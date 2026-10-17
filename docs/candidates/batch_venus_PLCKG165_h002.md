@@ -21,19 +21,20 @@
 | Registration or matching residual | A | does not explain | F150W and F444W S peaks 0.03″ apart (sky-fixed); a compact point-like negative lobe, not a dipole (`sheet_*h002.png`) | derived |
 | Real flux change | — | yes | forced photometry with 0.15″ apertures and random-aperture errors: F150W 240 ± 7 → −6 ± 6 nJy (z −27), F444W 74 ± 4 → −2 ± 4 nJy (z −13); every band falls at z −14 to −28 between some pair of epochs | derived |
 | Star (point-like, Gaia or SIMBAD) | C | does not explain | no Gaia source within 3″; no SIMBAD object within 3″; the source disappears completely | observed |
-| Catalogued galaxy at the position | C | consistent with a host | NED `[FPP2024] NS_0481`, type G, z = 1.3236, 0.06″ away; reference 2024ApJ...961..171F (Frye et al. 2024). Redshift type and origin not verified (NED lists one "Uncertain origin" row). Whether the catalogued object is the host or the transient itself, measured in 2023, is not known. | observed |
+| Catalogued galaxy near the position | C | no catalogued host at the position | NED `[FPP2024] NS_0481` (type G) is **3.77″ away**, not 0.06″ (corrected 2026-10-17: NED's separation column is in arcmin, 0.063′). Its z = 1.3236 ± 0.0002 is spectroscopic (Frye et al. 2024, arXiv:2309.07326, Table 2, NIRSpec MSA ID NS 481 from DDT 4446; grating not determined). At 3.8″ (about 31 kpc at z = 1.32, not stored) it is a weak host association; no host is seen directly under the transient (F150W −6 ± 6 nJy in 2026 in the 0.15″ aperture). | observed |
 | Light curve | C | explains, as a class | present on 2023-03-30 and still on 2023-04-22 (F090W 271 → 173 nJy, F150W 240 → 214, F200W 187 → 175); absent in 2025 (4744) and 2026 (VENUS). A transient lasting weeks to months that fades over two years is typical of a supernova. | derived; the class is a hypothesis |
-| SN H0pe identification | C | inconclusive | SN H0pe's catalogued position (11:27:15.60 +42:28:33.7) is about 32″ away; image coordinates were not checked | observed |
-| Transient-catalogue match (TNS) | C | not run | no TNS access in this session | — |
+| SN H0pe identification | C | does not explain | the three SN H0pe images (Frye et al. 2024 Table 2, NS 2/3/4) are 24.9″, 31.9″ and 37.9″ away (subagent check 2026-10-17, not stored); no image within 1″ | observed |
+| Transient-catalogue match (TNS) | C | not run | wis-tns.org returned HTTP 403 (its own load balancer, not the session proxy) on 2026-10-17; Frye et al. 2024 discusses only SN H0pe; two web searches found no other G165 transient report | — |
 
 ## Verdict
 **known population: extragalactic transient, supernova-like (hypothesis).**
-- **Basis:** a real, sky-fixed point source seen at two epochs in 2023 and gone in 2025–2026. It sits on a catalogued
-  galaxy with z = 1.32 (Frye et al. 2024; redshift type not verified).
+- **Basis:** a real, sky-fixed point source seen at two epochs in 2023 and gone in 2025–2026. No catalogued galaxy lies
+  under it; the nearest catalogued galaxy with a redshift (NS_0481, spectroscopic z = 1.3236) is 3.77″ away, so
+  the host and redshift are not determined (an earlier version said "0.06″", a unit error).
 - **Not unexplained.** It is a fading that the search was calibrated to find; it is not wormhole evidence.
 - **Open questions:**
-  - TNS or literature identity: one of the transients reported in G165 by PEARLS or the SN H0pe follow-up?
-  - Whether `NS_0481`'s redshift comes from the host or from the transient.
+  - TNS identity (not reachable 2026-10-17); no literature report found (Frye et al. 2024 only lists SN H0pe).
+  - The host: none catalogued at the position; NS_0481 (3.77″) is a weak association.
 
 ## Regenerate
 - `scripts/batch_review.py` (sheets, `hit_lightcurve.py` forced photometry); `post_review_checks.json`

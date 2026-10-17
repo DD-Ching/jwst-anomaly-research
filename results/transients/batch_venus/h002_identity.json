@@ -1,0 +1,18 @@
+{
+ "provenance": "observed positions; derived separations",
+ "date": "2026-10-17",
+ "h002": {"ra": 171.805899, "dec": 42.481802, "source": "docs/candidates/batch_venus_PLCKG165_h002.md"},
+ "NS_0481": {
+  "ned_name": "[FPP2024] NS_0481",
+  "ned_ra": 171.8069167,
+  "ned_dec": 42.4825333,
+  "frye2024_table2": "11:27:13.66 +42:28:57.12",
+  "z_spec": 1.3236,
+  "z_err": 0.0002,
+  "z_type": "spectroscopic (NIRSpec MSA, DDT 4446; Frye et al. 2024 Table 2, arXiv:2309.07326)",
+  "sep_arcsec_ned": 3.772,
+  "sep_arcsec_frye": 3.772,
+  "note": "NED's near-position Separation column is in arcmin (0.063); the #296 record read it as arcsec"
+ },
+ "tns": "not run: wis-tns.org HTTP 403 (its own load balancer) on 2026-10-17"
+}
