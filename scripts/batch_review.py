@@ -33,6 +33,24 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 
 
+def classify(edge: bool, z: dict, sheet: str | None) -> str:
+    """The coded class rule (module docstring): edge, then the two search-epoch z values."""
+    zs = [v for v in z.values() if np.isfinite(v)]
+    if edge:
+        cls = "artifact (edge)"
+    elif len(zs) < 2:
+        cls = "undetermined (photometry missing)"
+    elif max(abs(v) for v in zs) < 3:
+        cls = "no significant change"
+    elif all(v > 0 for v in zs) or all(v < 0 for v in zs):
+        cls = "real change"
+    else:
+        cls = "undetermined"
+    if sheet and sheet.lower().startswith("veto"):
+        cls = f"artifact (sheet: {sheet})"
+    return cls
+
+
 def key(e: dict) -> str:
     return f"{e['box_id']}:{e['hit_id']}"
 
@@ -92,20 +110,8 @@ def main(argv=None) -> int:
                     f2, e2_ = float(r2["flux_njy"][0]), float(r2["err_njy"][0])
                     z[band] = round((f2 - f1) / math.hypot(e1_, e2_), 2)
                     phot[band] = [round(f1, 1), round(e1_, 1), round(f2, 1), round(e2_, 1)]
-        zs = [v for v in z.values() if np.isfinite(v)]
-        if edge:
-            cls = "artifact (edge)"
-        elif len(zs) < 2:
-            cls = "undetermined (photometry missing)"
-        elif max(abs(v) for v in zs) < 3:
-            cls = "no significant change"
-        elif all(v > 0 for v in zs) or all(v < 0 for v in zs):
-            cls = "real change"
-        else:
-            cls = "undetermined"
         sv = verdicts.get(key(e))
-        if sv and sv.lower().startswith("veto"):
-            cls = f"artifact (sheet: {sv})"
+        cls = classify(edge, z, sv)
         rows.append(
             {**e, "edge": edge, "z": z, "phot_njy_f1_e1_f2_e2": phot, "sheet": sv, "class": cls}
         )

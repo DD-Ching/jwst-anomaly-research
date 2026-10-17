@@ -23,12 +23,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Partial (50 %) fades: 0.79 / 0.75 / 0.52.
   - Unchanged-control hits: 8/207.
 - **Screen:** 113 hits, 13 unflagged, 5 review entries, all 5 reviewed (capacity 10, 0 pending).
-  - Four show no significant change in forced photometry.
+  - Three show no significant change in forced photometry. h003 is undetermined after the full-rule post-review
+    check: mixed-sign differences across programmes on a bright arc.
   - **PLCK G165 h002** is a real fade: a point source in all PEARLS bands in March to April 2023, gone in 2025 and
     2026. That light curve is an ordinary transient's (supernova-like).
-  - Not yet identified: about 32″ from SN H0pe's published position.
+  - Vetted (`docs/candidates/batch_venus_PLCKG165_h002.md`): known population (hypothesis). It sits on a
+    catalogued z = 1.32 galaxy (Frye et al. 2024). Its TNS identity is pending.
   - Not an unexplained signal and not wormhole evidence.
-- **Time:** 22 min of computation on 4 workers; about 45 min for the whole unit.
+- **Time:** 22 min of computation on 4 workers; about 60 min for the whole unit (not stored).
 - **#293 report wording corrected:**
   - vanish 51/60, not 51/51;
   - 180 changes + 60 controls;

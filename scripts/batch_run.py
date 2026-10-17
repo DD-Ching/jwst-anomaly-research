@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -40,6 +41,7 @@ def _run(cmd: list[str], log: Path) -> dict:
     with open(log, "w") as f:
         p = subprocess.Popen(cmd, stdout=f, stderr=subprocess.STDOUT, env=env)
         _, status, ru = os.wait4(p.pid, 0)
+        p.returncode = os.waitstatus_to_exitcode(status)  # reaped here; keep Popen from re-waiting
     return {
         "rc": os.waitstatus_to_exitcode(status),
         "wall_s": round(time.time() - t0, 1),
@@ -59,7 +61,7 @@ def task(kind: str, i: int, box: dict, out: Path, scratch: Path, cache: Path, se
     d.mkdir(parents=True, exist_ok=True)
     sample = d / "sample.csv"
     rec = {"box_id": box["box_id"], "kind": kind}
-    if kind == "inj" and not sample.exists():
+    if kind == "inj":
         rec["sample"] = _run(
             [PY, str(HERE / "fade_calib.py"), "make", "--uri", box["e1"]["F150W"]["uri"],
              "--ra", str(box["ra"]), "--dec", str(box["dec"]), "--seed", str(seed0 + i),
@@ -81,6 +83,10 @@ def task(kind: str, i: int, box: dict, out: Path, scratch: Path, cache: Path, se
     cmd += [*SETTINGS, "--cache-dir", str(cache), "--out", str(run), "--maps", str(maps)]
     if kind == "inj":
         cmd += ["--inject-pre", str(sample), "--inject-pre-psf", "empirical"]
+    if kind == "inj" and rec["sample"]["rc"] != 0:
+        rec["arc_diff"] = {"rc": -1, "why": "sample failed"}
+        (d / f"{kind}_task.json").write_text(json.dumps(rec, indent=1) + "\n")
+        return rec
     rec["arc_diff"] = _run(cmd, d / f"{kind}.log")
     if rec["arc_diff"]["rc"] == 0:
         rec["morph"] = _run(
@@ -90,6 +96,20 @@ def task(kind: str, i: int, box: dict, out: Path, scratch: Path, cache: Path, se
         )  # fmt: skip
     (d / f"{kind}_task.json").write_text(json.dumps(rec, indent=1) + "\n")
     return rec
+
+
+def box_passes(vk: int, vn: int, false_hits: int, pass_vanish: float, max_false: int) -> bool:
+    """PLAN §4: vanish 26.0 + 27.0 AB review-with-sign fraction >= pass_vanish and
+    unchanged-control false hits <= max_false (both conditions)."""
+    return vn > 0 and vk / vn >= pass_vanish and false_hits <= max_false
+
+
+def _ok(task: dict | None) -> bool:
+    return (
+        bool(task)
+        and task.get("arc_diff", {}).get("rc") == 0
+        and task.get("morph", {}).get("rc") == 0
+    )
 
 
 def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) -> None:
@@ -106,7 +126,7 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
             tj = d / f"{kind}_task.json"
             r[f"{kind}_task"] = json.loads(tj.read_text()) if tj.exists() else None
         inj = d / "inj"
-        if (inj / "morph_all.json").exists():
+        if _ok(r["inj_task"]) and (inj / "morph_all.json").exists():
             st = fc.summarize(fc.stage_rows(inj, inj / "morph_all.json"))
             (d / "inj_eval.json").write_text(json.dumps(st, indent=1) + "\n")
             v = [st["vanish"][m] for m in ("26.00", "27.00") if m in st.get("vanish", {})]
@@ -123,13 +143,13 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
                     if c in st
                 },
             }
-            ok = vn > 0 and vk / vn >= pass_vanish and fh["false_hits"] <= max_false
+            ok = box_passes(vk, vn, fh["false_hits"], pass_vanish, max_false)
             r["status"] = "passed" if ok else "undeterminable"
         else:
             r["status"] = "undeterminable"
-            r["why"] = "injection run missing"
+            r["why"] = "injection run missing or failed"
         scr = d / "screen"
-        if (scr / "morph_all.json").exists():
+        if _ok(r["screen_task"]) and (scr / "morph_all.json").exists():
             h = Table.read(scr / "hits.ecsv")
             verdict = {
                 t["id"]: t["verdict"]
@@ -161,7 +181,7 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
         else:
             r["screen"] = None
             r["status"] = "undeterminable"
-            r["why"] = "screen missing"
+            r["why"] = "screen missing or failed"
         rows.append(r)
     queue.sort(key=lambda q: (q["box_status"] != "passed", -q["max_abs_sigma"]))
     for k, q in enumerate(queue):
@@ -183,9 +203,62 @@ def summarize(boxes: list[dict], out: Path, pass_vanish: float, max_false: int) 
     )
 
 
+def wilson(k: int, n: int, z: float = 1.0) -> list[float] | None:
+    if n == 0:
+        return None
+    p = k / n
+    den = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / den
+    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den
+    return [round(max(c - h, 0.0), 3), round(min(c + h, 1.0), 3)]
+
+
+def totals(out: Path) -> None:
+    """Pooled calibration (passing / undeterminable boxes), screen totals and task time."""
+    b = json.loads((out / "batch.json").read_text())["boxes"]
+    agg = {}
+    for st in ("passed", "undeterminable"):
+        cell: dict = {}
+        for r in b:
+            if r["status"] != st or "calibration" not in r:
+                continue
+            for c, mm in r["calibration"]["per_cell"].items():
+                for m, (k, n, _) in mm.items():
+                    x = cell.setdefault(f"{c}_{m}", [0, 0])
+                    x[0] += k
+                    x[1] += n
+            fh = r["calibration"]["unchanged_false_hits"]
+            x = cell.setdefault("unchanged_false_hits", [0, 0])
+            x[0] += fh[0]
+            x[1] += fh[1]
+        agg[st] = {
+            k: {"k": v[0], "n": v[1], "frac": round(v[0] / v[1], 3) if v[1] else None,
+                "wilson68": wilson(v[0], v[1])}
+            for k, v in sorted(cell.items())
+        }  # fmt: skip
+    tasks = [json.loads(f.read_text()) for f in sorted(out.glob("*/*_task.json"))]
+    secs = sum(
+        t[k].get("wall_s", 0) for t in tasks for k in ("sample", "arc_diff", "morph") if k in t
+    )
+    scr = [r["screen"] for r in b if r.get("screen")]
+    res = {
+        "label": "derived; batch totals (batch_run.py totals)",
+        "boxes": len(b),
+        "passed": sum(r["status"] == "passed" for r in b),
+        "undeterminable": sum(r["status"] == "undeterminable" for r in b),
+        "screen_hits": sum(s["hits"] for s in scr),
+        "screen_unflagged": sum(s["unflagged"] for s in scr),
+        "review_entries": sum(s["review"] for s in scr),
+        "task_seconds_sum": round(secs, 1),
+        "peak_rss_mb_max": max(t["arc_diff"].get("peak_rss_mb", 0) for t in tasks),
+        "pooled_calibration": agg,
+    }
+    (out.parent / "totals.json").write_text(json.dumps(res, indent=1) + "\n")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("cmd", choices=("run", "summarize"))
+    ap.add_argument("cmd", choices=("run", "summarize", "totals"))
     ap.add_argument("--boxes", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--scratch", type=Path)
@@ -195,6 +268,9 @@ def main(argv=None) -> int:
     ap.add_argument("--max-false", type=int, default=2)
     a = ap.parse_args(argv)
     boxes = json.loads(a.boxes.read_text())["chosen"]
+    if a.cmd == "totals":
+        totals(a.out)
+        return 0
     if a.cmd == "run":
         cache = a.scratch / "cache"
         jobs = [(k, i, b) for i, b in enumerate(boxes) for k in ("screen", "inj")]

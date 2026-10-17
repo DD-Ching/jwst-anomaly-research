@@ -17,6 +17,8 @@ the rest saved as pending. No follow-on batch, no tool work, no SFFT.
 
 - 06:32Z batch done (40 runs, all rc 0): 12 boxes passed, 8 undeterminable; review queue 5.
 - 06:35Z review done: 5 / 5 reviewed (capacity 10), 0 pending; PLCK G165 h002 real fade (ordinary transient).
+- 06:40–06:50Z review fixes: full-rule post-review checks (h003 → undetermined), h002 vetted
+  (`docs/candidates/batch_venus_PLCKG165_h002.md`), SCI PA_V3, rule tests, deviations labelled.
 - Results: `RESULT.md`.
 
 ## Next action

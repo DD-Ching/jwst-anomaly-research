@@ -7,11 +7,12 @@ whose F150W and F444W footprints both contain the target centre. Candidate boxes
 grid of 24″ boxes centred on the target (the cluster core, where lensed images concentrate); a
 box is kept if its corners and centre lie in all four footprints and it does not overlap an
 already searched box. Pairs are ranked by expected sensitivity (the shallower F150W exposure of
-the two epochs, longest first; one pair per target), boxes by distance from the centre; up to
-``--per-pair`` boxes per pair are taken in rank order until ``--max-boxes``. Each kept box is
-then quality-checked (``read_box`` finite fraction >= ``--min-finite`` in all four images;
-header DATE-OBS, CAL_VER, CRDS context) and replaced by the next candidate of the same rule if
-it fails.
+the two epochs, longest first; one pair per target; equal depth within a target: the lowest
+(other, VENUS) obs_id pair; across targets: input order), boxes by distance from the centre
+(ties: lowest RA, then lowest Dec); up to ``--per-pair`` boxes per pair are taken in rank order
+until ``--max-boxes``. Each kept box is then quality-checked (``read_box`` finite fraction >=
+``--min-finite`` in all four images; header DATE-OBS, CAL_VER, CRDS context) and replaced by the
+next candidate of the same rule if it fails.
 
     python scripts/batch_pairs.py --pairs venus_pairs.json --exclude RA DEC [...] --out boxes.json
 """
@@ -94,8 +95,10 @@ def header_info(u: str) -> dict:
 
     fs, path = fsspec.core.url_to_fs(u, anon=True)
     with fs.open(path, "rb", block_size=2**20) as f, fits.open(f, lazy_load_hdus=True) as h:
-        p = h[0].header
-        return {k: p.get(k) for k in ("DATE-OBS", "CAL_VER", "CRDS_CTX", "PA_V3")}
+        p, sci = h[0].header, h["SCI"].header
+        out = {k: p.get(k) for k in ("DATE-OBS", "CAL_VER", "CRDS_CTX")}
+        out["PA_V3"] = sci.get("PA_V3", p.get("PA_V3"))  # level-3: in the SCI extension
+        return out
 
 
 def main(argv=None) -> int:
@@ -135,7 +138,9 @@ def main(argv=None) -> int:
                         "e2": (vk, vv),
                         "depth": depth,
                     }
-                    if best is None or depth > best["depth"]:
+                    # equal depth: lowest (other, VENUS) obs_id pair, not MAST row order
+                    tie = (k, vk) < (best["e1"][0], best["e2"][0]) if best else True
+                    if best is None or depth > best["depth"] or (depth == best["depth"] and tie):
                         best = cand
         log.append(
             {"target": tg["target"], "pair": [best["e1"][0], best["e2"][0]] if best else None}

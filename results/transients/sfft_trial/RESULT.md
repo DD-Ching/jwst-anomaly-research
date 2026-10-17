@@ -110,7 +110,8 @@ Review list with the correct sign, B1 / B2 (`runs/*_eval.json`):
   - Expect about 0.3–1 entry per box. Each takes about 10–20 min to vet (an estimate, not stored).
 
 ## Corrections (2026-10-17, owner; wording only, no re-run)
-- Vanish recovery was printed as 51/51; per magnitude it is 51/60 for each tool (`runs/*_eval.json`).
+- Vanish recovery was printed as 51/51. Over all three magnitudes and both boxes it is 51/60 for each tool; per
+  magnitude 19/21, 18/21 and 14/18 at 26.0 / 27.0 / 27.5 AB (`runs/*_eval.json`).
 - The sample is 180 injected changes (60 appear, 60 partial, 60 vanish) plus 60 unchanged controls, not "180 injected
   sources".
 - Equal vanish totals do not mean the same sources were recovered (see the per-source list).

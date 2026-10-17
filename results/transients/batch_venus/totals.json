@@ -1,15 +1,12 @@
 {
- "label": "derived; batch totals",
+ "label": "derived; batch totals (batch_run.py totals)",
  "boxes": 20,
  "passed": 12,
  "undeterminable": 8,
- "passed_area_arcmin2": 1.92,
  "screen_hits": 113,
  "screen_unflagged": 13,
  "review_entries": 5,
  "task_seconds_sum": 3848.9,
- "batch_wall": "06:10-06:32Z (4 workers)",
- "review_compute_s": 145,
  "peak_rss_mb_max": 1526.1,
  "pooled_calibration": {
   "passed": {
