@@ -63,7 +63,11 @@ DEFAULT_FIELDS = (
     "abells1063",
     "smacs0723",
     "elgordo",
-)
+    "macs0417",
+    "whl0137",
+    "rxj2129",
+    "macs0647",
+)  # macs1423 is screened but not combined by default: results/w1_shear_more/RESULT.md
 # Screen options added after summaries were first committed, with the value those runs used
 # (before the option existed). A summary without the key is read with this value.
 LEGACY_SCREEN_OPTIONS = {"psf_chi": [0.0, 0.0], "min_coverage": 0.0}
@@ -82,11 +86,66 @@ SHEAR_FIELD_OVERRIDES = {
     # photo-z already in FIELDS (DJA tarballs reachable 2026-10-17); Gaia veto at the model centre
     "smacs0723": {"spike_stars": True, "centre": (110.826989, -73.454723)},
     "elgordo": {"spike_stars": True, "centre": (15.740693, -49.271992)},
+    # Shear-only fields (2026-10-17; results/w1_shear_more/PLAN.md): JWST-era map models that
+    # passed the `arcs` alignment control, the photo-z of those runs, the 100" grid of the other
+    # CANUCS fields (ASSUMPTION) and the Gaia veto at the model reference point.
+    "macs0417": {
+        "model": "macs0417-canucs-maps",
+        "catalog": ir._MAST.format("jw01208-o006_t003_nircam_clear-f200w"),
+        "photoz": ("canucs", ir._CANUCS.format("macs0417")),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (64.394582, -11.908964),
+    },
+    "macs1423": {
+        "model": "macs1423-canucs-maps",
+        "catalog": ir._MAST.format("jw01208-o010_t005_nircam_clear-f200w"),
+        "photoz": ("canucs", ir._CANUCS.format("macs1423")),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (215.949485, 24.078455),
+    },
+    "whl0137": {
+        "model": "whl0137-relics-lenstool",
+        "catalog": ir._MAST.format("jw02282-o010_t001_nircam_clear-f200w"),
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-sunrise-v7.5/sunrise-grizli-v7.5-fix.eazypy.zout.fits",
+        ),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (24.354, -8.4563),
+    },
+    # 2026-10-17 (results/w1_shear_rxj_m0647/PLAN.md): the primary models and DJA v7.0 photo-z of
+    # the `arcs` runs; MACS0647 uses epoch 1 (program 1433 o010)
+    "rxj2129": {
+        "model": "rxj2129-lenstool-maps",
+        "catalog": ir._MAST.format("jw02767-o002_t001_nircam_clear-f200w"),
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-rxj2129-v7.0/rxj2129-grizli-v7.0-fix.eazypy.zout.fits",
+        ),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (322.416503, 0.089236),
+    },
+    "macs0647": {
+        "model": "macs0647-clash-nfw",
+        "catalog": ir._MAST.format("jw01433-o010_t001_nircam_clear-f200w"),
+        "photoz": (
+            "eazy",
+            "cache/dja/photoz-macs0647-v7.0/macs0647-grizli-v7.0-fix.eazypy.zout.fits",
+        ),
+        "max_radius": 100.0,
+        "spike_stars": True,
+        "centre": (101.959458, 70.248611),
+    },
 }
+FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
 
 def field_spec(name: str) -> dict:
-    return {**ir.FIELDS[name], **SHEAR_FIELD_OVERRIDES.get(name, {})}
+    return {**ir.FIELDS.get(name, {}), **SHEAR_FIELD_OVERRIDES.get(name, {})}
 
 
 def injected_ellipticity(e_src, raw_img, raw_src, r: float) -> np.ndarray:
@@ -337,7 +396,7 @@ def setting(summary: dict) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--fields", nargs="+", default=list(DEFAULT_FIELDS), choices=sorted(ir.FIELDS))
+    ap.add_argument("--fields", nargs="+", default=list(DEFAULT_FIELDS), choices=FIELD_NAMES)
     ap.add_argument("--mass", nargs="+", type=float, default=list(ir.MASSES), help="|M| in M_sun")
     ap.add_argument("--n-inject", type=int, default=200, help="lenses per field and mass")
     ap.add_argument("--recover-tol", type=float, default=ir.RECOVER_TOL)

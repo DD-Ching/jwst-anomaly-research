@@ -1,0 +1,146 @@
+{
+ "field": "macs1423",
+ "model": "macs1423-canucs-maps",
+ "z_lens": 0.545,
+ "catalog": "data/cache/mast/jw01208-o010_t005_nircam_clear-f200w/jw01208-o010_t005_nircam_clear-f200w_cat.ecsv",
+ "photoz": "<scratch>/inj/macs1423/macs1423_canucs_zout.fits",
+ "screen": {
+  "n_rows": 4573,
+  "n_spike_segments": 130,
+  "n_lensable": 3275,
+  "n_lensable_after_spike_veto": 3162,
+  "n_snr": 3114,
+  "n_resolved": 2449,
+  "n_weak_shear": 2268,
+  "responsivity": 0.6042485043439614,
+  "responsivity_err": 0.03284200549899999,
+  "psf_sigma_px": 1.3277983571081244,
+  "n_centres_valid": 24526,
+  "s_max": 3.881362807376535,
+  "s_max_xy": [
+   32.0,
+   -50.0
+  ],
+  "s_max_radec": [
+   215.93974895503368,
+   24.064566111111116
+  ],
+  "p_random_max": 0.01,
+  "b_max": 3.6359871130798878,
+  "e_exceeds_b": true,
+  "passes_eb_rule": true,
+  "s_cross_plus_max": 3.6359871130798878,
+  "p_random_cross_plus": 0.065,
+  "s_cross_minus_max": 3.228106988308946,
+  "p_random_cross_minus": 0.59,
+  "null_max_p50_p95": [
+   3.264173781648511,
+   3.6779106731499183
+  ]
+ },
+ "screened_area_arcsec2": 23135.0,
+ "screened_area_deg2": 0.001785108024691358,
+ "footprint_border": {
+  "radii": [
+   4.0,
+   5.0,
+   6.0,
+   8.0
+  ],
+  "areas_arcsec2": [
+   23135.0,
+   24099.0,
+   24816.0,
+   26059.0
+  ],
+  "area_r0_arcsec2": 20402.85714285716,
+  "excess_frac": 0.11809564975763305
+ },
+ "efficiency": {
+  "2e+10": {
+   "mass_msun": 20000000000.0,
+   "theta_e_zs2_arcsec": 0.26958721463521335,
+   "n_inject": 200,
+   "n_recovered": 0,
+   "efficiency": 0.0,
+   "efficiency_err": 0.0,
+   "mean_lensed": 0.125,
+   "mean_image_used": 0.155,
+   "median_s_best": 0.8775942310895021
+  },
+  "2e+11": {
+   "mass_msun": 200000000000.0,
+   "theta_e_zs2_arcsec": 0.8525096263079532,
+   "n_inject": 200,
+   "n_recovered": 0,
+   "efficiency": 0.0,
+   "efficiency_err": 0.0,
+   "mean_lensed": 1.115,
+   "mean_image_used": 1.575,
+   "median_s_best": 1.2138075133526263
+  },
+  "2e+12": {
+   "mass_msun": 2000000000000.0,
+   "theta_e_zs2_arcsec": 2.695872146352134,
+   "n_inject": 200,
+   "n_recovered": 9,
+   "efficiency": 0.045,
+   "efficiency_err": 0.014658615214269049,
+   "mean_lensed": 10.545,
+   "mean_image_used": 14.715,
+   "median_s_best": 2.2597382248370215
+  },
+  "8e+12": {
+   "mass_msun": 8000000000000.0,
+   "theta_e_zs2_arcsec": 5.391744292704268,
+   "n_inject": 200,
+   "n_recovered": 72,
+   "efficiency": 0.36,
+   "efficiency_err": 0.03394112549695428,
+   "mean_lensed": 39.765,
+   "mean_image_used": 53.775,
+   "median_s_best": 3.226175186787391
+  },
+  "2e+13": {
+   "mass_msun": 20000000000000.0,
+   "theta_e_zs2_arcsec": 8.525096263079531,
+   "n_inject": 200,
+   "n_recovered": 140,
+   "efficiency": 0.7,
+   "efficiency_err": 0.032403703492039304,
+   "mean_lensed": 88.435,
+   "mean_image_used": 119.565,
+   "median_s_best": 4.143506759867973
+  }
+ },
+ "wall_time_s": {
+  "base_screen": 18.1,
+  "total": 100.6
+ },
+ "assumptions": {
+  "recover_tol_arcsec": 2.0,
+  "p_recover": 0.05,
+  "trials_per_null": 10,
+  "seed": 50,
+  "n_inject": 200,
+  "spike_stars": 9,
+  "screen": {
+   "aperture_arcsec": 10.0,
+   "filter": "schirmer",
+   "r_min_arcsec": 1.0,
+   "min_sources": 5,
+   "min_snr": 10.0,
+   "max_g": 0.5,
+   "responsivity": null,
+   "max_radius": 100.0,
+   "grid_arcsec": 1.0,
+   "n_random": 200,
+   "min_coverage": 0.0,
+   "seed": 1,
+   "psf_chi": [
+    0.0,
+    0.0
+   ]
+  }
+ }
+}

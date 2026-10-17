@@ -2,6 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear screen on RXJ2129 and MACS0647: null; eleven-field limits 4.5e3 / 7.6e2 / 3.8e2 deg⁻²
+- **Why:** TASKS "JWST focus" 1 (W1): the next fields of the previous handoff (DJA v7.0 photo-z).
+- **Result (`results/w1_shear_rxj_m0647/RESULT.md`):** neither passes D-053 (S_max 2.91 / 2.97, p_rot 0.375 / 0.325).
+  R 0.551 (RXJ2129, in the earlier range) and 0.231 (MACS0647, lowest of all fields; cause not measured). Sheet looked
+  at: both MACS0647 top centres sit on two crossing linear streaks (by eye), the third field with this pattern.
+- **Injections:** RXJ2129 8 / 53 / 92 of 200 at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉; MACS0647 0 / 1 / 1 (close to blind).
+- **Limits:** eleven fields, 64.0 arcmin²: Σ(W1) < 4.5 × 10³ / 7.6 × 10² / 3.8 × 10² deg⁻² (was 4.9e3 / 8.2e2 / 4.1e2);
+  without MACS0647 < 0.2 % different. `--combine-only` reproduces the nine-field file exactly.
+- **Handoff:** W1 next: the calibrated streak veto (now S1063, MACS1423, MACS0647), run through injections; then MACS1423
+  back in; then more photo-z fields (MACS0717 once DJA has photo-z).
+
+## 2026-10-17: W1 shear screen on MACS0417, MACS1423, WHL0137: one hit, carried by sources on an image stripe; nine-field limits 4.9e3 / 8.2e2 / 4.1e2 deg⁻²
+- **Why:** TASKS "JWST focus" 1 (W1): more fields with photo-z (MACS0717 still has none in the DJA v7 index).
+- **Result (`results/w1_shear_more/RESULT.md`):** R 0.488 / 0.604 / 0.533. MACS0417 and WHL0137 not passed (S_max
+  3.56, p_rot 0.065; 2.75, 0.72; both maxima at mosaic edges, sheet looked at). MACS1423 **passed** the D-053 rule
+  (S_max 3.88, p_rot 0.01, > B max 3.64); post hoc streak/star test frozen before computing (addendum A, `scripts/w1_peak_vet.py`): the
+  15 sources on a vertical image stripe through the aperture carry it (S 3.88 → −0.07 without them; stripe origin
+  not determined). Not a candidate.
+- **Limits (deviation from the plan):** nine fields (MACS1423 left out: hit plus R 0.60 above the earlier range), 55.1 arcmin²: Σ(W1) < 4.9 × 10³ /
+  8.2 × 10² / 4.1 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉; ten fields 4.3 × 10³ / 7.0 × 10² / 3.5 × 10² only
+  once a streak veto is run through injections.
+- **New:** shear-only field entries in `inject_shear.SHEAR_FIELD_OVERRIDES` (`FIELD_NAMES`); `scripts/w1_peak_vet.py`.
+- **Handoff:** W1 next: a calibrated stripe/streak veto in the screen (now two fields, S1063 and MACS1423), re-run
+  injections, then the ten-field limit; RXJ2129 and MACS0647 (DJA v7.0 photo-z) are the next fields.
+
 ## 2026-10-17: W1 shear screen on SMACS 0723 and El Gordo: null; seven-field limits 5.3e3 / 9.6e2 / 5.0e2 deg⁻²
 - **Why:** D-053 "Revisit if": the DJA photo-z tarballs (404 on 2026-10-08) answer HTTP 200 again; sha256 match.
 - **Result (`results/w1_shear_smacs_elgordo/RESULT.md`):** R 0.438 / 0.486 (cluster shear seen); S_max 2.91 / 2.95,

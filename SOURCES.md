@@ -639,7 +639,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     `29f74c91cf8984b3f44118073e183ef0bce9262addf7637ffed6dfbf0b642663`;
   - DJA v7.0 https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/macs0647-grizli-v7.0-fix.photoz.tar.gz
     (Last-Modified 2023-07-17, 41,494,640 B, sha256 `d56246b571ccfc78a54338a7ab16009fa8b73b2cdbcfefba4a2617c0058cdf0c`),
-    member `macs0647-grizli-v7.0-fix.eazypy.zout.fits` (7,956 rows) extracted while streaming;
+    member `macs0647-grizli-v7.0-fix.eazypy.zout.fits` (7,956 rows; sha256
+    `ceb199c61f1ca67df6afc34df6ed7ad61267f59ccaf27e9a2fd1e64c2662c04e`, recorded 2026-10-17) extracted while streaming;
   - CLASH Zitrin v2 maps (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762, L30; CLASH, Postman et al. 2012,
     ApJS 199, 25): https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{nfw,ltm-gauss}/v2/
     (sha256 in `lensmodel.MACS0647_CLASH_NFW`, `MACS0647_CLASH_LTM`; readme 2015-02, z_lens 0.591).
