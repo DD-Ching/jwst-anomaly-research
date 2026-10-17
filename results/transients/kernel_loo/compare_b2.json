@@ -31,7 +31,7 @@
   "only_a": [],
   "only_b": [],
   "changed": [],
-  "border_hits_a": [],
+  "border_hits": [],
   "max_abs_d_maxsigma": 1.8118839761882555e-12,
   "review": [
    [],
@@ -68,7 +68,7 @@
   "only_a": [],
   "only_b": [],
   "changed": [],
-  "border_hits_a": [],
+  "border_hits": [],
   "max_abs_d_maxsigma": 9.180212146020494e-12,
   "review": [
    [

@@ -87,10 +87,20 @@ Algorithm swap, GPU, new pipeline, new sky regions, SMACS, re-running history.
   - When the subtracted rows carry more than half of the Gram's trace, the Gram is summed from the kept rows.
   - Every solve gets 2 iterative-refinement steps, with the residual computed from the rows.
 - **Changes to the tests:**
-  - Test 1 now covers **every** stamp of B1 and B2 in both bands (`check2/`; the B2 F150W refit cost is split over
+  - Test 1 now covers **every** stamp of B1 and B2 in both bands (`check3/`; the B2 F150W refit cost is split over
     4 processes).
   - The clipped-row count, which `kernel_fit` does not expose, is compared through each fit's clipped χ².
   - The bright-star cases are unit tests.
   - Test 3 lists hits with 4.9 ≤ |S| ≤ 5.1 in **any band**, from each band's map within 0.15″, instead of only the
     hit's maximum.
 - **The first version's full-chain results and timings are superseded.**
+
+## Addendum 2 (2026-10-17T03:45Z, after the second `/code-review`; deviations)
+- **Refinement self-check:** refinement now stops when its step is ≤ 1e-12 of the solution (at most 4 steps). If
+  it does not converge, the fit is redone from a direct sum of the kept rows. Unconverged fits are counted
+  (`kernel_stats.stamp_unconverged`): 0 in every B2 run.
+- **Final validation:** test 1 is re-run on every stamp (`check3/`). Tests 2–4 are re-run on B2 with the final code,
+  two repeats each (`compare_b2.json`; repeat agreement `compare_b2_repeat.json`).
+- **Timing (deviation from §5):** refit was timed in a batch with the superseded first shared version. The final
+  shared code was timed in a later batch of four shared runs. Both batches ran 4 processes on 4 cores, so the loads
+  are similar but not identical (`timing_b2.json`).

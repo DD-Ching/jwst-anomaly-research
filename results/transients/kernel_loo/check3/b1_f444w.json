@@ -21,6 +21,6 @@
  "cond_design": 1519.1999320214773,
  "rows": 4937,
  "time_shared_all_s": 0.22,
- "shared_build_s": 0.011,
- "time_refit_compared_s": 1.68
+ "shared_build_s": 0.009,
+ "time_refit_compared_s": 1.84
 }

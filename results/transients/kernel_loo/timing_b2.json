@@ -1,5 +1,5 @@
 {
- "label": "derived; B2 (15.717097, -49.262488), F150W + F444W, #288 final-chain settings, no cache. refit: 4 runs started together (refit screen, refit inj, first shared version x2), one process each on 4 cores; the refit runs ran their last ~20 min on a half-loaded machine. shared (final code with refinement): 4 runs together (screen x2, inj x2), one process each on 4 cores. Loads are similar, not identical.",
+ "label": "derived; B2 (15.717097, -49.262488), F150W + F444W, #288 final-chain settings, no cache. DEVIATION from PLAN \u00a75 (not one shared batch): refit was timed in a batch of 4 runs started together (refit screen, refit inj, and the superseded first shared version x2), one process each on 4 cores, and spent its last ~20 min on a half-loaded machine; the final shared code was timed in a later batch of 4 shared runs (screen x2, inj x2), one process each on 4 cores. Loads are similar, not identical.",
  "runs": {
   "refit_screen": {
    "wall_s_process": 1507.8,
@@ -53,122 +53,154 @@
     }
    }
   },
-  "shared2_screen_r1": {
-   "wall_s_process": 98.2,
-   "wall_s_summary": 97.5,
-   "peak_rss_mb": 859.8,
-   "user_s": 84.2,
+  "shared3_screen_r1": {
+   "wall_s_process": 106.1,
+   "wall_s_summary": 105.5,
+   "peak_rss_mb": 861.3,
+   "user_s": 89.8,
    "timing_s": {
     "F150W": {
-     "read": 8.53,
+     "read": 8.55,
      "pre_injections": 0.0,
-     "resample_register_match": 74.08,
-     "detect": 3.0,
+     "resample_register_match": 80.28,
+     "detect": 2.91,
      "post_injections": 0.02,
-     "stamp_design_build": 0.279,
+     "stamp_design_build": 0.376,
+     "kernel_stamps_s": 52.081
+    },
+    "F444W": {
+     "read": 3.73,
+     "pre_injections": 0.0,
+     "resample_register_match": 9.35,
+     "detect": 0.24,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.007,
+     "kernel_stamps_s": 0.133
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
      "stamp_rows": 86892,
-     "kernel_stamps": 46.543,
+     "stamp_unconverged": 0,
      "n_stamps": 1076
     },
     "F444W": {
-     "read": 2.35,
-     "pre_injections": 0.0,
-     "resample_register_match": 8.8,
-     "detect": 0.25,
-     "post_injections": 0.0,
-     "stamp_design_build": 0.013,
      "stamp_rows": 3354,
-     "kernel_stamps": 0.252,
+     "stamp_unconverged": 0,
      "n_stamps": 33
     }
    }
   },
-  "shared2_screen_r2": {
-   "wall_s_process": 100.5,
-   "wall_s_summary": 99.8,
-   "peak_rss_mb": 860.5,
-   "user_s": 84.6,
+  "shared3_screen_r2": {
+   "wall_s_process": 106.2,
+   "wall_s_summary": 105.5,
+   "peak_rss_mb": 860.3,
+   "user_s": 90.6,
    "timing_s": {
     "F150W": {
-     "read": 9.21,
+     "read": 9.08,
      "pre_injections": 0.0,
-     "resample_register_match": 74.82,
-     "detect": 3.09,
-     "post_injections": 0.02,
-     "stamp_design_build": 0.278,
+     "resample_register_match": 80.05,
+     "detect": 3.1,
+     "post_injections": 0.03,
+     "stamp_design_build": 0.372,
+     "kernel_stamps_s": 52.65
+    },
+    "F444W": {
+     "read": 3.32,
+     "pre_injections": 0.0,
+     "resample_register_match": 9.25,
+     "detect": 0.25,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.008,
+     "kernel_stamps_s": 0.149
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
      "stamp_rows": 86892,
-     "kernel_stamps": 47.205,
+     "stamp_unconverged": 0,
      "n_stamps": 1076
     },
     "F444W": {
-     "read": 3.76,
-     "pre_injections": 0.0,
-     "resample_register_match": 8.21,
-     "detect": 0.25,
-     "post_injections": 0.0,
-     "stamp_design_build": 0.006,
      "stamp_rows": 3354,
-     "kernel_stamps": 0.135,
+     "stamp_unconverged": 0,
      "n_stamps": 33
     }
    }
   },
-  "shared2_inj_r1": {
-   "wall_s_process": 167.0,
-   "wall_s_summary": 166.3,
-   "peak_rss_mb": 1465.0,
-   "user_s": 122.5,
+  "shared3_inj_r1": {
+   "wall_s_process": 175.8,
+   "wall_s_summary": 175.1,
+   "peak_rss_mb": 1438.0,
+   "user_s": 123.6,
    "timing_s": {
     "F150W": {
-     "read": 5.84,
-     "pre_injections": 53.36,
-     "resample_register_match": 67.9,
-     "detect": 2.96,
+     "read": 8.92,
+     "pre_injections": 58.75,
+     "resample_register_match": 69.16,
+     "detect": 3.12,
      "post_injections": 0.02,
-     "stamp_design_build": 0.145,
+     "stamp_design_build": 0.252,
+     "kernel_stamps_s": 40.192
+    },
+    "F444W": {
+     "read": 3.48,
+     "pre_injections": 22.75,
+     "resample_register_match": 8.07,
+     "detect": 0.24,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.009,
+     "kernel_stamps_s": 0.286
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
      "stamp_rows": 78260,
-     "kernel_stamps": 39.802,
+     "stamp_unconverged": 0,
      "n_stamps": 1005
     },
     "F444W": {
-     "read": 4.05,
-     "pre_injections": 22.56,
-     "resample_register_match": 8.75,
-     "detect": 0.24,
-     "post_injections": 0.0,
-     "stamp_design_build": 0.01,
      "stamp_rows": 5477,
-     "kernel_stamps": 0.294,
+     "stamp_unconverged": 0,
      "n_stamps": 53
     }
    }
   },
-  "shared2_inj_r2": {
-   "wall_s_process": 175.9,
-   "wall_s_summary": 175.2,
-   "peak_rss_mb": 1463.4,
-   "user_s": 121.9,
+  "shared3_inj_r2": {
+   "wall_s_process": 156.8,
+   "wall_s_summary": 156.1,
+   "peak_rss_mb": 1465.2,
+   "user_s": 124.8,
    "timing_s": {
     "F150W": {
-     "read": 9.22,
-     "pre_injections": 59.51,
-     "resample_register_match": 67.64,
-     "detect": 3.1,
+     "read": 5.23,
+     "pre_injections": 41.58,
+     "resample_register_match": 69.78,
+     "detect": 3.01,
      "post_injections": 0.02,
-     "stamp_design_build": 0.177,
+     "stamp_design_build": 0.214,
+     "kernel_stamps_s": 41.274
+    },
+    "F444W": {
+     "read": 3.67,
+     "pre_injections": 23.47,
+     "resample_register_match": 8.49,
+     "detect": 0.26,
+     "post_injections": 0.0,
+     "stamp_design_build": 0.009,
+     "kernel_stamps_s": 0.296
+    }
+   },
+   "kernel_stats": {
+    "F150W": {
      "stamp_rows": 78260,
-     "kernel_stamps": 39.896,
+     "stamp_unconverged": 0,
      "n_stamps": 1005
     },
     "F444W": {
-     "read": 3.73,
-     "pre_injections": 22.95,
-     "resample_register_match": 8.18,
-     "detect": 0.25,
-     "post_injections": 0.0,
-     "stamp_design_build": 0.009,
      "stamp_rows": 5477,
-     "kernel_stamps": 0.318,
+     "stamp_unconverged": 0,
      "n_stamps": 53
     }
    }
@@ -176,79 +208,95 @@
  },
  "speedup_screen": {
   "whole_run": [
-   15.4,
-   15.0
+   14.2,
+   14.2
   ],
   "matching_step": [
-   18.0,
-   18.0
+   16.6,
+   16.7
   ],
   "kernel_stamps_step": [
-   31.1,
-   30.7
+   27.9,
+   27.6
   ],
   "wall_s": [
    1507.8,
-   98.2,
-   100.5
+   106.1,
+   106.2
   ],
   "matching_s": [
    1491.5,
-   82.9,
-   83.0
+   89.6,
+   89.3
   ],
   "kernel_stamps_s": [
    1455.6,
-   46.8,
-   47.3
+   52.2,
+   52.8
   ],
   "shared_design_build_s": [
-   0.29,
-   0.28
+   0.38,
+   0.38
+  ],
+  "f150w_pre_injections_s": [
+   0.0,
+   0.0
+  ],
+  "f150w_matching_minus_stamps_s": [
+   28.2,
+   27.4
   ],
   "peak_rss_mb": [
    859.7,
-   859.8,
-   860.5
+   861.3,
+   860.3
   ]
  },
  "speedup_inj": {
   "whole_run": [
-   8.0,
-   7.6
+   7.6,
+   8.6
   ],
   "matching_step": [
-   16.2,
-   16.4
+   16.1,
+   15.9
   ],
   "kernel_stamps_step": [
-   30.1,
-   30.0
+   29.8,
+   29.0
   ],
   "wall_s": [
    1341.0,
-   167.0,
-   175.9
+   175.8,
+   156.8
   ],
   "matching_s": [
    1241.9,
-   76.7,
-   75.8
+   77.2,
+   78.3
   ],
   "kernel_stamps_s": [
    1205.6,
-   40.1,
-   40.2
+   40.5,
+   41.6
   ],
   "shared_design_build_s": [
-   0.15,
-   0.19
+   0.26,
+   0.22
+  ],
+  "f150w_pre_injections_s": [
+   58.75,
+   41.58
+  ],
+  "f150w_matching_minus_stamps_s": [
+   29.0,
+   28.5
   ],
   "peak_rss_mb": [
    1466.5,
-   1465.0,
-   1463.4
+   1438.0,
+   1465.2
   ]
  },
- "superseded": "first shared version (no refinement) timed 67 s / 123 s; replaced after the final review (precision)"
+ "superseded": "first shared version (no refinement) 67 s / 123 s and the second (fixed 2 refinement steps) 98-100 s / 167-176 s; both replaced after the reviews (precision, self-check)"
 }

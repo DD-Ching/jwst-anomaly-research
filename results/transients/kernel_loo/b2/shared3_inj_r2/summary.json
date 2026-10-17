@@ -1,5 +1,5 @@
 {
- "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f150w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f444w_i2d.fits --ra 15.717097 --dec -49.262488 --half-arcsec 12 --kernel-px 4 --kernel-stamps --min-bands 2 --reg-tile-arcsec 6 --procs 1 --kernel-stamp-fit shared --inject-pre results/transients/kernel_loo/inject_b2_s40_noappear.csv --inject-pre-psf empirical --out /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/kl/shared2_inj_r1 --maps /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/kl/shared2_inj_r1/maps.npz",
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f150w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o051/jw06882-o051_t051_nircam_clear-f444w_i2d.fits --ra 15.717097 --dec -49.262488 --half-arcsec 12 --kernel-px 4 --kernel-stamps --min-bands 2 --reg-tile-arcsec 6 --procs 1 --kernel-stamp-fit shared --inject-pre results/transients/kernel_loo/inject_b2_s40_noappear.csv --inject-pre-psf empirical --out /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/kl/shared3_inj_r2 --maps /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/kl/shared3_inj_r2/maps.npz",
  "box": {
   "ra": 15.717097,
   "dec": -49.262488,
@@ -42,14 +42,17 @@
    "injection_recovered": {},
    "injection_recovered_not_near_core_this_band": {},
    "timing_s": {
-    "read": 5.84,
-    "pre_injections": 53.36,
-    "resample_register_match": 67.9,
-    "detect": 2.96,
+    "read": 5.23,
+    "pre_injections": 41.58,
+    "resample_register_match": 69.78,
+    "detect": 3.01,
     "post_injections": 0.02,
-    "stamp_design_build": 0.145,
+    "stamp_design_build": 0.214,
+    "kernel_stamps_s": 41.274
+   },
+   "kernel_stats": {
     "stamp_rows": 78260,
-    "kernel_stamps": 39.802,
+    "stamp_unconverged": 0,
     "n_stamps": 1005
    },
    "inject_pre_psf": {
@@ -110,14 +113,17 @@
    "injection_recovered": {},
    "injection_recovered_not_near_core_this_band": {},
    "timing_s": {
-    "read": 4.05,
-    "pre_injections": 22.56,
-    "resample_register_match": 8.75,
-    "detect": 0.24,
+    "read": 3.67,
+    "pre_injections": 23.47,
+    "resample_register_match": 8.49,
+    "detect": 0.26,
     "post_injections": 0.0,
-    "stamp_design_build": 0.01,
+    "stamp_design_build": 0.009,
+    "kernel_stamps_s": 0.296
+   },
+   "kernel_stats": {
     "stamp_rows": 5477,
-    "kernel_stamps": 0.294,
+    "stamp_unconverged": 0,
     "n_stamps": 53
    },
    "inject_pre_psf": {
@@ -169,7 +175,7 @@
   "n": 60,
   "csv": "results/transients/kernel_loo/inject_b2_s40_noappear.csv"
  },
- "wall_s": 166.3,
+ "wall_s": 156.1,
  "inject_grid": {
   "n": 0,
   "n_hit": 0,

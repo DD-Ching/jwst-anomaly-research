@@ -20,7 +20,7 @@
  ],
  "cond_design": 1029.4865876619408,
  "rows": 18857,
- "time_shared_all_s": 2.03,
- "shared_build_s": 0.038,
- "time_refit_compared_s": 35.96
+ "time_shared_all_s": 2.2,
+ "shared_build_s": 0.039,
+ "time_refit_compared_s": 37.26
 }
