@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear screen streak veto (in progress; claim)
+- Plan: test whether long linear streaks set the W1 B-mode floor (Abell 2744 S_× 4.21, S1063 top peaks).
+
 ## 2026-10-17: W1 shear screen aperture-coverage cut (c = 0.5): not adopted; limits move ≤ 1.6 %
 - **Why:** TASKS "JWST focus" 1 (W1): "drop edge apertures with < 50 % coverage" to lower the B-mode floor. Plan
   and computable rules first (`results/w1_edge_cut/PLAN.md`, `scripts/w1_edge_cut.py decide`).
