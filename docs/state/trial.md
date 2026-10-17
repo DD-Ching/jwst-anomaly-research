@@ -229,6 +229,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.4 (W1 Abell 2744 B-mode floor diagnostic: sheet looked at, contributors, rotation null, bright-neighbour screen) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01QRPt8P, 06:08–06:40Z |
 | 2026-W42 | ≈ 0.4 (W1 Abell 2744 PSF anisotropy from stars: plan, `psf_chi` option, screens, injections later withdrawn after review; map looked at) | — | ≈ 0.1 (PLCK G165 h002 record correction: NS_0481 3.77″, literature subagent; #299) | 0.1 (orientation, claim, PR) | cloud routine 019HJb2R, 07:08–07:45Z |
 | 2026-W42 | ≈ 0.35 (W1 STPSF model PSF vs stars and the Abell 2744 floor: plan, PSF grid, area-matched stars, screens; PSF figure looked at) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01TXkzEW, 08:08–08:40Z |
+| 2026-W42 | ≈ 0.2 (W1 smoothed STPSF vs star χ: plan, five variants, S3 fails) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01VZp3Mr, 09:08–09:30Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

@@ -167,7 +167,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      2026-10-17, not adopted (`results/w1_psf/RESULT.md`: 3 stars, too few for a map; a constant χ_PSF lowers the
      floor to 3.85, rule ≤ 3.79); ~~model PSF per detector (STPSF)~~ done 2026-10-17, not adopted
      (`results/w1_stpsf/RESULT.md`: axis close to the stars, |χ| depends on the isophote level and over-predicts the
-     stars by 0.05–0.07; next a per-source forward model or PSF-weighted moments), blend
+     stars by 0.05–0.07); ~~smoothed STPSF (detection kernel, jitter, drizzle box)~~ done 2026-10-17, rule S3
+     fails (`results/w1_psf_smooth/RESULT.md`; PSF-model route stops; next PSF-weighted pixel moments or new fields), blend
      rejection (2026-10-17 diagnostic, `results/w1_floor/RESULT.md`: no streak there; 44 sources near bright
      galaxies carry it, above the rotation null; a bright-neighbour veto is not floor-specific); ~~drop edge apertures with < 50 % coverage~~ done 2026-10-17, not adopted: limits move ≤ 1.6 %,
      `results/w1_edge_cut/RESULT.md`); add SMACS 0723 and El Gordo when DJA photo-z is reachable (tarballs 404
