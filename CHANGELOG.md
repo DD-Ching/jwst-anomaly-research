@@ -24,6 +24,26 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Wording corrected in `fade_calib/RESULT.md` (owner):**
   - the direction of the injection-registration effect is not verified;
   - the 8 looked-at rejections do not show that no fade was missed.
+## 2026-10-17: SMACS ERO → VENUS `arc_diff` with tile-median registration: shift 2.4 px off, outcome unchanged
+- **Why:** pending item of #288: pair 1's F150W whole-box shift (2.11, −1.82) px was never compared with
+  `--reg-tile-arcsec 6`. Plan first (`results/transients/smacs_arcdiff/o001_o057_tile/PLAN.md`).
+- **Result:** tile medians F150W (0.20, −0.40), F444W (0.28, −0.09) px: the whole-box peak was pulled (2.4 / 1.0 px),
+  as in El Gordo. Re-screen: Atalanta A/B recovered as `known`, 0 `vet`, no new pass within 2″ of an image; the two
+  new `off_image` passes are core residuals on the sheet (looked at). Injection recovery at 27.5 AB 0.85 / 0.82
+  (was 0.82 / 0.76).
+- **Handoff:** item closed; `results/transients/smacs_arcdiff/RESULT.md` pair 1 stands, h061 stays open as recorded.
+
+## 2026-10-17: MOA-II manifest lists every streamed field tar; retrieval dates no longer hard-coded
+- **Why:** TASKS follow-up from the gb10 review: `data/manifests/moa_ii.ecsv` had only the metadata tar and gb22,
+  and `write_manifest` stamped every row `retrieved_utc` 2026-10-08 (the day of the HTTP HEAD reads, not of the
+  streaming).
+- **New:** `w3_moa.py` pre-screen chunks record `retrieved_utc` (when their last byte range arrived);
+  `field_retrieved_utc` turns them into a day or `first/last` range; the manifest gains `head_utc` (2026-10-08, the
+  size and Last-Modified read). Test `test_field_retrieved_utc_from_chunk_stamps`.
+- **Result:** manifest regenerated from the tracked chunks: 22 streamed tars with `range_sha256` (gb1–gb22; gb22
+  also keeps its whole-file sha256 row). Their `retrieved_utc` is "not recorded": the older chunks carry no stamp,
+  and git dates of the chunk files (all 2026-10-15) are not retrieval dates, so none is inferred.
+- **Handoff:** no science change. A re-stream of any field fills its dates.
 
 ## 2026-10-17: `arc_diff` fading calibration (pre-matching injections), registration fix, El Gordo B1–B3 search (#288)
 - **Scope (owner, 2026-10-16):**
