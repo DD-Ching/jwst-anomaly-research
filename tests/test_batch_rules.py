@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import batch_pairs as bp  # noqa: E402
 import batch_review as br  # noqa: E402
 import batch_run as bru  # noqa: E402
 
@@ -33,3 +34,15 @@ def test_wilson():
     assert bru.wilson(0, 0) is None
     lo, hi = bru.wilson(62, 71)
     assert lo < 62 / 71 < hi
+
+
+def test_touching_boxes_do_not_overlap():
+    import math
+
+    ra, dec = 64.04, -24.07
+    step = bp.BOX / 3600 / math.cos(math.radians(dec))
+    neighbour = (round(ra + step, 6), round(dec, 6))  # stored rounded, as in boxes.json
+    assert not bp.overlaps(ra, dec, [neighbour])
+    assert not bp.overlaps(ra - step, dec, [(round(ra, 6), round(dec, 6))])
+    assert bp.overlaps(ra + step / 2, dec, [neighbour])
+    assert bp.overlaps(ra, dec, [(ra, dec)])
