@@ -8,7 +8,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result (derived; `RESULT.md`):** R 0.472 ± 0.034; S_max 3.61 (p_rot 0.07) > max |S_×| 3.33, but fails p < 0.05:
   **null** under D-053. Both top-peak apertures are crossed by long straight streaks in F200W (sheet looked at).
 - **Injections:** 0 / 0 / 17 / 69 / 91 of 200. The four earlier fields re-run here reproduce their counts and limits
-  exactly. Five fields (35.8 arcmin²): Σ(W1) < 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² /
+  exactly (post hoc, `rerun_4fields/`). Five fields (35.8 arcmin²): Σ(W1) < 5.8 × 10³ / 1.1 × 10³ / 5.7 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² /
   2 × 10¹³ M☉ (was 7.7 × 10³ / 1.3 × 10³ / 6.5 × 10²).
 - **Code:** `inject_shear.SHEAR_FIELD_OVERRIDES` (S1063 photo-z and Gaia veto for the shear run only);
   `inject_radial.load_field(spec=)` and `combine(specs=)` so the photo-z check uses the shear inputs. Tests added.

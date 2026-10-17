@@ -290,7 +290,8 @@ same session reproduce their recoveries and limits exactly). Four-field values (
 | 8 × 10¹² | 2.8 × 10⁻³ | 1.1 × 10³ (1.3 × 10³) | 1.2 × 10³ (1.5 × 10³) | 7.0 × 10³ |
 | 2 × 10¹³ | 5.3 × 10⁻³ | 5.7 × 10² (6.5 × 10²) | 6.2 × 10² (7.1 × 10²) | 4.0 × 10³ |
 
-**Reading.** The shear screen gives limits 6–11× stronger than `radial` from slightly less area (five fields; four gave 5–8× from 20 % less), but is equally blind
+**Reading.** The shear screen gives limits 6–11× stronger than the `radial` headline (five fields; ratios from
+the table, not stored; four fields gave 5–8× from 20 % less area), but is equally blind
 at ≤ 2 × 10¹¹ M☉ (θ_E ≲ 1″): there the umbra and images cover too few sources per aperture (S/N ≈ 1–2, as D-050
 expected). The best limit is about 5× weaker than Takahashi & Asada's ~120 deg⁻² (radial section). Below 10¹² M☉
 the orphan-pair limits (D-051) remain the only ones.

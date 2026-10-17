@@ -66,9 +66,9 @@ def test_combine_checks_photoz_against_the_given_specs(capsys):
     }
     out = ish.ir.combine([summ], [2e12], {"abells1063": ish.field_spec("abells1063")})
     assert out["fields"] == ["abells1063"]
-    assert "differs from FIELDS" not in capsys.readouterr().out
+    assert "differs from its field spec" not in capsys.readouterr().out
     ish.ir.combine([summ], [2e12])  # against the radial FIELDS entry (no photo-z) it warns
-    assert "differs from FIELDS" in capsys.readouterr().out
+    assert "differs from its field spec" in capsys.readouterr().out
 
 
 def test_injected_ellipticity_keeps_r_of_the_measured_change_only():

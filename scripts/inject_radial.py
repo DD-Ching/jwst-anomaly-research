@@ -133,7 +133,7 @@ FIELDS = {
     "abells1063": {
         "model": "abells1063-cats",
         "catalog": _MAST.format("jw03293-o001_t001_nircam_clear-f200w"),
-        "photoz": None,  # the DJA v7.5 zout is a 75 MB tarball; the null holds with or without it
+        "photoz": None,  # radial headline run without it (null either way); shear uses the DJA zout
         "max_radius": 100.0,
     },
 }
@@ -734,7 +734,8 @@ def combine(summaries: list[dict], masses, specs: dict | None = None) -> dict:
     for s in summaries:
         if bool(s.get("photoz")) != (specs[s["field"]]["photoz"] is not None):
             print(
-                f"warning: {s['field']}: summary photo-z differs from FIELDS; re-run it", flush=True
+                f"warning: {s['field']}: summary photo-z differs from its field spec; re-run it",
+                flush=True,
             )
     out = {
         "fields": [s["field"] for s in pz],
