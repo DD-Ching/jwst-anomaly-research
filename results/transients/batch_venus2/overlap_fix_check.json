@@ -1,0 +1,24 @@
+{
+ "label": "derived; overlap-test check on the RA-neighbours of the 20 batch-1 boxes (batch_pairs.overlaps vs the old strict < 24 arcsec test)",
+ "n_neighbours": 40,
+ "old_rule_overlapping": 34,
+ "new_rule_overlapping": 21,
+ "wrongly_rejected_by_old_rule": 13,
+ "examples": [
+  {
+   "box": "A370_1",
+   "ra": 39.98206918946676,
+   "dec": -1.576
+  },
+  {
+   "box": "A370_2",
+   "ra": 39.962061810533235,
+   "dec": -1.576
+  },
+  {
+   "box": "AS1063_1",
+   "ra": 342.1909518219781,
+   "dec": -44.5308
+  }
+ ]
+}

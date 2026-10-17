@@ -16,7 +16,7 @@ simulations. An ordinary transient is not wormhole evidence; zero entries is not
   broken alphabetically, as in #296) and took 19 boxes; RXJ2129 (pair rank 10) took the last one. The pairs of
   RXCJ0018, SPT0615, SMACS and Sunrise rank after it and were not reached (`boxes.json`: `pair_rank`, `pairs_considered`).
 - MACS0416 epoch 1 is now 1176 o211 (batch 1: o212): the lowest-obs_id tie-break that #296 put in the code.
-- Pipeline versions: jwst 3.0.0 except epoch 1 of Bullet, MS0451 and RXJ2129 (2.0.1).
+- Pipeline versions: jwst 3.0.0 except epoch 1 of Bullet and MS0451 (2.0.1) and RXJ2129's epoch-1 F150W (2.0.1).
 
 ## Calibration (per box, fixed rule; `boxes/batch.json`, `totals.json`)
 - **12 boxes passed** (1.92 arcmin²): A370 ×2, Bullet ×2, MACS1423 ×2, MACS0416 2, MACS0417 ×2, MACS1149 2, MS0451 1,
@@ -49,13 +49,13 @@ simulations. An ordinary transient is not wormhole evidence; zero entries is not
 | Rank | Entry | Box | z F150W / F444W (search epochs) | Final class | Note |
 |---|---|---|---|---|---|
 | 1 | MACS1423 2 h000 (215.949099, +24.086948) | passed | −29.1 / −12.5 | **real change** (fading) | point source on a z ≈ 0.53 galaxy's outskirts in 8 bands in 2023; not detected as a point source in 2026 |
-| 2 | MACS0417 2 h002 (64.396407, −11.907040) | passed | +13.7 / +3.2 | **real change** (brightening) | point source in VENUS (4 bands), not in 2022; on lensed image 1.1 of system 1 (z = 0.8718) |
+| 2 | MACS0417 2 h002 (64.396407, −11.907040) | passed | +13.7 / +3.2 | **real change** (brightening) | point source in VENUS (seen in F150W, F210M, F300M; F444W z +3.2), not in 2022; on lensed image 1.1 of system 1 (z = 0.8718) |
 | 3 | MS0451 1 h011 | passed | −0.4 / −5.4 | undetermined | LW-only source in two 5058 visits 4 d apart, not detected 4 d later; S peaks 0.19″ apart; persistence not tested |
 | 4 | MS0451 1 h015 | passed | 0.0 / −2.7 | artifact (edge) | |
 | 5 | Bullet 2 h019 (104.655304, −55.945271) | passed | +5.6 / +6.1 | **real change** (brightening) | faint point source in VENUS (4 bands, S/N 5–7), not in 2025 |
-| 6 | A370 1 h005 | passed | −0.2 / −1.7 | undetermined | compact-core dipole; opposite-sign ≥ 3σ differences in other mosaics (F200W −3.7, F444W +3.4) |
+| 6 | A370 1 h005 | passed | −0.2 / −1.7 | undetermined | compact-core dipole; opposite-sign ≥ 3σ differences in other mosaics (F200W −3.7, F210M −3.0, F356W +3.2, F444W +3.4) |
 | 7 | MACS1149 1 h012 | undeterminable | −37.8 / −11.7 | artifact (spike) | bright star's diffraction pattern |
-| 8 | PLCK G165 1 h003 | undeterminable | −1.8 / −1.3 | undetermined | compact-core dipole; F090W z −9.0 between other programmes |
+| 8 | PLCK G165 1 h003 | undeterminable | −1.8 / −1.3 | undetermined | compact-core dipole; F090W z −9.0 between two 4744 mosaics |
 | 9 | MACS1149 1 h051 | undeterminable | +10.2 / +2.7 | artifact (spike) | linear residual along a spike |
 | 10 | AS1063 1 h001 | undeterminable | −2.3 / −2.6 | no significant change | |
 
@@ -69,7 +69,7 @@ simulations. An ordinary transient is not wormhole evidence; zero entries is not
 
 ## Deviations and corrections (labelled)
 - **Selection bug fix** (before selection): `batch_pairs.overlaps()` now lets boxes touch a searched box (0.01″
-  tolerance); the old test wrongly rejected 13 of 40 RA-neighbours of batch-1 boxes. Tested; no threshold changed.
+  tolerance); the old test wrongly rejected 13 of 40 RA-neighbours of batch-1 boxes (`overlap_fix_check.json`). Tested; no threshold changed.
 - **Post hoc cutoff:** PLCK G165 2's screen and injection runs took the per-stamp fallback path (stamp pixels above
   `max_pix`, so the D-094 shared design is skipped) and ran 38 min (injection, finished) and 83 min (screen, stopped).
   At 11:51Z, before any result of that box, a 12:45Z cutoff was set; the screen was stopped then (`screen_task.json`
@@ -80,11 +80,11 @@ simulations. An ordinary transient is not wormhole evidence; zero entries is not
   (`boxes/review/post_review_checks_script.py.txt`).
 
 ## Cost (session clock; `boxes/*_task.json`, `totals.json`)
-- Box selection: 4.8 min (metadata and finite-pixel reads).
+- Times are from `run_log.json` (session clock). Box selection: 4.8 min (metadata and finite-pixel reads).
 - Search and calibration: 11:03Z → 12:45Z wall on 4 workers; 13,732 task-seconds, of which PLCK G165 2 took 7,308
   (2,294 s injection + 5,007 s stopped screen + 8 s sample and morphology); the other 19 boxes 6,424 task-seconds; peak memory 1.41 GB per task.
-- Review: about 6 min computation (sheets, 291 forced measurements, checks), 10 sheets and stamp sets looked at,
-  about 20 min in all (not stored); catalogue and literature checks by a subagent in parallel (about 19 min wall).
+- Review: about 6 min computation (approximate) (sheets, 291 forced measurements, checks), 10 sheets and stamp sets looked at,
+  about 20 min in all (not stored); catalogue and literature checks by a subagent in parallel (1,122 s wall).
 - Records and PR: about 30 min (not stored).
 
 ## Pending

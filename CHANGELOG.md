@@ -46,7 +46,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Screen:** 203 hits → 56 unflagged → 11 review entries; 10 reviewed, 1 pending. Final classes: 3 real changes
   (MACS1423 fading, MACS0417 brightening on lensed image 1.1, Bullet faint brightening), 3 undetermined, 3 artifacts,
   1 no significant change. TNS not queried (403). Vetting: `docs/candidates/batch_venus2_real_changes.md`.
-- **Fix:** `batch_pairs.overlaps()` lets touching boxes through (old test rejected 13 of 40 neighbours at random).
+- **Fix:** `batch_pairs.overlaps()` lets touching boxes through (old test rejected 13 of 40 batch-1 neighbours; `overlap_fix_check.json`).
 - **Failed approach / cost:** PLCK G165 2 hit the per-stamp fallback (stamp pixels > `max_pix`): 38 min injection,
   screen stopped at 83 min (post hoc 12:45Z cutoff); undeterminable by calibration anyway.
 

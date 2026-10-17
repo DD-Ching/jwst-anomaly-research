@@ -90,5 +90,7 @@
   "gaia_3arcsec": [],
   "literature": "no reported transient found; arXiv:2604.23668 (VENUS vs 4598 brown dwarfs, proper motions 24-49 mas/yr) gives no coordinates; a 0.05 arcsec/yr mover would stay in the 0.15 arcsec aperture, and h019 is not detected in 4598 (F444W S/N +0.4)"
  },
- "other": "arXiv:2601.10097 is a transient search in MS0451 (not read; relevant to MS0451 h011)"
+ "other": "arXiv:2601.10097 is a transient search in MS0451 (not read; relevant to MS0451 h011)",
+ "transient_match_radius_arcsec": 1.0,
+ "transient_match_note": "a reported transient was searched for within about 1 arcsec of each position (TNS not queried; literature and web search)"
 }

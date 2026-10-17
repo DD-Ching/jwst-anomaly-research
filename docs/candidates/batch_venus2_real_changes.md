@@ -11,8 +11,8 @@ exotic candidate.
 - **Instrumental tests** (all three): inside all four footprints, finite fraction ≥ 0.9999 (`results/transients/batch_venus2/boxes.json`);
   not within 1″ of the box edge; F150W and F444W S peaks ≤ 0.06″ apart (sky-fixed); a point source in ≥ 3 bands of
   the same visit (not a cosmic ray or single-band artifact); sheets show no spike through the position.
-- **Catalogues:** no Gaia DR3 source within 3″ (not a star); no reported transient found within 1″ in the sources
-  searched. **TNS could not be queried** (HTTP 403), so "no TNS record" is not established. Finding none does not
+- **Catalogues:** no Gaia DR3 source within 3″ (not a star); no reported transient found within about 1″ in the sources
+  searched (`crossmatch.json`). **TNS could not be queried** (HTTP 403), so "no TNS record" is not established. Finding none does not
   mean the public record was exhausted.
 
 ## MACSJ1423+2404_2:h000 (215.949099, +24.086948): fading
@@ -25,7 +25,8 @@ exotic candidate.
   confirmed (no spectrum, one detected epoch).
 
 ## MJ0417.5-1154_2:h002 (64.396407, −11.907040): brightening
-- 1208 (2022-10-13): no point source. VENUS (2025-10-06): a point source in F150W, F210M, F300M and F444W; F150W
+- 1208 (2022-10-13): no point source. VENUS (2025-10-06): a point source seen in F150W, F210M and F300M (F444W
+  z +3.2 only); F150W
   299.0 ± 26.3 → 867.3 ± 32.3 nJy (z +13.7, host light included), F444W 289.0 → 532.5 nJy (z +3.2).
 - Position: on image 1.1 of the multiply-imaged lensed system 1 (z = 0.8718; `[MSF2019] MACS J0417 1c.1` 0.26″,
   Mahler+2019 / Jauzac+2019 via SIMBAD/NED). Its counter-images 1.2 lie 6–7″ away.

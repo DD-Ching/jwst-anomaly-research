@@ -39,10 +39,13 @@ def test_wilson():
 def test_touching_boxes_do_not_overlap():
     import math
 
-    ra, dec = 64.04, -24.07
-    step = bp.BOX / 3600 / math.cos(math.radians(dec))
-    neighbour = (round(ra + step, 6), round(dec, 6))  # stored rounded, as in boxes.json
-    assert not bp.overlaps(ra, dec, [neighbour])
-    assert not bp.overlaps(ra - step, dec, [(round(ra, 6), round(dec, 6))])
-    assert bp.overlaps(ra + step / 2, dec, [neighbour])
-    assert bp.overlaps(ra, dec, [(ra, dec)])
+    # batch-1 A370_1 (stored rounded) and its east grid neighbour: 23.999999999999" apart, which the
+    # old strict "< BOX" test called overlapping
+    a370 = (39.9754, -1.576)
+    east = (39.98206918946676, -1.576)
+    c = math.cos(math.radians(east[1]))
+    assert abs((east[0] - a370[0]) * c * 3600) < bp.BOX  # the old rule's false overlap
+    assert not bp.overlaps(*east, [a370])
+    step = bp.BOX / 3600 / c
+    assert bp.overlaps(a370[0] + step / 2, a370[1], [a370])  # half a box: real overlap
+    assert bp.overlaps(*a370, [a370])
