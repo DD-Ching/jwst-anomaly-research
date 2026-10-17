@@ -1,0 +1,69 @@
+import json, sys, numpy as np, fsspec, warnings
+from concurrent.futures import ThreadPoolExecutor
+from astropy.io import fits
+from astropy.wcs import WCS
+from scipy import ndimage
+sys.path.insert(0, 'scripts')
+from hit_lightcurve import aperture_photometry, ANNULUS
+from arc_diff import read_box
+warnings.filterwarnings('ignore')
+RA, DEC, R = 73.548773, -3.020842, 0.15
+# reference compact sources from the 5058 o001 F277W mosaic within 10"
+b = read_box('s3://stpubdata/jwst/public/jw05058/L3/t/o001/jw05058-o001_t001_nircam_clear-f277w_i2d.fits', RA, DEC, 10)
+s = np.nan_to_num(b['sci']); sig = 1.4826 * np.median(np.abs(s - np.median(s)))
+pk = (ndimage.maximum_filter(s, 7) == s) & (s > 30 * sig)
+ys, xs = np.nonzero(pk)
+refs = []
+for y, x in zip(ys, xs):
+    if 5 <= y < s.shape[0]-5 and 5 <= x < s.shape[1]-5:
+        w = s[y-2:y+3, x-2:x+3]; yy, xx = np.mgrid[-2:3, -2:3]
+        cy, cx = y + (w*yy).sum()/w.sum(), x + (w*xx).sum()/w.sum()
+        r, d = b['wcs'].all_pix2world(cx, cy, 0)
+        refs.append((float(r), float(d), float(s[y, x] / sig)))
+refs = sorted(refs, key=lambda t: -t[2])[:12]
+print('refs', len(refs))
+files = [f for f in json.load(open(sys.argv[1])) if 'nrcalong' in f]
+def one(fn):
+    d = fn.split('_')[0]
+    fs, path = fsspec.core.url_to_fs(f's3://stpubdata/jwst/public/jw05058/{d}/{fn}', anon=True)
+    try:
+        with fs.open(path, 'rb', block_size=2**18) as fh, fits.open(fh, lazy_load_hdus=True) as h:
+            p, sh = h[0].header, h['SCI'].header
+            w = WCS(sh); x, y = (float(v) for v in w.world_to_pixel_values(RA, DEC))
+            H = 170; x0, y0 = max(int(x) - H, 0), max(int(y) - H, 0)
+            sci = h['SCI'].section[y0:y0 + 2*H + 1, x0:x0 + 2*H + 1].astype(float)
+            sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
+            k = sh['PIXAR_SR'] * 1e15
+            offs = []
+            for r, dd, _ in refs:
+                px, py = (float(v) for v in w.world_to_pixel_values(r, dd)); px -= x0; py -= y0
+                ix, iy = int(round(px)), int(round(py))
+                if not (8 <= ix < sci.shape[1]-8 and 8 <= iy < sci.shape[0]-8): continue
+                win = np.nan_to_num(sci[iy-6:iy+7, ix-6:ix+7])
+                my, mx = np.unravel_index(np.argmax(win), win.shape); my += iy-6; mx += ix-6
+                ww = np.nan_to_num(sci[my-2:my+3, mx-2:mx+3]); yy, xx = np.mgrid[-2:3, -2:3]
+                if ww.sum() <= 0: continue
+                offs.append((mx + (ww*xx).sum()/ww.sum() - px, my + (ww*yy).sum()/ww.sum() - py))
+            if len(offs) < 3: return {'file': fn, 'error': f'only {len(offs)} refs'}
+            o = np.median(np.array(offs), axis=0); spread = np.median(np.abs(np.array(offs) - o), axis=0)
+            xc, yc = x - x0 + o[0], y - y0 + o[1]
+            ap = (ANNULUS[0] / sc, ANNULUS[1] / sc)
+            clean = np.where(np.isfinite(sci), sci, np.nanmedian(sci))
+            f = aperture_photometry(clean, xc, yc, R / sc, ap) * k
+            rng = np.random.default_rng(0); rnd = []
+            for _ in range(400):
+                xx_, yy_ = rng.uniform(20, 2*H-20, 2)
+                if np.hypot(xx_-xc, yy_-yc)*sc < 0.6: continue
+                v = aperture_photometry(clean, xx_, yy_, R/sc, ap)
+                if np.isfinite(v): rnd.append(v*k)
+            e = 1.4826*np.median(np.abs(np.array(rnd)-np.median(rnd)))
+            nanfrac = float(np.isnan(sci[int(yc)-3:int(yc)+4, int(xc)-3:int(xc)+4]).mean())
+            return {'file': fn, 'filter': p['FILTER'], 'mjd': round(p['EXPMID'], 3), 'det_x': round(x+o[0], 1), 'det_y': round(y+o[1], 1),
+                    'wcs_offset_px': [round(float(o[0]), 2), round(float(o[1]), 2)], 'offset_mad_px': [round(float(spread[0]), 2), round(float(spread[1]), 2)],
+                    'n_refs': len(offs), 'flux_njy': round(float(f), 2), 'err_njy': round(float(e), 2), 'snr': round(float(f/e), 2), 'nan_frac_7x7': round(nanfrac, 2)}
+    except Exception as err:
+        return {'file': fn, 'error': str(err)[:150]}
+with ThreadPoolExecutor(8) as ex: out = list(ex.map(one, files))
+out.sort(key=lambda r: r['file'])
+json.dump({'refs': refs, 'exposures': out}, open(sys.argv[2], 'w'), indent=1)
+for r in out: print(r.get('file')[8:30], r.get('filter'), r.get('det_x'), r.get('det_y'), r.get('wcs_offset_px'), r.get('offset_mad_px'), r.get('n_refs'), r.get('flux_njy'), r.get('err_njy'), r.get('snr'), r.get('nan_frac_7x7'), r.get('error',''))
