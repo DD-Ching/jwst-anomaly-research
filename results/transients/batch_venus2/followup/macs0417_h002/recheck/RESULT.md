@@ -32,6 +32,6 @@ are sample ranges of the first 10 glafic realisations (map000–map009), not con
 - **Next useful epoch of the 7.6″ image:** **2027-09-14 to 2027-11-22** (#308: about 2027-07 to 2028-01).
 - **Position:** the converged glafic 7.6″ image lies 0.82–1.10″ from catalogued 1c.2 (#308's 0.41″ was the spurious
   candidate); lenstool positions were not re-checked here. Position uncertainty is of order 1″.
-- At the converged best-fit position (≈ the #308 `g2_7.6` aperture) the 2022 → 2025 photometry shows no brightening
+- At the converged best-fit position (0.047″ from the #308 `g2_7.6` aperture) the 2022 → 2025 photometry shows no brightening
   (F150W 94.5 → 93.4 nJy; `../counter_image_lightcurves.ecsv`), consistent with the delays.
 - The real change at h002 itself is not affected.
