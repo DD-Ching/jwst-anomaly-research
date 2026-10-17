@@ -220,6 +220,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.25 (MACS1423 clump-pair census re-run with the fixed #273 code; sheet looked at) | 0.1 (orientation, takeover, PR) | cloud routine 01WSfhqY, 00:08–00:45Z |
 | 2026-W42 | ≈ 0.4 (`arcs` on WHL0137: plan, GLAFIC model pin, run, sheet) | — | — | 0.1 (orientation, claim, PR) | cloud routine 016CxjVy, 01:08–01:45Z |
 | 2026-W42 | — | — | — | 0.3 (MOA-II manifest rows and retrieval dates; orientation, PR) | cloud routine 01RSWD6E, 02:08–02:45Z |
+| 2026-W42 | — | — | ≈ 0.2 (SMACS ERO → VENUS `arc_diff` tile-median registration re-screen; sheet looked at) | 0.1 (orientation, claim, PR) | cloud routine 017PWozQ, 03:08–03:30Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
