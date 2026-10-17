@@ -65,3 +65,20 @@ only a trial choice, not "generally better".
 - **"Keep `arc_diff`"** if (a) or (b) is worse, or if SFFT fails to run.
 - **Otherwise "evidence insufficient".**
 - No parameter changes after the first run. A failure is recorded, not tuned.
+
+## Addendum 1 (2026-10-17T04:20Z, after `/code-review` of the first results; corrections, not tuning)
+- **The review found three adapter or accounting faults.** They penalised SFFT, or both tools, and none is an SFFT
+  parameter:
+  1. **Masking:** each masked image was zero-filled only at its own NaNs. Now both are zeroed on the union NaN
+     mask, grown by `GKerHW`, as SFFT's own packets do.
+  2. **Variance and kernel:**
+     - Before, the variance was var_ref + var_sci; with the clamp of the S rescale at 1, this raised SFFT's bar.
+     - Now an effective 9 × 9 kernel is fitted to SFFT's own matched image (`kernel_fit`; its constant term absorbs
+       SFFT's background).
+     - That kernel propagates var_ref, gives the kernel sum and convolves post-matching injections.
+  3. **Accounting:** `summarize` judged "mixed" signs without per-band S. It now uses `fade_calib.stage_rows`.
+- **What was re-run:** the five SFFT runs, once. The first results stay in `runs_v1/`.
+- **Unchanged:** the `arc_diff` runs, the settings, the decision rule.
+- **Load difference:** the corrected SFFT runs ran as 4 at once plus 1 alone, where the `arc_diff` runs were 2 + 2.
+- **Deviation:** the compact-stamp region in `regions` uses epoch-1 stamps only, because the maps store no epoch-2
+  image. PLAN §3.3 said both epochs.

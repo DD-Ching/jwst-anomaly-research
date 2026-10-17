@@ -42,13 +42,18 @@ def sfft_kernel_match(e1, e2, v1, v2, blur, half, stamps=False, stamp_fit=None, 
     conv1 = blur >= 0
     ref, tgt = (e1, e2) if conv1 else (e2, e1)
     vref, vtgt = (v1, v2) if conv1 else (v2, v1)
+    # Masked images: both set to 0 on the union of NaNs, grown by the kernel half-width, as
+    # SFFT's own packets do; no source masking (PLAN §2; union mask: post-review correction).
+    from scipy import ndimage
+
+    bad = ndimage.binary_dilation(~(np.isfinite(ref) & np.isfinite(tgt)), iterations=half)
     with tempfile.TemporaryDirectory() as d:
         paths = {}
         for name, arr in (("ref", ref), ("sci", tgt)):
             paths[name] = os.path.join(d, name + ".fits")
             paths["m" + name] = os.path.join(d, "m" + name + ".fits")
             fits.writeto(paths[name], arr.astype(float), overwrite=True)
-            fits.writeto(paths["m" + name], np.nan_to_num(arr.astype(float)), overwrite=True)
+            fits.writeto(paths["m" + name], np.where(bad, 0.0, arr.astype(float)), overwrite=True)
         diff_path = os.path.join(d, "diff.fits")
         Customized_Packet.CP(
             FITS_REF=paths["ref"],
@@ -66,10 +71,15 @@ def sfft_kernel_match(e1, e2, v1, v2, blur, half, stamps=False, stamp_fit=None, 
         diff = fits.getdata(diff_path).astype(float)
     m = tgt - diff  # SFFT DIFF = SCI - K * REF, so K * REF = SCI - DIFF
     m[~np.isfinite(ref)] = np.nan
-    var = np.where(np.isfinite(vref), vref, np.nan) + vtgt
-    ksum = ad.flux_scale(ref, m)
-    kern = np.zeros((2 * half + 1, 2 * half + 1))
-    kern[half, half] = ksum  # summary only: SFFT's kernel varies over the box
+    # Effective whole-box kernel of SFFT's own matching (m = K * ref + B is noise-free in ref,
+    # so a 9x9 least-squares fit recovers K's mean shape; its constant term absorbs B). It
+    # propagates the variance as arc_diff does, gives the kernel sum without the background and
+    # convolves post-matching injections (post-review correction).
+    kern, _ = ad.kernel_fit(ref, m, np.where(np.isfinite(vref), vref, np.nan) + vtgt, half)
+    vfill = np.where(np.isfinite(vref), vref, 0.0)
+    var = ndimage.convolve(vfill, kern**2, mode="constant") + vtgt
+    var[~np.isfinite(vref)] = np.nan
+    ksum = float(kern.sum())
     if timing is not None:
         timing["sfft_s"] = round(time.perf_counter() - t0, 3)
     if conv1:
@@ -129,30 +139,21 @@ def regions(argv) -> int:
 
 
 def _stage_rows(run: Path) -> dict:
+    """fade_calib's stage rows (per-band S included, so 'mixed' signs are judged as in eval)."""
     import csv
 
-    v = {t["id"]: t["verdict"] for t in json.loads((run / "morph_all.json").read_text())["targets"]}
-    out = {}
+    import fade_calib as fc
+
+    rows = fc.stage_rows(run, run / "morph_all.json")
     with open(run / "injected_pre.csv", newline="") as f:
-        for r in csv.DictReader(f):
-            hit = r["hit"] or None
-            flag = r["near_bright_core"] == "True"
-            review = bool(hit) and not flag and v.get(hit) == "pass"
-            out[(run.name.split("_", 1)[1], r["name"])] = {
-                "cls": r["cls"],
-                "mag": r["mag"],
-                "hit": bool(hit),
-                "review": review,
-                "sign": r["hit_sign"],
-            }
-    return out
+        names = [r["name"] for r in csv.DictReader(f)]
+    return {(run.name.split("_", 1)[1], n): r for n, r in zip(names, rows, strict=True)}
 
 
 def summarize(argv) -> int:
     """PLAN §4 decision inputs from the stored runs (``runs/<tool>_<name>/``)."""
     import argparse
 
-    import fade_calib as fc
     from astropy.table import Table
 
     p = argparse.ArgumentParser()
@@ -171,14 +172,10 @@ def summarize(argv) -> int:
         tot[t] = {
             "unchanged_false_hits": sum(r["hit"] for r in rows.values() if r["cls"] == "unchanged"),
             "unchanged_n": sum(r["cls"] == "unchanged" for r in rows.values()),
-            "fade_review_sign": sum(
-                r["review"] and fc.sign_ok(r["cls"], r["sign"], {}) for r in fades
-            ),
+            "fade_review_sign": sum(r["review_sign"] for r in fades),
             "fade_n": len(fades),
             "appear_review_sign": sum(
-                r["review"] and fc.sign_ok(r["cls"], r["sign"], {})
-                for r in rows.values()
-                if r["cls"] == "appear"
+                r["review_sign"] for r in rows.values() if r["cls"] == "appear"
             ),
             "appear_n": sum(r["cls"] == "appear" for r in rows.values()),
         }
@@ -200,15 +197,15 @@ def summarize(argv) -> int:
     diffs = []
     for k, ra_ in per["arc"].items():
         rs = per["sfft"][k]
-        if ra_["review"] != rs["review"] or ra_["hit"] != rs["hit"]:
+        if ra_["review_sign"] != rs["review_sign"] or ra_["hit"] != rs["hit"]:
             diffs.append(
                 {
                     "run": k[0],
                     "name": k[1],
                     "cls": ra_["cls"],
                     "mag": ra_["mag"],
-                    "arc": {"hit": ra_["hit"], "review": ra_["review"]},
-                    "sfft": {"hit": rs["hit"], "review": rs["review"]},
+                    "arc": {"hit": ra_["hit"], "review_sign": ra_["review_sign"]},
+                    "sfft": {"hit": rs["hit"], "review_sign": rs["review_sign"]},
                 }
             )
     ar, sf = tot["arc"], tot["sfft"]

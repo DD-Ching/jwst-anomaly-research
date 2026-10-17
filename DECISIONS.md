@@ -5000,8 +5000,8 @@ confining radiation at a throat is found.
 - **Decision:** the batch search keeps `arc_diff` with the D-094 stamp kernels.
 - **Alternatives rejected:**
   - SFFT's JWST B-spline method (Hu & Wang 2024): GPU-only in sfft 1.7.3; a port is out of scope.
-  - Ordinary SFFT without masking: worse on B1 + B2 (fades 30/120 vs 85/120; unchanged false hits 11/60 vs 1/60),
-    though ×1.36 faster with ×1.5–2.6 the memory.
+  - Ordinary SFFT without masking (corrected adapter): somewhat worse on B1 + B2 (fades 83/120 vs 92/120; unchanged
+    false hits 7/60 vs 1/60), though ×1.31 faster with about 1.5–2.6 × the memory.
   - SFFT's automatic masking: needs the SExtractor binary.
 - **Evidence:** `results/transients/sfft_trial/RESULT.md`. Small development sample; not "generally worse".
 - **Revisit if:**

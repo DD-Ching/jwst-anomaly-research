@@ -6,12 +6,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **The JWST B-spline SFFT** (Hu & Wang 2024) is GPU-only in sfft 1.7.3, so it was not tested. SFFT's automatic
   masking needs SExtractor, so it was not tested either.
 - **Ordinary SFFT** (CPU, unmasked) replaced only `kernel_match` on B1 + B2 with the same pre-matching injections.
-  - fades on the review list: 30/120 vs 85/120;
-  - brightenings: 27/60 vs 39/60;
-  - unchanged false hits: 11/60 vs 1/60;
-  - ×1.36 faster, with 2.2 GB vs ≤ 1.5 GB peak memory.
-  - The B1 F150W fit is off: photometric ratio 0.895, S scatter ×6.6. B1 has a saturated star.
+  - After the post-review adapter corrections (union NaN mask, propagated variance, sign accounting), against
+    `arc_diff`:
+    - fades on the review list: 83/120 vs 92/120;
+    - brightenings: 42/60 vs 45/60;
+    - unchanged false hits: 7/60 vs 1/60.
+  - ×1.31 faster, with 2.2 GB vs ≤ 1.5 GB peak memory.
   - **Verdict under the fixed rule:** keep `arc_diff`.
+- **Failed first adapter (kept in `runs_v1/`):** its non-union NaN mask and unpropagated variance cost SFFT about a
+  third of the fades.
 - **Batch denominator:**
   - 56 VENUS targets, 18 with another public NIRCam F150W epoch, about 31 pairs (an upper bound: F444W and overlap
     not checked);

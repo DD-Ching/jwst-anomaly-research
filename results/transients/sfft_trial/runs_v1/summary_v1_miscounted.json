@@ -1,0 +1,1028 @@
+{
+ "label": "derived; PLAN \u00a74 rule (ordinary SFFT, not the B-spline JWST method)",
+ "totals": {
+  "arc": {
+   "unchanged_false_hits": 1,
+   "unchanged_n": 60,
+   "fade_review_sign": 85,
+   "fade_n": 120,
+   "appear_review_sign": 39,
+   "appear_n": 60,
+   "screen_review_entries": 1,
+   "wall_s_total": 579.5
+  },
+  "sfft": {
+   "unchanged_false_hits": 11,
+   "unchanged_n": 60,
+   "fade_review_sign": 30,
+   "fade_n": 120,
+   "appear_review_sign": 27,
+   "appear_n": 60,
+   "screen_review_entries": 2,
+   "wall_s_total": 427.1
+  }
+ },
+ "criteria": {
+  "a_false_hits": false,
+  "b_fades": false,
+  "c_screen_review": false,
+  "d_wall": true
+ },
+ "verdict": "keep arc_diff",
+ "per_source_differences": [
+  {
+   "run": "b1_s30",
+   "name": "pre000",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre001",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre005",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre012",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre013",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre014",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre017",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre019",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre021",
+   "cls": "appear",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre022",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre023",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre024",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre025",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre029",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre030",
+   "cls": "partial",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre034",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre035",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre037",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre043",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre048",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre051",
+   "cls": "vanish",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre053",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre058",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre061",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre062",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre065",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre066",
+   "cls": "partial",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre070",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre071",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre074",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre077",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre078",
+   "cls": "partial",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s30",
+   "name": "pre079",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre001",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre002",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre004",
+   "cls": "unchanged",
+   "mag": "27.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": true
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre005",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre006",
+   "cls": "partial",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre010",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre011",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre013",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre019",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre020",
+   "cls": "unchanged",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": true
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre025",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre029",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre030",
+   "cls": "partial",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre031",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre035",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre037",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre043",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre046",
+   "cls": "partial",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre048",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre053",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre059",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre061",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre062",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": true
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre063",
+   "cls": "vanish",
+   "mag": "26.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre065",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre071",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre077",
+   "cls": "appear",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b1_s31",
+   "name": "pre079",
+   "cls": "vanish",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre014",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre024",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre038",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre048",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre049",
+   "cls": "appear",
+   "mag": "27.00",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre050",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": true
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre059",
+   "cls": "vanish",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": true
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre060",
+   "cls": "unchanged",
+   "mag": "26.00",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": true
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre062",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": true,
+    "review": true
+   },
+   "sfft": {
+    "hit": false,
+    "review": false
+   }
+  },
+  {
+   "run": "b2_s40",
+   "name": "pre074",
+   "cls": "partial",
+   "mag": "27.50",
+   "arc": {
+    "hit": false,
+    "review": false
+   },
+   "sfft": {
+    "hit": true,
+    "review": true
+   }
+  }
+ ]
+}
