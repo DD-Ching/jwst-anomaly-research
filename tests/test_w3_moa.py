@@ -716,3 +716,18 @@ def test_merge_inject_joins_only_complete_matching_chunks(tmp_path, monkeypatch)
     assert list(tab["inj"]) == [0, 1, 2, 3, 4]
     assert tab.meta["chunk"] == "" and tab.meta["wall_time_s"] == 2.0
     assert wm.no_error(tab).all()  # empty strings read back masked are filled, not lost
+
+
+def test_field_retrieved_utc_from_chunk_stamps(tmp_path, monkeypatch):
+    monkeypatch.setattr(wm, "results_dir", lambda: tmp_path)
+    monkeypatch.setitem(wm.moa.TAR_BYTES, 21, 2 * wm.CHUNK_BYTES - 1)
+    tab = _scan_table()
+    rows = [dict(zip(tab.colnames, r, strict=True)) for r in tab]
+    assert wm.field_retrieved_utc("gb21") == wm.RETRIEVED_UNRECORDED  # no chunks yet
+    wm._write_prescreen_chunk("gb21", 0, 2, rows[:150], {"retrieved_utc": "2026-10-17T01:00:00Z"})
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:], {"wall_time_s": 1.0})  # older, unstamped
+    assert wm.field_retrieved_utc("gb21") == wm.RETRIEVED_UNRECORDED
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:], {"retrieved_utc": "2026-10-17T23:59:00Z"})
+    assert wm.field_retrieved_utc("gb21") == "2026-10-17"
+    wm._write_prescreen_chunk("gb21", 1, 2, rows[150:], {"retrieved_utc": "2026-10-18T00:01:00Z"})
+    assert wm.field_retrieved_utc("gb21") == "2026-10-17/2026-10-18"

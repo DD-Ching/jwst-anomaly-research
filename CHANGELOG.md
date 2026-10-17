@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: MOA-II manifest lists every streamed field tar; retrieval dates no longer hard-coded
+- **Why:** TASKS follow-up from the gb10 review: `data/manifests/moa_ii.ecsv` had only the metadata tar and gb22,
+  and `write_manifest` stamped every row `retrieved_utc` 2026-10-08 (the day of the HTTP HEAD reads, not of the
+  streaming).
+- **New:** `w3_moa.py` pre-screen chunks record `retrieved_utc` (when their last byte range arrived);
+  `field_retrieved_utc` turns them into a day or `first/last` range; the manifest gains `head_utc` (2026-10-08, the
+  size and Last-Modified read). Test `test_field_retrieved_utc_from_chunk_stamps`.
+- **Result:** manifest regenerated from the tracked chunks: 22 streamed tars with `range_sha256` (gb1–gb22; gb22
+  also keeps its whole-file sha256 row). Their `retrieved_utc` is "not recorded": the older chunks carry no stamp,
+  and git dates of the chunk files (all 2026-10-15) are not retrieval dates, so none is inferred.
+- **Handoff:** no science change. A re-stream of any field fills its dates.
+
 ## 2026-10-17: `arc_diff` fading calibration (pre-matching injections), registration fix, El Gordo B1–B3 search (#288)
 - **Scope (owner, 2026-10-16):**
   - calibrate fades, then a measured speed-up, then a small batch only if the calibration passes;

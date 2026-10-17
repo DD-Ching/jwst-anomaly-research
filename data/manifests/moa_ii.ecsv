@@ -3,14 +3,38 @@
 # datatype:
 # - {name: url, datatype: string}
 # - {name: sha256, datatype: string}
+# - {name: range_sha256, datatype: string}
 # - {name: size_bytes, datatype: int64}
+# - {name: head_utc, datatype: string}
 # - {name: retrieved_utc, datatype: string}
 # - {name: last_modified, datatype: string}
 # - {name: release, datatype: string}
 # meta: !!omap
 # - {provenance: observed}
-# - {source: jwst_anomaly.moa.FILES (MOA-II 9-year release; D-062)}
+# - {source: 'jwst_anomaly.moa.FILES and streamed field tars (MOA-II 9-year; D-062, D-068)'}
 # schema: astropy-2.0
-url sha256 size_bytes retrieved_utc last_modified release
-https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/metadata.ipac.tar.gz b339ec176933f4bfcad09d6e17f08166c7a18ffea2ddc567b6cca83fa25fe55c 97332954 2026-10-08 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
-https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb22.tar 1cb0173e676915dcf602647e5a2dc315f0ab51c8f2a612ffcdcab4e44edad2d0 3510138880 2026-10-08 2023-10-10 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+url sha256 range_sha256 size_bytes head_utc retrieved_utc last_modified release
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/metadata.ipac.tar.gz b339ec176933f4bfcad09d6e17f08166c7a18ffea2ddc567b6cca83fa25fe55c "" 97332954 2026-10-08 2026-10-08 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb22.tar 1cb0173e676915dcf602647e5a2dc315f0ab51c8f2a612ffcdcab4e44edad2d0 "" 3510138880 2026-10-08 2026-10-08 2023-10-10 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb1.tar "" a43132426651cc749e5a9eb446df6084f97c70144b5ea408d68baed9f80d515f 70145955840 2026-10-08 "not recorded" 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb2.tar "" 5b1a46bffeecd702446b71200e336a767103bba47f96ee513fb53641b79bf90b 60503715840 2026-10-08 "not recorded" 2023-10-11 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb3.tar "" 0e703c60df2e03486023f850f69241be7e62f440c0362509765f0d4a6a70ea45 214532423680 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb4.tar "" 3d225fd03d50cc8706dbeff295b2e78af87950726a45b4d99c0830314987252f 280555120640 2026-10-08 "not recorded" 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb5.tar "" 938c58042e36cc9fdba5beca27ea329e68c2a60231d1c5f0b4dc9b195c325d30 508495472640 2026-10-08 "not recorded" 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb6.tar "" 7ee4c4439b5ed22968c9ff01aa3c69e3d14d220e3c60a8fc87a9d2cac68ccd9f 7730944000 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb7.tar "" ec00c48d16d3fc1aa629accb126d799e70f0d511c7c7326df94a0602924bab6f 30745886720 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb8.tar "" d85892b183df2f5a5a8e1305aa16b026959acbe18591b56fc0257854d0095314 77880094720 2026-10-08 "not recorded" 2023-10-11 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb9.tar "" b87e7c242ca33557006f846a9a8fe73132e584064cdcaab5c93de1f3c430b79b 430753607680 2026-10-08 "not recorded" 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb10.tar "" d12852bc0c0498b72af4dbb4b668b730a686cb3c4357769ecefcc7fdd6363e7b 220873328640 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb11.tar "" d8bf8c14266ccef9d0aa7f268b9195721e02a04f9042a080cf2b50361cd5cbc4 22442977280 2026-10-08 "not recorded" 2023-10-11 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb12.tar "" a4e6ae5679be9528fb0cce5d19cb0e420240432b1387372f4e09bdb391d1c61e 27467520000 2026-10-08 "not recorded" 2023-10-11 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb13.tar "" fbf305cc0b8a61acd7e4c69495e668c7ce140a16e74d9dc6aff1be3eb54446fc 53574082560 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb14.tar "" 6f2409973b0a0f3130fa9c1fdbfd77b8b6ee6050816182d22d8ec7ac14c51c68 212026122240 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb15.tar "" 4301be590c340912158a25c50ac5c725cd5d4f03cbd2e1d8103ac32ca5be1a32 32830392320 2026-10-08 "not recorded" 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb16.tar "" 50e7a531399bd130c6d908c8e6feb433efb9a5211dc26b7084a56fa2e2c7894c 22349178880 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb17.tar "" 8215251e597c2af47f3e6652b0003bebe060b3b30d4646b17a6ce937bf251f04 52299028480 2026-10-08 "not recorded" 2023-10-13 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb18.tar "" ce1cbd21db2979691c7d2a4898a14f1ce1ab226d10f0a39593e4d12162d88c58 41926410240 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb19.tar "" c55add3e6c1deffa81e4834521e3d3254d56c8bb2fd817c4de9297690c63fd78 16264140800 2026-10-08 "not recorded" 2023-10-12 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb20.tar "" 135329e5ae330e7d4c367372c62e74a7684e72ca2db478c2376eda255a14fb25 15218606080 2026-10-08 "not recorded" 2023-10-10 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb21.tar "" b394d3b64c4e1eea6d95866d37e0b8b65208224dca60bb6ef2ef4fa84f24bdcc 12313610240 2026-10-08 "not recorded" 2023-10-10 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
+https://exoplanetarchive.ipac.caltech.edu/data/Contributed/MOA/bulk/gb22.tar "" 469ae03973c3520a4b54567a71435612490e1de7b168f34fb77ed87b5e948eb2 3510138880 2026-10-08 "not recorded" 2023-10-10 "MOA-II 9-year bulge release (2006-2014), NASA Exoplanet Archive"
