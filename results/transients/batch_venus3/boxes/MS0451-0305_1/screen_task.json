@@ -1,0 +1,14 @@
+{
+ "box_id": "MS0451-0305_1",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 70.8,
+  "peak_rss_mb": 859.5
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.4,
+  "peak_rss_mb": 133.5
+ }
+}
