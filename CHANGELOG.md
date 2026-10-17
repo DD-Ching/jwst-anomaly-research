@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 lenses injected at the `radial` centres through the stack: limit ≥ 2 × 10¹² M☉ (post hoc rule)
+- `scripts/w1_stack_inject.py` (`ShearInjector.lensed_sample` split out of `trial`); plan frozen first
+  (`results/w1_stack_radial/inject/PLAN.md`). Gates Z (θ_E = 0 reproduces S) and R (stack responds) passed.
+- **Failed approach:** the frozen rule adds lenses to the observed shapes only, so any positive shift "excludes"
+  (2 × 10¹⁰ M☉ moves the stack 0.51 → 0.53 and is "excluded"); no limit quoted from it.
+- **Post hoc noise-aware rule** (ΔS added to rotation-null draws; `RESULT.md`): excluded ≥ 2 × 10¹² M☉ at all 19
+  centres, ≥ 8 × 10¹² at half; ≤ 2 × 10¹¹ untestable (share above observed ≤ 0.28). The p 0.025 excess stays an
+  exploratory note. **Handoff:** W1 stack line done unless a mass point between 2 × 10¹¹ and 2 × 10¹² is wanted.
+
 ## 2026-10-17: W1 stack at `radial` centres, second model for MACS0417: S unchanged where both models cover
 - `scripts/w1_stack_radial.py --shear-model` (centres and arc exclusion fixed, only the cluster-shear removal swaps).
 - RELICS Lenstool vs CANUCS maps on the 7 MACS0417 centres valid under both: mean S −0.12 vs −0.18, largest change

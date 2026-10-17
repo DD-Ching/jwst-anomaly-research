@@ -230,7 +230,10 @@ class ShearInjector:
     def p_random(self, s: float) -> float:
         return float(np.mean(self.null >= s)) if np.isfinite(s) else 1.0
 
-    def trial(self, x_l, y_l, theta_row, pixel_scale) -> dict:
+    def lensed_sample(self, x_l, y_l, theta_row, pixel_scale):
+        """Model-frame positions and corrected ε of the used rows near one lens painted at
+        (``x_l``, ``y_l``): kept real rows within ``recover_tol + aperture + 1``″ plus the painted
+        images that pass the screen's cuts. Returns ``x, y, e, info, n_image_used``."""
         keep, img, info = ir.paint_lens(
             self.shapes,
             self.xs,
@@ -278,6 +281,11 @@ class ShearInjector:
             x = np.concatenate([x, np.atleast_1d(xi)[ok]])
             y = np.concatenate([y, np.atleast_1d(yi)[ok]])
             e = np.concatenate([e, e_img[ok]])
+        return x, y, e, info, n_img_used
+
+    def trial(self, x_l, y_l, theta_row, pixel_scale) -> dict:
+        x, y, e, info, n_img_used = self.lensed_sample(x_l, y_l, theta_row, pixel_scale)
+        a = self.args
         gx, gy = self.base["gx"], self.base["gy"]
         near = np.hypot(gx - x_l, gy - y_l) <= a.recover_tol
         cx, cy = gx[near], gy[near]
