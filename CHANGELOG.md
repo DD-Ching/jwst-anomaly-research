@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 shear stacked at the `radial` centres: excess mostly circular; residual p 0.027 (exploratory note)
+- **Why:** the `radial` centres (arc-orientation signature) had never been checked against the W1 shear statistic of
+  other sources (TASKS JWST focus: "stack S around `radial` ... centres").
+- **New:** `scripts/w1_stack_radial.py` (S, S_× at the centres via `exotic_screens.ApertureMass`, rotation null,
+  `--exclude-radial-arcs`, `--exclude-near-arcsec`); plan frozen first (`results/w1_stack_radial/PLAN.md`).
+- **Result (`results/w1_stack_radial/RESULT.md`):** 19 valid centres (S1063 5, MACS0417 14); planned stack mean S 0.72,
+  p 0.0035. Post hoc vet: without the 85 arcs that define the centres, 0.51, p 0.027 (exploratory note under the frozen
+  rule); without their 2″ neighbours too, 0.48, p 0.071 (diagnostic only). Not a candidate.
+- **Failed approach:** the planned sign check (cluster shear kept, off-centre apertures) barely responds (−0.007 to
+  −0.15); use a synthetic or injected case. **Handoff:** next is the same stack with a second lens model per field
+  (model-error explanation), then injections at the centres for a limit.
+
 ## 2026-10-17: Radial (W1) centre-level axial rule for streaks: gate K failed, not adopted
 - **Why:** handoff of `results/radial_streak`: an arc-level mask veto thins the null and misses the faint MACS0647
   streak; a centre-level rule applied alike to data and null avoids the thinning.
