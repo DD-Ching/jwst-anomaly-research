@@ -586,7 +586,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 ### MACS0717 field run (accessed 2026-10-08; D-041)
 
 - ASTRODEEP Frontier Fields catalogues (Di Criscienzo et al. 2017, A&A 607, A30), VizieR `J/A+A/607/A30`, tables
-  `m0717cla` (positions) and `m0717clz` (zbest, SIQR, relFlag), accessed 2026-10-17: 4,082 rows each
+  `m0717cla` (positions) and `m0717clz` (zbest, SIQR, relFlag, f_zbest), accessed 2026-10-17: 4,082 rows each; kept rows: relFlag = 1 or
+  f_zbest = 1 (2,928)
   (`scripts/astrodeep_zout.py`, W1 shear photo-z; `results/w1_shear_macs0717/`).
 - HFF-DeepSpace v3.9 (Shipley et al. 2018) download page http://cosmos.phy.tufts.edu/~danilo/HFF/Download.html:
   the catalogue tarballs returned HTTP 401 on 2026-10-17 (not used).

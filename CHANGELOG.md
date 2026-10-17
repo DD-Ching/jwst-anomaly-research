@@ -7,7 +7,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   HTTP 401; ASTRODEEP-FF (Di Criscienzo+17, VizieR J/A+A/607/A30) is public: `scripts/astrodeep_zout.py` → zout.
 - Plan frozen first (`results/w1_shear_macs0717/PLAN.md`); same code, seeds and streak veto as D-097.
 - **Result (`results/w1_shear_macs0717/RESULT.md`):** S_max 3.14, p_rot 0.28, below max |S_×| 3.28: D-053 rule not
-  passed. R = 0.23; recoveries 0 / 0 / 0 / 7 / 9 of 200. 84 % of the shape rows lack photo-z, so MACS0717 stays out
+  passed. R = 0.23; recoveries 0 / 0 / 0 / 7 / 9 of 200. 83 % of the shape rows lack photo-z, so MACS0717 stays out
   of the headline (twelve fields, D-097); counted anyway, limits move ≤ 1.5 %. S_max sheet looked at.
 - **Failed approach:** HFF-DeepSpace v3.9 tarballs (cosmos.phy.tufts.edu) need credentials (401, 2026-10-17).
 - **Handoff:** W1 field additions are at diminishing returns (T4); the low-R fields (MACS0717, MACS0647) would need

@@ -161,7 +161,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 ## JWST focus (D-047 screens; continues under the direction above)
 1. **Injection-recovery, then limits** (Phase 2; `exotic_sim.inject_images` / `inject_light_curve`):
    - W1: the shear screen (D-053, `exotic_screens.py shear`, `inject_shear.py`) is built; thirteen fields null (Abell S1063,
-     SMACS 0723 and El Gordo added 2026-10-17; MACS0417, WHL0137, RXJ2129 and MACS0647 too, MACS1423 explained hit, back in under the streak veto; MACS0717 added 2026-10-17 with ASTRODEEP-FF photo-z, null and nearly blind, kept out of the headline: 84 % of its rows lack photo-z, `results/w1_shear_macs0717/RESULT.md`); twelve-field limits with the streak veto 4.4 × 10³ / 7.2 × 10² / 3.5 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² /
+     SMACS 0723 and El Gordo added 2026-10-17; MACS0417, WHL0137, RXJ2129 and MACS0647 too, MACS1423 explained hit, back in under the streak veto; MACS0717 added 2026-10-17 with ASTRODEEP-FF photo-z, null and nearly blind, kept out of the headline: 83 % of its rows lack photo-z, `results/w1_shear_macs0717/RESULT.md`); twelve-field limits with the streak veto 4.4 × 10³ / 7.2 × 10² / 3.5 × 10² deg⁻² at 2 × 10¹² / 8 × 10¹² /
      2 × 10¹³ M☉, still blind at ≤ 2 × 10¹¹ M☉. Next:
      lower the B-mode floor (Abell 2744 max S_× 4.21 at (88, −42), full coverage: ~~PSF anisotropy from stars~~ done
      2026-10-17, not adopted (`results/w1_psf/RESULT.md`: 3 stars, too few for a map; a constant χ_PSF lowers the

@@ -8,8 +8,8 @@ every threshold an ASSUMPTION (D-053 defaults and the streak-veto settings, unch
 - F200W VENUS catalogue `jw06882-o029_t063` (sha256 `099c3c38…`, data/manifests/macs0717.ecsv), 4,953 shape rows.
 - ASTRODEEP-FF (VizieR J/A+A/607/A30 `m0717cla` + `m0717clz`, accessed 2026-10-17): 4,082 rows; kept: `relFlag` = 1 or a
   spectroscopic z (`f_zbest` = 1), 2,928 rows (2,866 + 62; `tests/test_astrodeep_zout.py` live test) (`scripts/astrodeep_zout.py`;
-  file sha256 `b072ff2e…`, pinned in `w1_stage_inputs.PHOTOZ`; written twice, identical). 808 shape rows get
-  a photo-z within 0.3″ (not stored); JWST − ASTRODEEP median offset (−0.03″, +0.06″) over 1,498 pairs within 1″ (not stored).
+  file sha256 `b072ff2e…`, pinned in `w1_stage_inputs.PHOTOZ`; written twice, identical). 855 shape rows (of 4,953) get
+  a photo-z within 0.3″ on the final zout (808 before review 2; not stored); JWST − ASTRODEEP median offset (−0.03″, +0.06″) over 1,498 pairs within 1″ (not stored).
 - Gaia DR3 G < 17 within 4′ of the VENUS pointing: 34 stars. Streak mask (`masks/macs0717_streak_mask.json`, 2 trails,
   19,621 binned pixels; the FITS mask is gitignored, re-make it with `w1_streak_mask.py --fields macs0717`).
 
@@ -29,7 +29,7 @@ every threshold an ASSUMPTION (D-053 defaults and the streak-veto settings, unch
 Screened area 22,207 arcsec² (6.17 arcmin²). MACS0717 is nearly blind (efficiency ≤ 0.045).
 
 ## Limits: the headline stays at twelve fields
-84 % of the MACS0717 shape rows have no photo-z (808 of 4,953 matched, not stored). `inject_radial.combine` puts a
+83 % of the MACS0717 shape rows have no photo-z (855 of 4,953 matched, not stored). `inject_radial.combine` puts a
 field in the headline (photo-z) set when it has any photo-z file, but rows without photo-z are lensable at z_s = 2,
 which biases a field's efficiency high (D-049). So MACS0717 is **not** added to the headline. Counted anyway
 (`combined_13fields_veto.json`, 76.6 arcmin², optimistic for MACS0717): 4.4 × 10³ / 7.1 × 10² / 3.4 × 10² deg⁻² at
@@ -44,7 +44,10 @@ Fields of the thirteen-field file: the twelve of D-097 plus macs0717 (`--combine
 - Review 2: spectroscopic rows with `relFlag` = 0 (62) were dropped; they are now kept. Re-run, same seed: p_rot
   0.23 → 0.28, R 0.228 → 0.229, 8 × 10¹² M☉ recoveries 6 → 7; the numbers above are from this run. Review 2 also
   moved MACS0717 out of the headline (above).
-- **Deviation:** the plan's critical-curve check of the peak was not run (the screen did not pass; no peak to vet).
+- **Deviations from PLAN.md:** (1) spectroscopic rows with `relFlag` = 0 are kept (the plan set every `relFlag` ≠ 1
+  row to NaN); (2) the planned thirteen-field combination is not the headline (post hoc criterion, no threshold;
+  the twelve headline fields were not checked against it); (3) the critical-curve check of the peak was not run
+  (the screen did not pass). No final zout row has zbest < 0.01, so the z160 floor never inverts a range.
 
 ## Limits of this result
 - Photo-z cover only the HST WFC3 footprint; the other rows enter as in the unchanged code. The low R (0.23) is
