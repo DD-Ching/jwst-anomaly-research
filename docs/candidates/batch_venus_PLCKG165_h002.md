@@ -42,7 +42,8 @@
 - SN H0pe images: 24.9″, 31.9″, 37.9″ (Frye et al. 2024 Table 2; now stored in
   `results/transients/batch_venus/followup/h002_identity_followup.json`); further lens-model images not checked.
 - NS_0481: separate galaxy at 3.77″; its z = 1.3236 is the galaxy's own NIRSpec redshift; not shown to be the host.
-- HST F160W 2016: 4.8 ± 9.5 nJy (3σ < 33 nJy), so the source appeared after 2016 (`followup/h002_hst2016.json`).
+- HST F160W 2016: 4.8 ± 9.5 nJy (3σ 28.5 nJy), so the source most likely appeared after 2016
+  (indicative: different instrument, band and aperture; `followup/h002_hst2016.json`).
 - The 23.8-day decline is significant only in F090W (z −4.0; F150W −1.7, F200W −1.3).
 - Missing for a type: transient spectrum, host and redshift, classification report, better light-curve sampling.
 - Identity unknown ≠ first discovery; not an exotic candidate.

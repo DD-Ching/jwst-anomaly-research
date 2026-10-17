@@ -71,7 +71,8 @@
   "jw01208-o004_t002_nircam_clear-f356w"
  ],
  "rule": "ctrl_tail_frac >= 0.05 => explained by programme/epoch-to-epoch scatter of matched arc pixels (ASSUMPTION, #286 h043 precedent); else undetermined",
- "decision": "explained by scatter of matched arc pixels",
- "note_raw_z": "raw z differs from #296 (-17.67 here vs -9.09) because the random-aperture error is measured in a larger box when controls are grouped; fluxes are identical (359.8, 308.0 nJy); the calibrated z_cal and tail fraction are the quantities used",
- "not_tested": "no PSF-matched difference of these mosaics; the check is statistical (matched arc pixels), not a model of the specific PSF/registration difference"
+ "note_raw_z": "raw z differs from #296 (-17.67 here vs -9.09) because the random-aperture error is measured in a larger box when controls are grouped; fluxes agree within 0.4 nJy (o211 359.8 in both; o004 308.4 in #296, 308.0 here); the calibrated z_cal and tail fraction are the quantities used",
+ "not_tested": "no PSF-matched difference of these mosaics; the check is statistical (matched arc pixels), not a model of the specific PSF/registration difference",
+ "rule_outcome": "explained by scatter of matched arc pixels",
+ "status": "undetermined (no evidence of a real change): the rule outcome shows the change is consistent with between-mosaic scatter of matched arc pixels, but no specific instrumental or processing mechanism was isolated; the owner's instruction keeps 'undetermined' unless a concrete check supports such an effect, so whether the rule outcome closes h003 is the owner's decision"
 }

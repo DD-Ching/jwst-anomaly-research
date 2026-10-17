@@ -5,11 +5,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-17: h002 identity follow-up and h003 limited re-check (#300)
 - **h002:** real fade; an ordinary transient is reasonable; identity and type not confirmed. No reported transient
   matched in queried sources; TNS not queried (403). SN H0pe images 24.9–37.9″ away; NS_0481 (3.77″) is a separate
-  galaxy. HST 2016 F160W 3σ < 33 nJy (appeared after 2016). Only F090W declines significantly over 23.8 d
+  galaxy. HST 2016 F160W 3σ 28.5 nJy (most likely appeared after 2016; indicative, different instrument and aperture). Only F090W declines significantly over 23.8 d
   (`results/transients/batch_venus/followup/h002_identity_followup.json`).
 - **h003:** large differences are same band, position and aperture, also within programme 1176; 31 matched arc-pixel
-  controls give tail fraction 0.39 on the decisive F356W pair ⇒ explained by between-mosaic arc photometry scatter
-  (pre-fixed rule; mechanism not isolated; `followup/h003_recheck.json`).
+  controls give tail fraction 0.39 on the decisive F356W pair: consistent with matched arc-pixel scatter (pre-fixed
+  rule met); no mechanism isolated, so it stays undetermined; closing it is the owner's call (`followup/h003_recheck.json`).
 - **Wording:** dated revisions in `RESULT.md` and the h002 record; review queue empty ≠ all objects explained.
 
 ## 2026-10-17: PLCK G165 h002 vetting record corrected: the z = 1.32 galaxy is 3.77″ away, not 0.06″

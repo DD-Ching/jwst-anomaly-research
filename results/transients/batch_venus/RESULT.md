@@ -57,7 +57,7 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
 ## Screen and review (`boxes/review_queue.json`, `boxes/review/`)
 - **Flags:** 113 hits in the 20 screens; 13 not near a bright core; **5 review-list entries.**
 - **After the post-review checks:** 1 ordinary transient (h002), 3 with no significant change, 1 undetermined
-  (h003). 0 pending, 0 unexplained.
+  (h003). 0 pending, 0 unexplained. *Revised 2026-10-17: see Revision below.*
   - 3 are in passing boxes, 2 in undeterminable ones.
   - All 5 were reviewed in detail (capacity 10). Pending: 0.
 - **Each detailed review:** the contact sheet, looked at; forced photometry in every covering public mosaic (180
@@ -98,25 +98,28 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
     Lens-model positions of any further image were not checked.
   - **NS_0481** (3.77″, spectroscopic z = 1.3236 from a DDT 4446 MSA filler slit) is a separate galaxy; the spectrum
     is not of the transient, and a host relation is not established.
-  - **Appearance:** HST WFC3/IR F160W in 2016 (GO-14223) gives 4.8 ± 9.5 nJy (3σ < 33 nJy, 0.2″, no aperture
-    correction; `followup/h002_hst2016.json`) against F150W 240 ± 7 nJy in 2023: it appeared after 2016.
+  - **Appearance:** HST WFC3/IR F160W in 2016 (GO-14223) gives 4.8 ± 9.5 nJy (3σ 28.5 nJy, 0.2″, no aperture
+    correction; `followup/h002_hst2016.json`) against F150W 240 ± 7 nJy in 2023: it most likely appeared after 2016
+    (indicative: different instrument, band and aperture).
   - **"Fading in the blue bands" narrowed:** over 23.8 d only F090W declines significantly (271 → 173 nJy, z −4.0);
     F150W (z −1.7) and F200W (z −1.3) are consistent with constant.
   - **Missing for a type:** a spectrum of the transient, a host and redshift, a classification report, and light-curve
     sampling (two detected epochs, no rise or peak). "Supernova-like" stays a hypothesis.
   - Identity unknown does not mean first discovery, and this is not an exotic candidate.
-- **h003 status: the cross-programme differences are explained by between-mosaic photometric scatter of matched arc
-  pixels (one pre-fixed control test); the specific mechanism is not isolated** (`followup/h003_recheck.json`).
+- **h003 status: undetermined, with no evidence of a real change.** One pre-fixed control test finds the differences
+  consistent with between-mosaic scatter of matched arc pixels; no specific mechanism is isolated
+  (`followup/h003_recheck.json`).
   - The large differences are same band, same fixed sky position and same 0.15″ aperture; they occur inside
     programme 1176 (o211 → o213, F356W 359.8 → 308.3 nJy) as well as between programmes, and the mosaics differ in
     orientation.
   - 31 arc-pixel controls (`pick-arc`, parameters fixed in `followup/PLAN.md` before the run) on the decisive pair
-    F356W 1176 o211 → 1208 o004: calibrated z −0.76, control tail fraction 0.39 (rule: ≥ 0.05 ⇒ explained). The other
+    F356W 1176 o211 → 1208 o004: calibrated z −0.76, control tail fraction 0.39 (rule, an ASSUMPTION: ≥ 0.05 ⇒ explained by that scatter; met). The other
     four pairs give tail fractions 0.26–0.52.
   - The raw z differs from #296 (−17.7 vs −9.1) because the random-aperture error is measured in a larger box when
     controls are grouped; the fluxes are identical.
-  - This changes h003 from "undetermined" to "explained by measurement scatter" under the fixed rule; the owner's
-    instruction expected "undetermined" unless a concrete check supported a processing effect (flagged in the PR).
+  - The rule is met, but a statistical control does not identify an instrumental or processing effect, which the
+    owner's instruction requires before calling it ordinary; the label stays "undetermined" and whether the rule
+    outcome closes h003 is left to the owner (flagged in the PR).
 - **Review queue vs open science questions:** the review queue is empty (5 of 5 reviewed, 0 pending). Detailed review
   finished does not mean every object is explained: h002's identity and physical type remain open. No evidence for
   special physics was found; that does not mean every ordinary explanation was proven.
@@ -155,7 +158,7 @@ injected sources are simulations. An ordinary fading is not wormhole evidence; z
 ## Pending
 - Identify h002 in TNS (403 on 2026-10-17). Literature: Frye et al. 2024 reports only SN H0pe; NS_0481's z is
   spectroscopic (NIRSpec) and 3.77″ away (host not determined).
-- h003 (MACS0416 box 2) stays undetermined: it needs a PSF-matched multi-programme check on the arc. *Superseded 2026-10-17: explained by matched arc-pixel scatter (see Revision).*
+- h003 (MACS0416 box 2) stays undetermined: it needs a PSF-matched multi-programme check on the arc. *Revised 2026-10-17: still undetermined; a control test finds it consistent with matched arc-pixel scatter (see Revision).*
 - Boxes not searched in this batch: the undeterminable 8, which need a decision on whether to re-calibrate with more
   injections, and pairs beyond the cap.
 - No follow-on batch is started.
