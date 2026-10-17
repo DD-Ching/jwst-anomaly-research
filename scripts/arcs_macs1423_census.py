@@ -192,7 +192,7 @@ def main(argv=None) -> int:
             "p_anti_row": [p_row[lab] for lab in labels],
         },
         meta={
-            "provenance": "derived (exploratory; PLAN_census.md)",
+            "provenance": f"derived (exploratory; {a.plan})",
             "image": IMAGE,
             "code": a.code_ref,
         }

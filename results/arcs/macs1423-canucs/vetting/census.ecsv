@@ -17,7 +17,7 @@
 # - {name: p_sn, datatype: float64}
 # - {name: p_anti_row, datatype: float64}
 # meta: !!omap
-# - {provenance: derived (exploratory; PLAN_census.md)}
+# - {provenance: derived (exploratory; PLAN_census_rerun.md)}
 # - {image: 's3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f200w_i2d.fits'}
 # - {code: 'main 528df92: #273 final arcs_vet_census.py / arcs_vet_deblend.py'}
 # - screen_anti: ['1818', '2197', '2322', '4234']
