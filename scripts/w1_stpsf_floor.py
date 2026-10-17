@@ -1,11 +1,11 @@
 """Does the model (STPSF) PSF anisotropy explain the star χ_PSF and set Abell 2744's B-mode floor?
 
 Plan and rules: ``results/w1_stpsf/PLAN.md``. ``psf`` computes STPSF F200W PSFs (``DET_DIST``,
-detector sampling, 6″) on a 3-position grid of each NIRCam SW detector and their isophotal (segment)
-second-moment distortion χ at several isophote levels, rotated to the sky with the mosaic's PC
-matrix. ``stars`` compares the w1_psf stars with the model at their isophotal area. ``screen`` runs
-the W1 shear screen with each level's median model χ as a constant PSF distortion (the
-``w1_psf_floor`` machinery). All outputs are ``derived`` (model PSFs are ``model_prediction``);
+detector sampling, 10″) on a 3-position grid of each NIRCam SW detector and their isophotal
+(segment) second-moment distortion χ at several isophote levels, rotated to the sky with the
+mosaic's PC matrix. ``stars`` compares the w1_psf stars with the model at their isophotal area.
+``screen`` runs the W1 shear screen with each level's median model χ as a constant PSF distortion
+(the ``w1_psf_floor`` machinery). All outputs are ``derived`` (model PSFs are ``model_prediction``);
 thresholds are ASSUMPTIONs.
 
     STPSF_PATH=<stpsf-data> python scripts/w1_stpsf_floor.py psf \

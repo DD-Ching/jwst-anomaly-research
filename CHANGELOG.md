@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-17: W1 model PSF (STPSF) vs the star χ_PSF and Abell 2744's B-mode floor: same axis, size not fixed; not adopted
+## 2026-10-17: W1 model PSF (STPSF) vs the star χ_PSF and Abell 2744's B-mode floor: axis close, size level-dependent; not adopted
 - **Why:** TASKS "JWST focus" 1 (W1), `results/w1_psf` "Next". Rules S1/S2 frozen in `results/w1_stpsf/PLAN.md`.
 - **New:** `scripts/w1_stpsf_floor.py` (`psf`, `stars`, `screen`); STPSF data streamed (88 MB, not stored).
 - **Result (`results/w1_stpsf/RESULT.md`):** model χ at sky PA 125.4–128.3° (stars 133°). Pixel-frame
