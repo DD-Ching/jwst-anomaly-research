@@ -217,9 +217,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      not replicate. ~~MACS0647~~ — done (2026-10-16, `results/arcs/macs0647-clash/RESULT.md`): both CLASH Zitrin
      models fail the control (67 %, 50 %), no result. ~~MACS1423~~ — done (2026-10-16,
      `results/arcs/macs1423-canucs/`): CANUCS DR1 maps, screen anti 4 vs 0.95 (P 0.016), but the clump-pair census
-     gives P 0.259 (exploratory): not replicated under the clump-aware null. **Needs a re-check before reuse:** the
-     census used the pre-fix `arcs_vet_deblend.fit_models` (fixed in #273: flux start/bound, census null/count);
-     the same applies to #279 (open). Do not cite these census numbers until re-run. ~~RXJ2129~~ — done (2026-10-16,
+     gives P 0.259 (exploratory): not replicated under the clump-aware null. Re-run with the fixed #273 census code
+     (2026-10-17, #287): every number unchanged; only 1818 (gate-failed) moves `single` → `undecided`. #279 has its
+     own re-run (open). ~~RXJ2129~~ — done (2026-10-16,
      `results/arcs/rxj2129/RESULT.md`): Lenstool and GLAFIC JWST-updated maps both fail the control (8 / 12),
      no result. Next, optional: RXJ2129 on the deeper DJA catalogue (new plan; shape source changes);
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
