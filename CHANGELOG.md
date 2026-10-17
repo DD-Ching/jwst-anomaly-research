@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: Radial (W1) screen on MACS0417, MACS1423, WHL0137, RXJ2129, MACS0647: no flag
+- **Why:** the five W1 shear-only fields had never run the `radial` screen (exotic W1 signature, D-031/D-049).
+- **New:** `scripts/radial_more.py` (the shear fields' inputs through `exotic_screens.cmd_radial`, Gaia spike veto;
+  `--sheet` draws the strongest centre with its arcs).
+- **Known case:** Abell S1063 headline run reproduced exactly (46 not model-radial, 10 centres, max 4, p 0.435).
+- **Result (`results/radial_more/RESULT.md`):** 0 centres with p_random < 0.05. MACS0417 max 5 lines (p 0.17), MACS1423
+  3 (0.915), WHL0137 3 (0.705, repeats the D-036 run with the Gaia veto). RXJ2129 and MACS0647 give no result (models
+  fail the `arcs` control); MACS0647's 6-line centre (p 0.075) is five segments of one linear streak (sheet, by eye).
+- **Handoff:** `radial` now covers all twelve W1 fields; its D-049 limits are unchanged (no new injections; the shear
+  limits are 9–14× stronger). Next radial item: the low-weight veto, and a streak veto (W1 masks) for MACS0647-like
+  streak segments.
+
 ## 2026-10-17: MACS0417 h002 delays re-checked with a fixed source position (#309)
 - #308 evaluated the Fermat potential with each pixel's own β; fixed β0 plus root-refined images gives 748 d (best fit)
   and 708–778 d (10-realisation sample range) for the 7.6″ counter-image (#308: 650–830 d, partly from a non-image grid

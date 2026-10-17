@@ -256,7 +256,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
      - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
-       field and re-run earlier fields' radial screens with it;
+       field and re-run earlier fields' radial screens with it (~~the five W1 shear-only fields~~ done 2026-10-17,
+       `results/radial_more/RESULT.md`: no flag; RXJ2129/MACS0647 no result; MACS0647 top centre is streak segments, so
+       add the W1 streak masks as a veto);
      - re-run MACS0717 radial when a photo-z catalogue exists;
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);

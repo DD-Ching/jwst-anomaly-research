@@ -1,0 +1,53 @@
+{
+ "model": "macs1423-canucs-maps",
+ "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01208-o010_t005_nircam_clear-f200w/jw01208-o010_t005_nircam_clear-f200w_cat.ecsv",
+ "spike_stars": {
+  "path": "/tmp/claude-0/-home-user-jwst-anomaly-research/4652cd15-929d-53ed-af6b-c97b8fe7b1e2/scratchpad/radial/macs1423/macs1423/macs1423_gaia_stars.ecsv",
+  "n": 9,
+  "sha256": "83736fa5ab93034498e986c5058a8d7cf1ed4665b31dd6c3628b88c337c11ef4"
+ },
+ "n_spike_segments_dropped": 54,
+ "n_elongated": 590,
+ "n_not_background_dropped": 112,
+ "n_anti": 41,
+ "n_anti_not_model_radial": 41,
+ "n_mu_radial_nan": 0,
+ "n_peaks": 1,
+ "n_dark_centre_peaks": 1,
+ "random_peaks_mean": 2.94,
+ "random_peaks_p95": 7.0,
+ "max_lines": 3,
+ "random_max_lines": {
+  "2": 17,
+  "3": 161,
+  "4": 22
+ },
+ "p_random_max": 0.915,
+ "peaks": [
+  {
+   "x": 1.0,
+   "y": 15.5,
+   "ra": 215.9491807485948,
+   "dec": 24.08276055555556,
+   "n_lines": 3,
+   "nearest_label": 1543,
+   "nearest_sep_arcsec": 1.2099466448771943,
+   "nearest_snr": 53.244953125340494,
+   "dark_centre": true,
+   "p_random": 0.915
+  }
+ ],
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 100.0,
+  "grid_arcsec": 0.5,
+  "line_tol_arcsec": 1.0,
+  "max_len_arcsec": 15.0,
+  "min_lines": 3,
+  "dark_radius_arcsec": 1.0,
+  "n_random": 200,
+  "max_radial_mu": 3.0
+ }
+}
