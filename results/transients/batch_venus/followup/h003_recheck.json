@@ -1,0 +1,77 @@
+{
+ "object": "MJ0416.1-2403_2:h003",
+ "ra": 64.031622,
+ "dec": -24.075255,
+ "provenance": "derived; hit_lightcurve.py (0.15 arcsec aperture) + hit_lightcurve_controls.py pick-arc/compare; parameters fixed in PLAN.md before the run",
+ "step1_same_band_same_aperture": {
+  "source": "boxes/review/lightcurves.ecsv (committed in #296)",
+  "finding": "the largest differences are same-band, same fixed sky position, same 0.15 arcsec aperture; they occur within programme 1176 (o211 -> o213, F356W 359.8 -> 308.3 nJy) as well as across programmes (1176 o211 -> 1208 o004, F356W 359.8 -> 308.4 nJy); mosaics differ in orientation (stamps)",
+  "search_band_peak_offset_arcsec": 0.49
+ },
+ "controls": {
+  "method": "pick-arc on jw01176-o211 F356W i2d, --half-arcsec 16 --match 1.5 --step-arcsec 0.2 --min-sep-arcsec 0.6 --n 80 --seed 1",
+  "n_found": 31,
+  "n_asked": 80,
+  "min_required": 20
+ },
+ "pairs": [
+  {
+   "obs_id_1": "jw01176-o211_t009_nircam_clear-f356w",
+   "obs_id_2": "jw01208-o004_t002_nircam_clear-f356w",
+   "z": -17.669765011462385,
+   "z_cal": -0.7627852369973049,
+   "ctrl_tail_frac": 0.3870967741935484,
+   "n_controls": 31,
+   "ctrl_median": -5.5594044564353755,
+   "ctrl_rsd": 15.876500969918217
+  },
+  {
+   "obs_id_1": "jw01176-o211_t009_nircam_clear-f356w",
+   "obs_id_2": "jw01176-o213_t009_nircam_clear-f356w",
+   "z": -14.928800635340302,
+   "z_cal": -1.0534446089370306,
+   "ctrl_tail_frac": 0.2903225806451613,
+   "n_controls": 31,
+   "ctrl_median": 0.3336325240074412,
+   "ctrl_rsd": 14.488121188211473
+  },
+  {
+   "obs_id_1": "jw01176-o211_t009_nircam_clear-f277w",
+   "obs_id_2": "jw01176-o212_t009_nircam_clear-f277w",
+   "z": 16.082468159866863,
+   "z_cal": 0.6461904538994073,
+   "ctrl_tail_frac": 0.5161290322580645,
+   "n_controls": 31,
+   "ctrl_median": -0.783127902579788,
+   "ctrl_rsd": 26.100039022043685
+  },
+  {
+   "obs_id_1": "jw01176-o212_t009_nircam_clear-f444w",
+   "obs_id_2": "jw01208-o004_t002_nircam_clear-f444w",
+   "z": -11.960142959827323,
+   "z_cal": -1.2558792489130837,
+   "ctrl_tail_frac": 0.25806451612903225,
+   "n_controls": 31,
+   "ctrl_median": 3.698343419267508,
+   "ctrl_rsd": 12.468146434178815
+  },
+  {
+   "obs_id_1": "jw01176-o211_t009_nircam_clear-f410m",
+   "obs_id_2": "jw01176-o213_t009_nircam_clear-f410m",
+   "z": -6.684579516597593,
+   "z_cal": -0.8592449076472204,
+   "ctrl_tail_frac": 0.41935483870967744,
+   "n_controls": 31,
+   "ctrl_median": 4.116330035334716,
+   "ctrl_rsd": 12.570233999416185
+  }
+ ],
+ "decisive_pair": [
+  "jw01176-o211_t009_nircam_clear-f356w",
+  "jw01208-o004_t002_nircam_clear-f356w"
+ ],
+ "rule": "ctrl_tail_frac >= 0.05 => explained by programme/epoch-to-epoch scatter of matched arc pixels (ASSUMPTION, #286 h043 precedent); else undetermined",
+ "decision": "explained by scatter of matched arc pixels",
+ "note_raw_z": "raw z differs from #296 (-17.67 here vs -9.09) because the random-aperture error is measured in a larger box when controls are grouped; fluxes are identical (359.8, 308.0 nJy); the calibrated z_cal and tail fraction are the quantities used",
+ "not_tested": "no PSF-matched difference of these mosaics; the check is statistical (matched arc pixels), not a model of the specific PSF/registration difference"
+}

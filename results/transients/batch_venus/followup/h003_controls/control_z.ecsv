@@ -1,0 +1,22 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: name, datatype: string}
+# - {name: obs_id_1, datatype: string}
+# - {name: obs_id_2, datatype: string}
+# - {name: z, datatype: float64, format: .3f}
+# - {name: ratio, datatype: float64, format: .3f}
+# - {name: z_cal, datatype: float64, format: .3f}
+# - {name: ctrl_tail_frac, datatype: float64, format: .3f}
+# - {name: n_controls, datatype: int64}
+# - {name: ctrl_median, datatype: float64, format: .3f}
+# - {name: ctrl_rsd, datatype: float64, format: .3f}
+# meta: !!omap
+# - {provenance: derived}
+# schema: astropy-2.0
+name obs_id_1 obs_id_2 z ratio z_cal ctrl_tail_frac n_controls ctrl_median ctrl_rsd
+h003 jw01176-o211_t009_nircam_clear-f356w jw01208-o004_t002_nircam_clear-f356w -17.669765011462385 0.8561757035033393 -0.7627852369973049 0.3870967741935484 31 -5.5594044564353755 15.876500969918217
+h003 jw01176-o211_t009_nircam_clear-f356w jw01176-o213_t009_nircam_clear-f356w -14.928800635340302 0.8565182041316861 -1.0534446089370306 0.2903225806451613 31 0.3336325240074412 14.488121188211473
+h003 jw01176-o211_t009_nircam_clear-f277w jw01176-o212_t009_nircam_clear-f277w 16.082468159866863 1.1245100307522726 0.6461904538994073 0.5161290322580645 31 -0.783127902579788 26.100039022043685
+h003 jw01176-o212_t009_nircam_clear-f444w jw01208-o004_t002_nircam_clear-f444w -11.960142959827323 0.8596578184037199 -1.2558792489130837 0.25806451612903225 31 3.698343419267508 12.468146434178815
+h003 jw01176-o211_t009_nircam_clear-f410m jw01176-o213_t009_nircam_clear-f410m -6.684579516597593 0.9024493612318887 -0.8592449076472204 0.41935483870967744 31 4.116330035334716 12.570233999416185
