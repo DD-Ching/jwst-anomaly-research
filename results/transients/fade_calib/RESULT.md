@@ -1,141 +1,130 @@
 # Fading / vanishing calibration of `arc_diff`, measured speed-up, small batch search: result
 
-Plan: `PLAN.md`, sections 0–6 committed before any run (2225589). Addendum 3 was written after the development seeds
-and before any held-out run (35748f4). Owner instruction 2026-10-16; budget 23:32Z → 03:32Z. Every number is
+Plan: `PLAN.md` §0–6, committed before any run (2225589); addenda 3–5 are dated and were each committed before the
+runs they govern (35748f4, d9399f6, d0c1ea3). Owner instruction 2026-10-16; budget 23:32Z → 03:32Z. Every number is
 `derived` unless labelled; injected sources are simulations; thresholds are ASSUMPTIONs.
 
-## Outcome in one line
-**The calibration fails its pre-registered pass rule, so the batch search (section 6) was not run.**
-- Vanishing sources are recovered: at 26.0 AB, 14 / 14 reach the review list with the correct sign.
-- But unchanged sources produce hits at 0.25–0.28, against the rule's ≤ 0.10. Almost all of these hits are removed
-  later by the morphology stage.
+## Outcome in short
+- **The first held-out run (seeds 20 + 21) failed, and it was invalid.**
+  - Unchanged false hits were 0.25–0.28.
+  - `/code-review` then found that the injection geometry was wrong: epoch-2 sources were not registered like real
+    sources.
+- **After the correction (addendum 4), the fresh held-out seeds 30 + 31 pass the pre-registered rule (§4).** Pass
+  rule ≤ 0.10:
 
-## What changed in the chain
-- **New `--inject-pre`:** injects sources into the raw boxes of both epochs before resampling, registration and
-  matching (PLAN §1). Each epoch gets its own grid and `PIXAR_SR`.
-- **The one fix:** `--reg-tile-arcsec 6` (addendum 3).
-  - **What was wrong:** the whole-box FFT registration of this pair is pinned at its ±3 px window edge in F150W:
-    (1.71, −3.00) px, against a 6″ tile median of (0.70, −0.57) px. F444W gives (0.53, −0.95) against
-    (0.11, −0.18). Values: `box1_regfix/compare_286.json`.
-  - **Why it mattered:** the local tile shift is capped at 2 px, so parts of the F150W box stayed misregistered.
-  - **Effect on #286:** this applied to the #286 screen too. Its injections were added after this step, so they
-    could not show it.
-  - **The fix:** the global shift is the median over tiles. The default stays 0, so historical runs reproduce.
-- **Injection model (post-hoc deviation, addendum 3):**
-  - Primary: per-epoch empirical PSFs. The 5 most concentrated isolated S/N ≥ 50 sources are chosen on epoch 1, in
-    a 40″-half box, and cut at the same sky positions in both epochs.
-  - The planned band-FWHM Gaussian (the same in both epochs) is run beside it on the held-out seeds.
-  - Peak fractions:
-    - F150W 0.243 / 0.214 (epoch 1 / epoch 2);
-    - F444W 0.104 / 0.107 (`heldout/hoE_s20/summary.json`).
-- `--cache-dir` (section 3 below).
+  | Injection model | Vanish at 26.0 AB, review list with sign | Unchanged false hits |
+  |---|---|---|
+  | Empirical PSF (primary) | 14 / 14 | 1 / 40 = 0.025 |
+  | Gaussian | 14 / 14 | 4 / 40 = 0.10, exactly at the limit |
 
-## Calibration (PLAN §2–§4)
+- **The pass is post hoc in one respect:** the injection code was corrected after a held-out run had been seen.
+  The pass rule, thresholds and samples are unchanged, and seeds 30 + 31 had never been run.
+- **The margin is small.** The corrected dev rerun (seeds 10 + 11) gives 6 / 40 = 0.15 for both models. Over
+  all four corrected seeds, false hits are 7 / 80 (empirical) and 10 / 80 (Gaussian).
+- **Batch search:** see section "Batch search" below.
+
+## Chain and tool changes
+- **`--inject-pre`:**
+  - Sources are added to both raw epochs before resampling, registration and matching.
+  - Epoch-2 positions follow the chain's own injection-free global registration (`pair_shift`, `epoch2_pixel`), so
+    an unchanged source lands where a real sky-fixed one would.
+  - Local tile shifts (2 px cap) are not emulated.
+- **The one chain fix: `--reg-tile-arcsec 6`.** The global shift is the median over 6″ tiles. Tiles < 90 %
+  finite, or pinned at the ±3 px window, are dropped.
+  - Before: the whole-box correlation of this pair was pinned at that edge, F150W (1.71, −3.00) px and F444W
+    (0.53, −0.95) px.
+  - Now: F150W (0.64, −0.52) px from 12 of 16 tiles, and F444W (0.11, −0.18) px from 16 tiles
+    (`box1_v2/compare_286.json`).
+  - The default stays 0, so historical runs reproduce.
+- **Injection model:**
+  - Primary: per-epoch empirical PSF. The 5 most concentrated isolated S/N ≥ 50 sources are chosen on epoch 1 and
+    median-stacked per epoch.
+  - The planned band-FWHM Gaussian is run beside it.
+  - Choosing the empirical model as primary was post hoc (addendum 3).
+- **`--cache-dir`:** the raw boxes (as header text, never a pickled WCS), the empirical PSFs and the injection-free
+  registration. Every function argument is part of the key.
+
+## Calibration (box 1, F150W + F444W, PEARLS o241 → VENUS o051)
 - **Sample:**
   - 80 positions per seed on epoch-1 F150W pixels above the 90th percentile, 1.5″ apart (`sample_s*.csv`). Epoch 2
     played no part.
-  - Classes (unchanged, appear, partial m → m + 0.75, vanish) × 26.0 / 27.0 / 27.5 AB.
-  - Dev seeds 10, 11; held-out seeds 20, 21. Each seed has n = 12–14 per cell.
-- **Stages counted:** hit (≥ 2 bands) → not `near_bright_core` → morph `pass` → correct sign. The review list is
+  - Classes: unchanged, appear, partial (m → m + 0.75), vanish; at 26.0 / 27.0 / 27.5 AB.
+  - Each seed has 6–7 per cell; two seeds combined give n = 12–14.
+- **Stages counted:** hit (|S| ≥ 5 in ≥ 2 bands) → not `near_bright_core` → morph `pass` → sign. The review list is
   the first three.
-  - Per-cell stage counts: `heldout/ho{E,G}_eval.json`, `dev/*_eval.json`.
-  - Intervals below are binomial 68 % Wilson intervals.
+  - Counts per cell are in the `*_eval.json` files.
+  - Intervals are binomial 68 % Wilson intervals.
 
-**Held-out (seeds 20 + 21), review list with the correct sign:**
+**Held-out seeds 30 + 31 (`heldout2/`), review list with the correct sign:**
 
-| Class / AB | Empirical PSF (primary) | Gaussian (plan §1) |
+| Class / AB | Empirical PSF (primary) | Gaussian |
 |---|---|---|
 | vanish 26.0 | **14 / 14** [0.93, 1.00] | 14 / 14 [0.93, 1.00] |
 | vanish 27.0 | 12 / 14 [0.74, 0.93] | 12 / 14 [0.74, 0.93] |
-| vanish 27.5 | 10 / 12 [0.70, 0.91] | 10 / 12 [0.70, 0.91] |
-| partial 26.0 | 13 / 14 [0.83, 0.97] | 13 / 14 [0.83, 0.97] |
-| partial 27.0 | 7 / 12 [0.44, 0.71] | 10 / 12 [0.70, 0.91] |
-| partial 27.5 | 5 / 14 [0.24, 0.49] | 8 / 14 [0.44, 0.70] |
-| appear 26.0 / 27.0 / 27.5 | 8 / 12, 9 / 14, 11 / 14 | 10 / 12, 10 / 14, 13 / 14 |
-| **unchanged: any hit (false hit)** | **11 / 40 = 0.275** [0.21, 0.35] | **10 / 40 = 0.25** [0.19, 0.32] |
-| unchanged: on the review list | 1 / 40 (27.5 AB) | 0 / 40 |
+| vanish 27.5 | 10 / 12 [0.70, 0.91] | 11 / 12 [0.80, 0.97] |
+| partial 26.0 | 14 / 14 [0.93, 1.00] | 13 / 14 [0.83, 0.97] |
+| partial 27.0 | 8 / 12 [0.52, 0.79] | 8 / 12 [0.52, 0.79] |
+| partial 27.5 | 4 / 14 [0.18, 0.42] | 6 / 14 [0.31, 0.56] |
+| appear 26.0 / 27.0 / 27.5 | 9 / 12, 8 / 14, 12 / 14 | 9 / 12, 8 / 14, 13 / 14 |
+| **unchanged: any hit** | **1 / 40** [0.01, 0.06] | **4 / 40** [0.06, 0.16] |
+| unchanged: on the review list | 0 / 40 | 0 / 40 |
 
-- **Pass rule (§4):**
-  - vanish 26.0 ≥ 0.80: passed;
-  - unchanged false hits ≤ 0.10: **failed** under both injection models.
-  - **Calibration: failed.** No threshold was tuned, and the one fix is used.
-- **Development seeds (10 + 11), unchanged false hits** (`dev/`):
-  - plan chain 12 / 40;
-  - empirical PSF alone 12 / 40;
-  - registration fix with Gaussian 8 / 40;
-  - registration fix with empirical PSF 4 / 40.
-  - Development and held-out disagree (4 / 40 against 11 / 40), so with n = 40 the dev value was optimistic.
-- **Where the false hits are:**
-  - Of the 11 held-out (empirical) false hits, 3 lie within 0.16″ of a hit in the un-injected run. The other 8 are
-    caused by the injected source itself (session match against `box1_regfix/hits.ecsv`; not stored).
-  - Most unchanged hits are F150W-dominated residuals of a compact 26 AB source on a galaxy or arc pixel.
-  - Every one except one is removed by morphology (rosette / dipole / edge). The review list therefore holds
-    0–1 / 40.
-  - The frozen rule counts hits, not review entries, so it fails. A rule on review entries would be a post-hoc
-    criterion change and needs the owner.
+- **Missed fades** (`heldout2/*_eval.json` stage counts, empirical / Gaussian):
+  - **Partial fades at 27.5 AB (a flux drop equal to a 28.25 AB source):** 9 / 14 and 6 / 14 are not detected at
+    all. This is the detection limit, not a later stage.
+  - **Partial fades at 27.0:** 3 / 12 and 1 / 12 are not detected; the rest of the losses are flags and morphology.
+  - **Vanish at 27.0:** 1 / 14 is flagged `near_bright_core` in each model; one more is lost to morphology.
+  - **Vanish at 27.5:** the empirical model misses 1 / 12 at detection and loses 1 to morphology; the Gaussian loses
+    1 to morphology.
+  - No review-list entry of a fade has the wrong sign.
+- **Unchanged sources:** all their hits are removed before the review list, by morphology in every case.
+- **Corrected dev rerun (`dev2/`, diagnosis only):**
+  - unchanged 6 / 40 for both models, every one removed by morphology;
+  - vanish 26.0 AB 12 / 14 for both.
+- **Invalid runs, kept for the record (wrong epoch-2 geometry):**
+  - `dev/`: the plan chain, empirical PSF alone, registration fix with the Gaussian, registration fix with the
+    empirical PSF;
+  - `heldout/`: seeds 20 + 21, unchanged false hits 11 / 40 and 10 / 40.
+  - Their failure measured the injection artefact (a 0.9 px dipole for each unchanged source), not the chain.
 - **Blind spots (not calibrated):**
   - extended fades;
-  - positions within 0.8″ of bright cores (not reviewed);
-  - sky and blank-field positions;
+  - positions within 0.8″ of bright cores (flagged, not reviewed);
+  - blank-sky positions;
   - fainter than 27.5 AB;
-  - injected-source Poisson noise (ASSUMPTION: negligible);
-  - PSF wings beyond 0.6″ (truncated);
-  - only one box and one pair.
+  - the Poisson noise of injected sources;
+  - PSF wings beyond 0.6″;
+  - local registration residuals;
+  - the density of 80 injections per run, which can shift the 99.9th-percentile core threshold that sets
+    `near_bright_core`.
 
-## Effect on #286 (box 1 re-screened with the fixed registration, no injections; `box1_regfix/`)
-- **Screen:** 50 → 39 hits; 18 → 7 unflagged; review list 4 → 1.
-- **The remaining entry**, h020, is #286 h024 at the same position (0.0″). It was already vetted as a spike residual
-  with no forced-photometry change ≥ 2σ.
-- **The other #286 entries:**
-  - h031 and h049 are no longer separate hits;
-  - h043's nearest hit (1.3″) is morph `extended`.
-- **No new entry; the #286 conclusion (nothing open) stands.**
-- **Its sensitivity numbers do not transfer.**
-  - The #286 brightening efficiencies were measured after the injection point and with the old registration.
-  - Fading sensitivity with the pre-matching injections is in the table above.
-- **Other fields:** they used the whole-box registration too. A scan of every stored `results/transients/**/summary.json`
-  `shift_px` shows the ±3 px edge is reached **only in the El Gordo runs**. The other runs are:
-  - MACS0416 tiles |shift| ≤ 1.2 px;
+## Effect on #286 (box 1 re-screened, no injections; `box1_v2/`)
+- **Screen:** 50 → 40 hits; 18 → 6 unflagged; review list 4 → 1.
+- **The remaining entry** (h021) is at the #286 h024 position (0.0″). It was already vetted: a diffraction-spike
+  residual with no forced-photometry change ≥ 2σ.
+- **Nothing new; the #286 conclusion (nothing open) stands.**
+- **#286's brightening efficiencies (0.85 / 0.78 / 0.54)** were measured after the injection point with the pinned
+  registration. They are superseded for this box by the table above.
+- **Other fields:** a scan of every stored `results/transients/**/summary.json` `shift_px` finds the ±3 px edge only
+  in El Gordo runs. The others are:
+  - MACS0416 |shift| ≤ 1.2 px;
   - Sunrise ≤ 0.3 px;
   - Abell 2744 grid ≤ 1.8 px;
   - SMACS GO-4043 ≤ 0.5 px.
-  - SMACS ERO → VENUS (`smacs_arcdiff/o001_o057`, `arc_chain/runs/smacs*`) has a large but unpinned shift of
-    (2.11, −1.82) px in F150W. It is **not** compared with a tile median, so it stays a pending check. That search
-    recovered SN Atalanta.
+  - SMACS ERO → VENUS has an unpinned (2.11, −1.82) px in F150W, not compared with a tile median. This is a
+    pending check; that search recovered SN Atalanta.
 
-## Speed-up (PLAN §5; `speedup.json`)
-- **Profile (one F150W band, 78.5 s):**
-  - kernel matching 55.1 s (`lstsq` 30.7 s, median filters 21.0 s);
-  - significance 6.8 s;
-  - S3 reads 8.5 s.
-  - With empirical-PSF injections, a second 40″-half read and its stacking add about 40 s per band.
-- **What was changed:** only raw-data products are cached (`--cache-dir`): the analysis boxes and the per-epoch
-  empirical PSFs. Matching depends on the injected sources and is never cached.
-- **Fair comparison:**
-  - Same 4 held-out runs, the same samples and settings, 4 concurrent processes.
-  - Per-run wall time:
-    - baseline 168–171 s (empirical) and 96–98 s (Gaussian);
-    - warm cache 86–88 s for all four, which is about ×1.9 for the empirical runs and ×1.1 for the Gaussian runs.
-  - The cold cache matches the baseline: set wall 163 s.
-- **Agreement (post hoc wording):**
-  - Plan §5 required byte-identical outputs. They are not byte-identical, but the un-cached chain itself is not
-    byte-reproducible run to run: in the cold G21 run, S differs by 2.4 × 10⁻⁸ without any cache effect.
-  - With the cache, S differs by at most 4.8 × 10⁻⁷ relative.
-  - Hit sets, flags and signs are identical, and every injected source's stage outcome is identical in all 8
-    comparisons: **0 extra misses**.
-  - Under the plan's wording the factor is therefore not a validated speed-up; it is reported as measured.
-- **Cost:**
-  - 25 MB of local scratch per box pair; it must be deleted after use.
-  - The cache key is URI + box, so a reprocessed archive file needs a cleared cache.
-  - No change for single un-injected screens: reads are about 8 s of about 90 s.
+## Speed-up (PLAN §5)
+SPEEDUP_PLACEHOLDER
 
-## Batch search (PLAN §6)
-**Not run:** the calibration failed. No extra regions were chosen, and there is no review list or vetting beyond
-the box-1 re-screen above.
+## Batch search (PLAN §6, addendum 5)
+BATCH_PLACEHOLDER
 
 ## Regenerate
-- Samples:
-  `fade_calib.py make --uri <o241 F150W i2d> --ra 15.7300 --dec -49.2530 --seed S --out sample_sS.csv`.
-- `arc_diff.py`: the commands are in each `summary.json`. Maps went to the session scratchpad and are not stored.
-- Then `arc_diff_morph.py --hits … --maps … --all-hits` and
-  `fade_calib.py eval --run DIR MORPH [--run …] --out eval.json`.
+- **Samples:**
+  `fade_calib.py make --uri <o241 F150W i2d> --ra <box> --dec <box> --seed S --out sample_*.csv`.
+- **Boxes:**
+  `fade_calib.py boxes --uri <4 i2d> --exclude 15.7300 -49.2530 --out boxes.json`.
+- **`arc_diff.py`:** the command is in each `summary.json`. Maps go to the session scratchpad and are not stored.
+- **Then:**
+  - `arc_diff_morph.py --hits … --maps … --all-hits`;
+  - `fade_calib.py eval --run DIR MORPH [--run …] --out eval.json`.
