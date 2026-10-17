@@ -1,0 +1,340 @@
+{
+ "object": "PLCKG165+67.0_2:h002",
+ "ra": 171.805899,
+ "dec": 42.481802,
+ "date": "2026-10-17",
+ "provenance": "observed positions and published values; derived photometry (lightcurves.ecsv from #296, h002_hst2016.json); thresholds ASSUMPTIONs",
+ "photometry": {
+  "jwst_0p15arcsec": [
+   {
+    "mjd": 60033.2,
+    "program": "01176",
+    "band": "F090W",
+    "flux_njy": 270.9,
+    "err_njy": 8.2,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60033.2,
+    "program": "01176",
+    "band": "F444W",
+    "flux_njy": 74.4,
+    "err_njy": 3.6,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60033.2,
+    "program": "01176",
+    "band": "F115W",
+    "flux_njy": 287.6,
+    "err_njy": 7.0,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60033.2,
+    "program": "01176",
+    "band": "F410M",
+    "flux_njy": 70.1,
+    "err_njy": 4.9,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60033.3,
+    "program": "01176",
+    "band": "F150W",
+    "flux_njy": 240.0,
+    "err_njy": 6.8,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60033.3,
+    "program": "01176",
+    "band": "F356W",
+    "flux_njy": 106.5,
+    "err_njy": 3.4,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60033.3,
+    "program": "01176",
+    "band": "F200W",
+    "flux_njy": 187.2,
+    "err_njy": 5.2,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60033.3,
+    "program": "01176",
+    "band": "F277W",
+    "flux_njy": 127.5,
+    "err_njy": 3.8,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60056.9,
+    "program": "04446",
+    "band": "F090W",
+    "flux_njy": 173.3,
+    "err_njy": 22.9,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60056.9,
+    "program": "04446",
+    "band": "F444W",
+    "flux_njy": null,
+    "err_njy": 4.8,
+    "status": "not covered (NaN)",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60057.0,
+    "program": "04446",
+    "band": "F356W",
+    "flux_njy": null,
+    "err_njy": 4.3,
+    "status": "not covered (NaN)",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60057.0,
+    "program": "04446",
+    "band": "F150W",
+    "flux_njy": 214.1,
+    "err_njy": 13.9,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60057.0,
+    "program": "04446",
+    "band": "F200W",
+    "flux_njy": 175.0,
+    "err_njy": 7.7,
+    "status": "detected",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60057.0,
+    "program": "04446",
+    "band": "F277W",
+    "flux_njy": null,
+    "err_njy": 3.9,
+    "status": "not covered (NaN)",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60073.6,
+    "program": "04446",
+    "band": "F090W",
+    "flux_njy": null,
+    "err_njy": 24.3,
+    "status": "not covered (NaN)",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60073.6,
+    "program": "04446",
+    "band": "F150W",
+    "flux_njy": null,
+    "err_njy": 11.2,
+    "status": "not covered (NaN)",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60073.6,
+    "program": "04446",
+    "band": "F200W",
+    "flux_njy": null,
+    "err_njy": 7.1,
+    "status": "not covered (NaN)",
+    "upper_limit_3sigma_njy": null
+   },
+   {
+    "mjd": 60815.5,
+    "program": "04744",
+    "band": "F090W",
+    "flux_njy": -8.5,
+    "err_njy": 5.6,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 16.8
+   },
+   {
+    "mjd": 60815.5,
+    "program": "04744",
+    "band": "F444W",
+    "flux_njy": -3.0,
+    "err_njy": 4.2,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 12.6
+   },
+   {
+    "mjd": 60815.5,
+    "program": "04744",
+    "band": "F150W",
+    "flux_njy": -2.0,
+    "err_njy": 5.3,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 15.9
+   },
+   {
+    "mjd": 60815.5,
+    "program": "04744",
+    "band": "F356W",
+    "flux_njy": -3.2,
+    "err_njy": 3.8,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 11.3
+   },
+   {
+    "mjd": 60815.5,
+    "program": "04744",
+    "band": "F200W",
+    "flux_njy": 0.3,
+    "err_njy": 5.1,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 15.6
+   },
+   {
+    "mjd": 60815.5,
+    "program": "04744",
+    "band": "F277W",
+    "flux_njy": 1.2,
+    "err_njy": 3.7,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 12.2
+   },
+   {
+    "mjd": 61125.3,
+    "program": "06882",
+    "band": "F150W",
+    "flux_njy": -6.2,
+    "err_njy": 6.1,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 18.3
+   },
+   {
+    "mjd": 61125.3,
+    "program": "06882",
+    "band": "F444W",
+    "flux_njy": -2.2,
+    "err_njy": 4.5,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 13.4
+   },
+   {
+    "mjd": 61125.4,
+    "program": "06882",
+    "band": "F210M",
+    "flux_njy": 4.6,
+    "err_njy": 8.9,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 31.3
+   },
+   {
+    "mjd": 61125.4,
+    "program": "06882",
+    "band": "F300M",
+    "flux_njy": 5.9,
+    "err_njy": 6.2,
+    "status": "not detected",
+    "upper_limit_3sigma_njy": 24.4
+   }
+  ],
+  "hst_2016": {
+   "band": "WFC3/IR F160W",
+   "program": "GO-14223",
+   "dataset": "icv715010_drz",
+   "mjd": 57538,
+   "flux_njy": 4.8,
+   "err_njy": 9.5,
+   "upper_limit_3sigma_njy": 28.5,
+   "note": "0.2 arcsec aperture, no aperture correction; compare with F150W 240 +- 7 nJy in 2023 (different aperture and instrument: indicative); upper_limit_3sigma_njy = 3 x err, the same convention as the JWST rows",
+   "flux_plus_3sigma_njy": 33.3
+  },
+  "decline_23d": {
+   "F090W": [
+    270.9,
+    173.3
+   ],
+   "F150W": [
+    240.0,
+    214.1
+   ],
+   "F200W": [
+    187.2,
+    175.0
+   ],
+   "days": 23.8,
+   "source": "lightcurves.ecsv",
+   "z": {
+    "F090W": -4.0,
+    "F150W": -1.7,
+    "F200W": -1.3
+   },
+   "note": "z = (f2-f1)/hypot(e1,e2) from lightcurves.ecsv; only F090W changes at > 3 sigma; second epoch is a different programme (4446)"
+  },
+  "sed_2023_03_30_njy": {
+   "F090W": 270.9,
+   "F444W": 74.4,
+   "F115W": 287.6,
+   "F410M": 70.1,
+   "F150W": 240.0,
+   "F356W": 106.5,
+   "F200W": 187.2,
+   "F277W": 127.5
+  }
+ },
+ "sn_h0pe_images": {
+  "source": "Frye et al. 2024 (arXiv:2309.07326) Table 2",
+  "separation_arcsec": {
+   "SN H0pe a (NS_2)": 24.91,
+   "SN H0pe b (NS_3)": 31.86,
+   "SN H0pe c (NS_4)": 37.88
+  },
+  "lens_model_rms_arcsec": 0.65,
+  "note": "three reported images, all on Arc 2; none within 1 arcsec; h002's first detection is the same PEARLS epoch (2023-03-30) as the SN H0pe discovery images. Lens-model-predicted positions of any further image were not checked (not in Frye 2024; other lens-model papers not read)."
+ },
+ "ns_0481": {
+  "source": "Frye et al. 2024 Table 2 row NS_481; NED [FPP2024] NS_0481",
+  "separation_arcsec": 3.77,
+  "z": "1.3236 +- 0.0002, spectroscopic (NIRSpec MSA, DDT 4446, 2023-04-22); a mask-filler 'other lensed sources' target",
+  "relation": "a separate catalogued galaxy 3.77 arcsec away; the spectrum is of that galaxy, not of the transient; host relation not established"
+ },
+ "queries": {
+  "TNS": "could not query (wis-tns.org HTTP 403, twice, 2026-10-17)",
+  "NED_5arcsec": "only NS_0481 (3.77 arcsec)",
+  "SIMBAD_3arcsec": "none",
+  "Gaia_3arcsec": "none",
+  "literature": "Frye et al. 2024 full text (only SN H0pe); Pierel et al. 2024 abstract; web search: no other G165 transient report found"
+ },
+ "supports_transient": [
+  "absent in HST 2016 (F160W 4.8 +- 9.5 nJy, 3-sigma 28.5 nJy) and present in 2023 at 240 nJy F150W (indicative: different instrument, band and aperture)",
+  "detected in 8 bands at S/N 14-41 on 2023-03-30 and in 3 bands on 2023-04-22 (two programmes)",
+  "over 23.8 d only F090W declines significantly (271 -> 173 nJy, z -4.0); F150W (z -1.7) and F200W (z -1.3) are consistent with constant",
+  "absent in all bands in 2025 (4744) and 2026 (VENUS)",
+  "point-like, no catalogued star or galaxy within 3 arcsec"
+ ],
+ "missing_for_type": [
+  "spectrum of the transient",
+  "host identification and redshift",
+  "classification or report (TNS could not be queried)",
+  "light-curve sampling: two detected epochs 23.8 d apart, no rise, no peak; colour evolution rests on one band"
+ ],
+ "identity_conclusion": {
+  "matches_reported_transient": "no match found in the sources that could be queried; TNS could not be queried",
+  "matches_ordinary_catalogue_object_only": "no; no catalogued object within 3 arcsec except NS_0481 at 3.77 arcsec, a separate galaxy",
+  "identity": "unknown",
+  "physical_type": "not confirmed; supernova-like is a hypothesis consistent with the data",
+  "not_implied": "identity unknown does not mean first discovery; not a wormhole or exotic candidate"
+ }
+}
