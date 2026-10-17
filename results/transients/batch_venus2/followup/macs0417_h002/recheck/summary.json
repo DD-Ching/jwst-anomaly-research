@@ -1,5 +1,5 @@
 {
- "label": "derived (model_prediction); summary of recheck_delays.json: converged images only (source-plane residual <= 1e-4 arcsec), order-1 interpolation; realisation ranges are sample ranges of map000-map009, not confidence intervals",
+ "label": "derived (model_prediction); summary of recheck_delays.json by summary.py.txt: converged images only (source-plane residual <= 1e-4 arcsec), order-1 interpolation; realisation ranges are sample ranges of map000-map009, not confidence intervals",
  "new": {
   "7.5": {
    "best_fit_days": [

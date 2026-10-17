@@ -7,7 +7,7 @@ from scipy import ndimage, optimize
 warnings.filterwarnings('ignore')
 D, OUT = sys.argv[1], sys.argv[2]
 RA, DEC = 64.39640738001187, -11.90704044211364
-F, TFAC = 0.4299, 110.65   # D_LS/D_S and days per arcsec^2 (as in #308 predicted_images.json)
+F, TFAC = 0.4299, 110.65   # D_LS/D_S and days per arcsec^2 (#308 predicted_images.json stores 0.4299 and 110.66; exact 110.655; <= 0.2 d effect)
 
 def load(kind, k=None):
     if kind == 'best':

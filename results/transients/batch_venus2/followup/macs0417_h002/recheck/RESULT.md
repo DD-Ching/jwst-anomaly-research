@@ -2,7 +2,8 @@
 
 Owner instruction 2026-10-17 (after #308); plan `PLAN.md`. Model quantities are `model_prediction`; the realisation ranges
 are sample ranges of the first 10 glafic realisations (map000–map009), not confidence intervals. Files:
-`recheck_delays.json` (per model, interpolation order 1 and 3, old and new values), `summary.json`.
+`recheck_delays.json` (per model, interpolation order 1 and 3, old and new values; `recheck_delays.py.txt`), `summary.json`
+(`summary.py.txt`).
 
 ## Checks
 - **Units and axes:** ∂ψ/∂θ from the glafic ψ map equals the deflection maps (median ratio 1.0000 ± 0.0002 on both pixel
@@ -12,11 +13,12 @@ are sample ranges of the first 10 glafic realisations (map000–map009), not con
 - **Reviewer's claim (verified, not assumed):** #308 used φ = ½|θ − β(θ)|² − ψ with each pixel's own β. At an exact
   image this equals φ(θ; β0) = ½|θ − β0|² − ψ, but at a grid point with source-plane residual δβ it is off to first
   order (≈ α·δβ). The re-check fixes β0 = β(h002) and root-finds β(θ) = β0 from each grid candidate.
-- **Self-reference:** the delay of h002 relative to itself is exactly 0 in all 11 models (the #308 grid point nearest
-  h002 showed −14 to −65 d, an artifact of the per-pixel β).
-- **Convergence:** converged images have source-plane residuals ≤ 3e-14″; interpolation order 1 vs 3 differs by
-  ≤ 3.6 d. One 7.3–7.6″ grid candidate per model does **not** converge (residual 0.06–0.39″): a local minimum of
-  |β − β0|, not an image. It includes the best fit's 7.34″ entry (826 d) that set the #308 upper bound.
+- **Self-reference (a convergence check):** φ0 is evaluated at h002, so its delay is 0 by construction; the real check is
+  that a root started 0.3 px away returns to h002 (shift 0.0 in all 11 models). The #308 grid point nearest h002 showed
+  −14 to −65 d, an artifact of the per-pixel β.
+- **Convergence:** converged images have source-plane residuals ≤ 4e-14″; interpolation order 1 vs 3 differs by
+  ≤ 3.6 d. One 7.3–7.6″ grid candidate per model does **not** converge (residual 0.06–0.39″): no root found from it
+  (local `hybr` solver; no global search), so it is not treated as an image. It includes the best fit's 7.34″ entry (826 d) that set the #308 upper bound.
 
 ## Old (#308) vs new delays relative to h002 (days)
 | Image | #308 best fit | #308 realisations | New best fit | New realisations (sample range) |
@@ -29,6 +31,7 @@ are sample ranges of the first 10 glafic realisations (map000–map009), not con
 - **7.6″ image:** in VENUS (2025-10-06) it shows image 1.1's state of **2023-08-20 to 2023-10-28** (#308: about
   2023-07 to 2023-12). No observation covers image 1.1 then, so the VENUS non-detection stays **uninformative**; the
   conclusion "not testable with current epochs" is unchanged.
+- **25.4″ image:** leads by 4,516–5,319 d (12.4–14.6 yr; sample range), i.e. about 2011–2013, still pre-JWST.
 - **Next useful epoch of the 7.6″ image:** **2027-09-14 to 2027-11-22** (#308: about 2027-07 to 2028-01).
 - **Position:** the converged glafic 7.6″ image lies 0.82–1.10″ from catalogued 1c.2 (#308's 0.41″ was the spurious
   candidate); lenstool positions were not re-checked here. Position uncertainty is of order 1″.
