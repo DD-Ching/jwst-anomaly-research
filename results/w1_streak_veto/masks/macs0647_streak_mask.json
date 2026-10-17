@@ -1,0 +1,68 @@
+{
+ "field": "macs0647",
+ "i2d": "s3://stpubdata/jwst/public/jw01433/L3/t/o010/jw01433-o010_t001_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  571,
+  1259
+ ],
+ "pixel_scale_arcsec": 0.24984303414325718,
+ "n_trails_status2": 9,
+ "n_candidates_all_status": 76,
+ "trails": [
+  {
+   "theta_deg": 121.0358426663867,
+   "rho_px": -274.00995862655066
+  },
+  {
+   "theta_deg": 59.503692169281756,
+   "rho_px": -178.40238317816545
+  },
+  {
+   "theta_deg": 178.41522779356492,
+   "rho_px": -88.01805474158004
+  },
+  {
+   "theta_deg": 1.1933329054963804,
+   "rho_px": 88.09968231381481
+  },
+  {
+   "theta_deg": 119.04312525671568,
+   "rho_px": 428.6357690333589
+  },
+  {
+   "theta_deg": 110.16266478917866,
+   "rho_px": -305.1136111362149
+  },
+  {
+   "theta_deg": 66.84589587953253,
+   "rho_px": -124.59013618488927
+  },
+  {
+   "theta_deg": 119.70851860818343,
+   "rho_px": -360.4877468134181
+  },
+  {
+   "theta_deg": 119.19172708291605,
+   "rho_px": -263.4832754806222
+  }
+ ],
+ "mask_pixels": 127239,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "wall_time_s": {
+  "read": 7.0,
+  "total": 30.2
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

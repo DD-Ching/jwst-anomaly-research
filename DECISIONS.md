@@ -5038,3 +5038,16 @@ confining radiation at a throat is found.
 - **Evidence:** `results/w1_stpsf/RESULT.md`. D-018's rejection of STPSF for spike templates is unchanged.
 - **Revisit if:** a per-source forward model (galaxy ⊗ drizzled STPSF PSF, catalogue isophote) reproduces the
   three stars' χ, or the screen moves to PSF-weighted moments.
+
+## D-097 W1 streak veto: STScI `acstools.findsat_mrt` trail masks, run through the injections (2026-10-17)
+- **Decision:** the W1 shear screen drops shape rows (and painted injected images) within 1″ of persistent trails
+  that `acstools.findsat_mrt` finds on the streamed F200W mosaic (`scripts/w1_streak_mask.py`,
+  `inject_shear.py --streak-masks`). Adopted by the frozen rule of `results/w1_streak_veto/PLAN.md` (K1, K2 hold).
+- **Alternatives rejected:**
+  - the post hoc column test of `w1_peak_vet.py`: one peak only, columns only, not run through the injections;
+  - catalogue collinearity: chains are common by chance (`results/w1_floor/RESULT.md`, 21 % of used sources);
+  - a hand-written Hough transform: findsat_mrt is maintained STScI code (BSD-3) built for this (charter order 1);
+  - zeroing > 5σ pixels before the finder: removes bright streaks (PLAN addendum A).
+- **Evidence:** `results/w1_streak_veto/RESULT.md`. MACS1423 S 3.88 → 3.41, p_rot 0.01 → 0.215.
+- **Revisit if:** a faint-streak case (S1063's parallel streaks) needs a lower threshold; recalibrate through
+  injections before using it.

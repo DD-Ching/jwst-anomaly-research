@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: W1 calibrated streak veto (STScI findsat_mrt masks, through injections): adopted; MACS1423 back in; S1063 now at the rule
+- **Why:** handoff of `results/w1_shear_rxj_m0647/RESULT.md`: a streak veto run through injections (S1063, MACS1423,
+  MACS0647 peaks on streaks); the post hoc V1 test could not be used for a limit.
+- **New:** `scripts/w1_streak_mask.py` (streams the F200W SCI, `acstools.findsat_mrt` persistent trails, masks in
+  `results/w1_streak_veto/masks/`), `inject_shear.py --streak-masks` (drops rows and painted images on trails),
+  `scripts/w1_stage_inputs.py` (stages the twelve fields' catalogues, photo-z and models; sha256 where recorded),
+  extra `streaks` in pyproject.
+- **Result (`results/w1_streak_veto/RESULT.md`):** K1 and K2 hold, so the veto is adopted. With it, MACS1423 gives S_max 3.41 and p_rot
+  0.215 and no longer passes. Abell S1063 now passes at the edge (p_rot 0.07 → 0.045; S_max and b_max unchanged);
+  its aperture holds faint parallel streaks the mask misses. To vetting; not a candidate. Headline eleven fields
+  (S1063 out, MACS1423 in, 62.5 arcmin²): Σ(W1) < 5.3 × 10³ / 8.0 × 10² / 3.9 × 10² deg⁻².
+- **Failed approach:** zeroing > 5σ pixels before the trail finder removes bright streaks (MACS0647; PLAN addendum A).
+- **Handoff:** W1 next: vet the S1063 peak (a diagonal-streak version of the V1 test, frozen before computing, or a
+  lower findsat threshold calibrated through injections); more rotation draws for peaks near p_rot 0.05.
+
 ## 2026-10-17: W1 shear screen on RXJ2129 and MACS0647: null; eleven-field limits 4.5e3 / 7.6e2 / 3.8e2 deg⁻²
 - **Why:** TASKS "JWST focus" 1 (W1): the next fields of the previous handoff (DJA v7.0 photo-z).
 - **Result (`results/w1_shear_rxj_m0647/RESULT.md`):** neither passes D-053 (S_max 2.91 / 2.97, p_rot 0.375 / 0.325).
