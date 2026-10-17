@@ -47,6 +47,9 @@
 - The 23.8-day decline is significant only in F090W (z −4.0; F150W −1.7, F200W −1.3).
 - Missing for a type: transient spectrum, host and redshift, classification report, better light-curve sampling.
 - Identity unknown ≠ first discovery; not an exotic candidate.
+- Owner wording (accepted 2026-10-17): "gone", "absent" and "disappears" above mean not detected in later
+  observations (2025, 2026). TNS query not completed (403): a low-cost pending item that blocks nothing. Finding no
+  more this round does not mean the public record was exhausted.
 
 ## Regenerate
 - `scripts/batch_review.py` (sheets, `hit_lightcurve.py` forced photometry); `post_review_checks.json`
