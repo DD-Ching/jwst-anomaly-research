@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-17: Radial screen on MACS0717 with ASTRODEEP-FF photo-z: no flag
+- `scripts/radial_more.py --fields macs0717` (unchanged code), plan frozen first (`results/radial_macs0717/PLAN.md`).
+- **Result (`results/radial_macs0717/RESULT.md`):** 411 elongated, 77 dropped as not behind the lens, 37 `anti` not
+  model-radial, 4 centres, max 5 lines, p_random_max 0.69: no flag (2026-10-08 run without photo-z: 68 / max 5 /
+  p >= 0.70). Top-centre sheet looked at: faint segments between two bright members, no dark centre.
+- #319 follow-ups also landed there: zout pinned by a column-value hash and verified before replacing the file.
+- **Handoff:** the TASKS item is closed. Photo-z cover ~17 % of MACS0717 rows, so this run is only partly cleaner;
+  next `radial` work stays the collinearity streak rule (TASKS JWST focus).
+
 ## 2026-10-17: W1 shear on MACS0717 with ASTRODEEP-FF photo-z: D-053 rule not passed, nearly blind; headline unchanged
 - **Why:** MACS0717 was the one screened HFF cluster without W1 (no DJA photo-z). HFF-DeepSpace downloads return
   HTTP 401; ASTRODEEP-FF (Di Criscienzo+17, VizieR J/A+A/607/A30) is public: `scripts/astrodeep_zout.py` → zout.

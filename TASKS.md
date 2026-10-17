@@ -266,7 +266,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        detector checked on that streak, plus its own injections; ~~centre-level axial concentration~~ tried
        2026-10-17, gate K failed (A 0.73 < 0.9, `results/radial_axial/RESULT.md`); next a collinearity rule with a
        new known streak as its gate);
-     - re-run MACS0717 radial when a photo-z catalogue exists;
+     - ~~re-run MACS0717 radial when a photo-z catalogue exists~~ done 2026-10-17 with ASTRODEEP-FF photo-z (no flag, max 5 lines,
+       p 0.69; `results/radial_macs0717/RESULT.md`; photo-z cover ~17 % of rows);
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);

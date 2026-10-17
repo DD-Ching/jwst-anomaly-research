@@ -1,0 +1,90 @@
+{
+ "model": "macs0717-cats",
+ "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw06882-o029_t063_nircam_clear-f200w/jw06882-o029_t063_nircam_clear-f200w_cat.ecsv",
+ "spike_stars": {
+  "path": "results/radial_macs0717/macs0717/macs0717_gaia_stars.ecsv",
+  "n": 34,
+  "sha256": "b6db863833166a5a3ca9526f6588059e9bcc294ba2377287e9cdbf3f10c210af"
+ },
+ "n_spike_segments_dropped": 64,
+ "n_elongated": 411,
+ "n_not_background_dropped": 77,
+ "n_anti": 42,
+ "n_anti_not_model_radial": 37,
+ "n_mu_radial_nan": 0,
+ "n_peaks": 4,
+ "n_dark_centre_peaks": 1,
+ "random_peaks_mean": 11.955,
+ "random_peaks_p95": 21.0,
+ "max_lines": 5,
+ "random_max_lines": {
+  "4": 62,
+  "5": 111,
+  "6": 25,
+  "7": 2
+ },
+ "p_random_max": 0.69,
+ "peaks": [
+  {
+   "x": -10.5,
+   "y": -30.5,
+   "ra": 109.4018885528404,
+   "dec": 37.73730577777778,
+   "n_lines": 5,
+   "nearest_label": 764,
+   "nearest_sep_arcsec": 0.5024141260899856,
+   "nearest_snr": 13.801197523052927,
+   "dark_centre": false,
+   "p_random": 0.69
+  },
+  {
+   "x": -23.5,
+   "y": -24.0,
+   "ra": 109.40645533254755,
+   "dec": 37.739111333333334,
+   "n_lines": 4,
+   "nearest_label": 3591,
+   "nearest_sep_arcsec": 0.7911645194387467,
+   "nearest_snr": 1697.978347764311,
+   "dark_centre": false,
+   "p_random": 1.0
+  },
+  {
+   "x": -8.0,
+   "y": -20.0,
+   "ra": 109.40101032597363,
+   "dec": 37.74022244444445,
+   "n_lines": 4,
+   "nearest_label": 832,
+   "nearest_sep_arcsec": 0.7386823301708489,
+   "nearest_snr": 18.378342369198293,
+   "dark_centre": false,
+   "p_random": 1.0
+  },
+  {
+   "x": -10.5,
+   "y": -7.0,
+   "ra": 109.4018885528404,
+   "dec": 37.743833555555554,
+   "n_lines": 3,
+   "nearest_label": 803,
+   "nearest_sep_arcsec": 1.1447435563109034,
+   "nearest_snr": 37.978704376378516,
+   "dark_centre": true,
+   "p_random": 1.0
+  }
+ ],
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 100.0,
+  "grid_arcsec": 0.5,
+  "line_tol_arcsec": 1.0,
+  "max_len_arcsec": 15.0,
+  "min_lines": 3,
+  "dark_radius_arcsec": 1.0,
+  "n_random": 200,
+  "max_radial_mu": 3.0
+ }
+}

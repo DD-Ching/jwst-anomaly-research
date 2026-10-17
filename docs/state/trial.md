@@ -244,6 +244,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (W5 counts at `radial` centres: plan, script, Gaia via CfA VizieR mirror, planned run, 2″-neighbour diagnostic) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01U6Y4Kd, 20:08–20:50Z |
 | 2026-W42 | ≈ 0.25 (W1 shear on MACS0717: ASTRODEEP-FF photo-z adapter, streak mask, screen, injections, S_max sheet) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01HW32mP, 21:08–21:35Z |
 | 2026-W42 | — | — | — | 0.3 (#319 review follow-ups: column-value hash pin, masked-flag tests, handoff) | cloud routine, 22:08–22:30Z |
+| 2026-W42 | ≈ 0.1 (radial screen on MACS0717 with ASTRODEEP-FF photo-z: plan, run, sheet) | — | — | 0.05 (claim, state files, PR) | cloud routine, 22:27–22:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
