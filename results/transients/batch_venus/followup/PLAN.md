@@ -49,6 +49,12 @@ regions, no batch re-run, no threshold changes, no new solver.
    `compare` on the band pair with the largest |z|. The control rule is fixed before measuring:
    - h003 is "explained by programme-to-program scatter" if its control tail fraction is ≥ 0.05, as in #286 h043;
    - otherwise it stays undetermined.
+   - **Fixed parameters (added 07:20Z, before the controls run; step 1 done from the committed table):**
+     `pick-arc` on `jw01176-o211_t009_nircam_clear-f356w_i2d.fits` at the h003 position, `--half-arcsec 16
+     --match 1.5 --step-arcsec 0.2 --min-sep-arcsec 0.6 --n 80 --seed 1` (the Abell 2744 h182 settings); controls and
+     h003 measured together by `hit_lightcurve.py` (0.15″); the decisive pair is the largest-|z| same-band pair,
+     F356W `jw01176-o211` → `jw01208-o004` (z = −9.09). Other pairs are reported, not decisive. Fewer than 20 controls
+     measured in both mosaics of the decisive pair ⇒ undetermined.
 3. If the controls cannot run (too few controls, tool limits), it stays undetermined and the minimal missing input
    is recorded.
 
