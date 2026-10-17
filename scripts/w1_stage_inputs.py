@@ -8,7 +8,7 @@ For each field (``inject_shear.field_spec``) this fetches, into the paths ``load
 - the photo-z file ``spec["photoz"][1]``: a DJA eazy zout (a plain file, or one member streamed
   out of a ``.photoz.tar.gz`` that is never stored), a CANUCS DR1 photometry catalogue, or
   (MACS0717) a zout that ``astrodeep_zout.py`` writes from a live VizieR query, checked against
-  the sha256 of the written file (a different astropy or VizieR serialisation fails the check).
+  a sha256 of its column values (``astrodeep_zout.content_sha256``), not of the FITS bytes.
 
 Downloads reuse ``photometry.fetch_catalog`` and ``orphan_pairs.fetch_tar_member`` (verified,
 ``.part`` files removed on failure); the verified file is then moved to the expected name. Files
@@ -30,6 +30,8 @@ import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
+from astropy.table import Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -112,7 +114,7 @@ PHOTOZ = {
 # No DJA photo-z for MACS0717 (2026-10-17): ASTRODEEP-FF from VizieR, written by astrodeep_zout.py
 PHOTOZ["m0717clu_zout.fits"] = {
     "astrodeep": "m0717",
-    "sha256": "b072ff2e81f744cf4d9116a96654bfc3cfaa5aaaf1dfee8054f3489899108a2e",
+    "sha256": "ef1a24d3440e70dd537db605b94e8a5f66080a3541878384aa27d5c3a4de7ca0",
 }
 for _f, _sha in (
     ("macs0417", "ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd"),
@@ -207,11 +209,22 @@ def stage_zip_members(files: dict[str, tuple[str, str]]) -> dict:
     return row | {"status": "fetched" if missing else "present"}
 
 
+def _content_sha256(path: Path) -> str | None:
+    try:
+        return astrodeep_zout.content_sha256(Table.read(path))
+    except Exception:  # noqa: BLE001 - an unreadable file is re-fetched
+        return None
+
+
 def stage_astrodeep(target: Path, src: dict) -> dict:
-    """Write the ASTRODEEP-FF zout (``astrodeep_zout.write``, from VizieR) and check its sha256."""
+    """Write the ASTRODEEP-FF zout (``astrodeep_zout.write``, from VizieR) and check its values.
+
+    The pin is ``astrodeep_zout.content_sha256`` (column values), so a new astropy version that
+    serialises identical content differently still passes.
+    """
     url = f"vizier:{astrodeep_zout.CATALOG}/{src['astrodeep']}"
     row = {"path": str(target), "url": url, "pinned": True, "bytes": 0}
-    if target.exists() and acquire.sha256_file(target) == src["sha256"]:
+    if target.exists() and _content_sha256(target) == src["sha256"]:
         return {**row, "status": "present", "sha256": src["sha256"]}
     try:
         got = astrodeep_zout.write(src["astrodeep"], target)

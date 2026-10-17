@@ -31,6 +31,7 @@ from astropy.table import Table, join
 SIQR_TO_SIGMA = 1.483  # 1 / 0.6745: Gaussian sigma per semi-interquartile range (ASSUMPTION)
 Z_FLOOR = 0.01  # lower bound of z160 (ASSUMPTION; attach_photoz turns values <= 0 into NaN)
 CATALOG = "J/A+A/607/A30"
+ZOUT_COLUMNS = ("id", "ra", "dec", "z_phot", "z160", "z840")
 
 
 def fetch(field: str) -> tuple[Table, Table]:
@@ -67,8 +68,21 @@ def to_zout(pos: Table, z: Table) -> Table:
     return out
 
 
+def content_sha256(t: Table) -> str:
+    """sha256 of the zout columns' values (little-endian, rows in file order), not the FITS bytes.
+
+    A new astropy or FITS header layout leaves it unchanged; a changed value, row or column fails.
+    """
+    h = hashlib.sha256()
+    for name in ZOUT_COLUMNS:
+        dtype = "<i8" if name == "id" else "<f8"
+        h.update(name.encode() + b"\0")
+        h.update(np.ascontiguousarray(np.asarray(t[name]), dtype=dtype).tobytes())
+    return h.hexdigest()
+
+
 def write(field: str, path: Path) -> str:
-    """Fetch, convert and write ``path`` (via a ``.part`` file); returns the file's sha256."""
+    """Fetch, convert and write ``path`` (via a ``.part`` file); returns ``content_sha256``."""
     pos, z = fetch(field)
     out = to_zout(pos, z)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -79,7 +93,7 @@ def write(field: str, path: Path) -> str:
     finally:
         part.unlink(missing_ok=True)
     print(f"{field}: {len(pos)} positions, {len(z)} redshifts, {len(out)} usable rows")
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return content_sha256(Table.read(path))
 
 
 def main(argv=None) -> int:
@@ -87,7 +101,7 @@ def main(argv=None) -> int:
     ap.add_argument("--field", default="m0717", choices=("m0717",))
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
-    print(f"sha256 {write(args.field, args.out)}")
+    print(f"content sha256 {write(args.field, args.out)}")
     return 0
 
 

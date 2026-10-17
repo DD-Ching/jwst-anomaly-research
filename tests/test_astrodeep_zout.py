@@ -3,7 +3,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from astropy.table import Table
+from astropy.table import MaskedColumn, Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
@@ -61,3 +61,40 @@ def test_fetch_m0717_live():
     assert (
         len(az.to_zout(pos, z)) == 2928
     )  # relFlag 1 (2,866) plus 62 spectroscopic rows with relFlag 0
+
+
+def test_masked_flags_and_finite_spec_range():
+    pos = Table({"ID": [1, 2, 3], "RAJ2000": [0.0, 0.1, 0.2], "DEJ2000": [0.0, 0.1, 0.2]})
+    z = Table(
+        {
+            "ID": [1, 2, 3],
+            "zbest": [0.8, 1.5, 2.5],
+            "e_zbest": [0.3, 0.1, 0.2],
+            "relFlag": MaskedColumn([1.0, 0.0, 1.0], mask=[False, True, False]),
+            "f_zbest": MaskedColumn([1.0, 0.0, 0.0], mask=[False, False, True]),
+        }
+    )
+    out = az.to_zout(pos, z)
+    by_id = {int(r["id"]): r for r in out}
+    assert set(by_id) == {1, 3}  # masked relFlag: unreliable; masked f_zbest: photometric
+    assert by_id[1]["z160"] == by_id[1]["z840"] == 0.8  # spectroscopic: finite e_zbest ignored
+    assert np.isclose(by_id[3]["z840"], 2.5 + az.SIQR_TO_SIGMA * 0.2)
+
+
+def test_content_sha256_survives_fits_round_trip(tmp_path):
+    pos = Table({"ID": [1, 2], "RAJ2000": [0.0, 0.1], "DEJ2000": [0.0, 0.1]})
+    z = Table(
+        {
+            "ID": [1, 2],
+            "zbest": [0.5, 1.2],
+            "e_zbest": [0.1, 0.2],
+            "relFlag": [1.0, 1.0],
+            "f_zbest": [0.0, 0.0],
+        }
+    )
+    out = az.to_zout(pos, z)
+    path = tmp_path / "z.fits"
+    out.write(path, format="fits")
+    assert az.content_sha256(Table.read(path)) == az.content_sha256(out)
+    out["z_phot"][0] += 1e-9
+    assert az.content_sha256(out) != az.content_sha256(Table.read(path))

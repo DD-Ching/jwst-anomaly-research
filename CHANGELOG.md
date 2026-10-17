@@ -11,7 +11,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   of the headline (twelve fields, D-097); counted anyway, limits move ≤ 1.5 %. S_max sheet looked at.
 - **Failed approach:** HFF-DeepSpace v3.9 tarballs (cosmos.phy.tufts.edu) need credentials (401, 2026-10-17).
 - **Handoff:** W1 field additions are at diminishing returns (T4); the low-R fields (MACS0717, MACS0647) would need
-  a member-aware responsivity calibration (hypothesis: members without photo-z dilute R; untested).
+  a member-aware responsivity calibration (hypothesis: members without photo-z dilute R; untested). Open
+  bookkeeping (none changes the null): `inject_radial.combine` admits any field with a photo-z file, so MACS0717's
+  exclusion is prose only; a photo-z coverage threshold there is a frozen-rule change and needs its own plan. The
+  62 spectroscopic rows with `relFlag` 0 are kept (possible blends; keep or drop is open). The zout pin is a
+  column-value hash (`astrodeep_zout.content_sha256`), so an astropy upgrade does not reject identical content.
 
 ## 2026-10-17: W5 counts at the `radial` centres: no deficit; the deficit test has no power at JWST depth
 - `scripts/w5_radial_counts.py`; plan frozen first (`results/w5_radial_counts/PLAN.md`, `RESULT.md`). 30 centres,
