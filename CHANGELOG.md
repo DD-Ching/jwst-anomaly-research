@@ -75,11 +75,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-18: W3 ZTF v7: the v4→v6 recovery drop is mostly missing catalogue epochs (2022-10 to 2023-10), not a bug
 - Post hoc stage trace (`results/w3_ztf/v7/`). It reproduces every stored count in both areas.
-- Gap 756 of 2,000 injections: about 654 from pre-injection sampling eligibility, about 102 from vetting given
-  eligibility (20 common-mode failures in the new area, 0 in the old).
+- Gap 756 of 2,000 injections: about 654–704 from pre-injection sampling eligibility (depending on the rate used),
+  about 52–102 from pre-screen and vetting given eligibility (20 common-mode failures in the new area, 0 in the old).
 - The 72 unexplained ρ 0.01, t_E 100 d cases all stop at MIN_BRACKET. 49 of them lack a post-event baseline that
   IRSA lists as official good exposures. Most new-area exposures from 2022-10 to 2023-10 have no DR24 catalogue
-  detection; the images exist (2 of 3 checked).
+  detection; an IRSA image is listed for 1 of 2 distinct exposures checked.
 - No implementation error changes the outcome; 2,600 unmatched 2023 detections are left open.
 - **Handoff:** route paused. Reopen only with a later release covering those epochs, or owner-authorized image
   forced photometry.

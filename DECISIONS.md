@@ -5196,8 +5196,8 @@ confining radiation at a throat is found.
   reproduce in Npix 7134. The search group was not read. Revisit if: the
   owner wants capability conditioned on cadence (e.g. per-star umbra coverage), decided before new data are read.
 - **Addendum 2026-10-18 (v7, `results/w3_ztf/v7/RESULT.md`):** the route is **paused**. The v4→v6 drop is about
-  654 of 756 injections from sampling: DR24 light curves lack most 2022-10 to 2023-10 exposures in Npix 7134, and
-  2024 is sparse. About 102 come from vetting given eligibility. No bug changes the outcome. Reopen if: a later
+  654–704 of 756 injections from sampling: DR24 light curves lack most 2022-10 to 2023-10 exposures in Npix 7134, and
+  2024 is sparse. About 52–102 come from pre-screen and vetting given eligibility. No bug changes the outcome. Reopen if: a later
   release covers those epochs (`month_script.py.txt` check on calibration data first), or the owner authorizes
   image-level forced photometry for the post-event baseline. Not reopened by another batch or area of DR24.
 

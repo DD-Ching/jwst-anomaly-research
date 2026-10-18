@@ -26,6 +26,13 @@ for k, r in rows.items():
     part = n_rec / n_el * r['eligible_gap']
     r['gap_from_sampling_eligibility'] = round(part, 1)
     r['gap_from_conditional_recovery'] = round(r['gap'] - part, 1)
+for k, r in rows.items():  # the same split with the OLD conditional rate (the split depends on the rate used)
+    o_rec, o_el = (int(x) for x in r['old_recovered_if_eligible'].split('/'))
+    part = o_rec / o_el * r['eligible_gap']
+    r['gap_from_sampling_eligibility_old_rate'] = round(part, 1)
+    r['gap_from_conditional_recovery_old_rate'] = round(r['gap'] - part, 1)
+out['totals']['gap_from_sampling_eligibility_old_rate'] = round(sum(r['gap_from_sampling_eligibility_old_rate'] for r in rows.values()), 1)
+out['totals']['gap_from_conditional_recovery_old_rate'] = round(sum(r['gap_from_conditional_recovery_old_rate'] for r in rows.values()), 1)
 out['totals']['gap_from_sampling_eligibility'] = round(sum(r['gap_from_sampling_eligibility'] for r in rows.values()), 1)
 out['totals']['gap_from_conditional_recovery'] = round(sum(r['gap_from_conditional_recovery'] for r in rows.values()), 1)
 json.dump(out, open('results/w3_ztf/v7/summary.json', 'w'), indent=1); open('results/w3_ztf/v7/summary.json', 'a').write('\n')

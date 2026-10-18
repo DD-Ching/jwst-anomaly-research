@@ -28,8 +28,6 @@ for g in groups:
     sel = np.array([tuple(x) in quads for x in eq]) & (np.asarray(expo['infobits']) == 0)
     ins = sel.copy()
     ins[sel] = wz.in_quad(expo[sel], g['ra'], g['dec'])
-    ok = set(np.unique(np.asarray(expo['expid'])[ins]).tolist())
-    yrs = [eyear[i] for i in np.flatnonzero(ins)]
     seen = set()
     for i in np.flatnonzero(ins):  # one count per exposure id
         e = int(expo['expid'][i])

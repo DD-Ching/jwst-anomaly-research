@@ -22,7 +22,9 @@
   and `../v6/injections_v6.json`. Stage counts add up to 200 per cell.
 - **Sampling-eligible group** (fixed from the frozen pre-screen requirements before the trace was read): ≥ MIN_RUN
   epochs on ≥ MIN_NIGHTS nights inside the umbra, and ≥ MIN_BRACKET epochs before and after it, all before
-  injection. Recovery is reported for both groups and for all 200.
+  injection. Recovery is reported for both groups and for all 200. It counts all carrier epochs, so it is a
+  sampling indicator, not a strict necessary condition: for example, at blend 0.7, t_E 100 d in the old area 173 are
+  flagged against 172 eligible.
 
 ## 2. How much of the gap is explained (`summary.json`)
 
@@ -40,13 +42,17 @@
 | 0.1, 0.7, 30 | 120 | 48 | 120/172, 48/93 | 40.8 | 31.2 |
 | **total (2,000 per area)** | **1,459** | **703** | — | **654.2** | **101.8** |
 
-- **Sampling part** = new conditional rate × (old eligible − new eligible). The other part is the difference in
-  recovery among injections that already had enough sampling.
-- **Sampling, about 654 of 756:** in the new area most injections lack the epochs the frozen pre-screen requires
-  (umbra epochs and nights, and baseline before and after). Recovery given eligibility is similar in both areas in
-  most cells.
-- **Rules, about 102 of 756, given eligibility.** Vetting first-fail counts in the new area, summed over the 10
-  cells, are stored per cell:
+- **Sampling part** = conditional rate × (old eligible − new eligible). The rest is the difference in recovery among
+  sampling-eligible injections (pre-screen and vetting). The split depends on the rate used:
+  - with the new area's conditional rate: 654.2 sampling and 101.8 conditional (table);
+  - with the old area's conditional rate: 704.2 and 51.8 (`summary.json`, `*_old_rate`).
+  - The sampling part therefore explains about 654–704 of the 756 gap.
+- **Sampling:** in the new area most injections lack the epochs the frozen pre-screen requires (umbra epochs and
+  nights, and baseline before and after).
+- **Recovery given eligibility** differs by more than 0.1 in 3 of 10 cells, all at blend 0.7: 0.94 vs 0.84, 0.85 vs
+  0.73 and 0.70 vs 0.52 (old vs new).
+- **Pre-screen and vetting given eligibility, about 52–102 of 756.** Vetting first-fail counts in the new area,
+  summed over the 10 cells, are stored per cell:
   - **common-mode test: 20 injections** in the new area, 0 in the old. The v6 comparison pool is the control group
     only (sample members excluded), which is a v6 method change. The link from that change to the common-mode
     failures is not tested here.
@@ -58,33 +64,36 @@
   not blocked by run length or by nights.
 - **59 have fewer than 20 series epochs after the umbra.** For 49 of them, IRSA lists ≥ 20 official good exposures
   after it (infobits 0, star ≥ 10″ inside the footprint), but the series lacks them. The median umbra end is
-  MJD 60153 (2023-08).
+  MJD 60153 (2023-07-28).
 - **13 have fewer than 20 series epochs before the umbra.** For 12 of them, the official exposures are also fewer
   than 20.
 
 ## 4. Why the series lacks those exposures (`drops_v6.json`, `month_v6.json`, `match_v6.json`; old area `*_v4.json`)
 - **Monthly catalogue coverage, new area, official r-band quadrant exposures with infobits 0:**
-  - **2022-10 to 2023-10:** most have no catalogue detection of any loaded star (e.g. 2023-03: 2 of 41 have one;
-    2023-10: 1 of 68). The frozen good-exposure rule (≥ 50 % of in-play comparison stars detected cleanly) then
-    drops them: 20,960 covered carrier exposures in 2023.
-  - **2024:** the area was barely observed (670 good covered exposures, `yearly_v6.json`).
+  - **2022-10 to 2023-10:** 148 of 607 official quadrant exposures (24 %) have any catalogue detection of a loaded
+    star (e.g. 2023-03: 2 of 41; 2023-10: 1 of 68; better in 2022-11, 30 of 43). The frozen good-exposure rule
+    (≥ 50 % of in-play comparison stars detected cleanly) then drops them: 20,960 carrier-member × exposure pairs in
+    2023 (`drops_v6.json`).
+  - **2024:** the area was barely observed: 73 r-band quadrant exposures (`match_v6.json`), or 670 carrier-member ×
+    exposure pairs (`yearly_v6.json`).
 - **Old area:** every month until 2024-06 has detections in all exposures (`month_v4.json`).
 - **Matching:** detection-to-exposure matching is complete in every year except 2023 in the new area, where 2,600 of
-  29,164 detections do not match an exposure (`match_v6.json`). That is too few to explain the empty exposures. It
-  is kept as an open minimal case: Npix 7134, r band, 2023.
-- **Images:** IRSA's image search lists a science image for 2 of 3 sampled empty exposures (`ibe_check.json`;
-  2023-08-09). The images exist; the DR24 catalogue light curves do not contain measurements from them for these
-  fields.
+  29,164 detections do not match an exposure (`match_v6.json`). Another 529 detections have a non-finite time; all
+  of them are unmatched. Whether the 2,600 would fill some empty exposures was not tested. They are kept as an open
+  minimal case: Npix 7134, r band, 2023.
+- **Images:** the check picked the same exposure twice, so only 2 distinct empty exposures were checked. IRSA's image
+  search lists a science image for 1 of them (`ibe_check.json`; 2023-08-09). At least some of the images exist; how
+  many is not established.
 
 ## 5. Classification of the cause
 - **Implementation error:** none found that changes the outcome. The trace reproduces every stored count. The 2,600
   unmatched 2023 detections remain an open small item.
 - **Missing sampling, the main cause:**
-  - **in the catalogue:** DR24 light curves for these fields lack most exposures from 2022-10 to 2023-10, although
-    the images exist;
+  - **in the catalogue:** DR24 light curves for these fields lack most exposures from 2022-10 to 2023-10; the image
+    check is limited to 1 of 2 distinct exposures;
   - **in the survey:** 2024 was barely observed, and in some cases the event falls before the first observations.
-- **Rules excluding the target given enough sampling, a minor cause:** about 102 injections (common-mode, sharp-edge
-  and achromatic tests; counts above). No rule was changed.
+- **Pre-screen and vetting given enough sampling, a minor cause:** about 52–102 injections depending on the rate
+  used (common-mode, sharp-edge and achromatic tests; counts above). No rule was changed.
 
 ## 6. Recommendation (the route is paused)
 - Another batch or another area in the DR24 catalogue would add more data of the same kind. It would not restore the
@@ -92,8 +101,8 @@
 - **Reopen if either holds:**
   1. a later ZTF data release whose light curves contain the 2022-10 to 2023-10 exposures for such fields. Check
      with `month_script.py.txt` on calibration data before any search data are read;
-  2. the owner authorizes image-level forced photometry from the IRSA science images (existence checked for 2 of 3
-     sampled exposures) to fill the post-event baseline of calibration carriers. The scale and cost of that are not
+  2. the owner authorizes image-level forced photometry from the IRSA science images (an image is listed for 1 of 2
+     distinct sampled exposures) to fill the post-event baseline of calibration carriers. The scale and cost of that are not
      estimated here (unknown).
 - In both cases the frozen thresholds stay. Recovery is quoted over all injections, with the sampling groups shown
   alongside.
