@@ -1,0 +1,62 @@
+[
+ {
+  "visit": "ifu901010",
+  "filter": "F105W",
+  "mjd": 61263.73,
+  "pixscale": 0.1282,
+  "photfnu": 1.1552773e-07,
+  "athena2_12781": {
+   "flux_njy": 167.6,
+   "err_njy": 31.2
+  },
+  "glafic_7p6": {
+   "flux_njy": 10.4,
+   "err_njy": 29.1
+  }
+ },
+ {
+  "visit": "ifu902010",
+  "filter": "F105W",
+  "mjd": 61282.91,
+  "pixscale": 0.1282,
+  "photfnu": 1.1553495e-07,
+  "athena2_12781": {
+   "flux_njy": 136.3,
+   "err_njy": 27.6
+  },
+  "glafic_7p6": {
+   "flux_njy": 26.7,
+   "err_njy": 30.8
+  }
+ },
+ {
+  "visit": "ifu903010",
+  "filter": "F105W",
+  "mjd": 61301.96,
+  "pixscale": 0.1282,
+  "photfnu": 1.1554212e-07,
+  "athena2_12781": {
+   "flux_njy": 181.2,
+   "err_njy": 27.6
+  },
+  "glafic_7p6": {
+   "flux_njy": -8.6,
+   "err_njy": 32.3
+  }
+ },
+ {
+  "visit": "ifu904010",
+  "filter": "F105W",
+  "mjd": 61320.68,
+  "pixscale": 0.1282,
+  "photfnu": 1.1554917e-07,
+  "athena2_12781": {
+   "flux_njy": 226.7,
+   "err_njy": 28.0
+  },
+  "glafic_7p6": {
+   "flux_njy": 66.9,
+   "err_njy": 28.3
+  }
+ }
+]

@@ -39,8 +39,12 @@ on that, and nothing points to it).
 ## Recommendation: **not worth requesting now**
 - A JWST or HST request would duplicate an approved, executing programme (duplication checks; DD urgency), and the
   object is already named and followed by its discoverers.
-- What we can still contribute without new observations: (1) a recorded, blind comparison of our model-based
-  reappearance window and position with the outcome, when HST 18470 / JWST 12781 data become public; (2) the
-  cheapest specific check now — whether the four public HST 18470 visits (2026-08-11 to 10-07) already show a new
-  point source at the predicted counter-image (existing data, no request).
+- What we can still contribute without new observations: a recorded, blind comparison of our model-based
+  reappearance window and position with the outcome, when later HST 18470 / JWST 12781 data become public.
+- **Done this round (existing data, rule fixed first):** in the four public HST 18470 WFC3/IR F105W visits
+  (2026-08-11 to 10-07) no new point source is seen at the 12781 "Athena-2" position or at our 7.6″ position: changes
+  vs visit 1 are +1.4σ at both (167.6 → 226.7 nJy and 10.4 → 66.9 nJy; errors ~28–32 nJy) and the stamps show only
+  the lensed galaxy ~1″ away (`macs0417_hst18470/`). The expected ~200–330 nJy (F150W) would be ≥ 5σ, but the
+  counterpart position is uncertain at the ~1″ level and the F105W brightness of a supernova may differ, so this is a
+  statement about existing data to 2026-10-07, not a test failure of either prediction.
 - No science-goal draft is written, because no proposal is recommended.

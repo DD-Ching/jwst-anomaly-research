@@ -7,6 +7,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   a common flux offset between the mosaics. **A370 h010:** within 80 matched arc-pixel controls (tail 0.10): no support
   for a real change. Batch 3 has no real change.
 - **MACS0417 h002 = SN Athena**, found in October 2025 by another team (JWST DD 12781, GO 4568, HST 18470 follow-up).
+- **HST 18470 visits 1–4 (public, to 2026-10-07):** no new point source at the 12781 or our predicted counter-image
+  position (+1.4σ at both).
 - **Decision:** not worth requesting new observations now; the predicted reappearance is covered by approved
   programmes (`results/transients/confirm_r1/DECISION.md`).
 
