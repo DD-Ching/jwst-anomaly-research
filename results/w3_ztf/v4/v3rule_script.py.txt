@@ -1,0 +1,26 @@
+# Post hoc (deviation): the v4 sample searched with the v3 mapping (no footprint test, no expid dedupe),
+# to show what the v4 fixes removed. Usage: python v3rule_script.py.txt <out json>
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(3838)
+wz.in_quad = lambda expo, ra, dec, margin=0.0: np.ones(len(expo), bool)
+wz.dedupe = lambda out: sorted(out, key=lambda x: x[0])
+groups = json.load(open(wz.SAMPLE))['groups']
+rows, cov = wz.context(None)
+out, n_ser = [], 0
+for g in groups:
+    for filt, other in ((2, 1), (1, 2)):
+        s = wz.series(g, rows, cov, filt)
+        if len(s) < 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+            continue
+        n_ser += 1
+        for x in wz.screen(s, wz.series(g, rows, cov, other), cov):
+            out.append({'key': g['key'], 'ra': g['ra'], 'dec': g['dec'], 'filter': filt, **x})
+summ = {'series_searched': n_ser, 'flagged_runs': len(out), 'flagged_groups': len({x['key'] for x in out}),
+        'passed_groups': sorted({x['key'] for x in out if x['pass']})}
+json.dump({'label': 'derived; post hoc: v4 sample under the v3 mapping', 'summary': summ, 'runs': out},
+          open(sys.argv[1], 'w'), default=float)  # compact (< 1 MB)
+open(sys.argv[1], 'a').write('\n')
+print(summ)

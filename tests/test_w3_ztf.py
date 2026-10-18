@@ -156,3 +156,58 @@ def test_apply_dmag_noise_grows_with_depth():
     out = wz.apply_dmag(s, np.full(400, 3.0), rng=rng)
     d = np.array([x[1] for x in out])
     assert abs(d.mean() - 3.0) < 0.02 and 0.05 < d.std() < 0.2  # 1 mag above the limit: sigma ~0.13
+
+
+def _corners(expo, ra, dec, half_deg):
+    """Square footprints of half-size ``half_deg`` around (ra, dec), corners in mixed order."""
+    c = np.cos(np.radians(dec))
+    pts = [(-1, -1), (1, 1), (1, -1), (-1, 1)]
+    for i, (sx, sy) in enumerate(pts, 1):
+        expo[f"ra{i}"] = np.full(len(expo), ra + sx * half_deg / c)
+        expo[f"dec{i}"] = np.full(len(expo), dec + sy * half_deg)
+
+
+def test_v4_footprint_test():
+    from astropy.table import Table
+
+    expo = Table({"expid": [1, 2]})
+    _corners(expo, 359.99, 20.0, 0.05)  # wraps through RA 0
+    assert wz.in_quad(expo, 359.99, 20.0).all()
+    assert not wz.in_quad(expo, 359.99, 20.0 + 0.05 - 5 / 3600).any()  # within the 10" margin
+    assert not wz.in_quad(expo, 0.2, 20.0).any()
+    assert wz.in_quad(Table({"expid": [1]}), 0.0, 0.0).all()  # no corners: pre-v4 behaviour
+
+
+def test_v4_no_nd_where_star_is_off_the_quadrant():
+    # the target is outside the quadrant at exposures 30-32 (pointing moved it to a neighbour)
+    expo, et, rows, star = _toy()
+    _corners(expo, 10.0, 60.0, 0.2)
+    for k in (30, 31, 32):
+        for i in range(1, 5):
+            expo[f"dec{i}"][k] += 0.5
+    rows[50] = star(np.delete(et, [30, 31, 32]))
+    cov = wz.coverage(rows, set(range(10)), set(), expo)
+    s = wz.series({"members": [50]}, rows, cov, 2)
+    assert not any(x[2] for x in s) and len(s) == 57 - 2  # no ND; first/last exposure out of span
+
+
+def test_v4_objectid_quadrant_ambiguity_and_dedupe():
+    assert wz.oid_quad(826215400000661) == (826, 59, 2)
+    assert wz.oid_quad(1856105100003845) == (1856, 16, 1)
+    assert not wz.ambiguous([826215400000661, 826115400000374, 1857208200005132])
+    assert wz.ambiguous([826215400000661, 826215400000999])
+    a = (1.0, 0.0, True, 3.0, Q, 7, 16.0, 0.0)
+    b = (1.0001, 0.2, False, 3.0, Q, 7, 16.0, 0.0)
+    assert wz.dedupe([a, b]) == [b] and wz.dedupe([b, a]) == [b]
+
+
+def test_v4_footprint_great_circle_edges_at_high_dec():
+    from astropy.table import Table
+
+    c = dict(ra1=99.0, dec1=65.3, ra2=101.0, dec2=65.3, ra3=101.0, dec3=64.3, ra4=99.0, dec4=64.3)
+    expo = Table({k: [v] for k, v in c.items()})
+    # the northern edge is a great circle bowing ~12" poleward of dec 65.3 at RA 100
+    assert wz.in_quad(expo, 100.0, 65.3 + 5 / 3600, 0.0).all()
+    assert not wz.in_quad(expo, 100.0, 65.3 + 20 / 3600, 0.0).any()
+    expo["dec2"][0] = np.nan
+    assert not wz.in_quad(expo, 100.0, 65.0, 0.0).any()  # a non-finite corner counts as outside

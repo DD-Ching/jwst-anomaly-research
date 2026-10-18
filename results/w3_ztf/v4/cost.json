@@ -1,0 +1,12 @@
+{
+ "label": "derived; download accounting (archive reads bounded by file sizes; exact transferred bytes not stored)",
+ "objects_partition": "ztf_dr24_objects-hats Norder=4 Npix=959 part0.snappy.parquet",
+ "objects_partition_file_mb": 574.2,
+ "objects_columns_read": 11,
+ "lc_partition": "ztf_dr24_lc-hats Norder=5 Npix=3838 part0.snappy.parquet",
+ "lc_partition_file_mb": 846.0,
+ "lc_columns_read": 7,
+ "archive_upper_bound_mb": 1420.2,
+ "tap_mb": 6.65,
+ "cutouts_separate": "image_check_posthoc.json cutout_bytes"
+}

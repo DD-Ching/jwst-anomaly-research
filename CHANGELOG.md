@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W3 ZTF v4: new-source validation failed (one W3 cell); footprint fix removes all flags; 0 dimming in 38 checked non-detections
+- `scripts/w3_ztf.py` v4 (`--pix 3838`): non-detections only ≥ 10″ inside each exposure's quadrant footprint
+  (IRSA corners, gnomonic after review), ambiguous groups dropped, one entry per expid; plan frozen before reading (`results/w3_ztf/v4/PLAN.md`).
+- 1,000 new groups (Npix 3838; same fields and windows as v1–v3): 0 flagged runs (2,565 under the v3 mapping);
+  controls pass vetting ≤ 9/200; W3 recovery 0.85/0.865/0.71/0.405 in the pass cells → **failed** (ρ 0.1,
+  t_E 100 d; sharp-edge test, post hoc diagnostic). t_E 3 d 0.40–0.45.
+- Images of the 5 flags the fix removed (post hoc, 44 cutouts, 3.10 MB): of 38 non-detections, 21 lie in a
+  quadrant without the objectid (11 photometrically present), 17 are not covered or at an edge, 0 show dimming.
+  Archive reads ≤ 1.42 GB (file sizes, `cost.json`).
+- **Handoff:** paused; no expansion without the owner (`results/w3_ztf/v4/RESULT.md`).
 ## 2026-10-18: W1 real-image metacal R v2: 1.056 ± 0.156 on 18 GOODS-N tiles, still "conservative" (D-105 addendum)
 - Frozen plan `results/w1_r_realmetacal/PLAN_v2.md`: noise-filled mask with a 16-px source pad, PSF σ floor
   (0.97 px), unique matching, a tile gate (raw PSF σ below the floor or < ½ median detections), all tiles, tile

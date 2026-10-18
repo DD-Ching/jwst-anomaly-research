@@ -1,0 +1,55 @@
+{
+ "label": "derived; frozen rule applied by code",
+ "w3_pass_cells": {
+  "rho0.01_tE30": 0.85,
+  "rho0.01_tE100": 0.865,
+  "rho0.1_tE30": 0.71,
+  "rho0.1_tE100": 0.405
+ },
+ "control_pass_rate": {
+  "eclipse": 0.0,
+  "fade": 0.045,
+  "pspl": 0.0,
+  "common": 0.0
+ },
+ "survivors": 0,
+ "conditions": {
+  "w3_ge_0.5_tE30_100_blend1": false,
+  "controls_le_0.10": true,
+  "survivors_le_5": true
+ },
+ "all_pass": false,
+ "verdict": "failed (some conditions pass)",
+ "by_class": {
+  "full_disappearance_rho0.01": {
+   "blend1_tE3": "90/200",
+   "blend1_tE10": "147/200",
+   "blend1_tE30": "170/200",
+   "blend1_tE100": "173/200",
+   "blend0.7_tE3": "90/200",
+   "blend0.7_tE10": "142/200",
+   "blend0.7_tE30": "165/200",
+   "blend0.7_tE100": "148/200"
+  },
+  "short_tE3_10": {
+   "rho0.01_blend1_tE3": "90/200",
+   "rho0.01_blend1_tE10": "147/200",
+   "rho0.01_blend0.7_tE3": "90/200",
+   "rho0.01_blend0.7_tE10": "142/200",
+   "rho0.1_blend1_tE3": "84/200",
+   "rho0.1_blend1_tE10": "124/200",
+   "rho0.1_blend0.7_tE3": "79/200",
+   "rho0.1_blend0.7_tE10": "128/200"
+  },
+  "slow_edge_rho0.1": {
+   "blend1_tE3": "84/200",
+   "blend1_tE10": "124/200",
+   "blend1_tE30": "142/200",
+   "blend1_tE100": "81/200",
+   "blend0.7_tE3": "79/200",
+   "blend0.7_tE10": "128/200",
+   "blend0.7_tE30": "120/200",
+   "blend0.7_tE100": "60/200"
+  }
+ }
+}

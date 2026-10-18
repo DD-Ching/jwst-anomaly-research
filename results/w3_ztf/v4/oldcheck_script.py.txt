@@ -1,0 +1,48 @@
+# v4 fix check on v3 data (no light curves re-read): do the v4 footprint test and the v4 group rules
+# explain the 11 catalogue non-detections that the v3 image check classified?
+# Usage: python oldcheck_script.py.txt <out json>
+import io, json, sys, urllib.parse, urllib.request
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+OUT = sys.argv[1]
+fp = json.load(open('results/w3_ztf/v3/forced_photometry.json'))['sources']
+groups = {str(g['key']): g for g in json.load(open('results/w3_ztf/sample.json'))['groups']}
+expids = sorted({int(e['expid']) for s in fp.values() for e in s['exposures']})
+sql = ('SELECT field,ccdid,qid,filtercode,expid,infobits,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 '
+       f'FROM ztf.ztf_current_meta_sci WHERE expid IN ({",".join(map(str, expids))})')
+url = 'https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'})
+raw = urllib.request.urlopen(url, timeout=300).read()
+meta = Table.read(io.BytesIO(raw), format='csv')
+res = {'label': 'derived; v4 fix check on v3 image-classified exposures', 'tap_bytes': len(raw), 'sources': {}}
+for key, src in fp.items():
+    g = groups[key]
+    quads = [wz.oid_quad(m) for m in g['members']]
+    rows = []
+    for e in src['exposures']:
+        m = meta[meta['expid'] == int(e['expid'])]
+        filt = {'zg': 1, 'zr': 2, 'zi': 3}[str(m['filtercode'][0])] if len(m) else None
+        # quadrants of this exposure that hold one of the group's objectids (same field, rcid, filter)
+        own = [r for r in m if (int(r['field']), (int(r['ccdid']) - 1) * 4 + int(r['qid']) - 1, filt) in quads]
+        inside_own = [bool(wz.in_quad(Table(rows=[r]), g['ra'], g['dec'])[0]) for r in own]
+        inside_any = [f"{r['field']}/c{r['ccdid']}q{r['qid']}" for r in m if wz.in_quad(Table(rows=[r]), g['ra'], g['dec'], 0.0)[0]]
+        rows.append({'expid': int(e['expid']), 'catalog_nondetection': e['catalog_nondetection'],
+                     'v3_class': e.get('cls'), 'v3_why': e.get('why'),
+                     'member_quadrants_in_exposure': len(own), 'inside_member_quadrant_10as': inside_own,
+                     'inside_quadrants_0as': inside_any, 'infobits_own': [int(r['infobits']) for r in own]})
+    res['sources'][key] = {'ambiguous_group': wz.ambiguous(g['members']), 'members': [list(wz.oid_quad(m)) for m in g['members']], 'exposures': rows}
+amb = sum(wz.ambiguous(g['members']) for g in groups.values())
+res['v3_sample_ambiguous_groups'] = int(amb); res['v3_sample_groups'] = len(groups)
+nd = [r for s in res['sources'].values() for r in s['exposures'] if r['catalog_nondetection']]
+res['nd_total'] = len(nd)
+res['nd_removed_by_footprint'] = sum(not any(r['inside_member_quadrant_10as']) for r in nd)
+res['nd_removed_by_infobits'] = sum(any(r['inside_member_quadrant_10as']) and all(b != 0 for b in r['infobits_own']) for r in nd)
+det = [r for s in res['sources'].values() for r in s['exposures'] if not r['catalog_nondetection'] and r['member_quadrants_in_exposure']]
+res['detections_with_member_quadrant'] = len(det)
+res['detections_inside_member_quadrant_10as'] = sum(any(r['inside_member_quadrant_10as']) for r in det)
+json.dump(res, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print({k: v for k, v in res.items() if k != 'sources'})
+for s in res['sources'].values():
+    for r in s['exposures']:
+        if r['catalog_nondetection']: print(r['expid'], r['v3_class'], r['inside_member_quadrant_10as'], r['inside_quadrants_0as'], r['infobits_own'], (r['v3_why'] or '')[:60])

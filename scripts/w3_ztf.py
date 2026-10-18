@@ -40,6 +40,66 @@ OBJ_PART = (
 LC_ORDER, LC_PIX = 5, 3839
 OUT = Path(__file__).resolve().parents[1] / "results" / "w3_ztf"
 CACHE = Path(os.environ.get("JWST_ANOMALY_DATA", "data")) / "cache" / "w3_ztf"
+SAMPLE = OUT / "sample.json"
+VDIR = OUT / "v3"
+VERSION = 3
+EDGE_MARGIN = (
+    10.0  # arcsec inside an exposure's quadrant footprint for a non-detection to count (v4)
+)
+
+
+def configure(pix: int) -> None:
+    """v4: another light-curve partition of the same order-4 pixel (independent validation)."""
+    global LC_PIX, LC_PART, CACHE, SAMPLE, VDIR, VERSION
+    if pix == 3839:
+        return
+    LC_PIX = pix
+    LC_PART = LC_PART.replace("Npix=3839", f"Npix={pix}")
+    CACHE = CACHE / str(pix)
+    VDIR = OUT / "v4"
+    SAMPLE = VDIR / "sample.json"
+    VERSION = 4
+
+
+def oid_quad(oid: int) -> tuple[int, int, int]:
+    """(field, rcid, filterid) encoded in a ZTF DR objectid: field, filter, ccd (2), qid (1), 8
+    digits."""
+    s = str(int(oid))
+    field, filt, ccd, q = int(s[:-12]), int(s[-12]), int(s[-11:-9]), int(s[-9])
+    return field, (ccd - 1) * 4 + q - 1, filt
+
+
+def ambiguous(members) -> bool:
+    """Two objectids of one group in the same quadrant and filter: two sources or a duplicate."""
+    keys = [oid_quad(m) for m in members]
+    return len(keys) != len(set(keys))
+
+
+def in_quad(expo, ra: float, dec: float, margin: float = EDGE_MARGIN) -> np.ndarray:
+    """Per exposure row: (ra, dec) inside the quadrant footprint (IRSA corners ra1..dec4, from each
+    image's WCS) by at least ``margin`` arcsec. The corners are projected gnomonically about the
+    star, so the great-circle edges are straight lines (v4 review fix). A non-finite corner
+    counts as outside; a table without corner columns counts as inside (pre-v4)."""
+    cols = getattr(expo, "colnames", None) or list(getattr(expo, "columns", []))
+    if "ra1" not in cols:
+        return np.ones(len(expo), bool)
+    cra = np.radians(np.column_stack([np.asarray(expo[f"ra{i}"], float) for i in range(1, 5)]))
+    cde = np.radians(np.column_stack([np.asarray(expo[f"dec{i}"], float) for i in range(1, 5)]))
+    a0, d0 = np.radians(ra), np.radians(dec)
+    dra = cra - a0
+    cosc = np.sin(d0) * np.sin(cde) + np.cos(d0) * np.cos(cde) * np.cos(dra)
+    x = np.cos(cde) * np.sin(dra) / cosc * 206264.806
+    y = (np.cos(d0) * np.sin(cde) - np.sin(d0) * np.cos(cde) * np.cos(dra)) / cosc * 206264.806
+    # order the corners by angle around their centre (counter-clockwise)
+    ang = np.arctan2(y - y.mean(1, keepdims=True), x - x.mean(1, keepdims=True))
+    o = np.argsort(ang, axis=1)
+    x, y = np.take_along_axis(x, o, 1), np.take_along_axis(y, o, 1)
+    x2, y2 = np.roll(x, -1, 1), np.roll(y, -1, 1)
+    # signed distance of the origin (the star) to each edge, positive inside
+    with np.errstate(invalid="ignore", divide="ignore"):
+        d = (x * y2 - x2 * y) / np.hypot(x2 - x, y2 - y)
+    return np.all(d >= margin, axis=1) & np.isfinite(d).all(axis=1) & (cosc > 0).all(axis=1)
+
 
 # plan section 4
 MAG_RANGE = (14.5, 17.5)
@@ -84,8 +144,9 @@ def in_partition(ra, dec) -> np.ndarray:
 # ----------------------------------------------------------------------------------------- sample
 
 
-def select(obj) -> tuple[list[dict], dict]:
-    """Groups of the sample from an objects table (pandas), plan section 4."""
+def select(obj, old=None) -> tuple[list[dict], dict]:
+    """Groups of the sample from an objects table (pandas), plan section 4; v4 also drops ambiguous
+    groups and groups within 2 x GROUP_RADIUS of an ``old`` (ra, dec) position."""
     from scipy.spatial import cKDTree
 
     obj = obj[in_partition(obj["ra"].to_numpy(), obj["dec"].to_numpy())].reset_index(drop=True)
@@ -94,6 +155,12 @@ def select(obj) -> tuple[list[dict], dict]:
         [obj["ra"].to_numpy() * np.cos(np.radians(dec0)) * 3600, obj["dec"].to_numpy() * 3600]
     )
     tree = cKDTree(xy)
+    exclude = None
+    if old is not None and len(old):
+        old = np.asarray(old, float)
+        exclude = cKDTree(
+            np.column_stack([old[:, 0] * np.cos(np.radians(dec0)) * 3600, old[:, 1] * 3600])
+        )
     ok = (
         (obj["fid"] == 2)
         & obj["refmag"].between(*MAG_RANGE)
@@ -118,11 +185,19 @@ def select(obj) -> tuple[list[dict], dict]:
     iso = sorted(iso, key=lambda i: -int(obj["ngoodobs"][i]))
     used = set()
     groups = []
+    n_amb = n_old = 0
     for i in iso:
         if i in used:
             continue
         mem = [j for j in tree.query_ball_point(xy[i], GROUP_RADIUS) if j not in used]
         used.update(mem)
+        if VERSION >= 4:  # v4: no ambiguous groups, no physical source of the v1-v3 sample
+            if ambiguous([int(obj["oid"][j]) for j in mem]):
+                n_amb += 1
+                continue
+            if exclude is not None and len(exclude.query_ball_point(xy[i], 2 * GROUP_RADIUS)):
+                n_old += 1
+                continue
         groups.append(
             {
                 "key": int(obj["oid"][i]),
@@ -130,6 +205,16 @@ def select(obj) -> tuple[list[dict], dict]:
                 "dec": float(obj["dec"][i]),
                 "refmag_r": float(refmag[i]),
                 "members": [int(obj["oid"][j]) for j in mem],
+                # v4 merge check: farthest member and nearest non-member object (arcsec)
+                "member_sep_max": float(max(np.hypot(*(xy[j] - xy[i])) for j in mem)),
+                "nearest_other": min(  # None: no other object within ISO_RADIUS
+                    (
+                        float(np.hypot(*(xy[j] - xy[i])))
+                        for j in tree.query_ball_point(xy[i], ISO_RADIUS)
+                        if j not in mem
+                    ),
+                    default=None,
+                ),
             }
         )
     n_all = len(groups)
@@ -137,7 +222,7 @@ def select(obj) -> tuple[list[dict], dict]:
     pick = rng.permutation(n_all)[:N_MAX]
     groups = [groups[k] for k in sorted(pick)]
     for g in groups:
-        g["holdout"] = holdout(g["key"])
+        g["holdout"] = holdout(g["key"]) if VERSION < 4 else False  # v4: all are validation
     info = {
         "objects_in_area": int(len(obj)),
         "r_band_passing_cuts": int(ok.sum()),
@@ -145,6 +230,8 @@ def select(obj) -> tuple[list[dict], dict]:
         "groups_before_draw": int(n_all),
         "groups": len(groups),
         "holdout": int(sum(g["holdout"] for g in groups)),
+        "ambiguous_groups_dropped": n_amb,
+        "groups_dropped_near_old_sample": n_old,
     }
     return groups, info
 
@@ -156,10 +243,14 @@ def stage_sample(_a) -> None:
     cols += ["ngoodobs", "transient"]
     t0 = time.time()
     obj = pq.ParquetFile(s3().open(OBJ_PART)).read(columns=cols).to_pandas()
-    groups, info = select(obj)
+    old = None
+    if VERSION >= 4:
+        old = [(g["ra"], g["dec"]) for g in json.loads((OUT / "sample.json").read_text())["groups"]]
+    groups, info = select(obj, old)
     info["read_s"] = round(time.time() - t0, 1)
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "sample.json").write_text(
+    info["lc_partition"] = LC_PART
+    SAMPLE.parent.mkdir(parents=True, exist_ok=True)
+    SAMPLE.write_text(
         json.dumps({"label": "derived; plan section 4", "info": info, "groups": groups}) + "\n"
     )
     # comparison stars for coverage (all objects in the area in the comparison magnitude range)
@@ -180,7 +271,7 @@ def stage_fetch(_a) -> None:
     import pyarrow.compute as pc
     import pyarrow.parquet as pq
 
-    groups = json.loads((OUT / "sample.json").read_text())["groups"]
+    groups = json.loads(SAMPLE.read_text())["groups"]
     members = np.array([m for g in groups for m in g["members"]], dtype=np.int64)
     comp = np.load(CACHE / "comparison_oids.npy")
     want = pa.array(np.unique(np.concatenate([members, comp])))
@@ -203,7 +294,9 @@ def stage_fetch(_a) -> None:
         "sample_members": int(len(members)),
         "read_s": round(time.time() - t0, 1),
     }
-    (OUT / "fetch_info.json").write_text(json.dumps({"label": "derived", **info}) + "\n")
+    (OUT / "fetch_info.json" if VERSION < 4 else VDIR / "fetch_info.json").write_text(
+        json.dumps({"label": "derived", **info}) + "\n"
+    )
     print(info)
 
 
@@ -315,7 +408,7 @@ def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
         n = len(et)
         inplay = np.zeros(n, int)
         clean = np.zeros(n, int)
-        states, spans, unmatched = {}, {}, 0
+        states, spans, covered, unmatched = {}, {}, {}, 0
         for o in oids:
             r = rows[o]
             idx = match_exposures(r["t"], et)
@@ -323,9 +416,10 @@ def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
             st, med, mag = star_state(r, idx, n)
             lo, hi = (r["t"].min(), r["t"].max()) if len(r["t"]) else (np.inf, -np.inf)
             play = (et > lo) & (et < hi)
-            states[o], spans[o] = (st, med, mag), play
+            inside = in_quad(e, r["ra"], r["dec"])  # v4: footprint of each exposure
+            states[o], spans[o], covered[o] = (st, med, mag), play, inside
             if o in comp:
-                inplay += play
+                inplay += play & (inside | (st > 0))
                 clean += play & (st == 1)
         info = np.asarray(e["infobits"])
         good = (info == 0) & (inplay > 0) & (clean >= GOOD_FRAC * np.maximum(inplay, 1))
@@ -338,6 +432,7 @@ def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
             "clean": clean,
             "states": states,
             "spans": spans,
+            "covered": covered,
             "comp": set(comps),
             "unmatched_detections": unmatched,
         }
@@ -351,7 +446,7 @@ def series(group, rows, cov, filt):
     """v3: time-ordered (t, dmag, is_nd, limit_dmag, quad, expid, base_mag, dimfrac) of a group in
     one filter over good exposures where the star is in play; dimfrac excludes the group's own
     members from the comparison counts."""
-    out = []
+    out, flagged = [], set()
     mem = set(group["members"])
     for o in group["members"]:
         r = rows.get(o)
@@ -366,15 +461,19 @@ def series(group, rows, cov, filt):
             continue
         own_play = np.zeros(len(c["t"]), int)
         own_clean = np.zeros(len(c["t"]), int)
+        cv = c.get("covered", {})
+        ones = np.ones(len(c["t"]), bool)
         for m in mem & c["comp"]:
             sm = c["states"][m][0]
-            own_play += c["spans"][m]
+            own_play += c["spans"][m] & (cv.get(m, ones) | (sm > 0))
             own_clean += c["spans"][m] & (sm == 1)
         play_n = c["inplay"] - own_play
         clean_n = c["clean"] - own_clean
-        mine = c["spans"][o] & c["good"]
+        # v4: a non-detection counts only where the star is inside the exposure's footprint
+        mine = c["spans"][o] & c["good"] & (cv.get(o, ones) | (st > 0))
         for k in np.flatnonzero(mine):
             if st[k] == 3:
+                flagged.add(int(c["expid"][k]))  # v4: the exposure is unknown for the whole group
                 continue  # flagged detection: unknown
             nd = st[k] == 0
             dm = 0.0 if nd else float(mag[k] - med)  # the magnitude star_state chose
@@ -393,8 +492,19 @@ def series(group, rows, cov, filt):
                     frac,
                 )
             )
+    out = [x for x in out if not (x[2] and x[5] in flagged)]
     out.sort(key=lambda x: x[0])
-    return out
+    return dedupe(out)
+
+
+def dedupe(out):
+    """v4: one entry per exposure (expid); a detection beats a non-detection."""
+    best: dict = {}
+    for x in out:
+        k = x[5]
+        if k not in best or (best[k][2] and not x[2]):
+            best[k] = x
+    return sorted(best.values(), key=lambda x: x[0])
 
 
 # --------------------------------------------------------------------------------- pre-screen, vet
@@ -487,9 +597,7 @@ def screen(s, other, cov, dimfrac_override=None):
 def context(groups_half):
     rows = load_rows()
     comp = set(np.load(CACHE / "comparison_oids.npy").tolist())
-    members = {
-        m for g in json.loads((OUT / "sample.json").read_text())["groups"] for m in g["members"]
-    }
+    members = {m for g in json.loads(SAMPLE.read_text())["groups"] for m in g["members"]}
     cov = coverage(rows, comp, members)
     return rows, cov
 
@@ -568,9 +676,7 @@ def stage_inject(a) -> None:
     run already flagged in the uninjected carrier; controls use one event model in both filters.
     The common-mode control sets the comparison-star dim fraction to 0.5 at the injected epochs, so
     its rejection by the common-mode test holds by construction."""
-    groups = [
-        g for g in json.loads((OUT / "sample.json").read_text())["groups"] if not g["holdout"]
-    ]
+    groups = [g for g in json.loads(SAMPLE.read_text())["groups"] if not g["holdout"]]
     rows, cov = context(groups)
     carriers = []
     for g in groups:
@@ -579,7 +685,7 @@ def stage_inject(a) -> None:
             o = series(g, rows, cov, 1)
             base = {(x["t_start"], x["t_end"]) for x in screen(s, o, cov)}
             carriers.append((g, s, o, base))
-    res = {"version": 3, "carriers": len(carriers), "w3": [], "controls": {}}
+    res = {"version": VERSION, "carriers": len(carriers), "w3": [], "controls": {}}
     n = a.n
     cells = [
         (r, b, te)
@@ -632,16 +738,17 @@ def stage_inject(a) -> None:
             passed += any(x["pass"] for x in sc)
         res["controls"][kind] = {"n": n, "flagged": flag, "passed_vetting": passed}
         print(kind, res["controls"][kind], flush=True)
-    (OUT / "v3").mkdir(parents=True, exist_ok=True)
-    (OUT / "v3" / "injections_dev_v3.json").write_text(
-        json.dumps({"label": "simulated", **res}, indent=1) + "\n"
-    )
+    VDIR.mkdir(parents=True, exist_ok=True)
+    name = "injections_dev_v3.json" if VERSION < 4 else "injections_v4.json"
+    (VDIR / name).write_text(json.dumps({"label": "simulated", **res}, indent=1) + "\n")
 
 
 def stage_search(a) -> None:
     want = a.half == "holdout"
     groups = [
-        g for g in json.loads((OUT / "sample.json").read_text())["groups"] if g["holdout"] == want
+        g
+        for g in json.loads(SAMPLE.read_text())["groups"]
+        if a.half == "all" or g["holdout"] == want
     ]
     rows, cov = context(groups)
     out, n_ser = [], 0
@@ -654,7 +761,7 @@ def stage_search(a) -> None:
             for x in screen(s, series(g, rows, cov, other), cov):
                 out.append({"key": g["key"], "ra": g["ra"], "dec": g["dec"], "filter": filt, **x})
     summ = {
-        "version": 3,
+        "version": VERSION,
         "half": a.half,
         "groups": len(groups),
         "series_searched": n_ser,
@@ -662,8 +769,8 @@ def stage_search(a) -> None:
         "flagged_groups": len({x["key"] for x in out}),
         "passed_groups": sorted({x["key"] for x in out if x["pass"]}),
     }
-    (OUT / "v3").mkdir(parents=True, exist_ok=True)
-    (OUT / "v3" / f"search_{a.half}_v3.json").write_text(
+    VDIR.mkdir(parents=True, exist_ok=True)
+    (VDIR / f"search_{a.half}_v{VERSION}.json").write_text(
         json.dumps({"label": "derived", "summary": summ, "runs": out}, indent=1, default=float)
         + "\n"
     )
@@ -682,33 +789,38 @@ def stage_exposures(_a) -> None:
 
     t = pq.read_table(CACHE / "lc_rows.parquet", columns=["fieldid", "rcid"])
     quads = set(zip(t["fieldid"].to_numpy().tolist(), t["rcid"].to_numpy().tolist(), strict=True))
-    parts = []
+    parts, nbytes = [], 0
     for field in sorted({f for f, _ in quads}):
         rc = sorted(r for f, r in quads if f == field)
         cond = " OR ".join(f"(ccdid={r // 4 + 1} AND qid={r % 4 + 1})" for r in rc)
         sql = (
-            "SELECT field,ccdid,qid,filtercode,obsjd,expid,infobits,maglimit,seeing "
+            "SELECT field,ccdid,qid,filtercode,obsjd,expid,infobits,maglimit,seeing,filefracday,"
+            "ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 "
             f"FROM ztf.ztf_current_meta_sci WHERE field={field} AND ({cond})"
         )
         url = "https://irsa.ipac.caltech.edu/TAP/sync?" + urllib.parse.urlencode(
             {"QUERY": sql, "FORMAT": "csv"}
         )
         raw = urllib.request.urlopen(url, timeout=300).read()
+        nbytes += len(raw)
         parts.append(Table.read(io.BytesIO(raw), format="csv"))
     expo = vstack(parts)
     expo.write(CACHE / "exposures.ecsv", overwrite=True)
-    (OUT / "v3").mkdir(parents=True, exist_ok=True)
+    VDIR.mkdir(parents=True, exist_ok=True)
     summ = {"label": "observed (IRSA TAP)", "rows": len(expo), "quadrants": len(quads)}
-    (OUT / "v3" / "exposures_summary.json").write_text(json.dumps(summ) + "\n")
+    summ["tap_bytes"] = nbytes
+    (VDIR / "exposures_summary.json").write_text(json.dumps(summ) + "\n")
     print(summ)
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("stage", choices=["sample", "fetch", "exposures", "inject", "search"])
-    ap.add_argument("--half", choices=["dev", "holdout"], default="dev")
+    ap.add_argument("--half", choices=["dev", "holdout", "all"], default="dev")
     ap.add_argument("--n", type=int, default=200)
+    ap.add_argument("--pix", type=int, default=3839, help="light-curve partition (v4: 3838)")
     a = ap.parse_args(argv)
+    configure(a.pix)
     fn = {
         "sample": stage_sample,
         "fetch": stage_fetch,
