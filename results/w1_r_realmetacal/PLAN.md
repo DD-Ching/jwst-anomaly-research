@@ -44,3 +44,7 @@ if" (a real-image calibration); the forty-field W1 limit (0.638× Takahashi & As
 ## Limitations stated in advance
 One field and filter; PSF_d analytic, not the drizzled empirical PSF; white-noise fixnoise vs correlated noise;
 selection response (detection in sheared images) not separated; R is for PSF_r images, not the catalogue's own.
+
+## Correction after review (2026-10-18, after the run)
+PSF_d "FWHM 0.071″" above is the measured FWHM of `w1_r_sim.psf()` at its 0.066″ parameter (D-101); the run used
+that parameter, and the × 1.15 variant scales the parameter. No setting changed.

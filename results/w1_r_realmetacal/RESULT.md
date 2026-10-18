@@ -19,12 +19,16 @@ Six 1024² tiles passed the ≥ 98 % coverage rule (`r_real.json` `tiles`); 323 
 
 | Variant | n | R | ±1σ (bootstrap) | median | R_11 / R_22 | frozen rule |
 |---|---|---|---|---|---|---|
-| plan (fixnoise, PSF_d 0.071″) | 323 | 0.953 | 0.239 | 0.835 | 0.951 / 0.954 | conservative |
+| plan (fixnoise, PSF_d parameter 0.066″) | 323 | 0.953 | 0.239 | 0.835 | 0.951 / 0.954 | conservative |
 | no fixnoise (reported) | 881 | 0.979 | 0.067 | 1.068 | 0.866 / 1.093 | conservative |
 | PSF_d FWHM × 1.15 (reported) | 323 | 0.886 | 0.237 | 0.852 | 0.736 / 1.036 | conservative |
 
 - **Rule outcome (frozen, `rule_outcome`): conservative.** The plan's R − 2σ is 0.475, above 0.414 but not by
-  much; the measurement does not exclude R ≈ 0.5.
+  much; the measurement does not exclude R ≈ 0.5. Post hoc (review), a bootstrap over tiles instead of sources
+  gives ±0.184 (`r_real_posthoc_excl_tile.json` `all_tiles`); the rule outcome is the same with either error.
+- PSF_d: the plan's "FWHM 0.071″" is the measured FWHM of `w1_r_sim.psf` at its 0.066″ parameter (D-101, not
+  stored); the run used that parameter (`r_real.json` `psf_d_fwhm_arcsec` 0.066) and × 1.15 of it in the variant
+  (correction of the plan's wording after review).
 - The no-fixnoise variant is more precise (fixnoise doubles the noise, so fewer sources reach S/N 10) but its
   R_11 ≠ R_22 (0.866 vs 1.093) shows the expected noise-shear anisotropy; it is not the plan's estimator.
 - Per tile (plan): R 0.604–1.851 with errors 0.133–0.811 (`per_tile`); by S/N bin 0.783–1.311 (`by_snr`).
@@ -34,8 +38,11 @@ Six 1024² tiles passed the ≥ 98 % coverage rule (`r_real.json` `tiles`); 323 
 pattern after deconvolution near its lower-right corner (a feature sharper than PSF_d, by eye; not identified), and
 its clipped noise is inflated: 94 detections vs 1,755–2,370 in the other tiles, PSF σ estimate 0.29 px vs
 1.30–2.27 px. Excluding it (post hoc, `r_real_posthoc_excl_tile.json`; error approximate): plan R = 1.004 ± 0.270
-(n 276), no fixnoise 1.002 ± 0.072, PSF_d × 1.15 0.940 ± 0.255; all "conservative". The other tile shown has no
-such pattern. The tool has no bad-pixel or sharp-feature mask before deconvolution (a gap).
+(n 276), no fixnoise 1.002 ± 0.072, PSF_d × 1.15 0.940 ± 0.255 (tile-bootstrap errors 0.222 / 0.089 / 0.299); all
+"conservative". The other tile shown has no such pattern. Its PSF σ estimate is exactly 1/√12 px (0.2887), the
+moment σ of a one-pixel feature, so a single-pixel artefact set the tile's PSF subtraction. The tool has no
+bad-pixel mask, no apodisation of masked pixels (zero-filled after sky subtraction; this tile has 0.6 % of them,
+seen in the session, not stored) and no PSF σ floor; a hypothesis for the ringing is a zero-filled hole edge.
 
 ## Reading
 On real GOODS-N F200W images, with the pipeline-like shapes and an analytic PSF, the metacalibration response is
@@ -45,6 +52,7 @@ large to adopt R ≈ 1 for the limits; the cluster-fit gap (R 0.41–0.60, D-053
 
 ## Limitations
 One field, one filter, 323 sources; analytic PSF_d (Airy ⊗ Gaussian), not an empirical drizzled PSF; white-noise
-fixnoise on drizzle-correlated noise; no bad-pixel mask before deconvolution; selection response not separated; R
+fixnoise on drizzle-correlated noise; no bad-pixel mask before deconvolution; selection response not separated; nearest-neighbour matching without a uniqueness check (blends can share a
+match); R
 belongs to images reconvolved with a 0.10″ Gaussian, broader than the catalogue's PSF; the gate's simulation is
 isolated n = 1 galaxies only.

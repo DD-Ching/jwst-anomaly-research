@@ -63,3 +63,16 @@ def test_metacal_shear_sign():
         return ((x * x - y * y) * im).sum() / ((x * x + y * y) * im).sum()
 
     assert e1(p) > 0.03 and e1(q) < -0.03
+
+
+def test_posthoc_excludes_tile_and_bootstraps(tmp_path):
+    tiles = [
+        {"y0": 0, "x0": 1024, "n": 10, "R": 0.5, "err": 0.1},
+        {"y0": 1024, "x0": 0, "n": 30, "R": 1.0, "err": 0.2},
+    ]
+    p = tmp_path / "r.json"
+    p.write_text('{"variants": {"plan": {"per_tile": ' + str(tiles).replace("'", '"') + "}}}")
+    out = m.posthoc(p, tmp_path / "o.json", n_boot=100)["variants"]["plan"]
+    assert out["all_tiles"]["R"] == pytest.approx((10 * 0.5 + 30 * 1.0) / 40)
+    assert out["excluded"]["R"] == pytest.approx(1.0) and out["excluded"]["n_tiles"] == 1
+    assert out["excluded"]["err_tile_bootstrap"] == pytest.approx(0.0)

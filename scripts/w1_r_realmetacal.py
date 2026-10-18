@@ -8,6 +8,8 @@ scenes; ε from ``exotic_screens.intrinsic_ellipticity``.
 
     python scripts/w1_r_realmetacal.py validate --out results/w1_r_realmetacal/validate.json
     python scripts/w1_r_realmetacal.py real --out results/w1_r_realmetacal/r_real.json
+    python scripts/w1_r_realmetacal.py posthoc --r-real results/w1_r_realmetacal/r_real.json \
+        --out results/w1_r_realmetacal/r_real_posthoc_excl_tile.json
     python scripts/w1_r_realmetacal.py sheet --out results/w1_r_realmetacal/sheet.png
 """
 
@@ -25,6 +27,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import exotic_screens as es  # noqa: E402
+import w1_r_sim  # noqa: E402
 from w1_psf_smooth import KERNEL_SIGMA_PX  # noqa: E402
 from w1_r_sim import PIX_ARCSEC, PSF_FWHM_ARCSEC  # noqa: E402
 
@@ -47,11 +50,9 @@ def _gsp():
 
 
 def psf_d(fwhm=PSF_FWHM_ARCSEC):
-    """Deconvolution PSF: ``w1_r_sim.psf`` (Airy ⊗ Gaussian); ASSUMPTION for the drizzled PSF."""
-    import galsim
-
-    airy = galsim.Airy(lam=2000.0, diam=6.5, scale_unit=galsim.arcsec)
-    return galsim.Convolve(airy, galsim.Gaussian(fwhm=0.5 * fwhm))
+    """Deconvolution PSF: ``w1_r_sim.psf`` (Airy ⊗ Gaussian of FWHM ``fwhm`` / 2; measured FWHM
+    0.071″ at the default 0.066″, D-101, not stored); ASSUMPTION for the drizzled PSF."""
+    return w1_r_sim.psf(fwhm)
 
 
 def psf_r():
@@ -268,8 +269,11 @@ def validate(noise_sigma=1.0, seed=7, keep_arrays=False) -> dict:
     direct_imgs = {k: scene(g1, g2, psf_r(), out_sigma, seed) for k, (g1, g2) in SHEARS.items()}
     di = responses(direct_imgs, move_positions=False, psf_sigma=mc["psf_sigma_px"])
     s_mc, s_di = summary(mc["r11"], mc["r22"]), summary(di["r11"], di["r22"])
-    tol = 0.10 * s_di["R"] + 2 * np.hypot(s_mc["err"], s_di["err"])
-    v1 = abs(s_mc["R"] - s_di["R"]) <= tol
+    if s_mc["R"] is None or s_di["R"] is None:
+        tol, v1 = float("nan"), False
+    else:
+        tol = 0.10 * s_di["R"] + 2 * np.hypot(s_mc["err"], s_di["err"])
+        v1 = abs(s_mc["R"] - s_di["R"]) <= tol
     # V2 sign: true g1 = +0.03 through the noshear metacal image vs g = 0
     plus = responses(metacal_set(scene(0.03, 0, psf_d(), noise_sigma, seed), noise_sigma, seed + 1))
     shift = plus["mean_eps_noshear"].real - mc["mean_eps_noshear"].real
@@ -316,13 +320,21 @@ def good_tiles(wht_rows, shape, n=N_TILES, tile=TILE, min_good=MIN_GOOD):
 def _real_tile(job) -> dict:
     arr, y0, x0, seed, psf_fwhm, fixnoise = job
     good = np.isfinite(arr)
-    sig = clipped_sigma(arr)
     from astropy.stats import sigma_clipped_stats
 
-    sky = float(sigma_clipped_stats(arr[good], sigma=3.0, maxiters=10)[1])
+    _, sky, sig = (float(v) for v in sigma_clipped_stats(arr[good], sigma=3.0, maxiters=10))
     a = np.where(good, arr - sky, 0.0)
-    res = responses(metacal_set(a, sig if fixnoise else None, seed, psf_fwhm))
+    try:
+        res = responses(metacal_set(a, sig if fixnoise else None, seed, psf_fwhm))
+    except ValueError as exc:  # e.g. no S/N > 50 source for the PSF σ: keep the other tiles
+        empty = np.zeros(0)
+        res = {"r11": empty, "r22": empty, "snr": empty, "a": empty, "psf_sigma_px": None,
+               "n_detected": None, "error": str(exc)}  # fmt: skip
     return {"y0": y0, "x0": x0, "sky": sky, "sigma": sig, **res}
+
+
+def _init_worker():
+    os.environ["OMP_NUM_THREADS"] = "1"  # scripts/CLAUDE.md parallel topology
 
 
 def real(out: Path, uri=I2D, workers=None) -> dict:
@@ -341,8 +353,10 @@ def real(out: Path, uri=I2D, workers=None) -> dict:
         cache = {}
 
         def rows_cached(y0, x0):
-            cache[(y0, x0)] = rows(y0, x0)
-            return cache[(y0, x0)]
+            sci_t, wht_t = rows(y0, x0)
+            if (np.isfinite(sci_t) & (wht_t > 0)).mean() >= MIN_GOOD:
+                cache[(y0, x0)] = (sci_t, wht_t)  # keep accepted tiles only
+            return sci_t, wht_t
 
         tiles = good_tiles(rows_cached, sci.shape)
         arrs = {t: np.where(cache[t][1] > 0, cache[t][0], np.nan) for t in tiles}
@@ -355,7 +369,7 @@ def real(out: Path, uri=I2D, workers=None) -> dict:
         for name, (fw, fx) in variants.items()
         for i, t in enumerate(tiles)
     ]
-    with ProcessPoolExecutor(max_workers=workers or os.cpu_count()) as ex:
+    with ProcessPoolExecutor(max_workers=workers or os.cpu_count(), initializer=_init_worker) as ex:
         res = list(ex.map(_real_tile, [j[:6] for j in jobs]))
     result = {
         "label": "derived (metacal of observed MAST JWST 1181 o001 F200W i2d tiles)",
@@ -434,6 +448,45 @@ def sheet(out: Path, tiles=((0, 1024), (1024, 1024)), uri=I2D) -> None:
     plt.savefig(out, dpi=60)
 
 
+def posthoc(r_real: Path, out: Path, exclude=((0, 1024),), n_boot=2000, seed=1) -> dict:
+    """Post hoc (deviation) summaries from ``r_real.json``'s per-tile numbers: tiles in ``exclude``
+    dropped (n-weighted mean of the per-tile means; error from the per-tile bootstrap errors in
+    quadrature, approximate), and for every tile set a bootstrap over tiles (tiles as the
+    independent unit)."""
+    res = json.loads(r_real.read_text())
+    excl = {tuple(t) for t in exclude}
+    rng = np.random.default_rng(seed)
+    result = {
+        "label": "post hoc (deviation), derived from r_real.json per-tile summaries",
+        "excluded_tiles": [list(t) for t in exclude],
+        "variants": {},
+    }
+    for name, v in res["variants"].items():
+        entry = {}
+        for key, tiles in (
+            ("all_tiles", [t for t in v["per_tile"] if t["n"]]),
+            ("excluded", [t for t in v["per_tile"] if t["n"] and (t["y0"], t["x0"]) not in excl]),
+        ):
+            n = np.array([t["n"] for t in tiles], float)
+            r = np.array([t["R"] for t in tiles], float)
+            e = np.array([t["err"] for t in tiles], float)
+            mean = float((n * r).sum() / n.sum())
+            idx = rng.integers(0, len(r), (n_boot, len(r)))
+            boot = (n[idx] * r[idx]).sum(axis=1) / n[idx].sum(axis=1)
+            entry[key] = {
+                "n_tiles": len(tiles),
+                "n": int(n.sum()),
+                "R": mean,
+                "err_sources": float(np.sqrt(((n * e) ** 2).sum()) / n.sum()),
+                "err_tile_bootstrap": float(np.std(boot)),
+            }
+            err = max(entry[key]["err_sources"], entry[key]["err_tile_bootstrap"])
+            entry[key]["rule_larger_error"] = rule_outcome(mean, err)
+        result["variants"][name] = entry
+    out.write_text(json.dumps(result, indent=1) + "\n")
+    return result
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -443,9 +496,15 @@ def main(argv=None) -> int:
     r = sub.add_parser("real")
     r.add_argument("--out", type=Path, required=True)
     r.add_argument("--workers", type=int, default=None)
+    ph = sub.add_parser("posthoc")
+    ph.add_argument("--r-real", type=Path, required=True)
+    ph.add_argument("--out", type=Path, required=True)
     sh = sub.add_parser("sheet")
     sh.add_argument("--out", type=Path, required=True)
     a = p.parse_args(argv)
+    if a.cmd == "posthoc":
+        print(json.dumps(posthoc(a.r_real, a.out), indent=1))
+        return 0
     if a.cmd == "sheet":
         sheet(a.out)
         return 0

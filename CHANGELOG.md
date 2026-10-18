@@ -10,10 +10,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   both pass; weak gate. Post hoc four scenes: metacal reads lower than direct (1.519 vs 1.844), so it tends to
   understate R.
 - **Result (`results/w1_r_realmetacal/RESULT.md`):** R = 0.953 ± 0.239 (323 sources), frozen rule "conservative"
-  (R − 2σ 0.475); no-fixnoise 0.979 ± 0.067 (anisotropic: R_11 0.866, R_22 1.093); PSF × 1.15 0.886 ± 0.237. The
+  (R − 2σ 0.475; a post hoc bootstrap over tiles gives ±0.184); no-fixnoise 0.979 ± 0.067 (anisotropic: R_11 0.866, R_22 1.093); PSF × 1.15 0.886 ± 0.237. The
   GOODS-N / CEERS / PRIMER limits stand at R = 0.414; the error is too large to adopt R ≈ 1.
 - **Failed / gap:** one tile rings after deconvolution (a sharp feature; by eye on `sheet.png`), 94 detections vs
-  1,755–2,370; post hoc without it R = 1.004 ± 0.270. The tool needs a bad-pixel / sharp-feature mask.
+  1,755–2,370, and its PSF σ estimate is 1/√12 px (a one-pixel artefact); post hoc without it R = 1.004 ± 0.270.
+  The tool needs a bad-pixel mask, apodised masked pixels, a PSF σ floor and unique matching.
 - **Handoff:** to tighten R: empirical drizzled PSF (stars of the mosaic), a mask before deconvolution, more tiles and
   a second field; then a frozen plan to re-run the blank-field limits with the measured R if its 2σ bound clears ~0.8.
 
