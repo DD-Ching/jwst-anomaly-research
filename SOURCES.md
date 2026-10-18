@@ -1536,3 +1536,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   per-survey zouts: `PRIMER_DJA` / `PRIMER_STACK_SHA256` in `scripts/w1_stage_inputs.py`.
 - The F200W `_i2d.fits` SCI extensions are 1.9–3.3 GB (NAXIS 25047 × 32984 for c1001; headers read
   2026-10-18, not stored); `w1_streak_mask.py` streams only that extension.
+- Prior-work check 2026-10-18 (`docs/value_comparison.md`): DeCoursey et al. 2024, JADES Transient Survey,
+  arXiv:2406.05060; Stein et al. 2021, "Self-supervised similarity search for large scientific datasets",
+  arXiv:2110.13151; https://github.com/georgestein/ssl-legacysurvey (MIT); Palencia et al. 2026 catalogue,
+  https://doi.org/10.5281/zenodo.19439926. sncosmo 2.x (BSD-3, https://github.com/sncosmo/sncosmo; isolated venv,
+  templates hsiao, nugent-sn2p/sn2l/sn1bc and NIRCam bandpasses fetched by sncosmo 2026-10-18) for
+  `scripts/achromatic_test.py simulate`; not a project dependency.

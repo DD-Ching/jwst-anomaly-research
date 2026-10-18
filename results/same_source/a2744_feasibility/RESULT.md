@@ -31,7 +31,7 @@ Plan `PLAN.md` (committed before any score); code `scripts/same_source_pairs.py`
 - **Field-wide burden** (`field_burden_posthoc.json`, computed after the verdict): among 9,385 eligible sources,
   2,674,270 pairs at 2–60″; 26,145 pass the SED rule, of which 11 have both members within 0.3″ of a published image
   (10 same-system pairs pass, `positive_fail_reasons.json`); 6,439 sources sit in at least one passing pair. A field
-  search with this rule would propose ~2,600 other pairs per passing true pair. That these are mostly same-redshift
+  search with this rule would propose ~2,600 other, unverified pairs per passing published pair (correction 2026-10-18: only 10 of the 26,145 match the published same-system list; the other pairs are not shown to be false, since unpublished multiple images or physical pairs can be among them; they are unverified, not disproved). That these are mostly same-redshift
   neighbours (as the orphan-pair nulls D-048, D-055 showed at 0.3–3″) is suggested, not tested here.
 - The decoy match rate of 0 (25 decoys matched in brightness, colour and size, not in redshift) suggests that those
   properties alone rarely produce an SED match; the cause of the field-wide burden is not tested.

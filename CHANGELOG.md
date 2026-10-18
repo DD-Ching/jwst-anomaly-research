@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-18: W1 shear in PRIMER: twenty tiles pass gate P; Z = 0.3 screens give four E/B flags, three explained (in progress)
+## 2026-10-18: W1 shear in PRIMER: forty-field limit 0.638× Takahashi & Asada at 2 × 10¹³ M☉ (R = 0.414 ASSUMPTION); UDS x3y0 flag unresolved
 - Staged: the four DJA PRIMER zouts (tarball names end in `-fix`; the planned names return 403), pinned and stacked
   per survey (`w1_stage_inputs.stack_zouts`, content sha256 pinned). Stacking every tile's survey pair instead of
   only tiles that straddle two DJA mosaics is an implementation choice (deviation from the plan's wording; the
@@ -27,12 +27,33 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   40″ sheet through the peak, with fainter parallel streaks above it; the tile's mask lists near-horizontal status-2
   trails (θ 0.85°, 178.4°, 178.5°), so the trail family is found, but the line through the peak is not fully vetoed
   (vetoed fraction not measured). Still a flag, not a candidate.
-- **Handoff:** (1) the remaining injection jobs (stage with `w1_stage_inputs.py`, masks with
-  `w1_streak_mask.py`, then `inject_shear.py --fields <tile> --lens-z Z --mass 2e12 8e12 2e13 --n-inject 100 --seed 50
-  --streak-masks <dir>`, one process per tile-Z; check `screen` equals the committed one); (2) R = 0.231 sensitivity at
-  Z = 0.3 (`--fixed-r 0.231`) on the sixteen; (3) combined limit (`w1_volume.py` over the twenty-four headline
-  summaries plus the sixteen) and RESULT.md; (4) for x3y0: the vetoed fraction of the 48 V1r rows under the regenerated
-  mask, and whether the line is in only one of the c1002 input visits (o001/o002) — a single-visit line is a trail.
+- **Run 4 (2026-10-18 09:12–09:50Z, takeover):** the 23 remaining UDS tile-Z injection jobs, then R = 0.231 at Z = 0.3
+  on the sixteen; regenerated masks and every new `screen` block equal the committed ones (checked in the session).
+  **Limit (`results/w1_shear_primer/RESULT.md`, `limits_40fields_unflagged.json`):** forty fields, 446.2 arcmin²,
+  n₉₅ < 6.38 × 10⁻⁵ h³ Mpc⁻³ at 2 × 10¹³ M☉ (0.638× Takahashi & Asada; 1.50× / 9.32× at 8 × 10¹² / 2 × 10¹²);
+  V_eff +71 %. The plan's trigger holds: next is lower masses, not more area. Screened area is 0.937 of the
+  covered tile area (`area_check.json`). R = 0.231 keeps 0.15–0.28 of the PRIMER recoveries (`r_sensitivity.json`,
+  sixteen-tile totals), so the sub-T&A reading needs R ≳ 0.414 (D-101 supports it for blank fields).
+- UDS x3y0 visit check (post hoc, `vet/x3y0_visit_check.json`): at the peak c1002 is effectively visit o001
+  (max |diff| 0.053 MJy/sr), so the visit test cannot decide; by eye the line ends ≈ 15″ east of the peak.
+- **Handoff:** (1) x3y0: the o001 L2 `_cal` exposures at the peak (a line in one exposure is a trail); (2) W1 at lower
+  masses (a new frozen plan: smaller Schirmer aperture or stacking, injections at ≤ 2 × 10¹² M☉); (3) a PRIMER or
+  real-image R measurement, since the result depends on R.
+## 2026-10-18: Confirmation round 2: SMACS h005 within control scatter; an achromaticity test cannot decide G165 h002
+- **SMACS 1 h005 (`results/transients/confirm_r2/RESULT.md`):** the control-photometry stall was one MAST portal
+  query per position hanging on an HTTP response; `hit_lightcurve.py --group-arcsec` shares one query. With 22
+  controls (entry and duplicates removed) the decisive F150W tail is 0.591: consistent with matched-control scatter.
+- **Discriminating test (D-102):** achromaticity of B1-PLCKG165 h002's fade (intrinsic transient vs magnification by a
+  point mass, Ellis wormhole or negative-mass lens). Frozen rule: not decided (16″ pick: all bands < 20 usable
+  controls; 30″ deviation: F090W 14 < 20). Simulated power against SN templates 0.15–0.62 (≤ 0.29 for type II), so
+  the two epochs are weak for this question; paused until a calibrated bright-epoch repeat or a spectrum exists.
+- **Prior work (`docs/value_comparison.md`):** JADES (2406.05060) and the Dragon-arc papers already search brightening
+  and fading; Stein et al. find look-alikes and lens systems, not the same source (2110.00023 is the lens-mining
+  paper, 2110.13151 the similarity search). Our measured added value is per-box calibration; coverage beyond other
+  teams' searches is not shown.
+- Wording correction to #327: the 26,145 SED-matched pairs minus the 10 published ones are unverified, not disproved.
+- **Handoff:** no new search; nothing confirmed or exotic.
+
 ## 2026-10-18: W1 shear in PRIMER: plan frozen, mosaics tiled, catalogues pinned (no screen yet)
 - `results/w1_shear_primer/PLAN.md` (frozen before any screen). MAST holds two UDS combined mosaics (c1001, c1002;
   129.2 / 127.9 arcmin²) and two COSMOS mosaics (o003, o004; 92.4 / 87.4 arcmin², overlap 38.7) in F200W
@@ -67,7 +88,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Feasibility test (`results/same_source/a2744_feasibility/`, plan and pass function committed first):** identity-blind
   SED ranking at 2–60″ on Abell 2744 (Bergamini+23 images for scoring only). Holdout recall@10 0.86, but true pairs
   pass the absolute SED rule only 17 % / 32 % (dev / holdout): **fails** (P2). Morphology (affine, either handedness)
-  AUC 0.53 vs matched decoys. Post hoc: 26,145 SED-matched pairs field-wide, of which 10 are true same-system pairs.
+  AUC 0.53 vs matched decoys. Post hoc: 26,145 SED-matched pairs field-wide, of which 10 match published same-system pairs (the rest unverified, not shown to be false).
 - **Identity check (`results/transients/identity_r2/identity_check.json`):** PLCK G165 h002, MACS1423 h000, Bullet
   h019: no record found in the sources searched; TNS 403 (result unknown). Leads: a Legacy Survey galaxy 0.97″ from
   G165 h002 (possible host, unchecked); JWST GO 9811 (SN-ECHOES) lists a planned Cycle 5 G165 epoch (footprint not checked); HST 17504 (Kelly SNAP)
