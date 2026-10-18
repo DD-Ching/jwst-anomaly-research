@@ -1,0 +1,92 @@
+{
+ "what": "screened grid area of the sixteen unflagged PRIMER tiles vs the tile area the kept mosaic covers (share x 280 arcsec square)",
+ "tiles": [
+  {
+   "field": "primer-uds-x0y0",
+   "share_weighted_arcmin2": 11.695,
+   "screened_arcmin2": 10.536
+  },
+  {
+   "field": "primer-uds-x0y1",
+   "share_weighted_arcmin2": 11.433,
+   "screened_arcmin2": 10.179
+  },
+  {
+   "field": "primer-uds-x1y0",
+   "share_weighted_arcmin2": 19.513,
+   "screened_arcmin2": 18.371
+  },
+  {
+   "field": "primer-uds-x1y1",
+   "share_weighted_arcmin2": 13.546,
+   "screened_arcmin2": 12.494
+  },
+  {
+   "field": "primer-uds-x1y2",
+   "share_weighted_arcmin2": 21.538,
+   "screened_arcmin2": 19.906
+  },
+  {
+   "field": "primer-uds-x2y1",
+   "share_weighted_arcmin2": 14.09,
+   "screened_arcmin2": 13.355
+  },
+  {
+   "field": "primer-uds-x2y2",
+   "share_weighted_arcmin2": 21.56,
+   "screened_arcmin2": 20.452
+  },
+  {
+   "field": "primer-uds-x3y1",
+   "share_weighted_arcmin2": 13.546,
+   "screened_arcmin2": 12.362
+  },
+  {
+   "field": "primer-uds-x3y2",
+   "share_weighted_arcmin2": 20.863,
+   "screened_arcmin2": 19.343
+  },
+  {
+   "field": "primer-cosmos-x0y1",
+   "share_weighted_arcmin2": 20.493,
+   "screened_arcmin2": 19.754
+  },
+  {
+   "field": "primer-cosmos-x0y2",
+   "share_weighted_arcmin2": 19.905,
+   "screened_arcmin2": 18.974
+  },
+  {
+   "field": "primer-cosmos-x0y3",
+   "share_weighted_arcmin2": 7.6,
+   "screened_arcmin2": 7.424
+  },
+  {
+   "field": "primer-cosmos-x1y0",
+   "share_weighted_arcmin2": 7.666,
+   "screened_arcmin2": 7.288
+  },
+  {
+   "field": "primer-cosmos-x1y1",
+   "share_weighted_arcmin2": 17.4,
+   "screened_arcmin2": 16.279
+  },
+  {
+   "field": "primer-cosmos-x1y2",
+   "share_weighted_arcmin2": 21.016,
+   "screened_arcmin2": 20.033
+  },
+  {
+   "field": "primer-cosmos-x1y3",
+   "share_weighted_arcmin2": 21.037,
+   "screened_arcmin2": 19.599
+  }
+ ],
+ "sum_share_weighted_arcmin2": 262.9,
+ "sum_screened_arcmin2": 246.3,
+ "ratio": 0.937,
+ "provenance": {
+  "share": "derived (MAST s_region)",
+  "screened": "derived"
+ }
+}
