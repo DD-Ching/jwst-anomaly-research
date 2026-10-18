@@ -1,0 +1,539 @@
+{
+ "label": "v8 image-trial selection (fixed before download)",
+ "plan": [
+  {
+   "group": 671205100000145,
+   "objectid": 672208200000073,
+   "ra": 184.2480481,
+   "dec": 33.1946074,
+   "official_gap_infobits0": 22,
+   "official_gap_without_dr24": 22,
+   "exposures": [
+    {
+     "expid": 193335993,
+     "mjd": 59687.35993060004,
+     "role": "control",
+     "dr24_mag": 17.2271786,
+     "filefracday": "20220418359884",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.10612,
+     "maglimit": 19.907101
+    },
+    {
+     "expid": 195727655,
+     "mjd": 59711.27655090019,
+     "role": "control",
+     "dr24_mag": 17.2476387,
+     "filefracday": "20220512276551",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.75409,
+     "maglimit": 19.6178
+    },
+    {
+     "expid": 212252128,
+     "mjd": 59876.521284699906,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221024520590",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.16731,
+     "maglimit": 19.7019
+    },
+    {
+     "expid": 212252871,
+     "mjd": 59876.52871529991,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221024528611",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.79014,
+     "maglimit": 19.8829
+    },
+    {
+     "expid": 216949438,
+     "mjd": 59923.494386599865,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221210494387",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.098,
+     "maglimit": 20.1782
+    },
+    {
+     "expid": 223128439,
+     "mjd": 59985.28439809987,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230210284363",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.20444,
+     "maglimit": 19.6742
+    },
+    {
+     "expid": 228223570,
+     "mjd": 60036.23570600012,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230402235706",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.06403,
+     "maglimit": 20.0275
+    },
+    {
+     "expid": 228830983,
+     "mjd": 60042.30983800022,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230408309711",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.17019,
+     "maglimit": 19.731899
+    },
+    {
+     "expid": 249052270,
+     "mjd": 60244.522708300035,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20231027522049",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.44196,
+     "maglimit": 19.857901
+    },
+    {
+     "expid": 249053293,
+     "mjd": 60244.53293980006,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20231027532766",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.41959,
+     "maglimit": 20.084801
+    },
+    {
+     "expid": 308526079,
+     "mjd": 60839.26079860004,
+     "role": "control",
+     "dr24_mag": 17.2607555,
+     "filefracday": "20250613260787",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.28745,
+     "maglimit": 20.126801
+    },
+    {
+     "expid": 309627976,
+     "mjd": 60850.27976850001,
+     "role": "control",
+     "dr24_mag": 17.2667751,
+     "filefracday": "20250624279757",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.21774,
+     "maglimit": 20.1206
+    }
+   ]
+  },
+  {
+   "group": 671205100000254,
+   "objectid": 672208200000239,
+   "ra": 184.3404415,
+   "dec": 33.1801816,
+   "official_gap_infobits0": 64,
+   "official_gap_without_dr24": 63,
+   "exposures": [
+    {
+     "expid": 206514034,
+     "mjd": 59819.14034719998,
+     "role": "control",
+     "dr24_mag": 16.594593,
+     "filefracday": "20220828140336",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 1.9647,
+     "maglimit": 19.335501
+    },
+    {
+     "expid": 206813989,
+     "mjd": 59822.139895800035,
+     "role": "control",
+     "dr24_mag": 16.5352402,
+     "filefracday": "20220831139850",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.63828,
+     "maglimit": 19.0107
+    },
+    {
+     "expid": 212252128,
+     "mjd": 59876.521284699906,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221024520590",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.16731,
+     "maglimit": 19.7019
+    },
+    {
+     "expid": 212452109,
+     "mjd": 59878.52109949989,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221026520903",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.42609,
+     "maglimit": 20.0592
+    },
+    {
+     "expid": 215545043,
+     "mjd": 59909.45043980004,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221126450440",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 1.90856,
+     "maglimit": 20.5152
+    },
+    {
+     "expid": 228830788,
+     "mjd": 60042.30788190011,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230408307766",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.15378,
+     "maglimit": 19.974899
+    },
+    {
+     "expid": 241116549,
+     "mjd": 60165.16549770022,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230809165486",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.34413,
+     "maglimit": 19.8764
+    },
+    {
+     "expid": 242514190,
+     "mjd": 60179.14190969989,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230823141910",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 1.82186,
+     "maglimit": 19.2596
+    },
+    {
+     "expid": 248752028,
+     "mjd": 60241.52028940013,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20231024520185",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.46707,
+     "maglimit": 19.6117
+    },
+    {
+     "expid": 249053293,
+     "mjd": 60244.53293980006,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20231027532766",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.41959,
+     "maglimit": 20.084801
+    },
+    {
+     "expid": 308526079,
+     "mjd": 60839.26079860004,
+     "role": "control",
+     "dr24_mag": 16.5497742,
+     "filefracday": "20250613260787",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.28745,
+     "maglimit": 20.126801
+    },
+    {
+     "expid": 309032905,
+     "mjd": 60844.32905089995,
+     "role": "control",
+     "dr24_mag": 16.5518913,
+     "filefracday": "20250618329051",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.15422,
+     "maglimit": 19.7705
+    }
+   ]
+  },
+  {
+   "group": 671205100001969,
+   "objectid": 672208200002085,
+   "ra": 184.0023873,
+   "dec": 32.9819741,
+   "official_gap_infobits0": 13,
+   "official_gap_without_dr24": 13,
+   "exposures": [
+    {
+     "expid": 204916473,
+     "mjd": 59803.164733800106,
+     "role": "control",
+     "dr24_mag": 16.0993958,
+     "filefracday": "20220812164711",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.06157,
+     "maglimit": 19.451099
+    },
+    {
+     "expid": 206813989,
+     "mjd": 59822.139895800035,
+     "role": "control",
+     "dr24_mag": 16.0309715,
+     "filefracday": "20220831139850",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.63828,
+     "maglimit": 19.0107
+    },
+    {
+     "expid": 212252128,
+     "mjd": 59876.521284699906,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221024520590",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.16731,
+     "maglimit": 19.7019
+    },
+    {
+     "expid": 212252623,
+     "mjd": 59876.52623840002,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221024526134",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.11013,
+     "maglimit": 19.725901
+    },
+    {
+     "expid": 212252871,
+     "mjd": 59876.52871529991,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20221024528611",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.79014,
+     "maglimit": 19.8829
+    },
+    {
+     "expid": 241017199,
+     "mjd": 60164.171990700066,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230808171979",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 1.8995,
+     "maglimit": 20.1796
+    },
+    {
+     "expid": 243114201,
+     "mjd": 60185.14201389998,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20230829142002",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.27912,
+     "maglimit": 19.093
+    },
+    {
+     "expid": 248752283,
+     "mjd": 60241.52283560019,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20231024522685",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.34559,
+     "maglimit": 19.6614
+    },
+    {
+     "expid": 248752537,
+     "mjd": 60241.52537039993,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20231024525232",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.95691,
+     "maglimit": 19.478001
+    },
+    {
+     "expid": 248753046,
+     "mjd": 60241.53046299983,
+     "role": "gap",
+     "dr24_mag": null,
+     "filefracday": "20231024530312",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 3.15345,
+     "maglimit": 19.701599
+    },
+    {
+     "expid": 308526079,
+     "mjd": 60839.26079860004,
+     "role": "control",
+     "dr24_mag": 16.0166664,
+     "filefracday": "20250613260787",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.28745,
+     "maglimit": 20.126801
+    },
+    {
+     "expid": 309032905,
+     "mjd": 60844.32905089995,
+     "role": "control",
+     "dr24_mag": 16.0303516,
+     "filefracday": "20250618329051",
+     "quad": [
+      672,
+      8,
+      2
+     ],
+     "seeing": 2.15422,
+     "maglimit": 19.7705
+    }
+   ]
+  }
+ ]
+}

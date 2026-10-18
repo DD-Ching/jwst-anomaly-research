@@ -1,0 +1,968 @@
+{
+ "label": "observed (HATS DR24 row group 2, IRSA LC API, IRSA TAP) and derived counts",
+ "gap_mjd": [
+  59853.0,
+  60249.0
+ ],
+ "stars": [
+  {
+   "group": 671205100000590,
+   "objectid": 671205100000590,
+   "quadrant": [
+    671,
+    16,
+    2
+   ],
+   "official_exposures_inside": 662,
+   "official_in_gap": 9,
+   "official_in_gap_infobits0": 2,
+   "official_in_gap_by_gid": {
+    "2": 8,
+    "1": 1
+   },
+   "official_outside_gap_by_gid": {
+    "2": 296,
+    "1": 229,
+    "3": 128
+   },
+   "hats_detections": 639,
+   "hats_in_gap": 10,
+   "api_detections": 639,
+   "api_in_gap": 10,
+   "api_in_gap_by_programid": {
+    "2": 9,
+    "1": 1
+   },
+   "api_outside_gap_by_programid": {
+    "1": 200,
+    "3": 128,
+    "2": 301
+   },
+   "api_expids_not_in_official_list": 18,
+   "pub_date_range_in_gap": [
+    "2023-05-09 00:00:00+00",
+    "2024-11-07 00:00:00+00"
+   ],
+   "months": {
+    "2022-11": [
+     4,
+     4,
+     4
+    ],
+    "2023-01": [
+     1,
+     1,
+     1
+    ],
+    "2023-02": [
+     3,
+     3,
+     3
+    ],
+    "2023-03": [
+     1,
+     2,
+     2
+    ]
+   }
+  },
+  {
+   "group": 671205100000590,
+   "objectid": 1669215100002886,
+   "quadrant": [
+    1669,
+    56,
+    2
+   ],
+   "official_exposures_inside": 54,
+   "official_in_gap": 6,
+   "official_in_gap_infobits0": 0,
+   "official_in_gap_by_gid": {
+    "2": 6
+   },
+   "official_outside_gap_by_gid": {
+    "1": 22,
+    "2": 20,
+    "3": 6
+   },
+   "hats_detections": 47,
+   "hats_in_gap": 1,
+   "api_detections": 47,
+   "api_in_gap": 1,
+   "api_in_gap_by_programid": {
+    "2": 1
+   },
+   "api_outside_gap_by_programid": {
+    "2": 19,
+    "1": 21,
+    "3": 6
+   },
+   "api_expids_not_in_official_list": 0,
+   "pub_date_range_in_gap": [
+    "2024-09-18 00:00:00+00",
+    "2025-01-22 00:00:00+00"
+   ],
+   "months": {
+    "2023-02": [
+     1,
+     0,
+     0
+    ],
+    "2023-03": [
+     1,
+     1,
+     1
+    ],
+    "2023-04": [
+     4,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "group": 671205100008858,
+   "objectid": 672208200001404,
+   "quadrant": [
+    672,
+    29,
+    2
+   ],
+   "official_exposures_inside": 776,
+   "official_in_gap": 110,
+   "official_in_gap_infobits0": 64,
+   "official_in_gap_by_gid": {
+    "1": 67,
+    "2": 43
+   },
+   "official_outside_gap_by_gid": {
+    "2": 285,
+    "1": 240,
+    "3": 141
+   },
+   "hats_detections": 654,
+   "hats_in_gap": 10,
+   "api_detections": 654,
+   "api_in_gap": 10,
+   "api_in_gap_by_programid": {
+    "1": 6,
+    "2": 4
+   },
+   "api_outside_gap_by_programid": {
+    "3": 140,
+    "1": 219,
+    "2": 285
+   },
+   "api_expids_not_in_official_list": 0,
+   "pub_date_range_in_gap": [
+    "2023-01-09 00:00:00+00",
+    "2026-01-22 00:00:00+00"
+   ],
+   "months": {
+    "2022-10": [
+     20,
+     1,
+     1
+    ],
+    "2022-11": [
+     4,
+     1,
+     1
+    ],
+    "2022-12": [
+     5,
+     1,
+     1
+    ],
+    "2023-01": [
+     4,
+     0,
+     0
+    ],
+    "2023-02": [
+     6,
+     3,
+     3
+    ],
+    "2023-03": [
+     10,
+     1,
+     1
+    ],
+    "2023-04": [
+     10,
+     2,
+     2
+    ],
+    "2023-05": [
+     6,
+     0,
+     0
+    ],
+    "2023-06": [
+     5,
+     1,
+     1
+    ],
+    "2023-08": [
+     25,
+     0,
+     0
+    ],
+    "2023-10": [
+     15,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "group": 671205100008858,
+   "objectid": 671205100008858,
+   "quadrant": [
+    671,
+    16,
+    2
+   ],
+   "official_exposures_inside": 691,
+   "official_in_gap": 12,
+   "official_in_gap_infobits0": 2,
+   "official_in_gap_by_gid": {
+    "2": 10,
+    "1": 2
+   },
+   "official_outside_gap_by_gid": {
+    "2": 309,
+    "1": 241,
+    "3": 129
+   },
+   "hats_detections": 651,
+   "hats_in_gap": 12,
+   "api_detections": 651,
+   "api_in_gap": 12,
+   "api_in_gap_by_programid": {
+    "1": 2,
+    "2": 10
+   },
+   "api_outside_gap_by_programid": {
+    "1": 204,
+    "3": 129,
+    "2": 306
+   },
+   "api_expids_not_in_official_list": 0,
+   "pub_date_range_in_gap": [
+    "2023-01-09 00:00:00+00",
+    "2024-11-07 00:00:00+00"
+   ],
+   "months": {
+    "2022-10": [
+     1,
+     1,
+     1
+    ],
+    "2022-11": [
+     4,
+     4,
+     4
+    ],
+    "2023-01": [
+     1,
+     1,
+     1
+    ],
+    "2023-02": [
+     3,
+     3,
+     3
+    ],
+    "2023-03": [
+     2,
+     2,
+     2
+    ],
+    "2023-04": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "group": 671205100008858,
+   "objectid": 1669214200003701,
+   "quadrant": [
+    1669,
+    53,
+    2
+   ],
+   "official_exposures_inside": 47,
+   "official_in_gap": 0,
+   "official_in_gap_infobits0": 0,
+   "official_in_gap_by_gid": {},
+   "official_outside_gap_by_gid": {
+    "1": 22,
+    "2": 19,
+    "3": 6
+   },
+   "hats_detections": 47,
+   "hats_in_gap": 1,
+   "api_detections": 47,
+   "api_in_gap": 1,
+   "api_in_gap_by_programid": {
+    "2": 1
+   },
+   "api_outside_gap_by_programid": {
+    "2": 19,
+    "1": 21,
+    "3": 6
+   },
+   "api_expids_not_in_official_list": 1,
+   "pub_date_range_in_gap": null,
+   "months": {
+    "2023-03": [
+     0,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "group": 671205200000039,
+   "objectid": 1669215100002237,
+   "quadrant": [
+    1669,
+    56,
+    2
+   ],
+   "official_exposures_inside": 54,
+   "official_in_gap": 6,
+   "official_in_gap_infobits0": 0,
+   "official_in_gap_by_gid": {
+    "2": 6
+   },
+   "official_outside_gap_by_gid": {
+    "1": 22,
+    "2": 20,
+    "3": 6
+   },
+   "hats_detections": 47,
+   "hats_in_gap": 1,
+   "api_detections": 47,
+   "api_in_gap": 1,
+   "api_in_gap_by_programid": {
+    "2": 1
+   },
+   "api_outside_gap_by_programid": {
+    "2": 19,
+    "1": 21,
+    "3": 6
+   },
+   "api_expids_not_in_official_list": 0,
+   "pub_date_range_in_gap": [
+    "2024-09-18 00:00:00+00",
+    "2025-01-22 00:00:00+00"
+   ],
+   "months": {
+    "2023-02": [
+     1,
+     0,
+     0
+    ],
+    "2023-03": [
+     1,
+     1,
+     1
+    ],
+    "2023-04": [
+     4,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "group": 671205200000039,
+   "objectid": 1714204300006577,
+   "quadrant": [
+    1714,
+    14,
+    2
+   ],
+   "official_exposures_inside": 34,
+   "official_in_gap": 2,
+   "official_in_gap_infobits0": 0,
+   "official_in_gap_by_gid": {
+    "2": 2
+   },
+   "official_outside_gap_by_gid": {
+    "2": 16,
+    "3": 4,
+    "1": 12
+   },
+   "hats_detections": 34,
+   "hats_in_gap": 2,
+   "api_detections": 34,
+   "api_in_gap": 2,
+   "api_in_gap_by_programid": {
+    "2": 2
+   },
+   "api_outside_gap_by_programid": {
+    "2": 16,
+    "1": 12,
+    "3": 4
+   },
+   "api_expids_not_in_official_list": 0,
+   "pub_date_range_in_gap": [
+    "2024-11-07 00:00:00+00",
+    "2024-11-07 00:00:00+00"
+   ],
+   "months": {
+    "2023-03": [
+     1,
+     1,
+     1
+    ],
+    "2023-04": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "group": 671205200000039,
+   "objectid": 671205200000039,
+   "quadrant": [
+    671,
+    17,
+    2
+   ],
+   "official_exposures_inside": 374,
+   "official_in_gap": 19,
+   "official_in_gap_infobits0": 7,
+   "official_in_gap_by_gid": {
+    "2": 16,
+    "1": 3
+   },
+   "official_outside_gap_by_gid": {
+    "3": 66,
+    "1": 127,
+    "2": 162
+   },
+   "hats_detections": 409,
+   "hats_in_gap": 22,
+   "api_detections": 409,
+   "api_in_gap": 22,
+   "api_in_gap_by_programid": {
+    "2": 19,
+    "1": 3
+   },
+   "api_outside_gap_by_programid": {
+    "1": 124,
+    "3": 79,
+    "2": 184
+   },
+   "api_expids_not_in_official_list": 63,
+   "pub_date_range_in_gap": [
+    "2023-03-09 00:00:00+00",
+    "2024-11-07 00:00:00+00"
+   ],
+   "months": {
+    "2022-11": [
+     6,
+     6,
+     6
+    ],
+    "2022-12": [
+     1,
+     1,
+     1
+    ],
+    "2023-01": [
+     5,
+     5,
+     5
+    ],
+    "2023-02": [
+     3,
+     3,
+     3
+    ],
+    "2023-03": [
+     3,
+     3,
+     3
+    ],
+    "2023-04": [
+     1,
+     2,
+     2
+    ],
+    "2023-06": [
+     0,
+     1,
+     1
+    ],
+    "2023-08": [
+     0,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "group": 671205200000050,
+   "objectid": 1669215100002234,
+   "quadrant": [
+    1669,
+    56,
+    2
+   ],
+   "official_exposures_inside": 54,
+   "official_in_gap": 6,
+   "official_in_gap_infobits0": 0,
+   "official_in_gap_by_gid": {
+    "2": 6
+   },
+   "official_outside_gap_by_gid": {
+    "1": 22,
+    "2": 20,
+    "3": 6
+   },
+   "hats_detections": 47,
+   "hats_in_gap": 1,
+   "api_detections": 47,
+   "api_in_gap": 1,
+   "api_in_gap_by_programid": {
+    "2": 1
+   },
+   "api_outside_gap_by_programid": {
+    "2": 19,
+    "1": 21,
+    "3": 6
+   },
+   "api_expids_not_in_official_list": 0,
+   "pub_date_range_in_gap": [
+    "2024-09-18 00:00:00+00",
+    "2025-01-22 00:00:00+00"
+   ],
+   "months": {
+    "2023-02": [
+     1,
+     0,
+     0
+    ],
+    "2023-03": [
+     1,
+     1,
+     1
+    ],
+    "2023-04": [
+     4,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "group": 671205200000050,
+   "objectid": 671205200000050,
+   "quadrant": [
+    671,
+    17,
+    2
+   ],
+   "official_exposures_inside": 405,
+   "official_in_gap": 21,
+   "official_in_gap_infobits0": 8,
+   "official_in_gap_by_gid": {
+    "2": 18,
+    "1": 3
+   },
+   "official_outside_gap_by_gid": {
+    "3": 72,
+    "1": 136,
+    "2": 176
+   },
+   "hats_detections": 424,
+   "hats_in_gap": 23,
+   "api_detections": 424,
+   "api_in_gap": 23,
+   "api_in_gap_by_programid": {
+    "2": 19,
+    "1": 4
+   },
+   "api_outside_gap_by_programid": {
+    "1": 130,
+    "3": 82,
+    "2": 189
+   },
+   "api_expids_not_in_official_list": 49,
+   "pub_date_range_in_gap": [
+    "2023-03-09 00:00:00+00",
+    "2025-01-07 00:00:00+00"
+   ],
+   "months": {
+    "2022-11": [
+     6,
+     6,
+     6
+    ],
+    "2022-12": [
+     1,
+     1,
+     1
+    ],
+    "2023-01": [
+     5,
+     5,
+     5
+    ],
+    "2023-02": [
+     3,
+     3,
+     3
+    ],
+    "2023-03": [
+     3,
+     3,
+     3
+    ],
+    "2023-04": [
+     2,
+     2,
+     2
+    ],
+    "2023-06": [
+     1,
+     2,
+     2
+    ],
+    "2023-08": [
+     0,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "group": 671205200000050,
+   "objectid": 1714204300019758,
+   "quadrant": [
+    1714,
+    14,
+    2
+   ],
+   "official_exposures_inside": 6,
+   "official_in_gap": 0,
+   "official_in_gap_infobits0": 0,
+   "official_in_gap_by_gid": {},
+   "official_outside_gap_by_gid": {
+    "2": 3,
+    "1": 2,
+    "3": 1
+   },
+   "hats_detections": 11,
+   "hats_in_gap": 0,
+   "api_detections": 11,
+   "api_in_gap": 0,
+   "api_in_gap_by_programid": {},
+   "api_outside_gap_by_programid": {
+    "2": 7,
+    "1": 3,
+    "3": 1
+   },
+   "api_expids_not_in_official_list": 5,
+   "pub_date_range_in_gap": null,
+   "months": {}
+  },
+  {
+   "group": 671205200000309,
+   "objectid": 671205200000309,
+   "quadrant": [
+    671,
+    17,
+    2
+   ],
+   "official_exposures_inside": 823,
+   "official_in_gap": 28,
+   "official_in_gap_infobits0": 9,
+   "official_in_gap_by_gid": {
+    "2": 19,
+    "1": 9
+   },
+   "official_outside_gap_by_gid": {
+    "3": 136,
+    "1": 274,
+    "2": 385
+   },
+   "hats_detections": 800,
+   "hats_in_gap": 28,
+   "api_detections": 800,
+   "api_in_gap": 28,
+   "api_in_gap_by_programid": {
+    "1": 9,
+    "2": 19
+   },
+   "api_outside_gap_by_programid": {
+    "1": 238,
+    "3": 139,
+    "2": 395
+   },
+   "api_expids_not_in_official_list": 17,
+   "pub_date_range_in_gap": [
+    "2023-01-09 00:00:00+00",
+    "2025-03-07 00:00:00+00"
+   ],
+   "months": {
+    "2022-10": [
+     5,
+     5,
+     5
+    ],
+    "2022-11": [
+     6,
+     6,
+     6
+    ],
+    "2022-12": [
+     1,
+     1,
+     1
+    ],
+    "2023-01": [
+     5,
+     5,
+     5
+    ],
+    "2023-02": [
+     3,
+     3,
+     3
+    ],
+    "2023-03": [
+     3,
+     3,
+     3
+    ],
+    "2023-04": [
+     2,
+     2,
+     2
+    ],
+    "2023-06": [
+     2,
+     2,
+     2
+    ],
+    "2023-08": [
+     1,
+     1,
+     1
+    ]
+   }
+  },
+  {
+   "group": 671205200000309,
+   "objectid": 1669215100002458,
+   "quadrant": [
+    1669,
+    56,
+    2
+   ],
+   "official_exposures_inside": 54,
+   "official_in_gap": 6,
+   "official_in_gap_infobits0": 0,
+   "official_in_gap_by_gid": {
+    "2": 6
+   },
+   "official_outside_gap_by_gid": {
+    "1": 22,
+    "2": 20,
+    "3": 6
+   },
+   "hats_detections": 47,
+   "hats_in_gap": 1,
+   "api_detections": 47,
+   "api_in_gap": 1,
+   "api_in_gap_by_programid": {
+    "2": 1
+   },
+   "api_outside_gap_by_programid": {
+    "2": 19,
+    "1": 21,
+    "3": 6
+   },
+   "api_expids_not_in_official_list": 0,
+   "pub_date_range_in_gap": [
+    "2024-09-18 00:00:00+00",
+    "2025-01-22 00:00:00+00"
+   ],
+   "months": {
+    "2023-02": [
+     1,
+     0,
+     0
+    ],
+    "2023-03": [
+     1,
+     1,
+     1
+    ],
+    "2023-04": [
+     4,
+     0,
+     0
+    ]
+   }
+  }
+ ],
+ "unmatched_lookup": [
+  {
+   "objectid": 671205100000590,
+   "hats_hmjd": 60017.429,
+   "nearest_official_dt_d": 1.0779511957371142,
+   "api_mjd": 60017.4239468,
+   "api_hjd_minus_2400000.5": 60017.428995338734,
+   "api_expid": 226342394,
+   "api_field_quadrant": [
+    671,
+    "5.0",
+    "1.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 672208200001404,
+   "hats_hmjd": 60065.24171,
+   "nearest_official_dt_d": 0.0015571339172311127,
+   "api_mjd": 60065.2368519,
+   "api_hjd_minus_2400000.5": 60065.24170959368,
+   "api_expid": 231123685,
+   "api_field_quadrant": [
+    672,
+    "8.0",
+    "2.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 672208200001404,
+   "hats_hmjd": 60065.25272,
+   "nearest_official_dt_d": 0.0015609395850333385,
+   "api_mjd": 60065.2478588,
+   "api_hjd_minus_2400000.5": 60065.25271578785,
+   "api_expid": 231124785,
+   "api_field_quadrant": [
+    672,
+    "8.0",
+    "2.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 671205100008858,
+   "hats_hmjd": 60065.25991,
+   "nearest_official_dt_d": 0.0015523015026701614,
+   "api_mjd": 60065.2550579,
+   "api_hjd_minus_2400000.5": 60065.25991441915,
+   "api_expid": 231125505,
+   "api_field_quadrant": [
+    671,
+    "5.0",
+    "1.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 1669214200003701,
+   "hats_hmjd": 60017.41897,
+   "nearest_official_dt_d": 289.991972025884,
+   "api_mjd": 60017.4139352,
+   "api_hjd_minus_2400000.5": 60017.41897445172,
+   "api_expid": 226341393,
+   "api_field_quadrant": [
+    1669,
+    "14.0",
+    "2.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 1714204300006577,
+   "hats_hmjd": 60065.28437,
+   "nearest_official_dt_d": 0.0015648115368094295,
+   "api_mjd": 60065.2795602,
+   "api_hjd_minus_2400000.5": 60065.284367701504,
+   "api_expid": 231127956,
+   "api_field_quadrant": [
+    1714,
+    "4.0",
+    "3.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 671205200000039,
+   "hats_hmjd": 60065.25986,
+   "nearest_official_dt_d": 0.0015555100471829064,
+   "api_mjd": 60065.2550579,
+   "api_hjd_minus_2400000.5": 60065.25986121688,
+   "api_expid": 231125505,
+   "api_field_quadrant": [
+    671,
+    "5.0",
+    "2.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 671205200000039,
+   "hats_hmjd": 60065.41107,
+   "nearest_official_dt_d": 0.15276551005081274,
+   "api_mjd": 60065.4078356,
+   "api_hjd_minus_2400000.5": 60065.41107215453,
+   "api_expid": 231140783,
+   "api_field_quadrant": [
+    671,
+    "5.0",
+    "2.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 671205200000039,
+   "hats_hmjd": 60121.27878,
+   "nearest_official_dt_d": 56.02047551004944,
+   "api_mjd": 60121.2799421,
+   "api_hjd_minus_2400000.5": 60121.27878230624,
+   "api_expid": 236727994,
+   "api_field_quadrant": [
+    671,
+    "5.0",
+    "2.0"
+   ],
+   "api_expid_in_official_list": true
+  },
+  {
+   "objectid": 671205200000039,
+   "hats_hmjd": 60165.15386,
+   "nearest_official_dt_d": 98.36685892957757,
+   "api_mjd": 60165.1578819,
+   "api_hjd_minus_2400000.5": 60165.15385696059,
+   "api_expid": 241115788,
+   "api_field_quadrant": [
+    671,
+    "5.0",
+    "2.0"
+   ],
+   "api_expid_in_official_list": true
+  }
+ ],
+ "bytes": {
+  "hats_objectid_column": 1001177,
+  "hats_lightcurve_rowgroup2": 65853581,
+  "lc_api": 986226,
+  "tap": 496883
+ }
+}

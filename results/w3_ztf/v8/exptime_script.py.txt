@@ -1,0 +1,18 @@
+# v8: how many official r-band quadrant exposures in the v6 (fields 671, 672, 1669, 1713, 1714) and v4 (826, 848,
+# 1831, 1856, 1857) areas have exptime != 30 s, and how many of those have infobits 0 (usable, so a time mismatch in
+# coverage() could empty them)? Counts per area, gap period and exptime. Usage: python exptime_script.py.txt <out json>
+import io, json, sys, urllib.parse, urllib.request
+from astropy.table import Table
+areas = {'v6': (671, 672, 1669, 1713, 1714), 'v4': (826, 848, 1831, 1856, 1857)}
+out = {'label': 'observed (IRSA TAP ztf_current_meta_sci, aggregate counts)', 'bytes': 0}
+for name, fields in areas.items():
+    for period, cond in (('all', '1=1'), ('gap_2022-10_2023-10', 'obsjd >= 2459853.5 AND obsjd < 2460249.5')):
+        sql = ('SELECT exptime, CASE WHEN infobits=0 THEN 1 ELSE 0 END AS good, COUNT(*) AS n '
+               f"FROM ztf.ztf_current_meta_sci WHERE field IN ({','.join(map(str, fields))}) AND filtercode='zr' "
+               f'AND {cond} GROUP BY exptime, CASE WHEN infobits=0 THEN 1 ELSE 0 END')
+        raw = urllib.request.urlopen('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), timeout=300).read()
+        out['bytes'] += len(raw)
+        t = Table.read(io.BytesIO(raw), format='csv')
+        out[f'{name}_{period}'] = sorted([[float(r['exptime']), int(r['good']), int(r['n'])] for r in t], key=lambda x: (-x[2]))
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out, indent=1))

@@ -1,0 +1,15 @@
+{
+ "label": "derived; v8 cost estimate (no new download)",
+ "cases": 49,
+ "carriers": 47,
+ "star_exposures_upper": 533,
+ "star_exposures_lower": 528,
+ "per_cutout_s": 1.69,
+ "per_cutout_bytes": 69600,
+ "query_s_per_star": 18.8,
+ "cutout_time_min_lower": 14.9,
+ "cutout_mb_lower": 36.7,
+ "cutout_time_min_upper": 15.0,
+ "cutout_mb_upper": 37.1,
+ "query_time_min": 14.7
+}
