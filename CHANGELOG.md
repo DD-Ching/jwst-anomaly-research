@@ -13,6 +13,21 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Archive reads ≤ 1.42 GB (file sizes, `cost.json`).
 - **Handoff:** paused; no expansion without the owner (`results/w3_ztf/v4/RESULT.md`).
 
+## 2026-10-18: W1 R by metacalibration of real GOODS-N F200W images: 0.95 ± 0.24, borrowed R = 0.414 conservative (D-105)
+- `scripts/w1_r_realmetacal.py` (plan frozen first, `results/w1_r_realmetacal/PLAN.md`): GalSim metacalibration
+  (deconvolve an analytic PSF, shear ±0.01, reconvolve with a 0.10″ Gaussian, white-noise fixnoise) of six 1024²
+  tiles of the JADES 1181 o001 F200W i2d streamed from MAST S3; shapes from the `w1_r_sim.measure` emulation.
+- **Gate (simulated):** V1 metacal 1.442 ± 0.226 vs direct shearing 1.732 ± 0.064 (tolerance 0.642) and V2 sign
+  both pass; weak gate. Post hoc four scenes: metacal reads lower than direct (1.519 vs 1.844), so it tends to
+  understate R.
+- **Result (`results/w1_r_realmetacal/RESULT.md`):** R = 0.953 ± 0.239 (323 sources), frozen rule "conservative"
+  (R − 2σ 0.475; a post hoc bootstrap over tiles gives ±0.184); no-fixnoise 0.979 ± 0.067 (anisotropic: R_11 0.866, R_22 1.093); PSF × 1.15 0.886 ± 0.237. The
+  GOODS-N / CEERS / PRIMER limits stand at R = 0.414; the error is too large to adopt R ≈ 1.
+- **Failed / gap:** one tile rings after deconvolution (a sharp feature; by eye on `sheet.png`), 94 detections vs
+  1,755–2,370, and its PSF σ estimate is 1/√12 px (a one-pixel artefact); post hoc without it R = 1.004 ± 0.270.
+  The tool needs a bad-pixel mask, apodised masked pixels, a PSF σ floor and unique matching.
+- **Handoff:** to tighten R: empirical drizzled PSF (stars of the mosaic), a mask before deconvolution, more tiles and
+  a second field; then a frozen plan to re-run the blank-field limits with the measured R if its 2σ bound clears ~0.8.
 ## 2026-10-18: W3 ZTF v3: counting fixed; for three survivors the non-detections are coverage gaps and quadrant changes, not dimming
 - `scripts/w3_ztf.py` v3: official exposure metadata (IRSA TAP), each star counted once per exposure, target
   excluded, in-play denominator; regression tests. Development half only (not blind); holdout unread.
