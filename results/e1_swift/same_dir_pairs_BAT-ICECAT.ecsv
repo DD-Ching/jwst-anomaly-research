@@ -1,0 +1,15 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: a, datatype: string}
+# - {name: b, datatype: string}
+# - {name: lag_s, datatype: float64}
+# - {name: sep_deg, datatype: float64}
+# - {name: sigma_comb_deg, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: HEASARC swiftgrbba (trigger_obs == Swift) x ICECAT-1 v4}
+# schema: astropy-2.0
+a b lag_s sep_deg sigma_comb_deg
+"GRB 190630B" IC190629A 38272.879 53.749 19.5
+"GRB 190701A" IC190629A 138064.879 25.662 19.5

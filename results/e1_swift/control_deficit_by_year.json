@@ -1,0 +1,198 @@
+{
+ "provenance": "derived",
+ "note": "post hoc diagnostic; BAT-GBM wide pairs at 1 h-7 d by BAT anchor year (scrambled anchor years are the original ones: the per-year permutation keeps the year); 300 jit scrambles",
+ "total_obs": 11462,
+ "total_jit_mean": 11872.7,
+ "rows": [
+  {
+   "year": 2008,
+   "obs": 466,
+   "jit_mean": 478.5,
+   "jit_sd": 9.7,
+   "bat_n": 98,
+   "gbm_n": 124,
+   "bat_max_gap_d": 13.2,
+   "gbm_max_gap_d": 6.1
+  },
+  {
+   "year": 2009,
+   "obs": 811,
+   "jit_mean": 836.0,
+   "jit_sd": 13.3,
+   "bat_n": 83,
+   "gbm_n": 250,
+   "bat_max_gap_d": 23.3,
+   "gbm_max_gap_d": 6.4
+  },
+  {
+   "year": 2010,
+   "obs": 625,
+   "jit_mean": 650.8,
+   "jit_sd": 12.6,
+   "bat_n": 73,
+   "gbm_n": 242,
+   "bat_max_gap_d": 27.8,
+   "gbm_max_gap_d": 5.9
+  },
+  {
+   "year": 2011,
+   "obs": 549,
+   "jit_mean": 576.0,
+   "jit_sd": 12.0,
+   "bat_n": 73,
+   "gbm_n": 218,
+   "bat_max_gap_d": 19.6,
+   "gbm_max_gap_d": 9.4
+  },
+  {
+   "year": 2012,
+   "obs": 685,
+   "jit_mean": 709.8,
+   "jit_sd": 12.7,
+   "bat_n": 89,
+   "gbm_n": 220,
+   "bat_max_gap_d": 21.8,
+   "gbm_max_gap_d": 8.2
+  },
+  {
+   "year": 2013,
+   "obs": 743,
+   "jit_mean": 760.0,
+   "jit_sd": 13.2,
+   "bat_n": 86,
+   "gbm_n": 232,
+   "bat_max_gap_d": 20.9,
+   "gbm_max_gap_d": 11.8
+  },
+  {
+   "year": 2014,
+   "obs": 738,
+   "jit_mean": 779.0,
+   "jit_sd": 13.0,
+   "bat_n": 85,
+   "gbm_n": 242,
+   "bat_max_gap_d": 17.5,
+   "gbm_max_gap_d": 8.5
+  },
+  {
+   "year": 2015,
+   "obs": 719,
+   "jit_mean": 757.9,
+   "jit_sd": 13.4,
+   "bat_n": 84,
+   "gbm_n": 237,
+   "bat_max_gap_d": 14.6,
+   "gbm_max_gap_d": 7.9
+  },
+  {
+   "year": 2016,
+   "obs": 657,
+   "jit_mean": 672.8,
+   "jit_sd": 13.1,
+   "bat_n": 82,
+   "gbm_n": 218,
+   "bat_max_gap_d": 13.7,
+   "gbm_max_gap_d": 10.0
+  },
+  {
+   "year": 2017,
+   "obs": 736,
+   "jit_mean": 746.5,
+   "jit_sd": 13.1,
+   "bat_n": 76,
+   "gbm_n": 251,
+   "bat_max_gap_d": 25.4,
+   "gbm_max_gap_d": 6.6
+  },
+  {
+   "year": 2018,
+   "obs": 757,
+   "jit_mean": 780.4,
+   "jit_sd": 14.2,
+   "bat_n": 86,
+   "gbm_n": 243,
+   "bat_max_gap_d": 19.9,
+   "gbm_max_gap_d": 16.9
+  },
+  {
+   "year": 2019,
+   "obs": 539,
+   "jit_mean": 566.2,
+   "jit_sd": 12.6,
+   "bat_n": 67,
+   "gbm_n": 230,
+   "bat_max_gap_d": 27.6,
+   "gbm_max_gap_d": 7.5
+  },
+  {
+   "year": 2020,
+   "obs": 695,
+   "jit_mean": 706.9,
+   "jit_sd": 12.6,
+   "bat_n": 72,
+   "gbm_n": 260,
+   "bat_max_gap_d": 23.0,
+   "gbm_max_gap_d": 8.1
+  },
+  {
+   "year": 2021,
+   "obs": 659,
+   "jit_mean": 698.9,
+   "jit_sd": 12.5,
+   "bat_n": 78,
+   "gbm_n": 235,
+   "bat_max_gap_d": 35.2,
+   "gbm_max_gap_d": 15.8
+  },
+  {
+   "year": 2022,
+   "obs": 385,
+   "jit_mean": 397.7,
+   "jit_sd": 9.6,
+   "bat_n": 46,
+   "gbm_n": 225,
+   "bat_max_gap_d": 31.2,
+   "gbm_max_gap_d": 10.0
+  },
+  {
+   "year": 2023,
+   "obs": 419,
+   "jit_mean": 436.8,
+   "jit_sd": 10.5,
+   "bat_n": 47,
+   "gbm_n": 250,
+   "bat_max_gap_d": 46.8,
+   "gbm_max_gap_d": 9.8
+  },
+  {
+   "year": 2024,
+   "obs": 431,
+   "jit_mean": 451.3,
+   "jit_sd": 10.1,
+   "bat_n": 56,
+   "gbm_n": 228,
+   "bat_max_gap_d": 39.4,
+   "gbm_max_gap_d": 11.0
+  },
+  {
+   "year": 2025,
+   "obs": 741,
+   "jit_mean": 753.3,
+   "jit_sd": 13.1,
+   "bat_n": 71,
+   "gbm_n": 271,
+   "bat_max_gap_d": 24.1,
+   "gbm_max_gap_d": 10.9
+  },
+  {
+   "year": 2026,
+   "obs": 107,
+   "jit_mean": 114.0,
+   "jit_sd": 5.0,
+   "bat_n": 11,
+   "gbm_n": 222,
+   "bat_max_gap_d": 236.7,
+   "gbm_max_gap_d": 6.8
+  }
+ ]
+}

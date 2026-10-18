@@ -1,0 +1,21 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uri, datatype: string}
+# - {name: file, datatype: string}
+# - {name: sha256, datatype: string}
+# - {name: size, datatype: int64}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'HEASARC TAP swiftgrbba (Swift GRB compilation by burst advocate) plus the four D-074 E1 catalogues (scripts/e1_events.py
+#     SOURCES), re-pinned for this run'}
+# - {retrieved: '2026-10-18'}
+# - {pipeline_version: 0.0.1}
+# - {reason: ~5 MB total; event tables only}
+# schema: astropy-2.0
+uri file sha256 size
+https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync?REQUEST=doQuery&LANG=ADQL&QUERY=SELECT%20name,time,trigger_obs,ra,dec,error_radius%20FROM%20swiftgrbba swiftgrbba.vot fde285ad5f4bfacf0cf56e9759b610da000db04599aca9a7f4eb38903855cf9b 157917
+https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync?REQUEST=doQuery&LANG=ADQL&QUERY=SELECT%20trigger_name,ra,dec,error_radius,trigger_time,t90,fluence,last_modified%20FROM%20fermigbrst fermigbrst.vot 5f5195dd2b5100663b7c9ae7920f52d7d3a117d6891eb81615ce94046bea5e9b 425250
+https://dataverse.harvard.edu/api/access/datafile/7502710?format=original icecat1_gold_bronze_tracks.csv 7d5013db3f210004b58414badcac739fc4bf6f90c5b5a495347f8a9080767e15 64301
+https://gwosc.org/api/v2/catalogs/GWTC/events?include-default-parameters=true&format=csv gwtc_events.csv 1ddd28f263b1817d434b95c75518f340145477a8a0c55be47bf15b5baf83010d 109667
+https://www.canfar.net/storage/vault/file/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/table/chimefrbcat2.csv chimefrbcat2.csv 5108ada779d279a2547d9f9e73ae25bfdd40d8496d6ba7255ec29c6629057a48 4057396

@@ -58,7 +58,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
      the 100 s–1 h residual;
    - signed-lag ("which comes first", addendum 3), antipodal (addendum 2) and GW sky-map channels (addendum 4:
      282 maps, global p = 0.83) and signed-lag GW cells by sky-map class (addendum 5, p = 0.56) are null;
-   - IceTracks-DR2, Swift, Einstein Probe.
+   - ~~Swift~~ done 2026-10-18 (BAT, D-074 addendum 6, `results/e1_swift/RESULT.md`: 35 cells null, control passes);
+     IceTracks-DR2, Einstein Probe.
 0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
    (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
    Reach: R ×2–8 / ×0.2–0.4; D_dt ×1.36–1.85 / ×0.41–0.78. Composite model (SDSS1206 only): null

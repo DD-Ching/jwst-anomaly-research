@@ -1,0 +1,96 @@
+{
+ "provenance": "derived",
+ "note": "post hoc diagnostic; all-separation BAT-GBM pairs; 300 jit scrambles",
+ "rows": [
+  {
+   "lag_lo_d": 0.0417,
+   "lag_hi_d": 0.125,
+   "obs": 117,
+   "gbm_after_bat": 69,
+   "gbm_before_bat": 48,
+   "jit_mean": 156.2,
+   "jit_sd": 11.8,
+   "ratio": 0.749
+  },
+  {
+   "lag_lo_d": 0.125,
+   "lag_hi_d": 0.25,
+   "obs": 235,
+   "gbm_after_bat": 110,
+   "gbm_before_bat": 125,
+   "jit_mean": 233.6,
+   "jit_sd": 15.6,
+   "ratio": 1.006
+  },
+  {
+   "lag_lo_d": 0.25,
+   "lag_hi_d": 0.5,
+   "obs": 411,
+   "gbm_after_bat": 206,
+   "gbm_before_bat": 205,
+   "jit_mean": 468.0,
+   "jit_sd": 22.1,
+   "ratio": 0.878
+  },
+  {
+   "lag_lo_d": 0.5,
+   "lag_hi_d": 1.0,
+   "obs": 840,
+   "gbm_after_bat": 437,
+   "gbm_before_bat": 403,
+   "jit_mean": 926.4,
+   "jit_sd": 28.7,
+   "ratio": 0.907
+  },
+  {
+   "lag_lo_d": 1.0,
+   "lag_hi_d": 2.0,
+   "obs": 1726,
+   "gbm_after_bat": 848,
+   "gbm_before_bat": 878,
+   "jit_mean": 1837.6,
+   "jit_sd": 37.2,
+   "ratio": 0.939
+  },
+  {
+   "lag_lo_d": 2.0,
+   "lag_hi_d": 4.0,
+   "obs": 3443,
+   "gbm_after_bat": 1759,
+   "gbm_before_bat": 1684,
+   "jit_mean": 3585.7,
+   "jit_sd": 51.8,
+   "ratio": 0.96
+  },
+  {
+   "lag_lo_d": 4.0,
+   "lag_hi_d": 8.0,
+   "obs": 6891,
+   "gbm_after_bat": 3413,
+   "gbm_before_bat": 3478,
+   "jit_mean": 6922.0,
+   "jit_sd": 65.4,
+   "ratio": 0.996
+  },
+  {
+   "lag_lo_d": 8.0,
+   "lag_hi_d": 16.0,
+   "obs": 13727,
+   "gbm_after_bat": 6981,
+   "gbm_before_bat": 6746,
+   "jit_mean": 13726.7,
+   "jit_sd": 71.9,
+   "ratio": 1.0
+  },
+  {
+   "lag_lo_d": 16.0,
+   "lag_hi_d": 30.0,
+   "obs": 24122,
+   "gbm_after_bat": 12217,
+   "gbm_before_bat": 11905,
+   "jit_mean": 24130.1,
+   "jit_sd": 72.4,
+   "ratio": 1.0
+  }
+ ]
+}

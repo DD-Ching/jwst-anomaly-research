@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: E1 + Swift BAT GRBs (fifth node set): 35-cell family null; BAT–GBM control passes
+- **Why:** TASKS Now 0 (E1) lists Swift as an open node set; every other open line waits on the owner or is
+  optional (2026-10-18 15:08Z queue check). Plan frozen first (`results/e1_swift/PLAN.md`); rules
+  `control_passes` / `outcome` unit-tested before the run (`scripts/e1_swift.py`, `tests/test_e1_swift.py`).
+- **Data:** HEASARC `swiftgrbba` (current to 2026-10-07; `swiftgrb` stops in 2012), 1,635 on-board BAT triggers;
+  the four D-074 catalogues re-pinned in `data/manifests/e1_swift.ecsv` (the live `fermigbrst` moved since D-074).
+- **Result (derived, `results/e1_swift/RESULT.md`):** control 466 BAT–GBM same-direction pairs at 0–100 s vs 0.10
+  expected (passes). Family: min cell BAT–CHIME 10–100 s wide, analytic p 0.047 (× 35 = 1), pooled global p 0.54:
+  **null**. 95 % limits per anchor, e.g. ≤ 1.8 × 10⁻³ dependent wide BAT–BAT pairs per burst at ≤ 100 s,
+  ≤ 3.3 × 10⁻³ BAT–ICECAT at ≤ 100 s (`limits.ecsv`).
+- **Post hoc (control channel only):** 8 same-GRB pairs land in "wide" through the 0.05° σ floor; a BAT–GBM deficit
+  at 1 h–4 d (1 h–1 d z −4.9) is in all 19 years, survives a Sun-frame null and vanishes when the 466 joint bursts
+  are removed (−0.5σ); its mechanism is not determined (`scripts/e1_swift_diag.py`, four JSONs).
+- **Handoff:** E1 open node sets: IceTracks-DR2 (1.6 M events; would need a ghost-pair-style reduction, D-079),
+  Einstein Probe (no public event table found yet; not searched this run).
+
 ## 2026-10-18: halo-subtracted flux ratios on Abell 370 (CANUCS, per-system rms gate): 2 images testable, no anomaly
 - **Why:** fifth cluster for the D-032 flux-ratio line (mission: flux ratios against published models). The four
   usable Lenstool models (SMACS, El Gordo, Abell 2744, MACS0416) were done; `abell370-canucs`' list is gated off
