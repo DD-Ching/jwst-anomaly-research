@@ -7,7 +7,7 @@ pointing choice; results/w1_shear_ceers/PLAN.md).
 One MAST ``Mast.Caom.Filtered`` query; each ``s_region`` (one or more POLYGONs) is rasterised on a
 flat tangent-plane grid of ``PIX_ARCMIN``. Footprints ``observed``; areas and overlaps ``derived``
 (the grid step and the flat-sky approximation are ASSUMPTIONs; overlaps below 0.05 arcmin² are not
-listed).
+listed). ``dropped``: the pointings ``drop_overlapping`` leaves out.
 """
 
 from __future__ import annotations
@@ -26,6 +26,7 @@ MAST = "https://mast.stsci.edu/api/v0/invoke"
 PIX_ARCMIN = 0.02  # raster step (1.2"; ASSUMPTION)
 HALF_ARCMIN = 25.0  # grid half-width around the footprints' mean centre
 MIN_OVERLAP = 0.05  # arcmin²; smaller overlaps are not listed
+MAX_OVERLAP = 0.6  # arcmin²; pairwise rule of results/w1_shear_goodsn/PLAN.md (ASSUMPTION)
 
 
 def query(program: str, band: str) -> list[dict]:
@@ -52,16 +53,36 @@ def polygons(s_region: str) -> list[np.ndarray]:
     """(ra, dec) vertex arrays of every POLYGON in an STC-S string."""
     out = []
     for chunk in re.split(r"POLYGON", s_region)[1:]:
-        v = [float(x) for x in re.findall(r"[-+]?[0-9]*\.?[0-9]+", chunk)]
+        # frame words (ICRS, J2000, ...) are skipped: only plain numbers are vertices
+        v = [float(t) for t in chunk.split() if re.fullmatch(r"[-+]?[0-9]*\.?[0-9]+", t)]
         out.append(np.asarray(v).reshape(-1, 2))
     return out
+
+
+def drop_overlapping(overlap: dict[str, float], max_overlap: float | None = None) -> list[str]:
+    """Pointings to leave out so that no kept pair overlaps by more than ``max_overlap``: drop the
+    pointing with the largest summed excess overlap, repeat (ties: name order)."""
+    max_overlap = MAX_OVERLAP if max_overlap is None else max_overlap
+    pairs = {tuple(k.split("|")): v for k, v in overlap.items() if v > max_overlap}
+    dropped = []
+    while pairs:
+        load: dict[str, float] = {}
+        for (a, b), v in pairs.items():
+            load[a] = load.get(a, 0.0) + v
+            load[b] = load.get(b, 0.0) + v
+        worst = max(sorted(load), key=load.get)
+        dropped.append(worst)
+        pairs = {k: v for k, v in pairs.items() if worst not in k}
+    return sorted(dropped)
 
 
 def footprints(rows: list[dict]) -> dict:
     """Area per pointing, pairwise overlaps and footprint centroids (degrees)."""
     polys = {r["obs_id"].split("_nircam")[0]: polygons(r["s_region"]) for r in rows}
     allv = np.vstack([p for ps in polys.values() for p in ps])
-    ra0, de0 = allv.mean(0)
+    ra0 = allv[0, 0]
+    ra0 += np.mean((allv[:, 0] - ra0 + 180.0) % 360.0 - 180.0)  # RA mean safe across 0/360
+    de0 = allv[:, 1].mean()
     cosd = np.cos(np.radians(de0))
     n = int(2 * HALF_ARCMIN / PIX_ARCMIN)
     ax = -HALF_ARCMIN + PIX_ARCMIN * np.arange(n)
@@ -70,7 +91,10 @@ def footprints(rows: list[dict]) -> dict:
     for name, ps in polys.items():
         m = np.zeros(len(grid), bool)
         for p in ps:
-            xy = np.c_[(p[:, 0] - ra0) * cosd * 60, (p[:, 1] - de0) * 60]
+            dra = (p[:, 0] - ra0 + 180.0) % 360.0 - 180.0
+            xy = np.c_[dra * cosd * 60, (p[:, 1] - de0) * 60]
+            if np.abs(xy).max() > HALF_ARCMIN - PIX_ARCMIN:
+                raise ValueError(f"{name}: footprint beyond the +-{HALF_ARCMIN} arcmin grid")
             box = np.all((grid > xy.min(0) - PIX_ARCMIN) & (grid < xy.max(0) + PIX_ARCMIN), 1)
             m[box] |= MplPath(xy).contains_points(grid[box])
         masks[name] = m
@@ -85,13 +109,18 @@ def footprints(rows: list[dict]) -> dict:
     centroid = {}
     for name in names:
         x, y = grid[masks[name]].mean(0)
-        centroid[name] = [round(ra0 + x / 60 / cosd, 5), round(de0 + y / 60, 5)]
+        centroid[name] = [round((ra0 + x / 60 / cosd) % 360.0, 5), round(de0 + y / 60, 5)]
     return {
         "area_arcmin2": {k: round(float(masks[k].sum() * px2), 2) for k in names},
         "overlap_arcmin2": overlap,
         "centroid": centroid,
         "exptime_s": {r["obs_id"].split("_nircam")[0]: r["t_exptime"] for r in rows},
-        "assumptions": {"pix_arcmin": PIX_ARCMIN, "min_overlap_arcmin2": MIN_OVERLAP},
+        "dropped": drop_overlapping(overlap),
+        "assumptions": {
+            "pix_arcmin": PIX_ARCMIN,
+            "min_overlap_arcmin2": MIN_OVERLAP,
+            "max_overlap_arcmin2": MAX_OVERLAP,
+        },
     }
 
 

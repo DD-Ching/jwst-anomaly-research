@@ -1,8 +1,9 @@
 # W1 shear screen in CEERS (EGS, program 1345, no lens model): result (2026-10-18)
 
 Plan: `PLAN.md` (frozen before any run). Code: the `CEERS_FIELDS` entries in `scripts/inject_shear.py`, the DJA
-v7.4 zout and catalogue pins in `scripts/w1_stage_inputs.py`, `scripts/w1_footprints.py` (pointing choice,
-`footprints.json`). Labels: shapes and pixels `observed`; S, p, efficiencies and limits `derived`; injected lenses
+v7.4 zout and catalogue pins in `scripts/w1_stage_inputs.py`, `scripts/w1_footprints.py` (pointing choice by
+`drop_overlapping`, `footprints.json`; the function was written after the choice by hand and agrees with it, post
+hoc). Labels: shapes and pixels `observed`; S, p, efficiencies and limits `derived`; injected lenses
 `simulated`; R and every threshold an ASSUMPTION.
 
 ## Gate P (`gate_p.json`, decided by `passes_gate_p`)
@@ -36,8 +37,8 @@ Under the frozen rule (`w1_shear_more` addendum A):
 - **o004 is explained:** without V1 ∪ V2, S = 1.54 and p_rot = 1.0;
 - **o069 is explained:** without V1 ∪ V2, S = 1.85 and p_rot = 1.0 (V2 carries it: without V1 alone S = 4.14).
 
-Neither is a candidate. Both stay out of the headline (D-098). **Deviation:** the plan ran injections on every
-pointing that passes gate P; the flagged two were not injected, because D-098 keeps them out of every limit here.
+Neither is a candidate. Both stay out of the headline (D-098). **Deviations:** the plan recorded the tarball sha256 at the first fetch; only the member sha256 was
+recorded (the archive was streamed unpinned). The plan ran injections on every pointing that passes gate P; the flagged two were not injected, because D-098 keeps them out of every limit here.
 
 ## Limits (`w1_volume.py`; zero detections; Planck18)
 The sixteen stored headline summaries reproduce `results/w1_shear_goodsn/limits_16fields_unflagged.json` exactly
@@ -49,8 +50,10 @@ The sixteen stored headline summaries reproduce `results/w1_shear_goodsn/limits_
 | **twenty-four: + eight unflagged CEERS (headline, D-098)** | `limits_24fields_unflagged.json` | 199.9 | 1.50 × 10⁻³ / 2.53 × 10⁻⁴ / 1.09 × 10⁻⁴ | 15.0 / 2.53 / **1.09** |
 | CEERS only (eight) | `limits_ceers_only.json` | 80.1 | 3.83 × 10⁻³ / 6.18 × 10⁻⁴ / 2.69 × 10⁻⁴ | 38.3 / 6.18 / 2.69 |
 
-The headline double-counts the pairwise overlaps among the eight: 1.33 arcmin², the sum of their pairs listed in
-`footprints.json` (≈ 1.7 % of the CEERS area).
+The headline double-counts the pairwise overlaps among the eight: at least 1.33 arcmin², the sum of their pairs
+listed in `footprints.json` (pairs ≤ 0.05 arcmin² are not listed). The area is the screened grid area, the same
+definition as every earlier field; for the eight it is 80.1 arcmin², 7 % more than their MAST footprints (74.9
+arcmin², `footprints.json`; sum not stored), so the CEERS V_eff may be overstated by up to that much.
 
 Plan check ("what would change the plan"):
 - the headline does not reach 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉ (1.09 × 10⁻⁴);
@@ -68,6 +71,6 @@ like GOODS-N's, depends strongly on the borrowed R.**
 
 ## Limitations
 - R is borrowed from another program (CANUCS Abell 370 F200W fit); CEERS F200W is shallower (2.8 ks) than JADES 1181.
-- Overlaps among the eight (1.33 arcmin²) are double-counted.
+- Overlaps among the eight (≥ 1.33 arcmin²) are double-counted; the screened area exceeds the MAST footprints by 7 %.
 - The headline is 1.09× the Takahashi & Asada bound at 2 × 10¹³ M☉ under that R; with R = 0.231 the recoveries at Z = 0.3 fall to
   0.19–0.28 (CEERS, eight-pointing totals) and 0.21–0.26 (GOODS-N, four-pointing totals) of the adopted ones.

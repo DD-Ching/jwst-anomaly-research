@@ -197,7 +197,7 @@ PHOTOZ[Path(ish._CEERS_ZOUT).name] = _tar(
     "ceers-full-grizli-v7.4-fix",
     None,  # tarball sha256 not recorded (streamed once; the member is pinned)
     "c50443d242c4c76b2d3c164b236911f14d926bf5c466ae90bfe0def299a48a50",
-) | {"max_bytes": 400_000_000}
+) | {"max_bytes": 450_000_000}
 for _spec in op.DEEP_FIELDS.values():  # CANUCS NCF photometry (results/w1_shear_ncf)
     if _spec.get("format") == "dja":
         continue

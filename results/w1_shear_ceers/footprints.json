@@ -89,8 +89,12 @@
   "jw01345-o003_t023": 2834.508,
   "jw01345-o001_t021": 2834.508
  },
+ "dropped": [
+  "jw01345-o052_t022"
+ ],
  "assumptions": {
   "pix_arcmin": 0.02,
-  "min_overlap_arcmin2": 0.05
+  "min_overlap_arcmin2": 0.05,
+  "max_overlap_arcmin2": 0.6
  }
 }
