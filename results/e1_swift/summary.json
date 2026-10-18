@@ -1,0 +1,99 @@
+{
+ "provenance": "derived",
+ "plan": "results/e1_swift/PLAN.md",
+ "events": {
+  "GBM": 4398,
+  "ICECAT": 340,
+  "GW": 391,
+  "CHIME": 3641,
+  "BAT": 1635
+ },
+ "bat_mjd_range": [
+  53359.9572569444,
+  61318.9021527778
+ ],
+ "n_jit": 10000,
+ "n_jitday": 10000,
+ "tested_cells": 35,
+ "positive_control_bat_gbm_same_0_100s": {
+  "obs": 466,
+  "jit_mean": 0.1019,
+  "jit_sd": 0.3138732068845635,
+  "analytic_p": 0.0,
+  "passes": true,
+  "rule": ">= 50 pairs and analytic p <= 1.8e-05"
+ },
+ "outcome": "null",
+ "min_cell": {
+  "cell": "BAT-CHIME 10s-100s wide",
+  "analytic_p": 0.0466054565328183,
+  "bonferroni_p": 1.0
+ },
+ "global_jit_pooled": {
+  "min_cell_p": 0.04789521047895211,
+  "trials_corrected_p": 0.5424457554244576
+ },
+ "global_jitday_pooled": {
+  "min_cell_p": 0.049795020497950204,
+  "trials_corrected_p": 0.5358464153584641
+ },
+ "injection_detection_p_star": 3.857142857142858e-05,
+ "same_direction_pairs": {
+  "BAT-BAT": 0,
+  "BAT-ICECAT": 2,
+  "BAT-CHIME": 1,
+  "BAT-GBM": 466
+ },
+ "params": {
+  "lag_edges": [
+   0.0,
+   10.0,
+   100.0,
+   3600.0,
+   86400.0,
+   604800.0
+  ],
+  "n_sigma": 3.0,
+  "min_wide_deg": 0.1,
+  "gbm_sys_deg": 3.7,
+  "gbm_external_deg": 0.5,
+  "gbm_external_sigma_deg": 0.05,
+  "icecat_90_to_sigma": 2.146,
+  "jitter_s": 259200.0,
+  "quantum_s": {
+   "GBM": 5736.0,
+   "BAT": 5700.0
+  },
+  "orbit_slop_s": 300.0,
+  "orbit_k": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "orbit_half_s": 120.0,
+  "day_k": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "day_half_s": 600.0,
+  "inject_local_days": 30.0
+ },
+ "swift_orbit_s": 5700.0
+}

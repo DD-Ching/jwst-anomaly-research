@@ -1,0 +1,75 @@
+{
+ "provenance": "derived",
+ "note": "post hoc diagnostic; counterparts removed: 466 BAT and 466 GBM events; all-separation pairs; 300 jit scrambles",
+ "rows": [
+  {
+   "lag_lo_d": 0.0417,
+   "lag_hi_d": 0.125,
+   "obs": 72,
+   "jit_mean": 81.9,
+   "jit_sd": 8.5,
+   "ratio": 0.879
+  },
+  {
+   "lag_lo_d": 0.125,
+   "lag_hi_d": 0.25,
+   "obs": 127,
+   "jit_mean": 123.8,
+   "jit_sd": 9.9,
+   "ratio": 1.026
+  },
+  {
+   "lag_lo_d": 0.25,
+   "lag_hi_d": 0.5,
+   "obs": 254,
+   "jit_mean": 245.9,
+   "jit_sd": 15.2,
+   "ratio": 1.033
+  },
+  {
+   "lag_lo_d": 0.5,
+   "lag_hi_d": 1.0,
+   "obs": 489,
+   "jit_mean": 490.6,
+   "jit_sd": 20.2,
+   "ratio": 0.997
+  },
+  {
+   "lag_lo_d": 1.0,
+   "lag_hi_d": 2.0,
+   "obs": 976,
+   "jit_mean": 974.0,
+   "jit_sd": 29.6,
+   "ratio": 1.002
+  },
+  {
+   "lag_lo_d": 2.0,
+   "lag_hi_d": 4.0,
+   "obs": 1926,
+   "jit_mean": 1947.5,
+   "jit_sd": 36.9,
+   "ratio": 0.989
+  },
+  {
+   "lag_lo_d": 4.0,
+   "lag_hi_d": 8.0,
+   "obs": 3809,
+   "jit_mean": 3839.7,
+   "jit_sd": 50.2,
+   "ratio": 0.992
+  },
+  {
+   "lag_lo_d": 8.0,
+   "lag_hi_d": 16.0,
+   "obs": 7841,
+   "jit_mean": 7820.4,
+   "jit_sd": 53.4,
+   "ratio": 1.003
+  }
+ ],
+ "sum": {
+  "obs_1h_4d": 3844,
+  "jit_mean_1h_4d": 3863.7,
+  "jit_sd_1h_4d": 37.9
+ }
+}

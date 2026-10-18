@@ -1,0 +1,14 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: a, datatype: string}
+# - {name: b, datatype: string}
+# - {name: lag_s, datatype: float64}
+# - {name: sep_deg, datatype: float64}
+# - {name: sigma_comb_deg, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: HEASARC swiftgrbba (trigger_obs == Swift) x CHIME/FRB Catalog 2}
+# schema: astropy-2.0
+a b lag_s sep_deg sigma_comb_deg
+"GRB 220412A" FRB20220415D 245272.801 0.515 0.253

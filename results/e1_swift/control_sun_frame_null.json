@@ -1,0 +1,86 @@
+{
+ "provenance": "derived",
+ "note": "post hoc diagnostic, not part of the frozen plan; 300 scrambles; per-year permutation + jit shifts as the jit null, then each BAT and GBM event keeps its ecliptic latitude and its ecliptic longitude relative to the Sun",
+ "rows": [
+  {
+   "lag": "0s-10s",
+   "cls": "same",
+   "obs": 403,
+   "sun_null_mean": 0.01,
+   "sun_null_sd": 0.08,
+   "z": 4952.18
+  },
+  {
+   "lag": "0s-10s",
+   "cls": "wide",
+   "obs": 8,
+   "sun_null_mean": 0.21,
+   "sun_null_sd": 0.44,
+   "z": 17.55
+  },
+  {
+   "lag": "10s-100s",
+   "cls": "same",
+   "obs": 63,
+   "sun_null_mean": 0.08,
+   "sun_null_sd": 0.28,
+   "z": 222.09
+  },
+  {
+   "lag": "10s-100s",
+   "cls": "wide",
+   "obs": 2,
+   "sun_null_mean": 2.05,
+   "sun_null_sd": 1.42,
+   "z": -0.04
+  },
+  {
+   "lag": "100s-1h",
+   "cls": "same",
+   "obs": 28,
+   "sun_null_mean": 3.31,
+   "sun_null_sd": 1.93,
+   "z": 12.81
+  },
+  {
+   "lag": "100s-1h",
+   "cls": "wide",
+   "obs": 66,
+   "sun_null_mean": 71.26,
+   "sun_null_sd": 8.33,
+   "z": -0.63
+  },
+  {
+   "lag": "1h-1d",
+   "cls": "same",
+   "obs": 66,
+   "sun_null_mean": 77.53,
+   "sun_null_sd": 9.62,
+   "z": -1.2
+  },
+  {
+   "lag": "1h-1d",
+   "cls": "wide",
+   "obs": 1537,
+   "sun_null_mean": 1709.93,
+   "sun_null_sd": 34.39,
+   "z": -5.03
+  },
+  {
+   "lag": "1d-7d",
+   "cls": "same",
+   "obs": 396,
+   "sun_null_mean": 458.36,
+   "sun_null_sd": 20.11,
+   "z": -3.1
+  },
+  {
+   "lag": "1d-7d",
+   "cls": "wide",
+   "obs": 9925,
+   "sun_null_mean": 10171.34,
+   "sun_null_sd": 63.16,
+   "z": -3.9
+  }
+ ]
+}

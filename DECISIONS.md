@@ -4420,6 +4420,20 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
   (> 30) at 1 h–7 d.
 - Revisit if: new GWTC PE releases, or a time-resolved CHIME uptime series (owner decision).
 
+**Addendum 6 (2026-10-18): Swift BAT GRBs as a fifth node set (`results/e1_swift/`).**
+- Input: HEASARC `swiftgrbba` (burst-advocate compilation; the older `swiftgrb` table stops in 2012), on-board
+  Swift triggers only, 1σ = BAT 90 % radius / 2.146. All five inputs re-pinned in `data/manifests/e1_swift.ecsv`.
+- Family: BAT–BAT, BAT–ICECAT, BAT–CHIME (same, wide), BAT–GW (all) × 5 lags = 35 cells; BAT–GBM is the positive
+  control (466 same-direction pairs at 0–100 s vs 0.10 expected: passes). BAT jit quantum = 5,700 s (ASSUMPTION).
+- **Result: null.** Min cell BAT–CHIME 10–100 s wide (analytic p 0.047, × 35 = 1); pooled global p 0.54. Limits
+  per eligible anchor in `results/e1_swift/limits.ecsv` (e.g. ≤ 1.8 × 10⁻³ dependent wide BAT–BAT pairs per burst
+  at ≤ 100 s).
+- Control-channel findings (post hoc): the 0.05° σ floor puts 8 same-GRB BAT–GBM pairs in "wide"; a BAT–GBM pair
+  deficit at 1 h–4 d is carried by the 466 joint bursts (removed: −0.5σ), mechanism not determined. A null that
+  keeps Sun-relative positions does not remove it.
+- Revisit if: an XRT-position variant is needed for same-direction cells, or a satellite × satellite channel
+  that contains joint detections enters a tested family (then remove joint events first).
+
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
 **Decision.**

@@ -1,0 +1,39 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: channel, datatype: string}
+# - {name: cls, datatype: string}
+# - {name: lag, datatype: string}
+# - {name: obs, datatype: int64}
+# - {name: jit_mean, datatype: float64}
+# - {name: ul95_pairs, datatype: float64}
+# - {name: eff, datatype: float64}
+# - {name: n50_detect, datatype: int64}
+# - {name: n_anchor_eligible, datatype: int64}
+# - {name: valid, datatype: bool}
+# - {name: ul95_rate_per_anchor, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: counts.ecsv (jit null) and injections.ecsv}
+# schema: astropy-2.0
+channel cls lag obs jit_mean ul95_pairs eff n50_detect n_anchor_eligible valid ul95_rate_per_anchor
+BAT-BAT wide 0s-10s 0 0.04 3.0 1.0 3 1635 True 0.001834862385321101
+BAT-BAT wide 10s-100s 0 0.36 3.0 1.0 8 1635 True 0.001834862385321101
+BAT-BAT wide 100s-1h 21 14.22 30.24 0.986 11 1635 True 0.018761196460561312
+BAT-BAT wide 1h-1d 319 334.65 26.87 0.959 131 1635 True 0.01713523776396075
+BAT-BAT wide 1d-7d 2159 2128.19 77.0 0.752 137 1635 True 0.06258952512651232
+BAT-ICECAT wide 0s-10s 0 0.02 3.0 1.0 3 915 True 0.003278688524590164
+BAT-ICECAT wide 10s-100s 0 0.14 3.0 1.0 5 915 True 0.003278688524590164
+BAT-ICECAT wide 100s-1h 3 5.3 7.75 1.0 18 915 True 0.008469945355191256
+BAT-ICECAT wide 1h-1d 136 125.09 27.0 0.947 30 915 True 0.03117063033941353
+BAT-ICECAT wide 1d-7d 765 779.81 27.37 0.93 83 915 True 0.032153575052063864
+BAT-CHIME wide 0s-10s 0 0.15 3.0 1.0 5 343 True 0.008746355685131196
+BAT-CHIME wide 10s-100s 4 1.33 9.15 0.994 6 343 True 0.02682541492255322
+BAT-CHIME wide 100s-1h 63 52.73 22.0 0.968 22 343 True 0.06624782709864628
+BAT-CHIME wide 1h-1d 1219 1246.96 53.16 0.947 259 343 True 0.16360621158155275
+BAT-CHIME wide 1d-7d 7837 7861.96 94.0 0.792 457 343 True 0.34588411300624006
+BAT-GW all 0s-10s 0 0.02 3.0 1.0 3 255 True 0.011764705882352941
+BAT-GW all 10s-100s 0 0.12 3.0 1.0 5 255 True 0.011764705882352941
+BAT-GW all 100s-1h 4 4.72 9.15 0.982 17 255 True 0.036546840958605664
+BAT-GW all 1h-1d 101 111.76 15.36 0.951 75 255 True 0.06331787486778943
+BAT-GW all 1d-7d 670 684.23 26.1 1.0 79 255 True 0.10235294117647059
