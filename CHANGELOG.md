@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W3 ZTF v3: counting fixed; the shared non-detections are coverage and catalogue gaps, not dimming
+- `scripts/w3_ztf.py` v3: official exposure metadata (IRSA TAP), each star counted once per exposure, target
+  excluded, in-play denominator; regression tests. Development half only (not blind); holdout unread.
+- Survivors 9 → 8 (same two windows); W3 recovery at ρ = 0.1, t_E = 100 d 0.24 → 0.30; frozen conditions still fail.
+- Images (IBE cutouts, 23 exposures, 1.34 MB): of 11 catalogue non-detections of three survivors, 6 have no coverage
+  or an invalid exposure and 5 show the star present (catalogue misses); none is a real drop
+  (`results/w3_ztf/v3/RESULT.md`).
+- **Handoff:** paused. A new independent validation would add footprint containment from metadata corners,
+  cross-quadrant merging and image checks of survivors (costs in RESULT); not started.
+
 ## 2026-10-18: W3 feasibility trial on ZTF DR24 light curves: failed its frozen validation (v1 and bug-fixed v2); no holdout search
 - Plan, sample (1,000 isolated stars, metadata only) and rules committed before any light curve was read
   (`results/w3_ztf/PLAN.md`); data: IRSA ZTF DR24 HATS on S3 (one 953-MB light-curve partition read in 61 s); model:

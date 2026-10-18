@@ -583,7 +583,7 @@ def stage_inject(a) -> None:
             o = series(g, rows, cov, 1)
             base = {(x["t_start"], x["t_end"]) for x in screen(s, o, cov)}
             carriers.append((g, s, o, base))
-    res = {"version": 2, "carriers": len(carriers), "w3": [], "controls": {}}
+    res = {"version": 3, "carriers": len(carriers), "w3": [], "controls": {}}
     n = a.n
     cells = [
         (r, b, te)
@@ -636,7 +636,7 @@ def stage_inject(a) -> None:
             passed += any(x["pass"] for x in sc)
         res["controls"][kind] = {"n": n, "flagged": flag, "passed_vetting": passed}
         print(kind, res["controls"][kind], flush=True)
-    (OUT / "injections_dev_v2.json").write_text(
+    (OUT / "v3" / "injections_dev_v3.json").write_text(
         json.dumps({"label": "simulated", **res}, indent=1) + "\n"
     )
 
@@ -657,7 +657,7 @@ def stage_search(a) -> None:
             for x in screen(s, series(g, rows, cov, other), cov):
                 out.append({"key": g["key"], "ra": g["ra"], "dec": g["dec"], "filter": filt, **x})
     summ = {
-        "version": 2,
+        "version": 3,
         "half": a.half,
         "groups": len(groups),
         "series_searched": n_ser,
@@ -665,7 +665,7 @@ def stage_search(a) -> None:
         "flagged_groups": len({x["key"] for x in out}),
         "passed_groups": sorted({x["key"] for x in out if x["pass"]}),
     }
-    (OUT / f"search_{a.half}_v2.json").write_text(
+    (OUT / "v3" / f"search_{a.half}_v3.json").write_text(
         json.dumps({"label": "derived", "summary": summ, "runs": out}, indent=1, default=float)
         + "\n"
     )
