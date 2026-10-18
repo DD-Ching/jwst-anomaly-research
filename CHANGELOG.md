@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W3 feasibility trial on ZTF DR24 light curves: failed its frozen validation (v1 and bug-fixed v2); no holdout search
+- Plan, sample (1,000 isolated stars, metadata only) and rules committed before any light curve was read
+  (`results/w3_ztf/PLAN.md`); data: IRSA ZTF DR24 HATS on S3 (one 953-MB light-curve partition read in 61 s); model:
+  W3, negative-mass point lens (n = 1, ε < 0; finite-source spikes), a restricted hypothesis, not wormholes in general.
+- **Result (`results/w3_ztf/RESULT.md`):** v1 failed (W3 recovery 0.215 at ρ = 0.1, t_E = 100 d; 6 real survivors).
+  A review found code bugs (time bins splitting exposures, night boundary, control models, missing injection noise,
+  seeds); v2 fixed them with unchanged thresholds and failed again on the same development half: W3 recovery
+  0.56–0.71 for t_E 10–100 d at ρ = 0.01 and 0.565–0.62 for t_E 10–30 d at ρ = 0.1 (blend 1), but 0.24 at ρ = 0.1,
+  t_E = 100 d; controls pass vetting at 0–1.5 %; 9 real survivors, all in two sample-wide non-detection windows.
+  The holdout half was not searched.
+- **Why:** detections-only data (non-detections only by inference), a common-mode test that misses sample-wide
+  episodes (its dim fraction can go negative: a known, unfixed v2 bug), and slow large-ρ t_E edges that look like
+  ordinary fades. **Handoff:** paused.
 ## 2026-10-18: W1 lower masses: filter pilot keeps the frozen Schirmer 10″ screen (D-103)
 - Frozen plan `results/w1_low_mass/PLAN.md`: three filters (V0 Schirmer 10″, V1 point-mass 10″, V2 Schirmer 5″) ×
   masses 2 × 10¹², 1 × 10¹², 5 × 10¹¹ M☉ × 100 injected lenses at Z = 0.3 on ceers-o001 and goodsn-o004 (no streak masks).

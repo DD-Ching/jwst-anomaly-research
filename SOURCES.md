@@ -1545,3 +1545,7 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - MACS1423 h000 HST archive (queried 2026-10-18; `results/transients/macs1423_h000_hst/hst_obs.ecsv`): HST GO 16667
   (ACS F435W/F606W 2022–2023), GO 17504 (WFC3 F110W/F606W/F814W 2023-12 – 2024-04), CLASH 12790 (2012–2013), 13386
   (WFC3/UVIS F606W 2014), 10493 (ACS F814W 2006); pipeline association `_drc`/`_drz` products read from s3://stpubdata/hst/public/.
+- ZTF DR24 light curves and objects, IRSA HATS collection (README version date 2026-05-13), DOI 10.26131/IRSA598;
+  s3://ipac-irsa-ztf/ztf/enhanced/dr24/ (anonymous; read 2026-10-18); tutorial
+  https://caltech-ipac.github.io/irsa-tutorials/ztf-lightcurves/; release notes
+  https://irsa.ipac.caltech.edu/data/ZTF/docs/releases/dr24/ztf_release_notes_dr24.pdf. Used by `scripts/w3_ztf.py`.

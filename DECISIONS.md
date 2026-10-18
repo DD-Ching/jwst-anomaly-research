@@ -5153,3 +5153,18 @@ confining radiation at a throat is found.
   V0 recovers 3–4 / 100 at 1 × 10¹² M☉, so a forty-field 1 × 10¹² grid would sit at roughly 30–45× Takahashi & Asada.
 - **Revisit if:** a filter with r_min near θ_E, deeper shape catalogues, or a source-density increase (e.g. a
   second band's shapes) is proposed.
+
+## D-104 W3 on ZTF DR24 light curves: detections-only data; feasibility trial failed its frozen validation twice (2026-10-18)
+- **Decision:** ZTF DR24 light curves (IRSA HATS on S3, read column-wise) support a W3 (negative-mass n = 1) umbra
+  search only through non-detections inferred from quadrant coverage. The frozen pipeline (`scripts/w3_ztf.py`, 1,000
+  isolated stars near RA 272.65°, Dec +64.95°) failed its validation in v1 and, after bug fixes with unchanged
+  thresholds, in v2 (W3 recovery 0.24 at ρ = 0.1, t_E = 100 d; 9 real development survivors > 5). No holdout search,
+  no limit.
+- **Alternatives rejected:** IRSA's per-object light-curve API (a 50-s request returned nothing here) in favour of
+  one HATS partition read; a full-vanish flux calibration (the release has no upper limits); changing thresholds
+  after the validation; a third version within this round.
+- **Evidence:** `results/w3_ztf/RESULT.md`: v2 controls pass vetting at 0–1.5 % (eclipses, fades, PSPL; common mode
+  by construction); the 9 survivors fall in two windows where ~10 % of development stars are mostly undetected.
+- **Revisit if:** a sample-wide shared-epoch test and a correct comparison dim fraction are frozen first and
+  validated on a new development set, an edge test that allows ρ t_E-long edges is defined without the injected
+  results, or ZTF forced photometry (fluxes at every epoch) replaces the detections-only release.

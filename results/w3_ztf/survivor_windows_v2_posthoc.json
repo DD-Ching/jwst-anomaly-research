@@ -1,0 +1,33 @@
+{
+ "label": "derived, post hoc (v2): how many development r-band series are mostly non-detected inside the two survivor windows",
+ "windows": [
+  {
+   "mjd": [
+    58655.0,
+    58662.0
+   ],
+   "series_with_ge3_good_epochs": 509,
+   "series_mostly_nd": 46,
+   "fields": [
+    826,
+    848
+   ]
+  },
+  {
+   "mjd": [
+    59106.0,
+    59110.0
+   ],
+   "series_with_ge3_good_epochs": 499,
+   "series_mostly_nd": 51,
+   "fields": [
+    826,
+    848
+   ]
+  }
+ ],
+ "negative_dimfrac_epochs": [
+  1886,
+  30838
+ ]
+}
