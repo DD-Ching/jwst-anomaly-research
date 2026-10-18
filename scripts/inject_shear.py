@@ -150,6 +150,30 @@ SHEAR_FIELD_OVERRIDES = {
         "centre": (109.3864, 37.7550),  # VENUS o029 pointing (configs/macs0717.yaml)
     },
 }
+# 2026-10-18 (results/w1_shear_ncf/PLAN.md): the CANUCS NIRCam flanking fields, no lens model
+# (``inject_radial.NullLensModel`` at the catalogue's median position), F150W (no F200W there),
+# CANUCS NCF photo-z, R fixed by gate R (``w1_ncf_gate_r.py``; the NCF have no shear to fit it)
+NCF_FIELDS = {
+    "macs0416-ncf": ("o023_t002", "macs0416", (64.14500, -24.09645)),
+    "macs1149-ncf": ("o029_t004", "macs1149", (177.40342, 22.29696)),
+    "abell370-ncf": ("o020_t001", "a370", (40.06161, -1.62260)),
+    "macs0417-ncf": ("o026_t003", "macs0417", (64.36952, -11.82049)),
+    "macs1423-ncf": ("o032_t005", "macs1423", (215.87389, 24.15656)),
+}
+NCF_RESPONSIVITY = 0.4211223185032926  # gate R passed: results/w1_shear_ncf/gate_r.json "adopted_r"
+_NCF_CANUCS = (
+    "cache/external/canucs/hlsp_canucs_jwst-hst_multi_{0}-ncf_multi_v1_photometry-cat.fits.gz"
+)
+for _name, (_obs, _c, _centre) in NCF_FIELDS.items():
+    SHEAR_FIELD_OVERRIDES[_name] = {
+        "model": None,
+        "catalog": ir._MAST.format(f"jw01208-{_obs}_nircam_clear-f150w"),
+        "photoz": ("canucs", _NCF_CANUCS.format(_c)),
+        "max_radius": 200.0,
+        "spike_stars": True,
+        "centre": _centre,
+        "responsivity": "ncf",
+    }
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
 
@@ -329,6 +353,12 @@ def run_field(name: str, args) -> dict:
     sargs.max_radius = spec["max_radius"]
     sargs.recover_tol = args.recover_tol
     sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
+    if spec.get("responsivity") == "ncf":  # no lens model: R fixed, the lens redshift explicit
+        if NCF_RESPONSIVITY is None:
+            raise ValueError(f"{name}: NCF_RESPONSIVITY is unset (gate R, w1_ncf_gate_r.py)")
+        if getattr(args, "lens_z", None) is None:
+            raise ValueError(f"{name} has no lens model; give --lens-z")
+        sargs.responsivity = NCF_RESPONSIVITY
     psf = es.psf_sigma_px(shapes)
     inj = ShearInjector(model, shapes, sargs, psf, extra, streak)
     t_base = time.time() - t0
