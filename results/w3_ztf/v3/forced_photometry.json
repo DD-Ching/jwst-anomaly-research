@@ -1,0 +1,453 @@
+{
+ "label": "derived; exploratory image check (plan v3 B); class 1 no coverage/valid observation, 2 poor, 3 source present but catalogue missing it (only for catalogue non-detections), 4 lower flux",
+ "download_bytes": 1344960,
+ "sources": {
+  "848201300006405": {
+   "pre_window_median_uJy": 517.9427065378217,
+   "exposures": [
+    {
+     "expid": 90037526,
+     "mjd": 58654.375512127546,
+     "catalog_nondetection": false,
+     "field": 1856,
+     "ccdid": 9,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.174299,
+     "seeing": 2.14563,
+     "flux_uJy": 515.0788753462352,
+     "err_uJy": 6.131563970178899,
+     "field_uJy": [
+      63641.97461771985,
+      5525.132470027099,
+      542.0217835963933,
+      83.03864527267312,
+      62.736091600050436
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 0.9279469817560264,
+     "cls": 3,
+     "why": "source present: 0.99 x the pre-window median"
+    },
+    {
+     "expid": 90038457,
+     "mjd": 58654.38485741162,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.3514,
+     "seeing": 1.94434,
+     "flux_uJy": 520.8065377294081,
+     "err_uJy": 6.489716618166219,
+     "field_uJy": [
+      113352.39759422289,
+      5911.436816210447,
+      584.1356891097688,
+      98.41563952058206,
+      72.4787274218942
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 1.0720530182439736,
+     "cls": 3,
+     "why": "source present: 1.01 x the pre-window median"
+    },
+    {
+     "expid": 90121858,
+     "mjd": 58655.218874875085,
+     "catalog_nondetection": true,
+     "cls": 1,
+     "why": "position not inside any image of this exposure (IBE position search)"
+    },
+    {
+     "expid": 90341295,
+     "mjd": 58657.413241545175,
+     "catalog_nondetection": true,
+     "cls": 1,
+     "why": "position not inside any image of this exposure (IBE position search)"
+    },
+    {
+     "expid": 90439518,
+     "mjd": 58658.395476757345,
+     "catalog_nondetection": true,
+     "cls": 1,
+     "why": "position not inside any image of this exposure (IBE position search)"
+    },
+    {
+     "expid": 90732578,
+     "mjd": 58661.326082572145,
+     "catalog_nondetection": true,
+     "cls": 1,
+     "why": "position not inside any image of this exposure (IBE position search)"
+    },
+    {
+     "expid": 90732623,
+     "mjd": 58661.326494302615,
+     "catalog_nondetection": false,
+     "field": 848,
+     "ccdid": 1,
+     "qid": 3,
+     "infobits": 0,
+     "maglimit": 20.9867,
+     "seeing": 1.90489,
+     "flux_uJy": 512.8512444337108,
+     "err_uJy": 3.8097167905906977,
+     "field_uJy": [
+      101994.85666665628,
+      6643.236212540097,
+      582.1091898328931,
+      83.8684883184825,
+      77.26568774113268
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 1.1428582798841431,
+     "cls": 3,
+     "why": "source present: 0.99 x the pre-window median"
+    },
+    {
+     "expid": 90732714,
+     "mjd": 58661.327397103625,
+     "catalog_nondetection": false,
+     "field": 848,
+     "ccdid": 1,
+     "qid": 3,
+     "infobits": 0,
+     "maglimit": 20.920799,
+     "seeing": 2.08328,
+     "flux_uJy": 480.38545191685114,
+     "err_uJy": 3.64301919085789,
+     "field_uJy": [
+      101509.98100002766,
+      6054.8420172889555,
+      580.6207421111892,
+      82.41240817897834,
+      73.92841815759641
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 1.0588563520662067,
+     "cls": 3,
+     "why": "source present: 0.93 x the pre-window median"
+    }
+   ]
+  },
+  "826215400000661": {
+   "pre_window_median_uJy": 2824.573078445521,
+   "exposures": [
+    {
+     "expid": 90037526,
+     "mjd": 58654.375595823745,
+     "catalog_nondetection": false,
+     "field": 1856,
+     "ccdid": 5,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.1887,
+     "seeing": 2.16235,
+     "flux_uJy": 2875.616635858705,
+     "err_uJy": 4.853700690792092,
+     "field_uJy": [
+      63469.97819974214,
+      45.454108180451534
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 0.8219617503671289,
+     "cls": 3,
+     "why": "source present: 1.02 x the pre-window median"
+    },
+    {
+     "expid": 90038457,
+     "mjd": 58654.38493648121,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.2887,
+     "seeing": 2.05187,
+     "flux_uJy": 2773.529521032336,
+     "err_uJy": 5.893173304250519,
+     "field_uJy": [
+      93414.54649220838,
+      63.4449225949414
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 1.178038249632871,
+     "cls": 3,
+     "why": "source present: 0.98 x the pre-window median"
+    },
+    {
+     "expid": 90121858,
+     "mjd": 58655.21895416153,
+     "catalog_nondetection": true,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.248301,
+     "seeing": 3.87479,
+     "flux_uJy": 1590.366919754745,
+     "err_uJy": 2.694096174373761,
+     "field_uJy": [
+      83102.36992367187,
+      37.09341762023324
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 0.8703261713715505,
+     "cls": 3,
+     "why": "source present: 0.56 x the pre-window median"
+    },
+    {
+     "expid": 90341295,
+     "mjd": 58657.41332133119,
+     "catalog_nondetection": true,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.5135,
+     "seeing": 2.12993,
+     "flux_uJy": 2772.441642315151,
+     "err_uJy": 3.3503008550753672,
+     "field_uJy": [
+      NaN,
+      54.64774407591293
+     ],
+     "cutout_bytes": 60480,
+     "field_ratio_median": 1.003640596005401,
+     "cls": 3,
+     "why": "source present: 0.98 x the pre-window median"
+    },
+    {
+     "expid": 90439518,
+     "mjd": 58658.39555673178,
+     "catalog_nondetection": true,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.903799,
+     "seeing": 1.75781,
+     "flux_uJy": 3244.0330051464703,
+     "err_uJy": 3.249837243226205,
+     "field_uJy": [
+      81858.99870049828,
+      72.21078221266575
+     ],
+     "cutout_bytes": 69120,
+     "field_ratio_median": 1.1848771543697745,
+     "cls": 3,
+     "why": "source present: 1.15 x the pre-window median"
+    },
+    {
+     "expid": 90632770,
+     "mjd": 58660.32808282287,
+     "catalog_nondetection": true,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 67108864,
+     "maglimit": 21.0156,
+     "seeing": 2.01977,
+     "flux_uJy": 3030.8349129241997,
+     "err_uJy": 3.0813379444094746,
+     "field_uJy": [
+      91451.09132791447,
+      58.843276895706815
+     ],
+     "cutout_bytes": 66240,
+     "field_ratio_median": 1.1232668848424536,
+     "cls": 1,
+     "why": "infobits 67108864 (not a valid observation by the plan rule)"
+    },
+    {
+     "expid": 90932839,
+     "mjd": 58663.32876992824,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.883699,
+     "seeing": 1.83083,
+     "flux_uJy": 3106.524835618316,
+     "err_uJy": 3.5679596636612674,
+     "field_uJy": [
+      91221.7844222291,
+      NaN
+     ],
+     "cutout_bytes": 57600,
+     "field_ratio_median": 1.1629162863749243,
+     "cls": 3,
+     "why": "source present: 1.10 x the pre-window median"
+    },
+    {
+     "expid": 90933021,
+     "mjd": 58663.33059863037,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 21.1019,
+     "seeing": 1.48132,
+     "flux_uJy": NaN,
+     "err_uJy": 3.7636874263865954,
+     "field_uJy": [
+      86586.89690786254,
+      NaN
+     ],
+     "cutout_bytes": 54720,
+     "field_ratio_median": 1.1038296744421365,
+     "cls": 1,
+     "why": "non-finite pixels in the aperture (edge or mask)"
+    }
+   ]
+  },
+  "826215100008147": {
+   "pre_window_median_uJy": 2320.988962663549,
+   "exposures": [
+    {
+     "expid": 134417600,
+     "mjd": 59098.176297490245,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.8172,
+     "seeing": 1.78753,
+     "flux_uJy": 2224.091376659977,
+     "err_uJy": 3.17124762439561,
+     "field_uJy": [
+      70.53384680050904
+     ],
+     "cutout_bytes": 63360,
+     "field_ratio_median": 0.8917792297683852,
+     "cls": 3,
+     "why": "source present: 0.96 x the pre-window median"
+    },
+    {
+     "expid": 134520084,
+     "mjd": 59099.20113397948,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.974899,
+     "seeing": 1.40624,
+     "flux_uJy": 2417.886548667121,
+     "err_uJy": 2.9051587390446474,
+     "field_uJy": [
+      87.652943037214
+     ],
+     "cutout_bytes": 80640,
+     "field_ratio_median": 1.1082207702316147,
+     "cls": 3,
+     "why": "source present: 1.04 x the pre-window median"
+    },
+    {
+     "expid": 135219129,
+     "mjd": 59106.19157419392,
+     "catalog_nondetection": true,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.2966,
+     "seeing": 1.79889,
+     "flux_uJy": 2276.9386081111898,
+     "err_uJy": 4.275662329245484,
+     "field_uJy": [
+      76.46902745054734
+     ],
+     "cutout_bytes": 69120,
+     "field_ratio_median": 0.966819385221656,
+     "cls": 3,
+     "why": "source present: 0.98 x the pre-window median"
+    },
+    {
+     "expid": 135314181,
+     "mjd": 59107.14209336647,
+     "catalog_nondetection": true,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.4002,
+     "seeing": 1.71293,
+     "flux_uJy": 2373.5759516193048,
+     "err_uJy": 5.424504785050067,
+     "field_uJy": [
+      83.89672845611973
+     ],
+     "cutout_bytes": 63360,
+     "field_ratio_median": 1.0607298946035348,
+     "cls": 3,
+     "why": "source present: 1.02 x the pre-window median"
+    },
+    {
+     "expid": 135517273,
+     "mjd": 59109.17300417095,
+     "catalog_nondetection": true,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.396299,
+     "seeing": 2.20587,
+     "flux_uJy": NaN,
+     "err_uJy": 3.976324068184438,
+     "field_uJy": [
+      NaN
+     ],
+     "cutout_bytes": 54720,
+     "field_ratio_median": NaN,
+     "cls": 1,
+     "why": "non-finite pixels in the aperture (edge or mask)"
+    },
+    {
+     "expid": 135624282,
+     "mjd": 59110.24309480683,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 19.8372,
+     "seeing": 2.07584,
+     "flux_uJy": 2079.953879187121,
+     "err_uJy": 7.346910776744854,
+     "field_uJy": [
+      69.56448960828664
+     ],
+     "cutout_bytes": 69120,
+     "field_ratio_median": 0.8795233746085855,
+     "cls": 3,
+     "why": "source present: 0.90 x the pre-window median"
+    },
+    {
+     "expid": 135724234,
+     "mjd": 59111.24261836759,
+     "catalog_nondetection": false,
+     "field": 826,
+     "ccdid": 15,
+     "qid": 1,
+     "infobits": 0,
+     "maglimit": 20.631399,
+     "seeing": 1.64871,
+     "flux_uJy": 2445.6804900383954,
+     "err_uJy": 3.629350418872682,
+     "field_uJy": [
+      88.32580345691784
+     ],
+     "cutout_bytes": 72000,
+     "field_ratio_median": 1.1167279334453584,
+     "cls": 3,
+     "why": "source present: 1.05 x the pre-window median"
+    }
+   ]
+  }
+ }
+}
