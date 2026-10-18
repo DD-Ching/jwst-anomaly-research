@@ -1,0 +1,41 @@
+# E1 + Einstein Probe: result (2026-10-18)
+
+Plan: `PLAN.md` (frozen first, committed before the count). Code: `scripts/e1_ep.py` (`build`, `count`; frozen
+rules `control_passes`, `outcome`, `test_mask`, unit-tested in `tests/test_e1_ep.py`), post hoc diagnostic
+`scripts/e1_ep_diag.py`. Inputs: GCN Circulars archive pinned in `data/manifests/e1_ep.ecsv`; GBM and BAT reused
+from `data/manifests/e1_swift.ecsv`.
+
+**Node table (derived, `ep_events.ecsv`, `build_summary.json`):** 230 EP/WXT transients, MJD 60384.8–61328.7, one
+row per name with its circular id; 216 with an arcmin (WXT) radius, 13 with only an arcsec radius; time from a
+stated onset for 74, else the first timestamp (155). 9 names with a WXT mention do not parse or were called "not a
+real source" (listed in `build_summary.json`).
+
+**Positive control (frozen rule passes):** EP–BAT + EP–GBM same-direction pairs at 0–1 h: 27 vs a jit-null mean
+of 0.61 (sd 0.78), analytic p 1.0 × 10⁻³⁴ (`summary.json`).
+
+**Tested family (18 cells, 10⁴ jit + 10⁴ jitday scrambles; `counts.ecsv`): outcome "null".**
+- Smallest cell: EP–GBM 1 h–1 d same, 27 pairs vs 14.35 ± 3.82; analytic p 1.8 × 10⁻³; × 18 = 0.033 (rule:
+  ≤ 1.35 × 10⁻³). jitday z 3.33.
+- Pooled global p 0.018 (jit), 0.013 (jitday) (`summary.json`).
+- EP–EP: no same-direction pair within 7 d (`same_dir_pairs_EP-EP.ecsv` is empty); wide cells within 1σ of the null.
+
+**Limits (`limits.ecsv`, D-074 method, EP–EP only, all 5 rows valid):** 95 % upper limits on dependent wide EP–EP
+pairs per EP transient (230 anchors): 1.3 × 10⁻² (0–10 s, 10–100 s), 3.4 × 10⁻² (100 s–1 h), 5.4 × 10⁻² (1 h–1 d),
+9.2 × 10⁻² (1–7 d).
+
+**The smallest cell, looked at (post hoc; `same_dir_pairs_EP-GBM.ecsv`, 27 rows at 1 h–1 d):**
+- 5 of the 27 are one source seen twice: EP250702a with the three GBM triggers bn250702548 / 581 / 682 at 0.011°
+  (GCN 40906: EP250702a "likely associated with GRB 250702B,C,D,E"); EP250919a / bn250919020 (0.002°) and
+  EP261007a / bn261007236 (0.054°), where the EP time is 1–2 h after the GBM trigger. Without them the cell is
+  22 vs 14.35 (not stored).
+- The other 22 have separations 4.7–94.6° at combined σ 6.1–31.8°: GBM's large errors make "same direction" a
+  wide region.
+- **Deviation:** D-074 addendum 6 asks that a satellite × satellite channel drop joint detections first; the frozen
+  plan did not. The post hoc re-count without them (`diag_no_joint.json`: 24 EP, 9 BAT, 18 GBM events removed,
+  10⁴ jit scrambles) gives EP–GBM 1 h–1 d same 26 vs 12.67 ± 3.48, p 6.8 × 10⁻⁴, × 18 = 0.012: still above the
+  family-wise rule. The joint-event rule (|lag| < 1 h) keeps EP250702a, EP250919a and EP261007a, whose EP times are
+  more than 1 h from GBM.
+
+**Limitations:** EP times are trigger, onset or observation start (up to ~20 min apart); the table holds only
+transients reported in circulars (a selected subset of WXT detections); positions with arcsec radii are FXT or
+refined ones. The circular archive changes daily, so the parsed table, not a re-parse, is the record.

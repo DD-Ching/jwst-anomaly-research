@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: E1 + Einstein Probe (sixth node set, from GCN Circulars): 18-cell family null; control passes
+- **Why:** handoff of #351 (E1 open node sets: Einstein Probe). No public EP event table exists, so the table is
+  parsed from the GCN Circulars JSON archive (`scripts/e1_ep.py build`, rules unit-tested; 5 / 5 random rows read
+  against their circulars). Plan frozen first (`results/e1_ep/PLAN.md`). ICECAT-1, CHIME Cat 2 and the pinned GWTC
+  end before EP starts, so only GBM and BAT channels run.
+- **Result (derived, `results/e1_ep/RESULT.md`):** 230 EP transients; control 27 EP–GRB same-direction pairs at
+  0–1 h vs 0.61. Family min EP–GBM 1 h–1 d same (27 vs 14.35, p 1.8 × 10⁻³, × 18 = 0.033), pooled global p 0.018:
+  **null**. EP–EP: 95 % limits 1.3 × 10⁻² to 9.2 × 10⁻² dependent wide pairs per EP transient.
+- **Post hoc / deviation:** 5 of the 27 min-cell pairs are one source twice (EP250702a = GRB 250702B–E; EP250919a,
+  EP261007a). D-074 addendum 6 asks to drop joint detections first; the post hoc re-count does (26 vs 12.67,
+  × 18 = 0.012), still above the rule. Failed approach: the first run's `control_sum` mixed axes on the null
+  ensemble (numpy advanced-index order); fixed and re-run before reading cells.
+- **Handoff:** E1 open node set: IceTracks-DR2. Optional: a joint-event rule by name/position (not |lag| < 1 h)
+  for EP–GBM, and a time-convention check of EP onsets vs GBM for the long-lag same cells.
+
 ## 2026-10-18: E1 + Swift BAT GRBs (fifth node set): 35-cell family null; BAT–GBM control passes
 - **Why:** TASKS Now 0 (E1) lists Swift as an open node set; every other open line waits on the owner or is
   optional (2026-10-18 15:08Z queue check). Plan frozen first (`results/e1_swift/PLAN.md`); rules

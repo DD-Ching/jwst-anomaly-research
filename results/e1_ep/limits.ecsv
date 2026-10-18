@@ -1,0 +1,24 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: channel, datatype: string}
+# - {name: cls, datatype: string}
+# - {name: lag, datatype: string}
+# - {name: obs, datatype: int64}
+# - {name: jit_mean, datatype: float64}
+# - {name: ul95_pairs, datatype: float64}
+# - {name: eff, datatype: float64}
+# - {name: n50_detect, datatype: int64}
+# - {name: n_anchor_eligible, datatype: int64}
+# - {name: valid, datatype: bool}
+# - {name: ul95_rate_per_anchor, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: counts.ecsv (jit null) and injections.ecsv}
+# schema: astropy-2.0
+channel cls lag obs jit_mean ul95_pairs eff n50_detect n_anchor_eligible valid ul95_rate_per_anchor
+EP-EP wide 0s-10s 0 0.01 3.0 1.0 2 230 True 0.013043478260869565
+EP-EP wide 10s-100s 0 0.06 3.0 1.0 3 230 True 0.013043478260869565
+EP-EP wide 100s-1h 3 2.36 7.75 0.994 8 230 True 0.03390757451462948
+EP-EP wide 1h-1d 59 57.19 12.0 0.973 33 230 True 0.05361746004468122
+EP-EP wide 1d-7d 362 363.13 19.0 0.895 58 230 True 0.09234507897934387
