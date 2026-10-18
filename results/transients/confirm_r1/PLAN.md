@@ -38,3 +38,11 @@ Positions and mosaics from `results/transients/batch_venus3/boxes/review/lightcu
 
 ## Deviation (00:54Z, recorded before any compare result)
 - The compact-source pick for h003 returned 16 controls (< 20). Fallback fixed before any comparison: the same `pick` with `--half-arcsec 30` (other settings unchanged). The 16-control result is reported as not decided.
+
+## D. Optional existing-data check (added 01:08Z, before any HST 18470 data are read; timebox 30 min)
+- Public HST 18470 WFC3/IR drizzled images, visits 1–4, one filter; forced 0.2″-aperture flux (annulus 0.6–1.0″,
+  random-aperture errors, as `h002_hst2016.json` in #300) at two positions: the 12781 target "Athena-2"
+  (64.394375, −11.90758) and our glafic 7.6″ image (64.394334, −11.907649).
+- Rule: "a new point source is seen" only if a later visit exceeds visit 1 by ≥ 5σ at a position and the stamp shows a
+  point source; otherwise "not seen in visits 1–4 (to 2026-10-07)". Either outcome is a statement about existing public
+  data, not a discovery claim; the other team monitors this.
