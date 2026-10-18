@@ -5145,16 +5145,17 @@ confining radiation at a throat is found.
 - **Revisit if:** a new public epoch or a spectrum of a fading point source exists while it is bright, with ≥ 3 bands
   calibrated to a few per cent; or a local-error photometry of the 4446 edge region recovers usable controls.
 
-## D-103 W3 on ZTF DR24 light curves: detections-only data, feasibility trial failed its frozen validation (2026-10-18)
-- **Decision:** ZTF DR24 light curves (IRSA HATS on S3, read column-wise) are usable for a W3 (negative-mass n = 1)
-  umbra search only through non-detections inferred from quadrant coverage; the first frozen pipeline
-  (`scripts/w3_ztf.py`, 1,000 isolated stars near RA 272.65°, Dec +64.95°) failed its validation (W3 recovery 0.215 at
-  ρ = 0.1, t_E = 100 d; 6 real development survivors > 5), so no holdout search was run and no limit is quoted.
-- **Alternatives rejected:** IRSA's per-object light-curve API (> 50 s per request here) in favour of one HATS
-  partition read (61 s for ~38 k objectids); a full-vanish calibration (no upper limits exist in the release);
-  changing thresholds after the validation.
-- **Evidence:** `results/w3_ztf/RESULT.md`: controls pass vetting at 0 / 0.05 / 0 / 0 (eclipses, fades, PSPL,
-  common mode); the 6 real survivors sit on shared epochs; 3.4 % of good epochs are non-detections in a median star.
-- **Revisit if:** a sample-wide shared-epoch test (MOA style) and an edge test that allows ρ t_E-long edges are frozen
-  first and validated on a new development set, or ZTF forced photometry (with fluxes at every epoch) is used instead
-  of the detections-only release.
+## D-103 W3 on ZTF DR24 light curves: detections-only data; feasibility trial failed its frozen validation twice (2026-10-18)
+- **Decision:** ZTF DR24 light curves (IRSA HATS on S3, read column-wise) support a W3 (negative-mass n = 1) umbra
+  search only through non-detections inferred from quadrant coverage. The frozen pipeline (`scripts/w3_ztf.py`, 1,000
+  isolated stars near RA 272.65°, Dec +64.95°) failed its validation in v1 and, after bug fixes with unchanged
+  thresholds, in v2 (W3 recovery 0.24 at ρ = 0.1, t_E = 100 d; 9 real development survivors > 5). No holdout search,
+  no limit.
+- **Alternatives rejected:** IRSA's per-object light-curve API (a 50-s request returned nothing here) in favour of
+  one HATS partition read; a full-vanish flux calibration (the release has no upper limits); changing thresholds
+  after the validation; a third version within this round.
+- **Evidence:** `results/w3_ztf/RESULT.md`: v2 controls pass vetting at 0–1.5 % (eclipses, fades, PSPL; common mode
+  by construction); the 9 survivors fall in two windows where ~10 % of development stars are mostly undetected.
+- **Revisit if:** a sample-wide shared-epoch test and a correct comparison dim fraction are frozen first and
+  validated on a new development set, an edge test that allows ρ t_E-long edges is defined without the injected
+  results, or ZTF forced photometry (fluxes at every epoch) replaces the detections-only release.

@@ -1,0 +1,7 @@
+{
+ "label": "observed (S3 listing and README read 2026-10-18)",
+ "collection": "ZTF DR24 Lightcurves, IRSA HATS collection, README 'Version Date: 2026-05-13', 5,401,134,101 catalog rows, DOI 10.26131/IRSA598",
+ "lc_partition": "s3://ipac-irsa-ztf/ztf/enhanced/dr24/lc/hats/ztf_dr24_lc-hats/dataset/Norder=5/Dir=0/Npix=3839/part0.snappy.parquet, 952.75 MB, 4 row groups, 508,684 rows",
+ "objects_partition": "s3://ipac-irsa-ztf/ztf/enhanced/dr24/objects/hats/ztf_dr24_objects-hats/dataset/Norder=4/Dir=0/Npix=959/part0.snappy.parquet, 574.2 MB, 3,485,908 rows; the 13 columns used read in 23.8 s for the sample stage (sample.json) and 69.5 s in a first exploratory read",
+ "irsa_light_curve_api": "one request with a 50 s client timeout returned nothing (session observation)"
+}

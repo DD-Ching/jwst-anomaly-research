@@ -2,16 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-18: W3 feasibility trial on ZTF DR24 light curves: failed its frozen validation; no holdout search
+## 2026-10-18: W3 feasibility trial on ZTF DR24 light curves: failed its frozen validation (v1 and bug-fixed v2); no holdout search
 - Plan, sample (1,000 isolated stars, metadata only) and rules committed before any light curve was read
-  (`results/w3_ztf/PLAN.md`); data: IRSA ZTF DR24 HATS on S3 (two partitions, ~2 min of reads); model: W3,
-  negative-mass point lens (n = 1, ε < 0; finite-source spikes), a restricted hypothesis, not wormholes in general.
-- **Result (`results/w3_ztf/RESULT.md`):** W3 recovery at this stage 0.20–0.60 by cell (≥ 0.5 only for t_E 30–100 d
-  at ρ = 0.01 and t_E 30 d at ρ = 0.1); ordinary controls pass vetting at 0–5 %; 6 real development survivors, all on
-  shared epochs. Two frozen pass conditions failed, so the holdout half was not searched.
-- **Why:** the release has detections only (a median star misses 3.4 % of good epochs without any change), a
-  sample-wide shared-epoch test was missing, and large-ρ t_E edges look like gradual ordinary fades.
-- **Handoff:** paused; reopen only with a frozen shared-epoch test on a new development set or forced photometry.
+  (`results/w3_ztf/PLAN.md`); data: IRSA ZTF DR24 HATS on S3 (one 953-MB light-curve partition read in 61 s); model:
+  W3, negative-mass point lens (n = 1, ε < 0; finite-source spikes), a restricted hypothesis, not wormholes in general.
+- **Result (`results/w3_ztf/RESULT.md`):** v1 failed (W3 recovery 0.215 at ρ = 0.1, t_E = 100 d; 6 real survivors).
+  A review found code bugs (time bins splitting exposures, night boundary, control models, missing injection noise,
+  seeds); v2 fixed them with unchanged thresholds and failed again on the same development half: W3 recovery
+  0.56–0.71 for t_E 10–100 d at ρ = 0.01 and 0.565–0.62 for t_E 10–30 d at ρ = 0.1 (blend 1), but 0.24 at ρ = 0.1,
+  t_E = 100 d; controls pass vetting at 0–1.5 %; 9 real survivors, all in two sample-wide non-detection windows.
+  The holdout half was not searched.
+- **Why:** detections-only data (non-detections only by inference), a common-mode test that misses sample-wide
+  episodes (its dim fraction can go negative: a known, unfixed v2 bug), and slow large-ρ t_E edges that look like
+  ordinary fades. **Handoff:** paused.
 
 ## 2026-10-18: W1 PRIMER UDS x3y0 explained (post hoc) as a G 10.07 star's optical artefact in one visit
 - `scripts/w1_cal_trail.py` (plan frozen first: `results/w1_shear_primer/vet/x3y0_cal_plan.md`) resamples every

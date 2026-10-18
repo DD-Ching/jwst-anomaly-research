@@ -1,0 +1,157 @@
+{
+ "label": "simulated",
+ "version": 2,
+ "carriers": 514,
+ "w3": [
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 3.0,
+   "n": 200,
+   "flagged": 105,
+   "recovered": 91
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 157,
+   "recovered": 112
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 179,
+   "recovered": 142
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 100.0,
+   "n": 200,
+   "flagged": 168,
+   "recovered": 123
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 3.0,
+   "n": 200,
+   "flagged": 93,
+   "recovered": 67
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 155,
+   "recovered": 113
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 175,
+   "recovered": 124
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 100.0,
+   "n": 200,
+   "flagged": 156,
+   "recovered": 48
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 3.0,
+   "n": 200,
+   "flagged": 95,
+   "recovered": 75
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 152,
+   "recovered": 122
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 182,
+   "recovered": 144
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 100.0,
+   "n": 200,
+   "flagged": 165,
+   "recovered": 136
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 3.0,
+   "n": 200,
+   "flagged": 95,
+   "recovered": 69
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 138,
+   "recovered": 101
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 162,
+   "recovered": 101
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 100.0,
+   "n": 200,
+   "flagged": 160,
+   "recovered": 48
+  }
+ ],
+ "controls": {
+  "eclipse": {
+   "n": 200,
+   "flagged": 41,
+   "passed_vetting": 0
+  },
+  "fade": {
+   "n": 200,
+   "flagged": 179,
+   "passed_vetting": 3
+  },
+  "pspl": {
+   "n": 200,
+   "flagged": 0,
+   "passed_vetting": 0
+  },
+  "common": {
+   "n": 200,
+   "flagged": 147,
+   "passed_vetting": 0
+  }
+ }
+}
