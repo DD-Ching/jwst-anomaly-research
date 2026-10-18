@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 shear in CEERS (program 1345, no lens model): twenty-four-field volume limit 1.09× Takahashi & Asada
+- Ten F200W pointings (o052 left out for overlap; `scripts/w1_footprints.py`), DJA v7.4 photo-z streamed out of the
+  397 MB tarball, R fixed at 0.414 (D-099 addendum); plan frozen first (`results/w1_shear_ceers/PLAN.md`). All ten
+  pass gate P (0.695–0.813).
+- **Screens:** eight null; o004 (S 4.96) and o069 (S 4.07) pass the E/B rule. On the sheet o004 sits on a detector-gap
+  edge lined with detections next to a bright star's spikes, o069 on a horizontal spike-like line; both explained by
+  the frozen V1 ∪ V2 rule (S 1.54 / 1.85). Not candidates; out of the headline (D-098).
+- **Result (`results/w1_shear_ceers/RESULT.md`):** twenty-four fields, 199.9 arcmin²: n₉₅ < 1.50 × 10⁻³ / 2.53 × 10⁻⁴ /
+  1.09 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, i.e. 15.0× / 2.53× / 1.09× weaker than T&A (from 24.6× /
+  4.29× / 1.82×). V_eff at 2 × 10¹³ M☉ +68 %.
+- **Caveat:** with R = 0.231 the CEERS recoveries fall to 0.19–0.28 of the adopted ones (eight-pointing totals, Z = 0.3).
+- **Failed step (process):** deleting the mask FITS files mid-grid made the next runs stop with FileNotFoundError (no
+  silent loss); the regenerated masks are byte-identical to the sha256 in the summaries.
+- **Handoff:** the borrowed R is now the dominant systematic and the headline is within reach of T&A: calibrate R for
+  blank fields (image simulations of the pipeline shapes) before adding PRIMER-UDS / COSMOS area.
+
 ## 2026-10-18: W1 shear in GOODS-N (JADES 1181, no lens model): sixteen-field volume limit 1.82× Takahashi & Asada
 - Six F200W pointings with small mutual overlap, DJA v7.3 photo-z, R fixed at 0.414 (D-099); plan frozen first
   (`results/w1_shear_goodsn/PLAN.md`). Gate P (photo-z share ≥ 0.5) drops o009 / o010 (0.22 / 0.02).

@@ -250,6 +250,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.25 (W1 faint-streak veto: plan, `--mrt-threshold`, two variants on two NCF, K1n failed; sheets looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01DA23en, 01:08–01:40Z (2026-10-18) |
 | 2026-W42 | ≈ 0.4 (W1 row/column-segment veto: plan, `segment_stripes`, NCF staging, two variants × five NCF masks and screens, cost check failed; sheets looked at) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 0188maj8, 02:08–02:50Z (2026-10-18) |
 | 2026-W42 | ≈ 0.4 (W1 shear in GOODS-N: plan, footprint choice, staging, gate P, streak masks, 36-job grid, flag vetting and sheet, volume combine) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 017BFTDU, 03:08–03:45Z (2026-10-18) |
+| 2026-W42 | ≈ 0.75 (W1 shear in CEERS: plan, footprint script, staging, gate P, streak masks, 10 screens, two flags vetted with sheet, 48-job grid, volume combine) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01ASLQCx, 04:08–05:00Z (2026-10-18) |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
