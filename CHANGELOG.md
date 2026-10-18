@@ -7,13 +7,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   parsed from the GCN Circulars JSON archive (`scripts/e1_ep.py build`, rules unit-tested; 5 / 5 random rows read
   against their circulars). Plan frozen first (`results/e1_ep/PLAN.md`). ICECAT-1, CHIME Cat 2 and the pinned GWTC
   end before EP starts, so only GBM and BAT channels run.
-- **Result (derived, `results/e1_ep/RESULT.md`):** 230 EP transients; control 27 EP–GRB same-direction pairs at
-  0–1 h vs 0.61. Family min EP–GBM 1 h–1 d same (27 vs 14.35, p 1.8 × 10⁻³, × 18 = 0.033), pooled global p 0.018:
-  **null**. EP–EP: 95 % limits 1.3 × 10⁻² to 9.2 × 10⁻² dependent wide pairs per EP transient.
+- **Result (derived, `results/e1_ep/RESULT.md`):** 231 EP transients; control 27 EP–GRB same-direction pairs at
+  0–1 h vs 0.63. Family min EP–GBM 1 h–1 d same (27 vs 14.53, p 2.2 × 10⁻³, × 18 = 0.039), pooled global p 0.017:
+  **null**. EP–EP: 95 % limits 1.3 × 10⁻² to 9.7 × 10⁻² dependent wide pairs per EP transient.
 - **Post hoc / deviation:** 5 of the 27 min-cell pairs are one source twice (EP250702a = GRB 250702B–E; EP250919a,
-  EP261007a). D-074 addendum 6 asks to drop joint detections first; the post hoc re-count does (26 vs 12.67,
-  × 18 = 0.012), still above the rule. Failed approach: the first run's `control_sum` mixed axes on the null
-  ensemble (numpy advanced-index order); fixed and re-run before reading cells.
+  EP261007a). D-074 addendum 6 asks to drop joint detections first; the post hoc re-count does (26 vs 12.85,
+  × 18 = 0.015), still above the rule. `jitday` dropped (equals `jit` here). Failed approaches: `control_sum`
+  mixed axes on the null ensemble; the parser took observation starts as onsets; both fixed and re-run.
 - **Handoff:** E1 open node set: IceTracks-DR2. Optional: a joint-event rule by name/position (not |lag| < 1 h)
   for EP–GBM, and a time-convention check of EP onsets vs GBM for the long-lag same cells.
 

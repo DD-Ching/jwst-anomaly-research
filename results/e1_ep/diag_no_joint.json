@@ -35,7 +35,7 @@
  "events_kept": {
   "GBM": 4380,
   "BAT": 1626,
-  "EP": 206
+  "EP": 207
  },
  "n_jit": 10000,
  "cells": {
@@ -48,7 +48,7 @@
   "EP-EP 0s-10s wide": {
    "obs": 0,
    "jit_mean": 0.01,
-   "jit_sd": 0.08,
+   "jit_sd": 0.07,
    "analytic_p": 1.0
   },
   "EP-EP 10s-100s same": {
@@ -60,7 +60,7 @@
   "EP-EP 10s-100s wide": {
    "obs": 0,
    "jit_mean": 0.06,
-   "jit_sd": 0.25,
+   "jit_sd": 0.24,
    "analytic_p": 1.0
   },
   "EP-EP 100s-1h same": {
@@ -72,20 +72,20 @@
   "EP-EP 100s-1h wide": {
    "obs": 2,
    "jit_mean": 1.99,
-   "jit_sd": 1.4,
-   "analytic_p": 0.5907908156732032
+   "jit_sd": 1.42,
+   "analytic_p": 0.5922862400015897
   },
   "EP-EP 1h-1d same": {
    "obs": 0,
    "jit_mean": 0.0,
-   "jit_sd": 0.0,
+   "jit_sd": 0.01,
    "analytic_p": 1.0
   },
   "EP-EP 1h-1d wide": {
    "obs": 52,
-   "jit_mean": 48.16,
-   "jit_sd": 6.07,
-   "analytic_p": 0.2633330194003455
+   "jit_mean": 48.12,
+   "jit_sd": 6.17,
+   "analytic_p": 0.2646284147332738
   },
   "EP-EP 1d-7d same": {
    "obs": 0,
@@ -94,10 +94,10 @@
    "analytic_p": 1.0
   },
   "EP-EP 1d-7d wide": {
-   "obs": 300,
-   "jit_mean": 302.04,
-   "jit_sd": 10.58,
-   "analytic_p": 0.5766058898009626
+   "obs": 302,
+   "jit_mean": 304.48,
+   "jit_sd": 10.44,
+   "analytic_p": 0.5937161878719383
   },
   "EP-BAT 1h-1d same": {
    "obs": 0,
@@ -106,48 +106,48 @@
    "analytic_p": 1.0
   },
   "EP-BAT 1h-1d wide": {
-   "obs": 45,
-   "jit_mean": 45.4,
-   "jit_sd": 5.88,
-   "analytic_p": 0.5274143159158675
+   "obs": 46,
+   "jit_mean": 45.44,
+   "jit_sd": 5.84,
+   "analytic_p": 0.4615277095181661
   },
   "EP-BAT 1d-7d same": {
    "obs": 0,
    "jit_mean": 0.0,
-   "jit_sd": 0.01,
+   "jit_sd": 0.02,
    "analytic_p": 1.0
   },
   "EP-BAT 1d-7d wide": {
    "obs": 286,
-   "jit_mean": 283.86,
-   "jit_sd": 9.92,
-   "analytic_p": 0.4147552533035856
+   "jit_mean": 284.45,
+   "jit_sd": 9.91,
+   "analytic_p": 0.43783954900808963
   },
   "EP-GBM 1h-1d same": {
    "obs": 26,
-   "jit_mean": 12.67,
-   "jit_sd": 3.48,
-   "analytic_p": 0.0006758296656465463
+   "jit_mean": 12.85,
+   "jit_sd": 3.59,
+   "analytic_p": 0.0008208223280075203
   },
   "EP-GBM 1h-1d wide": {
-   "obs": 251,
-   "jit_mean": 257.48,
-   "jit_sd": 14.34,
-   "analytic_p": 0.6742206778985899
+   "obs": 255,
+   "jit_mean": 259.66,
+   "jit_sd": 14.27,
+   "analytic_p": 0.6281264083199425
   },
   "EP-GBM 1d-7d same": {
    "obs": 70,
-   "jit_mean": 79.86,
-   "jit_sd": 8.82,
-   "analytic_p": 0.8679603720846287
+   "jit_mean": 80.77,
+   "jit_sd": 9.0,
+   "analytic_p": 0.8843621983493473
   },
   "EP-GBM 1d-7d wide": {
-   "obs": 1628,
-   "jit_mean": 1619.48,
-   "jit_sd": 25.36,
-   "analytic_p": 0.36838371865789604
+   "obs": 1642,
+   "jit_mean": 1633.44,
+   "jit_sd": 25.35,
+   "analytic_p": 0.3677482592523608
   }
  },
- "min_cell_p": 0.0006758296656465463,
- "min_cell_bonferroni_18": 0.012164933981637833
+ "min_cell_p": 0.0008208223280075203,
+ "min_cell_bonferroni_18": 0.014774801904135364
 }

@@ -4,36 +4,31 @@
  "events": {
   "GBM": 4398,
   "BAT": 1635,
-  "EP": 230
+  "EP": 231
  },
  "ep_mjd_range": [
   60384.840787037036,
-  61328.728842592594
+  61328.73462962963
  ],
  "n_jit": 10000,
- "n_jitday": 10000,
  "tested_cells": 18,
  "positive_control_ep_grb_same_0_1h": {
   "obs": 27,
-  "jit_mean": 0.6149,
-  "jit_sd": 0.778073254905989,
-  "analytic_p": 1.0076901582394744e-34,
+  "jit_mean": 0.6333,
+  "jit_sd": 0.7968883924364817,
+  "analytic_p": 2.1946349723804245e-34,
   "passes": true,
   "rule": ">= 5 pairs and analytic p <= 1.8e-05"
  },
  "outcome": "null",
  "min_cell": {
   "cell": "EP-GBM 1h-1d same",
-  "analytic_p": 0.0018312353837047896,
-  "bonferroni_p": 0.03296223690668621
+  "analytic_p": 0.0021810466386821934,
+  "bonferroni_p": 0.03925883949627948
  },
  "global_jit_pooled": {
-  "min_cell_p": 0.0021997800219978004,
-  "trials_corrected_p": 0.018098190180981903
- },
- "global_jitday_pooled": {
-  "min_cell_p": 0.0015998400159984002,
-  "trials_corrected_p": 0.013398660133986601
+  "min_cell_p": 0.0020997900209979003,
+  "trials_corrected_p": 0.017298270172982702
  },
  "injection_detection_p_star": 7.500000000000001e-05,
  "same_direction_pairs_within_7d": {

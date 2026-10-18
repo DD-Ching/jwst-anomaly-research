@@ -1191,7 +1191,7 @@ Exploration Program."
 
 ## E1 + Einstein Probe (accessed 2026-10-18; D-074 addendum 7)
 - GCN Circulars JSON archive, https://gcn.nasa.gov/circulars/archive.json.tar.gz (redirects to the GCN S3 bucket;
-  rewritten daily; 45,863 circulars on 2026-10-18), sha256 pinned in `data/manifests/e1_ep.ecsv`; the parsed table
+  rewritten daily; 45,863 circulars on 2026-10-18, `build_summary.json`), streamed; sha256 recorded in `data/manifests/e1_ep.ecsv`; the parsed table
   `results/e1_ep/ep_events.ecsv` keeps each row's circular id.
 - GCN Circular 40906 (EP250702a likely associated with GRB 250702B,C,D,E), https://gcn.nasa.gov/circulars/40906.
 

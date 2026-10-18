@@ -3,12 +3,12 @@ node set; frozen plan ``results/e1_ep/PLAN.md``). No public EP event table exist
 search), so each event's first WXT report circular is parsed: onset time, J2000 position and the
 90 % error radius.
 
-The archive (~31 MB, rewritten daily) is streamed to ``$JWST_ANOMALY_DATA/e1_ep/``, pinned by
-sha256 in ``data/manifests/e1_ep.ecsv`` and may be deleted after use; the parsed table
-``results/e1_ep/ep_events.ecsv`` (with circular ids) is the record the counts use.
+The archive (~31 MB, rewritten daily) is streamed, never stored; its sha256 and size go to
+``data/manifests/e1_ep.ecsv``. The parsed table ``results/e1_ep/ep_events.ecsv`` (with circular
+ids) is the record the counts use; ``build`` rewrites it from today's archive.
 
-  python scripts/e1_ep.py build [--refresh]
-  python scripts/e1_ep.py count [--jit 10000] [--jitday 10000] [--inject 40] [--cpu 4]
+  python scripts/e1_ep.py build
+  python scripts/e1_ep.py count [--jit 10000] [--inject 40] [--cpu 4]
 
 ``count`` reuses the GBM and BAT inputs pinned by ``scripts/e1_swift.py``
 (``data/manifests/e1_swift.ecsv``).
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures as cf
+import hashlib
 import json
 import os
 import re
@@ -39,15 +40,13 @@ import e1_events as e1  # noqa: E402
 import e1_swift as sw  # noqa: E402
 
 from jwst_anomaly import event_network as en  # noqa: E402
-from jwst_anomaly.paths import data_root  # noqa: E402
 from jwst_anomaly.schema import Provenance  # noqa: E402
 
 OUT = ROOT / "results" / "e1_ep"
 MANIFEST = ROOT / "data" / "manifests" / "e1_ep.ecsv"
 ARCHIVE_URL = "https://gcn.nasa.gov/circulars/archive.json.tar.gz"
 ARCHIVE = "gcn_circulars_archive.json.tar.gz"
-#: 2-D Gaussian: r90 = 2.146 sigma.
-R90_TO_SIGMA = 2.146
+R90_TO_SIGMA = sw.R90_TO_SIGMA
 #: Tested channels (frozen plan), then the positive-control channels (never tested).
 TESTED = (("EP", "EP"), ("EP", "BAT"), ("EP", "GBM"))
 CHANNELS = TESTED
@@ -55,7 +54,8 @@ CONTROL = (("EP", "BAT"), ("EP", "GBM"))
 #: ASSUMPTION: EP orbital period (s), ~96 min at ~600 km.
 EP_ORBIT = 5760.0
 P = en.Params(quantum_s={"GBM": en.FERMI_ORBIT, "BAT": sw.SWIFT_ORBIT, "EP": EP_ORBIT})
-P_DAY = en.Params(quantum_s={"GBM": en.FERMI_ORBIT, "BAT": sw.SWIFT_ORBIT, "EP": EP_ORBIT})
+#: No catalogue here is ground-based, so D-074's day-quantum `jitday` null would equal `jit`; it is
+#: not run (deviation from the plan, see RESULT.md).
 #: ASSUMPTIONs of the frozen control rule.
 CONTROL_MIN_PAIRS = 5
 CONTROL_MAX_P = 1.8e-5
@@ -73,10 +73,18 @@ POS = re.compile(
 ERR = re.compile(
     r"uncertainty(?:\s+radius)?\s+of\s*(?:about\s*|~\s*)?([0-9.]+)\s*(arcmin|arcsec)", re.I
 )
-#: a counterpart retraction (e.g. EP250903a, GCN 41696) does not retract the X-ray trigger
-RETRACT = re.compile(r"not a real (?:source|astrophysical)", re.I)
+#: the trigger itself called not real; a counterpart retraction (e.g. EP250903a, GCN 41696) or "the
+#: optical candidate is not a real source" does not retract the X-ray trigger
+RETRACT = re.compile(
+    r"(?:\btrigger\b|\bEP\d{6}[a-z]{1,2}\b)[^.\n]{0,80}?\bis not a real source", re.I
+)
 TS = r"(20\d\d-\d\d-\d\d)[T ](\d\d:\d\d:\d\d(?:\.\d+)?)"
-ONSET = re.compile(r"(?:began|begins|started|starting|onset)[^.]{0,40}?at\s*" + TS, re.I)
+#: the transient's own start; "the observation started at" is not an onset
+ONSET = re.compile(
+    r"(?:transient|light curve|event|flare|burst|source)[^.]{0,60}?"
+    r"(?:began|begins|started|starting)[^.]{0,40}?at\s*(?:T0\s*=\s*)?" + TS,
+    re.I,
+)
 ANY_TS = re.compile(TS)
 
 
@@ -89,7 +97,7 @@ def parse_circular(subject: str, body: str) -> dict | None:
     """One WXT report -> {name, mjd, ra, dec, r90_deg, time_rule} or None.
 
     Frozen rules (PLAN.md): the EP name comes from the subject; the body must mention WXT before
-    the position; time is the light-curve onset ("began/started ... at <UTC>") if stated, else the
+    the position; time is the transient onset ("transient ... began/started ... at <UTC>"), else the
     first UTC timestamp; the 90 % radius is the first "uncertainty [radius] of <x> arcmin" (else the
     first arcsec one, flagged in ``r90_unit``); the onset
     must lie within MAX_NAME_DAYS of the date in the name."""
@@ -98,7 +106,7 @@ def parse_circular(subject: str, body: str) -> dict | None:
     errs = list(ERR.finditer(body))
     # the WXT radius is in arcmin; an arcsec radius (FXT or refined) is used only if none is
     err = next((e for e in errs if e.group(2).lower() == "arcmin"), errs[0] if errs else None)
-    if not (n and pos and err) or "WXT" not in body[: pos.start() + 400]:
+    if not (n and pos and err) or "WXT" not in body[: pos.start()]:
         return None
     on = ONSET.search(body)
     ts = on.groups() if on else (ANY_TS.search(body).groups() if ANY_TS.search(body) else None)
@@ -133,7 +141,7 @@ def ep_events(circulars) -> Table:
         NAME.search(c["subject"]).group(0)
         for c in circulars
         if NAME.search(c.get("subject", ""))
-        and RETRACT.search(c.get("subject", "") + c.get("body", ""))
+        and RETRACT.search(c.get("subject", "") + "\n" + c.get("body", ""))
     }
     best: dict[str, tuple[int, dict]] = {}
     for c in circulars:
@@ -164,41 +172,44 @@ def ep_events(circulars) -> Table:
     return t
 
 
-def iter_archive(path: Path):
-    with tarfile.open(path) as tf:
-        for m in tf:
-            if m.isfile() and m.name.endswith(".json"):
-                yield json.load(tf.extractfile(m))
+class _Hashing:
+    """File-like wrapper that hashes and counts the bytes read through it."""
+
+    def __init__(self, raw):
+        self.raw, self.h, self.n = raw, hashlib.sha256(), 0
+
+    def read(self, size=-1):
+        b = self.raw.read(size)
+        self.h.update(b)
+        self.n += len(b)
+        return b
 
 
-def fetch(refresh: bool) -> Path:
-    d = data_root() / "e1_ep"
-    d.mkdir(parents=True, exist_ok=True)
-    path = d / ARCHIVE
-    if not path.exists() or refresh:
-        r = requests.get(ARCHIVE_URL, timeout=600)
+def stream_archive():
+    """Stream the archive (never stored on disk, cloud-disk rule) and yield circular dicts; when
+    the stream ends, record its sha256 and size in the manifest. The archive is rewritten daily, so
+    the pin documents the retrieval behind ``ep_events.ecsv``; it cannot verify a later one."""
+    with requests.get(ARCHIVE_URL, stream=True, timeout=600) as r:
         r.raise_for_status()
-        path.write_bytes(r.content)
-    import hashlib
-
-    h = hashlib.sha256(path.read_bytes()).hexdigest()
-    if MANIFEST.exists() and not refresh:
-        pin = Table.read(MANIFEST, format="ascii.ecsv")["sha256"][0]
-        if pin != h:
-            raise SystemExit(f"{ARCHIVE}: sha256 {h} != pinned {pin} (rerun with --refresh)")
-    else:
-        t = Table(rows=[(ARCHIVE_URL, ARCHIVE, h, path.stat().st_size)],
-                  names=("uri", "file", "sha256", "size"))  # fmt: skip
-        t.meta = {
-            "provenance": str(Provenance.OBSERVED),
-            "source": "GCN Circulars JSON archive (rewritten daily; the parsed table in "
-            "results/e1_ep/ep_events.ecsv is the record)",
-            "retrieved": time.strftime("%Y-%m-%d", time.gmtime()),
-            "pipeline_version": "0.0.1",
-            "reason": "~31 MB; text circulars only; delete after use in cloud sessions",
-        }
-        t.write(MANIFEST, format="ascii.ecsv", overwrite=True)
-    return path
+        r.raw.decode_content = False
+        hr = _Hashing(r.raw)
+        with tarfile.open(fileobj=hr, mode="r|gz") as tf:
+            for m in tf:
+                if m.isfile() and m.name.endswith(".json"):
+                    yield json.load(tf.extractfile(m))
+        while hr.read(1 << 20):  # hash any trailing bytes
+            pass
+    t = Table(rows=[(ARCHIVE_URL, ARCHIVE, hr.h.hexdigest(), hr.n)],
+              names=("uri", "file", "sha256", "size"))  # fmt: skip
+    t.meta = {
+        "provenance": str(Provenance.OBSERVED),
+        "source": "GCN Circulars JSON archive, streamed (rewritten daily; the parsed table "
+        "results/e1_ep/ep_events.ecsv is the record)",
+        "retrieved": time.strftime("%Y-%m-%d", time.gmtime()),
+        "pipeline_version": "0.0.1",
+        "reason": "~31 MB stream; text circulars only; nothing stored",
+    }
+    t.write(MANIFEST, format="ascii.ecsv", overwrite=True)
 
 
 def load_ep(path: Path = OUT / "ep_events.ecsv") -> Table:
@@ -227,11 +238,10 @@ def _init(samples):
 def _null_chunk(args):
     kind, seeds = args
     s = _W["s"]
-    q = P_DAY if kind == "jitday" else P
     out = []
     for seed in seeds:
         rng = np.random.default_rng(seed)
-        out.append(count_all({k: en.scramble_jit(v, rng, q) for k, v in s.items()}, P))
+        out.append(count_all({k: en.scramble_jit(v, rng, P) for k, v in s.items()}, P))
     return np.stack(out)
 
 
@@ -289,7 +299,6 @@ def count(a) -> int:
         print(k, len(v), f"MJD {v['mjd'].min():.1f}-{v['mjd'].max():.1f}", flush=True)
     obs = count_all(samples, p)
     jit = run_null("jit", a.jit, samples, a.cpu, 4_000_000)
-    jday = run_null("jitday", a.jitday, samples, a.cpu, 5_000_000)
     mask = test_mask(p)
     n_cells = int(mask.sum())
     c_obs, c_null = int(control_sum(obs)), control_sum(jit)
@@ -298,11 +307,7 @@ def count(a) -> int:
     wins = [w for w, _ in en.windows_for(p)]
     labels = en.lag_labels(p) + wins[len(p.lag_edges) - 1 :]
     z_jit, pa_jit = en.z_score(obs, jit), en.analytic_p(obs, jit)
-    p_jit, p_jday, z_jday = (
-        en.empirical_p(obs, jit),
-        en.empirical_p(obs, jday),
-        en.z_score(obs, jday),
-    )
+    p_jit = en.empirical_p(obs, jit)
     ul = en.upper_limit_95(obs, jit)
     rows = []
     for c, (ca, cb) in enumerate(CHANNELS):
@@ -314,23 +319,20 @@ def count(a) -> int:
                         round(float(jit[:, c, k, j].mean()), 2),
                         round(float(jit[:, c, k, j].std()), 2),
                         round(float(z_jit[c, k, j]), 2), float(p_jit[c, k, j]),
-                        float(pa_jit[c, k, j]),
-                        round(float(jday[:, c, k, j].mean()), 2),
-                        round(float(z_jday[c, k, j]), 2), float(p_jday[c, k, j]),
-                        round(float(ul[c, k, j]), 2),
+                        float(pa_jit[c, k, j]), round(float(ul[c, k, j]), 2),
                     )
                 )  # fmt: skip
     counts = Table(
         rows=rows,
         names=(
             "channel", "lag", "cls", "tested", "obs", "jit_mean", "jit_sd", "z_jit", "p_jit",
-            "p_jit_analytic", "jday_mean", "z_jday", "p_jday", "ul95_pairs",
+            "p_jit_analytic", "ul95_pairs",
         ),
     )  # fmt: skip
     counts.meta = {
         "provenance": str(Provenance.DERIVED),
         "source": "scripts/e1_ep.py count on results/e1_ep/ep_events.ecsv and "
-        f"data/manifests/e1_swift.ecsv (GBM, BAT); jit null {a.jit}, jitday null {a.jitday}",
+        f"data/manifests/e1_swift.ecsv (GBM, BAT); jit null {a.jit}",
     }
     counts.write(OUT / "counts.ecsv", format="ascii.ecsv", overwrite=True)
 
@@ -349,12 +351,15 @@ def count(a) -> int:
     # injections and limits for EP-EP only (frozen plan), through e1_events' code (in-process)
     # e1.injections sets its per-cell threshold to DETECT_P / mask.sum(); scale DETECT_P so the
     # threshold is DETECT_P / n_cells of the whole family (18), not of the EP-EP subset
+    saved = e1.CHANNELS, e1.DETECT_P
     e1.CHANNELS = (("EP", "EP"),)
     e1.DETECT_P = DETECT_P * int(mask[:1].sum()) / n_cells
-    inj, p_star = e1.injections(
-        samples, p, jit[:, :1], mask[:1], a.inject, np.random.default_rng(13)
-    )
-    e1.DETECT_P = DETECT_P
+    try:
+        inj, p_star = e1.injections(
+            samples, p, jit[:, :1], mask[:1], a.inject, np.random.default_rng(13)
+        )
+    finally:
+        e1.CHANNELS, e1.DETECT_P = saved
     inj.write(OUT / "injections.ecsv", format="ascii.ecsv", overwrite=True)
     lim = e1.limits(counts, inj, ev, p)
     lim.write(OUT / "limits.ecsv", format="ascii.ecsv", overwrite=True)
@@ -365,7 +370,6 @@ def count(a) -> int:
         "events": {k: len(v) for k, v in ev.items()},
         "ep_mjd_range": [float(ev["EP"]["mjd"].min()), float(ev["EP"]["mjd"].max())],
         "n_jit": a.jit,
-        "n_jitday": a.jitday,
         "tested_cells": n_cells,
         "positive_control_ep_grb_same_0_1h": {
             "obs": c_obs,
@@ -384,9 +388,6 @@ def count(a) -> int:
         "global_jit_pooled": dict(
             zip(("min_cell_p", "trials_corrected_p"), en.global_p(obs, jit, mask), strict=True)
         ),
-        "global_jitday_pooled": dict(
-            zip(("min_cell_p", "trials_corrected_p"), en.global_p(obs, jday, mask), strict=True)
-        ),
         "injection_detection_p_star": p_star,
         "same_direction_pairs_within_7d": dup,
         "ep_orbit_s": EP_ORBIT,
@@ -403,16 +404,13 @@ def count(a) -> int:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["build", "count"])
-    ap.add_argument("--refresh", action="store_true")
     ap.add_argument("--jit", type=int, default=10000)
-    ap.add_argument("--jitday", type=int, default=10000)
     ap.add_argument("--inject", type=int, default=40, help="trials per (bin, n)")
     ap.add_argument("--cpu", type=int, default=1)
     a = ap.parse_args(argv)
     if a.cmd == "count":
         return count(a)
-    path = fetch(a.refresh)
-    circ = list(iter_archive(path))
+    circ = list(stream_archive())
     ep_names = {NAME.search(c.get("subject", "")).group(0) for c in circ
                 if NAME.search(c.get("subject", "")) and "WXT" in c.get("body", "")}  # fmt: skip
     ev = ep_events(circ)

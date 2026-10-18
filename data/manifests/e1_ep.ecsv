@@ -7,10 +7,10 @@
 # - {name: size, datatype: int64}
 # meta: !!omap
 # - {provenance: observed}
-# - {source: GCN Circulars JSON archive (rewritten daily; the parsed table in results/e1_ep/ep_events.ecsv is the record)}
+# - {source: 'GCN Circulars JSON archive, streamed (rewritten daily; the parsed table results/e1_ep/ep_events.ecsv is the record)'}
 # - {retrieved: '2026-10-18'}
 # - {pipeline_version: 0.0.1}
-# - {reason: ~31 MB; text circulars only; delete after use in cloud sessions}
+# - {reason: ~31 MB stream; text circulars only; nothing stored}
 # schema: astropy-2.0
 uri file sha256 size
 https://gcn.nasa.gov/circulars/archive.json.tar.gz gcn_circulars_archive.json.tar.gz 0ef4373e8696f54e0d2d3933e1cc80b2412ba9ae772d40ff7522150739c89edb 31441858

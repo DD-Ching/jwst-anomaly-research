@@ -30,7 +30,7 @@ BODY_ONSET = (
 def test_parse_first_timestamp_and_negative_dec():
     r = ep.parse_circular("EP260601a: EP-WXT detection of an X-ray transient", BODY_FIRST)
     assert r["name"] == "EP260601a" and r["time_rule"] == "first"
-    assert np.isclose(r["mjd"], 61192 + (19 * 3600 + 13 * 60 + 22) / 86400)
+    assert abs(r["mjd"] - (61192 + (19 * 3600 + 13 * 60 + 22) / 86400)) * 86400 < 0.01
     assert (r["ra"], r["dec"]) == (257.649, -1.647)
     assert np.isclose(r["r90_deg"], 3 / 60) and r["r90_unit"] == "arcmin"
 
@@ -40,13 +40,29 @@ def test_parse_onset_wins_and_arcmin_radius_preferred():
         "EP261015c: Einstein Probe detection of a fast X-ray transient", BODY_ONSET
     )
     assert r["time_rule"] == "onset"
-    assert np.isclose(r["mjd"], 61328 + (17 * 3600 + 37 * 60 + 52) / 86400)
+    assert abs(r["mjd"] - (61328 + (17 * 3600 + 37 * 60 + 52) / 86400)) * 86400 < 0.01
     assert np.isclose(r["r90_deg"], 2.695 / 60)
 
 
 def test_parse_rejects_name_date_mismatch_and_no_wxt():
     assert ep.parse_circular("EP260501a: EP-WXT detection", BODY_FIRST) is None
     assert ep.parse_circular("EP260601a: detection", BODY_FIRST.replace("WXT", "XRT")) is None
+
+
+def test_wxt_must_precede_position():
+    body = (
+        "FXT position R.A. = 257.649 deg, Dec = 1.6 deg with an uncertainty of 10 arcsec at "
+        "2026-06-01T19:13:22. WXT also."
+    )
+    assert ep.parse_circular("EP260601a: EP detection", body) is None
+
+
+def test_retraction_only_of_the_trigger():
+    assert ep.RETRACT.search(
+        "The EP-WXT trigger 01709133021 (designated as EP250324a) is not a real source"
+    )
+    assert ep.RETRACT.search("EP260707a is not a real source")
+    assert not ep.RETRACT.search("The optical candidate is not a real source.")
 
 
 def test_ep_events_lowest_circular_and_retraction():

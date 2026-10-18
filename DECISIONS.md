@@ -4437,13 +4437,13 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
 **Addendum 7 (2026-10-18): Einstein Probe transients as a sixth node set (`results/e1_ep/`).**
 - Input: no public EP event table exists; one row per EP name is parsed from its first WXT report in the GCN
   Circulars JSON archive (`scripts/e1_ep.py`; onset or first timestamp, J2000 position, 90 % radius / 2.146;
-  "not a real source" names dropped). 230 events. Rejected: tables in papers (PDF, curated subsets).
+  trigger called "not a real source" dropped; streamed, not stored). 231 events. Rejected: tables in papers (PDF, curated subsets).
 - Only GBM and BAT overlap EP in time. Family: EP–EP (5 lags) and EP–BAT, EP–GBM (1 h–1 d, 1–7 d), same and wide:
-  18 cells; EP–GRB same-direction pairs at 0–1 h are the positive control (27 vs 0.61: passes). EP jit quantum
+  18 cells; EP–GRB same-direction pairs at 0–1 h are the positive control (27 vs 0.63: passes). EP jit quantum
   5,760 s (ASSUMPTION).
-- **Result: null.** Min cell EP–GBM 1 h–1 d same (p 1.8 × 10⁻³, × 18 = 0.033); pooled global p 0.018. 5 of its 27
+- **Result: null.** Min cell EP–GBM 1 h–1 d same (p 2.2 × 10⁻³, × 18 = 0.039); pooled global p 0.017. 5 of its 27
   pairs are one source twice (EP250702a = GRB 250702B–E). The plan did not drop joint detections first
-  (deviation from addendum 6); the post hoc re-count without them gives × 18 = 0.012.
+  (deviation from addendum 6); the post hoc re-count without them gives × 18 = 0.015. `jitday` not run: with no ground catalogue it equals `jit`.
 - Revisit if: EP publishes an event catalogue (then replace the parsed table), or an EP–GBM test is planned (then
   define joint events by name and position, not by |lag| < 1 h).
 

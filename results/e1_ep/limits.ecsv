@@ -17,8 +17,8 @@
 # - {source: counts.ecsv (jit null) and injections.ecsv}
 # schema: astropy-2.0
 channel cls lag obs jit_mean ul95_pairs eff n50_detect n_anchor_eligible valid ul95_rate_per_anchor
-EP-EP wide 0s-10s 0 0.01 3.0 1.0 2 230 True 0.013043478260869565
-EP-EP wide 10s-100s 0 0.06 3.0 1.0 3 230 True 0.013043478260869565
-EP-EP wide 100s-1h 3 2.36 7.75 0.994 8 230 True 0.03390757451462948
-EP-EP wide 1h-1d 59 57.19 12.0 0.973 33 230 True 0.05361746004468122
-EP-EP wide 1d-7d 362 363.13 19.0 0.895 58 230 True 0.09234507897934387
+EP-EP wide 0s-10s 0 0.01 3.0 1.0 2 231 True 0.012987012987012988
+EP-EP wide 10s-100s 0 0.07 3.0 1.0 3 231 True 0.012987012987012988
+EP-EP wide 100s-1h 3 2.38 7.75 1.0 8 231 True 0.03354978354978355
+EP-EP wide 1h-1d 60 57.36 13.0 0.973 33 231 True 0.057834128980374044
+EP-EP wide 1d-7d 362 365.23 18.92 0.841 58 231 True 0.09735449735449737
