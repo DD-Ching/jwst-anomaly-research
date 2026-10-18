@@ -183,17 +183,44 @@ def ncf_catalog(obs: str) -> str:
 
 for _name, (_obs, _c, _centre) in NCF_FIELDS.items():
     SHEAR_FIELD_OVERRIDES[_name]["catalog"] = ncf_catalog(_obs)
+# 2026-10-18 (results/w1_shear_goodsn/PLAN.md): six JADES GOODS-N F200W pointings (program
+# 1181) with small mutual overlap, no lens model, DJA v7.3 photo-z (tarball member, D-051),
+# R fixed at GOODSN_R (the smallest F200W cluster-fit R apart from MACS0647; ASSUMPTION)
+GOODSN_FIELDS = {
+    "goodsn-o001": ("o001_t001", (189.18115, 62.27479)),
+    "goodsn-o003": ("o003_t007", (189.04836, 62.26091)),
+    "goodsn-o004": ("o004_t008", (189.28111, 62.20377)),
+    "goodsn-o005": ("o005_t008", (189.21071, 62.18853)),
+    "goodsn-o009": ("o009_t009", (189.42173, 62.25673)),
+    "goodsn-o010": ("o010_t009", (189.37152, 62.30012)),
+}
+GOODSN_R = 0.414  # Abell 370 F200W fit (results/w1_volume/summaries/z0.3_abell370.json), rounded
+_GOODSN_ZOUT = "cache/dja/photoz-goodsn-v7.3/gdn-grizli-v7.3-fix.eazypy.zout.fits"
+for _name, (_obs, _centre) in GOODSN_FIELDS.items():
+    SHEAR_FIELD_OVERRIDES[_name] = {
+        "model": None,
+        "catalog": ir._MAST.format(f"jw01181-{_obs}_nircam_clear-f200w"),
+        "photoz": ("eazy", _GOODSN_ZOUT),
+        "max_radius": 200.0,
+        "spike_stars": True,
+        "centre": _centre,
+        "responsivity": GOODSN_R,
+    }
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
 
 def fixed_responsivity(name: str, spec: dict, lens_z, gate: Path = GATE_R) -> float | None:
-    """R for a field without a lens model (``spec["responsivity"] == "ncf"``): gate R's
-    ``adopted_r``; an error if gate R has not passed or no ``--lens-z`` is given (``z_lens`` 0).
-    None for every other field (R is fitted)."""
-    if spec.get("responsivity") != "ncf":
+    """R for a field without a lens model: gate R's ``adopted_r`` when
+    ``spec["responsivity"] == "ncf"`` (an error if gate R has not passed), the number itself when
+    it is a number (GOODS-N); an error if no ``--lens-z`` is given (``z_lens`` 0). None for every
+    other field (R is fitted)."""
+    rspec = spec.get("responsivity")
+    if rspec is None:
         return None
     if lens_z is None:
         raise ValueError(f"{name} has no lens model; give --lens-z")
+    if rspec != "ncf":
+        return float(rspec)
     res = json.loads(Path(gate).read_text())["gate_r"] if Path(gate).exists() else {}
     if not res.get("passed"):
         raise ValueError(f"{name}: gate R has not passed ({gate}; w1_ncf_gate_r.py)")

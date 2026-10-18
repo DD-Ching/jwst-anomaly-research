@@ -50,7 +50,7 @@ _CANUCS_URL = (
     "https://archive.stsci.edu/hlsps/canucs/dr1/{0}/clu/"
     "hlsp_canucs_jwst-hst_multi_{0}-clu_multi_v1_photometry-cat.fits.gz"
 )
-MAX_BYTES = 100_000_000  # every file and tarball here is < 80 MB (SOURCES.md)
+MAX_BYTES = 100_000_000  # every file here is < 80 MB (SOURCES.md) except the GOODS-N tarball
 
 # F200W catalogues not in data/manifests: sha256 as recorded in SOURCES.md (MACS0417, MACS1423,
 # MACS0647) and results/arcs/rxj2129/summary.json (RXJ2129).
@@ -140,7 +140,11 @@ for _f, _sha in (
 for _f in ("macs0416", "macs1149", "abell370"):
     _url, _sha = op.FIELDS[_f]["catalogue"]
     PHOTOZ[_url.rsplit("/", 1)[-1]] = {"url": _url, "sha256": _sha}
+# GOODS-N (results/w1_shear_goodsn): the DJA v7.3 zout streamed out of its 371 MB tarball (D-051)
+PHOTOZ[Path(ish._GOODSN_ZOUT).name] = op.DEEP_FIELDS["goodsn-dja"]["photoz"]
 for _spec in op.DEEP_FIELDS.values():  # CANUCS NCF photometry (results/w1_shear_ncf)
+    if _spec.get("format") == "dja":
+        continue
     _url, _sha = _spec["catalogue"]
     PHOTOZ.setdefault(_url.rsplit("/", 1)[-1], {"url": _url, "sha256": _sha})
 
@@ -196,7 +200,7 @@ def stage(target: Path, src: dict) -> dict:
                 **src,
                 "sha256": src["sha256"] or _Unpinned(),
                 "member_sha256": pinned or _Unpinned(),
-                "max_bytes": MAX_BYTES,
+                "max_bytes": src.get("max_bytes", MAX_BYTES),
             }
             got = op.fetch_tar_member(spec, cache_dir=target.parent)
         else:
