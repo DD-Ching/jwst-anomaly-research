@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 blank-field responsivity R from image simulations: borrowed R = 0.414 is conservative
+- `scripts/w1_r_sim.py`: GalSim Sérsic galaxies sheared by ±0.02, jwst-like 2 px kernel, 3σ segmentation and
+  photutils `SourceCatalog` moments on the smoothed data, then `intrinsic_ellipticity`; plan frozen first
+  (`results/w1_r_metacal/PLAN.md`). Checks: noiseless R 0.998; sign and round-source checks pass.
+- **Result (`results/w1_r_metacal/RESULT.md`, simulated):** weighted by 2,259 GOODS-N o001 rows, R_sim =
+  1.017 ± 0.006 (n = 1) / 0.965 ± 0.007 (n = 4) with the field's PSF σ (post hoc), 1.34–1.37 with the plan's stamp
+  PSF σ, 0.940–2.057 over every post hoc variant (resolved-cell weights, jwst-style threshold). All pass the frozen
+  rule (≥ 0.414 − 2σ): the GOODS-N / CEERS limits are conservative with respect to R; no limit changed.
+- The cluster-fit R (0.41–0.60) is about half the simulated measurement response; the cause (lens model, photo-z
+  default, member dilution) is untested.
+- D-101. **Handoff:** a real-image metacalibration on F200W i2d cutouts (S3 byte ranges, STPSF), and the simulation on a
+  cluster field's rows to locate the factor-two gap. If the real-image R stays ≈ 1, the blank-field limits can be
+  re-run with it (a new frozen plan).
 ## 2026-10-18: Same-source pairing feasibility fails its frozen rule; VENUS batch 4: 13 boxes calibrated, nothing confirmed
 - **Inventory and tools (`docs/same_source.md`, D-100):** the repository aligns epochs, finds brightening/fading
   sources and predicts counter-images with published models; it has no model-free step that proposes same-source

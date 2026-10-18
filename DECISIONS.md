@@ -5110,3 +5110,15 @@ confining radiation at a throat is found.
   pairs among 2,674,270 at 2–60″, of which 11 have both members within 0.3″ of a published image (10 same-system pairs pass). Limits on later searches: `docs/same_source.md`.
 - **Revisit if:** a ranking-based proposal with a calibrated threshold is frozen and tested on a new held-out cluster
   (e.g. MACS0416 CANUCS), or a specific pair needs a source-plane reconstruction (then lenstronomy in an isolated env).
+
+## D-101 W1 blank-field R: GalSim image simulations of the pipeline-like shapes; borrowed R kept (2026-10-18)
+- **Decision:** the blank-field W1 screens keep R = 0.414 (D-099). Image simulations of the catalogue shape
+  measurement (`scripts/w1_r_sim.py`, GalSim + photutils, isolated Sérsic stamps) give a weighted measurement
+  response ≥ 0.94 for the GOODS-N row distribution under every variant, so 0.414 understates injected W1 shear (conservative).
+- **Alternatives rejected:** adopting R_sim now (the simulation has no blending, correlated noise or real PSF, and
+  the frozen rule only allows "keep" or "re-run lower"); metacalibration on real i2d cutouts first (needs an STPSF
+  deconvolution and S3 cutouts; the next stage); ngmix metacal (fits its own shapes, not the pipeline's isophotal
+  moments).
+- **Evidence:** `results/w1_r_metacal/RESULT.md`, `r_sim.json`, `r_sim_rawthr.json` (simulated).
+- **Revisit if:** a real-image calibration gives R < 0.414, or the cluster-fit gap (≈ ×2) is traced to the
+  measurement rather than the lens models.

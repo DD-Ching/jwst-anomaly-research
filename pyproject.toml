@@ -44,6 +44,8 @@ mulens = ["MulensModel>=3.12"]
 nf = ["skyllh>=26.1"]
 # Linear-streak masks for the W1 shear screen (STScI findsat_mrt; scripts/w1_streak_mask.py).
 streaks = ["acstools>=3.8", "scikit-image>=0.22", "photutils>=1.12"]
+# Image simulations of the W1 catalogue-shape responsivity (scripts/w1_r_sim.py).
+shearsim = ["galsim>=2.5", "photutils>=3.0"]  # photutils 3 API (n_pixels, semimajor_axis)
 
 [project.scripts]
 jwst-anomaly = "jwst_anomaly.cli:main"

@@ -1518,3 +1518,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/ceers-full-grizli-v7.4-fix.photoz.tar.gz (396.8 MB, Last-Modified
   2024-09-27; tarball sha256 not recorded; same DJA terms and citation, arXiv:2302.10936). The F200W `_i2d.fits` SCI
   extensions were range-read for the streak masks, the vetting and the sheet (not stored).
+
+## W1 blank-field R simulation (accessed 2026-10-18; `results/w1_r_metacal/`)
+- **GalSim** 2.8.5 (PyPI `galsim`), https://github.com/GalSim-developers/GalSim; Rowe et al. 2015, Astronomy and
+  Computing 10, 121, doi:10.1016/j.ascom.2015.02.002. Sérsic profiles, Airy ⊗ Gaussian PSF, shears.
+- **photutils** 3.1.1 (PyPI), `detect_sources` and `SourceCatalog` (`semimajor_axis` is 3.x's name for the
+  catalogue's `semimajor_sigma`, per its deprecation warning).
