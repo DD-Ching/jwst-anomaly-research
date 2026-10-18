@@ -180,6 +180,21 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    # z_lens 0.972 (Paterno-Mahler et al. 2018)
+    "spt0615-relics-glafic": {
+        "files": lensmodel.SPT0615_RELICS_GLAFIC,
+        "kind": "maps",
+        "z_lens": 0.972,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "spt0615-relics-lenstool": {
+        "files": lensmodel.SPT0615_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.972,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     "macs0417-relics-lenstool": {
         "files": lensmodel.MACS0417_RELICS_LENSTOOL,
         "kind": "maps",

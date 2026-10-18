@@ -2,8 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-18: (in progress) `arcs` on SPT-CL J0615−5746 with RELICS maps and RELICS BPZ photo-z (S1063 replication)
-- Claimed; plan to be frozen in `results/arcs/spt0615-relics/PLAN.md` before any count.
+## 2026-10-18: `arcs` on SPT-CL J0615−5746 (RELICS maps, RELICS BPZ photo-z): no result, both controls fail
+- **Why:** one more independent field for the S1063 anti-excess tally. Plan frozen first
+  (`results/arcs/spt0615-relics/PLAN.md`, which also records the field survey below). F200W catalogue from program
+  4212 o001; photo-z from the RELICS BPZ catalogue (no DJA table exists; 95 % interval used as z160–z840,
+  ASSUMPTION; JWST − HST offset +0.31″/−0.27″ removed). Exploratory.
+- **New:** models `spt0615-relics-glafic` (v2) / `spt0615-relics-lenstool` (v1), both pass `validate`;
+  `scripts/arcs_spt0615.py` (+ tests), `scripts/arcs_spt0615_sheet.py`.
+- **Result (derived; `RESULT.md`):** strong-shear background rows 7 (GLAFIC: 3 aligned, 2 anti) and 4 (Lenstool:
+  1 aligned, 3 anti). Both controls fail (43 %, 25 % < 70 %) → **frozen outcome "no result"**; the P values (0.0065,
+  0.00034) decide nothing. Sheets looked at: Lenstool anti 2681 sits at g_min 4.84 (critical-curve flip region; 0.67
+  in GLAFIC); 2669 has F200W striping across it; 2773 is faint. No candidate.
+- **Field survey (so it is not repeated):** DJA v7 photo-z exists for only two unrun lensing clusters
+  (RCS2 J0327, MACS J0138), neither with public maps found. The LAM Strong Lensing Cluster Atlas
+  (data.lam.fr/sl-cluster-atlas; ANIS API `server/search/sl-cluster-atlas/{model,map_model}` with cookie
+  `Yogsototh_opens_the_door=1`) serves 17 Lenstool model tarballs; of those clusters only the Bullet has deep JWST
+  F200W (program 4598, no public photo-z found); VENUS (6882) visits are 1,245 s. SGAS HLSP models give only κ and
+  |γ| (no shear direction).
+- **Handoff:** S1063 tally: MACS0417 no, MACS0647 no result, MACS1423 explained, RXJ2129 no result, WHL0137 no,
+  RXC J0600 no, SPT0615 no result. Remaining routes: MACS0308 (RELICS GLAFIC + Zitrin maps, RELICS BPZ, JWST ≤
+  1,578 s); Bullet (LAM Lenstool model) needs a photo-z source.
 
 ## 2026-10-18: `arcs` on RXC J0600−2007, RELICS maps: the S1063 anti excess does not replicate (1 vs 0.20, P 0.18)
 - **Why:** the S1063 replication tally needs fields never used to tune `arcs`. Correction to the 2026-10-17 handoff:

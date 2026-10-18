@@ -286,6 +286,51 @@ RXC0600_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS GLAFIC v2 and Lenstool v1 maps of SPT-CL J0615-5746 (z_lens 0.972, Paterno-Mahler et al.
+#: 2018, ApJ 863, 154, arXiv:1805.09834; HLSP DOI 10.17909/T9SP45, accessed 2026-10-18), deflection
+#: in arcsec at D_LS/D_S = 1. GLAFIC v2 is the primary ``arcs`` model, Lenstool v1 the second.
+_RELICS_SPT0615 = "https://archive.stsci.edu/hlsps/relics/spt0615m57/models/"
+_RELICS_SPT0615_GLAFIC = f"{_RELICS_SPT0615}glafic/v2/hlsp_relics_model_model_spt0615m57_glafic_v2"
+_RELICS_SPT0615_LENSTOOL = (
+    f"{_RELICS_SPT0615}lenstool/hlsp_relics_model_model_spt0615m57_lenstool_v1"
+)
+SPT0615_RELICS_GLAFIC: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_SPT0615_GLAFIC}_x-arcsec-deflect.fits",
+        "5f9afe50ca0ce94880121ca22fa60ed396d56b78c8d66c511cfcdd5851e5bb53",
+    ),
+    "alpha_y": (
+        f"{_RELICS_SPT0615_GLAFIC}_y-arcsec-deflect.fits",
+        "3d29e05446194961eda05b3f99bfa2e7cf3e5344e45f568b5635a073625b722b",
+    ),
+    "kappa_map": (
+        f"{_RELICS_SPT0615_GLAFIC}_kappa.fits",
+        "2291d632d0a902705d0eab6f90e14e04613f4916367d2c737b0f9c9b88e08a72",
+    ),
+    "mag_z2": (
+        f"{_RELICS_SPT0615_GLAFIC}_z02-magnif.fits",
+        "d12a504374d8ba1a50492dcaac23d86d6fa8eb4c79edaba00b5cb11e46435e8f",
+    ),
+}
+SPT0615_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_SPT0615_LENSTOOL}_x-arcsec-deflect.fits",
+        "7460687b539aafdc7fb98cfd4292e6b76a9a3c313738e3954b2c7febca4140d9",
+    ),
+    "alpha_y": (
+        f"{_RELICS_SPT0615_LENSTOOL}_y-arcsec-deflect.fits",
+        "27ea17470c7d21bde14302b2d3704743a5a32df8c2e23c15143d40e6eea70361",
+    ),
+    "kappa_map": (
+        f"{_RELICS_SPT0615_LENSTOOL}_kappa.fits",
+        "27c29b0dbeb68affe58284f85a2b6931ce568e42d28684f165aa16f685a18b4f",
+    ),
+    "mag_z2": (
+        f"{_RELICS_SPT0615_LENSTOOL}_z02-magnif.fits",
+        "3dd993fdd4d2eecde9931ddeddd54738512be7aa3f98d2075f24ad8780eb2191",
+    ),
+}
+
 #: RELICS Lenstool v1 maps of MACS J0417.5-1154 (Mahler et al. 2019, MNRAS 485, 3954; HLSP DOI
 #: 10.17909/T9SP45, accessed 2026-10-16), deflection in arcsec at D_LS/D_S = 1. Lens redshift 0.443.
 _RELICS_MACS0417 = (

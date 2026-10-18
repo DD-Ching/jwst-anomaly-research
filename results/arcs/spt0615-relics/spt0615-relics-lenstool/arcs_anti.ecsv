@@ -1,0 +1,59 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: label, datatype: int32}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: pa_obs, datatype: float64}
+# - {name: ellipticity, datatype: float64}
+# - {name: semimajor_px, datatype: float64}
+# - {name: area_px, datatype: float64}
+# - {name: snr, datatype: float64}
+# - {name: is_extended, datatype: bool}
+# - {name: mag, datatype: float64}
+# - {name: z_phot, datatype: float64}
+# - {name: z160, datatype: float64}
+# - {name: z840, datatype: float64}
+# - {name: r_arcsec, datatype: float64}
+# - {name: pa_pred_z1, datatype: float64}
+# - {name: offset_z1, datatype: float64}
+# - {name: g_z1, datatype: float64}
+# - {name: mu_z1, datatype: float64}
+# - {name: pa_pred_z2, datatype: float64}
+# - {name: offset_z2, datatype: float64}
+# - {name: g_z2, datatype: float64}
+# - {name: mu_z2, datatype: float64}
+# - {name: pa_pred_z4, datatype: float64}
+# - {name: offset_z4, datatype: float64}
+# - {name: g_z4, datatype: float64}
+# - {name: mu_z4, datatype: float64}
+# - {name: offset_zphot, datatype: float64}
+# - {name: z_basis, datatype: string}
+# - {name: offset_min, datatype: float64}
+# - {name: offset_max, datatype: float64}
+# - {name: g_min, datatype: float64}
+# - {name: pa_pred_spread, datatype: float64}
+# - {name: orientation_class, datatype: string}
+# - {name: strong_shear, datatype: bool}
+# - {name: population, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: /tmp/claude-0/-home-user-jwst-anomaly-research/cbc19979-e4c9-5ad7-9cbc-18427fd2e177/scratchpad/spt0615/dl/jw04212-o001_t001_nircam_clear-f200w_cat.ecsv
+#     against spt0615-relics-lenstool}
+# - {photoz_source: /tmp/claude-0/-home-user-jwst-anomaly-research/cbc19979-e4c9-5ad7-9cbc-18427fd2e177/scratchpad/spt0615/dl/spt0615_bpz_zout.fits}
+# - {model_sha256: dbea57f40d366d70d0fa4cc7e1c6f45fa68628ac66f67226f644ad6977665386}
+# - {z_lens: 0.972}
+# - reference_radec: [93.96546, -57.780125]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.20020020020020007
+#     shape: [1000, 1000]
+# - z_grid: [1.0, 2.0, 4.0]
+# - assumptions: {aligned_deg: 30.0, anti_deg: 60.0, z_margin: 0.1}
+# schema: astropy-2.0
+label ra dec pa_obs ellipticity semimajor_px area_px snr is_extended mag z_phot z160 z840 r_arcsec pa_pred_z1 offset_z1 g_z1 mu_z1 pa_pred_z2 offset_z2 g_z2 mu_z2 pa_pred_z4 offset_z4 g_z4 mu_z4 offset_zphot z_basis offset_min offset_max g_min pa_pred_spread orientation_class strong_shear population
+2773 93.95592806530844 -57.772305403650414 120.63202621042001 0.6319536157727343 3.7855921573399405 72.0 47.72279313892365 True 26.401751595951545 3.379 3.131 3.599 33.57359087361926 48.904634015387785 71.72739219503222 0.008946424797627531 1.033794269713348 48.904634015387785 71.72739219503222 0.22610038487182857 2.1324034612844605 48.904634015387785 71.72739219503222 0.4106288739393573 3.7565702909290426 71.72739219503222 photo-z 71.72739219503222 71.72739219503222 0.3509416801412364 0.0 anti True background
+2681 93.96498620696258 -57.78384023110069 96.09770370007584 0.5841134720454995 4.346902437152683 102.0 42.00359929185338 True 26.46019624570679 4.472 3.973 5.035 13.405713149168239 107.85067500459559 11.752971304519747 0.023922712393764537 1.0863194959878013 107.85067500459559 11.752971304519747 1.5223696913423983 -10.22630579261574 17.850675004595587 78.24702869548025 9.535712486556989 -2.7509618986466675 78.24702869548025 photo-z 78.24702869548025 78.24702869548025 4.839148310509052 0.0 anti True background
+2669 93.97046118375907 -57.792776690287134 150.3854486399341 0.5171480978710266 5.762026343864003 295.0 143.36886796031447 True 24.432007564050664 3.015 2.587 3.171 46.54667508331379 78.41154122717657 71.97390741275754 0.009278550135978185 1.0231230862618514 78.41154122717657 71.97390741275754 0.2083144421849439 1.6520129029797048 78.41154122717657 71.97390741275754 0.3455454030167713 2.3107686370705176 71.97390741275754 photo-z 71.97390741275754 71.97390741275754 0.2663577070888067 0.0 anti True background
