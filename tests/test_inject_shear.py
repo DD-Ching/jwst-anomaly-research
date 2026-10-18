@@ -286,3 +286,15 @@ def test_fixed_r_sensitivity_runs_are_refused_by_w1_volume(tmp_path):
         )
     with pytest.raises(ValueError, match="'ncf' or a number"):
         ish.fixed_responsivity("x", {"responsivity": "NCF"}, 0.3)
+
+
+def test_ceers_fields_use_the_frozen_r_and_the_shared_dja_zout():
+    names = sorted(ish.CEERS_FIELDS)
+    assert len(names) == 10 and "ceers-o052" not in names  # o052 overlaps o002 / o064 (PLAN.md)
+    for name in names:
+        spec = ish.field_spec(name)
+        assert spec["model"] is None and spec["responsivity"] == ish.GOODSN_R
+        assert "jw01345-" in spec["catalog"]
+        assert spec["catalog"].endswith("_nircam_clear-f200w_cat.ecsv")
+        assert spec["photoz"] == ("eazy", ish._CEERS_ZOUT)
+        assert ish.fixed_responsivity(name, spec, 0.3) == pytest.approx(0.414)

@@ -102,6 +102,37 @@ CATALOG_SHA256 = {
     "jw01181-o010_t009_nircam_clear-f200w_cat.ecsv": (
         "a9060f9ce85856b73c4a4977a98ab58beec74e4936d36b24aae69c31b7e78574"
     ),
+    # CEERS F200W (results/w1_shear_ceers), as fetched 2026-10-18
+    "jw01345-o001_t021_nircam_clear-f200w_cat.ecsv": (
+        "878766359ac425b9510b0e02dba82f032f23a1e68d2deb097d51df9cc5f35f27"
+    ),
+    "jw01345-o002_t022_nircam_clear-f200w_cat.ecsv": (
+        "152648c84958a8bdc5e72287b55b70e3af292a0d0404917bf3fe65e325a11999"
+    ),
+    "jw01345-o003_t023_nircam_clear-f200w_cat.ecsv": (
+        "9a989e0c12144c65a332abab6694839a4ad5e8e3b00c28438fad957a573fc9d4"
+    ),
+    "jw01345-o004_t024_nircam_clear-f200w_cat.ecsv": (
+        "099d0beee716e6ba566a593908e1361e671d1fcf93d8957d435257f3b64f5dfa"
+    ),
+    "jw01345-o061_t043_nircam_clear-f200w_cat.ecsv": (
+        "b2c1b51ae6f8c3019716a7db1187560fe698852aef449ec5a9694d7aabba32b3"
+    ),
+    "jw01345-o064_t044_nircam_clear-f200w_cat.ecsv": (
+        "c3b2fce5200b0e6b690237d314c751687a38bfd3db029780d1d89411d8b9c5ff"
+    ),
+    "jw01345-o066_t055_nircam_clear-f200w_cat.ecsv": (
+        "93a96a25e0d9c8177044a2334cde57668759796f6f618b6e17c7d1a64bd5ba24"
+    ),
+    "jw01345-o068_t048_nircam_clear-f200w_cat.ecsv": (
+        "a897343adde44740e9031dd1cbde0340135a9af920d09f9caff9ab58800e919c"
+    ),
+    "jw01345-o069_t046_nircam_clear-f200w_cat.ecsv": (
+        "c8789ba9f7658db262c6432818990af0bf0318d5ed463818529060d984f28422"
+    ),
+    "jw01345-o071_t047_nircam_clear-f200w_cat.ecsv": (
+        "c775b3cd3dcaaf3698bb4a1c6b97dc0696aaf63825836537d8833a82c4f1ff93"
+    ),
 }
 
 
@@ -161,6 +192,12 @@ for _f in ("macs0416", "macs1149", "abell370"):
     PHOTOZ[_url.rsplit("/", 1)[-1]] = {"url": _url, "sha256": _sha}
 # GOODS-N (results/w1_shear_goodsn): the DJA v7.3 zout streamed out of its 371 MB tarball (D-051)
 PHOTOZ[Path(ish._GOODSN_ZOUT).name] = op.DEEP_FIELDS["goodsn-dja"]["photoz"]
+# CEERS (results/w1_shear_ceers): the DJA v7.4 zout streamed out of its 397 MB tarball (PLAN.md)
+PHOTOZ[Path(ish._CEERS_ZOUT).name] = _tar(
+    "ceers-full-grizli-v7.4-fix",
+    None,  # tarball sha256 not recorded (streamed once; the member is pinned)
+    "c50443d242c4c76b2d3c164b236911f14d926bf5c466ae90bfe0def299a48a50",
+) | {"max_bytes": 400_000_000}
 for _spec in op.DEEP_FIELDS.values():  # CANUCS NCF photometry (results/w1_shear_ncf)
     if _spec.get("format") == "dja":
         continue
