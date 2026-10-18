@@ -12,6 +12,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Failed approach:** lowering the TrailFinder threshold (D-097 "Revisit if"). **Handoff:** a field-wide row-segment
   median veto (V1r made field-wide), frozen and run through the injections, and a check of why the Gaia spike veto
   misses the macs0416-ncf star; or skip to other blank fields (PRIMER, CEERS) under the D-097 mask.
+## 2026-10-18: Confirmation round 1: A370 box-2 changes not source-specific / not supported; MACS0417 h002 is SN Athena (#323)
+- **A370 h003:** consistent with 54 compact-source controls, which share its F444W drop between 1208 and VENUS
+  (median ratio 0.852 vs 0.887): no evidence of a source-specific change. **A370 h010:** within 80 matched arc-pixel controls (tail 0.10): no support
+  for a real change. Batch 3 has no change supported beyond matched-control scatter.
+- **MACS0417 h002 = SN Athena**, found in October 2025 by another team (JWST DD 12781, GO 4568, HST 18470 follow-up).
+- **HST 18470 visits 1–4 (public, to 2026-10-07):** no new point source at the 12781 or our predicted counter-image
+  position (+1.4σ at both).
+- **Decision:** not worth requesting new observations now; the predicted reappearance is covered by approved
+  programmes (`results/transients/confirm_r1/DECISION.md`).
 
 ## 2026-10-18: W1 shear in the CANUCS flanking fields (no lens model): fourteen-field volume limit 2.35× from Takahashi & Asada
 - `inject_radial.NullLensModel` (κ = g = 0) and five NCF entries in `inject_shear.py` (F150W: the NCF have no

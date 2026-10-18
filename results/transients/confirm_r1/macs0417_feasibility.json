@@ -1,0 +1,32 @@
+{
+ "label": "observed (archive, programme and policy pages, accessed 2026-10-18) and derived; numbers labelled as estimates where scaled",
+ "object": {"name_here": "MJ0417.5-1154_2:h002 (batch 2, #304)", "ra": 64.396407, "dec": -11.90704},
+ "identity": {
+  "result": "the same object as the lensed supernova 'SN Athena' (named by another team), discovered in October 2025 with JWST/NIRCam",
+  "evidence": [
+   "JWST GO 4568 (PI Pierel) target 'athena' at 64.3964033, -11.90704: 0.014 arcsec from h002",
+   "JWST DD 12781 (PI Pascale, Cycle 5, 9.7 h, status Implementation) abstract: 'The strongly lensed SN Athena was discovered in October 2025 with JWST/NIRCam by comparing new observations with archival 2022 imaging of the z=0.87 “question mark” galaxy, which is quintuply imaged by the foreground cluster MACS J0417'",
+   "no refereed paper or arXiv preprint on SN Athena found (literature subagent, 2026-10-18)"
+  ],
+  "consequence": "not a first discovery by this project; its type is to be confirmed by that team's NIRSpec PRISM spectrum"
+ },
+ "other_team_prediction": "12781 abstract: three new lens models 'conservatively predict that Athena will reappear between mid-August 2026 and early March 2027 in a counterimage only a few arcseconds away'",
+ "this_project_prediction": "single public glafic v3 model (#309): counter-image ~7.6 arcsec away lags 708-778 d (sample range of 10 realisations; best fit 748 d) -> 2027-09-14 to 2027-11-22; position 0.8-1.1 arcsec from catalogued 1c.2; model-to-model uncertainty not covered",
+ "scheduled_and_executed": {
+  "JWST 12781 (DD)": "target Athena-2 at 64.394375, -11.90758 (0.29 arcsec from our predicted 7.6 arcsec image); NIRCam F090W/F300M 2027-01-14..17, F115W/F277W 2027-02-01..06, F150W/F356W 2027-02-19..24; NIRSpec PRISM fixed slit 2027-02-19..24",
+  "JWST 4568 (GO)": "NIRSpec MSA PRISM, window 2027-01-16..02-03",
+  "HST 18470 (PI Pascale)": "WFC3 imaging; visits 1-4 executed 2026-08-11, 08-30, 09-18, 10-07 (public); visit 5 2026-10-28; visits 6-7 2026-11-20..28, 2026-12-22..27",
+  "HST 17474 (PI Pierel)": "visits 2025-10-09..12-17; visit 37 window 2026-12-20..22",
+  "JWST 6882 (VENUS)": "one MACS0417 visit (2025-10-06); no further epoch listed",
+  "HST at the ~25 arcsec leading image": "12009 (2010-12-10, 2011-01-20, 2011-02-28); nothing 2011-03..2016-10",
+  "source": "MAST and STScI programme pages (literature subagent, footprint containment by s_region, chip gaps ignored); 12781 text and visit windows checked directly"
+ },
+ "jwst_visibility_macs0417": {"tool": "jwst_gtvt 1.2 (local PRD PRDOPSSOC-075, not checked online)", "windows": [["2026-10-02","2026-10-21"],["2026-12-27","2027-02-26"],["2027-08-19","2027-10-21"],["2027-12-27","2028-02-26"],["2028-08-18","2028-10-20"],["2028-12-26","2029-02-25"]], "file": "jwst_gtvt_macs0417.txt", "note": "our 2027-09-14..11-22 window is observable only until 2027-10-21"},
+ "depth_estimate": "estimate, not an ETC result: the expected counter-image signal (~200-330 nJy F150W, #308) against forced-photometry errors of 4.5 nJy (1208) and 12.2 nJy (VENUS, 1,245 s) in the 0.15 arcsec aperture gives S/N ~16-73 for a single VENUS- or 1208-like visit; depth is not the limiting factor",
+ "rules": {
+  "JWST Cycle 6 GO": "deadline (extended) 2026-10-01, closed; TAC 2027-02",
+  "JWST DD": "open year-round; requires compelling urgency; duplication with approved programmes is checked; 12781 already holds DD time for this reappearance",
+  "HST": "Cycle 34 runs 2026-11-01..2027-10-31; no further mid-cycle calls; DD possible",
+  "urls": ["https://www.stsci.edu/jwst-program-info/program/?program=12781","https://www.stsci.edu/jwst-program-info/download/jwst/pdf/12781/","https://jwst-docs.stsci.edu/jwst-opportunities-and-policies/jwst-call-for-proposals-for-cycle-6","https://jwst-docs.stsci.edu/jwst-opportunities-and-policies/james-webb-space-telescope-director-s-discretionary-time","https://jwst-docs.stsci.edu/jwst-opportunities-and-policies/jwst-observation-duplication-checking","https://hst-docs.stsci.edu/hsp/hubble-space-telescope-call-for-proposals-for-cycle-34"]
+ }
+}

@@ -56,3 +56,10 @@ exotic candidate.
 ## Not explained / open
 - None of the three is "unexplained": each has an ordinary transient hypothesis that the data do not contradict.
   Their identities and types are open (no spectra, single detected epochs, TNS not queried).
+
+## Revision 2026-10-18: identity of MACS0417 h002 (`results/transients/confirm_r1/macs0417_feasibility.json`)
+- It is the lensed supernova **SN Athena**, discovered in October 2025 with JWST/NIRCam by another team (JWST DD 12781
+  abstract; GO 4568 target "athena" 0.014″ from h002). Our detection is independent but not first. Its type will come from
+  that team's NIRSpec PRISM spectrum; its reappearance is monitored by HST 18470 and JWST 12781.
+- That team predicts the reappearance between mid-August 2026 and early March 2027 (three lens models); our single
+  glafic model gives 2027-09-14 to 2027-11-22 (#309). The outcome will test both.

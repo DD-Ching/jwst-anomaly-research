@@ -1,0 +1,48 @@
+import json, sys, numpy as np, warnings
+from astroquery.mast import Observations
+from astropy.io import fits
+from astropy.wcs import WCS
+sys.path.insert(0, 'scripts')
+from hit_lightcurve import aperture_photometry
+warnings.filterwarnings('ignore')
+POS = {'athena2_12781': (64.394375, -11.90758), 'glafic_7p6': (64.394334, -11.907649)}
+OUT = sys.argv[1]
+res = []; stamps = {}
+for v in ('ifu901010', 'ifu902010', 'ifu903010', 'ifu904010'):
+    obs = Observations.query_criteria(obs_id=v)
+    if not len(obs):
+        res.append({'visit': v, 'error': 'not found'}); continue
+    p = Observations.get_product_list(obs)
+    p = p[[str(x).endswith('_drz.fits') for x in p['productFilename']]]
+    dl = Observations.download_products(p[:1], download_dir=OUT, cache=True)
+    fn = dl['Local Path'][0]
+    with fits.open(fn) as h:
+        sci = h['SCI'].data.astype(float); hd = h['SCI'].header; p0 = h[0].header
+        w = WCS(hd, h); photfnu = hd.get('PHOTFNU', p0.get('PHOTFNU'))
+        sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
+        mjd = p0.get('EXPSTART'); filt = p0.get('FILTER')
+    k = photfnu * 1e9  # e-/s -> nJy
+    rec = {'visit': v, 'filter': filt, 'mjd': round(mjd, 2), 'pixscale': round(sc, 4), 'photfnu': photfnu}
+    for name, (ra, dec) in POS.items():
+        x, y = (float(t) for t in w.world_to_pixel_values(ra, dec))
+        f = aperture_photometry(sci, x, y, 0.2 / sc, (0.6 / sc, 1.0 / sc)) * k
+        rng = np.random.default_rng(0); rnd = []
+        for _ in range(300):
+            xx, yy = x + rng.uniform(-60, 60), y + rng.uniform(-60, 60)
+            if np.hypot(xx - x, yy - y) * sc < 1.5: continue
+            q = aperture_photometry(sci, xx, yy, 0.2 / sc, (0.6 / sc, 1.0 / sc))
+            if np.isfinite(q): rnd.append(q * k)
+        e = 1.4826 * np.median(np.abs(np.array(rnd) - np.median(rnd)))
+        rec[name] = {'flux_njy': round(float(f), 1), 'err_njy': round(float(e), 1)}
+        stamps[(v, name)] = sci[int(y) - 20:int(y) + 21, int(x) - 20:int(x) + 21] * k
+    res.append(rec); print(rec, flush=True)
+json.dump(res, open(OUT + '/hst18470_forced.json', 'w'), indent=1)
+import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+fig, ax = plt.subplots(2, 4, figsize=(10, 5))
+for j, v in enumerate(('ifu901010', 'ifu902010', 'ifu903010', 'ifu904010')):
+    for i, name in enumerate(POS):
+        a = ax[i, j]; s = stamps.get((v, name))
+        if s is not None:
+            a.imshow(s, origin='lower', cmap='gray', vmin=np.nanpercentile(s, 5), vmax=np.nanpercentile(s, 99.5)); a.plot(20, 20, 'r+')
+        a.set_title(f'{v} {name}', fontsize=7); a.set_xticks([]); a.set_yticks([])
+plt.tight_layout(); plt.savefig(OUT + '/hst18470_stamps.png', dpi=90)
