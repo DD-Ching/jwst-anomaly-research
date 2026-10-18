@@ -5200,3 +5200,8 @@ confining radiation at a throat is found.
   sources); R − 2σ = 0.744 < 0.8, still "conservative"; R = 0.414 kept. The PSF_d × 1.15 variant (0.875) shifts R by
   as much as the error, so the empirical PSF is the next step before more area (`results/w1_r_realmetacal/v2/RESULT.md`;
   post hoc output-PSF floor 1.37 px: 1.114 ± 0.168, same call).
+- **Addendum 2 (2026-10-18, v3):** an empirical PSF_d from Gaia DR3 stars of the same mosaic fails its frozen gate
+  (2 usable stars of 6; ≥ 5 needed), so v3 gives no R. Post hoc, the two-star ePSF fails the simulated gate (V1) and
+  gives R = 0.707 ± 0.169 against 1.006 ± 0.134 for the analytic PSF_d in the same run. R = 0.414 kept; the route is
+  paused, because the PSF model moves R by about 0.3 (`results/w1_r_realmetacal/v3/RESULT.md`). Revisit with a
+  validated drizzled STPSF or a field with ≥ 5 usable stars.
