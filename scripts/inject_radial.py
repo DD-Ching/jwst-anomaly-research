@@ -612,11 +612,13 @@ class NullLensModel:
 
 def in_box(ra, dec, centre, half_arcsec: float) -> np.ndarray:
     """Rows inside the square of half-width ``half_arcsec`` around ``centre`` (RA, Dec deg), on
-    flat tangent-plane offsets (ASSUMPTION; adequate for tiles of a few arcmin). Edges inclusive."""
+    flat tangent-plane offsets (ASSUMPTION; adequate for tiles of a few arcmin). Half-open
+    [-half, half) on each axis, so tiles that share an edge never both keep a row."""
     ra0, de0 = centre
     dx = ((np.asarray(ra, float) - ra0 + 180.0) % 360.0 - 180.0) * np.cos(np.radians(de0)) * 3600
     dy = (np.asarray(dec, float) - de0) * 3600
-    return (np.abs(dx) <= half_arcsec) & (np.abs(dy) <= half_arcsec)
+    h = half_arcsec
+    return (dx >= -h) & (dx < h) & (dy >= -h) & (dy < h)
 
 
 def load_field(name: str, out: Path, spec: dict | None = None):

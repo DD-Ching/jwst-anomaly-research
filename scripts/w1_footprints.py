@@ -154,7 +154,9 @@ def tile_grid(rows: list[dict], keep: list[str], half_arcsec: float, min_frac: f
     for ix in range(nx):
         for iy in range(ny):
             cx, cy = x0 + (ix + 0.5) * side, y0 + (iy + 0.5) * side
-            inside = (np.abs(grid[:, 0] - cx) <= side / 2) & (np.abs(grid[:, 1] - cy) <= side / 2)
+            dx, dy = grid[:, 0] - cx, grid[:, 1] - cy
+            h = side / 2
+            inside = (dx >= -h) & (dx < h) & (dy >= -h) & (dy < h)  # half-open, as in_box
             n = inside.sum()
             share = {k: float((m & inside).sum() / n) for k, m in masks.items()}
             best = max(sorted(share), key=share.get)  # first maximum: name order

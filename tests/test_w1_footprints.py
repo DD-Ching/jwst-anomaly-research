@@ -70,3 +70,14 @@ def test_in_box_is_square_and_wraps_ra():
     ra = np.array([359.99, 0.0 + 100 / 3600, 359.99 - 150 / 3600, 359.99])
     dec = np.array([0.0, 0.0, 0.0, 141 / 3600])
     assert ir.in_box(ra, dec, (359.99, 0.0), 140.0).tolist() == [True, True, False, False]
+
+
+def test_in_box_rows_near_a_shared_edge_fall_in_exactly_one_tile():
+    import inject_radial as ir
+
+    ra = np.linspace(139.9, 140.1, 2001) / 3600
+    dec = np.zeros_like(ra)
+    left = ir.in_box(ra, dec, (0.0, 0.0), 140.0)
+    right = ir.in_box(ra, dec, (280 / 3600, 0.0), 140.0)
+    assert not (left & right).any()
+    assert left[0] and right[-1]
