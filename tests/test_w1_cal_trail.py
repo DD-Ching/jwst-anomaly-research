@@ -12,10 +12,12 @@ def test_classify():
     assert t.classify([True, True]).startswith("in every exposure")
     assert t.classify([False, False]).startswith("undecided")
     assert t.classify([True, False, False]).startswith("trail: in exactly one")
-    d = ["00001", "00002", "00001", "00002"]
-    assert t.classify([False, True, False, True], d).startswith("trail: only in exposures of one")
-    assert t.classify([True, True, False, False], d).endswith("no frozen branch")
-    assert t.dither_of("jw01837001011_08201_00002_nrcb3_cal.fits") == "00002"
+    d = ["v1_00001", "v1_00002", "v11_00001", "v11_00002"]
+    assert t.classify([False, True, False, True], d).endswith("no frozen branch")
+    assert t.classify([True, False, False, False], d).startswith("trail: in exactly one")
+    assert t.classify([False, True, False, False, True], d + ["v1_00002"]).startswith("trail: only")
+    name = "jw01837001011_08201_00002_nrcb3_cal.fits"
+    assert t.dither_of(name) == "jw01837001011_00002"
 
 
 def test_contrast_and_track_on_synthetic_line():

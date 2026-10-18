@@ -47,9 +47,10 @@ SPIKE_LAW = (3.0, 20.0)  # spike length 3″ × 10^(0.2 (20 − m)): exotic_scre
 
 
 def dither_of(name: str) -> str:
-    """``00002`` from ``jw01837001011_08201_00002_nrcb3_cal.fits`` (exposure number in a visit)."""
+    """``jw01837001011_00002`` from ``jw01837001011_08201_00002_nrcb3_cal.fits``: visit and
+    exposure number, i.e. one pointing (a dither number alone repeats across visits)."""
     parts = Path(name).name.split("_")
-    return parts[2] if len(parts) > 3 else name
+    return f"{parts[0]}_{parts[2]}" if len(parts) > 3 else name
 
 
 def find_cal(dirs: list[str], ra: float, dec: float, band: str) -> list[dict]:
@@ -212,6 +213,8 @@ def line_track(stamp: np.ndarray, centre: int, half: int = 20, chunk: int = 50) 
     """Post hoc: the line's row per column chunk (brightest median row within ``centre ± half``)
     and a straight-line fit, so the line's tilt can be compared between stamps (a line fixed on
     the sky has the same row and tilt in every stamp)."""
+    if centre < half or centre + half + 1 > stamp.shape[0]:
+        raise ValueError("track window runs off the stamp: raise HALF_ROWS_ARCSEC")
     xs, rows, amps = [], [], []
     for x0 in range(0, stamp.shape[1] - chunk + 1, chunk):
         sub = stamp[centre - half : centre + half + 1, x0 : x0 + chunk]

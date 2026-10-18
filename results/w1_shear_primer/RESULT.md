@@ -38,13 +38,13 @@ The script searched the 22 visits of observation 001 (`--search-dirs`) and found
 the peak (`exposures_found` in the JSONs): visit 001 dithers 1–2 (nrca4, MJD 59960.255 / .262) and visit 011
 dithers 1–2 (nrcb3, MJD 59965.999 / 59966.005). Each is resampled onto the c1002 grid.
 - **Frozen outcome (`vet/x3y0_cal_check.json`, the plan's ±10″ stamps, band on the peak row):** contrasts 2.47 /
-  8.05 / 4.50 / 15.72 against the 5σ call. The two "in" exposures are both dither 2, so the frozen rule returns
-  **"trail: only in exposures of one dither position": x3y0 explained.**
-- **The sheets do not support the trail mechanism** (`vet/x3y0_cal_sheet.png`, `vet/x3y0_wide_cal_sheet.png`).
+  8.05 / 4.50 / 15.72 against the 5σ call. The two "in" exposures are dither 2 of two different visits (two
+  pointings). That matches none of the plan's branches (one exposure, one dither position, or every exposure), so
+  **the frozen rule does not decide** (`outcome`: "no frozen branch").
+- **The per-exposure calls do not match the sheets** (`vet/x3y0_cal_sheet.png`, `vet/x3y0_wide_cal_sheet.png`).
   Visit 011 dither 1 shows the line clearly but scores 4.50, because stray-light streaks enter its control band.
   Visit 001 dither 2 shows no coherent line: its track has residual rms 2.26 px (40″ run) and 11.8 px (wide run),
-  against 0.30–0.31 px for visit 011. The band-median contrast is therefore a weak per-exposure statistic, and the
-  frozen "explained" holds for a different reason than the rule states.
+  against 0.30–0.31 px for visit 011. The band-median contrast is therefore a weak per-exposure statistic.
 - **Post hoc (`vet/x3y0_wide_cal_check.json`, ±70″ stamps, `--star`):**
   - The line is radial from Gaia DR3 2489648647202619264 (G 10.07, 57.6″ west of the peak, on the line's track;
     queried from the Gaia archive 2026-10-18). The line fits of both visit-011 dithers pass 6.0 / 5.3 px
@@ -59,9 +59,8 @@ dithers 1–2 (nrcb3, MJD 59965.999 / 59966.005). Each is resampled onto the c10
 - **Reading (post hoc):** the line is a linear optical artefact of the G 10.07 star. It is present when the star
   sits just off nrcb3 (visit 011) and absent at the same sky position in visit 001. Whether it is a diffraction-spike
   wing or stray light is not determined. This is the row band whose removal (V1r) drops S to 2.99 (p_rot 0.99).
-  **x3y0 is explained as bright-star contamination.** The frozen `_cal` rule also returns "explained", but it names
-  a trail, which the sheets do not support. The earlier frozen V1 ∪ V2 outcome stays "not explained". It is not a
-  candidate.
+  **x3y0 is explained as bright-star contamination (post hoc).** Neither frozen rule decides it: the `_cal` rule
+  matches no branch, and the V1 ∪ V2 outcome stays "not explained". It is not a candidate.
 - **Why the screen's Gaia spike veto missed it:** the star lies 152″ from the tile centre (not stored), inside the
   tile's 4′ Gaia cone. Its uncapped spike law gives 291″ (`spike_law_uncapped_arcsec`). External stars are capped
   at `EXTERNAL_SPIKE_CAP` = 60″ (`scripts/exotic_screens.py`), and the peak sits at 57.6″, so most of the arm's
@@ -69,7 +68,9 @@ dithers 1–2 (nrcb3, MJD 59965.999 / 59966.005). Each is resampled onto the c10
   cone, not checked. In the mosaic the arm is traced to stamp x ≈ 2675, about 71″ from the star (chunk peak ≥ 0.1
   MJy/sr; chunk lists in the wide JSON; the distance is not stored). Visit-011 coverage ends there too, so the arm's
   full length is not measured.
-- **Deviation:** the plan's third branch ("fixed in detector pixels") had no computable threshold. The detector-fixed
+- **Deviations:** a first version of the rule keyed dither positions by exposure number alone, so it returned
+  "trail: one dither position" for these two pointings. Code review corrected the key to visit plus exposure before
+  this result was written. The plan's third branch ("fixed in detector pixels") had no computable threshold. The detector-fixed
   test above is post hoc. A first run used 40″ stamps and a band centred one row above the peak (contrasts 1.21 /
   5.09 / 2.87 / 7.81). It was superseded by the plan's settings; its outputs were overwritten and are not stored.
 

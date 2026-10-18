@@ -157,7 +157,7 @@
   {
    "name": "jw01837001001_08201_00001_nrca4_cal.fits",
    "uri": "s3://stpubdata/jwst/public/jw01837/jw01837001001/jw01837001001_08201_00001_nrca4_cal.fits",
-   "dither": "00001",
+   "dither": "jw01837001001_00001",
    "detector": "NRCA4",
    "expstart_mjd": 59960.25548778935,
    "pa_aper": 70.08554500543346,
@@ -219,7 +219,7 @@
   {
    "name": "jw01837001001_08201_00002_nrca4_cal.fits",
    "uri": "s3://stpubdata/jwst/public/jw01837/jw01837001001/jw01837001001_08201_00002_nrca4_cal.fits",
-   "dither": "00002",
+   "dither": "jw01837001001_00002",
    "detector": "NRCA4",
    "expstart_mjd": 59960.261701111114,
    "pa_aper": 70.08570240813597,
@@ -284,7 +284,7 @@
   {
    "name": "jw01837001011_08201_00001_nrcb3_cal.fits",
    "uri": "s3://stpubdata/jwst/public/jw01837/jw01837001011/jw01837001011_08201_00001_nrcb3_cal.fits",
-   "dither": "00001",
+   "dither": "jw01837001011_00001",
    "detector": "NRCB3",
    "expstart_mjd": 59965.99874912037,
    "pa_aper": 69.53354871740297,
@@ -355,7 +355,7 @@
   {
    "name": "jw01837001011_08201_00002_nrcb3_cal.fits",
    "uri": "s3://stpubdata/jwst/public/jw01837/jw01837001011/jw01837001011_08201_00002_nrcb3_cal.fits",
-   "dither": "00002",
+   "dither": "jw01837001011_00002",
    "detector": "NRCB3",
    "expstart_mjd": 59966.004962453706,
    "pa_aper": 69.5335184426721,
@@ -426,7 +426,7 @@
  ],
  "n_exposures_tested": 4,
  "n_exposures_with_line": 2,
- "outcome": "trail: only in exposures of one dither position (2 of 4)",
+ "outcome": "in 2 of 4 exposures from several dither positions: no frozen branch",
  "provenance": {
   "pixels": "observed",
   "stamps_profiles_contrasts": "derived",

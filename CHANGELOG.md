@@ -6,9 +6,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - `scripts/w1_cal_trail.py` (plan frozen first: `results/w1_shear_primer/vet/x3y0_cal_plan.md`) resamples every
   `_cal` exposure covering a flag onto the mosaic grid and tests the line through it. Four F200W exposures of
   observation 001 cover the x3y0 peak (visit 001 and visit 011, two dithers each).
-- **Frozen outcome:** "trail: only in exposures of one dither position" (2 of 4 above 5σ, both dither 2), so x3y0
-  is explained. The sheets do not support the trail mechanism: the line is clear in both visit-011 dithers (one
-  scores 4.50 because stray light enters its control band) and absent in visit 001. The band-median contrast is a
+- **Frozen outcome: undecided.** 2 of 4 exposures are above 5σ, from two different pointings, which matches no
+  branch of the plan. The per-exposure calls also disagree with the sheets: the line is clear in both visit-011
+  dithers (one scores 4.50 because stray light enters its control band) and absent in visit 001. The band-median contrast is a
   weak per-exposure statistic.
 - **Post hoc:** the line is radial from Gaia DR3 2489648647202619264 (G 10.07, 57.6″ from the peak) and passes
   0.17–0.19″ from it. Both visit-011 dithers put it on the same sky row; a detector-fixed line would move about 17
