@@ -5052,6 +5052,9 @@ confining radiation at a throat is found.
   Vetoed rows are blanked inside `shear_screen` after the spike veto; dropping them earlier changed the spike veto.
 - **Revisit if:** a faint-streak case (S1063's parallel streaks) needs a lower threshold; recalibrate through
   injections before using it.
+- **Addendum (2026-10-18):** tried for the two flagged CANUCS NCF (`results/w1_streak_rowdiag/RESULT.md`):
+  thresholds 3 and 2.5 give masks identical to 5 (the persistence check keeps the same trails); the features are a
+  diffraction spike and detector row striping, not trails. A lower threshold is not the route; D-097 is unchanged.
 
 ## D-098 W1 shear screen in blank fields: no lens model, R fixed from the same program's cluster pointings (2026-10-18)
 - **Decision:** fields without a lens model run the unchanged D-053 shear screen with `inject_radial.NullLensModel`

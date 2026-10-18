@@ -116,3 +116,27 @@ def test_rewriting_an_identical_mask_gives_the_same_file(tmp_path):
     back, _ = wsm.read_mask(a)
     np.testing.assert_array_equal(back, mask)
     assert ia["mask_pixels"] == 10
+
+
+def test_find_trails_passes_the_threshold(monkeypatch):
+    """--mrt-threshold reaches TrailFinder (results/w1_streak_rowdiag/PLAN.md); stubbed."""
+    import types
+
+    seen = {}
+
+    class Stub:
+        def __init__(self, z, **kw):
+            seen.update(kw)
+            self.mask, self.source_list = None, None
+
+        def run_all(self):
+            pass
+
+    mod = types.ModuleType("acstools.findsat_mrt")
+    mod.TrailFinder = Stub
+    monkeypatch.setitem(sys.modules, "acstools", types.ModuleType("acstools"))
+    monkeypatch.setitem(sys.modules, "acstools.findsat_mrt", mod)
+    mask, cat = wsm.find_trails(np.zeros((4, 4)), processes=1, threshold=2.5)
+    assert seen["threshold"] == 2.5 and not mask.any() and cat is None
+    wsm.find_trails(np.zeros((4, 4)), processes=1)
+    assert seen["threshold"] == wsm.MRT_THRESHOLD

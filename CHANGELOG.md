@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 faint-streak veto (lower findsat_mrt threshold) for the CANUCS flanking fields: failed, headline unchanged
+- `w1_streak_mask.py --mrt-threshold` (default 5 unchanged); plan frozen first (`results/w1_streak_rowdiag/PLAN.md`).
+- **Result (`results/w1_streak_rowdiag/RESULT.md`):** K1n failed for both pre-declared variants (threshold 3, 2.5):
+  more candidates, but the persistence check keeps the same two status-2 trails, masks identical pixel for pixel;
+  neither flagged NCF peak is covered. No injection run; the W1 headline stays at fourteen fields (2.35× T&A).
+- Sheets looked at: the macs0416-ncf "diagonal streak" lines up with a bright star's diffraction spikes (the V2 case);
+  macs0417-ncf sits on detector-wide horizontal row striping. Neither is a single long trail.
+- **Failed approach:** lowering the TrailFinder threshold (D-097 "Revisit if"). **Handoff:** a field-wide row-segment
+  median veto (V1r made field-wide), frozen and run through the injections, and a check of why the Gaia spike veto
+  misses the macs0416-ncf star; or skip to other blank fields (PRIMER, CEERS) under the D-097 mask.
+
 ## 2026-10-18: W1 shear in the CANUCS flanking fields (no lens model): fourteen-field volume limit 2.35× from Takahashi & Asada
 - `inject_radial.NullLensModel` (κ = g = 0) and five NCF entries in `inject_shear.py` (F150W: the NCF have no
   F200W; CANUCS NCF photo-z; fixed R). Plan frozen first (`results/w1_shear_ncf/PLAN.md`).
