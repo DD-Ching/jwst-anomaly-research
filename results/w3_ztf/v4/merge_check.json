@@ -1,0 +1,18 @@
+{
+ "label": "derived; v4 merge check on the v4 sample",
+ "groups": 1000,
+ "member_sep_max_arcsec_p50_p90_p99_max": [
+  0.126,
+  0.173,
+  0.231,
+  0.558
+ ],
+ "groups_with_nonmember_within_3as": 5,
+ "groups_with_nonmember_within_5as": 41,
+ "nearest_nonmember_min_arcsec": 2.0699841876989553,
+ "members_per_group_min_median_max": [
+  1.0,
+  5.0,
+  7.0
+ ]
+}

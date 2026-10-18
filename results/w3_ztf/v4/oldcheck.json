@@ -1,0 +1,514 @@
+{
+ "label": "derived; v4 fix check on v3 image-classified exposures",
+ "tap_bytes": 178633,
+ "sources": {
+  "848201300006405": {
+   "ambiguous_group": false,
+   "members": [
+    [
+     1857,
+     46,
+     2
+    ],
+    [
+     826,
+     56,
+     1
+    ],
+    [
+     826,
+     56,
+     2
+    ],
+    [
+     848,
+     2,
+     3
+    ],
+    [
+     848,
+     2,
+     2
+    ],
+    [
+     826,
+     56,
+     3
+    ],
+    [
+     848,
+     2,
+     1
+    ],
+    [
+     1856,
+     35,
+     2
+    ],
+    [
+     1856,
+     35,
+     1
+    ],
+    [
+     1857,
+     46,
+     1
+    ]
+   ],
+   "exposures": [
+    {
+     "expid": 90037526,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 0.99 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "1856/c9q4"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90038457,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 1.01 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90121858,
+     "catalog_nondetection": true,
+     "v3_class": 1,
+     "v3_why": "position not inside any image of this exposure (IBE position search)",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90341295,
+     "catalog_nondetection": true,
+     "v3_class": 1,
+     "v3_why": "position not inside any image of this exposure (IBE position search)",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90439518,
+     "catalog_nondetection": true,
+     "v3_class": 1,
+     "v3_why": "position not inside any image of this exposure (IBE position search)",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90732578,
+     "catalog_nondetection": true,
+     "v3_class": 1,
+     "v3_why": "position not inside any image of this exposure (IBE position search)",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90732623,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 0.99 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "848/c1q3"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90732714,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 0.93 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "848/c1q3"
+     ],
+     "infobits_own": [
+      0
+     ]
+    }
+   ]
+  },
+  "826215400000661": {
+   "ambiguous_group": false,
+   "members": [
+    [
+     1856,
+     16,
+     1
+    ],
+    [
+     1857,
+     29,
+     1
+    ],
+    [
+     826,
+     59,
+     1
+    ],
+    [
+     1856,
+     16,
+     2
+    ],
+    [
+     826,
+     59,
+     2
+    ],
+    [
+     1857,
+     29,
+     2
+    ],
+    [
+     826,
+     59,
+     3
+    ]
+   ],
+   "exposures": [
+    {
+     "expid": 90037526,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 1.02 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "1856/c5q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90038457,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 0.98 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q4"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90121858,
+     "catalog_nondetection": true,
+     "v3_class": 3,
+     "v3_why": "source present: 0.56 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90341295,
+     "catalog_nondetection": true,
+     "v3_class": 3,
+     "v3_why": "source present: 0.98 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90439518,
+     "catalog_nondetection": true,
+     "v3_class": 3,
+     "v3_why": "source present: 1.15 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90632770,
+     "catalog_nondetection": true,
+     "v3_class": 1,
+     "v3_why": "infobits 67108864 (not a valid observation by the plan rule)",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90932839,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 1.10 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 90933021,
+     "catalog_nondetection": false,
+     "v3_class": 1,
+     "v3_why": "non-finite pixels in the aperture (edge or mask)",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    }
+   ]
+  },
+  "826215100008147": {
+   "ambiguous_group": false,
+   "members": [
+    [
+     826,
+     56,
+     3
+    ],
+    [
+     826,
+     56,
+     2
+    ],
+    [
+     1857,
+     29,
+     2
+    ],
+    [
+     1856,
+     16,
+     1
+    ],
+    [
+     1857,
+     29,
+     1
+    ],
+    [
+     826,
+     56,
+     1
+    ],
+    [
+     1856,
+     16,
+     2
+    ]
+   ],
+   "exposures": [
+    {
+     "expid": 134417600,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 0.96 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 134520084,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 1.04 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 135219129,
+     "catalog_nondetection": true,
+     "v3_class": 3,
+     "v3_why": "source present: 0.98 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q4"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 135314181,
+     "catalog_nondetection": true,
+     "v3_class": 3,
+     "v3_why": "source present: 1.02 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q4"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 135517273,
+     "catalog_nondetection": true,
+     "v3_class": 1,
+     "v3_why": "non-finite pixels in the aperture (edge or mask)",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      false
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 135624282,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 0.90 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    },
+    {
+     "expid": 135724234,
+     "catalog_nondetection": false,
+     "v3_class": 3,
+     "v3_why": "source present: 1.05 x the pre-window median",
+     "member_quadrants_in_exposure": 1,
+     "inside_member_quadrant_10as": [
+      true
+     ],
+     "inside_quadrants_0as": [
+      "826/c15q1"
+     ],
+     "infobits_own": [
+      0
+     ]
+    }
+   ]
+  }
+ },
+ "v3_sample_ambiguous_groups": 0,
+ "v3_sample_groups": 1000,
+ "nd_total": 11,
+ "nd_removed_by_footprint": 11,
+ "nd_removed_by_infobits": 0,
+ "detections_with_member_quadrant": 12,
+ "detections_inside_member_quadrant_10as": 10
+}
