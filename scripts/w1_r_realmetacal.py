@@ -11,6 +11,8 @@ scenes; ε from ``exotic_screens.intrinsic_ellipticity``.
     python scripts/w1_r_realmetacal.py posthoc --r-real results/w1_r_realmetacal/r_real.json \
         --out results/w1_r_realmetacal/r_real_posthoc_excl_tile.json
     python scripts/w1_r_realmetacal.py sheet --out results/w1_r_realmetacal/sheet.png
+    python scripts/w1_r_realmetacal.py validate2 --out results/w1_r_realmetacal/v2/validate.json
+    python scripts/w1_r_realmetacal.py real2 --out results/w1_r_realmetacal/v2/r_real.json
 """
 
 from __future__ import annotations
@@ -40,6 +42,10 @@ PSF_R_FWHM = 0.10  # arcsec, round Gaussian reconvolution PSF (ASSUMPTION)
 MATCH_PX = 1.5
 EDGE_PX = 8
 MIN_SNR = 10.0
+# v2 (PLAN_v2.md; ASSUMPTIONs)
+PSF_SIGMA_FLOOR_PX = 0.071 / PIX_ARCSEC / 2.3548  # measured PSF_d FWHM (D-101) as σ, ≈ 0.97 px
+MASK_DILATE_PX = 2
+MASK_PAD_PX = 16
 SHEARS = {"noshear": (0.0, 0.0), "1p": (G, 0.0), "1m": (-G, 0.0), "2p": (0.0, G), "2m": (0.0, -G)}
 
 
@@ -128,9 +134,11 @@ def catalogue(im: np.ndarray, kernel_sigma=KERNEL_SIGMA_PX, nsig=3.0, npixels=5)
     }
 
 
-def _match(ref: dict, cat: dict, g1: float, g2: float, centre: tuple[float, float]):
+def _match(
+    ref: dict, cat: dict, g1: float, g2: float, centre: tuple[float, float], unique: bool = False
+):
     """Index in ``cat`` of each ``ref`` source at its first-order sheared position (−1 if none
-    within MATCH_PX)."""
+    within MATCH_PX; with ``unique``, also −1 where several ``ref`` sources share a match)."""
     from scipy.spatial import cKDTree
 
     if not len(cat["x"]):
@@ -139,12 +147,23 @@ def _match(ref: dict, cat: dict, g1: float, g2: float, centre: tuple[float, floa
     xp = centre[0] + (1 + g1) * dx + g2 * dy
     yp = centre[1] + g2 * dx + (1 - g1) * dy
     d, i = cKDTree(np.c_[cat["x"], cat["y"]]).query(np.c_[xp, yp])
-    return np.where(d <= MATCH_PX, i, -1)
+    idx = np.where(d <= MATCH_PX, i, -1)
+    if unique:  # PLAN_v2 change 4: a target shared by several references is dropped for all
+        tgt, cnt = np.unique(idx[idx >= 0], return_counts=True)
+        idx[np.isin(idx, tgt[cnt > 1])] = -1
+    return idx
 
 
-def responses(images: dict, move_positions: bool = True, psf_sigma: float | None = None) -> dict:
+def responses(
+    images: dict,
+    move_positions: bool = True,
+    psf_sigma: float | None = None,
+    v2: bool = False,
+    near_mask: np.ndarray | None = None,
+) -> dict:
     """Per-source R_11, R_22 from the five images (PLAN.md cuts); ``move_positions`` False when each
-    galaxy was sheared about its own centre (V1 direct)."""
+    galaxy was sheared about its own centre (V1 direct). ``v2`` adds the PLAN_v2 PSF σ floor and
+    unique matching; ``near_mask`` (bool image) drops sources centred on True pixels."""
     cats = {k: catalogue(v) for k, v in images.items()}
     ref = cats["noshear"]
     ny, nx = images["noshear"].shape
@@ -154,7 +173,8 @@ def responses(images: dict, move_positions: bool = True, psf_sigma: float | None
         "semimajor_px": ref["a"],
         "ellipticity": 1.0 - ref["b"] / np.where(ref["a"] > 0, ref["a"], np.nan),
     }
-    psig = es.psf_sigma_px(shapes) if psf_sigma is None else psf_sigma
+    psig_raw = es.psf_sigma_px(shapes) if psf_sigma is None else psf_sigma
+    psig = max(psig_raw, PSF_SIGMA_FLOOR_PX) if v2 and psf_sigma is None else psig_raw
 
     def eps(c, idx):
         out = np.full(len(idx), np.nan + 0j)
@@ -167,9 +187,9 @@ def responses(images: dict, move_positions: bool = True, psf_sigma: float | None
         if k == "noshear":
             continue
         idx = (
-            _match(ref, cats[k], g1, g2, centre)
+            _match(ref, cats[k], g1, g2, centre, unique=v2)
             if move_positions
-            else _match(ref, cats[k], 0, 0, centre)
+            else _match(ref, cats[k], 0, 0, centre, unique=v2)
         )
         e[k] = eps(cats[k], idx)
     inside = (
@@ -179,6 +199,10 @@ def responses(images: dict, move_positions: bool = True, psf_sigma: float | None
         & (ref["y"] < ny - 1 - EDGE_PX)
     )
     ok = inside & (ref["snr"] >= MIN_SNR) & np.all([np.isfinite(v) for v in e.values()], axis=0)
+    if near_mask is not None and len(ok):
+        iy = np.clip(np.round(ref["y"]).astype(int), 0, ny - 1)
+        ix = np.clip(np.round(ref["x"]).astype(int), 0, nx - 1)
+        ok &= ~near_mask[iy, ix]
     r11 = (e["1p"].real - e["1m"].real) / (2 * G)
     r22 = (e["2p"].imag - e["2m"].imag) / (2 * G)
     return {
@@ -187,6 +211,7 @@ def responses(images: dict, move_positions: bool = True, psf_sigma: float | None
         "snr": ref["snr"][ok],
         "a": ref["a"][ok],
         "psf_sigma_px": psig,
+        "psf_sigma_raw_px": psig_raw,
         "n_detected": int(len(ref["x"])),
         "mean_eps_noshear": complex(np.nanmean(e["noshear"][ok])) if ok.any() else complex("nan"),
     }
@@ -259,15 +284,15 @@ def validate_pooled(seeds=(7, 8, 9, 10), noise_sigma=1.0) -> dict:
     return {"label": "simulated", "seeds": list(seeds), "per_seed": per, "pooled": pooled}
 
 
-def validate(noise_sigma=1.0, seed=7, keep_arrays=False) -> dict:
+def validate(noise_sigma=1.0, seed=7, keep_arrays=False, v2=False) -> dict:
     t0 = time.time()
     mc_in = scene(0, 0, psf_d(), noise_sigma, seed)
     mc_imgs = metacal_set(mc_in, noise_sigma, seed + 1)
-    mc = responses(mc_imgs)
+    mc = responses(mc_imgs, v2=v2)
     out_sigma = clipped_sigma(mc_imgs["noshear"])
     # V1 direct: the same galaxies drawn with PSF_r at ±g, white noise at the metacal output level
     direct_imgs = {k: scene(g1, g2, psf_r(), out_sigma, seed) for k, (g1, g2) in SHEARS.items()}
-    di = responses(direct_imgs, move_positions=False, psf_sigma=mc["psf_sigma_px"])
+    di = responses(direct_imgs, move_positions=False, psf_sigma=mc["psf_sigma_px"], v2=v2)
     s_mc, s_di = summary(mc["r11"], mc["r22"]), summary(di["r11"], di["r22"])
     if s_mc["R"] is None or s_di["R"] is None:
         tol, v1 = float("nan"), False
@@ -275,7 +300,9 @@ def validate(noise_sigma=1.0, seed=7, keep_arrays=False) -> dict:
         tol = 0.10 * s_di["R"] + 2 * np.hypot(s_mc["err"], s_di["err"])
         v1 = abs(s_mc["R"] - s_di["R"]) <= tol
     # V2 sign: true g1 = +0.03 through the noshear metacal image vs g = 0
-    plus = responses(metacal_set(scene(0.03, 0, psf_d(), noise_sigma, seed), noise_sigma, seed + 1))
+    plus = responses(
+        metacal_set(scene(0.03, 0, psf_d(), noise_sigma, seed), noise_sigma, seed + 1), v2=v2
+    )
     shift = plus["mean_eps_noshear"].real - mc["mean_eps_noshear"].real
     extra = {}
     if keep_arrays:
@@ -285,6 +312,7 @@ def validate(noise_sigma=1.0, seed=7, keep_arrays=False) -> dict:
         **extra,
         "label": "simulated",
         "seed": seed,
+        "v2": v2,
         "metacal": s_mc,
         "direct": s_di,
         "psf_sigma_px": mc["psf_sigma_px"],
@@ -486,6 +514,142 @@ def posthoc(r_real: Path, out: Path, exclude=((0, 1024),), n_boot=2000, seed=1) 
     out.write_text(json.dumps(result, indent=1) + "\n")
     return result
 
+# ---- v2 (PLAN_v2.md) ----
+
+
+def prep_tile_v2(arr: np.ndarray, seed: int) -> tuple[np.ndarray, np.ndarray, float, float]:
+    """Sky-subtracted tile with masked pixels (non-finite, dilated by MASK_DILATE_PX) filled with
+    white noise of the clipped σ; returns (image, near-mask bool image, sky, σ)."""
+    from astropy.stats import sigma_clipped_stats
+    from scipy import ndimage
+
+    bad = ~np.isfinite(arr)
+    _, sky, sig = (float(v) for v in sigma_clipped_stats(arr[~bad], sigma=3.0, maxiters=10))
+    fill = ndimage.binary_dilation(bad, iterations=MASK_DILATE_PX) if bad.any() else bad
+    noise = np.random.default_rng(seed).normal(0.0, sig, arr.shape)
+    out = np.where(fill, noise, arr - sky)
+    near = ndimage.binary_dilation(bad, iterations=MASK_PAD_PX) if bad.any() else bad
+    return out, near, sky, sig
+
+
+def _real_tile_v2(job) -> dict:
+    arr, y0, x0, seed, psf_fwhm, fixnoise = job
+    a, near, sky, sig = prep_tile_v2(arr, seed + 50_000)
+    try:
+        res = responses(metacal_set(a, sig if fixnoise else None, seed, psf_fwhm), v2=True,
+                        near_mask=near)  # fmt: skip
+    except ValueError as exc:
+        empty = np.zeros(0)
+        res = {"r11": empty, "r22": empty, "snr": empty, "a": empty, "psf_sigma_px": None,
+               "psf_sigma_raw_px": None, "n_detected": None, "error": str(exc)}  # fmt: skip
+    return {"y0": y0, "x0": x0, "sky": sky, "sigma": sig, "masked_frac": float(near.mean()), **res}
+
+
+def tile_gate(per_tile: list[dict]) -> list[bool]:
+    """PLAN_v2 change 5: keep a tile unless its raw PSF σ is below the floor or its detection
+    count is below half the median over tiles with a count."""
+    counts = [t["n_detected"] for t in per_tile if t.get("n_detected")]
+    med = float(np.median(counts)) if counts else 0.0
+    return [
+        bool(t.get("n_detected"))
+        and t["n_detected"] >= 0.5 * med
+        and t.get("psf_sigma_raw_px") is not None
+        and t["psf_sigma_raw_px"] >= PSF_SIGMA_FLOOR_PX
+        for t in per_tile
+    ]
+
+
+def tile_bootstrap(per_tile_r: list[np.ndarray], n_boot=2000, seed=1) -> float | None:
+    """1σ of the pooled mean R over bootstrap resamples of tiles (sources pooled per draw)."""
+    tiles = [r for r in per_tile_r if len(r)]
+    if len(tiles) < 2:
+        return None
+    rng = np.random.default_rng(seed)
+    sums = np.array([r.sum() for r in tiles])
+    ns = np.array([len(r) for r in tiles])
+    draws = rng.integers(0, len(tiles), (n_boot, len(tiles)))
+    return float(np.std(sums[draws].sum(1) / ns[draws].sum(1)))
+
+
+def rule_outcome_v2(r: float | None, err: float | None, adopt=0.80, r_borrowed=0.414) -> str:
+    if r is None or err is None:
+        return "undetermined"
+    if r - 2 * err >= adopt:
+        return "adoptable"
+    return "conservative" if r >= r_borrowed - 2 * err else "optimistic: re-run lower"
+
+
+def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
+    from astropy.io import fits
+
+    t0 = time.time()
+    with fits.open(uri, use_fsspec=True, fsspec_kwargs={"anon": True}) as h:
+        sci, wht = h["SCI"], h["WHT"]
+        cache = {}
+
+        def rows_cached(y0, x0):
+            sci_t = np.asarray(sci.section[y0 : y0 + TILE, x0 : x0 + TILE], float)
+            wht_t = np.asarray(wht.section[y0 : y0 + TILE, x0 : x0 + TILE], float)
+            if (np.isfinite(sci_t) & (wht_t > 0)).mean() >= MIN_GOOD:
+                cache[(y0, x0)] = np.where(wht_t > 0, sci_t, np.nan)
+            return sci_t, wht_t
+
+        tiles = good_tiles(rows_cached, sci.shape, n=10**6)
+        mosaic_shape = list(sci.shape)
+    t_read = time.time() - t0
+    variants = variants or {"plan": (PSF_FWHM_ARCSEC, True),
+                            "no_fixnoise": (PSF_FWHM_ARCSEC, False),
+                            "psf_d_x1.15": (1.15 * PSF_FWHM_ARCSEC, True)}  # fmt: skip
+    jobs = [
+        (cache[t], t[0], t[1], 100 + i, fw, fx, name)
+        for name, (fw, fx) in variants.items()
+        for i, t in enumerate(tiles)
+    ]
+    with ProcessPoolExecutor(max_workers=workers or os.cpu_count(), initializer=_init_worker) as ex:
+        res = list(ex.map(_real_tile_v2, [j[:6] for j in jobs]))
+    result = {
+        "label": "derived (metacal v2 of observed MAST JWST 1181 o001 F200W i2d tiles)",
+        "plan": "results/w1_r_realmetacal/PLAN_v2.md",
+        "uri": uri,
+        "mosaic_shape": mosaic_shape,
+        "tiles": [list(t) for t in tiles],
+        "settings": {"g": G, "psf_d_fwhm_arcsec": PSF_FWHM_ARCSEC, "psf_r_fwhm_arcsec": PSF_R_FWHM,
+                     "match_px": MATCH_PX, "edge_px": EDGE_PX, "min_snr": MIN_SNR,
+                     "psf_sigma_floor_px": PSF_SIGMA_FLOOR_PX, "mask_dilate_px": MASK_DILATE_PX,
+                     "mask_pad_px": MASK_PAD_PX},  # fmt: skip
+        "variants": {},
+        "read_s": round(t_read, 1),
+    }
+    for name in variants:
+        rr = [r for r, j in zip(res, jobs, strict=True) if j[6] == name]
+        keep = tile_gate(rr)
+        kept = [r for r, k in zip(rr, keep, strict=True) if k]
+        r11 = np.concatenate([r["r11"] for r in kept]) if kept else np.zeros(0)
+        r22 = np.concatenate([r["r22"] for r in kept]) if kept else np.zeros(0)
+        s = summary(r11, r22)
+        s["err_source_bootstrap"] = s.pop("err")
+        s["err"] = tile_bootstrap([0.5 * (r["r11"] + r["r22"]) for r in kept])
+        s["n_tiles"] = len(kept)
+        s["rule"] = rule_outcome_v2(s["R"], s["err"])
+        s["excluded_tiles"] = [[r["y0"], r["x0"]] for r, k in zip(rr, keep, strict=True) if not k]
+        s["per_tile"] = [
+            {"y0": r["y0"], "x0": r["x0"], "kept": k, "psf_sigma_raw_px": r["psf_sigma_raw_px"],
+             "n_detected": r["n_detected"], "sigma": r["sigma"], "masked_frac": r["masked_frac"],
+             **summary(r["r11"], r["r22"], n_boot=200)}  # fmt: skip
+            for r, k in zip(rr, keep, strict=True)
+        ]
+        snr = np.concatenate([r["snr"] for r in kept]) if kept else np.zeros(0)
+        s["by_snr"] = {
+            f"{lo:g}-{hi:g}": summary(
+                r11[(snr >= lo) & (snr < hi)], r22[(snr >= lo) & (snr < hi)], n_boot=200
+            )
+            for lo, hi in ((10, 20), (20, 50), (50, 200), (200, np.inf))
+        }
+        result["variants"][name] = s
+    result["wall_s"] = round(time.time() - t0, 1)
+    out.write_text(json.dumps(result, indent=1) + "\n")
+    return result
+
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
@@ -493,6 +657,11 @@ def main(argv=None) -> int:
     v = sub.add_parser("validate")
     v.add_argument("--out", type=Path, required=True)
     v.add_argument("--pooled", action="store_true", help="post hoc: four scenes pooled")
+    v2 = sub.add_parser("validate2", help="PLAN_v2 gate: V1/V2 with the floor and unique matching")
+    v2.add_argument("--out", type=Path, required=True)
+    r2 = sub.add_parser("real2", help="PLAN_v2 real run: all tiles, mask, floor, unique, tile gate")
+    r2.add_argument("--out", type=Path, required=True)
+    r2.add_argument("--workers", type=int, default=None)
     r = sub.add_parser("real")
     r.add_argument("--out", type=Path, required=True)
     r.add_argument("--workers", type=int, default=None)
@@ -507,6 +676,16 @@ def main(argv=None) -> int:
         return 0
     if a.cmd == "sheet":
         sheet(a.out)
+        return 0
+    if a.cmd == "validate2":
+        res = validate(v2=True)
+        a.out.write_text(json.dumps(res, indent=1) + "\n")
+        print(json.dumps(res, indent=1))
+        return 0
+    if a.cmd == "real2":
+        res = real2(a.out, workers=a.workers)
+        print(json.dumps({k: (v["R"], v["err"], v["n_tiles"], v["rule"])
+                          for k, v in res["variants"].items()}, indent=1))  # fmt: skip
         return 0
     if a.cmd == "validate":
         res = validate_pooled() if a.pooled else validate()
