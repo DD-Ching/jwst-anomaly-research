@@ -12,6 +12,9 @@ res = {
     'new_fields': sorted({f for f, _ in nf}), 'old_fields': sorted({f for f, _ in of}),
     'shared_fields': sorted({f for f, _ in nf} & {f for f, _ in of}),
     'shared_field_quadrants': len(nf & of),
+    'new_center_galactic_b': round(float(__import__('astropy.coordinates', fromlist=['SkyCoord']).SkyCoord(
+        sum(g['ra'] for g in new['groups']) / len(new['groups']), sum(g['dec'] for g in new['groups']) / len(new['groups']),
+        unit='deg').galactic.b.deg), 1),
     'new_center_ra_dec': [round(sum(g['ra'] for g in new['groups']) / len(new['groups']), 2),
                           round(sum(g['dec'] for g in new['groups']) / len(new['groups']), 2)],
     'groups': len(new['groups']), 'calibration_groups': len(cal), 'search_groups': len(srch),

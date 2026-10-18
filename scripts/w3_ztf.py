@@ -631,7 +631,9 @@ def context(groups_half):
     rows = load_rows()
     comp = set(np.load(CACHE / "comparison_oids.npy").tolist())
     members = {m for g in json.loads(SAMPLE.read_text())["groups"] for m in g["members"]}
-    if VERSION >= 6 and groups_half is not None:
+    if VERSION >= 6:
+        if groups_half is None:  # every group (only after the validation passed; logged)
+            groups_half = json.loads(SAMPLE.read_text())["groups"]
         use = {m for g in groups_half for m in g["members"]}
         rows = {o: r for o, r in rows.items() if o in comp or o in use}
         search = {
@@ -894,6 +896,8 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     if a.vdir and a.stage == "sample" and a.pix == 3839:
         ap.error("--vdir reuses the v1-v3 sample; the sample stage would overwrite it")
+    if a.pix not in (3838, 3839) and not a.vdir:
+        ap.error("another partition needs --vdir (v4 outputs would be overwritten)")
     configure(a.pix, a.vdir)
     fn = {
         "sample": stage_sample,

@@ -5191,8 +5191,9 @@ confining radiation at a throat is found.
   (aggregate comparison use in v1–v3). No abundance or limit. Revisit if: the owner authorizes another batch or a
   slow-edge vetting change.
 - **Addendum 2026-10-18 (v6, `results/w3_ztf/v6/RESULT.md`):** a cross-sky validation in Npix 7134 (fields
-  disjoint from v1–v5) fails: all 10 calibrated cells < 0.5 (48–90/200). The dominant loss at t_E 30 d is no
-  epochs in the umbra (post hoc). The v4 capability is area-specific. The search group was not read. Revisit if: the
+  disjoint from v1–v5) fails: all 10 calibrated cells < 0.5 (48–90/200). In the one diagnosed t_E 30 d cell
+  (ρ 0.01, blend 1), 82 of 112 unflagged injections have < 3 umbra nights (post hoc). The v4 capability did not
+  reproduce in Npix 7134. The search group was not read. Revisit if: the
   owner wants capability conditioned on cadence (e.g. per-star umbra coverage), decided before new data are read.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)

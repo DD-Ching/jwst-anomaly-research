@@ -32,7 +32,7 @@ Both stages are authorized: if validation passes, the search group is searched o
 - **Three fixed sets:**
   - **search group:** crc32("v6:" + key) even, 539 groups;
   - **calibration group:** the other 533 groups;
-  - **control group:** 5,591 objects in the comparison range (refmag 14–18, non-transient) that belong to neither
+  - **control group:** 5,591 objects in the comparison range (count from the cache; not stored) (refmag 14–18, non-transient) that belong to neither
     of the other two. It is the only source of per-exposure comparison counts.
 - **Enforcement in code:** `context()` loads only control rows plus the members of the groups in use. Each stage
   appends a line to `source_usage.jsonl` (rows loaded, search-member rows). During calibration that count must be 0.
