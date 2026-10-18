@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 PRIMER UDS x3y0 explained (post hoc) as a G 10.07 star's optical artefact in one visit
+- `scripts/w1_cal_trail.py` (plan frozen first: `results/w1_shear_primer/vet/x3y0_cal_plan.md`) resamples every
+  `_cal` exposure covering a flag onto the mosaic grid and tests the line through it. Four F200W exposures of
+  observation 001 cover the x3y0 peak (visit 001 and visit 011, two dithers each).
+- **Frozen outcome: undecided.** 2 of 4 exposures are above 5σ, from two different pointings, which matches no
+  branch of the plan. The per-exposure calls also disagree with the sheets: the line is clear in both visit-011
+  dithers (one scores 4.50 because stray light enters its control band) and absent in visit 001. The band-median contrast is a
+  weak per-exposure statistic.
+- **Post hoc:** the line is radial from Gaia DR3 2489648647202619264 (G 10.07, 57.6″ from the peak) and passes
+  0.17–0.19″ from it. Both visit-011 dithers put it on the same sky row; a detector-fixed line would move about 17
+  rows. Visit 001 shows nothing at the same positions (chunk peaks 0.009–0.028 vs 0.40–0.89 MJy/sr). x3y0 is
+  explained as bright-star contamination, not a candidate. The forty-field limit is unchanged (flagged tiles were
+  already excluded).
+- **Method gap found:** the screen's Gaia spike veto caps external stars at 60″ (`EXTERNAL_SPIKE_CAP`). This star's
+  uncapped law gives 291″, and its arm is traced to about 71″ (not stored). Bright (G ≲ 11) stars near tile edges can therefore
+  still make E/B flags.
+- **Handoff:** (1) W1 at lower masses (a new frozen plan); (2) an R measurement on real blank-field images;
+  (3) optional: a G-dependent external spike cap tested by injection on the PRIMER tiles (it would only remove
+  false flags, not change the limit's tiles).
+
 ## 2026-10-18: MACS1423 h000 HST archive light curve: no change before (−181 d) or after (+180 to +409 d); identity still open
 - `scripts/hst_forced.py` (HST counterpart of `hit_lightcurve.py`: S3 byte-range drizzled products, 0.2″ aperture,
   local random-aperture errors, field peaks; `--offsets`) on 43 HST visits 2006–2024; visits registered to the
