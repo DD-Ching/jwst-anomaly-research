@@ -1,0 +1,47 @@
+{
+ "field": "primer-uds-x0y2",
+ "i2d": "s3://stpubdata/jwst/public/jw01837/L3/t/c1001/jw01837-c1001_t000_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  947,
+  1124
+ ],
+ "tile_slice_rebinned_px": {
+  "y": [
+   3176,
+   4123
+  ],
+  "x": [
+   243,
+   1367
+  ]
+ },
+ "pixel_scale_arcsec": 0.24984915835340155,
+ "n_trails_status2": 1,
+ "n_candidates_all_status": 1,
+ "trails": [
+  {
+   "theta_deg": 179.5,
+   "rho_px": -12.938446180560618
+  }
+ ],
+ "mask_pixels": 9470,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "segment_stripes": null,
+ "wall_time_s": {
+  "read": 43.9,
+  "total": 57.3
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

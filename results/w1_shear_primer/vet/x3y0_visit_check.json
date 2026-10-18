@@ -1,0 +1,31 @@
+{
+ "field": "primer-uds-x3y0",
+ "peak_radec": [
+  34.50675170212336,
+  -5.259761111111111
+ ],
+ "cutout_arcsec": 40.0,
+ "question": "is the horizontal line through the S peak present in only one input visit of c1002 (a single-visit line is a trail)?",
+ "products": {
+  "combined": "jw01837-c1002_t000_nircam_clear-f200w_i2d.fits",
+  "visit": "jw01837-o001_t001_nircam_clear-f200w_i2d.fits",
+  "not_covering_peak": [
+   "jw01837-o002_t002 (no cutout returned)",
+   "jw01837-c1001_t000 (no cutout returned)"
+  ]
+ },
+ "n_pixels_both_finite": 1616856,
+ "max_abs_diff_c1002_minus_o001": 0.05339421331882477,
+ "median_abs_diff": 0.017913594841957092,
+ "brightest_row_offsets_px_from_peak": [
+  1,
+  2
+ ],
+ "outcome": "undecided: within the cutout the combined mosaic differs from visit o001 by at most max_abs_diff (MJy/sr), i.e. it is effectively o001 there, so the visit test cannot separate a trail from sky; needs the o001 L2 exposures (cal) at the peak",
+ "by_eye": "one sharp horizontal line through the peak ending about 15 arcsec east of it (x ~ 1120 of 1281 px), with fainter parallel streaks above; not a frozen test",
+ "provenance": {
+  "pixels": "observed",
+  "diffs": "derived",
+  "by_eye": "assumption"
+ }
+}

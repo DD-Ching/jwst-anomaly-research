@@ -1529,9 +1529,13 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (UDS combined mosaics), `o003_t003`, `o004_t004` (COSMOS) `_cat.ecsv`; sha256 pins in `scripts/w1_stage_inputs.py`.
   Footprints from the MAST CAOM `s_region` (`footprints_*.json`). The `_i2d.fits` files are 31–69 GB (HTTP
   Content-Length, not stored).
-- **DJA v7** photo-z tarballs for PRIMER (planned, not fetched yet): `primer-uds-north-grizli-v7.2`,
-  `primer-uds-south-grizli-v7.2`, `primer-cosmos-east-grizli-v7.4`, `primer-cosmos-west-grizli-v7.4`
-  (`https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/<stem>-fix.photoz.tar.gz`).
+- **DJA v7** photo-z tarballs for PRIMER, streamed 2026-10-18 (only the `.eazypy.zout.fits` member kept):
+  `primer-uds-north-grizli-v7.2-fix`, `primer-uds-south-grizli-v7.2-fix`, `primer-cosmos-east-grizli-v7.4-fix`,
+  `primer-cosmos-west-grizli-v7.4-fix` (`https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/<stem>.photoz.tar.gz`;
+  the names without `-fix` return 403). Tarball and member sha256, and the content sha256 of the two stacked
+  per-survey zouts: `PRIMER_DJA` / `PRIMER_STACK_SHA256` in `scripts/w1_stage_inputs.py`.
+- The F200W `_i2d.fits` SCI extensions are 1.9–3.3 GB (NAXIS 25047 × 32984 for c1001; headers read
+  2026-10-18, not stored); `w1_streak_mask.py` streams only that extension.
 - Prior-work check 2026-10-18 (`docs/value_comparison.md`): DeCoursey et al. 2024, JADES Transient Survey,
   arXiv:2406.05060; Stein et al. 2021, "Self-supervised similarity search for large scientific datasets",
   arXiv:2110.13151; https://github.com/georgestein/ssl-legacysurvey (MIT); Palencia et al. 2026 catalogue,

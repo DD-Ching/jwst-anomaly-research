@@ -31,7 +31,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from astropy.table import Table
+import numpy as np
+from astropy.table import Table, vstack
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -211,6 +212,50 @@ PHOTOZ[Path(ish._CEERS_ZOUT).name] = _tar(
     None,  # tarball sha256 not recorded (streamed once; the member is pinned)
     "c50443d242c4c76b2d3c164b236911f14d926bf5c466ae90bfe0def299a48a50",
 ) | {"max_bytes": 450_000_000}
+# PRIMER (results/w1_shear_primer): per survey, the two DJA zouts (tarball members, streamed and
+# pinned 2026-10-18) stacked into one table for the 0.3″ match (``stack_zouts``; PLAN.md)
+PRIMER_DJA = {
+    "uds": (
+        (
+            "primer-uds-north-grizli-v7.2-fix",
+            "919c851cc8adc97f71d362e622296f969f3eae55facb22bbc5a89871d62df634",
+            "25e09b0d45ffe9258c5f91b2517c9f6fb086117bcb06fdfddc05cb3d3b9d57aa",
+        ),
+        (
+            "primer-uds-south-grizli-v7.2-fix",
+            "414ef77e33fddd0a29dededda78e9273d88e5f71fedebf46a92923ab41174203",
+            "13882906ce532357a93bab937a499ea3761cbe1e30af3db41b33b16584d61688",
+        ),
+    ),
+    "cosmos": (
+        (
+            "primer-cosmos-east-grizli-v7.4-fix",
+            "af3ba16135623eaf46c7a0f6ccf56cf87cbe7c6dc81e03ee610b55300008a858",
+            "ec279495ce6bbfacf6b77b99a679d845bcdefcb6148410dadb0c01089911775b",
+        ),
+        (
+            "primer-cosmos-west-grizli-v7.4-fix",
+            "9a2609c16e30884cf1207ed82f1cb4af0c5ae578fca08c164377e3228bcf5730",
+            "8042822f2c85514f12f5b7976a92a525953991d1978d51a551654d797c5f3d32",
+        ),
+    ),
+}
+# content_sha256 of each stacked table (astrodeep_zout.content_sha256), as written 2026-10-18
+PRIMER_STACK_SHA256 = {
+    "uds": "2f60c7a9a58d2814fd43afbc61a1f253c19743a677e5adbfc13e004a9a7b8edc",
+    "cosmos": "0c10add32c8ac55c4c1faaa703a6105e2bc8ec25990ac916fa104b33a273c214",
+}
+for _k, _parts in PRIMER_DJA.items():
+    PHOTOZ[Path(ish.PRIMER_ZOUT.format(_k)).name] = {
+        "stack": [
+            (
+                f"cache/dja/photoz-{st}/{st}.eazypy.zout.fits",
+                _tar(st, sha, msha) | {"max_bytes": 600_000_000},
+            )
+            for st, sha, msha in _parts
+        ],
+        "sha256": PRIMER_STACK_SHA256[_k],
+    }
 for _spec in op.DEEP_FIELDS.values():  # CANUCS NCF photometry (results/w1_shear_ncf)
     if _spec.get("format") == "dja":
         continue
@@ -325,10 +370,44 @@ def stage_astrodeep(target: Path, src: dict) -> dict:
     return {**row, "status": "fetched", "sha256": got, "bytes": target.stat().st_size}
 
 
+def stack_zouts(parts: list[Table]) -> Table:
+    """The ``astrodeep_zout.ZOUT_COLUMNS`` of several eazy zouts, stacked in the given order (the
+    nearest-match ``attach_photoz`` then picks the closer entry where mosaics overlap)."""
+    cols = astrodeep_zout.ZOUT_COLUMNS
+    return vstack([Table({c: np.asarray(t[c]) for c in cols}) for t in parts], join_type="exact")
+
+
+def stage_stack(target: Path, src: dict) -> dict:
+    """Stage each pinned DJA member, then write their stacked table, checked by its content
+    sha256 (``astrodeep_zout.content_sha256``) where one is recorded."""
+    root = paths.data_root()
+    row = {"path": str(target), "url": "stack:" + ",".join(s["url"] for _, s in src["stack"])}
+    row.update(pinned=src["sha256"] is not None, bytes=0)
+    have = _content_sha256(target) if target.exists() else None
+    if have is not None and src["sha256"] in (None, have):
+        return {**row, "status": "present", "sha256": have}
+    parts = []
+    for rel, member in src["stack"]:
+        got = stage(root / rel, member)
+        if got["status"].startswith("FAILED"):
+            return {**row, "status": got["status"]}
+        row["bytes"] += got["bytes"]
+        parts.append(Table.read(root / rel))
+    t = stack_zouts(parts)
+    sha = astrodeep_zout.content_sha256(t)
+    if src["sha256"] is not None and sha != src["sha256"]:
+        return {**row, "status": f"FAILED: stacked content sha256 {sha} != {src['sha256']}"}
+    target.parent.mkdir(parents=True, exist_ok=True)
+    t.write(target, overwrite=True)
+    return {**row, "status": "fetched", "sha256": sha}
+
+
 def run_job(job: tuple[str, Path | None, dict]) -> dict:
     _, target, src = job
     if "astrodeep" in src:
         return stage_astrodeep(target, src)
+    if "stack" in src:
+        return stage_stack(target, src)
     return stage_zip_members(src["zip_members"]) if target is None else stage(target, src)
 
 
@@ -338,7 +417,8 @@ def plan(fields: list[str]) -> list[tuple[str, Path | None, dict]]:
     jobs = []
     for name in fields:
         spec = ish.field_spec(name)
-        jobs.append((name, root / spec["catalog"], catalog_source(spec["catalog"], pins)))
+        if all(j[1] != root / spec["catalog"] for j in jobs):  # PRIMER tiles share a mosaic
+            jobs.append((name, root / spec["catalog"], catalog_source(spec["catalog"], pins)))
         if spec.get("photoz"):
             rel = spec["photoz"][1]
             src = PHOTOZ.get(Path(rel).name)

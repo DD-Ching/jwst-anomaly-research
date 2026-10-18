@@ -1,0 +1,69 @@
+{
+ "field": "primer-cosmos-x0y0",
+ "plan": "results/w1_shear_more/PLAN.md addendum A",
+ "peak_radec": [
+  150.07202707624208,
+  2.229501111111111
+ ],
+ "b_max": 4.2120152148231575,
+ "n_null": 200,
+ "stripe_columns_px": [
+  529,
+  530
+ ],
+ "pixel_scale_arcsec": 0.03122545263160208,
+ "n_v1": 13,
+ "n_v2": 25,
+ "stripe_rows_px": [],
+ "n_v1r": 0,
+ "star": {
+  "ra": 150.07049099661953,
+  "dec": 2.2303740656079762,
+  "mag": 17.857558312099442
+ },
+ "star_sep_from_peak_arcsec": 6.356849026242494,
+ "s_at_peak": {
+  "all": {
+   "s": 4.443241263697902,
+   "p_rot": 0.0,
+   "n_used_field": 3122
+  },
+  "no_v1": {
+   "s": 3.46329618695922,
+   "p_rot": 0.53,
+   "n_used_field": 3109
+  },
+  "no_v2": {
+   "s": 3.617783890309803,
+   "p_rot": 0.31,
+   "n_used_field": 3097
+  },
+  "no_v1_v2": {
+   "s": 3.0974351743365576,
+   "p_rot": 0.99,
+   "n_used_field": 3089
+  },
+  "no_v1r": {
+   "s": 4.443241263697902,
+   "p_rot": 0.0,
+   "n_used_field": 3122
+  },
+  "no_v1_v1r_v2": {
+   "s": 3.0974351743365576,
+   "p_rot": 0.99,
+   "n_used_field": 3089
+  },
+  "control_v1r_rotated": {
+   "n_draws": 0,
+   "s_median": null,
+   "frac_le_no_v1r": null
+  }
+ },
+ "outcome": "explained by streak/spike contamination (screen-level)",
+ "outcome_post_hoc_with_rows": "explained by streak/spike contamination (screen-level)",
+ "provenance": {
+  "shapes": "observed",
+  "s_p": "derived",
+  "thresholds": "assumption"
+ }
+}
