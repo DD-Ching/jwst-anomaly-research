@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 faint-streak veto (lower findsat_mrt threshold) for the CANUCS flanking fields: failed, headline unchanged
+- `w1_streak_mask.py --mrt-threshold` (default 5 unchanged); plan frozen first (`results/w1_streak_rowdiag/PLAN.md`).
+- **Result (`results/w1_streak_rowdiag/RESULT.md`):** K1n failed for both pre-declared variants (threshold 3, 2.5):
+  more candidates, but the persistence check keeps the same two status-2 trails, masks identical pixel for pixel;
+  neither flagged NCF peak is covered. No injection run; the W1 headline stays at fourteen fields (2.35× T&A).
+- Sheets looked at: the macs0416-ncf "diagonal streak" lines up with a bright star's diffraction spikes (the V2 case);
+  macs0417-ncf sits on detector-wide horizontal row striping. Neither is a single long trail.
+- **Failed approach:** lowering the TrailFinder threshold (D-097 "Revisit if"). **Handoff:** a field-wide row-segment
+  median veto (V1r made field-wide), frozen and run through the injections, and a check of why the Gaia spike veto
+  misses the macs0416-ncf star; or skip to other blank fields (PRIMER, CEERS) under the D-097 mask.
 ## 2026-10-18: Confirmation round 1: A370 box-2 changes not source-specific / not supported; MACS0417 h002 is SN Athena (#323)
 - **A370 h003:** consistent with 54 compact-source controls, which share its F444W drop between 1208 and VENUS
   (median ratio 0.852 vs 0.887): no evidence of a source-specific change. **A370 h010:** within 80 matched arc-pixel controls (tail 0.10): no support

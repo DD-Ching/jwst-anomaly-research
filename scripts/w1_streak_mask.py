@@ -98,14 +98,14 @@ def stream_binned(uri: str) -> tuple[np.ndarray, WCS]:
     return out, wcs[::BLOCK, ::BLOCK]
 
 
-def find_trails(z: np.ndarray, processes: int = 4):
+def find_trails(z: np.ndarray, processes: int = 4, threshold: float = MRT_THRESHOLD):
     """Persistent-trail mask and trail table from ``acstools.findsat_mrt``."""
     from acstools.findsat_mrt import TrailFinder
 
     tf = TrailFinder(
         z,
         processes=processes,
-        threshold=MRT_THRESHOLD,
+        threshold=threshold,
         save_catalog=False,
         save_diagnostic=False,
         mask_include_status=[KEEP_STATUS],
@@ -216,6 +216,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--processes", type=int, default=os.cpu_count() or 1)
     ap.add_argument("--png", action="store_true", help="also write a contact sheet per field")
     ap.add_argument(
+        "--mrt-threshold",
+        type=float,
+        default=MRT_THRESHOLD,
+        help="TrailFinder threshold (results/w1_streak_rowdiag/PLAN.md: faint-streak variants)",
+    )
+    ap.add_argument(
         "--evaluate",
         type=Path,
         metavar="SUMMARY",
@@ -237,7 +243,7 @@ def main(argv: list[str] | None = None) -> int:
         t_read = time.time() - t0
         z = normalise(img)
         wz = wcs[::REBIN, ::REBIN]
-        mask, cat = find_trails(z, args.processes)
+        mask, cat = find_trails(z, args.processes, args.mrt_threshold)
         write_mask(args.out / f"{name}_streak_mask.fits.gz", mask, wz)
         trails = []
         if cat is not None:
@@ -257,7 +263,7 @@ def main(argv: list[str] | None = None) -> int:
                 "rebin": REBIN,
                 "clip_nsig": CLIP_NSIG,
                 "edge_erode": EDGE_ERODE,
-                "mrt_threshold": MRT_THRESHOLD,
+                "mrt_threshold": args.mrt_threshold,
                 "keep_status": KEEP_STATUS,
                 "veto_arcsec": VETO_ARCSEC,
             },
