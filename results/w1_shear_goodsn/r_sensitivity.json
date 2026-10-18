@@ -1,0 +1,76 @@
+{
+ "provenance": "derived",
+ "plan": "results/w1_shear_goodsn/PLAN.md (responsivity sensitivity, Z = 0.3)",
+ "fields": {
+  "goodsn-o001": {
+   "2e+12": {
+    "n_recovered_r0.414": 6,
+    "n_recovered_r0.231": 2
+   },
+   "8e+12": {
+    "n_recovered_r0.414": 32,
+    "n_recovered_r0.231": 4
+   },
+   "2e+13": {
+    "n_recovered_r0.414": 58,
+    "n_recovered_r0.231": 13
+   }
+  },
+  "goodsn-o003": {
+   "2e+12": {
+    "n_recovered_r0.414": 0,
+    "n_recovered_r0.231": 0
+   },
+   "8e+12": {
+    "n_recovered_r0.414": 28,
+    "n_recovered_r0.231": 5
+   },
+   "2e+13": {
+    "n_recovered_r0.414": 59,
+    "n_recovered_r0.231": 18
+   }
+  },
+  "goodsn-o004": {
+   "2e+12": {
+    "n_recovered_r0.414": 18,
+    "n_recovered_r0.231": 3
+   },
+   "8e+12": {
+    "n_recovered_r0.414": 51,
+    "n_recovered_r0.231": 10
+   },
+   "2e+13": {
+    "n_recovered_r0.414": 70,
+    "n_recovered_r0.231": 17
+   }
+  },
+  "goodsn-o005": {
+   "2e+12": {
+    "n_recovered_r0.414": 9,
+    "n_recovered_r0.231": 2
+   },
+   "8e+12": {
+    "n_recovered_r0.414": 41,
+    "n_recovered_r0.231": 13
+   },
+   "2e+13": {
+    "n_recovered_r0.414": 67,
+    "n_recovered_r0.231": 19
+   }
+  }
+ },
+ "total_four_pointings": {
+  "2e+12": {
+   "n_recovered_r0.414": 33,
+   "n_recovered_r0.231": 7
+  },
+  "8e+12": {
+   "n_recovered_r0.414": 152,
+   "n_recovered_r0.231": 32
+  },
+  "2e+13": {
+   "n_recovered_r0.414": 254,
+   "n_recovered_r0.231": 67
+  }
+ }
+}

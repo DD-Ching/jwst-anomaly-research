@@ -1,0 +1,104 @@
+{
+ "field": "goodsn-o004",
+ "plan": "results/w1_shear_more/PLAN.md addendum A",
+ "peak_radec": [
+  189.24417847077157,
+  62.24265888888889
+ ],
+ "b_max": 3.7217713666392918,
+ "n_null": 200,
+ "stripe_columns_px": [
+  433,
+  434,
+  435,
+  436,
+  437,
+  438,
+  439,
+  440,
+  441,
+  442,
+  443,
+  444,
+  445,
+  446,
+  447,
+  448,
+  449,
+  450,
+  451,
+  452,
+  453,
+  454,
+  455,
+  456,
+  457,
+  458,
+  459,
+  460,
+  461,
+  462,
+  463,
+  464,
+  465,
+  468,
+  469,
+  470,
+  471
+ ],
+ "pixel_scale_arcsec": 0.031228643327002963,
+ "n_v1": 42,
+ "n_v2": 25,
+ "stripe_rows_px": [],
+ "n_v1r": 0,
+ "star": {
+  "ra": 189.24519748786605,
+  "dec": 62.243018566244594,
+  "mag": 19.26115114015669
+ },
+ "star_sep_from_peak_arcsec": 2.1437340633264643,
+ "s_at_peak": {
+  "all": {
+   "s": 4.345767201344307,
+   "p_rot": 0.0,
+   "n_used_field": 3187
+  },
+  "no_v1": {
+   "s": 0.10232714482763275,
+   "p_rot": 1.0,
+   "n_used_field": 3145
+  },
+  "no_v2": {
+   "s": 2.0434398229432986,
+   "p_rot": 1.0,
+   "n_used_field": 3162
+  },
+  "no_v1_v2": {
+   "s": -0.18072543101512015,
+   "p_rot": 1.0,
+   "n_used_field": 3138
+  },
+  "no_v1r": {
+   "s": 4.345767201344307,
+   "p_rot": 0.0,
+   "n_used_field": 3187
+  },
+  "no_v1_v1r_v2": {
+   "s": -0.18072543101512015,
+   "p_rot": 1.0,
+   "n_used_field": 3138
+  },
+  "control_v1r_rotated": {
+   "n_draws": 0,
+   "s_median": null,
+   "frac_le_no_v1r": null
+  }
+ },
+ "outcome": "explained by streak/spike contamination (screen-level)",
+ "outcome_post_hoc_with_rows": "explained by streak/spike contamination (screen-level)",
+ "provenance": {
+  "shapes": "observed",
+  "s_p": "derived",
+  "thresholds": "assumption"
+ }
+}

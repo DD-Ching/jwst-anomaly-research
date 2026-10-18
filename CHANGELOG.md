@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 shear in GOODS-N (JADES 1181, no lens model): sixteen-field volume limit 1.82× Takahashi & Asada
+- Six F200W pointings with small mutual overlap, DJA v7.3 photo-z, R fixed at 0.414 (D-099); plan frozen first
+  (`results/w1_shear_goodsn/PLAN.md`). Gate P (photo-z share ≥ 0.5) drops o009 / o010 (0.22 / 0.02).
+- **Screens:** o001, o005 null; o003 (S 4.77) and o004 (S 4.35) pass the E/B rule. Both sit on mosaic edges on the
+  sheet (a spike line of detections; an edge column of detections), and both are explained by the frozen V1 ∪ V2
+  rule (S 3.80 / −0.18). Not candidates.
+- **Result (`results/w1_shear_goodsn/RESULT.md`):** sixteen fields (D-098: flagged pointings out), 119.8 arcmin²:
+  n₉₅ < 2.46 × 10⁻³ / 4.29 × 10⁻⁴ / 1.82 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉. That is 24.6× / 4.29× /
+  1.82× weaker than T&A, down from 30× / 5.4× / 2.35×. Eighteen fields (the plan's rule, not adopted) would give 1.54×.
+- **Caveat:** with R = 0.231 the GOODS-N recoveries fall to 0.21–0.26 of the adopted ones, so the gain depends on
+  the borrowed R.
+- **Handoff:** more blank F200W area with photo-z (PRIMER-UDS / COSMOS, CEERS: MAST catalogues plus DJA zout), or
+  calibrate R for blank fields first (the dominant systematic now). A photo-z catalogue covering o009 / o010 would add
+  ≈ 20 arcmin².
+
 ## 2026-10-18: W1 row/column-segment stripe veto for the CANUCS flanking fields: failed on cost, headline unchanged
 - `w1_streak_mask.py --seg-len` (`segment_stripes`: field-wide segment medians, 41-row detrend, 5σ; rows and
   columns) OR-ed onto the D-097 trail mask; `w1_row_veto_eval.py` decides K1r and the cost check. Plan frozen first

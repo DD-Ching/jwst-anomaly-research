@@ -83,6 +83,25 @@ CATALOG_SHA256 = {
     "jw01208-o032_t005_nircam_clear-f150w_cat.ecsv": (
         "fb2f118625ae5a4a8c1107e546c5c19dfb7f2c4d1125d4c24d003ff4677898d2"
     ),
+    # JADES GOODS-N F200W (results/w1_shear_goodsn), as fetched 2026-10-18
+    "jw01181-o001_t001_nircam_clear-f200w_cat.ecsv": (
+        "28a3c404bd9a8d21828a23e4a9a34c0c56668b3d68678b9706a56af337a6c8e0"
+    ),
+    "jw01181-o003_t007_nircam_clear-f200w_cat.ecsv": (
+        "0563c8be132f3e9c147b54327389645f1df952a3b2498bd496b4abe1dda8e520"
+    ),
+    "jw01181-o004_t008_nircam_clear-f200w_cat.ecsv": (
+        "35bd5e3e7d21ef9a083d83e16f57ebde2c2f9be4ca698026cee0fe6a323cea06"
+    ),
+    "jw01181-o005_t008_nircam_clear-f200w_cat.ecsv": (
+        "27047942ed8fea19ef2a5466e0d5f26990ba6e1a09e9e3b1c50a29bc1b6b6ff1"
+    ),
+    "jw01181-o009_t009_nircam_clear-f200w_cat.ecsv": (
+        "818eb57775777d24dfba06a1cddb399c0a559aa59d399d8e387b7c619180f9b4"
+    ),
+    "jw01181-o010_t009_nircam_clear-f200w_cat.ecsv": (
+        "a9060f9ce85856b73c4a4977a98ab58beec74e4936d36b24aae69c31b7e78574"
+    ),
 }
 
 
