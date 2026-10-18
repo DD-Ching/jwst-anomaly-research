@@ -569,6 +569,16 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     `sunrise-grizli-v7.5-fix.eazypy.zout.fits`, sha256
     `672d4bdf31926209633c1a7feeb436bab3e5b08e847a079521820f3409f548e0`.
   - Earendel: Welch et al. arXiv:2209.14866, "A highly magnified star at redshift 6.2".
+- **RXC J0600−2007 (MACS J0600.1−2008)** (`arcs` only; accessed 2026-10-18).
+  - Data: MAST 6796 `jw06796-o010_t001_nircam_clear-f200w_cat.ecsv` (PUBLIC; sha256 in
+    `results/arcs/rxc0600-relics/summary.json`); i2d stamps by S3 byte range from `s3://stpubdata/jwst/public/jw06796/L3/t/o010/`.
+  - DJA v7.2 photo-z: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/rxcj0600-grizli-v7.2-fix.photoz.tar.gz
+    (33,760,489 B), member `rxcj0600-grizli-v7.2-fix.eazypy.zout.fits`, sha256
+    `51d3eece0cfe0d86dc8e2be6c3a48c1fb21c316a58e86ecd651b960a851d93f7`.
+  - RELICS models: https://archive.stsci.edu/hlsps/relics/rxc0600m20/models/ (DOI 10.17909/T9SP45): GLAFIC v3 and
+    Lenstool v1 x/y-arcsec-deflect, kappa, z02-magnif (sha256 in `lensmodel.RXC0600_RELICS_*`).
+  - z_lens 0.43: Fujimoto et al. 2021, arXiv:2101.01937 (ALCS [CII] at z = 6.0719 behind the cluster). Newer model:
+    Fujimoto et al. 2024, arXiv:2404.03286 (maps not found public on 2026-10-18).
 - **MAST stale product sizes** after the 2026-10-01 reprocessing (PR #29): `acquire` checks the Download
   service's Content-Length.
 ## HFF CATS lens models (accessed 2026-10-08; D-035)

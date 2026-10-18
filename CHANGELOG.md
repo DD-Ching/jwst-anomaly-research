@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: `arcs` on RXC J0600−2007, RELICS maps: the S1063 anti excess does not replicate (1 vs 0.20, P 0.18)
+- **Why:** the S1063 replication tally needs fields never used to tune `arcs`. Correction to the 2026-10-17 handoff:
+  RXC J0600 does have public maps (RELICS `rxc0600m20`: GLAFIC v3, Lenstool v1). Plan frozen first
+  (`results/arcs/rxc0600-relics/PLAN.md`); F200W catalogue from program 6796 o010, DJA v7.2 photo-z.
+- **New:** models `rxc0600-relics-glafic` / `rxc0600-relics-lenstool` (sha256-pinned; both pass `validate`);
+  `scripts/arcs_rxc0600.py`, `scripts/arcs_rxc0600_sheet.py`.
+- **Result (derived; `RESULT.md`):** GLAFIC 11 / 12 aligned (control passes), anti 1 vs 0.203, P 0.184 → **frozen
+  outcome "does not replicate"**. Lenstool fails its control (12 / 18, 67 %); its 3 vs 0.499 (P 0.014) decides
+  nothing under the rule. The GLAFIC anti (581, m 21.2, z_phot 0.70, offset 63.6°) is a bright edge-on-looking disc
+  with the same axis in F200W and F444W (sheets looked at); in Lenstool it sits at g_min 1.19. Not a candidate.
+- **Handoff:** S1063 tally: MACS0417 no, MACS0647 no result, MACS1423 explained, RXJ2129 no result, WHL0137 no,
+  RXC J0600 no. Further fields with public maps and JWST (map survey 2026-10-18): SPT0615, MACS0308 (RELICS), Abell
+  383, MACS1206, MACS1931 (CLASH), many VENUS (6882) clusters; none has a DJA photo-z catalogue yet.
+
 ## 2026-10-18: S2 with LS DR10 z < 22 galaxies: lensing control not detected (1.1σ); S2 paused (D-070 addendum 2)
 - Frozen plan `results/s2_flat_kernel/dr10/PLAN.md`; `scripts/s2_flat_kernel.py --survey dr10 --mag-z-max 22` (new
   `--fit-mag-z-max`, photo-z gate `photoz_gate`). Same DES-SN5YR SNe as the DR9 run, so exploratory.

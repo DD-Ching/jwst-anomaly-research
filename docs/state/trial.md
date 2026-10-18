@@ -261,6 +261,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.3 (W1 metacal R v3: frozen plan, ePSF tool, gate E failed, post hoc simulated + real diagnostic, sheet looked at) | 0.1 (orientation, claim, PR) | cloud routine 01NtqjLe, 14:08–14:45Z |
 | 2026-W42 | — | — | — | 0.3 (orientation; queue check: every open line waits on the owner or is optional; `pending.md` sync for #199, #237, #279, #273; PR) | cloud routine 01RKeHhJ, 15:08–15:40Z |
 | 2026-W42 | ≈ 0.25 (S2 DR10 z < 22: plan, `--survey dr10`, gate Q, fetch, three fits; control gate failed) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01JBqic5, 16:08–16:40Z |
+| 2026-W42 | ≈ 0.3 (`arcs` on RXC J0600: map survey, plan, two RELICS models, sheets; does not replicate) | — | — | 0.1 (orientation, claim, PR) | cloud routine 013yHurq, 17:08–17:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
