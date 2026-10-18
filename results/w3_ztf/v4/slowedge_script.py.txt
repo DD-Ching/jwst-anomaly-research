@@ -1,0 +1,39 @@
+# Post hoc diagnostic: which vetting test rejects flagged W3 injections in the rho 0.1 cells (same seeds and draws
+# as stage_inject). Usage: python slowedge_script.py.txt <out json>
+import json, sys
+from collections import Counter
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(3838)
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(None)
+carriers = []
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        carriers.append((g, s, o, {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}))
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+out = {'label': 'derived; post hoc vetting diagnostic (simulated injections)'}
+for c, (rho, blend, te) in enumerate(cells):
+    if rho != 0.1 or te < 30:
+        continue
+    rng = np.random.default_rng(1100 + c); fails = Counter(); rej = rec = 0
+    for _ in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s]); t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        hit = [x for x in wz.screen(si, oi, cov) if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half and (x['t_start'], x['t_end']) not in base]
+        if hit and not any(x['pass'] for x in hit):
+            rej += 1
+            for k in ('common_mode_ok', 'sharp_ok', 'oneoff_ok', 'achromatic_ok'):
+                if not any(x[k] for x in hit):
+                    fails[k] += 1
+        rec += any(x['pass'] for x in hit)
+    out[f'rho{rho}_blend{blend:g}_tE{te:g}'] = {'recovered': rec, 'flagged_but_rejected': rej, 'test_failed_by_all_hit_runs': dict(fails)}
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out, indent=1))

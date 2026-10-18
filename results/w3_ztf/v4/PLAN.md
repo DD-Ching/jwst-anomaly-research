@@ -76,3 +76,9 @@ Written 2026-10-18 before the v4 light-curve partition was read. Code version: t
   groups dropped; 0 near the v1–v3 sample; 1,000 drawn.
 - Merge check: farthest member ≤ 0.56″ in every group (99th percentile 0.23″); nearest non-member object ≥ 2.07″
   (5 groups have one within 3″). No neighbour falls inside the 1.5″ tolerance in this sample.
+
+## Deviations (after the v4 results; labelled post hoc in RESULT)
+- The v4 search flagged nothing, so the frozen image-selection rule was applied to the flags of the same sample under
+  the v3 mapping (`v3rule_script.py.txt`, `image_script.py.txt ... v3rule`) to check what the fix removed.
+- Added diagnostic: which vetting test rejects flagged ρ 0.1 injections (`slowedge_script.py.txt`; same seeds).
+- `search_all_v3rule_posthoc.json` is written without indentation to stay under 1 MB.

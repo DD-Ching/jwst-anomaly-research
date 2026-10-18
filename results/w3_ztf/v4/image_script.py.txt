@@ -1,0 +1,190 @@
+# v4 image check (PLAN section 4): selection rule, IBE position search, cutouts, forced photometry, classes.
+# Usage: python image_script.py.txt <cutout dir> <out json> <out png>   (run with --pix context: CACHE 3838)
+import json, os, sys, time, urllib.parse, urllib.request, io, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.wcs import WCS
+from scipy import ndimage
+warnings.filterwarnings('ignore')
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+from hit_lightcurve import aperture_photometry
+wz.configure(3838)
+CUT, OUT, PNG = sys.argv[1:4]
+MODE = sys.argv[4] if len(sys.argv) > 4 else 'v4'
+R, ANN, CAP_MB = 2.0, (4.0, 6.0), 50.0
+_in_quad = wz.in_quad
+EXPO = Table.read(wz.CACHE / 'exposures.ecsv')
+if MODE == 'v3rule':  # post hoc deviation: v4 found no flags; check the flags the v4 fixes removed
+    wz.in_quad = lambda expo, ra, dec, margin=0.0: np.ones(len(expo), bool)
+    wz.dedupe = lambda out: sorted(out, key=lambda x: x[0])
+    search = json.load(open(wz.VDIR / 'search_all_v3rule_posthoc.json'))
+else:
+    search = json.load(open(wz.VDIR / 'search_all_v4.json'))
+groups = {g['key']: g for g in json.load(open(wz.SAMPLE))['groups']}
+rows, cov = wz.context(None)
+# ---- selection (fixed before any flux)
+by_g = {}
+for r in search['runs']:
+    by_g.setdefault(r['key'], []).append(r)
+def series_of(key, filt):
+    return wz.series(groups[key], rows, cov, filt)
+cand = []
+for key, rr in by_g.items():
+    best = None
+    for r in rr:
+        s = series_of(key, r['filter']); t = np.array([x[0] for x in s])
+        inside = [x for x in s if r['t_start'] <= x[0] <= r['t_end']]
+        nnd = sum(x[2] for x in inside)
+        k = (r['n'], -r['t_start'])
+        if best is None or k > best[0]:
+            best = (k, r, nnd)
+    cand.append((any(x['pass'] for x in rr), best[2], key, best[1]))
+cand.sort(key=lambda c: (not c[0], -c[1], c[2]))
+chosen = cand[:5]
+sel = []
+for passed, nnd, key, r in chosen:
+    s = series_of(key, r['filter'])
+    inside = [x for x in s if r['t_start'] <= x[0] <= r['t_end'] and x[2]]
+    if len(inside) > 8:
+        inside = [inside[i] for i in np.unique(np.linspace(0, len(inside) - 1, 8).round().astype(int))]
+    before = [x for x in s if x[0] < r['t_start'] and not x[2]][-2:]
+    after = [x for x in s if x[0] > r['t_end'] and not x[2]][:2]
+    exps = before + inside + after
+    nd_run = sum(1 for x in s if r['t_start'] <= x[0] <= r['t_end'] and x[2])
+    sel.append({'key': key, 'ra': groups[key]['ra'], 'dec': groups[key]['dec'], 'passed_vetting': passed,
+                'filter': r['filter'], 'run': [r['t_start'], r['t_end']], 'nd_in_run': nd_run,
+                'nd_checked': len(inside), 'nd_pending': nd_run - len(inside),
+                'exposures': [{'expid': x[5], 't': x[0], 'nd': bool(x[2]), 'dmag': x[1]} for x in exps]})
+assert sum(len(x['exposures']) for x in sel) <= 64
+json.dump({'label': 'derived; v4 image selection (rule in PLAN section 4)', 'n_candidates': len(cand), 'sources': sel},
+          open(OUT.replace('.json', '_selection.json'), 'w'), indent=1)
+# ---- IBE position search (one query per source)
+def get(url, timeout=60):
+    err = None
+    for i in range(4):
+        try:
+            return urllib.request.urlopen(url, timeout=timeout).read(), None
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (i + 1))
+    return None, err
+total, ibe_bytes, stamps, res = 0, 0, [], []
+quads_of = lambda key: {wz.oid_quad(m) for m in groups[key]['members']}
+for src in sel:
+    ra, dec = src['ra'], src['dec']
+    ex = ",".join(str(e['expid']) for e in src['exposures'])
+    q = urllib.parse.urlencode({'POS': f'{ra},{dec}', 'WHERE': f'expid IN ({ex})', 'ct': 'csv',
+                                'COLUMNS': 'field,ccdid,qid,filtercode,expid,filefracday,infobits,maglimit,seeing'})
+    raw, err = get('https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + q, 120)
+    if raw is None:
+        src['error'] = f'IBE search failed: {err}'; res.append(src); continue
+    ibe_bytes += len(raw)
+    meta = Table.read(io.BytesIO(raw), format='csv') if len(raw.strip().splitlines()) > 1 else Table()
+    out, ref_field = [], None
+    for e in src['exposures']:
+        rec = dict(e)
+        mine = EXPO[EXPO['expid'] == e['expid']]
+        own = [r for r in mine if (int(r['field']), (int(r['ccdid']) - 1) * 4 + int(r['qid']) - 1,
+                                   {'zg': 1, 'zr': 2, 'zi': 3}[str(r['filtercode'])]) in quads_of(src['key'])]
+        rec['v4_inside_member_quadrant'] = [bool(_in_quad(Table(rows=[r]), src['ra'], src['dec'])[0]) for r in own]
+        m = meta[meta['expid'] == e['expid']] if len(meta) else []
+        if not len(m):
+            rec.update(cls=1, why='not covered: position outside every image of this exposure (IBE)'); out.append(rec); continue
+        m = m[0]
+        rec.update({k: (m[k].item() if hasattr(m[k], 'item') else m[k]) for k in ('field', 'ccdid', 'qid', 'infobits', 'maglimit', 'seeing')})
+        filt = {'zg': 1, 'zr': 2, 'zi': 3}[str(m['filtercode'])]
+        rec['member_quadrant'] = (int(m['field']), (int(m['ccdid']) - 1) * 4 + int(m['qid']) - 1, filt) in quads_of(src['key'])
+        if total / 1e6 > CAP_MB:
+            rec.update(cls=5, why='pending: cutout cap reached'); out.append(rec); continue
+        ffd = str(m['filefracday'])
+        url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+               f"{int(m['field']):06d}_{m['filtercode']}_c{int(m['ccdid']):02d}_o_q{int(m['qid'])}_sciimg.fits"
+               f"?center={ra},{dec}&size=120arcsec&gzip=false")
+        fn = f"{CUT}/{e['expid']}_{src['key']}.fits"
+        if not os.path.exists(fn):
+            data, err = get(url)
+            if data is None:
+                rec.update(cls=5, why=f'undetermined: cutout not obtained ({err})'); out.append(rec); continue
+            open(fn, 'wb').write(data)
+        total += os.path.getsize(fn); rec['cutout_bytes'] = os.path.getsize(fn)
+        h = fits.open(fn); img = h[0].data.astype(float); hd = h[0].header; w = WCS(hd)
+        sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600; k = 10 ** (-0.4 * (hd['MAGZP'] - 23.9))
+        x, y = (float(v) for v in w.world_to_pixel_values(ra, dec))
+        f = aperture_photometry(img, x, y, R / sc, (ANN[0] / sc, ANN[1] / sc))
+        rng = np.random.default_rng(int(e['expid']) % 2**32); rnd = []
+        for _ in range(800):
+            xx, yy = rng.uniform(8, img.shape[1] - 8), rng.uniform(8, img.shape[0] - 8)
+            if np.hypot(xx - x, yy - y) < 6 / sc: continue
+            qq = aperture_photometry(img, xx, yy, R / sc, (ANN[0] / sc, ANN[1] / sc))
+            if np.isfinite(qq): rnd.append(qq)
+            if len(rnd) >= 200: break
+        rnd = np.array(rnd); er = 1.4826 * np.median(np.abs(rnd - np.median(rnd))) if len(rnd) > 30 else np.nan
+        if ref_field is None:
+            sm = ndimage.gaussian_filter(np.nan_to_num(img), 1.0)
+            thr = np.nanmedian(sm) + 10 * 1.4826 * np.nanmedian(np.abs(sm - np.nanmedian(sm)))
+            pk = np.argwhere((sm == ndimage.maximum_filter(sm, 7)) & (sm > thr))
+            pk = [p for p in pk if np.hypot(p[1] - x, p[0] - y) * sc >= 8 and 8 < p[1] < img.shape[1] - 8 and 8 < p[0] < img.shape[0] - 8]
+            pk = sorted(pk, key=lambda p: -sm[p[0], p[1]])[:5]
+            ref_field = [w.pixel_to_world_values(p[1], p[0]) for p in pk]
+        ff = []
+        for fra, fde in ref_field:
+            fx, fy = (float(v) for v in w.world_to_pixel_values(fra, fde))
+            ff.append(aperture_photometry(img, fx, fy, R / sc, (ANN[0] / sc, ANN[1] / sc)) * k)
+        rec.update(flux_uJy=float(f * k), err_uJy=float(er * k), field_uJy=[float(v) for v in ff])
+        h0 = int(round(8 / sc)); xi, yi = int(round(x)), int(round(y))
+        stamps.append((src['key'], e['expid'], e['nd'], img[max(yi - h0, 0):yi + h0 + 1, max(xi - h0, 0):xi + h0 + 1]))
+        out.append(rec)
+    # reference: median of the bracketing detected exposures (field-star corrected)
+    refs = [r for r in out if not r['nd'] and np.isfinite(r.get('flux_uJy', np.nan)) and r.get('infobits', 1) == 0]
+    fbase = np.nanmedian(np.array([r['field_uJy'] for r in refs]), axis=0) if refs else None
+    for r in out:
+        if 'flux_uJy' in r and fbase is not None:
+            with np.errstate(all='ignore'):
+                r['field_ratio_median'] = float(np.nanmedian(np.array(r['field_uJy']) / fbase))
+    base = float(np.median([r['flux_uJy'] / r['field_ratio_median'] for r in refs if r.get('field_ratio_median')])) if refs else np.nan
+    base_err = float(np.median([r['err_uJy'] for r in refs])) if refs else np.nan
+    src['reference_uJy'] = base
+    for r in out:
+        if 'cls' in r: continue
+        if r['infobits'] != 0:
+            r['cls'], r['why'] = 1, f"invalid: infobits {r['infobits']}"; continue
+        if not np.isfinite(r['flux_uJy']) or not np.isfinite(r['err_uJy']):
+            r['cls'], r['why'] = 1, 'invalid: non-finite aperture or error'; continue
+        if r['seeing'] > 4 or r['maglimit'] < 19.5:
+            r['cls'], r['why'] = 2, 'poor image (seeing > 4" or maglimit < 19.5)'; continue
+        fr = r.get('field_ratio_median')
+        if not r['nd']:
+            r['cls'], r['why'] = 0, 'catalogue detection (reference / bracket)'; continue
+        if not r['member_quadrant']:
+            r['cls'], r['why'] = 3, 'source position in a quadrant without the group objectid'
+        if fr is None or not np.isfinite(base) or not (0.8 <= fr <= 1.25):
+            r.setdefault('cls', 5); r.setdefault('why', 'undetermined: field stars off their reference or no reference')
+            continue
+        fc = r['flux_uJy'] / fr; ratio = fc / base; sig = np.hypot(r['err_uJy'] / fr, base_err)
+        r['ratio'] = float(ratio); r['deficit_sigma'] = float((base - fc) / sig)
+        if 'cls' in r: continue
+        if ratio < 0.5 and r['deficit_sigma'] >= 3:
+            r['cls'], r['why'] = 4, f'credible dimming / non-detection: ratio {ratio:.2f}, deficit {r["deficit_sigma"]:.1f} sigma'
+        elif ratio >= 0.5 and r['deficit_sigma'] < 3:
+            r['cls'], r['why'] = 3, f'source present but catalogue missing it: ratio {ratio:.2f}'
+        else:
+            r['cls'], r['why'] = 5, f'undetermined: ratio {ratio:.2f}, deficit {r["deficit_sigma"]:.1f} sigma'
+    src['exposures'] = out; res.append(src)
+cnt = {}
+for s in res:
+    for r in s.get('exposures', []):
+        if r['nd']: cnt[str(r['cls'])] = cnt.get(str(r['cls']), 0) + 1
+summ = {'label': 'derived; v4 image check', 'cutout_bytes': total, 'ibe_search_bytes': ibe_bytes,
+        'n_cutouts': sum(1 for s in res for r in s.get('exposures', []) if 'cutout_bytes' in r),
+        'nd_classes': cnt, 'nd_pending_unchecked': sum(s['nd_pending'] for s in res)}
+json.dump({**summ, 'sources': res}, open(OUT, 'w'), indent=1, default=float); open(OUT, 'a').write('\n')
+print(summ)
+import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+n = len(stamps); nc = 8; nr = max(1, int(np.ceil(n / nc)))
+fig, ax = plt.subplots(nr, nc, figsize=(nc * 1.6, nr * 1.8))
+for a in np.ravel(ax): a.axis('off')
+for a, (key, exp, nd, st) in zip(np.ravel(ax), stamps):
+    v = np.nanpercentile(st, [5, 99.5]) if np.isfinite(st).any() else (0, 1)
+    a.imshow(st, origin='lower', cmap='gray', vmin=v[0], vmax=v[1]); a.set_title(f"{str(key)[-5:]} {exp}{' ND' if nd else ''}", fontsize=6)
+plt.tight_layout(); plt.savefig(PNG, dpi=90)

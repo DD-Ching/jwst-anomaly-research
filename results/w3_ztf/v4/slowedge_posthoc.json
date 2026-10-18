@@ -1,0 +1,36 @@
+{
+ "label": "derived; post hoc vetting diagnostic (simulated injections)",
+ "rho0.1_blend1_tE30": {
+  "recovered": 141,
+  "flagged_but_rejected": 27,
+  "test_failed_by_all_hit_runs": {
+   "sharp_ok": 26,
+   "oneoff_ok": 1
+  }
+ },
+ "rho0.1_blend1_tE100": {
+  "recovered": 81,
+  "flagged_but_rejected": 84,
+  "test_failed_by_all_hit_runs": {
+   "sharp_ok": 84,
+   "achromatic_ok": 2
+  }
+ },
+ "rho0.1_blend0.7_tE30": {
+  "recovered": 120,
+  "flagged_but_rejected": 39,
+  "test_failed_by_all_hit_runs": {
+   "sharp_ok": 33,
+   "oneoff_ok": 2,
+   "achromatic_ok": 6
+  }
+ },
+ "rho0.1_blend0.7_tE100": {
+  "recovered": 60,
+  "flagged_but_rejected": 102,
+  "test_failed_by_all_hit_runs": {
+   "sharp_ok": 94,
+   "achromatic_ok": 29
+  }
+ }
+}
