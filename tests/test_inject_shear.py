@@ -241,3 +241,48 @@ def test_gate_r_rule():
     bad = g.gate_r({"a": None, "b": 0.61}, r200)  # an unusable fit fails the gate
     assert not bad["passed"] and bad["adopted_r"] is None
     assert not g.gate_r({"a": 0.42}, r200)["passed"]  # a field without a fit fails, no KeyError
+
+
+def test_goodsn_fields_use_the_frozen_r_and_the_shared_dja_zout():
+    import json
+
+    names = sorted(ish.GOODSN_FIELDS)
+    assert len(names) == 6
+    for name in names:
+        spec = ish.field_spec(name)
+        assert spec["model"] is None and spec["responsivity"] == ish.GOODSN_R
+        assert spec["catalog"].endswith("_nircam_clear-f200w_cat.ecsv")
+        assert "jw01181-" in spec["catalog"]
+        assert spec["photoz"] == ("eazy", ish._GOODSN_ZOUT)
+        assert ish.fixed_responsivity(name, spec, 0.3) == pytest.approx(0.414)
+        with pytest.raises(ValueError, match="lens-z"):
+            ish.fixed_responsivity(name, spec, None)
+    # the frozen R is the Abell 370 F200W fit, rounded (results/w1_shear_goodsn/PLAN.md)
+    a370 = _DIR.parent / "results" / "w1_volume" / "summaries" / "z0.3_abell370.json"
+    assert round(json.loads(a370.read_text())["screen"]["responsivity"], 3) == ish.GOODSN_R
+
+
+def test_gate_p_rule():
+    assert ish.passes_gate_p({"n_used": 100, "n_used_photoz": 50})
+    assert not ish.passes_gate_p({"n_used": 100, "n_used_photoz": 49})
+    assert not ish.passes_gate_p({"n_used": 0, "n_used_photoz": 0})
+    assert not ish.passes_gate_p({"n_used": 100, "n_used_photoz": None})
+    assert not ish.passes_gate_p({"n_used_before_veto": 100})  # older summaries: no gate data
+
+
+def test_fixed_r_sensitivity_runs_are_refused_by_w1_volume(tmp_path):
+    import json
+
+    _lv = importlib.util.spec_from_file_location("w1_volume", _DIR / "w1_volume.py")
+    wv = importlib.util.module_from_spec(_lv)
+    _lv.loader.exec_module(wv)
+    d = tmp_path / "z0.3" / "f"
+    d.mkdir(parents=True)
+    summ = {"assumptions": {"w1_lens_z": 0.3, "fixed_r_override": 0.231}}
+    (d / "summary.json").write_text(json.dumps(summ))
+    with pytest.raises(SystemExit, match="sensitivity"):
+        wv.main(
+            ["--runs", str(tmp_path), "--fields", "f", "--z", "0.3", "--out", str(tmp_path / "o")]
+        )
+    with pytest.raises(ValueError, match="'ncf' or a number"):
+        ish.fixed_responsivity("x", {"responsivity": "NCF"}, 0.3)

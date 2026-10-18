@@ -1,0 +1,32 @@
+{
+ "field": "goodsn-o001",
+ "i2d": "s3://stpubdata/jwst/public/jw01181/L3/t/o001/jw01181-o001_t001_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  600,
+  1284
+ ],
+ "pixel_scale_arcsec": 0.24982951686240126,
+ "n_trails_status2": 0,
+ "n_candidates_all_status": 44,
+ "trails": [],
+ "mask_pixels": 0,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "segment_stripes": null,
+ "wall_time_s": {
+  "read": 8.5,
+  "total": 43.7
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

@@ -183,17 +183,46 @@ def ncf_catalog(obs: str) -> str:
 
 for _name, (_obs, _c, _centre) in NCF_FIELDS.items():
     SHEAR_FIELD_OVERRIDES[_name]["catalog"] = ncf_catalog(_obs)
+# 2026-10-18 (results/w1_shear_goodsn/PLAN.md): six JADES GOODS-N F200W pointings (program
+# 1181) with small mutual overlap, no lens model, DJA v7.3 photo-z (tarball member, D-051),
+# R fixed at GOODSN_R (the smallest F200W cluster-fit R apart from MACS0647; ASSUMPTION)
+GOODSN_FIELDS = {
+    "goodsn-o001": ("o001_t001", (189.18115, 62.27479)),
+    "goodsn-o003": ("o003_t007", (189.04836, 62.26091)),
+    "goodsn-o004": ("o004_t008", (189.28111, 62.20377)),
+    "goodsn-o005": ("o005_t008", (189.21071, 62.18853)),
+    "goodsn-o009": ("o009_t009", (189.42173, 62.25673)),
+    "goodsn-o010": ("o010_t009", (189.37152, 62.30012)),
+}
+GOODSN_R = 0.414  # Abell 370 F200W fit (results/w1_volume/summaries/z0.3_abell370.json), rounded
+_GOODSN_ZOUT = "cache/dja/photoz-goodsn-v7.3/gdn-grizli-v7.3-fix.eazypy.zout.fits"
+for _name, (_obs, _centre) in GOODSN_FIELDS.items():
+    SHEAR_FIELD_OVERRIDES[_name] = {
+        "model": None,
+        "catalog": ir._MAST.format(f"jw01181-{_obs}_nircam_clear-f200w"),
+        "photoz": ("eazy", _GOODSN_ZOUT),
+        "max_radius": 200.0,
+        "spike_stars": True,
+        "centre": _centre,
+        "responsivity": GOODSN_R,
+    }
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
 
 def fixed_responsivity(name: str, spec: dict, lens_z, gate: Path = GATE_R) -> float | None:
-    """R for a field without a lens model (``spec["responsivity"] == "ncf"``): gate R's
-    ``adopted_r``; an error if gate R has not passed or no ``--lens-z`` is given (``z_lens`` 0).
-    None for every other field (R is fitted)."""
-    if spec.get("responsivity") != "ncf":
+    """R for a field without a lens model: gate R's ``adopted_r`` when
+    ``spec["responsivity"] == "ncf"`` (an error if gate R has not passed), the number itself when
+    it is a number (GOODS-N); an error if no ``--lens-z`` is given (``z_lens`` 0). None for every
+    other field (R is fitted)."""
+    rspec = spec.get("responsivity")
+    if rspec is None:
         return None
     if lens_z is None:
         raise ValueError(f"{name} has no lens model; give --lens-z")
+    if isinstance(rspec, (int, float)):
+        return float(rspec)
+    if rspec != "ncf":
+        raise ValueError(f"{name}: responsivity must be 'ncf' or a number, not {rspec!r}")
     res = json.loads(Path(gate).read_text())["gate_r"] if Path(gate).exists() else {}
     if not res.get("passed"):
         raise ValueError(f"{name}: gate R has not passed ({gate}; w1_ncf_gate_r.py)")
@@ -377,6 +406,11 @@ def run_field(name: str, args) -> dict:
     sargs.recover_tol = args.recover_tol
     sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
     r_fixed = fixed_responsivity(name, spec, getattr(args, "lens_z", None))
+    r_override = getattr(args, "fixed_r", None)
+    if r_override is not None:  # sensitivity run (results/w1_shear_goodsn/PLAN.md)
+        if r_fixed is None:
+            raise ValueError(f"{name}: --fixed-r applies only to fields without a lens model")
+        r_fixed = float(r_override)
     if r_fixed is not None:  # no lens model: R fixed by gate R, the lens redshift explicit
         sargs.responsivity = r_fixed
     psf = es.psf_sigma_px(shapes)
@@ -444,6 +478,14 @@ def run_field(name: str, args) -> dict:
         | {
             "psf_sigma_px": psf,
             "n_streak_vetoed": inj.n_streak,
+            # gate P (results/w1_shear_goodsn/PLAN.md): rows in the statistic, and those of them
+            # with a photo-z match and a valid z160 (stricter than lensable_mask's finite z_phot)
+            "n_used": int(np.sum(inj.use)),
+            "n_used_photoz": (
+                int(np.sum(inj.use & np.isfinite(np.asarray(shapes["z160"], float))))
+                if "z160" in shapes.colnames
+                else None
+            ),
             "n_centres_valid": int(finite.sum()),
             "s_max": s_max,
             "s_max_xy": [float(inj.base["gx"][iy, ix]), float(inj.base["gy"][iy, ix])],
@@ -471,6 +513,8 @@ def run_field(name: str, args) -> dict:
             "spike_stars": len(extra) if extra is not None else None,
             **({} if getattr(args, "lens_z", None) is None else {"w1_lens_z": z_w1}),
             **({} if r_fixed is None else {"fixed_responsivity": r_fixed}),
+            # w1_volume.py refuses summaries of sensitivity runs
+            **({} if r_override is None else {"fixed_r_override": float(r_override)}),
             **(
                 {}
                 if streak is None
@@ -494,6 +538,15 @@ def run_field(name: str, args) -> dict:
     return summary
 
 
+GATE_P_MIN_FRAC = 0.5  # results/w1_shear_goodsn/PLAN.md gate P (ASSUMPTION)
+
+
+def passes_gate_p(screen: dict, min_frac: float = GATE_P_MIN_FRAC) -> bool:
+    """Gate P: at least ``min_frac`` of the rows the screen used have a photo-z match."""
+    n_used, n_z = screen.get("n_used", 0), screen.get("n_used_photoz")
+    return bool(n_z is not None and n_used > 0 and n_z >= min_frac * n_used)
+
+
 def streak_veto(mask_dir: Path, name: str):
     """``(ra, dec) -> bool`` for the field's streak mask (``w1_streak_mask.py``)."""
     path = mask_dir / f"{name}_streak_mask.fits.gz"
@@ -511,6 +564,7 @@ def setting(summary: dict) -> dict:
     a.pop("spike_stars", None)
     a.pop("streak_mask", None)  # per field
     a.pop("fixed_responsivity", None)  # per field kind (D-098)
+    a.pop("fixed_r_override", None)  # sensitivity runs; w1_volume.py refuses them
     a["screen"] = {**LEGACY_SCREEN_OPTIONS, **a["screen"]}
     return a
 
@@ -554,6 +608,12 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="redshift of the injected W1 lenses (default: each field's cluster redshift; "
         "results/w1_volume/PLAN.md)",
+    )
+    ap.add_argument(
+        "--fixed-r",
+        type=float,
+        default=None,
+        help="override the fixed R of fields without a lens model (sensitivity runs only)",
     )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")

@@ -50,7 +50,7 @@ _CANUCS_URL = (
     "https://archive.stsci.edu/hlsps/canucs/dr1/{0}/clu/"
     "hlsp_canucs_jwst-hst_multi_{0}-clu_multi_v1_photometry-cat.fits.gz"
 )
-MAX_BYTES = 100_000_000  # every file and tarball here is < 80 MB (SOURCES.md)
+MAX_BYTES = 100_000_000  # every file here is < 80 MB (SOURCES.md) except the GOODS-N tarball
 
 # F200W catalogues not in data/manifests: sha256 as recorded in SOURCES.md (MACS0417, MACS1423,
 # MACS0647) and results/arcs/rxj2129/summary.json (RXJ2129).
@@ -82,6 +82,25 @@ CATALOG_SHA256 = {
     ),
     "jw01208-o032_t005_nircam_clear-f150w_cat.ecsv": (
         "fb2f118625ae5a4a8c1107e546c5c19dfb7f2c4d1125d4c24d003ff4677898d2"
+    ),
+    # JADES GOODS-N F200W (results/w1_shear_goodsn), as fetched 2026-10-18
+    "jw01181-o001_t001_nircam_clear-f200w_cat.ecsv": (
+        "28a3c404bd9a8d21828a23e4a9a34c0c56668b3d68678b9706a56af337a6c8e0"
+    ),
+    "jw01181-o003_t007_nircam_clear-f200w_cat.ecsv": (
+        "0563c8be132f3e9c147b54327389645f1df952a3b2498bd496b4abe1dda8e520"
+    ),
+    "jw01181-o004_t008_nircam_clear-f200w_cat.ecsv": (
+        "35bd5e3e7d21ef9a083d83e16f57ebde2c2f9be4ca698026cee0fe6a323cea06"
+    ),
+    "jw01181-o005_t008_nircam_clear-f200w_cat.ecsv": (
+        "27047942ed8fea19ef2a5466e0d5f26990ba6e1a09e9e3b1c50a29bc1b6b6ff1"
+    ),
+    "jw01181-o009_t009_nircam_clear-f200w_cat.ecsv": (
+        "818eb57775777d24dfba06a1cddb399c0a559aa59d399d8e387b7c619180f9b4"
+    ),
+    "jw01181-o010_t009_nircam_clear-f200w_cat.ecsv": (
+        "a9060f9ce85856b73c4a4977a98ab58beec74e4936d36b24aae69c31b7e78574"
     ),
 }
 
@@ -140,7 +159,11 @@ for _f, _sha in (
 for _f in ("macs0416", "macs1149", "abell370"):
     _url, _sha = op.FIELDS[_f]["catalogue"]
     PHOTOZ[_url.rsplit("/", 1)[-1]] = {"url": _url, "sha256": _sha}
+# GOODS-N (results/w1_shear_goodsn): the DJA v7.3 zout streamed out of its 371 MB tarball (D-051)
+PHOTOZ[Path(ish._GOODSN_ZOUT).name] = op.DEEP_FIELDS["goodsn-dja"]["photoz"]
 for _spec in op.DEEP_FIELDS.values():  # CANUCS NCF photometry (results/w1_shear_ncf)
+    if _spec.get("format") == "dja":
+        continue
     _url, _sha = _spec["catalogue"]
     PHOTOZ.setdefault(_url.rsplit("/", 1)[-1], {"url": _url, "sha256": _sha})
 
@@ -196,7 +219,7 @@ def stage(target: Path, src: dict) -> dict:
                 **src,
                 "sha256": src["sha256"] or _Unpinned(),
                 "member_sha256": pinned or _Unpinned(),
-                "max_bytes": MAX_BYTES,
+                "max_bytes": src.get("max_bytes", MAX_BYTES),
             }
             got = op.fetch_tar_member(spec, cache_dir=target.parent)
         else:
@@ -271,7 +294,8 @@ def plan(fields: list[str]) -> list[tuple[str, Path | None, dict]]:
             src = PHOTOZ.get(Path(rel).name)
             if src is None:
                 raise KeyError(f"{name}: no recorded source for {rel}")
-            jobs.append((name, root / rel, src))
+            if all(j[1] != root / rel for j in jobs):  # one shared file (GOODS-N): fetch once
+                jobs.append((name, root / rel, src))
         files = ir.lc.MODELS[spec["model"]].get("files", {}) if spec["model"] else {}
         if any("#" in str(v[0]) for v in files.values()):
             jobs.append((name, None, {"zip_members": files}))

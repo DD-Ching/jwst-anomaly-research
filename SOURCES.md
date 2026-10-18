@@ -1478,3 +1478,16 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
     o010_t005 (MACS1423) `f165280389d6fbc192dd08c00208d9f4ed19f9f8f33875596b33706e611a4e6d`
   - the `_i2d.fits` of the same names were read by S3 byte range (streak masks, cutouts), not stored.
 - CANUCS DR1 NCF photometry and EAzY photo-z: as `orphan_pairs.DEEP_FIELDS` (all five sha256 matched on download).
+
+## W1 shear screen in GOODS-N (accessed 2026-10-18; `results/w1_shear_goodsn/`)
+- JWST JADES 1181 F200W pipeline catalogues `jw01181-<obs>_nircam_clear-f200w_cat.ecsv`, public S3
+  `s3://stpubdata/jwst/public/jw01181/L3/t/<o>/`, chosen from the MAST `s_region` footprints; sha256:
+  - o001_t001 `28a3c404bd9a8d21828a23e4a9a34c0c56668b3d68678b9706a56af337a6c8e0`
+  - o003_t007 `0563c8be132f3e9c147b54327389645f1df952a3b2498bd496b4abe1dda8e520`
+  - o004_t008 `35bd5e3e7d21ef9a083d83e16f57ebde2c2f9be4ca698026cee0fe6a323cea06`
+  - o005_t008 `27047942ed8fea19ef2a5466e0d5f26990ba6e1a09e9e3b1c50a29bc1b6b6ff1`
+  - o009_t009 `818eb57775777d24dfba06a1cddb399c0a559aa59d399d8e387b7c619180f9b4` (gate P failed)
+  - o010_t009 `a9060f9ce85856b73c4a4977a98ab58beec74e4936d36b24aae69c31b7e78574` (gate P failed)
+- Photo-z: DJA v7.3 `gdn-grizli-v7.3-fix.eazypy.zout.fits`, streamed out of `gdn-grizli-v7.3-fix.photoz.tar.gz`
+  (pins in `orphan_pairs.DEEP_FIELDS["goodsn-dja"]`; D-051). The F200W `_i2d.fits` SCI extensions were range-read
+  for the streak masks and the sheet (not stored).
