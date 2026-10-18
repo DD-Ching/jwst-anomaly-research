@@ -18,10 +18,21 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   on `sheet_smax_flags.png` the peak sits on a bright horizontal line lined with catalogue detections (by eye a
   streak; not a frozen test). Removing the row band (V1r, not part of the frozen outcome) drops S to 2.99 (p 0.99);
   5 % of rotated control bands do as much (`vet/vet_primer-uds-x3y0.json`). Not a candidate; unvetted.
-- **Handoff:** (1) `/vet-candidate` on primer-uds-x3y0 (cheapest first: the horizontal streak); (2) injections at
-  Z ∈ {0.6, 1.0, 1.5} on the twenty tiles (Z = 0.1 and 0.3 done, `summaries/`) (≈ 6 min per Z on 4 cores; Gaia star files are re-queried); (3)
-  combined limit with the unflagged tiles (D-098) and RESULT.md. Process: `inject_radial.MASSES` has five masses, so
-  pass `--mass 2e12 8e12 2e13` (the seeds depend on the mass list).
+- **Run 3 (2026-10-18 08:10–08:52Z, takeover of the released claim):** inputs re-staged and streak masks regenerated;
+  every regenerated mask JSON equals the committed one (wall time aside), and every new summary's `screen` block and
+  mask `data_sha256` equal the committed Z = 0.3 ones (`assert` before copying), so the restaged chain reproduces run 2.
+  Injections at Z ∈ {0.6, 1.0, 1.5} on the sixteen unflagged tiles (flagged tiles not injected, D-098, as CEERS):
+  25 of 48 done (the `summaries/z{0.6,1.0,1.5}_*.json` files). ≈ 230 s per tile-Z job with four in parallel (not 6 min per Z); the streak-mask tool
+  needs the `streaks` extra (`acstools`). UDS x3y0 (by eye on the sheet): one straight horizontal line crosses the whole
+  40″ sheet through the peak, with fainter parallel streaks above it; the tile's mask lists near-horizontal status-2
+  trails (θ 0.85°, 178.4°, 178.5°), so the trail family is found, but the line through the peak is not fully vetoed
+  (vetoed fraction not measured). Still a flag, not a candidate.
+- **Handoff:** (1) the remaining injection jobs (stage with `w1_stage_inputs.py`, masks with
+  `w1_streak_mask.py`, then `inject_shear.py --fields <tile> --lens-z Z --mass 2e12 8e12 2e13 --n-inject 100 --seed 50
+  --streak-masks <dir>`, one process per tile-Z; check `screen` equals the committed one); (2) R = 0.231 sensitivity at
+  Z = 0.3 (`--fixed-r 0.231`) on the sixteen; (3) combined limit (`w1_volume.py` over the twenty-four headline
+  summaries plus the sixteen) and RESULT.md; (4) for x3y0: the vetoed fraction of the 48 V1r rows under the regenerated
+  mask, and whether the line is in only one of the c1002 input visits (o001/o002) — a single-visit line is a trail.
 ## 2026-10-18: W1 shear in PRIMER: plan frozen, mosaics tiled, catalogues pinned (no screen yet)
 - `results/w1_shear_primer/PLAN.md` (frozen before any screen). MAST holds two UDS combined mosaics (c1001, c1002;
   129.2 / 127.9 arcmin²) and two COSMOS mosaics (o003, o004; 92.4 / 87.4 arcmin², overlap 38.7) in F200W
