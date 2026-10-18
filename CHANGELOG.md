@@ -2,16 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-18: MACS1423 h000 HST archive light curve: absent 181 d before, gone by +290 d; identity still open
+## 2026-10-18: MACS1423 h000 HST archive light curve: no change before (−181 d) or after (+180 to +409 d); identity still open
 - `scripts/hst_forced.py` (HST counterpart of `hit_lightcurve.py`: S3 byte-range drizzled products, 0.2″ aperture,
   local random-aperture errors, field peaks; `--offsets`) on 43 HST visits 2006–2024; visits registered to the
   JWST 1208 F150W frame (labelled deviation: the host gradient made per-visit WCS offsets of up to 0.27″ look like
   variability). Plan, result and light curve: `results/transients/macs1423_h000_hst/`.
-- **Result:** 5 new epochs (2022-02, 2022-08 before; 2023-08, 2023-12, 2024-04 after). No change at the position in any
-  same-instrument comparison: before, F435W/F606W 3σ < 19–41 nJy (−181 d, −380 d); after, F435W < 28 nJy (+180 d),
-  F110W < 59 / 58 nJy (+290 / +409 d). One episode of < ~470 observed days; a steadily bright long-lived source is
-  weakened; supernova types, other one-off transients and magnification of a faint persistent source are not
-  separated (no colours over time). No low-cost archive step remains for this object.
+- **Result:** four new epochs tested against same-instrument baselines (2022-08 before; 2023-08, 2023-12, 2024-04
+  after). No change at the position: −181 d vs −380 d F435W/F606W 3σ < 19–22 nJy (and vs 2013 < 41–63); after, F435W
+  < 28 nJy (+180 d), UVIS F606W < 41 (+290 d, vs 2014), F110W < 68 / 97 nJy (+290 / +409 d, vs 2013). Consistent with
+  one episode of < ~470 observed days; a source that varied the year before or stayed bright after is weakened;
+  supernova types, other one-off transients and magnification of a faint persistent source are not separated (no
+  colours over time). No low-cost archive step remains for this question. Review fixes: field zero points matched
+  in the registered frame and de-duplicated; single-visit IR errors scaled ×1.5; three baselines added (labelled).
 - #332 wording narrowed: the achromaticity test is a band-consistency test under stated assumptions, not a general
   supernova-versus-lensing classifier.
 

@@ -19,3 +19,11 @@ def test_centroid_and_peaks():
     assert abs(pk[0][0] - 20.3) < 0.2 and abs(pk[0][1] - 30.0) < 0.2  # brightest first
     assert abs(pk[1][1] - 12.6) < 0.2
     assert hf.centroid(img, 0, 0) == (0.0, 0.0)  # edge: no 3x3 box, returns the peak
+
+
+def test_photfnu_and_offset_sign():
+    # ACS/WFC F606W: PHOTFLAM 7.7e-20, PHOTPLAM 5921 A -> ~9.0e-8 Jy per e-/s (AB ZP ~26.5)
+    assert abs(hf.photfnu_from_photflam(7.7e-20, 5921.0) - 9.0e-8) < 0.1e-8
+    ra, dec = hf.shifted(10.0, 60.0, (1.0, -2.0))
+    assert np.isclose((ra - 10.0) * np.cos(np.radians(60.0)) * 3600, 1.0)
+    assert np.isclose((dec - 60.0) * 3600, -2.0)

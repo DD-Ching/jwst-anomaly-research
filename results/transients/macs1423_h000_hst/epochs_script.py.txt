@@ -14,29 +14,48 @@ for r in sorted(rows, key=lambda r: (key(r), r['mjd'])):
     else:
         ep.append({'visits': [r]})
 out = []
+ratio_by_inst = {}
+for e in ep:
+    v = e['visits']
+    if len(v) >= 3:
+        f = np.array([x['flux_njy'] for x in v]); sl = np.array([x['err_njy'] for x in v])
+        ratio_by_inst.setdefault(v[0]['instrument'], []).append(np.std(f, ddof=1) / np.median(sl))
+SCALE = {k: max(1.0, float(np.median(r))) for k, r in ratio_by_inst.items()}  # visit scatter / local error
 for e in ep:
     v = e['visits']; f = np.array([x['flux_njy'] for x in v]); s = np.array([x['err_njy'] for x in v])
     w = 1 / s**2; mean = float((w * f).sum() / w.sum()); err_local = float(1 / np.sqrt(w.sum()))
     err_scatter = float(np.std(f, ddof=1) / np.sqrt(len(f))) if len(f) > 1 else float('nan')
-    err = max(err_local, err_scatter) if np.isfinite(err_scatter) else err_local
+    err = max(err_local, err_scatter) if np.isfinite(err_scatter) else err_local * SCALE.get(v[0]['instrument'], 1.0)
     out.append({'instrument': v[0]['instrument'], 'filter': v[0]['filter'], 'mjd': float(np.mean([x['mjd'] for x in v])),
                 'days_from_jwst_detection': float(np.mean([x['mjd'] for x in v]) - T0), 'n_visits': len(v),
                 'assoc': [x['assoc'] for x in v], 'flux_njy': mean, 'err_local_njy': err_local,
                 'err_visit_scatter_njy': err_scatter, 'err_used_njy': err})
-def field_ratio(ref_vis, ep_vis):
-    """Median and robust scatter of field-source flux ratios (epoch / reference), matched within 0.1 arcsec."""
-    def avg(vis):
-        pts = {}
-        for x in vis:
-            for s in x['field']:
-                pts.setdefault((round(s['ra'], 5), round(s['dec'], 5)), []).append(s)
-        return [(np.mean([q['ra'] for q in g]), np.mean([q['dec'] for q in g]), np.mean([q['flux_njy'] for q in g])) for g in pts.values()]
-    a, b = avg(ref_vis), avg(ep_vis)
+def cluster(vis, tol=0.15):
+    """Field sources of an epoch's visits (registered frame) merged by distance; kept if seen in
+    >= min(2, n_visits) visits (drops cosmic-ray peaks); mean flux over finite measurements."""
+    groups = []
+    for vi, x in enumerate(vis):
+        for s in x['field']:
+            for g in groups:
+                if math.hypot((s['ra'] - g['ra']) * math.cos(math.radians(s['dec'])), s['dec'] - g['dec']) * 3600 < tol:
+                    g['m'].append((vi, s['flux_njy'])); break
+            else:
+                groups.append({'ra': s['ra'], 'dec': s['dec'], 'm': [(vi, s['flux_njy'])]})
+    need = min(2, len(vis)); out = []
+    for g in groups:
+        f = [q for _, q in g['m'] if q is not None and np.isfinite(q)]
+        if len({vi for vi, _ in g['m']}) >= need and f:
+            out.append((g['ra'], g['dec'], float(np.mean(f))))
+    return out
+def field_ratio(ref_vis, ep_vis, tol=0.15):
+    """Median and robust scatter of unique field-source flux ratios (epoch / reference)."""
+    a, b = cluster(ref_vis), cluster(ep_vis)
     rat = []
     for ra, de, fa in a:
-        best = min(b, key=lambda t: math.hypot((t[0] - ra) * math.cos(math.radians(de)), t[1] - de), default=None)
-        if best and math.hypot((best[0] - ra) * math.cos(math.radians(de)), best[1] - de) * 3600 < 0.1 and fa > 0:
-            rat.append(best[2] / fa)
+        if not b or fa <= 0: continue
+        d = [math.hypot((t[0] - ra) * math.cos(math.radians(de)), t[1] - de) * 3600 for t in b]
+        k = int(np.argmin(d))
+        if d[k] < tol: rat.append(b[k][2] / fa)
     rat = np.array(rat); rat = rat[np.isfinite(rat)]
     if len(rat) < 8: return None, None, len(rat)
     med = float(np.median(rat)); return med, float(1.4826 * np.median(np.abs(rat - med))), len(rat)
@@ -52,6 +71,9 @@ pairs = [  # (reference epoch selector, compared epoch selector), fixed in PLAN.
     (('ACS/WFC', 'F814W', 53810, 53825), ('WFC3/UVIS', 'F814W', 60405, 60415)),  # cross-instrument
     # added after the first measurement (labelled): a decade-earlier baseline for the pre-detection epoch
     (('ACS/WFC', 'F606W', 56300, 56310), ('ACS/WFC', 'F606W', 59815, 59825)),
+    # added after review (labelled): decade-earlier F435W baseline; same-instrument UVIS F606W baseline (13386, 2014)
+    (('ACS/WFC', 'F435W', 56325, 56332), ('ACS/WFC', 'F435W', 59815, 59825)),
+    (('WFC3/UVIS', 'F606W', 56770, 56780), ('WFC3/UVIS', 'F606W', 60285, 60295)),
 ]
 def pick(sel):
     for i, e in enumerate(out):
@@ -72,7 +94,7 @@ for ref, cmp_ in pairs:
                 'field_n': n, 'field_median_ratio': m, 'field_scatter': s, 'zero_point_applied': zp,
                 'delta_njy': d, 'sigma_njy': sig, 'snr': d / sig,
                 'decision': 'change detected' if abs(d / sig) >= 5 else f'no change at 5 sigma; 3 sigma limit |delta| < {3*sig:.0f} nJy'})
-json.dump({'label': 'derived; PLAN.md rule; err_used = max(local, visit scatter / sqrt(n)) (choice made after seeing the visit scatter; labelled)',
+json.dump({'label': 'derived; PLAN.md rule; err_used = max(local, visit scatter / sqrt(n)); single-visit epochs: local x the median (visit scatter / local error) of the same instrument >= 3-visit epochs (choices made after seeing the scatter, review; labelled)', 'single_visit_error_scale': SCALE,
            'epochs': out, 'comparisons': res}, open(D + '/epochs.json', 'w'), indent=1)
 open(D + '/epochs.json', 'a').write('\n')
 for e in out: print(f"{e['instrument']:10s} {e['filter']:6s} {e['mjd']:9.1f} {e['days_from_jwst_detection']:7.0f} n={e['n_visits']} {e['flux_njy']:7.1f} loc {e['err_local_njy']:5.1f} scat {e['err_visit_scatter_njy']:6.1f}")

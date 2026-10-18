@@ -26,7 +26,7 @@ for r in rows:
         info[r['assoc']] = {'n': len(d), 'offset': offs[r['assoc']], 'mad': [float(1.4826 * np.median(np.abs(d[:, i] - med[i]))) for i in (0, 1)]}
     else:
         info[r['assoc']] = {'n': len(d), 'offset': None}
-json.dump(offs, open(sys.argv[2], 'w'), indent=1)
+pass
 json.dump({'label': 'derived; HST visit minus JWST 1208 F150W field-peak positions (arcsec, dRA cos dec, dDec)', 'jwst_peaks': len(pk), 'visits': info},
           open(sys.argv[2].replace('.json', '_info.json'), 'w'), indent=1)
 for k, v in sorted(info.items()): print(k, v)

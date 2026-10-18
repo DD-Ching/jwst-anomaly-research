@@ -52,10 +52,22 @@ def resolve(assocs: list[str]) -> dict[str, str]:
     prods = query.list_products(obs, subgroups=("DRC", "DRZ"), calib_level=3, cloud_uris=True)
     out: dict[str, str] = {}
     for f, u in zip(prods["productFilename"], prods["cloud_uri"], strict=True):
+        if str(f).startswith("hst_"):  # HAP single-visit products are not used here
+            continue
         a, kind = str(f).split("_")[0], str(f).split("_")[1]
         if u and (a not in out or kind == "drc.fits"):
             out[a] = str(u)
     return out
+
+
+def photfnu_from_photflam(photflam: float, photplam: float) -> float:
+    """Jy per e-/s from PHOTFLAM (erg/s/cm2/A per e-/s) and PHOTPLAM (A): f_nu = f_lam lam^2 / c."""
+    return 3.33564095e4 * float(photflam) * float(photplam) ** 2
+
+
+def shifted(ra: float, dec: float, offset) -> tuple[float, float]:
+    """Sky position + offset (arcsec, [dRA cos(dec), dDec])."""
+    return ra + offset[0] / 3600.0 / np.cos(np.radians(dec)), dec + offset[1] / 3600.0
 
 
 def centroid(img: np.ndarray, x: int, y: int) -> tuple[float, float]:
@@ -93,8 +105,7 @@ def measure(
         w = WCS(sci_h, h)
         scale = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
         # registration: the target appears at (ra, dec) + offset (arcsec) in this visit's WCS
-        ra_m = ra + offset[0] / 3600.0 / np.cos(np.radians(dec))
-        dec_m = dec + offset[1] / 3600.0
+        ra_m, dec_m = shifted(ra, dec, offset)
         x, y = (float(v) for v in w.world_to_pixel_values(ra_m, dec_m))
         hb = int(np.ceil(BOX / scale))
         ny, nx = sci_h["NAXIS2"], sci_h["NAXIS1"]
@@ -107,7 +118,7 @@ def measure(
         if photfnu is None:  # ACS: from PHOTFLAM (erg/s/cm2/A per e-/s) and PHOTPLAM (A), in Jy
             flam = sci_h.get("PHOTFLAM", p0.get("PHOTFLAM"))
             plam = sci_h.get("PHOTPLAM", p0.get("PHOTPLAM"))
-            photfnu = 3.33564095e4 * float(flam) * float(plam) ** 2
+            photfnu = photfnu_from_photflam(flam, plam)
         rec = {
             "assoc": assoc,
             "instrument": f"{p0.get('INSTRUME')}/{p0.get('DETECTOR')}",
@@ -129,6 +140,8 @@ def measure(
     rng = np.random.default_rng(zlib.crc32(assoc.encode()))
     m = ann[1] + 1
     rnd = []
+    if sci.shape[0] <= 2 * m or sci.shape[1] <= 2 * m:
+        return {**rec, "error": "box too small for random apertures"}
     for _ in range(N_RANDOM * 3):
         xx, yy = rng.uniform(m, sci.shape[1] - m), rng.uniform(m, sci.shape[0] - m)
         if np.hypot(xx - xt, yy - yt) * scale < EXCLUDE:
@@ -150,6 +163,11 @@ def measure(
     px = np.array([p[0] for p in pk[:MAX_FIELD]])
     py = np.array([p[1] for p in pk[:MAX_FIELD]])
     rd = w.pixel_to_world_values(px + x0, py + y0)
+    # field positions in the registered (JWST) frame: remove this visit's offset
+    rd = (
+        np.asarray(rd[0]) - offset[0] / 3600.0 / np.cos(np.radians(dec)),
+        np.asarray(rd[1]) - offset[1] / 3600.0,
+    )
     rec["field"] = [
         {
             "ra": float(r),
@@ -160,7 +178,7 @@ def measure(
     ]
     h0 = int(np.ceil(1.2 / scale))
     xi, yi = int(round(xt)), int(round(yt))
-    rec["stamp"] = (sci[yi - h0 : yi + h0 + 1, xi - h0 : xi + h0 + 1] * k).tolist()
+    rec["stamp"] = (sci[max(yi - h0, 0) : yi + h0 + 1, max(xi - h0, 0) : xi + h0 + 1] * k).tolist()
     return rec
 
 
