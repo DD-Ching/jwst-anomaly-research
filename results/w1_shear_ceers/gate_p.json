@@ -1,0 +1,67 @@
+{
+ "provenance": "derived",
+ "plan": "results/w1_shear_ceers/PLAN.md (gate P)",
+ "rule": "inject_shear.passes_gate_p: n_used_photoz >= 0.5 * n_used",
+ "fields": {
+  "ceers-o001": {
+   "n_used": 3092,
+   "n_used_photoz": 2410,
+   "frac": 0.779,
+   "passed": true
+  },
+  "ceers-o002": {
+   "n_used": 2123,
+   "n_used_photoz": 1669,
+   "frac": 0.786,
+   "passed": true
+  },
+  "ceers-o003": {
+   "n_used": 2776,
+   "n_used_photoz": 1928,
+   "frac": 0.695,
+   "passed": true
+  },
+  "ceers-o004": {
+   "n_used": 2729,
+   "n_used_photoz": 1938,
+   "frac": 0.71,
+   "passed": true
+  },
+  "ceers-o061": {
+   "n_used": 1767,
+   "n_used_photoz": 1362,
+   "frac": 0.771,
+   "passed": true
+  },
+  "ceers-o064": {
+   "n_used": 2151,
+   "n_used_photoz": 1683,
+   "frac": 0.782,
+   "passed": true
+  },
+  "ceers-o066": {
+   "n_used": 2693,
+   "n_used_photoz": 2153,
+   "frac": 0.799,
+   "passed": true
+  },
+  "ceers-o068": {
+   "n_used": 1963,
+   "n_used_photoz": 1596,
+   "frac": 0.813,
+   "passed": true
+  },
+  "ceers-o069": {
+   "n_used": 2998,
+   "n_used_photoz": 2301,
+   "frac": 0.768,
+   "passed": true
+  },
+  "ceers-o071": {
+   "n_used": 1780,
+   "n_used_photoz": 1336,
+   "frac": 0.751,
+   "passed": true
+  }
+ }
+}

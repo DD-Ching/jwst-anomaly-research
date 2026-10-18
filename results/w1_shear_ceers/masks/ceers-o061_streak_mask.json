@@ -1,0 +1,45 @@
+{
+ "field": "ceers-o061",
+ "i2d": "s3://stpubdata/jwst/public/jw01345/L3/t/o061/jw01345-o061_t043_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  549,
+  1237
+ ],
+ "pixel_scale_arcsec": 0.24983839306756686,
+ "n_trails_status2": 3,
+ "n_candidates_all_status": 49,
+ "trails": [
+  {
+   "theta_deg": 58.75494928063851,
+   "rho_px": -452.6848456145824
+  },
+  {
+   "theta_deg": 1.1884494084384762,
+   "rho_px": -438.76357836365344
+  },
+  {
+   "theta_deg": 178.27103457797517,
+   "rho_px": 444.5538776681283
+  }
+ ],
+ "mask_pixels": 13048,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "segment_stripes": null,
+ "wall_time_s": {
+  "read": 11.4,
+  "total": 43.4
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

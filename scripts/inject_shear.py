@@ -206,6 +206,32 @@ for _name, (_obs, _centre) in GOODSN_FIELDS.items():
         "centre": _centre,
         "responsivity": GOODSN_R,
     }
+# 2026-10-18 (results/w1_shear_ceers/PLAN.md): ten CEERS F200W pointings (program 1345) with
+# pairwise overlaps <= 0.58 arcmin^2 (o052 left out), no lens model, DJA v7.4 photo-z (tarball
+# member), R fixed at GOODSN_R (D-099; ASSUMPTION). Centres: footprint centroids (footprints.json)
+CEERS_FIELDS = {
+    "ceers-o001": ("o001_t021", (214.98308, 52.97763)),
+    "ceers-o002": ("o002_t022", (214.89398, 52.91413)),
+    "ceers-o003": ("o003_t023", (214.80265, 52.85123)),
+    "ceers-o004": ("o004_t024", (214.85503, 52.83243)),
+    "ceers-o061": ("o061_t043", (214.75915, 52.76820)),
+    "ceers-o064": ("o064_t044", (214.94225, 52.89348)),
+    "ceers-o066": ("o066_t055", (215.10769, 52.95306)),
+    "ceers-o068": ("o068_t048", (215.01496, 52.88907)),
+    "ceers-o069": ("o069_t046", (214.92173, 52.82633)),
+    "ceers-o071": ("o071_t047", (214.82935, 52.76356)),
+}
+_CEERS_ZOUT = "cache/dja/photoz-ceers-v7.4/ceers-full-grizli-v7.4-fix.eazypy.zout.fits"
+for _name, (_obs, _centre) in CEERS_FIELDS.items():
+    SHEAR_FIELD_OVERRIDES[_name] = {
+        "model": None,
+        "catalog": ir._MAST.format(f"jw01345-{_obs}_nircam_clear-f200w"),
+        "photoz": ("eazy", _CEERS_ZOUT),
+        "max_radius": 200.0,
+        "spike_stars": True,
+        "centre": _centre,
+        "responsivity": GOODSN_R,
+    }
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
 

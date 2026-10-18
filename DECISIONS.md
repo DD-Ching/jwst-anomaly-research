@@ -5089,3 +5089,7 @@ confining radiation at a throat is found.
   adopted ones (four-pointing totals at Z = 0.3).
 - **Revisit if:** a blank-field R calibration exists (e.g. image simulations or a shear-calibrated catalogue of the
   same mosaics), or a photo-z catalogue covers o009/o010.
+- **Addendum (2026-10-18, CEERS):** the same rule applied to CEERS (program 1345, F200W, 2.8 ks; DJA v7.4 zout;
+  pointings with pairwise overlap ≤ 0.6 arcmin², o052 out). Ten pass gate P; o004 / o069 flags explained by V1 ∪ V2
+  and kept out. Twenty-four fields: n₉₅ < 1.09 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉ (1.09× T&A); R 0.231 keeps 0.19–0.28
+  of the CEERS recoveries (`results/w1_shear_ceers/RESULT.md`). The borrowed R now dominates the systematics.
