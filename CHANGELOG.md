@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W3 ZTF v5: exploratory holdout search within the calibrated cells, 0 flags in 486 groups
+- #339's failed verdict stands. This is a narrower, exploratory search with the #339 code unchanged; the plan was
+  frozen first (`results/w3_ztf/v5/PLAN.md`). Capability is stated for the 10 injection cells at ≥ 0.5 only.
+- Searched 486 holdout groups: 971 series, 1,438,841 exposures. Result: 0 flagged runs, so no image check (0 MB).
+  The holdout was not strictly blind: its light curves were downloaded in v1–v3 and used in aggregate comparison
+  counts (`independence.json`).
+- Post hoc functional check: the development half also gives 0 flags (1,520 under the v3 mapping).
+- Reads: 1,024.8 MB compressed (`cost.json`).
+- **Handoff:** no verified dimming; the route stays paused. No next batch without the owner (`results/w3_ztf/v5/RESULT.md`).
+
 ## 2026-10-18: W3 ZTF v4: new-source validation failed (one W3 cell); footprint fix removes all flags; 0 dimming in 38 checked non-detections
 - `scripts/w3_ztf.py` v4 (`--pix 3838`): non-detections only ≥ 10″ inside each exposure's quadrant footprint
   (IRSA corners, gnomonic after review), ambiguous groups dropped, one entry per expid; plan frozen before reading (`results/w3_ztf/v4/PLAN.md`).

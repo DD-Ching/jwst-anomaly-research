@@ -1,0 +1,13 @@
+{
+ "label": "derived",
+ "summary": {
+  "version": 5,
+  "half": "holdout",
+  "groups": 486,
+  "series_searched": 971,
+  "flagged_runs": 0,
+  "flagged_groups": 0,
+  "passed_groups": []
+ },
+ "runs": []
+}

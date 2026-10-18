@@ -1,0 +1,26 @@
+# v5 search statistics (what was actually searched; no rule change). Usage: python stats_script.py.txt <out json>
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(3839, 'v5')
+rows, cov = wz.context(None)
+out = {'label': 'derived; v5 holdout search statistics'}
+for half in ('holdout', 'dev'):
+    gs = [g for g in json.load(open(wz.SAMPLE))['groups'] if g['holdout'] == (half == 'holdout')]
+    n_ser = n_ep = n_nd = n_dim = n_long = 0; span = []
+    for g in gs:
+        for filt in (2, 1):
+            s = wz.series(g, rows, cov, filt)
+            if len(s) < 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+                continue
+            n_ser += 1; n_ep += len(s)
+            n_nd += sum(x[2] for x in s); n_dim += sum((not x[2]) and x[1] >= wz.DIM_MAG for x in s)
+            span.append(s[-1][0] - s[0][0])
+            d = wz.dim_state(s)
+            n_long += sum(1 for i, j in wz.runs(d) if j - i + 1 >= 2)
+    out[half] = {'groups': len(gs), 'series': n_ser, 'epochs': n_ep, 'non_detections': n_nd,
+                 'dim_detections': n_dim, 'dim_runs_ge2_epochs': n_long,
+                 'span_days_median': float(np.median(span)) if span else None}
+json.dump(out, open(sys.argv[1], 'w'), indent=1, default=int); open(sys.argv[1], 'a').write('\n')
+print(out)
