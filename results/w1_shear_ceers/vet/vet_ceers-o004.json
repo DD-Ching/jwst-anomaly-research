@@ -1,0 +1,124 @@
+{
+ "field": "ceers-o004",
+ "plan": "results/w1_shear_more/PLAN.md addendum A",
+ "peak_radec": [
+  214.82514402775845,
+  52.814930000000004
+ ],
+ "b_max": 4.1740884986287075,
+ "n_null": 200,
+ "stripe_columns_px": [
+  476,
+  477,
+  478,
+  479,
+  480,
+  481,
+  482,
+  483,
+  484,
+  485,
+  486,
+  487,
+  488,
+  489,
+  490,
+  491,
+  492,
+  493,
+  494,
+  495,
+  496,
+  497,
+  498,
+  499,
+  505,
+  627
+ ],
+ "pixel_scale_arcsec": 0.03122671191967502,
+ "n_v1": 30,
+ "n_v2": 16,
+ "stripe_rows_px": [
+  658,
+  659,
+  660,
+  661,
+  662,
+  663,
+  664,
+  665,
+  666,
+  667,
+  668,
+  669,
+  670,
+  671,
+  672,
+  673,
+  674,
+  675,
+  676,
+  677,
+  678,
+  679,
+  680,
+  681,
+  683,
+  684,
+  685,
+  688,
+  774,
+  775
+ ],
+ "n_v1r": 24,
+ "star": {
+  "ra": 214.82175681665092,
+  "dec": 52.81679155503891,
+  "mag": 17.820288870164163
+ },
+ "star_sep_from_peak_arcsec": 9.961286563473966,
+ "s_at_peak": {
+  "all": {
+   "s": 4.963511653854051,
+   "p_rot": 0.0,
+   "n_used_field": 2761
+  },
+  "no_v1": {
+   "s": 1.5313721641054014,
+   "p_rot": 1.0,
+   "n_used_field": 2731
+  },
+  "no_v2": {
+   "s": 2.963115101824433,
+   "p_rot": 1.0,
+   "n_used_field": 2745
+  },
+  "no_v1_v2": {
+   "s": 1.5413322173113524,
+   "p_rot": 1.0,
+   "n_used_field": 2727
+  },
+  "no_v1r": {
+   "s": 4.754779724686521,
+   "p_rot": 0.0,
+   "n_used_field": 2737
+  },
+  "no_v1_v1r_v2": {
+   "s": 1.5953178940518074,
+   "p_rot": 1.0,
+   "n_used_field": 2706
+  },
+  "control_v1r_rotated": {
+   "n_draws": 200,
+   "s_median": 4.910045356747092,
+   "frac_le_no_v1r": 0.38
+  }
+ },
+ "outcome": "explained by streak/spike contamination (screen-level)",
+ "outcome_post_hoc_with_rows": "explained by streak/spike contamination (screen-level)",
+ "provenance": {
+  "shapes": "observed",
+  "s_p": "derived",
+  "thresholds": "assumption"
+ }
+}

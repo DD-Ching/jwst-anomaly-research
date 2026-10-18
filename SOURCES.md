@@ -1492,6 +1492,26 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (pins in `orphan_pairs.DEEP_FIELDS["goodsn-dja"]`; D-051). The F200W `_i2d.fits` SCI extensions were range-read
   for the streak masks and the sheet (not stored).
 
+## W1 shear screen in CEERS (accessed 2026-10-18; `results/w1_shear_ceers/`)
+- JWST CEERS (program 1345) F200W pipeline catalogues `jw01345-<obs>_nircam_clear-f200w_cat.ecsv`, public S3
+  `s3://stpubdata/jwst/public/jw01345/L3/t/<o>/`, chosen from the MAST `s_region` footprints
+  (`scripts/w1_footprints.py`; o052_t022 left out); sha256:
+  - o001_t021 `878766359ac425b9510b0e02dba82f032f23a1e68d2deb097d51df9cc5f35f27`
+  - o002_t022 `152648c84958a8bdc5e72287b55b70e3af292a0d0404917bf3fe65e325a11999`
+  - o003_t023 `9a989e0c12144c65a332abab6694839a4ad5e8e3b00c28438fad957a573fc9d4`
+  - o004_t024 `099d0beee716e6ba566a593908e1361e671d1fcf93d8957d435257f3b64f5dfa`
+  - o061_t043 `b2c1b51ae6f8c3019716a7db1187560fe698852aef449ec5a9694d7aabba32b3`
+  - o064_t044 `c3b2fce5200b0e6b690237d314c751687a38bfd3db029780d1d89411d8b9c5ff`
+  - o066_t055 `93a96a25e0d9c8177044a2334cde57668759796f6f618b6e17c7d1a64bd5ba24`
+  - o068_t048 `a897343adde44740e9031dd1cbde0340135a9af920d09f9caff9ab58800e919c`
+  - o069_t046 `c8789ba9f7658db262c6432818990af0bf0318d5ed463818529060d984f28422`
+  - o071_t047 `c775b3cd3dcaaf3698bb4a1c6b97dc0696aaf63825836537d8833a82c4f1ff93`
+- Photo-z: DJA v7.4 `ceers-full-grizli-v7.4-fix.eazypy.zout.fits` (sha256
+  `c50443d242c4c76b2d3c164b236911f14d926bf5c466ae90bfe0def299a48a50`, 78.4 MB), streamed out of
+  https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/ceers-full-grizli-v7.4-fix.photoz.tar.gz (396.8 MB, Last-Modified
+  2024-09-27; tarball sha256 not recorded; same DJA terms and citation, arXiv:2302.10936). The F200W `_i2d.fits` SCI
+  extensions were range-read for the streak masks, the vetting and the sheet (not stored).
+
 ## W1 blank-field R simulation (accessed 2026-10-18; `results/w1_r_metacal/`)
 - **GalSim** 2.8.5 (PyPI `galsim`), https://github.com/GalSim-developers/GalSim; Rowe et al. 2015, Astronomy and
   Computing 10, 121, doi:10.1016/j.ascom.2015.02.002. Sérsic profiles, Airy ⊗ Gaussian PSF, shears.
