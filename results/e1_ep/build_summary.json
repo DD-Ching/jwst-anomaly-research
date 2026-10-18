@@ -1,0 +1,35 @@
+{
+ "provenance": "derived",
+ "circulars": 45863,
+ "ep_names_with_wxt_mention": 239,
+ "parsed_events": 230,
+ "unparsed_names": [
+  "EP250101a",
+  "EP250109b",
+  "EP250324a",
+  "EP250402a",
+  "EP250908a",
+  "EP260324a",
+  "EP260518a",
+  "EP260707a",
+  "EP260822a"
+ ],
+ "retracted_or_unparsed": "see unparsed_names",
+ "r90_unit_counts": {
+  "arcmin": 217,
+  "arcsec": 13
+ },
+ "time_rule_counts": {
+  "onset": 74,
+  "first": 156
+ },
+ "mjd_range": [
+  60384.840787037036,
+  61328.728842592594
+ ],
+ "r90_arcmin_quantiles_5_50_95": [
+  0.333,
+  3.0,
+  3.0
+ ]
+}
