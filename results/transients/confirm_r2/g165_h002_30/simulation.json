@@ -1,9 +1,0 @@
-{
- "label": "simulated",
- "equal_ratio_false_rejection": 0.0165,
- "power_hsiao": 0.415,
- "power_nugent-sn2p": 0.2055,
- "power_nugent-sn2l": 0.182,
- "power_nugent-sn1bc": 0.509,
- "n_per_class": 2000
-}

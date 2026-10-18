@@ -1,0 +1,23 @@
+{
+ "label": "simulated",
+ "noise_model": "plan",
+ "calibration_sigma": {
+  "F090W": 0.15352447504832836,
+  "F150W": 0.07222997450795123,
+  "F200W": 0.0728597166582149
+ },
+ "equal_ratio_false_rejection": 0.006,
+ "power_hsiao": 0.4345,
+ "draws_hsiao": 2000,
+ "peakphase_hsiao": 0.03963281948115344,
+ "power_nugent-sn2p": 0.166,
+ "draws_nugent-sn2p": 2000,
+ "peakphase_nugent-sn2p": 11.18378827845486,
+ "power_nugent-sn2l": 0.1485,
+ "draws_nugent-sn2l": 2000,
+ "peakphase_nugent-sn2l": 11.198626282087274,
+ "power_nugent-sn1bc": 0.2935,
+ "draws_nugent-sn1bc": 2000,
+ "peakphase_nugent-sn1bc": 16.983570718660843,
+ "n_per_class": 2000
+}

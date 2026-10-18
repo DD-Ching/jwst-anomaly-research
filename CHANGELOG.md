@@ -7,9 +7,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   query per position hanging on an HTTP response; `hit_lightcurve.py --group-arcsec` shares one query. With 22
   controls (entry and duplicates removed) the decisive F150W tail is 0.591: consistent with matched-control scatter.
 - **Discriminating test (D-102):** achromaticity of B1-PLCKG165 h002's fade (intrinsic transient vs magnification by a
-  point mass, Ellis wormhole or negative-mass lens). Frozen rule: not decided (F090W controls 10 / 14 < 20; a 30″ pick
-  was a labelled deviation). Simulated power against SN templates 0.18–0.59: the existing data cannot separate the two;
-  the path is paused until a calibrated multi-band epoch or a spectrum exists.
+  point mass, Ellis wormhole or negative-mass lens). Frozen rule: not decided (16″ pick: all bands < 20 usable
+  controls; 30″ deviation: F090W 14 < 20). Simulated power against SN templates 0.15–0.62 (≤ 0.29 for type II), so
+  the two epochs are weak for this question; paused until a calibrated bright-epoch repeat or a spectrum exists.
 - **Prior work (`docs/value_comparison.md`):** JADES (2406.05060) and the Dragon-arc papers already search brightening
   and fading; Stein et al. find look-alikes and lens systems, not the same source (2110.00023 is the lens-mining
   paper, 2110.13151 the similarity search). Our measured added value is per-box calibration; coverage beyond other

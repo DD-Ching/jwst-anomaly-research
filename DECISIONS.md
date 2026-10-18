@@ -5132,7 +5132,8 @@ confining radiation at a throat is found.
 - **Alternatives rejected:** comparing one SN light curve with one wormhole light curve (two ideal curves, no
   ordinary lens, no errors); a light-curve-shape test (W3 spike–umbra–spike): needs ≥ 3 well-sampled epochs, none of
   the open objects has them.
-- **Evidence:** `results/transients/confirm_r2/RESULT.md`: B1-PLCKG165 h002 not decided (F090W controls 10–14 < 20);
-  power 0.18–0.59 against SN templates at its real epochs and errors; post hoc p 0.03 / 0.30.
+- **Evidence:** `results/transients/confirm_r2/RESULT.md`: B1-PLCKG165 h002 not decided (too few usable controls; h002
+  is near the edge of the 4446 coverage); power 0.15–0.62 against SN templates at its real epochs and errors (two
+  noise models); post hoc p 0.03 / 0.30.
 - **Revisit if:** a new public epoch or a spectrum of a fading point source exists while it is bright, with ≥ 3 bands
-  calibrated to a few per cent; or the 4446 o003 non-finite flux at h002 turns out to be a photometry issue.
+  calibrated to a few per cent; or a local-error photometry of the 4446 edge region recovers usable controls.

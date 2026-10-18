@@ -281,7 +281,8 @@ def main(argv: list[str] | None = None) -> int:
         type=float,
         default=GROUP_ARCSEC,
         help="positions within this of a group's first member share one MAST query and box "
-        "(with --query-only, one query covers controls around a hit)",
+        "(with --query-only, one query covers controls around a hit; the error is then one robust "
+        "value over the larger group box, not local)",
     )
     ap.add_argument("--threads", type=int, default=12)
     ap.add_argument("--out", type=Path, required=True)

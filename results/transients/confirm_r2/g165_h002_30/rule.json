@@ -5,6 +5,7 @@
    "n_controls": 14,
    "control_median": 0.966687850491965,
    "control_scatter": 0.14841024478237586,
+   "control_median_ratio_err": 0.11973094946262006,
    "target": [
     271.6207013243184,
     5.071355134670104,
@@ -16,6 +17,7 @@
    "n_controls": 31,
    "control_median": 1.0246468321872926,
    "control_scatter": 0.07401021456854112,
+   "control_median_ratio_err": 0.06920015718641713,
    "target": [
     240.19295167591042,
     6.07025331927775,
@@ -27,6 +29,7 @@
    "n_controls": 32,
    "control_median": 0.9797415843765391,
    "control_scatter": 0.07138369423594519,
+   "control_median_ratio_err": 0.034678522146685514,
    "target": [
     187.24615919583667,
     4.628780905064699,

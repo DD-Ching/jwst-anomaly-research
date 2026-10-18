@@ -21,6 +21,7 @@ checked character by character). Nothing here assumes that others missed what we
   functions has been run, so "complementary coverage" is a hypothesis.
 - **Not available anywhere checked:** identification of the same physical source at different positions without a
   lens model (task 1); our own test of it failed (D-100).
-- **New this round:** a calibrated achromaticity test that separates an intrinsic transient from magnification by any
-  compact deflector (point mass, Ellis wormhole, negative mass) for a two-epoch, three-band fade
-  (`results/transients/confirm_r2/RESULT.md`). On the one usable object its power is 0.18–0.59, so it could not decide.
+- **New this round, not yet shown to work on data:** a frozen achromaticity test (intrinsic transient vs magnification
+  by a compact deflector: point mass, Ellis wormhole, negative mass; it rejects only chromaticity larger than its
+  calibrated noise). On G165 h002 it was not decided (too few F090W controls); simulated power against SN templates
+  0.15–0.62 (`results/transients/confirm_r2/RESULT.md`).

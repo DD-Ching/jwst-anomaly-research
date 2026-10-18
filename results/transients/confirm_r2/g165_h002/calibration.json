@@ -3,16 +3,19 @@
  "F090W": {
   "n_controls": 10,
   "control_median": 1.0257302619515265,
-  "control_scatter": 0.09173819785160679
+  "control_scatter": 0.09173819785160679,
+  "control_median_ratio_err": 0.1430483087807547
  },
  "F150W": {
   "n_controls": 15,
   "control_median": 1.0276826699633421,
-  "control_scatter": 0.030666851268802555
+  "control_scatter": 0.030666851268802555,
+  "control_median_ratio_err": 0.0824887645541708
  },
  "F200W": {
   "n_controls": 15,
   "control_median": 0.9548429315181184,
-  "control_scatter": 0.06397782700260345
+  "control_scatter": 0.06397782700260345,
+  "control_median_ratio_err": 0.0427884065932867
  }
 }
