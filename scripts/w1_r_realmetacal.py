@@ -13,6 +13,11 @@ scenes; ε from ``exotic_screens.intrinsic_ellipticity``.
     python scripts/w1_r_realmetacal.py sheet --out results/w1_r_realmetacal/sheet.png
     python scripts/w1_r_realmetacal.py validate2 --out results/w1_r_realmetacal/v2/validate.json
     python scripts/w1_r_realmetacal.py real2 --out results/w1_r_realmetacal/v2/r_real.json
+    python scripts/w1_r_realmetacal.py epsf3 --out results/w1_r_realmetacal/v3/epsf.json
+    python scripts/w1_r_realmetacal.py validate3 --epsf results/w1_r_realmetacal/v3/epsf.json \
+        --out results/w1_r_realmetacal/v3/validate.json
+    python scripts/w1_r_realmetacal.py real3 --epsf results/w1_r_realmetacal/v3/epsf.json \
+        --out results/w1_r_realmetacal/v3/r_real.json
 """
 
 from __future__ import annotations
@@ -67,9 +72,23 @@ def psf_r():
     return galsim.Gaussian(fwhm=PSF_R_FWHM)
 
 
+def psf_d_effective(spec):
+    """Pixel-convolved PSF_d: a float is the analytic ``psf_d`` FWHM (⊗ pixel); an array is an
+    empirical drizzled PSF image (PLAN_v3), which already includes the pixel."""
+    import galsim
+
+    if isinstance(spec, np.ndarray):
+        return galsim.InterpolatedImage(
+            galsim.Image(np.ascontiguousarray(spec, dtype=float), scale=PIX_ARCSEC),
+            x_interpolant=galsim.Lanczos(15),
+            gsparams=_gsp(),
+        )
+    return galsim.Convolve(psf_d(spec), galsim.Pixel(PIX_ARCSEC))
+
+
 def metacal(arr: np.ndarray, g1: float, g2: float, psf_d_fwhm=PSF_FWHM_ARCSEC) -> np.ndarray:
-    """``arr`` deconvolved by PSF_d ⊗ pixel, sheared by (g1, g2) about the image centre,
-    reconvolved by PSF_r ⊗ pixel, on the same pixel grid."""
+    """``arr`` deconvolved by PSF_d ⊗ pixel (``psf_d_fwhm``: see :func:`psf_d_effective`), sheared
+    by (g1, g2) about the image centre, reconvolved by PSF_r ⊗ pixel, on the same pixel grid."""
     import galsim
 
     gsp = _gsp()
@@ -79,9 +98,7 @@ def metacal(arr: np.ndarray, g1: float, g2: float, psf_d_fwhm=PSF_FWHM_ARCSEC) -
         x_interpolant=galsim.Lanczos(15),
         gsparams=gsp,
     )
-    dec = galsim.Deconvolve(
-        galsim.Convolve(psf_d(psf_d_fwhm), galsim.Pixel(PIX_ARCSEC)), gsparams=gsp
-    )
+    dec = galsim.Deconvolve(psf_d_effective(psf_d_fwhm), gsparams=gsp)
     obj = galsim.Convolve(ii, dec, gsparams=gsp)
     if g1 or g2:
         obj = obj.shear(g1=g1, g2=g2)
@@ -242,9 +259,13 @@ def rule_outcome(r: float | None, err: float | None, r_borrowed: float = 0.414) 
 # ---- validation (simulated) ----
 
 
-def scene(g1: float, g2: float, the_psf, noise_sigma: float, seed: int, spacing=48, size=TILE):
+def scene(
+    g1: float, g2: float, the_psf, noise_sigma: float, seed: int, spacing=48, size=TILE,
+    no_pixel=False,
+):  # fmt: skip
     """Grid of Sérsic n = 1 galaxies (hlr cycles {2.5, 4, 6} px, S/N {20, 50, 200}), each sheared
-    about its own centre by (g1, g2); the same ``seed`` gives the same galaxies and noise."""
+    about its own centre by (g1, g2); the same ``seed`` gives the same galaxies and noise.
+    ``no_pixel`` for a PSF that already includes the pixel (an empirical PSF image)."""
     import galsim
 
     rng = np.random.default_rng(seed)
@@ -265,7 +286,11 @@ def scene(g1: float, g2: float, the_psf, noise_sigma: float, seed: int, spacing=
             if g1 or g2:
                 gal = gal.shear(g1=g1, g2=g2)
             stamp = galsim.Convolve(gal, the_psf).drawImage(
-                nx=spacing, ny=spacing, scale=PIX_ARCSEC, center=galsim.PositionI(xc + 1, yc + 1)
+                nx=spacing,
+                ny=spacing,
+                scale=PIX_ARCSEC,
+                center=galsim.PositionI(xc + 1, yc + 1),
+                method="no_pixel" if no_pixel else "auto",
             )
             b = stamp.bounds & img.bounds
             img[b] += stamp[b]
@@ -284,10 +309,16 @@ def validate_pooled(seeds=(7, 8, 9, 10), noise_sigma=1.0) -> dict:
     return {"label": "simulated", "seeds": list(seeds), "per_seed": per, "pooled": pooled}
 
 
-def validate(noise_sigma=1.0, seed=7, keep_arrays=False, v2=False) -> dict:
+def validate(noise_sigma=1.0, seed=7, keep_arrays=False, v2=False, epsf=None) -> dict:
+    """PLAN.md gate (``v2``: PLAN_v2 changes); with ``epsf`` (PLAN_v3) the scene PSF and PSF_d are
+    both that empirical PSF image."""
     t0 = time.time()
-    mc_in = scene(0, 0, psf_d(), noise_sigma, seed)
-    mc_imgs = metacal_set(mc_in, noise_sigma, seed + 1)
+    if epsf is None:
+        the_psf, spec, nopix = psf_d(), PSF_FWHM_ARCSEC, False
+    else:
+        the_psf, spec, nopix = psf_d_effective(epsf), epsf, True
+    mc_in = scene(0, 0, the_psf, noise_sigma, seed, no_pixel=nopix)
+    mc_imgs = metacal_set(mc_in, noise_sigma, seed + 1, spec)
     mc = responses(mc_imgs, v2=v2)
     out_sigma = clipped_sigma(mc_imgs["noshear"])
     # V1 direct: the same galaxies drawn with PSF_r at ±g, white noise at the metacal output level
@@ -301,7 +332,10 @@ def validate(noise_sigma=1.0, seed=7, keep_arrays=False, v2=False) -> dict:
         v1 = abs(s_mc["R"] - s_di["R"]) <= tol
     # V2 sign: true g1 = +0.03 through the noshear metacal image vs g = 0
     plus = responses(
-        metacal_set(scene(0.03, 0, psf_d(), noise_sigma, seed), noise_sigma, seed + 1), v2=v2
+        metacal_set(
+            scene(0.03, 0, the_psf, noise_sigma, seed, no_pixel=nopix), noise_sigma, seed + 1, spec
+        ),
+        v2=v2,
     )
     shift = plus["mean_eps_noshear"].real - mc["mean_eps_noshear"].real
     extra = {}
@@ -313,6 +347,7 @@ def validate(noise_sigma=1.0, seed=7, keep_arrays=False, v2=False) -> dict:
         "label": "simulated",
         "seed": seed,
         "v2": v2,
+        "psf": "analytic" if epsf is None else "epsf",
         "metacal": s_mc,
         "direct": s_di,
         "psf_sigma_px": mc["psf_sigma_px"],
@@ -604,7 +639,10 @@ def rule_outcome_v2(r: float | None, err: float | None, adopt=0.80, r_borrowed=0
     return "conservative" if r >= r_borrowed - 2 * err else "optimistic: re-run lower"
 
 
-def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
+def real2(
+    out: Path, uri=I2D, workers=None, variants=None, plan="results/w1_r_realmetacal/PLAN_v2.md",
+    label="derived (metacal v2 of observed MAST JWST 1181 o001 F200W i2d tiles)", extra=None,
+) -> dict:  # fmt: skip
     from astropy.io import fits
 
     t0 = time.time()
@@ -630,8 +668,9 @@ def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
         res = list(ex.map(_real_tile_v2, jobs))
     keep = tile_gate([r["plan"] for r in res])  # decided once, on the plan variant
     result = {
-        "label": "derived (metacal v2 of observed MAST JWST 1181 o001 F200W i2d tiles)",
-        "plan": "results/w1_r_realmetacal/PLAN_v2.md",
+        "label": label,
+        "plan": plan,
+        **(extra or {}),
         "uri": uri,
         "mosaic_shape": mosaic_shape,
         "tiles": [list(t) for t in tiles],
@@ -688,6 +727,206 @@ def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
     return result
 
 
+# ---- v3: empirical drizzled PSF_d (PLAN_v3.md; ASSUMPTIONs) ----
+EPSF_HALF = 16
+EPSF_G = (17.0, 21.0)
+EPSF_RUWE = 1.4
+EPSF_EDGE_PX = 20
+EPSF_PEAK_PX = 3
+EPSF_FLAT_CORE = 0.85
+EPSF_SIZE_TOL = 0.20
+EPSF_MIN_STARS = 5
+EPSF_FWHM_RANGE = (0.060, 0.090)  # arcsec, gate E
+
+
+def gaia_in_footprint(wcs, shape) -> list[dict]:
+    """Gaia DR3 sources inside the mosaic (cone around its centre, then pixel bounds), PLAN_v3 1."""
+    from astroquery.gaia import Gaia
+
+    ny, nx = shape
+    c = wcs.pixel_to_world((nx - 1) / 2, (ny - 1) / 2)
+    corners = ((0, 0), (nx - 1, ny - 1), (0, ny - 1), (nx - 1, 0))
+    r = max(c.separation(wcs.pixel_to_world(x, y)).deg for x, y in corners)
+    q = (
+        "SELECT source_id, ra, dec, phot_g_mean_mag, ruwe, astrometric_params_solved FROM "
+        "gaiadr3.gaia_source WHERE 1=CONTAINS(POINT(ra,dec),"
+        f"CIRCLE({c.ra.deg},{c.dec.deg},{r + 0.002}))"
+    )
+    t = Gaia.launch_job(q).get_results()
+    x, y = wcs.world_to_pixel_values(np.asarray(t["ra"], float), np.asarray(t["dec"], float))
+    return [
+        {"source_id": int(t["source_id"][i]), "g": float(t["phot_g_mean_mag"][i]),
+         "ruwe": None if np.ma.is_masked(t["ruwe"][i]) else float(t["ruwe"][i]),
+         "params": int(t["astrometric_params_solved"][i]), "x": float(x[i]), "y": float(y[i])}
+        for i in range(len(t))
+        if EPSF_EDGE_PX <= x[i] < nx - EPSF_EDGE_PX and EPSF_EDGE_PX <= y[i] < ny - EPSF_EDGE_PX
+    ]  # fmt: skip
+
+
+def star_ok(star: dict) -> bool:
+    return (
+        EPSF_G[0] <= star["g"] <= EPSF_G[1]
+        and star["ruwe"] is not None
+        and star["ruwe"] < EPSF_RUWE
+        and star["params"] > 3
+    )
+
+
+def prep_star(st: np.ndarray, wh: np.ndarray) -> tuple[np.ndarray | None, str]:
+    """PLAN_v3 2: one star stamp → (recentred unit-sum stamp, "ok") or (None, reason)."""
+    from scipy import ndimage
+
+    h = st.shape[0] // 2
+    if not (np.isfinite(st).all() and (wh > 0).all()):
+        return None, "masked pixel"
+    st = st - np.median(np.r_[st[0], st[-1], st[:, 0], st[:, -1]])
+    py, px = np.unravel_index(np.argmax(st), st.shape)
+    if max(abs(py - h), abs(px - h)) > EPSF_PEAK_PX:
+        return None, "peak off centre"
+    core = st[h - 1 : h + 2, h - 1 : h + 2]  # stamp centre: a plateau's argmax is its corner
+    if core.max() <= 0 or core.min() > EPSF_FLAT_CORE * core.max():
+        return None, "flat core"
+    cy, cx = ndimage.center_of_mass(np.clip(st, 0, None) * (st > 0.1 * st.max()))
+    st = ndimage.shift(st, (h - cy, h - cx), order=3, mode="nearest")
+    if st.sum() <= 0:
+        return None, "no flux"
+    return st / st.sum(), "ok"
+
+
+def moment_sigma(st: np.ndarray, r=5.0) -> float:
+    """Flux-weighted second-moment σ (px) within ``r`` px of the stamp centre (positive pixels)."""
+    h = st.shape[0] // 2
+    y, x = np.mgrid[-h : h + 1, -h : h + 1]
+    w = np.clip(st, 0, None) * (x * x + y * y <= r * r)
+    return float(np.sqrt((w * (x * x + y * y)).sum() / w.sum() / 2))
+
+
+def hm_fwhm_arcsec(psf: np.ndarray) -> float:
+    """Gate E's FWHM: √(4A/π) pixels of the half-maximum area A, in arcsec."""
+    return float(np.sqrt(4 * (psf >= 0.5 * psf.max()).sum() / np.pi) * PIX_ARCSEC)
+
+
+def gate_e(n_stars: int, fwhm_arcsec: float) -> bool:
+    return n_stars >= EPSF_MIN_STARS and EPSF_FWHM_RANGE[0] <= fwhm_arcsec <= EPSF_FWHM_RANGE[1]
+
+
+def stack_epsf(stamps: list[np.ndarray]) -> tuple[np.ndarray | None, list[bool]]:
+    """PLAN_v3 3–4: drop size outliers, median-stack, clip at 0, unit sum."""
+    if not stamps:
+        return None, []
+    sig = np.array([moment_sigma(s) for s in stamps])
+    keep = list(np.abs(sig / np.median(sig) - 1) <= EPSF_SIZE_TOL)
+    kept = [s for s, k in zip(stamps, keep, strict=True) if k]
+    psf = np.clip(np.median(kept, axis=0), 0, None)
+    return psf / psf.sum(), keep
+
+
+def epsf_sheet(stamps: list[np.ndarray], psf: np.ndarray | None, path: Path) -> None:
+    """Star stamps, the ePSF and the analytic PSF_d ⊗ pixel on the same grid (log stretch)."""
+    import galsim
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    n = 2 * EPSF_HALF + 1
+    ana = (
+        galsim.Convolve(psf_d(), galsim.Pixel(PIX_ARCSEC))
+        .drawImage(nx=n, ny=n, scale=PIX_ARCSEC, method="no_pixel")
+        .array
+    )
+    panels = [(f"star {i}", s) for i, s in enumerate(stamps)]
+    panels += ([("ePSF (median)", psf)] if psf is not None else []) + [("analytic PSF_d", ana)]
+    fig, axs = plt.subplots(1, len(panels), figsize=(2.6 * len(panels), 2.8))
+    for ax, (t, im) in zip(np.atleast_1d(axs), panels, strict=True):
+        ax.imshow(np.log10(np.clip(im / im.max(), 1e-4, None)), origin="lower", vmin=-4, vmax=0)
+        ax.set_title(t, fontsize=8)
+        ax.set_xticks([])
+        ax.set_yticks([])
+    fig.tight_layout()
+    fig.savefig(path, dpi=90)
+    plt.close(fig)
+
+
+def epsf3(out: Path, uri=I2D) -> dict:
+    """Build the ePSF from the mosaic (PLAN_v3), write ``out`` (JSON with the image) and gate E."""
+    import galsim
+    from astropy.io import fits
+    from astropy.wcs import WCS
+
+    t0 = time.time()
+    h = EPSF_HALF
+    with fits.open(uri, use_fsspec=True, fsspec_kwargs={"anon": True}) as f:
+        sci, wht = f["SCI"], f["WHT"]
+        wcs = WCS(sci.header)
+        stars = gaia_in_footprint(wcs, sci.shape)
+        stamps, rows = [], []
+        for st in stars:
+            row = {**st, "selected": star_ok(st)}
+            if row["selected"]:
+                xi, yi = int(round(st["x"])), int(round(st["y"]))
+                a = np.asarray(sci.section[yi - h : yi + h + 1, xi - h : xi + h + 1], float)
+                w = np.asarray(wht.section[yi - h : yi + h + 1, xi - h : xi + h + 1], float)
+                s, why = prep_star(a, w)
+                row["stamp"] = why
+                if s is not None:
+                    row["stamp_index"] = len(stamps)
+                    stamps.append(s)
+            rows.append(row)
+    psf, keep = stack_epsf(stamps)
+    epsf_sheet(stamps, psf, out.with_name("epsf_sheet.png"))
+    for r in rows:
+        if "stamp_index" in r:
+            r["size_ok"] = bool(keep[r["stamp_index"]])
+    n = int(sum(keep))
+    fwhm = hm_fwhm_arcsec(psf) if psf is not None else float("nan")
+    gs_fwhm = (
+        float(psf_d_effective(psf).calculateFWHM()) if psf is not None else float("nan")
+    )  # reported
+    res = {
+        "label": "derived (empirical PSF, observed JWST 1181 o001 F200W i2d, Gaia DR3 stars)",
+        "plan": "results/w1_r_realmetacal/PLAN_v3.md",
+        "uri": uri,
+        "n_gaia_in_footprint": len(stars),
+        "n_selected": int(sum(r["selected"] for r in rows)),
+        "n_stamps": len(stamps),
+        "n_stars": n,
+        "fwhm_halfmax_area_arcsec": fwhm,
+        "fwhm_galsim_arcsec_reported": gs_fwhm,
+        "moment_sigma_px": moment_sigma(psf) if psf is not None else None,
+        "analytic_psf_d_fwhm_galsim_arcsec": float(
+            galsim.Convolve(psf_d(), galsim.Pixel(PIX_ARCSEC)).calculateFWHM()
+        ),
+        "gate_e_pass": gate_e(n, fwhm),
+        "stars": rows,
+        "epsf": None if psf is None else np.round(psf, 8).tolist(),
+        "wall_s": round(time.time() - t0, 1),
+    }
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(res, indent=1) + "\n")
+    return res
+
+
+def load_epsf(path: Path, posthoc: bool = False) -> np.ndarray:
+    """The ePSF image; refused when gate E failed unless ``posthoc`` (diagnostic, not the rule)."""
+    d = json.loads(path.read_text())
+    if not d["gate_e_pass"] and not posthoc:
+        raise SystemExit("gate E failed: PLAN_v3 stops before any R")
+    return np.asarray(d["epsf"], float)
+
+
+def real3(out: Path, epsf: np.ndarray, uri=I2D, workers=None, posthoc=False) -> dict:
+    return real2(
+        out, uri, workers,
+        variants={"plan": (epsf, True), "epsf_no_fixnoise": (epsf, False),
+                  "analytic_v2": (PSF_FWHM_ARCSEC, True)},
+        plan="results/w1_r_realmetacal/PLAN_v3.md",
+        label="derived (metacal v3, empirical PSF_d, observed MAST JWST 1181 o001 F200W i2d tiles)",
+        extra={"psf_d": "plan, epsf_no_fixnoise: v3/epsf.json; analytic_v2: settings",
+               "posthoc_gate_e_failed": posthoc},
+    )  # fmt: skip
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -699,6 +938,17 @@ def main(argv=None) -> int:
     r2 = sub.add_parser("real2", help="PLAN_v2 real run: all tiles, mask, floor, unique, tile gate")
     r2.add_argument("--out", type=Path, required=True)
     r2.add_argument("--workers", type=int, default=None)
+    e3 = sub.add_parser("epsf3", help="PLAN_v3: build the empirical PSF and gate E")
+    e3.add_argument("--out", type=Path, required=True)
+    v3 = sub.add_parser("validate3", help="PLAN_v3 simulated gate with the ePSF")
+    v3.add_argument("--epsf", type=Path, required=True)
+    v3.add_argument("--out", type=Path, required=True)
+    v3.add_argument("--posthoc", action="store_true", help="run although gate E failed")
+    r3 = sub.add_parser("real3", help="PLAN_v3 real run with the ePSF as PSF_d")
+    r3.add_argument("--epsf", type=Path, required=True)
+    r3.add_argument("--out", type=Path, required=True)
+    r3.add_argument("--workers", type=int, default=None)
+    r3.add_argument("--posthoc", action="store_true", help="run although gate E failed")
     r = sub.add_parser("real")
     r.add_argument("--out", type=Path, required=True)
     r.add_argument("--workers", type=int, default=None)
@@ -725,6 +975,21 @@ def main(argv=None) -> int:
             order = [tuple(x) for x in json.loads(a.r_real.read_text())["tiles"]]
             seeds = [100 + order.index(x) for x in t]
         sheet(a.out, **({"tiles": t} if t else {}), v2=a.v2, seeds=seeds)
+        return 0
+    if a.cmd == "epsf3":
+        res = epsf3(a.out)
+        print(json.dumps({k: v for k, v in res.items() if k not in ("stars", "epsf")}, indent=1))
+        return 0
+    if a.cmd == "validate3":
+        res = validate(v2=True, epsf=load_epsf(a.epsf, a.posthoc))
+        res["posthoc_gate_e_failed"] = a.posthoc
+        a.out.write_text(json.dumps(res, indent=1) + "\n")
+        print(json.dumps(res, indent=1))
+        return 0
+    if a.cmd == "real3":
+        res = real3(a.out, load_epsf(a.epsf, a.posthoc), workers=a.workers, posthoc=a.posthoc)
+        print(json.dumps({k: (v["R"], v["err"], v["n_tiles"], v["rule"])
+                          for k, v in res["variants"].items()}, indent=1))  # fmt: skip
         return 0
     if a.cmd == "validate2":
         res = validate(v2=True)

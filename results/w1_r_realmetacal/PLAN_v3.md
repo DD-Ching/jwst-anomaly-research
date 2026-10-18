@@ -1,6 +1,6 @@
 # W1 real-image metacal R, v3 (empirical drizzled PSF_d) — plan
 
-Frozen 2026-10-18 14:25 UTC before any v3 number. Script: `scripts/w1_r_realmetacal.py` (`epsf3`, `validate3`,
+Frozen 2026-10-18 14:12 UTC (commit time; first draft said 14:25) before any v3 number. Script: `scripts/w1_r_realmetacal.py` (`epsf3`, `validate3`,
 `real3`). v2 (`PLAN_v2.md`, `v2/RESULT.md`, #340): R = 1.056 ± 0.156 (18 tiles), R − 2σ 0.744 < 0.8; PSF_d × 1.15
 moved R by −0.18, so the analytic PSF_d is the limiting term. v1/v2 numbers and code paths are unchanged.
 

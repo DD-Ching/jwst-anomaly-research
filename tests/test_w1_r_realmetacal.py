@@ -122,3 +122,49 @@ def test_tile_bootstrap_zero_for_identical_tiles():
     r = [np.array([1.0, 2.0]), np.array([1.0, 2.0])]
     assert m.tile_bootstrap(r, n_boot=50) == pytest.approx(0.0)
     assert m.tile_bootstrap([np.array([1.0])]) is None
+
+
+def _gauss_stamp(sigma=1.0, dx=0.0, dy=0.0, h=m.EPSF_HALF, amp=100.0):
+    y, x = np.mgrid[-h : h + 1, -h : h + 1]
+    return amp * np.exp(-((x - dx) ** 2 + (y - dy) ** 2) / (2 * sigma**2))
+
+
+def test_star_ok_rules():
+    good = {"g": 19.0, "ruwe": 1.0, "params": 31}
+    assert m.star_ok(good)
+    assert not m.star_ok({**good, "g": 16.9})
+    assert not m.star_ok({**good, "ruwe": 1.5})
+    assert not m.star_ok({**good, "ruwe": None})
+    assert not m.star_ok({**good, "params": 3})  # 2-parameter solution
+
+
+def test_prep_star_rejections_and_recentring():
+    w = np.ones((2 * m.EPSF_HALF + 1,) * 2)
+    st, why = m.prep_star(_gauss_stamp(dx=0.4), w)
+    assert why == "ok" and np.isclose(st.sum(), 1.0)
+    h = m.EPSF_HALF
+    assert abs(np.argmax(st) - (h * st.shape[1] + h)) == 0
+    bad = _gauss_stamp()
+    bad[0, 0] = np.nan
+    assert m.prep_star(bad, w)[1] == "masked pixel"
+    assert m.prep_star(_gauss_stamp(dx=5), w)[1] == "peak off centre"
+    flat = np.minimum(_gauss_stamp(sigma=2.0), 50.0)
+    assert m.prep_star(flat, w)[1] == "flat core"
+
+
+def test_stack_epsf_drops_size_outliers_and_gate_e():
+    stamps = [_gauss_stamp(1.0) / _gauss_stamp(1.0).sum() for _ in range(5)]
+    big = _gauss_stamp(2.0)
+    psf, keep = m.stack_epsf(stamps + [big / big.sum()])
+    assert keep == [True] * 5 + [False]
+    assert np.isclose(psf.sum(), 1.0)
+    fwhm = m.hm_fwhm_arcsec(psf)
+    assert m.gate_e(5, 0.075) and not m.gate_e(4, 0.075)
+    assert not m.gate_e(5, 0.050) and not m.gate_e(5, 0.095)
+    assert 0.5 * 2.3548 * m.PIX_ARCSEC < fwhm < 2.0 * 2.3548 * m.PIX_ARCSEC
+
+
+def test_psf_d_effective_image_matches_unit_flux():
+    psf = _gauss_stamp(1.2)
+    obj = m.psf_d_effective(psf / psf.sum())
+    assert np.isclose(obj.flux, 1.0, atol=1e-6)

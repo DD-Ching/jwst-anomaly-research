@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 metacal R v3: empirical-PSF gate failed (2 usable Gaia stars); post hoc ePSF lowers R to 0.71 ± 0.17
+- Frozen plan `results/w1_r_realmetacal/PLAN_v3.md`: ePSF = median of Gaia DR3 star stamps (17 ≤ G ≤ 21, RUWE < 1.4,
+  5/6-parameter) from the same GOODS-N F200W mosaic; gate E needs ≥ 5 stars and FWHM 0.060–0.090″.
+- **Gate E failed** (`results/w1_r_realmetacal/v3/RESULT.md`): 6 Gaia sources in the footprint, 2 usable (FWHM
+  0.0782″ passes); v3 gives no R. Stamps looked at: clean stars with six-armed spikes, which the analytic PSF lacks.
+- Post hoc, two-star ePSF: the simulated gate fails V1 (0.969 vs 1.634, tolerance 0.647); real tiles R = 0.707 ±
+  0.169 vs analytic 1.006 ± 0.134 in the same run (19 tiles). The borrowed R = 0.414 stays; limits unchanged.
+- **Failed approach:** Gaia-star ePSF in a high-latitude deep field (too few stars). A unit test caught a flat-core
+  bug (plateau corner); fixed, outcome unchanged.
+- **Handoff:** the metacal R route is PSF-model-limited at about ±0.3 and does not reach the 0.8 bar; pause it.
+  Reopen only with a validated PSF (STPSF per exposure, drizzled) or a star-rich field.
 ## 2026-10-18: W3 ZTF v4: new-source validation failed (one W3 cell); footprint fix removes all flags; 0 dimming in 38 checked non-detections
 - `scripts/w3_ztf.py` v4 (`--pix 3838`): non-detections only ≥ 10″ inside each exposure's quadrant footprint
   (IRSA corners, gnomonic after review), ambiguous groups dropped, one entry per expid; plan frozen before reading (`results/w3_ztf/v4/PLAN.md`).
