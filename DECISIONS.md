@@ -5191,3 +5191,8 @@ confining radiation at a throat is found.
   `validate_pooled_posthoc.json`, `r_real_posthoc_excl_tile.json`, `sheet.png`.
 - **Revisit if:** an empirical-PSF, masked metacal on more tiles gives R < 0.414 − 2σ (re-run the limits lower), or
   its 2σ lower bound exceeds ~0.8 (a frozen plan to re-run the limits with it).
+- **Addendum (2026-10-18, v2):** noise-filled mask, PSF σ floor 0.97 px, unique matching, a frozen tile gate and all
+  22 coverage-passing tiles (4 excluded, all ringing after deconvolution): R = 1.056 ± 0.156 (tile bootstrap; 804
+  sources); R − 2σ = 0.744 < 0.8, still "conservative"; R = 0.414 kept. The PSF_d × 1.15 variant (0.875) shifts R by
+  as much as the error, so the empirical PSF is the next step before more area (`results/w1_r_realmetacal/v2/RESULT.md`;
+  post hoc output-PSF floor 1.37 px: 1.114 ± 0.168, same call).
