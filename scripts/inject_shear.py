@@ -404,6 +404,8 @@ def run_field(name: str, args) -> dict:
     sargs.recover_tol = args.recover_tol
     sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
     r_fixed = fixed_responsivity(name, spec, getattr(args, "lens_z", None))
+    if r_fixed is not None and getattr(args, "fixed_r", None) is not None:
+        r_fixed = float(args.fixed_r)  # sensitivity run (results/w1_shear_goodsn/PLAN.md)
     if r_fixed is not None:  # no lens model: R fixed by gate R, the lens redshift explicit
         sargs.responsivity = r_fixed
     psf = es.psf_sigma_px(shapes)
@@ -471,6 +473,14 @@ def run_field(name: str, args) -> dict:
         | {
             "psf_sigma_px": psf,
             "n_streak_vetoed": inj.n_streak,
+            # gate P (results/w1_shear_goodsn/PLAN.md): rows in the statistic, and those of them
+            # with a photo-z match
+            "n_used": int(np.sum(inj.use)),
+            "n_used_photoz": (
+                int(np.sum(inj.use & np.isfinite(np.asarray(shapes["z160"], float))))
+                if "z160" in shapes.colnames
+                else None
+            ),
             "n_centres_valid": int(finite.sum()),
             "s_max": s_max,
             "s_max_xy": [float(inj.base["gx"][iy, ix]), float(inj.base["gy"][iy, ix])],
@@ -519,6 +529,15 @@ def run_field(name: str, args) -> dict:
     }
     (out / "summary.json").write_text(json.dumps(es.json_safe(summary), indent=1) + "\n")
     return summary
+
+
+GATE_P_MIN_FRAC = 0.5  # results/w1_shear_goodsn/PLAN.md gate P (ASSUMPTION)
+
+
+def passes_gate_p(screen: dict, min_frac: float = GATE_P_MIN_FRAC) -> bool:
+    """Gate P: at least ``min_frac`` of the rows the screen used have a photo-z match."""
+    n_used, n_z = screen.get("n_used", 0), screen.get("n_used_photoz")
+    return bool(n_z is not None and n_used > 0 and n_z >= min_frac * n_used)
 
 
 def streak_veto(mask_dir: Path, name: str):
@@ -581,6 +600,12 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="redshift of the injected W1 lenses (default: each field's cluster redshift; "
         "results/w1_volume/PLAN.md)",
+    )
+    ap.add_argument(
+        "--fixed-r",
+        type=float,
+        default=None,
+        help="override the fixed R of fields without a lens model (sensitivity runs only)",
     )
     ap.add_argument("--seed", type=int, default=50)
     ap.add_argument("--out", type=Path, default=paths.outputs_dir() / "inject_shear")

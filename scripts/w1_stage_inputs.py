@@ -275,7 +275,8 @@ def plan(fields: list[str]) -> list[tuple[str, Path | None, dict]]:
             src = PHOTOZ.get(Path(rel).name)
             if src is None:
                 raise KeyError(f"{name}: no recorded source for {rel}")
-            jobs.append((name, root / rel, src))
+            if all(j[1] != root / rel for j in jobs):  # one shared file (GOODS-N): fetch once
+                jobs.append((name, root / rel, src))
         files = ir.lc.MODELS[spec["model"]].get("files", {}) if spec["model"] else {}
         if any("#" in str(v[0]) for v in files.values()):
             jobs.append((name, None, {"zip_members": files}))
