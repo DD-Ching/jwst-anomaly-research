@@ -261,10 +261,11 @@ def test_mask(p: en.Params) -> np.ndarray:
 
 
 def control_sum(counts: np.ndarray) -> np.ndarray:
-    """Same-direction EP-BAT + EP-GBM pairs at 0-10 s, 10-100 s and 100 s-1 h; counts has the
-    channel axis second to last but two (works on one count array or a null ensemble)."""
+    """Same-direction EP-BAT + EP-GBM pairs at 0-10 s, 10-100 s and 100 s-1 h, from counts of
+    shape (..., n_channels, n_windows, 3): one count array or a null ensemble."""
     idx = [CHANNELS.index(c) for c in CONTROL]
-    return counts[..., idx, :3, 0].sum(axis=(-1, -2))
+    same = counts[..., :3, 0]  # (..., n_channels, 3); plain indexing keeps the axis order
+    return np.take(same, idx, axis=-2).sum(axis=(-1, -2))
 
 
 def control_passes(obs_pairs: int, null_sums: np.ndarray) -> tuple[bool, float]:

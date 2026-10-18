@@ -88,7 +88,8 @@ def test_control_sum_and_rule():
         counts[c, 3, 0] = 100  # 1 h-1 d: not in the control
     counts[ep.CHANNELS.index(("EP", "EP")), 0, 0] = 50
     assert ep.control_sum(counts) == 12
-    assert ep.control_sum(np.stack([counts, counts])).tolist() == [12, 12]
+    ens = np.stack([counts, 2 * counts, 3 * counts])  # an ensemble keeps its scramble axis
+    assert ep.control_sum(ens).tolist() == [12, 24, 36]
     null = np.random.default_rng(0).poisson(0.1, 10000)
     ok, p = ep.control_passes(12, null)
     assert ok and p < 1e-10
