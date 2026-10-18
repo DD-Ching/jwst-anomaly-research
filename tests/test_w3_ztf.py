@@ -199,3 +199,15 @@ def test_v4_objectid_quadrant_ambiguity_and_dedupe():
     a = (1.0, 0.0, True, 3.0, Q, 7, 16.0, 0.0)
     b = (1.0001, 0.2, False, 3.0, Q, 7, 16.0, 0.0)
     assert wz.dedupe([a, b]) == [b] and wz.dedupe([b, a]) == [b]
+
+
+def test_v4_footprint_great_circle_edges_at_high_dec():
+    from astropy.table import Table
+
+    c = dict(ra1=99.0, dec1=65.3, ra2=101.0, dec2=65.3, ra3=101.0, dec3=64.3, ra4=99.0, dec4=64.3)
+    expo = Table({k: [v] for k, v in c.items()})
+    # the northern edge is a great circle bowing ~12" poleward of dec 65.3 at RA 100
+    assert wz.in_quad(expo, 100.0, 65.3 + 5 / 3600, 0.0).all()
+    assert not wz.in_quad(expo, 100.0, 65.3 + 20 / 3600, 0.0).any()
+    expo["dec2"][0] = np.nan
+    assert not wz.in_quad(expo, 100.0, 65.0, 0.0).any()  # a non-finite corner counts as outside

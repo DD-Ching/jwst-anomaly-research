@@ -1,0 +1,20 @@
+# Margin loss (review finding): fraction of catalogue detections (catflags 0) of the v4 sample members that the
+# v4 footprint test calls outside (10" margin) or outside at 0". Usage: python margin_script.py.txt <out json>
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(3838)
+rows, cov = wz.context(None)
+mem = {m for g in json.load(open(wz.SAMPLE))['groups'] for m in g['members']}
+n = out10 = 0
+for q, c in cov.items():
+    for o, (st, med, mag) in c['states'].items():
+        if o not in mem:
+            continue
+        det = st == 1
+        n += int(det.sum()); out10 += int((det & ~c['covered'][o]).sum())
+res = {'label': 'derived; review follow-up', 'member_clean_detections': n, 'outside_10as_margin': out10,
+       'fraction_outside': out10 / n}
+json.dump(res, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(res)

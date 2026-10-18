@@ -17,15 +17,15 @@
    "tE": 10.0,
    "n": 200,
    "flagged": 148,
-   "recovered": 145
+   "recovered": 147
   },
   {
    "rho": 0.01,
    "blend": 1.0,
    "tE": 30.0,
    "n": 200,
-   "flagged": 173,
-   "recovered": 169
+   "flagged": 174,
+   "recovered": 170
   },
   {
    "rho": 0.01,
@@ -48,8 +48,8 @@
    "blend": 1.0,
    "tE": 10.0,
    "n": 200,
-   "flagged": 149,
-   "recovered": 137
+   "flagged": 135,
+   "recovered": 124
   },
   {
    "rho": 0.1,
@@ -57,7 +57,7 @@
    "tE": 30.0,
    "n": 200,
    "flagged": 168,
-   "recovered": 141
+   "recovered": 142
   },
   {
    "rho": 0.1,
@@ -81,7 +81,7 @@
    "tE": 10.0,
    "n": 200,
    "flagged": 146,
-   "recovered": 141
+   "recovered": 142
   },
   {
    "rho": 0.01,
@@ -104,8 +104,8 @@
    "blend": 0.7,
    "tE": 3.0,
    "n": 200,
-   "flagged": 83,
-   "recovered": 80
+   "flagged": 82,
+   "recovered": 79
   },
   {
    "rho": 0.1,
@@ -150,7 +150,7 @@
   },
   "common": {
    "n": 200,
-   "flagged": 157,
+   "flagged": 155,
    "passed_vetting": 0
   }
  }

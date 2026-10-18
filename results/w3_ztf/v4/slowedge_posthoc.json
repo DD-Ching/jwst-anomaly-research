@@ -1,11 +1,10 @@
 {
  "label": "derived; post hoc vetting diagnostic (simulated injections)",
  "rho0.1_blend1_tE30": {
-  "recovered": 141,
-  "flagged_but_rejected": 27,
+  "recovered": 142,
+  "flagged_but_rejected": 26,
   "test_failed_by_all_hit_runs": {
-   "sharp_ok": 26,
-   "oneoff_ok": 1
+   "sharp_ok": 26
   }
  },
  "rho0.1_blend1_tE100": {

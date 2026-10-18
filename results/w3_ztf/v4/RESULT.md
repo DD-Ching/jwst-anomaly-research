@@ -6,7 +6,7 @@ IRSA metadata.
 
 ## Verdict (frozen rule, applied by code: `decision.json`, script `decision_script.py.txt`)
 - **Failed.** The W3 cells of the pass rule must each reach 0.5 (t_E 30 and 100 d, ρ 0.01 and 0.1, blend 1). They
-  reached 0.845, 0.865, 0.705 and **0.405** (ρ 0.1, t_E 100 d).
+  reached 0.85, 0.865, 0.71 and **0.405** (ρ 0.1, t_E 100 d).
 - The other two conditions hold:
   - controls passing vetting: eclipse 0/200, fade 9/200, PSPL 0/200, common mode 0/200;
   - survivors: 0 of 1,000 groups (`search_all_v4.json`; 1,991 series searched, 0 flagged runs).
@@ -28,13 +28,16 @@ IRSA metadata.
   - Coverage: 5 flags (all pass vetting under the v3 mapping, all in MJD 58655–58665), 44 cutouts, 38 catalogue
     non-detections checked and 6 left pending.
   - Classes of the 38 non-detections:
-    - 21 class 3: the star is present in a quadrant that has no objectid for it. Where the ratio is defined it is
-      0.96–1.04 with deficits < 3σ.
+    - 21 class 3 by position (the target lies in a quadrant that has no objectid for it). Only 11 of these are
+      photometrically confirmed: ratio 0.96–1.04, deficits ≤ 1.3σ. The other 10 have no usable field-star
+      correction.
     - 17 class 1: 14 not covered (position outside every image of the exposure, IBE) and 3 non-finite aperture
       (image edge).
     - 0 class 4 (credible dimming) and 0 undetermined.
-  - For all 38, the v4 footprint test says "outside the member quadrant", so the fix removed only exposures that
-    the images show as uncovered or off-quadrant.
+  - For all 38, the v4 footprint test says "outside the member quadrant". This is the same position criterion as
+    class 3, so it is not an independent confirmation. Photometrically, 11 show the star at its usual flux; none
+    shows dimming. The check covers 38 non-detections in 5 of the 144 groups that the fix cleared (6 pending), so
+    it cannot show that the fix removed only uncovered exposures.
 - **Merge across quadrants and filters** (`merge_check.json`, v4 sample):
   - Members lie ≤ 0.56″ from the anchor; the nearest non-member object is ≥ 2.07″ away. No neighbour is inside the
     1.5″ tolerance.
@@ -45,37 +48,47 @@ IRSA metadata.
 ## 2. Injections on the new sample (`injections_v4.json`, 200 per cell, 1,000 carriers)
 - Recovered / injected, by event class (`decision.json`):
   - **Full disappearance (ρ 0.01):**
-    - blend 1: 90, 145, 169, 173 at t_E 3, 10, 30, 100 d;
-    - blend 0.7: 90, 141, 165, 148.
+    - blend 1: 90, 147, 170, 173 at t_E 3, 10, 30, 100 d;
+    - blend 0.7: 90, 142, 165, 148.
   - **Short (t_E 3, 10 d):**
-    - ρ 0.01: 90, 145 (blend 1); 90, 141 (blend 0.7);
-    - ρ 0.1: 84, 137 (blend 1); 80, 128 (blend 0.7).
+    - ρ 0.01: 90, 147 (blend 1); 90, 142 (blend 0.7);
+    - ρ 0.1: 84, 124 (blend 1); 79, 128 (blend 0.7).
   - **Slow edges (ρ 0.1):**
-    - blend 1: 84, 137, 141, 81 at t_E 3, 10, 30, 100 d;
-    - blend 0.7: 80, 128, 120, 60.
-- **Short-event limit is flagging:** at t_E 3 d only 83–92 of 200 are flagged at all (fewer than 3 dim epochs on
-  3 nights).
-- **Slow-edge limit is vetting** (`slowedge_posthoc.json`, post hoc, same draws). Of the flagged but rejected
-  injections, the sharp-edge test is failed by every hit run in 84 of 84 (ρ 0.1, blend 1, t_E 100 d) and 94 of 102
+    - blend 1: 84, 124, 142, 81 at t_E 3, 10, 30, 100 d;
+    - blend 0.7: 79, 128, 120, 60.
+- **Short events:** at t_E 3 d only 82–92 of 200 are flagged at all. The cause was not stored.
+- **Slow edges are lost at vetting** (`slowedge_posthoc.json`, post hoc, same draws). Among flagged but rejected
+  injections, the sharp-edge test is failed by every hit run in 84 of 84 (ρ 0.1, blend 1, t_E 100 d) and in 94 of 102
   (blend 0.7, t_E 100 d).
-- These are light-curve-table efficiencies. They do not include the image step or the footprint margin. The
-  fraction of exposures lost to the 10″ margin was not stored.
+- These are light-curve-table efficiencies. They include neither the image step nor the footprint margin. The 10″
+  margin marks 10,069 of 2,922,788 clean member detections (0.34 %) as outside (`margin_loss.json`). A real
+  non-detection at those exposures would not be counted. On v3 data, 2 of 12 detections in member quadrants fall
+  outside the margin (`oldcheck.json`).
 - v3 → v4 differences mix the code change with a new sample: 514 dev carriers before, 1,000 new carriers now.
 
 ## 3. Image check of v4 flags
 None: the v4 search flagged nothing. No credible dimming was found in any checked image (section 1).
 
 ## Cost (logged separately)
-- Archive reads: objects partition Npix 959 (11 columns of a 574.2 MB file) and light-curve partition Npix 3838
-  (7 columns of an 846.0 MB file). The upper bound is about 1.42 GB, from file sizes; exact transferred bytes were
-  not stored.
-- Queries: IRSA TAP 6.47 MB (`exposures_summary.json`) plus 0.18 MB (`oldcheck.json`); IBE search 4.6 kB.
+- Archive reads (`cost.json`):
+  - objects partition Npix 959: 11 columns of a 574.2 MB file;
+  - light-curve partition Npix 3838: 7 columns of an 846.0 MB file;
+  - upper bound 1,420.2 MB from file sizes; exact transferred bytes not stored.
+- Queries: IRSA TAP 6.65 MB (`exposures_summary.json` plus `oldcheck.json`); IBE search 4.6 kB.
 - Cutouts: 3.10 MB, 44 cutouts (`image_check_posthoc.json`).
-- Wall time (not stored): sample 68 s, fetch 54 s, search and injections a few minutes each.
+- Wall time: not stored.
+
+## Review fix (deviation, before final numbers)
+- The first run projected the footprint corners on a flat RA/Dec plane. At dec 61–66 that is off by up to about
+  ±12″ near the edges (review's offline comparison; not stored), more than the 10″ margin. The code now uses a gnomonic projection about the star; a
+  high-dec test was added.
+- A non-detection at an exposure where another member of the group has a flagged detection is now dropped
+  (unknown).
+- Everything was re-run. The verdict is unchanged; numbers here are from the re-run.
 
 ## Decision (pre-declared, PLAN section 5)
 - Partial pass, so the overall verdict is **failed**. Capability per class:
-  - full disappearance at t_E ≥ 10 d: 0.70–0.87;
+  - full disappearance at t_E ≥ 10 d: 0.71–0.87;
   - t_E 3 d: 0.40–0.45;
-  - ρ 0.1, t_E 100 d slow edges: 0.30–0.41, limited by the frozen sharp-edge test.
-- No credible dimming. W3 stays a restricted hypothesis; nothing is a wormhole candidate. Nothing expands this round.
+  - ρ 0.1, t_E 100 d slow edges: 0.30–0.41, lost at the frozen sharp-edge test (post hoc diagnostic).
+- No credible dimming in the 38 checked non-detections (11 photometrically confirmed present). W3 stays a restricted hypothesis; nothing is a wormhole candidate. Nothing expands this round.

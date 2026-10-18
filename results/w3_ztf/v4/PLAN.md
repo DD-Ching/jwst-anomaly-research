@@ -82,3 +82,8 @@ Written 2026-10-18 before the v4 light-curve partition was read. Code version: t
   the v3 mapping (`v3rule_script.py.txt`, `image_script.py.txt ... v3rule`) to check what the fix removed.
 - Added diagnostic: which vetting test rejects flagged ρ 0.1 injections (`slowedge_script.py.txt`; same seeds).
 - `search_all_v3rule_posthoc.json` is written without indentation to stay under 1 MB.
+- Review fix (before the final numbers): the footprint test projected corners on a flat RA/Dec plane, which is off
+  by up to about ±12″ at dec 61–66 (review's offline comparison; not stored), more than the margin. It now uses a gnomonic projection. A non-detection at an
+  exposure where another group member has a flagged detection is dropped. Everything was re-run; the thresholds
+  and the rule are unchanged.
+- Added review records: `margin_loss.json`, `cost.json`.

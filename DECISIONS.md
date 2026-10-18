@@ -5176,7 +5176,7 @@ confining radiation at a throat is found.
   independent validation: footprint containment from the metadata corners, cross-quadrant objectid merging, and IBE
   forced photometry of survivors' non-detections.
 - **Addendum 2026-10-18 (v4, `results/w3_ztf/v4/RESULT.md`):** coverage from each exposure's quadrant footprint
-  (≥ 10″ inside IRSA's WCS corners) added to the time-span rule; ambiguous groups dropped; expid dedupe.
-  On 1,000 new stars: 0 flags (2,565 under the v3 mapping; images of 5 removed flags: 0 dimming). Still fails the
-  frozen rule at ρ 0.1, t_E 100 d (0.405; sharp-edge test). Revisit if: the owner accepts a slow-edge-aware vetting
+  (≥ 10″ inside IRSA's WCS corners, gnomonic) added to the time-span rule; ambiguous groups dropped; expid dedupe.
+  On 1,000 new stars: 0 flags (2,565 under the v3 mapping; images of 5 removed flags: 0 dimming in 38 non-detections). Still fails the
+  frozen rule at ρ 0.1, t_E 100 d (0.405; sharp-edge test in a post hoc diagnostic). Revisit if: the owner accepts a slow-edge-aware vetting
   test calibrated on injections before any new data are read.

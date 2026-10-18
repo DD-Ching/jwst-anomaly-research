@@ -77,22 +77,28 @@ def ambiguous(members) -> bool:
 
 def in_quad(expo, ra: float, dec: float, margin: float = EDGE_MARGIN) -> np.ndarray:
     """Per exposure row: (ra, dec) inside the quadrant footprint (IRSA corners ra1..dec4, from each
-    image's WCS) by at least ``margin`` arcsec. Rows without corners count as inside (pre-v4)."""
+    image's WCS) by at least ``margin`` arcsec. The corners are projected gnomonically about the
+    star, so the great-circle edges are straight lines (v4 review fix). A non-finite corner
+    counts as outside; a table without corner columns counts as inside (pre-v4)."""
     cols = getattr(expo, "colnames", None) or list(getattr(expo, "columns", []))
     if "ra1" not in cols:
         return np.ones(len(expo), bool)
-    cra = np.column_stack([np.asarray(expo[f"ra{i}"], float) for i in range(1, 5)])
-    cde = np.column_stack([np.asarray(expo[f"dec{i}"], float) for i in range(1, 5)])
-    x = ((cra - ra + 180.0) % 360.0 - 180.0) * np.cos(np.radians(dec)) * 3600.0
-    y = (cde - dec) * 3600.0
+    cra = np.radians(np.column_stack([np.asarray(expo[f"ra{i}"], float) for i in range(1, 5)]))
+    cde = np.radians(np.column_stack([np.asarray(expo[f"dec{i}"], float) for i in range(1, 5)]))
+    a0, d0 = np.radians(ra), np.radians(dec)
+    dra = cra - a0
+    cosc = np.sin(d0) * np.sin(cde) + np.cos(d0) * np.cos(cde) * np.cos(dra)
+    x = np.cos(cde) * np.sin(dra) / cosc * 206264.806
+    y = (np.cos(d0) * np.sin(cde) - np.sin(d0) * np.cos(cde) * np.cos(dra)) / cosc * 206264.806
     # order the corners by angle around their centre (counter-clockwise)
     ang = np.arctan2(y - y.mean(1, keepdims=True), x - x.mean(1, keepdims=True))
     o = np.argsort(ang, axis=1)
     x, y = np.take_along_axis(x, o, 1), np.take_along_axis(y, o, 1)
     x2, y2 = np.roll(x, -1, 1), np.roll(y, -1, 1)
     # signed distance of the origin (the star) to each edge, positive inside
-    d = (x * y2 - x2 * y) / np.maximum(np.hypot(x2 - x, y2 - y), 1e-9)
-    return np.all(d >= margin, axis=1) & np.isfinite(d).all(axis=1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        d = (x * y2 - x2 * y) / np.hypot(x2 - x, y2 - y)
+    return np.all(d >= margin, axis=1) & np.isfinite(d).all(axis=1) & (cosc > 0).all(axis=1)
 
 
 # plan section 4
@@ -440,7 +446,7 @@ def series(group, rows, cov, filt):
     """v3: time-ordered (t, dmag, is_nd, limit_dmag, quad, expid, base_mag, dimfrac) of a group in
     one filter over good exposures where the star is in play; dimfrac excludes the group's own
     members from the comparison counts."""
-    out = []
+    out, flagged = [], set()
     mem = set(group["members"])
     for o in group["members"]:
         r = rows.get(o)
@@ -467,6 +473,7 @@ def series(group, rows, cov, filt):
         mine = c["spans"][o] & c["good"] & (cv.get(o, ones) | (st > 0))
         for k in np.flatnonzero(mine):
             if st[k] == 3:
+                flagged.add(int(c["expid"][k]))  # v4: the exposure is unknown for the whole group
                 continue  # flagged detection: unknown
             nd = st[k] == 0
             dm = 0.0 if nd else float(mag[k] - med)  # the magnitude star_state chose
@@ -485,6 +492,7 @@ def series(group, rows, cov, filt):
                     frac,
                 )
             )
+    out = [x for x in out if not (x[2] and x[5] in flagged)]
     out.sort(key=lambda x: x[0])
     return dedupe(out)
 
