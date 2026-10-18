@@ -221,6 +221,8 @@ def load_rows():
         rows[int(o)] = {
             "filt": int(t["filterid"][i].as_py()),
             "quad": (int(t["fieldid"][i].as_py()), int(t["rcid"][i].as_py())),
+            "ra": float(t["objra"][i].as_py()),
+            "dec": float(t["objdec"][i].as_py()),
             "t": np.asarray(r["hmjd"], float),
             "m": np.asarray(r["mag"], float),
             "e": np.asarray(r["magerr"], float),
@@ -229,72 +231,114 @@ def load_rows():
     return rows
 
 
-CLUSTER_GAP = 0.003  # d: hmjd of one exposure spreads ~1e-4 d across a quadrant (v2 fix)
+def PALOMAR():  # noqa: N802 (constant-like factory; no network lookup of the site registry)
+    from astropy.coordinates import EarthLocation
+
+    return EarthLocation.from_geodetic(-116.8597, 33.3563, 1712.0)
 
 
-def clusters(times) -> np.ndarray:
-    """Median times of exposure clusters (sorted times split at gaps > CLUSTER_GAP)."""
-    t = np.sort(np.asarray(times, float))
-    if not len(t):
-        return t
-    cut = np.flatnonzero(np.diff(t) > CLUSTER_GAP) + 1
-    return np.array([np.median(c) for c in np.split(t, cut)])
+MATCH_TOL = 0.001  # d: light-curve hmjd to the exposure's heliocentric mid-time (v3)
 
 
-def assign(t, centres) -> np.ndarray:
-    """Index of the exposure cluster of each time, -1 if none within CLUSTER_GAP."""
+def exposure_times(expo, ra: float, dec: float) -> np.ndarray:
+    """Heliocentric MJD of each exposure's mid-time (obsjd = start, 30-s exposures) at (ra, dec)."""
+    import astropy.units as u
+    from astropy.coordinates import SkyCoord
+    from astropy.time import Time
+
+    t = Time(np.asarray(expo["obsjd"], float) + 15.0 / 86400.0, format="jd", scale="utc")
+    ltt = t.light_travel_time(
+        SkyCoord(ra * u.deg, dec * u.deg),
+        kind="heliocentric",
+        location=PALOMAR(),
+    )
+    return (t.utc + ltt).mjd
+
+
+def match_exposures(t, et) -> np.ndarray:
+    """Index into the (sorted) exposure times ``et`` of each time, -1 if none within MATCH_TOL."""
     t = np.asarray(t, float)
-    if not len(centres):
+    if not len(et):
         return np.full(len(t), -1)
-    i = np.clip(np.searchsorted(centres, t), 1, len(centres) - 1)
-    left = np.where(np.abs(t - centres[i - 1]) <= np.abs(t - centres[i]), i - 1, i)
-    return np.where(np.abs(t - centres[left]) <= CLUSTER_GAP, left, -1)
+    i = np.clip(np.searchsorted(et, t), 1, len(et) - 1)
+    near = np.where(np.abs(t - et[i - 1]) <= np.abs(t - et[i]), i - 1, i)
+    return np.where(np.abs(t - et[near]) <= MATCH_TOL, near, -1)
 
 
-def coverage(rows, comp: set[int], members: set[int]) -> dict:
-    """Per (field, rcid, filter): exposure clusters, good epochs, per-epoch 5-sigma limit and
-    magerr relation, and the fraction of comparison stars in the dim state per epoch (plan
-    section 3; limit: deviation; v2: exposure clusters instead of fixed time bins, comparison
-    stars include sample members as the plan says)."""
+def star_state(r, idx, n_exp):
+    """Per exposure index: 1 detected with catflags 0 and not dim, 2 detected and dim (>= DIM_MAG
+    fainter than the median), 3 flagged detection; 0 none. Duplicates in one exposure count once."""
+    ok = r["f"] == 0
+    med = float(np.median(r["m"][ok])) if ok.any() else np.nan
+    st = np.zeros(n_exp, np.int8)
+    rank = {0: 0, 3: 1, 2: 2, 1: 3}  # clean beats dim beats flagged beats none
+    for k, m, good in zip(idx, r["m"], ok, strict=True):
+        if k < 0:
+            continue
+        v = 3 if not good else (2 if m >= med + DIM_MAG else 1)
+        if rank[v] > rank[int(st[k])]:
+            st[k] = v
+    return st, med
+
+
+def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
+    """v3: per (field, rcid, filter) the official exposures (IRSA metadata), each matched to the
+    light-curve times; per exposure the number of comparison stars in play (detections before and
+    after it), detected clean, and detected but dim, each star counted once (plan v3 A)."""
+    from astropy.table import Table
+
+    expo = expo if expo is not None else Table.read(CACHE / "exposures.ecsv")
+    fid = {"zg": 1, "zr": 2, "zi": 3}
     by_q: dict = {}
     for o, r in rows.items():
-        if o in comp:
-            by_q.setdefault((*r["quad"], r["filt"]), []).append(r)
+        by_q.setdefault((*r["quad"], r["filt"]), []).append(o)
     cov = {}
-    for q, rs in by_q.items():
-        n = len(rs)
-        cen = clusters(np.concatenate([r["t"] for r in rs]))
-        det: dict = {}
-        dim: dict = {}
-        mags: dict = {}
-        for r in rs:
-            ok = r["f"] == 0
-            med = np.median(r["m"][ok]) if ok.any() else np.nan
-            for k, m, e, good in zip(assign(r["t"], cen), r["m"], r["e"], ok, strict=True):
-                if good and k >= 0:
-                    det[k] = det.get(k, 0) + 1
-                    mags.setdefault(k, []).append((m, e))
-                    if m >= med + DIM_MAG:
-                        dim[k] = dim.get(k, 0) + 1
-        good = {int(k) for k, c in det.items() if c >= GOOD_FRAC * n}
-        lim, err = {}, {}
-        for k in good:
-            me = np.array(mags[k])
-            b, a = (
-                np.polyfit(me[:, 0], np.log10(me[:, 1]), 1)
-                if len(me) >= 10 and np.ptp(me[:, 0]) > 0.5
-                else (np.nan, np.nan)
-            )
-            ok_fit = np.isfinite(b) and b > 0
-            lim[k] = float(np.clip((np.log10(0.2171) - a) / b, 18.0, 22.5)) if ok_fit else 20.5
-            err[k] = (float(a), float(b)) if ok_fit else (np.log10(0.02) - 0.2 * 17, 0.2)
+    ccd = np.asarray(expo["ccdid"])
+    qid = np.asarray(expo["qid"])
+    fld = np.asarray(expo["field"])
+    flt = np.array([fid[str(x)] for x in expo["filtercode"]])
+    for q, oids in by_q.items():
+        field, rcid, filt = q
+        sel = (fld == field) & (ccd == rcid // 4 + 1) & (qid == rcid % 4 + 1) & (flt == filt)
+        e = expo[sel]
+        if not len(e):
+            continue
+        comps = [o for o in oids if o in comp]
+        if not comps:
+            continue
+        ra = float(np.mean([rows[o]["ra"] for o in comps]))
+        dec = float(np.mean([rows[o]["dec"] for o in comps]))
+        et = exposure_times(e, ra, dec)
+        order = np.argsort(et)
+        e, et = e[order], et[order]
+        n = len(et)
+        inplay = np.zeros(n, int)
+        clean = np.zeros(n, int)
+        states, spans, unmatched = {}, {}, 0
+        for o in oids:
+            r = rows[o]
+            idx = match_exposures(r["t"], et)
+            unmatched += int((idx < 0).sum())
+            st, med = star_state(r, idx, n)
+            lo, hi = (r["t"].min(), r["t"].max()) if len(r["t"]) else (np.inf, -np.inf)
+            play = (et > lo) & (et < hi)
+            states[o], spans[o] = (st, med), play
+            if o in comp:
+                inplay += play
+                clean += play & (st == 1)
+        info = np.asarray(e["infobits"])
+        good = (info == 0) & (inplay > 0) & (clean >= GOOD_FRAC * np.maximum(inplay, 1))
         cov[q] = {
-            "n_comp": n,
-            "centres": cen,
+            "t": et,
+            "expid": np.asarray(e["expid"]),
+            "maglimit": np.asarray(e["maglimit"], float),
             "good": good,
-            "limit": lim,
-            "err": err,
-            "dimfrac": {k: 1.0 - (det[k] - dim.get(k, 0)) / n for k in good},
+            "inplay": inplay,
+            "clean": clean,
+            "states": states,
+            "spans": spans,
+            "comp": set(comps),
+            "unmatched_detections": unmatched,
         }
     return cov
 
@@ -303,33 +347,58 @@ def coverage(rows, comp: set[int], members: set[int]) -> dict:
 
 
 def series(group, rows, cov, filt):
-    """Time-ordered (t, dmag, is_nd, limit_dmag, quad, epoch, base_mag) of a group in one filter
-    over good epochs; dmag relative to each objectid's median (field zero points differ)."""
+    """v3: time-ordered (t, dmag, is_nd, limit_dmag, quad, expid, base_mag, dimfrac) of a group in
+    one filter over good exposures where the star is in play; dimfrac excludes the group's own
+    members from the comparison counts."""
     out = []
+    mem = set(group["members"])
     for o in group["members"]:
         r = rows.get(o)
         if r is None or r["filt"] != filt:
             continue
         q = (*r["quad"], filt)
         c = cov.get(q)
-        if c is None:
+        if c is None or o not in c["states"]:
             continue
-        ok = r["f"] == 0
-        if ok.sum() < 10:
+        st, med = c["states"][o]
+        if (st == 1).sum() < 10:
             continue
-        med = float(np.median(r["m"][ok]))
-        seen = {}
-        for k, m, good in zip(assign(r["t"], c["centres"]), r["m"], ok, strict=True):
-            if k >= 0:
-                seen[int(k)] = m - med if good else None  # None: flagged detection (unknown)
-        for k in c["good"]:
-            if k in seen and seen[k] is None:
-                continue
-            nd = k not in seen
-            t = float(c["centres"][k])
-            out.append((t, 0.0 if nd else seen[k], nd, c["limit"][k] - med, q, k, med))
+        own_play = np.zeros(len(c["t"]), int)
+        own_clean = np.zeros(len(c["t"]), int)
+        for m in mem & c["comp"]:
+            sm, _ = c["states"][m]
+            own_play += c["spans"][m]
+            own_clean += c["spans"][m] & (sm == 1)
+        play_n = c["inplay"] - own_play
+        clean_n = c["clean"] - own_clean
+        mine = c["spans"][o] & c["good"]
+        for k in np.flatnonzero(mine):
+            if st[k] == 3:
+                continue  # flagged detection: unknown
+            nd = st[k] == 0
+            dm = 0.0 if nd else float(_mag_at(r, c["t"][k]) - med)
+            frac = float((play_n[k] - clean_n[k]) / play_n[k]) if play_n[k] > 0 else 0.0
+            out.append(
+                (
+                    float(c["t"][k]),
+                    dm,
+                    nd,
+                    float(c["maglimit"][k] - med),
+                    q,
+                    int(c["expid"][k]),
+                    med,
+                    frac,
+                )
+            )
     out.sort(key=lambda x: x[0])
     return out
+
+
+def _mag_at(r, t):
+    """Magnitude of the clean detection nearest to time t (the matched exposure)."""
+    ok = r["f"] == 0
+    i = np.argmin(np.abs(np.where(ok, r["t"], np.inf) - t))
+    return r["m"][i]
 
 
 # --------------------------------------------------------------------------------- pre-screen, vet
@@ -383,7 +452,7 @@ def vet(s, run, other, cov, dimfrac_override=None) -> dict:
     for x in s[i : j + 1]:
         k, q = x[5], x[4]
         f = (dimfrac_override or {}).get(k)
-        fr.append(f if f is not None else cov[q]["dimfrac"].get(k, 0.0))
+        fr.append(f if f is not None else (x[7] if len(x) > 7 else cov[q]["dimfrac"].get(k, 0.0)))
     res["common_mode_frac"] = float(np.mean(fr))
     res["common_mode_ok"] = res["common_mode_frac"] < COMMON_FRAC
     # 2 sharp edges
@@ -440,19 +509,20 @@ def apply_dmag(s, ddm, cov=None, rng=None, nd_force=None):
     for x, dd, f in zip(
         s, ddm, nd_force if nd_force is not None else [False] * len(s), strict=True
     ):
-        t, dm, nd, lim, q, k, base = x
+        t, dm, nd, lim, q, k, base, *rest = x
         if nd:
             out.append(x)
             continue
         new = dm + dd
         if f or not np.isfinite(new) or new > lim:
-            out.append((t, 0.0, True, lim, q, k, base))
+            out.append((t, 0.0, True, lim, q, k, base, *rest))
             continue
-        if cov is not None and rng is not None and dd != 0:
-            a, b = cov[q]["err"][k]
-            e_old, e_new = 10 ** (a + b * (base + dm)), 10 ** (a + b * (base + new))
+        if rng is not None and dd != 0:
+            # v3: magerr ~ 1.0857 / SNR with SNR = 5 at the exposure's maglimit (sky-limited)
+            e_old = 0.2171 * 10 ** (0.4 * (dm - lim))
+            e_new = 0.2171 * 10 ** (0.4 * (new - lim))
             new += rng.normal(0, np.sqrt(max(e_new**2 - e_old**2, 0.0)))
-        out.append((t, new, False, lim, q, k, base))
+        out.append((t, new, False, lim, q, k, base, *rest))
     return out
 
 
