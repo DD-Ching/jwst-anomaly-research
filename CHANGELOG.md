@@ -9,7 +9,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   270 DR2–ICECAT same-direction pairs at 0–10 s, one-to-one, vs 0.0013. Family min DR2–CHIME 1–7 d same (35 vs
   26.51, p 0.065, × 35 = 1); pooled global p 0.79: **null**. DR2–GBM same at 0–100 s: 0 vs 0.47.
 - **Post hoc:** 6 same-neutrino DR2–ICECAT pairs at 0–10 s fall in "wide" (reconstruction differences). Review
-  found a DR2–ICECAT wide deficit at 1 h–7 d (z −4.5, −6.5); seven null variants leave it (not downtime, DR2 end,
+  found a DR2–ICECAT wide deficit at 1 h–7 d (z −4.5, −6.5); six distinct null variants leave it (not downtime, DR2 end,
   or one side's scramble); cause open. Review also fixed seed reproducibility (set order), so all numbers are
   from the re-run.
 - **Handoff:** E1 node sets are complete; E1 waits on the CHIME uptime series (owner). Optional: the DR2–ICECAT deficit (e.g. lag

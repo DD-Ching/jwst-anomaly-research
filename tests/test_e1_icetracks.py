@@ -25,6 +25,8 @@ def test_dr2_events_cuts_and_one_per_readout():
             _row(1, 8, 0, 55000.1, 3.9, 0.4, 12.0, 22.0),  # below the energy cut
             _row(2, 1, 0, 55001.0, 5.0, 0.3, 13.0, -6.0),  # south of the Dec cut
             _row(2, 2, 0, 54999.0, 4.0, 0.2, 14.0, -4.0),  # kept (edge of both cuts)
+            _row(3, 5, 0, 55002.0, 3.5, 0.3, 15.0, 30.0),  # first subevent fails the cut:
+            _row(3, 5, 1, 55002.0, 4.5, 0.3, 15.0, 30.0),  # so the readout is dropped
         ]
     )
     t = it.dr2_events(ev)

@@ -33,15 +33,16 @@ dependent wide (GW: any-separation) pairs per eligible anchor:
 - 6 DR2–ICECAT pairs at 0–10 s fall in "wide" (0.05 expected): the same neutrinos with DR2 and ICECAT positions
   more than 3σ_comb apart (different reconstructions and error conventions). Not a dependence.
 - DR2–ICECAT wide pairs show a **deficit** at long lags: 1 h–1 d 334 vs 415.5 ± 18.1 (z −4.5), 1–7 d 2,057 vs
-  2,241.7 ± 28.3 (z −6.5) (`counts.ecsv`). Seven null variants (`scripts/e1_icetracks_diag.py`,
-  `control_null_variants.json`, 10³ scrambles each) leave it at z −4.4 to −5.3 and −6.1 to −7.1: dropping alerts
+  2,241.7 ± 28.3 (z −6.5) (`counts.ecsv`). Six distinct null variants (`scripts/e1_icetracks_diag.py`,
+  `control_null_variants.json`, 10³ scrambles each; its `both` and `in_uptime` select the same 303 alerts) leave it at z −4.4 to −5.3 and −6.1 to −7.1: dropping alerts
   after the last DR2 track, keeping only alerts inside DR2 good runs (303 of 340), scrambling ICECAT with the DR2
   uptime jitter, and moving either side alone. So it is not downtime, the DR2 end date or one side's scramble;
   around an ICECAT alert time there are fewer DR2 tracks within 1 h–7 d than the null predicts. Cause not
   determined (not tested further). Like addendum 6's BAT–GBM deficit, it appears in a channel whose two catalogues
   share events. No tested channel shows a deficit beyond z −1.7.
 
-**Limitations:** the null is not validated against a same-detector channel (the control deficit above); the cut (log10 E ≥ 4, north) keeps mostly atmospheric neutrinos (D-079: f_astro not computed), so
+**Limitations:** `jitday` scrambles DR2 exactly as `jit` (only the partners change), so DR2 time-of-day
+structure is not separately tested; the null is not validated against a same-detector channel (the control deficit above); the cut (log10 E ≥ 4, north) keeps mostly atmospheric neutrinos (D-079: f_astro not computed), so
 the limits are per track above the cut, not per astrophysical neutrino. AngErr is used as 1σ without a
 systematic floor. CHIME overlaps DR2 only 2018-08 to 2022-05 (769 anchors). The ±3 d uptime jitter keeps each
 track's hour angle and good-run membership, not seasonal rate structure finer than ±3 d. One-sided upper tails

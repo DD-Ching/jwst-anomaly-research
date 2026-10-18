@@ -51,14 +51,13 @@ DETECT_P = e1.DETECT_P
 
 
 def dr2_events(ev: np.ndarray) -> Table:
-    """Reduced DR2 rows (run, event, subevent, mjd, log10E, AngErr, ra, dec, ...) -> events:
-    Dec > DEC_MIN, log10 E >= LOG10E_MIN, one track per (run, event) (the first row), 1-sigma =
-    AngErr (deg)."""
-    keep = (ev[:, 7] > DEC_MIN) & (ev[:, 4] >= LOG10E_MIN)
-    e = ev[keep]
-    e = e[np.lexsort((e[:, 2], e[:, 1], e[:, 0]))]
+    """Reduced DR2 rows (run, event, subevent, mjd, log10E, AngErr, ra, dec, ...) -> events: the
+    first subevent of each (run, event) readout, kept if Dec > DEC_MIN and log10 E >= LOG10E_MIN;
+    1-sigma = AngErr (deg)."""
+    e = ev[np.lexsort((ev[:, 2], ev[:, 1], ev[:, 0]))]
     _, first = np.unique(np.round(e[:, :2]).astype(np.int64), axis=0, return_index=True)
     e = e[np.sort(first)]
+    e = e[(e[:, 7] > DEC_MIN) & (e[:, 4] >= LOG10E_MIN)]
     e = e[np.argsort(e[:, 3], kind="stable")]
     names = [f"r{int(r)}e{int(x)}" for r, x in np.round(e[:, :2])]
     return en._events(
