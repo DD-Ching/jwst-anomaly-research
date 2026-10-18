@@ -48,7 +48,7 @@
   "EP-EP 0s-10s wide": {
    "obs": 0,
    "jit_mean": 0.01,
-   "jit_sd": 0.07,
+   "jit_sd": 0.08,
    "analytic_p": 1.0
   },
   "EP-EP 10s-100s same": {
@@ -60,7 +60,7 @@
   "EP-EP 10s-100s wide": {
    "obs": 0,
    "jit_mean": 0.06,
-   "jit_sd": 0.24,
+   "jit_sd": 0.25,
    "analytic_p": 1.0
   },
   "EP-EP 100s-1h same": {
@@ -71,83 +71,84 @@
   },
   "EP-EP 100s-1h wide": {
    "obs": 2,
-   "jit_mean": 1.99,
-   "jit_sd": 1.42,
-   "analytic_p": 0.5922862400015897
+   "jit_mean": 1.96,
+   "jit_sd": 1.39,
+   "analytic_p": 0.5824237266560885
   },
   "EP-EP 1h-1d same": {
-   "obs": 0,
-   "jit_mean": 0.0,
-   "jit_sd": 0.01,
-   "analytic_p": 1.0
-  },
-  "EP-EP 1h-1d wide": {
-   "obs": 52,
-   "jit_mean": 48.12,
-   "jit_sd": 6.17,
-   "analytic_p": 0.2646284147332738
-  },
-  "EP-EP 1d-7d same": {
-   "obs": 0,
-   "jit_mean": 0.0,
-   "jit_sd": 0.01,
-   "analytic_p": 1.0
-  },
-  "EP-EP 1d-7d wide": {
-   "obs": 302,
-   "jit_mean": 304.48,
-   "jit_sd": 10.44,
-   "analytic_p": 0.5937161878719383
-  },
-  "EP-BAT 1h-1d same": {
    "obs": 0,
    "jit_mean": 0.0,
    "jit_sd": 0.0,
    "analytic_p": 1.0
   },
-  "EP-BAT 1h-1d wide": {
-   "obs": 46,
-   "jit_mean": 45.44,
-   "jit_sd": 5.84,
-   "analytic_p": 0.4615277095181661
+  "EP-EP 1h-1d wide": {
+   "obs": 52,
+   "jit_mean": 48.15,
+   "jit_sd": 6.04,
+   "analytic_p": 0.261760181069413
   },
-  "EP-BAT 1d-7d same": {
+  "EP-EP 1d-7d same": {
    "obs": 0,
    "jit_mean": 0.0,
    "jit_sd": 0.02,
    "analytic_p": 1.0
   },
+  "EP-EP 1d-7d wide": {
+   "obs": 302,
+   "jit_mean": 304.49,
+   "jit_sd": 10.47,
+   "analytic_p": 0.5939456519013141
+  },
+  "EP-BAT 1h-1d same": {
+   "obs": 0,
+   "jit_mean": 0.0,
+   "jit_sd": 0.01,
+   "analytic_p": 1.0
+  },
+  "EP-BAT 1h-1d wide": {
+   "obs": 46,
+   "jit_mean": 45.48,
+   "jit_sd": 5.81,
+   "analytic_p": 0.46449815588484383
+  },
+  "EP-BAT 1d-7d same": {
+   "obs": 0,
+   "jit_mean": 0.0,
+   "jit_sd": 0.01,
+   "analytic_p": 1.0
+  },
   "EP-BAT 1d-7d wide": {
    "obs": 286,
-   "jit_mean": 284.45,
-   "jit_sd": 9.91,
-   "analytic_p": 0.43783954900808963
+   "jit_mean": 284.46,
+   "jit_sd": 9.93,
+   "analytic_p": 0.43852993048599664
   },
   "EP-GBM 1h-1d same": {
    "obs": 26,
-   "jit_mean": 12.85,
+   "jit_mean": 12.84,
    "jit_sd": 3.59,
-   "analytic_p": 0.0008208223280075203
+   "analytic_p": 0.0008121149484717522
   },
   "EP-GBM 1h-1d wide": {
    "obs": 255,
-   "jit_mean": 259.66,
-   "jit_sd": 14.27,
-   "analytic_p": 0.6281264083199425
+   "jit_mean": 259.73,
+   "jit_sd": 14.36,
+   "analytic_p": 0.6291758665914973
   },
   "EP-GBM 1d-7d same": {
    "obs": 70,
-   "jit_mean": 80.77,
-   "jit_sd": 9.0,
-   "analytic_p": 0.8843621983493473
+   "jit_mean": 80.62,
+   "jit_sd": 8.84,
+   "analytic_p": 0.8851532192761974
   },
   "EP-GBM 1d-7d wide": {
    "obs": 1642,
-   "jit_mean": 1633.44,
-   "jit_sd": 25.35,
-   "analytic_p": 0.3677482592523608
+   "jit_mean": 1633.24,
+   "jit_sd": 25.71,
+   "analytic_p": 0.36663910231254315
   }
  },
- "min_cell_p": 0.0008208223280075203,
- "min_cell_bonferroni_18": 0.014774801904135364
+ "min_cell_p": 0.0008121149484717522,
+ "tested_cells": 18,
+ "min_cell_bonferroni": 0.014618069072491538
 }

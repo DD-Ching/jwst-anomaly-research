@@ -58,11 +58,13 @@ def test_wxt_must_precede_position():
 
 
 def test_retraction_only_of_the_trigger():
-    assert ep.RETRACT.search(
+    assert ep.is_retraction(
         "The EP-WXT trigger 01709133021 (designated as EP250324a) is not a real source"
     )
-    assert ep.RETRACT.search("EP260707a is not a real source")
-    assert not ep.RETRACT.search("The optical candidate is not a real source.")
+    assert ep.is_retraction("EP260707a is not a real source\nH. Zhou (PMO)")
+    assert not ep.is_retraction("The optical candidate is not a real source.")
+    assert not ep.is_retraction("The optical candidate of EP250903a is not a real source.")
+    assert not ep.is_retraction("EP250903a: the afterglow candidate is not a real source.")
 
 
 def test_ep_events_lowest_circular_and_retraction():

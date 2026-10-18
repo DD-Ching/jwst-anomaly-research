@@ -78,6 +78,18 @@ ERR = re.compile(
 RETRACT = re.compile(
     r"(?:\btrigger\b|\bEP\d{6}[a-z]{1,2}\b)[^.\n]{0,80}?\bis not a real source", re.I
 )
+COUNTERPART = re.compile(r"candidate|counterpart|optical|afterglow", re.I)
+
+
+def is_retraction(text: str) -> bool:
+    """True if a sentence calls the trigger or EP name itself "not a real source" and names no
+    counterpart (candidate, counterpart, optical, afterglow)."""
+    for sent in re.split(r"(?<=[.\n])", text):
+        if RETRACT.search(sent) and not COUNTERPART.search(sent):
+            return True
+    return False
+
+
 TS = r"(20\d\d-\d\d-\d\d)[T ](\d\d:\d\d:\d\d(?:\.\d+)?)"
 #: the transient's own start; "the observation started at" is not an onset
 ONSET = re.compile(
@@ -141,7 +153,7 @@ def ep_events(circulars) -> Table:
         NAME.search(c["subject"]).group(0)
         for c in circulars
         if NAME.search(c.get("subject", ""))
-        and RETRACT.search(c.get("subject", "") + "\n" + c.get("body", ""))
+        and is_retraction(c.get("subject", "") + "\n" + c.get("body", ""))
     }
     best: dict[str, tuple[int, dict]] = {}
     for c in circulars:

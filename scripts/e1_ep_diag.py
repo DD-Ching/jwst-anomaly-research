@@ -60,6 +60,7 @@ def main(argv=None) -> int:
                         "analytic_p": float(pa[c, k, j]),
                     }
     pmin = min(v["analytic_p"] for v in cells.values())
+    n_cells = int(mask.sum())
     out = {
         "provenance": "derived",
         "post_hoc": True,
@@ -69,12 +70,13 @@ def main(argv=None) -> int:
         "n_jit": a.jit,
         "cells": cells,
         "min_cell_p": pmin,
-        "min_cell_bonferroni_18": min(1.0, pmin * 18),
+        "tested_cells": n_cells,
+        "min_cell_bonferroni": min(1.0, pmin * n_cells),
     }
     with open(ep.OUT / "diag_no_joint.json", "w") as fh:
         json.dump(out, fh, indent=1)
         fh.write("\n")
-    print(json.dumps({k: out[k] for k in ("removed", "min_cell_p", "min_cell_bonferroni_18")}))
+    print(json.dumps({k: out[k] for k in ("removed", "min_cell_p", "min_cell_bonferroni")}))
     print(json.dumps({k: v for k, v in cells.items() if "GBM" in k or "BAT" in k}, indent=0))
     return 0
 
