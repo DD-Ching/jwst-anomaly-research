@@ -1,0 +1,110 @@
+# v7 post hoc diagnosis: per-injection stage trace for the 10 calibrated cells, replaying stage_inject's draws
+# exactly (same carriers, seeds 1100 + original cell index, same calls). Usage:
+#   python trace_script.py.txt <pix> <vdir|-> <out json>
+# Groups (fixed before looking at the trace, from the frozen pre-screen requirements MIN_RUN, MIN_NIGHTS,
+# MIN_BRACKET): "sampling-eligible" = the PRE-injection carrier series (official good exposures in the footprint)
+# has >= MIN_RUN epochs on >= MIN_NIGHTS nights inside the umbra and >= MIN_BRACKET epochs before and after it.
+import json, sys
+from collections import Counter
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+pix, vdir, OUT = int(sys.argv[1]), (None if sys.argv[2] == '-' else sys.argv[2]), sys.argv[3]
+wz.configure(pix, vdir)
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        carriers.append((g, s, o, {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}))
+night = lambda t: np.floor(np.asarray(t) + 0.2).astype(int)
+
+def prescreen_block(s_inj, t0, half, base):
+    """First pre-screen requirement that stops a run overlapping the umbra (frozen flagged_runs logic)."""
+    d = wz.dim_state(s_inj); t = np.array([x[0] for x in s_inj])
+    best = None
+    for i, j in wz.runs(d):
+        if not (t[i] <= t0 + half and t[j] >= t0 - half):
+            continue
+        n_ep, n_ni = j - i + 1, len(set(night(t[i:j + 1])))
+        pre, post = int((~d[:i]).sum()), int((~d[j + 1:]).sum())
+        fails = [k for k, ok in (('MIN_RUN', n_ep >= wz.MIN_RUN), ('MIN_NIGHTS', n_ni >= wz.MIN_NIGHTS),
+                                 ('MIN_BRACKET', pre >= wz.MIN_BRACKET and post >= wz.MIN_BRACKET)) if not ok]
+        if not fails and (t[i], t[j]) in base:
+            fails = ['already_flagged_in_carrier']
+        cand = (len(fails), -n_ep, fails, n_ep, n_ni)
+        if best is None or cand < best:
+            best = cand
+    if best is None:
+        return ['no_dim_run_in_umbra'], 0, 0
+    return best[2], best[3], best[4]
+
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+res = {'label': 'derived; post hoc stage trace (simulated injections)', 'pix': pix, 'carriers': len(carriers), 'cells': {}}
+cases = []
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    rng = np.random.default_rng(1100 + c)
+    st = Counter(); first = Counter(); extra = Counter(); vet_first = Counter(); vet_all = Counter()
+    grp = {'eligible': [0, 0], 'not_eligible': [0, 0]}
+    metrics = []
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        dmag = wz.w3_dmag(t, t0, te, u0, rho, blend)
+        si = wz.apply_dmag(s, dmag, cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        sc = wz.screen(si, oi, cov)
+        hit = [x for x in sc if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half and (x['t_start'], x['t_end']) not in base]
+        flagged, rec = bool(hit), any(x['pass'] for x in hit)
+        # pre-injection sampling (official good exposures of the carrier; no injected detection used)
+        inside = (t >= t0 - half) & (t <= t0 + half)
+        n_in, nights_in = int(inside.sum()), len(set(night(t[inside])))
+        pre_n, post_n = int((t < t0 - half).sum()), int((t > t0 + half).sum())
+        edges = np.r_[t0 - half, t[inside], t0 + half]
+        max_gap = float(np.max(np.diff(edges)))
+        e1 = bool(((t >= t0 - 1.25 * half) & (t <= t0 - 0.75 * half)).any())
+        e2 = bool(((t >= t0 + 0.75 * half) & (t <= t0 + 1.25 * half)).any())
+        deep = float(np.mean(dmag[inside] >= wz.DIM_MAG)) if n_in else float('nan')
+        eligible = n_in >= wz.MIN_RUN and nights_in >= wz.MIN_NIGHTS and pre_n >= wz.MIN_BRACKET and post_n >= wz.MIN_BRACKET
+        key = 'eligible' if eligible else 'not_eligible'
+        grp[key][0] += 1; grp[key][1] += rec
+        st['injected'] += 1; st['umbra_has_epochs'] += n_in > 0; st['eligible'] += eligible
+        st['flagged'] += flagged; st['recovered'] += rec
+        if not flagged:
+            f, n_ep, n_ni = prescreen_block(si, t0, half, base)
+            first[f[0]] += 1
+            for x in f[1:]:
+                extra[x] += 1
+            if rho == 0.01 and blend == 1.0 and te == 100.0 and nights_in >= 3:
+                d_inj = wz.dim_state(si)
+                cases.append({'cell_k': k, 'carrier': g['key'], 't0': float(t0), 'u0': float(u0), 'half_d': float(half),
+                              'umbra_epochs': n_in, 'umbra_nights': nights_in, 'pre': pre_n, 'post': post_n,
+                              'umbra_dim_epochs_after_injection': int(d_inj[inside].sum()),
+                              'umbra_fraction_predicted_ge_1mag': deep,
+                              'first_block': f[0], 'other_blocks': f[1:], 'longest_run_epochs': n_ep, 'longest_run_nights': n_ni})
+        elif not rec:
+            tests = ('common_mode_ok', 'sharp_ok', 'oneoff_ok', 'achromatic_ok')
+            fails = [k2 for k2 in tests if not any(x[k2] for x in hit)]
+            vet_first[fails[0] if fails else 'mixed_runs'] += 1
+            for k2 in fails:
+                vet_all[k2] += 1
+        metrics.append((n_in, nights_in, max_gap, pre_n, post_n, e1, e2, deep))
+    m = np.array(metrics, float)
+    res['cells'][f'rho{rho}_blend{blend:g}_tE{te:g}'] = {
+        'stages': dict(st), 'prescreen_first_block': dict(first), 'prescreen_other_blocks': dict(extra),
+        'vetting_first_fail': dict(vet_first), 'vetting_all_fails': dict(vet_all),
+        'recovery_by_group': {k2: {'n': v[0], 'recovered': v[1]} for k2, v in grp.items()},
+        'sampling_median': {'umbra_epochs': float(np.median(m[:, 0])), 'umbra_nights': float(np.median(m[:, 1])),
+                            'max_gap_in_umbra_d': float(np.median(m[:, 2])), 'pre_epochs': float(np.median(m[:, 3])),
+                            'post_epochs': float(np.median(m[:, 4])), 'both_edges_sampled_frac': float(np.mean(m[:, 5] * m[:, 6])),
+                            'umbra_frac_predicted_ge_1mag': float(np.nanmedian(m[:, 7]))}}
+    print(c, rho, blend, te, dict(st), dict(first), flush=True)
+res['rho0.01_blend1_tE100_unflagged_ge3_umbra_nights'] = cases
+json.dump(res, open(OUT, 'w'), indent=1, default=float); open(OUT, 'a').write('\n')

@@ -86,6 +86,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   MOA gb13 (#145), S1063 spectroscopy (116.28VK.001). Remaining TASKS items are optional or low-value (W1 1 × 10¹²
   M☉ grid ≈ 30–45× T&A; G-dependent external spike cap). No new search was started.
 
+## 2026-10-18: W3 ZTF v7: the v4→v6 recovery drop is mostly missing catalogue epochs (2022-10 to 2023-10), not a bug
+- Post hoc stage trace (`results/w3_ztf/v7/`). It reproduces every stored count in both areas.
+- Gap 756 of 2,000 injections: about 654–704 from pre-injection sampling eligibility (depending on the rate used),
+  about 52–102 from pre-screen and vetting given eligibility (20 common-mode failures in the new area, 0 in the old).
+- The 72 unexplained ρ 0.01, t_E 100 d cases all stop at MIN_BRACKET. 49 of them lack a post-event baseline that
+  IRSA lists as official good exposures. Most new-area exposures from 2022-10 to 2023-10 have no DR24 catalogue
+  detection; an IRSA image is listed for 1 of 2 distinct exposures checked.
+- No implementation error changes the outcome; 2,600 unmatched 2023 detections are left open.
+- **Handoff:** route paused. Reopen only with a later release covering those epochs, or owner-authorized image
+  forced photometry.
+
 ## 2026-10-18: W3 ZTF v6: cross-sky validation failed (10 of 10 cells below 0.5); search group not read
 - New area Npix 7134 (RA 184, Dec +33), chosen by a metadata rule; no ZTF field shared with v1–v5. Sets were fixed
   before reading: 533 calibration groups, 539 search groups, a control group (5,212 with light curves) (`results/w3_ztf/v6/PLAN.md`).

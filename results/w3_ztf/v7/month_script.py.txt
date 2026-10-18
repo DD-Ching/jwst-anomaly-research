@@ -1,0 +1,28 @@
+# v7 post hoc: per month of 2022-2025, official r-band quadrant exposures (infobits 0) of the calibration area and
+# the number of them with any matched catalogue detection (any loaded star). Shows whether the empty exposures
+# form a contiguous block (catalogue coverage) or are scattered. Usage: month_script <pix> <vdir|-> <out json>
+import json, sys
+from collections import Counter
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+pix, vdir, OUT = int(sys.argv[1]), (None if sys.argv[2] == '-' else sys.argv[2]), sys.argv[3]
+wz.configure(pix, vdir)
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+mon = lambda t: f"{int(np.floor(1858.877 + t / 365.2425))}-{int(((t - 59580.0) % 365.2425) / 30.44) + 1:02d}"
+tot, withdet = Counter(), Counter()
+for q, c in cov.items():
+    if q[2] != 2:
+        continue
+    has = np.zeros(len(c['t']), bool)
+    for o, (st, med, mag) in c['states'].items():
+        has |= st > 0
+    for k in np.flatnonzero(c['infobits'] == 0):
+        if c['t'][k] < 59580.0 or c['t'][k] >= 61041.0:  # 2022-01-01 .. 2026-01-01
+            continue
+        m = mon(c['t'][k]); tot[m] += 1; withdet[m] += int(has[k])
+out = {'label': 'derived; post hoc catalogue coverage per month (r band, calibration area)', 'pix': pix,
+       'months': {m: [tot[m], withdet[m]] for m in sorted(tot)}}
+json.dump(out, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print(json.dumps(out['months']))

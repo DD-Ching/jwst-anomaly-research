@@ -1,0 +1,41 @@
+# v7 summary table: old (v4, Npix 3838) vs new (v6, Npix 7134) per calibrated cell, from the two stage traces.
+import json
+a = json.load(open('results/w3_ztf/v7/trace_v4.json'))['cells']; b = json.load(open('results/w3_ztf/v7/trace_v6.json'))['cells']
+rows = {}
+for k in a:
+    A, B = a[k], b[k]
+    ea, eb = A['recovery_by_group']['eligible'], B['recovery_by_group']['eligible']
+    rows[k] = {'old_recovered': A['stages']['recovered'], 'new_recovered': B['stages']['recovered'],
+               'gap': A['stages']['recovered'] - B['stages']['recovered'],
+               'old_sampling_eligible': A['stages']['eligible'], 'new_sampling_eligible': B['stages']['eligible'],
+               'eligible_gap': A['stages']['eligible'] - B['stages']['eligible'],
+               'old_recovered_if_eligible': f"{ea['recovered']}/{ea['n']}", 'new_recovered_if_eligible': f"{eb['recovered']}/{eb['n']}",
+               'old_recovered_if_not_eligible': A['recovery_by_group']['not_eligible']['recovered'],
+               'new_recovered_if_not_eligible': B['recovery_by_group']['not_eligible']['recovered'],
+               'new_prescreen_first_block': B['prescreen_first_block'], 'old_prescreen_first_block': A['prescreen_first_block'],
+               'new_vetting_first_fail': B['vetting_first_fail'], 'old_vetting_first_fail': A['vetting_first_fail']}
+tot = lambda key: sum(r[key] for r in rows.values())
+out = {'label': 'derived; post hoc comparison (simulated injections, 2000 per area)', 'cells': rows,
+       'totals': {'old_recovered': tot('old_recovered'), 'new_recovered': tot('new_recovered'), 'gap': tot('gap'),
+                  'eligible_gap': tot('eligible_gap'),
+                  }}
+# decomposition: sampling part = new conditional rate x (old eligible - new eligible); the rest of the gap is the
+# difference in recovery among sampling-eligible injections (vetting / pre-screen given enough epochs)
+for k, r in rows.items():
+    n_rec, n_el = (int(x) for x in r['new_recovered_if_eligible'].split('/'))
+    part = n_rec / n_el * r['eligible_gap']
+    r['gap_from_sampling_eligibility'] = round(part, 1)
+    r['gap_from_conditional_recovery'] = round(r['gap'] - part, 1)
+for k, r in rows.items():  # the same split with the OLD conditional rate (the split depends on the rate used)
+    o_rec, o_el = (int(x) for x in r['old_recovered_if_eligible'].split('/'))
+    part = o_rec / o_el * r['eligible_gap']
+    r['gap_from_sampling_eligibility_old_rate'] = round(part, 1)
+    r['gap_from_conditional_recovery_old_rate'] = round(r['gap'] - part, 1)
+out['totals']['gap_from_sampling_eligibility_old_rate'] = round(sum(r['gap_from_sampling_eligibility_old_rate'] for r in rows.values()), 1)
+out['totals']['gap_from_conditional_recovery_old_rate'] = round(sum(r['gap_from_conditional_recovery_old_rate'] for r in rows.values()), 1)
+out['totals']['gap_from_sampling_eligibility'] = round(sum(r['gap_from_sampling_eligibility'] for r in rows.values()), 1)
+out['totals']['gap_from_conditional_recovery'] = round(sum(r['gap_from_conditional_recovery'] for r in rows.values()), 1)
+json.dump(out, open('results/w3_ztf/v7/summary.json', 'w'), indent=1); open('results/w3_ztf/v7/summary.json', 'a').write('\n')
+for k, r in rows.items():
+    print(k, r['old_recovered'], r['new_recovered'], r['old_recovered_if_eligible'], r['new_recovered_if_eligible'], r['gap_from_sampling_eligibility'], r['gap_from_conditional_recovery'], r['new_vetting_first_fail'], r['old_vetting_first_fail'])
+print(out['totals'])

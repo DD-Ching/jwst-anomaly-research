@@ -1,0 +1,45 @@
+{
+ "label": "derived; post hoc per-year sampling of calibration carriers (r band)",
+ "pix": 7134,
+ "carriers": 509,
+ "years": [
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025
+ ],
+ "official_good_inside": [
+  60366,
+  68349,
+  147202,
+  110631,
+  45933,
+  25107,
+  670,
+  16597
+ ],
+ "catalogue_detections": [
+  75488,
+  86472,
+  168754,
+  150309,
+  51546,
+  13939,
+  2916,
+  7546
+ ],
+ "series_epochs": [
+  53963,
+  62145,
+  130390,
+  103930,
+  37666,
+  4159,
+  637,
+  4041
+ ]
+}

@@ -1,0 +1,861 @@
+{
+ "label": "derived; post hoc stage trace (simulated injections)",
+ "pix": 3838,
+ "carriers": 1000,
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 179,
+    "eligible": 148,
+    "flagged": 148,
+    "recovered": 147
+   },
+   "prescreen_first_block": {
+    "MIN_NIGHTS": 3,
+    "no_dim_run_in_umbra": 21,
+    "MIN_BRACKET": 12,
+    "MIN_RUN": 16
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 16,
+    "MIN_BRACKET": 1
+   },
+   "vetting_first_fail": {
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "oneoff_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 148,
+     "recovered": 147
+    },
+    "not_eligible": {
+     "n": 52,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 12.0,
+    "umbra_nights": 10.0,
+    "max_gap_in_umbra_d": 7.950855041570321,
+    "pre_epochs": 910.5,
+    "post_epochs": 372.0,
+    "both_edges_sampled_frac": 0.645,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend1_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 194,
+    "eligible": 175,
+    "flagged": 174,
+    "recovered": 170
+   },
+   "prescreen_first_block": {
+    "MIN_BRACKET": 15,
+    "no_dim_run_in_umbra": 6,
+    "MIN_NIGHTS": 2,
+    "MIN_RUN": 3
+   },
+   "prescreen_other_blocks": {
+    "MIN_BRACKET": 1,
+    "MIN_NIGHTS": 3
+   },
+   "vetting_first_fail": {
+    "oneoff_ok": 2,
+    "sharp_ok": 2
+   },
+   "vetting_all_fails": {
+    "oneoff_ok": 2,
+    "sharp_ok": 2
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 175,
+     "recovered": 170
+    },
+    "not_eligible": {
+     "n": 25,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 33.0,
+    "umbra_nights": 28.5,
+    "max_gap_in_umbra_d": 16.97179046995734,
+    "pre_epochs": 920.5,
+    "post_epochs": 389.0,
+    "both_edges_sampled_frac": 0.685,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend1_tE100": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 200,
+    "eligible": 177,
+    "flagged": 176,
+    "recovered": 173
+   },
+   "prescreen_first_block": {
+    "MIN_BRACKET": 23,
+    "no_dim_run_in_umbra": 1
+   },
+   "prescreen_other_blocks": {},
+   "vetting_first_fail": {
+    "sharp_ok": 2,
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 2,
+    "oneoff_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 177,
+     "recovered": 173
+    },
+    "not_eligible": {
+     "n": 23,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 99.5,
+    "umbra_nights": 90.5,
+    "max_gap_in_umbra_d": 59.373869306073175,
+    "pre_epochs": 937.5,
+    "post_epochs": 306.0,
+    "both_edges_sampled_frac": 0.86,
+    "umbra_frac_predicted_ge_1mag": 0.993006993006993
+   }
+  },
+  "rho0.1_blend1_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 166,
+    "eligible": 138,
+    "flagged": 135,
+    "recovered": 124
+   },
+   "prescreen_first_block": {
+    "MIN_RUN": 13,
+    "no_dim_run_in_umbra": 40,
+    "MIN_NIGHTS": 3,
+    "MIN_BRACKET": 9
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 13,
+    "MIN_BRACKET": 1
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 9,
+    "oneoff_ok": 2
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 9,
+    "oneoff_ok": 2
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 138,
+     "recovered": 124
+    },
+    "not_eligible": {
+     "n": 62,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 10.0,
+    "umbra_nights": 9.0,
+    "max_gap_in_umbra_d": 9.039187214420963,
+    "pre_epochs": 968.5,
+    "post_epochs": 334.5,
+    "both_edges_sampled_frac": 0.6,
+    "umbra_frac_predicted_ge_1mag": 0.9399759903961584
+   }
+  },
+  "rho0.1_blend1_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 199,
+    "eligible": 180,
+    "flagged": 168,
+    "recovered": 142
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 15,
+    "MIN_RUN": 6,
+    "MIN_BRACKET": 11
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 6
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 26
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 26
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 180,
+     "recovered": 142
+    },
+    "not_eligible": {
+     "n": 20,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 31.0,
+    "umbra_nights": 25.5,
+    "max_gap_in_umbra_d": 14.91170646278988,
+    "pre_epochs": 988.0,
+    "post_epochs": 336.5,
+    "both_edges_sampled_frac": 0.715,
+    "umbra_frac_predicted_ge_1mag": 0.9285714285714286
+   }
+  },
+  "rho0.01_blend0.7_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 178,
+    "eligible": 146,
+    "flagged": 146,
+    "recovered": 142
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 23,
+    "MIN_BRACKET": 12,
+    "MIN_RUN": 18,
+    "MIN_NIGHTS": 1
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 18,
+    "MIN_BRACKET": 1
+   },
+   "vetting_first_fail": {
+    "achromatic_ok": 3,
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "achromatic_ok": 3,
+    "oneoff_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 146,
+     "recovered": 142
+    },
+    "not_eligible": {
+     "n": 54,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 10.0,
+    "umbra_nights": 9.0,
+    "max_gap_in_umbra_d": 8.937583575454482,
+    "pre_epochs": 921.0,
+    "post_epochs": 371.0,
+    "both_edges_sampled_frac": 0.595,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend0.7_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 196,
+    "eligible": 175,
+    "flagged": 173,
+    "recovered": 165
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 5,
+    "MIN_BRACKET": 19,
+    "MIN_RUN": 2,
+    "MIN_NIGHTS": 1
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 2
+   },
+   "vetting_first_fail": {
+    "achromatic_ok": 7,
+    "sharp_ok": 1
+   },
+   "vetting_all_fails": {
+    "achromatic_ok": 7,
+    "sharp_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 175,
+     "recovered": 165
+    },
+    "not_eligible": {
+     "n": 25,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 30.5,
+    "umbra_nights": 27.5,
+    "max_gap_in_umbra_d": 15.051762250630418,
+    "pre_epochs": 969.0,
+    "post_epochs": 344.0,
+    "both_edges_sampled_frac": 0.7,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend0.7_tE100": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 200,
+    "eligible": 172,
+    "flagged": 173,
+    "recovered": 148
+   },
+   "prescreen_first_block": {
+    "MIN_BRACKET": 27
+   },
+   "prescreen_other_blocks": {},
+   "vetting_first_fail": {
+    "oneoff_ok": 2,
+    "achromatic_ok": 21,
+    "sharp_ok": 2
+   },
+   "vetting_all_fails": {
+    "oneoff_ok": 2,
+    "achromatic_ok": 22,
+    "sharp_ok": 2
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 172,
+     "recovered": 147
+    },
+    "not_eligible": {
+     "n": 28,
+     "recovered": 1
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 98.0,
+    "umbra_nights": 90.0,
+    "max_gap_in_umbra_d": 59.37371655683819,
+    "pre_epochs": 976.0,
+    "post_epochs": 258.0,
+    "both_edges_sampled_frac": 0.9,
+    "umbra_frac_predicted_ge_1mag": 0.9942112758649577
+   }
+  },
+  "rho0.1_blend0.7_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 169,
+    "eligible": 147,
+    "flagged": 141,
+    "recovered": 128
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 38,
+    "MIN_BRACKET": 11,
+    "MIN_RUN": 10
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 10
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 7,
+    "achromatic_ok": 4,
+    "oneoff_ok": 2
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 7,
+    "achromatic_ok": 5,
+    "oneoff_ok": 3
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 147,
+     "recovered": 128
+    },
+    "not_eligible": {
+     "n": 53,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 10.0,
+    "umbra_nights": 9.0,
+    "max_gap_in_umbra_d": 8.000032588897739,
+    "pre_epochs": 1001.5,
+    "post_epochs": 331.5,
+    "both_edges_sampled_frac": 0.67,
+    "umbra_frac_predicted_ge_1mag": 0.9387755102040817
+   }
+  },
+  "rho0.1_blend0.7_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 197,
+    "eligible": 172,
+    "flagged": 159,
+    "recovered": 120
+   },
+   "prescreen_first_block": {
+    "MIN_RUN": 5,
+    "no_dim_run_in_umbra": 18,
+    "MIN_BRACKET": 18
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 5
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 33,
+    "oneoff_ok": 2,
+    "achromatic_ok": 4
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 33,
+    "oneoff_ok": 2,
+    "achromatic_ok": 6
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 172,
+     "recovered": 120
+    },
+    "not_eligible": {
+     "n": 28,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 27.0,
+    "umbra_nights": 25.0,
+    "max_gap_in_umbra_d": 14.94273000549947,
+    "pre_epochs": 1038.5,
+    "post_epochs": 273.0,
+    "both_edges_sampled_frac": 0.69,
+    "umbra_frac_predicted_ge_1mag": 0.9259259259259259
+   }
+  }
+ },
+ "rho0.01_blend1_tE100_unflagged_ge3_umbra_nights": [
+  {
+   "cell_k": 2,
+   "carrier": 826211400012861,
+   "t0": 60826.88312219415,
+   "u0": 1.3298077143436489,
+   "half_d": 149.38579058505263,
+   "umbra_epochs": 73,
+   "umbra_nights": 72,
+   "pre": 1305,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 73,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 73,
+   "longest_run_nights": 72
+  },
+  {
+   "cell_k": 13,
+   "carrier": 826215400008495,
+   "t0": 58311.29497638801,
+   "u0": 0.5786597044648152,
+   "half_d": 191.44589174042602,
+   "umbra_epochs": 365,
+   "umbra_nights": 127,
+   "pre": 0,
+   "post": 1083,
+   "umbra_dim_epochs_after_injection": 365,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 365,
+   "longest_run_nights": 127
+  },
+  {
+   "cell_k": 17,
+   "carrier": 826210200004648,
+   "t0": 58206.014079528715,
+   "u0": 1.4781431823404376,
+   "half_d": 134.72537743500607,
+   "umbra_epochs": 197,
+   "umbra_nights": 77,
+   "pre": 0,
+   "post": 1194,
+   "umbra_dim_epochs_after_injection": 196,
+   "umbra_fraction_predicted_ge_1mag": 0.9949238578680203,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 196,
+   "longest_run_nights": 76
+  },
+  {
+   "cell_k": 29,
+   "carrier": 826210300002552,
+   "t0": 60406.554682141104,
+   "u0": 0.2797606247329867,
+   "half_d": 198.03368382295494,
+   "umbra_epochs": 7,
+   "umbra_nights": 7,
+   "pre": 445,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 7,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 7,
+   "longest_run_nights": 7
+  },
+  {
+   "cell_k": 56,
+   "carrier": 826210300003071,
+   "t0": 58239.078881476365,
+   "u0": 0.8461448598561523,
+   "half_d": 181.2191732720082,
+   "umbra_epochs": 332,
+   "umbra_nights": 118,
+   "pre": 0,
+   "post": 1003,
+   "umbra_dim_epochs_after_injection": 332,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 332,
+   "longest_run_nights": 118
+  },
+  {
+   "cell_k": 59,
+   "carrier": 826215300007943,
+   "t0": 58420.49111871828,
+   "u0": 0.49205527061325727,
+   "half_d": 193.85256280642034,
+   "umbra_epochs": 400,
+   "umbra_nights": 144,
+   "pre": 15,
+   "post": 1037,
+   "umbra_dim_epochs_after_injection": 400,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 400,
+   "longest_run_nights": 144
+  },
+  {
+   "cell_k": 78,
+   "carrier": 826211400001623,
+   "t0": 58325.92342196917,
+   "u0": 0.7280517799814292,
+   "half_d": 186.27776586769212,
+   "umbra_epochs": 347,
+   "umbra_nights": 125,
+   "pre": 0,
+   "post": 973,
+   "umbra_dim_epochs_after_injection": 347,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 347,
+   "longest_run_nights": 125
+  },
+  {
+   "cell_k": 79,
+   "carrier": 826210200006505,
+   "t0": 60476.201183486075,
+   "u0": 1.995283688284451,
+   "half_d": 13.726981921018941,
+   "umbra_epochs": 12,
+   "umbra_nights": 10,
+   "pre": 1253,
+   "post": 126,
+   "umbra_dim_epochs_after_injection": 0,
+   "umbra_fraction_predicted_ge_1mag": 0.0,
+   "first_block": "no_dim_run_in_umbra",
+   "other_blocks": [],
+   "longest_run_epochs": 0,
+   "longest_run_nights": 0
+  },
+  {
+   "cell_k": 80,
+   "carrier": 826211200004170,
+   "t0": 58230.288677738674,
+   "u0": 0.6155729089624711,
+   "half_d": 190.29109263839655,
+   "umbra_epochs": 320,
+   "umbra_nights": 113,
+   "pre": 0,
+   "post": 1004,
+   "umbra_dim_epochs_after_injection": 320,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 320,
+   "longest_run_nights": 113
+  },
+  {
+   "cell_k": 85,
+   "carrier": 826210300006061,
+   "t0": 58339.230529464825,
+   "u0": 0.5857866443489244,
+   "half_d": 191.22902518452648,
+   "umbra_epochs": 365,
+   "umbra_nights": 130,
+   "pre": 0,
+   "post": 1029,
+   "umbra_dim_epochs_after_injection": 365,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 365,
+   "longest_run_nights": 130
+  },
+  {
+   "cell_k": 95,
+   "carrier": 826215300004383,
+   "t0": 58255.25021440301,
+   "u0": 1.8880891841105454,
+   "half_d": 65.96356819068957,
+   "umbra_epochs": 158,
+   "umbra_nights": 58,
+   "pre": 0,
+   "post": 1230,
+   "umbra_dim_epochs_after_injection": 153,
+   "umbra_fraction_predicted_ge_1mag": 0.9683544303797469,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 153,
+   "longest_run_nights": 55
+  },
+  {
+   "cell_k": 104,
+   "carrier": 826211100006853,
+   "t0": 60753.87093990159,
+   "u0": 0.4372988790559371,
+   "half_d": 195.16069507911732,
+   "umbra_epochs": 93,
+   "umbra_nights": 92,
+   "pre": 1277,
+   "post": 7,
+   "umbra_dim_epochs_after_injection": 92,
+   "umbra_fraction_predicted_ge_1mag": 0.989247311827957,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 92,
+   "longest_run_nights": 91
+  },
+  {
+   "cell_k": 113,
+   "carrier": 826210300005427,
+   "t0": 58276.65385939025,
+   "u0": 1.7531052329358074,
+   "half_d": 96.2612093344504,
+   "umbra_epochs": 282,
+   "umbra_nights": 100,
+   "pre": 0,
+   "post": 1112,
+   "umbra_dim_epochs_after_injection": 277,
+   "umbra_fraction_predicted_ge_1mag": 0.9822695035460993,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 277,
+   "longest_run_nights": 98
+  },
+  {
+   "cell_k": 126,
+   "carrier": 826210200008934,
+   "t0": 60865.720973200914,
+   "u0": 0.5348869232442295,
+   "half_d": 192.71471089001798,
+   "umbra_epochs": 75,
+   "umbra_nights": 74,
+   "pre": 1303,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 75,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 75,
+   "longest_run_nights": 74
+  },
+  {
+   "cell_k": 127,
+   "carrier": 826215300011730,
+   "t0": 58226.071055274246,
+   "u0": 0.7909039064175154,
+   "half_d": 183.69733288247585,
+   "umbra_epochs": 332,
+   "umbra_nights": 115,
+   "pre": 0,
+   "post": 1050,
+   "umbra_dim_epochs_after_injection": 332,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 332,
+   "longest_run_nights": 115
+  },
+  {
+   "cell_k": 128,
+   "carrier": 826211200007280,
+   "t0": 60965.12425566165,
+   "u0": 1.4300924711649396,
+   "half_d": 139.81543276467573,
+   "umbra_epochs": 51,
+   "umbra_nights": 50,
+   "pre": 1331,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 51,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 51,
+   "longest_run_nights": 50
+  },
+  {
+   "cell_k": 136,
+   "carrier": 826211100004020,
+   "t0": 58340.056849773624,
+   "u0": 0.5931816122086151,
+   "half_d": 191.0009312788183,
+   "umbra_epochs": 344,
+   "umbra_nights": 124,
+   "pre": 0,
+   "post": 972,
+   "umbra_dim_epochs_after_injection": 344,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 344,
+   "longest_run_nights": 124
+  },
+  {
+   "cell_k": 139,
+   "carrier": 826211100009489,
+   "t0": 58250.21028899929,
+   "u0": 1.8083794022058497,
+   "half_d": 85.42622183367432,
+   "umbra_epochs": 182,
+   "umbra_nights": 69,
+   "pre": 0,
+   "post": 1107,
+   "umbra_dim_epochs_after_injection": 181,
+   "umbra_fraction_predicted_ge_1mag": 0.9945054945054945,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 181,
+   "longest_run_nights": 68
+  },
+  {
+   "cell_k": 143,
+   "carrier": 826211100002496,
+   "t0": 60791.350061725716,
+   "u0": 1.5712634288811427,
+   "half_d": 123.73888786718081,
+   "umbra_epochs": 56,
+   "umbra_nights": 55,
+   "pre": 1293,
+   "post": 18,
+   "umbra_dim_epochs_after_injection": 55,
+   "umbra_fraction_predicted_ge_1mag": 0.9821428571428571,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 55,
+   "longest_run_nights": 54
+  },
+  {
+   "cell_k": 147,
+   "carrier": 826215300004667,
+   "t0": 58236.02930780359,
+   "u0": 0.4380191054480662,
+   "half_d": 195.14454292299533,
+   "umbra_epochs": 348,
+   "umbra_nights": 122,
+   "pre": 0,
+   "post": 1042,
+   "umbra_dim_epochs_after_injection": 345,
+   "umbra_fraction_predicted_ge_1mag": 0.9913793103448276,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 345,
+   "longest_run_nights": 121
+  },
+  {
+   "cell_k": 174,
+   "carrier": 826211100011612,
+   "t0": 60948.11083183874,
+   "u0": 1.89251630505032,
+   "half_d": 64.6824578319875,
+   "umbra_epochs": 27,
+   "umbra_nights": 27,
+   "pre": 1292,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 26,
+   "umbra_fraction_predicted_ge_1mag": 0.9629629629629629,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 26,
+   "longest_run_nights": 26
+  },
+  {
+   "cell_k": 175,
+   "carrier": 826211200000789,
+   "t0": 60774.00177933507,
+   "u0": 0.9811040173647296,
+   "half_d": 174.28238313469288,
+   "umbra_epochs": 78,
+   "umbra_nights": 77,
+   "pre": 1295,
+   "post": 6,
+   "umbra_dim_epochs_after_injection": 78,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 78,
+   "longest_run_nights": 77
+  },
+  {
+   "cell_k": 180,
+   "carrier": 826211100008759,
+   "t0": 60866.531509233755,
+   "u0": 1.3341741113576886,
+   "half_d": 148.99595432705283,
+   "umbra_epochs": 72,
+   "umbra_nights": 71,
+   "pre": 1239,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 72,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 72,
+   "longest_run_nights": 71
+  },
+  {
+   "cell_k": 193,
+   "carrier": 826210200006415,
+   "t0": 58207.86995554096,
+   "u0": 0.8863423154479371,
+   "half_d": 179.28740334575625,
+   "umbra_epochs": 325,
+   "umbra_nights": 116,
+   "pre": 0,
+   "post": 1053,
+   "umbra_dim_epochs_after_injection": 319,
+   "umbra_fraction_predicted_ge_1mag": 0.9815384615384616,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 319,
+   "longest_run_nights": 114
+  }
+ ]
+}

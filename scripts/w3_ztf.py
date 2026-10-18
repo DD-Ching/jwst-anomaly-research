@@ -288,7 +288,10 @@ def stage_comparisons(_a) -> None:
 
     cols = ["oid", "ra", "dec", "refmag", "transient"]
     obj = pq.ParquetFile(s3().open(OBJ_PART)).read(columns=cols).to_pandas()
-    print(save_comparisons(obj))
+    excl = set()
+    if VERSION >= 6:  # v7 diagnosis: rebuild the v6 control group (no sample member)
+        excl = {m for g in json.loads(SAMPLE.read_text())["groups"] for m in g["members"]}
+    print(save_comparisons(obj, excl))
 
 
 # ------------------------------------------------------------------------------------------ fetch
@@ -457,6 +460,7 @@ def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
             "t": et,
             "expid": np.asarray(e["expid"]),
             "maglimit": np.asarray(e["maglimit"], float),
+            "infobits": info,
             "good": good,
             "inplay": inplay,
             "clean": clean,

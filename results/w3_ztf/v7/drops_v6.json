@@ -1,0 +1,89 @@
+{
+ "label": "derived; post hoc drop reasons of covered exposures (r band, calibration carriers)",
+ "pix": 7134,
+ "by_year": {
+  "2018": {
+   "outside_star_span": 10323,
+   "infobits_nonzero": 12012,
+   "kept": 53796,
+   "comparison_clean_fraction_lt_0.5": 231,
+   "flagged_detection": 83,
+   "other": 2
+  },
+  "2019": {
+   "kept": 61976,
+   "infobits_nonzero": 16782,
+   "flagged_detection": 102,
+   "other": 5,
+   "outside_star_span": 8553,
+   "comparison_clean_fraction_lt_0.5": 37
+  },
+  "2020": {
+   "infobits_nonzero": 16456,
+   "kept": 129784,
+   "flagged_detection": 257,
+   "outside_star_span": 21546,
+   "comparison_clean_fraction_lt_0.5": 145
+  },
+  "2021": {
+   "kept": 103508,
+   "infobits_nonzero": 29850,
+   "flagged_detection": 54,
+   "outside_star_span": 16474,
+   "other": 4,
+   "comparison_clean_fraction_lt_0.5": 55
+  },
+  "2022": {
+   "kept": 37483,
+   "infobits_nonzero": 11908,
+   "comparison_clean_fraction_lt_0.5": 7306,
+   "flagged_detection": 17,
+   "outside_star_span": 2534
+  },
+  "2023": {
+   "kept": 4143,
+   "infobits_nonzero": 13623,
+   "comparison_clean_fraction_lt_0.5": 20960,
+   "outside_star_span": 1029,
+   "flagged_detection": 3
+  },
+  "2024": {
+   "kept": 636,
+   "infobits_nonzero": 3329,
+   "comparison_clean_fraction_lt_0.5": 5,
+   "flagged_detection": 1,
+   "outside_star_span": 225
+  },
+  "2025": {
+   "infobits_nonzero": 4698,
+   "kept": 4032,
+   "comparison_clean_fraction_lt_0.5": 4318,
+   "outside_star_span": 11323,
+   "flagged_detection": 37
+  },
+  "2026": {
+   "outside_star_span": 7735
+  }
+ },
+ "clean_fraction_of_dropped_median": {
+  "2018": 0.0,
+  "2019": 0.16666666666666666,
+  "2020": 0.25,
+  "2021": 0.25,
+  "2022": 0.0,
+  "2023": 0.0,
+  "2024": 0.0,
+  "2025": 0.0
+ },
+ "comparison_in_play_median_of_dropped": {
+  "2018": 67.0,
+  "2019": 95.0,
+  "2020": 5.0,
+  "2021": 93.0,
+  "2022": 100.0,
+  "2023": 92.0,
+  "2024": 97.0,
+  "2025": 1.0,
+  "2026": 0.0
+ }
+}

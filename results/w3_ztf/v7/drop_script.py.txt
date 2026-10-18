@@ -1,0 +1,56 @@
+# v7 post hoc: why official good exposures (infobits 0, star >= 10" inside the footprint) are not in the searched
+# r-band series of calibration carriers, per survey year. Reasons are checked in this order (first applies):
+# outside_star_span (before the first or after the last detection of that member), no_comparison_in_play,
+# infobits_nonzero, comparison_clean_fraction_lt_0.5 (frozen GOOD_FRAC), flagged_detection, other. Usage: drop_script <pix> <vdir|-> <out>
+import json, sys
+from collections import Counter, defaultdict
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+pix, vdir, OUT = int(sys.argv[1]), (None if sys.argv[2] == '-' else sys.argv[2]), sys.argv[3]
+wz.configure(pix, vdir)
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+yr = lambda t: int(np.floor(1858.877 + t / 365.2425))
+reasons = defaultdict(Counter)
+inplay_med = defaultdict(list)
+frac = defaultdict(list)
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) < 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        continue
+    kept = {x[5] for x in s}
+    for o in g['members']:
+        r = rows.get(o)
+        if r is None or r['filt'] != 2:
+            continue
+        c = cov.get((*r['quad'], 2))
+        if c is None or o not in c['states']:
+            continue
+        st = c['states'][o][0]
+        for k in np.flatnonzero(c['covered'][o]):
+            if int(c['expid'][k]) in kept:
+                reasons[yr(c['t'][k])]['kept'] += 1
+                continue
+            y = yr(c['t'][k])
+            if not c['spans'][o][k]:
+                why = 'outside_star_span'
+            elif c['inplay'][k] == 0:
+                why = 'no_comparison_in_play'
+            elif int(c['infobits'][k]) != 0:
+                why = 'infobits_nonzero'
+            elif not c['good'][k]:
+                why = 'comparison_clean_fraction_lt_0.5'
+                frac[y].append(c['clean'][k] / c['inplay'][k])
+            elif st[k] == 3:
+                why = 'flagged_detection'
+            else:
+                why = 'other'
+            reasons[y][why] += 1
+            inplay_med[y].append(int(c['inplay'][k]))
+out = {'label': 'derived; post hoc drop reasons of covered exposures (r band, calibration carriers)', 'pix': pix,
+       'by_year': {str(y): dict(v) for y, v in sorted(reasons.items())},
+       'clean_fraction_of_dropped_median': {str(y): float(np.median(v)) for y, v in sorted(frac.items())},
+       'comparison_in_play_median_of_dropped': {str(y): float(np.median(v)) for y, v in sorted(inplay_med.items())}}
+json.dump(out, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print(json.dumps(out, indent=1))

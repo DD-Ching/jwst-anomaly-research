@@ -5204,6 +5204,11 @@ confining radiation at a throat is found.
   (ρ 0.01, blend 1), 82 of 112 unflagged injections have < 3 umbra nights (post hoc). The v4 capability did not
   reproduce in Npix 7134. The search group was not read. Revisit if: the
   owner wants capability conditioned on cadence (e.g. per-star umbra coverage), decided before new data are read.
+- **Addendum 2026-10-18 (v7, `results/w3_ztf/v7/RESULT.md`):** the route is **paused**. The v4→v6 drop is about
+  654–704 of 756 injections from sampling: DR24 light curves lack most 2022-10 to 2023-10 exposures in Npix 7134, and
+  2024 is sparse. About 52–102 come from pre-screen and vetting given eligibility. No bug changes the outcome. Reopen if: a later
+  release covers those epochs (`month_script.py.txt` check on calibration data first), or the owner authorizes
+  image-level forced photometry for the post-event baseline. Not reopened by another batch or area of DR24.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
