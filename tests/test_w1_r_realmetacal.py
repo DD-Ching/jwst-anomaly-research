@@ -92,12 +92,14 @@ def test_match_unique_drops_shared_targets():
 def test_prep_tile_v2_fills_holes_with_noise_and_pads():
     arr = np.full((128, 128), 5.0) + np.random.default_rng(0).normal(0, 1.0, (128, 128))
     arr[60:64, 60:64] = np.nan
-    out, near, sky, sig = m.prep_tile_v2(arr, seed=3)
+    out, near, sky, sig, bad_frac = m.prep_tile_v2(arr, seed=3)
+    assert bad_frac == pytest.approx(16 / 128**2)
     assert np.isfinite(out).all()
     assert sky == pytest.approx(5.0, abs=0.1) and sig == pytest.approx(1.0, rel=0.1)
     hole = out[58:66, 58:66]  # hole + 2-px dilation: noise around 0, not zeros
     assert abs(hole.mean()) < 0.6 and hole.std() > 0.5
     assert near[60 - m.MASK_PAD_PX, 61] and not near[60 - m.MASK_PAD_PX - 2, 61]
+    assert near[60 - 11, 60 - 11]  # diagonal, Euclidean 15.6 px: inside the pad
 
 
 def test_tile_gate_and_rule_v2():

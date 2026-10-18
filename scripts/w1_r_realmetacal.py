@@ -445,9 +445,10 @@ def real(out: Path, uri=I2D, workers=None) -> dict:
     return result
 
 
-def sheet(out: Path, tiles=((0, 1024), (1024, 1024)), uri=I2D, v2=False) -> None:
+def sheet(out: Path, tiles=((0, 1024), (1024, 1024)), uri=I2D, v2=False, seeds=None) -> None:
     """Contact sheet: original, metacal unsheared and 1p − 1m (plan settings) for ``tiles``;
-    ``v2`` prepares tiles with ``prep_tile_v2`` (noise-filled mask)."""
+    ``v2`` prepares tiles with ``prep_tile_v2`` (noise-filled mask) and ``seeds`` (the run's
+    per-tile seeds, ``real2``: 100 + tile index) reproduces the measured realisations."""
     import matplotlib
 
     matplotlib.use("Agg")
@@ -461,13 +462,14 @@ def sheet(out: Path, tiles=((0, 1024), (1024, 1024)), uri=I2D, v2=False) -> None
             a = np.asarray(h["SCI"].section[y0 : y0 + TILE, x0 : x0 + TILE], float)
             w = np.asarray(h["WHT"].section[y0 : y0 + TILE, x0 : x0 + TILE], float)
             a = np.where(w > 0, a, np.nan)
+            seed = seeds[i] if seeds else 1
             if v2:
-                b, _, _, sd = prep_tile_v2(a, 1)
+                b, _, _, sd, _ = prep_tile_v2(a, seed + 50_000 if seeds else 1)
             else:
                 good = np.isfinite(a)
                 _, med, sd = sigma_clipped_stats(a[good], sigma=3.0, maxiters=10)
                 b = np.where(good, a - med, 0.0)
-            ims = metacal_set(b, sd, 1)
+            ims = metacal_set(b, sd, seed)
             panels = [(b, "original"), (ims["noshear"], "metacal noshear"),
                       (ims["1p"] - ims["1m"], "1p - 1m")]  # fmt: skip
             for j, (im, title) in enumerate(panels):
@@ -522,39 +524,52 @@ def posthoc(r_real: Path, out: Path, exclude=((0, 1024),), n_boot=2000, seed=1) 
 # ---- v2 (PLAN_v2.md) ----
 
 
-def prep_tile_v2(arr: np.ndarray, seed: int) -> tuple[np.ndarray, np.ndarray, float, float]:
-    """Sky-subtracted tile with masked pixels (non-finite, dilated by MASK_DILATE_PX) filled with
-    white noise of the clipped σ; returns (image, near-mask bool image, sky, σ)."""
+def _disk(r: int) -> np.ndarray:
+    y, x = np.mgrid[-r : r + 1, -r : r + 1]
+    return x * x + y * y <= r * r
+
+
+def prep_tile_v2(arr: np.ndarray, seed: int) -> tuple[np.ndarray, np.ndarray, float, float, float]:
+    """Sky-subtracted tile with masked pixels (non-finite, dilated by a MASK_DILATE_PX disk) filled
+    with white noise of the clipped σ; returns (image, near-mask bool image within MASK_PAD_PX
+    (Euclidean) of a masked pixel, sky, σ, masked-pixel fraction)."""
     from astropy.stats import sigma_clipped_stats
     from scipy import ndimage
 
     bad = ~np.isfinite(arr)
     _, sky, sig = (float(v) for v in sigma_clipped_stats(arr[~bad], sigma=3.0, maxiters=10))
-    fill = ndimage.binary_dilation(bad, iterations=MASK_DILATE_PX) if bad.any() else bad
+    if bad.any():
+        fill = ndimage.binary_dilation(bad, structure=_disk(MASK_DILATE_PX))
+        near = ndimage.distance_transform_edt(~bad) <= MASK_PAD_PX
+    else:
+        fill = near = bad
     noise = np.random.default_rng(seed).normal(0.0, sig, arr.shape)
-    out = np.where(fill, noise, arr - sky)
-    near = ndimage.binary_dilation(bad, iterations=MASK_PAD_PX) if bad.any() else bad
-    return out, near, sky, sig
+    return np.where(fill, noise, arr - sky), near, sky, sig, float(bad.mean())
 
 
 def _real_tile_v2(job) -> dict:
-    arr, y0, x0, seed, psf_fwhm, fixnoise = job
-    a, near, sky, sig = prep_tile_v2(arr, seed + 50_000)
-    try:
-        res = responses(metacal_set(a, sig if fixnoise else None, seed, psf_fwhm), v2=True,
-                        near_mask=near)  # fmt: skip
-    except ValueError as exc:
-        empty = np.zeros(0)
-        res = {"r11": empty, "r22": empty, "snr": empty, "a": empty, "psf_sigma_px": None,
-               "psf_sigma_raw_px": None, "n_detected": None, "error": str(exc)}  # fmt: skip
-    return {"y0": y0, "x0": x0, "sky": sky, "sigma": sig, "masked_frac": float(near.mean()), **res}
+    """One tile, prepared once, through every variant ``{name: (psf_fwhm, fixnoise)}``."""
+    arr, y0, x0, seed, variants = job
+    a, near, sky, sig, bad_frac = prep_tile_v2(arr, seed + 50_000)
+    out = {}
+    for name, (psf_fwhm, fixnoise) in variants.items():
+        try:
+            res = responses(metacal_set(a, sig if fixnoise else None, seed, psf_fwhm), v2=True,
+                            near_mask=near)  # fmt: skip
+        except ValueError as exc:
+            empty = np.zeros(0)
+            res = {"r11": empty, "r22": empty, "snr": empty, "a": empty, "psf_sigma_px": None,
+                   "psf_sigma_raw_px": None, "n_detected": None, "error": str(exc)}  # fmt: skip
+        out[name] = {"y0": y0, "x0": x0, "sky": sky, "sigma": sig, "masked_frac": bad_frac,
+                     "pad_frac": float(near.mean()), **res}  # fmt: skip
+    return out
 
 
 def tile_gate(per_tile: list[dict]) -> list[bool]:
     """PLAN_v2 change 5: keep a tile unless its raw PSF σ is below the floor or its detection
-    count is below half the median over tiles with a count."""
-    counts = [t["n_detected"] for t in per_tile if t.get("n_detected")]
-    med = float(np.median(counts)) if counts else 0.0
+    count is below half the median over tiles with a count (deviation: the plan's "accepted
+    tiles" is circular; the median over all coverage-passing tiles is used, ``gate_median``)."""
+    med = gate_median(per_tile)
     return [
         bool(t.get("n_detected"))
         and t["n_detected"] >= 0.5 * med
@@ -562,6 +577,11 @@ def tile_gate(per_tile: list[dict]) -> list[bool]:
         and t["psf_sigma_raw_px"] >= PSF_SIGMA_FLOOR_PX
         for t in per_tile
     ]
+
+
+def gate_median(per_tile: list[dict]) -> float:
+    counts = [t["n_detected"] for t in per_tile if t.get("n_detected")]
+    return float(np.median(counts)) if counts else 0.0
 
 
 def tile_bootstrap(per_tile_r: list[np.ndarray], n_boot=2000, seed=1) -> float | None:
@@ -605,13 +625,10 @@ def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
     variants = variants or {"plan": (PSF_FWHM_ARCSEC, True),
                             "no_fixnoise": (PSF_FWHM_ARCSEC, False),
                             "psf_d_x1.15": (1.15 * PSF_FWHM_ARCSEC, True)}  # fmt: skip
-    jobs = [
-        (cache[t], t[0], t[1], 100 + i, fw, fx, name)
-        for name, (fw, fx) in variants.items()
-        for i, t in enumerate(tiles)
-    ]
+    jobs = [(cache[t], t[0], t[1], 100 + i, variants) for i, t in enumerate(tiles)]
     with ProcessPoolExecutor(max_workers=workers or os.cpu_count(), initializer=_init_worker) as ex:
-        res = list(ex.map(_real_tile_v2, [j[:6] for j in jobs]))
+        res = list(ex.map(_real_tile_v2, jobs))
+    keep = tile_gate([r["plan"] for r in res])  # decided once, on the plan variant
     result = {
         "label": "derived (metacal v2 of observed MAST JWST 1181 o001 F200W i2d tiles)",
         "plan": "results/w1_r_realmetacal/PLAN_v2.md",
@@ -630,11 +647,11 @@ def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
             "mask_pad_px": MASK_PAD_PX,
         },  # fmt: skip
         "variants": {},
+        "gate": {"variant": "plan", "median_n_detected": gate_median([r["plan"] for r in res])},
         "read_s": round(t_read, 1),
     }
     for name in variants:
-        rr = [r for r, j in zip(res, jobs, strict=True) if j[6] == name]
-        keep = tile_gate(rr)
+        rr = [r[name] for r in res]
         kept = [r for r, k in zip(rr, keep, strict=True) if k]
         r11 = np.concatenate([r["r11"] for r in kept]) if kept else np.zeros(0)
         r22 = np.concatenate([r["r22"] for r in kept]) if kept else np.zeros(0)
@@ -653,6 +670,7 @@ def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
                 "n_detected": r["n_detected"],
                 "sigma": r["sigma"],
                 "masked_frac": r["masked_frac"],
+                "pad_frac": r["pad_frac"],
                 **summary(r["r11"], r["r22"], n_boot=200),
             }  # fmt: skip
             for r, k in zip(rr, keep, strict=True)
@@ -687,17 +705,24 @@ def main(argv=None) -> int:
     ph = sub.add_parser("posthoc")
     ph.add_argument("--r-real", type=Path, required=True)
     ph.add_argument("--out", type=Path, required=True)
+    ph.add_argument("--exclude", type=int, nargs="+", default=None, help="y0 x0 pairs to drop")
     sh = sub.add_parser("sheet")
     sh.add_argument("--out", type=Path, required=True)
     sh.add_argument("--v2", action="store_true", help="PLAN_v2 tile preparation")
     sh.add_argument("--tiles", type=int, nargs="+", default=None, help="y0 x0 pairs")
+    sh.add_argument("--r-real", type=Path, default=None, help="real2 JSON: use the run's seeds")
     a = p.parse_args(argv)
     if a.cmd == "posthoc":
-        print(json.dumps(posthoc(a.r_real, a.out), indent=1))
+        ex = list(zip(a.exclude[::2], a.exclude[1::2], strict=True)) if a.exclude else None
+        print(json.dumps(posthoc(a.r_real, a.out, **({"exclude": ex} if ex else {})), indent=1))
         return 0
     if a.cmd == "sheet":
         t = list(zip(a.tiles[::2], a.tiles[1::2], strict=True)) if a.tiles else None
-        sheet(a.out, **({"tiles": t} if t else {}), v2=a.v2)
+        seeds = None
+        if a.r_real and t:
+            order = [tuple(x) for x in json.loads(a.r_real.read_text())["tiles"]]
+            seeds = [100 + order.index(x) for x in t]
+        sheet(a.out, **({"tiles": t} if t else {}), v2=a.v2, seeds=seeds)
         return 0
     if a.cmd == "validate2":
         res = validate(v2=True)
