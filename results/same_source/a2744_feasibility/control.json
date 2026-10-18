@@ -1,0 +1,349 @@
+[
+ {
+  "a": 16971,
+  "b": 16961,
+  "system": "1.1",
+  "holdout": false,
+  "pos_match": true,
+  "pos_p": 0.03665999044905735,
+  "decoy": null
+ },
+ {
+  "a": 16971,
+  "b": 14292,
+  "system": "1.1",
+  "holdout": false,
+  "pos_match": true,
+  "pos_p": 0.9933894572042554,
+  "decoy": null
+ },
+ {
+  "a": 16961,
+  "b": 14292,
+  "system": "1.1",
+  "holdout": false,
+  "pos_match": true,
+  "pos_p": 0.370973951135469,
+  "decoy": null
+ },
+ {
+  "a": 21141,
+  "b": 17476,
+  "system": "3.1",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 4.8496584770753176e-18,
+  "decoy": 21908,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 17191,
+  "b": 17597,
+  "system": "4.1",
+  "holdout": true,
+  "pos_match": true,
+  "pos_p": 0.8654755504782703,
+  "decoy": 16348,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 17473,
+  "b": 14996,
+  "system": "6.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 0.9983242129555845,
+  "decoy": 18445,
+  "decoy_match": false,
+  "decoy_p": 3.0641961858786914e-222
+ },
+ {
+  "a": 17473,
+  "b": 14449,
+  "system": "6.1",
+  "holdout": true,
+  "pos_match": true,
+  "pos_p": 0.9999909140026412,
+  "decoy": 18445,
+  "decoy_match": false,
+  "decoy_p": 3.0641961858786914e-222
+ },
+ {
+  "a": 14996,
+  "b": 14449,
+  "system": "6.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 0.9999453741509075,
+  "decoy": 18445,
+  "decoy_match": false,
+  "decoy_p": 7.27928255403841e-227
+ },
+ {
+  "a": 16304,
+  "b": 20102,
+  "system": "18.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 1.0093958893428868e-06,
+  "decoy": 23987,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 13658,
+  "b": 16370,
+  "system": "22.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 1.1935599872414854e-05,
+  "decoy": 13097,
+  "decoy_match": false,
+  "decoy_p": 2.1353861405122258e-60
+ },
+ {
+  "a": 13658,
+  "b": 14512,
+  "system": "22.1",
+  "holdout": true,
+  "pos_match": true,
+  "pos_p": 0.061982673319495446,
+  "decoy": 10270,
+  "decoy_match": false,
+  "decoy_p": 9.493272799915508e-29
+ },
+ {
+  "a": 16370,
+  "b": 14512,
+  "system": "22.1",
+  "holdout": true,
+  "pos_match": true,
+  "pos_p": 0.18785981072228375,
+  "decoy": 18867,
+  "decoy_match": false,
+  "decoy_p": 1.9140919678485036e-44
+ },
+ {
+  "a": 16632,
+  "b": 14474,
+  "system": "24",
+  "holdout": false,
+  "pos_match": true,
+  "pos_p": 0.043154745727012174,
+  "decoy": 12466,
+  "decoy_match": false,
+  "decoy_p": 8.657183590876547e-30
+ },
+ {
+  "a": 19229,
+  "b": 17523,
+  "system": "30",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 0.8255610553270892,
+  "decoy": 24006,
+  "decoy_match": false,
+  "decoy_p": 0.0009125070683998878
+ },
+ {
+  "a": 13945,
+  "b": 16350,
+  "system": "34.1",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 3.914594928210741e-43,
+  "decoy": 10505,
+  "decoy_match": false,
+  "decoy_p": 3.528938480777946e-77
+ },
+ {
+  "a": 13946,
+  "b": 16350,
+  "system": "34.1",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 3.905726554966607e-39,
+  "decoy": 10505,
+  "decoy_match": false,
+  "decoy_p": 1.1243954052211286e-59
+ },
+ {
+  "a": 18148,
+  "b": 14625,
+  "system": "42.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 8.118946111731658e-07,
+  "decoy": 22514,
+  "decoy_match": false,
+  "decoy_p": 1.8723780334403347e-12
+ },
+ {
+  "a": 37128,
+  "b": 34602,
+  "system": "600.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 1.3149576301296957e-11,
+  "decoy": 42793,
+  "decoy_match": false,
+  "decoy_p": 2.7663009905774646e-136
+ },
+ {
+  "a": 37128,
+  "b": 34607,
+  "system": "600.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 0.00016170797115812433,
+  "decoy": 36069,
+  "decoy_match": false,
+  "decoy_p": 2.6713079005948217e-105
+ },
+ {
+  "a": 34602,
+  "b": 34607,
+  "system": "600.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 2.5311879456267634e-42,
+  "decoy": 26281,
+  "decoy_match": false,
+  "decoy_p": 1.3792687933767039e-50
+ },
+ {
+  "a": 17309,
+  "b": 14273,
+  "system": "7",
+  "holdout": true,
+  "pos_match": true,
+  "pos_p": 0.9486914916694623,
+  "decoy": 24091,
+  "decoy_match": false,
+  "decoy_p": 1.0780984365990565e-145
+ },
+ {
+  "a": 17538,
+  "b": 19784,
+  "system": "53",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 0.0,
+  "decoy": null
+ },
+ {
+  "a": 17538,
+  "b": 20642,
+  "system": "53",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 0.000111613778524681,
+  "decoy": null
+ },
+ {
+  "a": 19784,
+  "b": 20642,
+  "system": "53",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 3.1208826690663826e-65,
+  "decoy": null
+ },
+ {
+  "a": 37133,
+  "b": 34601,
+  "system": "601.1",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 3.196840903916559e-11,
+  "decoy": 41288,
+  "decoy_match": false,
+  "decoy_p": 5.830744974748035e-229
+ },
+ {
+  "a": 37133,
+  "b": 34600,
+  "system": "601.1",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 7.57222494139863e-24,
+  "decoy": null
+ },
+ {
+  "a": 34601,
+  "b": 34600,
+  "system": "601.1",
+  "holdout": false,
+  "pos_match": false,
+  "pos_p": 2.446536926198646e-10,
+  "decoy": null
+ },
+ {
+  "a": 35783,
+  "b": 34606,
+  "system": "602.1",
+  "holdout": true,
+  "pos_match": true,
+  "pos_p": 0.9991581127679032,
+  "decoy": 40013,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 35783,
+  "b": 34599,
+  "system": "602.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 0.0,
+  "decoy": 38011,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 35783,
+  "b": 34597,
+  "system": "602.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 0.0,
+  "decoy": 27127,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 34606,
+  "b": 34599,
+  "system": "602.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 0.0,
+  "decoy": 24607,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 34606,
+  "b": 34597,
+  "system": "602.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 0.0,
+  "decoy": 27127,
+  "decoy_match": false,
+  "decoy_p": 0.0
+ },
+ {
+  "a": 34599,
+  "b": 34597,
+  "system": "602.1",
+  "holdout": true,
+  "pos_match": false,
+  "pos_p": 1.9392619270637397e-144,
+  "decoy": 27127,
+  "decoy_match": false,
+  "decoy_p": 5.579635184815211e-217
+ }
+]
