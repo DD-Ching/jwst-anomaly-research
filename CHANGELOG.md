@@ -9,7 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result (`results/w1_r_realmetacal/v2/RESULT.md`):** 22 tiles, 4 gated out; R = 1.056 ± 0.156 (804 sources),
   R − 2σ = 0.744 < 0.8 → "conservative"; borrowed R = 0.414 and the blank-field limits unchanged. No fixnoise 1.075 ±
   0.052 (not the estimator); PSF_d × 1.15 0.875 ± 0.162. R_11 < R_22 in every variant and in the simulation (a
-  chain property, not investigated).
+  chain property, not investigated). Review: the frozen 0.97 px floor is PSF_d's σ, but σ is measured on PSF_r
+  (1.37 px) images, so it acts only via the gate; post hoc with 1.37 px, R = 1.114 ± 0.168, R − 2σ 0.778 (same call).
 - **Failed / gap:** the noise fill does not stop the ringing; the gated tiles all ring after deconvolution
   (`v2/sheet.png`, looked at), one without any masked pixel, so a sharp data feature drives it.
 - **Handoff:** the PSF model is now the limiting term: an empirical drizzled PSF (stars of the mosaic or STPSF on

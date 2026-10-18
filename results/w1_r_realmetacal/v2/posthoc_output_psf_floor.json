@@ -1,0 +1,81 @@
+{
+ "label": "post hoc (deviation), derived from r_real.json per-tile summaries",
+ "excluded_tiles": [
+  [
+   0,
+   1024
+  ],
+  [
+   1024,
+   9216
+  ],
+  [
+   3072,
+   1024
+  ],
+  [
+   3072,
+   2048
+  ],
+  [
+   1024,
+   0
+  ]
+ ],
+ "variants": {
+  "plan": {
+   "all_tiles": {
+    "n_tiles": 22,
+    "n": 955,
+    "R": 1.0503660164785174,
+    "err_sources": 0.1330914445390119,
+    "err_tile_bootstrap": 0.13586482679716974,
+    "rule_larger_error": "conservative"
+   },
+   "excluded": {
+    "n_tiles": 17,
+    "n": 703,
+    "R": 1.1137248925881102,
+    "err_sources": 0.16201032502133514,
+    "err_tile_bootstrap": 0.16808835308543188,
+    "rule_larger_error": "conservative"
+   }
+  },
+  "no_fixnoise": {
+   "all_tiles": {
+    "n_tiles": 22,
+    "n": 2810,
+    "R": 1.0673963449495274,
+    "err_sources": 0.03727522387629347,
+    "err_tile_bootstrap": 0.05221066165740317,
+    "rule_larger_error": "conservative"
+   },
+   "excluded": {
+    "n_tiles": 17,
+    "n": 2379,
+    "R": 1.1118649157812555,
+    "err_sources": 0.03910726101418291,
+    "err_tile_bootstrap": 0.047484062255900496,
+    "rule_larger_error": "conservative"
+   }
+  },
+  "psf_d_x1.15": {
+   "all_tiles": {
+    "n_tiles": 22,
+    "n": 950,
+    "R": 0.8959974221716701,
+    "err_sources": 0.12523028971170258,
+    "err_tile_bootstrap": 0.13865143493958912,
+    "rule_larger_error": "conservative"
+   },
+   "excluded": {
+    "n_tiles": 17,
+    "n": 698,
+    "R": 0.9530602897960523,
+    "err_sources": 0.15138110954779732,
+    "err_tile_bootstrap": 0.16754108928721698,
+    "rule_larger_error": "conservative"
+   }
+  }
+ }
+}
