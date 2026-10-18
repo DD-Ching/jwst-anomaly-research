@@ -1,0 +1,24 @@
+# v8 review follow-up: uncorrected ratios from image_trial.json (no field stars were found, so the field-corrected
+# values there are NaN). ratio = aperture flux / median aperture flux of the star's 4 control exposures; also the
+# aperture / DR24 ratio at the controls. Usage: python trial_ratios_script.py.txt
+import json
+import numpy as np
+d = json.load(open('results/w3_ztf/v8/image_trial.json'))
+out = {'label': 'derived; uncorrected aperture ratios (no field-star correction available)', 'stars': []}
+gap_all, gap_bad = [], []
+for p in d['plan']:
+    ctl = [x for x in p['exposures'] if x['role'] == 'control' and np.isfinite(x['flux_uJy'])]
+    m = float(np.median([x['flux_uJy'] for x in ctl]))
+    rows = [{'role': x['role'], 'mjd': x['mjd'], 'seeing': x['seeing'], 'ratio_to_controls': x['flux_uJy'] / m,
+             'err_over_controls': x['err_uJy'] / m, 'ratio_to_dr24': x.get('ratio_to_dr24'),
+             'n_field_stars': len(x.get('field_uJy', []))} for x in p['exposures']]
+    out['stars'].append({'objectid': p['objectid'], 'exposures': rows})
+    gap_all += [r['ratio_to_controls'] for r in rows if r['role'] == 'gap']
+    gap_bad += [r['ratio_to_controls'] for r in rows if r['role'] == 'gap' and r['seeing'] > 3]
+ctl_dr = [r['ratio_to_dr24'] for s in out['stars'] for r in s['exposures'] if r['ratio_to_dr24'] is not None]
+out['summary'] = {'gap_n': len(gap_all), 'gap_ratio_min_max': [min(gap_all), max(gap_all)],
+                  'gap_seeing_gt3_n': len(gap_bad), 'gap_seeing_gt3_ratio_min_max': [min(gap_bad), max(gap_bad)],
+                  'control_aperture_over_dr24_min_max': [min(ctl_dr), max(ctl_dr)],
+                  'field_stars_found_per_star': [max(r['n_field_stars'] for r in s['exposures']) for s in out['stars']]}
+json.dump(out, open('results/w3_ztf/v8/trial_ratios.json', 'w'), indent=1); open('results/w3_ztf/v8/trial_ratios.json', 'a').write('\n')
+print(out['summary'])

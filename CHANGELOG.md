@@ -86,7 +86,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   MOA gb13 (#145), S1063 spectroscopy (116.28VK.001). Remaining TASKS items are optional or low-value (W1 1 × 10¹²
   M☉ grid ≈ 30–45× T&A; G-dependent external spike cap). No new search was started.
 
-## 2026-10-18: W3 ZTF v8: gap is in the DR24 release itself (HATS = API); image fill fails its control; route stays paused
+## 2026-10-18: W3 ZTF v8: field 672 gap exposures absent from DR24 in both HATS and API; image fill fails its control; paused
 - Fixed sample of 13 r-band objectids (Npix 7134). HATS and the IRSA light-curve API agree exactly on detections in
   the gap. In field 672, IRSA lists 110 covering exposures in the gap (64 with infobits 0) against 10 DR24
   detections. The release notes say DR24 does not include every field and exposure. No newer release is on IRSA's S3.
@@ -95,7 +95,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   134.5 s), and single-exposure matching is fixed. Regression test added. No stored result changes: every non-30-s
   exposure has infobits ≠ 0.
 - Image trial (3 stars, 36 cutouts, 2.51 MB): the star is present in all 24 gap exposures (0.62–1.16 × its controls).
-  The method fails its control: 0.54–0.75 × the DR24 flux, scatter tracking seeing, no field stars found.
+  The method fails its control: 0.54–0.75 × the DR24 flux at controls, no field stars found.
 - Filling the 49 bracket cases of one cell would need about 530 star × exposures (about 30 min, about 37 MB).
 - **Handoff:** paused; reopen conditions in `results/w3_ztf/v8/RESULT.md`.
 

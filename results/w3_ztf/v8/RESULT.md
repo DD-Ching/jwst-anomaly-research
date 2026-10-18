@@ -12,8 +12,11 @@
   the gap (2022-10 to 2023-10) is the same in the HATS DR24 row group and in the API (e.g. 10/10, 22/22, 28/28, 1/1).
   The gap is not a reading or subset problem of this round.
 - **The release lacks exposures in part of the area.** For the field 672 objectid 672208200001404, IRSA lists 110
-  official exposures in the gap that cover it (64 with infobits 0), but DR24 has 10 detections. For the field 1669
-  objectids, there are 6 official exposures and 1 detection each.
+  official exposures in the gap that cover it (64 with infobits 0), but DR24 has 10 detections. Four of the field
+  1669 objectids have 6 official exposures and 1 detection each. The fifth, 1669214200003701, has 0 official
+  exposures and 1 detection.
+- Month labels in `entry.json` can be off by one at month edges (approximate binning). The gap totals use exact MJD
+  limits.
 - **Field 671 objectids have no such gap:** official 9–28 exposures against 10–28 detections.
 - **The DR24 release notes** (IRSA, `ztf_release_notes_dr24.pdf`, read 2026-10-18) put the gap inside the release
   spans: public to MJD 60970 and private to MJD 60513. But "the single-exposures included in DR24 … do not cover all
@@ -38,31 +41,35 @@
 - **Science images (IBE):** cutouts were obtained for all 36 trial exposures (section 3).
 
 ## 3. Limited image trial (`image_trial.json`, selection `image_trial_selection.json`, fixed before download)
-- **Selection:** 3 calibration stars with an r-band objectid in field 672. Per star, 8 gap exposures without a DR24
-  detection plus 4 control exposures with one, 36 cutouts in total. All 36 cutouts were obtained and all apertures
+- **Selection:** 3 calibration stars with an r-band objectid in field 672. Per star, 8 gap exposures plus 4 control
+  exposures with a DR24 detection, 36 cutouts in total. A gap exposure is one with no DR24 detection with catflags 0
+  for that objectid, so a flagged detection may still exist there. All 36 cutouts were obtained and all apertures
   are finite.
-- **Gap flux:** the target is present in all 24 gap exposures. The ratio to the median of the star's own controls is
-  0.62–1.16, with no field correction. No gap exposure falls ≥ 1 mag below its controls.
+- **Gap flux** (`trial_ratios.json`; uncorrected, because no field stars were available): the target is present in
+  all 24 gap exposures. The aperture flux is 0.62–1.16 × the median of the star's own 4 controls, so no gap
+  exposure falls ≥ 1 mag below its controls. The field-corrected values in `image_trial.json` are NaN for that
+  reason.
 - **Control check, failed on two counts:**
-  - The 2″-aperture flux is 0.54–0.75 × the DR24 flux of the same exposure, and the scatter follows seeing: the
-    lowest ratio, 0.62, is at seeing 3.96″. The random-aperture errors (≈ 0.4–2.7 %) are far smaller than this
-    scatter.
-  - The field-star step found **0 comparison stars** in every 120″ cutout. Same-exposure zero-point and background
-    checks were therefore not possible.
+  - At the 12 control exposures, the 2″-aperture flux is 0.54–0.75 × the DR24 flux of the same exposure. The
+    random-aperture errors (≈ 0.4–2.7 % of the control flux) are far smaller than that spread.
+  - The field-star search, run once per star on its first cutout (3 searches), found **0 comparison stars**.
+    Same-exposure zero-point and background checks were therefore not possible.
+- **Seeing dependence:** the 9 gap exposures with seeing > 3″ have ratios to the controls of 0.62–0.88. The lowest,
+  0.62, is at seeing 3.96″.
 - **Reading:** the method shows the star is present at roughly its usual level. It does **not** reproduce catalogue
   flux to catalogue precision, and its errors are not realistic. Under the round's rule, the failure cases are kept
-  (the three seeing > 3″ gap exposures at 0.62–0.80) and no PSF solver is built.
+  (the 9 seeing > 3″ gap exposures) and no PSF solver is built.
 
 ## 4. Implementation fixes (`scripts/w3_ztf.py`, tests)
 - `exposure_times` now uses the `exptime` column (half the exposure) when present, and `stage_exposures` queries
   it. Without the column it falls back to 30 s.
 - `match_exposures` returned −1 for a quadrant with exactly one exposure; this is fixed.
 - One regression test was added, `test_v8_exposure_mid_time_uses_exptime`, which fails on the old code.
-- **Effect on stored results:** none.
-  - Every non-30-s r-band exposure in both areas has infobits ≠ 0 (`exptime.json`: 542 in v6, 320 in v4; 0 usable).
-    The frozen infobits rule already excluded them.
-  - A single-exposure quadrant contributes at most one epoch to series of ≥ 43 epochs.
-  - Nothing was re-run.
+- **Effect on stored results:**
+  - The `exptime` fix changes none. Every non-30-s r-band exposure in both areas has infobits ≠ 0 (`exptime.json`:
+    542 in v6, 320 in v4; 0 usable), and the frozen infobits rule already excluded them.
+  - The single-exposure fix was not re-run. It adds at most one epoch per such quadrant, against a frozen minimum of
+    2 × MIN_BRACKET + MIN_RUN epochs per series.
 
 ## 5. Cost of filling the #350 baseline gaps (`cost_estimate.json`)
 - **Scope:** the 49 ρ 0.01, blend 1, t_E 100 d cases whose post-event baseline is short, although IRSA lists ≥ 20
@@ -77,7 +84,8 @@
 - **Reusable:** cutouts, TAP and API responses can be cached per star and exposure (not stored here).
 
 ## Downloads
-- Metadata and light curves: about 69.6 MB (≤ 100 MB):
+- Metadata and light curves: about 69 MB (≤ 100 MB; byte counts in `entry.json`, `image_trial.json`,
+  `exptime.json`):
   - HATS row group 2, objectid column 1.00 MB and light-curve column 65.85 MB;
   - API 0.99 + 0.33 MB;
   - TAP 0.50 + 0.31 MB plus aggregate queries.
@@ -93,11 +101,12 @@
 
 ## Decision
 - **The route stays paused** for this area and DR24.
-- The gap in field 672 and similar fields is missing from the release itself, consistently across HATS and the API.
-  It is not a reading problem.
+- For field 672 in Npix 7134 (1 sampled objectid plus 3 trial stars), the gap exposures are absent from DR24 in both
+  HATS and the API, so it is not a reading problem. The reason for each exposure is not established.
 - The available images confirm the star is present. The reused cutout method fails its control: catalogue flux is
   not reproduced, no field stars are found, and the errors are not realistic. Filling about 530 star × exposures for
-  one cell (about 30 min, about 37 MB) would therefore rest on an unvalidated measurement.
+  one cell (about 30 min, about 37 MB, plus about 4 control exposures per star, about 188 more) would therefore rest
+  on an unvalidated measurement.
 - **Reopen if any of these is verified** (each check is cheap and uses this round's scripts):
   1. A newer ZTF release whose light curves contain the field 672 gap exposures. Check: `entry_script.py.txt` on the
      same 13 objectids shows release detections ≈ official infobits-0 exposures in the gap.
