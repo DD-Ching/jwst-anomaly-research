@@ -5055,6 +5055,10 @@ confining radiation at a throat is found.
 - **Addendum (2026-10-18):** tried for the two flagged CANUCS NCF (`results/w1_streak_rowdiag/RESULT.md`):
   thresholds 3 and 2.5 give masks identical to 5 (the persistence check keeps the same trails); the features are a
   diffraction spike and detector row striping, not trails. A lower threshold is not the route; D-097 is unchanged.
+- **Addendum 2 (2026-10-18):** a field-wide row/column-segment median veto (`w1_streak_mask.py --seg-len`,
+  `results/w1_row_veto/RESULT.md`) covers the macs0417-ncf peak but keeps only 56–75 % of the NCF shape rows
+  (cost rule ≥ 75 % in every field: 1 of 5 at L = 80, 0 of 5 at L = 40); not adopted, D-097 unchanged. A next stripe
+  veto needs source footprints masked before the segment medians.
 
 ## D-098 W1 shear screen in blank fields: no lens model, R fixed from the same program's cluster pointings (2026-10-18)
 - **Decision:** fields without a lens model run the unchanged D-053 shear screen with `inject_radial.NullLensModel`

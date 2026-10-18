@@ -1,0 +1,165 @@
+{
+ "variant": "B",
+ "k1r_field": "macs0417-ncf",
+ "k1r_radec": [
+  64.35674918457465,
+  -11.835767777777777
+ ],
+ "K1r": true,
+ "cost_ok": {
+  "macs0416-ncf": false,
+  "macs1149-ncf": false,
+  "abell370-ncf": false,
+  "macs0417-ncf": false,
+  "macs1423-ncf": false
+ },
+ "adopted": false,
+ "fields": {
+  "macs0416-ncf": {
+   "kept_d097": 3445,
+   "kept_union": 1936,
+   "kept_frac": 0.5619738751814224,
+   "cost_ok": false,
+   "union_mask": {
+    "file": "macs0416-ncf_streak_mask.fits.gz",
+    "sha256": "47c3847db05608ac725cc0209dee9e3b2644f346e1a879ebc46111ad668b6fe5",
+    "data_sha256": "1f578354f6e7bd6b039023407f1e4cbe633ec90e1f76fcd6e7943f7fb91af651",
+    "mask_pixels": 56397
+   },
+   "screen_union": {
+    "s_max": 4.048266183802904,
+    "s_max_radec": [
+     64.14256564697816,
+     -24.08783888888889
+    ],
+    "p_random_max": 0.0,
+    "b_max": 3.718955143839485,
+    "passes_eb_rule": true
+   },
+   "screen_d097": {
+    "s_max": 4.643201446567358,
+    "p_random_max": 0.005,
+    "b_max": 4.330748027272451,
+    "passes_eb_rule": true
+   }
+  },
+  "macs1149-ncf": {
+   "kept_d097": 3325,
+   "kept_union": 1930,
+   "kept_frac": 0.5804511278195489,
+   "cost_ok": false,
+   "union_mask": {
+    "file": "macs1149-ncf_streak_mask.fits.gz",
+    "sha256": "01d878ecddedc33d39cc7e41f303a6ab1c8c8d4b5704decb54bf205e70400de2",
+    "data_sha256": "ade0a8fb42953bf32a88a435c1ae431dcdfa8e658aacd6e692c45b6a662e0e5d",
+    "mask_pixels": 49187
+   },
+   "screen_union": {
+    "s_max": 3.2446748651982076,
+    "s_max_radec": [
+     177.41903173630553,
+     22.306404444444443
+    ],
+    "p_random_max": 0.73,
+    "b_max": 3.9149116663712538,
+    "passes_eb_rule": false
+   },
+   "screen_d097": {
+    "s_max": 3.4507587607152983,
+    "p_random_max": 0.64,
+    "b_max": 3.8105450117133355,
+    "passes_eb_rule": false
+   }
+  },
+  "abell370-ncf": {
+   "kept_d097": 3155,
+   "kept_union": 1873,
+   "kept_frac": 0.5936608557844691,
+   "cost_ok": false,
+   "union_mask": {
+    "file": "abell370-ncf_streak_mask.fits.gz",
+    "sha256": "90850880c8e917cc3143aff2cdf88d55336fcb89ec6b3a40651c908db588ff75",
+    "data_sha256": "46085596e79dafdbb99dc5582d333c24d778bc08520b3c5b6311e3b35bba4a03",
+    "mask_pixels": 41033
+   },
+   "screen_union": {
+    "s_max": 3.2832848657667695,
+    "s_max_radec": [
+     40.06772356250452,
+     -1.6653777777777778
+    ],
+    "p_random_max": 0.61,
+    "b_max": 3.400219620292041,
+    "passes_eb_rule": false
+   },
+   "screen_d097": {
+    "s_max": 3.943548080579235,
+    "p_random_max": 0.065,
+    "b_max": 4.80535061794128,
+    "passes_eb_rule": false
+   }
+  },
+  "macs0417-ncf": {
+   "kept_d097": 3829,
+   "kept_union": 2143,
+   "kept_frac": 0.5596761556542178,
+   "cost_ok": false,
+   "union_mask": {
+    "file": "macs0417-ncf_streak_mask.fits.gz",
+    "sha256": "423fadb0048a9389996c3e187e56d4bbcb80840730eeb2bc3adb5de885937130",
+    "data_sha256": "951ff74a5298f167f49aa5b6eacad9395b2af7251ad341ab62243844601b4fe1",
+    "mask_pixels": 66965
+   },
+   "screen_union": {
+    "s_max": 3.2106444954075286,
+    "s_max_radec": [
+     64.382007019527,
+     -11.77549
+    ],
+    "p_random_max": 0.835,
+    "b_max": 3.4022505193779176,
+    "passes_eb_rule": false
+   },
+   "screen_d097": {
+    "s_max": 6.020044469237016,
+    "p_random_max": 0.0,
+    "b_max": 4.00599789822904,
+    "passes_eb_rule": true
+   }
+  },
+  "macs1423-ncf": {
+   "kept_d097": 3348,
+   "kept_union": 2252,
+   "kept_frac": 0.6726403823178017,
+   "cost_ok": false,
+   "union_mask": {
+    "file": "macs1423-ncf_streak_mask.fits.gz",
+    "sha256": "073953ceb9312e1654534105facb5cd0fc88b93fa84ebf76f07401d780f56bf1",
+    "data_sha256": "968649972195027ffa99cff571616edfde723ef9a8998e5349b4ff097e496d7f",
+    "mask_pixels": 58613
+   },
+   "screen_union": {
+    "s_max": 3.6845504620945886,
+    "s_max_radec": [
+     215.8632347000411,
+     24.125726666666665
+    ],
+    "p_random_max": 0.14,
+    "b_max": 3.595028583859527,
+    "passes_eb_rule": false
+   },
+   "screen_d097": {
+    "s_max": 4.033700588657899,
+    "p_random_max": 0.06,
+    "b_max": 3.8179310857105344,
+    "passes_eb_rule": false
+   }
+  }
+ },
+ "rule": "results/w1_row_veto/PLAN.md (K1r, cost check)",
+ "provenance": {
+  "masks": "derived",
+  "counts": "derived",
+  "keep_frac": "assumption"
+ }
+}

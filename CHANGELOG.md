@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 row/column-segment stripe veto for the CANUCS flanking fields: failed on cost, headline unchanged
+- `w1_streak_mask.py --seg-len` (`segment_stripes`: field-wide segment medians, 41-row detrend, 5σ; rows and
+  columns) OR-ed onto the D-097 trail mask; `w1_row_veto_eval.py` decides K1r and the cost check. Plan frozen first
+  (`results/w1_row_veto/PLAN.md`). `w1_stage_inputs.py` now stages the NCF photo-z and pins the F150W catalogues.
+- **Result (`results/w1_row_veto/RESULT.md`):** K1r passes for both variants, but the screens keep only 0.68–0.75
+  (L = 80) and 0.56–0.67 (L = 40) of the rows the D-097 screens used (rule ≥ 0.75 in all five): not adopted, no
+  injections, the W1 headline stays at fourteen fields (2.35× T&A).
+- Post hoc: with either union mask macs0417-ncf no longer passes (S 3.15 / 3.21); abell370-ncf passes under L = 80
+  only (S 4.62, p 0.0), so S_max moves a lot when a third of the rows go. Sheets: the mask also hits bright-source
+  halos, spikes and detector edges.
+- **Failed approach:** an unmasked segment-median stripe detector. **Handoff:** mask source footprints before the
+  segment medians and require multi-segment stripes (new frozen plan), or move to other blank fields (PRIMER, CEERS).
+
 ## 2026-10-18: W1 faint-streak veto (lower findsat_mrt threshold) for the CANUCS flanking fields: failed, headline unchanged
 - `w1_streak_mask.py --mrt-threshold` (default 5 unchanged); plan frozen first (`results/w1_streak_rowdiag/PLAN.md`).
 - **Result (`results/w1_streak_rowdiag/RESULT.md`):** K1n failed for both pre-declared variants (threshold 3, 2.5):
