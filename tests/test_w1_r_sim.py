@@ -19,18 +19,26 @@ def test_rule_outcome_threshold():
     assert w.rule_outcome(1.0, 0.01, r_borrowed=1.05) == "optimistic"
 
 
-def test_weighted_r_nearest_cell():
-    cells = [
-        {"semimajor_px_median": 2.0, "snr_median": 20.0, "R": {"k": {"R": 0.5, "err": 0.1}}},
-        {"semimajor_px_median": 8.0, "snr_median": 200.0, "R": {"k": {"R": 1.0, "err": 0.1}}},
-        {"semimajor_px_median": 4.0, "snr_median": 50.0, "R": {"k": {"R": None, "err": None}}},
-    ]
-    size = np.array([2.1, 1.9, 7.0, 9.0])
-    snr = np.array([18.0, 25.0, 150.0, 300.0])
-    r, err, counts = w.weighted_r(cells, size, snr, "k")
-    assert counts == [2, 2]  # the cell without R is skipped
-    assert r == pytest.approx(0.75)
-    assert err == pytest.approx(np.sqrt(2 * 0.5**2 * 0.1**2))
+def _cell(size, snr, r, n_used, n_pairs=100):
+    return {
+        "semimajor_px_median": size,
+        "snr_median": snr,
+        "n_pairs": n_pairs,
+        "R": {"k": {"R": r, "err": 0.1 if n_used > 1 else None, "n_pairs_used": n_used}},
+    }
+
+
+def test_weighted_r_nearest_cell_and_unrepresented_rows():
+    cells = [_cell(2.0, 20.0, 0.5, 50), _cell(8.0, 200.0, 1.0, 100), _cell(4.0, 50.0, None, 0)]
+    size = np.array([2.1, 1.9, 7.0, 9.0, 4.0])
+    snr = np.array([18.0, 25.0, 150.0, 300.0, 50.0])
+    res = w.weighted_r(cells, size, snr, "k")
+    assert res["rows_per_cell"] == [2, 2, 1]  # the row nearest the R-less cell stays there
+    assert res["n_rows_used"] == 4 and res["n_rows_unrepresented"] == 1
+    assert res["R"] == pytest.approx(0.75)
+    assert res["err"] == pytest.approx(np.sqrt(2 * 0.5**2 * 0.1**2))
+    res = w.weighted_r(cells, size, snr, "k", min_used_frac=0.9)  # cell 0 used 50 of 100
+    assert res["n_rows_used"] == 2 and res["R"] == pytest.approx(1.0)
 
 
 def test_c1_noiseless_response_is_one():
