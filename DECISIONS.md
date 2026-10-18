@@ -5075,3 +5075,20 @@ confining radiation at a throat is found.
   rule, macs0417-ncf only by a post hoc row-stripe test whose rotated-band control is weak (9 % of orientations).
 - **Revisit if:** a blank field has a shape catalogue of another kind (calibrate its R first), or a row/diagonal
   streak veto is frozen and run through injections (then macs0416-ncf and macs0417-ncf can enter the headline).
+
+## D-099 Same-source pairing: no model-free proposal step adopted; lens tools are pair testers, not pair finders (2026-10-18)
+- **Decision:** the repository has no reliable model-free step that proposes which sources are images of one source
+  (task 1). An identity-blind SED pairing at 2–60″ (`scripts/same_source_pairs.py`, reusing `orphan_pairs.match_table`)
+  failed its frozen pass rule on Abell 2744; it is kept as a feasibility tool, not a search. lenstronomy, PyAutoLens and
+  Lenstruction are not added as dependencies: each tests or reconstructs a pair or system already chosen (task 2),
+  which published cluster models already cover here (`lensmodel.find_images`).
+- **Alternatives rejected:**
+  - affine morphology matching of either handedness (`parity_test.compare`) as the proposer: AUC 0.53 for true pairs
+    vs matched decoys (6 + 6, development half), and the parity tool is paused (D-032);
+  - integrating all three lens tools at once: none solves task 1; Lenstruction is unmaintained since 2022-11 and pinned
+    to lenstronomy 1.10.3 (imports with 1.14.2 except one module needing photutils).
+- **Evidence:** `results/same_source/a2744_feasibility/RESULT.md`: holdout recall@10 0.86 (relative ranking works) but
+  only 10 of 33 true pairs pass the absolute SED rule (20 fail χ², 13 photo-z overlap); post hoc, 26,145 SED-matched
+  pairs among 2,674,270 at 2–60″, of which 11 are published image pairs. Limits on later searches: `docs/same_source.md`.
+- **Revisit if:** a ranking-based proposal with a calibrated threshold is frozen and tested on a new held-out cluster
+  (e.g. MACS0416 CANUCS), or a specific pair needs a source-plane reconstruction (then lenstronomy in an isolated env).
