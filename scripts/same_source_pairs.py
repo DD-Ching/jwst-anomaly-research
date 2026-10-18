@@ -8,8 +8,9 @@ multiple images are read only to score the ranking (recall, false-match burden) 
 matched decoys (similar brightness, colour and size, different source). An optional morphology
 step scores pairs with ``parity_test.compare`` (affine map of either handedness).
 
-This proposes pairs; it does not test them against a lens model (task 2: ``lensmodel.find_images``,
-``lens_consistency.py images``). Every number is ``derived``; thresholds are ASSUMPTIONs in the plan.
+This proposes pairs; it does not test them against a lens model (task 2: ``lensmodel.find_images``
+and ``lens_consistency.py images``). Every number is ``derived``; thresholds are ASSUMPTIONs in the
+plan.
 
     python scripts/same_source_pairs.py --field abell2744 --model abell2744-bergamini23 \\
         --out results/same_source/a2744_feasibility [--morph-image s3://...f200w_i2d.fits]
