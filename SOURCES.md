@@ -1189,6 +1189,12 @@ Exploration Program."
 - Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
   opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
 
+## E1 + Einstein Probe (accessed 2026-10-18; D-074 addendum 7)
+- GCN Circulars JSON archive, https://gcn.nasa.gov/circulars/archive.json.tar.gz (redirects to the GCN S3 bucket;
+  rewritten daily; 45,863 circulars on 2026-10-18, `build_summary.json`), streamed; sha256 recorded in `data/manifests/e1_ep.ecsv`; the parsed table
+  `results/e1_ep/ep_events.ecsv` keeps each row's circular id.
+- GCN Circular 40906 (EP250702a likely associated with GRB 250702B,C,D,E), https://gcn.nasa.gov/circulars/40906.
+
 ## E1 + Swift BAT (accessed 2026-10-18; D-074 addendum 6)
 - Swift GRB compilation by the burst advocates, HEASARC TAP table `swiftgrbba`
   (https://heasarc.gsfc.nasa.gov/xamin/vo/tap/sync; columns name, time, trigger_obs, ra, dec, error_radius),

@@ -1,0 +1,22 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: a, datatype: string}
+# - {name: b, datatype: string}
+# - {name: lag_s, datatype: float64}
+# - {name: sep_deg, datatype: float64}
+# - {name: sigma_comb_deg, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: results/e1_ep/ep_events.ecsv x HEASARC swiftgrbba (trigger_obs == Swift)}
+# schema: astropy-2.0
+a b lag_s sep_deg sigma_comb_deg
+EP250615a "GRB 250615A" 2.59 0.005 0.019
+EP241025a "GRB 241025A" 5.0 0.037 0.023
+EP250706a "GRB 250706A" 5.96 0.008 0.022
+EP250430a "GRB 250430A" 15.5 0.029 0.024
+EP251230a "GRB 251230A" 40.0 0.018 0.033
+EP241026a "GRB 241026A" 64.0 0.016 0.009
+EP250925a "GRB 250925A" 64.0 0.015 0.025
+EP241213a "GRB 241213A" 105.0 0.016 0.023
+EP241030a "GRB 241030A" 2715.0 0.035 0.021

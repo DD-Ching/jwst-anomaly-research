@@ -1,0 +1,44 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: channel, datatype: string}
+# - {name: cls, datatype: string}
+# - {name: lag_bin, datatype: int64}
+# - {name: n_inj, datatype: int64}
+# - {name: n_moved, datatype: float64}
+# - {name: null_mean, datatype: float64}
+# - {name: null_sd, datatype: float64}
+# - {name: eff, datatype: float64}
+# - {name: det_frac, datatype: float64}
+# meta: !!omap
+# - {provenance: simulated}
+# - {source: 'synthetic wide-separation lagged pairs injected into the real catalogues (event_network.inject_pairs); eff = net count gain
+#     per moved event (moving an event also removes its old pairs); detected = injected-cell analytic p (jit null) x 10 cells <= 0.0007500000000000001
+#     (Bonferroni family-wise 3 sigma), i.e. per-cell p <= 7.5e-05'}
+# schema: astropy-2.0
+channel cls lag_bin n_inj n_moved null_mean null_sd eff det_frac
+EP-EP wide 0 1 1.0 0.0067 0.08157885755512884 1.0 0.0
+EP-EP wide 0 2 2.0 0.0067 0.08157885755512884 1.0 1.0
+EP-EP wide 0 3 3.0 0.0067 0.08157885755512884 1.0 1.0
+EP-EP wide 0 5 5.0 0.0067 0.08157885755512884 1.0 1.0
+EP-EP wide 0 8 8.0 0.0067 0.08157885755512884 1.0 1.0
+EP-EP wide 1 1 1.0 0.0656 0.2539618869043148 1.0 0.0
+EP-EP wide 1 2 2.0 0.0656 0.2539618869043148 1.0 0.0
+EP-EP wide 1 3 3.0 0.0656 0.2539618869043148 1.0 1.0
+EP-EP wide 1 5 5.0 0.0656 0.2539618869043148 1.0 1.0
+EP-EP wide 1 8 8.0 0.0656 0.2539618869043148 1.0 1.0
+EP-EP wide 2 2 2.0 2.382 1.550701776615994 0.975 0.0
+EP-EP wide 2 3 3.0 2.382 1.550701776615994 0.975 0.0
+EP-EP wide 2 5 5.0 2.382 1.550701776615994 1.0 0.0
+EP-EP wide 2 8 8.0 2.382 1.550701776615994 1.021875 0.9
+EP-EP wide 2 12 12.0 2.382 1.550701776615994 1.0125 1.0
+EP-EP wide 3 7 7.0 57.3603 6.691164615371528 1.032142857142857 0.0
+EP-EP wide 3 13 13.0 57.3603 6.691164615371528 0.973076923076923 0.0
+EP-EP wide 3 20 20.0 57.3603 6.691164615371528 0.97 0.25
+EP-EP wide 3 33 33.0 57.3603 6.691164615371528 1.062121212121212 1.0
+EP-EP wide 3 54 54.0 57.3603 6.691164615371528 0.9388888888888889 1.0
+EP-EP wide 4 12 12.0 365.2278 11.50113503789952 0.7708333333333333 0.0
+EP-EP wide 4 23 23.0 365.2278 11.50113503789952 0.8413043478260869 0.0
+EP-EP wide 4 35 35.0 365.2278 11.50113503789952 0.7971428571428572 0.075
+EP-EP wide 4 58 58.0 365.2278 11.50113503789952 0.7978448275862069 0.5
+EP-EP wide 4 92 92.0 365.2278 11.50113503789952 0.8019021739130435 0.925
