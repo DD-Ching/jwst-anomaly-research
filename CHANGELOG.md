@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 lower masses: filter pilot keeps the frozen Schirmer 10″ screen (D-103)
+- Frozen plan `results/w1_low_mass/PLAN.md`: three filters (V0 Schirmer 10″, V1 point-mass 10″, V2 Schirmer 5″) ×
+  masses 2 × 10¹², 1 × 10¹², 5 × 10¹¹ M☉ × 100 injected lenses at Z = 0.3 on ceers-o001 and goodsn-o004 (no streak masks).
+- **Result (`results/w1_low_mass/RESULT.md`):** recoveries at 1e12 + 2e12: V0 15 / 21, V1 5 / 9, V2 14 / 12; no
+  variant reaches the frozen ≥ 1.5× V0 in both fields, so V0 stays. V0 at 1 × 10¹² M☉: 4 and 3 / 100; 5 × 10¹¹: ≤ 1.
+  V0's real-data S_max reproduces the committed Z = 0.3 summaries in both pointings. V1 / V2 real-data screens (new
+  looks): no E/B pass.
+- **Handoff:** the plan's next step is a V0 grid at 1 × 10¹² M☉ over the forty fields; expected ≈ 30–45× Takahashi &
+  Asada (rough), so low value per cost (T4). Other W1 options: an R measurement on real blank-field images; a
+  G-dependent external spike cap (removes false flags only).
+
 ## 2026-10-18: W1 PRIMER UDS x3y0 explained (post hoc) as a G 10.07 star's optical artefact in one visit
 - `scripts/w1_cal_trail.py` (plan frozen first: `results/w1_shear_primer/vet/x3y0_cal_plan.md`) resamples every
   `_cal` exposure covering a flag onto the mosaic grid and tests the line through it. Four F200W exposures of
