@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W3 feasibility trial on ZTF DR24 light curves: failed its frozen validation; no holdout search
+- Plan, sample (1,000 isolated stars, metadata only) and rules committed before any light curve was read
+  (`results/w3_ztf/PLAN.md`); data: IRSA ZTF DR24 HATS on S3 (two partitions, ~2 min of reads); model: W3,
+  negative-mass point lens (n = 1, ε < 0; finite-source spikes), a restricted hypothesis, not wormholes in general.
+- **Result (`results/w3_ztf/RESULT.md`):** W3 recovery at this stage 0.20–0.60 by cell (≥ 0.5 only for t_E 30–100 d
+  at ρ = 0.01 and t_E 30 d at ρ = 0.1); ordinary controls pass vetting at 0–5 %; 6 real development survivors, all on
+  shared epochs. Two frozen pass conditions failed, so the holdout half was not searched.
+- **Why:** the release has detections only (a median star misses 3.4 % of good epochs without any change), a
+  sample-wide shared-epoch test was missing, and large-ρ t_E edges look like gradual ordinary fades.
+- **Handoff:** paused; reopen only with a frozen shared-epoch test on a new development set or forced photometry.
+
 ## 2026-10-18: W1 PRIMER UDS x3y0 explained (post hoc) as a G 10.07 star's optical artefact in one visit
 - `scripts/w1_cal_trail.py` (plan frozen first: `results/w1_shear_primer/vet/x3y0_cal_plan.md`) resamples every
   `_cal` exposure covering a flag onto the mosaic grid and tests the line through it. Four F200W exposures of

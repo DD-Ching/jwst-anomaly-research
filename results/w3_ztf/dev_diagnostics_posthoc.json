@@ -1,0 +1,15 @@
+{
+ "label": "derived, diagnostic after the dev search (post hoc)",
+ "series_r": 514,
+ "nd_fraction_pct_10_50_90_99": [
+  0.011,
+  0.034,
+  0.088,
+  0.505
+ ],
+ "series_with_nd_frac_gt_0.05": 117,
+ "median_good_epochs": 1414,
+ "flagged_run_start_epochs_shared_by_ge_5_groups": 91,
+ "flagged_runs_starting_on_those_epochs": 859,
+ "flagged_runs": 1753
+}

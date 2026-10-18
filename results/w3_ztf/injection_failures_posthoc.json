@@ -1,0 +1,28 @@
+{
+ "label": "simulated; post hoc diagnostic of which vetting test removes flagged W3 injections (seed 99, not the frozen run)",
+ "rho0.1_tE100": {
+  "flagged": 167,
+  "failed_tests_among_flagged_not_passing": {
+   "oneoff_ok": 56,
+   "sharp_ok": 86,
+   "achromatic_ok": 10,
+   "common_mode_ok": 1
+  }
+ },
+ "rho0.01_tE30": {
+  "flagged": 177,
+  "failed_tests_among_flagged_not_passing": {
+   "oneoff_ok": 61,
+   "achromatic_ok": 7,
+   "sharp_ok": 2
+  }
+ },
+ "rho0.1_tE30": {
+  "flagged": 167,
+  "failed_tests_among_flagged_not_passing": {
+   "oneoff_ok": 57,
+   "sharp_ok": 22,
+   "achromatic_ok": 9
+  }
+ }
+}
