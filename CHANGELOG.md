@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 shear in PRIMER: plan frozen, mosaics tiled, catalogues pinned (no screen yet)
+- `results/w1_shear_primer/PLAN.md` (frozen before any screen). MAST holds two UDS combined mosaics (c1001, c1002;
+  129.2 / 127.9 arcmin²) and two COSMOS mosaics (o003, o004; 92.4 / 87.4 arcmin², overlap 38.7) in F200W
+  (`footprints_*.json`); the single-visit products (837 s) lie inside them and are not used.
+- The mosaics exceed the screen's 200″ radius, so they are cut into non-overlapping 280″ tiles
+  (`w1_footprints.tile_grid`, new; rows kept by `inject_radial.in_box` through the spec key `box_half`): 12 UDS and
+  8 COSMOS tiles, share-weighted 204.8 + 129.8 arcmin², about 1.7× the current headline area if all pass gate P.
+  Tile sky covered only by the other mosaic is dropped (conservative; UDS keeps ≈ 80 % of its union, not stored).
+- Four F200W catalogues pinned (`w1_stage_inputs.py`). The `_i2d.fits` are 31–69 GB, so the whole-SCI streak-mask
+  stream is not used; a tile-range read is needed.
+- **Handoff:** next run: stage the four DJA PRIMER zouts (streamed out of 345–536 MB tarballs; a tile may need two),
+  register the 20 tiles in `inject_shear.py`, tile-range streak masks, then gate P, screens, injections and the
+  combined limit as the plan says.
 ## 2026-10-18: W1 blank-field responsivity R from image simulations: borrowed R = 0.414 is conservative
 - `scripts/w1_r_sim.py`: GalSim Sérsic galaxies sheared by ±0.02, jwst-like 2 px kernel, 3σ segmentation and
   photutils `SourceCatalog` moments on the smoothed data, then `intrinsic_ellipticity`; plan frozen first

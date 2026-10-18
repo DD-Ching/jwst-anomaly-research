@@ -610,9 +610,21 @@ class NullLensModel:
         return {"model": "none (NullLensModel)", "ra0": self.ra0, "dec0": self.dec0}
 
 
+def in_box(ra, dec, centre, half_arcsec: float) -> np.ndarray:
+    """Rows inside the square of half-width ``half_arcsec`` around ``centre`` (RA, Dec deg), on
+    flat tangent-plane offsets (ASSUMPTION; adequate for tiles of a few arcmin). Half-open
+    [-half, half) on each axis, so tiles that share an edge never both keep a row."""
+    ra0, de0 = centre
+    dx = ((np.asarray(ra, float) - ra0 + 180.0) % 360.0 - 180.0) * np.cos(np.radians(de0)) * 3600
+    dy = (np.asarray(dec, float) - de0) * 3600
+    h = half_arcsec
+    return (dx >= -h) & (dx < h) & (dy >= -h) & (dy < h)
+
+
 def load_field(name: str, out: Path, spec: dict | None = None):
     """Model, shapes, Gaia spike stars, catalogue and photo-z paths of one field. ``spec["model"]``
-    None means no lens model: :class:`NullLensModel` at ``spec["centre"]``."""
+    None means no lens model: :class:`NullLensModel` at ``spec["centre"]``. ``spec["box_half"]``
+    (arcsec), when set, keeps only the catalogue rows of that square tile around the centre."""
     spec = FIELDS[name] if spec is None else spec
     root = paths.data_root()
     if spec["model"] is None:
@@ -622,6 +634,9 @@ def load_field(name: str, out: Path, spec: dict | None = None):
         lc.apply_frame_offset(spec["model"], model)
     cat = root / spec["catalog"]
     shapes = lc.load_shapes(cat)
+    if spec.get("box_half") is not None:  # one tile of a large mosaic (results/w1_shear_primer)
+        keep = in_box(shapes["ra"], shapes["dec"], spec["centre"], spec["box_half"])
+        shapes = shapes[keep]
     photoz = None
     if spec["photoz"]:
         kind, rel = spec["photoz"]
