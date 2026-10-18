@@ -10,8 +10,12 @@ import w1_cal_trail as t  # noqa: E402
 def test_classify():
     assert t.classify([]).startswith("undecided")
     assert t.classify([True, True]).startswith("in every exposure")
-    assert t.classify([False, False]).startswith("in no exposure")
-    assert t.classify([True, False, False]).startswith("in 1 of 3")
+    assert t.classify([False, False]).startswith("undecided")
+    assert t.classify([True, False, False]).startswith("trail: in exactly one")
+    d = ["00001", "00002", "00001", "00002"]
+    assert t.classify([False, True, False, True], d).startswith("trail: only in exposures of one")
+    assert t.classify([True, True, False, False], d).endswith("no frozen branch")
+    assert t.dither_of("jw01837001011_08201_00002_nrcb3_cal.fits") == "00002"
 
 
 def test_contrast_and_track_on_synthetic_line():
@@ -20,11 +24,11 @@ def test_contrast_and_track_on_synthetic_line():
     rows = np.round(100 + 0.01 * (np.arange(600) - 300)).astype(int)
     stamp[rows, np.arange(600)] += 30.0
     prof = t.row_profile(stamp)
-    c = t.contrast(prof, 100, scale=0.03)
+    c = t.contrast(prof, 100, scale=0.06)
     assert c["contrast"] > t.IN_SIGMA
     tr = t.line_track(stamp, 100)
     assert abs(tr["slope_px_per_px"] - 0.01) < 0.003
-    flat = t.contrast(t.row_profile(rng.normal(0.0, 1.0, (201, 600))), 100, scale=0.03)
+    flat = t.contrast(t.row_profile(rng.normal(0.0, 1.0, (201, 600))), 100, scale=0.06)
     assert flat["contrast"] < t.IN_SIGMA
 
 
@@ -42,7 +46,7 @@ def test_star_geometry_miss_distance():
         {
             "name": "e",
             "track_post_hoc": {
-                "slope_px_per_px": 0.0,
+                "coef": [0.0, 4.0],
                 "rms_resid_px": 0.1,
                 "chunk_x_px": xs,
                 "chunk_row_px": [4.0, 4.0, 4.0],

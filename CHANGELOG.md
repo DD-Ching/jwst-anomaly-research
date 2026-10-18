@@ -6,15 +6,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - `scripts/w1_cal_trail.py` (plan frozen first: `results/w1_shear_primer/vet/x3y0_cal_plan.md`) resamples every
   `_cal` exposure covering a flag onto the mosaic grid and tests the line through it. Four F200W exposures of
   observation 001 cover the x3y0 peak (visit 001 and visit 011, two dithers each).
-- **Frozen outcome:** the line is not in every exposure (2 of 4 above 5σ), so it is not a static sky feature. The
-  per-exposure calls disagree with the sheet for two stamps (stray-light streaks in a control band; one false call),
-  so the band-median contrast is a weak per-exposure statistic (recorded in RESULT).
-- **Post hoc:** the line is radial from Gaia DR3 2489648647202619264 (G 10.07, 58″ from the peak), passing 0.17–0.19″
-  from it. Both visit-011 dithers put it on the same sky row; visit 001 shows nothing at the same positions (chunk
-  peaks 0.007–0.028 vs 0.40–0.89 MJy/sr). x3y0 is explained as bright-star contamination; the frozen V1 ∪ V2 outcome
-  stays "not explained". The forty-field limit is unchanged (flagged tiles were already excluded).
-- **Method gap found:** the screen's Gaia spike veto caps external stars at 60″ (`EXTERNAL_SPIKE_CAP`); this star's
-  uncapped law gives 291″, and its arm is traced to about 71″. Bright (G ≲ 11) stars near tile edges can therefore
+- **Frozen outcome:** "trail: only in exposures of one dither position" (2 of 4 above 5σ, both dither 2), so x3y0
+  is explained. The sheets do not support the trail mechanism: the line is clear in both visit-011 dithers (one
+  scores 4.50 because stray light enters its control band) and absent in visit 001. The band-median contrast is a
+  weak per-exposure statistic.
+- **Post hoc:** the line is radial from Gaia DR3 2489648647202619264 (G 10.07, 57.6″ from the peak) and passes
+  0.17–0.19″ from it. Both visit-011 dithers put it on the same sky row; a detector-fixed line would move about 17
+  rows. Visit 001 shows nothing at the same positions (chunk peaks 0.009–0.028 vs 0.40–0.89 MJy/sr). x3y0 is
+  explained as bright-star contamination, not a candidate. The forty-field limit is unchanged (flagged tiles were
+  already excluded).
+- **Method gap found:** the screen's Gaia spike veto caps external stars at 60″ (`EXTERNAL_SPIKE_CAP`). This star's
+  uncapped law gives 291″, and its arm is traced to about 71″ (not stored). Bright (G ≲ 11) stars near tile edges can therefore
   still make E/B flags.
 - **Handoff:** (1) W1 at lower masses (a new frozen plan); (2) an R measurement on real blank-field images;
   (3) optional: a G-dependent external spike cap tested by injection on the PRIMER tiles (it would only remove
