@@ -1,0 +1,61 @@
+{
+ "field": "ceers-o002",
+ "i2d": "s3://stpubdata/jwst/public/jw01345/L3/t/o002/jw01345-o002_t022_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  558,
+  1246
+ ],
+ "pixel_scale_arcsec": 0.24981372187179554,
+ "n_trails_status2": 7,
+ "n_candidates_all_status": 59,
+ "trails": [
+  {
+   "theta_deg": 178.83933181734014,
+   "rho_px": -556.9267548603764
+  },
+  {
+   "theta_deg": 109.9147277694493,
+   "rho_px": 392.27986700729866
+  },
+  {
+   "theta_deg": 114.54398318446385,
+   "rho_px": 424.31861530556944
+  },
+  {
+   "theta_deg": 59.26137049803837,
+   "rho_px": 442.43296356536257
+  },
+  {
+   "theta_deg": 0.6684146488891503,
+   "rho_px": 558.6561548141194
+  },
+  {
+   "theta_deg": 96.05311877267025,
+   "rho_px": 282.13785510007665
+  },
+  {
+   "theta_deg": 127.38976531199046,
+   "rho_px": 501.85056043804184
+  }
+ ],
+ "mask_pixels": 81451,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "segment_stripes": null,
+ "wall_time_s": {
+  "read": 7.0,
+  "total": 44.0
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}
