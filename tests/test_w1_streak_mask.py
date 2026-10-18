@@ -175,3 +175,25 @@ def test_cost_ok_uses_rows_kept_after_the_veto():
     assert wsm.kept_rows(old) == 900
     assert wsm.cost_ok({"screen": {"n_used_before_veto": 1000, "n_veto_used": 325}}, old)
     assert not wsm.cost_ok({"screen": {"n_used_before_veto": 1000, "n_veto_used": 326}}, old)
+
+
+def test_tile_slices_cover_every_row_the_tile_keeps():
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+    import inject_radial as ir
+
+    w = _wcs()
+    shape = (2000, 2000)
+    centre = tuple(w.pixel_to_world_values(900.0, 1100.0))
+    ys, xs = wsm.tile_slices(w, shape, centre, 140.0)
+    assert ys.stop - ys.start == xs.stop - xs.start  # square, about 2 * 140 / 0.25 px
+    assert 1120 <= ys.stop - ys.start <= 1125
+    rng = np.random.default_rng(1)
+    px, py = rng.uniform(0, 1999, (2, 20000))
+    ra, dec = w.pixel_to_world_values(px, py)
+    keep = ir.in_box(ra, dec, centre, 140.0)
+    assert keep.sum() > 1000
+    assert np.all((px[keep] >= xs.start) & (px[keep] < xs.stop - 1))
+    assert np.all((py[keep] >= ys.start) & (py[keep] < ys.stop - 1))
+    # clipped at the image edge
+    ys, xs = wsm.tile_slices(w, shape, tuple(w.pixel_to_world_values(10.0, 10.0)), 140.0)
+    assert ys.start == 0 and xs.start == 0

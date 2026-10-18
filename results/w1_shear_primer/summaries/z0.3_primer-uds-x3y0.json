@@ -1,0 +1,141 @@
+{
+ "field": "primer-uds-x3y0",
+ "model": null,
+ "z_lens": 0.0,
+ "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01837-c1002_t000_nircam_clear-f200w/jw01837-c1002_t000_nircam_clear-f200w_cat.ecsv",
+ "photoz": "/home/user/jwst-anomaly-research/data/cache/dja/photoz-primer-uds-stacked/primer-uds-stacked.zout.fits",
+ "screen": {
+  "n_rows": 4041,
+  "n_spike_segments": 71,
+  "n_lensable": 3966,
+  "n_lensable_after_spike_veto": 3898,
+  "n_snr": 3835,
+  "n_resolved": 2651,
+  "n_weak_shear": 2651,
+  "responsivity": 0.414,
+  "responsivity_err": null,
+  "n_used_before_veto": 2651,
+  "n_veto_used": 367,
+  "psf_sigma_px": 1.458853859537915,
+  "n_streak_vetoed": 558,
+  "n_used": 2284,
+  "n_used_photoz": 1867,
+  "n_centres_valid": 59474,
+  "s_max": 6.466292318406659,
+  "s_max_xy": [
+   -124.0,
+   104.0
+  ],
+  "s_max_radec": [
+   34.50675170212336,
+   -5.259761111111111
+  ],
+  "p_random_max": 0.0,
+  "b_max": 4.262593464625711,
+  "e_exceeds_b": true,
+  "passes_eb_rule": true,
+  "s_cross_plus_max": 3.648097492991144,
+  "p_random_cross_plus": 0.15,
+  "s_cross_minus_max": 4.262593464625711,
+  "p_random_cross_minus": 0.01,
+  "null_max_p50_p95": [
+   3.3538021952258257,
+   3.7927478935631864
+  ]
+ },
+ "screened_area_arcsec2": 63889.0,
+ "screened_area_deg2": 0.004929706790123457,
+ "footprint_border": {
+  "radii": [
+   4.0,
+   5.0,
+   6.0,
+   8.0
+  ],
+  "areas_arcsec2": [
+   63889.0,
+   70808.0,
+   74363.0,
+   77889.0
+  ],
+  "area_r0_arcsec2": 52726.60000000002,
+  "excess_frac": 0.17471552223387404
+ },
+ "efficiency": {
+  "2e+12": {
+   "mass_msun": 2000000000000.0,
+   "theta_e_zs2_arcsec": 3.631517062018138,
+   "n_inject": 100,
+   "n_recovered": 0,
+   "efficiency": 0.0,
+   "efficiency_err": 0.0,
+   "mean_lensed": 12.53,
+   "mean_image_used": 17.67,
+   "median_s_best": 2.0831033154045873
+  },
+  "8e+12": {
+   "mass_msun": 8000000000000.0,
+   "theta_e_zs2_arcsec": 7.263034124036276,
+   "n_inject": 100,
+   "n_recovered": 4,
+   "efficiency": 0.04,
+   "efficiency_err": 0.019595917942265423,
+   "mean_lensed": 47.49,
+   "mean_image_used": 66.07,
+   "median_s_best": 2.4492185172409844
+  },
+  "2e+13": {
+   "mass_msun": 20000000000000.0,
+   "theta_e_zs2_arcsec": 11.483865277740263,
+   "n_inject": 100,
+   "n_recovered": 13,
+   "efficiency": 0.13,
+   "efficiency_err": 0.03363034344160047,
+   "mean_lensed": 113.66,
+   "mean_image_used": 157.42,
+   "median_s_best": 3.1022634357671985
+  }
+ },
+ "wall_time_s": {
+  "base_screen": 5.6,
+  "total": 66.2
+ },
+ "assumptions": {
+  "recover_tol_arcsec": 2.0,
+  "p_recover": 0.05,
+  "trials_per_null": 10,
+  "seed": 50,
+  "n_inject": 100,
+  "spike_stars": 8,
+  "w1_lens_z": 0.3,
+  "fixed_responsivity": 0.414,
+  "streak_veto": {
+   "veto_arcsec": 1.0,
+   "masks": "w1_streak_mask.py"
+  },
+  "streak_mask": {
+   "file": "primer-uds-x3y0_streak_mask.fits.gz",
+   "sha256": "18dd7174d4e69b8e253bb7e24dc21ac6d3997c517300970b34bf207ff2654741",
+   "data_sha256": "8f73af4df6cafe74f1fd26fdc44f35ad99103d537261c7bf150275d6328beac8",
+   "mask_pixels": 112462
+  },
+  "screen": {
+   "aperture_arcsec": 10.0,
+   "filter": "schirmer",
+   "r_min_arcsec": 1.0,
+   "min_sources": 5,
+   "min_snr": 10.0,
+   "max_g": 0.5,
+   "responsivity": null,
+   "max_radius": 200.0,
+   "grid_arcsec": 1.0,
+   "n_random": 200,
+   "min_coverage": 0.0,
+   "seed": 1,
+   "psf_chi": [
+    0.0,
+    0.0
+   ]
+  }
+ }
+}

@@ -5093,6 +5093,11 @@ confining radiation at a throat is found.
   pointings with pairwise overlap ≤ 0.6 arcmin², o052 out). Ten pass gate P; o004 / o069 flags explained by V1 ∪ V2
   and kept out. Twenty-four fields: n₉₅ < 1.09 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉ (1.09× T&A); R 0.231 keeps 0.19–0.28
   of the CEERS recoveries (`results/w1_shear_ceers/RESULT.md`). The borrowed R now dominates the systematics.
+- **Addendum 2 (2026-10-18, PRIMER):** mosaics larger than the 200″ screen radius are cut into non-overlapping 280″
+  tiles (`w1_footprints.tile_grid`, each tile one mosaic's rows, share ≥ 0.3); same rule otherwise. Twenty tiles pass
+  gate P; four flags kept out (x3y0 unresolved). Forty fields: n₉₅ < 6.38 × 10⁻⁵ h³ Mpc⁻³ at 2 × 10¹³ M☉ (0.638× T&A)
+  under R = 0.414; R 0.231 keeps 0.15–0.28 of the PRIMER recoveries (`results/w1_shear_primer/RESULT.md`). Per the
+  frozen plan, W1 turns to lower masses rather than more area.
 
 ## D-100 Same-source pairing: no model-free proposal step adopted; lens tools are pair testers, not pair finders (2026-10-18)
 - **Decision:** the repository has no reliable model-free step that proposes which sources are images of one source

@@ -80,27 +80,47 @@ def normalise(d: np.ndarray) -> np.ndarray:
     return z[:ny, :nx].reshape(ny // REBIN, REBIN, nx // REBIN, REBIN).mean(axis=(1, 3))
 
 
-def stream_binned(uri: str) -> tuple[np.ndarray, WCS]:
-    """Block-median SCI image and its WCS, read in row strips (no full copy kept)."""
+def stream_binned(uri: str, workers: int = 8) -> tuple[np.ndarray, WCS]:
+    """Block-median SCI image and its WCS, read in row strips (no full copy kept); ``workers``
+    concurrent range reads (the PRIMER SCI extensions are 2-3 GB)."""
+    from concurrent.futures import ThreadPoolExecutor
+
     import s3fs
 
     fs = s3fs.S3FileSystem(anon=True)
     path = uri.removeprefix("s3://")
-    with fs.open(path, "rb", block_size=2**24) as f, fits.open(f, lazy_load_hdus=True) as h:
+    with fs.open(path, "rb", block_size=2**20) as f, fits.open(f, lazy_load_hdus=True) as h:
         hdu = h["SCI"]
         hd = hdu.header
         if hd["BITPIX"] != -32:
             raise ValueError(f"{uri}: SCI BITPIX {hd['BITPIX']}, expected -32")
         nx, ny = hd["NAXIS1"], hd["NAXIS2"]
         start = hdu.fileinfo()["datLoc"]
-        out = np.full((ny // BLOCK, nx // BLOCK), np.nan, np.float32)
-        for y0 in range(0, (ny // BLOCK) * BLOCK, ROWS_PER_READ):
-            nr = min(ROWS_PER_READ, (ny // BLOCK) * BLOCK - y0)
-            f.seek(start + y0 * nx * 4)
-            a = np.frombuffer(f.read(nr * nx * 4), ">f4").reshape(nr, nx)
-            out[y0 // BLOCK : (y0 + nr) // BLOCK] = block_median(a, BLOCK)
         wcs = WCS(hd)
+    out = np.full((ny // BLOCK, nx // BLOCK), np.nan, np.float32)
+
+    def strip(y0: int) -> None:
+        nr = min(ROWS_PER_READ, (ny // BLOCK) * BLOCK - y0)
+        b = fs.cat_file(path, start=start + y0 * nx * 4, end=start + (y0 + nr) * nx * 4)
+        a = np.frombuffer(b, ">f4").reshape(nr, nx)
+        out[y0 // BLOCK : (y0 + nr) // BLOCK] = block_median(a, BLOCK)
+
+    with ThreadPoolExecutor(workers) as pool:
+        list(pool.map(strip, range(0, (ny // BLOCK) * BLOCK, ROWS_PER_READ)))
     return out, wcs[::BLOCK, ::BLOCK]
+
+
+def tile_slices(wcs: WCS, shape, centre, half_arcsec: float) -> tuple[slice, slice]:
+    """Pixel slices (y, x) of the square tile of half-width ``half_arcsec`` around ``centre`` on an
+    image with ``wcs`` (clipped to the image; results/w1_shear_primer/PLAN.md). The tile's rows
+    are the ones ``inject_radial.in_box`` keeps; a one-pixel margin covers the rounding."""
+    scale = proj_plane_pixel_scales(wcs)[0] * 3600.0
+    x, y = wcs.world_to_pixel_values(*centre)
+    h = half_arcsec / scale + 1
+    ny, nx = shape
+    ys = slice(max(0, int(np.floor(y - h))), min(ny, int(np.ceil(y + h)) + 1))
+    xs = slice(max(0, int(np.floor(x - h))), min(nx, int(np.ceil(x + h)) + 1))
+    return ys, xs
 
 
 def _row_stripes(img: np.ndarray, seg_len: int) -> np.ndarray:
@@ -303,13 +323,23 @@ def main(argv: list[str] | None = None) -> int:
         (args.out / "adoption.json").write_text(json.dumps(res, indent=1) + "\n")
         print(json.dumps(res))
         return 0
+    mosaics = {}  # PRIMER tiles: one streamed and normalised mosaic per i2d, cut per tile
     for name in args.fields:
         t0 = time.time()
-        uri = i2d_uri(ish.field_spec(name)["catalog"])
-        img, wcs = stream_binned(uri)
+        spec = ish.field_spec(name)
+        uri = i2d_uri(spec["catalog"])
+        if uri not in mosaics:
+            mosaics.clear()  # one mosaic in memory at a time (fields come grouped by mosaic)
+            img, wcs = stream_binned(uri)
+            mosaics[uri] = (img, wcs, normalise(img), wcs[::REBIN, ::REBIN])
+        img, wcs, z, wz = mosaics[uri]
         t_read = time.time() - t0
-        z = normalise(img)
-        wz = wcs[::REBIN, ::REBIN]
+        tile = None
+        if spec.get("box_half") is not None:  # normalised over the whole mosaic, then cut
+            ys, xs = tile_slices(wz, z.shape, spec["centre"], spec["box_half"])
+            z, wz = z[ys, xs], wz[ys, xs]
+            img = img[ys.start * REBIN : ys.stop * REBIN, xs.start * REBIN : xs.stop * REBIN]
+            tile = {"y": [ys.start, ys.stop], "x": [xs.start, xs.stop]}
         mask, cat = find_trails(z, args.processes, args.mrt_threshold)
         n_trail_px = int(mask.sum())
         seg = None
@@ -333,6 +363,7 @@ def main(argv: list[str] | None = None) -> int:
             "field": name,
             "i2d": uri,
             "binned_shape": list(z.shape),
+            "tile_slice_rebinned_px": tile,
             "pixel_scale_arcsec": float(proj_plane_pixel_scales(wz)[0] * 3600.0),
             "n_trails_status2": len(trails),
             "n_candidates_all_status": 0 if cat is None else len(cat),

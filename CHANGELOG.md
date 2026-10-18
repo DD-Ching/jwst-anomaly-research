@@ -2,6 +2,43 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 shear in PRIMER: forty-field limit 0.638× Takahashi & Asada at 2 × 10¹³ M☉ (R = 0.414 ASSUMPTION); UDS x3y0 flag unresolved
+- Staged: the four DJA PRIMER zouts (tarball names end in `-fix`; the planned names return 403), pinned and stacked
+  per survey (`w1_stage_inputs.stack_zouts`, content sha256 pinned). Stacking every tile's survey pair instead of
+  only tiles that straddle two DJA mosaics is an implementation choice (deviation from the plan's wording; the
+  0.3″ nearest match differs only where DJA mosaics overlap).
+- Streak masks: the SCI extensions are 1.9–3.3 GB, not the 31–69 GB file sizes, so `w1_streak_mask.py` streams each
+  mosaic once (concurrent range reads, ≈ 40 s each), normalises it whole and cuts each tile (`tile_slices`).
+  Contact sheets (`masks/*.png`): wide mask bands on several tiles; visible diagonal satellite trails in UDS x0y2 /
+  x3y2 are partly unmasked (the frozen rule, not tuned).
+- **Gate P (`gate_p.json`):** all 20 tiles pass (photo-z fraction 0.592–0.873).
+- **Screens (`screen_flags.json`, Z = 0.3 summaries):** four tiles pass the E/B rule: COSMOS x0y0 (S 4.44), UDS x0y2
+  (4.17), x2y0 (4.85), x3y0 (6.47); all four peaks lie within 20″ of a tile edge (7 of 20 maxima do). Frozen V1 ∪ V2
+  vetting (`vet/`): x0y0, x0y2 and x2y0 explained (spike / streak). **UDS x3y0 is not explained by the frozen rule**;
+  on `sheet_smax_flags.png` the peak sits on a bright horizontal line lined with catalogue detections (by eye a
+  streak; not a frozen test). Removing the row band (V1r, not part of the frozen outcome) drops S to 2.99 (p 0.99);
+  5 % of rotated control bands do as much (`vet/vet_primer-uds-x3y0.json`). Not a candidate; unvetted.
+- **Run 3 (2026-10-18 08:10–08:52Z, takeover of the released claim):** inputs re-staged and streak masks regenerated;
+  every regenerated mask JSON equals the committed one (wall time aside), and every new summary's `screen` block and
+  mask `data_sha256` equal the committed Z = 0.3 ones (`assert` before copying), so the restaged chain reproduces run 2.
+  Injections at Z ∈ {0.6, 1.0, 1.5} on the sixteen unflagged tiles (flagged tiles not injected, D-098, as CEERS):
+  25 of 48 done (the `summaries/z{0.6,1.0,1.5}_*.json` files). ≈ 230 s per tile-Z job with four in parallel (not 6 min per Z); the streak-mask tool
+  needs the `streaks` extra (`acstools`). UDS x3y0 (by eye on the sheet): one straight horizontal line crosses the whole
+  40″ sheet through the peak, with fainter parallel streaks above it; the tile's mask lists near-horizontal status-2
+  trails (θ 0.85°, 178.4°, 178.5°), so the trail family is found, but the line through the peak is not fully vetoed
+  (vetoed fraction not measured). Still a flag, not a candidate.
+- **Run 4 (2026-10-18 09:12–09:50Z, takeover):** the 23 remaining UDS tile-Z injection jobs, then R = 0.231 at Z = 0.3
+  on the sixteen; regenerated masks and every new `screen` block equal the committed ones (checked in the session).
+  **Limit (`results/w1_shear_primer/RESULT.md`, `limits_40fields_unflagged.json`):** forty fields, 446.2 arcmin²,
+  n₉₅ < 6.38 × 10⁻⁵ h³ Mpc⁻³ at 2 × 10¹³ M☉ (0.638× Takahashi & Asada; 1.50× / 9.32× at 8 × 10¹² / 2 × 10¹²);
+  V_eff +71 %. The plan's trigger holds: next is lower masses, not more area. Screened area is 0.937 of the
+  covered tile area (`area_check.json`). R = 0.231 keeps 0.15–0.28 of the PRIMER recoveries (`r_sensitivity.json`,
+  sixteen-tile totals), so the sub-T&A reading needs R ≳ 0.414 (D-101 supports it for blank fields).
+- UDS x3y0 visit check (post hoc, `vet/x3y0_visit_check.json`): at the peak c1002 is effectively visit o001
+  (max |diff| 0.053 MJy/sr), so the visit test cannot decide; by eye the line ends ≈ 15″ east of the peak.
+- **Handoff:** (1) x3y0: the o001 L2 `_cal` exposures at the peak (a line in one exposure is a trail); (2) W1 at lower
+  masses (a new frozen plan: smaller Schirmer aperture or stacking, injections at ≤ 2 × 10¹² M☉); (3) a PRIMER or
+  real-image R measurement, since the result depends on R.
 ## 2026-10-18: Confirmation round 2: SMACS h005 within control scatter; an achromaticity test cannot decide G165 h002
 - **SMACS 1 h005 (`results/transients/confirm_r2/RESULT.md`):** the control-photometry stall was one MAST portal
   query per position hanging on an HTTP response; `hit_lightcurve.py --group-arcsec` shares one query. With 22

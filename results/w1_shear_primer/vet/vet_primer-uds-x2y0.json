@@ -1,0 +1,140 @@
+{
+ "field": "primer-uds-x2y0",
+ "plan": "results/w1_shear_more/PLAN.md addendum A",
+ "peak_radec": [
+  34.355293817781074,
+  -5.301427777777778
+ ],
+ "b_max": 4.667671854802303,
+ "n_null": 200,
+ "stripe_columns_px": [
+  332,
+  459,
+  460,
+  461,
+  462,
+  463,
+  464,
+  465,
+  466,
+  467,
+  468,
+  469,
+  470,
+  471,
+  472,
+  473,
+  474,
+  475,
+  476,
+  477,
+  478,
+  479,
+  480,
+  481,
+  482,
+  483,
+  484,
+  485,
+  486,
+  487,
+  488,
+  489,
+  490,
+  491,
+  492,
+  493,
+  494,
+  495,
+  496,
+  497,
+  498,
+  499,
+  500,
+  501,
+  502,
+  503,
+  504,
+  505,
+  506,
+  507,
+  508,
+  509,
+  510,
+  511,
+  512,
+  513,
+  514,
+  515,
+  516,
+  517,
+  518,
+  519,
+  520,
+  521,
+  522
+ ],
+ "pixel_scale_arcsec": 0.03122523993267161,
+ "n_v1": 12,
+ "n_v2": 15,
+ "stripe_rows_px": [
+  477,
+  478,
+  479,
+  480,
+  485,
+  486,
+  487
+ ],
+ "n_v1r": 14,
+ "star": {
+  "ra": 34.35530018071497,
+  "dec": -5.301322197018214,
+  "mag": 13.992122409835805
+ },
+ "star_sep_from_peak_arcsec": 0.38077447075055626,
+ "s_at_peak": {
+  "all": {
+   "s": 4.847388247913365,
+   "p_rot": 0.0,
+   "n_used_field": 3150
+  },
+  "no_v1": {
+   "s": 3.672727784202943,
+   "p_rot": 0.115,
+   "n_used_field": 3138
+  },
+  "no_v2": {
+   "s": 1.7535641779714122,
+   "p_rot": 1.0,
+   "n_used_field": 3135
+  },
+  "no_v1_v2": {
+   "s": 0.827247282343751,
+   "p_rot": 1.0,
+   "n_used_field": 3128
+  },
+  "no_v1r": {
+   "s": 2.2541078472377842,
+   "p_rot": 1.0,
+   "n_used_field": 3136
+  },
+  "no_v1_v1r_v2": {
+   "s": null,
+   "p_rot": 0.0,
+   "n_used_field": 3126
+  },
+  "control_v1r_rotated": {
+   "n_draws": 200,
+   "s_median": 4.663553221249592,
+   "frac_le_no_v1r": 0.065
+  }
+ },
+ "outcome": "explained by streak/spike contamination (screen-level)",
+ "outcome_post_hoc_with_rows": "not explained: to /vet-candidate",
+ "provenance": {
+  "shapes": "observed",
+  "s_p": "derived",
+  "thresholds": "assumption"
+ }
+}
