@@ -232,6 +232,42 @@ for _name, (_obs, _centre) in CEERS_FIELDS.items():
         "centre": _centre,
         "responsivity": GOODSN_R,
     }
+# 2026-10-18 (results/w1_shear_primer/PLAN.md): the twenty non-overlapping 280″ tiles of the
+# PRIMER UDS / COSMOS F200W mosaics (program 1837), one field per tile, read from the frozen
+# footprint files; rows of the tile's assigned mosaic inside the tile only (``box_half``). Photo-z:
+# the field's two DJA zouts stacked (``w1_stage_inputs.stack_zouts``); R fixed at GOODSN_R.
+PRIMER_FOOTPRINTS = {
+    k: _DIR.parent / "results" / "w1_shear_primer" / f"footprints_{k}.json"
+    for k in ("uds", "cosmos")
+}
+PRIMER_ZOUT = "cache/dja/photoz-primer-{0}-stacked/primer-{0}-stacked.zout.fits"
+
+
+def primer_fields() -> dict[str, dict]:
+    """``primer-<uds|cosmos>-<tile>`` -> tile record of the frozen footprint files."""
+    out = {}
+    for key, path in PRIMER_FOOTPRINTS.items():
+        d = json.loads(path.read_text())
+        for t in d["tiles"]:
+            out[f"primer-{key}-{t['tile']}"] = t | {
+                "survey": key,
+                "half": d["assumptions"]["tile_half_arcsec"],
+            }
+    return out
+
+
+PRIMER_FIELDS = primer_fields()
+for _name, _t in PRIMER_FIELDS.items():
+    SHEAR_FIELD_OVERRIDES[_name] = {
+        "model": None,
+        "catalog": ir._MAST.format(f"{_t['pointing']}_nircam_clear-f200w"),
+        "photoz": ("eazy", PRIMER_ZOUT.format(_t["survey"])),
+        "max_radius": 200.0,
+        "spike_stars": True,
+        "centre": tuple(_t["centre"]),
+        "box_half": _t["half"],
+        "responsivity": GOODSN_R,
+    }
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
 
 

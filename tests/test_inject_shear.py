@@ -298,3 +298,17 @@ def test_ceers_fields_use_the_frozen_r_and_the_shared_dja_zout():
         assert spec["catalog"].endswith("_nircam_clear-f200w_cat.ecsv")
         assert spec["photoz"] == ("eazy", ish._CEERS_ZOUT)
         assert ish.fixed_responsivity(name, spec, 0.3) == pytest.approx(0.414)
+
+
+def test_primer_tiles_are_fields_with_a_box_and_the_stacked_zout():
+    names = sorted(ish.PRIMER_FIELDS)
+    assert sum(n.startswith("primer-uds-") for n in names) == 12  # PLAN.md: 12 UDS + 8 COSMOS
+    assert sum(n.startswith("primer-cosmos-") for n in names) == 8
+    for name in names:
+        spec = ish.field_spec(name)
+        assert spec["model"] is None and spec["box_half"] == 140.0
+        assert spec["responsivity"] == ish.GOODSN_R and spec["max_radius"] == 200.0
+        assert "jw01837-" in spec["catalog"]
+        survey = name.split("-")[1]
+        assert spec["photoz"] == ("eazy", ish.PRIMER_ZOUT.format(survey))
+        assert np.hypot(spec["box_half"], spec["box_half"]) < spec["max_radius"]
