@@ -46,9 +46,16 @@ an exclusion; calibration-failed boxes are not reliable zero-candidate regions.
 - **B4-A370-box1-h000:** bright point-like source (F150W ~1,030 nJy in 0.15″) present in every programme. Its 0.15″
   F150W flux is unchanged between the search epochs (ratio 0.998); the screen hit is a core residual. Against 34
   matched compact controls: F150W tail 0.529 (decisive), F444W tail 0.382 → **consistent with the matched-control
-  scatter; no evidence of a source-specific change** (`confirm/a370_h000/cz_*.ecsv`). No Gaia DR3 source within 2″,
+  scatter; no evidence of a source-specific change** (`confirm/a370_h000/cz_*.ecsv`). No Gaia DR3 source within 2″ (`confirm/gaia_check.json`),
   which cannot exclude a star at this brightness (AB ≈ 23.9 in F150W, below Gaia's limit).
-- **B4-SJ0723.3-7327-box1-h005:** SMACS_H005_PLACEHOLDER
+- **B4-SJ0723.3-7327-box1-h005:** bright compact galaxy (F150W ~1,250 nJy) in four programmes. 0.15″ fluxes
+  in the search pair: F150W 1,254 → 1,313 nJy (+4.7 %), F444W 1,075 → 1,184 nJy (+10 %), and 31 days after VENUS F444W
+  is 1,076 nJy again (12774), while the screen's S peaks are negative in both bands (a core residual whose sign
+  disagrees with the aperture change). **Not decided:** the matched-control photometry (28 controls picked) did not
+  finish: `hit_lightcurve.py` stalled after its first position group twice (killed after 40 min, then at a 25 min cap;
+  `confirm/smacs_h005/log_trimmed.txt`). The cheapest next check is the same control comparison once the stall is
+  understood. Batch 3's A370 h003 showed a common ~15 % offset between two mosaics for bright compact sources; whether
+  the same applies here is untested. A return to the earlier level does not exclude real variability.
 
 ## Deviations (labelled)
 - Control photometry: the first run used `--query-only` and so measured only the controls sharing the entry's
@@ -60,7 +67,7 @@ an exclusion; calibration-failed boxes are not reliable zero-candidate regions.
   in all); undeterminable 5,580 s, of which the two timed-out boxes 4,060 s; peak memory 1.40 GB per task.
 - **Per reliable area:** 8,443 task-s / 2.08 arcmin² ≈ 4,060 task-s (1.1 CPU-hours) per calibrated arcmin²; 43 min wall
   on 4 cores for 2.08 arcmin².
-- Review: 03:59 → 04:17 (photometry, sheets) plus sheet look and checks; control checks 04:20 →.
+- Review: 03:59 → 04:17 (photometry, sheets) plus sheet look and checks; control checks 04:20 → 05:30 (two stalled photometry runs included).
 
 ## Pending (no automatic follow-up)
 - 8 AS1063 1 entries beyond capacity (calibration-failed box). Held undeterminable boxes now 33 (26 + 7).
