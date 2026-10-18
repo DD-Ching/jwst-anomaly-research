@@ -1,0 +1,27 @@
+{
+ "label": "post hoc (deviation): tile y0=0 x0=1024 excluded after the contact sheet showed deconvolution ringing from a sharp feature (sheet.png); pooled mean = n-weighted per-tile means; error = per-tile bootstrap errors combined in quadrature with n weights (approximate)",
+ "excluded_tile": [
+  0,
+  1024
+ ],
+ "variants": {
+  "plan": {
+   "n": 276,
+   "R": 1.0036813774298559,
+   "err": 0.2700150661246946,
+   "rule": "conservative"
+  },
+  "no_fixnoise": {
+   "n": 833,
+   "R": 1.002109938704754,
+   "err": 0.07228424369824236,
+   "rule": "conservative"
+  },
+  "psf_d_x1.15": {
+   "n": 276,
+   "R": 0.9396427381792363,
+   "err": 0.25501902542980565,
+   "rule": "conservative"
+  }
+ }
+}

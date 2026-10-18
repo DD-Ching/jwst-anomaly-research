@@ -5168,3 +5168,14 @@ confining radiation at a throat is found.
 - **Revisit if:** a sample-wide shared-epoch test and a correct comparison dim fraction are frozen first and
   validated on a new development set, an edge test that allows ρ t_E-long edges is defined without the injected
   results, or ZTF forced photometry (fluxes at every epoch) replaces the detections-only release.
+
+## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
+- **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
+  with the pipeline-like shapes gives R = 0.953 ± 0.239, "conservative" under the frozen rule (R ≥ 0.414 − 2σ).
+- **Alternatives rejected:** adopting the measured R (its 2σ lower bound is 0.475); ngmix metacal (fits its own
+  shapes, not the screen's isophotal moments; D-101); STPSF as PSF_d (an analytic Airy ⊗ Gaussian was frozen first
+  for speed; an empirical drizzled PSF is the better next step); the post hoc tile exclusion as the headline.
+- **Evidence:** `results/w1_r_realmetacal/RESULT.md`, `r_real.json`, `validate.json` (simulated gate passed, weak),
+  `validate_pooled_posthoc.json`, `r_real_posthoc_excl_tile.json`, `sheet.png`.
+- **Revisit if:** an empirical-PSF, masked metacal on more tiles gives R < 0.414 − 2σ (re-run the limits lower), or
+  its 2σ lower bound exceeds ~0.8 (a frozen plan to re-run the limits with it).
