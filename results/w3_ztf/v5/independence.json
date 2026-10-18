@@ -1,0 +1,14 @@
+{
+ "label": "derived; v5 independence check (metadata only)",
+ "holdout_groups": 486,
+ "holdout_members": 2788,
+ "member_overlap_with_dev": 0,
+ "member_overlap_with_v4": 0,
+ "nearest_dev_group_arcsec_min": 9.96453703493515,
+ "holdout_groups_within_3as_of_dev": 0,
+ "nearest_v4_group_arcsec_min": 77.16550102166897,
+ "holdout_groups_within_3as_of_v4": 0,
+ "ambiguous_holdout_groups": 0,
+ "committed_files_naming_holdout_ids": {},
+ "exposure_history": "v1-v3 stage_fetch downloaded the holdout members light curves with the dev sample, and coverage() used holdout stars in the comparison range as comparison stars in aggregate per-exposure counts; no holdout light curve was searched, screened, injected into or plotted, and no committed file names a holdout id (list above)."
+}

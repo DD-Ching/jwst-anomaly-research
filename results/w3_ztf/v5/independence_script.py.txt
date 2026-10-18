@@ -1,0 +1,43 @@
+# v5 independence check of the v1-v3 holdout half (metadata only). Usage: python independence_script.py.txt <out json>
+import glob, json, re, sys
+import numpy as np
+from scipy.spatial import cKDTree
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+g = json.load(open('results/w3_ztf/sample.json'))['groups']
+v4 = json.load(open('results/w3_ztf/v4/sample.json'))['groups']
+ho = [x for x in g if x['holdout']]; dev = [x for x in g if not x['holdout']]
+def xy(gr, dec0):
+    return np.array([(x['ra'] * np.cos(np.radians(dec0)) * 3600, x['dec'] * 3600) for x in gr])
+dec0 = float(np.median([x['dec'] for x in g]))
+hxy = xy(ho, dec0)
+def nearest(other):
+    d, _ = cKDTree(xy(other, dec0)).query(hxy)
+    return float(d.min()), int((d < 3.0).sum())
+hm = {m for x in ho for m in x['members']}
+dm = {m for x in dev for m in x['members']}
+vm = {m for x in v4 for m in x['members']}
+# committed files (other than the sample itself) that name a holdout key or member objectid
+ids = {str(x['key']) for x in ho} | {str(m) for m in hm}
+named = {}
+for f in glob.glob('results/w3_ztf/**/*.*', recursive=True):
+    if f.endswith(('.png',)) or f == 'results/w3_ztf/sample.json' or '/v5/' in f:
+        continue
+    n = len(set(re.findall(r'\d{13,16}', open(f, errors='ignore').read())) & ids)
+    if n:
+        named[f] = n
+res = {
+    'label': 'derived; v5 independence check (metadata only)',
+    'holdout_groups': len(ho), 'holdout_members': len(hm),
+    'member_overlap_with_dev': len(hm & dm), 'member_overlap_with_v4': len(hm & vm),
+    'nearest_dev_group_arcsec_min': nearest(dev)[0], 'holdout_groups_within_3as_of_dev': nearest(dev)[1],
+    'nearest_v4_group_arcsec_min': nearest(v4)[0], 'holdout_groups_within_3as_of_v4': nearest(v4)[1],
+    'ambiguous_holdout_groups': int(sum(wz.ambiguous(x['members']) for x in ho)),
+    'committed_files_naming_holdout_ids': named,
+    'exposure_history': ('v1-v3 stage_fetch downloaded the holdout members light curves with the dev sample, and '
+                         'coverage() used holdout stars in the comparison range as comparison stars in aggregate '
+                         'per-exposure counts; no holdout light curve was searched, screened, injected into or '
+                         'plotted, and no committed file names a holdout id (list above).'),
+}
+json.dump(res, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(res)
