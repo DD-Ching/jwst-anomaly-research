@@ -85,7 +85,8 @@ def scramble(kind: str, s: en.Sample, rng, up: np.ndarray) -> en.Sample:
 
 def _init(samples, up):
     os.environ["OMP_NUM_THREADS"] = "1"
-    _W["s"] = {k: samples[k] for k in {c for ch in CHANNELS for c in ch}}
+    # fixed order, so a seed gives the same draws in every interpreter (str hashing is salted)
+    _W["s"] = {k: samples[k] for k in sorted({c for ch in CHANNELS for c in ch})}
     _W["up"] = up
 
 
@@ -162,8 +163,8 @@ def main(argv=None) -> int:
         print(k, len(v), f"MJD {v['mjd'].min():.1f}-{v['mjd'].max():.1f}", flush=True)
 
     obs = count_all(samples, p)
-    jit = run_null("jit", a.jit, samples, up, a.cpu, 4_000_000)
-    jday = run_null("jitday", a.jitday, samples, up, a.cpu, 5_000_000)
+    jit = run_null("jit", a.jit, samples, up, a.cpu, 6_000_000)
+    jday = run_null("jitday", a.jitday, samples, up, a.cpu, 7_000_000)
     mask = test_mask(p)
     n_cells = int(mask.sum())
 
@@ -261,6 +262,8 @@ def main(argv=None) -> int:
         "injection_detection_p_star": p_star,
         "same_direction_pairs": dup,
         "node_set": {"dec_min": DEC_MIN, "log10e_min": LOG10E_MIN, "one_per_readout": True},
+        "params": {k: (list(v) if isinstance(v, tuple) else v) for k, v in p.__dict__.items()},
+        "jitday_quantum_s": P_DAY.quantum_s,
     }
     with open(OUT / "summary.json", "w") as fh:
         json.dump(summary, fh, indent=1, default=float)

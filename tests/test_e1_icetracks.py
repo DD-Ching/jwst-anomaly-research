@@ -43,6 +43,9 @@ def test_control_rule():
     assert not ok
     ok, _ = it.control_passes(2, null)
     assert not ok
+    # enough pairs but not significant: the p half of the rule fails
+    ok, p = it.control_passes(12, rng.poisson(12.0, 10000))
+    assert not ok and p > it.CONTROL_MAX_P
 
 
 def test_outcome_and_mask():

@@ -4452,9 +4452,12 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
   tracks (2008-04 to 2022-05). Null for DR2: the D-079 uptime-aware ±3 d jitter; other catalogues as addendum 6.
 - Family: DR2–GBM, DR2–BAT, DR2–CHIME (same, wide), DR2–GW (all) × 5 lags = 35 cells. DR2–ICECAT same-direction
   pairs at 0–10 s are the positive control (270 one-to-one vs 0.0009 expected: passes). DR2–DR2 stays with D-079.
-- **Result: null.** Min cell DR2–CHIME 1–7 d same (p 0.064, × 35 = 1); pooled global p 0.77. Limits per
-  eligible anchor in `results/e1_icetracks/limits.ecsv` (e.g. ≤ 4 × 10⁻⁴ dependent wide DR2–GBM / DR2–BAT pairs
-  per track at 0–10 s).
+- **Result: null.** Min cell DR2–CHIME 1–7 d same (p 0.065, × 35 = 1); pooled global p 0.79. Limits per
+  eligible anchor in `results/e1_icetracks/limits.ecsv` (e.g. ≤ 4.1 × 10⁻⁴ dependent wide DR2–GBM pairs per
+  track at 0–10 s).
+- Control-channel finding (post hoc): DR2–ICECAT wide pairs are short of the null at 1 h–1 d (z −4.5) and 1–7 d
+  (z −6.5); seven null variants (downtime, DR2 end date, either side alone) leave it; cause not determined. No
+  tested cell is below z −1.7.
 - With this, every node set TASKS.md listed for E1 is done; E1 waits only on the CHIME uptime series (owner).
 - Revisit if: f_astro per cut is computed (turns per-track limits into per-astrophysical-neutrino limits), or
   a southern / lower-energy DR2 variant is planned (atmospheric muons dominate; new control needed).

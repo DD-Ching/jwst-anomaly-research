@@ -6,11 +6,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Why:** handoff of #353 (last open E1 node set). Plan frozen first (`results/e1_icetracks/PLAN.md`); data are
   the D-079 pinned DR2 files (fetched in 13 s, reduced cache only), other catalogues from `e1_swift.ecsv`.
 - **Result (derived, `results/e1_icetracks/RESULT.md`):** 7,583 tracks (Dec > −5°, log10 E ≥ 4). Control:
-  270 DR2–ICECAT same-direction pairs at 0–10 s, one-to-one, vs 0.0009. Family min DR2–CHIME 1–7 d same (35 vs
-  26.45, p 0.064, × 35 = 1); pooled global p 0.77: **null**. DR2–GBM same at 0–100 s: 0 vs 0.47.
-- **Post hoc:** 6 same-neutrino DR2–ICECAT pairs at 0–10 s fall in "wide" (reconstruction differences).
-- **Handoff:** E1 node sets are complete; E1 waits on the CHIME uptime series (owner). Optional: f_astro per cut
-  (D-079 revisit) to quote per-astrophysical-neutrino limits.
+  270 DR2–ICECAT same-direction pairs at 0–10 s, one-to-one, vs 0.0013. Family min DR2–CHIME 1–7 d same (35 vs
+  26.51, p 0.065, × 35 = 1); pooled global p 0.79: **null**. DR2–GBM same at 0–100 s: 0 vs 0.47.
+- **Post hoc:** 6 same-neutrino DR2–ICECAT pairs at 0–10 s fall in "wide" (reconstruction differences). Review
+  found a DR2–ICECAT wide deficit at 1 h–7 d (z −4.5, −6.5); seven null variants leave it (not downtime, DR2 end,
+  or one side's scramble); cause open. Review also fixed seed reproducibility (set order), so all numbers are
+  from the re-run.
+- **Handoff:** E1 node sets are complete; E1 waits on the CHIME uptime series (owner). Optional: the DR2–ICECAT deficit (e.g. lag
+  curve around alert times, alerts split by realtime vs archival); f_astro per cut (D-079 revisit).
 
 ## 2026-10-18: E1 + Einstein Probe (sixth node set, from GCN Circulars): 18-cell family null; control passes
 - **Why:** handoff of #351 (E1 open node sets: Einstein Probe). No public EP event table exists, so the table is
