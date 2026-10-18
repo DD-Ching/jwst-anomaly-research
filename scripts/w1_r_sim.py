@@ -6,7 +6,7 @@ detection kernel, segmented at 3σ and measured with photutils ``SourceCatalog``
 data (``semimajor_sigma``, ``ellipticity``, ``orientation``), then PSF-corrected by
 ``exotic_screens.intrinsic_ellipticity``. R per cell = (⟨ε(+g)⟩ − ⟨ε(−g)⟩) / 2g (``simulated``).
 ``--weight-field`` weights the cells by the used rows of a real field (nearest cell in
-log semimajor σ and log S/N of the measured, unsheared simulated galaxies).
+log semimajor σ and log S/N of each cell's kept galaxies, measured in their +g1 copy).
 
     python scripts/w1_r_sim.py --out results/w1_r_metacal/r_sim.json \
         --weight-field goodsn-o001 --work-dir <scratch>/goodsn [--raw-threshold]
@@ -14,13 +14,13 @@ log semimajor σ and log S/N of the measured, unsheared simulated galaxies).
 
 from __future__ import annotations
 
-import os
-
-os.environ.setdefault("OMP_NUM_THREADS", "1")  # pool workers: no BLAS oversubscription
-
 import argparse
 import json
+import multiprocessing
+import os
+import resource
 import sys
+import time
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
@@ -112,7 +112,10 @@ def psf_sigma_px(the_psf, kernel_sigma=KERNEL_SIGMA_PX) -> float:
     if the_psf is None and kernel_sigma <= 0:
         return 0.0  # nothing to subtract (C1)
     im, conv = draw(galsim.Gaussian(sigma=1e-4, flux=1.0), the_psf, 0.0, None, kernel_sigma)
-    return measure(im, conv, 0.0, kernel_sigma)[1]
+    m = measure(im, conv, 0.0, kernel_sigma)
+    if m is None:
+        raise ValueError("the PSF-only stamp has no central source")
+    return m[1]
 
 
 def cell(job) -> dict:
@@ -147,12 +150,12 @@ def cell(job) -> dict:
                     m = measure(im, conv, noise, kernel_sigma, raw_thr=raw_thr)
                     if m is not None:
                         moms[comp, sgn] = m
-            if len(moms) == 4:
-                sizes.append(moms[0, 1.0][0])
-                snrs.append(moms[0, 1.0][3])
             pair.append(moms)
         if any(len(m) < 4 for m in pair):
             continue  # a pair counts only if all eight sheared copies are detected at the centre
+        for moms in pair:  # cell placement uses the same kept pairs (their +g1 copies)
+            sizes.append(moms[0, 1.0][0])
+            snrs.append(moms[0, 1.0][3])
         for k, ps in psigs.items():
             rs = []
             for moms in pair:
@@ -170,7 +173,7 @@ def cell(job) -> dict:
         "snr_target": snr,
         "psf_sigma_px": psigs,
         "n_pairs": npair,
-        "n_detected": len(sizes),  # of 2 n_pairs galaxies, all four sheared copies detected
+        "n_detected": len(sizes),  # galaxies of pairs with all eight sheared copies detected
         "semimajor_px_median": float(np.median(sizes)) if sizes else None,
         "snr_median": float(np.median(snrs)) if snrs else None,
         "R": {},
@@ -195,7 +198,7 @@ def used_rows(field: str, work_dir: Path):
     spec = ish.field_spec(field)
     model, shapes, extra, _cat, _pz = ir.load_field(field, work_dir, spec)
     psig = es.psf_sigma_px(shapes)
-    e, _ = es.shear_sources(model, shapes, psig, 10.0, responsivity=0.414, extra=extra)
+    e, _ = es.shear_sources(model, shapes, psig, 10.0, responsivity=ish.GOODSN_R, extra=extra)
     ok = np.isfinite(e)
     return np.asarray(shapes["semimajor_px"], float)[ok], np.asarray(shapes["snr"], float)[ok], psig
 
@@ -204,12 +207,20 @@ def weighted_r(cells: list[dict], size, snr, key: str, min_used_frac: float = 0.
     """Mean cell R (PSF-σ choice ``key``) over real rows, each mapped to the nearest detected cell
     in (log semimajor σ, log S/N) of the cells' measured medians. Rows whose cell has fewer than
     two used pairs, or a used-pair fraction below ``min_used_frac``, are left out and counted as
-    ``n_rows_unrepresented`` (R there is unknown, not assumed)."""
+    ``n_rows_unrepresented`` (R there is unknown, not assumed). Cells without any kept galaxy
+    have no position, so rows near them go to a neighbour. ``n_rows_extrapolated`` counts rows
+    beyond the placed cells' size or S/N range (they take an edge cell's R)."""
     det = [c for c in cells if c["semimajor_px_median"]]
     cs = np.log([c["semimajor_px_median"] for c in det])
     cn = np.log([max(c["snr_median"], 1e-3) for c in det])
     d = (np.log(size)[:, None] - cs[None]) ** 2 + (np.log(snr)[:, None] - cn[None]) ** 2
     counts = np.bincount(np.argmin(d, axis=1), minlength=len(det))
+    outside = (
+        (np.log(size) > cs.max())
+        | (np.log(size) < cs.min())
+        | (np.log(snr) > cn.max())
+        | (np.log(snr) < cn.min())
+    )
     ok = np.array(
         [
             c["R"][key]["n_pairs_used"] >= 2
@@ -225,6 +236,7 @@ def weighted_r(cells: list[dict], size, snr, key: str, min_used_frac: float = 0.
         "err": float(np.sqrt(np.dot(w**2, err**2))),
         "n_rows_used": int(np.where(ok, counts, 0).sum()),
         "n_rows_unrepresented": int(np.where(ok, 0, counts).sum()),
+        "n_rows_extrapolated": int(outside.sum()),
         "rows_per_cell": counts.tolist(),
     }
 
@@ -274,9 +286,22 @@ def main(argv=None) -> int:
         for i, (n, h, s) in enumerate((n, h, s) for n in SERSIC_N for h in HLR_PX for s in SNR)
     ]
     c1_job = (0.5, 8.0, np.inf, 10, a.seed - 1, 0.0, 0.0, {}, False)
-    with ProcessPoolExecutor(a.workers) as ex:
+    os.environ["OMP_NUM_THREADS"] = "1"  # spawned workers inherit it: no BLAS oversubscription
+    t0 = time.perf_counter()
+    ctx = multiprocessing.get_context("spawn")
+    with ProcessPoolExecutor(a.workers, mp_context=ctx) as ex:
+        c1_fut = ex.submit(cell, c1_job)
         cells = list(ex.map(cell, jobs))
-        c1 = ex.submit(cell, c1_job).result()
+        c1 = c1_fut.result()
+    wall = time.perf_counter() - t0
+    cpu = resource.getrusage(resource.RUSAGE_CHILDREN)
+    cpu_pct = 100 * (cpu.ru_utime + cpu.ru_stime) / (wall * a.workers)
+    print(
+        f"{len(jobs) + 1} cells in {wall:.0f} s ({(len(jobs) + 1) / wall:.2f} cells/s), "
+        f"CPU {cpu_pct:.0f} % of {a.workers} cores",
+        file=sys.stderr,
+    )
+    c1_r = c1["R"]["stamp"]["R"]
     out = {
         "label": "simulated",
         "plan": "results/w1_r_metacal/PLAN.md",
@@ -286,10 +311,12 @@ def main(argv=None) -> int:
         "psf_fwhm_arcsec_measured": float(
             psf().drawImage(nx=64, ny=64, scale=PIX_ARCSEC / 8, method="no_pixel").calculateFWHM()
         ),
-        "check_c1": {"R": c1["R"]["stamp"]["R"], "passed": abs(c1["R"]["stamp"]["R"] - 1) < 0.03},
+        "check_c1": {"R": c1_r, "passed": c1_r is not None and abs(c1_r - 1) < 0.03},
         "cells": cells,
     }
     if a.weight_field:
+        import inject_shear as ish
+
         out["weight_field"] = {
             "field": a.weight_field,
             "n_rows": len(size),
@@ -301,7 +328,7 @@ def main(argv=None) -> int:
                 sub = [c for c in cells if c["sersic_n"] == n]
                 for tag, frac in (("", 0.0), ("_resolved90", 0.9)):  # _resolved90: post hoc
                     res = weighted_r(sub, size, snr, key, frac)
-                    res["rule"] = rule_outcome(res["R"], res["err"])
+                    res["rule"] = rule_outcome(res["R"], res["err"], ish.GOODSN_R)
                     out["R_sim"][f"psf_{key}_n{int(n)}{tag}"] = res
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(out, indent=1) + "\n")

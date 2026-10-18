@@ -118,9 +118,9 @@
     "field": 1.3265394298851567
    },
    "n_pairs": 100,
-   "n_detected": 199,
-   "semimajor_px_median": 1.629334101563668,
-   "snr_median": 9.19417742674281,
+   "n_detected": 198,
+   "semimajor_px_median": 1.627236231278713,
+   "snr_median": 9.185425964400446,
    "R": {
     "stamp": {
      "R": null,
@@ -318,9 +318,9 @@
     "field": 1.3265394298851567
    },
    "n_pairs": 100,
-   "n_detected": 186,
-   "semimajor_px_median": 2.3921463571488317,
-   "snr_median": 9.848057883828396,
+   "n_detected": 172,
+   "semimajor_px_median": 2.3875923582804974,
+   "snr_median": 9.820517840306358,
    "R": {
     "stamp": {
      "R": 1.5873312477676205,
@@ -418,9 +418,9 @@
     "field": 1.3265394298851567
    },
    "n_pairs": 100,
-   "n_detected": 118,
-   "semimajor_px_median": 2.247616677590525,
-   "snr_median": 8.296711903188367,
+   "n_detected": 62,
+   "semimajor_px_median": 2.1806373302499473,
+   "snr_median": 8.167669068442109,
    "R": {
     "stamp": {
      "R": null,
@@ -1021,6 +1021,7 @@
    "err": 0.028194370769569713,
    "n_rows_used": 2021,
    "n_rows_unrepresented": 238,
+   "n_rows_extrapolated": 412,
    "rows_per_cell": [
     0,
     19,
@@ -1050,6 +1051,7 @@
    "err": 0.007259782933250755,
    "n_rows_used": 1736,
    "n_rows_unrepresented": 523,
+   "n_rows_extrapolated": 412,
    "rows_per_cell": [
     0,
     19,
@@ -1079,6 +1081,7 @@
    "err": 0.01803584452849931,
    "n_rows_used": 2098,
    "n_rows_unrepresented": 161,
+   "n_rows_extrapolated": 536,
    "rows_per_cell": [
     0,
     2,
@@ -1108,6 +1111,7 @@
    "err": 0.009072462835831687,
    "n_rows_used": 1811,
    "n_rows_unrepresented": 448,
+   "n_rows_extrapolated": 536,
    "rows_per_cell": [
     0,
     2,
@@ -1137,6 +1141,7 @@
    "err": 0.00572163033400854,
    "n_rows_used": 2259,
    "n_rows_unrepresented": 0,
+   "n_rows_extrapolated": 412,
    "rows_per_cell": [
     0,
     19,
@@ -1166,6 +1171,7 @@
    "err": 0.005307369173309789,
    "n_rows_used": 2216,
    "n_rows_unrepresented": 43,
+   "n_rows_extrapolated": 412,
    "rows_per_cell": [
     0,
     19,
@@ -1195,6 +1201,7 @@
    "err": 0.007282635619839641,
    "n_rows_used": 2257,
    "n_rows_unrepresented": 2,
+   "n_rows_extrapolated": 536,
    "rows_per_cell": [
     0,
     2,
@@ -1224,6 +1231,7 @@
    "err": 0.006848066857225653,
    "n_rows_used": 2189,
    "n_rows_unrepresented": 70,
+   "n_rows_extrapolated": 536,
    "rows_per_cell": [
     0,
     2,

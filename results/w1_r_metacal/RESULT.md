@@ -33,13 +33,17 @@ Weighted by the 2,259 GOODS-N o001 rows (`r_sim.json`, plan threshold):
 | field (post hoc, 1.327 px) | 1.017 ± 0.006 | 0.965 ± 0.007 | 1.006 ± 0.005 | 0.940 ± 0.007 | conservative (all) |
 
 - Rows without a usable cell (`n_rows_unrepresented`): 0–238 of 2,259 in the plain columns, 43–523 under
-  resolved90.
+  resolved90. Rows beyond the placed cells' size or S/N range (`n_rows_extrapolated`, 412 for n = 1 and 536 for
+  n = 4) take an edge cell's R; the grid stops at S/N 200.
+- The plain columns give full weight to cells where few pairs survive, whose R is selected upward; resolved90 is
+  the less selected number, and it passes the rule too (0.940–1.182).
 - Per cell (field PSF σ): 36 of 40 cells have ≥ 2 used pairs; R 0.836–2.390. The 27 cells with ≥ 90 % of pairs
   used span 0.836–1.404. Cells where few pairs stay resolved exceed 1 (a hypothesis, not tested: the pairs that
   stay resolved after the PSF subtraction are a selected subset, and the subtraction amplifies their ε).
 - **Post hoc threshold variant** (`r_sim_rawthr.json`; 3σ of the unsmoothed noise on the smoothed image, the jwst
   `source_catalog` convention as we understand it, ASSUMPTION, not re-read this run; a higher isophote): weighted R
-  1.034–2.057 in all eight columns, every one "conservative"; 18 cells usable with the field PSF σ (0.926–4.13).
+  1.034–2.057 in all eight columns, every one "conservative"; 18 cells usable with the field PSF σ (0.926–4.131);
+  494–871 rows extrapolated.
 - **Reading:** in every variant the weighted simulated response of the pipeline-like shapes is ≥ 0.940, more than
   twice the borrowed R = 0.414. In this simulation, injections that paint W1 shear with R = 0.414 understate the
   shape change a real W1 lens would cause, so the GOODS-N and CEERS limits (D-099) are conservative with respect
