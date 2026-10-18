@@ -1,0 +1,128 @@
+{
+ "provenance": "derived",
+ "plan": "results/w1_shear_primer/PLAN.md (gate P)",
+ "rule": "inject_shear.passes_gate_p: n_used_photoz >= 0.5 * n_used",
+ "source": "summaries/z0.3_<tile>.json (screen)",
+ "fields": {
+  "primer-cosmos-x0y0": {
+   "n_used": 3122,
+   "n_used_photoz": 2087,
+   "frac": 0.668,
+   "passed": true
+  },
+  "primer-cosmos-x0y1": {
+   "n_used": 3992,
+   "n_used_photoz": 2608,
+   "frac": 0.653,
+   "passed": true
+  },
+  "primer-cosmos-x0y2": {
+   "n_used": 3397,
+   "n_used_photoz": 2615,
+   "frac": 0.77,
+   "passed": true
+  },
+  "primer-cosmos-x0y3": {
+   "n_used": 1366,
+   "n_used_photoz": 939,
+   "frac": 0.687,
+   "passed": true
+  },
+  "primer-cosmos-x1y0": {
+   "n_used": 1039,
+   "n_used_photoz": 864,
+   "frac": 0.832,
+   "passed": true
+  },
+  "primer-cosmos-x1y1": {
+   "n_used": 2326,
+   "n_used_photoz": 1967,
+   "frac": 0.846,
+   "passed": true
+  },
+  "primer-cosmos-x1y2": {
+   "n_used": 3316,
+   "n_used_photoz": 2855,
+   "frac": 0.861,
+   "passed": true
+  },
+  "primer-cosmos-x1y3": {
+   "n_used": 3475,
+   "n_used_photoz": 2358,
+   "frac": 0.679,
+   "passed": true
+  },
+  "primer-uds-x0y0": {
+   "n_used": 1532,
+   "n_used_photoz": 1256,
+   "frac": 0.82,
+   "passed": true
+  },
+  "primer-uds-x0y1": {
+   "n_used": 1470,
+   "n_used_photoz": 1235,
+   "frac": 0.84,
+   "passed": true
+  },
+  "primer-uds-x0y2": {
+   "n_used": 3117,
+   "n_used_photoz": 1944,
+   "frac": 0.624,
+   "passed": true
+  },
+  "primer-uds-x1y0": {
+   "n_used": 2805,
+   "n_used_photoz": 2329,
+   "frac": 0.83,
+   "passed": true
+  },
+  "primer-uds-x1y1": {
+   "n_used": 1950,
+   "n_used_photoz": 1682,
+   "frac": 0.863,
+   "passed": true
+  },
+  "primer-uds-x1y2": {
+   "n_used": 4102,
+   "n_used_photoz": 2428,
+   "frac": 0.592,
+   "passed": true
+  },
+  "primer-uds-x2y0": {
+   "n_used": 3150,
+   "n_used_photoz": 2574,
+   "frac": 0.817,
+   "passed": true
+  },
+  "primer-uds-x2y1": {
+   "n_used": 2123,
+   "n_used_photoz": 1808,
+   "frac": 0.852,
+   "passed": true
+  },
+  "primer-uds-x2y2": {
+   "n_used": 3675,
+   "n_used_photoz": 2889,
+   "frac": 0.786,
+   "passed": true
+  },
+  "primer-uds-x3y0": {
+   "n_used": 2284,
+   "n_used_photoz": 1867,
+   "frac": 0.817,
+   "passed": true
+  },
+  "primer-uds-x3y1": {
+   "n_used": 2134,
+   "n_used_photoz": 1863,
+   "frac": 0.873,
+   "passed": true
+  },
+  "primer-uds-x3y2": {
+   "n_used": 2661,
+   "n_used_photoz": 2201,
+   "frac": 0.827,
+   "passed": true
+  }
+ }
+}

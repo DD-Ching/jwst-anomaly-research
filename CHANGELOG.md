@@ -2,8 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-18: W1 shear in PRIMER: staging and screens (in progress)
-- Claimed by a cloud routine run; continues the PRIMER handoff below.
+## 2026-10-18: W1 shear in PRIMER: twenty tiles pass gate P; Z = 0.3 screens give four E/B flags, three explained (in progress)
+- Staged: the four DJA PRIMER zouts (tarball names end in `-fix`; the planned names return 403), pinned and stacked
+  per survey (`w1_stage_inputs.stack_zouts`, content sha256 pinned). Stacking every tile's survey pair instead of
+  only tiles that straddle two DJA mosaics is an implementation choice (deviation from the plan's wording; the
+  0.3″ nearest match differs only where DJA mosaics overlap).
+- Streak masks: the SCI extensions are 1.9–3.3 GB, not the 31–69 GB file sizes, so `w1_streak_mask.py` streams each
+  mosaic once (concurrent range reads, ≈ 40 s each), normalises it whole and cuts each tile (`tile_slices`).
+  Contact sheets (`masks/*.png`): wide mask bands on several tiles; visible diagonal satellite trails in UDS x0y2 /
+  x3y2 are partly unmasked (the frozen rule, not tuned).
+- **Gate P (`gate_p.json`):** all 20 tiles pass (photo-z fraction 0.592–0.873).
+- **Screens (`screen_flags.json`, Z = 0.3 summaries):** four tiles pass the E/B rule: COSMOS x0y0 (S 4.44), UDS x0y2
+  (4.17), x2y0 (4.85), x3y0 (6.47); all four peaks lie within 20″ of a tile edge (7 of 20 maxima do). Frozen V1 ∪ V2
+  vetting (`vet/`): x0y0, x0y2 and x2y0 explained (spike / streak). **UDS x3y0 is not explained by the frozen rule**;
+  on `sheet_smax_flags.png` the peak sits on a bright horizontal line lined with catalogue detections (by eye a
+  streak; not a frozen test). Removing the row band (V1r, not part of the frozen outcome) drops S to 2.99 (p 0.99);
+  5 % of rotated control bands do as much (`vet/vet_primer-uds-x3y0.json`). Not a candidate; unvetted.
+- **Handoff:** (1) `/vet-candidate` on primer-uds-x3y0 (cheapest first: the horizontal streak); (2) injections at
+  Z ∈ {0.6, 1.0, 1.5} on the twenty tiles (Z = 0.1 and 0.3 done, `summaries/`) (≈ 6 min per Z on 4 cores; Gaia star files are re-queried); (3)
+  combined limit with the unflagged tiles (D-098) and RESULT.md. Process: `inject_radial.MASSES` has five masses, so
+  pass `--mass 2e12 8e12 2e13` (the seeds depend on the mass list).
 ## 2026-10-18: W1 shear in PRIMER: plan frozen, mosaics tiled, catalogues pinned (no screen yet)
 - `results/w1_shear_primer/PLAN.md` (frozen before any screen). MAST holds two UDS combined mosaics (c1001, c1002;
   129.2 / 127.9 arcmin²) and two COSMOS mosaics (o003, o004; 92.4 / 87.4 arcmin², overlap 38.7) in F200W

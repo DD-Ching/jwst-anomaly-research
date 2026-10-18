@@ -1,0 +1,55 @@
+{
+ "field": "primer-cosmos-x0y1",
+ "i2d": "s3://stpubdata/jwst/public/jw01837/L3/t/o003/jw01837-o003_t003_nircam_clear-f200w_i2d.fits",
+ "binned_shape": [
+  1125,
+  1125
+ ],
+ "tile_slice_rebinned_px": {
+  "y": [
+   304,
+   1429
+  ],
+  "x": [
+   806,
+   1931
+  ]
+ },
+ "pixel_scale_arcsec": 0.2498036210528158,
+ "n_trails_status2": 3,
+ "n_candidates_all_status": 79,
+ "trails": [
+  {
+   "theta_deg": 134.48966974749627,
+   "rho_px": -768.313463423104
+  },
+  {
+   "theta_deg": 107.64561966876516,
+   "rho_px": -16.458163446524964
+  },
+  {
+   "theta_deg": 179.5,
+   "rho_px": 68.020459148148
+  }
+ ],
+ "mask_pixels": 129676,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "segment_stripes": null,
+ "wall_time_s": {
+  "read": 0.0,
+  "total": 20.0
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}
