@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: (in progress) `arcs` on SPT-CL J0615−5746 with RELICS maps and RELICS BPZ photo-z (S1063 replication)
+- Claimed; plan to be frozen in `results/arcs/spt0615-relics/PLAN.md` before any count.
+
 ## 2026-10-18: `arcs` on RXC J0600−2007, RELICS maps: the S1063 anti excess does not replicate (1 vs 0.20, P 0.18)
 - **Why:** the S1063 replication tally needs fields never used to tune `arcs`. Correction to the 2026-10-17 handoff:
   RXC J0600 does have public maps (RELICS `rxc0600m20`: GLAFIC v3, Lenstool v1). Plan frozen first
