@@ -984,5 +984,7 @@ def test_systems_passing_rms_needs_every_image_solved_and_low_rms():
 
 def test_gated_systems_none_for_usable_list_and_error_without_table():
     assert lc.gated_systems("macs0416-canucs", None, 0.5) is None
+    with pytest.raises(SystemExit, match="usable as a whole"):
+        lc.gated_systems("macs0416-canucs", Path("unused.ecsv"), 0.5)
     with pytest.raises(SystemExit):
         lc.gated_systems("abell370-canucs", None, 0.5)

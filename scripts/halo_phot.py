@@ -335,7 +335,7 @@ def run(
     usable = lc.has_image_list(model_name)
     if lc.is_map_model(model_name) or not (usable or gate_imageplane is not None):
         raise SystemExit(f"error: {model_name}: needs a Lenstool model with a usable image list")
-    keep = None if usable else lc.gated_systems(model_name, gate_imageplane, gate_max_rms)
+    keep = lc.gated_systems(model_name, gate_imageplane, gate_max_rms)
     if keep is not None and set(systems) - set(keep):
         raise SystemExit(
             f"error: systems fail the per-system rms gate: {sorted(set(systems) - set(keep))}"

@@ -318,6 +318,8 @@ def gated_systems(name: str, imageplane: Path | None, max_rms: float) -> list[st
     """None where ``name``'s image list is usable as a whole; else the systems that pass
     :func:`systems_passing_rms` on ``imageplane`` (an error without one)."""
     if has_image_list(name):
+        if imageplane is not None:
+            raise SystemExit(f"error: {name}: image list usable as a whole; drop --gate-imageplane")
         return None
     if imageplane is None or "arcs.dat" not in MODELS[name]["files"] or is_map_model(name):
         raise SystemExit(
