@@ -2,15 +2,49 @@
  "label": "derived; matched-control checks of B3-A370-box2-h010 and h003 with hit_lightcurve_controls.py (unchanged), rules fixed in PLAN.md; 2026-10-18",
  "h010": {
   "controls": "pick-arc on jw01208-o002 F444W, half-width 16 arcsec, match 1.5, step 0.2, min-sep 0.6, n 80, seed 1: 80 arc-pixel controls",
-  "decisive_F444W_1208_o002_to_VENUS_o053": {"z": -3.107, "z_cal": -1.409, "ctrl_tail_frac": 0.100, "n_controls": 80, "hit_flux_ratio": 0.439, "ctrl_median_flux_ratio": 0.921, "ctrl_16_84_flux_ratio": [0.648, 1.299]},
-  "secondary_F356W_5324_o002_to_o003": {"z": -4.772, "z_cal": -1.451, "ctrl_tail_frac": 0.113, "n_controls": 80},
+  "decisive_F444W_1208_o002_to_VENUS_o053": {
+   "z": -3.107,
+   "z_cal": -1.409,
+   "ctrl_tail_frac": 0.1,
+   "n_controls": 80,
+   "hit_flux_ratio": 0.439,
+   "ctrl_median_flux_ratio": 0.921,
+   "ctrl_16_84_flux_ratio": [
+    0.648,
+    1.299
+   ]
+  },
+  "secondary_F356W_5324_o002_to_o003": {
+   "z": -4.772,
+   "z_cal": -1.451,
+   "ctrl_tail_frac": 0.113,
+   "n_controls": 80
+  },
   "rule_outcome": "consistent with the matched arc-pixel scatter (tail >= 0.05 on both pairs); this does not prove an instrumental cause"
  },
  "h003": {
   "controls_halfwidth16": "pick, flux range 128-510 nJy, n 80, seed 1: 16 controls (< 20, not decided)",
   "controls": "fallback fixed before any comparison: same pick with half-width 30 arcsec: 54 compact-source controls",
-  "decisive_F444W_1208_o002_to_VENUS_o053": {"z": -5.106, "z_cal": 0.432, "ctrl_tail_frac": 0.611, "n_controls": 54, "ctrl_median_z": -6.0, "hit_flux_ratio": 0.887, "ctrl_median_flux_ratio": 0.852, "ctrl_16_84_flux_ratio": [0.824, 0.882]},
-  "secondary_F444W_VENUS_o053_to_5324_o014": {"z": 3.233, "z_cal": 1.51, "ctrl_tail_frac": 0.094, "n_controls": 53},
-  "rule_outcome": "consistent with the matched compact-source scatter; moreover the 54 unrelated compact sources share a median 15% F444W aperture-flux drop between these two mosaics (ratio 0.852), and h003's 0.887 lies within it: the change is a common flux offset between the mosaics, not specific to h003"
+  "decisive_F444W_1208_o002_to_VENUS_o053": {
+   "z": -5.106,
+   "z_cal": 0.432,
+   "ctrl_tail_frac": 0.611,
+   "n_controls": 54,
+   "ctrl_median_z": -6.0,
+   "hit_flux_ratio": 0.887,
+   "ctrl_median_flux_ratio": 0.852,
+   "ctrl_16_84_flux_ratio": [
+    0.824,
+    0.882
+   ]
+  },
+  "secondary_F444W_VENUS_o053_to_5324_o014": {
+   "z": 3.233,
+   "z_cal": 1.51,
+   "ctrl_tail_frac": 0.094,
+   "n_controls": 53
+  },
+  "rule_outcome": "consistent with the matched compact-source scatter (tail 0.611 >= 0.05)",
+  "interpretation_added_after_check": "the 54 unrelated compact sources share a median 15% F444W aperture-flux drop between these two mosaics (ratio 0.852, 16-84% 0.824-0.882) and h003's 0.887 lies within it: this points to a common flux offset between the mosaics; no evidence of a source-specific change"
  }
 }

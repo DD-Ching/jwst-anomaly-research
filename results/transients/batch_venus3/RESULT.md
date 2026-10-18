@@ -79,7 +79,7 @@ Vetting record: `docs/candidates/batch_venus3_A370_box2.md`.
 ## Revision 2026-10-18 (`../confirm_r1/a370_controls.json`; text above kept)
 - B3-A370-box2-h003: no source-specific change (54 compact controls share its F444W drop: median ratio 0.852 vs 0.887).
 - B3-A370-box2-h010: existing data do not support a real change (within 80 matched arc-pixel controls, tail 0.10).
-- Batch 3 therefore has no real change.
+- Batch 3 therefore has no change supported beyond matched-control scatter.
 
 ## Deviations and corrections (labelled)
 - **Tools changed before selection (tested):** `batch_pairs.py --prefer-extra-epochs` (owner-requested ranking);

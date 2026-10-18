@@ -5,10 +5,10 @@ are kept apart: did the brightness really change, what kind of object is it, and
 on that, and nothing points to it).
 
 ## What is now settled
-- **B3-A370-box2-h003: no source-specific change.** 54 unrelated compact sources in the same two mosaics lose a median
-  15 % of their F444W 0.15″-aperture flux between 1208 and VENUS (ratio 0.852, 16–84 %: 0.824–0.882); h003's 0.887 lies
-  inside that band (control tail 0.61). Its change is a common flux offset between the two mosaics, not a property of
-  this galaxy. VENUS → 18 days later: within the control scatter (tail 0.094).
+- **B3-A370-box2-h003: consistent with the matched-control scatter (rule, tail 0.61); no evidence of a source-specific
+  change.** Interpretation added after the check, from the control distribution: 54 unrelated compact sources in the same
+  two mosaics lose a median 15 % of their F444W 0.15″-aperture flux between 1208 and VENUS (ratio 0.852, 16–84 %:
+  0.824–0.882) and h003's 0.887 lies inside that band, which points to a common flux offset between the two mosaics. VENUS → 18 days later: within the control scatter (tail 0.094).
 - **B3-A370-box2-h010: existing data do not support a real change.** With 80 matched arc pixels its change is within
   their scatter (tail 0.100 for 1208 → VENUS F444W; 0.113 for the within-5324 F356W drop). This does not prove an
   instrumental cause. To say more needs a change larger than the arc-pixel scatter (calibrated |z| here 1.4–1.5; a
@@ -25,7 +25,7 @@ on that, and nothing points to it).
 | Batch-2 MACS1423 h000 | real | unknown; SN-like hypothesis | spectrum; host redshift confirmation |
 | Batch-2 MACS0417 h002 | real | **SN Athena** (named; type pending) | the other team's spectrum and reappearance |
 | Batch-2 Bullet h019 | real at S/N 5–7 | unknown | a second epoch or spectrum |
-| Batch-3 A370 h003 | not source-specific | compact galaxy z 0.36 | — |
+| Batch-3 A370 h003 | consistent with control scatter; no source-specific evidence | compact galaxy z 0.36 | — |
 | Batch-3 A370 h010 | not supported | on the Dragon arc | deeper or PSF-modelled data |
 
 ## Smallest new observation for MACS0417
@@ -44,7 +44,7 @@ on that, and nothing points to it).
 - **Done this round (existing data, rule fixed first):** in the four public HST 18470 WFC3/IR F105W visits
   (2026-08-11 to 10-07) no new point source is seen at the 12781 "Athena-2" position or at our 7.6″ position: changes
   vs visit 1 are +1.4σ at both (167.6 → 226.7 nJy and 10.4 → 66.9 nJy; errors ~28–32 nJy) and the stamps show only
-  the lensed galaxy ~1″ away (`macs0417_hst18470/`). The expected ~200–330 nJy (F150W) would be ≥ 5σ, but the
+  the lensed galaxy ~1″ away (`macs0417_hst18470/`). The expected ~200–330 nJy (F150W) would be ~5–8σ against the visit-1 difference error (~41–42 nJy), but the
   counterpart position is uncertain at the ~1″ level and the F105W brightness of a supernova may differ, so this is a
   statement about existing data to 2026-10-07, not a test failure of either prediction.
 - No science-goal draft is written, because no proposal is recommended.
