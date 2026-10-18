@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: Upkeep: `docs/state/pending.md` synced with the open needs-human PRs
+- Added rows for #199 (Abell 370 1565, parked), #237 (o052 / SMACS-VENUS grids; SN Atalanta) and #279 (five-field
+  clump-pair census); #273 moved to a "merged since" note. Other rows' heads checked: unchanged.
+- **Queue check (handoff):** no agent PR awaits merge; 18 await the owner. The recent lines are paused on owner
+  calls: W3 ZTF (v4/v5), W1 metacal R (PSF-limited; reopen with a validated drizzled PSF or a star-rich field),
+  MOA gb13 (#145), S1063 spectroscopy (116.28VK.001). Remaining TASKS items are optional or low-value (W1 1 × 10¹²
+  M☉ grid ≈ 30–45× T&A; G-dependent external spike cap). No new search was started.
+
 ## 2026-10-18: W3 ZTF v5: exploratory holdout search within the calibrated cells, 0 flags in 486 groups
 - #339's failed verdict stands. This is a narrower, exploratory search with the #339 code unchanged; the plan was
   frozen first (`results/w3_ztf/v5/PLAN.md`). Capability is stated for the 10 injection cells at ≥ 0.5 only.
