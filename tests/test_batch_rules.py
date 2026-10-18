@@ -119,5 +119,5 @@ def test_same_source_verdict():
     assert ssp.verdict(bad) == {"P1": False, "P2": False, "pass": False}
     missing = {"retrieval": {"recall@10": None, "median_false_matches": None}, "control": {}}
     assert ssp.verdict(missing)["pass"] is False
-    assert ssp.holdout("1") == (__import__("zlib").crc32(b"1") % 2 == 0)
+    assert ssp.holdout("1") is False and ssp.holdout("4") is True  # fixed crc32 split
     assert ssp.auc([1, 2], [3, 4]) == 1.0 and ssp.auc([3], [3]) == 0.5

@@ -8,8 +8,8 @@ an exclusion; calibration-failed boxes are not reliable zero-candidate regions.
 ## New coverage (`boxes.json`)
 - 20 new 24″ boxes in 10 cluster fields (two each): MS0451, MACS0416, MACS1149, PLCK G165, AS1063, SMACS 0723, A370,
   Bullet, MACS1423, MACS0417; same ranking as batch 3 (`--prefer-extra-epochs`). Selection 4 min 43 s (session clock).
-- Not reached again: RXCJ0018, RXJ2129, SPT0615, Sunrise (each pair still has free grid positions but ranks after the
-  20th box under the unchanged rule).
+- Not reached again: RXCJ0018, RXJ2129, SPT0615, Sunrise (rank after the 20th box under the unchanged rule; free grid
+  positions there not checked). El Gordo again had no free box (`boxes.json` rejected entries).
 
 ## Calibration (`boxes/batch.json`, `totals.json`)
 - **Passed: 13 boxes (2.08 arcmin²):** MS0451 ×2, MACS0416 2, MACS1149 ×2, SMACS ×2, A370 ×2, Bullet ×2, MACS1423 2,
@@ -44,16 +44,19 @@ an exclusion; calibration-failed boxes are not reliable zero-candidate regions.
 
 ## The two rule-level real changes: matched-control check (`confirm/`, plan `confirm/PLAN.md` fixed first)
 - **B4-A370-box1-h000:** bright point-like source (F150W ~1,030 nJy in 0.15″) present in every programme. Its 0.15″
-  F150W flux is unchanged between the search epochs (ratio 0.998); the screen hit is a core residual. Against 34
-  matched compact controls: F150W tail 0.529 (decisive), F444W tail 0.382 → **consistent with the matched-control
-  scatter; no evidence of a source-specific change** (`confirm/a370_h000/cz_*.ecsv`). No Gaia DR3 source within 2″ (`confirm/gaia_check.json`),
+  F150W flux is unchanged between the search epochs (ratio 0.998); the screen hit is a core residual. Against 33
+  matched compact controls (the pick also returned the entry itself as c13, removed; deviation below): F150W tail
+  0.455 (decisive), F444W ratio 0.942, tail 0.364 → **consistent with the matched-control scatter in the decisive
+  F150W search pair** (`confirm/a370_h000/cz_*_no_c13.ecsv`). This does not prove an instrumental cause. The large
+  pairwise differences between other mosaics (F200W z −34.6, F356W −19.0; `post_review_checks.json`) were not tested
+  against controls (possibly the common between-mosaic offset seen for A370 h003 in `../confirm_r1/`). No Gaia DR3 source within 2″ (`confirm/gaia_check.json`),
   which cannot exclude a star at this brightness (AB ≈ 23.9 in F150W, below Gaia's limit).
 - **B4-SJ0723.3-7327-box1-h005:** bright compact galaxy (F150W ~1,250 nJy) in four programmes. 0.15″ fluxes
   in the search pair: F150W 1,254 → 1,313 nJy (+4.7 %), F444W 1,075 → 1,184 nJy (+10 %), and 31 days after VENUS F444W
   is 1,076 nJy again (12774), while the screen's S peaks are negative in both bands (a core residual whose sign
   disagrees with the aperture change). **Not decided:** the matched-control photometry (28 controls picked) did not
-  finish: `hit_lightcurve.py` stalled after its first position group twice (killed after 40 min, then at a 25 min cap;
-  `confirm/smacs_h005/log_trimmed.txt`). The cheapest next check is the same control comparison once the stall is
+  finish: `hit_lightcurve.py` stalled after its first position group twice (first run stopped after ~40 min, log not
+  kept; second at a 25 min cap, `confirm/smacs_h005/log_trimmed.txt`). The cheapest next check is the same control comparison once the stall is
   understood. Batch 3's A370 h003 showed a common ~15 % offset between two mosaics for bright compact sources; whether
   the same applies here is untested. A return to the earlier level does not exclude real variability.
 
@@ -61,6 +64,11 @@ an exclusion; calibration-failed boxes are not reliable zero-candidate regions.
 - Control photometry: the first run used `--query-only` and so measured only the controls sharing the entry's
   position group (14 and 16 < 20); re-run without it before any tail was seen (tool usage error, no rule change).
 - The control pick used the pre-declared 30″ fallback (16″ gave 8 and 4 controls).
+- `pick` returns the entry itself among the controls (h000 = c13, 0.03″; h005 = c14). c13 was removed and the
+  comparison recomputed (`lightcurves_no_c13.ecsv`, `cz_*_no_c13.ecsv`; the 34-control files are kept). The SMACS
+  picks also contain knots < 1″ apart; a rerun should exclude the entry and dedupe controls (tool follow-up).
+- Gaia cone radius 2″ (plan said 1″; larger, so no source is missed).
+- Times in the plans are session clock.
 
 ## Cost (session clock; `boxes/*_task.json`, `totals.json`)
 - Search + calibration: 03:15:43 → 03:58 wall on 4 workers; 8,443 task-seconds; passed boxes 173–272 s each (2,860 s

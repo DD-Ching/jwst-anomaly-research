@@ -10,7 +10,7 @@ the first feasibility test: `results/same_source/a2744_feasibility/RESULT.md`.
 | Find brightening / fading point sources between epochs | working, injection-calibrated | `arc_diff.py`, `fade_calib.py` |
 | Predict counter-images of a given position with a published lens model | working (dPIE port, map models) | `lensmodel.find_images`, `lens_consistency.py images`, `arcs_counter.py` |
 | Test catalogued multiple images for flux / colour / position anomalies | working | `lens_consistency.py`, D-029–D-045 |
-| **Task 1: propose which sources are the same source, without a model** | **not available**: SED pairing at 0.3–3″ (`orphan_pairs.py`, dark-lens screen) is null-dominated; at 2–60″ it fails the 2026-10-18 test (26,145 SED-matched pairs vs 11 true ones in Abell 2744) | `same_source_pairs.py` |
+| **Task 1: propose which sources are the same source, without a model** | **not available**: SED pairing at 0.3–3″ (`orphan_pairs.py`, dark-lens screen) is null-dominated; at 2–60″ it fails the 2026-10-18 test (26,145 SED-matched pairs in Abell 2744, of which 10 are true same-system pairs) | `same_source_pairs.py` |
 | **Task 2: test a given pair against ordinary lensing** | partly: positions and fluxes with published models; the morphological (flip / stretch) test is paused, failing its acceptance test (D-032) and not discriminating true pairs from decoys (AUC 0.53, 6 + 6 pairs) | `parity_test.py` |
 
 Image registration and lens-model root finding are not same-source searches: they assume which pixels or which
@@ -19,7 +19,7 @@ system belong together.
 ## External tools evaluated (2026-10-18, isolated venv in the session scratch; not added to `pyproject.toml`)
 | Tool | Licence, version | Installs / runs | What it solves |
 |---|---|---|---|
-| lenstronomy | BSD-3, 1.14.2 | yes (Python 3.12, ~35 s with PyAutoLens) | task 2 for galaxy-scale systems: forward-models given images with a lens and source; no catalogue pair proposal |
+| lenstronomy | BSD-3, 1.14.2 | yes (Python 3.12; session observation) | task 2 for galaxy-scale systems: forward-models given images with a lens and source; no catalogue pair proposal |
 | PyAutoLens | MIT, 2026.10.17.1 | yes | task 2, galaxy (and group) scale; automated pipelines; no pair proposal |
 | Lenstruction | MIT, last commit 2022-11, pinned to lenstronomy 1.10.3 | imports with 1.14.2 except `data_process` (needs photutils) | task 2 for cluster arcs: reconstructs one source from images already identified as one system, with local lens corrections; needs the image list and a cluster model as input |
 - None proposes same-source pairs from a catalogue (task 1). They would refine task 2 for a pair already in hand; the
@@ -33,7 +33,7 @@ system belong together.
   delay, source evolution, position shift, blending, non-detection, several foreground deflectors.
 - **What is not allowed:** free per-pixel warps, per-line or per-epoch shifts until two data sets agree, or adding
   freedoms after seeing a score. Each extra freedom needs a decoy test showing it does not make unrelated sources
-  match (the 2026-10-18 test: redshift freedom alone gives ~2,400 unrelated SED pairs per true pair).
+  match (the 2026-10-18 test: the achromatic-scale SED rule with photo-z overlap gives ~2,600 other pairs per passing true pair).
 - **Competing explanations kept for every pair:** two different sources each lensed; group members at one redshift;
   knots of one galaxy; instrument artefacts (persistence, spikes, edges).
 - **Geometry:** no assumption that an exotic lens is a flat ring seen in projection; no exotic shape template is used.

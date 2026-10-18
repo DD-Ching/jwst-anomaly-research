@@ -5089,6 +5089,6 @@ confining radiation at a throat is found.
     to lenstronomy 1.10.3 (imports with 1.14.2 except one module needing photutils).
 - **Evidence:** `results/same_source/a2744_feasibility/RESULT.md`: holdout recall@10 0.86 (relative ranking works) but
   only 10 of 33 true pairs pass the absolute SED rule (20 fail χ², 13 photo-z overlap); post hoc, 26,145 SED-matched
-  pairs among 2,674,270 at 2–60″, of which 11 are published image pairs. Limits on later searches: `docs/same_source.md`.
+  pairs among 2,674,270 at 2–60″, of which 11 have both members within 0.3″ of a published image (10 same-system pairs pass). Limits on later searches: `docs/same_source.md`.
 - **Revisit if:** a ranking-based proposal with a calibrated threshold is frozen and tested on a new held-out cluster
   (e.g. MACS0416 CANUCS), or a specific pair needs a source-plane reconstruction (then lenstronomy in an isolated env).
