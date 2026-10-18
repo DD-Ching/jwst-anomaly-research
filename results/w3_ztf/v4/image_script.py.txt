@@ -60,6 +60,7 @@ for passed, nnd, key, r in chosen:
 assert sum(len(x['exposures']) for x in sel) <= 64
 json.dump({'label': 'derived; v4 image selection (rule in PLAN section 4)', 'n_candidates': len(cand), 'sources': sel},
           open(OUT.replace('.json', '_selection.json'), 'w'), indent=1)
+open(OUT.replace('.json', '_selection.json'), 'a').write('\n')
 # ---- IBE position search (one query per source)
 def get(url, timeout=60):
     err = None
