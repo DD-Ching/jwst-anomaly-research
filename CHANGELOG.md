@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: Same-source pairing feasibility fails its frozen rule; VENUS batch 4: 13 boxes calibrated, nothing confirmed
+- **Inventory and tools (`docs/same_source.md`, D-100):** the repository aligns epochs, finds brightening/fading
+  sources and predicts counter-images with published models; it has no model-free step that proposes same-source
+  pairs. lenstronomy 1.14.2, PyAutoLens 2026.10.17.1 and Lenstruction (2022, pinned to lenstronomy 1.10.3) were tried
+  in an isolated venv: all test or reconstruct a chosen pair/system; none proposes pairs. None adopted.
+- **Feasibility test (`results/same_source/a2744_feasibility/`, plan and pass function committed first):** identity-blind
+  SED ranking at 2–60″ on Abell 2744 (Bergamini+23 images for scoring only). Holdout recall@10 0.86, but true pairs
+  pass the absolute SED rule only 17 % / 32 % (dev / holdout): **fails** (P2). Morphology (affine, either handedness)
+  AUC 0.53 vs matched decoys. Post hoc: 26,145 SED-matched pairs field-wide, of which 10 are true same-system pairs.
+- **Identity check (`results/transients/identity_r2/identity_check.json`):** PLCK G165 h002, MACS1423 h000, Bullet
+  h019: no record found in the sources searched; TNS 403 (result unknown). Leads: a Legacy Survey galaxy 0.97″ from
+  G165 h002 (possible host, unchecked); JWST GO 9811 (SN-ECHOES) lists a planned Cycle 5 G165 epoch (footprint not checked); HST 17504 (Kelly SNAP)
+  imaged MACS1423 in 2023-12 – 2024-04 (not checked).
+- **VENUS batch 4 (`results/transients/batch_venus4/RESULT.md`):** 20 boxes, 13 calibrated (2.08 arcmin²), 7
+  undeterminable (2 timed out); 204 hits → 70 → 18 review entries, 10 reviewed, 8 pending (calibration-failed AS1063 1).
+  Two rule-level real changes (A370 1 h000, SMACS 1 h005), checked against matched compact controls: A370 1 h000 consistent with matched-control scatter in the decisive F150W pair (tail 0.455, 33 controls; flux ratio 0.998); SMACS 1 h005 not decided (control photometry stalled twice); A370 2 h004 and A370 1 h006 undetermined; 8 AS1063 1 entries pending.
+- **Handoff:** no next batch without the owner; held undeterminable boxes 33.
 ## 2026-10-18: W1 shear in CEERS (program 1345, no lens model): twenty-four-field volume limit 1.09× Takahashi & Asada
 - Ten F200W pointings (o052 left out for overlap; `scripts/w1_footprints.py`), DJA v7.4 photo-z streamed out of the
   397 MB tarball, R fixed at 0.414 (D-099 addendum); plan frozen first (`results/w1_shear_ceers/PLAN.md`). All ten

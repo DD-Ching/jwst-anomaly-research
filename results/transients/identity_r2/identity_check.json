@@ -1,0 +1,35 @@
+{
+ "label": "observed (archive and literature queries, 2026-10-18; separations derived). Earlier checks (SIMBAD, NED, Gaia DR3, Frye+2024, CANUCS DR1) are in batch_venus/h002_identity*.json and batch_venus2/boxes/review/crossmatch.json and were not repeated.",
+ "sources_all": {
+  "tns": "https://www.wis-tns.org/search?ra=<ra>&decl=<dec>&radius=5&coords_unit=arcsec, one request per position: HTTP 403 for all three; result unknown, not retried",
+  "vizier": "all catalogues within 2 arcsec",
+  "mast": "all HST/JWST observations within 7.2 arcsec, including planned",
+  "venus_team": "https://jwst-venus.github.io/news.html and pubs/pubs.json: announced SN Ares (MACS0308), SN Eos (MACS1931), SN Athena (MACS0417), SN Typhon (Abell 370), SN Atalanta (SMACS0723), SN Helios (RXC J0018, arXiv:2609.30440), Snake-LS1 (MACS1206); none in PLCK G165, MACS1423 or Bullet",
+  "arxiv_api": "G165/PLCK G165 + transient/supernova, MACS J1423/MACS1423 + supernova/transient, Bullet cluster + supernova, VENUS + transients: no matching object",
+  "web": "about 8 general searches; no match"
+ },
+ "objects": [
+  {
+   "name": "B1-PLCKG165 h002",
+   "ra": 171.805899, "dec": 42.481802,
+   "catalogue_neighbour": "Legacy Survey DR8 north (VizieR VII/292) 8001554377001902 at 171.805535 +42.481834, 0.97 arcsec, type REX, photo-z 0.74 +- 0.15; BASS DR3 counterpart 0.94 arcsec (g 23.45, r 23.20, z 22.23). Possible host only; not checked against the JWST image.",
+   "programmes": "HST 14223 (2016); JWST 1176 (2023-03-30), 4446 (2023-04/05), 4744 (2025-05), 6882. Planned: JWST GO 9811 'SN-ECHOES: SuperNovae Embedded in Cluster-lensed, Hyper-luminous...' (Cycle 5, supernova search; abstract verified from https://www.stsci.edu/jwst-program-info/download/jwst/pdf/9811/), G165 epoch 5, pointing 29.5 arcsec away (footprint not checked); JWST GO 11171 (spectroscopy, target 27.7 arcsec away, not targeting h002).",
+   "status": "no record found in the sources searched"
+  },
+  {
+   "name": "B2-MACS1423 box2 h000",
+   "ra": 215.949099, "dec": 24.086948,
+   "catalogue_neighbour": "known host: GLASS 00487 (z 0.525) 0.72 arcsec; CLASH, Legacy, HSC entries 0.63-0.83 arcsec; no transient",
+   "programmes": "CLASH 12790, GLASS 13459, HST 13386 (2014); HST 16667 (2022-02 to 2023-08); JWST 1208 (2023-02/03); HST 17504 'SNAP Survey for Strongly Lensed Supernovae and Magnified Stars' (PI Kelly; 5 visits 2023-12 to 2024-04, public; no published result found for MACS1423; its images were not checked); 6882 (2026-03). No later or planned observation listed.",
+   "status": "no record found in the sources searched"
+  },
+  {
+   "name": "B2-Bullet box2 h019",
+   "ra": 104.655304, "dec": -55.945271,
+   "catalogue_neighbour": "none within 2 arcsec",
+   "programmes": "HST 10200, 10863, 11099, 11591 (2004-2011); JWST 4598 (2025-01-20 to about 2025-03-28; whether later 4598 visits cover h019 not checked); 6882 (2026-01-21). No later or planned observation listed.",
+   "status": "no record found in the sources searched"
+  }
+ ],
+ "not_checked": "lens-model counter-images of PLCK G165 h002 and Bullet h019; ATel/GCN/RNAAS full text; ADS full text; HST 17504 images; later JWST 4598 visits"
+}

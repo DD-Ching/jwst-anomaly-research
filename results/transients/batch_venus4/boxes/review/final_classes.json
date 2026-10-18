@@ -1,0 +1,136 @@
+{
+ "label": "derived; full rule of the #296 post-review checks applied by function (#304): artifact stays; real change needs S-peak offset <= 0.1 arcsec (post hoc ASSUMPTION of #304); no significant change needs |z| < 3 in every band over all covering mosaics; else undetermined",
+ "sky_fixed_arcsec": 0.1,
+ "entries": [
+  {
+   "name": "B4-A370-box1-h000 (39.968857, -1.571911)",
+   "key": "A370_1:h000",
+   "rank": 1,
+   "box_status": "passed",
+   "coded": "real change",
+   "final": "real change",
+   "z_search": {
+    "F150W": -0.14,
+    "F444W": -5.73
+   },
+   "offset_arcsec": 0.065
+  },
+  {
+   "name": "B4-SJ0723.3-7327-box1-h005 (110.809928, -73.463102)",
+   "key": "SJ0723.3-7327_1:h005",
+   "rank": 2,
+   "box_status": "passed",
+   "coded": "real change",
+   "final": "real change",
+   "z_search": {
+    "F150W": 6.66,
+    "F444W": 26.38
+   },
+   "offset_arcsec": 0.068
+  },
+  {
+   "name": "B4-SJ0723.3-7327-box1-h006 (110.815491, -73.462798)",
+   "key": "SJ0723.3-7327_1:h006",
+   "rank": 3,
+   "box_status": "passed",
+   "coded": "artifact (edge)",
+   "final": "artifact (edge)",
+   "z_search": {
+    "F150W": -3.07,
+    "F444W": -11.84
+   },
+   "offset_arcsec": 0.299
+  },
+  {
+   "name": "B4-A370-box2-h004 (39.980333, -1.583316)",
+   "key": "A370_2:h004",
+   "rank": 4,
+   "box_status": "passed",
+   "coded": "undetermined",
+   "final": "undetermined",
+   "z_search": {
+    "F150W": -1.12,
+    "F444W": 5.98
+   },
+   "offset_arcsec": 0.239
+  },
+  {
+   "name": "B4-BULLET-box1-h008 (104.639893, -55.947082)",
+   "key": "BULLET_1:h008",
+   "rank": 5,
+   "box_status": "passed",
+   "coded": "no significant change",
+   "final": "no significant change",
+   "z_search": {
+    "F150W": -1.32,
+    "F444W": -1.95
+   },
+   "offset_arcsec": 0.064
+  },
+  {
+   "name": "B4-A370-box1-h006 (39.966252, -1.567313)",
+   "key": "A370_1:h006",
+   "rank": 6,
+   "box_status": "passed",
+   "coded": "no significant change",
+   "final": "undetermined (>= 3 sigma in other mosaics: F200W)",
+   "z_search": {
+    "F150W": 0.63,
+    "F444W": -0.05
+   },
+   "offset_arcsec": 0.114
+  },
+  {
+   "name": "B4-SJ0723.3-7327-box1-h010 (110.802876, -73.464924)",
+   "key": "SJ0723.3-7327_1:h010",
+   "rank": 7,
+   "box_status": "passed",
+   "coded": "artifact (edge)",
+   "final": "artifact (edge)",
+   "z_search": {
+    "F150W": -0.64,
+    "F444W": -0.58
+   },
+   "offset_arcsec": 0.051
+  },
+  {
+   "name": "B4-AS1063-box1-h006 (342.174250, -44.527317)",
+   "key": "AS1063_1:h006",
+   "rank": 8,
+   "box_status": "undeterminable",
+   "coded": "artifact (edge)",
+   "final": "artifact (edge)",
+   "z_search": {
+    "F150W": -2.23,
+    "F444W": 0.37
+   },
+   "offset_arcsec": 0.098
+  },
+  {
+   "name": "B4-AS1063-box1-h014 (342.171669, -44.521964)",
+   "key": "AS1063_1:h014",
+   "rank": 9,
+   "box_status": "undeterminable",
+   "coded": "no significant change",
+   "final": "no significant change",
+   "z_search": {
+    "F150W": 0.75,
+    "F444W": -0.07
+   },
+   "offset_arcsec": 0.371
+  },
+  {
+   "name": "B4-AS1063-box1-h021 (342.176219, -44.523448)",
+   "key": "AS1063_1:h021",
+   "rank": 10,
+   "box_status": "undeterminable",
+   "coded": "no significant change",
+   "final": "no significant change",
+   "z_search": {
+    "F150W": -0.26,
+    "F444W": -0.64
+   },
+   "offset_arcsec": 0.345
+  }
+ ]
+}

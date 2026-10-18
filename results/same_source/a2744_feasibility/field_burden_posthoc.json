@@ -1,0 +1,9 @@
+{
+ "label": "derived, post hoc (computed after the frozen verdict; not a pass condition)",
+ "eligible": 9385,
+ "pairs_2_60": 2674270,
+ "pairs_passing_match": 26145,
+ "passing_with_both_members_within_0.3_of_a_published_image": 11,
+ "sources_in_any_passing_pair": 6439,
+ "cpu_s": 13.8
+}

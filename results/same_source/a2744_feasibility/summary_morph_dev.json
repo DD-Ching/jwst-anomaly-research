@@ -1,0 +1,66 @@
+{
+ "plan": "PLAN.md",
+ "catalogue_rows": 66172,
+ "eligible_rows": 9385,
+ "sample": {
+  "images": 149,
+  "within_0.3": 65,
+  "eligible_unique": 53,
+  "shared_rows": 3
+ },
+ "positive_pairs_2_60": 33,
+ "positive_pairs_below_2": 1,
+ "dev": {
+  "retrieval": {
+   "queries": 18,
+   "recall@1": 0.5555555555555556,
+   "recall@5": 0.7777777777777778,
+   "recall@10": 0.8333333333333334,
+   "median_rank": 1.0,
+   "median_false_matches": 0.0,
+   "median_candidates": 585.5
+  },
+  "control": {
+   "pairs": 14,
+   "with_decoy": 6,
+   "positive_match_rate": 0.16666666666666666,
+   "decoy_match_rate": 0.0
+  },
+  "verdict": {
+   "P1": true,
+   "P2": false,
+   "pass": false
+  },
+  "morph": {
+   "pairs_scored": 6,
+   "auc": 0.5277777777777778,
+   "paired_win_rate": 0.5
+  }
+ },
+ "holdout": {
+  "retrieval": {
+   "queries": 21,
+   "recall@1": 0.7142857142857143,
+   "recall@5": 0.8095238095238095,
+   "recall@10": 0.8571428571428571,
+   "median_rank": 1.0,
+   "median_false_matches": 0.0,
+   "median_candidates": 613.0
+  },
+  "control": {
+   "pairs": 19,
+   "with_decoy": 19,
+   "positive_match_rate": 0.3157894736842105,
+   "decoy_match_rate": 0.0
+  },
+  "verdict": {
+   "P1": true,
+   "P2": false,
+   "pass": false
+  }
+ },
+ "cost_s": {
+  "retrieval_and_control": 2.8,
+  "morph_dev": 14.5
+ }
+}

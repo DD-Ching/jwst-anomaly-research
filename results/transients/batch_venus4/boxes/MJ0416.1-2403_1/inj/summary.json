@@ -1,0 +1,184 @@
+{
+ "command": "arc_diff.py --band f150w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f150w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f150w_i2d.fits --band f444w s3://stpubdata/jwst/public/jw01176/L3/t/o211/jw01176-o211_t009_nircam_clear-f444w_i2d.fits s3://stpubdata/jwst/public/jw06882/L3/t/o054/jw06882-o054_t054_nircam_clear-f444w_i2d.fits --ra 64.031698 --dec -24.065733 --half-arcsec 12 --kernel-px 4 --kernel-stamps --min-bands 2 --reg-tile-arcsec 6 --procs 1 --cache-dir /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/b4scratch/cache --out results/transients/batch_venus4/boxes/MJ0416.1-2403_1/inj --maps /tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/b4scratch/MJ0416.1-2403_1/inj/maps.npz --inject-pre results/transients/batch_venus4/boxes/MJ0416.1-2403_1/sample.csv --inject-pre-psf empirical",
+ "box": {
+  "ra": 64.031698,
+  "dec": -24.065733,
+  "half_arcsec": 12.0
+ },
+ "thresholds_assumption": {
+  "min_sigma": 5.0,
+  "min_bands": 2,
+  "link_arcsec": 0.1,
+  "bg_arcsec": 0.6,
+  "tile_arcsec": 3.0,
+  "reg_tile_arcsec": 6.0,
+  "inject_pre_psf": "empirical",
+  "kernel_px": 4,
+  "kernel_stamps": true,
+  "kernel_stamp_fit": "shared",
+  "match_arcsec": 0.15,
+  "core_arcsec": 0.8,
+  "core_pct": 99.9,
+  "psf_fwhm_arcsec": {
+   "F150W": 0.05,
+   "F444W": 0.145
+  }
+ },
+ "bands": {
+  "F150W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f150w_i2d.fits",
+   "e2": "jw06882-o054_t054_nircam_clear-f150w_i2d.fits",
+   "scale_arcsec": 0.031228290320561063,
+   "shift_px": [
+    -0.8047948707681565,
+    -0.2582748953245196
+   ],
+   "blur_sigma_px": -1.02,
+   "kernel_sum": 0.8705428824963443,
+   "convolved_epoch": 2,
+   "flux_scale": 1.1487084899625257,
+   "noise_scale": 1.2606314917978172,
+   "n_detections": 225,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {},
+   "timing_s": {
+    "read": 5.62,
+    "pre_injections": 57.18,
+    "resample_register_match": 37.16,
+    "detect": 2.99,
+    "post_injections": 0.02,
+    "stamp_design_build": 0.052,
+    "kernel_stamps_s": 6.083
+   },
+   "kernel_stats": {
+    "stamp_rows": 22799,
+    "stamp_unconverged": 1,
+    "n_stamps": 350
+   },
+   "inject_pre_psf": {
+    "sources_ra_dec_conc": [
+     [
+      64.02404198480806,
+      -24.072949684900678,
+      0.183
+     ],
+     [
+      64.03492661997923,
+      -24.065396950273357,
+      0.1741
+     ],
+     [
+      64.02077891536173,
+      -24.070418798554133,
+      0.1685
+     ],
+     [
+      64.0300732441804,
+      -24.057466117558533,
+      0.1568
+     ],
+     [
+      64.03571666232274,
+      -24.065423598263905,
+      0.1567
+     ]
+    ],
+    "half_arcsec": 0.6,
+    "box_half_arcsec": 40.0,
+    "peak_frac": [
+     0.1654,
+     0.1602
+    ]
+   },
+   "inject_pre_shift_px": [
+    -0.7827920006022742,
+    -0.4276300063177701
+   ],
+   "reg_tiles_used": 12
+  },
+  "F444W": {
+   "e1": "jw01176-o211_t009_nircam_clear-f444w_i2d.fits",
+   "e2": "jw06882-o054_t054_nircam_clear-f444w_i2d.fits",
+   "scale_arcsec": 0.06291375188055767,
+   "shift_px": [
+    -0.2256540741013669,
+    -0.0489854281978874
+   ],
+   "blur_sigma_px": -0.734,
+   "kernel_sum": 0.9655190984661612,
+   "convolved_epoch": 2,
+   "flux_scale": 1.0357122936134724,
+   "noise_scale": 1.4103972501050177,
+   "n_detections": 72,
+   "injection_recovered": {},
+   "injection_recovered_not_near_core_this_band": {},
+   "timing_s": {
+    "read": 0.02,
+    "pre_injections": 22.81,
+    "resample_register_match": 8.89,
+    "detect": 0.27,
+    "post_injections": 0.0,
+    "stamp_design_build": 0.009,
+    "kernel_stamps_s": 0.278
+   },
+   "kernel_stats": {
+    "stamp_rows": 5093,
+    "stamp_unconverged": 0,
+    "n_stamps": 48
+   },
+   "inject_pre_psf": {
+    "sources_ra_dec_conc": [
+     [
+      64.03572338482229,
+      -24.06541710706391,
+      0.1038
+     ],
+     [
+      64.03492410268697,
+      -24.06539204273113,
+      0.102
+     ],
+     [
+      64.0207804171517,
+      -24.070407783944955,
+      0.0949
+     ],
+     [
+      64.03006968090429,
+      -24.05745343737653,
+      0.0928
+     ],
+     [
+      64.03257890756547,
+      -24.07754527610838,
+      0.0897
+     ]
+    ],
+    "half_arcsec": 0.6,
+    "box_half_arcsec": 40.0,
+    "peak_frac": [
+     0.1028,
+     0.109
+    ]
+   },
+   "inject_pre_shift_px": [
+    -0.24185825062368385,
+    -0.08567595965137434
+   ],
+   "reg_tiles_used": 12
+  }
+ },
+ "n_hits": 61,
+ "n_hits_not_near_bright_core": 46,
+ "known": [],
+ "inject_pre": {
+  "n": 80,
+  "csv": "results/transients/batch_venus4/boxes/MJ0416.1-2403_1/sample.csv"
+ },
+ "wall_s": 135.7,
+ "inject_grid": {
+  "n": 0,
+  "n_hit": 0,
+  "n_hit_not_near_bright_core": 0
+ }
+}

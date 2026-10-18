@@ -276,6 +276,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - JAXtronomy, no tagged release: https://github.com/lenstronomy/JAXtronomy
 - PyAutoLens 2026.10.4.1: https://github.com/PyAutoLabs/PyAutoLens
 - herculens v0.3.0: https://github.com/Herculens/herculens
+- PyAutoLens 2026.10.17.1 (installed in an isolated venv 2026-10-18, `docs/same_source.md`; not a dependency)
+- Lenstruction 0.1.0 (MIT; last commit 2022-11-18, pinned to lenstronomy 1.10.3): https://github.com/ylilan/lenstruction
+  (cloned 2026-10-18; Yang et al. 2020, MNRAS 498, 3241)
 - glafic v2.1.15: https://github.com/oguri/glafic2
 - Lens finders (rejected; kept for the record):
   - ssl-legacysurvey: https://github.com/georgestein/ssl-legacysurvey
@@ -331,6 +334,10 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - JWST DD 12781 (PI Pascale), "Catching the reappearance of strongly lensed supernova with a 1+ year time-delay"
   (SN Athena, MACS J0417): https://www.stsci.edu/jwst-program-info/program/?program=12781 (proposal PDF read 2026-10-18);
   JWST GO 4568 (target "athena"); HST 18470 and 17474 (MAST programme pages, 2026-10-18).
+- JWST GO 9811 (PI Kamieneski), "SN-ECHOES", Cycle 5, includes a PLCK G165 epoch:
+  https://www.stsci.edu/jwst-program-info/download/jwst/pdf/9811/ (read 2026-10-18); HST 17504 (PI Kelly), "SNAP Survey for
+  Strongly Lensed Supernovae and Magnified Stars" (proposal PDF read 2026-10-18); Legacy Survey DR8 north, VizieR VII/292
+  (queried 2026-10-18). Identity checks: `results/transients/identity_r2/identity_check.json`.
 - JWST General Target Visibility Tool `jwst_gtvt` 1.2 (PyPI), run 2026-10-18 for MACS0417.
 - Hubble Frontier Fields lens models (same layout as RELICS): https://archive.stsci.edu/prepds/frontier/lensmodels/
 - Zoobot Euclid encoder (Apache-2.0): https://huggingface.co/mwalmsley/zoobot-encoder-euclid

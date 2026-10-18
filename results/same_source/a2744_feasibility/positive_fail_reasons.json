@@ -1,0 +1,8 @@
+{
+ "pairs": 33,
+ "fail_p": 20,
+ "fail_nband": 0,
+ "fail_zoverlap": 13,
+ "median_chi2_nu": 2.9547123679604606,
+ "pass_all": 10
+}

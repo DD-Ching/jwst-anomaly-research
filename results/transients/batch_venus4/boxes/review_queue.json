@@ -1,0 +1,203 @@
+{
+ "label": "derived; PLAN \u00a75 order",
+ "entries": [
+  {
+   "box_id": "A370_1",
+   "box_status": "passed",
+   "hit_id": "h000",
+   "ra": 39.968856870920256,
+   "dec": -1.571911097184512,
+   "sign": "mixed",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 45.898697558084834,
+   "rank": 1
+  },
+  {
+   "box_id": "SJ0723.3-7327_1",
+   "box_status": "passed",
+   "hit_id": "h005",
+   "ra": 110.8099281034915,
+   "dec": -73.46310207885345,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 18.264515907215273,
+   "rank": 2
+  },
+  {
+   "box_id": "SJ0723.3-7327_1",
+   "box_status": "passed",
+   "hit_id": "h006",
+   "ra": 110.81549087953114,
+   "dec": -73.46279778760174,
+   "sign": "mixed",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 14.59725213085127,
+   "rank": 3
+  },
+  {
+   "box_id": "A370_2",
+   "box_status": "passed",
+   "hit_id": "h004",
+   "ra": 39.980332815560274,
+   "dec": -1.5833160943495785,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 13.012731373041035,
+   "rank": 4
+  },
+  {
+   "box_id": "BULLET_1",
+   "box_status": "passed",
+   "hit_id": "h008",
+   "ra": 104.63989251661295,
+   "dec": -55.94708196713468,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 12.59392917203874,
+   "rank": 5
+  },
+  {
+   "box_id": "A370_1",
+   "box_status": "passed",
+   "hit_id": "h006",
+   "ra": 39.966251936220715,
+   "dec": -1.5673132458469177,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 9.67113344020456,
+   "rank": 6
+  },
+  {
+   "box_id": "SJ0723.3-7327_1",
+   "box_status": "passed",
+   "hit_id": "h010",
+   "ra": 110.80287638172699,
+   "dec": -73.46492360914499,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 5.227417097031319,
+   "rank": 7
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h006",
+   "ra": 342.17425042172397,
+   "dec": -44.52731675990306,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 68.35667496146729,
+   "rank": 8
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h014",
+   "ra": 342.17166852876596,
+   "dec": -44.52196402798833,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 45.04974160249386,
+   "rank": 9
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h021",
+   "ra": 342.17621864164823,
+   "dec": -44.52344771958876,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 42.92916923910483,
+   "rank": 10
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h024",
+   "ra": 342.17185915884414,
+   "dec": -44.52130923366161,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 42.10532478506026,
+   "rank": 11
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h025",
+   "ra": 342.1704926547164,
+   "dec": -44.522663112684924,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 41.063809637712694,
+   "rank": 12
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h027",
+   "ra": 342.17277654399345,
+   "dec": -44.52477421402626,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 40.73513558000255,
+   "rank": 13
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h032",
+   "ra": 342.16905965156263,
+   "dec": -44.522505400374286,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 38.42410631370197,
+   "rank": 14
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h035",
+   "ra": 342.1724531614335,
+   "dec": -44.526580450420326,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 36.299711584680665,
+   "rank": 15
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h038",
+   "ra": 342.1698659857601,
+   "dec": -44.52415334077361,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 33.08181207859102,
+   "rank": 16
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h043",
+   "ra": 342.17212309909456,
+   "dec": -44.52645738066956,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 25.399303925133303,
+   "rank": 17
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h054",
+   "ra": 342.1758133856305,
+   "dec": -44.52487595221307,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 11.122495075666189,
+   "rank": 18
+  }
+ ]
+}

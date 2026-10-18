@@ -1,0 +1,93 @@
+{
+ "label": "review-list entries beyond capacity: pending, not cleared",
+ "entries": [
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h024",
+   "ra": 342.17185915884414,
+   "dec": -44.52130923366161,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 42.10532478506026,
+   "rank": 11
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h025",
+   "ra": 342.1704926547164,
+   "dec": -44.522663112684924,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 41.063809637712694,
+   "rank": 12
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h027",
+   "ra": 342.17277654399345,
+   "dec": -44.52477421402626,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 40.73513558000255,
+   "rank": 13
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h032",
+   "ra": 342.16905965156263,
+   "dec": -44.522505400374286,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 38.42410631370197,
+   "rank": 14
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h035",
+   "ra": 342.1724531614335,
+   "dec": -44.526580450420326,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 36.299711584680665,
+   "rank": 15
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h038",
+   "ra": 342.1698659857601,
+   "dec": -44.52415334077361,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 33.08181207859102,
+   "rank": 16
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h043",
+   "ra": 342.17212309909456,
+   "dec": -44.52645738066956,
+   "sign": "+",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 25.399303925133303,
+   "rank": 17
+  },
+  {
+   "box_id": "AS1063_1",
+   "box_status": "undeterminable",
+   "hit_id": "h054",
+   "ra": 342.1758133856305,
+   "dec": -44.52487595221307,
+   "sign": "-",
+   "bands": "F150W,F444W",
+   "max_abs_sigma": 11.122495075666189,
+   "rank": 18
+  }
+ ]
+}

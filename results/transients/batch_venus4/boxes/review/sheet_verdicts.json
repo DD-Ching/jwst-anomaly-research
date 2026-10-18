@@ -1,0 +1,12 @@
+{
+ "A370_1:h000": "bright isolated point-like source present in every programme; ring/dipole residual at its core in F150W and a compact negative in F444W (compact-core class; possibly a star)",
+ "SJ0723.3-7327_1:h005": "bright compact elongated galaxy; dipole residual along its major axis in F150W and an above/below dipole in F444W (compact-core class)",
+ "SJ0723.3-7327_1:h006": "bright spiral galaxy core; mixed-sign residual pattern along the bulge (core residual)",
+ "A370_2:h004": "negative residual chain along the edge of a bright extended arc/galaxy (steep-structure residual)",
+ "BULLET_1:h008": "small compact knot on a faint arc; weak negative residual in both bands",
+ "A370_1:h006": "compact source with a blue/red core dipole in F150W, weak negative in F444W (compact-core class)",
+ "SJ0723.3-7327_1:h010": "no residual at the marked compact source in F150W; residual offset ~0.5 arcsec; weak in F444W",
+ "AS1063_1:h006": "large-scale patchy residuals across the stamp in F150W (box-wide pattern; calibration-failed box)",
+ "AS1063_1:h014": "ring-shaped positive residuals repeated across the stamp in both bands (detector ring artifact pattern)",
+ "AS1063_1:h021": "ring-shaped residuals repeated across the stamp; nothing at the marked position in the images"
+}
