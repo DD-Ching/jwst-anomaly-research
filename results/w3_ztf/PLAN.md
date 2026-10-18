@@ -75,3 +75,11 @@ Written before any light curve of the sample was read (only the objects table an
 ## 8. Limits
 - A pass is feasibility for this field and stage only; no W3 abundance or exclusion is computed (sample too small).
 - Cap: data reading ≤ 30 min; stop computation at 14:30Z.
+
+## Deviation (before any search or injection result; after the data-condition check)
+- Per-epoch limit: the 95th percentile of comparison-star magnitudes would be ≤ 18 by construction (they are chosen at
+  14–18), so the limit is instead the magnitude where the comparison stars' magerr–mag relation at that epoch reaches
+  0.2171 (S/N 5), clipped to 18–22.5 (20.5 if fewer than 10 stars); it is used only by the injections.
+- Data-condition check (comparison stars only, 3,000 light curves): no NaN magnitudes (detections only); catflags 0
+  in 94 %, 32768 (cloud/moon) in 6 %; median spacing between epochs 1.0–4.0 d (10th–90th percentile); fields 826,
+  848, 1856, 1857 (not stored beyond this note).
