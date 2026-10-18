@@ -1,0 +1,39 @@
+{
+ "field": "abell370-ncf",
+ "i2d": "s3://stpubdata/jwst/public/jw01208/L3/t/o020/jw01208-o020_t001_nircam_clear-f150w_i2d.fits",
+ "binned_shape": [
+  553,
+  1242
+ ],
+ "pixel_scale_arcsec": 0.24979309945285455,
+ "n_trails_status2": 0,
+ "n_candidates_all_status": 40,
+ "trails": [],
+ "mask_pixels": 33064,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "segment_stripes": {
+  "seg_len": 80,
+  "min_valid": 0.5,
+  "detrend_rows": 41,
+  "nsig": 5.0,
+  "stripe_block_px": 100438,
+  "trail_mask_pixels": 0
+ },
+ "wall_time_s": {
+  "read": 11.6,
+  "total": 30.0
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

@@ -42,6 +42,11 @@ MRT_THRESHOLD = 5.0  # TrailFinder threshold (ASSUMPTION; other settings its def
 KEEP_STATUS = 2  # TrailFinder status of a persistent trail (ASSUMPTION)
 VETO_ARCSEC = 1.0  # shape rows within this of a masked pixel are vetoed (ASSUMPTION)
 ROWS_PER_READ = 256  # native rows per range read (multiple of BLOCK)
+# row/column-segment stripe veto (results/w1_row_veto/PLAN.md; every number an ASSUMPTION)
+SEG_MIN_VALID = 0.5  # finite share a segment needs
+SEG_DETREND = 41  # running-median window along the segment column (block pixels)
+SEG_NSIG = 5.0  # |residual| > this × 1.4826 MAD is a stripe
+KEEP_FRAC = 0.75  # cost check: rows kept with the veto ≥ this × rows kept without it
 
 
 def i2d_uri(catalog: str | Path) -> str:
@@ -96,6 +101,61 @@ def stream_binned(uri: str) -> tuple[np.ndarray, WCS]:
             out[y0 // BLOCK : (y0 + nr) // BLOCK] = block_median(a, BLOCK)
         wcs = WCS(hd)
     return out, wcs[::BLOCK, ::BLOCK]
+
+
+def _row_stripes(img: np.ndarray, seg_len: int) -> np.ndarray:
+    """Row half of :func:`segment_stripes`: residual of each row segment's median against a
+    running median over ``SEG_DETREND`` rows of the same segment column (NaN if undefined)."""
+    ny, nx = img.shape
+    ns = nx // seg_len
+    seg = img[:, : ns * seg_len].reshape(ny, ns, seg_len)
+    valid = np.isfinite(seg).mean(axis=2) >= SEG_MIN_VALID
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        val = np.where(valid, np.nanmedian(seg, axis=2), np.nan)
+        trend = ndimage.generic_filter(val, np.nanmedian, size=(SEG_DETREND, 1), mode="nearest")
+    return val - trend
+
+
+def segment_stripes(img: np.ndarray, seg_len: int) -> np.ndarray:
+    """Stripe pixels of a block-median image (PLAN steps 1–4): row segments of ``seg_len``
+    pixels (last partial one dropped) with ≥ ``SEG_MIN_VALID`` finite pixels, median-valued,
+    detrended along y, flagged if |residual| > ``SEG_NSIG`` σ (σ from the MAD of all residuals
+    of that axis); the same on columns. Returns a bool image of ``img``'s shape."""
+    img = np.asarray(img, float)
+    out = np.zeros(img.shape, bool)
+    for axis_img, put in ((img, lambda m: m), (img.T, lambda m: m.T)):
+        res = _row_stripes(axis_img, seg_len)
+        ok = np.isfinite(res)
+        if not ok.any():
+            continue
+        sig = 1.4826 * np.median(np.abs(res[ok] - np.median(res[ok])))
+        if not sig > 0:
+            continue
+        flag = np.zeros(res.shape, bool)
+        flag[ok] = np.abs(res[ok]) > SEG_NSIG * sig
+        full = np.zeros(axis_img.shape, bool)
+        full[:, : flag.shape[1] * seg_len] = np.repeat(flag, seg_len, axis=1)
+        out |= put(full)
+    return out
+
+
+def to_mask_grid(stripes: np.ndarray, shape: tuple[int, int]) -> np.ndarray:
+    """OR of each ``REBIN`` × ``REBIN`` block onto the trail mask's grid of ``shape``."""
+    ny, nx = shape
+    s = stripes[: ny * REBIN, : nx * REBIN]
+    return s.reshape(ny, REBIN, nx, REBIN).any(axis=(1, 3))
+
+
+def kept_rows(summary: dict) -> int:
+    """Rows the screen used after the streak veto (PLAN cost check)."""
+    sc = summary["screen"]
+    return int(sc["n_used_before_veto"] - sc["n_veto_used"])
+
+
+def cost_ok(new: dict, old: dict, frac: float = KEEP_FRAC) -> bool:
+    """Cost check: the union-mask screen keeps ≥ ``frac`` of the rows the D-097 screen kept."""
+    return kept_rows(new) >= frac * kept_rows(old)
 
 
 def find_trails(z: np.ndarray, processes: int = 4, threshold: float = MRT_THRESHOLD):
@@ -222,6 +282,13 @@ def main(argv: list[str] | None = None) -> int:
         help="TrailFinder threshold (results/w1_streak_rowdiag/PLAN.md: faint-streak variants)",
     )
     ap.add_argument(
+        "--seg-len",
+        type=int,
+        default=None,
+        help="add the row/column-segment stripe mask with this segment length in block pixels "
+        "(results/w1_row_veto/PLAN.md); default: trail mask only",
+    )
+    ap.add_argument(
         "--evaluate",
         type=Path,
         metavar="SUMMARY",
@@ -244,6 +311,19 @@ def main(argv: list[str] | None = None) -> int:
         z = normalise(img)
         wz = wcs[::REBIN, ::REBIN]
         mask, cat = find_trails(z, args.processes, args.mrt_threshold)
+        n_trail_px = int(mask.sum())
+        seg = None
+        if args.seg_len is not None:
+            stripes = segment_stripes(img, args.seg_len)
+            mask = mask | to_mask_grid(stripes, mask.shape)
+            seg = {
+                "seg_len": args.seg_len,
+                "min_valid": SEG_MIN_VALID,
+                "detrend_rows": SEG_DETREND,
+                "nsig": SEG_NSIG,
+                "stripe_block_px": int(stripes.sum()),
+                "trail_mask_pixels": n_trail_px,
+            }
         write_mask(args.out / f"{name}_streak_mask.fits.gz", mask, wz)
         trails = []
         if cat is not None:
@@ -267,6 +347,7 @@ def main(argv: list[str] | None = None) -> int:
                 "keep_status": KEEP_STATUS,
                 "veto_arcsec": VETO_ARCSEC,
             },
+            "segment_stripes": seg,
             "wall_time_s": {"read": round(t_read, 1), "total": round(time.time() - t0, 1)},
             "provenance": {"pixels": "observed", "mask": "derived", "settings": "assumption"},
         }

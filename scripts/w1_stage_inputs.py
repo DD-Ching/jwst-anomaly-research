@@ -67,6 +67,22 @@ CATALOG_SHA256 = {
     "jw02767-o002_t001_nircam_clear-f200w_cat.ecsv": (
         "2ed1a2c7666734483974e568e1c3b332eea223ea487b4cd279dd89b4e9261f53"
     ),
+    # CANUCS NCF F150W (results/w1_shear_ncf), as fetched 2026-10-18
+    "jw01208-o023_t002_nircam_clear-f150w_cat.ecsv": (
+        "6ac987242db0435afb0aac549b825d12a7f67868e93cf23e63aef0dada8ec38c"
+    ),
+    "jw01208-o029_t004_nircam_clear-f150w_cat.ecsv": (
+        "e331b754f054cf3c31eb84096ff7dd3131b2aeb6f595f711953244ddad2c672d"
+    ),
+    "jw01208-o020_t001_nircam_clear-f150w_cat.ecsv": (
+        "6be0bacd8cd437bbf557076a099888770c301ea2b81b835ddde84f12b7b9328c"
+    ),
+    "jw01208-o026_t003_nircam_clear-f150w_cat.ecsv": (
+        "b3d71250aec8bbe965c1c4908958e5d6366af7c8e25abf587006de65cee8383e"
+    ),
+    "jw01208-o032_t005_nircam_clear-f150w_cat.ecsv": (
+        "fb2f118625ae5a4a8c1107e546c5c19dfb7f2c4d1125d4c24d003ff4677898d2"
+    ),
 }
 
 
@@ -124,6 +140,9 @@ for _f, _sha in (
 for _f in ("macs0416", "macs1149", "abell370"):
     _url, _sha = op.FIELDS[_f]["catalogue"]
     PHOTOZ[_url.rsplit("/", 1)[-1]] = {"url": _url, "sha256": _sha}
+for _spec in op.DEEP_FIELDS.values():  # CANUCS NCF photometry (results/w1_shear_ncf)
+    _url, _sha = _spec["catalogue"]
+    PHOTOZ.setdefault(_url.rsplit("/", 1)[-1], {"url": _url, "sha256": _sha})
 
 
 class _Unpinned(str):
@@ -253,7 +272,7 @@ def plan(fields: list[str]) -> list[tuple[str, Path | None, dict]]:
             if src is None:
                 raise KeyError(f"{name}: no recorded source for {rel}")
             jobs.append((name, root / rel, src))
-        files = ir.lc.MODELS[spec["model"]].get("files", {})
+        files = ir.lc.MODELS[spec["model"]].get("files", {}) if spec["model"] else {}
         if any("#" in str(v[0]) for v in files.values()):
             jobs.append((name, None, {"zip_members": files}))
     return jobs
