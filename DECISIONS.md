@@ -5094,7 +5094,24 @@ confining radiation at a throat is found.
   and kept out. Twenty-four fields: n₉₅ < 1.09 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉ (1.09× T&A); R 0.231 keeps 0.19–0.28
   of the CEERS recoveries (`results/w1_shear_ceers/RESULT.md`). The borrowed R now dominates the systematics.
 
-## D-100 W1 blank-field R: GalSim image simulations of the pipeline-like shapes; borrowed R kept (2026-10-18)
+## D-100 Same-source pairing: no model-free proposal step adopted; lens tools are pair testers, not pair finders (2026-10-18)
+- **Decision:** the repository has no reliable model-free step that proposes which sources are images of one source
+  (task 1). An identity-blind SED pairing at 2–60″ (`scripts/same_source_pairs.py`, reusing `orphan_pairs.match_table`)
+  failed its frozen pass rule on Abell 2744; it is kept as a feasibility tool, not a search. lenstronomy, PyAutoLens and
+  Lenstruction are not added as dependencies: each tests or reconstructs a pair or system already chosen (task 2),
+  which published cluster models already cover here (`lensmodel.find_images`).
+- **Alternatives rejected:**
+  - affine morphology matching of either handedness (`parity_test.compare`) as the proposer: AUC 0.53 for true pairs
+    vs matched decoys (6 + 6, development half), and the parity tool is paused (D-032);
+  - integrating all three lens tools at once: none solves task 1; Lenstruction is unmaintained since 2022-11 and pinned
+    to lenstronomy 1.10.3 (imports with 1.14.2 except one module needing photutils).
+- **Evidence:** `results/same_source/a2744_feasibility/RESULT.md`: holdout recall@10 0.86 (relative ranking works) but
+  only 10 of 33 true pairs pass the absolute SED rule (20 fail χ², 13 photo-z overlap); post hoc, 26,145 SED-matched
+  pairs among 2,674,270 at 2–60″, of which 11 have both members within 0.3″ of a published image (10 same-system pairs pass). Limits on later searches: `docs/same_source.md`.
+- **Revisit if:** a ranking-based proposal with a calibrated threshold is frozen and tested on a new held-out cluster
+  (e.g. MACS0416 CANUCS), or a specific pair needs a source-plane reconstruction (then lenstronomy in an isolated env).
+
+## D-101 W1 blank-field R: GalSim image simulations of the pipeline-like shapes; borrowed R kept (2026-10-18)
 - **Decision:** the blank-field W1 screens keep R = 0.414 (D-099). Image simulations of the catalogue shape
   measurement (`scripts/w1_r_sim.py`, GalSim + photutils, isolated Sérsic stamps) give a weighted measurement
   response ≥ 0.94 for the GOODS-N row distribution under every variant, so 0.414 understates injected W1 shear (conservative).

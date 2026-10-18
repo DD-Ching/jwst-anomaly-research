@@ -102,3 +102,22 @@ def test_task_problem():
     )
     assert bru.task_problem({"arc_diff": {"rc": 1}}) == "failed"
     assert bru.task_problem({"arc_diff": {"rc": 0}, "morph": {"rc": 0}}) is None
+
+
+def test_same_source_verdict():
+    import same_source_pairs as ssp
+
+    good = {
+        "retrieval": {"recall@10": 0.5, "median_false_matches": 10.0},
+        "control": {"decoy_match_rate": 0.2, "positive_match_rate": 0.6},
+    }
+    assert ssp.verdict(good) == {"P1": True, "P2": True, "pass": True}
+    bad = {
+        "retrieval": {"recall@10": 0.49, "median_false_matches": 10.5},
+        "control": {"decoy_match_rate": 0.1, "positive_match_rate": 0.9},
+    }
+    assert ssp.verdict(bad) == {"P1": False, "P2": False, "pass": False}
+    missing = {"retrieval": {"recall@10": None, "median_false_matches": None}, "control": {}}
+    assert ssp.verdict(missing)["pass"] is False
+    assert ssp.holdout("1") is False and ssp.holdout("4") is True  # fixed crc32 split
+    assert ssp.auc([1, 2], [3, 4]) == 1.0 and ssp.auc([3], [3]) == 0.5

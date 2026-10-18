@@ -1,0 +1,14 @@
+group ['h000', 'c03', 'c05', 'c09', 'c11', 'c13', 'c14', 'c17', 'c20', 'c22', 'c23', 'c24', 'c25', 'c30', 'c31']: 12 mosaics
+group ['c00', 'c16', 'c18']: 12 mosaics
+group ['c01', 'c08', 'c12', 'c19']: 12 mosaics
+group ['c02', 'c07', 'c33']: 12 mosaics
+group ['c04', 'c26']: 12 mosaics
+group ['c06', 'c10', 'c21', 'c27', 'c28', 'c29']: 12 mosaics
+group ['c15', 'c32']: 12 mosaics
+WARNING: FITSFixedWarning: 'datfix' made the change 'Set DATE-BEG to '2026-01-09T02:28:04.489' from MJD-BEG.
+Set DATE-AVG to '2026-01-09T02:46:11.617' from MJD-AVG.
+Set DATE-END to '2026-01-09T03:04:24.105' from MJD-END'. [astropy.wcs.wcs]
+WARNING: FITSFixedWarning: 'obsfix' made the change 'Set OBSGEO-L to    88.955323 from OBSGEO-[XYZ].
+Set OBSGEO-B to    13.142766 from OBSGEO-[XYZ].
+Set OBSGEO-H to 1670326078.182 from OBSGEO-[XYZ]'. [astropy.wcs.wcs]
+420 measurements, 0 skipped; results/transients/batch_venus4/confirm/a370_h000

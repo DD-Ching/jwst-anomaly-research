@@ -1,0 +1,29 @@
+# Post hoc snippets run after the frozen verdict (2026-10-18), from scripts/ with JWST_ANOMALY_DATA set.
+# 1) positive_fail_reasons.json
+import json, numpy as np, orphan_pairs as op
+c = json.load(open('../results/same_source/a2744_feasibility/control.json'))
+cat = op.as_standard(op.load_catalogue('abell2744'))
+f, e = np.asarray(cat['flux'], float), np.asarray(cat['err'], float)
+z16, z84 = np.asarray(cat['z16'], float), np.asarray(cat['z84'], float)
+a = np.array([x['a'] for x in c]); b = np.array([x['b'] for x in c])
+t = op.match_table(a, b, f, e, z16, z84)
+out = {'pairs': len(c), 'fail_p': int((t['p_sed'] < 0.01).sum()), 'fail_nband': int((t['nband'] < 8).sum()),
+       'fail_zoverlap': int((~t['z_overlap']).sum()), 'median_chi2_nu': float(np.median(t['chi2_nu'])),
+       'pass_all': int(t['match'].sum())}
+# 2) field_burden_posthoc.json
+import lens_consistency as lc, same_source_pairs as ssp
+from scipy.spatial import cKDTree
+elig = op.select_sources(cat, 0.308); idx = np.flatnonzero(elig)
+ra, dec = np.asarray(cat['ra'], float), np.asarray(cat['dec'], float)
+x, y = op.tangent_xy(ra, dec, np.nanmedian(ra), np.nanmedian(dec))
+i, j, d = op.close_pairs(x[idx], y[idx], *ssp.SEP); i, j = idx[i], idx[j]
+m = np.zeros(len(i), bool)
+for s in range(0, len(i), 200000):
+    m[s:s + 200000] = np.asarray(op.match_table(i[s:s + 200000], j[s:s + 200000], f, e, z16, z84)['match'])
+images, _ = lc.image_list('abell2744-bergamini23', {}, None); lc.shift_images('abell2744-bergamini23', images)
+ix, iy = op.tangent_xy(images['ra'], images['dec'], np.nanmedian(ra), np.nanmedian(dec))
+dimg = cKDTree(np.column_stack([ix, iy])).query(np.column_stack([x, y]))[0]
+both = (dimg[i] <= 0.3) & (dimg[j] <= 0.3)
+burden = {'eligible': int(len(idx)), 'pairs_2_60': int(len(i)), 'pairs_passing_match': int(m.sum()),
+          'passing_with_both_members_within_0.3_of_a_published_image': int((m & both).sum()),
+          'sources_in_any_passing_pair': int(len(np.unique(np.r_[i[m], j[m]])))}

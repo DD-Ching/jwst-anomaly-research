@@ -1,0 +1,14 @@
+{
+ "box_id": "PLCKG165+67.0_1",
+ "kind": "screen",
+ "arc_diff": {
+  "rc": 0,
+  "wall_s": 137.9,
+  "peak_rss_mb": 859.6
+ },
+ "morph": {
+  "rc": 0,
+  "wall_s": 1.0,
+  "peak_rss_mb": 133.8
+ }
+}
