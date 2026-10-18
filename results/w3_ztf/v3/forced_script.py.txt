@@ -1,0 +1,98 @@
+# Plan v3 B: forced photometry of chosen exposures on IRSA IBE science-image cutouts (2026-10-18).
+# Usage: python forced_script.py.txt <ibe_meta.json> <cutout dir> <out json> <out png>
+import json, os, sys, time, urllib.request, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.wcs import WCS
+from scipy import ndimage
+warnings.filterwarnings('ignore')
+sys.path.insert(0, 'scripts')
+from hit_lightcurve import aperture_photometry
+META, CUT, OUT, PNG = sys.argv[1:5]
+meta = json.load(open(META)); sel = json.load(open('results/w3_ztf/v3/image_selection.json'))['sources']
+R, ANN = 2.0, (4.0, 6.0)  # arcsec
+def get(url, fn):
+    for i in range(4):  # 503s seen: retry with back-off
+        try:
+            data = urllib.request.urlopen(url, timeout=60).read(); open(fn, 'wb').write(data); return None
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (i + 1))
+    return err
+def phot(img, x, y, sc, seed):
+    f = aperture_photometry(img, x, y, R / sc, (ANN[0] / sc, ANN[1] / sc))
+    rng = np.random.default_rng(seed); rnd = []
+    for _ in range(800):
+        xx, yy = rng.uniform(8, img.shape[1] - 8), rng.uniform(8, img.shape[0] - 8)
+        if np.hypot(xx - x, yy - y) < 6 / sc: continue
+        q = aperture_photometry(img, xx, yy, R / sc, (ANN[0] / sc, ANN[1] / sc))
+        if np.isfinite(q): rnd.append(q)
+        if len(rnd) >= 200: break
+    rnd = np.array(rnd)
+    return f, (1.4826 * np.median(np.abs(rnd - np.median(rnd))) if len(rnd) > 30 else np.nan)
+res, total, stamps = {}, 0, []
+for key, src in sel.items():
+    ra, dec = src['ra'], src['dec']; rows = {int(m['expid']): m for m in meta[key]}
+    out, ref_field = [], None
+    for e in src['exposures']:
+        rec = {'expid': e['expid'], 'mjd': e['t'], 'catalog_nondetection': e['nd']}
+        m = rows.get(int(e['expid']))
+        if m is None:
+            rec.update(cls=1, why='position not inside any image of this exposure (IBE position search)'); out.append(rec); continue
+        rec.update({k: m[k] for k in ('field', 'ccdid', 'qid', 'infobits', 'maglimit', 'seeing')})
+        ffd = str(m['filefracday'])
+        url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+               f"{int(m['field']):06d}_{m['filtercode']}_c{int(m['ccdid']):02d}_o_q{int(m['qid'])}_sciimg.fits"
+               f"?center={ra},{dec}&size=120arcsec&gzip=false")
+        fn = f"{CUT}/{e["expid"]}_{key}_120.fits"
+        if not os.path.exists(fn):
+            err = get(url, fn)
+            if err: rec.update(cls=1, why=f'cutout not obtained: {err}'); out.append(rec); continue
+        total += os.path.getsize(fn)
+        h = fits.open(fn); img = h[0].data.astype(float); hd = h[0].header; w = WCS(hd)
+        sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600; k = 10 ** (-0.4 * (hd['MAGZP'] - 23.9))
+        x, y = (float(v) for v in w.world_to_pixel_values(ra, dec))
+        f, err = phot(img, x, y, sc, int(e['expid']) % 2**32)
+        # field stars: the 5 brightest peaks >= 8" from the target, fixed by sky position in the first usable cutout
+        if ref_field is None:
+            sm = ndimage.gaussian_filter(np.nan_to_num(img), 1.0)
+            pk = np.argwhere((sm == ndimage.maximum_filter(sm, 7)) & (sm > np.nanmedian(sm) + 10 * 1.4826 * np.nanmedian(np.abs(sm - np.nanmedian(sm)))))
+            pk = [p for p in pk if np.hypot(p[1] - x, p[0] - y) * sc >= 8 and 8 < p[1] < img.shape[1] - 8 and 8 < p[0] < img.shape[0] - 8]
+            pk = sorted(pk, key=lambda p: -sm[p[0], p[1]])[:5]
+            ref_field = [w.pixel_to_world_values(p[1], p[0]) for p in pk]
+        ff = []
+        for (fra, fde) in ref_field:
+            fx, fy = (float(v) for v in w.world_to_pixel_values(fra, fde))
+            ff.append(aperture_photometry(img, fx, fy, R / sc, (ANN[0] / sc, ANN[1] / sc)) * k)
+        rec.update(flux_uJy=float(f * k), err_uJy=float(err * k), field_uJy=[float(v) for v in ff], cutout_bytes=os.path.getsize(fn))
+        h0 = int(round(8 / sc)); xi, yi = int(round(x)), int(round(y))
+        stamps.append((key, e['expid'], e['nd'], img[max(yi - h0, 0):yi + h0 + 1, max(xi - h0, 0):xi + h0 + 1]))
+        out.append(rec)
+    pre = [r['flux_uJy'] for r in out if not r['catalog_nondetection'] and np.isfinite(r.get('flux_uJy', np.nan))][:2]
+    pre_f = [r['field_uJy'] for r in out if not r['catalog_nondetection'] and 'field_uJy' in r][:2]
+    base = float(np.median(pre)) if pre else np.nan
+    fbase = np.nanmedian(np.array(pre_f), axis=0) if pre_f else None
+    for r in out:
+        if 'cls' in r: continue
+        r['field_ratio_median'] = float(np.nanmedian(np.array(r['field_uJy']) / fbase)) if fbase is not None else None
+        if r['infobits'] != 0:
+            r['cls'], r['why'] = 1, f"infobits {r['infobits']} (not a valid observation by the plan rule)"
+        elif r['seeing'] > 4 or r['maglimit'] < 19.5:
+            r['cls'], r['why'] = 2, 'poor image (seeing or maglimit)'
+        elif not np.isfinite(r['flux_uJy']):
+            r['cls'], r['why'] = 1, 'non-finite pixels in the aperture (edge or mask)'
+        elif r['flux_uJy'] >= 5 * r['err_uJy'] and r['flux_uJy'] >= 0.5 * base:
+            r['cls'], r['why'] = 3, f"source present: {r['flux_uJy'] / base:.2f} x the pre-window median"
+        else:
+            r['cls'], r['why'] = 4, f"flux {r['flux_uJy'] / base:.2f} x the pre-window median"
+    res[key] = {'pre_window_median_uJy': base, 'exposures': out}
+json.dump({'label': 'derived; exploratory image check (plan v3 B); class 1 no coverage/valid observation, 2 poor, 3 source present but catalogue missing it (only for catalogue non-detections), 4 lower flux', 'download_bytes': total, 'sources': res}, open(OUT, 'w'), indent=1, default=float)
+open(OUT, 'a').write('\n')
+import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+fig, ax = plt.subplots(3, 8, figsize=(13, 5.4))
+for a in ax.flat: a.axis('off')
+row = {k: i for i, k in enumerate(sel)}; col = {k: 0 for k in sel}
+for key, ex, nd, st in stamps:
+    a = ax[row[key], col[key]]; col[key] += 1
+    a.imshow(st, origin='lower', cmap='gray', vmin=np.nanpercentile(st, 5), vmax=np.nanpercentile(st, 99.5))
+    a.plot(st.shape[1] / 2, st.shape[0] / 2, 'r+'); a.set_title(f"{key[-6:]} {ex}\n{'catalogue ND' if nd else 'detected'}", fontsize=6)
+plt.tight_layout(); plt.savefig(PNG, dpi=70)
