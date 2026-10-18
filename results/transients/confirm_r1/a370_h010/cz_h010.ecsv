@@ -1,0 +1,19 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: name, datatype: string}
+# - {name: obs_id_1, datatype: string}
+# - {name: obs_id_2, datatype: string}
+# - {name: z, datatype: float64, format: .3f}
+# - {name: ratio, datatype: float64, format: .3f}
+# - {name: z_cal, datatype: float64, format: .3f}
+# - {name: ctrl_tail_frac, datatype: float64, format: .3f}
+# - {name: n_controls, datatype: int64}
+# - {name: ctrl_median, datatype: float64, format: .3f}
+# - {name: ctrl_rsd, datatype: float64, format: .3f}
+# meta: !!omap
+# - {provenance: derived}
+# schema: astropy-2.0
+name obs_id_1 obs_id_2 z ratio z_cal ctrl_tail_frac n_controls ctrl_median ctrl_rsd
+h010 jw01208-o002_t001_nircam_clear-f444w jw06882-o053_t053_nircam_clear-f444w -3.1074216482426804 0.43892860965166425 -1.4091339144245478 0.1 80 -0.4285541826189162 1.9010737291904165
+h010 jw05324-o002_t012_nircam_clear-f356w jw05324-o003_t012_nircam_clear-f356w -4.772021107758642 0.2418614861182696 -1.4508110716969065 0.1125 80 0.09064638677760307 3.3516889892828994

@@ -1,2 +1,2 @@
 # Confirmation round 1: state
-Owner instruction 2026-10-18 (after #311). Budget 2 h. Plan: PLAN.md.
+Budget 00:51Z → 02:51Z. Done: A370 controls, MACS0417 feasibility, `DECISION.md`. Next action: none started.
