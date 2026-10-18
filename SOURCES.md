@@ -1524,3 +1524,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   Computing 10, 121, doi:10.1016/j.ascom.2015.02.002. Sérsic profiles, Airy ⊗ Gaussian PSF, shears.
 - **photutils** 3.1.1 (PyPI), `detect_sources` and `SourceCatalog` (`semimajor_axis` is 3.x's name for the
   catalogue's `semimajor_sigma`, per its deprecation warning).
+## W1 shear in PRIMER (accessed 2026-10-18; `results/w1_shear_primer/`)
+- **PRIMER** (JWST GO 1837, PI Dunlop) NIRCam F200W level-3 products, MAST: `jw01837-c1001_t000`, `c1002_t000`
+  (UDS combined mosaics), `o003_t003`, `o004_t004` (COSMOS) `_cat.ecsv`; sha256 pins in `scripts/w1_stage_inputs.py`.
+  Footprints from the MAST CAOM `s_region` (`footprints_*.json`). The `_i2d.fits` files are 31–69 GB (HTTP
+  Content-Length, not stored).
+- **DJA v7** photo-z tarballs for PRIMER (planned, not fetched yet): `primer-uds-north-grizli-v7.2`,
+  `primer-uds-south-grizli-v7.2`, `primer-cosmos-east-grizli-v7.4`, `primer-cosmos-west-grizli-v7.4`
+  (`https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/<stem>-fix.photoz.tar.gz`).

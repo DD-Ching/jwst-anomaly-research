@@ -26,6 +26,8 @@ MAST = "https://mast.stsci.edu/api/v0/invoke"
 PIX_ARCMIN = 0.02  # raster step (1.2"; ASSUMPTION)
 HALF_ARCMIN = 25.0  # grid half-width around the footprints' mean centre
 MIN_OVERLAP = 0.05  # arcmin²; smaller overlaps are not listed
+TILE_HALF = 140.0  # arcsec; half-diagonal 198" stays inside the screen's 200" radius (ASSUMPTION)
+TILE_MIN_FRAC = 0.3  # a tile is kept when its pointing covers >= this share (ASSUMPTION)
 MAX_OVERLAP = 0.6  # arcmin²; pairwise rule of results/w1_shear_goodsn/PLAN.md (ASSUMPTION)
 
 
@@ -59,6 +61,11 @@ def polygons(s_region: str) -> list[np.ndarray]:
     return out
 
 
+def first_ra(s_region: str) -> float:
+    """RA (deg) of the first vertex of an STC-S region."""
+    return float(polygons(s_region)[0][0, 0])
+
+
 def drop_overlapping(overlap: dict[str, float], max_overlap: float | None = None) -> list[str]:
     """Pointings to leave out so that no kept pair overlaps by more than ``max_overlap``: drop the
     pointing with the largest summed excess overlap, repeat (ties: name order)."""
@@ -76,8 +83,8 @@ def drop_overlapping(overlap: dict[str, float], max_overlap: float | None = None
     return sorted(dropped)
 
 
-def footprints(rows: list[dict]) -> dict:
-    """Area per pointing, pairwise overlaps and footprint centroids (degrees)."""
+def _masks(rows: list[dict]):
+    """Rasterised footprints: (grid offsets in arcmin, {name: bool mask}, ra0, de0, cos dec0)."""
     polys = {r["obs_id"].split("_nircam")[0]: polygons(r["s_region"]) for r in rows}
     allv = np.vstack([p for ps in polys.values() for p in ps])
     ra0 = allv[0, 0]
@@ -98,6 +105,12 @@ def footprints(rows: list[dict]) -> dict:
             box = np.all((grid > xy.min(0) - PIX_ARCMIN) & (grid < xy.max(0) + PIX_ARCMIN), 1)
             m[box] |= MplPath(xy).contains_points(grid[box])
         masks[name] = m
+    return grid, masks, ra0, de0, cosd
+
+
+def footprints(rows: list[dict]) -> dict:
+    """Area per pointing, pairwise overlaps and footprint centroids (degrees)."""
+    grid, masks, ra0, de0, cosd = _masks(rows)
     names = sorted(masks)
     px2 = PIX_ARCMIN**2
     overlap = {}
@@ -124,13 +137,68 @@ def footprints(rows: list[dict]) -> dict:
     }
 
 
+def tile_grid(rows: list[dict], keep: list[str], half_arcsec: float, min_frac: float) -> list[dict]:
+    """Square tiles of half-width ``half_arcsec`` on one RA/Dec-aligned grid over the union of the
+    ``keep`` footprints (results/w1_shear_primer/PLAN.md). Each tile goes to the kept pointing that
+    covers most of it (ties: name order) and is listed when that share is >= ``min_frac``. Tiles do
+    not overlap, so no sky is screened twice; sky of a tile that only another pointing covers is
+    lost (conservative)."""
+    grid, masks, ra0, de0, cosd = _masks(rows)
+    masks = {k: masks[k] for k in sorted(keep)}
+    union = np.logical_or.reduce(list(masks.values()))
+    side = 2 * half_arcsec / 60.0  # arcmin
+    pts = grid[union]
+    x0, y0 = pts.min(0)
+    nx, ny = (np.ceil((pts.max(0) - pts.min(0)) / side).astype(int)) + 1
+    tiles = []
+    for ix in range(nx):
+        for iy in range(ny):
+            cx, cy = x0 + (ix + 0.5) * side, y0 + (iy + 0.5) * side
+            inside = (np.abs(grid[:, 0] - cx) <= side / 2) & (np.abs(grid[:, 1] - cy) <= side / 2)
+            n = inside.sum()
+            share = {k: float((m & inside).sum() / n) for k, m in masks.items()}
+            best = max(sorted(share), key=share.get)  # first maximum: name order
+            if share[best] >= min_frac:
+                tiles.append(
+                    {
+                        "tile": f"x{ix}y{iy}",
+                        "pointing": best,
+                        "centre": [
+                            round((ra0 + cx / 60 / cosd) % 360.0, 5),
+                            round(de0 + cy / 60, 5),
+                        ],
+                        "share": round(share[best], 3),
+                    }
+                )
+    return tiles
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--program", required=True)
     ap.add_argument("--filter", default="F200W")
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument(
+        "--ra-range",
+        nargs=2,
+        type=float,
+        metavar=("MIN", "MAX"),
+        help="keep pointings whose first vertex RA is in [MIN, MAX) deg (multi-field programs)",
+    )
+    ap.add_argument("--tile-keep", nargs="+", help="pointings to tile (large mosaics)")
+    ap.add_argument("--tile-half", type=float, default=TILE_HALF, help="tile half-width, arcsec")
+    ap.add_argument("--tile-min-frac", type=float, default=TILE_MIN_FRAC)
     args = ap.parse_args(argv)
-    res = footprints(query(args.program, args.filter))
+    rows = query(args.program, args.filter)
+    if args.ra_range:
+        rows = [r for r in rows if args.ra_range[0] <= first_ra(r["s_region"]) < args.ra_range[1]]
+    res = footprints(rows)
+    if args.tile_keep:
+        res["tiles"] = tile_grid(rows, args.tile_keep, args.tile_half, args.tile_min_frac)
+        res["assumptions"] |= {
+            "tile_half_arcsec": args.tile_half,
+            "tile_min_frac": args.tile_min_frac,
+        }
     args.out.write_text(json.dumps(res, indent=1) + "\n")
     print(json.dumps(res["overlap_arcmin2"], indent=1))
     return 0

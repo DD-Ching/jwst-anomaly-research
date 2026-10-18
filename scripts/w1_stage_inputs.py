@@ -133,6 +133,19 @@ CATALOG_SHA256 = {
     "jw01345-o071_t047_nircam_clear-f200w_cat.ecsv": (
         "c775b3cd3dcaaf3698bb4a1c6b97dc0696aaf63825836537d8833a82c4f1ff93"
     ),
+    # PRIMER F200W mosaics (results/w1_shear_primer/PLAN.md), as fetched 2026-10-18
+    "jw01837-c1001_t000_nircam_clear-f200w_cat.ecsv": (
+        "47197dcf1ff9f178546f2107aecf762313a04c2f08ea339bb9a8a38f4262b149"
+    ),
+    "jw01837-c1002_t000_nircam_clear-f200w_cat.ecsv": (
+        "561c5ed17ec3e389bee2fddfa51a7e90b8b9ea0f4620b81b455611f59cb86e39"
+    ),
+    "jw01837-o003_t003_nircam_clear-f200w_cat.ecsv": (
+        "dd2506dea9061a2a01cca2931cbc62bc97eb5addc945bee1855ac37432f229c3"
+    ),
+    "jw01837-o004_t004_nircam_clear-f200w_cat.ecsv": (
+        "368dba12e44905de7b12e7354802e6fa59bad48ee507b374e67ea31436d7b980"
+    ),
 }
 
 

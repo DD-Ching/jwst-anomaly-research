@@ -252,6 +252,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.4 (W1 shear in GOODS-N: plan, footprint choice, staging, gate P, streak masks, 36-job grid, flag vetting and sheet, volume combine) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 017BFTDU, 03:08–03:45Z (2026-10-18) |
 | 2026-W42 | ≈ 0.6 (W1 blank-field R image simulations, `results/w1_r_metacal/`) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01SnbR8J, 05:08–05:50Z (2026-10-18) |
 | 2026-W42 | ≈ 0.75 (W1 shear in CEERS: plan, footprint script, staging, gate P, streak masks, 10 screens, two flags vetted with sheet, 48-job grid, volume combine) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01ASLQCx, 04:08–05:00Z (2026-10-18) |
+| 2026-W42 | ≈ 0.4 (W1 shear in PRIMER: frozen plan, mosaic tiling, catalogue pins) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01RnsypG, 06:08–06:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
