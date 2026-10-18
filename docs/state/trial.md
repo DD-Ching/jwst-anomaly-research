@@ -264,6 +264,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.3 (`arcs` on RXC J0600: map survey, plan, two RELICS models, sheets; does not replicate) | — | — | 0.1 (orientation, claim, PR) | cloud routine 013yHurq, 17:08–17:40Z |
 | 2026-W42 | ≈ 0.3 (`arcs` on SPT0615: map/photo-z field survey incl. LAM atlas, plan, RELICS BPZ route, two RELICS models, sheets; no result) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01SmgqdA, 18:08–18:40Z |
 | 2026-W42 | ≈ 0.25 (`arcs` on MACS0308: plan, two RELICS models, RELICS BPZ, sheets; does not replicate) | — | — | 0.1 (orientation, claim, PR) | cloud routine 018BWoMp, 19:08–19:35Z |
+| 2026-W42 | ≈ 0.25 (Abell 370 halo fluxes: per-system rms gate, `halo_phot`, `fluxratios`, stamps) | — | — | 0.1 (orientation, claim, review, PR) | cloud routine 01StJeNF, 20:08–20:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

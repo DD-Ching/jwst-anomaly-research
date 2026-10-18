@@ -1,0 +1,60 @@
+{
+ "model": "abell370-canucs",
+ "photometry": "results/halo_phot/abell370/halo_phot.json (f444w, annulus)",
+ "thresholds": {
+  "match_arcsec": 0.3,
+  "offset_arcsec": [
+   0.0,
+   0.0
+  ],
+  "min_snr": 10.0,
+  "max_abs_mu": 20.0,
+  "outlier_mag": 0.75,
+  "colour_tol": 0.3,
+  "colour": [
+   "f150w",
+   "f444w"
+  ],
+  "max_npix": 20000,
+  "z_margin": 0.15,
+  "photoz": null,
+  "tension_sigma": 3.0,
+  "unstable_frac": 0.16
+ },
+ "n_images": 64,
+ "n_matched": 2,
+ "n_blended": 0,
+ "n_large_segment": 0,
+ "n_photoz_excluded": 0,
+ "flux_classes": {
+  "consistent": 2,
+  "flux_outlier": 0,
+  "untested": 62
+ },
+ "colour_classes": {
+  "consistent": 2,
+  "colour_outlier": 0,
+  "untested": 62
+ },
+ "tension_classes": {
+  "consistent": 0,
+  "flux_tension": 0,
+  "mu_unstable": 0,
+  "untested": 64
+ },
+ "chain": null,
+ "resid_model_err_median": null,
+ "sigma_sys": null,
+ "injection_recovery": null,
+ "flux_resid_mag": {
+  "n_images": 2,
+  "median_abs": 0.229,
+  "rms": 0.229
+ },
+ "colour_resid_mag": {
+  "n_images": 2,
+  "median_abs": 0.003,
+  "rms": 0.003
+ },
+ "flagged": []
+}

@@ -295,6 +295,40 @@ def has_image_list(name: str) -> bool:
     return "arcs.dat" in spec["files"] and spec.get("image_list_ok", True)
 
 
+GATE_MAX_RMS_ARCSEC = (
+    0.5  # per-system opening of a gated list: about macs0416-canucs' rms (ASSUMPTION)
+)
+
+
+def systems_passing_rms(imageplane: Table, max_rms: float = GATE_MAX_RMS_ARCSEC) -> list[str]:
+    """Systems of a ``validate`` image-plane table (``imageplane.ecsv``) whose every image is
+    solved (finite ``dtheta_arcsec``) and whose rms image-plane offset is <= ``max_rms`` arcsec.
+    Opens a list gated off as a whole (D-035 / D-044) for those systems only."""
+    sysid = np.asarray(imageplane["system"], str)
+    d = np.asarray(imageplane["dtheta_arcsec"], float)
+    out = []
+    for s in sorted(set(sysid)):
+        ds = d[sysid == s]
+        if np.all(np.isfinite(ds)) and np.sqrt(np.mean(ds**2)) <= max_rms:
+            out.append(s)
+    return out
+
+
+def gated_systems(name: str, imageplane: Path | None, max_rms: float) -> list[str] | None:
+    """None where ``name``'s image list is usable as a whole; else the systems that pass
+    :func:`systems_passing_rms` on ``imageplane`` (an error without one)."""
+    if has_image_list(name):
+        if imageplane is not None:
+            raise SystemExit(f"error: {name}: image list usable as a whole; drop --gate-imageplane")
+        return None
+    if imageplane is None or "arcs.dat" not in MODELS[name]["files"] or is_map_model(name):
+        raise SystemExit(
+            f"error: {name}: image list gated off (D-035 / D-044); pass --gate-imageplane "
+            "(validate's imageplane.ecsv) to use the systems that pass the per-system rms gate"
+        )
+    return systems_passing_rms(Table.read(imageplane, format="ascii.ecsv"), max_rms)
+
+
 def image_list(name: str, files: dict[str, Path], par) -> tuple[Table, dict[str, float]]:
     """The model's catalogued multiple images and its fixed system redshifts (``z_m_limit``;
     none for a map model, whose image list carries the redshifts it used, 0 = unknown)."""
@@ -2171,11 +2205,14 @@ def _resid_stats(r: np.ndarray) -> dict:
 
 
 def cmd_fluxratios(args) -> dict:
-    if not has_image_list(args.model) or is_map_model(args.model):
+    gated = not has_image_list(args.model) and args.gate_imageplane is not None
+    if is_map_model(args.model) or not (has_image_list(args.model) or gated):
         raise SystemExit(
             f"error: {args.model}: fluxratios needs a Lenstool model with a usable multiple-image "
-            "list (gated off by the image-plane rms gate of D-035 / D-044, or a map model)"
+            "list (gated off by the image-plane rms gate of D-035 / D-044 without "
+            "--gate-imageplane, or a map model)"
         )
+    keep = gated_systems(args.model, args.gate_imageplane, args.gate_max_rms)
     if (args.photometry is None) == (args.halo_phot is None):
         raise SystemExit("error: fluxratios takes exactly one of --photometry and --halo-phot")
     if args.mu_samples and "bayes" not in MODELS[args.model]:  # before any download
@@ -2184,6 +2221,8 @@ def cmd_fluxratios(args) -> dict:
     par = lensmodel.parse_lenstool_par(files["best.par"])
     model = lensmodel.LensModel.from_par(par)
     images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    if keep is not None:
+        images = images[np.isin(np.asarray(images["system"], str), keep)]
     colour = tuple(b.strip().lower() for b in args.colour.split(","))
     if len(colour) != 2:
         raise SystemExit("--colour takes two bands, e.g. f150w,f444w")
@@ -2334,6 +2373,8 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--halo-phot", type=Path, help="halo_phot.py JSON in place of --photometry")
     f.add_argument("--halo-band", default="f444w", help="--halo-phot band for the flux test")
     f.add_argument("--halo-route", choices=("medfilt", "annulus"), default="medfilt")
+    f.add_argument("--gate-imageplane", type=Path, help="validate imageplane.ecsv (gated lists)")
+    f.add_argument("--gate-max-rms", type=float, default=GATE_MAX_RMS_ARCSEC)
     f.add_argument("--colour", default="f150w,f444w", help="two bands for the colour test")
     f.add_argument("--aperture", type=int, default=1, help="DJA aperture index (1 = 0.5 arcsec)")
     f.add_argument("--match-arcsec", type=float, default=0.3)

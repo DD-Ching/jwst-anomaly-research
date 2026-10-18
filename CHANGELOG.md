@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: halo-subtracted flux ratios on Abell 370 (CANUCS, per-system rms gate): 2 images testable, no anomaly
+- **Why:** fifth cluster for the D-032 flux-ratio line (mission: flux ratios against published models). The four
+  usable Lenstool models (SMACS, El Gordo, Abell 2744, MACS0416) were done; `abell370-canucs`' list is gated off
+  (D-044). Plan frozen first (`results/halo_phot/abell370/PLAN.md`, with the pre-run deviation).
+- **New:** `lens_consistency.systems_passing_rms` / `gated_systems` and `--gate-imageplane` / `--gate-max-rms` on
+  `halo_phot.py` and `fluxratios` (+ tests): a gated list opens only for systems with every image solved and
+  image-plane rms ≤ 0.5″ (ASSUMPTION). Abell 370: 27 / 45 systems, 64 / 115 images.
+- **Result (derived):** 2 images tested (system 9; F150W and F444W), residuals 0.09–0.23 mag, no `flux_outlier`,
+  no colour outlier; `flux_tension` untested (too few images). Injections (simulated): a −1 mag change recovered
+  in 1 / 2 targets, +1 mag in 0 / 2. Stamps looked at. **No anomaly; almost no power** (D-032 addendum).
+- **Handoff:** the halo-flux line now covers five clusters; no further cluster has a usable Lenstool par + list.
+  More power needs a gate that keeps resolved images (a surface-brightness test, D-032) or new image-plane models.
+
 ## 2026-10-18: `arcs` on MACS J0308.9+2645 (RELICS maps, RELICS BPZ): the S1063 anti excess does not replicate (1 vs 0.31, P 0.27)
 - **Why:** next field of the S1063 replication tally (handoff of #346). Plan frozen first
   (`results/arcs/macs0308-relics/PLAN.md`); F200W catalogue from program 5293 o005 (1,578 s; chosen over 6882 o015 by
