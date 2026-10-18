@@ -87,6 +87,8 @@ def offset_arcsec(zout: Table, cat: Table) -> dict:
 
 def shift(zout: Table, off: dict) -> bool:
     """Apply the offset to the BPZ positions if either axis exceeds 0.1"; returns whether it did."""
+    if not off.get("n_pairs", 1) or not np.isfinite([off["dra_arcsec"], off["ddec_arcsec"]]).all():
+        raise SystemExit("error: no BPZ-JWST pairs within 1 arcsec; offset undefined")
     if max(abs(off["dra_arcsec"]), abs(off["ddec_arcsec"])) <= SHIFT_MIN_ARCSEC:
         return False
     zout["dec"] = zout["dec"] + off["ddec_arcsec"] / 3600

@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
@@ -66,3 +67,9 @@ def test_shift_ra_is_on_sky_arcsec():
     asp.shift(z, {"dra_arcsec": 0.3, "ddec_arcsec": 0.0})
     dra = (z["ra"] - ra0) * np.cos(np.radians(z["dec"])) * 3600
     assert np.allclose(dra, 0.3)
+
+
+def test_shift_refuses_undefined_offset():
+    z = asp.bpz_zout(_bpz())
+    with pytest.raises(SystemExit):
+        asp.shift(z, {"n_pairs": 0, "dra_arcsec": float("nan"), "ddec_arcsec": float("nan")})
