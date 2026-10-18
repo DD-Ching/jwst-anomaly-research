@@ -51,7 +51,7 @@ EDGE_MARGIN = (
 def configure(pix: int, vdir: str | None = None) -> None:
     """v4: another light-curve partition of the same order-4 pixel (independent validation). v5:
     ``vdir`` (e.g. "v5") writes the v4 method's outputs for the v1-v3 sample in its own folder."""
-    global LC_PIX, LC_PART, CACHE, SAMPLE, VDIR, VERSION
+    global LC_PIX, LC_PART, OBJ_PART, CACHE, SAMPLE, VDIR, VERSION, N_MAX
     if pix == 3839:
         if vdir:
             VDIR, VERSION = OUT / vdir, int(vdir.lstrip("v"))
@@ -59,9 +59,12 @@ def configure(pix: int, vdir: str | None = None) -> None:
     LC_PIX = pix
     LC_PART = LC_PART.replace("Npix=3839", f"Npix={pix}")
     CACHE = CACHE / str(pix)
-    VDIR = OUT / "v4"
+    VDIR = OUT / (vdir or "v4")
     SAMPLE = VDIR / "sample.json"
-    VERSION = 4
+    VERSION = int((vdir or "v4").lstrip("v"))
+    if pix // 4 != 959:  # v6: another sky area; objects from the order-4 parent pixel
+        OBJ_PART = OBJ_PART.replace("Npix=959", f"Npix={pix // 4}")
+        N_MAX = N_MAX6
 
 
 def oid_quad(oid: int) -> tuple[int, int, int]:
@@ -112,6 +115,8 @@ ISO_RADIUS = 5.0  # arcsec
 ISO_DMAG = 2.5
 GROUP_RADIUS = 1.5  # arcsec
 N_MAX = 1000
+N_MAX6 = 5000  # v6: up to 5,000 groups, split into calibration and search halves
+SPLIT6 = "v6"  # v6 split salt: search if crc32("v6:" + key) is even, else calibration
 SEED = 7
 COMP_MAG = (14.0, 18.0)
 # plan sections 3, 5, 6
@@ -226,6 +231,8 @@ def select(obj, old=None) -> tuple[list[dict], dict]:
     groups = [groups[k] for k in sorted(pick)]
     for g in groups:
         g["holdout"] = holdout(g["key"]) if VERSION < 4 else False  # v4: all are validation
+        if VERSION >= 6:  # v6: "holdout" is the search group, the rest the calibration group
+            g["holdout"] = zlib.crc32(f"{SPLIT6}:{int(g['key'])}".encode()) % 2 == 0
     info = {
         "objects_in_area": int(len(obj)),
         "r_band_passing_cuts": int(ok.sum()),
@@ -250,20 +257,26 @@ def stage_sample(_a) -> None:
     if VERSION >= 4:
         old = [(g["ra"], g["dec"]) for g in json.loads((OUT / "sample.json").read_text())["groups"]]
     groups, info = select(obj, old)
+    if VERSION >= 6:
+        info["calibration_groups"] = int(sum(not g["holdout"] for g in groups))
+        info["search_groups"] = int(sum(g["holdout"] for g in groups))
     info["read_s"] = round(time.time() - t0, 1)
     info["lc_partition"] = LC_PART
     SAMPLE.parent.mkdir(parents=True, exist_ok=True)
     SAMPLE.write_text(
         json.dumps({"label": "derived; plan section 4", "info": info, "groups": groups}) + "\n"
     )
-    n = save_comparisons(obj)
+    excl = {m for g in groups for m in g["members"]} if VERSION >= 6 else set()
+    n = save_comparisons(obj, excl)
     print(json.dumps(info), n)
 
 
-def save_comparisons(obj) -> int:
-    """Comparison stars for coverage: all objects in the area in the comparison magnitude range."""
+def save_comparisons(obj, exclude=frozenset()) -> int:
+    """Comparison stars for coverage: all objects in the area in the comparison magnitude range
+    (v6: the control group, i.e. without any calibration or search group member)."""
     comp = obj[in_partition(obj["ra"].to_numpy(), obj["dec"].to_numpy())]
     comp = comp[comp["refmag"].between(*COMP_MAG) & (comp["transient"] == 0)]
+    comp = comp[~comp["oid"].isin(list(exclude))]
     CACHE.mkdir(parents=True, exist_ok=True)
     np.save(CACHE / "comparison_oids.npy", comp["oid"].to_numpy())
     return len(comp)
@@ -612,9 +625,34 @@ def screen(s, other, cov, dimfrac_override=None):
 
 
 def context(groups_half):
+    """Rows and coverage. v6: only the control group and the members of ``groups_half`` are kept
+    (the search group is never loaded during calibration); a usage record is appended to
+    ``VDIR / "source_usage.jsonl"``."""
     rows = load_rows()
     comp = set(np.load(CACHE / "comparison_oids.npy").tolist())
     members = {m for g in json.loads(SAMPLE.read_text())["groups"] for m in g["members"]}
+    if VERSION >= 6:
+        if groups_half is None:  # every group (only after the validation passed; logged)
+            groups_half = json.loads(SAMPLE.read_text())["groups"]
+        use = {m for g in groups_half for m in g["members"]}
+        rows = {o: r for o, r in rows.items() if o in comp or o in use}
+        search = {
+            m
+            for g in json.loads(SAMPLE.read_text())["groups"]
+            if g["holdout"]
+            for m in g["members"]
+        }
+        rec = {
+            "stage": sys.argv[1] if len(sys.argv) > 1 else "?",
+            "groups": len(groups_half),
+            "search_groups_in_use": int(sum(g["holdout"] for g in groups_half)),
+            "rows_loaded": len(rows),
+            "control_rows": int(sum(o in comp for o in rows)),
+            "search_member_rows": int(sum(o in search for o in rows)),
+        }
+        VDIR.mkdir(parents=True, exist_ok=True)
+        with open(VDIR / "source_usage.jsonl", "a") as fh:
+            fh.write(json.dumps(rec) + "\n")
     cov = coverage(rows, comp, members)
     return rows, cov
 
@@ -710,10 +748,14 @@ def stage_inject(a) -> None:
         for te in (3.0, 10.0, 30.0, 100.0)
     ]
     for c, (rho, blend, te) in enumerate(cells):
+        if a.cells == "calibrated" and (te == 3.0 or (rho == 0.1 and te == 100.0)):
+            continue  # v6: only the 10 cells that reached 0.5 in v4 (seeds keep their cell index)
         rng = np.random.default_rng(1100 + c)
         rec = flag = 0
+        used = set()
         for _ in range(n):
             g, s, o, base = carriers[rng.integers(len(carriers))]
+            used.add(g["key"])
             t = np.array([x[0] for x in s])
             t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
             half = te * np.sqrt(4 - u0**2)
@@ -732,12 +774,15 @@ def stage_inject(a) -> None:
         res["w3"].append(
             {"rho": rho, "blend": blend, "tE": te, "n": n, "flagged": flag, "recovered": rec}
         )
+        res["w3"][-1]["distinct_stars"] = len(used)
         print(res["w3"][-1], flush=True)
     for kk, kind in enumerate(("eclipse", "fade", "pspl", "common")):
         rng = np.random.default_rng(1200 + kk)
         flag = passed = 0
+        used = set()
         for _ in range(n):
             g, s, o, base = carriers[rng.integers(len(carriers))]
+            used.add(g["key"])
             t = np.array([x[0] for x in s])
             over = None
             if kind == "common":
@@ -754,9 +799,10 @@ def stage_inject(a) -> None:
             flag += bool(sc)
             passed += any(x["pass"] for x in sc)
         res["controls"][kind] = {"n": n, "flagged": flag, "passed_vetting": passed}
+        res["controls"][kind]["distinct_stars"] = len(used)
         print(kind, res["controls"][kind], flush=True)
     VDIR.mkdir(parents=True, exist_ok=True)
-    name = "injections_dev_v3.json" if VERSION < 4 else "injections_v4.json"
+    name = "injections_dev_v3.json" if VERSION < 4 else f"injections_v{VERSION}.json"
     (VDIR / name).write_text(json.dumps({"label": "simulated", **res}, indent=1) + "\n")
 
 
@@ -818,7 +864,14 @@ def stage_exposures(_a) -> None:
         url = "https://irsa.ipac.caltech.edu/TAP/sync?" + urllib.parse.urlencode(
             {"QUERY": sql, "FORMAT": "csv"}
         )
-        raw = urllib.request.urlopen(url, timeout=300).read()
+        for k in range(4):  # v6: bounded retry on resets (TAP, 2026-10-18)
+            try:
+                raw = urllib.request.urlopen(url, timeout=300).read()
+                break
+            except OSError:
+                if k == 3:
+                    raise
+                time.sleep(10 * (k + 1))
         nbytes += len(raw)
         parts.append(Table.read(io.BytesIO(raw), format="csv"))
     expo = vstack(parts)
@@ -837,11 +890,14 @@ def main(argv=None) -> int:
     )
     ap.add_argument("--half", choices=["dev", "holdout", "all"], default="dev")
     ap.add_argument("--n", type=int, default=200)
+    ap.add_argument("--cells", choices=["all", "calibrated"], default="all")
     ap.add_argument("--pix", type=int, default=3839, help="light-curve partition (v4: 3838)")
     ap.add_argument("--vdir", default=None, help="output folder for the v1-v3 sample (v5)")
     a = ap.parse_args(argv)
-    if a.vdir and a.stage == "sample":
+    if a.vdir and a.stage == "sample" and a.pix == 3839:
         ap.error("--vdir reuses the v1-v3 sample; the sample stage would overwrite it")
+    if a.pix not in (3838, 3839) and not a.vdir:
+        ap.error("another partition needs --vdir (v4 outputs would be overwritten)")
     configure(a.pix, a.vdir)
     fn = {
         "sample": stage_sample,

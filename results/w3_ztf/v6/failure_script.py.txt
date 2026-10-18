@@ -1,0 +1,45 @@
+# v6 post hoc failure diagnostic on the calibration group only (no search-group source is loaded):
+# cadence of the carriers and, for one calibrated cell, how many series epochs fall inside the umbra of the
+# injections that were not flagged. Same seeds and draws as stage_inject. Usage: python failure_script.py.txt <out json>
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        carriers.append((g, s, o, {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}))
+lens = np.array([len(c[1]) for c in carriers])
+nights = np.array([len(set(np.floor(np.array([x[0] for x in c[1]]) + 0.2).astype(int))) for c in carriers])
+span = np.array([c[1][-1][0] - c[1][0][0] for c in carriers])
+out = {'label': 'derived; post hoc failure diagnostic (calibration group only; simulated draws)',
+       'carriers': len(carriers), 'r_epochs_per_carrier_p10_p50_p90': np.percentile(lens, [10, 50, 90]).tolist(),
+       'r_nights_per_carrier_p10_p50_p90': np.percentile(nights, [10, 50, 90]).tolist(),
+       'span_days_median': float(np.median(span)),
+       'r_nights_per_year_median': float(np.median(nights / (span / 365.25)))}
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+for c, (rho, blend, te) in enumerate(cells):
+    if (rho, blend, te) not in ((0.01, 1.0, 30.0), (0.01, 1.0, 100.0)):
+        continue
+    rng = np.random.default_rng(1100 + c); nights_in = {'flagged': [], 'not_flagged': []}
+    for _ in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s]); t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        hit = [x for x in wz.screen(si, oi, cov) if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half and (x['t_start'], x['t_end']) not in base]
+        inside = (t >= t0 - half) & (t <= t0 + half)
+        n_in = len(set(np.floor(t[inside] + 0.2).astype(int)))
+        nights_in['flagged' if hit else 'not_flagged'].append(n_in)
+    out[f'rho{rho}_blend{blend:g}_tE{te:g}'] = {
+        k: {'n': len(v), 'umbra_nights_p50': float(np.median(v)) if v else None,
+            'with_fewer_than_3_umbra_nights': int(sum(x < 3 for x in v))} for k, v in nights_in.items()}
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out, indent=1))

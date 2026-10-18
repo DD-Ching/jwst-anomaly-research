@@ -1,0 +1,29 @@
+{
+ "label": "derived; v6 independence check (metadata only)",
+ "new_fields": [
+  671,
+  672,
+  1669,
+  1713,
+  1714
+ ],
+ "old_fields": [
+  826,
+  848,
+  1831,
+  1856,
+  1857
+ ],
+ "shared_fields": [],
+ "shared_field_quadrants": 0,
+ "new_center_galactic_b": 80.7,
+ "new_center_ra_dec": [
+  184.25,
+  32.76
+ ],
+ "groups": 1072,
+ "calibration_groups": 533,
+ "search_groups": 539,
+ "member_overlap_calibration_search": 0,
+ "shared": "ZTF camera, DR24 processing, 2018-2024 survey period, IRSA metadata and the same code"
+}
