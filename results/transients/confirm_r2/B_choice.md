@@ -44,3 +44,10 @@
     rejected at p < 0.01.
 - If the H1 power is < 0.5, a "not distinguished" outcome is uninformative and is reported that way.
 - Stop for B: 11:30Z.
+
+## Deviation (08:44Z session clock; after the control calibration, before any target ratio or simulation)
+- The 16″ pick gave 26 positions (23 after the entry/duplicate filter) but only 10 / 15 / 15 controls usable in
+  F090W / F150W / F200W (S/N ≥ 5 at both epochs; `g165_h002/calibration.json`), below the 20 the rule needs. The
+  frozen result for that set is "not decided" and is kept. As a labelled deviation, the 30″ pick (seed 2, same flux
+  range; `g165_h002/pos30.txt`) is run through the same filter, photometry, calibration and rule; its outcome is
+  reported as the deviation's result. No threshold changes.
