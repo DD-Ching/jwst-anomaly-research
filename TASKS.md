@@ -72,8 +72,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
    route), a generative pulse-model null.
 2. **S2 flat-kernel SN residuals** (D-070 + addendum): Pantheon+ × LS DR9 null (γ < 0.025), DES-SN5YR × LS DR9 null
    (γ < 0.019 mag per unit T/⟨T⟩, α = 2, one-sided 95 %, dilution- and chain-corrected); α = 1 is kernel-degenerate. The
-   lensing positive control is only ~1.7σ (DES) / ~2σ combined. Next: a deeper galaxy column (DES Y3 Gold or LS DR10
-   z < 22) so the control detects, and the full Pantheon+ / DES-SN5YR covariances.
+   lensing positive control is only ~1.7σ (DES) / ~2σ combined. ~~LS DR10 z < 22 column~~ done 2026-10-18, control
+   gate failed (γ_L 1.1σ, `results/s2_flat_kernel/dr10/RESULT.md`): **S2 paused**. Reopen only with DES Y3 Gold or a
+   spec-z / deeper column, plus the full DES-SN5YR covariance.
 3. **S3 hybrid images** (D-072): COSMOGRAIL doubles null, sensitivity only r ≈ 0.4–2.4 (red quasar variability makes
    the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
 4. **System A rounds paused** (D-076: rounds 2–3 gave no testable survivor). Restart only with a new owner brief.

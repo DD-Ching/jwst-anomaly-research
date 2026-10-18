@@ -3927,6 +3927,12 @@ lensing control γ_L = −0.018 ± 0.011 (1.7σ, right sign). Rejected for this 
 second galaxy calibration; it is the next step because the control needs deeper galaxies). Revisit if: a deeper
 galaxy column is set up, or the full covariances change the errors by > 20 %.
 
+**Addendum 2 (2026-10-18, LS DR10 z < 22).** The deeper column the addendum asked for was tried under a frozen plan
+(`results/s2_flat_kernel/dr10/PLAN.md`): photo-z gate Q passed, positive-control gate C failed (γ_L = −0.0145 ±
+0.0129, 1.13σ, p 0.25; `results/s2_flat_kernel/dr10/RESULT.md`). Decision: S2 is paused; γ < 0.019 stays the quoted
+limit (the DR10 bound 0.0076 is not adopted without a detected control). Rejected: LS DR10 at z < 22 as the control
+column (the error grows faster than λ_L). Revisit if: DES Y3 Gold or a spec-z / deeper galaxy column is accessible.
+
 ## D-071 S1 burst twins in Fermi GBM: bcat HDU 2 light curves, multi-band max cross-correlation, chi2 twin test; null and limit (2026-10-09)
 
 **Decision.**

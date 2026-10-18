@@ -1146,6 +1146,9 @@ Exploration Program."
   paper reference is not recorded here (not verified this cycle).
 - Legacy Surveys DR9 Tractor + DR9 photometric redshifts (Data Lab TAP tables `ls_dr9.tractor`, `ls_dr9.photo_z`,
   joined on `ls_id`; https://www.legacysurvey.org/dr9/), batched box queries, accessed 2026-10-09 (D-070).
+- Legacy Surveys DR10 Tractor + DR10 photometric redshifts (Data Lab TAP tables `ls_dr10.tractor`,
+  `ls_dr10.photo_z`, joined on `ls_id`; https://www.legacysurvey.org/dr10/), same box queries, dereddened z < 22,
+  accessed 2026-10-18 (D-070 addendum 2).
 
 ## S1 burst twins: Fermi GBM (accessed 2026-10-09; D-071)
 
