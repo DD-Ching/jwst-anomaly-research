@@ -165,6 +165,7 @@ def test_stack_epsf_drops_size_outliers_and_gate_e():
 
 
 def test_psf_d_effective_image_matches_unit_flux():
+    pytest.importorskip("galsim")
     psf = _gauss_stamp(1.2)
     obj = m.psf_d_effective(psf / psf.sum())
     assert np.isclose(obj.flux, 1.0, atol=1e-6)
