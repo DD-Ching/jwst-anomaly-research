@@ -323,6 +323,8 @@ def run(
     half_arcsec: float = 3.0,
     inject_mags: tuple[float, ...] = (),
     workers: int | None = None,
+    gate_imageplane: Path | None = None,
+    gate_max_rms: float = lc.GATE_MAX_RMS_ARCSEC,
 ):
     """Measure and classify ``systems``' images. Each of ``inject_mags`` is an end-to-end
     injection: each image in turn is changed by that many mag (negative: brighter) with
@@ -330,8 +332,14 @@ def run(
     re-runs for it; the others keep their base measurements. Each record holds the target's class
     before and after, per band (``flux_outlier`` after = recovered; a target untested before was
     never testable and does not count as a miss). Returns ``(rows, injections)``."""
-    if not lc.has_image_list(model_name) or lc.is_map_model(model_name):
+    usable = lc.has_image_list(model_name)
+    if lc.is_map_model(model_name) or not (usable or gate_imageplane is not None):
         raise SystemExit(f"error: {model_name}: needs a Lenstool model with a usable image list")
+    keep = None if usable else lc.gated_systems(model_name, gate_imageplane, gate_max_rms)
+    if keep is not None and set(systems) - set(keep):
+        raise SystemExit(
+            f"error: systems fail the per-system rms gate: {sorted(set(systems) - set(keep))}"
+        )
     known = sorted(set(PSF_FWHM_ARCSEC) & set(MIN_AXIS_RATIO))
     missing = [b for b in bands if b not in known]
     if missing:
@@ -412,17 +420,28 @@ def main(argv=None) -> int:
         help="end-to-end injection per image, mag (repeatable; negative = brighter)",
     )
     ap.add_argument("--workers", type=int, default=None)
+    ap.add_argument("--gate-imageplane", type=Path, help="validate imageplane.ecsv (gated lists)")
+    ap.add_argument("--gate-max-rms", type=float, default=lc.GATE_MAX_RMS_ARCSEC)
     args = ap.parse_args(argv)
     bands = {k.strip().lower(): v for k, v in (b.split("=", 1) for b in args.band)}
     systems = [s.strip() for s in args.systems.split(",") if s.strip()]
     rows, injections = run(
-        args.model, systems, bands, inject_mags=tuple(args.inject_mag), workers=args.workers
+        args.model,
+        systems,
+        bands,
+        inject_mags=tuple(args.inject_mag),
+        workers=args.workers,
+        gate_imageplane=args.gate_imageplane,
+        gate_max_rms=args.gate_max_rms,
     )
     clean = [{k: (lc._r(v, 3) if isinstance(v, float) else v) for k, v in r.items()} for r in rows]
     summary = {
         "model": args.model,
         "provenance": "derived (injections: simulated)",
         "bands": bands,
+        "system_gate": None
+        if args.gate_imageplane is None
+        else {"imageplane": str(args.gate_imageplane), "max_rms_arcsec": args.gate_max_rms},
         "assumptions": {
             "filter_arcsec": FILTER_ARCSEC,
             "r_ap_arcsec": R_AP_ARCSEC,

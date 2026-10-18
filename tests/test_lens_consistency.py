@@ -967,3 +967,22 @@ def test_validate_refuses_plane_on_a_map_model(monkeypatch):
     monkeypatch.setattr(lc, "cmd_validate_maps", no_io)
     with pytest.raises(SystemExit, match="map model"):
         lc.cmd_validate(Namespace(model="toymap", plane=["g=0.2"]))
+
+
+def test_systems_passing_rms_needs_every_image_solved_and_low_rms():
+    from astropy.table import Table
+
+    t = Table(
+        {
+            "system": ["1", "1", "2", "2", "3", "3"],
+            "dtheta_arcsec": [0.2, 0.3, 0.1, np.nan, 0.6, 0.6],
+        }
+    )
+    assert lc.systems_passing_rms(t, 0.5) == ["1"]
+    assert lc.systems_passing_rms(t, 0.6) == ["1", "3"]
+
+
+def test_gated_systems_none_for_usable_list_and_error_without_table():
+    assert lc.gated_systems("macs0416-canucs", None, 0.5) is None
+    with pytest.raises(SystemExit):
+        lc.gated_systems("abell370-canucs", None, 0.5)
