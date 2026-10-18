@@ -1,0 +1,25 @@
+# #304 full-rule function, unchanged: artifact stays; real change needs S-peak offset <= 0.1 arcsec (post hoc ASSUMPTION
+# of #304); no significant change needs |z| < 3 in every band over all covering mosaics; else undetermined.
+# Usage: python final_classes.py <review dir> <batch tag>
+import json, sys
+R, TAG = sys.argv[1], sys.argv[2]
+rev = json.load(open(R + '/review.json'))['reviewed']
+chk = json.load(open(R + '/post_review_checks.json'))['entries']
+SKY = 0.1
+def final(coded, offset, zall):
+    if coded.startswith('artifact'):
+        return coded
+    big = [b for b, (z, *_) in zall.items() if abs(z) >= 3]
+    if coded == 'real change':
+        return 'real change' if offset <= SKY else 'undetermined (not sky-fixed: S peaks %.2f arcsec apart)' % offset
+    if coded == 'no significant change':
+        return coded if not big else 'undetermined (>= 3 sigma in other mosaics: %s)' % ','.join(big)
+    return coded
+out = {'label': 'derived; full rule of the #296 post-review checks applied by function (#304): artifact stays; real change needs S-peak offset <= 0.1 arcsec (post hoc ASSUMPTION of #304); no significant change needs |z| < 3 in every band over all covering mosaics; else undetermined', 'sky_fixed_arcsec': SKY, 'entries': []}
+for e in rev:
+    k = f"{e['box_id']}:{e['hit_id']}"; c = chk[k]
+    f = final(e['class'], c['S_peak_offset_F150W_F444W_arcsec'], c['max_pairwise_z_by_band_all_mosaics'])
+    name = f"{TAG}-{e['box_id'].rsplit('_', 1)[0]}-box{e['box_id'].rsplit('_', 1)[1]}-{e['hit_id']} ({e['ra']:.6f}, {e['dec']:+.6f})"
+    out['entries'].append({'name': name, 'key': k, 'rank': e['rank'], 'box_status': e['box_status'], 'coded': e['class'], 'final': f, 'z_search': e['z'], 'offset_arcsec': c['S_peak_offset_F150W_F444W_arcsec']})
+    print(e['rank'], name, e['box_status'], '|', f)
+json.dump(out, open(R + '/final_classes.json', 'w'), indent=1); open(R + '/final_classes.json', 'a').write('\n')
