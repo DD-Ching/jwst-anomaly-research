@@ -35,3 +35,6 @@ Positions and mosaics from `results/transients/batch_venus3/boxes/review/lightcu
 
 ## Stop
 - 02:30Z: no new checks; 02:51Z stop.
+
+## Deviation (00:54Z, recorded before any compare result)
+- The compact-source pick for h003 returned 16 controls (< 20). Fallback fixed before any comparison: the same `pick` with `--half-arcsec 30` (other settings unchanged). The 16-control result is reported as not decided.
