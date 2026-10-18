@@ -1,0 +1,22 @@
+# v6 independence of the new sky area from v1-v5 (metadata only). Usage: python independence_script.py.txt <out json>
+import json, sys
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+new = json.load(open('results/w3_ztf/v6/sample.json'))
+old = json.load(open('results/w3_ztf/sample.json'))['groups'] + json.load(open('results/w3_ztf/v4/sample.json'))['groups']
+fq = lambda gs: {wz.oid_quad(m)[:2] for g in gs for m in g['members']}
+nf, of = fq(new['groups']), fq(old)
+cal = [g for g in new['groups'] if not g['holdout']]; srch = [g for g in new['groups'] if g['holdout']]
+res = {
+    'label': 'derived; v6 independence check (metadata only)',
+    'new_fields': sorted({f for f, _ in nf}), 'old_fields': sorted({f for f, _ in of}),
+    'shared_fields': sorted({f for f, _ in nf} & {f for f, _ in of}),
+    'shared_field_quadrants': len(nf & of),
+    'new_center_ra_dec': [round(sum(g['ra'] for g in new['groups']) / len(new['groups']), 2),
+                          round(sum(g['dec'] for g in new['groups']) / len(new['groups']), 2)],
+    'groups': len(new['groups']), 'calibration_groups': len(cal), 'search_groups': len(srch),
+    'member_overlap_calibration_search': len({m for g in cal for m in g['members']} & {m for g in srch for m in g['members']}),
+    'shared': 'ZTF camera, DR24 processing, 2018-2024 survey period, IRSA metadata and the same code',
+}
+json.dump(res, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(res)

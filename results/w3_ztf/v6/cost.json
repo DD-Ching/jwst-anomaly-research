@@ -1,0 +1,10 @@
+{
+ "label": "derived; compressed bytes of the columns read, from parquet metadata (computed before reading light curves)",
+ "lc_partition": "ztf_dr24_lc-hats Norder=5 Npix=7134 part0.snappy.parquet",
+ "lc_columns_read": 7,
+ "lc_compressed_mb": 299.9,
+ "objects_partition": "ztf_dr24_objects-hats Norder=4 Npix=1783 part0.snappy.parquet",
+ "objects_columns_read": 11,
+ "objects_compressed_mb": 86.8,
+ "total_mb": 386.7
+}
