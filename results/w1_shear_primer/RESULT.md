@@ -55,7 +55,19 @@ Plan check ("what would change the plan"):
 - the PRIMER tiles add 71 % to V_eff at 2 × 10¹³ M☉ (more than 20 %).
 
 ## Responsivity sensitivity (`r_sensitivity.json`, Z = 0.3, sixteen tiles)
-R_SENS_PLACEHOLDER
+Injections at Z = 0.3 repeated with `--fixed-r 0.231` (`summaries_r0.231/`):
+
+| Mass (M☉) | R = 0.414 | R = 0.231 | ratio |
+|---|---|---|---|
+| 2 × 10¹² | 68 | 19 | 0.279 |
+| 8 × 10¹² | 320 | 49 | 0.153 |
+| 2 × 10¹³ | 638 | 116 | 0.182 |
+
+Per tile and mass the ratio spans 0.0–0.667 (47 cells with a non-zero adopted count). **As for GOODS-N and CEERS,
+the PRIMER contribution depends strongly on R.** A forty-field limit at R = 0.231 was not computed (only Z = 0.3 was
+re-run, as the plan says); with these ratios the PRIMER V_eff would fall well below its R = 0.414 value, so the
+sub-Takahashi & Asada reading holds only if R ≳ 0.414 (D-101 supports that for blank fields; not shown for PRIMER
+itself).
 
 ## Limitations
 - The comparison depends on R = 0.414, borrowed from a cluster fit in another program (D-099). The image
