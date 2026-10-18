@@ -907,6 +907,10 @@ def epsf3(out: Path, uri=I2D) -> dict:
     return res
 
 
+def gate_e_failed(path: Path) -> bool:
+    return not json.loads(path.read_text())["gate_e_pass"]
+
+
 def load_epsf(path: Path, posthoc: bool = False) -> np.ndarray:
     """The ePSF image; refused when gate E failed unless ``posthoc`` (diagnostic, not the rule)."""
     d = json.loads(path.read_text())
@@ -982,12 +986,16 @@ def main(argv=None) -> int:
         return 0
     if a.cmd == "validate3":
         res = validate(v2=True, epsf=load_epsf(a.epsf, a.posthoc))
-        res["posthoc_gate_e_failed"] = a.posthoc
+        res["posthoc_gate_e_failed"] = gate_e_failed(a.epsf)
+        a.out.parent.mkdir(parents=True, exist_ok=True)
         a.out.write_text(json.dumps(res, indent=1) + "\n")
         print(json.dumps(res, indent=1))
         return 0
     if a.cmd == "real3":
-        res = real3(a.out, load_epsf(a.epsf, a.posthoc), workers=a.workers, posthoc=a.posthoc)
+        a.out.parent.mkdir(parents=True, exist_ok=True)
+        res = real3(
+            a.out, load_epsf(a.epsf, a.posthoc), workers=a.workers, posthoc=gate_e_failed(a.epsf)
+        )
         print(json.dumps({k: (v["R"], v["err"], v["n_tiles"], v["rule"])
                           for k, v in res["variants"].items()}, indent=1))  # fmt: skip
         return 0
