@@ -125,3 +125,34 @@ def test_v3_target_not_its_own_comparison_and_span():
     assert len(nd) == 3
     # dimfrac at the target gap: target excluded, star 9 (not yet in play) not missing
     assert all(x[7] == 0.0 for x in nd)
+
+
+def test_v3_infobits_and_state_priority():
+    expo, et, rows, star = _toy()
+    expo["infobits"][5] = 4
+    # star 0: a dim and a clean detection in exposure 7; the clean one wins, with its magnitude
+    t0 = np.append(et, et[7])
+    r0 = star(t0)
+    r0["m"][-1] = 18.0
+    rows[0] = r0
+    cov = wz.coverage(rows, set(range(10)), set(), expo)
+    c = cov[(1, 0, 2)]
+    assert not c["good"][5] and c["good"][6]
+    st, med, mag = c["states"][0]
+    assert st[7] == 1 and mag[7] == 16.0
+
+
+def test_v3_no_nd_outside_target_span():
+    expo, et, rows, star = _toy()
+    rows[50] = star(et[10:])  # the target's light curve starts at exposure 10
+    cov = wz.coverage(rows, set(range(10)), set(), expo)
+    s = wz.series({"members": [50]}, rows, cov, 2)
+    assert not any(x[2] for x in s) and min(x[0] for x in s) > et[10]
+
+
+def test_apply_dmag_noise_grows_with_depth():
+    s = [(float(i), 0.0, False, 4.0, Q, i, 16.0, 0.0) for i in range(400)]
+    rng = np.random.default_rng(0)
+    out = wz.apply_dmag(s, np.full(400, 3.0), rng=rng)
+    d = np.array([x[1] for x in out])
+    assert abs(d.mean() - 3.0) < 0.02 and 0.05 < d.std() < 0.2  # 1 mag above the limit: sigma ~0.13

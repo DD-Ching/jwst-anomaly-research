@@ -1,0 +1,33 @@
+# Plan v3 B, step 1-2 (2026-10-18): exposure choice for the image check (before any flux) and the IBE position
+# search that lists which images of those exposures contain each position. Run from the repository root with
+# JWST_ANOMALY_DATA set (uses the v3 cache).
+# Usage: python image_selection_script.py.txt <out ibe_meta.json>
+import io, json, sys, urllib.parse, urllib.request
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts'); import w3_ztf as wz
+groups = [g for g in json.loads((wz.OUT / 'sample.json').read_text())['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+pick = {826215400000661: (58650, 58670), 848201300006405: (58650, 58670), 826215100008147: (59100, 59115)}
+sel = {}
+for g in groups:
+    if g['key'] not in pick: continue
+    s = wz.series(g, rows, cov, 2); w0, w1 = pick[g['key']]
+    t = np.array([x[0] for x in s]); nd = np.array([x[2] for x in s])
+    inwin = [i for i in range(len(s)) if w0 <= t[i] <= w1 and nd[i]][:4]
+    before = [i for i in range(len(s)) if t[i] < t[inwin[0]] and not nd[i]][-2:]
+    after = [i for i in range(len(s)) if t[i] > t[inwin[-1]] and not nd[i]][:2]
+    chosen = before + inwin + after
+    sel[g['key']] = {'ra': g['ra'], 'dec': g['dec'], 'quad': s[0][4],
+                     'exposures': [{'expid': s[i][5], 't': s[i][0], 'nd': bool(s[i][2]), 'dmag': s[i][1]} for i in chosen]}
+json.dump({'label': 'derived; plan v3 B exposure choice (before any image flux)', 'sources': sel},
+          open('results/w3_ztf/v3/image_selection.json', 'w'), indent=1, default=float)
+meta = {}
+for k, v in sel.items():
+    ex = ','.join(str(e['expid']) for e in v['exposures'])
+    url = 'https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + urllib.parse.urlencode(
+        {'POS': f"{v['ra']},{v['dec']}", 'WHERE': f'expid IN ({ex})', 'ct': 'csv',
+         'COLUMNS': 'expid,field,ccdid,qid,filtercode,filefracday,obsjd,infobits,maglimit,seeing'})
+    t = Table.read(io.BytesIO(urllib.request.urlopen(url, timeout=60).read()), format='csv')
+    meta[str(k)] = [{c: (row[c].item() if hasattr(row[c], 'item') else str(row[c])) for c in t.colnames} for row in t]
+json.dump(meta, open(sys.argv[1], 'w'), default=str)

@@ -5170,8 +5170,8 @@ confining radiation at a throat is found.
   results, or ZTF forced photometry (fluxes at every epoch) replaces the detections-only release.
 - **Addendum 2026-10-18 (v3, `results/w3_ztf/v3/RESULT.md`):** exposures from IRSA's `ztf_current_meta_sci`, unique
   per-exposure counts, the target excluded and an in-play denominator (regression-tested). Survivors 9 → 8, recovery
-  at ρ 0.1, t_E 100 d 0.24 → 0.30; still failing. Images of 23 exposures (1.34 MB) of three survivors: the 11
-  catalogue non-detections are 6 no-coverage/invalid and 5 present-in-image (catalogue misses, incl. a star moving to
-  the neighbouring quadrant); 0 real drops. A catalogue non-detection is not a disappearance. Next, only as a new
+  at ρ 0.1, t_E 100 d 0.24 → 0.30; still failing. Images of 23 exposures (1.34 MB) of 3 of the 8 survivors: the 11
+  catalogue non-detections are 6 no-image/invalid/edge and 5 present in a neighbouring quadrant without an objectid;
+  0 real drops. For these, a catalogue non-detection was not a disappearance; the rest is not established. Next, only as a new
   independent validation: footprint containment from the metadata corners, cross-quadrant objectid merging, and IBE
   forced photometry of survivors' non-detections.

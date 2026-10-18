@@ -36,3 +36,12 @@ Development half only (already seen in v1/v2, so not blind); the holdout half st
   position); (2) observed but poor (seeing > 4″ or maglimit < 19.5); (3) source present in the image (flux ≥ 5σ and
   ≥ 50 % of the pre-window median) although the catalogue has no detection; (4) valid observation with flux below
   50 % of the pre-window median or below 5σ (a real dimming or below the local limit, stated with the flux and error).
+
+## Deviations (labelled; recorded after the run)
+- Cutouts were 120″, not 40″: the 40″ cutouts held no field star for the common-change check (all three sources are
+  isolated); the classification rule is unchanged.
+- The image windows were taken from the v2 survivors' non-detection runs (MJD 58655–58661 and 59106–59109); the v3
+  run's flagged runs start at 58657.41 and 59106.19.
+- After review (same day): `star_state` returns the magnitude it chose; a run epoch with no comparison star in play
+  now fails the common-mode test (was 0.0); an `exposures` stage writes the TAP query and a summary. Re-running
+  search and injections gave identical numbers.

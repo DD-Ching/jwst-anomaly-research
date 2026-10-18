@@ -271,14 +271,15 @@ def star_state(r, idx, n_exp):
     ok = r["f"] == 0
     med = float(np.median(r["m"][ok])) if ok.any() else np.nan
     st = np.zeros(n_exp, np.int8)
+    mag = np.full(n_exp, np.nan)
     rank = {0: 0, 3: 1, 2: 2, 1: 3}  # clean beats dim beats flagged beats none
     for k, m, good in zip(idx, r["m"], ok, strict=True):
         if k < 0:
             continue
         v = 3 if not good else (2 if m >= med + DIM_MAG else 1)
         if rank[v] > rank[int(st[k])]:
-            st[k] = v
-    return st, med
+            st[k], mag[k] = v, m
+    return st, med, mag
 
 
 def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
@@ -319,10 +320,10 @@ def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
             r = rows[o]
             idx = match_exposures(r["t"], et)
             unmatched += int((idx < 0).sum())
-            st, med = star_state(r, idx, n)
+            st, med, mag = star_state(r, idx, n)
             lo, hi = (r["t"].min(), r["t"].max()) if len(r["t"]) else (np.inf, -np.inf)
             play = (et > lo) & (et < hi)
-            states[o], spans[o] = (st, med), play
+            states[o], spans[o] = (st, med, mag), play
             if o in comp:
                 inplay += play
                 clean += play & (st == 1)
@@ -360,13 +361,13 @@ def series(group, rows, cov, filt):
         c = cov.get(q)
         if c is None or o not in c["states"]:
             continue
-        st, med = c["states"][o]
+        st, med, mag = c["states"][o]
         if (st == 1).sum() < 10:
             continue
         own_play = np.zeros(len(c["t"]), int)
         own_clean = np.zeros(len(c["t"]), int)
         for m in mem & c["comp"]:
-            sm, _ = c["states"][m]
+            sm = c["states"][m][0]
             own_play += c["spans"][m]
             own_clean += c["spans"][m] & (sm == 1)
         play_n = c["inplay"] - own_play
@@ -376,8 +377,10 @@ def series(group, rows, cov, filt):
             if st[k] == 3:
                 continue  # flagged detection: unknown
             nd = st[k] == 0
-            dm = 0.0 if nd else float(_mag_at(r, c["t"][k]) - med)
-            frac = float((play_n[k] - clean_n[k]) / play_n[k]) if play_n[k] > 0 else 0.0
+            dm = 0.0 if nd else float(mag[k] - med)  # the magnitude star_state chose
+            frac = (
+                float((play_n[k] - clean_n[k]) / play_n[k]) if play_n[k] > 0 else float("nan")
+            )  # unknown: fails
             out.append(
                 (
                     float(c["t"][k]),
@@ -392,13 +395,6 @@ def series(group, rows, cov, filt):
             )
     out.sort(key=lambda x: x[0])
     return out
-
-
-def _mag_at(r, t):
-    """Magnitude of the clean detection nearest to time t (the matched exposure)."""
-    ok = r["f"] == 0
-    i = np.argmin(np.abs(np.where(ok, r["t"], np.inf) - t))
-    return r["m"][i]
 
 
 # --------------------------------------------------------------------------------- pre-screen, vet
@@ -450,9 +446,9 @@ def vet(s, run, other, cov, dimfrac_override=None) -> dict:
     # 1 common mode
     fr = []
     for x in s[i : j + 1]:
-        k, q = x[5], x[4]
+        k = x[5]
         f = (dimfrac_override or {}).get(k)
-        fr.append(f if f is not None else (x[7] if len(x) > 7 else cov[q]["dimfrac"].get(k, 0.0)))
+        fr.append(f if f is not None else (x[7] if len(x) > 7 else 0.0))
     res["common_mode_frac"] = float(np.mean(fr))
     res["common_mode_ok"] = res["common_mode_frac"] < COMMON_FRAC
     # 2 sharp edges
@@ -568,7 +564,7 @@ def control_model(kind, t, rng):
 
 def stage_inject(a) -> None:
     """v2 (after review): independent seeds (W3 cell c: 1100 + c; controls 1200 + k), noise from the
-    epoch's magerr relation, a hit must overlap the umbra t0 +- tE sqrt(4 - u0^2) and must not be a
+    exposure's maglimit (v3), a hit must overlap the umbra t0 +- tE sqrt(4 - u0^2) and must not be a
     run already flagged in the uninjected carrier; controls use one event model in both filters.
     The common-mode control sets the comparison-star dim fraction to 0.5 at the injected epochs, so
     its rejection by the common-mode test holds by construction."""
@@ -636,6 +632,7 @@ def stage_inject(a) -> None:
             passed += any(x["pass"] for x in sc)
         res["controls"][kind] = {"n": n, "flagged": flag, "passed_vetting": passed}
         print(kind, res["controls"][kind], flush=True)
+    (OUT / "v3").mkdir(parents=True, exist_ok=True)
     (OUT / "v3" / "injections_dev_v3.json").write_text(
         json.dumps({"label": "simulated", **res}, indent=1) + "\n"
     )
@@ -665,6 +662,7 @@ def stage_search(a) -> None:
         "flagged_groups": len({x["key"] for x in out}),
         "passed_groups": sorted({x["key"] for x in out if x["pass"]}),
     }
+    (OUT / "v3").mkdir(parents=True, exist_ok=True)
     (OUT / "v3" / f"search_{a.half}_v3.json").write_text(
         json.dumps({"label": "derived", "summary": summ, "runs": out}, indent=1, default=float)
         + "\n"
@@ -672,15 +670,49 @@ def stage_search(a) -> None:
     print(json.dumps(summ))
 
 
+def stage_exposures(_a) -> None:
+    """Official exposure metadata (IRSA TAP ztf.ztf_current_meta_sci) for every quadrant of the
+    fetched light curves (v3); cached, with a small tracked summary."""
+    import io
+    import urllib.parse
+    import urllib.request
+
+    import pyarrow.parquet as pq
+    from astropy.table import Table, vstack
+
+    t = pq.read_table(CACHE / "lc_rows.parquet", columns=["fieldid", "rcid"])
+    quads = set(zip(t["fieldid"].to_numpy().tolist(), t["rcid"].to_numpy().tolist(), strict=True))
+    parts = []
+    for field in sorted({f for f, _ in quads}):
+        rc = sorted(r for f, r in quads if f == field)
+        cond = " OR ".join(f"(ccdid={r // 4 + 1} AND qid={r % 4 + 1})" for r in rc)
+        sql = (
+            "SELECT field,ccdid,qid,filtercode,obsjd,expid,infobits,maglimit,seeing "
+            f"FROM ztf.ztf_current_meta_sci WHERE field={field} AND ({cond})"
+        )
+        url = "https://irsa.ipac.caltech.edu/TAP/sync?" + urllib.parse.urlencode(
+            {"QUERY": sql, "FORMAT": "csv"}
+        )
+        raw = urllib.request.urlopen(url, timeout=300).read()
+        parts.append(Table.read(io.BytesIO(raw), format="csv"))
+    expo = vstack(parts)
+    expo.write(CACHE / "exposures.ecsv", overwrite=True)
+    (OUT / "v3").mkdir(parents=True, exist_ok=True)
+    summ = {"label": "observed (IRSA TAP)", "rows": len(expo), "quadrants": len(quads)}
+    (OUT / "v3" / "exposures_summary.json").write_text(json.dumps(summ) + "\n")
+    print(summ)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("stage", choices=["sample", "fetch", "inject", "search"])
+    ap.add_argument("stage", choices=["sample", "fetch", "exposures", "inject", "search"])
     ap.add_argument("--half", choices=["dev", "holdout"], default="dev")
     ap.add_argument("--n", type=int, default=200)
     a = ap.parse_args(argv)
     fn = {
         "sample": stage_sample,
         "fetch": stage_fetch,
+        "exposures": stage_exposures,
         "inject": stage_inject,
         "search": stage_search,
     }
