@@ -445,8 +445,9 @@ def real(out: Path, uri=I2D, workers=None) -> dict:
     return result
 
 
-def sheet(out: Path, tiles=((0, 1024), (1024, 1024)), uri=I2D) -> None:
-    """Contact sheet: original, metacal unsheared and 1p − 1m (plan settings) for ``tiles``."""
+def sheet(out: Path, tiles=((0, 1024), (1024, 1024)), uri=I2D, v2=False) -> None:
+    """Contact sheet: original, metacal unsheared and 1p − 1m (plan settings) for ``tiles``;
+    ``v2`` prepares tiles with ``prep_tile_v2`` (noise-filled mask)."""
     import matplotlib
 
     matplotlib.use("Agg")
@@ -460,9 +461,12 @@ def sheet(out: Path, tiles=((0, 1024), (1024, 1024)), uri=I2D) -> None:
             a = np.asarray(h["SCI"].section[y0 : y0 + TILE, x0 : x0 + TILE], float)
             w = np.asarray(h["WHT"].section[y0 : y0 + TILE, x0 : x0 + TILE], float)
             a = np.where(w > 0, a, np.nan)
-            good = np.isfinite(a)
-            _, med, sd = sigma_clipped_stats(a[good], sigma=3.0, maxiters=10)
-            b = np.where(good, a - med, 0.0)
+            if v2:
+                b, _, _, sd = prep_tile_v2(a, 1)
+            else:
+                good = np.isfinite(a)
+                _, med, sd = sigma_clipped_stats(a[good], sigma=3.0, maxiters=10)
+                b = np.where(good, a - med, 0.0)
             ims = metacal_set(b, sd, 1)
             panels = [(b, "original"), (ims["noshear"], "metacal noshear"),
                       (ims["1p"] - ims["1m"], "1p - 1m")]  # fmt: skip
@@ -685,12 +689,15 @@ def main(argv=None) -> int:
     ph.add_argument("--out", type=Path, required=True)
     sh = sub.add_parser("sheet")
     sh.add_argument("--out", type=Path, required=True)
+    sh.add_argument("--v2", action="store_true", help="PLAN_v2 tile preparation")
+    sh.add_argument("--tiles", type=int, nargs="+", default=None, help="y0 x0 pairs")
     a = p.parse_args(argv)
     if a.cmd == "posthoc":
         print(json.dumps(posthoc(a.r_real, a.out), indent=1))
         return 0
     if a.cmd == "sheet":
-        sheet(a.out)
+        t = list(zip(a.tiles[::2], a.tiles[1::2], strict=True)) if a.tiles else None
+        sheet(a.out, **({"tiles": t} if t else {}), v2=a.v2)
         return 0
     if a.cmd == "validate2":
         res = validate(v2=True)
