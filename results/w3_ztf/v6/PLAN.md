@@ -77,3 +77,8 @@ Both stages are authorized: if validation passes, the search group is searched o
   (both from parquet metadata). Total 386.7 MB, under the 1.5 GB cap. Cutouts ≤ 50 MB, logged separately.
 - Network: TAP batched per field and cached; 60 s timeouts for cutouts, ≤ 4 retries.
 - Computation stops by 21:40Z.
+
+## Deviations
+- After a TAP connection reset, `stage_exposures` gained a bounded retry (4 tries, 10–30 s back-off). This is
+  network handling only; the stage was re-run before any light-curve statistic.
+- Added after the failure: `failure_script.py.txt`, a post hoc diagnostic run on the calibration group only.

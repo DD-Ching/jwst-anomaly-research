@@ -73,6 +73,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   MOA gb13 (#145), S1063 spectroscopy (116.28VK.001). Remaining TASKS items are optional or low-value (W1 1 × 10¹²
   M☉ grid ≈ 30–45× T&A; G-dependent external spike cap). No new search was started.
 
+## 2026-10-18: W3 ZTF v6: cross-sky validation failed (10 of 10 cells below 0.5); search group not read
+- New area Npix 7134 (RA 184, Dec +33), chosen by a metadata rule; no ZTF field shared with v1–v5. Sets were fixed
+  before reading: 533 calibration groups, 539 search groups, 5,591 control objects (`results/w3_ztf/v6/PLAN.md`).
+- The 10 calibrated cells recover 48–90/200 (0.24–0.45; 0.60–0.87 in v4). Controls pass vetting in ≤ 8/200. Real
+  calibration light curves give 0 survivors. **Failed**, so the round stopped. The search group was never loaded
+  (`source_usage.jsonl`).
+- Post hoc: at ρ 0.01, t_E 30 d, 82 of 112 unflagged injections have fewer than 3 nights in the umbra (median 54.8
+  nights per year here). At t_E 100 d, 72 unflagged injections with ≥ 3 umbra nights are unexplained.
+  Reads: 386.7 MB.
+- **Handoff:** the measured capability does not carry over to this area; route paused (`results/w3_ztf/v6/RESULT.md`).
+
 ## 2026-10-18: W3 ZTF v5: exploratory holdout search within the calibrated cells, 0 flags in 486 groups
 - #339's failed verdict stands. This is a narrower, exploratory search with the #339 code unchanged; the plan was
   frozen first (`results/w3_ztf/v5/PLAN.md`). Capability is stated for the 10 injection cells at ≥ 0.5 only.

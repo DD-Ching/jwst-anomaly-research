@@ -1,0 +1,40 @@
+{
+ "label": "derived; post hoc failure diagnostic (calibration group only; simulated draws)",
+ "carriers": 509,
+ "r_epochs_per_carrier_p10_p50_p90": [
+  439.8,
+  731.0,
+  1408.0
+ ],
+ "r_nights_per_carrier_p10_p50_p90": [
+  261.8,
+  411.0,
+  544.0
+ ],
+ "span_days_median": 2751.2876353330284,
+ "r_nights_per_year_median": 54.80817795887246,
+ "rho0.01_blend1_tE30": {
+  "flagged": {
+   "n": 88,
+   "umbra_nights_p50": 22.0,
+   "with_fewer_than_3_umbra_nights": 0
+  },
+  "not_flagged": {
+   "n": 112,
+   "umbra_nights_p50": 0.0,
+   "with_fewer_than_3_umbra_nights": 82
+  }
+ },
+ "rho0.01_blend1_tE100": {
+  "flagged": {
+   "n": 93,
+   "umbra_nights_p50": 74.0,
+   "with_fewer_than_3_umbra_nights": 0
+  },
+  "not_flagged": {
+   "n": 107,
+   "umbra_nights_p50": 6.0,
+   "with_fewer_than_3_umbra_nights": 35
+  }
+ }
+}

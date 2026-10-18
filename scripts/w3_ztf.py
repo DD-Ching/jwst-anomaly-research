@@ -862,7 +862,14 @@ def stage_exposures(_a) -> None:
         url = "https://irsa.ipac.caltech.edu/TAP/sync?" + urllib.parse.urlencode(
             {"QUERY": sql, "FORMAT": "csv"}
         )
-        raw = urllib.request.urlopen(url, timeout=300).read()
+        for k in range(4):  # v6: bounded retry on resets (TAP, 2026-10-18)
+            try:
+                raw = urllib.request.urlopen(url, timeout=300).read()
+                break
+            except OSError:
+                if k == 3:
+                    raise
+                time.sleep(10 * (k + 1))
         nbytes += len(raw)
         parts.append(Table.read(io.BytesIO(raw), format="csv"))
     expo = vstack(parts)

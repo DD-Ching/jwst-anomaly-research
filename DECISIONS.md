@@ -5190,6 +5190,10 @@ confining radiation at a throat is found.
   and the capability limited to the 10 cells at ≥ 0.5. 486 groups, 0 flags. The holdout was not strictly blind
   (aggregate comparison use in v1–v3). No abundance or limit. Revisit if: the owner authorizes another batch or a
   slow-edge vetting change.
+- **Addendum 2026-10-18 (v6, `results/w3_ztf/v6/RESULT.md`):** a cross-sky validation in Npix 7134 (fields
+  disjoint from v1–v5) fails: all 10 calibrated cells < 0.5 (48–90/200). The dominant loss at t_E 30 d is no
+  epochs in the umbra (post hoc). The v4 capability is area-specific. The search group was not read. Revisit if: the
+  owner wants capability conditioned on cadence (e.g. per-star umbra coverage), decided before new data are read.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
