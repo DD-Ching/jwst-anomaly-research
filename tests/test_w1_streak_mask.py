@@ -140,3 +140,38 @@ def test_find_trails_passes_the_threshold(monkeypatch):
     assert seen["threshold"] == 2.5 and not mask.any() and cat is None
     wsm.find_trails(np.zeros((4, 4)), processes=1)
     assert seen["threshold"] == wsm.MRT_THRESHOLD
+
+
+def test_segment_stripes_finds_a_faint_row_and_column():
+    rng = np.random.default_rng(3)
+    img = rng.normal(0.0, 1.0, (200, 240))
+    img[100:102, :] += 1.0  # faint row stripe: ~9 σ of an 80-pixel segment median
+    img[:, 50] += 1.5  # faint column stripe
+    img += np.linspace(0.0, 3.0, 200)[:, None]  # smooth gradient is detrended away
+    s = wsm.segment_stripes(img, 80)
+    assert s[100:102].all() and s[:, 50].sum() == 160
+    assert s[150, 120] == False  # noqa: E712
+    assert s.sum() <= 2 * 240 + 200 + 4 * 80
+
+
+def test_segment_stripes_needs_valid_pixels_and_drops_partial_segment():
+    img = np.random.default_rng(4).normal(0.0, 1.0, (100, 90))
+    img[40, :] += 3.0
+    img[40, :50] = np.nan  # 50 of the first 80 NaN: segment invalid
+    s = wsm.segment_stripes(img, 80)
+    assert not s[40, :80].any()
+    assert s[40, 80:].all() == False  # noqa: E712  (partial row segment 80-89 dropped)
+
+
+def test_to_mask_grid_is_block_or():
+    s = np.zeros((6, 6), bool)
+    s[3, 4] = True
+    m = wsm.to_mask_grid(s, (3, 3))
+    assert m.sum() == 1 and m[1, 2]
+
+
+def test_cost_ok_uses_rows_kept_after_the_veto():
+    old = {"screen": {"n_used_before_veto": 1000, "n_veto_used": 100}}
+    assert wsm.kept_rows(old) == 900
+    assert wsm.cost_ok({"screen": {"n_used_before_veto": 1000, "n_veto_used": 325}}, old)
+    assert not wsm.cost_ok({"screen": {"n_used_before_veto": 1000, "n_veto_used": 326}}, old)
