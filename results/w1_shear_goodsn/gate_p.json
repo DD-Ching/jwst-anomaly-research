@@ -1,0 +1,43 @@
+{
+ "provenance": "derived",
+ "plan": "results/w1_shear_goodsn/PLAN.md (gate P)",
+ "rule": "inject_shear.passes_gate_p: n_used_photoz >= 0.5 * n_used",
+ "fields": {
+  "goodsn-o001": {
+   "n_used": 2259,
+   "n_used_photoz": 1954,
+   "frac": 0.865,
+   "passed": true
+  },
+  "goodsn-o003": {
+   "n_used": 2329,
+   "n_used_photoz": 1817,
+   "frac": 0.78,
+   "passed": true
+  },
+  "goodsn-o004": {
+   "n_used": 3187,
+   "n_used_photoz": 2265,
+   "frac": 0.711,
+   "passed": true
+  },
+  "goodsn-o005": {
+   "n_used": 3234,
+   "n_used_photoz": 2308,
+   "frac": 0.714,
+   "passed": true
+  },
+  "goodsn-o009": {
+   "n_used": 2945,
+   "n_used_photoz": 646,
+   "frac": 0.219,
+   "passed": false
+  },
+  "goodsn-o010": {
+   "n_used": 2748,
+   "n_used_photoz": 49,
+   "frac": 0.018,
+   "passed": false
+  }
+ }
+}

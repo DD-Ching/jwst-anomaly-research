@@ -5076,7 +5076,25 @@ confining radiation at a throat is found.
 - **Revisit if:** a blank field has a shape catalogue of another kind (calibrate its R first), or a row/diagonal
   streak veto is frozen and run through injections (then macs0416-ncf and macs0417-ncf can enter the headline).
 
-## D-099 Same-source pairing: no model-free proposal step adopted; lens tools are pair testers, not pair finders (2026-10-18)
+## D-099 W1 in GOODS-N: R borrowed across programs, photo-z coverage gate; headline per D-098 (2026-10-18)
+- **Decision:** JADES 1181 F200W pointings run the D-098 blank-field screen with R = 0.414, the smallest F200W
+  cluster-fit R apart from MACS0647 (Abell 370; program 1181 has no cluster pointing to fit R on). A pointing enters
+  only if ≥ 50 % of its used rows have a photo-z match (gate P, `inject_shear.passes_gate_p`). The headline follows
+  D-098 (flagged pointings out, even when the frozen V1 ∪ V2 rule explains them).
+- **Alternatives rejected:** R = 0.231 (MACS0647; unexplained and nearly blind, kept as the sensitivity case); the
+  median cluster R (≈ 0.48; less conservative); the eastern pointings o009/o010 (photo-z share 0.22 / 0.02).
+- **Evidence:** `results/w1_shear_goodsn/RESULT.md`. Sixteen fields: n₉₅ < 1.82 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉
+  (1.82× Takahashi & Asada, from 2.35×); the two flags (o003, o004) sit on mosaic-edge artefacts and are explained
+  by V1 ∪ V2 (eighteen fields would give 1.54×). With R = 0.231 the GOODS-N recoveries drop to 0.21–0.26 of the
+  adopted ones (four-pointing totals at Z = 0.3).
+- **Revisit if:** a blank-field R calibration exists (e.g. image simulations or a shear-calibrated catalogue of the
+  same mosaics), or a photo-z catalogue covers o009/o010.
+- **Addendum (2026-10-18, CEERS):** the same rule applied to CEERS (program 1345, F200W, 2.8 ks; DJA v7.4 zout;
+  pointings with pairwise overlap ≤ 0.6 arcmin², o052 out). Ten pass gate P; o004 / o069 flags explained by V1 ∪ V2
+  and kept out. Twenty-four fields: n₉₅ < 1.09 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉ (1.09× T&A); R 0.231 keeps 0.19–0.28
+  of the CEERS recoveries (`results/w1_shear_ceers/RESULT.md`). The borrowed R now dominates the systematics.
+
+## D-100 Same-source pairing: no model-free proposal step adopted; lens tools are pair testers, not pair finders (2026-10-18)
 - **Decision:** the repository has no reliable model-free step that proposes which sources are images of one source
   (task 1). An identity-blind SED pairing at 2–60″ (`scripts/same_source_pairs.py`, reusing `orphan_pairs.match_table`)
   failed its frozen pass rule on Abell 2744; it is kept as a feasibility tool, not a search. lenstronomy, PyAutoLens and

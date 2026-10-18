@@ -1,0 +1,90 @@
+{
+ "field": "ceers-o069",
+ "plan": "results/w1_shear_more/PLAN.md addendum A",
+ "peak_radec": [
+  214.91713280366363,
+  52.839663333333334
+ ],
+ "b_max": 3.618219713205126,
+ "n_null": 200,
+ "stripe_columns_px": [
+  740,
+  741,
+  742,
+  743,
+  744,
+  745,
+  746,
+  747,
+  748
+ ],
+ "pixel_scale_arcsec": 0.031229794373160216,
+ "n_v1": 4,
+ "n_v2": 12,
+ "stripe_rows_px": [
+  459,
+  462,
+  463,
+  464,
+  465,
+  466,
+  467,
+  468,
+  469,
+  470,
+  471,
+  472,
+  474
+ ],
+ "n_v1r": 10,
+ "star": {
+  "ra": 214.91953651825688,
+  "dec": 52.84197024617074,
+  "mag": 21.8254591180956
+ },
+ "star_sep_from_peak_arcsec": 9.81290845968271,
+ "s_at_peak": {
+  "all": {
+   "s": 4.0696918989864255,
+   "p_rot": 0.02,
+   "n_used_field": 2998
+  },
+  "no_v1": {
+   "s": 4.144593785902879,
+   "p_rot": 0.01,
+   "n_used_field": 2994
+  },
+  "no_v2": {
+   "s": 1.7023568957142057,
+   "p_rot": 1.0,
+   "n_used_field": 2986
+  },
+  "no_v1_v2": {
+   "s": 1.8531187071001525,
+   "p_rot": 1.0,
+   "n_used_field": 2982
+  },
+  "no_v1r": {
+   "s": 1.0030837610073622,
+   "p_rot": 1.0,
+   "n_used_field": 2988
+  },
+  "no_v1_v1r_v2": {
+   "s": 1.2936646272752268,
+   "p_rot": 1.0,
+   "n_used_field": 2981
+  },
+  "control_v1r_rotated": {
+   "n_draws": 200,
+   "s_median": 3.811429507950726,
+   "frac_le_no_v1r": 0.055
+  }
+ },
+ "outcome": "explained by streak/spike contamination (screen-level)",
+ "outcome_post_hoc_with_rows": "explained by streak/spike contamination (screen-level)",
+ "provenance": {
+  "shapes": "observed",
+  "s_p": "derived",
+  "thresholds": "assumption"
+ }
+}
