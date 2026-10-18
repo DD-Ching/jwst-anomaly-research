@@ -2,11 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: MACS1423 h000 HST archive light curve: absent 181 d before, gone by +290 d; identity still open
+- `scripts/hst_forced.py` (HST counterpart of `hit_lightcurve.py`: S3 byte-range drizzled products, 0.2″ aperture,
+  local random-aperture errors, field peaks; `--offsets`) on 43 HST visits 2006–2024; visits registered to the
+  JWST 1208 F150W frame (labelled deviation: the host gradient made per-visit WCS offsets of up to 0.27″ look like
+  variability). Plan, result and light curve: `results/transients/macs1423_h000_hst/`.
+- **Result:** 5 new epochs (2022-02, 2022-08 before; 2023-08, 2023-12, 2024-04 after). No change at the position in any
+  same-instrument comparison: before, F435W/F606W 3σ < 19–41 nJy (−181 d, −380 d); after, F435W < 28 nJy (+180 d),
+  F110W < 59 / 58 nJy (+290 / +409 d). One episode of < ~470 observed days; a steadily bright long-lived source is
+  weakened; supernova types, other one-off transients and magnification of a faint persistent source are not
+  separated (no colours over time). No low-cost archive step remains for this object.
+- #332 wording narrowed: the achromaticity test is a band-consistency test under stated assumptions, not a general
+  supernova-versus-lensing classifier.
+
 ## 2026-10-18: Confirmation round 2: SMACS h005 within control scatter; an achromaticity test cannot decide G165 h002
 - **SMACS 1 h005 (`results/transients/confirm_r2/RESULT.md`):** the control-photometry stall was one MAST portal
   query per position hanging on an HTTP response; `hit_lightcurve.py --group-arcsec` shares one query. With 22
   controls (entry and duplicates removed) the decisive F150W tail is 0.591: consistent with matched-control scatter.
-- **Discriminating test (D-102):** achromaticity of B1-PLCKG165 h002's fade (intrinsic transient vs magnification by a
+- **Discriminating test (D-102):** band consistency (achromaticity, under stated assumptions; not a general classifier) of B1-PLCKG165 h002's fade (intrinsic transient vs magnification by a
   point mass, Ellis wormhole or negative-mass lens). Frozen rule: not decided (16″ pick: all bands < 20 usable
   controls; 30″ deviation: F090W 14 < 20). Simulated power against SN templates 0.15–0.62 (≤ 0.29 for type II), so
   the two epochs are weak for this question; paused until a calibrated bright-epoch repeat or a spectrum exists.

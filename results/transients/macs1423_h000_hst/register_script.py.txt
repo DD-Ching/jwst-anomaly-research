@@ -1,0 +1,32 @@
+# Registration of HST visits to the JWST 1208 F150W frame with field peaks (2026-10-18; PLAN deviation).
+# Usage: python register_script.py.txt <hst_forced.json of the unshifted run> <out offsets.json>
+import json, sys, math
+import numpy as np
+sys.path.insert(0, 'scripts')
+from arc_diff import read_box
+from hst_forced import find_peaks
+RA, DEC = 215.949099, 24.086948
+URI = 's3://stpubdata/jwst/public/jw01208/L3/t/o010/jw01208-o010_t005_nircam_clear-f150w_i2d.fits'
+b = read_box(URI, RA, DEC, 8.0)
+pk = find_peaks(b['sci'], b['scale'], 20.0, 60)
+jr, jd = b['wcs'].all_pix2world([p[0] for p in pk], [p[1] for p in pk], 0)
+rows = json.load(open(sys.argv[1]))['rows']
+c = math.cos(math.radians(DEC))
+offs, info = {}, {}
+for r in rows:
+    if 'error' in r: continue
+    d = []
+    for f in r['field']:
+        dx = (f['ra'] - jr) * c * 3600; dy = (f['dec'] - jd) * 3600
+        k = int(np.argmin(np.hypot(dx, dy)))
+        if math.hypot(dx[k], dy[k]) < 0.6: d.append((dx[k], dy[k]))
+    if len(d) >= 5:
+        d = np.array(d); med = np.median(d, axis=0)
+        offs[r['assoc']] = [float(med[0]), float(med[1])]
+        info[r['assoc']] = {'n': len(d), 'offset': offs[r['assoc']], 'mad': [float(1.4826 * np.median(np.abs(d[:, i] - med[i]))) for i in (0, 1)]}
+    else:
+        info[r['assoc']] = {'n': len(d), 'offset': None}
+json.dump(offs, open(sys.argv[2], 'w'), indent=1)
+json.dump({'label': 'derived; HST visit minus JWST 1208 F150W field-peak positions (arcsec, dRA cos dec, dDec)', 'jwst_peaks': len(pk), 'visits': info},
+          open(sys.argv[2].replace('.json', '_info.json'), 'w'), indent=1)
+for k, v in sorted(info.items()): print(k, v)

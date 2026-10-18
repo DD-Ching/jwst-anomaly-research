@@ -1538,3 +1538,6 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   https://doi.org/10.5281/zenodo.19439926. sncosmo 2.x (BSD-3, https://github.com/sncosmo/sncosmo; isolated venv,
   templates hsiao, nugent-sn2p/sn2l/sn1bc and NIRCam bandpasses fetched by sncosmo 2026-10-18) for
   `scripts/achromatic_test.py simulate`; not a project dependency.
+- MACS1423 h000 HST archive (queried 2026-10-18; `results/transients/macs1423_h000_hst/hst_obs.ecsv`): HST GO 16667
+  (ACS F435W/F606W 2022–2023), GO 17504 (WFC3 F110W/F606W/F814W 2023-12 – 2024-04), CLASH 12790 (2012–2013), 10493
+  (ACS F814W 2006); pipeline association `_drc`/`_drz` products read from s3://stpubdata/hst/public/.

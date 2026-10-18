@@ -35,3 +35,15 @@ Owner instruction 2026-10-18 (after #332). Budget 09:28Z → **11:28Z** (session
   limit on the decline; a detection is a late-time point (rate of decline). Colour from one filter pair at one epoch
   only. None of this decides lensing vs intrinsic.
 - Cap: if the S3 reads stall, a 60 s socket timeout and one retry; stop measurement at 10:45Z.
+
+## Deviation (09:36Z session clock; after the first measurement, before any interpretation is written)
+- The stamps (`stamps_hst.png`) show the target on the steep outskirts of the host, and visits of one epoch differ by
+  far more than their local errors (F110W 2024-04: 245 vs 492 nJy; F110W 2023-12 scatter 56 nJy vs ~21 local), with
+  the host shifted relative to the aperture between visits: per-visit WCS offsets, not variability.
+- Added step: each visit is registered to the JWST 1208 F150W frame (the frame of the target position) with compact
+  field sources: local maxima in the JWST box and in the HST visit box, matched within 0.6″; the median offset (≥ 5
+  matches, else the visit is flagged unregistered) shifts the aperture (`hst_forced.py --offsets`). Everything else
+  (apertures, errors, epochs, rule) is unchanged; the first, unregistered run is kept as `unregistered/`.
+- Quality gate added at 09:39Z after seeing the offsets (labelled): an offset is applied only if its uncertainty
+  max(MAD)/√n ≤ 0.05″; otherwise the visit is measured unshifted and flagged (mostly F435W, where few compact field
+  sources are bright in the blue). `offsets_info.json` holds every offset (written by `register_script.py.txt`), `offsets_used.json` the applied ones.
