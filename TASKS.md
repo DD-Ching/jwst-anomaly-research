@@ -213,7 +213,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - ~~`bayes.dat` μ errors~~ — done (D-032 addendum 2026-10-13, `--mu-samples`): model error 0.04–0.07 mag
        median against a 0.32–0.36 mag scatter floor; no new flag. SMACS 6.3 needs a chain (Mahler+22 pins none);
      - ~~MACS0416 halo fluxes~~ — done (D-032 addendum 2026-10-14, `macs0416-canucs`): 5 systems testable, no
-       anomaly; the halo-flux line is null in four clusters (MACS1149 needs a Lenstool par);
+       anomaly; the halo-flux line is null in four clusters (MACS1149 needs a Lenstool par); ~~Abell 370~~ done
+       2026-10-18 (`results/halo_phot/abell370/RESULT.md`: per-system rms gate opens 27 / 45 systems of
+       `abell370-canucs`; 2 images testable, no anomaly, almost no power);
      - observational parity test: `scripts/parity_test.py` (affine fit of image pairs in both handedness families,
        synthetic power per pair; D-032 addenda 2026-10-14): acceptance test failed (87 % vs 95 %; 3 persistent
        flags, all predicted-mirror compact cores; classes depend on the start set). PSF-commuting fit with an

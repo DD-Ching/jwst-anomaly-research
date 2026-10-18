@@ -161,3 +161,11 @@ the back-traced image-plane χ² (σ_pos 0.3″, 115 images) is a relative metri
   the σ change. 273 is a lensed source on a member (the ASSUMPTION's known failure mode); moving it is harmless.
 - `images` is gated off for this model (image-plane rms 2.3″, D-044), so extra images were not predicted.
 - **Null:** no off-plane potential breaks the image fit.
+
+## Halo-subtracted flux ratios (2026-10-18)
+
+`scripts/halo_phot.py --model abell370-canucs --gate-imageplane ...` (D-032 addendum): the CANUCS list is gated off
+as a whole (D-044), so only systems with every image solved and image-plane rms ≤ 0.5″ enter (27 / 45 systems,
+64 / 115 images). CANUCS 1208 o002 F150W + F444W stamps by S3 byte range, ±1 mag injections; then `fluxratios
+--halo-phot` (F444W, both routes). 2 images tested (9.1, 9.3), residuals ≤ 0.23 mag, no flag; injections recover a
+1 mag change in ≤ 1 / 2 targets. No anomaly, almost no power. Outputs and stamps: `results/halo_phot/abell370/`.

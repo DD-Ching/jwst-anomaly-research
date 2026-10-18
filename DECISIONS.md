@@ -2070,6 +2070,15 @@ Each hit is a candidate for `/vet-candidate`, never evidence.
   recovered in 36–50 % of targets (simulated). No anomaly in a fourth cluster. Revisit if: a CANUCS MCMC chain is
   pinned (per-image μ errors) or a star calibration on this mosaic moves the q gate.
 
+- Abell 370 halo fluxes (2026-10-18; `results/halo_phot/abell370/RESULT.md`): `abell370-canucs`' list is gated off
+  as a whole (D-044), so `halo_phot` and `fluxratios` take `--gate-imageplane` (validate's `imageplane.ecsv`) and use
+  only systems with every image solved and image-plane rms ≤ 0.5″ (`lens_consistency.systems_passing_rms`,
+  `GATE_MAX_RMS_ARCSEC`, ASSUMPTION ≈ `macs0416-canucs`' global rms): 27 / 45 systems, 64 / 115 images. Only
+  system 9 (2 images) passes the photometry gates; residuals ≤ 0.23 mag, no flag; injections recover a 1 mag
+  change in ≤ 1 / 2 targets. No anomaly in a fifth cluster, with almost no power there. Alternative rejected:
+  opening the whole list (global rms 2.32″, max 17.9″; μ near the worst systems is not the fitted model's).
+  Revisit if: an image-plane Abell 370 model with fitted redshifts is published (it would open D-035 too).
+
 ## D-033 Lens models from published deflection maps; WHL0137 (Sunrise) RELICS Lenstool (2026-10-08)
 
 **Decision.**
