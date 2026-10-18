@@ -257,6 +257,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | — | — | ≈ 0.35 (W1 PRIMER x3y0 `_cal` exposure check, `w1_cal_trail.py`; bright-star artefact, post hoc) | 0.1 (orientation, claim, PR) | cloud routine 0145mJQ8, 10:08–10:45Z |
 | 2026-W42 | ≈ 0.2 (W1 lower-mass filter pilot: plan, staging, 6 injection jobs, D-103) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01Jc3ZxK, 11:08–11:35Z |
 | 2026-W42 | — | — | ≈ 0.25 (W1 real-image metacal R: plan, tool, simulated gate, six GOODS-N tiles, sheet looked at) | 0.1 (orientation, claim, PR) | cloud routine 01SS72dG, 12:08–12:45Z |
+| 2026-W42 | — | — | ≈ 0.2 (W1 metacal R v2: frozen plan, mask/floor/unique/tile gate, simulated gate, 22 tiles, sheet looked at) | 0.1 (orientation, claim, PR) | cloud routine 01E7j7xV, 13:08–13:35Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

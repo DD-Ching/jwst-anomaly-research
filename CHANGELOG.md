@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 real-image metacal R v2: 1.056 ± 0.156 on 18 GOODS-N tiles, still "conservative" (D-105 addendum)
+- Frozen plan `results/w1_r_realmetacal/PLAN_v2.md`: noise-filled mask with a 16-px source pad, PSF σ floor
+  (0.97 px), unique matching, a tile gate (raw PSF σ below the floor or < ½ median detections), all tiles, tile
+  bootstrap. Simulated gate re-run: passes (unchanged from v1).
+- **Result (`results/w1_r_realmetacal/v2/RESULT.md`):** 22 tiles, 4 gated out; R = 1.056 ± 0.156 (804 sources),
+  R − 2σ = 0.744 < 0.8 → "conservative"; borrowed R = 0.414 and the blank-field limits unchanged. No fixnoise 1.075 ±
+  0.052 (not the estimator); PSF_d × 1.15 0.875 ± 0.162. R_11 < R_22 in every variant and in the simulation (a
+  chain property, not investigated).
+- **Failed / gap:** the noise fill does not stop the ringing; the gated tiles all ring after deconvolution
+  (`v2/sheet.png`, looked at), one without any masked pixel, so a sharp data feature drives it.
+- **Handoff:** the PSF model is now the limiting term: an empirical drizzled PSF (stars of the mosaic or STPSF on
+  the drizzle) as PSF_d, then a second field (CEERS F200W) if the bar is still missed.
+
 ## 2026-10-18: W1 R by metacalibration of real GOODS-N F200W images: 0.95 ± 0.24, borrowed R = 0.414 conservative (D-105)
 - `scripts/w1_r_realmetacal.py` (plan frozen first, `results/w1_r_realmetacal/PLAN.md`): GalSim metacalibration
   (deconvolve an analytic PSF, shear ±0.01, reconvolve with a 0.10″ Gaussian, white-noise fixnoise) of six 1024²
