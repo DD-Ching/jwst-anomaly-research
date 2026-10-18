@@ -1,0 +1,70 @@
+{
+ "plan": "results/arcs/macs0308-relics/PLAN.md",
+ "inputs": {
+  "catalog": "jw05293-o005_t001_nircam_clear-f200w_cat.ecsv",
+  "catalog_sha256": "35a1c4e7e716444166311da9ba917fa840b526a8ed86c8383ac9ca1eee38cd9f",
+  "photoz": "macs0308_bpz_zout.fits",
+  "photoz_sha256": "55bcf21e5b7ef63b8e5b255f245c00543cf8178e7abeb488a23af08832effa63"
+ },
+ "runs": {
+  "macs0308-relics-glafic": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 21,
+    "aligned": 17,
+    "anti": 1,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 1.0256154636272845e-05
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 21,
+    "anti": 1,
+    "expected": 0.309,
+    "p_ge_observed": 0.2660943158889799
+   }
+  },
+  "macs0308-relics-zitrin": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 18,
+    "aligned": 15,
+    "anti": 1,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 1.8525091480125605e-05
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 18,
+    "anti": 1,
+    "expected": 0.39,
+    "p_ge_observed": 0.3226263470380794
+   }
+  }
+ },
+ "deciding_model": "macs0308-relics-glafic",
+ "outcome": "does not replicate",
+ "p_ge_observed": 0.2660943158889799,
+ "background_by_gmin": {
+  "g_min<1": {
+   "n": 16,
+   "aligned": 13,
+   "anti": 1
+  },
+  "g_min>=1": {
+   "n": 5,
+   "aligned": 4,
+   "anti": 0
+  }
+ },
+ "anti_background": [
+  {
+   "label": 2157,
+   "ra": 47.232856,
+   "dec": 26.755094,
+   "mag": 20.61,
+   "g_min": 0.64,
+   "z_phot": 0.76,
+   "ellipticity": 0.531,
+   "class_macs0308-relics-zitrin": "anti"
+  }
+ ]
+}

@@ -330,6 +330,13 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   `hlsp_relics_hst_acs-wfc3ir_spt0615m57_multi_v1_cat.txt` (Coe, 2017-07-06): https://archive.stsci.edu/hlsps/relics/spt0615m57/
   (accessed 2026-10-18; sha256 in `lensmodel.SPT0615_RELICS_*` and `results/arcs/spt0615-relics/summary.json`).
 - Paterno-Mahler et al. 2018, RELICS SPT-CLJ0615−5746 model, z_lens 0.972, ApJ 863, 154, arXiv:1805.09834 (abstract read 2026-10-18).
+- RELICS MACS J0308.9+2645 lens models (`glafic/v2`, `zitrin-ltm-gauss` v1; maps at D_LS/D_S = 1) and BPZ catalogue
+  `hlsp_relics_hst_acs-wfc3ir_macs0308p26_multi_v1_cat.txt`: https://archive.stsci.edu/hlsps/relics/macs0308p26/
+  (accessed 2026-10-18; sha256 in `lensmodel.MACS0308_RELICS_*` and `results/arcs/macs0308-relics/summary.json`).
+- Acebron et al. 2018, RELICS strong-lensing analysis of MACS J0308.9+2645 and PLCK G171.9−40.7, ApJ 858, 42,
+  arXiv:1803.00560 (Table 1 z_lens 0.356, read 2026-10-18).
+- JWST program 5293 o005 NIRCam F200W level-3 catalogue `jw05293-o005_t001_nircam_clear-f200w_cat.ecsv` (MAST, PUBLIC,
+  accessed 2026-10-18; sha256 in `results/arcs/macs0308-relics/summary.json`).
 - LAM Strong Lensing Cluster Atlas (Lenstool model tarballs and maps; 17 models on 2026-10-18): https://data.lam.fr/sl-cluster-atlas
   (ANIS API `https://data.lam.fr/server/search/sl-cluster-atlas/model?a=1;2;3`; needs cookie `Yogsototh_opens_the_door=1`).
 - Mahler et al. 2019 (RELICS MACS J0417 lenstool model, system 1 images): arXiv:1810.13439 (abstract read 2026-10-17: "MACS J0417.5-1154 at z=0.443"; journal reference not checked).

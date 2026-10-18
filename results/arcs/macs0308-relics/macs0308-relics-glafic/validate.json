@@ -1,0 +1,24 @@
+{
+ "model": "macs0308-relics-glafic",
+ "model_sha256": "bb1afe794bc432fc00a9536f790954535bf36d0223ceaa17d6849115f8e55f24",
+ "kappa_map": {
+  "map": "data/cache/external/cee400683a33_hlsp_relics_model_model_macs0308p26_glafic_v2_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 4189,
+  "median_rel_diff": 2.2249679500569926e-05,
+  "p95_rel_diff": 0.00012500912372307143,
+  "median_ratio": 0.9999856192129291,
+  "parity_agree": null
+ },
+ "magnification_z2": {
+  "map": "data/cache/external/b2a076ed89bb_hlsp_relics_model_model_macs0308p26_glafic_v2_z02-magnif.fits",
+  "quantity": "mu",
+  "z_s": 2.0,
+  "n_points": 3914,
+  "median_rel_diff": 1.4554003110317512e-05,
+  "p95_rel_diff": 9.886769710744848e-05,
+  "median_ratio": 0.9999913280923372,
+  "parity_agree": null
+ }
+}

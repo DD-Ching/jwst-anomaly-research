@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: `arcs` on MACS J0308.9+2645 (RELICS maps, RELICS BPZ): the S1063 anti excess does not replicate (1 vs 0.31, P 0.27)
+- **Why:** next field of the S1063 replication tally (handoff of #346). Plan frozen first
+  (`results/arcs/macs0308-relics/PLAN.md`); F200W catalogue from program 5293 o005 (1,578 s; chosen over 6882 o015 by
+  coverage only, 705 vs 640 S/N ≥ 10 rows within 50″); photo-z RELICS BPZ through the SPT0615 conversion
+  (95 % interval as z160–z840, ASSUMPTION; JWST − BPZ offset +0.34″/−0.10″ removed). z_lens 0.356 (Acebron et al.
+  2018, Table 1). Exploratory.
+- **New:** models `macs0308-relics-glafic` (v2) / `macs0308-relics-zitrin` (LTM-Gauss v1), both pass `validate`;
+  `scripts/arcs_macs0308.py` (+ tests, reuses `arcs_spt0615`), `scripts/arcs_macs0308_sheet.py` (F410M as second
+  band; the program has no F444W).
+- **Result (derived; `RESULT.md`):** GLAFIC 17 / 21 aligned (control passes), anti 1 vs 0.309, P 0.266 → **frozen
+  outcome "does not replicate"**; Zitrin 15 / 18, anti 1 vs 0.39, P 0.32 (same source). The anti (2157, m 20.6,
+  z_phot 0.76) lies where the predicted axis flips between z = 1 and 2 (82° vs 8° offset); its class rests on BPZ
+  z < 1. Sheets looked at. Not a candidate.
+- **Handoff:** S1063 tally: MACS0417 no, MACS0647 no result, MACS1423 explained, RXJ2129 no result, WHL0137 no,
+  RXC J0600 no, SPT0615 no result, MACS0308 no. Four "no", one explained, three "no result": nothing supports the
+  S1063 excess beyond S1063 itself. Remaining routes are optional (VENUS clusters without photo-z; Bullet).
+
 ## 2026-10-18: `arcs` on SPT-CL J0615−5746 (RELICS maps, RELICS BPZ photo-z): no result, both controls fail
 - **Why:** one more independent field for the S1063 anti-excess tally. Plan frozen first
   (`results/arcs/spt0615-relics/PLAN.md`, which also records the field survey below). F200W catalogue from program
