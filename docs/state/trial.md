@@ -254,6 +254,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.75 (W1 shear in CEERS: plan, footprint script, staging, gate P, streak masks, 10 screens, two flags vetted with sheet, 48-job grid, volume combine) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01ASLQCx, 04:08–05:00Z (2026-10-18) |
 | 2026-W42 | ≈ 0.4 (W1 shear in PRIMER: frozen plan, mosaic tiling, catalogue pins) | — | — | 0.1 (orientation, claim, PR) | cloud routine 01RnsypG, 06:08–06:45Z |
 | 2026-W42 | ≈ 0.5 (W1 shear in PRIMER run 4: last 23 injection jobs, R sensitivity, forty-field limit, RESULT) | — | ≈ 0.05 (x3y0 visit check) | 0.15 (orientation, takeover, base merge, PR) | cloud routine 018J4abj, 09:08–09:50Z |
+| 2026-W42 | — | — | ≈ 0.35 (W1 PRIMER x3y0 `_cal` exposure check, `w1_cal_trail.py`; bright-star artefact, post hoc) | 0.1 (orientation, claim, PR) | cloud routine 0145mJQ8, 10:08–10:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

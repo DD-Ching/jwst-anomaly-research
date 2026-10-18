@@ -8,10 +8,14 @@ line are compared with two control bands ``CONTROL_ARCSEC`` away along the mosai
 
     contrast = (median of band rows − median of control rows) / robust σ of control row medians
 
+    S=s3://stpubdata/jwst/public/jw01837
     python scripts/w1_cal_trail.py --ra 34.50675170212336 --dec -5.259761111111111 \\
-        --mosaic s3://stpubdata/jwst/public/jw01837/L3/t/c1002/jw01837-c1002_t000_nircam_clear-f200w_i2d.fits \\
-        --cal s3://stpubdata/jwst/public/jw01837/jw01837001001/jw01837001001_08201_00001_nrca4_cal.fits ... \\
+        --mosaic $S/L3/t/c1002/jw01837-c1002_t000_nircam_clear-f200w_i2d.fits \\
+        --cal $S/jw01837001001/jw01837001001_08201_00001_nrca4_cal.fits ... \\
         --out results/w1_shear_primer/vet
+
+The four exposures and the post hoc ``--half-arcsec 70 --star`` run:
+results/w1_shear_primer/RESULT.md.
 
 Pixels ``observed``; stamps, profiles and contrasts ``derived``; every threshold an ASSUMPTION.
 """
@@ -26,7 +30,6 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
-from astropy.io import fits
 from astropy.wcs import WCS, FITSFixedWarning
 from scipy import ndimage
 
@@ -166,6 +169,24 @@ def line_track(stamp: np.ndarray, centre: int, half: int = 20, chunk: int = 50) 
     }
 
 
+def star_geometry(wcs: WCS, star, x_origin: int, row_origin: int, stamps: list[dict]) -> dict:
+    """Post hoc: the star's stamp position and how far each stamp's fitted line passes from it
+    (rows at the star's column), so a line radial from the star can be told apart."""
+    sx, sy = (float(v) for v in wcs.world_to_pixel_values(*star))
+    sx, srow = sx - x_origin, sy - row_origin
+    out = {"radec": list(star), "stamp_x_px": sx, "row_rel_line_centre_px": srow, "tracks": {}}
+    for s in stamps:
+        t = s["track_post_hoc"]
+        if "slope_px_per_px" not in t or t["rms_resid_px"] > 2.0:
+            continue
+        coef = np.polyfit(t["chunk_x_px"], t["chunk_row_px"], 1)
+        out["tracks"][s["name"]] = {
+            "line_row_at_star_x_px": float(np.polyval(coef, sx)),
+            "miss_distance_px": float(abs(np.polyval(coef, sx) - srow)),
+        }
+    return out
+
+
 def classify(line_in: list[bool]) -> str:
     """The plan's frozen outcome from the per-exposure calls (``contrast > IN_SIGMA``)."""
     if not line_in:
@@ -175,18 +196,30 @@ def classify(line_in: list[bool]) -> str:
         return "in every exposure: not a single-exposure trail (stays a flag)"
     if n_in == 0:
         return "in no exposure above the threshold: the mosaic line is not reproduced"
-    return f"in {n_in} of {len(line_in)} exposures: not a feature of every exposure (trail or exposure-level artefact)"
+    return (
+        f"in {n_in} of {len(line_in)} exposures: "
+        "not a feature of every exposure (trail or exposure-level artefact)"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("--ra", type=float, required=True)
     ap.add_argument("--dec", type=float, required=True)
     ap.add_argument("--mosaic", required=True)
     ap.add_argument("--cal", nargs="+", required=True)
-    ap.add_argument("--line-row-offset", type=int, default=1, help="line row minus peak row (mosaic px)")
+    ap.add_argument(
+        "--line-row-offset", type=int, default=1, help="line row minus peak row (mosaic px)"
+    )
     ap.add_argument("--name", default="x3y0")
-    ap.add_argument("--half-arcsec", type=float, default=HALF_ARCSEC, help="stamp half-width along the line")
+    ap.add_argument(
+        "--star", type=float, nargs=2, metavar=("RA", "DEC"), help="post hoc: a suspected source"
+    )
+    ap.add_argument(
+        "--half-arcsec", type=float, default=HALF_ARCSEC, help="stamp half-width along the line"
+    )
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
 
@@ -201,7 +234,9 @@ def main(argv: list[str] | None = None) -> int:
     # rows are indexed from the stamp's first (lowest-y) row; the line is at the peak row + offset
     centre = hy + args.line_row_offset
     out = {
-        "question": "is the line through the peak present in one exposure only (trail) or in all (sky)?",
+        "question": (
+            "is the line through the peak present in one exposure only (trail) or in all (sky)?"
+        ),
         "plan": "results/w1_shear_primer/vet/x3y0_cal_plan.md",
         "peak_radec": [args.ra, args.dec],
         "mosaic": Path(args.mosaic).name,
@@ -234,18 +269,34 @@ def main(argv: list[str] | None = None) -> int:
         rec["line_in"] = None if c is None else bool(c > IN_SIGMA)
         rec["track_post_hoc"] = line_track(stamp, centre)
         out["stamps"].append(rec)
+    if args.star:
+        out["star_post_hoc"] = star_geometry(
+            wcs, args.star, xi - hx, centre + yi - hy, out["stamps"]
+        )
     exp = [s for s in out["stamps"] if s["name"] != "mosaic" and s["line_in"] is not None]
     out["n_exposures_tested"] = len(exp)
     out["n_exposures_with_line"] = sum(s["line_in"] for s in exp)
     out["outcome"] = classify([s["line_in"] for s in exp])
-    out["provenance"] = {"pixels": "observed", "stamps_profiles_contrasts": "derived", "thresholds": "assumption"}
+    out["provenance"] = {
+        "pixels": "observed",
+        "stamps_profiles_contrasts": "derived",
+        "thresholds": "assumption",
+    }
 
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / f"{args.name}_cal_check.json").write_text(json.dumps(out, indent=1) + "\n")
     _sheet(args.out / f"{args.name}_cal_sheet.png", mstamp, cals, profiles, centre, scale, out)
-    print(json.dumps({k: out[k] for k in ("n_exposures_tested", "n_exposures_with_line", "outcome")}))
+    print(
+        json.dumps({k: out[k] for k in ("n_exposures_tested", "n_exposures_with_line", "outcome")})
+    )
     for s in out["stamps"]:
-        print(s["name"], s.get("contrast"), s.get("line_in"), s.get("brightest_row_offset_px"), s["track_post_hoc"])
+        print(
+            s["name"],
+            s.get("contrast"),
+            s.get("line_in"),
+            s.get("brightest_row_offset_px"),
+            s["track_post_hoc"],
+        )
     return 0
 
 
@@ -259,7 +310,7 @@ def _sheet(path, mstamp, cals, profiles, centre, scale, out) -> None:
     fig, axes = plt.subplots(len(stamps), 2, figsize=(13, 2.2 * len(stamps)), width_ratios=[4, 1])
     for (name, st), (ax, axp), rec in zip(stamps, axes, out["stamps"], strict=True):
         fin = st[np.isfinite(st)]
-        lo, hi = (np.percentile(fin, [5, 99.5]) if fin.size else (0, 1))
+        lo, hi = np.percentile(fin, [5, 99.5]) if fin.size else (0, 1)
         ax.imshow(st, origin="lower", cmap="gray_r", vmin=lo, vmax=hi, aspect="equal")
         ax.axhline(centre, color="tab:red", lw=0.5, alpha=0.5)
         off = int(round(CONTROL_ARCSEC / scale))
@@ -273,9 +324,11 @@ def _sheet(path, mstamp, cals, profiles, centre, scale, out) -> None:
         axp.axhline(centre, color="tab:red", lw=0.5)
         axp.set_ylim(0, prof.size)
         axp.tick_params(labelsize=6)
-    fig.suptitle(f"{out['mosaic']} vs _cal exposures; rows = mosaic rows; {out['outcome']}", fontsize=8)
+    fig.suptitle(
+        f"{out['mosaic']} vs _cal exposures; rows = mosaic rows; {out['outcome']}", fontsize=8
+    )
     fig.tight_layout()
-    fig.savefig(path, dpi=110)
+    fig.savefig(path, dpi=90)
     plt.close(fig)
 
 

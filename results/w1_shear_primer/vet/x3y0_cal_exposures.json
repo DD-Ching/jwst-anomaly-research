@@ -1,0 +1,70 @@
+{
+ "purpose": "exposures of observation 001 covering the x3y0 peak, and the post hoc bright-star geometry (results/w1_shear_primer/RESULT.md)",
+ "search": "every jw01837001001-022 nrc[ab][1-4] _cal.fits of an F200W exposure group (S3 listing; 1408 SW files, 352 F200W); kept if the peak pixel is within 50 px of the detector",
+ "exposures": [
+  {
+   "file": "jw01837001001_08201_00001_nrca4_cal.fits",
+   "det": "NRCA4",
+   "filt": "F200W",
+   "pupil": "CLEAR",
+   "expstart": 59960.25548778935,
+   "pa": 70.08554500543346,
+   "x": 191.11763989552037,
+   "y": 170.97820440034508
+  },
+  {
+   "file": "jw01837001001_08201_00002_nrca4_cal.fits",
+   "det": "NRCA4",
+   "filt": "F200W",
+   "pupil": "CLEAR",
+   "expstart": 59960.261701111114,
+   "pa": 70.08570240813597,
+   "x": 244.95175964670617,
+   "y": 188.23610523020795
+  },
+  {
+   "file": "jw01837001011_08201_00001_nrcb3_cal.fits",
+   "det": "NRCB3",
+   "filt": "F200W",
+   "pupil": "CLEAR",
+   "expstart": 59965.99874912037,
+   "pa": 69.53354871740297,
+   "x": 1501.9562330661906,
+   "y": 522.4354967198824
+  },
+  {
+   "file": "jw01837001011_08201_00002_nrcb3_cal.fits",
+   "det": "NRCB3",
+   "filt": "F200W",
+   "pupil": "CLEAR",
+   "expstart": 59966.004962453706,
+   "pa": 69.5335184426721,
+   "x": 1555.8567304599248,
+   "y": 539.6357103869904
+  }
+ ],
+ "dither_offset_visit011_px": [
+  53.90049739373421,
+  17.20021366710796
+ ],
+ "star": {
+  "gaia_dr3_source_id": 2489648647202619264,
+  "ra": 34.51225848109559,
+  "dec": -5.274802124569481,
+  "phot_g_mean_mag": 10.066538,
+  "query": "Gaia archive gaiadr3.gaia_source, 2026-10-18",
+  "sep_from_peak_arcsec": 57.63394968754611,
+  "sep_from_tile_centre_arcsec": 152.13956690540758,
+  "spike_radius_law_arcsec_uncapped": 290.94684675044726,
+  "external_spike_cap_arcsec": 60.0
+ },
+ "star_beyond_visit011_coverage_arcsec": {
+  "jw01837001011_08201_00001_nrcb3_cal.fits": 11.067229652257957,
+  "jw01837001011_08201_00002_nrcb3_cal.fits": 9.505967655624362
+ },
+ "provenance": {
+  "positions_times": "observed",
+  "separations_lengths": "derived",
+  "spike_law": "assumption"
+ }
+}

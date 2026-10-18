@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 PRIMER UDS x3y0 explained (post hoc) as a G 10.07 star's optical artefact in one visit
+- `scripts/w1_cal_trail.py` (plan frozen first: `results/w1_shear_primer/vet/x3y0_cal_plan.md`) resamples every
+  `_cal` exposure covering a flag onto the mosaic grid and tests the line through it. Four F200W exposures of
+  observation 001 cover the x3y0 peak (visit 001 and visit 011, two dithers each).
+- **Frozen outcome:** the line is not in every exposure (2 of 4 above 5σ), so it is not a static sky feature. The
+  per-exposure calls disagree with the sheet for two stamps (stray-light streaks in a control band; one false call),
+  so the band-median contrast is a weak per-exposure statistic (recorded in RESULT).
+- **Post hoc:** the line is radial from Gaia DR3 2489648647202619264 (G 10.07, 58″ from the peak), passing 0.17–0.19″
+  from it. Both visit-011 dithers put it on the same sky row; visit 001 shows nothing at the same positions (chunk
+  peaks 0.007–0.028 vs 0.40–0.89 MJy/sr). x3y0 is explained as bright-star contamination; the frozen V1 ∪ V2 outcome
+  stays "not explained". The forty-field limit is unchanged (flagged tiles were already excluded).
+- **Method gap found:** the screen's Gaia spike veto caps external stars at 60″ (`EXTERNAL_SPIKE_CAP`); this star's
+  uncapped law gives 291″, and its arm is traced to about 71″. Bright (G ≲ 11) stars near tile edges can therefore
+  still make E/B flags.
+- **Handoff:** (1) W1 at lower masses (a new frozen plan); (2) an R measurement on real blank-field images;
+  (3) optional: a G-dependent external spike cap tested by injection on the PRIMER tiles (it would only remove
+  false flags, not change the limit's tiles).
+
 ## 2026-10-18: MACS1423 h000 HST archive light curve: no change before (−181 d) or after (+180 to +409 d); identity still open
 - `scripts/hst_forced.py` (HST counterpart of `hit_lightcurve.py`: S3 byte-range drizzled products, 0.2″ aperture,
   local random-aperture errors, field peaks; `--offsets`) on 43 HST visits 2006–2024; visits registered to the

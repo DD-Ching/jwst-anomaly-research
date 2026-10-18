@@ -910,6 +910,24 @@
    }
   }
  ],
+ "star_post_hoc": {
+  "radec": [
+   34.51225848109559,
+   -5.274802124569481
+  ],
+  "stamp_x_px": 395.56782666454455,
+  "row_rel_line_centre_px": -18.21347897743908,
+  "tracks": {
+   "jw01837001011_08201_00001_nrcb3_cal.fits": {
+    "line_row_at_star_x_px": -24.220494796310973,
+    "miss_distance_px": 6.007015818871892
+   },
+   "jw01837001011_08201_00002_nrcb3_cal.fits": {
+    "line_row_at_star_x_px": -23.540672538438848,
+    "miss_distance_px": 5.327193560999767
+   }
+  }
+ },
  "n_exposures_tested": 4,
  "n_exposures_with_line": 2,
  "outcome": "in 2 of 4 exposures: not a feature of every exposure (trail or exposure-level artefact)",
