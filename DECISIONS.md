@@ -5086,7 +5086,6 @@ confining radiation at a throat is found.
 - **Evidence:** `results/w1_shear_goodsn/RESULT.md`. Sixteen fields: n₉₅ < 1.82 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉
   (1.82× Takahashi & Asada, from 2.35×); the two flags (o003, o004) sit on mosaic-edge artefacts and are explained
   by V1 ∪ V2 (eighteen fields would give 1.54×). With R = 0.231 the GOODS-N recoveries drop to 0.21–0.26 of the
-  adopted ones.
+  adopted ones (four-pointing totals at Z = 0.3).
 - **Revisit if:** a blank-field R calibration exists (e.g. image simulations or a shear-calibrated catalogue of the
   same mosaics), or a photo-z catalogue covers o009/o010.
-

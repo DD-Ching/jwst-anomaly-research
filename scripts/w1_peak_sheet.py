@@ -17,6 +17,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
+import astropy.units as u  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 from astropy.coordinates import SkyCoord  # noqa: E402
@@ -27,19 +28,20 @@ from astropy.wcs import WCS  # noqa: E402
 from astropy.wcs.utils import proj_plane_pixel_scales  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import inject_shear as ish  # noqa: E402
 import w1_streak_mask as wsm  # noqa: E402
+
+from jwst_anomaly import paths  # noqa: E402
 
 HALF_ARCSEC = 20.0  # cutout half-width (ASSUMPTION, display only)
 
 
 def cutout(uri: str, ra: float, dec: float, half: float = HALF_ARCSEC) -> Cutout2D:
-    """Section of the SCI extension around (ra, dec), read remotely."""
+    """Section of the SCI extension around (ra, dec), read remotely (trimmed at the edges)."""
     with fits.open(uri, use_fsspec=True, fsspec_kwargs={"anon": True}) as hdul:
         hdu = hdul["SCI"]
-        wcs = WCS(hdu.header)
-        scale = float(np.sqrt(abs(np.linalg.det(wcs.pixel_scale_matrix)))) * 3600.0
-        size = int(2 * half / scale)
-        return Cutout2D(hdu.section, SkyCoord(ra, dec, unit="deg"), size, wcs=wcs)
+        pos = SkyCoord(ra, dec, unit="deg")
+        return Cutout2D(hdu.section, pos, 2 * half * u.arcsec, wcs=WCS(hdu.header))
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -52,23 +54,25 @@ def main(argv: list[str] | None = None) -> int:
     for ax, path in zip(axes[0], args.summaries, strict=True):
         s = json.loads(path.read_text())
         ra, dec = s["screen"]["s_max_radec"]
-        c = cutout(wsm.i2d_uri(s["catalog"]), ra, dec)
+        rel = ish.field_spec(s["field"])["catalog"]  # the stored path is machine-specific
+        c = cutout(wsm.i2d_uri(rel), ra, dec)
         img = np.nan_to_num(np.asarray(c.data, float))
         lo, hi = np.percentile(img, [5, 99.5])
         ax.imshow(img, origin="lower", cmap="gray", vmin=lo, vmax=hi)
-        cat = Table.read(s["catalog"])
+        cat = Table.read(paths.data_root() / rel)
         sky = cat["sky_centroid"]
         x, y = c.wcs.world_to_pixel(sky)
         inside = (x > 0) & (y > 0) & (x < img.shape[1]) & (y < img.shape[0])
         ax.plot(x[inside], y[inside], "c+", ms=4, alpha=0.6)
         px, py = c.wcs.world_to_pixel(SkyCoord(ra, dec, unit="deg"))
         scale = float(np.mean(proj_plane_pixel_scales(c.wcs))) * 3600.0  # cutouts trim at edges
-        ax.add_patch(plt.Circle((px, py), 10.0 / scale, fill=False, color="r"))
+        r_ap = float(s["assumptions"]["screen"]["aperture_arcsec"])
+        ax.add_patch(plt.Circle((px, py), r_ap / scale, fill=False, color="r"))
         ax.plot(px, py, "rx")
         sc = s["screen"]
         ax.set_title(
             f"{s['field']}: S {sc['s_max']:.2f}, p {sc['p_random_max']:.3f}, "
-            f'max|S_x| {sc["b_max"]:.2f}\n10" aperture (red), catalogue sources (cyan)',
+            f'max|S_x| {sc["b_max"]:.2f}\n{r_ap:g}" aperture (red), catalogue sources (cyan)',
             fontsize=9,
         )
         ax.set_xticks([])

@@ -5,72 +5,92 @@
   "goodsn-o001": {
    "2e+12": {
     "n_recovered_r0.414": 6,
-    "n_recovered_r0.231": 2
+    "n_recovered_r0.231": 2,
+    "ratio": 0.333
    },
    "8e+12": {
     "n_recovered_r0.414": 32,
-    "n_recovered_r0.231": 4
+    "n_recovered_r0.231": 4,
+    "ratio": 0.125
    },
    "2e+13": {
     "n_recovered_r0.414": 58,
-    "n_recovered_r0.231": 13
+    "n_recovered_r0.231": 13,
+    "ratio": 0.224
    }
   },
   "goodsn-o003": {
    "2e+12": {
     "n_recovered_r0.414": 0,
-    "n_recovered_r0.231": 0
+    "n_recovered_r0.231": 0,
+    "ratio": null
    },
    "8e+12": {
     "n_recovered_r0.414": 28,
-    "n_recovered_r0.231": 5
+    "n_recovered_r0.231": 5,
+    "ratio": 0.179
    },
    "2e+13": {
     "n_recovered_r0.414": 59,
-    "n_recovered_r0.231": 18
+    "n_recovered_r0.231": 18,
+    "ratio": 0.305
    }
   },
   "goodsn-o004": {
    "2e+12": {
     "n_recovered_r0.414": 18,
-    "n_recovered_r0.231": 3
+    "n_recovered_r0.231": 3,
+    "ratio": 0.167
    },
    "8e+12": {
     "n_recovered_r0.414": 51,
-    "n_recovered_r0.231": 10
+    "n_recovered_r0.231": 10,
+    "ratio": 0.196
    },
    "2e+13": {
     "n_recovered_r0.414": 70,
-    "n_recovered_r0.231": 17
+    "n_recovered_r0.231": 17,
+    "ratio": 0.243
    }
   },
   "goodsn-o005": {
    "2e+12": {
     "n_recovered_r0.414": 9,
-    "n_recovered_r0.231": 2
+    "n_recovered_r0.231": 2,
+    "ratio": 0.222
    },
    "8e+12": {
     "n_recovered_r0.414": 41,
-    "n_recovered_r0.231": 13
+    "n_recovered_r0.231": 13,
+    "ratio": 0.317
    },
    "2e+13": {
     "n_recovered_r0.414": 67,
-    "n_recovered_r0.231": 19
+    "n_recovered_r0.231": 19,
+    "ratio": 0.284
    }
   }
  },
  "total_four_pointings": {
   "2e+12": {
    "n_recovered_r0.414": 33,
-   "n_recovered_r0.231": 7
+   "n_recovered_r0.231": 7,
+   "ratio": 0.212
   },
   "8e+12": {
    "n_recovered_r0.414": 152,
-   "n_recovered_r0.231": 32
+   "n_recovered_r0.231": 32,
+   "ratio": 0.211
   },
   "2e+13": {
    "n_recovered_r0.414": 254,
-   "n_recovered_r0.231": 67
+   "n_recovered_r0.231": 67,
+   "ratio": 0.264
   }
- }
+ },
+ "per_cell_ratio_range": [
+  0.125,
+  0.333
+ ],
+ "n_cells_with_ratio": 11
 }

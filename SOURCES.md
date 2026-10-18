@@ -1491,4 +1491,3 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - Photo-z: DJA v7.3 `gdn-grizli-v7.3-fix.eazypy.zout.fits`, streamed out of `gdn-grizli-v7.3-fix.photoz.tar.gz`
   (pins in `orphan_pairs.DEEP_FIELDS["goodsn-dja"]`; D-051). The F200W `_i2d.fits` SCI extensions were range-read
   for the streak masks and the sheet (not stored).
-

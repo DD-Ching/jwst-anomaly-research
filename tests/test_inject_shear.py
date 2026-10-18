@@ -268,3 +268,21 @@ def test_gate_p_rule():
     assert not ish.passes_gate_p({"n_used": 0, "n_used_photoz": 0})
     assert not ish.passes_gate_p({"n_used": 100, "n_used_photoz": None})
     assert not ish.passes_gate_p({"n_used_before_veto": 100})  # older summaries: no gate data
+
+
+def test_fixed_r_sensitivity_runs_are_refused_by_w1_volume(tmp_path):
+    import json
+
+    _lv = importlib.util.spec_from_file_location("w1_volume", _DIR / "w1_volume.py")
+    wv = importlib.util.module_from_spec(_lv)
+    _lv.loader.exec_module(wv)
+    d = tmp_path / "z0.3" / "f"
+    d.mkdir(parents=True)
+    summ = {"assumptions": {"w1_lens_z": 0.3, "fixed_r_override": 0.231}}
+    (d / "summary.json").write_text(json.dumps(summ))
+    with pytest.raises(SystemExit, match="sensitivity"):
+        wv.main(
+            ["--runs", str(tmp_path), "--fields", "f", "--z", "0.3", "--out", str(tmp_path / "o")]
+        )
+    with pytest.raises(ValueError, match="'ncf' or a number"):
+        ish.fixed_responsivity("x", {"responsivity": "NCF"}, 0.3)

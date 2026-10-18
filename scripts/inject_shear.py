@@ -219,8 +219,10 @@ def fixed_responsivity(name: str, spec: dict, lens_z, gate: Path = GATE_R) -> fl
         return None
     if lens_z is None:
         raise ValueError(f"{name} has no lens model; give --lens-z")
-    if rspec != "ncf":
+    if isinstance(rspec, (int, float)):
         return float(rspec)
+    if rspec != "ncf":
+        raise ValueError(f"{name}: responsivity must be 'ncf' or a number, not {rspec!r}")
     res = json.loads(Path(gate).read_text())["gate_r"] if Path(gate).exists() else {}
     if not res.get("passed"):
         raise ValueError(f"{name}: gate R has not passed ({gate}; w1_ncf_gate_r.py)")
@@ -404,8 +406,11 @@ def run_field(name: str, args) -> dict:
     sargs.recover_tol = args.recover_tol
     sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
     r_fixed = fixed_responsivity(name, spec, getattr(args, "lens_z", None))
-    if r_fixed is not None and getattr(args, "fixed_r", None) is not None:
-        r_fixed = float(args.fixed_r)  # sensitivity run (results/w1_shear_goodsn/PLAN.md)
+    r_override = getattr(args, "fixed_r", None)
+    if r_override is not None:  # sensitivity run (results/w1_shear_goodsn/PLAN.md)
+        if r_fixed is None:
+            raise ValueError(f"{name}: --fixed-r applies only to fields without a lens model")
+        r_fixed = float(r_override)
     if r_fixed is not None:  # no lens model: R fixed by gate R, the lens redshift explicit
         sargs.responsivity = r_fixed
     psf = es.psf_sigma_px(shapes)
@@ -474,7 +479,7 @@ def run_field(name: str, args) -> dict:
             "psf_sigma_px": psf,
             "n_streak_vetoed": inj.n_streak,
             # gate P (results/w1_shear_goodsn/PLAN.md): rows in the statistic, and those of them
-            # with a photo-z match
+            # with a photo-z match and a valid z160 (stricter than lensable_mask's finite z_phot)
             "n_used": int(np.sum(inj.use)),
             "n_used_photoz": (
                 int(np.sum(inj.use & np.isfinite(np.asarray(shapes["z160"], float))))
@@ -508,6 +513,8 @@ def run_field(name: str, args) -> dict:
             "spike_stars": len(extra) if extra is not None else None,
             **({} if getattr(args, "lens_z", None) is None else {"w1_lens_z": z_w1}),
             **({} if r_fixed is None else {"fixed_responsivity": r_fixed}),
+            # w1_volume.py refuses summaries of sensitivity runs
+            **({} if r_override is None else {"fixed_r_override": float(r_override)}),
             **(
                 {}
                 if streak is None
@@ -557,6 +564,7 @@ def setting(summary: dict) -> dict:
     a.pop("spike_stars", None)
     a.pop("streak_mask", None)  # per field
     a.pop("fixed_responsivity", None)  # per field kind (D-098)
+    a.pop("fixed_r_override", None)  # sensitivity runs; w1_volume.py refuses them
     a["screen"] = {**LEGACY_SCREEN_OPTIONS, **a["screen"]}
     return a
 

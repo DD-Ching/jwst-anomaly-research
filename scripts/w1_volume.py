@@ -70,6 +70,8 @@ def main(argv: list[str] | None = None) -> int:
         for f in args.fields
     }
     for (z, f), s in summ.items():
+        if s["assumptions"].get("fixed_r_override") is not None:
+            raise SystemExit(f"error: {f} at z {z} is a --fixed-r sensitivity run")
         if s["assumptions"].get("w1_lens_z") != z:
             raise SystemExit(f"error: {f} at z {z}: summary has w1_lens_z {s['assumptions']}")
     masses = list(summ[(args.z[0], args.fields[0])]["efficiency"])

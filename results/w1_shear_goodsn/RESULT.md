@@ -70,7 +70,7 @@ The same injections with R = 0.231 (the MACS0647 value) recover:
 | 8 × 10¹² | 152 | 32 |
 | 2 × 10¹³ | 254 | 67 |
 
-That is 0.21–0.26 of the recoveries. **The GOODS-N contribution depends strongly on the assumed R.** R cannot be
+That is 0.21–0.26 of the recoveries in the four-pointing totals, and 0.13–0.33 per pointing and mass (11 cells with a non-zero adopted count; `ratio` in the file). **The GOODS-N contribution depends strongly on the assumed R.** R cannot be
 fitted in a blank field, and program 1181 has no cluster pointing to fit it on (a deviation from D-098's
 same-program rule; D-099).
 
@@ -79,4 +79,5 @@ same-program rule; D-099).
 - The o004/o005 overlap (≈ 0.5 arcmin² of MAST footprint) is double-counted in the headline: less than 1 % of the area.
 - The two eastern pointings are lost to photo-z coverage.
 - The faint unmasked o004 streaks were found by eye only.
-- The summaries' `photoz` paths point to the session scratchpad. The zout is the pinned DJA member.
+- The summaries store absolute `catalog` / `photoz` paths of the session machine; resolve them through `inject_shear.field_spec` and the data root (as `w1_peak_sheet.py` does). The zout is the pinned DJA member.
+- Gate P counts rows with a valid z160 (stricter than the screen's finite z_phot; `inject_shear.py`).
