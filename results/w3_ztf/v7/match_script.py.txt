@@ -1,0 +1,38 @@
+# v7 post hoc: are catalogue detections matched to an official exposure (MATCH_TOL), per survey year? If 2023
+# detections failed to match, the empty-comparison exposures would be an implementation problem, not missing
+# catalogue data. Calibration carriers + control rows. Usage: match_script <pix> <vdir|-> <out json>
+import json, sys
+from collections import Counter
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+pix, vdir, OUT = int(sys.argv[1]), (None if sys.argv[2] == '-' else sys.argv[2]), sys.argv[3]
+wz.configure(pix, vdir)
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+expo = Table.read(wz.CACHE / 'exposures.ecsv')
+fid = {'zg': 1, 'zr': 2, 'zi': 3}
+yr = lambda t: np.floor(1858.877 + np.asarray(t) / 365.2425).astype(int)
+det, unm = Counter(), Counter()
+expy = Counter()
+for (field, rcid, filt), c in cov.items():
+    if filt != 2:
+        continue
+    for y in yr(c['t']):
+        expy[int(y)] += 1
+for o, r in rows.items():
+    if r['filt'] != 2:
+        continue
+    q = (*r['quad'], 2)
+    if q not in cov:
+        continue
+    idx = wz.match_exposures(r['t'], cov[q]['t'])
+    for y, k in zip(yr(r['t']), idx):
+        det[int(y)] += 1
+        unm[int(y)] += int(k < 0)
+out = {'label': 'derived; post hoc detection-to-exposure matching per year (r band)', 'pix': pix,
+       'detections': {str(k): det[k] for k in sorted(det)}, 'unmatched': {str(k): unm[k] for k in sorted(det)},
+       'official_quadrant_exposures': {str(k): expy[k] for k in sorted(expy)}}
+json.dump(out, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print(json.dumps(out))

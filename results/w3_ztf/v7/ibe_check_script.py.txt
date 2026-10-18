@@ -1,0 +1,36 @@
+# v7 post hoc: does IRSA list a science image (IBE search, metadata only, no download) for 3 official r-band
+# exposures that have no catalogue detection of any loaded star (2023, calibration area)? Usage: ibe_check <out json>
+import io, json, sys, urllib.parse, urllib.request
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+picks = []
+for q, c in sorted(cov.items()):
+    if q[2] != 2:
+        continue
+    has = np.zeros(len(c['t']), bool)
+    for o, (st, med, mag) in c['states'].items():
+        has |= st > 0
+    empty = np.flatnonzero((c['infobits'] == 0) & ~has & (c['t'] > 59945) & (c['t'] < 60280))
+    if len(empty):
+        o = next(o for o in c['states'] if o in {m for g in groups for m in g['members']})
+        picks.append((int(c['expid'][empty[len(empty) // 2]]), rows[o]['ra'], rows[o]['dec'], q))
+    if len(picks) == 3:
+        break
+out = {'label': 'observed (IRSA IBE search, metadata only)', 'checks': []}
+for expid, ra, dec, q in picks:
+    url = 'https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + urllib.parse.urlencode(
+        {'POS': f'{ra},{dec}', 'WHERE': f'expid={expid}', 'ct': 'csv', 'COLUMNS': 'field,ccdid,qid,filtercode,expid,infobits,obsdate'})
+    try:
+        raw = urllib.request.urlopen(url, timeout=60).read()
+        t = Table.read(io.BytesIO(raw), format='csv') if len(raw.strip().splitlines()) > 1 else Table()
+        out['checks'].append({'expid': expid, 'quadrant': list(q), 'images_listed': len(t),
+                              'obsdate': str(t['obsdate'][0]) if len(t) else None})
+    except Exception as ex:
+        out['checks'].append({'expid': expid, 'error': str(ex)[:100]})
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out))

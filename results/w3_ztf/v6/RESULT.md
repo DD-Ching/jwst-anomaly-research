@@ -68,3 +68,10 @@
 
 ## Not done (by the frozen rule)
 - No search of the search group and no image check. No abundance or limit. Nothing here bears on wormholes.
+
+## Wording addendum (2026-10-18, after #349)
+- The new-area recovery is **measured and below the adopted 0.5 threshold** (0.24–0.45 per cell). It is not zero
+  capability.
+- The 539-group search was **not executed (not applicable)**. It is not a search with zero candidates.
+- Splitting recovery by sampling can explain a difference between areas. It adds no missing observations and does not
+  raise recognition power. The diagnosis is in `../v7/RESULT.md`.

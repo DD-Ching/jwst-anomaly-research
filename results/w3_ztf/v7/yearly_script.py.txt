@@ -1,0 +1,55 @@
+# v7 post hoc: where do the carrier epochs come from, per year? For every calibration carrier (r band), count per
+# survey year (a) official exposures of the member quadrants with infobits 0 and the star >= 10" inside the
+# footprint (IRSA metadata; no light-curve information), (b) catalogue detections of the members, (c) epochs kept
+# in the searched series. Usage: python yearly_script.py.txt <pix> <vdir|-> <out json>
+import json, sys
+import numpy as np
+from astropy.table import Table
+from astropy.time import Time
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+pix, vdir, OUT = int(sys.argv[1]), (None if sys.argv[2] == '-' else sys.argv[2]), sys.argv[3]
+wz.configure(pix, vdir)
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+expo = Table.read(wz.CACHE / 'exposures.ecsv')
+fid = {'zg': 1, 'zr': 2, 'zi': 3}
+eq = np.array([(int(f), (int(c) - 1) * 4 + int(q) - 1, fid[str(x)]) for f, c, q, x in zip(expo['field'], expo['ccdid'], expo['qid'], expo['filtercode'])])
+eyear = Time(np.asarray(expo['obsjd'], float), format='jd').datetime64.astype('datetime64[Y]').astype(int) + 1970
+years = list(range(2018, 2026))
+tot = {k: np.zeros(len(years), int) for k in ('official_good_inside', 'catalogue_detections', 'series_epochs')}
+n = 0
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) < 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        continue
+    n += 1
+    quads = {wz.oid_quad(m) for m in g['members'] if wz.oid_quad(m)[2] == 2}
+    sel = np.array([tuple(x) in quads for x in eq]) & (np.asarray(expo['infobits']) == 0)
+    ins = sel.copy()
+    ins[sel] = wz.in_quad(expo[sel], g['ra'], g['dec'])
+    ok = set(np.unique(np.asarray(expo['expid'])[ins]).tolist())
+    yrs = [eyear[i] for i in np.flatnonzero(ins)]
+    seen = set()
+    for i in np.flatnonzero(ins):  # one count per exposure id
+        e = int(expo['expid'][i])
+        if e in seen:
+            continue
+        seen.add(e)
+        if eyear[i] in years:
+            tot['official_good_inside'][years.index(eyear[i])] += 1
+    for m in g['members']:
+        r = rows.get(m)
+        if r is None or r['filt'] != 2:
+            continue
+        tt = r['t'][np.isfinite(r['t'])]
+        for yy in np.floor(1858.877 + tt / 365.2425).astype(int):
+            if yy in years:
+                tot['catalogue_detections'][years.index(yy)] += 1
+    for yy in np.floor(1858.877 + np.array([x[0] for x in s]) / 365.2425).astype(int):
+        if yy in years:
+            tot['series_epochs'][years.index(yy)] += 1
+out = {'label': 'derived; post hoc per-year sampling of calibration carriers (r band)', 'pix': pix, 'carriers': n,
+       'years': years, **{k: v.tolist() for k, v in tot.items()}}
+json.dump(out, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print(json.dumps(out))

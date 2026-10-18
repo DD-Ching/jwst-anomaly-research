@@ -1,0 +1,587 @@
+{
+ "label": "derived; post hoc (simulated injections; official exposures from IRSA metadata)",
+ "cases": 72,
+ "series_post_lt_20": 59,
+ "of_which_official_post_ge_20": 49,
+ "series_pre_lt_20": 13,
+ "of_which_official_pre_ge_20": 1,
+ "umbra_end_mjd_median": 60152.89630446397,
+ "per_case": [
+  {
+   "carrier": 672212300007409,
+   "series_pre": 1104,
+   "series_post": 11,
+   "official_pre": 1106,
+   "official_post": 124,
+   "umbra_end_mjd": 60045.32045349305
+  },
+  {
+   "carrier": 672212300005141,
+   "series_pre": 1144,
+   "series_post": 0,
+   "official_pre": 1238,
+   "official_post": 47,
+   "umbra_end_mjd": 60866.90191056429
+  },
+  {
+   "carrier": 671205400005129,
+   "series_pre": 0,
+   "series_post": 1148,
+   "official_pre": 0,
+   "official_post": 1307,
+   "umbra_end_mjd": 58602.98901417128
+  },
+  {
+   "carrier": 671205400004229,
+   "series_pre": 824,
+   "series_post": 2,
+   "official_pre": 797,
+   "official_post": 30,
+   "umbra_end_mjd": 60927.19784814032
+  },
+  {
+   "carrier": 672212300007372,
+   "series_pre": 1145,
+   "series_post": 0,
+   "official_pre": 1238,
+   "official_post": 47,
+   "umbra_end_mjd": 60891.49095515274
+  },
+  {
+   "carrier": 672208300001052,
+   "series_pre": 570,
+   "series_post": 17,
+   "official_pre": 589,
+   "official_post": 117,
+   "umbra_end_mjd": 59932.98569444788
+  },
+  {
+   "carrier": 672208100001916,
+   "series_pre": 591,
+   "series_post": 9,
+   "official_pre": 592,
+   "official_post": 71,
+   "umbra_end_mjd": 60151.67193451394
+  },
+  {
+   "carrier": 671205200001076,
+   "series_pre": 725,
+   "series_post": 0,
+   "official_pre": 726,
+   "official_post": 15,
+   "umbra_end_mjd": 61023.75449922773
+  },
+  {
+   "carrier": 671205200005736,
+   "series_pre": 607,
+   "series_post": 16,
+   "official_pre": 607,
+   "official_post": 57,
+   "umbra_end_mjd": 59879.85084323296
+  },
+  {
+   "carrier": 671209300006313,
+   "series_pre": 0,
+   "series_post": 722,
+   "official_pre": 0,
+   "official_post": 755,
+   "umbra_end_mjd": 58523.04913139526
+  },
+  {
+   "carrier": 672212300006774,
+   "series_pre": 1140,
+   "series_post": 9,
+   "official_pre": 1166,
+   "official_post": 74,
+   "umbra_end_mjd": 60267.85304528186
+  },
+  {
+   "carrier": 672208200003445,
+   "series_pre": 438,
+   "series_post": 0,
+   "official_pre": 906,
+   "official_post": 13,
+   "umbra_end_mjd": 60975.11363098522
+  },
+  {
+   "carrier": 672212300005227,
+   "series_pre": 0,
+   "series_post": 1064,
+   "official_pre": 0,
+   "official_post": 1220,
+   "umbra_end_mjd": 58275.14737296391
+  },
+  {
+   "carrier": 672208100003905,
+   "series_pre": 0,
+   "series_post": 518,
+   "official_pre": 0,
+   "official_post": 642,
+   "umbra_end_mjd": 58476.51227562449
+  },
+  {
+   "carrier": 672212300005227,
+   "series_pre": 1140,
+   "series_post": 11,
+   "official_pre": 1159,
+   "official_post": 74,
+   "umbra_end_mjd": 60249.80817946205
+  },
+  {
+   "carrier": 672212300010309,
+   "series_pre": 1137,
+   "series_post": 10,
+   "official_pre": 1139,
+   "official_post": 93,
+   "umbra_end_mjd": 60184.66333765204
+  },
+  {
+   "carrier": 671205400007049,
+   "series_pre": 1399,
+   "series_post": 18,
+   "official_pre": 1477,
+   "official_post": 78,
+   "umbra_end_mjd": 60375.24371902037
+  },
+  {
+   "carrier": 671205100011670,
+   "series_pre": 440,
+   "series_post": 7,
+   "official_pre": 844,
+   "official_post": 77,
+   "umbra_end_mjd": 59936.33633426374
+  },
+  {
+   "carrier": 672208200000997,
+   "series_pre": 447,
+   "series_post": 2,
+   "official_pre": 516,
+   "official_post": 6,
+   "umbra_end_mjd": 60895.94135693515
+  },
+  {
+   "carrier": 672212300001621,
+   "series_pre": 1132,
+   "series_post": 9,
+   "official_pre": 1135,
+   "official_post": 115,
+   "umbra_end_mjd": 60154.120674414
+  },
+  {
+   "carrier": 672208200006470,
+   "series_pre": 426,
+   "series_post": 16,
+   "official_pre": 813,
+   "official_post": 104,
+   "umbra_end_mjd": 59753.77526751143
+  },
+  {
+   "carrier": 672212300002097,
+   "series_pre": 1140,
+   "series_post": 10,
+   "official_pre": 1166,
+   "official_post": 93,
+   "umbra_end_mjd": 60232.16872252803
+  },
+  {
+   "carrier": 671205200004364,
+   "series_pre": 698,
+   "series_post": 6,
+   "official_pre": 700,
+   "official_post": 42,
+   "umbra_end_mjd": 60160.45092980424
+  },
+  {
+   "carrier": 672212300008096,
+   "series_pre": 1053,
+   "series_post": 18,
+   "official_pre": 1055,
+   "official_post": 174,
+   "umbra_end_mjd": 59825.18523355325
+  },
+  {
+   "carrier": 671205400003995,
+   "series_pre": 813,
+   "series_post": 9,
+   "official_pre": 813,
+   "official_post": 46,
+   "umbra_end_mjd": 60342.99726877024
+  },
+  {
+   "carrier": 671205400005490,
+   "series_pre": 1389,
+   "series_post": 12,
+   "official_pre": 1458,
+   "official_post": 72,
+   "umbra_end_mjd": 60567.096498297375
+  },
+  {
+   "carrier": 672208100003423,
+   "series_pre": 571,
+   "series_post": 12,
+   "official_pre": 572,
+   "official_post": 136,
+   "umbra_end_mjd": 59832.11545343508
+  },
+  {
+   "carrier": 672208100004607,
+   "series_pre": 593,
+   "series_post": 2,
+   "official_pre": 699,
+   "official_post": 15,
+   "umbra_end_mjd": 60952.75780113375
+  },
+  {
+   "carrier": 671205400002793,
+   "series_pre": 1414,
+   "series_post": 13,
+   "official_pre": 1499,
+   "official_post": 74,
+   "umbra_end_mjd": 60618.28336707248
+  },
+  {
+   "carrier": 672208200002435,
+   "series_pre": 448,
+   "series_post": 0,
+   "official_pre": 921,
+   "official_post": 10,
+   "umbra_end_mjd": 60997.955752705944
+  },
+  {
+   "carrier": 672208200004641,
+   "series_pre": 447,
+   "series_post": 2,
+   "official_pre": 915,
+   "official_post": 15,
+   "umbra_end_mjd": 60904.63515110423
+  },
+  {
+   "carrier": 671205400001545,
+   "series_pre": 0,
+   "series_post": 1307,
+   "official_pre": 0,
+   "official_post": 1466,
+   "umbra_end_mjd": 58404.68552330094
+  },
+  {
+   "carrier": 671205200000923,
+   "series_pre": 734,
+   "series_post": 5,
+   "official_pre": 740,
+   "official_post": 42,
+   "umbra_end_mjd": 60501.21195440987
+  },
+  {
+   "carrier": 672208200000644,
+   "series_pre": 405,
+   "series_post": 5,
+   "official_pre": 795,
+   "official_post": 75,
+   "umbra_end_mjd": 59884.11477948245
+  },
+  {
+   "carrier": 672212300000980,
+   "series_pre": 1094,
+   "series_post": 17,
+   "official_pre": 1097,
+   "official_post": 178,
+   "umbra_end_mjd": 59867.864836560155
+  },
+  {
+   "carrier": 671209300006313,
+   "series_pre": 0,
+   "series_post": 718,
+   "official_pre": 0,
+   "official_post": 751,
+   "umbra_end_mjd": 58540.09494676902
+  },
+  {
+   "carrier": 672212300006053,
+   "series_pre": 1145,
+   "series_post": 0,
+   "official_pre": 1238,
+   "official_post": 39,
+   "umbra_end_mjd": 60993.90410607638
+  },
+  {
+   "carrier": 671205200001074,
+   "series_pre": 725,
+   "series_post": 0,
+   "official_pre": 726,
+   "official_post": 0,
+   "umbra_end_mjd": 61088.83655135309
+  },
+  {
+   "carrier": 672208200007480,
+   "series_pre": 0,
+   "series_post": 409,
+   "official_pre": 0,
+   "official_post": 861,
+   "umbra_end_mjd": 58415.186678985825
+  },
+  {
+   "carrier": 672208200013811,
+   "series_pre": 430,
+   "series_post": 7,
+   "official_pre": 833,
+   "official_post": 61,
+   "umbra_end_mjd": 60148.03934590732
+  },
+  {
+   "carrier": 672212300015886,
+   "series_pre": 0,
+   "series_post": 961,
+   "official_pre": 0,
+   "official_post": 1118,
+   "umbra_end_mjd": 58500.024300116616
+  },
+  {
+   "carrier": 671205200003389,
+   "series_pre": 738,
+   "series_post": 0,
+   "official_pre": 743,
+   "official_post": 0,
+   "umbra_end_mjd": 61101.25702815991
+  },
+  {
+   "carrier": 672212300005141,
+   "series_pre": 0,
+   "series_post": 1023,
+   "official_pre": 0,
+   "official_post": 1178,
+   "umbra_end_mjd": 58336.36035352729
+  },
+  {
+   "carrier": 672212300008511,
+   "series_pre": 0,
+   "series_post": 1023,
+   "official_pre": 0,
+   "official_post": 1178,
+   "umbra_end_mjd": 58404.910350408056
+  },
+  {
+   "carrier": 671205200003011,
+   "series_pre": 737,
+   "series_post": 2,
+   "official_pre": 743,
+   "official_post": 30,
+   "umbra_end_mjd": 60858.93164559794
+  },
+  {
+   "carrier": 671209300006904,
+   "series_pre": 685,
+   "series_post": 14,
+   "official_pre": 685,
+   "official_post": 48,
+   "umbra_end_mjd": 60079.96897030085
+  },
+  {
+   "carrier": 672208200001178,
+   "series_pre": 438,
+   "series_post": 2,
+   "official_pre": 906,
+   "official_post": 15,
+   "umbra_end_mjd": 60873.733275108265
+  },
+  {
+   "carrier": 672208200005974,
+   "series_pre": 407,
+   "series_post": 5,
+   "official_pre": 407,
+   "official_post": 57,
+   "umbra_end_mjd": 59889.178187061385
+  },
+  {
+   "carrier": 672208100001954,
+   "series_pre": 594,
+   "series_post": 0,
+   "official_pre": 699,
+   "official_post": 13,
+   "umbra_end_mjd": 60980.78389895237
+  },
+  {
+   "carrier": 671205400003300,
+   "series_pre": 821,
+   "series_post": 9,
+   "official_pre": 822,
+   "official_post": 46,
+   "umbra_end_mjd": 60367.628623951634
+  },
+  {
+   "carrier": 672212300007350,
+   "series_pre": 0,
+   "series_post": 961,
+   "official_pre": 0,
+   "official_post": 1118,
+   "umbra_end_mjd": 58501.91680063016
+  },
+  {
+   "carrier": 671205100006497,
+   "series_pre": 188,
+   "series_post": 14,
+   "official_pre": 423,
+   "official_post": 97,
+   "umbra_end_mjd": 59316.26383437132
+  },
+  {
+   "carrier": 671205400000101,
+   "series_pre": 976,
+   "series_post": 0,
+   "official_pre": 980,
+   "official_post": 36,
+   "umbra_end_mjd": 60996.648423548315
+  },
+  {
+   "carrier": 671205400005174,
+   "series_pre": 748,
+   "series_post": 13,
+   "official_pre": 779,
+   "official_post": 50,
+   "umbra_end_mjd": 60248.93280047943
+  },
+  {
+   "carrier": 671205200001330,
+   "series_pre": 715,
+   "series_post": 7,
+   "official_pre": 716,
+   "official_post": 43,
+   "umbra_end_mjd": 60178.80475022506
+  },
+  {
+   "carrier": 672208200002978,
+   "series_pre": 431,
+   "series_post": 8,
+   "official_pre": 433,
+   "official_post": 73,
+   "umbra_end_mjd": 59878.24030949498
+  },
+  {
+   "carrier": 672208200002570,
+   "series_pre": 422,
+   "series_post": 7,
+   "official_pre": 815,
+   "official_post": 77,
+   "umbra_end_mjd": 59887.12447098547
+  },
+  {
+   "carrier": 671205200003447,
+   "series_pre": 635,
+   "series_post": 10,
+   "official_pre": 635,
+   "official_post": 52,
+   "umbra_end_mjd": 59962.198533335184
+  },
+  {
+   "carrier": 671205400004842,
+   "series_pre": 1421,
+   "series_post": 2,
+   "official_pre": 1521,
+   "official_post": 44,
+   "umbra_end_mjd": 60856.66215957553
+  },
+  {
+   "carrier": 671205400004365,
+   "series_pre": 1416,
+   "series_post": 13,
+   "official_pre": 1516,
+   "official_post": 74,
+   "umbra_end_mjd": 60574.2679338155
+  },
+  {
+   "carrier": 672212300003383,
+   "series_pre": 0,
+   "series_post": 883,
+   "official_pre": 0,
+   "official_post": 1040,
+   "umbra_end_mjd": 58589.01937514049
+  },
+  {
+   "carrier": 671205400008814,
+   "series_pre": 1413,
+   "series_post": 16,
+   "official_pre": 1500,
+   "official_post": 75,
+   "umbra_end_mjd": 60599.795956906084
+  },
+  {
+   "carrier": 672208200002435,
+   "series_pre": 432,
+   "series_post": 7,
+   "official_pre": 826,
+   "official_post": 77,
+   "umbra_end_mjd": 59943.85543772914
+  },
+  {
+   "carrier": 672208100001087,
+   "series_pre": 539,
+   "series_post": 13,
+   "official_pre": 540,
+   "official_post": 138,
+   "umbra_end_mjd": 59794.96520627154
+  },
+  {
+   "carrier": 672212300008889,
+   "series_pre": 1099,
+   "series_post": 0,
+   "official_pre": 1181,
+   "official_post": 47,
+   "umbra_end_mjd": 60874.24134214767
+  },
+  {
+   "carrier": 671205400008814,
+   "series_pre": 1372,
+   "series_post": 19,
+   "official_pre": 1398,
+   "official_post": 78,
+   "umbra_end_mjd": 60326.17177628205
+  },
+  {
+   "carrier": 671205100006792,
+   "series_pre": 15,
+   "series_post": 23,
+   "official_pre": 24,
+   "official_post": 353,
+   "umbra_end_mjd": 58572.46388761163
+  },
+  {
+   "carrier": 671205200007765,
+   "series_pre": 630,
+   "series_post": 6,
+   "official_pre": 627,
+   "official_post": 49,
+   "umbra_end_mjd": 60032.02012215757
+  },
+  {
+   "carrier": 671205200005736,
+   "series_pre": 708,
+   "series_post": 7,
+   "official_pre": 708,
+   "official_post": 43,
+   "umbra_end_mjd": 60179.04077013103
+  },
+  {
+   "carrier": 672208200007649,
+   "series_pre": 433,
+   "series_post": 9,
+   "official_pre": 434,
+   "official_post": 59,
+   "umbra_end_mjd": 59994.51245358831
+  },
+  {
+   "carrier": 671205200002593,
+   "series_pre": 627,
+   "series_post": 10,
+   "official_pre": 627,
+   "official_post": 52,
+   "umbra_end_mjd": 59905.829389212835
+  },
+  {
+   "carrier": 672208200008621,
+   "series_pre": 429,
+   "series_post": 7,
+   "official_pre": 429,
+   "official_post": 58,
+   "umbra_end_mjd": 60010.945384708655
+  }
+ ]
+}

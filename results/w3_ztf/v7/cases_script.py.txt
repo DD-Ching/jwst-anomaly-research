@@ -1,0 +1,38 @@
+# v7 post hoc: for the 72 rho 0.01 / blend 1 / t_E 100 d injections that had >= 3 umbra nights but were not flagged,
+# count official good exposures (IRSA metadata: member r-band quadrants, infobits 0, star >= 10" inside the
+# footprint) before and after the umbra, next to the series epochs the pre-screen saw. Usage: cases_script <out json>
+import json, sys
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+tr = json.load(open('results/w3_ztf/v7/trace_v6.json'))
+cases = tr['rho0.01_blend1_tE100_unflagged_ge3_umbra_nights']
+groups = {g['key']: g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']}
+expo = Table.read(wz.CACHE / 'exposures.ecsv')
+fid = {'zg': 1, 'zr': 2, 'zi': 3}
+eq = [(int(f), (int(c) - 1) * 4 + int(q) - 1, fid[str(x)]) for f, c, q, x in zip(expo['field'], expo['ccdid'], expo['qid'], expo['filtercode'])]
+mjd = np.asarray(expo['obsjd'], float) - 2400000.5
+info = np.asarray(expo['infobits'])
+dr_last = None
+out = []
+for cs in cases:
+    g = groups[cs['carrier']]
+    quads = {wz.oid_quad(m) for m in g['members'] if wz.oid_quad(m)[2] == 2}
+    sel = np.array([q in quads for q in eq]) & (info == 0)
+    ins = sel.copy(); ins[sel] = wz.in_quad(expo[sel], g['ra'], g['dec'])
+    t = np.unique(np.round(mjd[ins], 4))
+    lo, hi = cs['t0'] - cs['half_d'], cs['t0'] + cs['half_d']
+    out.append({'carrier': cs['carrier'], 'series_pre': cs['pre'], 'series_post': cs['post'],
+                'official_pre': int((t < lo).sum()), 'official_post': int((t > hi).sum()),
+                'umbra_end_mjd': hi})
+n = len(out)
+short_post = [o for o in out if o['series_post'] < wz.MIN_BRACKET]
+short_pre = [o for o in out if o['series_pre'] < wz.MIN_BRACKET]
+res = {'label': 'derived; post hoc (simulated injections; official exposures from IRSA metadata)', 'cases': n,
+       'series_post_lt_20': len(short_post), 'of_which_official_post_ge_20': sum(o['official_post'] >= 20 for o in short_post),
+       'series_pre_lt_20': len(short_pre), 'of_which_official_pre_ge_20': sum(o['official_pre'] >= 20 for o in short_pre),
+       'umbra_end_mjd_median': float(np.median([o['umbra_end_mjd'] for o in out])), 'per_case': out}
+json.dump(res, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print({k: v for k, v in res.items() if k != 'per_case'})
