@@ -5144,3 +5144,12 @@ confining radiation at a throat is found.
   noise models); post hoc p 0.03 / 0.30.
 - **Revisit if:** a new public epoch or a spectrum of a fading point source exists while it is bright, with ≥ 3 bands
   calibrated to a few per cent; or a local-error photometry of the 4446 edge region recovers usable controls.
+
+## D-103 W1 lower masses: the frozen Schirmer 10″ shear filter stays; re-weighted filters do not open ≤ 2 × 10¹² M☉ (2026-10-18)
+- **Decision:** the W1 shear screen keeps its frozen filter (Schirmer, 10″, r_min 1″; D-053) for lower masses.
+- **Alternatives rejected:** the point-mass (1/θ²) filter at 10″ (N(1e12 + 2e12) 0.33× / 0.43× of V0 on the two
+  pilot pointings); a 5″ Schirmer aperture (0.93× / 0.57×); the frozen adoption threshold was ≥ 1.5× in both.
+- **Evidence:** `results/w1_low_mass/RESULT.md` (simulated injections, ceers-o001 and goodsn-o004, Z = 0.3).
+  V0 recovers 3–4 / 100 at 1 × 10¹² M☉, so a forty-field 1 × 10¹² grid would sit at roughly 30–45× Takahashi & Asada.
+- **Revisit if:** a filter with r_min near θ_E, deeper shape catalogues, or a source-density increase (e.g. a
+  second band's shapes) is proposed.
