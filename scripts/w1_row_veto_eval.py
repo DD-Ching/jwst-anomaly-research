@@ -43,7 +43,7 @@ def evaluate(mask_dir: Path, run_dir: Path, ref_dir: Path = REF) -> dict:
         fields[f] = {
             "kept_d097": wsm.kept_rows(old),
             "kept_union": wsm.kept_rows(new),
-            "kept_frac": wsm.kept_rows(new) / wsm.kept_rows(old),
+            "kept_frac": wsm.kept_rows(new) / max(wsm.kept_rows(old), 1),
             "cost_ok": wsm.cost_ok(new, old),
             "union_mask": new["assumptions"]["streak_mask"],
             "screen_union": {
