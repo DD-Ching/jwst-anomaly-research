@@ -514,6 +514,7 @@ def posthoc(r_real: Path, out: Path, exclude=((0, 1024),), n_boot=2000, seed=1) 
     out.write_text(json.dumps(result, indent=1) + "\n")
     return result
 
+
 # ---- v2 (PLAN_v2.md) ----
 
 
@@ -613,10 +614,17 @@ def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
         "uri": uri,
         "mosaic_shape": mosaic_shape,
         "tiles": [list(t) for t in tiles],
-        "settings": {"g": G, "psf_d_fwhm_arcsec": PSF_FWHM_ARCSEC, "psf_r_fwhm_arcsec": PSF_R_FWHM,
-                     "match_px": MATCH_PX, "edge_px": EDGE_PX, "min_snr": MIN_SNR,
-                     "psf_sigma_floor_px": PSF_SIGMA_FLOOR_PX, "mask_dilate_px": MASK_DILATE_PX,
-                     "mask_pad_px": MASK_PAD_PX},  # fmt: skip
+        "settings": {
+            "g": G,
+            "psf_d_fwhm_arcsec": PSF_FWHM_ARCSEC,
+            "psf_r_fwhm_arcsec": PSF_R_FWHM,
+            "match_px": MATCH_PX,
+            "edge_px": EDGE_PX,
+            "min_snr": MIN_SNR,
+            "psf_sigma_floor_px": PSF_SIGMA_FLOOR_PX,
+            "mask_dilate_px": MASK_DILATE_PX,
+            "mask_pad_px": MASK_PAD_PX,
+        },  # fmt: skip
         "variants": {},
         "read_s": round(t_read, 1),
     }
@@ -633,9 +641,16 @@ def real2(out: Path, uri=I2D, workers=None, variants=None) -> dict:
         s["rule"] = rule_outcome_v2(s["R"], s["err"])
         s["excluded_tiles"] = [[r["y0"], r["x0"]] for r, k in zip(rr, keep, strict=True) if not k]
         s["per_tile"] = [
-            {"y0": r["y0"], "x0": r["x0"], "kept": k, "psf_sigma_raw_px": r["psf_sigma_raw_px"],
-             "n_detected": r["n_detected"], "sigma": r["sigma"], "masked_frac": r["masked_frac"],
-             **summary(r["r11"], r["r22"], n_boot=200)}  # fmt: skip
+            {
+                "y0": r["y0"],
+                "x0": r["x0"],
+                "kept": k,
+                "psf_sigma_raw_px": r["psf_sigma_raw_px"],
+                "n_detected": r["n_detected"],
+                "sigma": r["sigma"],
+                "masked_frac": r["masked_frac"],
+                **summary(r["r11"], r["r22"], n_boot=200),
+            }  # fmt: skip
             for r, k in zip(rr, keep, strict=True)
         ]
         snr = np.concatenate([r["snr"] for r in kept]) if kept else np.zeros(0)
