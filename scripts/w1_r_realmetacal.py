@@ -718,6 +718,8 @@ def main(argv=None) -> int:
         return 0
     if a.cmd == "sheet":
         t = list(zip(a.tiles[::2], a.tiles[1::2], strict=True)) if a.tiles else None
+        if a.r_real and not t:
+            t = [(0, 1024), (1024, 1024)]  # the default tiles, with the run's seeds
         seeds = None
         if a.r_real and t:
             order = [tuple(x) for x in json.loads(a.r_real.read_text())["tiles"]]
