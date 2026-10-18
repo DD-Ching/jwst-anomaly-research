@@ -88,13 +88,15 @@ def empirical_error(
     return robust_std(f, min_n=30)
 
 
-def groups(positions: list[tuple[str, float, float]]) -> list[list[tuple[str, float, float]]]:
-    """Greedy grouping of positions within ``GROUP_ARCSEC`` of a group's first member."""
+def groups(
+    positions: list[tuple[str, float, float]], group_arcsec: float = GROUP_ARCSEC
+) -> list[list[tuple[str, float, float]]]:
+    """Greedy grouping of positions within ``group_arcsec`` of a group's first member."""
     out: list[list[tuple[str, float, float]]] = []
     for p in positions:
         for g in out:
             dra = (p[1] - g[0][1]) * np.cos(np.radians(g[0][2])) * 3600
-            if np.hypot(dra, (p[2] - g[0][2]) * 3600) < GROUP_ARCSEC:
+            if np.hypot(dra, (p[2] - g[0][2]) * 3600) < group_arcsec:
                 g.append(p)
                 break
         else:
@@ -274,6 +276,14 @@ def main(argv: list[str] | None = None) -> int:
         action="append",
         help="measure only mosaics of these programs (e.g. 01176)",
     )
+    ap.add_argument(
+        "--group-arcsec",
+        type=float,
+        default=GROUP_ARCSEC,
+        help="positions within this of a group's first member share one MAST query and box "
+        "(with --query-only, one query covers controls around a hit; the error is then one robust "
+        "value over the larger group box, not local)",
+    )
     ap.add_argument("--threads", type=int, default=12)
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
@@ -281,7 +291,7 @@ def main(argv: list[str] | None = None) -> int:
     positions = [(n, float(r), float(d)) for n, r, d in args.pos]
     args.out.mkdir(parents=True, exist_ok=True)
     jobs = []
-    for g in groups(positions):
+    for g in groups(positions, args.group_arcsec):
         prods = covering_products(g, set(args.query_only or []))
         if args.only_program and len(prods):
             prods = prods[np.isin(prods["program"], args.only_program)]

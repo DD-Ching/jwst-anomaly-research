@@ -148,3 +148,9 @@ def test_measure_applies_registration_offset(monkeypatch):
     raw = hl.measure(job)[0]["flux_njy"]
     fixed = hl.measure({**job, "offset": (0.3, 0.0)})[0]["flux_njy"]
     assert fixed > 0.9 * 100.0 and raw < 0.1 * fixed
+
+
+def test_groups_radius_option():
+    pts = [("a", 3.55, -30.37), ("b", 3.55, -30.3750), ("c", 3.55, -30.3830)]
+    assert [len(g) for g in hl.groups(pts)] == [2, 1]  # default 20" groups
+    assert [len(g) for g in hl.groups(pts, 50.0)] == [3]

@@ -33,7 +33,7 @@ system belong together.
   delay, source evolution, position shift, blending, non-detection, several foreground deflectors.
 - **What is not allowed:** free per-pixel warps, per-line or per-epoch shifts until two data sets agree, or adding
   freedoms after seeing a score. Each extra freedom needs a decoy test showing it does not make unrelated sources
-  match (the 2026-10-18 test: the achromatic-scale SED rule with photo-z overlap gives ~2,600 other pairs per passing true pair).
+  match (the 2026-10-18 test: the achromatic-scale SED rule with photo-z overlap gives ~2,600 other pairs per passing published pair; those are unverified, not shown to be false).
 - **Competing explanations kept for every pair:** two different sources each lensed; group members at one redshift;
   knots of one galaxy; instrument artefacts (persistence, spikes, edges).
 - **Geometry:** no assumption that an exotic lens is a flat ring seen in projection; no exotic shape template is used.

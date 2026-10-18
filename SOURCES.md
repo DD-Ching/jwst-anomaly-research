@@ -1532,3 +1532,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - **DJA v7** photo-z tarballs for PRIMER (planned, not fetched yet): `primer-uds-north-grizli-v7.2`,
   `primer-uds-south-grizli-v7.2`, `primer-cosmos-east-grizli-v7.4`, `primer-cosmos-west-grizli-v7.4`
   (`https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/<stem>-fix.photoz.tar.gz`).
+- Prior-work check 2026-10-18 (`docs/value_comparison.md`): DeCoursey et al. 2024, JADES Transient Survey,
+  arXiv:2406.05060; Stein et al. 2021, "Self-supervised similarity search for large scientific datasets",
+  arXiv:2110.13151; https://github.com/georgestein/ssl-legacysurvey (MIT); Palencia et al. 2026 catalogue,
+  https://doi.org/10.5281/zenodo.19439926. sncosmo 2.x (BSD-3, https://github.com/sncosmo/sncosmo; isolated venv,
+  templates hsiao, nugent-sn2p/sn2l/sn1bc and NIRCam bandpasses fetched by sncosmo 2026-10-18) for
+  `scripts/achromatic_test.py simulate`; not a project dependency.

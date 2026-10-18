@@ -5107,7 +5107,7 @@ confining radiation at a throat is found.
     to lenstronomy 1.10.3 (imports with 1.14.2 except one module needing photutils).
 - **Evidence:** `results/same_source/a2744_feasibility/RESULT.md`: holdout recall@10 0.86 (relative ranking works) but
   only 10 of 33 true pairs pass the absolute SED rule (20 fail χ², 13 photo-z overlap); post hoc, 26,145 SED-matched
-  pairs among 2,674,270 at 2–60″, of which 11 have both members within 0.3″ of a published image (10 same-system pairs pass). Limits on later searches: `docs/same_source.md`.
+  pairs among 2,674,270 at 2–60″, of which 11 have both members within 0.3″ of a published image (10 same-system pairs pass; the rest are unverified, not shown to be false). Limits on later searches: `docs/same_source.md`.
 - **Revisit if:** a ranking-based proposal with a calibrated threshold is frozen and tested on a new held-out cluster
   (e.g. MACS0416 CANUCS), or a specific pair needs a source-plane reconstruction (then lenstronomy in an isolated env).
 
@@ -5122,3 +5122,18 @@ confining radiation at a throat is found.
 - **Evidence:** `results/w1_r_metacal/RESULT.md`, `r_sim.json`, `r_sim_rawthr.json` (simulated).
 - **Revisit if:** a real-image calibration gives R < 0.414, or the cluster-fit gap (≈ ×2) is traced to the
   measurement rather than the lens models.
+
+## D-102 Achromaticity as the discriminating test of a two-epoch fade; G165 h002 cannot be decided (2026-10-18)
+- **Decision:** for a fade seen in the same bands at two bright epochs, the test between an intrinsic transient and
+  magnification by a compact deflector (point mass, Ellis wormhole n = 2, negative-mass n = 1; D-047 family) is the
+  band-independence of the calibrated epoch ratio (`scripts/achromatic_test.py`: per-band matched-control zero point
+  and scatter, χ² of a constant, p < 0.01). Its power is simulated first with SN templates (sncosmo, isolated env).
+  It does not separate the deflector types from each other.
+- **Alternatives rejected:** comparing one SN light curve with one wormhole light curve (two ideal curves, no
+  ordinary lens, no errors); a light-curve-shape test (W3 spike–umbra–spike): needs ≥ 3 well-sampled epochs, none of
+  the open objects has them.
+- **Evidence:** `results/transients/confirm_r2/RESULT.md`: B1-PLCKG165 h002 not decided (too few usable controls; h002
+  is near the edge of the 4446 coverage); power 0.15–0.62 against SN templates at its real epochs and errors (two
+  noise models); post hoc p 0.03 / 0.30.
+- **Revisit if:** a new public epoch or a spectrum of a fading point source exists while it is bright, with ≥ 3 bands
+  calibrated to a few per cent; or a local-error photometry of the 4446 edge region recovers usable controls.
