@@ -328,6 +328,10 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - Palencia et al. 2026, catalogue of microlensed stars in the A370 Dragon arc, A&A 714, A22, arXiv:2604.22702
   (via a literature search 2026-10-17; used for B3-A370-box2-h010).
 - Fudamoto et al., Dragon-arc transients, arXiv:2404.08045 (via a literature search 2026-10-17).
+- JWST DD 12781 (PI Pascale), "Catching the reappearance of strongly lensed supernova with a 1+ year time-delay"
+  (SN Athena, MACS J0417): https://www.stsci.edu/jwst-program-info/program/?program=12781 (proposal PDF read 2026-10-18);
+  JWST GO 4568 (target "athena"); HST 18470 and 17474 (MAST programme pages, 2026-10-18).
+- JWST General Target Visibility Tool `jwst_gtvt` 1.2 (PyPI), run 2026-10-18 for MACS0417.
 - Hubble Frontier Fields lens models (same layout as RELICS): https://archive.stsci.edu/prepds/frontier/lensmodels/
 - Zoobot Euclid encoder (Apache-2.0): https://huggingface.co/mwalmsley/zoobot-encoder-euclid
 - Euclid Q1 strong-lens expert labels: https://huggingface.co/datasets/mwalmsley/euclid_strong_lens_expert_judges

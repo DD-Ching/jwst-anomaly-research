@@ -33,3 +33,12 @@ Vetted 2026-10-17. Every number is `derived` unless labelled. Neither entry is u
 - **Cheapest discriminating next check:** matched arc-pixel controls (`hit_lightcurve_controls.py pick-arc` + `compare`)
   on the 1208 → VENUS F444W pair; if the change exceeds the control scatter, compare its epochs and position with the
   Palencia+2026 event list.
+
+## Revision 2026-10-18: matched-control checks (`results/transients/confirm_r1/a370_controls.json`)
+- **h003:** rule outcome: consistent with the matched compact-source scatter (tail 0.61). Interpretation from the control
+  distribution (added after the check): the 54 controls share a median 15 % F444W aperture-flux drop between 1208 and
+  VENUS (ratio 0.852, 16–84 %: 0.824–0.882) and h003's 0.887 lies inside it, pointing to a common flux offset between
+  the two mosaics. Status: **no evidence of a source-specific change.**
+- **h010:** within the scatter of 80 matched arc pixels (tail 0.100 F444W 1208 → VENUS; 0.113 F356W within 5324).
+  Status: **existing data do not support a real change**; an instrumental cause is not proven. Needed for more: a change
+  larger than the arc-pixel scatter (deeper data or a PSF-matched model of the arc light).
