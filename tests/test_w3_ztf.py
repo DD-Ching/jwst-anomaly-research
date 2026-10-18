@@ -211,3 +211,20 @@ def test_v4_footprint_great_circle_edges_at_high_dec():
     assert not wz.in_quad(expo, 100.0, 65.3 + 20 / 3600, 0.0).any()
     expo["dec2"][0] = np.nan
     assert not wz.in_quad(expo, 100.0, 65.0, 0.0).any()  # a non-finite corner counts as outside
+
+
+def test_v8_exposure_mid_time_uses_exptime():
+    from astropy.table import Table
+
+    # a 299-s private-survey exposure: the detection sits at the mid-time, 149.5 s after the start
+    obsjd = 2460065.7368519
+    expo = Table({"obsjd": [obsjd], "exptime": [299.0]})
+    et = wz.exposure_times(expo, 184.0, 33.0)
+    t_det = wz.exposure_times(
+        Table({"obsjd": [obsjd + 134.5 / 86400.0]}), 184.0, 33.0
+    )  # 30-s rule + 134.5 s
+    assert wz.match_exposures(t_det, et)[0] == 0
+    assert (
+        wz.match_exposures(t_det, wz.exposure_times(Table({"obsjd": [obsjd]}), 184.0, 33.0))[0]
+        == -1
+    )

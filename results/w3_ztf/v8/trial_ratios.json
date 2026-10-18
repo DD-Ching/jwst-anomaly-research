@@ -1,0 +1,365 @@
+{
+ "label": "derived; uncorrected aperture ratios (no field-star correction available)",
+ "stars": [
+  {
+   "objectid": 672208200000073,
+   "exposures": [
+    {
+     "role": "control",
+     "mjd": 59687.35993060004,
+     "seeing": 2.10612,
+     "ratio_to_controls": 1.032801384015621,
+     "err_over_controls": 0.02053947723865157,
+     "ratio_to_dr24": 0.693133545554389,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 59711.27655090019,
+     "seeing": 2.75409,
+     "ratio_to_controls": 0.7843865188730772,
+     "err_over_controls": 0.019534241120847996,
+     "ratio_to_dr24": 0.5364314941400863,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59876.521284699906,
+     "seeing": 3.16731,
+     "ratio_to_controls": 0.8099282540406983,
+     "err_over_controls": 0.016432777356454688,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59876.52871529991,
+     "seeing": 2.79014,
+     "ratio_to_controls": 0.938067754394129,
+     "err_over_controls": 0.0142052244253528,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59923.494386599865,
+     "seeing": 2.098,
+     "ratio_to_controls": 1.050301236771212,
+     "err_over_controls": 0.016071903865532623,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59985.28439809987,
+     "seeing": 3.20444,
+     "ratio_to_controls": 0.7449968027258049,
+     "err_over_controls": 0.01394309101173441,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60036.23570600012,
+     "seeing": 2.06403,
+     "ratio_to_controls": 1.1586785730296518,
+     "err_over_controls": 0.016225688867511575,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60042.30983800022,
+     "seeing": 2.17019,
+     "ratio_to_controls": 1.0325527007150936,
+     "err_over_controls": 0.026668294859026238,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60244.522708300035,
+     "seeing": 2.44196,
+     "ratio_to_controls": 1.0293311055646304,
+     "err_over_controls": 0.014711636192390725,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60244.53293980006,
+     "seeing": 2.41959,
+     "ratio_to_controls": 0.9525512840609024,
+     "err_over_controls": 0.01666368420655401,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 60839.26079860004,
+     "seeing": 2.28745,
+     "ratio_to_controls": 1.0455224074668046,
+     "err_over_controls": 0.015052598006689748,
+     "ratio_to_dr24": 0.7237093967893306,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 60850.27976850001,
+     "seeing": 2.21774,
+     "ratio_to_controls": 0.9671986159843793,
+     "err_over_controls": 0.018647432761590546,
+     "ratio_to_dr24": 0.6732159131179799,
+     "n_field_stars": 0
+    }
+   ]
+  },
+  {
+   "objectid": 672208200000239,
+   "exposures": [
+    {
+     "role": "control",
+     "mjd": 59819.14034719998,
+     "seeing": 1.9647,
+     "ratio_to_controls": 1.0003769626738783,
+     "err_over_controls": 0.0189536890248785,
+     "ratio_to_dr24": 0.7073938431236786,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 59822.139895800035,
+     "seeing": 2.63828,
+     "ratio_to_controls": 0.9785318765592262,
+     "err_over_controls": 0.02051670525719041,
+     "ratio_to_dr24": 0.6551359798070799,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59876.521284699906,
+     "seeing": 3.16731,
+     "ratio_to_controls": 0.8633327181425591,
+     "err_over_controls": 0.008560658527900448,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59878.52109949989,
+     "seeing": 2.42609,
+     "ratio_to_controls": 1.0851296578536478,
+     "err_over_controls": 0.007408719074497727,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59909.45043980004,
+     "seeing": 1.90856,
+     "ratio_to_controls": 1.0896159878430531,
+     "err_over_controls": 0.007063021728732147,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60042.30788190011,
+     "seeing": 2.15378,
+     "ratio_to_controls": 1.0874121857065868,
+     "err_over_controls": 0.011797131362278876,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60165.16549770022,
+     "seeing": 2.34413,
+     "ratio_to_controls": 0.9946348503737765,
+     "err_over_controls": 0.009749436312093273,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60179.14190969989,
+     "seeing": 1.82186,
+     "ratio_to_controls": 1.146499445484419,
+     "err_over_controls": 0.020929169823028407,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60241.52028940013,
+     "seeing": 3.46707,
+     "ratio_to_controls": 0.7385565745427504,
+     "err_over_controls": 0.007763644682494437,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60244.53293980006,
+     "seeing": 2.41959,
+     "ratio_to_controls": 1.0275855320776262,
+     "err_over_controls": 0.007702366925353019,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 60839.26079860004,
+     "seeing": 2.28745,
+     "ratio_to_controls": 0.9996230373261218,
+     "err_over_controls": 0.009242583665773107,
+     "ratio_to_dr24": 0.6782758119567167,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 60844.32905089995,
+     "seeing": 2.15422,
+     "ratio_to_controls": 1.096861299508118,
+     "err_over_controls": 0.011493574426944188,
+     "ratio_to_dr24": 0.7457076993807227,
+     "n_field_stars": 0
+    }
+   ]
+  },
+  {
+   "objectid": 672208200002085,
+   "exposures": [
+    {
+     "role": "control",
+     "mjd": 59803.164733800106,
+     "seeing": 2.06157,
+     "ratio_to_controls": 0.9737602395639101,
+     "err_over_controls": 0.009295391753569145,
+     "ratio_to_dr24": 0.7147452422768321,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 59822.139895800035,
+     "seeing": 2.63828,
+     "ratio_to_controls": 0.9118107356692248,
+     "err_over_controls": 0.010825448293198368,
+     "ratio_to_dr24": 0.6283971647742036,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59876.521284699906,
+     "seeing": 3.16731,
+     "ratio_to_controls": 0.8016572950837231,
+     "err_over_controls": 0.004185958581865652,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59876.52623840002,
+     "seeing": 3.11013,
+     "ratio_to_controls": 0.875399408914194,
+     "err_over_controls": 0.0046544652434535976,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 59876.52871529991,
+     "seeing": 2.79014,
+     "ratio_to_controls": 0.8989195668719805,
+     "err_over_controls": 0.004576966892382792,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60164.171990700066,
+     "seeing": 1.8995,
+     "ratio_to_controls": 1.0770551155837642,
+     "err_over_controls": 0.006034355451968977,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60185.14201389998,
+     "seeing": 2.27912,
+     "ratio_to_controls": 0.9080481092750311,
+     "err_over_controls": 0.012233353297281268,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60241.52283560019,
+     "seeing": 3.34559,
+     "ratio_to_controls": 0.7835329487979413,
+     "err_over_controls": 0.005075863332114517,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60241.52537039993,
+     "seeing": 3.95691,
+     "ratio_to_controls": 0.6243492689264505,
+     "err_over_controls": 0.004448193750722674,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "gap",
+     "mjd": 60241.53046299983,
+     "seeing": 3.15345,
+     "ratio_to_controls": 0.7622014163026835,
+     "err_over_controls": 0.005200640030626282,
+     "ratio_to_dr24": null,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 60839.26079860004,
+     "seeing": 2.28745,
+     "ratio_to_controls": 1.0337788660039768,
+     "err_over_controls": 0.005846175186991576,
+     "ratio_to_dr24": 0.7031291855945617,
+     "n_field_stars": 0
+    },
+    {
+     "role": "control",
+     "mjd": 60844.32905089995,
+     "seeing": 2.15422,
+     "ratio_to_controls": 1.0262397604360898,
+     "err_over_controls": 0.006695175556344803,
+     "ratio_to_dr24": 0.7068550946034494,
+     "n_field_stars": 0
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "gap_n": 24,
+  "gap_ratio_min_max": [
+   0.6243492689264505,
+   1.1586785730296518
+  ],
+  "gap_seeing_gt3_n": 9,
+  "gap_seeing_gt3_ratio_min_max": [
+   0.6243492689264505,
+   0.875399408914194
+  ],
+  "control_aperture_over_dr24_min_max": [
+   0.5364314941400863,
+   0.7457076993807227
+  ],
+  "field_stars_found_per_star": [
+   0,
+   0,
+   0
+  ]
+ }
+}

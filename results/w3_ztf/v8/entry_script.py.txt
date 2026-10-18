@@ -1,0 +1,93 @@
+# v8 data-entry check (Npix 7134, r band). Fixed sample (before any per-star count is looked at): the first 5
+# calibration groups (by key) whose r-band objectid lies in HATS row group 2 (the smallest). For each member r
+# objectid: HATS DR24 detections (row group 2 only), IRSA light-curve API detections (expid, programid), and official
+# exposures (TAP ztf_current_meta_sci, member quadrants, star >= 10" inside the footprint, with ipac_gid and
+# ipac_pub_date), compared per month. Up to 10 HATS detections in 2023 that do not time-match an official exposure are
+# looked up in the API by time. Usage: python entry_script.py.txt <out json>
+import io, json, sys, time, urllib.parse, urllib.request
+from collections import Counter, defaultdict
+import numpy as np
+import pyarrow as pa, pyarrow.compute as pc, pyarrow.parquet as pq
+from astropy.table import Table, vstack
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+nbytes = Counter()
+def get(url, kind, timeout=300):
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=timeout).read(); nbytes[kind] += len(raw); return raw
+        except OSError:
+            time.sleep(10 * (k + 1))
+    raise RuntimeError(url[:80])
+GAP = (59853.0, 60249.0)  # 2022-10-01 .. 2023-11-01
+mon = lambda t: f"{int(np.floor(1858.877 + t / 365.2425))}-{int(((t - 59580.0) % 365.2425) / 30.44) + 1:02d}"
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+f = pq.ParquetFile(wz.s3().open(wz.LC_PART))
+ids = f.read_row_group(2, columns=['objectid'])['objectid'].to_numpy()
+nbytes['hats_objectid_column'] = f.metadata.row_group(2).column(0).total_compressed_size
+inrg = set(ids.tolist())
+pick = [g for g in sorted(groups, key=lambda g: g['key']) if any(m in inrg and wz.oid_quad(m)[2] == 2 for m in g['members'])][:5]
+oids = [m for g in pick for m in g['members'] if wz.oid_quad(m)[2] == 2]
+t = f.read_row_group(2, columns=['objectid', 'lightcurve'])
+nbytes['hats_lightcurve_rowgroup2'] = sum(f.metadata.row_group(2).column(j).total_compressed_size for j in range(f.metadata.row_group(2).num_columns) if f.metadata.row_group(2).column(j).path_in_schema.startswith('lightcurve'))
+t = t.filter(pc.is_in(t['objectid'], value_set=pa.array(oids)))
+hats = {int(o): t['lightcurve'][i].as_py() for i, o in enumerate(t['objectid'].to_numpy())}
+api = {}
+for o in oids:
+    raw = get(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={o}&FORMAT=csv', 'lc_api', 120)
+    api[o] = Table.read(io.BytesIO(raw), format='csv') if len(raw.strip().splitlines()) > 1 else Table()
+quads = sorted({wz.oid_quad(o) for o in oids})
+parts = []
+for field in sorted({q[0] for q in quads}):
+    cond = ' OR '.join(f'(ccdid={r // 4 + 1} AND qid={r % 4 + 1})' for r in sorted({q[1] for q in quads if q[0] == field}))
+    sql = ('SELECT field,ccdid,qid,filtercode,expid,obsjd,infobits,ipac_gid,ipac_pub_date,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 '
+           f"FROM ztf.ztf_current_meta_sci WHERE field={field} AND filtercode='zr' AND ({cond})")
+    raw = get('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), 'tap')
+    parts.append(Table.read(io.BytesIO(raw), format='csv'))
+expo = vstack(parts)
+res = {'label': 'observed (HATS DR24 row group 2, IRSA LC API, IRSA TAP) and derived counts', 'gap_mjd': GAP,
+       'stars': [], 'unmatched_lookup': []}
+for g in pick:
+    for o in [m for m in g['members'] if wz.oid_quad(m)[2] == 2]:
+        q = wz.oid_quad(o)
+        e = expo[(expo['field'] == q[0]) & ((expo['ccdid'] - 1) * 4 + expo['qid'] - 1 == q[1])]
+        e = e[wz.in_quad(e, g['ra'], g['dec'])]
+        emjd = np.asarray(e['obsjd'], float) - 2400000.5
+        lc = hats.get(o); h = np.asarray(lc['hmjd'], float) if lc else np.array([])
+        a = api[o]; am = np.asarray(a['mjd'], float) if len(a) else np.array([])
+        aexp = set(np.asarray(a['expid']).tolist()) if len(a) else set()
+        eexp = set(np.asarray(e['expid']).tolist())
+        ingap = lambda x: (x >= GAP[0]) & (x < GAP[1])
+        rec = {'group': g['key'], 'objectid': o, 'quadrant': list(q),
+               'official_exposures_inside': len(e), 'official_in_gap': int(ingap(emjd).sum()),
+               'official_in_gap_infobits0': int((ingap(emjd) & (np.asarray(e['infobits']) == 0)).sum()),
+               'official_in_gap_by_gid': {str(k): int(v) for k, v in Counter(np.asarray(e['ipac_gid'])[ingap(emjd)].tolist()).items()},
+               'official_outside_gap_by_gid': {str(k): int(v) for k, v in Counter(np.asarray(e['ipac_gid'])[~ingap(emjd)].tolist()).items()},
+               'hats_detections': int(len(h)), 'hats_in_gap': int(ingap(h).sum()),
+               'api_detections': int(len(am)), 'api_in_gap': int(ingap(am).sum()),
+               'api_in_gap_by_programid': {str(k): int(v) for k, v in Counter(np.asarray(a['programid'])[ingap(am)].tolist()).items()} if len(a) else {},
+               'api_outside_gap_by_programid': {str(k): int(v) for k, v in Counter(np.asarray(a['programid'])[~ingap(am)].tolist()).items()} if len(a) else {},
+               'api_expids_not_in_official_list': len(aexp - eexp),
+               'pub_date_range_in_gap': [str(min(np.asarray(e['ipac_pub_date'])[ingap(emjd)])), str(max(np.asarray(e['ipac_pub_date'])[ingap(emjd)]))] if ingap(emjd).any() else None,
+               'months': {}}
+        for m in sorted({mon(x) for x in np.r_[emjd[ingap(emjd)], h[ingap(h)], am[ingap(am)]]}):
+            rec['months'][m] = [int(sum(mon(x) == m for x in emjd[ingap(emjd)])), int(sum(mon(x) == m for x in h[ingap(h)])),
+                                int(sum(mon(x) == m for x in am[ingap(am)]))]
+        res['stars'].append(rec)
+        # unmatched HATS detections in 2023 (time match to official exposures as in coverage())
+        if len(h) and len(e) and len(res['unmatched_lookup']) < 10:
+            et = np.sort(wz.exposure_times(e, g['ra'], g['dec']))
+            idx = wz.match_exposures(h, et)
+            for k in np.flatnonzero((idx < 0) & (h >= 59945.0) & (h < 60310.0))[: 10 - len(res['unmatched_lookup'])]:
+                j = int(np.argmin(np.abs(am - h[k]))) if len(am) else None
+                row = a[j] if j is not None else None
+                res['unmatched_lookup'].append({'objectid': o, 'hats_hmjd': float(h[k]), 'nearest_official_dt_d': float(np.min(np.abs(et - h[k]))),
+                    'api_mjd': float(row['mjd']) if row is not None else None, 'api_hjd_minus_2400000.5': float(row['hjd']) - 2400000.5 if row is not None else None,
+                    'api_expid': int(row['expid']) if row is not None else None, 'api_field_quadrant': [int(row['field']), str(row['ccdid']), str(row['qid'])] if row is not None else None,
+                    'api_expid_in_official_list': (int(row['expid']) in set(np.asarray(expo['expid']).tolist())) if row is not None else None})
+res['bytes'] = dict(nbytes)
+json.dump(res, open(sys.argv[1], 'w'), indent=1, default=str); open(sys.argv[1], 'a').write('\n')
+for s in res['stars']:
+    print(s['objectid'], s['quadrant'], 'off gap', s['official_in_gap'], s['official_in_gap_by_gid'], 'hats gap', s['hats_in_gap'], 'api gap', s['api_in_gap'], s['api_in_gap_by_programid'], 'pub', s['pub_date_range_in_gap'])
+print(res['unmatched_lookup'][:3]); print(res['bytes'])

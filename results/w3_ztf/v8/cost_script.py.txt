@@ -1,0 +1,25 @@
+# v8: star x exposure measurements needed to give the 49 #350 cases (rho 0.01, blend 1, t_E 100 d; series post-event
+# baseline < 20 but >= 20 official good exposures after the umbra) the frozen 20 post-event epochs, from
+# ../v7/cases_tE100.json. Needed per case = 20 - series_post. Bounds over shared carriers: upper = sum over cases;
+# lower = per carrier the largest need (the same later exposures can serve every case of that carrier only if their
+# umbrae end before them; the true union lies between). Unit costs from image_trial.json.
+import json
+c = json.load(open('results/w3_ztf/v7/cases_tE100.json'))['per_case']
+tr = json.load(open('results/w3_ztf/v8/image_trial.json'))
+cases = [x for x in c if x['series_post'] < 20 and x['official_post'] >= 20]
+need = [20 - x['series_post'] for x in cases]
+per_carrier = {}
+for x, n in zip(cases, need):
+    per_carrier[x['carrier']] = max(per_carrier.get(x['carrier'], 0), n)
+n_cut = tr['attempted']; s_phot = tr['timing']['cutout_and_photometry_s']; b_cut = tr['bytes']['cutouts']
+out = {'label': 'derived; v8 cost estimate (no new download)', 'cases': len(cases), 'carriers': len(per_carrier),
+       'star_exposures_upper': sum(need), 'star_exposures_lower': sum(per_carrier.values()),
+       'per_cutout_s': round(s_phot / n_cut, 2), 'per_cutout_bytes': round(b_cut / n_cut),
+       'query_s_per_star': round(tr['timing']['query_s'] / len(tr['plan']), 1)}
+for k in ('lower', 'upper'):
+    n = out[f'star_exposures_{k}']
+    out[f'cutout_time_min_{k}'] = round(n * out['per_cutout_s'] / 60, 1)
+    out[f'cutout_mb_{k}'] = round(n * out['per_cutout_bytes'] / 1e6, 1)
+out['query_time_min'] = round(out['carriers'] * out['query_s_per_star'] / 60, 1)
+json.dump(out, open('results/w3_ztf/v8/cost_estimate.json', 'w'), indent=1); open('results/w3_ztf/v8/cost_estimate.json', 'a').write('\n')
+print(out)

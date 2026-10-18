@@ -5209,6 +5209,13 @@ confining radiation at a throat is found.
   2024 is sparse. About 52–102 come from pre-screen and vetting given eligibility. No bug changes the outcome. Reopen if: a later
   release covers those epochs (`month_script.py.txt` check on calibration data first), or the owner authorizes
   image-level forced photometry for the post-event baseline. Not reopened by another batch or area of DR24.
+- **Addendum 2026-10-18 (v8, `results/w3_ztf/v8/RESULT.md`):** for field 672 in Npix 7134 the gap exposures are absent from DR24
+  in both HATS and the IRSA light-curve API (13 objectids checked; consistent with release-notes advisory 10; the
+  reason for each exposure is not established). The #338/#339 cutout photometry fails its control
+  (0.54–0.75 × DR24 flux, no field stars), so it cannot fill baselines as is. The exposure mid-time bug (exptime) is
+  fixed, with no effect on stored results. **Paused.** Reopen if a newer release fills the field 672 gap (checked
+  with `entry_script.py.txt`), image photometry passes a control against DR24 (owner go-ahead needed), or the owner
+  revisits the infobits rule under a new plan.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

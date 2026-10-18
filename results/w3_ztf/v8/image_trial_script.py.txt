@@ -1,0 +1,125 @@
+# v8 limited image trial (owner round after #350): can the #338/#339 forced-photometry method recover usable flux
+# at exposures that DR24 lacks? Selection (fixed before any download; metadata only): the first 3 calibration
+# groups (by key) of the v6 sample with an r-band objectid in field 672 (the field with the largest gap in
+# entry.json). Per star 12 exposures from IRSA TAP (member quadrant, infobits 0, star >= 10" inside the footprint):
+#   8 gap exposures (MJD 59853-60249) with no DR24 detection of that objectid (IRSA LC API), evenly spaced;
+#   4 control exposures with a DR24 detection: the 2 latest before the gap and the 2 earliest after it.
+# Photometry as in v4/v5 image_script: 120" IBE cutout, 2" aperture, 4-6" annulus, random-aperture error, 5 field
+# stars by sky position from the first usable cutout. Control: field-corrected flux vs the DR24 mag of that expid.
+# Usage: python image_trial_script.py.txt <cutout dir> <out json>
+import io, json, os, sys, time, urllib.parse, urllib.request, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.wcs import WCS
+from scipy import ndimage
+warnings.filterwarnings('ignore')
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+from hit_lightcurve import aperture_photometry
+wz.configure(7134, 'v6')
+CUT, OUT = sys.argv[1:3]
+R, ANN, GAP = 2.0, (4.0, 6.0), (59853.0, 60249.0)
+t_start = time.time(); timing = {}
+def get(url, timeout=60):
+    for k in range(4):
+        try:
+            return urllib.request.urlopen(url, timeout=timeout).read(), None
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (k + 1))
+    return None, err
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+pick = [g for g in sorted(groups, key=lambda g: g['key']) if any(wz.oid_quad(m)[0] == 672 and wz.oid_quad(m)[2] == 2 for m in g['members'])][:3]
+nbytes = {'tap': 0, 'lc_api': 0, 'cutouts': 0}
+plan = []
+for g in pick:
+    o = next(m for m in g['members'] if wz.oid_quad(m)[0] == 672 and wz.oid_quad(m)[2] == 2)
+    f, rc, _ = wz.oid_quad(o)
+    sql = ('SELECT field,ccdid,qid,filtercode,expid,obsjd,infobits,filefracday,seeing,maglimit,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 '
+           f"FROM ztf.ztf_current_meta_sci WHERE field={f} AND ccdid={rc // 4 + 1} AND qid={rc % 4 + 1} AND filtercode='zr' AND infobits=0")
+    raw, _ = get('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), 300); nbytes['tap'] += len(raw)
+    e = Table.read(io.BytesIO(raw), format='csv'); e = e[wz.in_quad(e, g['ra'], g['dec'])]
+    raw, _ = get(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={o}&FORMAT=csv', 120); nbytes['lc_api'] += len(raw)
+    a = Table.read(io.BytesIO(raw), format='csv')
+    dr = {int(x['expid']): float(x['mag']) for x in a if int(x['catflags']) == 0}
+    mjd = np.asarray(e['obsjd'], float) - 2400000.5
+    order = np.argsort(mjd); e, mjd = e[order], mjd[order]
+    has = np.array([int(x) in dr for x in e['expid']])
+    gap = np.flatnonzero((mjd >= GAP[0]) & (mjd < GAP[1]) & ~has)
+    gap = gap[np.unique(np.linspace(0, len(gap) - 1, min(8, len(gap))).round().astype(int))] if len(gap) else gap
+    before = np.flatnonzero((mjd < GAP[0]) & has)[-2:]; after = np.flatnonzero((mjd >= GAP[1]) & has)[:2]
+    sel = list(before) + list(gap) + list(after)
+    plan.append({'group': g['key'], 'objectid': o, 'ra': g['ra'], 'dec': g['dec'],
+                 'official_gap_infobits0': int(((mjd >= GAP[0]) & (mjd < GAP[1])).sum()),
+                 'official_gap_without_dr24': int(((mjd >= GAP[0]) & (mjd < GAP[1]) & ~has).sum()),
+                 'exposures': [{'expid': int(e['expid'][k]), 'mjd': float(mjd[k]), 'role': 'gap' if k in gap else 'control',
+                                'dr24_mag': dr.get(int(e['expid'][k])), 'filefracday': str(e['filefracday'][k]),
+                                'quad': [int(e['field'][k]), int(e['ccdid'][k]), int(e['qid'][k])],
+                                'seeing': float(e['seeing'][k]), 'maglimit': float(e['maglimit'][k])} for k in sel]})
+json.dump({'label': 'v8 image-trial selection (fixed before download)', 'plan': plan}, open(OUT.replace('.json', '_selection.json'), 'w'), indent=1)
+open(OUT.replace('.json', '_selection.json'), 'a').write('\n')
+timing['query_s'] = round(time.time() - t_start, 1)
+t1 = time.time(); n_ok = n_try = 0
+for p in plan:
+    ref_field = None
+    for x in p['exposures']:
+        n_try += 1
+        ffd = x['filefracday']; fq = x['quad']
+        url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+               f"{fq[0]:06d}_zr_c{fq[1]:02d}_o_q{fq[2]}_sciimg.fits?center={p['ra']},{p['dec']}&size=120arcsec&gzip=false")
+        fn = f"{CUT}/{x['expid']}_{p['objectid']}.fits"
+        if not os.path.exists(fn):
+            data, err = get(url)
+            if data is None:
+                x['status'] = f'cutout not obtained: {err}'; continue
+            open(fn, 'wb').write(data)
+        nbytes['cutouts'] += os.path.getsize(fn)
+        try:
+            h = fits.open(fn); img = h[0].data.astype(float); hd = h[0].header; w = WCS(hd)
+        except Exception as ex:
+            x['status'] = f'unreadable: {str(ex)[:60]}'; continue
+        sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600; k = 10 ** (-0.4 * (hd['MAGZP'] - 23.9))
+        xx, yy = (float(v) for v in w.world_to_pixel_values(p['ra'], p['dec']))
+        f_ = aperture_photometry(img, xx, yy, R / sc, (ANN[0] / sc, ANN[1] / sc))
+        rng = np.random.default_rng(x['expid'] % 2**32); rnd = []
+        for _ in range(800):
+            u, v = rng.uniform(8, img.shape[1] - 8), rng.uniform(8, img.shape[0] - 8)
+            if np.hypot(u - xx, v - yy) < 6 / sc: continue
+            q = aperture_photometry(img, u, v, R / sc, (ANN[0] / sc, ANN[1] / sc))
+            if np.isfinite(q): rnd.append(q)
+            if len(rnd) >= 200: break
+        rnd = np.array(rnd); er = 1.4826 * np.median(np.abs(rnd - np.median(rnd))) if len(rnd) > 30 else np.nan
+        if ref_field is None:
+            sm = ndimage.gaussian_filter(np.nan_to_num(img), 1.0)
+            thr = np.nanmedian(sm) + 10 * 1.4826 * np.nanmedian(np.abs(sm - np.nanmedian(sm)))
+            pk = np.argwhere((sm == ndimage.maximum_filter(sm, 7)) & (sm > thr))
+            pk = [z for z in pk if np.hypot(z[1] - xx, z[0] - yy) * sc >= 8 and 8 < z[1] < img.shape[1] - 8 and 8 < z[0] < img.shape[0] - 8]
+            pk = sorted(pk, key=lambda z: -sm[z[0], z[1]])[:5]
+            ref_field = [w.pixel_to_world_values(z[1], z[0]) for z in pk]
+        ff = [aperture_photometry(img, *(float(v) for v in w.world_to_pixel_values(a1, d1)), R / sc, (ANN[0] / sc, ANN[1] / sc)) * k for a1, d1 in ref_field]
+        x.update(status='measured', flux_uJy=float(f_ * k), err_uJy=float(er * k), field_uJy=[float(v) for v in ff],
+                 finite_aperture=bool(np.isfinite(f_)), cutout_bytes=os.path.getsize(fn))
+        n_ok += np.isfinite(f_)
+    ctl = [x for x in p['exposures'] if x.get('status') == 'measured' and x['role'] == 'control' and x['dr24_mag'] is not None]
+    fb = np.nanmedian(np.array([x['field_uJy'] for x in ctl]), axis=0) if ctl else None
+    for x in p['exposures']:
+        if x.get('status') != 'measured' or fb is None:
+            continue
+        x['field_ratio_median'] = float(np.nanmedian(np.array(x['field_uJy']) / fb))
+        x['flux_field_corrected_uJy'] = x['flux_uJy'] / x['field_ratio_median'] if x['field_ratio_median'] else None
+        if x['dr24_mag'] is not None:
+            x['dr24_uJy'] = 10 ** (-0.4 * (x['dr24_mag'] - 23.9)); x['ratio_to_dr24'] = x['flux_uJy'] / x['dr24_uJy']
+    base = [x['flux_field_corrected_uJy'] for x in ctl if x.get('flux_field_corrected_uJy')]
+    p['control_median_uJy'] = float(np.median(base)) if base else None
+    for x in p['exposures']:
+        if x.get('flux_field_corrected_uJy') and p['control_median_uJy']:
+            x['ratio_to_control'] = x['flux_field_corrected_uJy'] / p['control_median_uJy']
+            x['deficit_sigma'] = (p['control_median_uJy'] - x['flux_field_corrected_uJy']) / x['err_uJy'] if x['err_uJy'] else None
+timing['cutout_and_photometry_s'] = round(time.time() - t1, 1)
+out = {'label': 'derived; v8 limited image trial', 'timing': timing, 'bytes': nbytes, 'measured': n_ok, 'attempted': n_try, 'plan': plan}
+json.dump(out, open(OUT, 'w'), indent=1, default=float); open(OUT, 'a').write('\n')
+for p in plan:
+    print(p['objectid'], p['official_gap_infobits0'], p['official_gap_without_dr24'], p['control_median_uJy'])
+    for x in p['exposures']:
+        print('  ', x['role'], round(x['mjd'], 2), x.get('status'), x.get('ratio_to_dr24'), x.get('ratio_to_control'), x.get('deficit_sigma'), x.get('field_ratio_median'))
+print(timing, nbytes, n_ok, n_try)

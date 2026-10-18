@@ -1,0 +1,12 @@
+# v8: exposure times of the expids in entry.json's unmatched lookup (IRSA TAP). Usage: <out json>
+import io, json, sys, urllib.parse, urllib.request
+from astropy.table import Table
+d = json.load(open('results/w3_ztf/v8/entry.json'))
+ex = sorted({u['api_expid'] for u in d['unmatched_lookup']})
+sql = f"SELECT DISTINCT expid, exptime FROM ztf.ztf_current_meta_sci WHERE expid IN ({','.join(map(str, ex))})"
+raw = urllib.request.urlopen('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), timeout=120).read()
+t = Table.read(io.BytesIO(raw), format='csv')
+out = {'label': 'observed (IRSA TAP)', 'exptime_by_expid': {str(int(r['expid'])): float(r['exptime']) for r in t},
+       'rows': [{'expid': u['api_expid'], 'nearest_official_dt_d': u['nearest_official_dt_d']} for u in d['unmatched_lookup']]}
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out))

@@ -367,12 +367,15 @@ MATCH_TOL = 0.001  # d: light-curve hmjd to the exposure's heliocentric mid-time
 
 
 def exposure_times(expo, ra: float, dec: float) -> np.ndarray:
-    """Heliocentric MJD of each exposure's mid-time (obsjd = start, 30-s exposures) at (ra, dec)."""
+    """Heliocentric MJD of each exposure's mid-time (obsjd = start) at (ra, dec). v8: half of the
+    ``exptime`` column when present (private exposures last up to 300 s), else 30-s exposures."""
     import astropy.units as u
     from astropy.coordinates import SkyCoord
     from astropy.time import Time
 
-    t = Time(np.asarray(expo["obsjd"], float) + 15.0 / 86400.0, format="jd", scale="utc")
+    cols = getattr(expo, "colnames", None) or list(getattr(expo, "columns", []))
+    half = np.asarray(expo["exptime"], float) / 2.0 if "exptime" in cols else 15.0
+    t = Time(np.asarray(expo["obsjd"], float) + half / 86400.0, format="jd", scale="utc")
     ltt = t.light_travel_time(
         SkyCoord(ra * u.deg, dec * u.deg),
         kind="heliocentric",
@@ -386,6 +389,8 @@ def match_exposures(t, et) -> np.ndarray:
     t = np.asarray(t, float)
     if not len(et):
         return np.full(len(t), -1)
+    if len(et) == 1:  # v8: the general branch below would return index -1 for a single exposure
+        return np.where(np.abs(t - et[0]) <= MATCH_TOL, 0, -1)
     i = np.clip(np.searchsorted(et, t), 1, len(et) - 1)
     near = np.where(np.abs(t - et[i - 1]) <= np.abs(t - et[i]), i - 1, i)
     return np.where(np.abs(t - et[near]) <= MATCH_TOL, near, -1)
@@ -861,8 +866,8 @@ def stage_exposures(_a) -> None:
         rc = sorted(r for f, r in quads if f == field)
         cond = " OR ".join(f"(ccdid={r // 4 + 1} AND qid={r % 4 + 1})" for r in rc)
         sql = (
-            "SELECT field,ccdid,qid,filtercode,obsjd,expid,infobits,maglimit,seeing,filefracday,"
-            "ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 "
+            "SELECT field,ccdid,qid,filtercode,obsjd,exptime,expid,infobits,maglimit,seeing,"
+            "filefracday,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 "
             f"FROM ztf.ztf_current_meta_sci WHERE field={field} AND ({cond})"
         )
         url = "https://irsa.ipac.caltech.edu/TAP/sync?" + urllib.parse.urlencode(
