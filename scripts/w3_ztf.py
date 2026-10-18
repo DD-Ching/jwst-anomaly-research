@@ -229,46 +229,71 @@ def load_rows():
     return rows
 
 
-def epoch_key(t):
-    return np.round(np.asarray(t) / EPOCH_TOL).astype(np.int64)
+CLUSTER_GAP = 0.003  # d: hmjd of one exposure spreads ~1e-4 d across a quadrant (v2 fix)
+
+
+def clusters(times) -> np.ndarray:
+    """Median times of exposure clusters (sorted times split at gaps > CLUSTER_GAP)."""
+    t = np.sort(np.asarray(times, float))
+    if not len(t):
+        return t
+    cut = np.flatnonzero(np.diff(t) > CLUSTER_GAP) + 1
+    return np.array([np.median(c) for c in np.split(t, cut)])
+
+
+def assign(t, centres) -> np.ndarray:
+    """Index of the exposure cluster of each time, -1 if none within CLUSTER_GAP."""
+    t = np.asarray(t, float)
+    if not len(centres):
+        return np.full(len(t), -1)
+    i = np.clip(np.searchsorted(centres, t), 1, len(centres) - 1)
+    left = np.where(np.abs(t - centres[i - 1]) <= np.abs(t - centres[i]), i - 1, i)
+    return np.where(np.abs(t - centres[left]) <= CLUSTER_GAP, left, -1)
 
 
 def coverage(rows, comp: set[int], members: set[int]) -> dict:
-    """Per (field, rcid, filter): good epochs (key -> time), per-epoch 5-sigma limit, and the
-    fraction of comparison stars in the dim state per epoch (plan section 3; limit: deviation)."""
+    """Per (field, rcid, filter): exposure clusters, good epochs, per-epoch 5-sigma limit and
+    magerr relation, and the fraction of comparison stars in the dim state per epoch (plan
+    section 3; limit: deviation; v2: exposure clusters instead of fixed time bins, comparison
+    stars include sample members as the plan says)."""
     by_q: dict = {}
     for o, r in rows.items():
-        if o in comp and o not in members:
+        if o in comp:
             by_q.setdefault((*r["quad"], r["filt"]), []).append(r)
     cov = {}
     for q, rs in by_q.items():
         n = len(rs)
+        cen = clusters(np.concatenate([r["t"] for r in rs]))
         det: dict = {}
         dim: dict = {}
         mags: dict = {}
         for r in rs:
             ok = r["f"] == 0
             med = np.median(r["m"][ok]) if ok.any() else np.nan
-            for k, m, e, good in zip(epoch_key(r["t"]), r["m"], r["e"], ok, strict=True):
-                if good:
+            for k, m, e, good in zip(assign(r["t"], cen), r["m"], r["e"], ok, strict=True):
+                if good and k >= 0:
                     det[k] = det.get(k, 0) + 1
                     mags.setdefault(k, []).append((m, e))
                     if m >= med + DIM_MAG:
                         dim[k] = dim.get(k, 0) + 1
-        good = {k for k, c in det.items() if c >= GOOD_FRAC * n}
-        lim = {}
+        good = {int(k) for k, c in det.items() if c >= GOOD_FRAC * n}
+        lim, err = {}, {}
         for k in good:
             me = np.array(mags[k])
-            if len(me) >= 10 and np.ptp(me[:, 0]) > 0.5:
-                b, a = np.polyfit(me[:, 0], np.log10(me[:, 1]), 1)
-                lim[k] = float(np.clip((np.log10(0.2171) - a) / b, 18.0, 22.5)) if b > 0 else 20.5
-            else:
-                lim[k] = 20.5
+            b, a = (
+                np.polyfit(me[:, 0], np.log10(me[:, 1]), 1)
+                if len(me) >= 10 and np.ptp(me[:, 0]) > 0.5
+                else (np.nan, np.nan)
+            )
+            ok_fit = np.isfinite(b) and b > 0
+            lim[k] = float(np.clip((np.log10(0.2171) - a) / b, 18.0, 22.5)) if ok_fit else 20.5
+            err[k] = (float(a), float(b)) if ok_fit else (np.log10(0.02) - 0.2 * 17, 0.2)
         cov[q] = {
             "n_comp": n,
+            "centres": cen,
             "good": good,
             "limit": lim,
-            # dim fraction: comparison stars not detected (or >= DIM_MAG fainter) on a good epoch
+            "err": err,
             "dimfrac": {k: 1.0 - (det[k] - dim.get(k, 0)) / n for k in good},
         }
     return cov
@@ -278,8 +303,8 @@ def coverage(rows, comp: set[int], members: set[int]) -> dict:
 
 
 def series(group, rows, cov, filt):
-    """Time-ordered (t, dmag, is_nd, limit_dmag, quad) of a group in one filter over good epochs;
-    dmag relative to each objectid's median (field zero points differ)."""
+    """Time-ordered (t, dmag, is_nd, limit_dmag, quad, epoch, base_mag) of a group in one filter
+    over good epochs; dmag relative to each objectid's median (field zero points differ)."""
     out = []
     for o in group["members"]:
         r = rows.get(o)
@@ -293,15 +318,16 @@ def series(group, rows, cov, filt):
         if ok.sum() < 10:
             continue
         med = float(np.median(r["m"][ok]))
-        keys = epoch_key(r["t"])
         seen = {}
-        for k, m, good in zip(keys, r["m"], ok, strict=True):
-            seen[k] = m - med if good else None  # None: flagged detection (unknown)
+        for k, m, good in zip(assign(r["t"], c["centres"]), r["m"], ok, strict=True):
+            if k >= 0:
+                seen[int(k)] = m - med if good else None  # None: flagged detection (unknown)
         for k in c["good"]:
             if k in seen and seen[k] is None:
                 continue
             nd = k not in seen
-            out.append((k * EPOCH_TOL, 0.0 if nd else seen[k], nd, c["limit"][k] - med, q, k))
+            t = float(c["centres"][k])
+            out.append((t, 0.0 if nd else seen[k], nd, c["limit"][k] - med, q, k, med))
     out.sort(key=lambda x: x[0])
     return out
 
@@ -335,7 +361,9 @@ def flagged_runs(s):
     t = np.array([x[0] for x in s])
     out = []
     for i, j in runs(d):
-        nights = len(set(np.floor(t[i : j + 1] - 0.3).astype(int)))
+        nights = len(
+            set(np.floor(t[i : j + 1] + 0.2).astype(int))
+        )  # v2: night boundary ~local noon
         if j - i + 1 >= MIN_RUN and nights >= MIN_NIGHTS:
             if (~d[:i]).sum() >= MIN_BRACKET and (~d[j + 1 :]).sum() >= MIN_BRACKET:
                 out.append((i, j))
@@ -404,21 +432,27 @@ def context(groups_half):
 # ------------------------------------------------------------------------------------- injection
 
 
-def apply_dmag(s, ddm, nd_force=None):
-    """New series: detections shifted by ddm (mag); epochs fainter than their limit become ND."""
+def apply_dmag(s, ddm, cov=None, rng=None, nd_force=None):
+    """New series: detections shifted by ddm (mag); epochs fainter than their limit become ND.
+    With ``cov`` and ``rng``, noise is added for the fainter level from the epoch's magerr-mag
+    relation (plan section 7; v2)."""
     out = []
     for x, dd, f in zip(
         s, ddm, nd_force if nd_force is not None else [False] * len(s), strict=True
     ):
-        t, dm, nd, lim, q, k = x
+        t, dm, nd, lim, q, k, base = x
         if nd:
             out.append(x)
             continue
         new = dm + dd
         if f or not np.isfinite(new) or new > lim:
-            out.append((t, 0.0, True, lim, q, k))
-        else:
-            out.append((t, new, False, lim, q, k))
+            out.append((t, 0.0, True, lim, q, k, base))
+            continue
+        if cov is not None and rng is not None and dd != 0:
+            a, b = cov[q]["err"][k]
+            e_old, e_new = 10 ** (a + b * (base + dm)), 10 ** (a + b * (base + new))
+            new += rng.normal(0, np.sqrt(max(e_new**2 - e_old**2, 0.0)))
+        out.append((t, new, False, lim, q, k, base))
     return out
 
 
@@ -432,29 +466,42 @@ def w3_dmag(t, t0, te, u0, rho, blend):
         return -2.5 * np.log10(np.clip(f, 0, None))
 
 
-def control_dmag(kind, t, rng):
+def control_model(kind, t, rng):
+    """An ordinary-control light-curve model dmag(t) with parameters drawn once (v2: callable, so
+    the other filter sees the same event)."""
     if kind == "eclipse":
-        p, dur = rng.uniform(1, 50), rng.uniform(0.1, 2.0)
-        ph = ((t - rng.uniform(0, p)) % p) < dur
-        return np.where(ph, 1.5, 0.0), {"period": p, "duration": dur}
+        p, dur, ph0 = rng.uniform(1, 50), rng.uniform(0.1, 2.0), None
+        ph0 = rng.uniform(0, p)
+        return lambda x: np.where(((np.asarray(x) - ph0) % p) < dur, 1.5, 0.0)
     if kind == "fade":
-        t1 = rng.uniform(t.min(), t.max())
-        td, tr = rng.uniform(5, 20), rng.uniform(30, 200)
-        dm = np.where(
-            t < t1 - td,
-            0.0,
-            np.where(t < t1, 3.0 * (t - (t1 - td)) / td, 3.0 * np.exp(-(t - t1) / tr)),
-        )
-        return dm, {"t1": t1, "decline": td, "recovery": tr}
+        t1, td, tr = rng.uniform(t.min(), t.max()), rng.uniform(5, 20), rng.uniform(30, 200)
+
+        def fade(x):
+            x = np.asarray(x)
+            return np.where(
+                x < t1 - td,
+                0.0,
+                np.where(x < t1, 3.0 * (x - (t1 - td)) / td, 3.0 * np.exp(-(x - t1) / tr)),
+            )
+
+        return fade
     if kind == "pspl":
         t0, te, u0 = rng.uniform(t.min(), t.max()), rng.uniform(3, 100), rng.uniform(0, 1)
-        u = np.hypot(u0, (t - t0) / te)
-        a = (u**2 + 2) / (u * np.sqrt(u**2 + 4))
-        return -2.5 * np.log10(a), {"t0": t0, "tE": te, "u0": u0}
+
+        def pspl(x):
+            u = np.hypot(u0, (np.asarray(x) - t0) / te)
+            return -2.5 * np.log10((u**2 + 2) / (u * np.sqrt(u**2 + 4)))
+
+        return pspl
     raise ValueError(kind)
 
 
 def stage_inject(a) -> None:
+    """v2 (after review): independent seeds (W3 cell c: 1100 + c; controls 1200 + k), noise from the
+    epoch's magerr relation, a hit must overlap the umbra t0 +- tE sqrt(4 - u0^2) and must not be a
+    run already flagged in the uninjected carrier; controls use one event model in both filters.
+    The common-mode control sets the comparison-star dim fraction to 0.5 at the injected epochs, so
+    its rejection by the common-mode test holds by construction."""
     groups = [
         g for g in json.loads((OUT / "sample.json").read_text())["groups"] if not g["holdout"]
     ]
@@ -463,33 +510,45 @@ def stage_inject(a) -> None:
     for g in groups:
         s = series(g, rows, cov, 2)
         if len(s) >= 2 * MIN_BRACKET + MIN_RUN:
-            carriers.append((g, s, series(g, rows, cov, 1)))
-    res = {"carriers": len(carriers), "w3": [], "controls": {}}
+            o = series(g, rows, cov, 1)
+            base = {(x["t_start"], x["t_end"]) for x in screen(s, o, cov)}
+            carriers.append((g, s, o, base))
+    res = {"version": 2, "carriers": len(carriers), "w3": [], "controls": {}}
     n = a.n
-    for ci, (rho, blend) in enumerate(((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7))):
-        for te in (3.0, 10.0, 30.0, 100.0):
-            rng = np.random.default_rng(11 + ci * 10 + int(te))
-            rec = flag = 0
-            for _ in range(n):
-                g, s, o = carriers[rng.integers(len(carriers))]
-                t = np.array([x[0] for x in s])
-                t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
-                si = apply_dmag(s, w3_dmag(t, t0, te, u0, rho, blend))
-                to = np.array([x[0] for x in o]) if o else np.array([])
-                oi = apply_dmag(o, w3_dmag(to, t0, te, u0, rho, blend)) if o else o
-                sc = screen(si, oi, cov)
-                hit = [x for x in sc if x["t_start"] <= t0 + 2 * te and x["t_end"] >= t0 - 2 * te]
-                flag += bool(hit)
-                rec += any(x["pass"] for x in hit)
-            res["w3"].append(
-                {"rho": rho, "blend": blend, "tE": te, "n": n, "flagged": flag, "recovered": rec}
-            )
-            print(res["w3"][-1], flush=True)
-    for kind in ("eclipse", "fade", "pspl", "common"):
-        rng = np.random.default_rng(14 + len(kind))
+    cells = [
+        (r, b, te)
+        for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7))
+        for te in (3.0, 10.0, 30.0, 100.0)
+    ]
+    for c, (rho, blend, te) in enumerate(cells):
+        rng = np.random.default_rng(1100 + c)
+        rec = flag = 0
+        for _ in range(n):
+            g, s, o, base = carriers[rng.integers(len(carriers))]
+            t = np.array([x[0] for x in s])
+            t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+            half = te * np.sqrt(4 - u0**2)
+            si = apply_dmag(s, w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+            to = np.array([x[0] for x in o]) if o else np.array([])
+            oi = apply_dmag(o, w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+            hit = [
+                x
+                for x in screen(si, oi, cov)
+                if x["t_start"] <= t0 + half
+                and x["t_end"] >= t0 - half
+                and (x["t_start"], x["t_end"]) not in base
+            ]
+            flag += bool(hit)
+            rec += any(x["pass"] for x in hit)
+        res["w3"].append(
+            {"rho": rho, "blend": blend, "tE": te, "n": n, "flagged": flag, "recovered": rec}
+        )
+        print(res["w3"][-1], flush=True)
+    for kk, kind in enumerate(("eclipse", "fade", "pspl", "common")):
+        rng = np.random.default_rng(1200 + kk)
         flag = passed = 0
         for _ in range(n):
-            g, s, o = carriers[rng.integers(len(carriers))]
+            g, s, o, base = carriers[rng.integers(len(carriers))]
             t = np.array([x[0] for x in s])
             over = None
             if kind == "common":
@@ -497,21 +556,17 @@ def stage_inject(a) -> None:
                 ddm = np.zeros(len(s))
                 ddm[k0 : k0 + 5] = 3.0
                 over = {s[k][5]: 0.5 for k in range(k0, k0 + 5)}
-                si, oi = apply_dmag(s, ddm), o
+                si, oi = apply_dmag(s, ddm, cov, rng), o
             else:
-                ddm, _ = control_dmag(kind, t, rng)
-                si = apply_dmag(s, ddm)
-                oi = o
-                if o:
-                    to = np.array([x[0] for x in o])
-                    # the same physical event in the other filter (same dmag curve; colour-free)
-                    oi = apply_dmag(o, np.interp(to, t, ddm))
-            sc = screen(si, oi, cov, over)
+                model = control_model(kind, t, rng)
+                si = apply_dmag(s, model(t), cov, rng)
+                oi = apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+            sc = [x for x in screen(si, oi, cov, over) if (x["t_start"], x["t_end"]) not in base]
             flag += bool(sc)
             passed += any(x["pass"] for x in sc)
         res["controls"][kind] = {"n": n, "flagged": flag, "passed_vetting": passed}
         print(kind, res["controls"][kind], flush=True)
-    (OUT / "injections_dev.json").write_text(
+    (OUT / "injections_dev_v2.json").write_text(
         json.dumps({"label": "simulated", **res}, indent=1) + "\n"
     )
 
@@ -532,6 +587,7 @@ def stage_search(a) -> None:
             for x in screen(s, series(g, rows, cov, other), cov):
                 out.append({"key": g["key"], "ra": g["ra"], "dec": g["dec"], "filter": filt, **x})
     summ = {
+        "version": 2,
         "half": a.half,
         "groups": len(groups),
         "series_searched": n_ser,
@@ -539,7 +595,7 @@ def stage_search(a) -> None:
         "flagged_groups": len({x["key"] for x in out}),
         "passed_groups": sorted({x["key"] for x in out if x["pass"]}),
     }
-    (OUT / f"search_{a.half}.json").write_text(
+    (OUT / f"search_{a.half}_v2.json").write_text(
         json.dumps({"label": "derived", "summary": summ, "runs": out}, indent=1, default=float)
         + "\n"
     )

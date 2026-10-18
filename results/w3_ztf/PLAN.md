@@ -83,3 +83,16 @@ Written before any light curve of the sample was read (only the objects table an
 - Data-condition check (comparison stars only, 3,000 light curves): no NaN magnitudes (detections only); catflags 0
   in 94 %, 32768 (cloud/moon) in 6 %; median spacing between epochs 1.0–4.0 d (10th–90th percentile); fields 826,
   848, 1856, 1857 (not stored beyond this note).
+
+## Version 2 (after the review of the first run; 11:40Z session clock; labelled)
+- The first run (v1, `search_dev.json`, `injections_dev.json`, kept) **failed** its frozen validation and that
+  verdict stands. An independent review then found code bugs, fixed here without changing any threshold, rule or the
+  sample: (1) fixed 0.0005-d time bins split single exposures (hmjd spreads ~1e-4 d across a quadrant), creating fake
+  non-detections → exposure clusters (gaps > 0.003 d); (2) night boundary at MJD .7 split Palomar nights → MJD .8;
+  (3) controls in the other filter interpolated a boxcar → one event model evaluated in both filters; (4) injection
+  noise from the epoch's magerr relation (plan section 7, omitted in v1); independent seeds (W3 cell c: 1100 + c;
+  controls 1200 + k); (5) a W3 hit must overlap the umbra and not be a run already flagged in the uninjected carrier;
+  comparison stars include sample members (plan section 3). The common-mode control sets the comparison dim fraction
+  to 0.5, so its rejection holds by construction; the common-mode test uses the mean over the run's epochs.
+- v2 is re-validated on the **same development half** (already looked at in v1, so v2's development numbers are not
+  blind). The holdout half is still untouched: it is searched once only if v2 passes every unchanged pass condition.
