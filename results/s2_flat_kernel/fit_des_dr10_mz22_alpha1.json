@@ -1,0 +1,93 @@
+{
+ "params": {
+  "z_min": 0.1,
+  "z_max": 1.3,
+  "radius_arcsec": 120.0,
+  "mag_z_max": 22.0,
+  "z_gal_min": 0.02,
+  "host_gap": 0.05,
+  "shell_dz": 0.05,
+  "om": 0.334,
+  "batch": 60,
+  "n_scramble": 1000,
+  "n_chain": 20,
+  "chain_gamma": 0.01,
+  "min_chain_ratio": 0.3,
+  "min_coverage": 0.5,
+  "seed": 69,
+  "trim_pct": 99.0,
+  "min_shell_expect": 1.0,
+  "alpha": 1,
+  "sample": "des",
+  "min_probia": 0.5,
+  "survey": "dr10",
+  "fit_mag_z_max": null,
+  "pz_split_mag": 21.0,
+  "pz_max_nmad": 0.1,
+  "pz_max_outlier": 0.2
+ },
+ "provenance": {
+  "des_sn5yr": "observed (MU, MUERR, c; DES Collaboration 2024, Dovekie re-analysis)",
+  "des_sn5yr_files": {
+   "hd": "2f57019d783eaa976df80a41b0054171a2d994ee9808d715ce850c2df5720aaf",
+   "meta": "45ad71f8470eaecfe2b386699ef66b26b0717c50f445d5f32941988d32c75388",
+   "head": "4396d427c1a1f064be4f9cb81669d0179bbbbaacca0b009391ab2e0aaccdbfb5"
+  },
+  "galaxies": "observed (LS DR10 Tractor + photo-z, Data Lab TAP)",
+  "columns": "derived",
+  "residual_model": "model_prediction (flat LCDM Om = 0.334)",
+  "thresholds": "assumption (Params)"
+ },
+ "n_sne_input": 1518,
+ "n_sne_with_columns": 1505,
+ "n_cut_coverage_or_5sigma": 29,
+ "n_sne_fit": 1476,
+ "n_galaxies": 116190,
+ "photoz_gate_q": {
+  "bright": {
+   "n_spec": 6306,
+   "nmad": 0.019561849862855148,
+   "outlier_frac": 0.007770377418331748
+  },
+  "faint": {
+   "n_spec": 2021,
+   "nmad": 0.03482790401110237,
+   "outlier_frac": 0.031172686788718457
+  },
+  "passed": true
+ },
+ "corr_xl_xf": 0.9910315495663072,
+ "std_xl": 0.5523583412200922,
+ "std_xf": 0.5446056561594058,
+ "reduced_chi2": 0.9405050815297741,
+ "gamma_lens": -0.019089087951506656,
+ "gamma_lens_err": 0.05259834397367336,
+ "gamma_flat": 0.001617247047687398,
+ "gamma_flat_err": 0.05349771776739009,
+ "p_scramble_flat": 0.981,
+ "p_scramble_lens": 0.702,
+ "colour_lens": -0.03479297633323358,
+ "colour_lens_err": 0.03746460976773847,
+ "colour_flat": 0.03996962193894921,
+ "colour_flat_err": 0.03799586704039505,
+ "trim_n": 1461,
+ "gamma_flat_trim": 0.030925260631835316,
+ "gamma_flat_trim_err": 0.059847282449411614,
+ "lambda_lens": 0.4866448070664552,
+ "lambda_flat": 0.4813071574323645,
+ "lambda_flat_trim": 0.5802092588142356,
+ "chain_inject_gamma": 0.01,
+ "chain_recovered_full": [
+  0.043949754717326886,
+  0.16605440349187747
+ ],
+ "chain_recovered_trim": [
+  0.018561466143778297,
+  0.10004879562436815
+ ],
+ "per_unit": "mag per unit fractional excess of the weighted foreground count (X)",
+ "norm_mean_1_plus_x": 1.020306353382306,
+ "chain_recovery_ratio": 1.8561466143778296,
+ "gamma_norm_upper95_one_sided": 0.22750611651893496,
+ "gamma_norm_upper95_unit": "mag per unit T/<T>, corrected for shot-noise dilution"
+}

@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: S2 with LS DR10 z < 22 galaxies: lensing control not detected (1.1σ); S2 paused (D-070 addendum 2)
+- Frozen plan `results/s2_flat_kernel/dr10/PLAN.md`; `scripts/s2_flat_kernel.py --survey dr10 --mag-z-max 22` (new
+  `--fit-mag-z-max`, photo-z gate `photoz_gate`). Same DES-SN5YR SNe as the DR9 run, so exploratory.
+- 116,190 DR10 galaxies (2.5× DR9 z < 21). Gate Q passed (21–22 mag: σ_NMAD 0.035, outliers 3.1 %, 2,021 z_spec).
+- **Gate C failed:** γ_L = −0.0145 ± 0.0129 (1.13σ, scramble p 0.25) vs DR9 −0.0183 ± 0.0110 (1.67σ); post hoc
+  DR10 z < 21 gives −0.0098 ± 0.0115. The deeper column raises the error; λ_L 0.60 → 0.65.
+- Flat term α = 2: γ_F = −0.0011 ± 0.0031; computed bound 0.0076 not adopted (control failed); the quoted S2 limit
+  stays γ < 0.019. α = 1 kernel-degenerate (corr 0.991).
+- **Failed approach:** a deeper LS photo-z column as the S2 positive control.
+- **Handoff:** S2 paused; reopen only with DES Y3 Gold or a spec-z / deeper column and the full covariance.
+
 ## 2026-10-18: Upkeep: `docs/state/pending.md` synced with the open needs-human PRs
 - Added rows for #199 (Abell 370 1565, parked), #237 (o052 / SMACS-VENUS grids; SN Atalanta) and #279 (five-field
   clump-pair census); #273 moved to a "merged since" note. Other rows' heads checked: unchanged.
