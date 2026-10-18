@@ -1,0 +1,457 @@
+{
+ "label": "derived; PLAN.md rule; err_used = max(local, visit scatter / sqrt(n)); single-visit epochs: local x the median (visit scatter / local error) of the same instrument >= 3-visit epochs (choices made after seeing the scatter, review; labelled)",
+ "single_visit_error_scale": {
+  "ACS/WFC": 1.0,
+  "WFC3/IR": 1.4957143294591464,
+  "WFC3/UVIS": 1.0
+ },
+ "epochs": [
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F435W",
+   "mjd": 56292.73039347,
+   "days_from_jwst_detection": -3708.8696065299955,
+   "n_visits": 1,
+   "assoc": [
+    "jbztb0010"
+   ],
+   "flux_njy": 20.668317181441658,
+   "err_local_njy": 17.768741473080645,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 17.768741473080645
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F435W",
+   "mjd": 56328.70769734,
+   "days_from_jwst_detection": -3672.892302659995,
+   "n_visits": 1,
+   "assoc": [
+    "jbzta3020"
+   ],
+   "flux_njy": 7.234081509802934,
+   "err_local_njy": 20.193231669620122,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 20.193231669620122
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F435W",
+   "mjd": 59617.81391133,
+   "days_from_jwst_detection": -383.78608867,
+   "n_visits": 10,
+   "assoc": [
+    "jeou07010",
+    "jeoua7010",
+    "jeou08010",
+    "jeoua8010",
+    "jeou09010",
+    "jeoua9010",
+    "jeou10010",
+    "jeoua0010",
+    "jeou11010",
+    "jeoua1010"
+   ],
+   "flux_njy": 12.517501236711258,
+   "err_local_njy": 4.500656230293164,
+   "err_visit_scatter_njy": 4.376472912376773,
+   "err_used_njy": 4.500656230293164
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F435W",
+   "mjd": 59818.93103683333,
+   "days_from_jwst_detection": -182.6689631666668,
+   "n_visits": 3,
+   "assoc": [
+    "jeou01010",
+    "jeou03010",
+    "jeou04010"
+   ],
+   "flux_njy": -0.633454858280356,
+   "err_local_njy": 5.582230158829858,
+   "err_visit_scatter_njy": 3.9038853066161083,
+   "err_used_njy": 5.582230158829858
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F435W",
+   "mjd": 60181.35064147,
+   "days_from_jwst_detection": 179.75064147000376,
+   "n_visits": 1,
+   "assoc": [
+    "jeou52010"
+   ],
+   "flux_njy": 27.099054161260536,
+   "err_local_njy": 8.08983980873333,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 8.08983980873333
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F606W",
+   "mjd": 56305.51202569,
+   "days_from_jwst_detection": -3696.0879743100013,
+   "n_visits": 1,
+   "assoc": [
+    "jbztb2020"
+   ],
+   "flux_njy": 61.97985359305236,
+   "err_local_njy": 12.910795792900247,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 12.910795792900247
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F606W",
+   "mjd": 56328.69136623,
+   "days_from_jwst_detection": -3672.908633769999,
+   "n_visits": 1,
+   "assoc": [
+    "jbzta3010"
+   ],
+   "flux_njy": 54.07071927218596,
+   "err_local_njy": 12.026608006257288,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 12.026608006257288
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F606W",
+   "mjd": 59621.844623921665,
+   "days_from_jwst_detection": -379.75537607833394,
+   "n_visits": 6,
+   "assoc": [
+    "jeou12010",
+    "jeoua2010",
+    "jeou13010",
+    "jeoua3010",
+    "jeou14010",
+    "jeoua4010"
+   ],
+   "flux_njy": 75.36323050052177,
+   "err_local_njy": 3.519631494142465,
+   "err_visit_scatter_njy": 4.407189318197578,
+   "err_used_njy": 4.407189318197578
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F606W",
+   "mjd": 59820.23148608999,
+   "days_from_jwst_detection": -181.36851391000528,
+   "n_visits": 2,
+   "assoc": [
+    "jeou05010",
+    "jeou06010"
+   ],
+   "flux_njy": 59.75924291366973,
+   "err_local_njy": 4.584156766019402,
+   "err_visit_scatter_njy": 2.349880308935738,
+   "err_used_njy": 4.584156766019402
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F775W",
+   "mjd": 56305.49594902,
+   "days_from_jwst_detection": -3696.1040509800005,
+   "n_visits": 1,
+   "assoc": [
+    "jbztb2010"
+   ],
+   "flux_njy": 175.27622739124072,
+   "err_local_njy": 19.984788261086774,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 19.984788261086774
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F814W",
+   "mjd": 53818.37961665,
+   "days_from_jwst_detection": -6183.220383349995,
+   "n_visits": 1,
+   "assoc": [
+    "j9dd08010"
+   ],
+   "flux_njy": 185.34884865172086,
+   "err_local_njy": 13.906891738702415,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 13.906891738702415
+  },
+  {
+   "instrument": "ACS/WFC",
+   "filter": "F850LP",
+   "mjd": 56292.74673606,
+   "days_from_jwst_detection": -3708.85326394,
+   "n_visits": 1,
+   "assoc": [
+    "jbztb0020"
+   ],
+   "flux_njy": 237.39908360654604,
+   "err_local_njy": 39.775740869550624,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 39.775740869550624
+  },
+  {
+   "instrument": "WFC3/IR",
+   "filter": "F110W",
+   "mjd": 56311.41071244,
+   "days_from_jwst_detection": -3690.189287559995,
+   "n_visits": 1,
+   "assoc": [
+    "ibzta2020"
+   ],
+   "flux_njy": 316.8248925812506,
+   "err_local_njy": 10.061962236749286,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 15.049821099982712
+  },
+  {
+   "instrument": "WFC3/IR",
+   "filter": "F110W",
+   "mjd": 56363.61013519,
+   "days_from_jwst_detection": -3637.989864809999,
+   "n_visits": 1,
+   "assoc": [
+    "ibzta9030"
+   ],
+   "flux_njy": 331.2147819272638,
+   "err_local_njy": 26.765447669702215,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 40.033463613962525
+  },
+  {
+   "instrument": "WFC3/IR",
+   "filter": "F110W",
+   "mjd": 60291.5990458,
+   "days_from_jwst_detection": 289.99904580000293,
+   "n_visits": 4,
+   "assoc": [
+    "ifaa47010",
+    "ifaa44010",
+    "ifaa46010",
+    "ifaa43010"
+   ],
+   "flux_njy": 299.84561893461847,
+   "err_local_njy": 10.749233334509476,
+   "err_visit_scatter_njy": 16.86891007927913,
+   "err_used_njy": 16.86891007927913
+  },
+  {
+   "instrument": "WFC3/IR",
+   "filter": "F110W",
+   "mjd": 60411.07172623499,
+   "days_from_jwst_detection": 409.471726234995,
+   "n_visits": 2,
+   "assoc": [
+    "ifaa45010",
+    "ifaa48010"
+   ],
+   "flux_njy": 277.31600542093196,
+   "err_local_njy": 16.643015491913577,
+   "err_visit_scatter_njy": 0.564745114575004,
+   "err_used_njy": 16.643015491913577
+  },
+  {
+   "instrument": "WFC3/IR",
+   "filter": "F160W",
+   "mjd": 56363.59051705,
+   "days_from_jwst_detection": -3638.0094829500013,
+   "n_visits": 1,
+   "assoc": [
+    "ibzta9020"
+   ],
+   "flux_njy": 428.39472966310115,
+   "err_local_njy": 14.446648072020315,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 21.608058533974134
+  },
+  {
+   "instrument": "WFC3/UVIS",
+   "filter": "F606W",
+   "mjd": 56775.43282746,
+   "days_from_jwst_detection": -3226.167172540001,
+   "n_visits": 1,
+   "assoc": [
+    "ica9ga060"
+   ],
+   "flux_njy": 73.6779724540736,
+   "err_local_njy": 10.919520590559411,
+   "err_visit_scatter_njy": NaN,
+   "err_used_njy": 10.919520590559411
+  },
+  {
+   "instrument": "WFC3/UVIS",
+   "filter": "F606W",
+   "mjd": 60291.607917395,
+   "days_from_jwst_detection": 290.0079173949998,
+   "n_visits": 4,
+   "assoc": [
+    "ifaa47020",
+    "ifaa44020",
+    "ifaa46020",
+    "ifaa43020"
+   ],
+   "flux_njy": 74.3962246482605,
+   "err_local_njy": 8.384677210756779,
+   "err_visit_scatter_njy": 8.274606377443428,
+   "err_used_njy": 8.384677210756779
+  },
+  {
+   "instrument": "WFC3/UVIS",
+   "filter": "F814W",
+   "mjd": 60411.07868792499,
+   "days_from_jwst_detection": 409.47868792499503,
+   "n_visits": 2,
+   "assoc": [
+    "ifaa45020",
+    "ifaa48020"
+   ],
+   "flux_njy": 254.78028559321714,
+   "err_local_njy": 35.15775633707061,
+   "err_visit_scatter_njy": 70.64549395399261,
+   "err_used_njy": 70.64549395399261
+  }
+ ],
+ "comparisons": [
+  {
+   "reference": "ACS/WFC F435W MJD 59617.8",
+   "epoch": "ACS/WFC F435W MJD 59818.9",
+   "days_from_jwst_detection": -182.6689631666668,
+   "cross_instrument": false,
+   "field_n": 0,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": -13.150956094991614,
+   "sigma_njy": 7.1705787806443,
+   "snr": -1.8340159835479775,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 22 nJy"
+  },
+  {
+   "reference": "ACS/WFC F435W MJD 59617.8",
+   "epoch": "ACS/WFC F435W MJD 60181.4",
+   "days_from_jwst_detection": 179.75064147000376,
+   "cross_instrument": false,
+   "field_n": 0,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": 14.581552924549278,
+   "sigma_njy": 9.257505853859517,
+   "snr": 1.5751059901809439,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 28 nJy"
+  },
+  {
+   "reference": "ACS/WFC F606W MJD 59621.8",
+   "epoch": "ACS/WFC F606W MJD 59820.2",
+   "days_from_jwst_detection": -181.36851391000528,
+   "cross_instrument": false,
+   "field_n": 4,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": -15.603987586852035,
+   "sigma_njy": 6.359073119714562,
+   "snr": -2.453814776634059,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 19 nJy"
+  },
+  {
+   "reference": "WFC3/IR F110W MJD 56311.4",
+   "epoch": "WFC3/IR F110W MJD 60291.6",
+   "days_from_jwst_detection": 289.99904580000293,
+   "cross_instrument": false,
+   "field_n": 5,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": -16.979273646632123,
+   "sigma_njy": 22.606575202898156,
+   "snr": -0.7510767771871693,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 68 nJy"
+  },
+  {
+   "reference": "WFC3/IR F110W MJD 56311.4",
+   "epoch": "WFC3/IR F110W MJD 60411.1",
+   "days_from_jwst_detection": 409.471726234995,
+   "cross_instrument": false,
+   "field_n": 10,
+   "field_median_ratio": 1.0332868400614155,
+   "field_scatter": 0.07174411475057169,
+   "zero_point_applied": true,
+   "delta_njy": -50.054986687145856,
+   "sigma_njy": 32.17894189361267,
+   "snr": -1.555519968699825,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 97 nJy"
+  },
+  {
+   "reference": "ACS/WFC F606W MJD 59820.2",
+   "epoch": "WFC3/UVIS F606W MJD 60291.6",
+   "days_from_jwst_detection": 290.0079173949998,
+   "cross_instrument": true,
+   "field_n": 4,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": 14.63698173459077,
+   "sigma_njy": 9.556008852236667,
+   "snr": 1.5317044972352507,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 29 nJy"
+  },
+  {
+   "reference": "ACS/WFC F814W MJD 53818.4",
+   "epoch": "WFC3/UVIS F814W MJD 60411.1",
+   "days_from_jwst_detection": 409.47868792499503,
+   "cross_instrument": true,
+   "field_n": 0,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": 69.43143694149629,
+   "sigma_njy": 72.00130175097945,
+   "snr": 0.9643080785070917,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 216 nJy"
+  },
+  {
+   "reference": "ACS/WFC F606W MJD 56305.5",
+   "epoch": "ACS/WFC F606W MJD 59820.2",
+   "days_from_jwst_detection": -181.36851391000528,
+   "cross_instrument": false,
+   "field_n": 4,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": -2.220610679382631,
+   "sigma_njy": 13.700479599685996,
+   "snr": -0.16208269668410188,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 41 nJy"
+  },
+  {
+   "reference": "ACS/WFC F435W MJD 56328.7",
+   "epoch": "ACS/WFC F435W MJD 59818.9",
+   "days_from_jwst_detection": -182.6689631666668,
+   "cross_instrument": false,
+   "field_n": 0,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": -7.8675363680832895,
+   "sigma_njy": 20.950606168058687,
+   "snr": -0.37552786324999715,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 63 nJy"
+  },
+  {
+   "reference": "WFC3/UVIS F606W MJD 56775.4",
+   "epoch": "WFC3/UVIS F606W MJD 60291.6",
+   "days_from_jwst_detection": 290.0079173949998,
+   "cross_instrument": false,
+   "field_n": 3,
+   "field_median_ratio": null,
+   "field_scatter": null,
+   "zero_point_applied": false,
+   "delta_njy": 0.7182521941869027,
+   "sigma_njy": 13.767306993607539,
+   "snr": 0.05217085625535937,
+   "decision": "no change at 5 sigma; 3 sigma limit |delta| < 41 nJy"
+  }
+ ]
+}

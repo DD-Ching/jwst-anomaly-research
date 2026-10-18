@@ -5133,7 +5133,9 @@ confining radiation at a throat is found.
   magnification by a compact deflector (point mass, Ellis wormhole n = 2, negative-mass n = 1; D-047 family) is the
   band-independence of the calibrated epoch ratio (`scripts/achromatic_test.py`: per-band matched-control zero point
   and scatter, χ² of a constant, p < 0.01). Its power is simulated first with SN templates (sncosmo, isolated env).
-  It does not separate the deflector types from each other.
+  It does not separate the deflector types from each other. It is a band-consistency test under stated assumptions
+  (two epochs, three bands, a uniform-colour source, geometric optics), not a general supernova-versus-lensing
+  classifier (wording narrowed 2026-10-18).
 - **Alternatives rejected:** comparing one SN light curve with one wormhole light curve (two ideal curves, no
   ordinary lens, no errors); a light-curve-shape test (W3 spike–umbra–spike): needs ≥ 3 well-sampled epochs, none of
   the open objects has them.

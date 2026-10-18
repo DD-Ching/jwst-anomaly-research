@@ -23,6 +23,9 @@ exotic candidate.
   not determined). Catalogue position near the source does not by itself establish the host.
 - **Status:** real change; an ordinary transient (supernova-like) is a reasonable hypothesis; identity and type not
   confirmed (no spectrum, one detected epoch).
+- Revision 2026-10-18 (`results/transients/macs1423_h000_hst/RESULT.md`): HST shows no change at the position between
+  380 and 181 days before (F435W/F606W) or at +180 d (F435W), +290 d (F606W, F110W) and +409 d (F110W) against
+  same-instrument baselines, at the stated limits: consistent with a single episode of < ~470 observed days. Identity and type still not confirmed.
 
 ## MJ0417.5-1154_2:h002 (64.396407, −11.907040): brightening
 - 1208 (2022-10-13): no point source. VENUS (2025-10-06): a point source seen in F150W, F210M and F300M (F444W

@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: MACS1423 h000 HST archive light curve: no change before (−181 d) or after (+180 to +409 d); identity still open
+- `scripts/hst_forced.py` (HST counterpart of `hit_lightcurve.py`: S3 byte-range drizzled products, 0.2″ aperture,
+  local random-aperture errors, field peaks; `--offsets`) on 43 HST visits 2006–2024; visits registered to the
+  JWST 1208 F150W frame (labelled deviation: the host gradient made per-visit WCS offsets of up to 0.27″ look like
+  variability). Plan, result and light curve: `results/transients/macs1423_h000_hst/`.
+- **Result:** four new epochs tested against same-instrument baselines (2022-08 before; 2023-08, 2023-12, 2024-04
+  after). No change at the position: −181 d vs −380 d F435W/F606W 3σ < 19–22 nJy (and vs 2013 < 41–63); after, F435W
+  < 28 nJy (+180 d), UVIS F606W < 41 (+290 d, vs 2014), F110W < 68 / 97 nJy (+290 / +409 d, vs 2013). Consistent with
+  one episode of < ~470 observed days; a source that varied the year before or stayed bright after is weakened;
+  supernova types, other one-off transients and magnification of a faint persistent source are not separated (no
+  colours over time). No low-cost archive step remains for this question. Review fixes: field zero points matched
+  in the registered frame and de-duplicated; single-visit IR errors scaled ×1.5; three baselines added (labelled).
+- #332 wording narrowed: the achromaticity test is a band-consistency test under stated assumptions, not a general
+  supernova-versus-lensing classifier.
+
 ## 2026-10-18: W1 shear in PRIMER: forty-field limit 0.638× Takahashi & Asada at 2 × 10¹³ M☉ (R = 0.414 ASSUMPTION); UDS x3y0 flag unresolved
 - Staged: the four DJA PRIMER zouts (tarball names end in `-fix`; the planned names return 403), pinned and stacked
   per survey (`w1_stage_inputs.stack_zouts`, content sha256 pinned). Stacking every tile's survey pair instead of
@@ -43,7 +58,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **SMACS 1 h005 (`results/transients/confirm_r2/RESULT.md`):** the control-photometry stall was one MAST portal
   query per position hanging on an HTTP response; `hit_lightcurve.py --group-arcsec` shares one query. With 22
   controls (entry and duplicates removed) the decisive F150W tail is 0.591: consistent with matched-control scatter.
-- **Discriminating test (D-102):** achromaticity of B1-PLCKG165 h002's fade (intrinsic transient vs magnification by a
+- **Discriminating test (D-102):** band consistency (achromaticity, under stated assumptions; not a general classifier) of B1-PLCKG165 h002's fade (intrinsic transient vs magnification by a
   point mass, Ellis wormhole or negative-mass lens). Frozen rule: not decided (16″ pick: all bands < 20 usable
   controls; 30″ deviation: F090W 14 < 20). Simulated power against SN templates 0.15–0.62 (≤ 0.29 for type II), so
   the two epochs are weak for this question; paused until a calibrated bright-epoch repeat or a spectrum exists.
