@@ -1,0 +1,21 @@
+{
+ "label": "derived; v5 holdout search statistics; the dev block is a post hoc functional check",
+ "holdout": {
+  "groups": 486,
+  "series": 971,
+  "epochs": 1438841,
+  "non_detections": 531,
+  "dim_detections": 0,
+  "dim_runs_ge2_epochs": 16,
+  "span_days_median": 2766.8486255584285
+ },
+ "dev": {
+  "groups": 514,
+  "series": 1023,
+  "epochs": 1569065,
+  "non_detections": 547,
+  "dim_detections": 1,
+  "dim_runs_ge2_epochs": 32,
+  "span_days_median": 2766.8486904584643
+ }
+}

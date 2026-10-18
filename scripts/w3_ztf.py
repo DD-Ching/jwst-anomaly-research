@@ -48,10 +48,13 @@ EDGE_MARGIN = (
 )
 
 
-def configure(pix: int) -> None:
-    """v4: another light-curve partition of the same order-4 pixel (independent validation)."""
+def configure(pix: int, vdir: str | None = None) -> None:
+    """v4: another light-curve partition of the same order-4 pixel (independent validation). v5:
+    ``vdir`` (e.g. "v5") writes the v4 method's outputs for the v1-v3 sample in its own folder."""
     global LC_PIX, LC_PART, CACHE, SAMPLE, VDIR, VERSION
     if pix == 3839:
+        if vdir:
+            VDIR, VERSION = OUT / vdir, int(vdir.lstrip("v"))
         return
     LC_PIX = pix
     LC_PART = LC_PART.replace("Npix=3839", f"Npix={pix}")
@@ -253,12 +256,26 @@ def stage_sample(_a) -> None:
     SAMPLE.write_text(
         json.dumps({"label": "derived; plan section 4", "info": info, "groups": groups}) + "\n"
     )
-    # comparison stars for coverage (all objects in the area in the comparison magnitude range)
+    n = save_comparisons(obj)
+    print(json.dumps(info), n)
+
+
+def save_comparisons(obj) -> int:
+    """Comparison stars for coverage: all objects in the area in the comparison magnitude range."""
     comp = obj[in_partition(obj["ra"].to_numpy(), obj["dec"].to_numpy())]
     comp = comp[comp["refmag"].between(*COMP_MAG) & (comp["transient"] == 0)]
     CACHE.mkdir(parents=True, exist_ok=True)
     np.save(CACHE / "comparison_oids.npy", comp["oid"].to_numpy())
-    print(json.dumps(info), len(comp))
+    return len(comp)
+
+
+def stage_comparisons(_a) -> None:
+    """v5: only the comparison stars (5 object columns), for an existing sample."""
+    import pyarrow.parquet as pq
+
+    cols = ["oid", "ra", "dec", "refmag", "transient"]
+    obj = pq.ParquetFile(s3().open(OBJ_PART)).read(columns=cols).to_pandas()
+    print(save_comparisons(obj))
 
 
 # ------------------------------------------------------------------------------------------ fetch
@@ -815,14 +832,20 @@ def stage_exposures(_a) -> None:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("stage", choices=["sample", "fetch", "exposures", "inject", "search"])
+    ap.add_argument(
+        "stage", choices=["sample", "comparisons", "fetch", "exposures", "inject", "search"]
+    )
     ap.add_argument("--half", choices=["dev", "holdout", "all"], default="dev")
     ap.add_argument("--n", type=int, default=200)
     ap.add_argument("--pix", type=int, default=3839, help="light-curve partition (v4: 3838)")
+    ap.add_argument("--vdir", default=None, help="output folder for the v1-v3 sample (v5)")
     a = ap.parse_args(argv)
-    configure(a.pix)
+    if a.vdir and a.stage == "sample":
+        ap.error("--vdir reuses the v1-v3 sample; the sample stage would overwrite it")
+    configure(a.pix, a.vdir)
     fn = {
         "sample": stage_sample,
+        "comparisons": stage_comparisons,
         "fetch": stage_fetch,
         "exposures": stage_exposures,
         "inject": stage_inject,

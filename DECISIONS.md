@@ -5180,6 +5180,10 @@ confining radiation at a throat is found.
   On 1,000 new stars: 0 flags (2,565 under the v3 mapping; images of 5 removed flags: 0 dimming in 38 non-detections). Still fails the
   frozen rule at ρ 0.1, t_E 100 d (0.405; sharp-edge test in a post hoc diagnostic). Revisit if: the owner accepts a slow-edge-aware vetting
   test calibrated on injections before any new data are read.
+- **Addendum 2026-10-18 (v5, `results/w3_ztf/v5/RESULT.md`):** an exploratory holdout search with the #339 code
+  and the capability limited to the 10 cells at ≥ 0.5. 486 groups, 0 flags. The holdout was not strictly blind
+  (aggregate comparison use in v1–v3). No abundance or limit. Revisit if: the owner authorizes another batch or a
+  slow-edge vetting change.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W3 ZTF v5: exploratory holdout search within the calibrated cells, 0 flags in 486 groups
+- #339's failed verdict stands. This is a narrower, exploratory search with the #339 code unchanged; the plan was
+  frozen first (`results/w3_ztf/v5/PLAN.md`). Capability is stated for the 10 injection cells at ≥ 0.5 only.
+- Searched 486 holdout groups: 971 series, 1,438,841 series epochs. Result: 0 flagged runs, so no image check (0 MB).
+  The holdout was not strictly blind: its light curves were downloaded in v1–v3 and used in aggregate comparison
+  counts (`independence.json`).
+- Post hoc functional check: the development half also gives 0 flags (1,520 under the v3 mapping).
+- Reads: 1,024.8 MB compressed (`cost.json`).
+- **Handoff:** no verified dimming; the route stays paused. No next batch without the owner (`results/w3_ztf/v5/RESULT.md`).
+
 ## 2026-10-18: W1 metacal R v3: empirical-PSF gate failed (2 usable Gaia stars); post hoc ePSF lowers R to 0.71 ± 0.17
 - Frozen plan `results/w1_r_realmetacal/PLAN_v3.md`: ePSF = median of Gaia DR3 star stamps (17 ≤ G ≤ 21, RUWE < 1.4,
   5/6-parameter) from the same GOODS-N F200W mosaic; gate E needs ≥ 5 stars and FWHM 0.060–0.090″.
