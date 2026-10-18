@@ -307,10 +307,10 @@ def main(argv=None) -> int:
         summary["cost_s"][f"morph_{args.morph_half}"] = round(time.time() - t1, 1)
     args.out.mkdir(parents=True, exist_ok=True)
     tag = f"_morph_{args.morph_half}" if args.morph_image else ""
-    (args.out / f"queries{tag}.json").write_text(json.dumps(rows, indent=1))
-    (args.out / f"control{tag}.json").write_text(json.dumps(control, indent=1, default=str))
-    (args.out / f"summary{tag}.json").write_text(json.dumps(op._finite(summary), indent=1))
-    print(json.dumps(op._finite(summary), indent=1))
+    (args.out / f"queries{tag}.json").write_text(json.dumps(rows, indent=1) + "\n")
+    (args.out / f"control{tag}.json").write_text(json.dumps(control, indent=1, default=str) + "\n")
+    (args.out / f"summary{tag}.json").write_text(json.dumps(op._finite(summary), indent=1) + "\n")
+    print(json.dumps(op._finite(summary), indent=1) + "\n")
     return 0
 
 
