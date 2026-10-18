@@ -13,9 +13,10 @@ import w1_r_sim as w  # noqa: E402
 
 
 def test_rule_outcome_threshold():
-    assert w.rule_outcome(0.414, 0.0) == "conservative"
-    assert w.rule_outcome(0.40, 0.01) == "conservative"  # within 2σ below
-    assert w.rule_outcome(0.39, 0.01) == "optimistic"
+    assert w.rule_outcome(0.414, 0.0, 0.414) == "conservative"
+    assert w.rule_outcome(0.40, 0.01, 0.414) == "conservative"  # within 2σ below
+    assert w.rule_outcome(0.39, 0.01, 0.414) == "optimistic"
+    assert w.rule_outcome(None, None, 0.414) == "undetermined"
     assert w.rule_outcome(1.0, 0.01, r_borrowed=1.05) == "optimistic"
 
 
@@ -37,8 +38,12 @@ def test_weighted_r_nearest_cell_and_unrepresented_rows():
     assert res["n_rows_used"] == 4 and res["n_rows_unrepresented"] == 1
     assert res["R"] == pytest.approx(0.75)
     assert res["err"] == pytest.approx(np.sqrt(2 * 0.5**2 * 0.1**2))
+    assert res["n_rows_extrapolated"] == 3  # size 1.9, size 9 / S/N 300 and S/N 18 lie outside
     res = w.weighted_r(cells, size, snr, "k", min_used_frac=0.9)  # cell 0 used 50 of 100
     assert res["n_rows_used"] == 2 and res["R"] == pytest.approx(1.0)
+    assert res["n_rows_extrapolated"] == 1  # only the 9 px row counts; cell 0 rows are unused
+    empty = w.weighted_r([_cell(None, None, None, 0)], size, snr, "k")
+    assert empty["R"] is None and empty["n_rows_unrepresented"] == len(size)
 
 
 def test_c1_noiseless_response_is_one():

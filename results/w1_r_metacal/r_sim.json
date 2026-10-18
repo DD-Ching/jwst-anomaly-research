@@ -118,9 +118,9 @@
     "field": 1.3265394298851567
    },
    "n_pairs": 100,
-   "n_detected": 198,
-   "semimajor_px_median": 1.627236231278713,
-   "snr_median": 9.185425964400446,
+   "n_detected": 199,
+   "semimajor_px_median": 1.629334101563668,
+   "snr_median": 9.19417742674281,
    "R": {
     "stamp": {
      "R": null,
@@ -318,9 +318,9 @@
     "field": 1.3265394298851567
    },
    "n_pairs": 100,
-   "n_detected": 172,
-   "semimajor_px_median": 2.3875923582804974,
-   "snr_median": 9.820517840306358,
+   "n_detected": 186,
+   "semimajor_px_median": 2.3921463571488317,
+   "snr_median": 9.848057883828396,
    "R": {
     "stamp": {
      "R": 1.5873312477676205,
@@ -418,9 +418,9 @@
     "field": 1.3265394298851567
    },
    "n_pairs": 100,
-   "n_detected": 62,
-   "semimajor_px_median": 2.1806373302499473,
-   "snr_median": 8.167669068442109,
+   "n_detected": 118,
+   "semimajor_px_median": 2.247616677590525,
+   "snr_median": 8.296711903188367,
    "R": {
     "stamp": {
      "R": null,
@@ -1051,7 +1051,7 @@
    "err": 0.007259782933250755,
    "n_rows_used": 1736,
    "n_rows_unrepresented": 523,
-   "n_rows_extrapolated": 412,
+   "n_rows_extrapolated": 410,
    "rows_per_cell": [
     0,
     19,
