@@ -1491,3 +1491,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - Photo-z: DJA v7.3 `gdn-grizli-v7.3-fix.eazypy.zout.fits`, streamed out of `gdn-grizli-v7.3-fix.photoz.tar.gz`
   (pins in `orphan_pairs.DEEP_FIELDS["goodsn-dja"]`; D-051). The F200W `_i2d.fits` SCI extensions were range-read
   for the streak masks and the sheet (not stored).
+
+## W1 blank-field R simulation (accessed 2026-10-18; `results/w1_r_metacal/`)
+- **GalSim** 2.8.5 (PyPI `galsim`), https://github.com/GalSim-developers/GalSim; Rowe et al. 2015, Astronomy and
+  Computing 10, 121, doi:10.1016/j.ascom.2015.02.002. Sérsic profiles, Airy ⊗ Gaussian PSF, shears.
+- **photutils** 3.1.1 (PyPI), `detect_sources` and `SourceCatalog` (`semimajor_axis` is 3.x's name for the
+  catalogue's `semimajor_sigma`, per its deprecation warning).
