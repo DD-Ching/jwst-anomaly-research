@@ -1,0 +1,111 @@
+{
+ "provenance": "derived",
+ "plan": "results/e1_icetracks/PLAN.md",
+ "events": {
+  "GBM": 4398,
+  "ICECAT": 340,
+  "GW": 391,
+  "CHIME": 3641,
+  "BAT": 1635,
+  "DR2": 7583
+ },
+ "dr2_mjd_range": [
+  54562.71429234,
+  59722.40319898
+ ],
+ "n_jit": 10000,
+ "n_jitday": 10000,
+ "tested_cells": 35,
+ "positive_control_dr2_icecat_same_0_10s": {
+  "obs": 270,
+  "jit_mean": 0.0013,
+  "jit_sd": 0.036032069049667416,
+  "analytic_p": 0.0,
+  "passes": true,
+  "rule": ">= 10 pairs and analytic p <= 1.8e-05"
+ },
+ "outcome": "null",
+ "min_cell": {
+  "cell": "DR2-CHIME 1d-7d same",
+  "analytic_p": 0.06498322348935238,
+  "bonferroni_p": 1.0
+ },
+ "global_jit_pooled": {
+  "min_cell_p": 0.06359364063593641,
+  "trials_corrected_p": 0.785021497850215
+ },
+ "global_jitday_pooled": {
+  "min_cell_p": 0.06379362063793621,
+  "trials_corrected_p": 0.7801219878012199
+ },
+ "injection_detection_p_star": 3.857142857142858e-05,
+ "same_direction_pairs": {
+  "DR2-GBM": 19,
+  "DR2-BAT": 0,
+  "DR2-CHIME": 0,
+  "DR2-ICECAT": 270
+ },
+ "node_set": {
+  "dec_min": -5.0,
+  "log10e_min": 4.0,
+  "one_per_readout": true
+ },
+ "params": {
+  "lag_edges": [
+   0.0,
+   10.0,
+   100.0,
+   3600.0,
+   86400.0,
+   604800.0
+  ],
+  "n_sigma": 3.0,
+  "min_wide_deg": 0.1,
+  "gbm_sys_deg": 3.7,
+  "gbm_external_deg": 0.5,
+  "gbm_external_sigma_deg": 0.05,
+  "icecat_90_to_sigma": 2.146,
+  "jitter_s": 259200.0,
+  "quantum_s": {
+   "GBM": 5736.0,
+   "BAT": 5700.0
+  },
+  "orbit_slop_s": 300.0,
+  "orbit_k": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "orbit_half_s": 120.0,
+  "day_k": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "day_half_s": 600.0,
+  "inject_local_days": 30.0
+ },
+ "jitday_quantum_s": {
+  "GBM": 5736.0,
+  "BAT": 5700.0,
+  "ICECAT": 86400.0,
+  "CHIME": 86400.0,
+  "GW": 86400.0
+ }
+}

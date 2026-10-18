@@ -1,0 +1,13 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: a, datatype: string}
+# - {name: b, datatype: string}
+# - {name: lag_s, datatype: float64}
+# - {name: sep_deg, datatype: float64}
+# - {name: sigma_comb_deg, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'IceTracks-DR2 v3.1 (Dec > -5.0, log10E >= 4.0) x CHIME/FRB Catalog 2'}
+# schema: astropy-2.0
+a b lag_s sep_deg sigma_comb_deg

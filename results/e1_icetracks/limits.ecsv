@@ -1,0 +1,39 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: channel, datatype: string}
+# - {name: cls, datatype: string}
+# - {name: lag, datatype: string}
+# - {name: obs, datatype: int64}
+# - {name: jit_mean, datatype: float64}
+# - {name: ul95_pairs, datatype: float64}
+# - {name: eff, datatype: float64}
+# - {name: n50_detect, datatype: int64}
+# - {name: n_anchor_eligible, datatype: int64}
+# - {name: valid, datatype: bool}
+# - {name: ul95_rate_per_anchor, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: counts.ecsv (jit null) and injections.ecsv}
+# schema: astropy-2.0
+channel cls lag obs jit_mean ul95_pairs eff n50_detect n_anchor_eligible valid ul95_rate_per_anchor
+DR2-GBM wide 0s-10s 0 1.09 3.0 1.0 8 7321 True 0.00040978008468788414
+DR2-GBM wide 10s-100s 12 9.76 19.44 0.995 16 7321 True 0.002667880639274087
+DR2-GBM wide 100s-1h 372 378.3 31.95 0.997 97 7321 True 0.004375376816840942
+DR2-GBM wide 1h-1d 8866 8945.93 147.59 1.0 449 7321 True 0.020159814233028275
+DR2-GBM wide 1d-7d 56154 56104.24 353.05 1.0 549 7321 True 0.04822428629968584
+DR2-BAT wide 0s-10s 0 0.38 3.0 1.0 8 7583 True 0.0003956217855729922
+DR2-BAT wide 10s-100s 4 3.41 9.15 1.0 15 7583 True 0.0012066464459976262
+DR2-BAT wide 100s-1h 113 133.01 19.13 1.0 93 7583 True 0.002522748252670447
+DR2-BAT wide 1h-1d 3105 3144.0 89.2 1.0 271 7583 True 0.011763154424370302
+DR2-BAT wide 1d-7d 19884 19768.28 272.0 1.0 190 7583 True 0.035869708558617965
+DR2-CHIME wide 0s-10s 0 0.36 3.0 1.0 5 769 True 0.0039011703511053317
+DR2-CHIME wide 10s-100s 2 3.11 6.3 1.0 14 769 True 0.008192457737321196
+DR2-CHIME wide 100s-1h 118 120.94 18.0 1.0 55 769 True 0.02340702210663199
+DR2-CHIME wide 1h-1d 2844 2865.89 80.73 1.0 245 769 True 0.10498049414824448
+DR2-CHIME wide 1d-7d 18004 18022.96 144.68 1.0 440 769 True 0.1881404421326398
+DR2-GW all 0s-10s 0 0.01 3.0 1.0 3 435 True 0.006896551724137931
+DR2-GW all 10s-100s 0 0.12 3.0 1.0 5 435 True 0.006896551724137931
+DR2-GW all 100s-1h 3 4.61 7.75 0.988 17 435 True 0.018041612105339735
+DR2-GW all 1h-1d 115 108.42 21.0 0.811 46 435 True 0.05951818611242324
+DR2-GW all 1d-7d 657 655.06 26.0 0.201 -1 435 False nan
