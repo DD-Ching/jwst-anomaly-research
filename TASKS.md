@@ -237,8 +237,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      anti 1 vs 0.15 (P 0.14): does not replicate; ~~RXC J0600~~ — done (2026-10-18,
      `results/arcs/rxc0600-relics/RESULT.md`): RELICS GLAFIC v3 11 / 12 aligned, anti 1 vs 0.20 (P 0.18): does not
      replicate (Lenstool v1 fails the control); ~~SPT0615~~ — done (2026-10-18, `results/arcs/spt0615-relics/RESULT.md`;
-     RELICS BPZ photo-z): both RELICS models fail the control (3 / 7, 1 / 4), no result. Next, optional: MACS0308
-     (RELICS GLAFIC + Zitrin maps, RELICS BPZ; JWST 5293 / 6882, ≤ 1,578 s) and VENUS (6882) clusters with
+     RELICS BPZ photo-z): both RELICS models fail the control (3 / 7, 1 / 4), no result; ~~MACS0308~~ — done
+     (2026-10-18, `results/arcs/macs0308-relics/RESULT.md`; RELICS BPZ): GLAFIC v2 17 / 21 aligned, anti 1 vs 0.31
+     (P 0.27): does not replicate (Zitrin 15 / 18, same anti). Next, optional: VENUS (6882) clusters with
      RELICS/CLASH maps (no photo-z yet); Bullet (LAM atlas Lenstool model, JWST 4598) once a photo-z source exists;
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
      Gordo 2527 explained by its model); critical curves at z_s = 1, 2, 4 still open;

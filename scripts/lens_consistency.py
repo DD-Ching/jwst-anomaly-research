@@ -195,6 +195,21 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    # z_lens 0.356 (Acebron et al. 2018, Table 1)
+    "macs0308-relics-glafic": {
+        "files": lensmodel.MACS0308_RELICS_GLAFIC,
+        "kind": "maps",
+        "z_lens": 0.356,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "macs0308-relics-zitrin": {
+        "files": lensmodel.MACS0308_RELICS_ZITRIN,
+        "kind": "maps",
+        "z_lens": 0.356,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     "macs0417-relics-lenstool": {
         "files": lensmodel.MACS0417_RELICS_LENSTOOL,
         "kind": "maps",
