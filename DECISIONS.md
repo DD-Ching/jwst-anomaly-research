@@ -4447,6 +4447,18 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
 - Revisit if: EP publishes an event catalogue (then replace the parsed table), or an EP–GBM test is planned (then
   define joint events by name and position, not by |lag| < 1 h).
 
+**Addendum 8 (2026-10-18): IceTracks-DR2 northern tracks as a seventh node set (`results/e1_icetracks/`).**
+- Input: the D-079 pinned DR2 files; Dec > −5°, log10 E ≥ 4.0, one track per (run, event), 1σ = AngErr: 7,583
+  tracks (2008-04 to 2022-05). Null for DR2: the D-079 uptime-aware ±3 d jitter; other catalogues as addendum 6.
+- Family: DR2–GBM, DR2–BAT, DR2–CHIME (same, wide), DR2–GW (all) × 5 lags = 35 cells. DR2–ICECAT same-direction
+  pairs at 0–10 s are the positive control (270 one-to-one vs 0.0009 expected: passes). DR2–DR2 stays with D-079.
+- **Result: null.** Min cell DR2–CHIME 1–7 d same (p 0.064, × 35 = 1); pooled global p 0.77. Limits per
+  eligible anchor in `results/e1_icetracks/limits.ecsv` (e.g. ≤ 4 × 10⁻⁴ dependent wide DR2–GBM / DR2–BAT pairs
+  per track at 0–10 s).
+- With this, every node set TASKS.md listed for E1 is done; E1 waits only on the CHIME uptime series (owner).
+- Revisit if: f_astro per cut is computed (turns per-track limits into per-astrophysical-neutrino limits), or
+  a southern / lower-energy DR2 variant is planned (atmospheric muons dominate; new control needed).
+
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
 **Decision.**

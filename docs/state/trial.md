@@ -267,6 +267,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.25 (Abell 370 halo fluxes: per-system rms gate, `halo_phot`, `fluxratios`, stamps) | — | — | 0.1 (orientation, claim, review, PR) | cloud routine 01StJeNF, 20:08–20:45Z |
 | 2026-W42 | ≈ 0.3 (E1 + Swift BAT: plan, driver, 2 × 10⁴ scrambles, injections; control-channel diagnostics) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 016CcRnf, 21:08–21:45Z |
 | 2026-W42 | ≈ 0.3 (E1 + Einstein Probe: GCN-circular node table, plan, driver, 2 × 10⁴ scrambles, injections; joint-event diagnostic) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01UFgoqS, 22:08–22:45Z |
+| 2026-W42 | ≈ 0.2 (E1 + IceTracks-DR2: plan, driver, 2 × 10⁴ scrambles, injections) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01MS6Fgg, 23:08–23:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
