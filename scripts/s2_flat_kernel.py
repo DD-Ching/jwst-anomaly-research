@@ -14,6 +14,7 @@ z-matched scramble null -> injection-recovery of gamma_F.
     python scripts/s2_flat_kernel.py fetch      # Data Lab TAP, batched boxes, cached per chunk
     python scripts/s2_flat_kernel.py fit        # columns, regression, scramble null, injections
     python scripts/s2_flat_kernel.py fetch --sample des   # DES-SN5YR (Dovekie) instead of Pantheon+
+    python scripts/s2_flat_kernel.py fetch --sample des --survey dr10 --mag-z-max 22
 """
 
 from __future__ import annotations
@@ -73,6 +74,15 @@ class Params:
     alpha: int = 1  # flat column on (1 + delta)^alpha; A3's fiducial is alpha >= 2 (1 or 2 here)
     sample: str = "pantheon"  # "pantheon" (Pantheon+) or "des" (DES-SN5YR Dovekie, DES SNe only)
     min_probia: float = 0.5  # ASSUMPTION (des): BEAMS P(Ia) cut against core-collapse contamination
+    survey: str = "dr9"  # Legacy Surveys release of the galaxy column ("dr9" or "dr10")
+    fit_mag_z_max: float | None = (
+        None  # fit-only brighter cut on the fetched galaxies (None: mag_z_max)
+    )
+    pz_split_mag: float = 21.0  # photo-z gate Q: the faint bin is [pz_split_mag, mag_z_max)
+    pz_max_nmad: float = (
+        0.10  # ASSUMPTION (gate Q): sigma_NMAD of dz / (1 + z_spec) in the faint bin
+    )
+    pz_max_outlier: float = 0.20  # ASSUMPTION (gate Q): fraction with |dz| / (1 + z_spec) > 0.15
 
 
 def cache() -> Path:
@@ -170,6 +180,8 @@ def galaxy_dir(p: Params) -> Path:
     key = [QUERY_VERSION, FETCH_Z, p.radius_arcsec, p.mag_z_max, p.batch]
     if p.sample != "pantheon":  # keeps the Pantheon+ cache key of D-070
         key += [p.sample, p.min_probia]
+    if p.survey != "dr9":  # keeps the DR9 cache keys
+        key += [p.survey]
     key = json.dumps(key)
     d = cache() / f"gal_{hashlib.sha1(key.encode()).hexdigest()[:10]}"
     d.mkdir(parents=True, exist_ok=True)
@@ -183,7 +195,8 @@ def query(sne: Table, p: Params) -> Table:
         for t in box_terms(r, d, p.radius_arcsec)  # unqualified ra/dec: only the tractor has them
     ]
     q = (
-        f"SELECT {COLS} FROM ls_dr9.tractor t JOIN ls_dr9.photo_z p ON t.ls_id = p.ls_id "
+        f"SELECT {COLS} FROM ls_{p.survey}.tractor t JOIN ls_{p.survey}.photo_z p "
+        f"ON t.ls_id = p.ls_id "
         f"WHERE t.brick_primary = 1 AND t.maskbits = 0 AND t.type <> 'PSF' AND t.type <> 'DUP' "
         f"AND t.dered_mag_z > 0 AND t.dered_mag_z < {p.mag_z_max} AND (" + " OR ".join(terms) + ")"
     )
@@ -235,7 +248,8 @@ def lens_weight(zg: np.ndarray, zs: float, cosmo: FlatLambdaCDM) -> np.ndarray:
     return np.clip((1 + zg) * cl * (cs - cl) / cs, 0, None)
 
 
-REGION = {9010: 0, 9011: 1}  # DR9 south (DECam) and north (BASS/MzLS): different depths
+# DR9 south (DECam) and north (BASS/MzLS): different depths; DR10 DECam (release 10000) is south
+REGION = {9010: 0, 9011: 1, 10000: 0}
 
 
 def shell_edges(p: Params) -> tuple[np.ndarray, np.ndarray]:
@@ -492,6 +506,33 @@ def chain_injection(c, sne, y, err, z, p: Params, rng, gamma: float) -> np.ndarr
     return np.array(out)
 
 
+def photoz_gate(gal: Table, p: Params) -> dict:
+    """Gate Q of results/s2_flat_kernel/dr10/PLAN.md: photo-z quality of the faint bin.
+
+    Uses the galaxies with a spectroscopic redshift (DR photo-z of training objects are k-fold
+    predictions). Passes when the faint bin [pz_split_mag, mag_z_max) has sigma_NMAD <= pz_max_nmad
+    AND an outlier fraction (|dz| / (1 + z_spec) > 0.15) <= pz_max_outlier.
+    """
+    m = np.asarray(gal["dered_mag_z"])
+    zs = np.asarray(gal["z_spec"])
+    zp = np.asarray(gal["z_phot_median"])
+    out = {}
+    for name, lo, hi in (("bright", 0.0, p.pz_split_mag), ("faint", p.pz_split_mag, p.mag_z_max)):
+        k = (zs > 0) & (zp >= 0) & (m >= lo) & (m < hi)
+        dz = (zp[k] - zs[k]) / (1 + zs[k])
+        n = int(k.sum())
+        out[name] = {
+            "n_spec": n,
+            "nmad": float(1.4826 * np.median(np.abs(dz - np.median(dz)))) if n else None,
+            "outlier_frac": float(np.mean(np.abs(dz) > 0.15)) if n else None,
+        }
+    fb = out["faint"]
+    out["passed"] = bool(
+        fb["n_spec"] > 0 and fb["nmad"] <= p.pz_max_nmad and fb["outlier_frac"] <= p.pz_max_outlier
+    )
+    return out
+
+
 def sample_provenance(p: Params) -> dict:
     def sha(name: str) -> str:
         return hashlib.sha256((cache() / name).read_bytes()).hexdigest()
@@ -515,6 +556,9 @@ def fit(p: Params) -> dict:
     gal = vstack([Table.read(f) for f in files])
     # a galaxy inside two SN boxes of different chunks comes back twice with identical values
     gal = gal[np.unique(np.column_stack([gal["ra"], gal["dec"]]), axis=0, return_index=True)[1]]
+    pz = photoz_gate(gal, p)
+    if p.fit_mag_z_max is not None:  # a brighter cut than the fetch
+        gal = gal[np.asarray(gal["dered_mag_z"]) < p.fit_mag_z_max]
     c = columns(sne, gal, p)
     y = residuals(sne, p)
     err, z, colour = (np.asarray(sne[k]) for k in ("err", "z", "c"))
@@ -531,7 +575,7 @@ def fit(p: Params) -> dict:
         "params": asdict(p),
         "provenance": {
             **sample_provenance(p),
-            "galaxies": "observed (LS DR9 Tractor + DR9 photo-z, Data Lab TAP)",
+            "galaxies": f"observed (LS {p.survey.upper()} Tractor + photo-z, Data Lab TAP)",
             "columns": "derived",
             "residual_model": "model_prediction (flat LCDM Om = 0.334)",
             "thresholds": "assumption (Params)",
@@ -541,6 +585,7 @@ def fit(p: Params) -> dict:
         "n_cut_coverage_or_5sigma": int((finite & ~sel).sum()),
         "n_sne_fit": int(sel.sum()),
         "n_galaxies": len(gal),
+        "photoz_gate_q": pz,
         "corr_xl_xf": float(np.corrcoef(xl, xf)[0, 1]),
         "std_xl": float(np.std(xl)),
         "std_xf": float(np.std(xf)),
@@ -586,9 +631,15 @@ def main() -> None:
     ap.add_argument("--z-min", type=float, default=None, help="fit only SNe above this z")
     ap.add_argument("--alpha", type=int, default=1, choices=[1, 2], help="flat column power")
     ap.add_argument("--sample", default="pantheon", choices=["pantheon", "des"])
+    ap.add_argument("--survey", default="dr9", choices=["dr9", "dr10"])
+    ap.add_argument("--mag-z-max", type=float, default=None, help="galaxy depth of the fetch")
+    ap.add_argument("--fit-mag-z-max", type=float, default=None, help="brighter cut for the fit")
     a = ap.parse_args()
-    p = Params(sample=a.sample)
+    p = Params(sample=a.sample, survey=a.survey)
+    if a.mag_z_max is not None:
+        p = replace(p, mag_z_max=a.mag_z_max)
     fit_p = replace(p, alpha=a.alpha, **({} if a.z_min is None else {"z_min": a.z_min}))
+    fit_p = replace(fit_p, fit_mag_z_max=a.fit_mag_z_max)
     if a.cmd == "fetch":
         fetch(p)
     else:
@@ -597,6 +648,7 @@ def main() -> None:
         tag = (
             ("" if a.sample == "pantheon" else f"_{a.sample}")
             + ("" if a.z_min is None else f"_zmin{a.z_min:g}")
+            + ("" if a.survey == "dr9" else f"_{a.survey}_mz{a.fit_mag_z_max or p.mag_z_max:g}")
             + f"_alpha{a.alpha}"
         )
         (OUT / f"fit{tag}.json").write_text(json.dumps(res, indent=1) + "\n")

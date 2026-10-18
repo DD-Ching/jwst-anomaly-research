@@ -153,3 +153,27 @@ def test_load_des_joins_hd_meta_and_positions(tmp_path, monkeypatch):
     t = s2.load_des(s2.Params(sample="des"))
     assert list(t["cid"]) == ["101"]
     assert t["ra"][0] == 35.1 and t["m"][0] == 42.2 and t["c"][0] == -0.05 and t["err"][0] == 0.15
+
+
+def test_photoz_gate_uses_faint_bin_and_both_conditions():
+    p = s2.Params(mag_z_max=22.0)
+    n = 200
+    zs = np.full(2 * n, 0.5)
+    zp = zs.copy()
+    zp[n : n + 30] = 1.2  # 15 % faint outliers
+    zp[n + 30 :] += np.linspace(-0.05, 0.05, n - 30)  # moderate faint scatter
+    zp[:n] = 2.0  # bright bin all outliers: must not affect the gate
+    gal = Table(
+        {
+            "dered_mag_z": np.r_[np.full(n, 20.0), np.full(n, 21.5)],
+            "z_spec": zs,
+            "z_phot_median": zp,
+        }
+    )
+    g = s2.photoz_gate(gal, p)
+    assert g["faint"]["n_spec"] == n and g["bright"]["outlier_frac"] == 1.0
+    assert g["faint"]["outlier_frac"] == 0.15 and g["passed"]
+    g = s2.photoz_gate(gal, s2.Params(mag_z_max=22.0, pz_max_outlier=0.1))
+    assert not g["passed"]
+    gal["z_spec"][n:] = -99  # no spec-z in the faint bin: the gate fails
+    assert not s2.photoz_gate(gal, p)["passed"]
