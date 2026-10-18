@@ -1549,3 +1549,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   s3://ipac-irsa-ztf/ztf/enhanced/dr24/ (anonymous; read 2026-10-18); tutorial
   https://caltech-ipac.github.io/irsa-tutorials/ztf-lightcurves/; release notes
   https://irsa.ipac.caltech.edu/data/ZTF/docs/releases/dr24/ztf_release_notes_dr24.pdf. Used by `scripts/w3_ztf.py`.
+- Metacalibration: Huff & Mandelbaum 2017, arXiv:1702.02600 ("Metacalibration: Direct Self-Calibration of Biases in
+  Shear Measurement"); Sheldon & Huff 2017, arXiv:1702.02601 ("Practical Weak Lensing Shear Measurement with
+  Metacalibration"); titles checked via the arXiv API 2026-10-18. JADES 1181 o001 F200W i2d:
+  s3://stpubdata/jwst/public/jw01181/L3/t/o001/jw01181-o001_t001_nircam_clear-f200w_i2d.fits (anonymous, streamed
+  2026-10-18). Used by `scripts/w1_r_realmetacal.py`.
