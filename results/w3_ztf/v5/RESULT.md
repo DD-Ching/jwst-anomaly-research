@@ -9,11 +9,11 @@
 - **Searched** (`search_holdout_v5.json`, `search_stats.json`):
   - 486 holdout groups;
   - 971 light-curve series in the r and g filters;
-  - 1,438,841 exposures; median span 2,767 d.
+  - 1,438,841 series epochs (star-exposures); median span 2,767 d.
 - **What the search saw:**
   - 531 catalogue non-detections that passed the footprint test;
   - 0 detections ≥ 1 mag below the median;
-  - 16 dim runs of 2 epochs, all too short for the frozen MIN_RUN 3 on 3 nights.
+  - 16 dim runs of ≥ 2 epochs, none flagged by the frozen run rule.
 - **Calibrated capability** (W3 n = 1, ε < 0; recovered / injected on the v4 carriers, `../v4/injections_v4.json`):
 
   | ρ | blend | t_E 10 d | t_E 30 d | t_E 100 d |
@@ -34,13 +34,13 @@
 ## 2. Flags and image check
 - 0 flagged runs, so there was nothing to check. No cutouts were downloaded (0 MB). The image script is committed
   (`image_script.py.txt`) but was not run.
-- **Functional check** (post hoc, development half, already seen in v1–v3; `search_dev_v5.json`): the same code
+- **Functional check** (post hoc; also the `dev` block of `search_stats.json`, development half, already seen in v1–v3; `search_dev_v5.json`): the same code
   gives 0 flagged runs on 514 development groups (1,023 series). With the v3 mapping these groups gave 1,520 flagged
   runs and 8 survivors (`../v3/search_dev_v3.json`). The change is the footprint test of #339; no rule was altered.
 
 ## 3. Real dimming
-None was proposed by the catalogue stage, so none was checked. This is not evidence of absence outside the calibrated
-cells, nor for events that leave no catalogue record.
+None was proposed by the catalogue stage, so none was checked. This is not evidence of absence, and no limit is
+derived.
 
 ## 4. Independence and caveats (`independence.json`)
 - No objectid is shared with the development half or the v4 sample. The nearest development group is 9.96″ away, the
@@ -55,4 +55,4 @@ cells, nor for events that leave no catalogue record.
 - Objects catalogue Npix 959: 5 columns, 79.9 MB compressed (`cost.json`). Total 1,024.8 MB.
 - IRSA TAP: 7.90 MB (`exposures_summary.json`).
 - Cutouts: 0 MB.
-- Wall time (not stored): fetch 40 s; search and statistics about 1 min each.
+- Wall time: fetch 39.6 s (`fetch_info.json`); search and statistics about 1 min each (not stored).

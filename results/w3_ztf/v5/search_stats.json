@@ -1,5 +1,5 @@
 {
- "label": "derived; v5 holdout search statistics",
+ "label": "derived; v5 holdout search statistics; the dev block is a post hoc functional check",
  "holdout": {
   "groups": 486,
   "series": 971,

@@ -5,7 +5,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-18: W3 ZTF v5: exploratory holdout search within the calibrated cells, 0 flags in 486 groups
 - #339's failed verdict stands. This is a narrower, exploratory search with the #339 code unchanged; the plan was
   frozen first (`results/w3_ztf/v5/PLAN.md`). Capability is stated for the 10 injection cells at ≥ 0.5 only.
-- Searched 486 holdout groups: 971 series, 1,438,841 exposures. Result: 0 flagged runs, so no image check (0 MB).
+- Searched 486 holdout groups: 971 series, 1,438,841 series epochs. Result: 0 flagged runs, so no image check (0 MB).
   The holdout was not strictly blind: its light curves were downloaded in v1–v3 and used in aggregate comparison
   counts (`independence.json`).
 - Post hoc functional check: the development half also gives 0 flags (1,520 under the v3 mapping).

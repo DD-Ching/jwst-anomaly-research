@@ -5,7 +5,7 @@ sys.path.insert(0, 'scripts')
 import w3_ztf as wz
 wz.configure(3839, 'v5')
 rows, cov = wz.context(None)
-out = {'label': 'derived; v5 holdout search statistics'}
+out = {'label': 'derived; v5 holdout search statistics; the dev block is a post hoc functional check'}
 for half in ('holdout', 'dev'):
     gs = [g for g in json.load(open(wz.SAMPLE))['groups'] if g['holdout'] == (half == 'holdout')]
     n_ser = n_ep = n_nd = n_dim = n_long = 0; span = []

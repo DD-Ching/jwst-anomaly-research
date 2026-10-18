@@ -30,7 +30,7 @@ commit that adds this file (`scripts/w3_ztf.py`, the #339 method; `--pix 3839 --
   - no shared objectid with the v1–v3 development half or with the v4 sample;
   - nearest development group 9.96″, nearest v4 group 77.2″;
   - 0 ambiguous groups;
-  - no committed file names a holdout id.
+  - no committed file names a holdout id (see `independence.json` for the scope of that check).
 - **Exposure history (stated, not hidden):**
   - v1–v3 downloaded the holdout members' light curves together with the development sample.
   - Holdout stars in the comparison magnitude range entered the aggregate per-exposure comparison counts.

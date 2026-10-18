@@ -840,6 +840,8 @@ def main(argv=None) -> int:
     ap.add_argument("--pix", type=int, default=3839, help="light-curve partition (v4: 3838)")
     ap.add_argument("--vdir", default=None, help="output folder for the v1-v3 sample (v5)")
     a = ap.parse_args(argv)
+    if a.vdir and a.stage == "sample":
+        ap.error("--vdir reuses the v1-v3 sample; the sample stage would overwrite it")
     configure(a.pix, a.vdir)
     fn = {
         "sample": stage_sample,

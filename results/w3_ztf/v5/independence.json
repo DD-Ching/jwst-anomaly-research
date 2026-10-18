@@ -10,5 +10,6 @@
  "holdout_groups_within_3as_of_v4": 0,
  "ambiguous_holdout_groups": 0,
  "committed_files_naming_holdout_ids": {},
+ "id_check_scope": "every git-tracked file except the v1-v3 sample and v5 outputs; whole 13-16 digit numbers",
  "exposure_history": "v1-v3 stage_fetch downloaded the holdout members light curves with the dev sample, and coverage() used holdout stars in the comparison range as comparison stars in aggregate per-exposure counts; no holdout light curve was searched, screened, injected into or plotted, and no committed file names a holdout id (list above)."
 }
