@@ -1,0 +1,18 @@
+{
+ "label": "derived",
+ "F090W": {
+  "n_controls": 14,
+  "control_median": 0.966687850491965,
+  "control_scatter": 0.14841024478237586
+ },
+ "F150W": {
+  "n_controls": 31,
+  "control_median": 1.0246468321872926,
+  "control_scatter": 0.07401021456854112
+ },
+ "F200W": {
+  "n_controls": 32,
+  "control_median": 0.9797415843765391,
+  "control_scatter": 0.07138369423594519
+ }
+}
