@@ -53,7 +53,7 @@ from astropy.table import Table, vstack
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
 
-from jwst_anomaly import exotic_sim, paths, schema  # noqa: E402
+from jwst_anomaly import exotic_sim, lensmodel, paths, schema  # noqa: E402
 
 _spec = importlib.util.spec_from_file_location(
     "exotic_screens", Path(__file__).resolve().parent / "exotic_screens.py"
@@ -582,11 +582,44 @@ def pixel_scale_arcsec(cat_path: Path) -> float:
     return float(sep / np.hypot(x[i] - x[j], y[i] - y[j]))
 
 
+class NullLensModel:
+    """No lens: κ = 0 and g = 0 everywhere, in a tangent-plane frame at (``ra0``, ``dec0``) with
+    the model frame of :class:`jwst_anomaly.lensmodel.LensModel` (x West, y North, arcsec). For
+    blank fields without a lens model (results/w1_shear_ncf/PLAN.md); ``z_lens`` 0, so every row
+    with a photo-z above the margin is background."""
+
+    z_lens = 0.0
+
+    def __init__(self, ra0: float, dec0: float):
+        self.ra0, self.dec0 = float(ra0), float(dec0)
+        self._cos0 = np.cos(np.deg2rad(self.dec0))
+
+    to_frame = lensmodel.LensModel.to_frame
+    to_sky = lensmodel.LensModel.to_sky
+
+    def evaluate(self, ra, dec, z_s) -> dict:
+        n = np.broadcast(np.asarray(ra), np.asarray(dec), np.asarray(z_s)).shape
+        return {
+            "kappa": np.zeros(n),
+            "reduced_shear": np.zeros(n),
+            "tangential_pa": np.full(n, np.nan),
+            "magnification": np.ones(n),
+        }
+
+    def _meta(self) -> dict:
+        return {"model": "none (NullLensModel)", "ra0": self.ra0, "dec0": self.dec0}
+
+
 def load_field(name: str, out: Path, spec: dict | None = None):
+    """Model, shapes, Gaia spike stars, catalogue and photo-z paths of one field. ``spec["model"]``
+    None means no lens model: :class:`NullLensModel` at ``spec["centre"]``."""
     spec = FIELDS[name] if spec is None else spec
     root = paths.data_root()
-    model, _, _ = lc.load_model(spec["model"])
-    lc.apply_frame_offset(spec["model"], model)
+    if spec["model"] is None:
+        model = NullLensModel(*spec["centre"])
+    else:
+        model, _, _ = lc.load_model(spec["model"])
+        lc.apply_frame_offset(spec["model"], model)
     cat = root / spec["catalog"]
     shapes = lc.load_shapes(cat)
     photoz = None

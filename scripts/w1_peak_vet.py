@@ -40,6 +40,7 @@ STAR_SEARCH = 10.0  # arcsec from the peak to look for the bright star (ASSUMPTI
 STAR_RADIUS = 15.0  # arcsec from the star for V2 (ASSUMPTION)
 STAR_PA_TOL = 15.0  # deg between the source axis and the direction to the star (ASSUMPTION)
 P_RULE = 0.05  # the D-053 p_rot threshold
+N_CONTROL = 200  # rotation angles for the post hoc V1r control (ASSUMPTION)
 
 
 def stripe_columns(img: np.ndarray, nmad: float = STRIPE_NMAD) -> np.ndarray:
@@ -82,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="inject_shear.py output dir of this field (reuses its photo-z and Gaia files)",
     )
+    ap.add_argument("--seed", type=int, default=7, help="RNG of the V1r rotated-band control")
     args = ap.parse_args(argv)
     full = json.loads(args.summary.read_text())
     if not {"field", "screen", "assumptions"} <= set(full):
@@ -99,6 +101,9 @@ def main(argv: list[str] | None = None) -> int:
         screen = {**ish.LEGACY_SCREEN_OPTIONS, **full["assumptions"]["screen"]}
         sargs = SimpleNamespace(**{**ish.SHEAR_DEFAULTS, **screen})
         sargs.psf_chi = complex(*screen["psf_chi"])
+        r_fixed = full["assumptions"].get("fixed_responsivity")
+        if r_fixed is not None:  # no lens model: the fixed R the screen ran with (D-098)
+            sargs.responsivity = r_fixed
         res = es.shear_screen(model, shapes, sargs, ir.psf_sigma_px(shapes), extra)
         tg = Table({"source_uid": ["peak"], "ra": [ra_pk], "dec": [dec_pk]})
         cut = cutouts.make_cutouts(
@@ -124,6 +129,15 @@ def main(argv: list[str] | None = None) -> int:
     else:
         dist = np.full(len(ra), np.inf)
     v1 = use & inside & (dist <= STREAK_TOL)
+    # V1r (post hoc, results/w1_shear_ncf/RESULT.md): V1 with stripe rows instead of columns,
+    # for horizontal stripes; reported beside the frozen outcome, never replacing it
+    srows = stripe_columns(img.T)
+    dist_r = (
+        np.min(np.abs(sy[:, None] - srows[None, :]), axis=1) * px_scale
+        if len(srows)
+        else np.full(len(ra), np.inf)
+    )
+    v1r = use & inside & (dist_r <= STREAK_TOL)
     # V2: the brightest catalogue source near the peak and sources pointing at it
     sep_pk = np.hypot((ra - ra_pk) * np.cos(np.deg2rad(dec_pk)), dec - dec_pk) * 3600.0
     mag = np.asarray(shapes["mag"], float)
@@ -155,9 +169,33 @@ def main(argv: list[str] | None = None) -> int:
 
     none = np.zeros(len(ra), bool)
     rows = {}
-    for name, drop in (("all", none), ("no_v1", v1), ("no_v2", v2), ("no_v1_v2", v1 | v2)):
+    for name, drop in (
+        ("all", none),
+        ("no_v1", v1),
+        ("no_v2", v2),
+        ("no_v1_v2", v1 | v2),
+        ("no_v1r", v1r),
+        ("no_v1_v1r_v2", v1 | v1r | v2),
+    ):
         s, p, n = s_at(drop)
         rows[name] = {"s": s, "p_rot": p, "n_used_field": n}
+    # control for V1r (post hoc): the same stripe-row set rotated about the peak by random angles,
+    # so the dropped band has the stripes' width and passes through the peak like them; the share
+    # of angles with S as low as without V1r says whether the stripe orientation matters
+    rng = np.random.default_rng(args.seed)
+    px_pk, py_pk = w.world_to_pixel_values(ra_pk, dec_pk)
+    s_rot = []
+    for phi in rng.uniform(0.0, np.pi, N_CONTROL if v1r.sum() else 0):
+        yr = py_pk - np.sin(phi) * (sx - px_pk) + np.cos(phi) * (sy - py_pk)
+        d = np.min(np.abs(yr[:, None] - srows[None, :]), axis=1) * px_scale
+        s_rot.append(s_at(use & inside & (d <= STREAK_TOL))[0])
+    rows["control_v1r_rotated"] = {
+        "n_draws": len(s_rot),
+        "s_median": float(np.median(s_rot)) if s_rot else None,
+        "frac_le_no_v1r": (
+            float(np.mean(np.asarray(s_rot) <= rows["no_v1r"]["s"])) if s_rot else None
+        ),
+    }
     b_max = float(summ["b_max"])
     out = {
         "field": args.field,
@@ -169,12 +207,17 @@ def main(argv: list[str] | None = None) -> int:
         "pixel_scale_arcsec": px_scale,
         "n_v1": int(v1.sum()),
         "n_v2": int(v2.sum()),
+        "stripe_rows_px": [int(r) for r in srows],
+        "n_v1r": int(v1r.sum()),
         "star": None
         if star is None
         else {"ra": float(ra[star]), "dec": float(dec[star]), "mag": float(mag[star])},
         "star_sep_from_peak_arcsec": None if star is None else float(sep_pk[star]),
         "s_at_peak": rows,
         "outcome": outcome(rows["no_v1_v2"]["s"], rows["no_v1_v2"]["p_rot"], b_max),
+        "outcome_post_hoc_with_rows": outcome(
+            rows["no_v1_v1r_v2"]["s"], rows["no_v1_v1r_v2"]["p_rot"], b_max
+        ),
         "provenance": {"shapes": "observed", "s_p": "derived", "thresholds": "assumption"},
     }
     args.out.write_text(json.dumps(es.json_safe(out), indent=1) + "\n")

@@ -1,0 +1,139 @@
+{
+ "field": "macs0417-ncf",
+ "model": null,
+ "z_lens": 0.0,
+ "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01208-o026_t003_nircam_clear-f150w/jw01208-o026_t003_nircam_clear-f150w_cat.ecsv",
+ "photoz": "/tmp/claude-0/-home-user-jwst-anomaly-research/2d1288a3-80a1-5bc6-81a3-0cde54055046/scratchpad/runs/z1/macs0417-ncf/macs0417-ncf_canucs_zout.fits",
+ "screen": {
+  "n_rows": 5343,
+  "n_spike_segments": 76,
+  "n_lensable": 5296,
+  "n_lensable_after_spike_veto": 5220,
+  "n_snr": 4897,
+  "n_resolved": 4040,
+  "n_weak_shear": 4040,
+  "responsivity": 0.4252564852542171,
+  "responsivity_err": null,
+  "n_used_before_veto": 4040,
+  "n_veto_used": 211,
+  "psf_sigma_px": 1.312046446361382,
+  "n_streak_vetoed": 305,
+  "n_centres_valid": 40863,
+  "s_max": 6.020044469237016,
+  "s_max_xy": [
+   45.0,
+   -55.0
+  ],
+  "s_max_radec": [
+   64.35674918457465,
+   -11.835767777777777
+  ],
+  "p_random_max": 0.0,
+  "b_max": 4.00599789822904,
+  "e_exceeds_b": true,
+  "passes_eb_rule": true,
+  "s_cross_plus_max": 3.5152039027751414,
+  "p_random_cross_plus": 0.54,
+  "s_cross_minus_max": 4.00599789822904,
+  "p_random_cross_minus": 0.01,
+  "null_max_p50_p95": [
+   3.54624629349507,
+   3.9254449023667295
+  ]
+ },
+ "screened_area_arcsec2": 38230.0,
+ "screened_area_deg2": 0.0029498456790123455,
+ "footprint_border": {
+  "radii": [
+   4.0,
+   5.0,
+   6.0,
+   8.0
+  ],
+  "areas_arcsec2": [
+   38230.0,
+   39765.0,
+   41016.0,
+   43437.0
+  ],
+  "area_r0_arcsec2": 33211.91428571431,
+  "excess_frac": 0.13126041627741802
+ },
+ "efficiency": {
+  "2e+12": {
+   "mass_msun": 2000000000000.0,
+   "theta_e_zs2_arcsec": 1.859166198729853,
+   "n_inject": 100,
+   "n_recovered": 1,
+   "efficiency": 0.01,
+   "efficiency_err": 0.0099498743710662,
+   "mean_lensed": 8.67,
+   "mean_image_used": 11.73,
+   "median_s_best": 1.4647461788301241
+  },
+  "8e+12": {
+   "mass_msun": 8000000000000.0,
+   "theta_e_zs2_arcsec": 3.718332397459706,
+   "n_inject": 100,
+   "n_recovered": 12,
+   "efficiency": 0.12,
+   "efficiency_err": 0.03249615361854384,
+   "mean_lensed": 42.19,
+   "mean_image_used": 53.56,
+   "median_s_best": 2.309495596772761
+  },
+  "2e+13": {
+   "mass_msun": 20000000000000.0,
+   "theta_e_zs2_arcsec": 5.879199736783578,
+   "n_inject": 100,
+   "n_recovered": 19,
+   "efficiency": 0.19,
+   "efficiency_err": 0.039230090491866064,
+   "mean_lensed": 83.96,
+   "mean_image_used": 108.44,
+   "median_s_best": 2.869467472483379
+  }
+ },
+ "wall_time_s": {
+  "base_screen": 2.4,
+  "total": 57.9
+ },
+ "assumptions": {
+  "recover_tol_arcsec": 2.0,
+  "p_recover": 0.05,
+  "trials_per_null": 10,
+  "seed": 50,
+  "n_inject": 100,
+  "spike_stars": 11,
+  "w1_lens_z": 1.0,
+  "fixed_responsivity": 0.4252564852542171,
+  "streak_veto": {
+   "veto_arcsec": 1.0,
+   "masks": "w1_streak_mask.py"
+  },
+  "streak_mask": {
+   "file": "macs0417-ncf_streak_mask.fits.gz",
+   "sha256": "93f7acf3de5a4b5e10d9ca183e2b276707a5ac55f25a6e8c7c2a03ca7919214b",
+   "data_sha256": "79ff778a32960453de92738cd11860ac204ada8212d075c72b0bd0199fba5125",
+   "mask_pixels": 20242
+  },
+  "screen": {
+   "aperture_arcsec": 10.0,
+   "filter": "schirmer",
+   "r_min_arcsec": 1.0,
+   "min_sources": 5,
+   "min_snr": 10.0,
+   "max_g": 0.5,
+   "responsivity": null,
+   "max_radius": 200.0,
+   "grid_arcsec": 1.0,
+   "n_random": 200,
+   "min_coverage": 0.0,
+   "seed": 1,
+   "psf_chi": [
+    0.0,
+    0.0
+   ]
+  }
+ }
+}

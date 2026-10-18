@@ -1,0 +1,35 @@
+{
+ "provenance": "derived",
+ "plan": "results/w1_shear_ncf/PLAN.md (gate R)",
+ "max_diff": 0.15,
+ "fields": {
+  "macs0417": {
+   "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01208-o006_t003_nircam_clear-f150w/jw01208-o006_t003_nircam_clear-f150w_cat.ecsv",
+   "psf_sigma_px": 1.2183705861863288,
+   "r": 0.4252564852542171,
+   "r_err": 0.035196106735279994,
+   "n_weak_shear": 2247,
+   "n_spike_stars": 13,
+   "r_f200w_stored": 0.4877905915671723,
+   "r_f200w_err_stored": 0.033580495970199714
+  },
+  "macs1423": {
+   "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01208-o010_t005_nircam_clear-f150w/jw01208-o010_t005_nircam_clear-f150w_cat.ecsv",
+   "psf_sigma_px": 1.2942861917704658,
+   "r": 0.6176988116213242,
+   "r_err": 0.037199981996131476,
+   "n_weak_shear": 1979,
+   "n_spike_stars": 9,
+   "r_f200w_stored": 0.6042485043439614,
+   "r_f200w_err_stored": 0.03284200549899999
+  }
+ },
+ "gate_r": {
+  "per_field_pass": {
+   "macs0417": true,
+   "macs1423": true
+  },
+  "passed": true,
+  "adopted_r": 0.4252564852542171
+ }
+}
