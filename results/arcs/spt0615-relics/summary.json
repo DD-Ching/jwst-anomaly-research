@@ -1,0 +1,46 @@
+{
+ "plan": "results/arcs/spt0615-relics/PLAN.md",
+ "inputs": {
+  "catalog": "jw04212-o001_t001_nircam_clear-f200w_cat.ecsv",
+  "catalog_sha256": "23f8bcfb88ee61fa3b20595505969ab98bd72c4d7794f90fd0d86fd74e7010ff",
+  "photoz": "spt0615_bpz_zout.fits",
+  "photoz_sha256": "8edc05d0098036471b515ae2303e1a8e3d5c475e61069081b72429a26632458e"
+ },
+ "runs": {
+  "spt0615-relics-glafic": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 7,
+    "aligned": 3,
+    "anti": 2,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.42935528120713307
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 7,
+    "anti": 2,
+    "expected": 0.119,
+    "p_ge_observed": 0.006493830430342591
+   }
+  },
+  "spt0615-relics-lenstool": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 4,
+    "aligned": 1,
+    "anti": 3,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.8024691358024691
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 4,
+    "anti": 3,
+    "expected": 0.132,
+    "p_ge_observed": 0.0003436671320956244
+   }
+  }
+ },
+ "deciding_model": null,
+ "outcome": "no result",
+ "p_ge_observed": null
+}

@@ -1,0 +1,66 @@
+{
+ "model": "spt0615-relics-lenstool",
+ "catalog": "/tmp/claude-0/-home-user-jwst-anomaly-research/cbc19979-e4c9-5ad7-9cbc-18427fd2e177/scratchpad/spt0615/dl/jw04212-o001_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "/tmp/claude-0/-home-user-jwst-anomaly-research/cbc19979-e4c9-5ad7-9cbc-18427fd2e177/scratchpad/spt0615/dl/spt0615_bpz_zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": null,
+ "selected": 80,
+ "strong_shear_background": {
+  "n": 4,
+  "aligned": 1,
+  "anti": 3,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.8024691358024691
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 4,
+   "aligned": 1,
+   "anti": 3,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.8024691358024691
+  },
+  "member_or_foreground": {
+   "n": 0,
+   "aligned": 0,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": NaN
+  },
+  "unknown": {
+   "n": 0,
+   "aligned": 0,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": NaN
+  }
+ },
+ "strong_shear_all": {
+  "n": 4,
+  "aligned": 1,
+  "anti": 3,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.8024691358024691
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 4,
+  "anti": 3,
+  "expected": 0.132,
+  "p_ge_observed": 0.0003436671320956244
+ },
+ "anti_candidates": [
+  2773,
+  2681,
+  2669
+ ]
+}

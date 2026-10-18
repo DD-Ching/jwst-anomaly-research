@@ -326,6 +326,12 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - RELICS MACS J0417 lens models (`glafic/v3` incl. `range/` realisations, `lenstool/v2`; maps scaled to D_LS/D_S = 1;
   readme `hlsp_relics_hst_multi_lens-models_multi_v3_readme.pdf`): https://archive.stsci.edu/hlsps/relics/macs0417m11/models/
   (accessed 2026-10-17; used by `results/transients/batch_venus2/followup/macs0417_h002`).
+- RELICS SPT-CL J0615−5746 lens models (`glafic/v2`, `lenstool/v1`; maps at D_LS/D_S = 1) and BPZ catalogue
+  `hlsp_relics_hst_acs-wfc3ir_spt0615m57_multi_v1_cat.txt` (Coe, 2017-07-06): https://archive.stsci.edu/hlsps/relics/spt0615m57/
+  (accessed 2026-10-18; sha256 in `lensmodel.SPT0615_RELICS_*` and `results/arcs/spt0615-relics/summary.json`).
+- Paterno-Mahler et al. 2018, RELICS SPT-CLJ0615−5746 model, z_lens 0.972, ApJ 863, 154, arXiv:1805.09834 (abstract read 2026-10-18).
+- LAM Strong Lensing Cluster Atlas (Lenstool model tarballs and maps; 17 models on 2026-10-18): https://data.lam.fr/sl-cluster-atlas
+  (ANIS API `https://data.lam.fr/server/search/sl-cluster-atlas/model?a=1;2;3`; needs cookie `Yogsototh_opens_the_door=1`).
 - Mahler et al. 2019 (RELICS MACS J0417 lenstool model, system 1 images): arXiv:1810.13439 (abstract read 2026-10-17: "MACS J0417.5-1154 at z=0.443"; journal reference not checked).
 - Meena et al. 2026, "Caught in Swallowtails" (MS 0451.6−0305), arXiv:2601.10097 (abstract read 2026-10-17).
 - Palencia et al. 2026, catalogue of microlensed stars in the A370 Dragon arc, A&A 714, A22, arXiv:2604.22702

@@ -1,0 +1,24 @@
+{
+ "model": "spt0615-relics-glafic",
+ "model_sha256": "2ec43c83a7eb704d0970265e5dc93deccc8bafc77e23751b00753b83944fcbc0",
+ "kappa_map": {
+  "map": "data/cache/external/2291d632d0a9_hlsp_relics_model_model_spt0615m57_glafic_v2_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 4097,
+  "median_rel_diff": 1.9332807246639167e-05,
+  "p95_rel_diff": 0.00010052994447114689,
+  "median_ratio": 1.0000088901593458,
+  "parity_agree": null
+ },
+ "magnification_z2": {
+  "map": "data/cache/external/d12a504374d8_hlsp_relics_model_model_spt0615m57_glafic_v2_z02-magnif.fits",
+  "quantity": "mu",
+  "z_s": 2.0,
+  "n_points": 4052,
+  "median_rel_diff": 9.692346290895459e-06,
+  "p95_rel_diff": 8.35183195571842e-05,
+  "median_ratio": 1.0000039206719338,
+  "parity_agree": null
+ }
+}
