@@ -1461,3 +1461,16 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   accessed 2026-10-17): median-Radon-transform satellite-trail finder, Stark et al. 2022, ACS ISR 2022-8
   (https://ui.adsabs.harvard.edu/abs/2022acs..rept....8S/abstract). Used with scikit-image 0.26.0 and photutils 3.1.1
   for the W1 streak masks (`scripts/w1_streak_mask.py`, `results/w1_streak_veto/`).
+
+## W1 shear screen in the CANUCS flanking fields (accessed 2026-10-18; `results/w1_shear_ncf/`)
+- JWST CANUCS 1208 F150W pipeline catalogues `jw01208-<obs>_nircam_clear-f150w_cat.ecsv`, public S3
+  `s3://stpubdata/jwst/public/jw01208/L3/t/<o>/` (the NCF observations have no F200W); sha256:
+  - o023_t002 (macs0416-ncf) `6ac987242db0435afb0aac549b825d12a7f67868e93cf23e63aef0dada8ec38c`
+  - o029_t004 (macs1149-ncf) `e331b754f054cf3c31eb84096ff7dd3131b2aeb6f595f711953244ddad2c672d`
+  - o020_t001 (abell370-ncf) `6be0bacd8cd437bbf557076a099888770c301ea2b81b835ddde84f12b7b9328c`
+  - o026_t003 (macs0417-ncf) `b3d71250aec8bbe965c1c4908958e5d6366af7c8e25abf587006de65cee8383e`
+  - o032_t005 (macs1423-ncf) `fb2f118625ae5a4a8c1107e546c5c19dfb7f2c4d1125d4c24d003ff4677898d2`
+  - gate R cluster pointings: o006_t003 (MACS0417) `1d49cb6c579b0f2ae4923681a2be2b82db5fed8ebdb430fa64cf851362ccb2ac`,
+    o010_t005 (MACS1423) `f165280389d6fbc192dd08c00208d9f4ed19f9f8f33875596b33706e611a4e6d`
+  - the `_i2d.fits` of the same names were read by S3 byte range (streak masks, cutouts), not stored.
+- CANUCS DR1 NCF photometry and EAzY photo-z: as `orphan_pairs.DEEP_FIELDS` (all five sha256 matched on download).

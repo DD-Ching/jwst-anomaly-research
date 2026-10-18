@@ -5052,3 +5052,19 @@ confining radiation at a throat is found.
   Vetoed rows are blanked inside `shear_screen` after the spike veto; dropping them earlier changed the spike veto.
 - **Revisit if:** a faint-streak case (S1063's parallel streaks) needs a lower threshold; recalibrate through
   injections before using it.
+
+## D-098 W1 shear screen in blank fields: no lens model, R fixed from the same program's cluster pointings (2026-10-18)
+- **Decision:** fields without a lens model run the unchanged D-053 shear screen with `inject_radial.NullLensModel`
+  (κ = g = 0) and a fixed responsivity R. R cannot be fitted without shear; it is fitted on cluster pointings of the
+  same program and band and the smaller value adopted (gate R, `results/w1_shear_ncf/PLAN.md`; CANUCS NCF in F150W:
+  R = 0.425). The W1 volume headline adds only blank fields whose screen does not pass the E/B rule.
+- **Alternatives rejected:**
+  - R = 1: overstates the injected signal (fitted R 0.41–0.60 in ten of the eleven headline fields, 0.23 in MACS0647;
+    `results/w1_volume/summaries/z0.3_*.json`);
+  - the cluster fields' F200W R: the NCF have no F200W, and the band changes R by up to 0.07 (gate R);
+  - DJA GOODS-N shapes: SEP moments, a different shape measurement whose R has no calibration yet.
+- **Evidence:** `results/w1_shear_ncf/RESULT.md`. Fourteen fields: n₉₅ < 2.35 × 10⁻⁴ h³ Mpc⁻³ at 2 × 10¹³ M☉ (2.35×
+  Takahashi & Asada, from 3.6×). Two NCF flags sit on linear artefacts: macs0416-ncf explained by the frozen V1/V2
+  rule, macs0417-ncf only by a post hoc row-stripe test whose rotated-band control is weak (9 % of orientations).
+- **Revisit if:** a blank field has a shape catalogue of another kind (calibrate its R first), or a row/diagonal
+  streak veto is frozen and run through injections (then macs0416-ncf and macs0417-ncf can enter the headline).

@@ -319,6 +319,10 @@ W1 lenses injected at Z = 0.1, 0.3, 0.6, 1.0, 1.5 (eleven fields, RXJ2129 out; 1
 ASSUMPTION), ε integrated over Planck18 comoving volume: n₉₅ < 6.5 × 10⁻³ / 8.5 × 10⁻⁴ / 3.65 × 10⁻⁴ h³ Mpc⁻³ at
 2 × 10¹² / 8 × 10¹² / 2 × 10¹³ M☉, 65× / 8.5× / 3.6× weaker than Takahashi & Asada's 10⁻⁴ (this replaces the
 hand-spread ~3.2× above, which held at the cluster redshift only).
+Adding the three CANUCS NIRCam flanking fields whose screen is null (no lens model, F150W, fixed R; D-098,
+`results/w1_shear_ncf/RESULT.md`): fourteen fields, 97.5 arcmin², n₉₅ < 3.03 × 10⁻³ / 5.35 × 10⁻⁴ / 2.35 × 10⁻⁴
+h³ Mpc⁻³, 30× / 5.4× / 2.35× weaker. The other two NCF have flags on linear artefacts (explained; one post hoc, weakly) and are
+kept out; with them (sixteen fields) the ratios would be 23× / 4.0× / 1.9×.
 
 ### Caveats
 - Isophotal catalogue moments, not a weak-lensing shape pipeline: no PSF anisotropy model, no noise-bias or

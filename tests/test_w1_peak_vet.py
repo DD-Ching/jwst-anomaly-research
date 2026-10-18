@@ -54,3 +54,11 @@ def test_axis_points_at_uses_direction_to_the_star():
     # a N-S axis points at the star from the north source, an E-W axis from the east source
     assert pv.axis_points_at(np.array([0.0, 90.0]), pa_to).tolist() == [True, True]
     assert pv.axis_points_at(np.array([90.0, 0.0]), pa_to).tolist() == [False, False]
+
+
+def test_stripe_rows_are_stripe_columns_of_the_transpose():
+    rng = np.random.default_rng(3)
+    img = rng.normal(1.0, 0.1, (60, 80))
+    img[20:23, :] += 5.0  # a horizontal stripe (the post hoc V1r case)
+    assert len(pv.stripe_columns(img)) == 0
+    np.testing.assert_array_equal(pv.stripe_columns(img.T), [20, 21, 22])

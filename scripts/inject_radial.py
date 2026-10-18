@@ -599,13 +599,15 @@ class NullLensModel:
 
     def evaluate(self, ra, dec, z_s) -> dict:
         n = np.broadcast(np.asarray(ra), np.asarray(dec), np.asarray(z_s)).shape
-        zero = np.zeros(n)
         return {
-            "kappa": zero,
-            "reduced_shear": zero,
+            "kappa": np.zeros(n),
+            "reduced_shear": np.zeros(n),
             "tangential_pa": np.full(n, np.nan),
             "magnification": np.ones(n),
         }
+
+    def _meta(self) -> dict:
+        return {"model": "none (NullLensModel)", "ra0": self.ra0, "dec0": self.dec0}
 
 
 def load_field(name: str, out: Path, spec: dict | None = None):

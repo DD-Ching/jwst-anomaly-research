@@ -32,7 +32,7 @@ def gate_r(r150: dict, r200: dict, max_diff: float = MAX_DIFF) -> dict:
     """Gate R as frozen: every field's F150W fit usable (``shear_responsivity`` raised otherwise,
     recorded as None) *and* within ``max_diff`` of its F200W value, in every field. Adopted R is
     the smallest F150W value."""
-    ok = {f: r150[f] is not None and abs(r150[f] - r200[f]) <= max_diff for f in sorted(r200)}
+    ok = {f: r150.get(f) is not None and abs(r150[f] - r200[f]) <= max_diff for f in sorted(r200)}
     passed = bool(ok) and all(ok.values()) and set(r150) == set(r200)
     return {
         "per_field_pass": ok,
@@ -43,20 +43,20 @@ def gate_r(r150: dict, r200: dict, max_diff: float = MAX_DIFF) -> dict:
 
 def fit_r(field: str, obs: str, out: Path) -> dict:
     spec = ish.field_spec(field) | {
-        "catalog": ir._MAST.format(f"jw01208-{obs}_nircam_clear-f150w"),
-        "spike_stars": False,  # spike segments are dropped from the fit as in the F200W runs
-    }
-    model, shapes, _extra, cat, _ = ir.load_field(field, out, spec)
+        "catalog": ish.ncf_catalog(obs),
+    }  # Gaia spike stars as in the F200W runs (spec["spike_stars"])
+    model, shapes, extra, cat, _ = ir.load_field(field, out, spec)
     psf = es.psf_sigma_px(shapes)
     a = SimpleNamespace(**ish.SHEAR_DEFAULTS)
     try:
-        _, counts = es.shear_sources(model, shapes, psf, a.min_snr, a.max_g)
+        _, counts = es.shear_sources(model, shapes, psf, a.min_snr, a.max_g, extra=extra)
         return {
             "catalog": str(cat),
             "psf_sigma_px": psf,
             "r": counts["responsivity"],
             "r_err": counts["responsivity_err"],
             "n_weak_shear": counts["n_weak_shear"],
+            "n_spike_stars": None if extra is None else len(extra),
         }
     except ValueError as exc:  # R not usable: the gate fails for this field
         return {"catalog": str(cat), "psf_sigma_px": psf, "r": None, "error": str(exc)}

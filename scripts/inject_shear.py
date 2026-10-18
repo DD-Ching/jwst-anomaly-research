@@ -160,21 +160,44 @@ NCF_FIELDS = {
     "macs0417-ncf": ("o026_t003", "macs0417", (64.36952, -11.82049)),
     "macs1423-ncf": ("o032_t005", "macs1423", (215.87389, 24.15656)),
 }
-NCF_RESPONSIVITY = 0.4211223185032926  # gate R passed: results/w1_shear_ncf/gate_r.json "adopted_r"
+GATE_R = _DIR.parent / "results" / "w1_shear_ncf" / "gate_r.json"
 _NCF_CANUCS = (
     "cache/external/canucs/hlsp_canucs_jwst-hst_multi_{0}-ncf_multi_v1_photometry-cat.fits.gz"
 )
 for _name, (_obs, _c, _centre) in NCF_FIELDS.items():
     SHEAR_FIELD_OVERRIDES[_name] = {
         "model": None,
-        "catalog": ir._MAST.format(f"jw01208-{_obs}_nircam_clear-f150w"),
+        "catalog": None,  # set below by ncf_catalog
         "photoz": ("canucs", _NCF_CANUCS.format(_c)),
         "max_radius": 200.0,
         "spike_stars": True,
         "centre": _centre,
         "responsivity": "ncf",
     }
+
+
+def ncf_catalog(obs: str) -> str:
+    """Data-root path of a program 1208 F150W pipeline catalogue (NCF screens and gate R)."""
+    return ir._MAST.format(f"jw01208-{obs}_nircam_clear-f150w")
+
+
+for _name, (_obs, _c, _centre) in NCF_FIELDS.items():
+    SHEAR_FIELD_OVERRIDES[_name]["catalog"] = ncf_catalog(_obs)
 FIELD_NAMES = sorted(set(ir.FIELDS) | set(SHEAR_FIELD_OVERRIDES))
+
+
+def fixed_responsivity(name: str, spec: dict, lens_z, gate: Path = GATE_R) -> float | None:
+    """R for a field without a lens model (``spec["responsivity"] == "ncf"``): gate R's
+    ``adopted_r``; an error if gate R has not passed or no ``--lens-z`` is given (``z_lens`` 0).
+    None for every other field (R is fitted)."""
+    if spec.get("responsivity") != "ncf":
+        return None
+    if lens_z is None:
+        raise ValueError(f"{name} has no lens model; give --lens-z")
+    res = json.loads(Path(gate).read_text())["gate_r"] if Path(gate).exists() else {}
+    if not res.get("passed"):
+        raise ValueError(f"{name}: gate R has not passed ({gate}; w1_ncf_gate_r.py)")
+    return float(res["adopted_r"])
 
 
 def field_spec(name: str) -> dict:
@@ -353,12 +376,9 @@ def run_field(name: str, args) -> dict:
     sargs.max_radius = spec["max_radius"]
     sargs.recover_tol = args.recover_tol
     sargs.psf_chi = complex(*getattr(args, "psf_chi", (0.0, 0.0)))
-    if spec.get("responsivity") == "ncf":  # no lens model: R fixed, the lens redshift explicit
-        if NCF_RESPONSIVITY is None:
-            raise ValueError(f"{name}: NCF_RESPONSIVITY is unset (gate R, w1_ncf_gate_r.py)")
-        if getattr(args, "lens_z", None) is None:
-            raise ValueError(f"{name} has no lens model; give --lens-z")
-        sargs.responsivity = NCF_RESPONSIVITY
+    r_fixed = fixed_responsivity(name, spec, getattr(args, "lens_z", None))
+    if r_fixed is not None:  # no lens model: R fixed by gate R, the lens redshift explicit
+        sargs.responsivity = r_fixed
     psf = es.psf_sigma_px(shapes)
     inj = ShearInjector(model, shapes, sargs, psf, extra, streak)
     t_base = time.time() - t0
@@ -450,6 +470,7 @@ def run_field(name: str, args) -> dict:
             "n_inject": args.n_inject,
             "spike_stars": len(extra) if extra is not None else None,
             **({} if getattr(args, "lens_z", None) is None else {"w1_lens_z": z_w1}),
+            **({} if r_fixed is None else {"fixed_responsivity": r_fixed}),
             **(
                 {}
                 if streak is None
@@ -489,6 +510,7 @@ def setting(summary: dict) -> dict:
     a["screen"].pop("max_radius", None)
     a.pop("spike_stars", None)
     a.pop("streak_mask", None)  # per field
+    a.pop("fixed_responsivity", None)  # per field kind (D-098)
     a["screen"] = {**LEGACY_SCREEN_OPTIONS, **a["screen"]}
     return a
 

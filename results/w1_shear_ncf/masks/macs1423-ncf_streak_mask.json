@@ -1,0 +1,48 @@
+{
+ "field": "macs1423-ncf",
+ "i2d": "s3://stpubdata/jwst/public/jw01208/L3/t/o032/jw01208-o032_t005_nircam_clear-f150w_i2d.fits",
+ "binned_shape": [
+  553,
+  1242
+ ],
+ "pixel_scale_arcsec": 0.2498297199388292,
+ "n_trails_status2": 4,
+ "n_candidates_all_status": 65,
+ "trails": [
+  {
+   "theta_deg": 59.23708440711946,
+   "rho_px": -463.32624152990707
+  },
+  {
+   "theta_deg": 119.05342141493615,
+   "rho_px": -363.30948176003847
+  },
+  {
+   "theta_deg": 178.37322761946746,
+   "rho_px": -326.0657528732105
+  },
+  {
+   "theta_deg": 0.9258483479665593,
+   "rho_px": 325.4849795236157
+  }
+ ],
+ "mask_pixels": 23297,
+ "settings": {
+  "block": 4,
+  "rebin": 2,
+  "clip_nsig": 10.0,
+  "edge_erode": 12,
+  "mrt_threshold": 5.0,
+  "keep_status": 2,
+  "veto_arcsec": 1.0
+ },
+ "wall_time_s": {
+  "read": 11.1,
+  "total": 34.8
+ },
+ "provenance": {
+  "pixels": "observed",
+  "mask": "derived",
+  "settings": "assumption"
+ }
+}

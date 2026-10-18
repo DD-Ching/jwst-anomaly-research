@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-18: W1 shear in the CANUCS flanking fields (no lens model): fourteen-field volume limit 2.35× from Takahashi & Asada
+- `inject_radial.NullLensModel` (κ = g = 0) and five NCF entries in `inject_shear.py` (F150W: the NCF have no
+  F200W; CANUCS NCF photo-z; fixed R). Plan frozen first (`results/w1_shear_ncf/PLAN.md`).
+- **Gate R passed** (`gate_r.json`): F150W R 0.425 ± 0.035 / 0.618 ± 0.037 on the MACS0417 / MACS1423 cluster
+  pointings vs F200W 0.488 / 0.604; adopted 0.425 (D-098; a first run without the Gaia spike veto gave 0.421, re-run).
+- **Screens:** three NCF null; macs0416-ncf (S 4.64, p 0.005) and macs0417-ncf (S 6.02, p < 0.005) pass the E/B
+  rule. Sheet first: a diagonal streak the trail mask missed and horizontal stripes cross the two apertures.
+  macs0416-ncf explained under the frozen V1/V2 rule (S 3.53, p 0.575); macs0417-ncf only post hoc (V1 on rows:
+  S 1.35; the same band rotated about the peak reaches that in 9 % of 200 angles: weak). Not candidates.
+- **Result (`results/w1_shear_ncf/RESULT.md`):** fourteen fields (both flagged NCF out), 97.5 arcmin²: n₉₅ <
+  3.03 × 10⁻³ / 5.35 × 10⁻⁴ / 2.35 × 10⁻⁴ h³ Mpc⁻³, 30× / 5.4× / 2.35× weaker than Takahashi & Asada (from 65× /
+  8.5× / 3.6×). Sixteen fields would give 1.9× at 2 × 10¹³ M☉ (rests on the post hoc explanation).
+- **Failed approach:** the frozen `w1_peak_vet.py` V1 looks for stripe columns only; it cannot see horizontal or
+  diagonal streaks. **Handoff:** freeze a row/diagonal streak veto and run it through the injections, then more blank
+  fields (TASKS).
+
 ## 2026-10-17: W1 shear null as a volume density over lens redshift: 3.6× weaker than Takahashi & Asada at 2 × 10¹³ M☉
 - `inject_shear.py --lens-z` (W1 lens off the cluster redshift; default path unchanged) and `scripts/w1_volume.py`
   (ε integrated over comoving volume); plan frozen first (`results/w1_volume/PLAN.md`, addendum A before the grid).

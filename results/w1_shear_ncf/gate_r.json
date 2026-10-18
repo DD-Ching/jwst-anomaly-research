@@ -6,18 +6,20 @@
   "macs0417": {
    "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01208-o006_t003_nircam_clear-f150w/jw01208-o006_t003_nircam_clear-f150w_cat.ecsv",
    "psf_sigma_px": 1.2183705861863288,
-   "r": 0.4211223185032926,
-   "r_err": 0.035286029280225194,
-   "n_weak_shear": 2266,
+   "r": 0.4252564852542171,
+   "r_err": 0.035196106735279994,
+   "n_weak_shear": 2247,
+   "n_spike_stars": 13,
    "r_f200w_stored": 0.4877905915671723,
    "r_f200w_err_stored": 0.033580495970199714
   },
   "macs1423": {
    "catalog": "/home/user/jwst-anomaly-research/data/cache/mast/jw01208-o010_t005_nircam_clear-f150w/jw01208-o010_t005_nircam_clear-f150w_cat.ecsv",
    "psf_sigma_px": 1.2942861917704658,
-   "r": 0.6135944765870496,
-   "r_err": 0.0365302448596434,
-   "n_weak_shear": 2013,
+   "r": 0.6176988116213242,
+   "r_err": 0.037199981996131476,
+   "n_weak_shear": 1979,
+   "n_spike_stars": 9,
    "r_f200w_stored": 0.6042485043439614,
    "r_f200w_err_stored": 0.03284200549899999
   }
@@ -28,6 +30,6 @@
    "macs1423": true
   },
   "passed": true,
-  "adopted_r": 0.4211223185032926
+  "adopted_r": 0.4252564852542171
  }
 }

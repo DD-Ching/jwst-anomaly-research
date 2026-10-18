@@ -183,3 +183,61 @@ def test_streak_veto_blanks_rows_and_painted_images():
     np.testing.assert_array_equal(inj.background[~on], plain.background[~on])
     with pytest.raises(ValueError, match="bool array"):
         ish.es.shear_screen(model, shapes, args, 1.0, None, on.astype(int))
+
+
+def test_null_lens_model_has_no_shear_and_the_lens_model_frame():
+    ref = _model()
+    null = ish.ir.NullLensModel(ref.ra0, ref.dec0)
+    ra, dec = ref.to_sky(np.array([12.0, -30.0]), np.array([5.0, 40.0]))
+    np.testing.assert_allclose(null.to_frame(ra, dec), ref.to_frame(ra, dec))
+    np.testing.assert_allclose(null.to_sky(*null.to_frame(ra, dec)), (ra, dec))
+    g, kappa = ish.es.cluster_reduced_shear(null, ra, dec, np.array([1.0, 3.0]))
+    assert np.all(g == 0) and np.all(kappa == 0) and null.z_lens == 0.0
+
+
+def test_a_massive_w1_lens_is_recovered_without_a_lens_model():
+    model, shapes, args = _field()
+    null = ish.ir.NullLensModel(model.ra0, model.dec0)
+    args.responsivity = 0.42
+    inj = ish.ShearInjector(null, shapes, args, psf_sigma=1.0)
+    assert inj.r == 0.42
+    np.testing.assert_allclose(inj.e[inj.use], inj.eps[inj.use])  # nothing removed
+    inj.draw_null(np.random.default_rng(1))
+    hit = inj.trial(15.0, -10.0, np.where(inj.background, 6.0, np.nan), SCALE)
+    assert hit["recovered"]
+
+
+def test_ncf_fields_need_their_fixed_responsivity_and_a_lens_redshift(tmp_path):
+    import json
+
+    spec = ish.field_spec("macs0416-ncf")
+    assert spec["model"] is None and spec["responsivity"] == "ncf"
+    assert spec["catalog"] == ish.ncf_catalog("o023_t002")
+    assert spec["catalog"].endswith("jw01208-o023_t002_nircam_clear-f150w_cat.ecsv")
+    gate = tmp_path / "gate_r.json"
+    gate.write_text(json.dumps({"gate_r": {"passed": True, "adopted_r": 0.43}}))
+    assert ish.fixed_responsivity("macs0416-ncf", spec, 0.3, gate) == 0.43
+    assert ish.fixed_responsivity("macs0416", ish.field_spec("macs0416"), None, gate) is None
+    with pytest.raises(ValueError, match="lens-z"):
+        ish.fixed_responsivity("macs0416-ncf", spec, None, gate)
+    gate.write_text(json.dumps({"gate_r": {"passed": False, "adopted_r": None}}))
+    with pytest.raises(ValueError, match="gate R"):
+        ish.fixed_responsivity("macs0416-ncf", spec, 0.3, gate)
+    with pytest.raises(ValueError, match="gate R"):
+        ish.fixed_responsivity("macs0416-ncf", spec, 0.3, tmp_path / "missing.json")
+    assert ish.setting(  # the fixed R is per field kind, not a screen setting to compare
+        {"assumptions": {"screen": {"max_radius": 1.0}, "fixed_responsivity": 0.43}}
+    ) == ish.setting({"assumptions": {"screen": {"max_radius": 2.0}}})
+
+
+def test_gate_r_rule():
+    _ld = importlib.util.spec_from_file_location("w1_ncf_gate_r", _DIR / "w1_ncf_gate_r.py")
+    g = importlib.util.module_from_spec(_ld)
+    _ld.loader.exec_module(g)
+    r200 = {"a": 0.49, "b": 0.60}
+    ok = g.gate_r({"a": 0.42, "b": 0.61}, r200)
+    assert ok["passed"] and ok["adopted_r"] == 0.42
+    assert not g.gate_r({"a": 0.30, "b": 0.61}, r200)["passed"]  # 0.19 > 0.15 in one field
+    bad = g.gate_r({"a": None, "b": 0.61}, r200)  # an unusable fit fails the gate
+    assert not bad["passed"] and bad["adopted_r"] is None
+    assert not g.gate_r({"a": 0.42}, r200)["passed"]  # a field without a fit fails, no KeyError
