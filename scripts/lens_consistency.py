@@ -165,6 +165,21 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    # z_lens 0.43 (Fujimoto et al. 2021)
+    "rxc0600-relics-glafic": {
+        "files": lensmodel.RXC0600_RELICS_GLAFIC,
+        "kind": "maps",
+        "z_lens": 0.43,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "rxc0600-relics-lenstool": {
+        "files": lensmodel.RXC0600_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.43,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     "macs0417-relics-lenstool": {
         "files": lensmodel.MACS0417_RELICS_LENSTOOL,
         "kind": "maps",

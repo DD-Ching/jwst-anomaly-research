@@ -1,0 +1,70 @@
+{
+ "plan": "results/arcs/rxc0600-relics/PLAN.md",
+ "inputs": {
+  "catalog": "jw06796-o010_t001_nircam_clear-f200w_cat.ecsv",
+  "catalog_sha256": "99648b3176febe40b145b4a19ffa6708599680942b39751134add2e38eac2030",
+  "photoz": "rxcj0600-grizli-v7.2-fix.eazypy.zout.fits",
+  "photoz_sha256": "51d3eece0cfe0d86dc8e2be6c3a48c1fb21c316a58e86ecd651b960a851d93f7"
+ },
+ "runs": {
+  "rxc0600-relics-glafic": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 12,
+    "aligned": 11,
+    "anti": 1,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 4.704191057897299e-05
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 12,
+    "anti": 1,
+    "expected": 0.203,
+    "p_ge_observed": 0.18372095496564825
+   }
+  },
+  "rxc0600-relics-lenstool": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 18,
+    "aligned": 12,
+    "anti": 3,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.003919279034310444
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 18,
+    "anti": 3,
+    "expected": 0.499,
+    "p_ge_observed": 0.014345508389732517
+   }
+  }
+ },
+ "deciding_model": "rxc0600-relics-glafic",
+ "outcome": "does not replicate",
+ "p_ge_observed": 0.18372095496564825,
+ "background_by_gmin": {
+  "g_min<1": {
+   "n": 11,
+   "aligned": 10,
+   "anti": 1
+  },
+  "g_min>=1": {
+   "n": 1,
+   "aligned": 1,
+   "anti": 0
+  }
+ },
+ "anti_background": [
+  {
+   "label": 581,
+   "ra": 90.030408,
+   "dec": -20.147417,
+   "mag": 21.17,
+   "g_min": 0.394,
+   "z_phot": 0.7,
+   "ellipticity": 0.688,
+   "class_rxc0600-relics-lenstool": "anti"
+  }
+ ]
+}

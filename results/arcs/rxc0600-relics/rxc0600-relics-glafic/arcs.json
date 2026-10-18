@@ -1,0 +1,65 @@
+{
+ "model": "rxc0600-relics-glafic",
+ "catalog": "data/cache/rxc0600/jw06796-o010_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/rxc0600/rxcj0600-grizli-v7.2-fix.eazypy.zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": null,
+ "selected": 38,
+ "strong_shear_background": {
+  "n": 12,
+  "aligned": 11,
+  "anti": 1,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 4.704191057897299e-05
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 12,
+   "aligned": 11,
+   "anti": 1,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 4.704191057897299e-05
+  },
+  "member_or_foreground": {
+   "n": 4,
+   "aligned": 1,
+   "anti": 0,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.8024691358024691
+  },
+  "unknown": {
+   "n": 10,
+   "aligned": 4,
+   "anti": 1,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.4407356602143985
+  }
+ },
+ "strong_shear_all": {
+  "n": 26,
+  "aligned": 16,
+  "anti": 2,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.002966414666330708
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 12,
+  "anti": 1,
+  "expected": 0.203,
+  "p_ge_observed": 0.18372095496564825
+ },
+ "anti_candidates": [
+  581,
+  1004
+ ]
+}

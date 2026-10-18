@@ -1,0 +1,70 @@
+{
+ "model": "rxc0600-relics-lenstool",
+ "catalog": "data/cache/rxc0600/jw06796-o010_t001_nircam_clear-f200w_cat.ecsv",
+ "photoz": "data/cache/rxc0600/rxcj0600-grizli-v7.2-fix.eazypy.zout.fits",
+ "assumptions": {
+  "min_ellipticity": 0.5,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
+ },
+ "multiple_images": null,
+ "selected": 38,
+ "strong_shear_background": {
+  "n": 18,
+  "aligned": 12,
+  "anti": 3,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.003919279034310444
+ },
+ "strong_shear_by_population": {
+  "background": {
+   "n": 18,
+   "aligned": 12,
+   "anti": 3,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.003919279034310444
+  },
+  "member_or_foreground": {
+   "n": 7,
+   "aligned": 0,
+   "anti": 2,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 1.0
+  },
+  "unknown": {
+   "n": 12,
+   "aligned": 4,
+   "anti": 4,
+   "p_random": 0.3333333333333333,
+   "p_aligned_excess": 0.6069253219077937
+  }
+ },
+ "strong_shear_all": {
+  "n": 37,
+  "aligned": 16,
+  "anti": 9,
+  "p_random": 0.3333333333333333,
+  "p_aligned_excess": 0.13536615698401921
+ },
+ "anti_expected_shape_noise_background": {
+  "n": 18,
+  "anti": 3,
+  "expected": 0.499,
+  "p_ge_observed": 0.014345508389732517
+ },
+ "anti_candidates": [
+  1368,
+  581,
+  1108,
+  1143,
+  1324,
+  952,
+  1292
+ ]
+}
