@@ -40,6 +40,11 @@ OBJ_PART = (
 LC_ORDER, LC_PIX = 5, 3839
 OUT = Path(__file__).resolve().parents[1] / "results" / "w3_ztf"
 CACHE = Path(os.environ.get("JWST_ANOMALY_DATA", "data")) / "cache" / "w3_ztf"
+_BASE = (
+    LC_PART,
+    OBJ_PART,
+    CACHE,
+)  # v15: configure() starts from these, so repeated calls do not stack
 SAMPLE = OUT / "sample.json"
 VDIR = OUT / "v3"
 VERSION = 3
@@ -54,13 +59,16 @@ def configure(pix: int, vdir: str | None = None) -> None:
     global LC_PIX, LC_PART, OBJ_PART, CACHE, SAMPLE, VDIR, VERSION, N_MAX
     # v12: vdir may name a per-area subfolder, e.g. "v12/2380"; the version is its first part
     ver = int((vdir or "v4").split("/")[0].lstrip("v"))
+    LC_PART, OBJ_PART, CACHE = _BASE  # v15: every call starts from the defaults
+    N_MAX = 1000
     if pix == 3839 and not (vdir and ver >= 11):  # v11: own sample in 3839
         if vdir:
             VDIR, VERSION = OUT / vdir, ver
         return
     LC_PIX = pix
-    LC_PART = LC_PART.replace("Npix=3839", f"Npix={pix}")
-    CACHE = CACHE / str(pix)
+    LC_PART = _BASE[0].replace("Npix=3839", f"Npix={pix}")
+    OBJ_PART = _BASE[1]
+    CACHE = _BASE[2] / str(pix)
     VDIR = OUT / (vdir or "v4")
     SAMPLE = VDIR / "sample.json"
     VERSION = ver

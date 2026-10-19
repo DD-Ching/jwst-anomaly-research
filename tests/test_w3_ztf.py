@@ -284,3 +284,18 @@ def test_v13_edge_time_uses_time_not_count():
         assert wz.vet(noisy, (40, 59), [], COV)["edge_post_d"] == 3.0
     finally:
         wz.EDGE_RULE = "count"
+
+
+def test_v15_configure_twice_does_not_stack():
+    saved = (wz.LC_PIX, wz.LC_PART, wz.OBJ_PART, wz.CACHE, wz.SAMPLE, wz.VDIR, wz.VERSION, wz.N_MAX)
+    try:
+        wz.configure(3837, "v15/3837")
+        wz.configure(183, "v15/183")
+        assert "Npix=183/" in wz.LC_PART and "Npix=45/" in wz.OBJ_PART
+        assert wz.CACHE == wz._BASE[2] / "183"
+        wz.configure(3839, "v5")  # back to the v1-v3 partition: defaults restored
+        assert "Npix=3839/" in wz.LC_PART and "Npix=959/" in wz.OBJ_PART and wz.N_MAX == 1000
+    finally:
+        (wz.LC_PIX, wz.LC_PART, wz.OBJ_PART, wz.CACHE, wz.SAMPLE, wz.VDIR, wz.VERSION, wz.N_MAX) = (
+            saved
+        )

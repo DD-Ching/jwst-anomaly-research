@@ -5378,6 +5378,13 @@ confining radiation at a throat is found.
   groups gave 1 vetted survivor. Images show it is a near-limit g-band catalogue drop, not a dimming. The 3 newly checked #370 class-4 NDs sit on official mask DEAD + LOW RESPONSIVITY pixels; the other #370 NDs were not masked.
   Revisit if: the owner wants the pre-screen to treat an ND as dim only when the source is well above the exposure
   limit (a method change; not made here).
+- **Addendum 2026-10-19 (v15, `results/w3_ztf/v15/RESULT.md`):**
+  - **3837:** the frozen v13 method passes validation and is searched: 4,778 groups, 0 vetted survivors.
+  - **183:** fails validation. Its short-event cells are sampling-limited, and fade passes vetting at 15.4 %.
+  - **Fade rate depends on the area:** 5.0–8.5 % in the three passing areas, 15.4 % in 183.
+  - **Decision:** keep the per-area validation gate before any search; the metadata sampling margin (183: 0.547) is
+    a weak predictor of passing.
+  - **Revisit if:** a larger batch is wanted, then choose areas with a worst-cell margin ≳ 0.65 first.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

@@ -1,0 +1,60 @@
+{
+ "dedupe_groups": 12572,
+ "3837": {
+  "objects_in_area": 832370,
+  "r_band_passing_cuts": 6974,
+  "isolated": 6745,
+  "groups_before_draw": 5278,
+  "groups": 5278,
+  "holdout": 2636,
+  "ambiguous_groups_dropped": 1,
+  "groups_dropped_near_old_sample": 0,
+  "dropped_shared_objectid": 0,
+  "calibration_groups": 500,
+  "search_groups": 4778,
+  "split": "lowest 500 by crc32(\"v15:\"+key) = calibration (the \"holdout\" count above is select()'s pre-split parity)",
+  "refmag_r_p5_p50_p95": {
+   "calibration": [
+    14.824349784851075,
+    16.463500022888184,
+    17.434049987792967
+   ],
+   "search": [
+    14.798999786376953,
+    16.42799949645996,
+    17.41714973449707
+   ]
+  },
+  "lc_partition": "ipac-irsa-ztf/ztf/enhanced/dr24/lc/hats/ztf_dr24_lc-hats/dataset/Norder=5/Dir=0/Npix=3837/part0.snappy.parquet",
+  "controls": 15373
+ },
+ "183": {
+  "objects_in_area": 924744,
+  "r_band_passing_cuts": 2380,
+  "isolated": 2303,
+  "groups_before_draw": 2303,
+  "groups": 2303,
+  "holdout": 1125,
+  "ambiguous_groups_dropped": 0,
+  "groups_dropped_near_old_sample": 0,
+  "dropped_shared_objectid": 0,
+  "calibration_groups": 500,
+  "search_groups": 1803,
+  "split": "lowest 500 by crc32(\"v15:\"+key) = calibration (the \"holdout\" count above is select()'s pre-split parity)",
+  "refmag_r_p5_p50_p95": {
+   "calibration": [
+    14.784849834442138,
+    16.387500762939453,
+    17.402100372314454
+   ],
+   "search": [
+    14.738999366760254,
+    16.354999542236328,
+    17.398898315429687
+   ]
+  },
+  "lc_partition": "ipac-irsa-ztf/ztf/enhanced/dr24/lc/hats/ztf_dr24_lc-hats/dataset/Norder=5/Dir=0/Npix=183/part0.snappy.parquet",
+  "controls": 13901
+ },
+ "note": "183 lc_partition corrected after the run: configure() was called twice in one process, so the stored text and the cache folder carried the 3837 values; the selection itself used LC_PIX 183 (deviation, labelled)"
+}
