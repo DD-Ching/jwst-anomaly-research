@@ -43,3 +43,24 @@ def test_wht_rel_takes_the_3x3_minimum_and_zero_off_grid():
     assert rel[0] == 0.0  # NaN neighbour counts as 0
     assert rel[1] == 1.0
     assert rel[2] == 0.0  # off the grid
+
+
+def test_stamp_edge_any_cut_and_nan_is_low():
+    q = np.array(["", "outside", "", "", "", "edge"])
+    on_edge = np.array([False, False, True, False, False, False])
+    frac = np.array([0.0, np.nan, 0.0, 0.2, 0.0, 0.05])
+    wr = np.array([0.9, np.nan, 0.9, 0.9, np.nan, 0.6])
+    assert ed.stamp_edge(q, on_edge, frac, wr).tolist() == [False, True, True, True, True, False]
+
+
+def test_gate_v2():
+    ref = np.array([True] * 10 + [False] * 100)
+    e = ref.copy()
+    assert ed.gate_v2(e, ref)["verdict"] == "passed"
+    e2 = e.copy()
+    e2[:3] = False  # sensitivity 0.7
+    assert ed.gate_v2(e2, ref)["verdict"] == "failed"
+    e3 = e.copy()
+    e3[10:16] = True  # false-edge 0.06
+    assert ed.gate_v2(e3, ref)["verdict"] == "failed"
+    assert ed.gate_v2(e[1:], ref[1:])["verdict"] == "undetermined"
