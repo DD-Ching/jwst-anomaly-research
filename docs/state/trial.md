@@ -285,8 +285,8 @@ adds its line, with a note naming the unit.
 | 2026-W43 | ≈ 0.15 (W3 dimming: D-039 persistence-swap scoping, frozen rule, workload + veto-off what-if on three fields, reproduction exact) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01Eubzuj, 15:12–15:30Z |
 | 2026-W43 | ≈ 0.45 (W3 dimming: D-039 persistence run, frozen plan + tested rules; NEXUS 17 targets, partial controls on MACS0416 / Abell 2744) | — | — | 0.2 (orientation, merged #376 per policy, claim, state files, PR) | cloud routine 01WrZoCP, 16:08–16:50Z |
 | 2026-W43 | ≈ 0.2 (W3 dimming: NEXUS `o014` forced check on the 12 `on_sky` targets, frozen plan + tested rule, sheet looked at; 0 survivors, mosaic-edge / depth) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 019eUf3y, 17:09–17:35Z |
-| 2026-W43 | — | — | ≈ 0.2 (W3 dimming injection edge coverage: frozen plan, rule and gate, `WHT` grids on 15 images, 4-variant what-if, sheet looked at; gate V failed as written, post hoc diagnostic) | 0.1 (orientation, claim, state files, PR) | cloud routine 01RmqBCN, 19:09–19:40Z |
 | 2026-W43 | ≈ 0.7 (W3 dimming: D-039 persistence run, MACS0416 e2–3 + Abell 2744 e1: all 20 targets `on_sky`, one epoch each; controls 194 / 194) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine 01GSZUHb, 18:08–19:10Z |
+| 2026-W43 | — | — | ≈ 0.2 (W3 dimming injection edge coverage: frozen plan, rule and gate, `WHT` grids on 15 images, 4-variant what-if, sheet looked at; gate V failed as written, post hoc diagnostic) | 0.1 (orientation, claim, state files, PR) | cloud routine 01RmqBCN, 19:09–19:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
