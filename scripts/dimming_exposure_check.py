@@ -99,7 +99,10 @@ def measure(uri: str, x: float, y: float, band: str) -> dict | None:
         sci = np.asarray(hdul["SCI"].section[sl], dtype=float)
         err = np.asarray(hdul["ERR"].section[sl], dtype=float)
         dq = np.asarray(hdul["DQ"].section[sl]).astype(np.int64)
-        pixar = float(hdr.get("PIXAR_SR", hdul[0].header.get("PIXAR_SR", np.nan)))
+        pixar = hdr.get("PIXAR_SR", hdul[0].header.get("PIXAR_SR"))
+        if pixar is None:
+            raise ValueError(f"{uri}: no PIXAR_SR, cannot convert MJy/sr to µJy")
+        pixar = float(pixar)
     lx, ly = x - (xi - HALF), y - (yi - HALF)
     yy, xx = np.mgrid[0 : sci.shape[0], 0 : sci.shape[1]]
     ap = np.hypot(xx - lx, yy - ly) <= r_px

@@ -52,6 +52,8 @@ for band in ("F200W", "F444W"):
     }
     med = {k: v for k, v in med.items() if np.isfinite(v)}
     vals = np.array(list(med.values()))
+    if vals.min() <= 0:
+        raise ValueError(f"{band}: non-positive epoch flux; a max/min ratio is meaningless")
     per_epoch[band] = {
         "epoch_median_cal_ujy_r015": {str(k): round(v, 3) for k, v in med.items()},
         "max_over_min": round(float(vals.max() / vals.min()), 3),
@@ -60,6 +62,8 @@ for band in ("F200W", "F444W"):
 r = calib[calib["uid"] == "nexus-d73390"][0]
 i2d = [float(r[f"F200W_e{i}_fflux"]) for i in range(8)]
 fin = [v for v in i2d if np.isfinite(v)]
+if min(fin) <= 0:
+    raise ValueError("d73390 i2d forced F200W: non-positive epoch flux")
 per_epoch["F200W_i2d_forced_max_over_min"] = round(max(fin) / min(fin), 3)
 out["nexus-d73390"] = per_epoch
 
