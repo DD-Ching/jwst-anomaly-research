@@ -47,7 +47,8 @@
 ## 2. Data and sample
 - **Sample** (`sample.json`): 1,000 groups, seed 7, split into 512 calibration and 488 search groups
   (crc32("v11:" + key)). There are 32,966 control (comparison) stars, none of them a v11 sample member.
-  - The nearest v1–v4 sample group is 5.3″ away (pre-search review).
+  - The nearest v1–v4 sample group is 5.4″ away. No groups lie within 3″, and no objectids are shared
+    (`sample_check.json`).
 - **Light curves:** 38,195 rows of the DR24 partition (`fetch_info.json`); TAP 38,026 exposure rows
   (`exposures_summary.json`).
 - **Realised sampling** (`realised_sampling.json`), on the calibration carriers' actual series:

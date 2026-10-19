@@ -1,0 +1,14 @@
+# v11 sample check (stored for RESULT section 2): nearest v1-v3 / v4 sample group to any v11 group, shared
+# objectids, and the split salt. Usage: python sample_check_script.py.txt
+import json, zlib
+import numpy as np
+v11 = json.load(open('results/w3_ztf/v11/sample.json'))['groups']
+old = json.load(open('results/w3_ztf/sample.json'))['groups'] + json.load(open('results/w3_ztf/v4/sample.json'))['groups']
+a = np.array([(g['ra'], g['dec']) for g in v11]); b = np.array([(g['ra'], g['dec']) for g in old])
+c = np.cos(np.radians(a[:, 1].mean()))
+d = np.min(np.hypot((a[:, None, 0] - b[None, :, 0]) * c, a[:, None, 1] - b[None, :, 1]), axis=1) * 3600
+out = {'label': 'derived', 'nearest_old_group_arcsec': float(d.min()), 'groups_within_3arcsec': int((d < 3).sum()),
+       'shared_objectids': len({m for g in v11 for m in g['members']} & {m for g in old for m in g['members']}),
+       'split_matches_crc32_v11': all(g['holdout'] == (zlib.crc32(f"v11:{g['key']}".encode()) % 2 == 0) for g in v11)}
+json.dump(out, open('results/w3_ztf/v11/sample_check.json', 'w'), indent=1); open('results/w3_ztf/v11/sample_check.json', 'a').write('\n')
+print(out)
