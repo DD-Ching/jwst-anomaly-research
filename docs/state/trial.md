@@ -277,6 +277,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | — | — | ≈ 0.25 (review-list h039 / h005: frozen plan and rule, forced photometry, matched controls, stamps looked at; inconclusive, post hoc within control scatter) | 0.1 (orientation, claim, state files, PR) | cloud routine 01QCVQcw, 06:16–06:45Z |
 | 2026-W43 | — | — | — | 0.3 (orientation; queue check: the two open-looking lensing items, the halo-phot elongation gate and the off-arc veto control, were already done; TASKS synced; PR) | cloud routine 01Hea1QD, 07:12–07:45Z |
 | 2026-W43 | — | — | — | 0.25 (orientation; the in-flight W3 ZTF v11 branch was merged as #365 by its own session during this run; queue still blocked on owner decisions per the 07:12 handoff; no unit started) | cloud routine 017cBF6W, 08:09–08:35Z |
+| 2026-W43 | ≈ 0.25 (W3 dimming Abell 2744 forced stage: frozen plan, 300 controls, calibrated, null, limits) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine 0125PxUc, 09:09–09:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
