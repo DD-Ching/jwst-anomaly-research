@@ -1,6 +1,6 @@
 # W3 dimming: does the injection chain count mosaic-edge positions as covered? (plan, frozen before data)
 
-Frozen 2026-10-19 19:22 UTC (cloud routine), before any weight map was read. From
+Frozen 2026-10-19 19:12 UTC (cloud routine), before any weight map was read. From
 `results/dimming/nexus_o014/RESULT.md` Next 2.
 
 - **Question.** The screen calls an epoch "covered" for a source when ≥ 3 catalogue rows lie within 5″
