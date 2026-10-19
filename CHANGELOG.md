@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: Abell 2744 forced stage calibrated (300 controls); still null; headline 5–13 % tighter
+- **Why:** D-052 "Revisit if" holds (S3 byte-range jobs have worked since 10-08); Abell 2744 and NEXUS were never
+  calibrated. Plan frozen first (`results/dimming/abell2744_calib/PLAN.md`); code unchanged.
+- **Result (`results/dimming/abell2744_calib/RESULT.md`):** screen reproduces D-052 (530 / 32 flags); `forced`
+  calibrated on the o002–o006 pair (247 / 256 controls); 0 of 32 flags confirmed, 0 controls flagged. Noise scale
+  4.05 / 7.21 and F444W inflation 3.60 (higher than MACS0416; unexplained).
+- **Limits:** calibrated W3 efficiency 0.000–0.013 (the uncalibrated values were 4–7× too high); headline
+  per-source rate 0.053 per source per yr at t_E = 1 yr (was 0.056), 5–13 % tighter over t_E.
+- **Handoff:** NEXUS `forced` with ≥ 300 controls next (the field that could move the headline), then a joint
+  `combine` for the per-deg² headline.
+
 ## 2026-10-19: W3 ZTF v11: area chosen by observing conditions (Npix 3839) passes validation; 488 search groups, 0 flags
 - **Records fixed first** (`results/w3_ztf/v10/RESULT.md` addendum):
   - v10's 711 vs v6's 703 differs only in the noise realisation (per-expid seeds) on the same events; the re-read inputs have the same
