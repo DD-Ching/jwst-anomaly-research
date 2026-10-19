@@ -28,7 +28,7 @@ elig = {}
 for pix in AREAS:
     wz.LC_PIX = pix
     wz.VERSION = 11
-    groups, info = wz.select(obj, old)  # draw of <= N_MAX is not used here; all eligible groups:
+    groups, info = wz.select(obj, old)  # the seed-7 draw of <= N_MAX (1,000) groups, i.e. the would-be sample
     elig[pix] = (groups, info)
     print(pix, info, flush=True)
 

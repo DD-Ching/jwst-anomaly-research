@@ -1,0 +1,21 @@
+{
+ "label": "derived; realised necessary-sampling indicator on calibration carriers (upper bound, not recovery)",
+ "carriers": 512,
+ "series_share_of_official_median": 0.9816388792286974,
+ "series_share_of_official_p10_p90": [
+  0.9783065545909696,
+  0.9929623897175537
+ ],
+ "cells": {
+  "rho0.01_blend1_tE10": 0.7525,
+  "rho0.01_blend1_tE30": 0.8845,
+  "rho0.01_blend1_tE100": 0.839,
+  "rho0.1_blend1_tE10": 0.723,
+  "rho0.1_blend1_tE30": 0.851,
+  "rho0.01_blend0.7_tE10": 0.746,
+  "rho0.01_blend0.7_tE30": 0.889,
+  "rho0.01_blend0.7_tE100": 0.8405,
+  "rho0.1_blend0.7_tE10": 0.721,
+  "rho0.1_blend0.7_tE30": 0.834
+ }
+}
