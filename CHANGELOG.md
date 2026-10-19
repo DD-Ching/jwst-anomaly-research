@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: NEXUS `o014` targets are mosaic-edge and catalogue-depth effects (0 survivors)
+- **Why:** #377 handoff 1. Plan, rule (`summarise.explanation`, unit-tested) and target builder frozen first
+  (`results/dimming/nexus_o014/PLAN.md`).
+- **Result (`results/dimming/nexus_o014/RESULT.md`):** `forced` on the 12 NEXUS `on_sky` single-epoch vanish flags:
+  0 survivors; 5 footprint / image quality, 7 catalogue depth or deblend (forced F200W S/N 4.1–28.2 in covering
+  epochs). 11 / 12 lie at or beyond the other epochs' mosaic edges (sheet looked at); `o014` is about 1.5× deeper
+  than six of the other seven epochs (control forced errors).
+- **Failed requirement:** 8 / 300 controls flagged against the plan's ≤ 1 % (mis-set: the committed NEXUS run had
+  10 / 300), so the run is not a calibrated null; the footprint reading uses coverage only.
+- **Handoff:** finish MACS0416 e2–3 and Abell 2744 e1–2 persistence; check whether injections count mosaic-edge
+  positions as covered before the D-039 swap; set the NEXUS control false-flag requirement.
+
 ## 2026-10-19: W3 dimming: D-039 persistence test on the single-epoch vanish flags (partial)
 - **Why:** #376 handoff. Plan and rules frozen first (`results/dimming/persistence_run/PLAN.md`, rules as tested
   functions in `summarise.py`).

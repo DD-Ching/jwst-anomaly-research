@@ -196,7 +196,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      `chromatic_veto` into `forced`~~ done 2026-10-19 (D-052 addendum e; injections unaffected, no re-run needed); replace the single-epoch veto for
      vanish flags with the D-039 persistence test (scoped 2026-10-19, D-052 addendum f,
      `results/dimming/persistence_scope/RESULT.md`: worth it, joint exposure ×2.0–3.4 upper bound, 37 compact flags;
-     run 2026-10-19 partial, `results/dimming/persistence_run/RESULT.md`: NEXUS 12 / 17 `on_sky`, controls 61 / 61 `on_sky`; next: `forced` on the 12 with the `o014` depth test first, finish MACS0416 e2–3 and Abell 2744 e1–2, then the swap); add JADES and new NEXUS epochs;
+     run 2026-10-19 partial, `results/dimming/persistence_run/RESULT.md`: NEXUS 12 / 17 `on_sky`, controls 61 / 61 `on_sky`; ~~`forced` on the 12~~ done 2026-10-19, `results/dimming/nexus_o014/RESULT.md`: 0 survivors, 11 / 12 at other epochs' mosaic edges, 7 detected in covering epochs; controls 8 / 300 flagged, above the frozen 1 %; next: finish MACS0416 e2–3 and Abell 2744 e1–2, check edge coverage in the injection chain, then the swap); add JADES and new NEXUS epochs;
      SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
    - ~~W5: counts N(>S) around `radial` centres~~ done 2026-10-17 (`results/w5_radial_counts/RESULT.md`): no deficit,
      but no power: at JWST depth the model predicts an excess; the post hoc excess (Q ≈ 1.26 at 9″ without arc
