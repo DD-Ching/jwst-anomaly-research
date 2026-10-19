@@ -1,0 +1,99 @@
+{
+ "label": "derived; post-run counts (calibration series and the v10 events)",
+ "series_epochs": {
+  "filter2_epochs_before": 397386,
+  "filter2_epochs_after": 430030,
+  "filter2_epochs_from_fill_exposures": 32643,
+  "filter2_epochs_lost": 0,
+  "filter2_series_ge_43_before": 509,
+  "filter2_series_ge_43_after": 509,
+  "filter1_epochs_before": 512761,
+  "filter1_epochs_after": 525866,
+  "filter1_epochs_from_fill_exposures": 13103,
+  "filter1_epochs_lost": 0,
+  "filter1_series_ge_43_before": 532,
+  "filter1_series_ge_43_after": 532
+ },
+ "remaining_blocks": {
+  "rho0.01_blend1_tE10": {
+   "stopped_at_MIN_BRACKET_after": 5,
+   "official_pre_lt_20": 2,
+   "official_post_lt_20": 0,
+   "official_both_ge_20": 3,
+   "no_dim_run_in_umbra_after": 97,
+   "of_which_official_umbra_lt_3": 86
+  },
+  "rho0.01_blend1_tE30": {
+   "stopped_at_MIN_BRACKET_after": 15,
+   "official_pre_lt_20": 2,
+   "official_post_lt_20": 3,
+   "official_both_ge_20": 10,
+   "no_dim_run_in_umbra_after": 59,
+   "of_which_official_umbra_lt_3": 47
+  },
+  "rho0.01_blend1_tE100": {
+   "stopped_at_MIN_BRACKET_after": 38,
+   "official_pre_lt_20": 12,
+   "official_post_lt_20": 10,
+   "official_both_ge_20": 16,
+   "no_dim_run_in_umbra_after": 29,
+   "of_which_official_umbra_lt_3": 18
+  },
+  "rho0.1_blend1_tE10": {
+   "stopped_at_MIN_BRACKET_after": 3,
+   "official_pre_lt_20": 0,
+   "official_post_lt_20": 0,
+   "official_both_ge_20": 3,
+   "no_dim_run_in_umbra_after": 82,
+   "of_which_official_umbra_lt_3": 69
+  },
+  "rho0.1_blend1_tE30": {
+   "stopped_at_MIN_BRACKET_after": 18,
+   "official_pre_lt_20": 8,
+   "official_post_lt_20": 3,
+   "official_both_ge_20": 7,
+   "no_dim_run_in_umbra_after": 56,
+   "of_which_official_umbra_lt_3": 40
+  },
+  "rho0.01_blend0.7_tE10": {
+   "stopped_at_MIN_BRACKET_after": 7,
+   "official_pre_lt_20": 3,
+   "official_post_lt_20": 2,
+   "official_both_ge_20": 2,
+   "no_dim_run_in_umbra_after": 72,
+   "of_which_official_umbra_lt_3": 70
+  },
+  "rho0.01_blend0.7_tE30": {
+   "stopped_at_MIN_BRACKET_after": 18,
+   "official_pre_lt_20": 1,
+   "official_post_lt_20": 4,
+   "official_both_ge_20": 13,
+   "no_dim_run_in_umbra_after": 44,
+   "of_which_official_umbra_lt_3": 43
+  },
+  "rho0.01_blend0.7_tE100": {
+   "stopped_at_MIN_BRACKET_after": 49,
+   "official_pre_lt_20": 17,
+   "official_post_lt_20": 12,
+   "official_both_ge_20": 20,
+   "no_dim_run_in_umbra_after": 14,
+   "of_which_official_umbra_lt_3": 14
+  },
+  "rho0.1_blend0.7_tE10": {
+   "stopped_at_MIN_BRACKET_after": 4,
+   "official_pre_lt_20": 0,
+   "official_post_lt_20": 3,
+   "official_both_ge_20": 1,
+   "no_dim_run_in_umbra_after": 95,
+   "of_which_official_umbra_lt_3": 91
+  },
+  "rho0.1_blend0.7_tE30": {
+   "stopped_at_MIN_BRACKET_after": 14,
+   "official_pre_lt_20": 3,
+   "official_post_lt_20": 1,
+   "official_both_ge_20": 10,
+   "no_dim_run_in_umbra_after": 54,
+   "of_which_official_umbra_lt_3": 49
+  }
+ }
+}

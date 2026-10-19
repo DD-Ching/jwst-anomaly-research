@@ -228,3 +228,38 @@ def test_v8_exposure_mid_time_uses_exptime():
         wz.match_exposures(t_det, wz.exposure_times(Table({"obsjd": [obsjd]}), 184.0, 33.0))[0]
         == -1
     )
+
+
+def test_v10_psfcat_match_unique_missing_ambiguous():
+    ra, dec = np.array([10.0, 10.0 + 2.0 / 3600]), np.array([60.0, 60.0])
+    c = np.cos(np.radians(60.0))
+    idx = wz.psfcat_match(ra, dec, [10.0, 10.0 + 1.0 / 3600 / c, 11.0], [60.0, 60.0, 60.0])
+    assert idx[0] == -2  # second source 1" away: ambiguous
+    assert idx[2] == -1  # nothing within 1.5": missing
+    one = wz.psfcat_match(ra[:1], dec[:1], [10.0 + 1.0 / 3600 / c], [60.0])
+    assert one[0] == 0
+
+
+def test_v10_merge_psfcat_fills_without_overwriting_or_inventing_nd():
+    expo, et, rows, star = _toy()
+    gap = [30, 31, 32, 33, 34]
+    for i in range(10):  # comparison stars: DR24 lacks the gap exposures
+        rows[i] = star(np.delete(et, gap))
+    tgt = star(np.delete(et, [30, 32, 33, 34]))  # the target keeps its DR24 detection at 31
+    tgt["m"][30] = 16.3
+    rows[50] = tgt
+    src = (np.array([10.0]), np.array([60.0]), np.array([16.0]), np.array([0.02]))
+    cats = {}
+    for k in gap[:-1]:  # exposure 34: no source at all (missing for every star)
+        cats[(1, 0, 2, int(expo["expid"][k]))] = (*src, np.array([4 if k == 33 else 0]))
+    cats[(1, 0, 2, int(expo["expid"][34]))] = tuple(np.array([]) for _ in range(5))
+    log = wz.merge_psfcat(rows, cats, expo)
+    assert log[(1, 0, 2)]["dr24_kept"] == 1 and log[(1, 0, 2)]["missing"] == 11
+    cov = wz.coverage(rows, set(range(10)), {50}, expo)
+    s = wz.series({"members": [50]}, rows, cov, 2)
+    ids = {x[5]: x for x in s}
+    e = [int(expo["expid"][k]) for k in gap]
+    assert e[0] in ids and e[2] in ids and abs(ids[e[1]][1] - 0.3) < 1e-6  # DR24 value kept
+    assert e[3] not in ids and e[4] not in ids  # flagged: unknown; missing: unknown, not ND
+    assert not any(x[2] for x in s)
+    wz.FILL.clear()

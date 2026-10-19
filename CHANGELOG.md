@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 ZTF v10: psfcat in the W3 chain raises recovery by 161 of 2,000 same events; 8 of 10 cells stay below 0.5; search not executed
+- Plan and fill set fixed before any psfcat read (`results/w3_ztf/v10/PLAN.md`). The fill set has 724 exposures
+  where DR24 has no detection of any control star; 32 of 33 field / quadrant / filter combinations pass the v9
+  overlap test (672_31_2 has 3 pairs and was not filled). In total, 790 files (183.6 MB) were downloaded once.
+- The merge adds 32,643 r-band and 13,103 g-band epochs to the calibration series. DR24 is never overwritten, and a
+  missing psfcat row stays unknown.
+- Same v6 events (exact replay): recovered 711 → 872 (v6 stored 703). The main gain is at the MIN_BRACKET stage
+  (289 → 171). Only 2 of 10 cells reach 0.5 (124 and 102 of 200).
+- Controls (fade 16/200) and burden (0 survivors) pass, but the frozen rule fails, so the **539-group search was not
+  executed**.
+- Of the 1,128 events still lost:
+  - 602 have no dim run in the umbra, 527 of them with fewer than 3 official exposures there;
+  - 86 lack official exposures for the bracket;
+  - 128 fail vetting;
+  - 85 have ≥ 20 official r-band exposures on both sides, but fewer than 20 non-dim series epochs on a side.
+- **Handoff:** paused. No threshold change, no new sample, no follow-on batch without the owner
+  (`results/w3_ztf/v10/RESULT.md`).
+
 ## 2026-10-19: E1 BAT–GBM control deficit: long lags behave as the shared-event displacement predicts; frozen rule undetermined
 - **Why:** handoff of #356 (optional: the BAT–GBM deficit, D-074 addendum 6, with the shared-event test of
   addendum 9). Plan frozen first (`results/e1_swift/selfpair/PLAN.md`); rule `outcome` unit-tested before the run.

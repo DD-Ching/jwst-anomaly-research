@@ -1,0 +1,48 @@
+# v10 search of the 539 search groups (PLAN.md section 6), run only after decision.json passed. Same merge as the
+# calibration (validated combinations only); search-member psfcat values are extracted here for the first time.
+# Usage: python search_script.py.txt <fillset.json> <psfcat cache dir>
+import json, os, sys
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+HERE = wz.OUT / 'v10'
+wz.VDIR = HERE
+FS, PSF = sys.argv[1:3]
+assert json.load(open(HERE / 'decision.json'))['passed'], 'calibration did not pass; the search is not allowed'
+fs = json.load(open(FS))
+ok = {q for q, v in json.load(open(HERE / 'overlap_v10.json'))['combinations'].items() if v['passed']}
+expo = Table.read(wz.CACHE / 'exposures.ecsv')
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if g['holdout']]
+rows, _ = wz.context(groups)  # search members + controls (logged)
+comp = set(np.load(wz.CACHE / 'comparison_oids.npy').tolist())
+cats = {}
+for f in fs['fill']:
+    fn = f"{PSF}/{f['expid']}_{f['rcid']}_{f['filt']}.fits"
+    if f"{f['field']}_{f['rcid']}_{f['filt']}" not in ok or not os.path.exists(fn):
+        continue
+    h = fits.open(fn)
+    if int(h[0].header.get('INFOBITS', -1)) != 0:
+        continue
+    t, zp = h[1].data, float(h[0].header['MAGZP'])
+    cats[f['field'], f['rcid'], f['filt'], f['expid']] = (np.asarray(t['ra'], float), np.asarray(t['dec'], float),
+        np.asarray(t['mag'], float) + zp, np.asarray(t['sigmag'], float), np.asarray(t['flags'], int))
+mlog = wz.merge_psfcat(rows, cats, expo)
+cov = wz.coverage(rows, comp, set(rows))
+out, n_ser = [], 0
+for g in groups:
+    for filt, other in ((2, 1), (1, 2)):
+        s = wz.series(g, rows, cov, filt)
+        if len(s) < 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+            continue
+        n_ser += 1
+        for x in wz.screen(s, wz.series(g, rows, cov, other), cov):
+            out.append({'key': g['key'], 'ra': g['ra'], 'dec': g['dec'], 'filter': filt, **x})
+summ = {'version': 10, 'half': 'holdout', 'groups': len(groups), 'series_searched': n_ser, 'flagged_runs': len(out),
+        'flagged_groups': len({x['key'] for x in out}), 'passed_groups': sorted({x['key'] for x in out if x['pass']}),
+        'psfcat_added_clean': sum(v['added_clean'] for v in mlog.values())}
+json.dump({'label': 'derived', 'summary': summ, 'runs': out}, open(HERE / 'search_holdout_v10.json', 'w'), indent=1, default=float)
+open(HERE / 'search_holdout_v10.json', 'a').write('\n')
+print(json.dumps(summ))

@@ -396,6 +396,81 @@ def match_exposures(t, et) -> np.ndarray:
     return np.where(np.abs(t - et[near]) <= MATCH_TOL, near, -1)
 
 
+FILL: dict = {}  # v10: (field, rcid, filter) -> expids filled from psfcat (set by merge_psfcat)
+PSF_R_MATCH, PSF_R_AMB = (
+    1.5,
+    3.0,
+)  # arcsec: unique match / second source = ambiguous (v9 plan section 2)
+
+
+def psfcat_match(sra, sdec, ra, dec) -> np.ndarray:
+    """v10: per star (ra, dec) the index of the nearest psfcat source within PSF_R_MATCH arcsec,
+    -1 if none (missing), -2 if a second source lies within PSF_R_AMB (ambiguous)."""
+    sra, sdec = np.asarray(sra, float), np.asarray(sdec, float)
+    out = np.full(len(ra), -1)
+    for i, (a, d) in enumerate(zip(ra, dec, strict=True)):
+        sep = np.hypot((sra - a) * np.cos(np.radians(d)), sdec - d) * 3600.0
+        if not len(sep):
+            continue
+        k = np.argsort(sep)[:2]
+        if sep[k[0]] > PSF_R_MATCH:
+            continue
+        out[i] = -2 if len(k) > 1 and sep[k[1]] <= PSF_R_AMB else k[0]
+    return out
+
+
+def merge_psfcat(rows, cats, expo) -> dict:
+    """v10: add psfcat detections of fill exposures to ``rows`` (in place) and set FILL.
+
+    ``cats`` maps (field, rcid, filter, expid) to (ra, dec, mag + MAGZP, sigmag, flags) arrays of
+    one validated psfcat file. A star gets a point only where DR24 has no detection of it in that
+    exposure (DR24 is never overwritten); flags != 0 or an ambiguous match enter as a flagged
+    detection (catflags 1). A missing star gets nothing (state 4 in ``coverage``). Returns
+    per-key counts."""
+    fid = {"zg": 1, "zr": 2, "zi": 3}
+    erow = {
+        (
+            int(r["field"]),
+            (int(r["ccdid"]) - 1) * 4 + int(r["qid"]) - 1,
+            fid[str(r["filtercode"])],
+            int(r["expid"]),
+        ): i
+        for i, r in enumerate(expo)
+    }
+    by_q: dict = {}
+    for o, r in rows.items():
+        by_q.setdefault((*r["quad"], r["filt"]), []).append(o)
+    log: dict = {}
+    FILL.clear()
+    for key, (sra, sdec, smag, serr, sflag) in cats.items():
+        q, expid = key[:3], key[3]
+        FILL.setdefault(q, set()).add(expid)
+        oids = by_q.get(q, [])
+        if not oids or key not in erow:
+            continue
+        e = expo[erow[key] : erow[key] + 1]
+        # mid-time once per file at the stars' mean position, as coverage() does per quadrant
+        ra0, de0 = np.mean([rows[o]["ra"] for o in oids]), np.mean([rows[o]["dec"] for o in oids])
+        t = float(exposure_times(e, ra0, de0)[0])
+        idx = psfcat_match(sra, sdec, [rows[o]["ra"] for o in oids], [rows[o]["dec"] for o in oids])
+        c = log.setdefault(q, {"added_clean": 0, "added_flagged": 0, "missing": 0, "dr24_kept": 0})
+        for o, j in zip(oids, idx, strict=True):
+            r = rows[o]
+            if len(r["t"]) and np.min(np.abs(r["t"] - t)) <= MATCH_TOL:
+                c["dr24_kept"] += 1
+                continue
+            if j == -1:
+                c["missing"] += 1
+                continue
+            m, err = (np.nan, np.nan) if j == -2 else (float(smag[j]), float(serr[j]))
+            # ambiguous, flagged or a non-finite magnitude: a flagged detection (magnitude unused)
+            bad = j == -2 or int(sflag[j]) != 0 or not np.isfinite(m)
+            c["added_flagged" if bad else "added_clean"] += 1
+            r["t"], r["m"] = np.append(r["t"], t), np.append(r["m"], m)
+            r["e"], r["f"] = np.append(r["e"], err), np.append(r["f"], 1 if bad else 0)
+    return log
+
+
 def star_state(r, idx, n_exp):
     """Per exposure index: 1 detected with catflags 0 and not dim, 2 detected and dim (>= DIM_MAG
     fainter than the median), 3 flagged detection; 0 none. Duplicates in one exposure count once."""
@@ -455,6 +530,8 @@ def coverage(rows, comp: set[int], members: set[int], expo=None) -> dict:
             lo, hi = (r["t"].min(), r["t"].max()) if len(r["t"]) else (np.inf, -np.inf)
             play = (et > lo) & (et < hi)
             inside = in_quad(e, r["ra"], r["dec"])  # v4: footprint of each exposure
+            if q in FILL:  # v10: no psfcat row in a fill exposure is unknown, never a non-detection
+                st[(st == 0) & inside & np.isin(np.asarray(e["expid"]), list(FILL[q]))] = 4
             states[o], spans[o], covered[o] = (st, med, mag), play, inside
             if o in comp:
                 inplay += play & (inside | (st > 0))
@@ -511,6 +588,8 @@ def series(group, rows, cov, filt):
         # v4: a non-detection counts only where the star is inside the exposure's footprint
         mine = c["spans"][o] & c["good"] & (cv.get(o, ones) | (st > 0))
         for k in np.flatnonzero(mine):
+            if st[k] == 4:
+                continue  # v10: missing from a psfcat fill exposure: unknown for this star only
             if st[k] == 3:
                 flagged.add(int(c["expid"][k]))  # v4: the exposure is unknown for the whole group
                 continue  # flagged detection: unknown
