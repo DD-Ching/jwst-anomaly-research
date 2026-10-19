@@ -1,0 +1,440 @@
+{
+ "label": "derived; frozen v16 queue",
+ "candidates": 25,
+ "qualifying": 17,
+ "catalogue_eligible_unused_total": 54080,
+ "sampling_qualified_unused_total": 44354,
+ "sampling_qualified_search_total": 35854,
+ "queue": [
+  {
+   "npix": 187,
+   "qualifies": true,
+   "worst_cell": 0.578,
+   "product_ratio": 1.154,
+   "unused": 2264,
+   "search_if_500_cal": 1764,
+   "lc_mb": 302.0,
+   "unused_per_gb": 7496.7,
+   "shared_fields": [
+    1649
+   ],
+   "position": 1,
+   "seed_offset": 10000
+  },
+  {
+   "npix": 1626,
+   "qualifies": true,
+   "worst_cell": 0.551,
+   "product_ratio": 1.082,
+   "unused": 2557,
+   "search_if_500_cal": 2057,
+   "lc_mb": 363.6,
+   "unused_per_gb": 7032.5,
+   "shared_fields": [],
+   "position": 2,
+   "seed_offset": 11000
+  },
+  {
+   "npix": 1627,
+   "qualifies": true,
+   "worst_cell": 0.593,
+   "product_ratio": 1.085,
+   "unused": 2564,
+   "search_if_500_cal": 2064,
+   "lc_mb": 425.6,
+   "unused_per_gb": 6024.4,
+   "shared_fields": [],
+   "position": 3,
+   "seed_offset": 12000
+  },
+  {
+   "npix": 2274,
+   "qualifies": true,
+   "worst_cell": 0.508,
+   "product_ratio": 1.177,
+   "unused": 1440,
+   "search_if_500_cal": 940,
+   "lc_mb": 244.8,
+   "unused_per_gb": 5882.4,
+   "shared_fields": [],
+   "position": 4,
+   "seed_offset": 13000
+  },
+  {
+   "npix": 1624,
+   "qualifies": true,
+   "worst_cell": 0.6385,
+   "product_ratio": 1.075,
+   "unused": 2387,
+   "search_if_500_cal": 1887,
+   "lc_mb": 433.9,
+   "unused_per_gb": 5501.3,
+   "shared_fields": [],
+   "position": 5,
+   "seed_offset": 14000
+  },
+  {
+   "npix": 1358,
+   "qualifies": true,
+   "worst_cell": 0.5105,
+   "product_ratio": 1.132,
+   "unused": 1037,
+   "search_if_500_cal": 537,
+   "lc_mb": 193.3,
+   "unused_per_gb": 5364.7,
+   "shared_fields": [],
+   "position": 6,
+   "seed_offset": 15000
+  },
+  {
+   "npix": 1625,
+   "qualifies": true,
+   "worst_cell": 0.6615,
+   "product_ratio": 1.079,
+   "unused": 2544,
+   "search_if_500_cal": 2044,
+   "lc_mb": 573.4,
+   "unused_per_gb": 4436.7,
+   "shared_fields": [],
+   "position": 7,
+   "seed_offset": 16000
+  },
+  {
+   "npix": 1357,
+   "qualifies": true,
+   "worst_cell": 0.517,
+   "product_ratio": 1.122,
+   "unused": 1116,
+   "search_if_500_cal": 616,
+   "lc_mb": 263.3,
+   "unused_per_gb": 4238.5,
+   "shared_fields": [],
+   "position": 8,
+   "seed_offset": 17000
+  }
+ ],
+ "queue_lc_mb_total": 2799.9,
+ "all": [
+  {
+   "npix": 187,
+   "qualifies": true,
+   "worst_cell": 0.578,
+   "product_ratio": 1.154,
+   "unused": 2264,
+   "search_if_500_cal": 1764,
+   "lc_mb": 302.0,
+   "unused_per_gb": 7496.7,
+   "shared_fields": [
+    1649
+   ],
+   "position": 1,
+   "seed_offset": 10000
+  },
+  {
+   "npix": 1356,
+   "qualifies": true,
+   "worst_cell": 0.563,
+   "product_ratio": 1.126,
+   "unused": 1221,
+   "search_if_500_cal": 721,
+   "lc_mb": 289.2,
+   "unused_per_gb": 4222.0,
+   "shared_fields": []
+  },
+  {
+   "npix": 1357,
+   "qualifies": true,
+   "worst_cell": 0.517,
+   "product_ratio": 1.122,
+   "unused": 1116,
+   "search_if_500_cal": 616,
+   "lc_mb": 263.3,
+   "unused_per_gb": 4238.5,
+   "shared_fields": [],
+   "position": 8,
+   "seed_offset": 17000
+  },
+  {
+   "npix": 1358,
+   "qualifies": true,
+   "worst_cell": 0.5105,
+   "product_ratio": 1.132,
+   "unused": 1037,
+   "search_if_500_cal": 537,
+   "lc_mb": 193.3,
+   "unused_per_gb": 5364.7,
+   "shared_fields": [],
+   "position": 6,
+   "seed_offset": 15000
+  },
+  {
+   "npix": 1359,
+   "qualifies": false,
+   "worst_cell": 0.4025,
+   "product_ratio": 1.104,
+   "unused": 999,
+   "search_if_500_cal": 499,
+   "lc_mb": 158.0,
+   "unused_per_gb": 6322.8,
+   "shared_fields": []
+  },
+  {
+   "npix": 1624,
+   "qualifies": true,
+   "worst_cell": 0.6385,
+   "product_ratio": 1.075,
+   "unused": 2387,
+   "search_if_500_cal": 1887,
+   "lc_mb": 433.9,
+   "unused_per_gb": 5501.3,
+   "shared_fields": [],
+   "position": 5,
+   "seed_offset": 14000
+  },
+  {
+   "npix": 1625,
+   "qualifies": true,
+   "worst_cell": 0.6615,
+   "product_ratio": 1.079,
+   "unused": 2544,
+   "search_if_500_cal": 2044,
+   "lc_mb": 573.4,
+   "unused_per_gb": 4436.7,
+   "shared_fields": [],
+   "position": 7,
+   "seed_offset": 16000
+  },
+  {
+   "npix": 1626,
+   "qualifies": true,
+   "worst_cell": 0.551,
+   "product_ratio": 1.082,
+   "unused": 2557,
+   "search_if_500_cal": 2057,
+   "lc_mb": 363.6,
+   "unused_per_gb": 7032.5,
+   "shared_fields": [],
+   "position": 2,
+   "seed_offset": 11000
+  },
+  {
+   "npix": 1627,
+   "qualifies": true,
+   "worst_cell": 0.593,
+   "product_ratio": 1.085,
+   "unused": 2564,
+   "search_if_500_cal": 2064,
+   "lc_mb": 425.6,
+   "unused_per_gb": 6024.4,
+   "shared_fields": [],
+   "position": 3,
+   "seed_offset": 12000
+  },
+  {
+   "npix": 2272,
+   "qualifies": false,
+   "worst_cell": 0.4905,
+   "product_ratio": 1.181,
+   "unused": 1505,
+   "search_if_500_cal": 1005,
+   "lc_mb": 230.0,
+   "unused_per_gb": 6543.5,
+   "shared_fields": []
+  },
+  {
+   "npix": 2273,
+   "qualifies": false,
+   "worst_cell": 0.366,
+   "product_ratio": 1.252,
+   "unused": 1542,
+   "search_if_500_cal": 1042,
+   "lc_mb": 252.4,
+   "unused_per_gb": 6109.4,
+   "shared_fields": []
+  },
+  {
+   "npix": 2274,
+   "qualifies": true,
+   "worst_cell": 0.508,
+   "product_ratio": 1.177,
+   "unused": 1440,
+   "search_if_500_cal": 940,
+   "lc_mb": 244.8,
+   "unused_per_gb": 5882.4,
+   "shared_fields": [],
+   "position": 4,
+   "seed_offset": 13000
+  },
+  {
+   "npix": 2275,
+   "qualifies": false,
+   "worst_cell": 0.433,
+   "product_ratio": 1.149,
+   "unused": 1536,
+   "search_if_500_cal": 1036,
+   "lc_mb": 252.5,
+   "unused_per_gb": 6083.2,
+   "shared_fields": []
+  },
+  {
+   "npix": 2488,
+   "qualifies": true,
+   "worst_cell": 0.5365,
+   "product_ratio": 1.063,
+   "unused": 1860,
+   "search_if_500_cal": 1360,
+   "lc_mb": 490.3,
+   "unused_per_gb": 3793.6,
+   "shared_fields": []
+  },
+  {
+   "npix": 2489,
+   "qualifies": true,
+   "worst_cell": 0.569,
+   "product_ratio": 1.045,
+   "unused": 1933,
+   "search_if_500_cal": 1433,
+   "lc_mb": 515.6,
+   "unused_per_gb": 3749.0,
+   "shared_fields": []
+  },
+  {
+   "npix": 2490,
+   "qualifies": true,
+   "worst_cell": 0.569,
+   "product_ratio": 1.051,
+   "unused": 1901,
+   "search_if_500_cal": 1401,
+   "lc_mb": 471.6,
+   "unused_per_gb": 4031.0,
+   "shared_fields": []
+  },
+  {
+   "npix": 2491,
+   "qualifies": true,
+   "worst_cell": 0.5395,
+   "product_ratio": 1.048,
+   "unused": 1828,
+   "search_if_500_cal": 1328,
+   "lc_mb": 462.3,
+   "unused_per_gb": 3954.1,
+   "shared_fields": []
+  },
+  {
+   "npix": 2696,
+   "qualifies": false,
+   "worst_cell": 0.438,
+   "product_ratio": 1.031,
+   "unused": 1022,
+   "search_if_500_cal": 522,
+   "lc_mb": 213.4,
+   "unused_per_gb": 4789.1,
+   "shared_fields": [
+    672,
+    1669,
+    1714
+   ]
+  },
+  {
+   "npix": 2697,
+   "qualifies": false,
+   "worst_cell": 0.4405,
+   "product_ratio": 1.04,
+   "unused": 1003,
+   "search_if_500_cal": 503,
+   "lc_mb": 209.7,
+   "unused_per_gb": 4783.0,
+   "shared_fields": [
+    672,
+    1714
+   ]
+  },
+  {
+   "npix": 2698,
+   "qualifies": false,
+   "worst_cell": 0.463,
+   "product_ratio": 1.073,
+   "unused": 993,
+   "search_if_500_cal": 493,
+   "lc_mb": 218.1,
+   "unused_per_gb": 4553.0,
+   "shared_fields": [
+    672,
+    1714
+   ]
+  },
+  {
+   "npix": 2699,
+   "qualifies": false,
+   "worst_cell": 0.445,
+   "product_ratio": 1.11,
+   "unused": 1126,
+   "search_if_500_cal": 626,
+   "lc_mb": 324.3,
+   "unused_per_gb": 3472.1,
+   "shared_fields": [
+    672,
+    1714
+   ]
+  },
+  {
+   "npix": 2900,
+   "qualifies": true,
+   "worst_cell": 0.6885,
+   "product_ratio": 1.045,
+   "unused": 3616,
+   "search_if_500_cal": 3116,
+   "lc_mb": 1021.4,
+   "unused_per_gb": 3540.2,
+   "shared_fields": [
+    848,
+    1856
+   ]
+  },
+  {
+   "npix": 8124,
+   "qualifies": true,
+   "worst_cell": 0.6355,
+   "product_ratio": 1.049,
+   "unused": 5604,
+   "search_if_500_cal": 5104,
+   "lc_mb": 1704.6,
+   "unused_per_gb": 3287.6,
+   "shared_fields": [
+    634,
+    635,
+    1679
+   ]
+  },
+  {
+   "npix": 8126,
+   "qualifies": true,
+   "worst_cell": 0.659,
+   "product_ratio": 1.045,
+   "unused": 5108,
+   "search_if_500_cal": 4608,
+   "lc_mb": 1299.7,
+   "unused_per_gb": 3930.1,
+   "shared_fields": [
+    634,
+    1679
+   ]
+  },
+  {
+   "npix": 8127,
+   "qualifies": true,
+   "worst_cell": 0.6565,
+   "product_ratio": 1.053,
+   "unused": 5374,
+   "search_if_500_cal": 4874,
+   "lc_mb": 1734.0,
+   "unused_per_gb": 3099.2,
+   "shared_fields": [
+    634,
+    635,
+    681,
+    1679
+   ]
+  }
+ ]
+}
