@@ -1,0 +1,47 @@
+# v15 samples (PLAN.md section 2): all eligible new groups of each chosen partition, deduplicated against every earlier
+# calibration, development or search group (positions within 3" and shared objectids). Objects tables are read once
+# per parent and cached in the scratch dir. Usage: python sample_script.py.txt <scratch dir>
+import json, os, sys, zlib
+import numpy as np
+import pandas as pd
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+SCR = sys.argv[1]
+AREAS = [3837, 183]
+ded = json.load(open('results/w3_ztf/v12/dedupe.json'))['groups']
+for f, tag in (('results/w3_ztf/v12/2382/sample.json', 'v12/v13 (Npix 2382)'),):
+    ded += [[tag, g['ra'], g['dec'], g['members']] for g in json.load(open(f))['groups']]
+import gzip
+ded += [['v14 (Npix 8170)', g['ra'], g['dec'], g['members']] for g in json.load(gzip.open('results/w3_ztf/v14/8170/sample.json.gz'))['groups']]
+old_pos = [(g[1], g[2]) for g in ded]
+old_oid = {m for g in ded for m in g[3]}
+cols = ['oid', 'ra', 'dec', 'field', 'ccdid', 'qid', 'fid', 'refmag', 'refsharp', 'ngoodobs', 'transient']
+summary = {'dedupe_groups': len(ded)}
+import pyarrow.parquet as pq
+for pix in AREAS:
+    wz.configure(pix, f'v15/{pix}')
+    wz.N_MAX = 100000  # every eligible group
+    fn = f'{SCR}/obj{pix // 4}.parquet'
+    if not os.path.exists(fn):
+        pq.ParquetFile(wz.s3().open(wz.OBJ_PART)).read(columns=cols).to_pandas().to_parquet(fn)
+    obj = pd.read_parquet(fn)
+    groups, info = wz.select(obj, old_pos)
+    n0 = len(groups)
+    groups = [g for g in groups if not set(g['members']) & old_oid]
+    rank = sorted(groups, key=lambda g: zlib.crc32(f"v15:{int(g['key'])}".encode()))
+    cal = {g['key'] for g in rank[:500]}
+    for g in groups:
+        g['holdout'] = g['key'] not in cal
+        g['ra'], g['dec'] = round(g['ra'], 7), round(g['dec'], 7)
+    pct = lambda xs: [float(np.percentile(xs, q)) for q in (5, 50, 95)]
+    info.update(dropped_shared_objectid=n0 - len(groups), calibration_groups=len(cal), search_groups=len(groups) - len(cal),
+                split='lowest 500 by crc32("v15:"+key) = calibration (the "holdout" count above is select()\'s pre-split parity)',
+                refmag_r_p5_p50_p95={'calibration': pct([g['refmag_r'] for g in groups if not g['holdout']]),
+                                     'search': pct([g['refmag_r'] for g in groups if g['holdout']])},
+                lc_partition=wz.LC_PART)
+    wz.SAMPLE.parent.mkdir(parents=True, exist_ok=True)
+    wz.SAMPLE.write_text(json.dumps({'label': 'derived; v15 PLAN section 2', 'info': info, 'groups': groups}, separators=(',', ':')) + '\n')
+    info['controls'] = wz.save_comparisons(obj, {m for g in groups for m in g['members']})
+    summary[str(pix)] = info
+    print(pix, json.dumps(info), flush=True)
+json.dump(summary, open('results/w3_ztf/v15/sample_info.json', 'w'), indent=1); open('results/w3_ztf/v15/sample_info.json', 'a').write('\n')

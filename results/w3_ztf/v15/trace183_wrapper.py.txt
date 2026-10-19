@@ -1,0 +1,12 @@
+import runpy, sys
+sys.argv = ['trace', '183', 'v15/183', 'results/w3_ztf/v15/183/trace_posthoc.json']
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.EDGE_RULE = 'time'
+_c = wz.configure
+def conf(p, v):
+    _c(p, v)
+wz.configure = conf
+src = open('results/w3_ztf/v7/trace_script.py.txt').read()
+src = src.replace('default_rng(1100 + c)', 'default_rng(1100 + c + 8000)'); assert '1100 + c + 8000' in src
+exec(compile(src, 'trace_script', 'exec'))
