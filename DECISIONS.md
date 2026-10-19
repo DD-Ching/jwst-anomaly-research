@@ -3192,6 +3192,14 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   per yr at t_E = 0.01 … 3 yr (ρ = 0.1; docs/exotic_limits.md).
 - Catalogues read from S3 `cloud_uri` when the MAST API is unreachable, verified by the manifest's sha256.
 
+**Addendum 2026-10-19e (chromatic veto in `forced`).**
+- `dimming_screen.py forced` now writes `chromatic_veto` per source (`chromatic_vetoed`: some epoch meets
+  `dimming_exposure_check.chromatic_veto` on its F200W / F444W forced fluxes) and removes those sources from
+  `survives_artefact_tests`; `forced_summary.json` counts them. Fields without both bands are not tested.
+- Efficiencies and limits are unchanged without a re-run: `inject` does not run `forced` (it emulates it by error
+  inflation), and an injected W3 event scales both bands by the same factor, so its F200W / F444W ratio is the
+  host's (unit test). Existing `forced.ecsv` outputs predate the column; the NEXUS reading of addendum c stands.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**

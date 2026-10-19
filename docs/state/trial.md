@@ -281,6 +281,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | — | — | ≈ 0.3 (NEXUS W3 survivors: frozen plan, `_cal` exposure tool, chromatic veto (post hoc), 5 survivors + controls vetted, sheets looked at; 0 W3 events) | 0.1 (orientation, claim, state files, PR) | cloud routine 01Goi7d2, 11:12–11:50Z |
 | 2026-W43 | — | — | — | 0.6 (orientation; brought W3 ZTF v13 #370 up to date with main, full offline tests, CI, merge per policy; queue otherwise blocked on owner decisions; no unit started) | cloud routine 01Mfyque, 12:09–12:50Z |
 | 2026-W43 | ≈ 0.4 (W3 dimming MACS0416 regeneration: frozen plan and gate, S3 catalogue route, forced + inject, joint three-field `combine`) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine 01Ep8g9c, 13:12–13:55Z |
+| 2026-W43 | ≈ 0.15 (W3 dimming: chromatic veto folded into `forced`, unit test) | — | — | 0.3 (orientation; issue #374 network-test failures diagnosed as upstream MAST/NED connection errors; state files, PR) | cloud routine 01CCHGKi, 14:12–14:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

@@ -276,3 +276,34 @@ def test_known_object_labels_and_failed_services():
     assert failed == ["ned"]
     xm["n_ned"] = [1, 0]
     assert ds.known_object_labels(xm, ["a", "b"])[1] == []
+
+
+def test_chromatic_vetoed_spike_only_and_achromatic_injection_kept():
+    # source 0: an F200W-only spike in epoch 1 (no simultaneous F444W light) -> vetoed;
+    # source 1: an ordinary red source; source 2: source 1 with an achromatic W3 dimming
+    # (factor 0.05 in epoch 1 on both bands) -> never vetoed; source 3: F444W unmeasured.
+    flux = np.array(
+        [
+            [[0.1, 0.1], [10.0, 0.02], [0.1, 0.1]],
+            [[2.0, 4.0], [2.0, 4.0], [2.0, 4.0]],
+            [[2.0, 4.0], [0.1, 0.2], [2.0, 4.0]],
+            [[10.0, np.nan], [10.0, np.nan], [10.0, np.nan]],
+        ]
+    )
+    err = np.full_like(flux, 0.01)
+    assert ds.chromatic_vetoed(flux, err, ["F200W", "F444W"]).tolist() == [
+        True,
+        False,
+        False,
+        False,
+    ]
+    # the band order comes from the field, not the array position
+    swapped = flux[:, :, ::-1]
+    assert ds.chromatic_vetoed(swapped, err, ["F444W", "F200W"]).tolist() == [
+        True,
+        False,
+        False,
+        False,
+    ]
+    # a field without the F200W / F444W pair: the test does not apply
+    assert not ds.chromatic_vetoed(flux, err, ["F150W", "F444W"]).any()

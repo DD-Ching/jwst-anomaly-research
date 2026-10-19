@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: chromatic veto folded into `forced`; weekly network test failure is upstream
+- **Change:** `dimming_screen.py forced` applies the D-052 addendum c chromatic veto (simultaneous F444W below
+  F200W / 20 at 3σ in some epoch) before `survives_artefact_tests` (D-052 addendum e, unit-tested). No field
+  re-run: injections do not pass through `forced` and an achromatic W3 event cannot meet the veto, so the joint
+  headline stands as written.
+- **Issue #374 (weekly network tests):** 3 of 1,604 failed, all connection errors (MAST `RemoteDisconnected` twice, NED
+  `ConnectTimeout`); the run took 24 min against 5 min on 2026-10-12. MAST API timeouts were also seen in the
+  13:12Z run. Treated as upstream; no code change. Re-running the job from the cloud session is refused (403).
+- **Handoff:** D-039 persistence test in place of the single-epoch veto for vanish flags; JADES / new NEXUS epochs.
+
 ## 2026-10-19: W3 dimming: MACS0416 regenerated (reproduces D-052); joint three-field `combine` gives the per-deg² headline
 - **Why:** #371 / #369 handoff. Plan and a computable reproduction gate frozen first
   (`results/dimming/macs0416_regen/PLAN.md`, `scripts/dimming_repro_gate.py` + unit test).
