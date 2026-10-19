@@ -27,8 +27,7 @@ area = ds.area_deg2(lc["ra"], lc["dec"], covd)
 
 # workload: real flags vetoed by single_epoch alone
 fl = ds.flagged(res)
-other = ds.catalogue_veto({**ordn, "single_epoch": np.zeros_like(ordn["single_epoch"])})
-se_only = fl & ordn["single_epoch"] & ~other
+se_only = fl & ordn["single_epoch"] & ~static_veto
 work = {
     "flagged": int(fl.sum()),
     "single_epoch_only": int(se_only.sum()),
@@ -51,7 +50,6 @@ def no_se(fi, ei, det, p, inflation):
     return rec
 
 
-lims = {}
 for tag, fn in (("veto_on", orig), ("veto_off", no_se)):
     ds._recovered = fn
     eff = ds.efficiency_table(
@@ -74,10 +72,8 @@ for tag, fn in (("veto_on", orig), ("veto_off", no_se)):
     lim = ds.rate_limits(eff, area, n)
     eff.write(out / f"efficiency_{tag}.ecsv", overwrite=True)
     lim.write(out / f"limits_{tag}.ecsv", overwrite=True)
-    lims[tag] = lim
 ds._recovered = orig
 (out / "workload.json").write_text(
     json.dumps({"field": field_name, "n_monitored": int(sel.sum()), **work}, indent=1) + "\n"
 )
 print(json.dumps(work))
-print(lims["veto_on"].colnames)
