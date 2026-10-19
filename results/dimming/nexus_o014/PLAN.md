@@ -1,6 +1,6 @@
 # W3 dimming: NEXUS `o014` depth/footprint test and forced photometry on the 12 `on_sky` persistence targets
 
-Frozen 2026-10-19 17:25 UTC, before any forced flux was read (handoff of #377,
+Frozen 2026-10-19 17:12 UTC, before any forced flux was read (handoff of #377,
 `results/dimming/persistence_run/RESULT.md` Next 1). Screen code, thresholds and `forced` unchanged.
 
 - **Targets.** The 12 NEXUS compact single-epoch vanish flags whose D-039 persistence verdict was `on_sky`
