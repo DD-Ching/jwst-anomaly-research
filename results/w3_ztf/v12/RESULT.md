@@ -13,7 +13,9 @@
   - controls passing vetting: eclipse 0, fade 4, PSPL 0, common mode 0 of 200;
   - real calibration light curves: 998 series, 16 flagged runs in 3 groups, 0 survivors.
 - As planned, the area stopped. **Its 2,500 search groups were not searched**: they were never loaded
-  (`2382/source_usage.jsonl`, search_member_rows 0). This is "not executed", not a search with zero candidates.
+  (`2382/source_usage.jsonl`, search_member_rows 0). The file has 4 records: `realised_script` (stage "?"), inject,
+  search dev, and the post hoc trace (stage "2382", from argv). This is "not executed", not a search with zero
+  candidates.
 - No threshold was changed, no seed redrawn, and no second area read. Npix 8170 had already been dropped before any
   light curve by the budget rule (section 2).
 
@@ -52,7 +54,7 @@
 - **Realised sampling** (`2382/realised_sampling.json`):
   - calibration series hold a median 94.2 % of their official exposures;
   - r-band epochs per carrier, 5/50/95 %: 1,734 / 2,022 / 3,823;
-  - realised indicator 0.717–0.892 per cell (0.8405 for the failing cell).
+  - realised indicator 0.717–0.8915 per cell (0.8405 for the failing cell).
 
 ## 4. Injection results and the reason for the failure (`2382/injections_v12.json`; post hoc trace `2382/trace_posthoc.json`)
 
@@ -91,6 +93,6 @@
 
 ## Deviations and notes
 - **Post hoc:** `2382/trace_posthoc.json` is a failure diagnosis on the calibration group only.
-- **Plan wording:** the candidate rule asked for "2, 2, 1 children", but only 4 partitions met it, because two
-  parents had one eligible child each. That is recorded in `candidates.json`.
+- **Plan wording:** the candidate rule asked for "2, 2, 1 children". Only 4 partitions met it, because one parent
+  (45, Npix 183) had a single eligible child; this can be read from the parents of the listed candidates.
 - **Code:** `configure()` accepts a per-area folder ("v12/2382"). This is plumbing only.

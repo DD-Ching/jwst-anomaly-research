@@ -13,8 +13,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     Sampling is not the limit: 171/200 are flagged.
   - Controls ≤ 2 %; 0 calibration survivors.
 - **Not executed:** the 2,500 search groups. 8170 was not read. No threshold changed and no retry.
-- **Handoff:** W3 / ZTF is paused again. More areas would only add volume. The binding limit in dense-cadence data
-  is the sharp-edge test for finite-source (ρ 0.1) events; changing it is a method change that needs the owner.
+- **Handoff:** W3 / ZTF is paused again.
+  - In the one validated area, the failing cell lost most flagged injections at the sharp-edge test (80 of 87, post
+    hoc). A link to cadence is a hypothesis; it was not tested.
+  - Another area under the same rules may pass or fail; it would not change the method. Changing the test is a method
+    change that needs the owner.
 
 ## 2026-10-19: W3 ZTF v11: area chosen by observing conditions (Npix 3839) passes validation; 488 search groups, 0 flags
 - **Records fixed first** (`results/w3_ztf/v10/RESULT.md` addendum):
