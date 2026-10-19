@@ -1,0 +1,35 @@
+# v13 development comparison (PLAN.md section 2): same events and noise, old (count) vs new (time) edge rule, on the
+# already-used v12 calibration group. Usage: python devcompare_script.py.txt
+import json
+from collections import Counter
+D = 'results/w3_ztf/v13/2382dev/'
+old, new = (json.load(open(D + f'dump_{r}.json'))['rows'] for r in ('count', 'time'))
+io, inew = (json.load(open(D + f'injections_v13_{r}.json')) for r in ('count', 'time'))
+v12 = json.load(open('results/w3_ztf/v12/2382/injections_v12.json'))
+assert [x['recovered'] for x in io['w3']] == [x['recovered'] for x in v12['w3']], 'count rule must reproduce v12'
+assert len(old) == len(new) and all(a[:4] == b[:4] for a, b in zip(old, new)), 'same events and flags expected'
+cells = {}
+for k, c in enumerate(io['w3']):
+    name = f"rho{c['rho']}_blend{c['blend']:g}_tE{c['tE']:g}"
+    cells[name] = {'old': c['recovered'], 'new': inew['w3'][k]['recovered'], 'flagged': c['flagged']}
+by_cell = Counter(); kept = Counter(); lost = Counter(); sharp_old = Counter()
+for a, b in zip(old, new):
+    if isinstance(a[0], str):
+        continue
+    if a[3] and not a[4] and a[5] and a[5][0] == 'sharp_ok':
+        sharp_old[a[0]] += 1
+        kept[a[0]] += bool(b[4])
+    lost[a[0]] += bool(a[4] and not b[4])
+idx = sorted({a[0] for a in old if not isinstance(a[0], str)})
+for k, name in zip(idx, cells):
+    cells[name].update(old_first_fail_sharp=sharp_old[k], of_which_recovered_new=kept[k], recovered_old_lost_new=lost[k])
+ctrl = {k: {'old': io['controls'][k]['passed_vetting'], 'new': inew['controls'][k]['passed_vetting'], 'n': 200} for k in io['controls']}
+burden = {'count (v12 file)': json.load(open('results/w3_ztf/v12/2382/search_dev_v12.json'))['summary'],
+          'time': json.load(open(D + 'search_dev_v13_time.json'))['summary']}
+out = {'label': 'simulated (development set; not a validation)', 'cells': cells,
+       'totals': {'old': sum(v['old'] for v in cells.values()), 'new': sum(v['new'] for v in cells.values()),
+                  'old_sharp_first_fail': sum(sharp_old.values()), 'kept_by_new': sum(kept.values()),
+                  'recovered_old_lost_new': sum(lost.values())},
+       'controls_passed': ctrl, 'real_calibration': {r: {k: v[k] for k in ('series_searched', 'flagged_runs', 'flagged_groups', 'passed_groups')} for r, v in burden.items()}}
+json.dump(out, open('results/w3_ztf/v13/devcompare.json', 'w'), indent=1); open('results/w3_ztf/v13/devcompare.json', 'a').write('\n')
+print(json.dumps(out, indent=1))
