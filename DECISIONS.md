@@ -4475,6 +4475,16 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
 - **Revisit if** a channel with shared events enters a tested family (remove them first), or the BAT–GBM deficit
   needs its own check.
 
+**Addendum 10 (2026-10-19): the BAT–GBM control deficit, post hoc, is the same displacement (`results/e1_swift/selfpair/`).**
+- **Decision.** Joint events are found by a same-direction match within 1 h, not only by a 100 s time window,
+  before a shared-event channel's long-lag cells are read (extends addendum 9). No tested channel changes.
+- **Evidence.** Frozen rule "undetermined": dropping the 476 BAT bursts with a GBM burst within 100 s gives
+  all-separation z −0.27 (1 h–1 d) and −0.65 (1–7 d), from −4.91 / −5.26 (random drop: −5.61 / −5.30), but
+  100 s–1 h z +4.05, carried by joint GRBs whose triggers are 100 s–1 h apart (e.g. GRB 221009A). Post hoc,
+  also dropping BAT bursts with a same-direction GBM burst within 1 h (500 in all): |z| ≤ 0.29 in all three
+  cells; random drop keeps −5.81 at 1 h–1 d. Exploratory (window chosen after the rule failed).
+- **Revisit if** a channel with shared events enters a tested family.
+
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)
 
 **Decision.**

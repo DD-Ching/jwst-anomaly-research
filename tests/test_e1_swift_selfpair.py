@@ -34,3 +34,25 @@ def test_shared_window_is_control_window():
     g = np.array([100.0])
     b = np.array([100.0 + 99 / day, 100.0 - 101 / day])
     assert sp.sp.shared_mask(b, g, sp.SHARED_S).tolist() == [True, False]
+
+
+def test_joint_mask_same_direction_within_1h():
+    from jwst_anomaly import event_network as en
+
+    day = 86400.0
+
+    def s(mjd, ra):
+        n = len(mjd)
+        return en.Sample(
+            "X", np.array(mjd), np.array(ra, float), np.zeros(n), np.full(n, 0.1), np.zeros(n, int)
+        )
+
+    g = s([100.0], [10.0])
+    b = s([100.0 + 3000 / day, 100.0 + 3000 / day, 100.0 + 4000 / day], [10.0, 50.0, 10.0])
+    assert sp.joint_mask(b, g).tolist() == [True, False, False]
+
+
+def test_random_ctl_avoids_excluded_rows():
+    keep_out = np.array([True, False, False, True, False])
+    ctl = sp.random_ctl(5, keep_out, 2, 0)
+    assert (~ctl).sum() == 2 and ctl[keep_out].all()

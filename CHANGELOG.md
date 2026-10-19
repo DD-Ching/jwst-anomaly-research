@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: E1 BAT–GBM control deficit: the null displaces joint bursts (post hoc; frozen rule undetermined)
+- **Why:** handoff of #356 (optional: the BAT–GBM deficit, D-074 addendum 6, with the shared-event test of
+  addendum 9). Plan frozen first (`results/e1_swift/selfpair/PLAN.md`); rule `outcome` unit-tested before the run.
+- **Result (derived, `results/e1_swift/selfpair/RESULT.md`):** frozen outcome "undetermined". Without the 476
+  BAT bursts that have a GBM burst within 100 s: all-separation z −0.27 / −0.65 (1 h–1 d, 1–7 d), from
+  −4.91 / −5.26; random drop keeps −5.61 / −5.30. The rule fails on 100 s–1 h (z +4.05): joint GRBs whose BAT and
+  GBM triggers are 100 s–1 h apart (24 bursts, e.g. GRB 221009A, GRB 130925A). **Post hoc** (deviation) 1 h
+  same-direction joint match: |z| ≤ 0.29 in all three cells, random control −5.81: "explained" (exploratory).
+- **Consequence:** D-074 addendum 10: joint events need a ≥ 1 h position match, not a 100 s window alone. No
+  tested E1 channel changes.
+- **Handoff:** E1 waits on the CHIME uptime series (owner). Optional: the EP–GBM joint-event rule (addendum 7)
+  can now use this 1 h position match.
+
 ## 2026-10-19: E1 DR2–ICECAT control deficit explained: the null displaces the 276 shared events
 - **Why:** handoff of #354 (DR2–ICECAT wide deficit at 1 h–7 d, z −4.5 / −6.5, cause open). Plan frozen first
   (`results/e1_icetracks/selfpair/PLAN.md`); rule `outcome` unit-tested before the run.
