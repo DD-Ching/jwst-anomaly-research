@@ -18,6 +18,8 @@ t = vstack(
 )
 d = t[t["edge_pair"] != t["stamp_edge"]]
 n = len(d)
+if n == 0:
+    sys.exit("no disagreements; no sheet")
 cols = 8
 fig, axs = plt.subplots(
     2 * ((n + cols - 1) // cols), cols, figsize=(cols * 1.5, 3.2 * ((n + cols - 1) // cols))
