@@ -1,0 +1,16 @@
+{
+ "label": "derived (download log)",
+ "files": 790,
+ "ok": 789,
+ "cached": 0,
+ "failed": [
+  [
+   226634785,
+   31,
+   2,
+   "failed: <urlopen error [Errno 104] Connection reset by peer>"
+  ]
+ ],
+ "mb": 183.19,
+ "seconds": 281.9
+}

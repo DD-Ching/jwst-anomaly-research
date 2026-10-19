@@ -1,0 +1,41 @@
+# v10: download every psfcat file of fillset.json (fill + overlap) once, 8 parallel connections, <= 4 tries each.
+# Usage: python download_script.py.txt <fillset.json> <cache dir> <out json>
+import json, os, sys, time, urllib.request
+from concurrent.futures import ThreadPoolExecutor
+FS, CACHE, OUT = sys.argv[1:4]
+fs = json.load(open(FS))
+todo = {}
+for f in fs['fill']:
+    todo[f['expid'], f['rcid'], f['filt']] = (f['filefracday'], f['field'])
+for q, lst in fs['overlap'].items():
+    field, rcid, filt = map(int, q.split('_'))
+    for x in lst:
+        todo[x['expid'], rcid, filt] = (x['filefracday'], field)
+os.makedirs(CACHE, exist_ok=True)
+def url(k, v):
+    (expid, rcid, filt), (ffd, field) = k, v
+    s = str(ffd)
+    return (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{s[:4]}/{s[4:8]}/{s[8:]}/ztf_{s}_"
+            f"{field:06d}_{'zg' if filt == 1 else 'zr'}_c{rcid // 4 + 1:02d}_o_q{rcid % 4 + 1}_psfcat.fits")
+def get(item):
+    k, v = item
+    fn = f'{CACHE}/{k[0]}_{k[1]}_{k[2]}.fits'
+    if os.path.exists(fn):
+        return k, os.path.getsize(fn), 'cached'
+    err = ''
+    for i in range(4):
+        try:
+            raw = urllib.request.urlopen(url(k, v), timeout=120).read()
+            open(fn + '.part', 'wb').write(raw); os.rename(fn + '.part', fn)
+            return k, len(raw), 'ok'
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (i + 1))
+    return k, 0, 'failed: ' + err
+t0 = time.time()
+with ThreadPoolExecutor(8) as ex:
+    res = list(ex.map(get, todo.items()))
+out = {'label': 'derived (download log)', 'files': len(res), 'ok': sum(r[2] != 'cached' and r[1] > 0 for r in res),
+       'cached': sum(r[2] == 'cached' for r in res), 'failed': [[*r[0], r[2]] for r in res if r[1] == 0],
+       'mb': round(sum(r[1] for r in res) / 1e6, 2), 'seconds': round(time.time() - t0, 1)}
+json.dump(out, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print(out)

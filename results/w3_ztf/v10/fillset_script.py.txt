@@ -1,0 +1,70 @@
+# v10 fill set and cost (PLAN.md section 2). Metadata plus DR24 detections of CONTROL stars only; no psfcat read,
+# no calibration or search member used. Usage: python fillset_script.py.txt <out json>
+import json, sys
+from collections import Counter
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+OUT = sys.argv[1]
+rows = wz.load_rows()
+comp = set(np.load(wz.CACHE / 'comparison_oids.npy').tolist())
+rows = {o: r for o, r in rows.items() if o in comp}  # control group only
+expo = Table.read(wz.CACHE / 'exposures.ecsv')
+fid = {'zg': 1, 'zr': 2, 'zi': 3}
+flt = np.array([fid[str(x)] for x in expo['filtercode']])
+by_q = {}
+for o, r in rows.items():
+    by_q.setdefault((*r['quad'], r['filt']), []).append(o)
+fill, overlap_cand, per_q = [], {}, {}
+for (field, rcid, filt), oids in sorted(by_q.items()):
+    if filt not in (1, 2):
+        continue
+    sel = (np.asarray(expo['field']) == field) & (np.asarray(expo['ccdid']) == rcid // 4 + 1) & \
+          (np.asarray(expo['qid']) == rcid % 4 + 1) & (flt == filt)
+    e = expo[sel]
+    if not len(e):
+        continue
+    ra = float(np.mean([rows[o]['ra'] for o in oids])); dec = float(np.mean([rows[o]['dec'] for o in oids]))
+    et = wz.exposure_times(e, ra, dec)
+    o_ = np.argsort(et); e, et = e[o_], et[o_]
+    n = len(et)
+    det_any = np.zeros(n, int); det_clean = np.zeros(n, int); inplay = np.zeros(n, int)
+    for o in oids:
+        r = rows[o]
+        idx = wz.match_exposures(r['t'], et)
+        k = idx[idx >= 0]
+        hit = np.zeros(n, bool); hit[k] = True
+        det_any += hit
+        cl = np.zeros(n, bool); cl[idx[(idx >= 0) & (r['f'] == 0)]] = True
+        det_clean += cl
+        lo, hi = (r['t'].min(), r['t'].max()) if len(r['t']) else (np.inf, -np.inf)
+        inplay += (et > lo) & (et < hi) & wz.in_quad(e, r['ra'], r['dec'])
+    info = np.asarray(e['infobits'])
+    # product gap: an official infobits-0 exposure with >= 1 control star in play inside its footprint and
+    # no DR24 detection (any catflags) of any control star of the quadrant
+    gap = (info == 0) & (inplay > 0) & (det_any == 0)
+    mjd = np.asarray(e['obsjd'], float) - 2400000.5
+    for i in np.flatnonzero(gap):
+        fill.append({'expid': int(e['expid'][i]), 'field': field, 'rcid': rcid, 'filt': filt,
+                     'mjd': float(mjd[i]), 'filefracday': int(e['filefracday'][i])})
+    # overlap candidates: infobits-0 exposures with the most clean DR24 control detections (ties: earliest)
+    ok = np.flatnonzero((info == 0) & (det_clean > 0))
+    best = sorted(ok, key=lambda i: (-det_clean[i], mjd[i]))[:2]
+    q = f'{field}_{rcid}_{filt}'
+    overlap_cand[q] = [{'expid': int(e['expid'][i]), 'mjd': float(mjd[i]), 'filefracday': int(e['filefracday'][i]),
+                        'dr24_clean_controls': int(det_clean[i])} for i in best]
+    per_q[q] = {'official_infobits0': int((info == 0).sum()), 'gap': int(gap.sum()),
+                'gap_mjd_range': [float(mjd[gap].min()), float(mjd[gap].max())] if gap.any() else None,
+                'controls': len(oids)}
+yr = Counter(int(2018 + (f['mjd'] - 58119) // 365.25) for f in fill)
+res = {'label': 'derived (IRSA TAP metadata, DR24 control light curves); fill set fixed before any psfcat read',
+       'fill_exposures': len(fill), 'combinations_with_fill': sum(v['gap'] > 0 for v in per_q.values()),
+       'overlap_exposures': sum(len(overlap_cand[q]) for q in per_q if per_q[q]['gap'] > 0),
+       'fill_by_year_approx': dict(sorted(yr.items())),
+       'fill_mjd_range': [min(f['mjd'] for f in fill), max(f['mjd'] for f in fill)] if fill else None,
+       'est_mb_at_214kB': round((len(fill) + 2 * len(per_q)) * 0.214, 1), 'per_combination': per_q,
+       'overlap': {q: v for q, v in overlap_cand.items() if per_q[q]['gap'] > 0}, 'fill': fill}
+json.dump(res, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print(json.dumps({k: v for k, v in res.items() if k not in ('fill', 'overlap', 'per_combination')}, indent=1))
