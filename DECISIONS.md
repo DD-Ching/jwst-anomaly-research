@@ -4475,14 +4475,14 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
 - **Revisit if** a channel with shared events enters a tested family (remove them first), or the BAT–GBM deficit
   needs its own check.
 
-**Addendum 10 (2026-10-19): the BAT–GBM control deficit, post hoc, is the same displacement (`results/e1_swift/selfpair/`).**
-- **Decision.** Joint events are found by a same-direction match within 1 h, not only by a 100 s time window,
-  before a shared-event channel's long-lag cells are read (extends addendum 9). No tested channel changes.
+**Addendum 10 (2026-10-19): the BAT–GBM control deficit at long lags behaves as the displacement predicts; frozen rule undetermined (`results/e1_swift/selfpair/`).**
+- **Decision.** None on the tested family (no tested channel includes BAT–GBM). For a future joint-event rule
+  (e.g. EP–GBM, addendum 7), pre-register a position match over a window longer than 100 s; the 1 h window
+  used here is post hoc and is a hypothesis to freeze, not a settled parameter.
 - **Evidence.** Frozen rule "undetermined": dropping the 476 BAT bursts with a GBM burst within 100 s gives
-  all-separation z −0.27 (1 h–1 d) and −0.65 (1–7 d), from −4.91 / −5.26 (random drop: −5.61 / −5.30), but
-  100 s–1 h z +4.05, carried by joint GRBs whose triggers are 100 s–1 h apart (e.g. GRB 221009A). Post hoc,
-  also dropping BAT bursts with a same-direction GBM burst within 1 h (500 in all): |z| ≤ 0.29 in all three
-  cells; random drop keeps −5.81 at 1 h–1 d. Exploratory (window chosen after the rule failed).
+  all-separation z −0.33 (1 h–1 d) and −0.66 (1–7 d), from −4.78 / −5.04 (random drop: −5.83 / −5.31), but
+  100 s–1 h z +4.2, where 25 same-direction pairs (23 within 0.1°, e.g. GRB 221009A at −3,197 s) look like joint
+  GRBs with triggers 100 s–1 h apart. The post hoc 1 h variant is circular in that cell.
 - **Revisit if** a channel with shared events enters a tested family.
 
 ## D-075 Hypothesis round 2: three worlds with derived Lorentz invariance; no survivor this project can test (2026-10-09)

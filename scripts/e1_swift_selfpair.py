@@ -74,18 +74,40 @@ def _init() -> None:
     os.environ["OMP_NUM_THREADS"] = "1"
 
 
+WINDOWS = en.windows_for(sw.P)[:NLAG]  # lag bins only (the vetting windows are not used)
+
+
 def count(b: en.Sample, g: en.Sample) -> np.ndarray:
-    return en.count_channel(b, g, sw.P, same=False)[:NLAG, ALL]
+    return en.count_channel(b, g, sw.P, same=False, windows=WINDOWS)[:, ALL]
 
 
 def null_chunk(args) -> np.ndarray:
-    """All-separation counts per lag bin for ``n`` jit scrambles from ``seed``."""
+    """All-separation counts per lag bin for ``n`` jit scrambles from ``seed``. GBM is scrambled
+    first from each seed, so its scrambles are identical in every variant (paired comparison)."""
     b, g, n, seed = args
     rng = np.random.default_rng(seed)
-    return np.array(
-        [count(en.scramble_jit(b, rng, sw.P), en.scramble_jit(g, rng, sw.P)) for _ in range(n)],
-        float,
-    )
+    out = []
+    for _ in range(n):
+        gs = en.scramble_jit(g, rng, sw.P)
+        out.append(count(en.scramble_jit(b, rng, sw.P), gs))
+    return np.array(out, float)
+
+
+def joint_pairs(b: en.Sample, g: en.Sample, bnames, gnames, rows: np.ndarray) -> list[dict]:
+    """Same-direction GBM pairs within POSTHOC_S of the BAT rows ``rows`` (post hoc listing)."""
+    i, j = en.pairs_within(b.mjd, g.mjd, POSTHOC_S, False)
+    sep = en.sep_deg(b.ra[i], b.dec[i], g.ra[j], g.dec[j])
+    hit = (en.sep_class(sep, b.sigma[i], g.sigma[j], sw.P) == 0) & np.isin(i, rows)
+    return [
+        {
+            "bat": str(bnames[a]),
+            "gbm": str(gnames[c]),
+            "lag_s": round(float((g.mjd[c] - b.mjd[a]) * en.DAY), 1),
+            "sep_deg": round(float(d), 3),
+            "sigma_comb_deg": round(float(np.hypot(b.sigma[a], g.sigma[c])), 3),
+        }
+        for a, c, d in zip(i[hit], j[hit], sep[hit], strict=True)
+    ]
 
 
 def summarize(name: str, b: en.Sample, g: en.Sample, null: np.ndarray) -> dict:
@@ -119,7 +141,7 @@ def main(argv=None) -> int:
         "rm_joint_1h": sp.subset(b, ~jt),
         "rm_random_1h": sp.subset(b, ctl_jt),
     }
-    # same seeds for every variant, chunks of CHUNK scrambles spread over the cores
+    # same seeds for every variant (GBM scrambles identical); CHUNK scrambles per pool task
     seeds = list(range(8_000_000, 8_000_000 + a.n, CHUNK))
     jobs = [(v, g, min(CHUNK, 8_000_000 + a.n - s0), s0) for v in variants.values() for s0 in seeds]
     with cf.ProcessPoolExecutor(a.cpu, initializer=_init) as ex:
@@ -143,7 +165,11 @@ def main(argv=None) -> int:
         "labels": labels,
         "n_shared_bat": int(sh.sum()),
         "n_joint_1h_bat_post_hoc": int(jt.sum()),
+        "n_shared_bat_with_same_direction_pair": int((sh & joint_mask(b, g, SHARED_S)).sum()),
         "joint_1h_only_bat_names": sorted(str(n) for n in ev["BAT"]["name"][jt & ~sh]),
+        "joint_1h_only_pairs": joint_pairs(
+            b, g, ev["BAT"]["name"], ev["GBM"]["name"], np.flatnonzero(jt & ~sh)
+        ),
         "n_gbm": len(g.mjd),
         "variants": res,
         "all_sep_z": zl,
