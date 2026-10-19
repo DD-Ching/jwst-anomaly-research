@@ -1,0 +1,189 @@
+{
+ "provenance": "derived",
+ "post_hoc": [
+  "chromatic_veto (rule written after the plan; unit-tested)"
+ ],
+ "nexus-d53823|e0": {
+  "forced": {
+   "f_sw": 4.2711388063487155,
+   "f_lw": -0.0001799184235172345,
+   "e_lw": 0.008419860764259672,
+   "chromatic_veto": true
+  },
+  "F200W_exposures": [
+   {
+    "exposure": "jw05105001010_05101_00001_nrca1",
+    "flux_ujy": 93.5632,
+    "n_jump": 60,
+    "n_ap": 72
+   },
+   {
+    "exposure": "jw05105001010_05101_00002_nrca1",
+    "flux_ujy": 0.0003,
+    "n_jump": 8,
+    "n_ap": 70
+   }
+  ]
+ },
+ "nexus-d60156|e3": {
+  "forced": {
+   "f_sw": 10.441728890066084,
+   "f_lw": 0.038437634019584166,
+   "e_lw": 0.014529022847053699,
+   "chromatic_veto": true
+  },
+  "F200W_exposures": [
+   {
+    "exposure": "jw05105004005_02101_00001_nrca3",
+    "flux_ujy": 0.7034,
+    "n_jump": 46,
+    "n_ap": 75
+   }
+  ]
+ },
+ "nexus-d79928|e6": {
+  "forced": {
+   "f_sw": 24.368533054980585,
+   "f_lw": 0.016988119072026388,
+   "e_lw": 0.016993559282859245,
+   "chromatic_veto": true
+  },
+  "F200W_exposures": [
+   {
+    "exposure": "jw05105010004_02101_00002_nrcb4",
+    "flux_ujy": 23.6772,
+    "n_jump": 10,
+    "n_ap": 74
+   }
+  ]
+ },
+ "ctl0276|e1": {
+  "forced": {
+   "f_sw": 0.17776081663410984,
+   "f_lw": 0.010130583992709647,
+   "e_lw": 0.010360888549838094,
+   "chromatic_veto": false
+  },
+  "F200W_exposures": []
+ },
+ "ctl0290|e4": {
+  "forced": {
+   "f_sw": 1.0559046012668718,
+   "f_lw": -0.006005596333076639,
+   "e_lw": 0.00998512549479661,
+   "chromatic_veto": true
+  },
+  "F200W_exposures": [
+   {
+    "exposure": "jw05105006005_02101_00002_nrca1",
+    "flux_ujy": NaN,
+    "n_jump": 0,
+    "n_ap": 71
+   },
+   {
+    "exposure": "jw05105006006_02101_00001_nrcb2",
+    "flux_ujy": 181.4553,
+    "n_jump": 48,
+    "n_ap": 71
+   }
+  ]
+ },
+ "ctl0294|e5": {
+  "forced": {
+   "f_sw": 0.4416766832939103,
+   "f_lw": 0.0067257819389413675,
+   "e_lw": 0.01091519069746383,
+   "chromatic_veto": false
+  },
+  "F200W_exposures": [
+   {
+    "exposure": "jw05105008004_02101_00001_nrca2",
+    "flux_ujy": -0.0009,
+    "n_jump": 0,
+    "n_ap": 75
+   },
+   {
+    "exposure": "jw05105008004_02101_00002_nrca4",
+    "flux_ujy": 1.1337,
+    "n_jump": 31,
+    "n_ap": 75
+   }
+  ]
+ },
+ "ctl0298|e7": {
+  "forced": {
+   "f_sw": 1.1559781146807642,
+   "f_lw": 0.009327549419054969,
+   "e_lw": 0.01573293776812149,
+   "chromatic_veto": true
+  },
+  "F200W_exposures": [
+   {
+    "exposure": "jw05105012002_02101_00002_nrcb3",
+    "flux_ujy": 0.5542,
+    "n_jump": 48,
+    "n_ap": 72
+   }
+  ]
+ },
+ "nexus-d73390": {
+  "F200W": {
+   "epoch_median_cal_ujy_r015": {
+    "0": 5.707,
+    "1": 6.012,
+    "5": 5.203,
+    "6": 5.801
+   },
+   "max_over_min": 1.156,
+   "min_over_max": 0.865
+  },
+  "F444W": {
+   "epoch_median_cal_ujy_r015": {
+    "0": 3.895,
+    "5": 3.438
+   },
+   "max_over_min": 1.133,
+   "min_over_max": 0.883
+  },
+  "F200W_i2d_forced_max_over_min": 2.031
+ },
+ "nexus-d79956": {
+  "F200W_forced": [
+   0.022,
+   0.042,
+   null,
+   0.02,
+   0.019,
+   0.096,
+   0.16,
+   0.118
+  ],
+  "F444W_forced": [
+   0.011,
+   0.014,
+   null,
+   0.002,
+   0.012,
+   0.035,
+   0.056,
+   0.048
+  ],
+  "cal_e6": [
+   {
+    "exposure": "jw05105010003_02101_00002_nrcb3",
+    "flux_ujy": 0.1581,
+    "n_jump": 0,
+    "n_ap": 73
+   },
+   {
+    "exposure": "jw05105010003_02101_00002_nrcblong",
+    "flux_ujy": 0.0568,
+    "n_jump": 0,
+    "n_ap": 18
+   }
+  ],
+  "simbad_5arcsec": "no object",
+  "ned": "not checked (query timed out after 60 s)",
+  "tns": "not checked (HTTP 403 from the TNS load balancer for unauthenticated requests)"
+ }
+}

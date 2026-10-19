@@ -278,6 +278,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | — | — | — | 0.3 (orientation; queue check: the two open-looking lensing items, the halo-phot elongation gate and the off-arc veto control, were already done; TASKS synced; PR) | cloud routine 01Hea1QD, 07:12–07:45Z |
 | 2026-W43 | — | — | — | 0.25 (orientation; the in-flight W3 ZTF v11 branch was merged as #365 by its own session during this run; queue still blocked on owner decisions per the 07:12 handoff; no unit started) | cloud routine 017cBF6W, 08:09–08:35Z |
 | 2026-W43 | ≈ 0.25 (W3 dimming Abell 2744 forced stage: frozen plan, 300 controls, calibrated, null, limits) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine 0125PxUc, 09:09–09:45Z |
+| 2026-W43 | — | — | ≈ 0.3 (NEXUS W3 survivors: frozen plan, `_cal` exposure tool, chromatic veto (post hoc), 5 survivors + controls vetted, sheets looked at; 0 W3 events) | 0.1 (orientation, claim, state files, PR) | cloud routine 01Goi7d2, 11:12–11:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
