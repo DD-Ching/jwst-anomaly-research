@@ -216,8 +216,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        an ICL-aware total (local background or ICL-subtracted) would remove the halo-light flags;
      - totals for arcs inside cluster-galaxy/ICL light: `scripts/halo_phot.py` explains Abell 2744 602.1c (600.1 is
        a resolved spiral, untestable; D-032 addendum; `_phot_apcorr` rejected). Run on all three fields (2026-10-13: no anomaly; scatter 0.10–0.27 mag on the
-       compact subset; El Gordo 1c is a thin arc that passed the concentration gate). Next: an elongation gate
-       validated on PSF stars and known arcs, re-run, then feed it to `fluxratios` and `--mu-samples 100`;
+       compact subset; El Gordo 1c is a thin arc that passed the concentration gate). ~~Elongation gate, re-run,
+       `fluxratios --halo-phot --mu-samples 100`~~ done 2026-10-13 (D-032 addenda; `results/halo_phot/abell2744_all/`:
+       one flag, A2744-QSO1, ordinary);
      - ~~`bayes.dat` μ errors~~ — done (D-032 addendum 2026-10-13, `--mu-samples`): model error 0.04–0.07 mag
        median against a 0.32–0.36 mag scatter floor; no new flag. SMACS 6.3 needs a chain (Mahler+22 pins none);
      - ~~MACS0416 halo fluxes~~ — done (D-032 addendum 2026-10-14, `macs0416-canucs`): 5 systems testable, no
@@ -402,7 +403,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        rosette and dipole vetoes).
 
      **No new arc box until the off-arc efficiency is understood.** Options for the owner:
-     - a no-injection control of the vetoed positions;
+     - ~~a no-injection control of the vetoed positions~~ done 2026-10-16 (`results/transients/veto_control/RESULT.md`:
+       frozen outcome mixed, 19 / 19 vetoed and 15 / 19 passed off-mask positions carry a pre-existing negative lobe,
+       so it does not separate them; next diagnostic: a location-aware lobe measure on re-made injected maps);
      - accept 0.34 and state it per box. This would loosen the frozen R2 threshold, so it needs an owner decision and
        a new plan.
 
