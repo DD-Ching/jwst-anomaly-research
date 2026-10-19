@@ -29,7 +29,7 @@ Frozen 2026-10-19 19:12 UTC (cloud routine), before any weight map was read. Fro
   over-counts edges, and the swap needs a weight-map coverage term in screen and injections before its gain is
   quoted (the corrected gain is reported). Otherwise the scoped gain stands (still an upper bound, as scoped).
 
-## Addendum: gate V2 (re-frozen 2026-10-19 21:25 UTC, cloud routine; before any stamp was read)
+## Addendum: gate V2 (re-frozen 2026-10-19 21:11 UTC, cloud routine; before any stamp was read)
 Deviation from the first plan: gate V failed as written because its target set was mis-specified (RESULT.md).
 V2 tests `edge_pair` against an independent per-(source, epoch) reference on the population the decision is about.
 - **Pairs tested:** every proxy-covered F200W (source, epoch) pair of the injection set (`monitored` and unflagged)

@@ -83,7 +83,7 @@ GATE_V2_FALSE_MAX = 0.05  # P(edge_pair | not stamp_edge) (ASSUMPTION)
 def stamp_edge(quality_flag, on_edge, frac_nan, wht_rel) -> np.ndarray:
     """Per-(source, epoch) ``forced`` stamp cuts (PLAN.md addendum): outside, or on_edge, or
     frac_nan > 0.1, or wht_rel < WHT_REL_MIN (NaN counts as low)."""
-    outside = np.array([str(q) == "outside" for q in np.atleast_1d(quality_flag)])
+    outside = np.array(["outside" in str(q).split(",") for q in np.atleast_1d(quality_flag)])
     fn = np.nan_to_num(np.asarray(frac_nan, float), nan=1.0)
     wr = np.nan_to_num(np.asarray(wht_rel, float), nan=0.0)
     return outside | np.asarray(on_edge, bool) | (fn > 0.1) | (wr < WHT_REL_MIN)
