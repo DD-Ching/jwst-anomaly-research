@@ -185,7 +185,9 @@ def main(argv: list[str] | None = None) -> int:
                 "posthoc": {
                     "d_at_prediction_njy": round(d_pred, 1),
                     "n_disc_outside_core": int(outer.size),
-                    "delta_max_outside_core_njy": round(float(np.nanmax(outer)), 1),
+                    "delta_max_outside_core_njy": (
+                        round(float(np.nanmax(outer)), 1) if np.isfinite(outer).any() else None
+                    ),
                     "outcome_outside_core": outcome_psfmatch(outer, sig, thr, 0.0, inj, ctrl),
                 },
             }
