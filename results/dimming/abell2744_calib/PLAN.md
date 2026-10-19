@@ -1,6 +1,6 @@
 # W3 dimming screen: calibrate the Abell 2744 forced stage (D-052 "Revisit if": S3 cutout jobs work again)
 
-Frozen 2026-10-19 09:25 UTC, before any run.
+Frozen 2026-10-19 09:11 UTC (commit 7953081), before any run.
 
 - **Question.** D-052's headline W3 limits use MACS0416 only (34 sources); Abell 2744's forced stage was never
   calibrated because the S3 multi-target jobs failed on 2026-10-08. Can the Abell 2744 forced stage now be
