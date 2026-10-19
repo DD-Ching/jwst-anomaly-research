@@ -55,7 +55,7 @@ def main(argv: list[str] | None = None) -> int:
     res = repro_gate(Table.read(args.limits), MACS0416_D052)
     args.out.write_text(json.dumps(res, indent=1) + "\n")
     print(json.dumps({"passed": res["passed"]}))
-    return 0
+    return 0 if res["passed"] else 1
 
 
 if __name__ == "__main__":
