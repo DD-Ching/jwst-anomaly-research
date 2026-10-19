@@ -12,7 +12,8 @@ delays. Plan: ``results/transients/smacs_at2024jfz/PLAN.md`` (frozen before the 
 * ``testable`` (the frozen rule) says whether a counter-image repeats the event inside a public
   JWST epoch bright enough to be seen.
 
-Outputs (``--out``): ``result.json`` (model_prediction / derived).
+Outputs (``--out``): ``result.json`` (model_prediction), ``sanity.json`` (derived); post hoc
+``--fetch-epochs`` writes ``mast_epochs.json`` (observed) and ``--posthoc`` ``posthoc.json``.
 """
 
 from __future__ import annotations
@@ -88,7 +89,7 @@ def delay_factor_days(cosmo, z_l: float, z_s: float) -> float:
     """(1 + z_l) D_l D_s / (c D_ls) in days per arcsec^2."""
     dl = cosmo.angular_diameter_distance(z_l)
     ds = cosmo.angular_diameter_distance(z_s)
-    dls = cosmo.angular_diameter_distance_z1z2(z_l, z_s)
+    dls = cosmo.angular_diameter_distance(z_l, z_s)
     return float(
         ((1 + z_l) * dl * ds / (const.c * dls) * (u.arcsec.to(u.rad)) ** 2).to(u.day).value
     )
@@ -141,19 +142,23 @@ def solve(model, grid, z_s: float) -> dict:
                 "next_window_mjd": None
                 if k == i0 or F0_NJY * abs(ratio) < MIN_FLUX_NJY
                 else [
-                    round(T0_MJD + delay - WINDOW_DAYS[1], 1),
-                    round(T0_MJD + delay - WINDOW_DAYS[0], 1),
+                    round(T0_MJD + delay + WINDOW_DAYS[0], 1),
+                    round(T0_MJD + delay + WINDOW_DAYS[1], 1),
                 ],
             }
         )
     tested = any(r["testable_epochs_mjd"] for r in rows)
+    if worst > PATH_TOL:  # frozen gate: the delays are not trusted, so no outcome
+        outcome = "stopped: path check failed"
+    else:
+        outcome = "testable" if tested else "not testable"
     return out | {
         "n_images": len(rows),
         "tns_to_reference_arcsec": round(float(d0[i0]), 3),
         "days_per_arcsec2": round(tfac, 3),
         "path_check_max_rel_diff": float(f"{worst:.3g}"),
         "path_check_pass": worst <= PATH_TOL,
-        "outcome": "testable" if tested else "not testable",
+        "outcome": outcome,
         "images": rows,
     }
 
@@ -161,7 +166,7 @@ def solve(model, grid, z_s: float) -> dict:
 def posthoc(model, grid, out: Path) -> None:
     """Post hoc (not in the plan): a finer z_s grid against every MAST epoch in mast_epochs.json."""
     epochs = json.loads((out / "mast_epochs.json").read_text())["epochs"]
-    days = sorted({round(float(e[3]), 1) for e in epochs})
+    days = sorted({round(float(e[3]), 3) for e in epochs})
     rows = []
     for z in np.round(np.arange(1.0, 2.51, 0.05), 3):
         r = solve(model, grid, float(z))
@@ -183,7 +188,9 @@ def posthoc(model, grid, out: Path) -> None:
     doc = {
         "provenance": "model_prediction",
         "note": "post hoc (not in PLAN.md): z_s 1.00-2.50 step 0.05; epochs = unique days of "
-        "mast_epochs.json (HST and JWST, any instrument); footprint coverage not checked",
+        "mast_epochs.json (HST and JWST, any instrument); footprint coverage not checked; "
+        "the NIRCam flux threshold of the frozen rule is applied to every instrument "
+        "(other depths not checked); delays rounded to 0.1 d",
         "epochs_mjd": days,
         "rows": rows,
     }
@@ -193,13 +200,92 @@ def posthoc(model, grid, out: Path) -> None:
             print("posthoc", row)
 
 
+#: Catalogued system 6 images (Mahler+22 ICLv2 arcs.dat; sha256 in SMACS0723_MAHLER22_ICLV2).
+SYSTEM6 = {
+    "6.1": (110.8358540, -73.4518199),
+    "6.2": (110.8367611, -73.4530868),
+    "6.3": (110.8303933, -73.4608436),
+}
+
+
+def sanity(res: dict) -> dict:
+    """Separation of every predicted image from the nearest catalogued system 6 image (derived)."""
+    from astropy.coordinates import SkyCoord
+
+    cat = SkyCoord([v[0] for v in SYSTEM6.values()], [v[1] for v in SYSTEM6.values()], unit="deg")
+    rows = []
+    for run in res["runs"]:
+        for im in run["images"]:
+            d = SkyCoord(im["ra"], im["dec"], unit="deg").separation(cat).arcsec
+            k = int(np.argmin(d))
+            rows.append(
+                {
+                    "z_s": run["z_s"],
+                    "ra": im["ra"],
+                    "dec": im["dec"],
+                    "nearest": list(SYSTEM6)[k],
+                    "sep_arcsec": round(float(d[k]), 2),
+                }
+            )
+    return {
+        "provenance": "derived",
+        "note": "separation of each predicted image (result.json) from the catalogued system 6 "
+        "images of Mahler+22 ICLv2 arcs.dat (pinned sha256 in lensmodel.SMACS0723_MAHLER22_ICLV2)",
+        "catalogued_system6": SYSTEM6,
+        "rows": rows,
+    }
+
+
+def fetch_epochs(out: Path) -> None:
+    """mast_epochs.json: HST and JWST imaging days within 0.02 deg (observed, MAST metadata)."""
+    from astroquery.mast import Observations
+
+    query = dict(
+        coordinates="110.8350 -73.4530",
+        radius="0.02 deg",
+        t_min=[54000, 61500],
+        dataproduct_type=["image"],
+        intentType="science",
+        calib_level=[3],
+    )
+    t = Observations.query_criteria(**query)
+    t = t[np.argsort(t["t_min"])]
+    rows, seen = [], set()
+    for r in t:
+        key = (str(r["obs_collection"]), str(r["proposal_id"]), round(float(r["t_min"]), 0))
+        if key in seen or key[0] in ("TESS", "HLSP"):  # 21" pixels; HLSP repeats them
+            continue
+        seen.add(key)
+        rows.append(
+            [
+                key[0],
+                str(r["instrument_name"]),
+                str(r["filters"]),
+                round(float(r["t_min"]), 2),
+                key[1],
+            ]
+        )
+    doc = {
+        "provenance": "observed",
+        "query": f"astroquery.mast Observations.query_criteria(**{query}); first row per "
+        "(collection, program, day); TESS and HLSP rows dropped; footprint coverage of each "
+        "predicted position not checked",
+        "epochs": rows,
+    }
+    (out / "mast_epochs.json").write_text(json.dumps(doc, indent=1) + "\n")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=Path("results/transients/smacs_at2024jfz"))
     ap.add_argument("--half-width", type=float, default=60.0)
     ap.add_argument("--step", type=float, default=0.1)
     ap.add_argument("--posthoc", action="store_true", help="finer z grid vs mast_epochs.json")
+    ap.add_argument("--fetch-epochs", action="store_true", help="write mast_epochs.json (MAST)")
     args = ap.parse_args(argv)
+    if args.fetch_epochs:
+        fetch_epochs(args.out)
+        return 0
     model, _files, _par = lc.load_model(MODEL)
     grid = lensmodel.DeflectionGrid.cached(
         model, lc.grid_cache_path(model, args.half_width, args.step), args.half_width, args.step
@@ -220,6 +306,7 @@ def main(argv=None) -> int:
     }
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "result.json").write_text(json.dumps(res, indent=1) + "\n")
+    (args.out / "sanity.json").write_text(json.dumps(sanity(res), indent=1) + "\n")
     for r in res["runs"]:
         print(r["z_s"], r.get("n_images"), r.get("outcome"), r.get("path_check_max_rel_diff"))
         for im in r["images"]:

@@ -73,8 +73,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      61091.9,
-      61123.9
+      61119.9,
+      61151.9
      ]
     },
     {
@@ -87,8 +87,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      60987.6,
-      61019.6
+      61015.6,
+      61047.6
      ]
     },
     {
@@ -139,8 +139,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      60497.3,
-      60529.3
+      60525.3,
+      60557.3
      ]
     },
     {
@@ -153,8 +153,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      56914.4,
-      56946.4
+      56942.4,
+      56974.4
      ]
     }
    ]
@@ -194,8 +194,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      60442.8,
-      60474.8
+      60470.8,
+      60502.8
      ]
     },
     {
@@ -208,8 +208,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      54948.2,
-      54980.2
+      54976.2,
+      55008.2
      ]
     }
    ]
@@ -249,8 +249,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      60414.4,
-      60446.4
+      60442.4,
+      60474.4
      ]
     },
     {
@@ -263,8 +263,8 @@
      "reference_image": false,
      "testable_epochs_mjd": [],
      "next_window_mjd": [
-      51643.9,
-      51675.9
+      51671.9,
+      51703.9
      ]
     }
    ]
@@ -306,8 +306,8 @@
       60441.8
      ],
      "next_window_mjd": [
-      60411.8,
-      60443.8
+      60439.8,
+      60471.8
      ]
     },
     {

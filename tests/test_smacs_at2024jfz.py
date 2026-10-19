@@ -37,13 +37,20 @@ def test_sis_delay_matches_analytic():
     p_plus, p_minus = (beta + te, 0.0), (beta - te, 0.0)
     # path that avoids the singular centre: via a corner off-axis
     dpsi = s.psi_difference(deflect, p_plus, p_minus, via=(0.0, 1.0))
-    # straight path through the corner pieces is not used here; compare with the analytic psi
     assert dpsi == pytest.approx(te * abs(p_minus[0]) - te * abs(p_plus[0]), abs=2e-3)
     phi = [0.5 * (p[0] - beta) ** 2 for p in (p_plus, p_minus)]
     dphi = (phi[1] - dpsi) - phi[0]
     assert dphi == pytest.approx(
         2 * te * beta, abs=2e-3
     )  # analytic SIS: delta phi = 2 theta_E beta
+
+
+def test_delay_factor_matches_independent_value():
+    # MACS0417 h002 recipe (#308): z_l 0.443, z_s 0.8718, flat H0 70, Om 0.3 -> 110.66 d / arcsec^2
+    from astropy.cosmology import FlatLambdaCDM
+
+    cosmo = FlatLambdaCDM(H0=70, Om0=0.3)
+    assert s.delay_factor_days(cosmo, 0.443, 0.8718) == pytest.approx(110.66, abs=0.01)
 
 
 def test_path_independence_smooth_field():

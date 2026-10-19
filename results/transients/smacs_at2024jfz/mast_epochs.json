@@ -1,6 +1,6 @@
 {
  "provenance": "observed",
- "query": "astroquery.mast Observations.query_criteria(coordinates='110.8350 -73.4530', radius='0.02 deg', t_min=[54000, 61500], dataproduct_type=['image'], intentType='science', calib_level=[3]); first row per (collection, program, day); queried 2026-10-19; footprint coverage of each predicted position not checked; TESS and HLSP rows dropped (21 arcsec pixels)",
+ "query": "astroquery.mast Observations.query_criteria(**{'coordinates': '110.8350 -73.4530', 'radius': '0.02 deg', 't_min': [54000, 61500], 'dataproduct_type': ['image'], 'intentType': 'science', 'calib_level': [3]}); first row per (collection, program, day); TESS and HLSP rows dropped; footprint coverage of each predicted position not checked",
  "epochs": [
   [
    "HST",
@@ -11,15 +11,15 @@
   ],
   [
    "HLA",
-   "WFPC2/PC",
-   "F606W",
+   "WFPC2/WFC",
+   "DETECTION",
    54512.3,
    "11103"
   ],
   [
    "HST",
    "WFPC2/PC",
-   "F814W",
+   "detection",
    54791.02,
    "11103"
   ],
@@ -33,7 +33,7 @@
   [
    "HLA",
    "ACS/WFC",
-   "DETECTION",
+   "F606W",
    55758.27,
    "12166"
   ],
@@ -53,13 +53,6 @@
   ],
   [
    "HLA",
-   "ACS/WFC",
-   "DETECTION",
-   56562.08,
-   "12884"
-  ],
-  [
-   "HST",
    "ACS/WFC",
    "F814W",
    56562.08,
@@ -70,40 +63,47 @@
    "ACS/WFC",
    "F814W",
    56562.08,
+   "12884"
+  ],
+  [
+   "HST",
+   "ACS/WFC",
+   "F814W",
+   56562.08,
+   "--"
+  ],
+  [
+   "HLA",
+   "ACS/WFC",
+   "F435W",
+   57817.64,
+   "14096"
+  ],
+  [
+   "HST",
+   "ACS/WFC",
+   "F435W",
+   57817.64,
+   "14096"
+  ],
+  [
+   "HST",
+   "ACS/WFC",
+   "F435W",
+   57817.64,
    "--"
   ],
   [
    "HLA",
    "ACS/WFC",
    "DETECTION",
-   57817.64,
-   "14096"
-  ],
-  [
-   "HST",
-   "ACS/WFC",
-   "F435W",
-   57817.64,
-   "14096"
-  ],
-  [
-   "HST",
-   "ACS/WFC",
-   "F435W",
-   57817.64,
-   "--"
-  ],
-  [
-   "HLA",
-   "ACS/WFC",
-   "F606W",
    57858.72,
    "14096"
   ],
   [
    "HST",
    "ACS/WFC",
-   "F606W",
+   "detection",
    57858.72,
    "14096"
   ],
@@ -117,7 +117,7 @@
   [
    "HST",
    "WFC3/IR",
-   "F140W",
+   "detection",
    57874.28,
    "14096"
   ],
@@ -138,35 +138,35 @@
   [
    "HLA",
    "WFC3/IR",
-   "F140W",
+   "DETECTION",
    57889.12,
    "14096"
   ],
   [
    "HST",
    "WFC3/IR",
-   "F140W",
+   "detection",
    57889.12,
    "14096"
   ],
   [
    "HLA",
    "WFC3/IR",
-   "F125W",
+   "DETECTION",
    57938.89,
    "14096"
   ],
   [
    "HST",
    "WFC3/IR",
-   "F125W",
+   "detection",
    57938.89,
    "14096"
   ],
   [
    "HLA",
    "WFC3/IR",
-   "F160W",
+   "DETECTION",
    57939.95,
    "14096"
   ],
@@ -250,7 +250,7 @@
   [
    "HST",
    "WFC3/IR",
-   "detection",
+   "F160W",
    61243.12,
    "18297"
   ],

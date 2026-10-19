@@ -1,30 +1,31 @@
 {
  "provenance": "model_prediction",
- "note": "post hoc (not in PLAN.md): z_s 1.00-2.50 step 0.05; epochs = unique days of mast_epochs.json (HST and JWST, any instrument); footprint coverage not checked",
+ "note": "post hoc (not in PLAN.md): z_s 1.00-2.50 step 0.05; epochs = unique days of mast_epochs.json (HST and JWST, any instrument); footprint coverage not checked; the NIRCam flux threshold of the frozen rule is applied to every instrument (other depths not checked); delays rounded to 0.1 d",
  "epochs_mjd": [
   54512.3,
-  54791.0,
-  55758.3,
-  56562.1,
-  57817.6,
-  57858.7,
-  57874.3,
-  57880.5,
-  57889.1,
-  57938.9,
-  57939.9,
-  59713.1,
-  59737.0,
-  59744.2,
-  59747.3,
-  59861.0,
-  60441.7,
-  60558.0,
-  61196.9,
-  61227.7,
-  61243.1,
-  61248.1,
-  61253.8
+  54791.02,
+  55758.27,
+  56562.08,
+  57817.64,
+  57858.72,
+  57874.28,
+  57880.48,
+  57889.12,
+  57938.89,
+  57939.95,
+  59713.09,
+  59713.11,
+  59737.02,
+  59744.17,
+  59747.32,
+  59861.02,
+  60441.72,
+  60557.96,
+  61196.91,
+  61227.74,
+  61243.12,
+  61248.14,
+  61253.75
  ],
  "rows": [
   {
@@ -161,7 +162,7 @@
    "mu_ratio": -0.8425,
    "delay_days": 114.0,
    "testable_epochs_mjd": [
-    60558.0
+    60557.96
    ]
   },
   {
@@ -181,7 +182,7 @@
    "mu_ratio": -0.8375,
    "delay_days": 93.9,
    "testable_epochs_mjd": [
-    60558.0
+    60557.96
    ]
   },
   {
@@ -318,7 +319,7 @@
    "mu_ratio": 0.198,
    "delay_days": -5678.8,
    "testable_epochs_mjd": [
-    54791.0
+    54791.02
    ]
   },
   {
