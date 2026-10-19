@@ -73,3 +73,39 @@ def decision(exp_masked: np.ndarray, exp_unmasked: np.ndarray) -> str:
     m, u = np.asarray(exp_masked, float), np.asarray(exp_unmasked, float)
     drop = 1.0 - m / u
     return "over_counts" if bool(np.any(drop > EXPOSURE_DROP_MAX)) else "gain_stands"
+
+
+GATE_V2_MIN_POS = 10  # reference-positive pairs needed (ASSUMPTION)
+GATE_V2_SENS_MIN = 0.80  # P(edge_pair | stamp_edge) (ASSUMPTION)
+GATE_V2_FALSE_MAX = 0.05  # P(edge_pair | not stamp_edge) (ASSUMPTION)
+
+
+def stamp_edge(quality_flag, on_edge, frac_nan, wht_rel) -> np.ndarray:
+    """Per-(source, epoch) ``forced`` stamp cuts (PLAN.md addendum): outside, or on_edge, or
+    frac_nan > 0.1, or wht_rel < WHT_REL_MIN (NaN counts as low)."""
+    outside = np.array(["outside" in str(q).split(",") for q in np.atleast_1d(quality_flag)])
+    fn = np.nan_to_num(np.asarray(frac_nan, float), nan=1.0)
+    wr = np.nan_to_num(np.asarray(wht_rel, float), nan=0.0)
+    return outside | np.asarray(on_edge, bool) | (fn > 0.1) | (wr < WHT_REL_MIN)
+
+
+def gate_v2(edge: np.ndarray, ref: np.ndarray) -> dict:
+    """Gate V2 on paired boolean arrays: 'passed' iff >= GATE_V2_MIN_POS reference positives,
+    sensitivity >= GATE_V2_SENS_MIN and false-edge rate <= GATE_V2_FALSE_MAX."""
+    e, r = np.asarray(edge, bool), np.asarray(ref, bool)
+    npos, nneg = int(r.sum()), int((~r).sum())
+    sens = float((e & r).sum() / npos) if npos else float("nan")
+    false = float((e & ~r).sum() / nneg) if nneg else float("nan")
+    if npos < GATE_V2_MIN_POS:
+        verdict = "undetermined"
+    elif sens >= GATE_V2_SENS_MIN and false <= GATE_V2_FALSE_MAX:
+        verdict = "passed"
+    else:
+        verdict = "failed"
+    return {
+        "n_ref_pos": npos,
+        "n_ref_neg": nneg,
+        "sensitivity": sens,
+        "false_edge": false,
+        "verdict": verdict,
+    }

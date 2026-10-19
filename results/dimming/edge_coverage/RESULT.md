@@ -48,3 +48,34 @@ established).
    with `edge_pair` both ways (false-edge rate on interior controls too). A finer grid (8 px) where needed.
 2. If it passes, read the decision; if `over_counts`, add a weight-map coverage term to `build_light_curves`
    coverage before the D-039 swap and re-run `inject` for the headline.
+
+## Gate V2 (PLAN.md addendum, frozen 21:11 UTC before any stamp was read): passed; decision `over_counts`
+Run 2026-10-19 21:13–21:19 UTC (`gate_v2.py`; `gate_v2.json`, `gate_v2/pairs_<field>.ecsv`). The 608 proxy-covered
+injection pairs are the same as at the first run (90 / 125 / 393).
+- **Gate V2, pooled (the frozen test): passed.** 59 reference (`stamp_edge`) positives; sensitivity 0.915
+  (≥ 0.80), false-edge rate 0.0455 (≤ 0.05). Per field (descriptive, not gated): MACS0416 1.00 / 0.026,
+  Abell 2744 1.00 / 0.042 (6 positives), NEXUS 0.872 / 0.051 (just above the 0.05 limit).
+- **Frozen decision on the committed `summary.json`: `over_counts`.** Joint veto-off exposure with edge pairs masked
+  is ×0.81–0.87 of the unmasked one (drop > 10 % at every t_E).
+- **Sheet (`sheet_v2.png`, the 30 disagreements, looked at):** of the 25 `grid only` pairs, most show a weight step
+  (fewer exposures or a chip gap) within about 1″ but a clean 2″ core; the 32-pixel 3 × 3 grid box reaches beyond the
+  stamp, so the grid rule is the more conservative of the two. The 5 `stamp only` pairs have a partial data edge or a
+  low-weight patch inside the stamp.
+- **Sensitivity (post hoc; `run_stamp.py`, `gate_v2/stamp_sensitivity.json`):** masking the injection-set pairs by
+  `stamp_edge` instead (the grid rule elsewhere): veto-off ×0.84–0.93 of unmasked, so `edge.decision` still reads
+  `over_counts` (drop > 10 % at t_E 0.01, 0.1 and 3 yr). Veto-off / veto-on gain ×2.04–3.35; veto-on exposure
+  ×0.77–1.06 of the committed one.
+
+### Reading (narrowest statement)
+- The screen's catalogue-count coverage proxy counts as covered some injection pairs that the F200W weight maps place
+  at mosaic edges or low weight. Under the frozen rule that is material: the veto-off what-if exposure for the D-039
+  swap is overstated by 7–19 % (range over the two masks and six t_E), and the committed veto-on headline limits may be
+  optimistic by up to about 23–25 % at t_E = 3 yr (derived, both masks; not yet a corrected limit).
+- ASSUMPTIONs: the F444W footprint follows F200W; thresholds 0.5 (weight), 0.80 / 0.05 (gate), 10 % (decision).
+- Limitation: the stamp reference uses the same `WHT` maps (at pixel scale on a 2″ box), so it checks the grid
+  sampling, not the weight maps themselves.
+
+### Next
+Add a weight-map coverage term (the `stamp_edge` rule, or the grid rule as the conservative one) to the screen's
+coverage in `build_light_curves`, re-run `inject` for the three fields, and quote corrected headline limits before
+the D-039 swap gain is used.

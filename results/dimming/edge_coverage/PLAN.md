@@ -28,3 +28,19 @@ Frozen 2026-10-19 19:12 UTC (cloud routine), before any weight map was read. Fro
   exposure (three fields, ρ = 0.1) is below the unmasked veto-off exposure by > 10 % at any t_E, the chain
   over-counts edges, and the swap needs a weight-map coverage term in screen and injections before its gain is
   quoted (the corrected gain is reported). Otherwise the scoped gain stands (still an upper bound, as scoped).
+
+## Addendum: gate V2 (re-frozen 2026-10-19 21:11 UTC, cloud routine; before any stamp was read)
+Deviation from the first plan: gate V failed as written because its target set was mis-specified (RESULT.md).
+V2 tests `edge_pair` against an independent per-(source, epoch) reference on the population the decision is about.
+- **Pairs tested:** every proxy-covered F200W (source, epoch) pair of the injection set (`monitored` and unflagged)
+  in the three fields, as in `run.py` (393 + 90 + 125 pairs at the first run).
+- **Reference flag (rule `edge.stamp_edge`, unit-tested):** the `forced` stamp cuts of that one epoch, from a 2″
+  `cutouts.make_cutouts` stamp of the F200W i2d with `WHT`: `quality_flag == "outside"`, or `on_edge`, or
+  `frac_nan > 0.1`, or `wht_rel < 0.5` (NaN counts as low). Per pair, not OR'ed over epochs.
+- **Gate V2 (function `edge.gate_v2`, ASSUMPTION thresholds):** pooled over the three fields, with
+  ≥ 10 reference-positive pairs: sensitivity P(edge_pair | ref) ≥ 0.80 **and** false-edge rate
+  P(edge_pair | not ref) ≤ 0.05 → `passed`; either fails → `failed`; < 10 reference positives → `undetermined`.
+- **If passed:** read the frozen `edge.decision` on the committed `summary.json` joint veto-off exposures (masked
+  vs unmasked; already computed with the same `edge_pair`). **If failed or undetermined:** no decision; record.
+- **What changes the plan:** `over_counts` → a weight-map coverage term before the D-039 swap; `gain_stands` →
+  the scoped gain stands as an upper bound.

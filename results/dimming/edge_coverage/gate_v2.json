@@ -1,0 +1,32 @@
+{
+ "n_ref_pos": 59,
+ "n_ref_neg": 549,
+ "sensitivity": 0.9152542372881356,
+ "false_edge": 0.04553734061930783,
+ "verdict": "passed",
+ "per_field": {
+  "macs0416": {
+   "n_ref_pos": 14,
+   "n_ref_neg": 76,
+   "sensitivity": 1.0,
+   "false_edge": 0.02631578947368421,
+   "verdict": "passed"
+  },
+  "abell2744": {
+   "n_ref_pos": 6,
+   "n_ref_neg": 119,
+   "sensitivity": 1.0,
+   "false_edge": 0.04201680672268908,
+   "verdict": "undetermined"
+  },
+  "nexus": {
+   "n_ref_pos": 39,
+   "n_ref_neg": 354,
+   "sensitivity": 0.8717948717948718,
+   "false_edge": 0.05084745762711865,
+   "verdict": "failed"
+  }
+ },
+ "decision": "over_counts",
+ "provenance": "derived"
+}
