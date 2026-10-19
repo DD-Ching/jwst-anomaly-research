@@ -1,0 +1,100 @@
+{
+ "label": "derived; frozen v6 rule (v12 PLAN section 5) applied by code",
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "recovered": 150,
+   "n": 200,
+   "distinct_stars": 160,
+   "rate": 0.75
+  },
+  "rho0.01_blend1_tE30": {
+   "recovered": 173,
+   "n": 200,
+   "distinct_stars": 166,
+   "rate": 0.865
+  },
+  "rho0.01_blend1_tE100": {
+   "recovered": 150,
+   "n": 200,
+   "distinct_stars": 174,
+   "rate": 0.75
+  },
+  "rho0.1_blend1_tE10": {
+   "recovered": 130,
+   "n": 200,
+   "distinct_stars": 172,
+   "rate": 0.65
+  },
+  "rho0.1_blend1_tE30": {
+   "recovered": 122,
+   "n": 200,
+   "distinct_stars": 164,
+   "rate": 0.61
+  },
+  "rho0.01_blend0.7_tE10": {
+   "recovered": 138,
+   "n": 200,
+   "distinct_stars": 163,
+   "rate": 0.69
+  },
+  "rho0.01_blend0.7_tE30": {
+   "recovered": 155,
+   "n": 200,
+   "distinct_stars": 161,
+   "rate": 0.775
+  },
+  "rho0.01_blend0.7_tE100": {
+   "recovered": 136,
+   "n": 200,
+   "distinct_stars": 174,
+   "rate": 0.68
+  },
+  "rho0.1_blend0.7_tE10": {
+   "recovered": 117,
+   "n": 200,
+   "distinct_stars": 164,
+   "rate": 0.585
+  },
+  "rho0.1_blend0.7_tE30": {
+   "recovered": 84,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.42
+  }
+ },
+ "controls": {
+  "eclipse": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 172
+  },
+  "fade": {
+   "passed": 4,
+   "n": 200,
+   "rate": 0.02,
+   "distinct_stars": 162
+  },
+  "pspl": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 163
+  },
+  "common": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 157
+  }
+ },
+ "calibration_real_survivors": 0,
+ "calibration_flagged_runs": 16,
+ "conditions": {
+  "all_10_cells_ge_0.5": false,
+  "controls_le_0.10": true,
+  "calibration_survivors_le_5": true
+ },
+ "passed": false,
+ "carriers": 500
+}

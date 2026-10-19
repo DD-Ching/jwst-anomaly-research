@@ -5300,6 +5300,11 @@ confining radiation at a throat is found.
   ZTF batch, run the metadata check (`obs_script.py.txt`) before reading light curves, and use only areas whose
   worst-cell fraction is ≥ 0.5. Npix 7134 stays excluded. Revisit if: the owner wants a limit (not derived here) or
   another model range.
+- **Addendum 2026-10-19 (v12, `results/w3_ztf/v12/RESULT.md`):** a new-field area chosen the same way (Npix
+  2382; sampling indicator 0.6965) fails the frozen validation in one cell. At ρ 0.1, blend 0.7, t_E 30 d it recovers
+  84/200; 80 of the flagged losses fail the sharp-edge test first, with 171/200 flagged. The observing-condition check
+  therefore predicts sampling, not recognition. Decision: no further W3 / ZTF batches under the current rules. Revisit
+  if: the owner authorizes a re-specified edge test for finite-source events, under a new plan and a new validation.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

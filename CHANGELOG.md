@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 ZTF v12: new-field batch area Npix 2382 fails validation (ρ 0.1, blend 0.7, t_E 30 d at 0.42); search not executed
+- **Setup:** plan, dedupe list (4,072 earlier groups) and candidates were fixed before any read
+  (`results/w3_ztf/v12/`).
+- **Area check (metadata):** of 5 candidates, 4 qualify. 2382 (0.6965) and 8170 (0.6615) share no field with
+  earlier samples. Their partitions need 4.4 GB together, so the budget rule kept 2382 only.
+- **Npix 2382:** 3,000 new groups, 500 calibration and 2,500 search. 9 of 10 cells reach ≥ 0.5, but
+  ρ 0.1 / blend 0.7 / t_E 30 d recovers 84/200.
+  - Of the 87 flagged injections lost in that cell, 80 fail first on the frozen sharp-edge test (post hoc trace).
+    Sampling is not the limit: 171/200 are flagged.
+  - Controls ≤ 2 %; 0 calibration survivors.
+- **Not executed:** the 2,500 search groups. 8170 was not read. No threshold changed and no retry.
+- **Handoff:** W3 / ZTF is paused again. More areas would only add volume. The binding limit in dense-cadence data
+  is the sharp-edge test for finite-source (ρ 0.1) events; changing it is a method change that needs the owner.
+
 ## 2026-10-19: W3 ZTF v11: area chosen by observing conditions (Npix 3839) passes validation; 488 search groups, 0 flags
 - **Records fixed first** (`results/w3_ztf/v10/RESULT.md` addendum):
   - v10's 711 vs v6's 703 differs only in the noise realisation (per-expid seeds) on the same events; the re-read inputs have the same
