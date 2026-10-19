@@ -1,0 +1,19 @@
+{
+ "field": "abell2744",
+ "step_px": 32,
+ "n_master": 17669,
+ "n_injection_sources": 62,
+ "covered_pairs_injection": 125,
+ "edge_pairs_injection": 11,
+ "f_edge_injection": 0.088,
+ "injection_sources_with_edge_pair": 11,
+ "covered_pairs_all": 23825,
+ "edge_pairs_all": 3199,
+ "edge_pairs_per_epoch_injection": [
+  1,
+  4,
+  6
+ ],
+ "n_injection_sources_masked": 53,
+ "wall_s": 46
+}
