@@ -1,0 +1,33 @@
+{
+ "field": "nexus",
+ "term_off": {
+  "n_monitored": 151,
+  "n_injection_sources": 139,
+  "weight_edge_pairs": 0,
+  "weight_edge_sources": 0,
+  "n_flagged_compact_no_veto": 12,
+  "area_deg2": 0.022096836419753088
+ },
+ "gate_R0": true,
+ "term_on": {
+  "n_monitored": 129,
+  "n_injection_sources": 125,
+  "weight_edge_pairs": 18212,
+  "weight_edge_sources": 16196,
+  "n_flagged_compact_no_veto": 4,
+  "area_deg2": 0.021099537037037038
+ },
+ "gate_R1": true,
+ "flags_removed_by_term": [
+  "nexus-d12071",
+  "nexus-d22035",
+  "nexus-d22758",
+  "nexus-d22857",
+  "nexus-d30183",
+  "nexus-d45375",
+  "nexus-d45498",
+  "nexus-d47294"
+ ],
+ "flags_added_by_term": [],
+ "wall_s": 303
+}

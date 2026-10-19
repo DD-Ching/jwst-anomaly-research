@@ -25,6 +25,10 @@ Subcommands (configs/dimming_screen.yaml lists the fields and epochs):
   low weight, hexagonal spike statistic, D-018/D-021) and a SIMBAD/NED match, and draws an epoch
   contact sheet.
 
+``screen`` and ``inject`` apply a weight-map coverage term on top of the catalogue-count coverage
+proxy (S3 row reads of each epoch's detection-band i2d ``WHT``; ``--no-weight-coverage`` skips it):
+proxy-covered epochs at mosaic edges or low weight are uncovered (results/dimming/edge_coverage).
+
     python scripts/dimming_screen.py fetch --field nexus
     python scripts/dimming_screen.py screen --field nexus --out outputs/dimming/nexus
     python scripts/dimming_screen.py inject --field nexus --out outputs/dimming/nexus
@@ -85,6 +89,11 @@ class Params:
     bright_neighbour_arcsec: float = 1.5  # a much brighter neighbour this close -> veto
     bright_neighbour_ratio: float = 100.0
     sys_floor: float = 0.03  # fractional flux error floor added in quadrature (D-027: 0.03 mag)
+    # weight-map coverage term (results/dimming/edge_coverage gate V2): a proxy-covered epoch whose
+    # detection-band i2d WHT, sampled every wht_step_px pixels, has a 3 x 3 node minimum below
+    # wht_rel_min x the median positive WHT around the source is uncovered in every band
+    wht_rel_min: float = 0.5
+    wht_step_px: int = 32
 
 
 DEFAULT_PARAMS = Params()
@@ -864,15 +873,122 @@ def _times_yr(field: dict[str, Any]) -> np.ndarray:
     return np.array([float(e["mjd"]) for e in field["epochs"]]) / DAYS_PER_YEAR
 
 
-def _screen(field: dict[str, Any], p: Params, gaia: Table | None):
+def _screen(field: dict[str, Any], p: Params, gaia: Table | None, wht_cache: Path | None = None):
+    """Catalogues -> light curves -> flags and ordinary columns. With ``wht_cache`` (a ``.npz``
+    path) the weight-map coverage term is applied (``field_wht_rel``, network on a cache miss):
+    weight-edge pairs are uncovered after the noise scale and the ordinary columns, which stay
+    catalogue-based, and before the flags (the order of the gate V2 what-if, edge_coverage/run.py).
+    ``lc['weight_edge']`` holds the (source, epoch) mask (all False without the term)."""
     cats = load_catalogs(field)
     bands = field["bands"]
     lc = build_light_curves(cats, len(field["epochs"]), bands, p)
     scale = noise_scale(lc["flux"], lc["err_raw"], lc["det"])
     err = scaled_errors(lc["flux"], lc["err_raw"], scale, p.sys_floor)
-    res = classify(mask_shallow_nondetections(lc["flux"], err, lc["det"], p), err, p)
     ordn = ordinary_columns(lc, cats, bands, p, gaia)
+    edge = np.zeros(lc["flux"].shape[:2], bool)
+    if wht_cache is not None:
+        rel = field_wht_rel(field, lc["ra"], lc["dec"], p, wht_cache)
+        edge = weight_edge(np.isfinite(lc["flux"][:, :, 0]), rel, p)
+        lc, err = mask_weight_edges(lc, err, edge)
+    lc["weight_edge"] = edge
+    res = classify(mask_shallow_nondetections(lc["flux"], err, lc["det"], p), err, p)
     return cats, lc, scale, err, res, ordn
+
+
+# --------------------------------------------------------------------------------------------
+# weight-map coverage term (network: S3 row reads of the i2d WHT extension)
+
+
+def wht_grid(uri: str, step: int = 32, workers: int = 16) -> tuple[np.ndarray, Any]:
+    """Every ``step``-th row and column of ``WHT``; the WCS is the full image's (SCI header)."""
+    from astropy.io import fits
+    from astropy.wcs import WCS
+
+    kw = {"anon": True, "default_block_size": 2**18}
+    with fits.open(uri, use_fsspec=True, fsspec_kwargs=kw) as h:
+        wcs = WCS(h["SCI"].header)
+        ny = h["WHT"].header["NAXIS2"]
+    rows = np.arange(0, ny, step)
+
+    def chunk(rs):
+        with fits.open(uri, use_fsspec=True, fsspec_kwargs=kw) as h:
+            sec = h["WHT"].section
+            return [np.asarray(sec[int(r), :])[::step] for r in rs]
+
+    parts = np.array_split(rows, workers)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        out = [row for part in pool.map(chunk, parts) for row in part]
+    return np.array(out, dtype=np.float32), wcs
+
+
+def wht_rel(grid: np.ndarray, wcs, ra: np.ndarray, dec: np.ndarray, step: int) -> np.ndarray:
+    """Smallest WHT of the 3 x 3 grid nodes around each position over the median positive grid
+    WHT; NaN WHT counts as 0 and nodes off the grid as 0."""
+    g = np.nan_to_num(grid, nan=0.0)
+    med = float(np.median(g[g > 0])) if (g > 0).any() else np.nan
+    x, y = wcs.all_world2pix(ra, dec, 0)
+    gi = np.rint(np.asarray(y) / step).astype(int)
+    gj = np.rint(np.asarray(x) / step).astype(int)
+    out = np.full(len(gi), np.inf)
+    for di in (-1, 0, 1):
+        for dj in (-1, 0, 1):
+            i, j = gi + di, gj + dj
+            ok = (i >= 0) & (i < g.shape[0]) & (j >= 0) & (j < g.shape[1])
+            v = np.zeros(len(gi))
+            v[ok] = g[i[ok], j[ok]]
+            out = np.minimum(out, v)
+    return out / med
+
+
+def weight_edge(covered: np.ndarray, rel: np.ndarray, p: Params = DEFAULT_PARAMS) -> np.ndarray:
+    """Proxy-covered (source, epoch) pairs with ``rel < wht_rel_min``; NaN ``rel`` (no
+    detection-band image in that epoch) is not tested, so never an edge."""
+    r = np.asarray(rel, float)
+    with np.errstate(invalid="ignore"):
+        return np.asarray(covered, bool) & np.isfinite(r) & (r < p.wht_rel_min)
+
+
+def mask_weight_edges(lc: dict, err: np.ndarray, edge: np.ndarray) -> tuple[dict, np.ndarray]:
+    """Copies of ``lc`` and ``err`` with the ``edge`` (source, epoch) pairs uncovered (NaN flux and
+    error, not detected) in every band (ASSUMPTION: the other bands' footprint follows the
+    detection band's)."""
+    out = {**lc, "flux": lc["flux"].copy(), "det": lc["det"].copy()}
+    e = err.copy()
+    out["flux"][edge] = np.nan
+    out["det"][edge] = False
+    e[edge] = np.nan
+    return out, e
+
+
+def field_wht_rel(
+    field: dict[str, Any], ra: np.ndarray, dec: np.ndarray, p: Params, cache: Path
+) -> np.ndarray:
+    """(source, epoch) ``wht_rel`` from each epoch's detection-band i2d (NaN where the epoch has
+    no detection-band image). Cached in ``cache`` (``.npz`` with the positions, grid step and
+    image URIs it was made for; any mismatch recomputes it)."""
+    det_band = field["bands"][0]
+    uris = [
+        pipeline.l3_image_uri(field["cloud"], obs_id(e, det_band)) if det_band in e["bands"] else ""
+        for e in field["epochs"]
+    ]
+    if cache.exists():
+        z = np.load(cache)
+        if (
+            z["ra"].shape == ra.shape
+            and np.allclose(z["ra"], ra)
+            and np.allclose(z["dec"], dec)
+            and int(z["step"]) == p.wht_step_px
+            and z["uris"].tolist() == uris
+        ):
+            return z["rel"]
+    rel = np.full((len(ra), len(field["epochs"])), np.nan)
+    for k, uri in enumerate(uris):
+        if uri:
+            grid, wcs = wht_grid(uri, p.wht_step_px)
+            rel[:, k] = wht_rel(grid, wcs, ra, dec, p.wht_step_px)
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(cache, ra=ra, dec=dec, rel=rel, step=p.wht_step_px, uris=np.array(uris))
+    return rel
 
 
 def _gaia(field: dict[str, Any], out: Path) -> Table:
@@ -885,6 +1001,15 @@ def _gaia(field: dict[str, Any], out: Path) -> Table:
     out.mkdir(parents=True, exist_ok=True)
     g.write(path, overwrite=True)
     return g
+
+
+def _wht_cache(args) -> Path | None:
+    return None if args.no_weight_coverage else args.out / "wht_rel.npz"
+
+
+def _weight_summary(lc: dict) -> dict:
+    e = lc["weight_edge"]
+    return {"weight_edge_pairs": int(e.sum()), "weight_edge_sources": int(e.any(axis=1).sum())}
 
 
 def lightcurve_table(field, lc, err, res, ordn) -> Table:
@@ -908,7 +1033,7 @@ def cmd_screen(args) -> dict:
     field = load_field(args.config, args.field)
     t_start = time.time()
     gaia = None if args.no_gaia else _gaia(field, args.out)
-    cats, lc, scale, err, res, ordn = _screen(field, p, gaia)
+    cats, lc, scale, err, res, ordn = _screen(field, p, gaia, _wht_cache(args))
     t = lightcurve_table(field, lc, err, res, ordn)
     times = _times_yr(field)
     t.meta.update(
@@ -923,6 +1048,7 @@ def cmd_screen(args) -> dict:
         catalogues={f"{b}_e{k}": c.meta.get("input_sha256") for (k, b), c in cats.items()},
         params=asdict(p),
         thresholds_provenance="assumption",
+        weight_coverage=not args.no_weight_coverage,
     )
     args.out.mkdir(parents=True, exist_ok=True)
     t.write(args.out / "lightcurves.ecsv", overwrite=True)
@@ -939,6 +1065,8 @@ def cmd_screen(args) -> dict:
         "n_monitored_compact": int(mon.sum()),
         "flags": {k: int(res[k].sum()) for k in FLAGS},
         "n_flagged": len(fl),
+        "weight_coverage": not args.no_weight_coverage,
+        **_weight_summary(lc),
         "n_flagged_no_catalogue_veto": int((t["flagged"] & ~t["catalogue_veto"]).sum()),
         "n_flagged_compact_no_veto": int((t["flagged"] & ~t["catalogue_veto"] & mon).sum()),
         "veto_counts_among_flagged": {
@@ -995,7 +1123,7 @@ def cmd_inject(args) -> dict:
     field = load_field(args.config, args.field)
     t_start = time.time()
     gaia = None if args.no_gaia else _gaia(field, args.out)
-    cats, lc, scale, err, res, ordn = _screen(field, p, gaia)
+    cats, lc, scale, err, res, ordn = _screen(field, p, gaia, _wht_cache(args))
     sel = monitored(lc, err, ordn, p)
     times = _times_yr(field)
     # catalogue_veto without single_epoch, which efficiency_table re-applies per injected copy;
@@ -1042,7 +1170,12 @@ def cmd_inject(args) -> dict:
     covd = np.isfinite(lc["flux"][:, :, 0]).sum(axis=1)
     area = area_deg2(lc["ra"], lc["dec"], covd)
     lim = rate_limits(eff, area, int(sum(n_by_bin.values())))
-    lim.meta.update(field=args.field, area_deg2=area, calibrated=calibrated)
+    lim.meta.update(
+        field=args.field,
+        area_deg2=area,
+        calibrated=calibrated,
+        weight_coverage=not args.no_weight_coverage,
+    )
     args.out.mkdir(parents=True, exist_ok=True)
     eff.write(args.out / "efficiency.ecsv", overwrite=True)
     lim.write(args.out / "limits.ecsv", overwrite=True)
@@ -1053,6 +1186,8 @@ def cmd_inject(args) -> dict:
         "area_deg2": area,
         "n_monitored_unflagged": int(sum(n_by_bin.values())),
         "calibrated": calibrated,
+        "weight_coverage": not args.no_weight_coverage,
+        **_weight_summary(lc),
         "baseline_yr": float(times.max() - times.min()),
         "forced_inflation": eff.meta["forced_inflation"],
         "wall_s": round(time.time() - t_start, 1),
@@ -1490,6 +1625,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--no-gaia", action="store_true", help="skip the Gaia star mask (offline)")
+    ap.add_argument(
+        "--no-weight-coverage",
+        action="store_true",
+        help="screen / inject: skip the i2d weight-map coverage term (offline; the pre-2026-10-19 "
+        "catalogue-count proxy only)",
+    )
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument(
         "--max-flags",

@@ -1,0 +1,26 @@
+{
+ "field": "abell2744",
+ "term_off": {
+  "n_monitored": 63,
+  "n_injection_sources": 62,
+  "weight_edge_pairs": 0,
+  "weight_edge_sources": 0,
+  "n_flagged_compact_no_veto": 1,
+  "area_deg2": 0.0038888888888888888
+ },
+ "gate_R0": true,
+ "term_on": {
+  "n_monitored": 53,
+  "n_injection_sources": 53,
+  "weight_edge_pairs": 3199,
+  "weight_edge_sources": 3111,
+  "n_flagged_compact_no_veto": 0,
+  "area_deg2": 0.0031732253086419753
+ },
+ "gate_R1": true,
+ "flags_removed_by_term": [
+  "abell2744-d05190"
+ ],
+ "flags_added_by_term": [],
+ "wall_s": 49
+}

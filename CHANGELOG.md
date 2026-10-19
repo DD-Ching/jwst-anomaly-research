@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: weight-map coverage term in `screen` / `inject`; corrected headline limits
+- **Why:** #382 handoff (decision `over_counts`). Plan and gates R0 / R1 frozen first
+  (`results/dimming/wht_coverage/PLAN.md`); `weight_edge` / `mask_weight_edges` / `wht_rel` unit-tested.
+- **Result (`results/dimming/wht_coverage/RESULT.md`):** R0 (term off = committed limits) and R1 (term on = the
+  validated gate V2 what-if) pass in all three fields. Injection sources 235 → 202; the term removes 10 compact
+  unvetoed screen flags and adds none. Corrected headline (`limits_combined.ecsv`, D-052 addendum h): per-source
+  limits ×1.07–1.33 weaker at t_E ≥ 0.03 yr, ×0.82–0.92 at 0.01 yr; D-039 swap gain ×1.80–3.52 with the term on.
+- **Handoff:** the D-039 swap can now use the corrected chain: measure the persistence test's `on_sky` efficiency
+  against mosaic S/N on monitored sources (D-052 addendum f), then fold the swap into `inject`.
 ## 2026-10-19: W3 ZTF v15: batch with the frozen v13 method; Npix 3837 searched (4,778 groups, 0 vetted survivors); Npix 183 fails validation
 - **Choice:** by metadata and cost, Npix 3837 and 183. Npix 8170 has only about 738 unused eligible groups.
   - 3837 shares fields 826 and 1857 with v1–v5, so the sources are new but the exposures are partly shared.

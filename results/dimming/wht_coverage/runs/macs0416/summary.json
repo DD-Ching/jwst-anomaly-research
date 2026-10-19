@@ -1,0 +1,26 @@
+{
+ "field": "macs0416",
+ "term_off": {
+  "n_monitored": 44,
+  "n_injection_sources": 34,
+  "weight_edge_pairs": 0,
+  "weight_edge_sources": 0,
+  "n_flagged_compact_no_veto": 10,
+  "area_deg2": 0.002991898148148148
+ },
+ "gate_R0": true,
+ "term_on": {
+  "n_monitored": 33,
+  "n_injection_sources": 24,
+  "weight_edge_pairs": 3035,
+  "weight_edge_sources": 2523,
+  "n_flagged_compact_no_veto": 9,
+  "area_deg2": 0.0023823302469135805
+ },
+ "gate_R1": true,
+ "flags_removed_by_term": [
+  "macs0416-d04053"
+ ],
+ "flags_added_by_term": [],
+ "wall_s": 36
+}

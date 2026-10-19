@@ -1,0 +1,213 @@
+{
+ "gates_passed": true,
+ "fields": {
+  "macs0416": {
+   "field": "macs0416",
+   "term_off": {
+    "n_monitored": 44,
+    "n_injection_sources": 34,
+    "weight_edge_pairs": 0,
+    "weight_edge_sources": 0,
+    "n_flagged_compact_no_veto": 10,
+    "area_deg2": 0.002991898148148148
+   },
+   "gate_R0": true,
+   "term_on": {
+    "n_monitored": 33,
+    "n_injection_sources": 24,
+    "weight_edge_pairs": 3035,
+    "weight_edge_sources": 2523,
+    "n_flagged_compact_no_veto": 9,
+    "area_deg2": 0.0023823302469135805
+   },
+   "gate_R1": true,
+   "flags_removed_by_term": [
+    "macs0416-d04053"
+   ],
+   "flags_added_by_term": [],
+   "wall_s": 36
+  },
+  "abell2744": {
+   "field": "abell2744",
+   "term_off": {
+    "n_monitored": 63,
+    "n_injection_sources": 62,
+    "weight_edge_pairs": 0,
+    "weight_edge_sources": 0,
+    "n_flagged_compact_no_veto": 1,
+    "area_deg2": 0.0038888888888888888
+   },
+   "gate_R0": true,
+   "term_on": {
+    "n_monitored": 53,
+    "n_injection_sources": 53,
+    "weight_edge_pairs": 3199,
+    "weight_edge_sources": 3111,
+    "n_flagged_compact_no_veto": 0,
+    "area_deg2": 0.0031732253086419753
+   },
+   "gate_R1": true,
+   "flags_removed_by_term": [
+    "abell2744-d05190"
+   ],
+   "flags_added_by_term": [],
+   "wall_s": 49
+  },
+  "nexus": {
+   "field": "nexus",
+   "term_off": {
+    "n_monitored": 151,
+    "n_injection_sources": 139,
+    "weight_edge_pairs": 0,
+    "weight_edge_sources": 0,
+    "n_flagged_compact_no_veto": 12,
+    "area_deg2": 0.022096836419753088
+   },
+   "gate_R0": true,
+   "term_on": {
+    "n_monitored": 129,
+    "n_injection_sources": 125,
+    "weight_edge_pairs": 18212,
+    "weight_edge_sources": 16196,
+    "n_flagged_compact_no_veto": 4,
+    "area_deg2": 0.021099537037037038
+   },
+   "gate_R1": true,
+   "flags_removed_by_term": [
+    "nexus-d12071",
+    "nexus-d22035",
+    "nexus-d22758",
+    "nexus-d22857",
+    "nexus-d30183",
+    "nexus-d45375",
+    "nexus-d45498",
+    "nexus-d47294"
+   ],
+   "flags_added_by_term": [],
+   "wall_s": 303
+  }
+ },
+ "headline": [
+  {
+   "t_e_yr": 0.01,
+   "rho": 0.01,
+   "limit_per_source_per_yr": 0.29972362240649597,
+   "committed_limit_per_source_per_yr": 0.3249845256056339,
+   "limit_ratio_corrected_over_committed": 0.9222704430247494,
+   "area_limit_ratio_corrected_over_committed": 0.9157531695413224,
+   "swap_gain_veto_off_over_on": 1.91536852534063
+  },
+  {
+   "t_e_yr": 0.01,
+   "rho": 0.1,
+   "limit_per_source_per_yr": 0.3587074745864357,
+   "committed_limit_per_source_per_yr": 0.43822909453250064,
+   "limit_ratio_corrected_over_committed": 0.8185387028424072,
+   "area_limit_ratio_corrected_over_committed": 0.7761277094305281,
+   "swap_gain_veto_off_over_on": 1.7976716341200114
+  },
+  {
+   "t_e_yr": 0.03,
+   "rho": 0.01,
+   "limit_per_source_per_yr": 0.13882058185682333,
+   "committed_limit_per_source_per_yr": 0.10828996093506892,
+   "limit_ratio_corrected_over_committed": 1.281933991462613,
+   "area_limit_ratio_corrected_over_committed": 1.160409599557267,
+   "swap_gain_veto_off_over_on": 2.2633311466637056
+  },
+  {
+   "t_e_yr": 0.03,
+   "rho": 0.1,
+   "limit_per_source_per_yr": 0.14030607018542943,
+   "committed_limit_per_source_per_yr": 0.11210415378756179,
+   "limit_ratio_corrected_over_committed": 1.2515688798767481,
+   "area_limit_ratio_corrected_over_committed": 1.1528173116670701,
+   "swap_gain_veto_off_over_on": 2.1155019544894844
+  },
+  {
+   "t_e_yr": 0.1,
+   "rho": 0.01,
+   "limit_per_source_per_yr": 0.05409842135795266,
+   "committed_limit_per_source_per_yr": 0.04523975397500823,
+   "limit_ratio_corrected_over_committed": 1.1958159937792372,
+   "area_limit_ratio_corrected_over_committed": 1.1271383245624718,
+   "swap_gain_veto_off_over_on": 2.5540065416754074
+  },
+  {
+   "t_e_yr": 0.1,
+   "rho": 0.1,
+   "limit_per_source_per_yr": 0.056499983422546064,
+   "committed_limit_per_source_per_yr": 0.04341469416730138,
+   "limit_ratio_corrected_over_committed": 1.3014023133462524,
+   "area_limit_ratio_corrected_over_committed": 1.1992939622510155,
+   "swap_gain_veto_off_over_on": 2.54165810938345
+  },
+  {
+   "t_e_yr": 0.3,
+   "rho": 0.01,
+   "limit_per_source_per_yr": 0.03319915159844544,
+   "committed_limit_per_source_per_yr": 0.02789495504559007,
+   "limit_ratio_corrected_over_committed": 1.190148955041744,
+   "area_limit_ratio_corrected_over_committed": 1.1012293499285017,
+   "swap_gain_veto_off_over_on": 3.523159290347418
+  },
+  {
+   "t_e_yr": 0.3,
+   "rho": 0.1,
+   "limit_per_source_per_yr": 0.03411377844069894,
+   "committed_limit_per_source_per_yr": 0.028996092943519135,
+   "limit_ratio_corrected_over_committed": 1.1764956922695908,
+   "area_limit_ratio_corrected_over_committed": 1.0982785150551693,
+   "swap_gain_veto_off_over_on": 3.370682978392037
+  },
+  {
+   "t_e_yr": 1.0,
+   "rho": 0.01,
+   "limit_per_source_per_yr": 0.025039342559983482,
+   "committed_limit_per_source_per_yr": 0.023330463911610127,
+   "limit_ratio_corrected_over_committed": 1.0732466638832223,
+   "area_limit_ratio_corrected_over_committed": 0.9660263759853313,
+   "swap_gain_veto_off_over_on": 3.4613559479824247
+  },
+  {
+   "t_e_yr": 1.0,
+   "rho": 0.1,
+   "limit_per_source_per_yr": 0.0245514404772087,
+   "committed_limit_per_source_per_yr": 0.02061883701761949,
+   "limit_ratio_corrected_over_committed": 1.1907286747661212,
+   "area_limit_ratio_corrected_over_committed": 1.1017939464509037,
+   "swap_gain_veto_off_over_on": 3.2387440887911834
+  },
+  {
+   "t_e_yr": 3.0,
+   "rho": 0.01,
+   "limit_per_source_per_yr": 0.02288690309685227,
+   "committed_limit_per_source_per_yr": 0.017763024619260312,
+   "limit_ratio_corrected_over_committed": 1.288457545233382,
+   "area_limit_ratio_corrected_over_committed": 1.1701133313330083,
+   "swap_gain_veto_off_over_on": 3.2758997631135043
+  },
+  {
+   "t_e_yr": 3.0,
+   "rho": 0.1,
+   "limit_per_source_per_yr": 0.020901259844777108,
+   "committed_limit_per_source_per_yr": 0.015691808330436256,
+   "limit_ratio_corrected_over_committed": 1.3319854158705506,
+   "area_limit_ratio_corrected_over_committed": 1.2254632841456454,
+   "swap_gain_veto_off_over_on": 2.852551955129025
+  }
+ ],
+ "limit_ratio_corrected_over_committed_range": [
+  0.8185387028424072,
+  1.3319854158705506
+ ],
+ "area_limit_ratio_corrected_over_committed_range": [
+  0.7761277094305281,
+  1.2254632841456454
+ ],
+ "swap_gain_veto_off_over_on_range": [
+  1.7976716341200114,
+  3.523159290347418
+ ],
+ "provenance": "derived (exposures from simulated injections; weight maps and catalogues observed)"
+}

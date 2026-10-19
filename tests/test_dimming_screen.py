@@ -307,3 +307,76 @@ def test_chromatic_vetoed_spike_only_and_achromatic_injection_kept():
     ]
     # a field without the F200W / F444W pair: the test does not apply
     assert not ds.chromatic_vetoed(flux, err, ["F150W", "F444W"]).any()
+
+
+def test_wht_rel_weight_edge_and_mask():
+    from astropy.wcs import WCS
+
+    # 10 x 10 grid (step 4 px -> a 40 x 40 px image): weight 1, right column 0, one NaN node
+    grid = np.ones((10, 10), np.float32)
+    grid[:, 9] = 0.0
+    grid[2, 2] = np.nan
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [RA0, DEC0]
+    w.wcs.crpix = [1, 1]
+    w.wcs.cdelt = [-1 / 3600, 1 / 3600]
+    # pixel positions: interior (20, 20); next to the zero column (36, 20); next to the NaN
+    # node (8, 8); off the image (-40, 20)
+    x = np.array([20.0, 36.0, 8.0, -40.0])
+    y = np.array([20.0, 20.0, 8.0, 20.0])
+    ra, dec = w.all_pix2world(x, y, 0)
+    rel = ds.wht_rel(grid, w, ra, dec, 4)
+    assert rel.tolist() == [1.0, 0.0, 0.0, 0.0]
+    # per (source, epoch): epoch 1 has no detection-band image (NaN) -> never an edge;
+    # source 3 is not proxy-covered in epoch 0 -> not an edge either
+    rel2 = np.column_stack([rel, np.full(4, np.nan), [0.49, 0.5, 0.51, 0.2]])
+    covered = np.ones((4, 3), bool)
+    covered[3, 0] = False
+    edge = ds.weight_edge(covered, rel2)
+    assert edge.tolist() == [
+        [False, False, True],
+        [True, False, False],
+        [True, False, False],
+        [False, False, True],
+    ]
+    lc = {
+        "flux": np.ones((4, 3, 2)),
+        "det": np.ones((4, 3, 2), bool),
+        "ra": ra,
+    }
+    err = np.full((4, 3, 2), 0.1)
+    lcm, errm = ds.mask_weight_edges(lc, err, edge)
+    assert np.isnan(lcm["flux"][edge]).all() and np.isnan(errm[edge]).all()
+    assert not lcm["det"][edge].any()
+    assert np.isfinite(lcm["flux"][~edge]).all() and lcm["det"][~edge].all()
+    assert lc["det"].all() and np.isfinite(err).all()  # inputs untouched
+
+
+def test_field_wht_rel_cache_keys_on_step_and_uris(tmp_path, monkeypatch):
+    calls = []
+
+    def fake_grid(uri, step):
+        calls.append((uri, step))
+        return None, None
+
+    monkeypatch.setattr(ds, "wht_grid", fake_grid)
+    monkeypatch.setattr(ds, "wht_rel", lambda grid, wcs, ra, dec, step: np.full(len(ra), 0.7))
+    monkeypatch.setattr(ds.pipeline, "l3_image_uri", lambda cloud, oid: f"s3://x/{oid}")
+    field = {
+        "bands": ["F200W", "F444W"],
+        "cloud": {},
+        "epochs": [{"obs": "a", "bands": ["F200W"]}, {"obs": "b", "bands": ["F444W"]}],
+    }
+    ra, dec = np.array([1.0, 2.0]), np.array([3.0, 4.0])
+    cache = tmp_path / "w.npz"
+    rel = ds.field_wht_rel(field, ra, dec, ds.Params(), cache)
+    assert np.allclose(rel[:, 0], 0.7) and np.isnan(rel[:, 1]).all()  # no F200W in epoch 1
+    assert len(calls) == 1
+    ds.field_wht_rel(field, ra, dec, ds.Params(), cache)
+    assert len(calls) == 1  # cache hit
+    ds.field_wht_rel(field, ra, dec, ds.Params(wht_step_px=16), cache)
+    assert len(calls) == 2 and calls[-1][1] == 16  # step changed: recomputed
+    field["epochs"][0]["obs"] = "c"
+    ds.field_wht_rel(field, ra, dec, ds.Params(wht_step_px=16), cache)
+    assert len(calls) == 3  # image changed: recomputed
