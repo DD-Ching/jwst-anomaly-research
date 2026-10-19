@@ -1,0 +1,9 @@
+{
+ "field": "nexus",
+ "n_monitored": 151,
+ "flagged": 3793,
+ "single_epoch_only": 875,
+ "single_epoch_only_vanish": 873,
+ "single_epoch_only_point_like": 17,
+ "single_epoch_only_point_like_vanish": 17
+}

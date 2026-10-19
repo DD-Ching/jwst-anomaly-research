@@ -1,6 +1,6 @@
 # W3 dimming: cost and value of the D-039 persistence test in place of the `single_epoch` veto
 
-Frozen 2026-10-19 15:20 UTC, before any run (handoff of #375; D-052 "Revisit if", second bullet).
+Frozen 2026-10-19 15:13 UTC, before any run (handoff of #375; D-052 "Revisit if", second bullet).
 
 - **Question.** The `single_epoch` veto removes every vanish of a source caught in only one detection-band epoch.
   Replacing it with the D-039 level-2 persistence test would restore full-vanish sensitivity, but costs one

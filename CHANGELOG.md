@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: the D-039 persistence test in place of `single_epoch` is worth building (scoping)
+- **Why:** #375 handoff, D-052 "Revisit if". Plan and decision rule frozen first
+  (`results/dimming/persistence_scope/PLAN.md`); screen code and thresholds unchanged.
+- **Result (`results/dimming/persistence_scope/RESULT.md`):** with the veto on, the committed limits of all three
+  fields are reproduced exactly. Workload: 37 compact single-epoch vanish flags (12 / 8 / 17 in MACS0416 /
+  Abell 2744 / NEXUS). Value (simulated what-if, veto off, ρ = 0.1): joint exposure ×2.0–3.4 by t_E
+  (Abell 2744 ×17–53); 100 % dimming recovered 240 → 680, 20 → 1,238, 1,140 → 2,779. Rule met: build the swap.
+- **Limit of the reading:** an upper bound; it assumes the persistence test calls every real full vanish `on_sky`
+  (two clean exposure detections at S/N ≥ 5), which the faint bins will not reach.
+- **Failed route:** VizieR timed out; the Gaia mask came from the ESA Gaia TAP (same cone; reproduction exact).
+- **Handoff:** (1) persistence `on_sky` efficiency vs mosaic S/N on monitored sources; (2) `persistence_check.py`
+  on the 37 flags; (3) then swap the veto in `efficiency_table` and re-run `combine`.
+
 ## 2026-10-19: W3 dimming: chromatic veto folded into `forced`; weekly network test failure is upstream
 - **Change:** `dimming_screen.py forced` applies the D-052 addendum c chromatic veto (simultaneous F444W below
   F200W / 20 at 3σ in some epoch) before `survives_artefact_tests` (D-052 addendum e, unit-tested). No field

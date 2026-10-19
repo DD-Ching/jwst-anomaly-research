@@ -194,7 +194,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      on its survivors (d79956 SN-like; three single-band points) done (#371, 0 W3 events); ~~MACS0416 `forced
      --workers` and a joint `combine`~~ done 2026-10-19 (`results/dimming/macs0416_regen/RESULT.md`); ~~fold
      `chromatic_veto` into `forced`~~ done 2026-10-19 (D-052 addendum e; injections unaffected, no re-run needed); replace the single-epoch veto for
-     vanish flags with the D-039 persistence test (restores full-vanish sensitivity); add JADES and new NEXUS epochs;
+     vanish flags with the D-039 persistence test (scoped 2026-10-19, D-052 addendum f,
+     `results/dimming/persistence_scope/RESULT.md`: worth it, joint exposure ×2.0–3.4 upper bound, 37 compact flags;
+     next: `on_sky` efficiency vs S/N on monitored sources, then `persistence_check.py` on the 37, then the swap); add JADES and new NEXUS epochs;
      SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
    - ~~W5: counts N(>S) around `radial` centres~~ done 2026-10-17 (`results/w5_radial_counts/RESULT.md`): no deficit,
      but no power: at JWST depth the model predicts an excess; the post hoc excess (Q ≈ 1.26 at 9″ without arc
