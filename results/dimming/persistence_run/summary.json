@@ -1,6 +1,6 @@
 {
  "provenance": "derived",
- "monitored_pairs": 61,
+ "monitored_pairs": 194,
  "monitored_persistence_rate": 0.0,
  "efficiency_by_mosaic_snr": [
   {
@@ -16,8 +16,8 @@
   {
    "snr_lo": 10,
    "snr_hi": 20,
-   "n_pairs": 5,
-   "n_on_sky": 5,
+   "n_pairs": 19,
+   "n_on_sky": 19,
    "n_persistence": 0,
    "n_inconclusive": 0,
    "n_undetected": 0,
@@ -26,8 +26,8 @@
   {
    "snr_lo": 20,
    "snr_hi": 50,
-   "n_pairs": 56,
-   "n_on_sky": 56,
+   "n_pairs": 175,
+   "n_on_sky": 175,
    "n_persistence": 0,
    "n_inconclusive": 0,
    "n_undetected": 0,
@@ -46,6 +46,206 @@
  ],
  "rule1_usable": true,
  "targets": [
+  {
+   "uid": "abell2744-d03227",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 144,
+   "n_detected": 21,
+   "n_suspect": 0,
+   "n_clean": 21,
+   "mosaic_snr": 19.283473690396228
+  },
+  {
+   "uid": "abell2744-d03574",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 108,
+   "n_detected": 67,
+   "n_suspect": 0,
+   "n_clean": 64,
+   "mosaic_snr": 17.601981506259573
+  },
+  {
+   "uid": "abell2744-d04445",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 180,
+   "n_detected": 81,
+   "n_suspect": 0,
+   "n_clean": 75,
+   "mosaic_snr": 24.943424843768707
+  },
+  {
+   "uid": "abell2744-d04474",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 108,
+   "n_detected": 60,
+   "n_suspect": 2,
+   "n_clean": 56,
+   "mosaic_snr": 20.19961362509747
+  },
+  {
+   "uid": "abell2744-d04554",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 126,
+   "n_detected": 50,
+   "n_suspect": 2,
+   "n_clean": 44,
+   "mosaic_snr": 25.58446411953002
+  },
+  {
+   "uid": "abell2744-d04698",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 144,
+   "n_detected": 72,
+   "n_suspect": 0,
+   "n_clean": 67,
+   "mosaic_snr": 19.8605187486092
+  },
+  {
+   "uid": "abell2744-d05952",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 36,
+   "n_detected": 36,
+   "n_suspect": 0,
+   "n_clean": 32,
+   "mosaic_snr": 26.24036419346858
+  },
+  {
+   "uid": "abell2744-d07198",
+   "epoch": 1,
+   "verdict": "on_sky",
+   "n_exposures": 140,
+   "n_detected": 108,
+   "n_suspect": 19,
+   "n_clean": 81,
+   "mosaic_snr": 33.29937414732474
+  },
+  {
+   "uid": "macs0416-d00193",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 32,
+   "n_detected": 9,
+   "n_suspect": 0,
+   "n_clean": 9,
+   "mosaic_snr": 12.142613009159577
+  },
+  {
+   "uid": "macs0416-d00365",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 48,
+   "n_detected": 16,
+   "n_suspect": 0,
+   "n_clean": 15,
+   "mosaic_snr": 11.466784892406626
+  },
+  {
+   "uid": "macs0416-d00614",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 36,
+   "n_suspect": 0,
+   "n_clean": 36,
+   "mosaic_snr": 21.572440282107106
+  },
+  {
+   "uid": "macs0416-d00643",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 22,
+   "n_suspect": 1,
+   "n_clean": 20,
+   "mosaic_snr": 13.962717410847784
+  },
+  {
+   "uid": "macs0416-d00678",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 18,
+   "n_suspect": 0,
+   "n_clean": 18,
+   "mosaic_snr": 17.18592855380902
+  },
+  {
+   "uid": "macs0416-d01166",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 45,
+   "n_suspect": 6,
+   "n_clean": 38,
+   "mosaic_snr": 21.444323269236563
+  },
+  {
+   "uid": "macs0416-d01316",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 15,
+   "n_suspect": 0,
+   "n_clean": 15,
+   "mosaic_snr": 12.817013449167524
+  },
+  {
+   "uid": "macs0416-d01329",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 52,
+   "n_detected": 36,
+   "n_suspect": 2,
+   "n_clean": 32,
+   "mosaic_snr": 17.88837449390603
+  },
+  {
+   "uid": "macs0416-d02197",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 56,
+   "n_detected": 19,
+   "n_suspect": 0,
+   "n_clean": 18,
+   "mosaic_snr": 12.172889588179672
+  },
+  {
+   "uid": "macs0416-d02261",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 41,
+   "n_suspect": 1,
+   "n_clean": 39,
+   "mosaic_snr": 18.919609351645974
+  },
+  {
+   "uid": "macs0416-d02264",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 31,
+   "n_suspect": 0,
+   "n_clean": 30,
+   "mosaic_snr": 17.045888075760192
+  },
+  {
+   "uid": "macs0416-d02480",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 64,
+   "n_detected": 36,
+   "n_suspect": 0,
+   "n_clean": 36,
+   "mosaic_snr": 22.249560258823728
+  },
   {
    "uid": "nexus-d10423",
    "epoch": 2,
@@ -218,6 +418,26 @@
   }
  ],
  "targets_to_vet": [
+  "abell2744-d03227",
+  "abell2744-d03574",
+  "abell2744-d04445",
+  "abell2744-d04474",
+  "abell2744-d04554",
+  "abell2744-d04698",
+  "abell2744-d05952",
+  "abell2744-d07198",
+  "macs0416-d00193",
+  "macs0416-d00365",
+  "macs0416-d00614",
+  "macs0416-d00643",
+  "macs0416-d00678",
+  "macs0416-d01166",
+  "macs0416-d01316",
+  "macs0416-d01329",
+  "macs0416-d02197",
+  "macs0416-d02261",
+  "macs0416-d02264",
+  "macs0416-d02480",
   "nexus-d10423",
   "nexus-d13073",
   "nexus-d15524",

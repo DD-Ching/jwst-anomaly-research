@@ -1,8 +1,9 @@
 """D-039 persistence test on the compact single-epoch vanish flags (targets) and on every monitored
 source in every epoch it is detected in (known on-sky controls; `on_sky` efficiency vs mosaic S/N).
 
-Usage (repo root): run.py FIELD GAIA_ROOT OUT [targets]
-("targets": the flags only, no monitored controls; used for NEXUS, see RESULT.md "Deviations")
+Usage (repo root): run.py FIELD GAIA_ROOT OUT [targets] [epochs=K,K...]
+("targets": the flags only, no monitored controls; used for NEXUS, see RESULT.md "Deviations";
+"epochs=": only those epoch indices, to finish an interrupted field; merge with partial.py)
 """
 
 import json
@@ -18,7 +19,9 @@ import dimming_screen as ds  # noqa: E402
 import persistence_check as pc  # noqa: E402
 
 name, groot, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
-targets_only = len(sys.argv) > 4 and sys.argv[4] == "targets"
+targets_only = "targets" in sys.argv[4:]
+only = next((a[7:] for a in sys.argv[4:] if a.startswith("epochs=")), None)
+only = {int(k) for k in only.split(",")} if only else None
 out.mkdir(parents=True, exist_ok=True)
 p = ds.Params()
 field = ds.load_field(ds.DEFAULT_CONFIG, name)
@@ -33,7 +36,7 @@ det = lc["det"][:, :, 0]
 target = ds.flagged(res) & ordn["single_epoch"] & ~static_veto & ordn["point_like"] & res["vanish"]
 rows = []
 for k, e in enumerate(field["epochs"]):
-    if "F200W" not in e["bands"]:
+    if "F200W" not in e["bands"] or (only is not None and k not in only):
         continue
     idx = np.flatnonzero((target | sel) & det[:, k])
     if not len(idx):
