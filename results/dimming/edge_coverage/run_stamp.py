@@ -1,6 +1,6 @@
 """Post hoc sensitivity of run.py (gate V2 RESULT): injection-set pairs masked by stamp_edge
 (gate_v2/pairs_<field>.ecsv) instead of the grid edge_pair; other pairs keep edge_pair.
-Usage (repo root): run_stamp.py GAIA_ROOT OUT FIELD...   (GAIA_ROOT/<field>/gaia.ecsv from persistence_scope/gaia_esa.py)
+Usage (repo root): run_stamp.py GAIA_ROOT OUT FIELD...
 
 Writes OUT/<field>/{edge_summary.json, limits_<variant>.ecsv, efficiency_<variant>.ecsv}.
 """

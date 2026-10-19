@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from astropy.table import Table
+from astropy.table import Table, vstack
 
 here = Path(__file__).parent
 _spec = importlib.util.spec_from_file_location("edge", here / "edge.py")
@@ -20,8 +20,16 @@ for f in ("macs0416", "abell2744", "nexus"):
         lim = Table.read(root / f / f"limits_{v}.ecsv")
         e = np.asarray(lim["exposure_source_yr"][lim["rho"] == 0.1], float)
         joint[v] = joint.get(v, 0.0) + e
+pt = vstack(
+    [Table.read(here / f"gate_v2/pairs_{f}.ecsv") for f in ("macs0416", "abell2744", "nexus")]
+)
+e, r = np.asarray(pt["edge_pair"], bool), np.asarray(pt["stamp_edge"], bool)
 out = {
     "post_hoc": True,
+    "pairs_grid_and_stamp": int((e & r).sum()),
+    "pairs_grid_only": int((e & ~r).sum()),
+    "pairs_stamp_only": int((~e & r).sum()),
+    "pairs_neither": int((~e & ~r).sum()),
     "mask": "stamp_edge on injection-set pairs, edge_pair elsewhere",
     "joint_exposure_rho0.1": {k: [float(x) for x in v] for k, v in joint.items()},
     "veto_off_masked_over_unmasked": [
