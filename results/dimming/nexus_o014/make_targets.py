@@ -1,5 +1,5 @@
 """Copy of the NEXUS lightcurves.ecsv in which only the 12 D-039 `on_sky` targets are unvetoed flags
-(PLAN.md "Measurement"). Usage (repo root): make_targets.py SCREEN_OUT  (rewrites lightcurves.ecsv there)
+(PLAN.md "Measurement"). Usage (repo root): make_targets.py OUT (rewrites OUT/lightcurves.ecsv)
 """
 
 import sys
