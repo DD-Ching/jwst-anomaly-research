@@ -1,0 +1,50 @@
+{
+ "rho": 0.1,
+ "rel_tol": 0.1,
+ "calibrated": true,
+ "rows": [
+  {
+   "t_e_yr": 0.01,
+   "reference": 1.2,
+   "regenerated": 1.1550335386721426,
+   "rel_diff": -0.03747205110654776,
+   "within": true
+  },
+  {
+   "t_e_yr": 0.03,
+   "reference": 4.7,
+   "regenerated": 4.732134154688572,
+   "rel_diff": 0.006837054189057743,
+   "within": true
+  },
+  {
+   "t_e_yr": 0.1,
+   "reference": 9.9,
+   "regenerated": 9.882258726899385,
+   "rel_diff": -0.0017920477879409108,
+   "within": true
+  },
+  {
+   "t_e_yr": 0.3,
+   "reference": 18.7,
+   "regenerated": 18.286392881587958,
+   "rel_diff": -0.02211802772256908,
+   "within": true
+  },
+  {
+   "t_e_yr": 1.0,
+   "reference": 53.7,
+   "regenerated": 52.635694729637244,
+   "rel_diff": -0.0198194649974443,
+   "within": true
+  },
+  {
+   "t_e_yr": 3.0,
+   "reference": 62.6,
+   "regenerated": 61.80338809034908,
+   "rel_diff": -0.01272542986662812,
+   "within": true
+  }
+ ],
+ "passed": true
+}
