@@ -1,7 +1,8 @@
 """D-039 persistence test on the compact single-epoch vanish flags (targets) and on every monitored
 source in every epoch it is detected in (known on-sky controls; `on_sky` efficiency vs mosaic S/N).
 
-Usage (repo root): run.py FIELD GAIA_ROOT OUT
+Usage (repo root): run.py FIELD GAIA_ROOT OUT [targets]
+("targets": the flags only, no monitored controls; used for NEXUS, see RESULT.md "Deviations")
 """
 
 import json
@@ -17,6 +18,7 @@ import dimming_screen as ds  # noqa: E402
 import persistence_check as pc  # noqa: E402
 
 name, groot, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
+targets_only = len(sys.argv) > 4 and sys.argv[4] == "targets"
 out.mkdir(parents=True, exist_ok=True)
 p = ds.Params()
 field = ds.load_field(ds.DEFAULT_CONFIG, name)
@@ -24,10 +26,11 @@ gaia = Table.read(groot / name / "gaia.ecsv")
 cats, lc, scale, err, res, ordn = ds._screen(field, p, gaia)
 static_veto = ds.catalogue_veto({**ordn, "single_epoch": np.zeros_like(ordn["single_epoch"])})
 sel = ds.monitored(lc, err, ordn, p)
+n_mon = int(sel.sum())
+if targets_only:
+    sel = np.zeros_like(sel)
 det = lc["det"][:, :, 0]
-target = (
-    ds.flagged(res) & ordn["single_epoch"] & ~static_veto & ordn["point_like"] & res["vanish"]
-)
+target = ds.flagged(res) & ordn["single_epoch"] & ~static_veto & ordn["point_like"] & res["vanish"]
 rows = []
 for k, e in enumerate(field["epochs"]):
     if "F200W" not in e["bands"]:
@@ -42,18 +45,26 @@ for k, e in enumerate(field["epochs"]):
     per_exp.write(out / f"exposures_e{k}.ecsv", overwrite=True)
     summ["epoch"] = k
     summ["kind"] = ["flag" if target[uid[u]] else "monitored" for u in summ["uid"]]
-    summ["mosaic_snr"] = [
-        float(lc["flux"][uid[u], k, 0] / err[uid[u], k, 0]) for u in summ["uid"]
-    ]
+    summ["mosaic_snr"] = [float(lc["flux"][uid[u], k, 0] / err[uid[u], k, 0]) for u in summ["uid"]]
     summ["n_files"] = len(files)
     summ["n_failed"] = len(summ.meta.get("failed", []))
     summ.meta.pop("failed", None)
     rows.append(summ)
-    print(name, k, len(files), dict(zip(*np.unique(summ["verdict"], return_counts=True))), flush=True)
+    print(
+        name, k, len(files), dict(zip(*np.unique(summ["verdict"], return_counts=True))), flush=True
+    )
 t = vstack(rows, metadata_conflicts="silent")
 t.meta.update(provenance="derived", source=f"results/dimming/persistence_run/run.py {name}")
 t.write(out / "verdicts.ecsv", overwrite=True)
 (out / "counts.json").write_text(
-    json.dumps({"field": name, "n_targets": int(target.sum()), "n_monitored": int(sel.sum())}, indent=1)
+    json.dumps(
+        {
+            "field": name,
+            "n_targets": int(target.sum()),
+            "n_monitored": n_mon,
+            "targets_only": targets_only,
+        },
+        indent=1,
+    )
     + "\n"
 )

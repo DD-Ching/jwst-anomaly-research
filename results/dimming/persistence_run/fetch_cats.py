@@ -32,7 +32,12 @@ for field in sys.argv[1:]:
     prods = Table.read(f"data/manifests/dimming_{field}_products.ecsv")
     uri = {str(r["productFilename"]): str(r["cloud_uri"]) for r in prods}
     for r in man:
-        jobs.append(({"local_path": r["local_path"], "cloud_uri": uri[str(r["productFilename"])]}, str(r["sha256"])))
+        jobs.append(
+            (
+                {"local_path": r["local_path"], "cloud_uri": uri[str(r["productFilename"])]},
+                str(r["sha256"]),
+            )
+        )
 with ThreadPoolExecutor(8) as ex:
     for name, n in ex.map(lambda j: one(*j), jobs):
         print(name, n, flush=True)

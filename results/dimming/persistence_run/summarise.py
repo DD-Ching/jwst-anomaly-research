@@ -23,7 +23,10 @@ def efficiency(mon: Table) -> list[dict]:
                 "snr_lo": lo,
                 "snr_hi": None if np.isinf(hi) else hi,
                 "n_pairs": n,
-                **{f"n_{k}": int((v[m] == k).sum()) for k in ("on_sky", "persistence", "inconclusive", "undetected")},
+                **{
+                    f"n_{k}": int((v[m] == k).sum())
+                    for k in ("on_sky", "persistence", "inconclusive", "undetected")
+                },
                 "on_sky_fraction": float((v[m] == "on_sky").mean()) if n else None,
             }
         )
@@ -33,16 +36,26 @@ def efficiency(mon: Table) -> list[dict]:
 def usable(eff: list[dict], persist_rate: float) -> bool:
     """Rule 1: on_sky >= 0.8 in every S/N >= 20 bin with >= 10 pairs, and persistence <= 2 %."""
     hi = [b for b in eff if b["snr_lo"] >= 20 and b["n_pairs"] >= MIN_PAIRS]
-    return bool(hi) and all(b["on_sky_fraction"] >= MIN_ON_SKY for b in hi) and persist_rate <= MAX_PERSIST
+    return (
+        bool(hi)
+        and all(b["on_sky_fraction"] >= MIN_ON_SKY for b in hi)
+        and persist_rate <= MAX_PERSIST
+    )
 
 
 if __name__ == "__main__":
     root = Path(sys.argv[1])
-    t = vstack([Table.read(f) for f in sorted(root.glob("*/verdicts.ecsv"))], metadata_conflicts="silent")
+    t = vstack(
+        [Table.read(f) for f in sorted(root.glob("*/verdicts.ecsv"))], metadata_conflicts="silent"
+    )
     mon = t[t["kind"] == "monitored"]
     tg = t[t["kind"] == "flag"]
     eff = efficiency(mon)
-    pr = float(np.mean(np.asarray(mon["verdict"]).astype(str) == "persistence")) if len(mon) else float("nan")
+    pr = (
+        float(np.mean(np.asarray(mon["verdict"]).astype(str) == "persistence"))
+        if len(mon)
+        else float("nan")
+    )
     res = {
         "provenance": "derived",
         "monitored_pairs": len(mon),
@@ -50,8 +63,19 @@ if __name__ == "__main__":
         "efficiency_by_mosaic_snr": eff,
         "rule1_usable": usable(eff, pr),
         "targets": [
-            {k: (r[k].item() if hasattr(r[k], "item") else str(r[k]))
-             for k in ("uid", "epoch", "verdict", "n_exposures", "n_detected", "n_suspect", "n_clean", "mosaic_snr")}
+            {
+                k: (r[k].item() if hasattr(r[k], "item") else str(r[k]))
+                for k in (
+                    "uid",
+                    "epoch",
+                    "verdict",
+                    "n_exposures",
+                    "n_detected",
+                    "n_suspect",
+                    "n_clean",
+                    "mosaic_snr",
+                )
+            }
             for r in tg
         ],
         "targets_to_vet": [str(r["uid"]) for r in tg if r["verdict"] == "on_sky"],
