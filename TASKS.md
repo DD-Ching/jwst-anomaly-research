@@ -406,7 +406,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - accept 0.34 and state it per box. This would loosen the frozen R2 threshold, so it needs an owner decision and
        a new plan.
 
-     Open, unvetted by photometry: SMACS h039 and Sunrise o052 h005 (both artifacts by eye).
+     ~~Open, unvetted by photometry: SMACS h039 and Sunrise o052 h005~~ done 2026-10-19
+     (`results/transients/review_list/vet_h039_h005/RESULT.md`: frozen rule inconclusive for both; post hoc within
+     matched-control scatter; not candidates).
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
