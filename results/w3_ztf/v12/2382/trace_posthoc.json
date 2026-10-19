@@ -1,0 +1,1115 @@
+{
+ "label": "derived; post hoc stage trace (simulated injections)",
+ "pix": 2382,
+ "carriers": 500,
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 180,
+    "eligible": 150,
+    "flagged": 150,
+    "recovered": 150
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 20,
+    "MIN_BRACKET": 10,
+    "MIN_RUN": 20
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 20
+   },
+   "vetting_first_fail": {},
+   "vetting_all_fails": {},
+   "recovery_by_group": {
+    "eligible": {
+     "n": 150,
+     "recovered": 150
+    },
+    "not_eligible": {
+     "n": 50,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 13.0,
+    "umbra_nights": 9.0,
+    "max_gap_in_umbra_d": 9.011726955948689,
+    "pre_epochs": 1550.5,
+    "post_epochs": 838.5,
+    "both_edges_sampled_frac": 0.6,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend1_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 197,
+    "eligible": 177,
+    "flagged": 177,
+    "recovered": 173
+   },
+   "prescreen_first_block": {
+    "MIN_BRACKET": 16,
+    "MIN_RUN": 4,
+    "no_dim_run_in_umbra": 3
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 4
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 4
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 4
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 177,
+     "recovered": 173
+    },
+    "not_eligible": {
+     "n": 23,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 52.0,
+    "umbra_nights": 32.0,
+    "max_gap_in_umbra_d": 14.111324562440132,
+    "pre_epochs": 1504.0,
+    "post_epochs": 691.0,
+    "both_edges_sampled_frac": 0.75,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend1_tE100": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 200,
+    "eligible": 160,
+    "flagged": 160,
+    "recovered": 150
+   },
+   "prescreen_first_block": {
+    "MIN_BRACKET": 39,
+    "MIN_RUN": 1
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 1
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 9,
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 9,
+    "oneoff_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 160,
+     "recovered": 150
+    },
+    "not_eligible": {
+     "n": 40,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 286.0,
+    "umbra_nights": 130.0,
+    "max_gap_in_umbra_d": 56.88419249965591,
+    "pre_epochs": 1312.0,
+    "post_epochs": 871.5,
+    "both_edges_sampled_frac": 0.88,
+    "umbra_frac_predicted_ge_1mag": 0.9951385196999232
+   }
+  },
+  "rho0.1_blend1_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 176,
+    "eligible": 157,
+    "flagged": 146,
+    "recovered": 130
+   },
+   "prescreen_first_block": {
+    "MIN_NIGHTS": 3,
+    "MIN_RUN": 17,
+    "no_dim_run_in_umbra": 30,
+    "MIN_BRACKET": 4
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 17,
+    "MIN_BRACKET": 1
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 15,
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 15,
+    "oneoff_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 157,
+     "recovered": 130
+    },
+    "not_eligible": {
+     "n": 43,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 12.5,
+    "umbra_nights": 9.0,
+    "max_gap_in_umbra_d": 8.982386850235343,
+    "pre_epochs": 1411.0,
+    "post_epochs": 710.0,
+    "both_edges_sampled_frac": 0.655,
+    "umbra_frac_predicted_ge_1mag": 0.9453405017921147
+   }
+  },
+  "rho0.1_blend1_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 198,
+    "eligible": 185,
+    "flagged": 180,
+    "recovered": 122
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 7,
+    "MIN_BRACKET": 7,
+    "MIN_RUN": 5,
+    "MIN_NIGHTS": 1
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 5
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 57,
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 57,
+    "achromatic_ok": 2,
+    "oneoff_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 185,
+     "recovered": 122
+    },
+    "not_eligible": {
+     "n": 15,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 67.0,
+    "umbra_nights": 35.0,
+    "max_gap_in_umbra_d": 13.995105954287283,
+    "pre_epochs": 1556.0,
+    "post_epochs": 895.5,
+    "both_edges_sampled_frac": 0.79,
+    "umbra_frac_predicted_ge_1mag": 0.9381377551020409
+   }
+  },
+  "rho0.01_blend0.7_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 179,
+    "eligible": 148,
+    "flagged": 148,
+    "recovered": 138
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 21,
+    "MIN_RUN": 22,
+    "MIN_BRACKET": 7,
+    "MIN_NIGHTS": 2
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 22
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 1,
+    "achromatic_ok": 6,
+    "oneoff_ok": 3
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 1,
+    "achromatic_ok": 7,
+    "oneoff_ok": 3
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 148,
+     "recovered": 138
+    },
+    "not_eligible": {
+     "n": 52,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 13.0,
+    "umbra_nights": 8.5,
+    "max_gap_in_umbra_d": 8.98162015379421,
+    "pre_epochs": 1313.5,
+    "post_epochs": 840.0,
+    "both_edges_sampled_frac": 0.55,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend0.7_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 196,
+    "eligible": 179,
+    "flagged": 178,
+    "recovered": 155
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 6,
+    "MIN_BRACKET": 12,
+    "MIN_RUN": 4
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 4
+   },
+   "vetting_first_fail": {
+    "achromatic_ok": 21,
+    "sharp_ok": 1,
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "achromatic_ok": 21,
+    "sharp_ok": 1,
+    "oneoff_ok": 1
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 179,
+     "recovered": 155
+    },
+    "not_eligible": {
+     "n": 21,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 61.0,
+    "umbra_nights": 31.5,
+    "max_gap_in_umbra_d": 17.377352948180487,
+    "pre_epochs": 1311.5,
+    "post_epochs": 907.5,
+    "both_edges_sampled_frac": 0.75,
+    "umbra_frac_predicted_ge_1mag": 1.0
+   }
+  },
+  "rho0.01_blend0.7_tE100": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 200,
+    "eligible": 180,
+    "flagged": 179,
+    "recovered": 136
+   },
+   "prescreen_first_block": {
+    "MIN_BRACKET": 20,
+    "no_dim_run_in_umbra": 1
+   },
+   "prescreen_other_blocks": {},
+   "vetting_first_fail": {
+    "achromatic_ok": 28,
+    "sharp_ok": 12,
+    "oneoff_ok": 3
+   },
+   "vetting_all_fails": {
+    "achromatic_ok": 30,
+    "sharp_ok": 12,
+    "oneoff_ok": 4
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 180,
+     "recovered": 136
+    },
+    "not_eligible": {
+     "n": 20,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 257.5,
+    "umbra_nights": 128.0,
+    "max_gap_in_umbra_d": 56.42764866503421,
+    "pre_epochs": 1318.5,
+    "post_epochs": 707.0,
+    "both_edges_sampled_frac": 0.93,
+    "umbra_frac_predicted_ge_1mag": 0.9965187092864718
+   }
+  },
+  "rho0.1_blend0.7_tE10": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 180,
+    "eligible": 148,
+    "flagged": 143,
+    "recovered": 117
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 29,
+    "MIN_RUN": 22,
+    "MIN_BRACKET": 5,
+    "MIN_NIGHTS": 1
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 22
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 23,
+    "achromatic_ok": 2,
+    "oneoff_ok": 1
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 23,
+    "achromatic_ok": 2,
+    "oneoff_ok": 2
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 148,
+     "recovered": 117
+    },
+    "not_eligible": {
+     "n": 52,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 15.0,
+    "umbra_nights": 10.0,
+    "max_gap_in_umbra_d": 8.950429560325574,
+    "pre_epochs": 1458.0,
+    "post_epochs": 814.5,
+    "both_edges_sampled_frac": 0.64,
+    "umbra_frac_predicted_ge_1mag": 0.9375
+   }
+  },
+  "rho0.1_blend0.7_tE30": {
+   "stages": {
+    "injected": 200,
+    "umbra_has_epochs": 196,
+    "eligible": 184,
+    "flagged": 171,
+    "recovered": 84
+   },
+   "prescreen_first_block": {
+    "no_dim_run_in_umbra": 16,
+    "MIN_BRACKET": 10,
+    "MIN_RUN": 3
+   },
+   "prescreen_other_blocks": {
+    "MIN_NIGHTS": 3
+   },
+   "vetting_first_fail": {
+    "sharp_ok": 80,
+    "achromatic_ok": 7
+   },
+   "vetting_all_fails": {
+    "sharp_ok": 80,
+    "achromatic_ok": 21,
+    "oneoff_ok": 2
+   },
+   "recovery_by_group": {
+    "eligible": {
+     "n": 184,
+     "recovered": 84
+    },
+    "not_eligible": {
+     "n": 16,
+     "recovered": 0
+    }
+   },
+   "sampling_median": {
+    "umbra_epochs": 56.0,
+    "umbra_nights": 31.0,
+    "max_gap_in_umbra_d": 13.995118461636594,
+    "pre_epochs": 1379.0,
+    "post_epochs": 717.5,
+    "both_edges_sampled_frac": 0.755,
+    "umbra_frac_predicted_ge_1mag": 0.9230769230769231
+   }
+  }
+ },
+ "rho0.01_blend1_tE100_unflagged_ge3_umbra_nights": [
+  {
+   "cell_k": 6,
+   "carrier": 723205400005768,
+   "t0": 58268.17693363656,
+   "u0": 1.2869100935972095,
+   "half_d": 153.09678020773728,
+   "umbra_epochs": 419,
+   "umbra_nights": 130,
+   "pre": 0,
+   "post": 1406,
+   "umbra_dim_epochs_after_injection": 419,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 419,
+   "longest_run_nights": 130
+  },
+  {
+   "cell_k": 10,
+   "carrier": 724204200001228,
+   "t0": 60920.397972718,
+   "u0": 0.6255539242076764,
+   "half_d": 189.9653202010403,
+   "umbra_epochs": 118,
+   "umbra_nights": 78,
+   "pre": 3702,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 118,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 118,
+   "longest_run_nights": 78
+  },
+  {
+   "cell_k": 12,
+   "carrier": 724208400008582,
+   "t0": 60723.383721010316,
+   "u0": 1.095637849171257,
+   "half_d": 167.31938630844252,
+   "umbra_epochs": 74,
+   "umbra_nights": 73,
+   "pre": 1891,
+   "post": 11,
+   "umbra_dim_epochs_after_injection": 74,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 74,
+   "longest_run_nights": 73
+  },
+  {
+   "cell_k": 20,
+   "carrier": 724208400000357,
+   "t0": 60686.94244506239,
+   "u0": 0.6544892875357846,
+   "half_d": 188.98793010403867,
+   "umbra_epochs": 123,
+   "umbra_nights": 104,
+   "pre": 1780,
+   "post": 12,
+   "umbra_dim_epochs_after_injection": 122,
+   "umbra_fraction_predicted_ge_1mag": 0.991869918699187,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 122,
+   "longest_run_nights": 103
+  },
+  {
+   "cell_k": 26,
+   "carrier": 723201100003428,
+   "t0": 60914.82286513024,
+   "u0": 1.9134194622472396,
+   "half_d": 58.208758919382944,
+   "umbra_epochs": 48,
+   "umbra_nights": 36,
+   "pre": 3774,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 46,
+   "umbra_fraction_predicted_ge_1mag": 0.9583333333333334,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 46,
+   "longest_run_nights": 35
+  },
+  {
+   "cell_k": 29,
+   "carrier": 724208300008529,
+   "t0": 58256.686749558205,
+   "u0": 0.07234795349466894,
+   "half_d": 199.8691015045881,
+   "umbra_epochs": 789,
+   "umbra_nights": 137,
+   "pre": 0,
+   "post": 2971,
+   "umbra_dim_epochs_after_injection": 789,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 789,
+   "longest_run_nights": 137
+  },
+  {
+   "cell_k": 34,
+   "carrier": 724208400002229,
+   "t0": 60676.523804582095,
+   "u0": 0.4540587251042649,
+   "half_d": 194.77758274905995,
+   "umbra_epochs": 144,
+   "umbra_nights": 112,
+   "pre": 1878,
+   "post": 15,
+   "umbra_dim_epochs_after_injection": 141,
+   "umbra_fraction_predicted_ge_1mag": 0.9791666666666666,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 141,
+   "longest_run_nights": 111
+  },
+  {
+   "cell_k": 37,
+   "carrier": 724204200007510,
+   "t0": 58252.60780001778,
+   "u0": 0.9002779749056102,
+   "half_d": 178.59170103618627,
+   "umbra_epochs": 393,
+   "umbra_nights": 130,
+   "pre": 0,
+   "post": 1570,
+   "umbra_dim_epochs_after_injection": 393,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 393,
+   "longest_run_nights": 130
+  },
+  {
+   "cell_k": 38,
+   "carrier": 724208300010072,
+   "t0": 60835.266688997726,
+   "u0": 0.5782434569238284,
+   "half_d": 191.45846819936642,
+   "umbra_epochs": 132,
+   "umbra_nights": 90,
+   "pre": 3629,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 132,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 132,
+   "longest_run_nights": 90
+  },
+  {
+   "cell_k": 43,
+   "carrier": 724204200027658,
+   "t0": 60873.77676642219,
+   "u0": 0.21336879899393946,
+   "half_d": 198.8585868303374,
+   "umbra_epochs": 132,
+   "umbra_nights": 88,
+   "pre": 3688,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 131,
+   "umbra_fraction_predicted_ge_1mag": 0.9924242424242424,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 131,
+   "longest_run_nights": 87
+  },
+  {
+   "cell_k": 47,
+   "carrier": 724204100003762,
+   "t0": 58255.920281937484,
+   "u0": 1.3980896484178982,
+   "half_d": 143.01557030570896,
+   "umbra_epochs": 406,
+   "umbra_nights": 132,
+   "pre": 0,
+   "post": 1600,
+   "umbra_dim_epochs_after_injection": 406,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 406,
+   "longest_run_nights": 132
+  },
+  {
+   "cell_k": 49,
+   "carrier": 724204100008715,
+   "t0": 58220.28421337406,
+   "u0": 1.9652910763680187,
+   "half_d": 37.09865026496715,
+   "umbra_epochs": 80,
+   "umbra_nights": 21,
+   "pre": 0,
+   "post": 1923,
+   "umbra_dim_epochs_after_injection": 66,
+   "umbra_fraction_predicted_ge_1mag": 0.825,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 66,
+   "longest_run_nights": 16
+  },
+  {
+   "cell_k": 57,
+   "carrier": 724204200006491,
+   "t0": 58388.31915116476,
+   "u0": 0.07065671664445938,
+   "half_d": 199.87515174210685,
+   "umbra_epochs": 886,
+   "umbra_nights": 165,
+   "pre": 0,
+   "post": 2911,
+   "umbra_dim_epochs_after_injection": 886,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 886,
+   "longest_run_nights": 165
+  },
+  {
+   "cell_k": 63,
+   "carrier": 724208200006027,
+   "t0": 58302.900407578214,
+   "u0": 1.0204514344074875,
+   "half_d": 172.00810649547017,
+   "umbra_epochs": 826,
+   "umbra_nights": 139,
+   "pre": 0,
+   "post": 3029,
+   "umbra_dim_epochs_after_injection": 826,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 826,
+   "longest_run_nights": 139
+  },
+  {
+   "cell_k": 64,
+   "carrier": 723205400009024,
+   "t0": 58263.52868307063,
+   "u0": 0.3824118694155605,
+   "half_d": 196.30998859278904,
+   "umbra_epochs": 404,
+   "umbra_nights": 130,
+   "pre": 0,
+   "post": 1405,
+   "umbra_dim_epochs_after_injection": 404,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 404,
+   "longest_run_nights": 130
+  },
+  {
+   "cell_k": 70,
+   "carrier": 724208400011405,
+   "t0": 58238.7619163274,
+   "u0": 1.187066817702877,
+   "half_d": 160.96187033918204,
+   "umbra_epochs": 402,
+   "umbra_nights": 129,
+   "pre": 0,
+   "post": 1633,
+   "umbra_dim_epochs_after_injection": 402,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 402,
+   "longest_run_nights": 129
+  },
+  {
+   "cell_k": 80,
+   "carrier": 724208300009222,
+   "t0": 60903.89022541642,
+   "u0": 0.36952029121512764,
+   "half_d": 196.55672856405315,
+   "umbra_epochs": 126,
+   "umbra_nights": 84,
+   "pre": 3635,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 126,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 126,
+   "longest_run_nights": 84
+  },
+  {
+   "cell_k": 81,
+   "carrier": 724204200010337,
+   "t0": 58413.910957325,
+   "u0": 0.3302953541792233,
+   "half_d": 197.2537700275364,
+   "umbra_epochs": 461,
+   "umbra_nights": 160,
+   "pre": 12,
+   "post": 1489,
+   "umbra_dim_epochs_after_injection": 456,
+   "umbra_fraction_predicted_ge_1mag": 0.9891540130151844,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 456,
+   "longest_run_nights": 159
+  },
+  {
+   "cell_k": 85,
+   "carrier": 724208100009122,
+   "t0": 58199.77305111626,
+   "u0": 0.3195444319060199,
+   "half_d": 197.4307816941892,
+   "umbra_epochs": 394,
+   "umbra_nights": 126,
+   "pre": 0,
+   "post": 1614,
+   "umbra_dim_epochs_after_injection": 394,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 394,
+   "longest_run_nights": 126
+  },
+  {
+   "cell_k": 116,
+   "carrier": 724208400008582,
+   "t0": 60828.504395750664,
+   "u0": 1.7012071003746787,
+   "half_d": 105.16151395043616,
+   "umbra_epochs": 61,
+   "umbra_nights": 60,
+   "pre": 1914,
+   "post": 1,
+   "umbra_dim_epochs_after_injection": 59,
+   "umbra_fraction_predicted_ge_1mag": 0.9672131147540983,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 59,
+   "longest_run_nights": 58
+  },
+  {
+   "cell_k": 117,
+   "carrier": 724204200004259,
+   "t0": 58307.87755670375,
+   "u0": 1.3951993510274743,
+   "half_d": 143.2975495565962,
+   "umbra_epochs": 803,
+   "umbra_nights": 137,
+   "pre": 0,
+   "post": 3015,
+   "umbra_dim_epochs_after_injection": 803,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 803,
+   "longest_run_nights": 137
+  },
+  {
+   "cell_k": 120,
+   "carrier": 724208300010107,
+   "t0": 60891.37095542594,
+   "u0": 1.0417630298792226,
+   "half_d": 170.7257973938579,
+   "umbra_epochs": 125,
+   "umbra_nights": 83,
+   "pre": 3633,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 125,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 125,
+   "longest_run_nights": 83
+  },
+  {
+   "cell_k": 121,
+   "carrier": 724204100001359,
+   "t0": 60851.926521509005,
+   "u0": 0.7432583077396726,
+   "half_d": 185.67625286977218,
+   "umbra_epochs": 66,
+   "umbra_nights": 65,
+   "pre": 1943,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 66,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 66,
+   "longest_run_nights": 65
+  },
+  {
+   "cell_k": 127,
+   "carrier": 724208300010866,
+   "t0": 60845.06915908118,
+   "u0": 1.2636213203100184,
+   "half_d": 155.02455156709746,
+   "umbra_epochs": 130,
+   "umbra_nights": 88,
+   "pre": 3680,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 130,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 130,
+   "longest_run_nights": 88
+  },
+  {
+   "cell_k": 129,
+   "carrier": 724204100000076,
+   "t0": 58363.95191996194,
+   "u0": 0.004325316572216131,
+   "half_d": 199.99953229036686,
+   "umbra_epochs": 285,
+   "umbra_nights": 105,
+   "pre": 0,
+   "post": 1133,
+   "umbra_dim_epochs_after_injection": 285,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 285,
+   "longest_run_nights": 105
+  },
+  {
+   "cell_k": 139,
+   "carrier": 724204200002420,
+   "t0": 60702.10746291592,
+   "u0": 1.0994998373116656,
+   "half_d": 167.06585850351414,
+   "umbra_epochs": 77,
+   "umbra_nights": 76,
+   "pre": 1929,
+   "post": 16,
+   "umbra_dim_epochs_after_injection": 76,
+   "umbra_fraction_predicted_ge_1mag": 0.987012987012987,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 76,
+   "longest_run_nights": 75
+  },
+  {
+   "cell_k": 140,
+   "carrier": 724204100004592,
+   "t0": 58365.159241366884,
+   "u0": 0.4123102545393855,
+   "half_d": 195.7038643972486,
+   "umbra_epochs": 426,
+   "umbra_nights": 143,
+   "pre": 0,
+   "post": 1579,
+   "umbra_dim_epochs_after_injection": 422,
+   "umbra_fraction_predicted_ge_1mag": 0.9906103286384976,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 422,
+   "longest_run_nights": 142
+  },
+  {
+   "cell_k": 144,
+   "carrier": 724208300002655,
+   "t0": 60860.435620898716,
+   "u0": 1.884159682492506,
+   "half_d": 67.07773780247356,
+   "umbra_epochs": 78,
+   "umbra_nights": 54,
+   "pre": 3729,
+   "post": 14,
+   "umbra_dim_epochs_after_injection": 72,
+   "umbra_fraction_predicted_ge_1mag": 0.9230769230769231,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 72,
+   "longest_run_nights": 50
+  },
+  {
+   "cell_k": 155,
+   "carrier": 724208300007418,
+   "t0": 60833.38839207156,
+   "u0": 1.3973659306359891,
+   "half_d": 143.0862836157895,
+   "umbra_epochs": 130,
+   "umbra_nights": 88,
+   "pre": 3684,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 130,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 130,
+   "longest_run_nights": 88
+  },
+  {
+   "cell_k": 159,
+   "carrier": 724208100008148,
+   "t0": 60883.26259426812,
+   "u0": 0.8080808097932732,
+   "half_d": 182.9482277816281,
+   "umbra_epochs": 65,
+   "umbra_nights": 64,
+   "pre": 1991,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 65,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 65,
+   "longest_run_nights": 64
+  },
+  {
+   "cell_k": 165,
+   "carrier": 724204100000737,
+   "t0": 60846.56284229869,
+   "u0": 0.7332952680052436,
+   "half_d": 186.0719766628258,
+   "umbra_epochs": 66,
+   "umbra_nights": 65,
+   "pre": 1941,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 66,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 66,
+   "longest_run_nights": 65
+  },
+  {
+   "cell_k": 167,
+   "carrier": 723205100006482,
+   "t0": 58338.01193018671,
+   "u0": 0.12167104727721423,
+   "half_d": 199.62956084343986,
+   "umbra_epochs": 837,
+   "umbra_nights": 145,
+   "pre": 0,
+   "post": 3024,
+   "umbra_dim_epochs_after_injection": 837,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 837,
+   "longest_run_nights": 145
+  },
+  {
+   "cell_k": 168,
+   "carrier": 724204100001359,
+   "t0": 58299.6864993413,
+   "u0": 1.783148350833071,
+   "half_d": 90.57493907926735,
+   "umbra_epochs": 402,
+   "umbra_nights": 132,
+   "pre": 4,
+   "post": 1603,
+   "umbra_dim_epochs_after_injection": 392,
+   "umbra_fraction_predicted_ge_1mag": 0.9751243781094527,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 392,
+   "longest_run_nights": 129
+  },
+  {
+   "cell_k": 169,
+   "carrier": 724208400002219,
+   "t0": 60806.97106582726,
+   "u0": 0.29627483934909904,
+   "half_d": 197.79335730930566,
+   "umbra_epochs": 70,
+   "umbra_nights": 69,
+   "pre": 1966,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 70,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 70,
+   "longest_run_nights": 69
+  },
+  {
+   "cell_k": 175,
+   "carrier": 724204200004355,
+   "t0": 58404.84982783472,
+   "u0": 0.24125615896507835,
+   "half_d": 198.53955439059033,
+   "umbra_epochs": 928,
+   "umbra_nights": 173,
+   "pre": 13,
+   "post": 2880,
+   "umbra_dim_epochs_after_injection": 928,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 928,
+   "longest_run_nights": 173
+  },
+  {
+   "cell_k": 182,
+   "carrier": 724204200008878,
+   "t0": 60809.602654425515,
+   "u0": 1.3007427796051967,
+   "half_d": 151.92327739042977,
+   "umbra_epochs": 130,
+   "umbra_nights": 86,
+   "pre": 3690,
+   "post": 1,
+   "umbra_dim_epochs_after_injection": 130,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 130,
+   "longest_run_nights": 86
+  },
+  {
+   "cell_k": 185,
+   "carrier": 724208200004541,
+   "t0": 58380.66889610289,
+   "u0": 0.3872553394214271,
+   "half_d": 196.2150173174723,
+   "umbra_epochs": 895,
+   "umbra_nights": 161,
+   "pre": 0,
+   "post": 2969,
+   "umbra_dim_epochs_after_injection": 895,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 895,
+   "longest_run_nights": 161
+  },
+  {
+   "cell_k": 186,
+   "carrier": 724204100001908,
+   "t0": 60901.68086555391,
+   "u0": 0.3196482398546152,
+   "half_d": 197.42910126822352,
+   "umbra_epochs": 64,
+   "umbra_nights": 63,
+   "pre": 1944,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 64,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 64,
+   "longest_run_nights": 63
+  },
+  {
+   "cell_k": 189,
+   "carrier": 724208300005523,
+   "t0": 60924.56337766847,
+   "u0": 1.730780284167216,
+   "half_d": 100.21973897082606,
+   "umbra_epochs": 74,
+   "umbra_nights": 50,
+   "pre": 3748,
+   "post": 0,
+   "umbra_dim_epochs_after_injection": 74,
+   "umbra_fraction_predicted_ge_1mag": 1.0,
+   "first_block": "MIN_BRACKET",
+   "other_blocks": [],
+   "longest_run_epochs": 74,
+   "longest_run_nights": 50
+  }
+ ]
+}

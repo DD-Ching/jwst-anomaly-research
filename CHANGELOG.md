@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 ZTF v12: new-field batch area Npix 2382 fails validation (ρ 0.1, blend 0.7, t_E 30 d at 0.42); search not executed
+- **Setup:** plan, dedupe list (4,072 earlier groups) and candidates were fixed before any read
+  (`results/w3_ztf/v12/`).
+- **Area check (metadata):** of 5 candidates, 4 qualify. 2382 (0.6965) and 8170 (0.6615) share no field with
+  earlier samples. Their partitions need 4.4 GB together, so the budget rule kept 2382 only.
+- **Npix 2382:** 3,000 new groups, 500 calibration and 2,500 search. 9 of 10 cells reach ≥ 0.5, but
+  ρ 0.1 / blend 0.7 / t_E 30 d recovers 84/200.
+  - Of the 87 flagged injections lost in that cell, 80 fail first on the frozen sharp-edge test (post hoc trace).
+    Sampling is not the limit: 171/200 are flagged.
+  - Controls ≤ 2 %; 0 calibration survivors.
+- **Not executed:** the 2,500 search groups. 8170 was not read. No threshold changed and no retry.
+- **Handoff:** W3 / ZTF is paused again.
+  - In the one validated area, the failing cell lost most flagged injections at the sharp-edge test (80 of 87, post
+    hoc). A link to cadence is a hypothesis; it was not tested.
+  - Another area under the same rules may pass or fail; it would not change the method. Changing the test is a method
+    change that needs the owner.
 ## 2026-10-19: W3 dimming: Abell 2744 forced stage calibrated (300 controls); still null; headline 5–11 % tighter
 - **Why:** D-052 "Revisit if" holds (S3 byte-range jobs have worked since 10-08); Abell 2744 and NEXUS were never
   calibrated. Plan frozen first (`results/dimming/abell2744_calib/PLAN.md`); code unchanged.

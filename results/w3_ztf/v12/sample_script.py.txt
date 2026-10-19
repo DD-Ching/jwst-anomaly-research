@@ -1,0 +1,37 @@
+# v12 samples of the chosen areas (PLAN.md section 4), from the objects tables cached by obs_script (one download).
+# Usage: python sample_script.py.txt <scratch dir>
+import json, sys, zlib
+import numpy as np
+import pandas as pd
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+SCR = sys.argv[1]
+obs = json.load(open(wz.OUT / 'v12' / 'obs_conditions.json'))
+assert obs['chosen'], 'no area qualified; the plan stops before any light curve'
+ded = json.load(open(wz.OUT / 'v12' / 'dedupe.json'))['groups']
+old_pos = [(g[1], g[2]) for g in ded]
+old_oid = {m for g in ded for m in g[3]}
+summary = {}
+for pix in json.load(open(wz.OUT / 'v12' / 'budget.json'))['used_areas']:  # budget rule (PLAN section 7)
+    wz.configure(pix, f'v12/{pix}')
+    wz.N_MAX = 3000
+    obj = pd.read_parquet(f'{SCR}/obj{pix // 4}.parquet')
+    groups, info = wz.select(obj, old_pos)
+    groups = [g for g in groups if not set(g['members']) & old_oid]
+    rank = sorted(groups, key=lambda g: zlib.crc32(f"v12:{int(g['key'])}".encode()))
+    ncal = min(500, len(groups) // 2)
+    cal = {g['key'] for g in rank[:ncal]}
+    for g in groups:
+        g['holdout'] = g['key'] not in cal
+    info.update(calibration_groups=ncal, search_groups=len(groups) - ncal, lc_partition=wz.LC_PART,
+                split='lowest min(500, n//2) by crc32("v12:"+key) = calibration')
+    pct = lambda xs: [float(np.percentile(xs, q)) for q in (5, 50, 95)]
+    info['refmag_r_p5_p50_p95'] = {'calibration': pct([g['refmag_r'] for g in groups if not g['holdout']]),
+                                   'search': pct([g['refmag_r'] for g in groups if g['holdout']])}
+    wz.SAMPLE.parent.mkdir(parents=True, exist_ok=True)
+    wz.SAMPLE.write_text(json.dumps({'label': 'derived; v12 PLAN section 4', 'info': info, 'groups': groups}) + '\n')
+    info['controls'] = wz.save_comparisons(obj, {m for g in groups for m in g['members']})
+    summary[pix] = info
+    print(pix, json.dumps(info), flush=True)
+json.dump({'label': 'derived', 'areas': {str(k): v for k, v in summary.items()}}, open(wz.OUT / 'v12' / 'samples_info.json', 'w'), indent=1)
+open(wz.OUT / 'v12' / 'samples_info.json', 'a').write('\n')

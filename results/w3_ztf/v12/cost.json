@@ -1,0 +1,11 @@
+{
+ "label": "derived; compressed bytes of columns read (parquet metadata) and TAP response bytes",
+ "objects_mb_4_parents": 372.4,
+ "tap_obs_check_mb": 18.03,
+ "lc_partition_2382_mb": 1846.5,
+ "tap_exposures_2382_mb": 13.92,
+ "psfcat_head_requests": 100,
+ "cutouts_mb": 0.0,
+ "not_read": "Npix 8170 light curves (budget rule)",
+ "total_mb": 2250.8
+}
