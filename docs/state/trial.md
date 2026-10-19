@@ -287,6 +287,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | ≈ 0.2 (W3 dimming: NEXUS `o014` forced check on the 12 `on_sky` targets, frozen plan + tested rule, sheet looked at; 0 survivors, mosaic-edge / depth) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 019eUf3y, 17:09–17:35Z |
 | 2026-W43 | ≈ 0.7 (W3 dimming: D-039 persistence run, MACS0416 e2–3 + Abell 2744 e1: all 20 targets `on_sky`, one epoch each; controls 194 / 194) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine 01GSZUHb, 18:08–19:10Z |
 | 2026-W43 | — | — | ≈ 0.2 (W3 dimming injection edge coverage: frozen plan, rule and gate, `WHT` grids on 15 images, 4-variant what-if, sheet looked at; gate V failed as written, post hoc diagnostic) | 0.1 (orientation, claim, state files, PR) | cloud routine 01RmqBCN, 19:09–19:40Z |
+| 2026-W43 | — | — | — | 0.5 (#380 W3 ZTF v14 brought up to date with `main` and merged under the policy; #374 live re-check of the three failing network tests) | cloud routine 01QjKQDx, 20:08–20:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
