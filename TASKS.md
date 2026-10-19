@@ -63,6 +63,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
      null, control passes; EP–GBM 1 h–1 d same is the smallest cell, × 18 = 0.039); ~~IceTracks-DR2~~ done
      2026-10-18 (northern tracks, D-074 addendum 8, `results/e1_icetracks/RESULT.md`: 35 cells null, control passes).
      All listed node sets are done; E1 now waits only on the CHIME uptime series.
+     ~~DR2–ICECAT control deficit~~ explained 2026-10-19 (D-074 addendum 9, `results/e1_icetracks/selfpair/RESULT.md`:
+     the null displaces the 276 shared events; removed, z −1.23 / +0.97).
 0. **D1 distance self-consistency** (D-073 + addenda; owner idea 1): H0LiCOW (R and D_dt LOO), 94 localized FRBs
    (NE2001 and YMW16) and TDCOSMO 2025 power-law D_dt LOO on 8 lenses (addendum 2: max 1.12σ with κ_ext): all null.
    Reach: R ×2–8 / ×0.2–0.4; D_dt ×1.36–1.85 / ×0.41–0.78. Composite model (SDSS1206 only): null
