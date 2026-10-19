@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: D-039 persistence test on the single-epoch vanish flags (partial)
+- **Why:** #376 handoff. Plan and rules frozen first (`results/dimming/persistence_run/PLAN.md`, rules as tested
+  functions in `summarise.py`).
+- **Result (`results/dimming/persistence_run/RESULT.md`):** NEXUS 17 targets (all in epoch `o014`): 12 `on_sky`,
+  4 `inconclusive`, 1 `undetected`, 0 `persistence`. Controls (partial): 61 / 61 monitored pairs `on_sky`, 0
+  `persistence` (S/N 10–50). No swap decision from the partial set; no flag is interpreted.
+- **Deviations / failed approaches:** NEXUS ran without controls (I/O: each `_cal` open streams several MB);
+  MACS0416 and Abell 2744 unfinished (their 20 targets untested); `pkill -f` killed the calling shell.
+- **Handoff:** (1) `forced` on the 12 NEXUS `on_sky` targets, `o014` depth/footprint test first (its F200W
+  catalogue is 65 MB against 12–27 MB); (2) finish MACS0416 e2–3, Abell 2744 e1–2; (3) then the swap.
+
 ## 2026-10-19: W3 dimming: the D-039 persistence test in place of `single_epoch` is worth building (scoping)
 - **Why:** #375 handoff, D-052 "Revisit if". Plan and decision rule frozen first
   (`results/dimming/persistence_scope/PLAN.md`); screen code and thresholds unchanged.

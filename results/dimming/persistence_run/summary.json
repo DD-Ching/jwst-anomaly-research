@@ -1,0 +1,235 @@
+{
+ "provenance": "derived",
+ "monitored_pairs": 61,
+ "monitored_persistence_rate": 0.0,
+ "efficiency_by_mosaic_snr": [
+  {
+   "snr_lo": 0,
+   "snr_hi": 10,
+   "n_pairs": 0,
+   "n_on_sky": 0,
+   "n_persistence": 0,
+   "n_inconclusive": 0,
+   "n_undetected": 0,
+   "on_sky_fraction": null
+  },
+  {
+   "snr_lo": 10,
+   "snr_hi": 20,
+   "n_pairs": 5,
+   "n_on_sky": 5,
+   "n_persistence": 0,
+   "n_inconclusive": 0,
+   "n_undetected": 0,
+   "on_sky_fraction": 1.0
+  },
+  {
+   "snr_lo": 20,
+   "snr_hi": 50,
+   "n_pairs": 56,
+   "n_on_sky": 56,
+   "n_persistence": 0,
+   "n_inconclusive": 0,
+   "n_undetected": 0,
+   "on_sky_fraction": 1.0
+  },
+  {
+   "snr_lo": 50,
+   "snr_hi": null,
+   "n_pairs": 0,
+   "n_on_sky": 0,
+   "n_persistence": 0,
+   "n_inconclusive": 0,
+   "n_undetected": 0,
+   "on_sky_fraction": null
+  }
+ ],
+ "rule1_usable": true,
+ "targets": [
+  {
+   "uid": "nexus-d10423",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 10,
+   "n_suspect": 0,
+   "n_clean": 10,
+   "mosaic_snr": 27.371081734970755
+  },
+  {
+   "uid": "nexus-d11436",
+   "epoch": 2,
+   "verdict": "inconclusive",
+   "n_exposures": 4,
+   "n_detected": 1,
+   "n_suspect": 0,
+   "n_clean": 1,
+   "mosaic_snr": 19.62453085075978
+  },
+  {
+   "uid": "nexus-d12360",
+   "epoch": 2,
+   "verdict": "inconclusive",
+   "n_exposures": 12,
+   "n_detected": 1,
+   "n_suspect": 0,
+   "n_clean": 1,
+   "mosaic_snr": 20.128576721963146
+  },
+  {
+   "uid": "nexus-d12528",
+   "epoch": 2,
+   "verdict": "inconclusive",
+   "n_exposures": 10,
+   "n_detected": 1,
+   "n_suspect": 0,
+   "n_clean": 1,
+   "mosaic_snr": 30.54071414531361
+  },
+  {
+   "uid": "nexus-d13073",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 4,
+   "n_detected": 2,
+   "n_suspect": 0,
+   "n_clean": 2,
+   "mosaic_snr": 13.747846916321727
+  },
+  {
+   "uid": "nexus-d15524",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 5,
+   "n_suspect": 0,
+   "n_clean": 3,
+   "mosaic_snr": 18.029640425304084
+  },
+  {
+   "uid": "nexus-d18183",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 10,
+   "n_detected": 9,
+   "n_suspect": 0,
+   "n_clean": 9,
+   "mosaic_snr": 27.33563751619459
+  },
+  {
+   "uid": "nexus-d20291",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 6,
+   "n_suspect": 0,
+   "n_clean": 6,
+   "mosaic_snr": 17.908657152434543
+  },
+  {
+   "uid": "nexus-d22021",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 11,
+   "n_detected": 4,
+   "n_suspect": 0,
+   "n_clean": 4,
+   "mosaic_snr": 20.072267364542494
+  },
+  {
+   "uid": "nexus-d23045",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 10,
+   "n_suspect": 0,
+   "n_clean": 10,
+   "mosaic_snr": 22.779977322172055
+  },
+  {
+   "uid": "nexus-d24470",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 9,
+   "n_suspect": 0,
+   "n_clean": 9,
+   "mosaic_snr": 28.764349236657456
+  },
+  {
+   "uid": "nexus-d29073",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 12,
+   "n_suspect": 1,
+   "n_clean": 11,
+   "mosaic_snr": 26.188827703762875
+  },
+  {
+   "uid": "nexus-d29638",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 9,
+   "n_suspect": 0,
+   "n_clean": 9,
+   "mosaic_snr": 19.944813637424108
+  },
+  {
+   "uid": "nexus-d30295",
+   "epoch": 2,
+   "verdict": "undetected",
+   "n_exposures": 12,
+   "n_detected": 0,
+   "n_suspect": 0,
+   "n_clean": 0,
+   "mosaic_snr": 31.98994864972924
+  },
+  {
+   "uid": "nexus-d30428",
+   "epoch": 2,
+   "verdict": "inconclusive",
+   "n_exposures": 7,
+   "n_detected": 1,
+   "n_suspect": 0,
+   "n_clean": 1,
+   "mosaic_snr": 10.326129388356737
+  },
+  {
+   "uid": "nexus-d30717",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 8,
+   "n_suspect": 0,
+   "n_clean": 8,
+   "mosaic_snr": 23.924285162180368
+  },
+  {
+   "uid": "nexus-d46213",
+   "epoch": 2,
+   "verdict": "on_sky",
+   "n_exposures": 12,
+   "n_detected": 4,
+   "n_suspect": 0,
+   "n_clean": 3,
+   "mosaic_snr": 11.453428013680599
+  }
+ ],
+ "targets_to_vet": [
+  "nexus-d10423",
+  "nexus-d13073",
+  "nexus-d15524",
+  "nexus-d18183",
+  "nexus-d20291",
+  "nexus-d22021",
+  "nexus-d23045",
+  "nexus-d24470",
+  "nexus-d29073",
+  "nexus-d29638",
+  "nexus-d30717",
+  "nexus-d46213"
+ ],
+ "n_failed_reads": 0
+}
