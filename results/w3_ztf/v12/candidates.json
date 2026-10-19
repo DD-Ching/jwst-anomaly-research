@@ -1,0 +1,43 @@
+{
+ "label": "derived (HATS partition_info only)",
+ "rule": "Norder 5, parent has an objects partition, parent not 959/1783, 300k-700k rows, centre dec +25..+65, |b| >= 30; 3 parents evenly spaced in Npix order; their 2, 2, 1 largest children; plus Npix 3837 (old fields) as the fallback",
+ "eligible_partitions": 1213,
+ "eligible_parents": 361,
+ "candidates": [
+  {
+   "npix": 183,
+   "rows": 440567,
+   "ra": 36.56,
+   "dec": 25.94,
+   "b": -32.2
+  },
+  {
+   "npix": 2380,
+   "rows": 647931,
+   "ra": 258.75,
+   "dec": 37.17,
+   "b": 34.4
+  },
+  {
+   "npix": 2382,
+   "rows": 640009,
+   "ra": 257.34,
+   "dec": 38.68,
+   "b": 35.8
+  },
+  {
+   "npix": 8170,
+   "rows": 696214,
+   "ra": 260.16,
+   "dec": 30.0,
+   "b": 31.7
+  },
+  {
+   "npix": 3837,
+   "rows": null,
+   "ra": null,
+   "dec": null,
+   "b": null
+  }
+ ]
+}

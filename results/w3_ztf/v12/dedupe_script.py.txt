@@ -1,0 +1,14 @@
+# v12 dedupe list: every calibration or search group of earlier rounds (positions + objectids). Usage: python dedupe_script.py.txt
+import json
+src = {'v1-v3 (Npix 3839)': 'results/w3_ztf/sample.json', 'v4 (Npix 3838)': 'results/w3_ztf/v4/sample.json',
+       'v6/v10 (Npix 7134)': 'results/w3_ztf/v6/sample.json', 'v11 (Npix 3839)': 'results/w3_ztf/v11/sample.json'}
+out = {'label': 'derived; groups used before as calibration or search groups', 'rule': 'new = no shared objectid and '
+       'no listed group within 3 arcsec', 'comparison_stars_read_before': 'by rule: refmag 14-18, non-transient, in '
+       'Npix 3838, 3839, 7134 (control/comparison sets of v1-v11); never searched', 'rounds': {}, 'groups': []}
+for k, p in src.items():
+    gs = json.load(open(p))['groups']
+    out['rounds'][k] = {'file': p, 'groups': len(gs), 'searched_or_holdout': int(sum(bool(g.get('holdout')) for g in gs))}
+    out['groups'] += [[k, round(g['ra'], 7), round(g['dec'], 7), g['members']] for g in gs]
+out['total_groups'] = len(out['groups'])
+json.dump(out, open('results/w3_ztf/v12/dedupe.json', 'w'), separators=(',', ':')); open('results/w3_ztf/v12/dedupe.json', 'a').write('\n')
+print(out['rounds'], out['total_groups'])
