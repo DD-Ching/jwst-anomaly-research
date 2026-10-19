@@ -1,0 +1,44 @@
+# v11 realised sampling (PLAN.md section 4): the section 2 indicator on the calibration carriers' actual r-band
+# series (frozen series(): good exposures, DR24 detections or in-footprint non-detections), and the share of
+# official infobits-0 in-footprint exposures that reach the series. Calibration + control rows only.
+# Usage: python realised_script.py.txt
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(3839, 'v11')
+CELLS = [(0.01, 1.0, 10.0), (0.01, 1.0, 30.0), (0.01, 1.0, 100.0), (0.1, 1.0, 10.0), (0.1, 1.0, 30.0),
+         (0.01, 0.7, 10.0), (0.01, 0.7, 30.0), (0.01, 0.7, 100.0), (0.1, 0.7, 10.0), (0.1, 0.7, 30.0)]
+night = lambda t: np.floor(np.asarray(t) + 0.2).astype(int)
+def classify(t, dm, t0, half):  # as obs_script.py.txt
+    s = [(float(a), float(b), False, 99.0, (0, 0, 2), k, 0.0, 0.0) for k, (a, b) in enumerate(zip(t, dm))]
+    return any(s[i][0] <= t0 + half and s[j][0] >= t0 - half for i, j in wz.flagged_runs(s))
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+car, share = [], []
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) < 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        continue
+    car.append(np.array([x[0] for x in s]))
+    off = set()
+    for o in g['members']:
+        r = rows.get(o)
+        if r is None or r['filt'] != 2 or (*r['quad'], 2) not in cov:
+            continue
+        c = cov[(*r['quad'], 2)]
+        off |= set(c['expid'][(c['infobits'] == 0) & c['covered'][o]].tolist())
+    share.append(len({x[5] for x in s}) / max(len(off), 1))
+out = {'label': 'derived; realised necessary-sampling indicator on calibration carriers (upper bound, not recovery)',
+       'carriers': len(car), 'series_share_of_official_median': float(np.median(share)),
+       'series_share_of_official_p10_p90': [float(np.percentile(share, 10)), float(np.percentile(share, 90))], 'cells': {}}
+for c, (rho, blend, te) in enumerate(CELLS):
+    r = np.random.default_rng(2100 + c); ok = 0
+    for _ in range(2000):
+        t = car[r.integers(len(car))]
+        t0, u0 = r.uniform(t.min(), t.max()), r.uniform(0, 2)
+        ok += classify(t, wz.w3_dmag(t, t0, te, u0, rho, blend), t0, te * np.sqrt(4 - u0**2))
+    out['cells'][f'rho{rho}_blend{blend:g}_tE{te:g}'] = ok / 2000
+    print(c, ok / 2000, flush=True)
+json.dump(out, open('results/w3_ztf/v11/realised_sampling.json', 'w'), indent=1); open('results/w3_ztf/v11/realised_sampling.json', 'a').write('\n')
+print(json.dumps(out))
