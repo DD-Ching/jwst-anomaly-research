@@ -19,7 +19,7 @@ for v in ctrl.values():
 cond = {'all_10_cells_ge_0.5': all(v['rate'] >= 0.5 for v in cells.values()),
         'controls_le_0.10': all(v['rate'] <= 0.10 for v in ctrl.values()),
         'calibration_survivors_le_5': len(cal['passed_groups']) <= 5}
-out = {'label': 'derived; frozen v6 rule (v14 PLAN section 3) applied by code', 'cells': cells, 'controls': ctrl,
+out = {'label': 'derived; frozen v13 rule with the v6 pass criteria (v14 PLAN section 3), applied by code', 'cells': cells, 'controls': ctrl,
        'calibration_real_survivors': len(cal['passed_groups']), 'calibration_flagged_runs': cal['flagged_runs'],
        'conditions': cond, 'passed': all(cond.values()), 'carriers': inj['carriers']}
 json.dump(out, open('results/w3_ztf/v14/8170/decision.json', 'w'), indent=1); open('results/w3_ztf/v14/8170/decision.json', 'a').write('\n')

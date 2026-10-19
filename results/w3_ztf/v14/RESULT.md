@@ -2,7 +2,8 @@
 
 - **Plan:** `PLAN.md`, committed in 2ed8929 with the frozen part-1 selection, before any new cutout.
 - **8170 sample:** committed before any light curve (`8170/sample.json.gz`). The uncompressed file is 1.3 MB, over the
-  repo's 1 MB rule, so it is git-ignored and rebuilt from the `.gz`; ra/dec are rounded to 1e-7 deg.
+  repo's 1 MB rule, so it is git-ignored and rebuilt with `gunzip -k sample.json.gz`. Rounding changed refmag_r
+  (≤ 2e-6), member_sep_max and nearest_other (≤ 5e-4); ra/dec are unchanged at 1e-7 deg.
 - **Labels:** TAP, DR24, IBE images and masks `observed`; counts `derived`; injections `simulated`.
 - **Scope:**
   - the frozen v13 W3 rule, catalogue stage, the 10 calibrated cells;
@@ -26,11 +27,15 @@
   - 26 cutouts in total (cap 40). **656 rebuilt NDs stay pending, not excluded.**
 - **Results** (`pending_image.json`, `pending_image.png`, `mask_check.json`):
   - **3 new auto-classified "dimming" NDs** (723205400006654: 1; 724208200007532: 2). The official mask at the source
-    position has value 516 = bit 2 **LOW RESPONSIVITY** + bit 9 **DEAD (UNRESPONSIVE)**, bit names from the mask
-    header. The other masked ND of 723205400006654 (class 5) also carries 516 at the centre.
+    position has value 516 = bit 2 **LOW RESPONSIVITY** + bit 9 **DEAD (UNRESPONSIVE)**. The bit names come from
+    the mask header comments (`mask_bitnames.json`, a review fix: `mask_check.json` stored header values only). The other masked ND of 723205400006654 (class 5) also carries 516 at the centre.
     - So for these exposures the official pipeline flags the pixels under the source as dead or low-response. That
       supports, beyond the #370 image-only dark-column relation, a detector origin for these NDs.
     - The 17 #370 NDs were not re-masked (cap).
+    - **Column check of the new cutouts** (`mask_check.json` → `column_check_new_cutouts`): a dark column lies
+      0.10–0.38″ from the source in all 6 masked-position NDs with a column. It lies within 2″ in 2 of 6 detected
+      references too (1.45″ and 1.84″), so a nearby column alone does not remove a detection.
+      This agrees with the mask reading for the pixels under the source but does not prove the cause.
     - The relation is **not** made a global veto.
   - **724208200014557** (6th group): 2 NDs are undetermined (class 5). Their masks show bit 7 (pixel spike) and bit 1
     (a SExtractor detection inside the aperture), and the only post-run reference is a poor image. **Not
@@ -86,10 +91,13 @@
   - 122247916 and 122339453: maglimit 19.25 and 19.30, below the image check's 19.5 quality cut (class 2, poor
     image);
   - 122440822: the source is present at 0.88 × the reference flux (class 3, "catalogue missing it").
-- **After the run:** detections 7–9 min after the third ND (122441409, 122441457).
+- **After the run:** detections 8.5 and 9.2 min after the third ND (122441409, 122441457).
 - **The contact sheet shows the star in all three NDs.**
 - **Reading:**
-  - the source (g ≈ 18.9 AB from the 100.6 µJy reference) lies 0.3–0.7 mag above those exposures' limits;
+  - the source (g ≈ 18.9 AB from the 100.6 µJy reference) lies 0.36, 0.41 and 0.70 mag above those exposures'
+    limits;
+  - in the shallow ND 122247916 the aperture gives 73.7 ± 11.9 µJy (0.73 ×, about 2.3σ low), with the source
+    visible;
   - the catalogue dropped it in shallow images;
   - this is **not a real dimming**, and no ordinary-versus-W3 comparison applies.
 - Post hoc note, not a rule change: the frozen pre-screen counts any in-footprint ND as dim, whatever the source
@@ -107,3 +115,6 @@
 - **Part 1 inventory:** rebuilt without the good-exposure rule (approximation, stated above).
 - **Sample storage:** gzipped (see the header).
 - **Image script:** restricted to vetted survivors (PLAN section 4); that is the only change from `../v13/image_script.py.txt`.
+- **Usage log:** in `8170/source_usage.jsonl` the post-search records (coverage script) carry the stage labels "?"
+  and a scratch path (from argv); they come after the search.
+- **Decision label:** corrected to "frozen v13 rule with the v6 pass criteria"; the values are unchanged.

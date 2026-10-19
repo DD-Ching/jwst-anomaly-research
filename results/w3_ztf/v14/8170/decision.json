@@ -1,5 +1,5 @@
 {
- "label": "derived; frozen v6 rule (v14 PLAN section 3) applied by code",
+ "label": "derived; frozen v13 rule with the v6 pass criteria (v14 PLAN section 3), applied by code",
  "cells": {
   "rho0.01_blend1_tE10": {
    "recovered": 136,

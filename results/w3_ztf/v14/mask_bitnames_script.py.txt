@@ -1,0 +1,14 @@
+# v14 review fix: the mask bit names as written in the header comments of the downloaded _mskimg cutouts (the first
+# mask_check run stored only the header values). Usage: python -I mask_bitnames_script.py.txt <cutout dir> <out json>
+import glob, json, sys
+from astropy.io import fits
+fs = sorted(glob.glob(f'{sys.argv[1]}/*_msk.fits'))
+names = {}
+for f in fs:
+    h = fits.open(f)[0].header
+    for k in h:
+        if k.startswith('BIT') and k != 'BITPIX':
+            names.setdefault(k, set()).add(h.comments[k])
+out = {'label': 'observed (IBE _mskimg header comments)', 'files': len(fs), 'bit_names': {k: sorted(v) for k, v in names.items()}}
+json.dump(out, open(sys.argv[2], 'w'), indent=1); open(sys.argv[2], 'a').write('\n')
+print(out)
