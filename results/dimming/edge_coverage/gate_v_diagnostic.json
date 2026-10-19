@@ -1,0 +1,467 @@
+{
+ "post_hoc": true,
+ "targets": {
+  "nexus-d10423": {
+   "covered": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    4,
+    0,
+    6,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "wht_rel": [
+    0.0,
+    0.0,
+    1.006,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "nexus-d13073": {
+   "covered": [
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    0,
+    0,
+    12,
+    3,
+    4,
+    0,
+    4,
+    5
+   ],
+   "wht_rel": [
+    0.0,
+    0.0,
+    0.509,
+    0.954,
+    0.911,
+    0.0,
+    0.998,
+    0.96
+   ]
+  },
+  "nexus-d15524": {
+   "covered": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    4,
+    0,
+    6,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "wht_rel": [
+    0.516,
+    0.0,
+    0.65,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "nexus-d18183": {
+   "covered": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    4,
+    0,
+    6,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "wht_rel": [
+    0.0,
+    0.0,
+    0.505,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "nexus-d20291": {
+   "covered": [
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    true,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    0,
+    6,
+    10,
+    6,
+    0,
+    0,
+    7,
+    0
+   ],
+   "wht_rel": [
+    0.0,
+    0.954,
+    0.989,
+    0.989,
+    0.0,
+    0.0,
+    0.97,
+    0.0
+   ]
+  },
+  "nexus-d22021": {
+   "covered": [
+    false,
+    true,
+    true,
+    false,
+    false,
+    true,
+    true,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    0,
+    3,
+    6,
+    0,
+    0,
+    3,
+    3,
+    0
+   ],
+   "wht_rel": [
+    0.0,
+    0.984,
+    0.847,
+    0.0,
+    0.0,
+    0.982,
+    0.807,
+    0.0
+   ]
+  },
+  "nexus-d23045": {
+   "covered": [
+    false,
+    true,
+    true,
+    true,
+    false,
+    false,
+    true,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    1,
+    4,
+    6,
+    4,
+    0,
+    2,
+    4,
+    0
+   ],
+   "wht_rel": [
+    0.0,
+    1.985,
+    0.988,
+    0.0,
+    0.0,
+    0.0,
+    0.975,
+    0.0
+   ]
+  },
+  "nexus-d24470": {
+   "covered": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    13,
+    0,
+    11,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "wht_rel": [
+    0.752,
+    0.0,
+    1.025,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "nexus-d29073": {
+   "covered": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    6,
+    0,
+    7,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "wht_rel": [
+    0.0,
+    0.0,
+    0.844,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "nexus-d29638": {
+   "covered": [
+    false,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    0,
+    0,
+    10,
+    0,
+    6,
+    0,
+    0,
+    4
+   ],
+   "wht_rel": [
+    0.0,
+    0.0,
+    0.995,
+    0.0,
+    0.966,
+    0.0,
+    0.0,
+    0.992
+   ]
+  },
+  "nexus-d30717": {
+   "covered": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "detected": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "neighbours": [
+    4,
+    0,
+    11,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "wht_rel": [
+    0.0,
+    0.0,
+    0.642,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ }
+}

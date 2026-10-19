@@ -18,6 +18,28 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - The image check (7 cutouts) shows the star in all 3 NDs: 2 shallow images and 1 at 0.88 × reference flux.
   - That is a near-limit catalogue drop, **not a real dimming**.
 - No limit is derived (`results/w3_ztf/v14/RESULT.md`). W3 / ZTF is paused.
+## 2026-10-19: W3 dimming: injection edge-coverage check: gate V failed as written; no decision
+- **Why:** #378 handoff 2 (does the injection chain count mosaic-edge positions as covered?). Plan, rule
+  (`edge.edge_pair`, F200W `WHT` on a 32-px grid, `wht_rel < 0.5`), gate and decision frozen and unit-tested first
+  (`results/dimming/edge_coverage/PLAN.md`).
+- **Result (`results/dimming/edge_coverage/RESULT.md`):** gate V needed ≥ 9 of the 11 NEXUS mosaic-edge targets
+  called; 5 were, so no decision is read. Post hoc: the gate set was mis-specified (`forced` cut flags are OR'ed
+  over epochs the proxy already calls uncovered); all 4 "no other epoch measurable" targets are called. The
+  `veto_on` exposures reproduce the committed limits exactly.
+- **Post hoc, not a result:** 9–18 % of proxy-covered injection pairs are edge pairs; masking them gives veto-off
+  exposure ×0.81–0.87 and veto-on ×0.75–1.22 of the unmasked, the swap gain ×1.80–3.37 (unmasked ×1.99–3.36).
+- **Handoff:** re-freeze gate V on per-epoch `forced` stamp flags in proxy-covered epochs (targets and controls,
+  both directions), then read the decision; if `over_counts`, add a weight-map coverage term before the swap.
+## 2026-10-19: W3 dimming: D-039 persistence test on all 37 targets: 32 `on_sky`, 0 `persistence`
+- **Why:** #378 handoff 1, under the frozen `results/dimming/persistence_run/PLAN.md`.
+- **Result (`results/dimming/persistence_run/RESULT.md` "Continuation"):** MACS0416 complete and Abell 2744 epoch 1
+  done: their 20 targets are all `on_sky`, each only in one epoch per field (MACS0416 `jw01208-o004` CANUCS,
+  Abell 2744 `jw02561-o002`), the NEXUS `o014` pattern that `forced` explained as depth / footprint (#378).
+  Controls 194 / 194 `on_sky`, 0 `persistence`, all at mosaic S/N 11–33 (fainter unmeasured).
+- **Failed approach:** both fields in parallel shared the stream (about 150 MB/s; 1,920 `_cal` × 118 MB); Abell 2744
+  epoch 2 (controls only) did not finish. Exposure tables over 1 MB are committed gzipped.
+- **Handoff:** (1) `forced` + epoch depth / footprint test on the 20 targets; (2) reconsider the swap, since the
+  persistence verdict removed none of the 37 targets.
 
 ## 2026-10-19: W3 dimming: NEXUS `o014` targets are mosaic-edge and catalogue-depth effects (0 survivors)
 - **Why:** #377 handoff 1. Plan, rule (`summarise.explanation`, unit-tested) and target builder frozen first
