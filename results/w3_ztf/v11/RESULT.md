@@ -25,18 +25,18 @@
 
 | cell (ρ, blend, t_E) | 3837 | 3838 | 3839 |
 |---|---|---|---|
-| 0.01, 1, 10 | 0.737 | 0.734 | 0.751 |
+| 0.01, 1, 10 | 0.737 | 0.734 | 0.7505 |
 | 0.01, 1, 30 | 0.859 | 0.864 | 0.868 |
 | 0.01, 1, 100 | 0.820 | 0.818 | 0.823 |
-| 0.1, 1, 10 | 0.701 | 0.705 | 0.715 |
+| 0.1, 1, 10 | 0.701 | 0.705 | 0.7145 |
 | 0.1, 1, 30 | 0.821 | 0.820 | 0.833 |
-| 0.01, 0.7, 10 | 0.724 | 0.719 | 0.725 |
-| 0.01, 0.7, 30 | 0.860 | 0.854 | 0.863 |
+| 0.01, 0.7, 10 | 0.724 | 0.719 | 0.7245 |
+| 0.01, 0.7, 30 | 0.860 | 0.854 | 0.8625 |
 | 0.01, 0.7, 100 | 0.824 | 0.819 | 0.825 |
-| 0.1, 0.7, 10 | **0.687** | **0.685** | **0.703** |
-| 0.1, 0.7, 30 | 0.816 | 0.808 | 0.817 |
+| 0.1, 0.7, 10 | **0.687** | **0.6855** | **0.7025** |
+| 0.1, 0.7, 30 | 0.816 | 0.8085 | 0.817 |
 
-- **Choice:** the rule picks the highest worst-cell fraction, which is **Npix 3839 (0.703)**. All three areas score
+- **Choice:** the rule picks the highest worst-cell fraction, which is **Npix 3839 (0.7025)**. All three areas score
   ≥ 0.5. The tie-break was not needed. Its stored count is capped at 1,000 per area, so it could not have applied as
   written.
 - **What is missing, by cell (3839, first missing requirement in `first_missing`):**
@@ -46,7 +46,8 @@
 
 ## 2. Data and sample
 - **Sample** (`sample.json`): 1,000 groups, seed 7, split into 512 calibration and 488 search groups
-  (crc32("v11:" + key)). There are 32,966 control (comparison) stars, none of them a v11 sample member.
+  (crc32("v11:" + key)). There are 32,966 control (comparison) stars, none of them a v11 sample member
+  (`sample_check.json`).
   - The nearest v1–v4 sample group is 5.4″ away. No groups lie within 3″, and no objectids are shared
     (`sample_check.json`).
 - **Light curves:** 38,195 rows of the DR24 partition (`fetch_info.json`); TAP 38,026 exposure rows
@@ -75,10 +76,11 @@
 - **Controls passing vetting:** eclipse 0, fade 8 (4 %), PSPL 0 and common mode 0 of 200.
 - **Real calibration light curves** (`search_dev_v11.json`): 1,022 series, 0 flagged runs, 0 survivors.
 - **Carriers:** 512. The search group was never loaded during calibration (`source_usage.jsonl`,
-  search_member_rows 0 in every record).
+  search_member_rows 0 in the three calibration records: inject, search dev, and `realised_script` logged as
+  stage "?"). The fourth record is the holdout search, after the pass, with 2,752 search-member rows.
 - **The necessary-sampling fraction is not a strict per-sample bound.** At ρ 0.01, blend 1, t_E 10 d, recovery is
-  0.775 against an indicator of 0.751 (3839) and 0.753 (realised). The 200 injections are a different draw from the
-  2,000, so the binomial error of ±0.03 (one σ) covers the difference. The indicator also ignores real non-detections
+  0.775 against an indicator of 0.7505 (3839) and 0.753 (realised). The 200 injections are a different draw from the
+  2,000, so the binomial error of about ±0.03 (one σ; computed in the session, not stored) covers the difference. The indicator also ignores real non-detections
   already in the series. "Upper bound" holds on average, not draw by draw.
 - **Pre-search review** (subagent): no finding affects the verdict. Recorded:
   - the position draw (section 1);

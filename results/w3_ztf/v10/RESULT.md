@@ -105,7 +105,7 @@
 - **Colour term:** not applied, as in v9.
 - **Deviation, too-faint injected epochs:** whether such an epoch is dropped or becomes a non-detection is decided
   by the exposure (fill or not), not by the point's source. The 261 DR24 detections kept inside fill exposures
-  (`merge_log.json`) are therefore dropped instead of becoming non-detections, contrary to PLAN section 4. This is
+  (`merge_log.json`) are therefore dropped instead of becoming non-detections, contrary to PLAN section 4.
   The direction of its effect on recovery is **not verified** (addendum below); it was not re-run.
 - **Review fix after the first run:** a psfcat row with a non-finite magnitude now counts as flagged (it was
   unguarded). The ambiguous branch also no longer writes a placeholder magnitude. The whole re-run and the stats
@@ -120,17 +120,19 @@
 
 ## Addendum 2026-10-19 (after #359; from stored files only)
 - **Why "before" is 711 and v6 stored is 703.**
-  - The two runs use the same events and the same DR24 inputs.
+  - The two runs use the same events. The DR24 re-read has the same row count (below); byte identity was not
+    checked.
   - The replay used the v6 sequential-noise scheme on the re-read inputs and reproduced the v6 per-cell flagged and
-    recovered counts exactly (`decision.json`, `replay_mismatches_vs_v6: []`; the controls likewise,
-    `injections_v10.json` `v6_replay`).
+    recovered counts exactly (`decision.json` → `burden_calibration_merged.replay_mismatches_vs_v6: []`). The
+    control passed counts were reproduced likewise (`injections_v10.json` `v6_replay`; v6 stored no flagged count
+    for controls).
   - "Before" differs from that replay in **one thing only: the noise draws**. They come from a generator per
     (cell seed, event, expid) instead of one sequential generator per cell, so the realised noise differs.
   - The +8 (703 → 711) is therefore a noise-realisation difference of the same events. It is not a data or code
     change.
-  - **What is known about the inputs:** the light-curve partition re-read gave the same 12,209 rows. The TAP
-    re-query gave the same 21,632 rows, but its byte count differed (4,509,175 vs 4,660,671; content not
-    compared). The code included the v8 fixes (exptime mid-time, single-exposure match). The exact replay shows
+  - **What is known about the inputs:** the light-curve partition re-read gave 12,209 rows, the same as v6. The TAP
+    re-query gave 21,632 rows, also the same, but its byte count was 4,660,671 against v6's 4,509,175. The v10-side
+    values are from the session log, not stored, and the content was not compared. The code included the v8 fixes (exptime mid-time, single-exposure match). The exact replay shows
     that none of these changed the stored v6 counts. It does not show the inputs are byte-identical.
 - **What +161 compares:** "before" (711) and "after" (872) use the same events, code, noise scheme and per-expid
   seeds. They differ only in the data: DR24 alone vs DR24 + validated psfcat fill (and the FILL rules that come with
