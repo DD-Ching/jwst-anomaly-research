@@ -671,6 +671,32 @@ def flagged_runs(s):
     return out
 
 
+EDGE_RULE = "count"  # v13: "time" replaces the intermediate-point count by edge_time()
+EDGE_FRAC = 0.25  # v13: ~99th pct of the W3 model edge/span ratio (rho 0.1, blend 0.7)
+EDGE_NSIG = 2.0  # v13: an intermediate epoch must exceed INTER[0] by this many expected errors
+
+
+def edge_time(s, run, span) -> dict:
+    """v13 edge test: the time from the run's first (last) dim epoch back (forward) to the farthest
+    significantly intermediate detection within one run span must be <= EDGE_FRAC * span on both
+    sides. Significant: INTER[0] + EDGE_NSIG * sigma <= dm < INTER[1], with sigma from the epoch's
+    maglimit (SNR 5 at the limit, as in apply_dmag). Non-detections are never intermediate."""
+    i, j = run
+    t = np.array([x[0] for x in s])
+    dm = np.array([x[1] for x in s])
+    nd = np.array([x[2] for x in s], bool)
+    lim = np.array([x[3] for x in s], float)
+    with np.errstate(over="ignore", invalid="ignore"):
+        sig = 0.2171 * 10 ** (0.4 * (dm - lim))
+    inter = ~nd & (dm >= INTER[0] + EDGE_NSIG * sig) & (dm < INTER[1])
+    pre = inter & (t >= t[i] - span) & (t < t[i])
+    post = inter & (t > t[j]) & (t <= t[j] + span)
+    e_pre = float(t[i] - t[pre].min()) if pre.any() else 0.0
+    e_post = float(t[post].max() - t[j]) if post.any() else 0.0
+    ok = max(e_pre, e_post) <= EDGE_FRAC * span
+    return {"edge_pre_d": e_pre, "edge_post_d": e_post, "edge_ok": bool(ok)}
+
+
 def vet(s, run, other, cov, dimfrac_override=None) -> dict:
     """Plan section 6; returns each test's outcome."""
     i, j = run
@@ -693,6 +719,9 @@ def vet(s, run, other, cov, dimfrac_override=None) -> dict:
     inter = win & ~nd & (dm >= INTER[0]) & (dm < INTER[1])
     res["n_intermediate"] = int(inter.sum())
     res["sharp_ok"] = res["n_intermediate"] <= MAX_INTER
+    if EDGE_RULE == "time":  # v13: edge duration in time instead of a point count
+        res.update(edge_time(s, run, span))
+        res["sharp_ok"] = res["edge_ok"]
     # 3 one-off: no other D-run of >= MIN_RUN epochs
     others = [r for r in runs(d) if r != (i, j) and r[1] - r[0] + 1 >= MIN_RUN]
     res["n_other_runs"] = len(others)
@@ -837,6 +866,8 @@ def stage_inject(a) -> None:
             base = {(x["t_start"], x["t_end"]) for x in screen(s, o, cov)}
             carriers.append((g, s, o, base))
     res = {"version": VERSION, "carriers": len(carriers), "w3": [], "controls": {}}
+    res["edge_rule"], res["seed_offset"] = EDGE_RULE, a.seed_offset
+    dump = [] if getattr(a, "dump", None) else None
     n = a.n
     cells = [
         (r, b, te)
@@ -846,7 +877,7 @@ def stage_inject(a) -> None:
     for c, (rho, blend, te) in enumerate(cells):
         if a.cells == "calibrated" and (te == 3.0 or (rho == 0.1 and te == 100.0)):
             continue  # v6: only the 10 cells that reached 0.5 in v4 (seeds keep their cell index)
-        rng = np.random.default_rng(1100 + c)
+        rng = np.random.default_rng(1100 + c + a.seed_offset)  # v13: offset for new draws
         rec = flag = 0
         used = set()
         for _ in range(n):
@@ -867,13 +898,17 @@ def stage_inject(a) -> None:
             ]
             flag += bool(hit)
             rec += any(x["pass"] for x in hit)
+            if dump is not None:  # v13: per-injection outcome
+                tests = ("common_mode_ok", "sharp_ok", "oneoff_ok", "achromatic_ok")
+                fails = [k for k in tests if hit and not any(x[k] for x in hit)]
+                dump.append([c, len(dump), g["key"], bool(hit), any(x["pass"] for x in hit), fails])
         res["w3"].append(
             {"rho": rho, "blend": blend, "tE": te, "n": n, "flagged": flag, "recovered": rec}
         )
         res["w3"][-1]["distinct_stars"] = len(used)
         print(res["w3"][-1], flush=True)
     for kk, kind in enumerate(("eclipse", "fade", "pspl", "common")):
-        rng = np.random.default_rng(1200 + kk)
+        rng = np.random.default_rng(1200 + kk + a.seed_offset)
         flag = passed = 0
         used = set()
         for _ in range(n):
@@ -894,12 +929,19 @@ def stage_inject(a) -> None:
             sc = [x for x in screen(si, oi, cov, over) if (x["t_start"], x["t_end"]) not in base]
             flag += bool(sc)
             passed += any(x["pass"] for x in sc)
+            if dump is not None:
+                dump.append([kind, len(dump), g["key"], bool(sc), any(x["pass"] for x in sc), []])
         res["controls"][kind] = {"n": n, "flagged": flag, "passed_vetting": passed}
         res["controls"][kind]["distinct_stars"] = len(used)
         print(kind, res["controls"][kind], flush=True)
     VDIR.mkdir(parents=True, exist_ok=True)
     name = "injections_dev_v3.json" if VERSION < 4 else f"injections_v{VERSION}.json"
+    if VERSION >= 13:  # v13: one file per edge rule
+        name = f"injections_v{VERSION}_{EDGE_RULE}.json"
     (VDIR / name).write_text(json.dumps({"label": "simulated", **res}, indent=1) + "\n")
+    if dump is not None:
+        cols = ["cell_or_control", "i", "carrier", "flagged", "passed", "failed_tests"]
+        (VDIR / a.dump).write_text(json.dumps({"columns": cols, "rows": dump}) + "\n")
 
 
 def stage_search(a) -> None:
@@ -929,7 +971,8 @@ def stage_search(a) -> None:
         "passed_groups": sorted({x["key"] for x in out if x["pass"]}),
     }
     VDIR.mkdir(parents=True, exist_ok=True)
-    (VDIR / f"search_{a.half}_v{VERSION}.json").write_text(
+    tag = f"_{EDGE_RULE}" if VERSION >= 13 else ""  # v13: one file per edge rule
+    (VDIR / f"search_{a.half}_v{VERSION}{tag}.json").write_text(
         json.dumps({"label": "derived", "summary": summ, "runs": out}, indent=1, default=float)
         + "\n"
     )
@@ -987,6 +1030,9 @@ def main(argv=None) -> int:
     ap.add_argument("--half", choices=["dev", "holdout", "all"], default="dev")
     ap.add_argument("--n", type=int, default=200)
     ap.add_argument("--cells", choices=["all", "calibrated"], default="all")
+    ap.add_argument("--edge", choices=["count", "time"], default="count", help="v13 edge test")
+    ap.add_argument("--seed-offset", type=int, default=0, help="v13: added to injection seeds")
+    ap.add_argument("--dump", default=None, help="v13: per-injection outcome file in VDIR")
     ap.add_argument("--pix", type=int, default=3839, help="light-curve partition (v4: 3838)")
     ap.add_argument("--vdir", default=None, help="output folder for the v1-v3 sample (v5)")
     a = ap.parse_args(argv)
@@ -995,6 +1041,8 @@ def main(argv=None) -> int:
     if a.pix not in (3838, 3839) and not a.vdir:
         ap.error("another partition needs --vdir (v4 outputs would be overwritten)")
     configure(a.pix, a.vdir)
+    global EDGE_RULE
+    EDGE_RULE = a.edge
     fn = {
         "sample": stage_sample,
         "comparisons": stage_comparisons,

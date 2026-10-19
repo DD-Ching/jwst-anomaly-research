@@ -1,0 +1,128 @@
+{
+ "label": "simulated (development set; not a validation)",
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "old": 150,
+   "new": 150,
+   "flagged": 150,
+   "old_first_fail_sharp": 0,
+   "of_which_recovered_new": 0,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.01_blend1_tE30": {
+   "old": 173,
+   "new": 176,
+   "flagged": 177,
+   "old_first_fail_sharp": 4,
+   "of_which_recovered_new": 3,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.01_blend1_tE100": {
+   "old": 150,
+   "new": 157,
+   "flagged": 160,
+   "old_first_fail_sharp": 9,
+   "of_which_recovered_new": 7,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.1_blend1_tE10": {
+   "old": 130,
+   "new": 142,
+   "flagged": 146,
+   "old_first_fail_sharp": 15,
+   "of_which_recovered_new": 12,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.1_blend1_tE30": {
+   "old": 122,
+   "new": 174,
+   "flagged": 180,
+   "old_first_fail_sharp": 57,
+   "of_which_recovered_new": 52,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.01_blend0.7_tE10": {
+   "old": 138,
+   "new": 139,
+   "flagged": 148,
+   "old_first_fail_sharp": 1,
+   "of_which_recovered_new": 1,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.01_blend0.7_tE30": {
+   "old": 155,
+   "new": 156,
+   "flagged": 178,
+   "old_first_fail_sharp": 1,
+   "of_which_recovered_new": 1,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.01_blend0.7_tE100": {
+   "old": 136,
+   "new": 145,
+   "flagged": 179,
+   "old_first_fail_sharp": 12,
+   "of_which_recovered_new": 9,
+   "recovered_old_lost_new": 0
+  },
+  "rho0.1_blend0.7_tE10": {
+   "old": 117,
+   "new": 130,
+   "flagged": 143,
+   "old_first_fail_sharp": 23,
+   "of_which_recovered_new": 17,
+   "recovered_old_lost_new": 4
+  },
+  "rho0.1_blend0.7_tE30": {
+   "old": 84,
+   "new": 148,
+   "flagged": 171,
+   "old_first_fail_sharp": 80,
+   "of_which_recovered_new": 64,
+   "recovered_old_lost_new": 0
+  }
+ },
+ "totals": {
+  "old": 1355,
+  "new": 1517,
+  "old_sharp_first_fail": 202,
+  "kept_by_new": 166,
+  "recovered_old_lost_new": 4
+ },
+ "controls_passed": {
+  "eclipse": {
+   "old": 0,
+   "new": 0,
+   "n": 200
+  },
+  "fade": {
+   "old": 4,
+   "new": 9,
+   "n": 200
+  },
+  "pspl": {
+   "old": 0,
+   "new": 0,
+   "n": 200
+  },
+  "common": {
+   "old": 0,
+   "new": 0,
+   "n": 200
+  }
+ },
+ "real_calibration": {
+  "count (v12 file)": {
+   "series_searched": 998,
+   "flagged_runs": 16,
+   "flagged_groups": 3,
+   "passed_groups": []
+  },
+  "time": {
+   "series_searched": 998,
+   "flagged_runs": 16,
+   "flagged_groups": 3,
+   "passed_groups": []
+  }
+ }
+}

@@ -1,0 +1,28 @@
+# v13 re-split (plan change, PLAN.md section 4), fixed before any v12 search-group light curve is loaded: the 2,500
+# never-read v12 search groups of Npix 2382 -> 500 validation groups (seed 13, uniform without replacement) and
+# 2,000 search groups. Each group already binds all objectids of one source. The 500 v12 calibration groups (the
+# development set) are left out of this file. Usage: python split_script.py.txt
+import json
+import numpy as np
+src = json.load(open('results/w3_ztf/v12/2382/sample.json'))
+search12 = [g for g in src['groups'] if g['holdout']]
+dev = [g for g in src['groups'] if not g['holdout']]
+pick = set(np.random.default_rng(13).choice(len(search12), 500, replace=False).tolist())
+groups = []
+for k, g in enumerate(search12):
+    g = dict(g)
+    g['holdout'] = k not in pick  # holdout = search group; the rest = validation (calibration role)
+    groups.append(g)
+mem_v = {m for g in groups if not g['holdout'] for m in g['members']}
+mem_s = {m for g in groups if g['holdout'] for m in g['members']}
+mem_d = {m for g in dev for m in g['members']}
+info = {'source': 'results/w3_ztf/v12/2382/sample.json', 'v12_search_groups': len(search12),
+        'validation_groups': len(pick), 'search_groups': len(groups) - len(pick), 'seed': 13,
+        'shared_objectids_val_search': len(mem_v & mem_s), 'shared_objectids_with_dev': len((mem_v | mem_s) & mem_d)}
+import os
+os.makedirs('results/w3_ztf/v13/2382val', exist_ok=True)
+json.dump({'label': 'derived; v13 re-split (plan change)', 'info': info, 'groups': groups},
+          open('results/w3_ztf/v13/2382val/sample.json', 'w'))
+open('results/w3_ztf/v13/2382val/sample.json', 'a').write('\n')
+json.dump(info, open('results/w3_ztf/v13/split_info.json', 'w'), indent=1); open('results/w3_ztf/v13/split_info.json', 'a').write('\n')
+print(info)

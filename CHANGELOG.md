@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 ZTF v13: edge-duration rule passes validation; 2,000 groups searched, 0 vetted survivors, no image-confirmed dimming
+- **New rule:** one W3 vetting rule replaced. The intermediate-point count becomes edge duration in days, allowed up to
+  0.25 × the run span. The 0.25 comes from the W3 model only (99th percentile at ρ 0.1, blend 0.7). It was frozen
+  before any comparison (`results/w3_ztf/v13/`).
+- **Development set** (same events and noise; not a validation):
+  - recovered 1,355 → 1,517 of 2,000;
+  - the failing cell 84 → 148;
+  - 166 of 202 sharp-edge losses kept, 4 earlier recoveries lost;
+  - fade control 4 → 9 of 200.
+- **Validation** on 500 never-read groups with new seeds: **passed**.
+  - cells 0.64–0.87;
+  - fade 17/200 (8.5 %, limit 10 %), other controls 0;
+  - 0 real survivors.
+  - Same area and exposures as the development set, so not an independent-area validation.
+- **Search of 2,000 groups:** 96 flagged runs in 6 groups, **0 pass vetting**. Image check of 5 groups (50 cutouts):
+  all 17 "credible dimming" non-detections have a dark detector column within 2″ of the source, against 0 of 20
+  detections (post hoc check). That is consistent with a data problem. One group is pending. **No image-confirmed dimming.**
+- **Handoff:** W3 / ZTF is paused. The fade-control margin (8.5 % vs 10 %) is the known weak point of the new rule.
 ## 2026-10-19: W3 dimming: NEXUS survivors vetted at exposure level; 0 W3 events, three-field headline stands
 - **Why:** #369 handoff (its headline was conditional on 5 by-eye survivors). Plan frozen first
   (`results/dimming/nexus_vet/PLAN.md`).

@@ -263,3 +263,24 @@ def test_v10_merge_psfcat_fills_without_overwriting_or_inventing_nd():
     assert e[3] not in ids and e[4] not in ids  # flagged: unknown; missing: unknown, not ND
     assert not any(x[2] for x in s)
     wz.FILL.clear()
+
+
+def test_v13_edge_time_uses_time_not_count():
+    # 20 dim epochs (days 40-59): dense intermediates at the edges pass, one far out fails
+    wz.EDGE_RULE, wz.EDGE_FRAC = "time", 0.25
+    try:
+        dim = {i: 0.0 for i in range(40, 60)}
+        s = mk(n=120, nd_at=set(dim))
+        s = [(*x, 0.0) for x in s]  # dimfrac column
+        edge = {37: 0.6, 38: 0.7, 39: 0.8, 60: 0.8, 61: 0.6, 62: 0.5}  # 6 intermediates within 3 d
+        s_ok = [(x[0], edge.get(i, x[1]), x[2], 6.0, *x[4:]) for i, x in enumerate(s)]
+        v = wz.vet(s_ok, (40, 59), [], COV)
+        assert v["n_intermediate"] == 6 and v["sharp_ok"] and v["edge_post_d"] == 3.0
+        far = {**edge, 70: 0.6}  # 11 d after a 19 d run: > 0.25 x 19 d
+        s_bad = [(x[0], far.get(i, x[1]), x[2], 6.0, *x[4:]) for i, x in enumerate(s)]
+        assert not wz.vet(s_bad, (40, 59), [], COV)["sharp_ok"]
+        # an insignificant intermediate (within 2 sigma of 0.3 at a shallow limit) does not count
+        noisy = [(x[0], 0.35, x[2], 0.5, *x[4:]) if i == 70 else x for i, x in enumerate(s_ok)]
+        assert wz.vet(noisy, (40, 59), [], COV)["edge_post_d"] == 3.0
+    finally:
+        wz.EDGE_RULE = "count"
