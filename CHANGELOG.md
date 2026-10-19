@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: E1 DR2–ICECAT control deficit explained: the null displaces the 276 shared events
+- **Why:** handoff of #354 (DR2–ICECAT wide deficit at 1 h–7 d, z −4.5 / −6.5, cause open). Plan frozen first
+  (`results/e1_icetracks/selfpair/PLAN.md`); rule `outcome` unit-tested before the run.
+- **Result (derived, `results/e1_icetracks/selfpair/RESULT.md`):** frozen outcome "explained". Without the
+  276 DR2 tracks that are ICECAT alerts' own events: wide z −0.09 / −1.24 / +1.01 (100 s–1 h, 1 h–1 d, 1–7 d);
+  without 276 random tracks: −1.27 / −4.63 / −6.98. The null mean falls by 122.38 / 450.22 pairs, the data by
+  60 / 240; the null-only parts (62.38 / 210.22) are within 22 % / 11 % of the planned displacement estimate
+  (≈ 80 / 190). D-074 addendum 9.
+- **Consequence:** with shared events removed the jit null matches this same-detector channel (|z| ≤ 1.24);
+  tested channels (no shared events) are unchanged; in long-lag wide cells shared events raise the null mean,
+  lowering sensitivity to an excess there. The BAT–GBM deficit (addendum 6) is consistent with the same
+  mechanism (not recomputed).
+- **Review fixes:** z for zero-spread cells via `en.z_score`, scrambles chunked over all cores with an
+  initializer; numbers above are from the re-run (first run: same outcome, not stored).
+- **Handoff:** E1 waits on the CHIME uptime series (owner). Optional: recompute the BAT–GBM deficit with the
+  expected displacement; the EP–GBM joint-event rule (addendum 7).
+
 ## 2026-10-18: E1 + IceTracks-DR2 (seventh node set, northern tracks): 35-cell family null; control passes
 - **Why:** handoff of #353 (last open E1 node set). Plan frozen first (`results/e1_icetracks/PLAN.md`); data are
   the D-079 pinned DR2 files (fetched in 13 s, reduced cache only), other catalogues from `e1_swift.ecsv`.

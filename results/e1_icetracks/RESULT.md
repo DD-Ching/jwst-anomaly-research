@@ -37,12 +37,13 @@ dependent wide (GW: any-separation) pairs per eligible anchor:
   `control_null_variants.json`, 10³ scrambles each; its `both` and `in_uptime` select the same 303 alerts) leave it at z −4.4 to −5.3 and −6.1 to −7.1: dropping alerts
   after the last DR2 track, keeping only alerts inside DR2 good runs (303 of 340), scrambling ICECAT with the DR2
   uptime jitter, and moving either side alone. So it is not downtime, the DR2 end date or one side's scramble;
-  around an ICECAT alert time there are fewer DR2 tracks within 1 h–7 d than the null predicts. Cause not
-  determined (not tested further). Like addendum 6's BAT–GBM deficit, it appears in a channel whose two catalogues
+  around an ICECAT alert time there are fewer DR2 tracks within 1 h–7 d than the null predicts. Cause found 2026-10-19
+  (`selfpair/RESULT.md`): the null displaces the 276 shared DR2–ICECAT events into long lags; with them
+  removed the deficit is gone (z −1.24, +1.01). Like addendum 6's BAT–GBM deficit, it appears in a channel whose two catalogues
   share events. No tested channel shows a deficit beyond z −1.7.
 
 **Limitations:** `jitday` scrambles DR2 exactly as `jit` (only the partners change), so DR2 time-of-day
-structure is not separately tested; the null is not validated against a same-detector channel (the control deficit above); the cut (log10 E ≥ 4, north) keeps mostly atmospheric neutrinos (D-079: f_astro not computed), so
+structure is not separately tested; the null is validated against a same-detector channel only with the shared events removed (`selfpair/RESULT.md`); the cut (log10 E ≥ 4, north) keeps mostly atmospheric neutrinos (D-079: f_astro not computed), so
 the limits are per track above the cut, not per astrophysical neutrino. AngErr is used as 1σ without a
 systematic floor. CHIME overlaps DR2 only 2018-08 to 2022-05 (769 anchors). The ±3 d uptime jitter keeps each
 track's hour angle and good-run membership, not seasonal rate structure finer than ±3 d. One-sided upper tails
