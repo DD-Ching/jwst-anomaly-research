@@ -2,9 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-19: W3 dimming: D-039 persistence test, MACS0416 e2–3 and Abell 2744 e1–2 (in progress)
-- **Plan:** #378 handoff 1: finish `results/dimming/persistence_run/run.py` on the unfinished epochs (tests the
-  20 MACS0416 / Abell 2744 targets and adds controls), under the frozen `PLAN.md`.
+## 2026-10-19: W3 dimming: D-039 persistence test on all 37 targets: 32 `on_sky`, 0 `persistence`
+- **Why:** #378 handoff 1, under the frozen `results/dimming/persistence_run/PLAN.md`.
+- **Result (`results/dimming/persistence_run/RESULT.md` "Continuation"):** MACS0416 complete and Abell 2744 epoch 1
+  done: their 20 targets are all `on_sky`, each only in one epoch per field (MACS0416 `jw01208-o004` CANUCS,
+  Abell 2744 `jw02561-o002`), the NEXUS `o014` pattern that `forced` explained as depth / footprint (#378).
+  Controls 194 / 194 `on_sky`, 0 `persistence`, all at mosaic S/N 11–33 (fainter unmeasured).
+- **Failed approach:** both fields in parallel shared the stream (about 150 MB/s; 1,920 `_cal` × 118 MB); Abell 2744
+  epoch 2 (controls only) did not finish. Exposure tables over 1 MB are committed gzipped.
+- **Handoff:** (1) `forced` + epoch depth / footprint test on the 20 targets; (2) reconsider the swap, since the
+  persistence verdict removed none of the 37 targets.
 
 ## 2026-10-19: W3 dimming: NEXUS `o014` targets are mosaic-edge and catalogue-depth effects (0 survivors)
 - **Why:** #377 handoff 1. Plan, rule (`summarise.explanation`, unit-tested) and target builder frozen first
