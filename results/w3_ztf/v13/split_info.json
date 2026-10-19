@@ -1,0 +1,9 @@
+{
+ "source": "results/w3_ztf/v12/2382/sample.json",
+ "v12_search_groups": 2500,
+ "validation_groups": 500,
+ "search_groups": 2000,
+ "seed": 13,
+ "shared_objectids_val_search": 0,
+ "shared_objectids_with_dev": 0
+}

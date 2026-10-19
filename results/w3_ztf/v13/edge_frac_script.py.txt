@@ -1,0 +1,28 @@
+# v13 model-derived edge allowance (no data): for the W3 model (n = 1, eps < 0) at t_E = 1, u0 on a 200-point grid
+# in (0, 2), the larger of the ingress/egress durations from dm = 0.3 to dm = 1.0, divided by the time span with
+# dm >= 1. Usage: python edge_frac_script.py.txt <out json>
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+t = np.linspace(-3, 3, 24001)
+out = {'label': 'model_prediction (W3 finite-source light curve; no data)', 'combos': {}}
+for rho in (0.01, 0.1):
+    for blend in (1.0, 0.7):
+        rs = []
+        for u0 in np.linspace(0.005, 1.995, 200):
+            dm = wz.w3_dmag(t, 0.0, 1.0, u0, rho, blend)
+            dim = dm >= 1.0
+            if dim.sum() < 2:
+                continue
+            i0, i1 = np.flatnonzero(dim)[[0, -1]]
+            inter = (dm >= 0.3) & ~dim
+            pre = t[i0] - t[:i0][inter[:i0]].min() if inter[:i0].any() else 0.0
+            post = t[i1 + 1:][inter[i1 + 1:]].max() - t[i1] if inter[i1 + 1:].any() else 0.0
+            rs.append(max(pre, post) / (t[i1] - t[i0]))
+        out['combos'][f'rho{rho}_blend{blend:g}'] = {'u0_with_dim_span': len(rs), 'pct50_90_95_99_max':
+            [float(x) for x in np.percentile(rs, [50, 90, 95, 99, 100])]}
+out['EDGE_FRAC'] = 0.25
+out['rule'] = 'EDGE_FRAC = the rho 0.1, blend 0.7 99th percentile (0.248) rounded up to 0.25'
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(out)
