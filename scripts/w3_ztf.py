@@ -59,6 +59,8 @@ def configure(pix: int, vdir: str | None = None) -> None:
     global LC_PIX, LC_PART, OBJ_PART, CACHE, SAMPLE, VDIR, VERSION, N_MAX
     # v12: vdir may name a per-area subfolder, e.g. "v12/2380"; the version is its first part
     ver = int((vdir or "v4").split("/")[0].lstrip("v"))
+    LC_PART, OBJ_PART, CACHE = _BASE  # v15: every call starts from the defaults
+    N_MAX = 1000
     if pix == 3839 and not (vdir and ver >= 11):  # v11: own sample in 3839
         if vdir:
             VDIR, VERSION = OUT / vdir, ver

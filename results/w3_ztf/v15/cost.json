@@ -12,9 +12,10 @@
   "search_4778": 3.2
  },
  "per_1000_searched_3837": {
-  "minutes_compute": 1.9,
   "download_mb": 279.5,
-  "image_checks": 0
+  "image_checks": 0,
+  "formula": "minutes = (fetch+exposures 3.0 + inject 2.8 + search 3.2) / 4.778 (end to end); MB = (LC 1233.2 + TAP 9.26 + half of the two objects tables 93.1) / 4.778",
+  "minutes_end_to_end": 1.9
  },
  "note": "wall-clock values are session observations, not stored timings; 183 was read (270.2 MB) but its search was not executed",
  "total_mb_upper": 1703.5

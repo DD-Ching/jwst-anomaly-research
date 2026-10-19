@@ -9,12 +9,14 @@
     independent-area validation.
 
 ## 1. Choice and samples (`sample_info.json`)
-- **Npix 8170 was not used.** Only ≈ 738 unused eligible groups remain there. After a new 500-group calibration set
+- **Npix 8170 was not used.** Only ≈ 738 unused eligible groups remain there (6,238 eligible in
+  `../v14/sample_info.json` minus the 5,500 used). After a new 500-group calibration set
   that leaves ≤ 238 search groups for a 2.2 GB re-read.
 - **Chosen by metadata and cost:** 3837 and 183, both qualified in #368.
   - **3837:** 5,278 eligible groups, split 500 calibration / 4,778 search. Refmag r 5/50/95 %: calibration 14.82 /
     16.46 / 17.43; search 14.80 / 16.43 / 17.42.
-  - **183:** 2,303 eligible groups, split 500 / 1,803.
+  - **183:** 2,303 eligible groups, split 500 / 1,803. Its #368 worst-cell margin is 0.547
+    (`../v12/obs_conditions.json`).
 - **Dedupe** against every earlier calibration, development and search group (v1–v14): 0 shared objectids and none
   within 3″. Earlier reference stars lie in other, disjoint partitions.
 - **Deviation:** `configure()` was called twice in one process, so the stored 183 `lc_partition` text and its cache
@@ -71,8 +73,8 @@
   - objects ≤ 186.2 MB;
   - TAP 13.9 MB;
   - cutouts 0 MB.
-- **Per 1,000 searched groups in 3837** (session wall-clock, not stored timings):
-  - about 1.9 min of compute;
+- **Per 1,000 searched groups in 3837** (session wall-clock, not stored timings; formulas in `cost.json`):
+  - about 1.9 min end to end (fetch, calibration and search);
   - about 280 MB downloaded;
   - 0 image checks.
 
