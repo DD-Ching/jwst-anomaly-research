@@ -84,7 +84,7 @@ def main(argv=None) -> int:
     tns = SkyCoord(*TNS_RADEC, unit="deg")
     sky = SkyCoord(zout["ra"], zout["dec"], unit="deg")
     sep = tns.separation(sky).arcsec
-    rh = np.asarray(phot["flux_radius"], float) * PIX
+    rh = np.nan_to_num(np.asarray(phot["flux_radius"], float)) * PIX  # NaN radius -> floor
     near = np.flatnonzero(sep <= R_MAX)
 
     def row(i: int) -> dict:
