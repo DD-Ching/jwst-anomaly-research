@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: MACS0416 regenerated (reproduces D-052); joint three-field `combine` gives the per-deg² headline
+- **Why:** #371 / #369 handoff. Plan and a computable reproduction gate frozen first
+  (`results/dimming/macs0416_regen/PLAN.md`, `scripts/dimming_repro_gate.py` + unit test).
+- **Result (`results/dimming/macs0416_regen/RESULT.md`):** screen identical to D-052 (854 / 358 / 10 compact);
+  forced calibrated, 1 confirmed (the saturated star d03349, cutout tests remove it), 0 survivors, 0 / 300 controls
+  flagged; exposures −3.7 % to +0.7 % of D-052 (gate passed).
+- **Joint headline** (`limits_combined.ecsv`, ρ = 0.1): < 0.44 / 0.11 / 0.043 / 0.029 / 0.021 / 0.016 per source per yr
+  and < 3.0e3 / 776 / 295 / 201 / 157 / 118 per deg² per yr at t_E = 0.01 / 0.03 / 0.1 / 0.3 / 1 / 3 yr.
+- **Failed approach / deviation:** `fetch` via the MAST API timed out (3 tries); catalogues read from S3 `cloud_uri`,
+  all 9 sha256-identical to the committed manifest. Forced noise scale differs from D-052's offline re-calibration
+  (cause not investigated).
+- **Handoff:** fold `chromatic_veto` into `forced` and re-run the three fields' injections; D-039 persistence test
+  for vanish flags.
+
 ## 2026-10-19: W3 ZTF v13: edge-duration rule passes validation; 2,000 groups searched, 0 vetted survivors, no image-confirmed dimming
 - **New rule:** one W3 vetting rule replaced. The intermediate-point count becomes edge duration in days, allowed up to
   0.25 × the run span. The 0.25 comes from the W3 model only (99th percentile at ρ 0.1, blend 0.7). It was frozen

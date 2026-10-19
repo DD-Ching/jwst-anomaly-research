@@ -191,8 +191,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      2026-10-19 (calibrated, null, headline 5–11 % tighter; `results/dimming/abell2744_calib/RESULT.md`); ~~NEXUS
      `forced` with 300 controls~~ done 2026-10-19 (calibrated; 5 artefact-test survivors, none a W3 dimming by eye,
      post hoc; headline ×2.6–6.2 tighter if they hold; `results/dimming/nexus_calib/RESULT.md`); next `/vet-candidate`
-     on its survivors (d79956 SN-like; three single-band points) and the 10 flagged controls, then MACS0416 `forced
-     --workers` and a joint `combine`; replace the single-epoch veto for
+     on its survivors (d79956 SN-like; three single-band points) done (#371, 0 W3 events); ~~MACS0416 `forced
+     --workers` and a joint `combine`~~ done 2026-10-19 (`results/dimming/macs0416_regen/RESULT.md`); next fold
+     `chromatic_veto` into `forced` and re-run the three fields' injections; replace the single-epoch veto for
      vanish flags with the D-039 persistence test (restores full-vanish sensitivity); add JADES and new NEXUS epochs;
      SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
    - ~~W5: counts N(>S) around `radial` centres~~ done 2026-10-17 (`results/w5_radial_counts/RESULT.md`): no deficit,

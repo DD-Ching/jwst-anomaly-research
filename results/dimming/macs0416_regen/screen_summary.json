@@ -1,0 +1,31 @@
+{
+ "field": "macs0416",
+ "n_sources": 7708,
+ "n_epochs": 5,
+ "baseline_yr": 3.260095824777551,
+ "noise_scale": {
+  "F200W": 1.661016708732061,
+  "F444W": 1.7264665411276972
+ },
+ "n_point_like": 111,
+ "n_monitored_compact": 44,
+ "flags": {
+  "vanish": 714,
+  "dim_achromatic": 67,
+  "rise_dip_rise": 310
+ },
+ "n_flagged": 854,
+ "n_flagged_no_catalogue_veto": 358,
+ "n_flagged_compact_no_veto": 10,
+ "veto_counts_among_flagged": {
+  "near_star": 82,
+  "bright_neighbour": 75,
+  "gaia_star": 1,
+  "sharp_artifact": 15,
+  "edge_proxy": 144,
+  "blended": 36,
+  "single_epoch": 383,
+  "point_like": 34
+ },
+ "wall_s": 5.4
+}

@@ -630,7 +630,20 @@ only, ρ = 0.1; `results/dimming/nexus_calib/headline.json`, `results/dimming/ne
 0.11 / 0.043 / 0.029 / 0.020 / 0.016 per source per yr at t_E = 0.01 / 0.03 / 0.1 / 0.3 / 1 / 3 yr (×2.6–6.2
 tighter). Per-deg² columns still await a joint `combine`.
 
-All three fields, **including the two uncalibrated ones** (indicative only; `limits_combined_all_fields.ecsv`,
+**Joint headline, three calibrated fields** (MACS0416 regenerated and `combine` run 2026-10-19, D-052 addendum d;
+`results/dimming/macs0416_regen/RESULT.md`, `limits_combined.ecsv`; ρ = 0.1; supersedes the summed rates above and
+the indicative all-fields table below):
+
+| t_E (yr) | exposure (source yr) | per source per yr | τ | per deg² per yr | per deg² per epoch |
+|---|---|---|---|---|---|
+| 0.01 | 6.85 | 0.44 | 0.014 | 3.0e3 | 94 |
+| 0.03 | 26.8 | 0.11 | 0.011 | 776 | 73 |
+| 0.1 | 69.1 | 0.043 | 0.014 | 295 | 93 |
+| 0.3 | 103.5 | 0.029 | 0.027 | 201 | 190 |
+| 1 | 145.5 | 0.021 | 0.065 | 157 | 493 |
+| 3 | 191.2 | 0.016 | 0.15 | 118 | 1.1e3 |
+
+All three fields, **including the two uncalibrated ones** (indicative only; superseded by the joint headline above; `limits_combined_all_fields.ecsv`,
 ρ = 0.1):
 
 | t_E (yr) | exposure (source yr) | per source per yr | τ | per deg² per yr | per deg² per epoch |

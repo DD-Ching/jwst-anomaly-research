@@ -3184,6 +3184,14 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 - Adopted: `chromatic_veto` is a cheap first test for single-band forced points in future `forced` runs. It is
   not yet in `dimming_screen.py`.
 
+**Addendum 2026-10-19d (MACS0416 regenerated; joint `combine`).**
+- MACS0416 `screen` / `forced --workers 16` / `inject` regenerated with unchanged code; screen counts identical,
+  forced stage calibrated, 0 survivors; exposures within −3.7 % to +0.7 % of the D-052 values (frozen ±10 % gate
+  passed; `results/dimming/macs0416_regen/`).
+- The joint three-field `combine` is now the headline: < 0.44 … 0.016 per source per yr and < 3.0e3 … 118 per deg²
+  per yr at t_E = 0.01 … 3 yr (ρ = 0.1; docs/exotic_limits.md).
+- Catalogues read from S3 `cloud_uri` when the MAST API is unreachable, verified by the manifest's sha256.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**

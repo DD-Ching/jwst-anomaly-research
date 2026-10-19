@@ -1,0 +1,26 @@
+{
+ "field": "macs0416",
+ "n_flags_measured": 358,
+ "n_controls": 300,
+ "noise_scale": {
+  "F200W": 3.114263243144114,
+  "F444W": 4.571671700052346
+ },
+ "calibrated": true,
+ "inflation_vs_catalogue": {
+  "F200W": 1.0,
+  "F444W": 2.6245187255417743
+ },
+ "forced_confirmed": 1,
+ "confirmed_by_flag": {
+  "vanish": 0,
+  "dim_achromatic": 0,
+  "rise_dip_rise": 1
+ },
+ "confirmed_and_cutout_clean": 0,
+ "survives_artefact_tests": 0,
+ "controls_flagged": 0,
+ "crossmatch": "not run (no survivors)",
+ "unread_images": [],
+ "wall_s": 410.3
+}
