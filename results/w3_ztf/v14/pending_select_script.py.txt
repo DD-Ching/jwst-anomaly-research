@@ -1,0 +1,55 @@
+# v14 part 1 selection, frozen before any new cutout (owner cap: 40 new cutouts in this phase). From
+# pending_inventory.json:
+#  (a) group 724208200014557 (never checked): v6 sampling of its run - 2 detected before, up to 8 NDs inside (evenly
+#      spaced), 2 detected after;
+#  (b) the other 5 groups: pending NDs (not cut out in v13) grouped into strata (run, field, ccdid, qid). Strata whose
+#      detector quadrant was not checked in v13 for that group come first, then by run order; the ND nearest the run
+#      middle represents a stratum; up to 2 strata per group, plus 1 detected reference of the first chosen run;
+#  (c) official mask cutouts (mskimg) for the (b) NDs, then for (a) NDs while the 40-cutout cap allows.
+# Everything not selected stays pending. Usage: python pending_select_script.py.txt
+import json
+import numpy as np
+inv = json.load(open('results/w3_ztf/v14/pending_inventory.json'))
+ic = json.load(open('results/w3_ztf/v13/2382val/image_check.json'))
+grp = {g['key']: g for g in json.load(open('results/w3_ztf/v13/2382val/sample.json'))['groups']}
+checked_quads = {}
+for s in ic['sources']:
+    checked_quads[s['key']] = {(r.get('field'), r.get('ccdid'), r.get('qid')) for r in s['exposures'] if 'cutout_bytes' in r}
+sources, masks = [], []
+G6 = 724208200014557
+r6 = [r for r in inv['runs'] if r['key'] == G6][0]
+nd6 = [x for x in r6['exposures'] if x['nd']]
+if len(nd6) > 8:
+    nd6 = [nd6[i] for i in np.unique(np.linspace(0, len(nd6) - 1, 8).round().astype(int))]
+sources.append({'key': G6, 'run': [r6['t_start'], r6['t_end']], 'filter': r6['filter'], 'part': 'a',
+                'exposures': r6['refs_before'] + nd6 + r6['refs_after'],
+                'nd_pending': sum(x['nd'] for x in r6['exposures']) - len(nd6)})
+for key in sorted({r['key'] for r in inv['runs']} - {G6}):
+    strata = {}
+    for r in [r for r in inv['runs'] if r['key'] == key]:
+        mid = 0.5 * (r['t_start'] + r['t_end'])
+        for x in r['exposures']:
+            if x['nd'] and not x['checked_in_v13']:
+                strata.setdefault((r['run'], x['field'], x['ccdid'], x['qid']), []).append((abs(x['t'] - mid), x, r))
+    order = sorted(strata, key=lambda s: ((s[1], s[2], s[3]) in checked_quads.get(key, set()), s[0]))
+    chosen = order[:2]
+    if not chosen:
+        continue
+    picks = [min(strata[s], key=lambda z: z[0]) for s in chosen]
+    r0 = picks[0][2]
+    ref = (r0['refs_before'][-1:] or r0['refs_after'][:1])
+    sources.append({'key': key, 'run': [min(p[2]['t_start'] for p in picks), max(p[2]['t_end'] for p in picks)],
+                    'filter': r0['filter'], 'part': 'b', 'strata_total': len(strata), 'strata_chosen': [list(s) for s in chosen],
+                    'exposures': ref + [p[1] for p in picks], 'nd_pending': sum(len(v) for v in strata.values()) - len(picks)})
+    masks += [p[1]['expid'] for p in picks]
+n_sci = sum(len(s['exposures']) for s in sources)
+cap = 40 - n_sci - len(masks)
+masks_b = list(masks)
+masks += [x['expid'] for x in nd6][:max(cap, 0)]
+out = {'label': 'derived; frozen selection (v14 PLAN part 1)', 'sci_cutouts': n_sci, 'mask_cutouts': len(masks),
+       'total': n_sci + len(masks), 'mask_expids': masks, 'mask_expids_part_b': masks_b, 'sources': sources,
+       'pending_nd_after_selection': inv['summary']['nd_total'] - inv['summary']['nd_checked_in_v13']
+       - sum(1 for s in sources for x in s['exposures'] if x['nd'])}
+assert out['total'] <= 40
+json.dump(out, open('results/w3_ztf/v14/pending_selection.json', 'w'), indent=1); open('results/w3_ztf/v14/pending_selection.json', 'a').write('\n')
+print({k: v for k, v in out.items() if k != 'sources'}, [(s['key'], len(s['exposures'])) for s in sources])

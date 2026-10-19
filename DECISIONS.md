@@ -5373,6 +5373,11 @@ confining radiation at a throat is found.
   All 17 auto-classified "dimming" non-detections coincide with a dark detector column within 2″ of the source,
   against 0 of 20 detections (post hoc). Revisit if: the fade-control rate exceeds 10 % on another set, or a column-mask check is added to the
   catalogue stage (it would remove the spurious runs earlier).
+- **Addendum 2026-10-19 (v14, `results/w3_ztf/v14/RESULT.md`):** the frozen v13 rule reproduces its capability on
+  exposure-independent data (Npix 8170: cells ≥ 0.57; fade 5.0 %, Wilson 3.8–6.5 %, n = 1,000). One search of 5,000
+  groups gave 1 vetted survivor. Images show it is a near-limit g-band catalogue drop, not a dimming. The 3 newly checked #370 class-4 NDs sit on official mask DEAD + LOW RESPONSIVITY pixels; the other #370 NDs were not masked.
+  Revisit if: the owner wants the pre-screen to treat an ND as dim only when the source is well above the exposure
+  limit (a method change; not made here).
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

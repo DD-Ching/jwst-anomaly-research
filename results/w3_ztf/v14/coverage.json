@@ -1,0 +1,31 @@
+{
+ "label": "derived (after the search)",
+ "calibration": {
+  "groups": 500,
+  "r_series_epochs_p5_p50_p95": [
+   1036.0,
+   1849.0,
+   3526.0
+  ],
+  "r_series_ge_43": 500,
+  "refmag_r_p5_p50_p95": [
+   14.87725,
+   16.54,
+   17.41405
+  ]
+ },
+ "search": {
+  "groups": 5000,
+  "r_series_epochs_p5_p50_p95": [
+   1016.6500000000001,
+   1849.0,
+   3526.0
+  ],
+  "r_series_ge_43": 5000,
+  "refmag_r_p5_p50_p95": [
+   14.84285,
+   16.51,
+   17.416
+  ]
+ }
+}

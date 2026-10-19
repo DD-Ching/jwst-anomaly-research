@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 ZTF v14: #370 pending checks (official masks), Npix 8170 passes validation, 5,000 groups searched, 1 survivor not a real dimming
+- **#370 pending checks:**
+  - 26 new cutouts, 17 science and 9 official masks; 656 rebuilt NDs stay pending.
+  - The 3 newly checked auto "dimming" NDs sit on mask value 516 (bits 2 LOW RESPONSIVITY + 9 DEAD; names from the
+    mask header comments).
+  - The 6th group's NDs are undetermined.
+  - No item needed priority follow-up.
+- **Npix 8170** (fields share nothing with the development data): 500 calibration and 5,000 search groups. The frozen
+  v13 rule passes validation:
+  - cells 0.57–0.81;
+  - fade 50/1,000 = 5.0 % (Wilson 3.8–6.5 %), against 8.5 % (17/200) in v13;
+  - 0 calibration flags.
+- **Search** of 5,000 groups (9,995 series): 8 flagged runs, **1 vetted survivor** (635216100004733, g band).
+  - The image check (7 cutouts) shows the star in all 3 NDs: 2 shallow images and 1 at 0.88 × reference flux.
+  - That is a near-limit catalogue drop, **not a real dimming**.
+- No limit is derived (`results/w3_ztf/v14/RESULT.md`). W3 / ZTF is paused.
 ## 2026-10-19: W3 dimming: injection edge-coverage check: gate V failed as written; no decision
 - **Why:** #378 handoff 2 (does the injection chain count mosaic-edge positions as covered?). Plan, rule
   (`edge.edge_pair`, F200W `WHT` on a 32-px grid, `wht_rel < 0.5`), gate and decision frozen and unit-tested first

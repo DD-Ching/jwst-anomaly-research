@@ -911,7 +911,8 @@ def stage_inject(a) -> None:
         rng = np.random.default_rng(1200 + kk + a.seed_offset)
         flag = passed = 0
         used = set()
-        for _ in range(n):
+        nk = getattr(a, "n_fade", None) or n if kind == "fade" else n  # v14: larger fade control
+        for _ in range(nk):
             g, s, o, base = carriers[rng.integers(len(carriers))]
             used.add(g["key"])
             t = np.array([x[0] for x in s])
@@ -931,7 +932,7 @@ def stage_inject(a) -> None:
             passed += any(x["pass"] for x in sc)
             if dump is not None:
                 dump.append([kind, len(dump), g["key"], bool(sc), any(x["pass"] for x in sc), []])
-        res["controls"][kind] = {"n": n, "flagged": flag, "passed_vetting": passed}
+        res["controls"][kind] = {"n": nk, "flagged": flag, "passed_vetting": passed}
         res["controls"][kind]["distinct_stars"] = len(used)
         print(kind, res["controls"][kind], flush=True)
     VDIR.mkdir(parents=True, exist_ok=True)
@@ -1033,6 +1034,7 @@ def main(argv=None) -> int:
     ap.add_argument("--edge", choices=["count", "time"], default="count", help="v13 edge test")
     ap.add_argument("--seed-offset", type=int, default=0, help="v13: added to injection seeds")
     ap.add_argument("--dump", default=None, help="v13: per-injection outcome file in VDIR")
+    ap.add_argument("--n-fade", type=int, default=None, help="v14: fade-control injections")
     ap.add_argument("--pix", type=int, default=3839, help="light-curve partition (v4: 3838)")
     ap.add_argument("--vdir", default=None, help="output folder for the v1-v3 sample (v5)")
     a = ap.parse_args(argv)

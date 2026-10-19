@@ -1,0 +1,55 @@
+{
+ "label": "observed (IBE _mskimg header comments)",
+ "files": 9,
+ "bit_names": {
+  "BIT00": [
+   "AIRCRAFT/SATELLITE TRACK"
+  ],
+  "BIT01": [
+   "CONTAINS SEXTRACTOR DETECTION"
+  ],
+  "BIT02": [
+   "LOW RESPONSIVITY"
+  ],
+  "BIT03": [
+   "HIGH RESPONSIVITY"
+  ],
+  "BIT04": [
+   "NOISY"
+  ],
+  "BIT05": [
+   "GHOST FROM BRIGHT SOURCE"
+  ],
+  "BIT06": [
+   "POSSIBLE GHOST FROM CHARGE SPILLAGE",
+   "RESERVED FOR FUTURE USE"
+  ],
+  "BIT07": [
+   "PIXEL SPIKE (POSSIBLE RAD HIT)"
+  ],
+  "BIT08": [
+   "SATURATED"
+  ],
+  "BIT09": [
+   "DEAD (UNRESPONSIVE)"
+  ],
+  "BIT10": [
+   "NAN (not a number)"
+  ],
+  "BIT11": [
+   "CONTAINS PSF-EXTRACTED SOURCE POSITION"
+  ],
+  "BIT12": [
+   "HALO FROM BRIGHT SOURCE"
+  ],
+  "BIT13": [
+   "RESERVED FOR FUTURE USE"
+  ],
+  "BIT14": [
+   "RESERVED FOR FUTURE USE"
+  ],
+  "BIT15": [
+   "RESERVED FOR FUTURE USE"
+  ]
+ }
+}

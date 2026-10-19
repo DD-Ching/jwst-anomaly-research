@@ -1,0 +1,74 @@
+# v14 part 1: inventory of the #370 flagged runs' exposures, rebuilt from official metadata (IRSA TAP) and the DR24
+# light-curve API (detections per objectid, matched by expid), without re-reading the 1.85 GB partition. For each of the 96 runs:
+# exposures of the group's member quadrants (same filter), infobits 0, source >= 10" inside the footprint, inside the
+# run window; an exposure without a DR24 detection (any catflags) of a member is a non-detection (ND). The frozen
+# good-exposure rule is not re-applied (approximation; counts compared with the stored run length).
+# Usage: python pending_inventory_script.py.txt <out json>
+import io, json, sys, time, urllib.parse, urllib.request
+import numpy as np
+from astropy.table import Table, vstack
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+OUT = sys.argv[1]
+runs = json.load(open('results/w3_ztf/v13/2382val/search_holdout_v13_time.json'))['runs']
+groups = {g['key']: g for g in json.load(open('results/w3_ztf/v13/2382val/sample.json'))['groups']}
+ic = json.load(open('results/w3_ztf/v13/2382val/image_check.json'))
+checked = {(s['key'], r['expid']) for s in ic['sources'] for r in s['exposures'] if 'cutout_bytes' in r}
+nb = {'tap': 0, 'lc_api': 0}
+def get(url, kind, timeout=300):
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=timeout).read(); nb[kind] += len(raw); return raw
+        except OSError:
+            time.sleep(5 * (k + 1))
+    raise RuntimeError(url[:80])
+keys = sorted({r['key'] for r in runs})
+quads = {(f, rc) for k in keys for m in groups[k]['members'] for f, rc, _ in [wz.oid_quad(m)]}
+parts = []
+for field in sorted({f for f, _ in quads}):
+    cond = ' OR '.join(f'(ccdid={r // 4 + 1} AND qid={r % 4 + 1})' for r in sorted(r for f, r in quads if f == field))
+    sql = ('SELECT field,ccdid,qid,filtercode,obsjd,exptime,expid,infobits,maglimit,seeing,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 '
+           f"FROM ztf.ztf_current_meta_sci WHERE field={field} AND ({cond}) AND filtercode IN ('zg','zr')")
+    parts.append(Table.read(io.BytesIO(get('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), 'tap')), format='csv'))
+expo = vstack(parts)
+det = {}
+for k in keys:
+    for m in groups[k]['members']:
+        a = Table.read(io.BytesIO(get(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={m}&FORMAT=csv', 'lc_api', 120)), format='csv')
+        det[m] = set(np.asarray(a['expid'], int).tolist()) if len(a) else set()
+fid = {'zg': 1, 'zr': 2}
+out = []
+for n, r in enumerate(runs):
+    g = groups[r['key']]
+    mem = [m for m in g['members'] if wz.oid_quad(m)[2] == r['filter']]
+    sel = np.zeros(len(expo), bool)
+    for m in mem:
+        f, rc, filt = wz.oid_quad(m)
+        sel |= (np.asarray(expo['field']) == f) & (np.asarray(expo['ccdid']) == rc // 4 + 1) & \
+               (np.asarray(expo['qid']) == rc % 4 + 1) & (np.array([fid.get(str(x), 0) for x in expo['filtercode']]) == filt)
+    e = expo[sel]
+    e = e[(np.asarray(e['infobits']) == 0) & wz.in_quad(e, g['ra'], g['dec'])]
+    t = wz.exposure_times(e, g['ra'], g['dec']) if len(e) else np.array([])
+    inside = (t >= r['t_start'] - 1e-6) & (t <= r['t_end'] + 1e-6)
+    dts = set().union(*[det[m] for m in mem]) if mem else set()
+    rows = []
+    for i in np.flatnonzero(inside):
+        nd = int(e['expid'][i]) not in dts  # LC API detections matched by expid
+        rows.append({'expid': int(e['expid'][i]), 't': float(t[i]), 'nd': nd, 'field': int(e['field'][i]),
+                     'ccdid': int(e['ccdid'][i]), 'qid': int(e['qid'][i]), 'seeing': float(e['seeing'][i]),
+                     'maglimit': float(e['maglimit'][i]), 'checked_in_v13': (r['key'], int(e['expid'][i])) in checked})
+    detected = [i for i in np.argsort(t) if int(e['expid'][i]) in dts]
+    pick = lambda idx: [{'expid': int(e['expid'][i]), 't': float(t[i]), 'nd': False, 'field': int(e['field'][i]),
+                         'ccdid': int(e['ccdid'][i]), 'qid': int(e['qid'][i])} for i in idx]
+    refs_before = pick([i for i in detected if t[i] < r['t_start']][-2:])
+    refs_after = pick([i for i in detected if t[i] > r['t_end']][:2])
+    out.append({'run': n, 'key': r['key'], 'filter': r['filter'], 't_start': r['t_start'], 't_end': r['t_end'],
+                'refs_before': refs_before, 'refs_after': refs_after,
+                'stored_n_dim': r['n'], 'rebuilt_nd': sum(x['nd'] for x in rows), 'rebuilt_detected': sum(not x['nd'] for x in rows),
+                'exposures': rows})
+summ = {'runs': len(out), 'groups': len(keys), 'nd_total': sum(x['rebuilt_nd'] for x in out),
+        'nd_checked_in_v13': sum(1 for x in out for y in x['exposures'] if y['nd'] and y['checked_in_v13']),
+        'runs_rebuilt_nd_equals_stored_n': sum(x['rebuilt_nd'] == x['stored_n_dim'] for x in out), 'bytes': nb}
+json.dump({'label': 'observed (TAP, DR24 LC API) and derived', 'summary': summ, 'runs': out}, open(OUT, 'w'), separators=(',', ':'))
+open(OUT, 'a').write('\n')
+print(summ)
