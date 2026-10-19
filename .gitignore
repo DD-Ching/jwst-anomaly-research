@@ -37,3 +37,4 @@ outputs/
 *.log
 .DS_Store
 Thumbs.db
+results/w3_ztf/v14/8170/sample.json
