@@ -625,6 +625,11 @@ and τ < 0.073 / 0.054 / 0.085 / 0.13 / 0.17 / 0.41 at t_E = 0.01 / 0.03 / 0.1 /
 The per-deg² columns above stay MACS0416-only until a joint `combine`. Abell 2744's calibrated efficiency
 (0.000–0.013) replaces its uncalibrated column below, which was 4–7× too high.
 
+Headline with NEXUS added (calibrated and its 5 survivors vetted 2026-10-19, D-052 addenda b and c; per-source rate
+only, ρ = 0.1; `results/dimming/nexus_calib/headline.json`, `results/dimming/nexus_vet/RESULT.md`): rate < 0.43 /
+0.11 / 0.043 / 0.029 / 0.020 / 0.016 per source per yr at t_E = 0.01 / 0.03 / 0.1 / 0.3 / 1 / 3 yr (×2.6–6.2
+tighter). Per-deg² columns still await a joint `combine`.
+
 All three fields, **including the two uncalibrated ones** (indicative only; `limits_combined_all_fields.ecsv`,
 ρ = 0.1):
 

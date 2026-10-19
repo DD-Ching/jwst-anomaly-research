@@ -1,0 +1,162 @@
+{
+ "nexus-d73390|e0|forced": {
+  "f_sw": 0.5557039817743108,
+  "f_lw": 3.8031587518560146,
+  "e_lw": 0.1176506054753794,
+  "chromatic_veto": false
+ },
+ "nexus-d73390|e0|F200W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   5.71,
+   5.7048
+  ],
+  "n_jump": [
+   10,
+   1
+  ],
+  "median_ujy": 5.707421413981121,
+  "max_ujy": 5.7100293446006445
+ },
+ "nexus-d73390|e0|F444W": {
+  "n_exposures": 3,
+  "flux_ujy": [
+   3.6623,
+   3.8951,
+   3.9356
+  ],
+  "n_jump": [
+   0,
+   0,
+   0
+  ],
+  "median_ujy": 3.895129056746038,
+  "max_ujy": 3.9356484916192724
+ },
+ "nexus-d73390|e1|forced": {
+  "f_sw": 0.862594810648938,
+  "f_lw": 3.890768755024474,
+  "e_lw": 0.12173100938099748,
+  "chromatic_veto": false
+ },
+ "nexus-d73390|e1|F200W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   5.9462,
+   6.0775
+  ],
+  "n_jump": [
+   0,
+   0
+  ],
+  "median_ujy": 6.011832909992151,
+  "max_ujy": 6.077480314990232
+ },
+ "nexus-d73390|e1|F444W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   NaN,
+   NaN
+  ],
+  "n_jump": [
+   0,
+   4
+  ],
+  "median_ujy": NaN,
+  "max_ujy": null
+ },
+ "nexus-d73390|e3|forced": {
+  "f_sw": 0.47678559039046875,
+  "f_lw": 3.5698615591462763,
+  "e_lw": 0.11162704439329398,
+  "chromatic_veto": false
+ },
+ "nexus-d73390|e3|F200W": {
+  "n_exposures": 1,
+  "flux_ujy": [
+   NaN
+  ],
+  "n_jump": [
+   0
+  ],
+  "median_ujy": NaN,
+  "max_ujy": null
+ },
+ "nexus-d73390|e3|F444W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   NaN,
+   NaN
+  ],
+  "n_jump": [
+   0,
+   0
+  ],
+  "median_ujy": NaN,
+  "max_ujy": null
+ },
+ "nexus-d73390|e5|forced": {
+  "f_sw": 0.42475520360036806,
+  "f_lw": 3.4937248913887737,
+  "e_lw": 0.11024009805824152,
+  "chromatic_veto": false
+ },
+ "nexus-d73390|e5|F200W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   5.2026,
+   NaN
+  ],
+  "n_jump": [
+   0,
+   1
+  ],
+  "median_ujy": 5.202550375529581,
+  "max_ujy": 5.202550375529581
+ },
+ "nexus-d73390|e5|F444W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   3.3622,
+   3.5136
+  ],
+  "n_jump": [
+   0,
+   0
+  ],
+  "median_ujy": 3.4378934410709068,
+  "max_ujy": 3.5136064653809878
+ },
+ "nexus-d73390|e6|forced": {
+  "f_sw": 0.7109589239714583,
+  "f_lw": 3.921476516150524,
+  "e_lw": 0.12320173186533445,
+  "chromatic_veto": false
+ },
+ "nexus-d73390|e6|F200W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   NaN,
+   5.801
+  ],
+  "n_jump": [
+   9,
+   0
+  ],
+  "median_ujy": 5.800996328633351,
+  "max_ujy": 5.800996328633351
+ },
+ "nexus-d73390|e6|F444W": {
+  "n_exposures": 2,
+  "flux_ujy": [
+   NaN,
+   NaN
+  ],
+  "n_jump": [
+   0,
+   0
+  ],
+  "median_ujy": NaN,
+  "max_ujy": null
+ }
+}

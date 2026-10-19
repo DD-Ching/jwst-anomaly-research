@@ -37,6 +37,7 @@ import argparse
 import json
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
@@ -1119,26 +1120,35 @@ def cmd_forced(args) -> dict:
     qual = {k: np.zeros(n, bool) for k in ("cut_edge", "cut_low_weight", "cut_spike")}
     files: dict[tuple[int, str], list[str]] = {}
     skipped: list[str] = []
+
+    def read_image(b: str, k: int, e: dict[str, Any]):
+        uri = pipeline.l3_image_uri(field["cloud"], obs_id(e, b))
+        for _attempt in range(2):  # S3 reads through a proxy fail now and then
+            try:
+                return cutouts.make_cutouts(
+                    uri,
+                    targets,
+                    size_arcsec=2.0,
+                    extensions=["ERR", "WHT"],
+                    spike_radii_arcsec=(0.2, 0.8),
+                    out_dir=args.out / "cutouts" / f"{b}_e{k}",
+                )
+            except OSError as exc:
+                print(f"warning: {b} e{k}: {exc}", file=sys.stderr)
+        return None
+
+    # the (band, epoch) images are independent S3 range-read jobs: read them concurrently;
+    # everything below consumes them in the same order as a sequential run
+    jobs = [(b, k, e) for b in bands for k, e in enumerate(field["epochs"]) if b in e["bands"]]
+    with ThreadPoolExecutor(max_workers=max(1, getattr(args, "workers", 1))) as pool:
+        futs = {(b, k): pool.submit(read_image, b, k, e) for b, k, e in jobs}
+        read = {key: f.result() for key, f in futs.items()}
     for jb, b in enumerate(bands):
         scales = {}
         for k, e in enumerate(field["epochs"]):
             if b not in e["bands"]:
                 continue
-            uri = pipeline.l3_image_uri(field["cloud"], obs_id(e, b))
-            ct = None
-            for _attempt in range(2):  # S3 reads through a proxy fail now and then
-                try:
-                    ct = cutouts.make_cutouts(
-                        uri,
-                        targets,
-                        size_arcsec=2.0,
-                        extensions=["ERR", "WHT"],
-                        spike_radii_arcsec=(0.2, 0.8),
-                        out_dir=args.out / "cutouts" / f"{b}_e{k}",
-                    )
-                    break
-                except OSError as exc:
-                    print(f"warning: {b} e{k}: {exc}", file=sys.stderr)
+            ct = read[(b, k)]
             if ct is None:  # the epoch stays unmeasured (NaN), recorded in meta
                 skipped.append(f"{b}_e{k}")
                 continue
@@ -1465,6 +1475,12 @@ def main(argv: list[str] | None = None) -> int:
         "this many in total (0 = all)",
     )
     ap.add_argument("--n-controls", type=int, default=300)
+    ap.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="forced: (band, epoch) images read concurrently (S3 range reads)",
+    )
     ap.add_argument("--control-mag", nargs=2, type=float, default=(24.0, 27.5))
     ap.add_argument("--no-crossmatch", action="store_true")
     args = ap.parse_args(argv)

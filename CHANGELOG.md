@@ -20,6 +20,41 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   all 17 "credible dimming" non-detections have a dark detector column within 2″ of the source, against 0 of 20
   detections (post hoc check). That is consistent with a data problem. One group is pending. **No image-confirmed dimming.**
 - **Handoff:** W3 / ZTF is paused. The fade-control margin (8.5 % vs 10 %) is the known weak point of the new rule.
+## 2026-10-19: W3 dimming: NEXUS survivors vetted at exposure level; 0 W3 events, three-field headline stands
+- **Why:** #369 handoff (its headline was conditional on 5 by-eye survivors). Plan frozen first
+  (`results/dimming/nexus_vet/PLAN.md`).
+- **New:** `scripts/dimming_exposure_check.py`: fixed-aperture flux, JUMP / DO_NOT_USE counts and stamps on every
+  level-2 `_cal` exposure covering a flagged point; `chromatic_veto` (post hoc, unit-tested).
+- **Result (`results/dimming/nexus_vet/RESULT.md`, `vetting.json`):**
+  - d53823 is in one of two dithers (93.6 µJy, 60 JUMP pixels; 0.0003 in the other).
+  - d60156 and d79928 are covered by one exposure each, are JUMP-flagged, and fail the chromatic veto
+    (simultaneous F444W < F200W / 20 at 3σ).
+  - d73390's F200W variation is not reproduced on `_cal` (min / max 0.865 against 2.03 in the i2d forced
+    photometry).
+  - d79956 is a brightening in both bands, a real sky source (SIMBAD none; TNS 403, NED timeout).
+  - Controls show the same class: 3 covered single-epoch control points are single-exposure, JUMP-flagged events.
+- **Consequence:** 0 W3 events; the three-field headline holds: 0.020 per source per yr at t_E = 1 yr and 0.029 at
+  0.3 yr (docs/exotic_limits.md, D-052 addendum c).
+- **Deviations:** the chromatic veto is post hoc. The nearby-galaxy comparison for d73390 was not run. 6 faint flagged
+  controls were not examined at exposure level.
+- **Handoff:** MACS0416 `forced --workers` regeneration, then a joint `combine` for the per-deg² headline. Fold
+  `chromatic_veto` into `dimming_screen.py forced` and re-run injections before quoting a limit that uses it in
+  the chain.
+
+## 2026-10-19: W3 dimming: NEXUS forced stage calibrated; 5 artefact-test survivors, none a W3 dimming by eye; headline ×2.6–6.2 tighter if they hold
+- **Why:** handoff of #367 (NEXUS was the one uncalibrated field that could move the headline). Plan frozen first
+  (`results/dimming/nexus_calib/PLAN.md`).
+- **New:** `dimming_screen.py forced --workers N` reads the (band, epoch) images concurrently. Validated before use:
+  Abell 2744 summary identical, 666 → 236 s (`workers_validation.json`).
+- **Result (`results/dimming/nexus_calib/RESULT.md`):** screen reproduces D-052 (3,793 / 1,051); `forced` calibrated
+  (noise 1.91 / 2.57, inflation 1.00 / 2.06); 32 confirmed, 5 survive the artefact tests, 10 / 300 controls flagged.
+  Survivors looked at (`survivors_sheet.png`): three single-band single-epoch F200W points, an extended-nucleus
+  F200W-only variation (WISE source), an SN-like brightening in both bands. None is a W3 dimming (by eye, post hoc).
+- **Limits:** W3 efficiency 0.026–0.218 (ρ = 0.1). Three-field headline, conditional on the survivors: 0.020 per
+  source per yr at t_E = 1 yr (was 0.053), 0.029 at 0.3 yr (was 0.14) (`headline.json`).
+- **Deviation:** `/vet-candidate` on the survivors did not run in this cycle (time); flagged controls not examined.
+- **Handoff:** vet the 5 survivors (TNS for d79956) and look at the 10 flagged controls; then MACS0416 `forced
+  --workers` and `combine`; update docs/exotic_limits.md once the survivors are vetted.
 
 ## 2026-10-19: W3 ZTF v12: new-field batch area Npix 2382 fails validation (ρ 0.1, blend 0.7, t_E 30 d at 0.42); search not executed
 - **Setup:** plan, dedupe list (4,072 earlier groups) and candidates were fixed before any read
