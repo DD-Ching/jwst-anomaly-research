@@ -47,3 +47,32 @@ def test_inject_gaussian_integral():
     out = m.inject_gaussian(sci, 20.0, 20.0, 100.0, 3.0)
     assert abs(out.sum() - 100.0) < 1e-9
     assert np.unravel_index(out.argmax(), out.shape) == (20, 20)
+
+
+def test_posthoc_outcome_and_point_disc():
+    assert m.posthoc_outcome(np.array([5.0, 120.0]), 10.0, 0.0, 100.0) == "present"
+    assert m.posthoc_outcome(np.array([5.0, 90.0]), 10.0, 0.0, 100.0) == "absent"
+    assert m.posthoc_outcome(np.array([5.0]), 10.0, 0.3, 100.0) == "untestable"
+    disc = m.grid_points(np.array([[110.83, -73.45], [110.83, -73.45]]))
+    assert 70 < len(disc) < 90  # pi 0.5^2 / 0.01
+
+
+def test_posthoc_injection_gate():
+    assert m.posthoc_outcome(np.array([5.0]), 10.0, 0.0, 100.0, inj_delta=180.0) == "absent"
+    assert m.posthoc_outcome(np.array([5.0]), 10.0, 0.0, 100.0, inj_delta=90.0) == "untestable"
+    assert m.posthoc_outcome(np.array([5.0]), 30.0, 0.0, 100.0, inj_delta=120.0) == "untestable"
+    assert m.posthoc_outcome(np.array([5.0]), 10.0, 0.0, 100.0, inj_delta=np.nan) == "untestable"
+
+
+def test_classify_flag():
+    wing = {
+        "flag_to_source_arcsec": 0.2,
+        "e_minus_t_offset_arcsec": 0.012,
+        "flux_e_minus_t_njy": 207.0,
+    }
+    assert m.classify_flag("present", wing, 97.0) == "undetermined"
+    assert m.classify_flag("present", wing | {"flux_e_minus_t_njy": -50.0}, 97.0) == "absent"
+    assert m.classify_flag("present", wing | {"flag_to_source_arcsec": 0.45}, 97.0) == "present"
+    assert m.classify_flag("present", wing | {"e_minus_t_offset_arcsec": 0.2}, 97.0) == "present"
+    assert m.classify_flag("present", None, 97.0) == "present"
+    assert m.classify_flag("absent", wing, 97.0) == "absent"

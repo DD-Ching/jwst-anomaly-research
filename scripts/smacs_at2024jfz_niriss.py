@@ -29,7 +29,7 @@ from hit_lightcurve import (  # noqa: E402
     aperture_photometry,
     empirical_error,
 )
-from smacs_at2024jfz import F0_NJY, TNS_RADEC  # noqa: E402
+from smacs_at2024jfz import F0_NJY, T0_MJD, TNS_RADEC  # noqa: E402
 
 EPOCH_OBS = "jw04368-o001_t001_niriss_clear-f150w"
 TEMPLATE_OBS = "jw02736-o001_t001_nircam_clear-f150w"
@@ -47,6 +47,55 @@ INJ_FWHM_ARCSEC = 0.08  # ASSUMPTION: Gaussian stand-in for the drizzled NIRISS 
 NSIGMA = 5.0
 MAX_NAN_FRAC = 0.2
 MIN_INJ_PASS = 5  # of N_TRACK
+STATIC_SEARCH_ARCSEC = 0.6  # post hoc: static-source search radius around a flag
+STATIC_AP_ARCSEC = 0.8  # post hoc: aperture holding most of a point source in both instruments
+POSTHOC_MU_FACTOR = 0.5  # post hoc ASSUMPTION: model |mu_k/mu_0| may be high by up to x2
+STATIC_FLAG_ARCSEC = 0.3  # post hoc ASSUMPTION: a flag this close to a T source is its wing
+STATIC_OFFSET_ARCSEC = 0.05  # post hoc ASSUMPTION: same source if E and T centroids agree to this
+EPOCH_MJD = 60557.96  # MJD of EPOCH_OBS as listed in ../mast_epochs.json and ../posthoc.json
+
+
+def classify_flag(verdict: str, static: dict | None, threshold: float) -> str:
+    """Post hoc: a "present" that is the wing of a static source becomes "absent" or "undetermined".
+
+    A flag within ``STATIC_FLAG_ARCSEC`` of a source whose E and T centroids agree within
+    ``STATIC_OFFSET_ARCSEC`` is that source's cross-instrument residual. Then a counter-image
+    blended with the source is excluded ("absent") only if the source's total E - T flux change
+    is below ``threshold``; otherwise "undetermined". Without a usable ``static`` the verdict stays.
+    """
+    if verdict != "present" or not static:
+        return verdict
+    if (
+        static["flag_to_source_arcsec"] <= STATIC_FLAG_ARCSEC
+        and static["e_minus_t_offset_arcsec"] <= STATIC_OFFSET_ARCSEC
+    ):
+        return "absent" if abs(static["flux_e_minus_t_njy"]) < threshold else "undetermined"
+    return verdict
+
+
+def posthoc_outcome(
+    delta: np.ndarray, sig: float, nan_frac: float, threshold: float, inj_delta: float | None = None
+) -> str:
+    """Post hoc rule (not in PLAN.md) for one counter-image, with a one-point injection gate.
+
+    ``inj_delta`` is E - T at the predicted position after injecting the expected counter-image
+    (``threshold / POSTHOC_MU_FACTOR`` in aperture units); it must pass the same cuts, else
+    "untestable".
+
+    ``threshold`` is ``POSTHOC_MU_FACTOR * |mu_k/mu_0| * (F_E - F_T)(TNS)``: under a single-peaked
+    light curve, a counter-image whose delay lies in [0, t_E - t_0] shows a phase at which the
+    event was at least as bright as at the TNS position in E (same instrument, so no aperture
+    correction).
+    """
+    if nan_frac > MAX_NAN_FRAC:
+        return "untestable"
+    if inj_delta is not None and not (
+        np.isfinite(inj_delta) and inj_delta >= threshold and inj_delta >= NSIGMA * sig
+    ):
+        return "untestable"
+    d = np.asarray(delta, float)
+    hit = np.isfinite(d) & (d >= threshold) & (d >= NSIGMA * sig)
+    return "present" if hit.any() else "absent"
 
 
 def outcome(
@@ -74,6 +123,59 @@ def outcome(
     return "present" if hit.any() else "absent"
 
 
+def _peak_centroid(box: dict, ra: float, dec: float, search: float) -> tuple[float, float]:
+    """Sky position of the 7 x 7 px centroid of the brightest pixel near (ra, dec).
+
+    The box median is subtracted first; raises ValueError on an empty, all-NaN or flat window.
+    """
+    sci = box["sci"] - np.nanmedian(box["sci"])
+    x, y = (float(v) for v in box["wcs"].all_world2pix(ra, dec, 0))
+    h = max(int(np.ceil(search / box["scale"])), 1)
+    x0, y0 = max(int(round(x)) - h, 3), max(int(round(y)) - h, 3)
+    x1 = min(int(round(x)) + h + 1, sci.shape[1] - 3)
+    y1 = min(int(round(y)) + h + 1, sci.shape[0] - 3)
+    win = sci[y0:y1, x0:x1]
+    if win.size == 0 or not np.isfinite(win).any():
+        raise ValueError("no finite pixels in the centroid window")
+    py, px = np.unravel_index(np.nanargmax(win), win.shape)
+    px, py = px + x0, py + y0
+    w = np.clip(np.nan_to_num(sci[py - 3 : py + 4, px - 3 : px + 4]), 0, None)
+    yy, xx = np.mgrid[py - 3 : py + 4, px - 3 : px + 4]
+    if w.sum() <= 0:
+        raise ValueError("flat centroid window")
+    cx, cy = (w * xx).sum() / w.sum(), (w * yy).sum() / w.sum()
+    ra_c, dec_c = box["wcs"].all_pix2world(cx, cy, 0)
+    return float(ra_c), float(dec_c)
+
+
+def static_check(boxes: dict, ra: float, dec: float) -> dict:
+    """Post hoc: is a flag the wing of a static source? Same source in T and E, and its total flux.
+
+    The brightest T pixel within ``STATIC_SEARCH_ARCSEC`` of the flag, centroided in T and then in
+    E (searched near the T centroid); fluxes in ``STATIC_AP_ARCSEC`` (annulus 1.0-1.5 arcsec).
+    """
+    ra_t, dec_t = _peak_centroid(boxes["T"], ra, dec, STATIC_SEARCH_ARCSEC)
+    ra_e, dec_e = _peak_centroid(boxes["E"], ra_t, dec_t, 0.15)
+    cosd = np.cos(np.radians(dec))
+    out = {
+        "source_radec_t": [round(ra_t, 7), round(dec_t, 7)],
+        "e_minus_t_offset_arcsec": round(
+            float(np.hypot((ra_e - ra_t) * cosd, dec_e - dec_t)) * 3600, 3
+        ),
+        "flag_to_source_arcsec": round(float(np.hypot((ra - ra_t) * cosd, dec - dec_t)) * 3600, 3),
+    }
+    for k, (rk, dk) in {"E": (ra_e, dec_e), "T": (ra_t, dec_t)}.items():
+        b = boxes[k]
+        x, y = (float(v) for v in b["wcs"].all_world2pix(rk, dk, 0))
+        f = aperture_photometry(
+            b["sci"], x, y, STATIC_AP_ARCSEC / b["scale"], (1.0 / b["scale"], 1.5 / b["scale"])
+        )
+        out[f"flux_{k}_njy"] = round(float(f * b["pixar_sr"] * NJY_PER_MJYSR_SR), 1)
+    out["flux_e_minus_t_njy"] = round(out["flux_E_njy"] - out["flux_T_njy"], 1)
+    out["flux_change_frac"] = round(out["flux_e_minus_t_njy"] / out["flux_T_njy"], 4)
+    return out
+
+
 def track_points(p0: tuple[float, float], p1: tuple[float, float], n: int = N_TRACK) -> np.ndarray:
     """``n`` (ra, dec) points evenly from ``p0`` to ``p1`` (linear; fine over < 1 arcsec)."""
     t = np.linspace(0.0, 1.0, n)[:, None]
@@ -96,7 +198,10 @@ def grid_points(
     gx, gy = np.meshgrid(np.arange(-k, k + 1) * step, np.arange(-k, k + 1) * step)
     pts = np.column_stack([gx.ravel(), gy.ravel()])
     ab = b - a
-    t = np.clip(((pts - a) @ ab) / (ab @ ab), 0.0, 1.0)
+    if ab @ ab == 0:  # a single point: a disc
+        t = np.zeros(len(pts))
+    else:
+        t = np.clip(((pts - a) @ ab) / (ab @ ab), 0.0, 1.0)
     dist = np.linalg.norm(pts - (a + t[:, None] * ab), axis=1)
     keep = pts[dist <= radius + 1e-9]
     return np.column_stack([ra0 + keep[:, 0] / 3600.0 / cosd, dec0 + keep[:, 1] / 3600.0])
@@ -219,6 +324,87 @@ def main(argv: list[str] | None = None) -> int:
     tns_f = {k: measure(b | {"name": k}, tns)[:2] for k, b in tb.items()}
     stamps(boxes, centre, track, args.out / "stamps_track.png")
     stamps(tb, TNS_RADEC, tns, args.out / "stamps_tns.png")
+    # post hoc (not in PLAN.md): every posthoc.json counter-image whose delay is in [0, t_E - t_0]
+    from concurrent.futures import ThreadPoolExecutor
+
+    if not np.any(np.isclose(post["epochs_mjd"], EPOCH_MJD, atol=0.01)):
+        raise RuntimeError(f"EPOCH_MJD {EPOCH_MJD} is not an epoch of posthoc.json")
+    t_e = EPOCH_MJD
+    span = t_e - T0_MJD
+    f_now = float(tns_f["E"][0][0] - tns_f["T"][0][0])
+    rows = [r for r in post["rows"] if 0.0 <= r["delay_days"] <= span]
+
+    def one(r: dict) -> dict:
+        thr = POSTHOC_MU_FACTOR * abs(r["mu_ratio"]) * f_now
+        row = {
+            "z_s": r["z_s"],
+            "sep_from_tns_arcsec": r["sep_from_tns_arcsec"],
+            "mu_ratio": r["mu_ratio"],
+            "delay_days": r["delay_days"],
+            "phase_in_e_days": round(span - r["delay_days"], 1),
+            "threshold_njy": round(thr, 1),
+        }
+        pt = np.array([[r["ra"], r["dec"]]])
+        disc = grid_points(np.repeat(pt, 2, axis=0))
+        m, bx = {}, {}
+        try:
+            for k, u in uris.items():
+                bx[k] = read_box(u, r["ra"], r["dec"], BOX_HALF_ARCSEC)
+                m[k] = measure(bx[k] | {"name": k}, disc)[:2]
+        except ValueError as exc:  # outside a mosaic
+            return row | {"outcome": "untestable", "error": str(exc)[:120]}
+        d = m["E"][0] - m["T"][0]
+        sg = float(np.hypot(m["E"][1], m["T"][1]))
+        nanf = float(max(np.mean(~np.isfinite(m["E"][0])), np.mean(~np.isfinite(m["T"][0]))))
+        # injection of the expected counter-image (aperture flux thr / factor) at the prediction
+        e = bx["E"]
+        to = e["pixar_sr"] * NJY_PER_MJYSR_SR
+        x, y = (float(v) for v in e["wcs"].all_world2pix(r["ra"], r["dec"], 0))
+        sci = inject_gaussian(
+            e["sci"], x, y, thr / POSTHOC_MU_FACTOR / to, INJ_FWHM_ARCSEC / e["scale"]
+        )
+        f_inj = aperture_photometry(
+            sci,
+            x,
+            y,
+            RADIUS_ARCSEC / e["scale"],
+            (ANNULUS[0] / e["scale"], ANNULUS[1] / e["scale"]),
+        )
+        inj_d = float(f_inj * to - measure(bx["T"] | {"name": "T"}, pt)[0][0])
+        verdict_ph = posthoc_outcome(d, sg, nanf, thr, inj_d)
+        row |= {"sigma_njy": round(sg, 2), "nan_frac": nanf, "inj_delta_njy": round(inj_d, 1)}
+        if np.isfinite(d).any():
+            i = int(np.nanargmax(d))
+            row |= {
+                "delta_max_njy": round(float(d[i]), 1),
+                "delta_max_snr": round(float(d[i] / sg), 2),
+            }
+        row["outcome_raw"] = verdict_ph
+        sc = None
+        if verdict_ph == "present":
+            row["delta_max_radec"] = np.round(disc[i], 7).tolist()
+            try:
+                sc = static_check(bx, *disc[i])
+            except ValueError as exc:
+                sc = None
+                row["static_check_error"] = str(exc)[:120]
+            if sc:
+                cosd = np.cos(np.radians(r["dec"]))
+                ra_s, dec_s = sc["source_radec_t"]
+                sc["predicted_to_source_arcsec"] = round(
+                    float(np.hypot((r["ra"] - ra_s) * cosd, r["dec"] - dec_s)) * 3600, 3
+                )
+                row["static_check"] = sc
+        row["outcome"] = classify_flag(verdict_ph, sc, thr)
+        return row | {"ra": r["ra"], "dec": r["dec"]}
+
+    with ThreadPoolExecutor(8) as ex:
+        ph = list(ex.map(one, rows))
+    flagged = np.array([[p["ra"], p["dec"]] for p in ph if p.get("outcome_raw") == "present"])
+    if len(flagged):
+        fc = tuple(flagged.mean(axis=0))
+        fb = {k: read_box(u, fc[0], fc[1], BOX_HALF_ARCSEC) for k, u in uris.items()}
+        stamps(fb, fc, flagged, args.out / "stamps_posthoc_flags.png")
     i_max = int(np.nanargmax(delta))
     out = {
         "provenance": {
@@ -253,6 +439,15 @@ def main(argv: list[str] | None = None) -> int:
         "tns_position": {
             k: {"flux_njy": round(float(v[0][0]), 1), "err_njy": round(v[1], 1)}
             for k, v in tns_f.items()
+        },
+        "posthoc": {
+            "note": "not in PLAN.md; single-peaked light curve ASSUMPTION; outcome_raw from "
+            "posthoc_outcome (one-point injection gate), outcome after classify_flag; threshold = "
+            f"{POSTHOC_MU_FACTOR} x |mu_ratio| x (F_E - F_T at the TNS position)",
+            "t_e_mjd": t_e,
+            "t_e_minus_t0_days": round(span, 2),
+            "f_now_njy": round(f_now, 1),
+            "rows": ph,
         },
     }
     (args.out / "result.json").write_text(json.dumps(out, indent=1) + "\n")

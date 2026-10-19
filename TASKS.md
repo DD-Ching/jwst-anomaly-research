@@ -389,7 +389,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      model of the star). Next: the rest of the SMACS arcs (more boxes);
      ~~whether AT 2024jfz (1.8″ from image 6.1) has model counter-images~~ done 2026-10-19
      (`results/transients/smacs_at2024jfz/RESULT.md`): yes for z_s ≥ 1; "not testable" in the NIRCam epochs for
-     z_s ≤ 2.5 (z 1.71: +31 d, 4.5″), "testable" at z_s 4 only as an unresolved 0.087″ pair in 2024; optional: NIRISS 4368 F150W epoch if z_s ≈ 1.35–1.40 (footprint first);
+     z_s ≤ 2.5 (z 1.71: +31 d, 4.5″), "testable" at z_s 4 only as an unresolved 0.087″ pair in 2024; ~~NIRISS 4368 F150W epoch~~ done 2026-10-19 (`results/transients/smacs_at2024jfz/niriss4368/RESULT.md`: frozen outcome absent at z_s 1.35–1.40; post hoc, single-peaked light curve: absent for z_s 1.35–1.50 and 1.75–2.50, undetermined for 1.55–1.70 next to a static source; the transient is still visible at +116 d);
    - **Full-chain known-case check** (2026-10-16, `results/transients/arc_chain/RESULT.md`):
      - MACS0416 Yan+2023: 4 / 4 pass detection, morphology and the arc mask;
      - SMACS Atalanta fails the position stage under both the 1″ rule and the mask;

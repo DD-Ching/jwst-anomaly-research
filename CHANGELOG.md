@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: AT 2024jfz: no counter-image in NIRISS 4368 F150W at z_s 1.35–1.40; the transient is still visible at +116 d
+- **Why:** handoff of #358 (the only archival epoch matching the counter-image timing, if z_s ≈ 1.35–1.40). Plan
+  frozen first (`results/transients/smacs_at2024jfz/niriss4368/PLAN.md`); rule `outcome` unit-tested before the run.
+- **New:** `scripts/smacs_at2024jfz_niriss.py` (+ tests): NIRISS 4368 epoch vs the ERO NIRCam F150W template, S3
+  byte-range boxes, injection control.
+- **Result (derived, `RESULT.md`):** frozen outcome **absent**: max Δ 9.5 nJy (1.0σ) over 119 grid points within
+  0.5″ of the track, against T_ap 271 nJy; injections 6 / 6 recovered. AT 2024jfz itself is still in E at 254.7 ± 5.6
+  nJy (+116.1 d; template 31.3 ± 3.2).
+- **Post hoc:** under a single-peaked light curve, nearby counter-images are not seen for z_s 1.35–1.50 and
+  1.75–2.50 (21 rows, max Δ ≤ 40.9 vs thresholds ≥ 93.5 nJy; expected counter-images injected and recovered in all
+  25 rows). z_s 1.55–1.70 is undetermined (tested rule `classify_flag`): the flags sit on the wing of a static compact
+  source (centroids agree to 0.014″; flux change fraction 0.0266 across instruments).
+- **Review fixes:** post hoc injection gate, `classify_flag` replaces a by-eye reclassification, off-footprint and
+  NaN rows return "untestable", the epoch is a checked constant.
+- **Handoff:** the AT 2024jfz counter-image line is closed except z_s 1.55–1.70 (needs a same-instrument epoch or
+  a PSF-matched difference) and z_s outside 1.35–2.5. A host redshift would decide which applies. Not a candidate.
+
 ## 2026-10-19: AT 2024jfz (SMACS 0723): counter-images not testable in the JWST epochs for z_s ≤ 2.5 under Mahler+22 ICLv2
 - **Why:** open TASKS item (SMACS arc `arc_diff`, h000 = AT 2024jfz, 1.81″ from image 6.1): does the cluster model
   predict counter-images that existing epochs could test? Plan frozen first (`results/transients/smacs_at2024jfz/PLAN.md`).
