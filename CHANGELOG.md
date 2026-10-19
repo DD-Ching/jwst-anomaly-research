@@ -133,9 +133,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-19: W3 ZTF v9: official psfcat catalogues fill the field 672 gap for 3 calibration stars (overlap test passed)
 - psfcat (IRSA IBE, per exposure and quadrant) exists and is readable for all 72 files requested. Its `mag` is
   instrumental, so MAGZP is added. Labelled deviation: the first run omitted it.
-- Overlap with DR24: 13 pairs, median Δ −0.015 mag, robust scatter 0.0013 mag. Passes the frozen test.
-- Gap fill (60 exposures, 12.8 MB): usable gap observations rise from 2, 2, 1 to 30, 62, 32. All 55 missing targets
-  lie outside the footprint or inside its 10″ margin.
+- Overlap with DR24: 13 pairs, pooled median Δ −0.015 mag. Per-star offsets −0.015, −0.015 and +0.020 (range −0.016
+  to +0.030). Passes the frozen test. This shows consistency only: DR24 is built from the same PSF photometry.
+- Gap fill (60 of 63 candidate exposures): strict usable gap observations rise from 1 per star to 28, 60 and 31.
+  All 55 missing targets lie outside the footprint (52) or inside its 10″ margin (3).
 - ZFPS not needed for these stars; difference images exist for 5 of the 6 checked.
 - One cell's #350 cases would need ≤ 533 files (≤ 114 MB, about 13 min).
 - **Handoff:** paused until the owner authorizes a psfcat data path in the W3 chain and a re-run of the calibration

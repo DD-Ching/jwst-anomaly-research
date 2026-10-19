@@ -1,0 +1,55 @@
+{
+ "label": "derived; v9 review audit",
+ "bytes": 457521,
+ "per_star_overlap_delta": {
+  "672208200000073": [
+   -0.0149,
+   -0.0142,
+   -0.0154
+  ],
+  "672208200000239": [
+   -0.0158,
+   -0.0159,
+   -0.0151,
+   -0.0149,
+   -0.0136,
+   -0.0155
+  ],
+  "672208200002085": [
+   0.0302,
+   0.0234,
+   0.013,
+   0.0172
+  ]
+ },
+ "per_star_median_delta": {
+  "672208200000073": -0.0149,
+  "672208200000239": -0.015300000000000001,
+  "672208200002085": 0.0203
+ },
+ "candidates_before_cap": 63,
+ "candidates_fetched": 60,
+ "per_star": {
+  "672208200000073": {
+   "dr24_clean_in_gap_infobits0": 1,
+   "added_incl_dr24_flagged": 28,
+   "added_excl_dr24_flagged": 27,
+   "total_strict": 28,
+   "meets_20_strict": true
+  },
+  "672208200000239": {
+   "dr24_clean_in_gap_infobits0": 1,
+   "added_incl_dr24_flagged": 60,
+   "added_excl_dr24_flagged": 59,
+   "total_strict": 60,
+   "meets_20_strict": true
+  },
+  "672208200002085": {
+   "dr24_clean_in_gap_infobits0": 1,
+   "added_incl_dr24_flagged": 31,
+   "added_excl_dr24_flagged": 30,
+   "total_strict": 31,
+   "meets_20_strict": true
+  }
+ }
+}

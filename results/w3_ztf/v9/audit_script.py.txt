@@ -1,0 +1,49 @@
+# v9 review follow-up (no psfcat re-download): per-star overlap deltas, candidate count before the 60 cap, DR24
+# "before" counts with the same infobits-0 rule as "added", and "added" without exposures where DR24 has a flagged
+# (catflags != 0) detection. Uses psfcat_overlap.json, psfcat_fill.json, TAP and the LC API. Usage: <out json>
+import io, json, sys, urllib.parse, urllib.request
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+STARS = [672208200000073, 672208200000239, 672208200002085]
+GAP = (59853.0, 60249.0)
+ov = json.load(open('results/w3_ztf/v9/psfcat_overlap.json')); fl = json.load(open('results/w3_ztf/v9/psfcat_fill.json'))
+per_delta = {}
+for r in ov['exposures'][:6]:
+    for o, s in r['stars'].items():
+        if s['status'] == 'matched' and s['flags'] == 0 and s['dr24'] and s['dr24']['catflags'] == 0:
+            per_delta.setdefault(o, []).append(round(s['mag'] - s['dr24']['mag'], 4))
+nb = 0
+sql = ("SELECT expid,obsjd,infobits,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 FROM ztf.ztf_current_meta_sci "
+       "WHERE field=672 AND ccdid=8 AND qid=2 AND filtercode='zr'")
+raw = urllib.request.urlopen('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), timeout=300).read(); nb += len(raw)
+meta = Table.read(io.BytesIO(raw), format='csv'); row = {int(r['expid']): r for r in meta}
+pos = {m: (g['ra'], g['dec']) for g in json.load(open(wz.SAMPLE))['groups'] for m in g['members'] if m in STARS}
+dr = {}
+for o in STARS:
+    raw = urllib.request.urlopen(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={o}&FORMAT=csv', timeout=120).read(); nb += len(raw)
+    a = Table.read(io.BytesIO(raw), format='csv')
+    dr[o] = {int(x['expid']): int(x['catflags']) for x in a}
+cand = set()
+for r in meta:
+    m = float(r['obsjd']) - 2400000.5; e = int(r['expid'])
+    if GAP[0] <= m < GAP[1] and int(r['infobits']) == 0:
+        if any(bool(wz.in_quad(Table(rows=[r]), *pos[o])[0]) and dr[o].get(e) != 0 for o in STARS):
+            cand.add(e)
+fill_ids = {r['expid'] for r in fl['exposures']}
+out = {'label': 'derived; v9 review audit', 'bytes': nb, 'per_star_overlap_delta': per_delta,
+       'per_star_median_delta': {o: float(np.median(v)) for o, v in per_delta.items()},
+       'candidates_before_cap': len(cand), 'candidates_fetched': len(fill_ids), 'per_star': {}}
+for o in STARS:
+    before = sum(1 for e, f in dr[o].items() if f == 0 and e in row and int(row[e]['infobits']) == 0
+                 and GAP[0] <= float(row[e]['obsjd']) - 2400000.5 < GAP[1])
+    added = [r['expid'] for r in fl['exposures'] if r['stars'][str(o)]['status'] == 'matched' and r['stars'][str(o)]['flags'] == 0
+             and dr[o].get(r['expid']) != 0]
+    strict = [e for e in added if dr[o].get(e) is None]
+    out['per_star'][str(o)] = {'dr24_clean_in_gap_infobits0': before, 'added_incl_dr24_flagged': len(added),
+                               'added_excl_dr24_flagged': len(strict), 'total_strict': before + len(strict),
+                               'meets_20_strict': before + len(strict) >= 20}
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out, indent=1))

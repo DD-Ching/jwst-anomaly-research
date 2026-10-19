@@ -117,7 +117,6 @@ else:
     recs = [measure(e) for _, e in cand]
     per = {}
     for o in STARS:
-        ins = [e for e in (int(r['expid']) for r in meta) if True]
         before_gap_dr = sum(1 for e, x in dr[o].items() if x[2] == 0 and e in row and GAP[0] <= float(row[e]['obsjd']) - 2400000.5 < GAP[1])
         added = sum(1 for r in recs if r['stars'][str(o)]['status'] == 'matched' and r['stars'][str(o)]['flags'] == 0 and not (r['stars'][str(o)]['dr24'] and r['stars'][str(o)]['dr24']['catflags'] == 0))
         miss = sum(1 for r in recs if r['stars'][str(o)]['status'] == 'missing')
