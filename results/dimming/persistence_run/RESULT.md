@@ -42,3 +42,28 @@ Catalogues from S3 (`fetch_cats.py`, sha256 checked against the committed manife
 2. Finish MACS0416 epochs 2–3 and Abell 2744 epochs 1–2 (`run.py`; about 8 min per 1,200-file epoch with
    controls, not stored), which also tests their 20 targets; NEXUS controls on a subset of monitored sources.
 3. Only then the veto swap in `efficiency_table` with the per-bin `on_sky` efficiency, and `combine`.
+
+## Continuation 2026-10-19 18:08–19:05 UTC (all 37 targets tested; Abell 2744 epoch 2 controls missing)
+Same frozen `PLAN.md`, catalogues re-fetched from S3 (sha256-checked), Gaia mask from the ESA TAP. `run.py` gained
+`epochs=` to run only the unfinished epochs; `partial.py` rebuilds `verdicts.ecsv` from all stored per-exposure
+tables (same `classify`; reads `.ecsv.gz`, used where a table is over 1 MB) and records `complete`.
+- **MACS0416 complete** (epoch 2 = `jw01208-o004`, 320 `_cal`; epoch 3 = `jw01176-o213`, 160 `_cal`; 0 failed
+  reads). All **12 targets `on_sky`**, every one detected only in epoch 2 (CANUCS, the field's only non-1176 F200W
+  epoch; F200W catalogue 5.5 MB against 3.4–3.8 MB for the three 1176 epochs). Mosaic S/N 11.5–22.2; 9–45
+  detected exposures each, 0–6 suspect.
+- **Abell 2744 epoch 1** (`jw02561-o002`, 1,080 `_cal`, 0 failed reads): all **8 targets `on_sky`**, every one only
+  in this epoch. Mosaic S/N 17.6–33.3; 21–108 detected exposures each (d07198: 19 suspect, 81 clean). Epoch 2
+  (360 `_cal`, controls only: no target is detected there) did not finish in the session.
+- **All 37 targets tested:** 32 `on_sky` (MACS0416 12, Abell 2744 8, NEXUS 12), 4 `inconclusive`, 1 `undetected`,
+  0 `persistence`. In each field every target sits in one epoch only (MACS0416 e2, Abell 2744 e1, NEXUS e2). The
+  persistence test therefore removes none of them; the NEXUS 12 were all explained by depth / footprint in `forced`
+  (#378), so the same test comes first for the other 20. No flag is interpreted.
+- **Controls:** 194 monitored pairs (MACS0416 121, Abell 2744 73): `on_sky` 194 / 194 (S/N 10–20: 19 / 19;
+  20–50: 175 / 175), `persistence` 0 (`summary.json`; rule 1 "usable"). Every pair has mosaic S/N 11–33, so the
+  efficiency below S/N 11 is **unmeasured**; NEXUS and Abell 2744 e2 controls are still missing.
+
+## Next (replaces the list above)
+1. `forced` with the epoch depth / footprint test first (as `results/dimming/nexus_o014/`) on the 12 MACS0416 and
+   8 Abell 2744 `on_sky` targets; survivors to `/vet-candidate`.
+2. Then the swap: given 0 `persistence` among 37 targets and 194 controls, the D-039 veto removes nothing that
+   `forced` does not; decide whether the swap is still worth building once (1) is in.
