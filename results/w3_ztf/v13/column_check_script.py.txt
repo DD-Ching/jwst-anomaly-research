@@ -1,0 +1,39 @@
+# v13 post hoc data check of the image-check cutouts (owner step 1: coverage and data first). In each cutout, a
+# "dark column" is a pixel column whose median over the cutout lies > 5 robust sigma below the cutout median
+# (a bad or low column, not sky). Recorded per exposure: whether a dark column lies within the 2" photometry aperture
+# (+1 px) of the source position. Usage: python -I column_check_script.py.txt <cutout dir> <image_check.json> <out json>
+import json, sys, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.wcs import WCS
+warnings.filterwarnings('ignore')
+CUT, IC, OUT = sys.argv[1:4]
+ic = json.load(open(IC))
+res = {'label': 'derived; post hoc cutout column check', 'rule': 'column median < cutout median - 5 x 1.4826 MAD; '
+       'within aperture if |column - source x| <= 2"/scale + 1 px', 'sources': []}
+for s in ic['sources']:
+    rows = []
+    for r in s['exposures']:
+        fn = f"{CUT}/{r['expid']}_{s['key']}.fits"
+        try:
+            h = fits.open(fn)
+        except OSError:
+            rows.append({'expid': r['expid'], 'nd': r.get('nd'), 'cls': r.get('cls'), 'cutout': False}); continue
+        img = h[0].data.astype(float); w = WCS(h[0].header)
+        x, y = w.all_world2pix([[s['ra'], s['dec']]], 0)[0]
+        sc = abs(w.proj_plane_pixel_scales()[0].value) * 3600 if hasattr(w.proj_plane_pixel_scales()[0], 'value') else abs(float(w.proj_plane_pixel_scales()[0])) * 3600
+        med = np.nanmedian(img); sig = 1.4826 * np.nanmedian(np.abs(img - med))
+        cm = np.nanmedian(img, axis=0)
+        dark = np.flatnonzero(cm < med - 5 * sig)
+        near = bool(np.any(np.abs(dark - x) <= 2.0 / sc + 1))
+        rows.append({'expid': r['expid'], 'nd': r.get('nd'), 'cls': r.get('cls'), 'cutout': True,
+                     'dark_columns': len(dark), 'dark_column_in_aperture': near})
+    nd_drop = [x for x in rows if x['nd'] and x.get('cls') == 4]
+    res['sources'].append({'key': s['key'], 'nd_cls4': len(nd_drop),
+                           'nd_cls4_with_dark_column_in_aperture': sum(bool(x.get('dark_column_in_aperture')) for x in nd_drop),
+                           'detections_with_dark_column_in_aperture': sum(bool(x.get('dark_column_in_aperture')) for x in rows if not x['nd']),
+                           'exposures': rows})
+json.dump(res, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+for s in res['sources']:
+    print(s['key'], s['nd_cls4'], s['nd_cls4_with_dark_column_in_aperture'], s['detections_with_dark_column_in_aperture'],
+          [(x['nd'], x.get('dark_column_in_aperture')) for x in s['exposures']])

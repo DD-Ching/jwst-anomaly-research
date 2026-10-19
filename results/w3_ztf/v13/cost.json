@@ -1,0 +1,10 @@
+{
+ "label": "derived; compressed bytes (parquet metadata), TAP and cutout bytes",
+ "lc_partition_2382_mb": 1846.5,
+ "objects_595_5cols_mb_upper": 93.1,
+ "tap_mb": 13.92,
+ "cutouts_mb": 4.02,
+ "ibe_search_mb": 0.01,
+ "note": "objects: upper bound from the 11-column read of the four v12 parents (372.4 MB / 4); the comparisons stage read 5 columns",
+ "total_mb_upper": 1957.5
+}

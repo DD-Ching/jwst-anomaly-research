@@ -1,0 +1,17 @@
+# v13 coverage check (after the search, PLAN.md section 3): r-band series lengths (frozen series()) and refmag of the
+# validation and search groups, 5/50/95 percentiles. Usage: python coverage_script.py.txt
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(2382, 'v13/2382val')
+groups = json.load(open(wz.SAMPLE))['groups']
+rows, cov = wz.context(groups)
+out = {'label': 'derived (after the search)'}
+for name, gs in (('validation', [g for g in groups if not g['holdout']]), ('search', [g for g in groups if g['holdout']])):
+    n = [len(wz.series(g, rows, cov, 2)) for g in gs]
+    out[name] = {'groups': len(gs), 'r_series_epochs_p5_p50_p95': [float(np.percentile(n, q)) for q in (5, 50, 95)],
+                 'r_series_ge_43': int(sum(x >= 2 * wz.MIN_BRACKET + wz.MIN_RUN for x in n)),
+                 'refmag_r_p5_p50_p95': [float(np.percentile([g['refmag_r'] for g in gs], q)) for q in (5, 50, 95)]}
+json.dump(out, open('results/w3_ztf/v13/coverage.json', 'w'), indent=1); open('results/w3_ztf/v13/coverage.json', 'a').write('\n')
+print(out)

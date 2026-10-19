@@ -5316,6 +5316,13 @@ confining radiation at a throat is found.
   observing-condition check did not predict recognition: the failing cell has a necessary fraction of 0.828 but
   recovers 0.42. Decision: no further W3 / ZTF batches under the current rules. Revisit
   if: the owner authorizes a re-specified edge test for finite-source events, under a new plan and a new validation.
+- **Addendum 2026-10-19 (v13, `results/w3_ztf/v13/RESULT.md`):** the edge test is re-specified as edge
+  *duration* ≤ 0.25 × run span. The threshold comes from the W3 finite-source model (`edge_frac.json`), and the rule is
+  selected by `--edge time`; the count rule stays the default for earlier versions. It passes a new validation in
+  Npix 2382, with fade-control contamination 8.5 % (limit 10 %). One search of 2,000 groups gave 0 vetted survivors.
+  A low detector column crossing the source made spurious non-detections in all 17 auto-classified "dimming"
+  exposures. Revisit if: the fade-control rate exceeds 10 % on another set, or a column-mask check is added to the
+  catalogue stage (it would remove the spurious runs earlier).
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
