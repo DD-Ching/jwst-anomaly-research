@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: TASKS sync: two stale "Next" items were already done
+- The halo-phot elongation gate and its `fluxratios --halo-phot --mu-samples 100` run (D-032 addenda 2026-10-13) and
+  the no-injection control of the off-arc vetoed positions (`results/transients/veto_control/RESULT.md`, 2026-10-16:
+  mixed) still read as open in TASKS.md; now struck through with their results.
+- **Handoff:** every open lensing line waits on an owner decision (off-arc efficiency, #199, #237, #279, X4 budget)
+  or is optional low-value (VENUS/Bullet `arcs` without photo-z, critical-curve curvature). No new unit started.
+
 ## 2026-10-19: Review-list h039 (SMACS) and h005 (Sunrise o052): frozen rule inconclusive; post hoc within control scatter
 - **Why:** the two open by-eye artifact calls of `results/transients/review_list/RESULT.md`. Plan and rule frozen
   first (`results/transients/review_list/vet_h039_h005/PLAN.md`).
