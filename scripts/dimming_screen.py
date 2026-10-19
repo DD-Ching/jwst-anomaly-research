@@ -1063,6 +1063,26 @@ def cmd_inject(args) -> dict:
 
 # --------------------------------------------------------------------------------------------
 # forced photometry of flags (network: S3 byte-range cutouts)
+def chromatic_vetoed(flux: np.ndarray, err: np.ndarray, bands: list[str]) -> np.ndarray:
+    """Per source (``flux`` / ``err`` shaped (n, epoch, band)): True when some epoch meets
+    ``dimming_exposure_check.chromatic_veto`` on its F200W and F444W forced fluxes (same
+    exposures, dichroic; D-052 addendum 2026-10-19c). A W3 event is achromatic, so the veto
+    cannot remove an injected one. All False when the field lacks either band."""
+    from dimming_exposure_check import chromatic_veto
+
+    if "F200W" not in bands or "F444W" not in bands:
+        return np.zeros(flux.shape[0], bool)
+    sw, lw = bands.index("F200W"), bands.index("F444W")
+    return np.array(
+        [
+            any(
+                chromatic_veto(flux[i, k, sw], flux[i, k, lw], err[i, k, lw])
+                for k in range(flux.shape[1])
+            )
+            for i in range(flux.shape[0])
+        ],
+        bool,
+    )
 
 
 def cmd_forced(args) -> dict:
@@ -1276,7 +1296,10 @@ def cmd_forced(args) -> dict:
     cat_ok = ~np.concatenate(
         [np.asarray(fl["catalogue_veto"], bool), np.zeros(int(is_ctl.sum()), bool)]
     )
-    out["survives_artefact_tests"] = out["forced_confirmed"] & cut_ok & cat_ok
+    out["chromatic_veto"] = chromatic_vetoed(flux, err, bands)
+    out["survives_artefact_tests"] = (
+        out["forced_confirmed"] & cut_ok & cat_ok & ~out["chromatic_veto"]
+    )
     surv = np.flatnonzero(out["survives_artefact_tests"])
     xm_note = "not run (no survivors)"
     out["known_object"] = np.zeros(n, "U120")
@@ -1320,6 +1343,7 @@ def cmd_forced(args) -> dict:
             k: int((out["forced_confirmed"] & out[f"forced_{k}"]).sum()) for k in FLAGS
         },
         "confirmed_and_cutout_clean": int((out["forced_confirmed"] & cut_ok).sum()),
+        "chromatic_veto": int((out["forced_confirmed"] & out["chromatic_veto"]).sum()),
         "survives_artefact_tests": int(out["survives_artefact_tests"].sum()),
         "controls_flagged": int((out["forced_flagged"] & is_ctl).sum()),
         "crossmatch": xm_note,
