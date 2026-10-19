@@ -17,7 +17,9 @@ _in_quad = wz.in_quad
 EXPO = Table.read(wz.CACHE / 'exposures.ecsv')
 search = json.load(open(wz.VDIR / 'search_holdout_v16_time.json'))
 groups = {g['key']: g for g in json.load(open(wz.SAMPLE))['groups'] if g['holdout']}
+_argv, sys.argv = sys.argv, [sys.argv[0], 'image_check']  # stage label in source_usage.jsonl
 rows, cov = wz.context(None)
+sys.argv = _argv
 # ---- selection (fixed before any flux)
 by_g = {}
 for r in search['runs']:

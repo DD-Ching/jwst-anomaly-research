@@ -2,19 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-19: W3 ZTF v16: inventory of 25 partitions, frozen queue of 8 (3 pass); 5,995 groups searched, 2 survivors, both data problems
+## 2026-10-19: W3 ZTF v16: inventory of 25 partitions, frozen queue of 8 (3 pass); 5,995 groups searched, 2 survivors, both read as data problems
 - **Inventory** (metadata only, 48.7 min): 54,080 catalogue-eligible unused groups in 25 partitions; 44,354 in the 17
   sampling-qualified ones. The frozen queue of 8 (by unused groups per GB) holds 11,909 searchable.
-- **Queue:** 3 of 8 pass the frozen v13 validation (1627, 1624, 1625; worst-cell fraction 0.593–0.66). 5 fail on
+- **Queue:** 3 of 8 pass the frozen v13 validation (1627, 1624, 1625; inventory sampling worst cell 0.593–0.66). 5 fail on
   short-event cells (worst cell 0.508–0.578). Controls are within limits everywhere (fade ≤ 9.7 %).
 - **Search:** 5,995 groups (11,919 series), 2 final survivors.
-  - 1624: the official LOW RESPONSIVITY mask and a dark column at the source.
-  - 1625: poor-seeing images with the source visible.
+  - 1624: consistent with a low-response column (official LOW RESPONSIVITY mask, dark column at the source; visual
+    reading over 4 automatically undetermined NDs).
+  - 1625: consistent with a catalogue miss in poor-seeing images (source visible).
   - Neither is an image-confirmed dimming.
 - **Cumulative searched with v13:** 17,773 groups, with no confirmed target event. Groups removed by vetting are not
   image-proven artefacts.
 - **Speed:** queue of 8 areas in 14 min, 190 stage-seconds and 239 MB per 1,000 searched groups. Downloads
-  3.56 GB.
+  3.56 GB (light curves from parquet metadata).
 - **Still open:** 4 unqueued partitions with worst cell ≥ 0.59 (2900, 8124, 8126, 8127) hold 17,702 searchable groups
   in 5.76 GB, all sharing fields with earlier samples (`results/w3_ztf/v16/RESULT.md`).
 
