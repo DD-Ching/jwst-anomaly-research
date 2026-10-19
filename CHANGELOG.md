@@ -5,7 +5,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-19: W3 ZTF v14: #370 pending checks (official masks), Npix 8170 passes validation, 5,000 groups searched, 1 survivor not a real dimming
 - **#370 pending checks:**
   - 26 new cutouts, 17 science and 9 official masks; 656 rebuilt NDs stay pending.
-  - The 3 new auto "dimming" NDs sit on mask value 516 (bits 2 LOW RESPONSIVITY + 9 DEAD).
+  - The 3 newly checked auto "dimming" NDs sit on mask value 516 (bits 2 LOW RESPONSIVITY + 9 DEAD; names from the
+    mask header comments).
   - The 6th group's NDs are undetermined.
   - No item needed priority follow-up.
 - **Npix 8170** (fields share nothing with the development data): 500 calibration and 5,000 search groups. The frozen

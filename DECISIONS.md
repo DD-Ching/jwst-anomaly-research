@@ -5375,8 +5375,7 @@ confining radiation at a throat is found.
   catalogue stage (it would remove the spurious runs earlier).
 - **Addendum 2026-10-19 (v14, `results/w3_ztf/v14/RESULT.md`):** the frozen v13 rule reproduces its capability on
   exposure-independent data (Npix 8170: cells ≥ 0.57; fade 5.0 %, Wilson 3.8–6.5 %, n = 1,000). One search of 5,000
-  groups gave 1 vetted survivor. Images show it is a near-limit g-band catalogue drop, not a dimming. The #370
-  dimming-like NDs sit on official mask DEAD + LOW RESPONSIVITY pixels.
+  groups gave 1 vetted survivor. Images show it is a near-limit g-band catalogue drop, not a dimming. The 3 newly checked #370 class-4 NDs sit on official mask DEAD + LOW RESPONSIVITY pixels; the other #370 NDs were not masked.
   Revisit if: the owner wants the pre-screen to treat an ND as dim only when the source is well above the exposure
   limit (a method change; not made here).
 
