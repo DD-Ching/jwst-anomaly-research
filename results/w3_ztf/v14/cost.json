@@ -1,0 +1,13 @@
+{
+ "label": "derived; download accounting",
+ "part1_tap_mb": 2.68,
+ "part1_lc_api_mb": 6.73,
+ "part1_note": "inventory was run three times (one stopped by a timeout); bytes of one run, counted x3 in the total",
+ "part1_sci_cutouts_mb": 1.37,
+ "part1_mask_cutouts_mb": 0.18,
+ "objects_2042_mb_upper": 93.1,
+ "lc_partition_8170_mb": 2207.9,
+ "tap_8170_mb": 13.21,
+ "survivor_cutouts_mb": 0.56,
+ "total_mb_upper": 2344.6
+}

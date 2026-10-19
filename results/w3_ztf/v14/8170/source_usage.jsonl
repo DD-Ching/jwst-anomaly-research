@@ -1,3 +1,5 @@
 {"stage": "inject", "groups": 500, "search_groups_in_use": 0, "rows_loaded": 22390, "control_rows": 19687, "search_member_rows": 0}
 {"stage": "search", "groups": 500, "search_groups_in_use": 0, "rows_loaded": 22390, "control_rows": 19687, "search_member_rows": 0}
 {"stage": "search", "groups": 5000, "search_groups_in_use": 5000, "rows_loaded": 46806, "control_rows": 19687, "search_member_rows": 27119}
+{"stage": "/tmp/claude-0/-home-user-jwst-anomaly-research/e83e9832-58ec-503e-b437-7a61beee124e/scratchpad/cut14s", "groups": 5500, "search_groups_in_use": 5000, "rows_loaded": 49509, "control_rows": 19687, "search_member_rows": 27119}
+{"stage": "?", "groups": 5500, "search_groups_in_use": 5000, "rows_loaded": 49509, "control_rows": 19687, "search_member_rows": 27119}
