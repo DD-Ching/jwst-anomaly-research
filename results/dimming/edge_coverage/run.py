@@ -52,12 +52,16 @@ for name in fields:
     cats, lc, scale, err, res, ordn = ds._screen(field, p, gaia)
     ne = len(field["epochs"])
     rel = np.full((len(lc["ra"]), ne), np.nan)
+    cache = out / "wht_rel.npy"  # session cache (not tracked)
     for k, e in enumerate(field["epochs"]):
-        if "F200W" not in e["bands"]:
+        if "F200W" not in e["bands"] or cache.exists():
             continue
         grid, wcs = ed.wht_grid(pipeline.l3_image_uri(field["cloud"], ds.obs_id(e, "F200W")), STEP)
         rel[:, k] = ed.wht_rel(grid, wcs, lc["ra"], lc["dec"], STEP)
         print(name, "epoch", k, "grid", grid.shape, f"{time.time() - t0:.0f}s", flush=True)
+    if cache.exists():
+        rel = np.load(cache)
+    np.save(cache, rel)
     covered = np.isfinite(lc["flux"][:, :, 0])
     has_img = np.isfinite(rel)  # epochs without an F200W image are not tested
     edge = ed.edge_pair(covered & has_img, rel)
@@ -97,8 +101,8 @@ for name in fields:
     resm = ds.classify(ds.mask_shallow_nondetections(lcm["flux"], errm, lcm["det"], p), errm, p)
     selm = ds.monitored(lcm, errm, ordn, p)
     summ["n_injection_sources_masked"] = int((selm & ~ds.flagged(resm)).sum())
-    meta = Table.read(f"{COMMITTED[name]}/efficiency.ecsv").meta
-    infl = np.array(meta["forced_inflation"], float)
+    inj_meta = json.loads(Path(f"{COMMITTED[name]}/inject_summary.json").read_text())
+    infl = np.array(inj_meta["forced_inflation"], float)
     static_veto = ds.catalogue_veto({**ordn, "single_epoch": np.zeros_like(ordn["single_epoch"])})
     times = ds._times_yr(field)
     orig = ds._recovered

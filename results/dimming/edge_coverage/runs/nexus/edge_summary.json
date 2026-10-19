@@ -1,0 +1,52 @@
+{
+ "field": "nexus",
+ "step_px": 32,
+ "n_master": 81136,
+ "n_injection_sources": 139,
+ "covered_pairs_injection": 393,
+ "edge_pairs_injection": 52,
+ "f_edge_injection": 0.13231552162849872,
+ "injection_sources_with_edge_pair": 45,
+ "covered_pairs_all": 183964,
+ "edge_pairs_all": 18212,
+ "edge_pairs_per_epoch_injection": [
+  19,
+  3,
+  16,
+  3,
+  4,
+  1,
+  2,
+  4
+ ],
+ "gate_v_targets": [
+  "nexus-d10423",
+  "nexus-d13073",
+  "nexus-d15524",
+  "nexus-d18183",
+  "nexus-d20291",
+  "nexus-d22021",
+  "nexus-d23045",
+  "nexus-d24470",
+  "nexus-d29073",
+  "nexus-d29638",
+  "nexus-d30717"
+ ],
+ "gate_v_called": [
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  true,
+  false,
+  true,
+  false,
+  true
+ ],
+ "gate_v_n_called": 5,
+ "gate_v_passed": false,
+ "n_injection_sources_masked": 125,
+ "wall_s": 256
+}

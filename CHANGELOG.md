@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: injection edge-coverage check: gate V failed as written; no decision
+- **Why:** #378 handoff 2 (does the injection chain count mosaic-edge positions as covered?). Plan, rule
+  (`edge.edge_pair`, F200W `WHT` on a 32-px grid, `wht_rel < 0.5`), gate and decision frozen and unit-tested first
+  (`results/dimming/edge_coverage/PLAN.md`).
+- **Result (`results/dimming/edge_coverage/RESULT.md`):** gate V needed ≥ 9 of the 11 NEXUS mosaic-edge targets
+  called; 5 were, so no decision is read. Post hoc: the gate set was mis-specified (`forced` cut flags are OR'ed
+  over epochs the proxy already calls uncovered); all 4 "no other epoch measurable" targets are called. The
+  `veto_on` exposures reproduce the committed limits exactly.
+- **Post hoc, not a result:** 9–18 % of proxy-covered injection pairs are edge pairs; masking them gives veto-off
+  exposure ×0.81–0.87 and veto-on ×0.75–1.22 of the unmasked, the swap gain ×1.80–3.37 (unmasked ×1.99–3.36).
+- **Handoff:** re-freeze gate V on per-epoch `forced` stamp flags in proxy-covered epochs (targets and controls,
+  both directions), then read the decision; if `over_counts`, add a weight-map coverage term before the swap.
+
 ## 2026-10-19: W3 dimming: NEXUS `o014` targets are mosaic-edge and catalogue-depth effects (0 survivors)
 - **Why:** #377 handoff 1. Plan, rule (`summarise.explanation`, unit-tested) and target builder frozen first
   (`results/dimming/nexus_o014/PLAN.md`).
