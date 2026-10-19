@@ -5294,6 +5294,12 @@ confining radiation at a throat is found.
   in the umbra. Decision: keep psfcat as the gap-fill path if W3/ZTF is reopened; do not retune thresholds. Revisit
   if: a longer-baseline release or another survey adds epochs inside these gaps, or the owner changes the model range
   (e.g. longer t_E only).
+- **Addendum 2026-10-19 (v11, `results/w3_ztf/v11/RESULT.md`):** in Npix 3839, chosen by official observing
+  conditions first (worst-cell fraction 0.7025), a new 1,000-group sample passes the
+  frozen validation (10 of 10 cells ≥ 0.5), and one search of 488 groups gives 0 flags. Decision: for any further W3 /
+  ZTF batch, run the metadata check (`obs_script.py.txt`) before reading light curves, and use only areas whose
+  worst-cell fraction is ≥ 0.5. Npix 7134 stays excluded. Revisit if: the owner wants a limit (not derived here) or
+  another model range.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

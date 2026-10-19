@@ -1,0 +1,4 @@
+{"stage": "search", "groups": 512, "search_groups_in_use": 0, "rows_loaded": 35443, "control_rows": 32465, "search_member_rows": 0}
+{"stage": "inject", "groups": 512, "search_groups_in_use": 0, "rows_loaded": 35443, "control_rows": 32465, "search_member_rows": 0}
+{"stage": "?", "groups": 512, "search_groups_in_use": 0, "rows_loaded": 35443, "control_rows": 32465, "search_member_rows": 0}
+{"stage": "search", "groups": 488, "search_groups_in_use": 488, "rows_loaded": 35217, "control_rows": 32465, "search_member_rows": 2752}

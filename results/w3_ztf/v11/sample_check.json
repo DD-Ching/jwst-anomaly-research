@@ -1,0 +1,8 @@
+{
+ "label": "derived",
+ "nearest_old_group_arcsec": 5.396628067137924,
+ "groups_within_3arcsec": 0,
+ "shared_objectids": 0,
+ "control_stars_comparison_oids": 32966,
+ "split_matches_crc32_v11": true
+}

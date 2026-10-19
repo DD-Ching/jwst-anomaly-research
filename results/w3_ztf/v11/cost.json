@@ -1,0 +1,14 @@
+{
+ "label": "derived; compressed bytes of the columns read (parquet metadata) and TAP response bytes",
+ "lc_partition": "ztf_dr24_lc-hats Norder=5 Npix=3839 part0.snappy.parquet",
+ "lc_columns_read": 7,
+ "lc_compressed_mb": 944.9,
+ "objects_partition": "ztf_dr24_objects-hats Norder=4 Npix=959 part0.snappy.parquet (read once, cached for the sample)",
+ "objects_columns_read": 11,
+ "objects_compressed_mb": 92.6,
+ "tap_obs_check_mb": 7.29,
+ "tap_exposures_stage_mb": 8.17,
+ "psfcat_head_requests": 60,
+ "cutouts_mb": 0.0,
+ "total_mb": 1053.0
+}

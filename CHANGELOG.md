@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 ZTF v11: area chosen by observing conditions (Npix 3839) passes validation; 488 search groups, 0 flags
+- **Records fixed first** (`results/w3_ztf/v10/RESULT.md` addendum):
+  - v10's 711 vs v6's 703 differs only in the noise realisation (per-expid seeds) on the same events; the re-read inputs have the same
+    row counts.
+  - +161 compares the same events, code and noise with and without the psfcat fill.
+  - The direction of the 261 dropped points is not verified.
+- **Area choice:**
+  - Metadata only (`results/w3_ztf/v11/obs_conditions.json`): the worst-cell necessary-sampling fraction is 0.687,
+    0.6855 and 0.7025 for Npix 3837, 3838 and 3839, with seasonal gaps kept.
+  - 3839 was chosen. Its new 1,000-group sample excludes the v1–v4 samples.
+  - The series hold a median of 98 % of the official exposures.
+- **Validation passed** (frozen v6 rule): cells 0.615–0.855; controls ≤ 4 %; 0 calibration flags.
+- **Search:** one search of the 488 groups found **0 flagged runs**, so no image check was needed. This is not an
+  independent-area validation (same fields as v1–v5), and no limit is derived.
+- **Handoff:** the W3 / ZTF DR24 unit is paused. No follow-on batch without the owner.
+
 ## 2026-10-19: TASKS sync: two stale "Next" items were already done
 - The halo-phot elongation gate and its `fluxratios --halo-phot --mu-samples 100` run (D-032 addenda 2026-10-13) and
   the no-injection control of the off-arc vetoed positions (`results/transients/veto_control/RESULT.md`, 2026-10-16:
