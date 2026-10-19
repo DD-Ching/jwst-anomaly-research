@@ -351,3 +351,32 @@ def test_wht_rel_weight_edge_and_mask():
     assert not lcm["det"][edge].any()
     assert np.isfinite(lcm["flux"][~edge]).all() and lcm["det"][~edge].all()
     assert lc["det"].all() and np.isfinite(err).all()  # inputs untouched
+
+
+def test_field_wht_rel_cache_keys_on_step_and_uris(tmp_path, monkeypatch):
+    calls = []
+
+    def fake_grid(uri, step):
+        calls.append((uri, step))
+        return None, None
+
+    monkeypatch.setattr(ds, "wht_grid", fake_grid)
+    monkeypatch.setattr(ds, "wht_rel", lambda grid, wcs, ra, dec, step: np.full(len(ra), 0.7))
+    monkeypatch.setattr(ds.pipeline, "l3_image_uri", lambda cloud, oid: f"s3://x/{oid}")
+    field = {
+        "bands": ["F200W", "F444W"],
+        "cloud": {},
+        "epochs": [{"obs": "a", "bands": ["F200W"]}, {"obs": "b", "bands": ["F444W"]}],
+    }
+    ra, dec = np.array([1.0, 2.0]), np.array([3.0, 4.0])
+    cache = tmp_path / "w.npz"
+    rel = ds.field_wht_rel(field, ra, dec, ds.Params(), cache)
+    assert np.allclose(rel[:, 0], 0.7) and np.isnan(rel[:, 1]).all()  # no F200W in epoch 1
+    assert len(calls) == 1
+    ds.field_wht_rel(field, ra, dec, ds.Params(), cache)
+    assert len(calls) == 1  # cache hit
+    ds.field_wht_rel(field, ra, dec, ds.Params(wht_step_px=16), cache)
+    assert len(calls) == 2 and calls[-1][1] == 16  # step changed: recomputed
+    field["epochs"][0]["obs"] = "c"
+    ds.field_wht_rel(field, ra, dec, ds.Params(wht_step_px=16), cache)
+    assert len(calls) == 3  # image changed: recomputed

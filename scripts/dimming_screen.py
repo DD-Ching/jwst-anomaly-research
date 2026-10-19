@@ -964,22 +964,30 @@ def field_wht_rel(
     field: dict[str, Any], ra: np.ndarray, dec: np.ndarray, p: Params, cache: Path
 ) -> np.ndarray:
     """(source, epoch) ``wht_rel`` from each epoch's detection-band i2d (NaN where the epoch has
-    no detection-band image). Cached in ``cache`` (``.npz`` with the positions it was made for)."""
+    no detection-band image). Cached in ``cache`` (``.npz`` with the positions, grid step and
+    image URIs it was made for; any mismatch recomputes it)."""
+    det_band = field["bands"][0]
+    uris = [
+        pipeline.l3_image_uri(field["cloud"], obs_id(e, det_band)) if det_band in e["bands"] else ""
+        for e in field["epochs"]
+    ]
     if cache.exists():
         z = np.load(cache)
-        if z["ra"].shape == ra.shape and np.allclose(z["ra"], ra) and np.allclose(z["dec"], dec):
+        if (
+            z["ra"].shape == ra.shape
+            and np.allclose(z["ra"], ra)
+            and np.allclose(z["dec"], dec)
+            and int(z["step"]) == p.wht_step_px
+            and z["uris"].tolist() == uris
+        ):
             return z["rel"]
-    det_band = field["bands"][0]
     rel = np.full((len(ra), len(field["epochs"])), np.nan)
-    for k, e in enumerate(field["epochs"]):
-        if det_band not in e["bands"]:
-            continue
-        grid, wcs = wht_grid(
-            pipeline.l3_image_uri(field["cloud"], obs_id(e, det_band)), p.wht_step_px
-        )
-        rel[:, k] = wht_rel(grid, wcs, ra, dec, p.wht_step_px)
+    for k, uri in enumerate(uris):
+        if uri:
+            grid, wcs = wht_grid(uri, p.wht_step_px)
+            rel[:, k] = wht_rel(grid, wcs, ra, dec, p.wht_step_px)
     cache.parent.mkdir(parents=True, exist_ok=True)
-    np.savez(cache, ra=ra, dec=dec, rel=rel)
+    np.savez(cache, ra=ra, dec=dec, rel=rel, step=p.wht_step_px, uris=np.array(uris))
     return rel
 
 
