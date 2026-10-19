@@ -3160,7 +3160,7 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   forced/catalogue inflation 1.00 / 3.60 (F200W / F444W), both higher than MACS0416's; not explained.
 - 32 flags measured, 0 confirmed, 0 controls flagged: still null. Calibrated W3 efficiency 0.000–0.013, about
   4–7× below the 2026-10-08 uncalibrated values.
-- Abell 2744 joins the headline: per-source rate limits tighten by 5–13 % (0.053 per source per yr at t_E = 1 yr,
+- Abell 2744 joins the headline: per-source rate limits tighten by 5–11 % (0.053 per source per yr at t_E = 1 yr,
   ρ = 0.1). NEXUS is still uncalibrated and is the field that could move the headline.
 
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)

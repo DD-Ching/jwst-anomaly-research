@@ -188,7 +188,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
      optionally CEERS / GOODS-S / PRIMER (~600 MB each);
    - W3 (D-052, null; headline limits from MACS0416 + Abell 2744): ~~Abell 2744 `forced` with 300 controls~~ done
-     2026-10-19 (calibrated, null, headline 5–13 % tighter; `results/dimming/abell2744_calib/RESULT.md`); next NEXUS
+     2026-10-19 (calibrated, null, headline 5–11 % tighter; `results/dimming/abell2744_calib/RESULT.md`); next NEXUS
      `forced` with ≥ 300 controls (≈ 20–35 min, one S3 job), then a joint `combine`; replace the single-epoch veto for
      vanish flags with the D-039 persistence test (restores full-vanish sensitivity); add JADES and new NEXUS epochs;
      SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;

@@ -23,14 +23,14 @@ Outputs here: `forced_summary.json`, `inject_summary.json`, `limits.ecsv` (deriv
 - **Headline limits, MACS0416 + Abell 2744** (ρ = 0.1; exposures add; MACS0416 exposures as rounded in
   docs/exotic_limits.md, so the sums are good to ±0.05 source yr):
 
-  | t_E (yr) | Abell 2744 exposure (source yr) | MACS0416 | sum | per source per yr (was) | τ | gain |
+  | t_E (yr) | Abell 2744 exposure (source yr) | MACS0416 | sum | per source per yr (was) | τ | limit tighter by |
   |---|---|---|---|---|---|---|
   | 0.01 | 0.09 | 1.2 | 1.29 | 2.3 (2.5) | 0.073 | 7 % |
-  | 0.03 | 0.56 | 4.7 | 5.26 | 0.57 (0.64) | 0.054 | 12 % |
-  | 0.1 | 1.18 | 9.9 | 11.08 | 0.27 (0.30) | 0.085 | 12 % |
-  | 0.3 | 2.35 | 18.7 | 21.05 | 0.14 (0.16) | 0.13 | 13 % |
+  | 0.03 | 0.56 | 4.7 | 5.26 | 0.57 (0.64) | 0.054 | 11 % |
+  | 0.1 | 1.18 | 9.9 | 11.08 | 0.27 (0.30) | 0.085 | 11 % |
+  | 0.3 | 2.35 | 18.7 | 21.05 | 0.14 (0.16) | 0.13 | 11 % |
   | 1 | 2.87 | 53.7 | 56.57 | 0.053 (0.056) | 0.17 | 5 % |
-  | 3 | 6.18 | 62.6 | 68.78 | 0.044 (0.048) | 0.41 | 10 % |
+  | 3 | 6.18 | 62.6 | 68.78 | 0.044 (0.048) | 0.41 | 9 % |
 
 ## Limits of this result
 - Same caveats as D-052 (isolated lens, no macro-magnification; catalogue-level injection; the `single_epoch`
