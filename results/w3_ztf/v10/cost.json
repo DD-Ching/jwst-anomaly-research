@@ -1,0 +1,11 @@
+{
+ "label": "derived; bytes downloaded this round",
+ "lc_partition_mb": 299.9,
+ "objects_columns_mb_upper": 86.8,
+ "tap_mb": 4.66,
+ "psfcat_mb": 183.63,
+ "psfcat_files": 790,
+ "cutouts_mb": 0,
+ "total_mb_upper": 575.0,
+ "note": "partition and objects sizes from ../v6/cost.json (same files re-read); TAP from the re-run of stage_exposures; psfcat from download_pass2 on-disk total"
+}

@@ -1,0 +1,6631 @@
+{
+ "label": "derived (IRSA TAP metadata, DR24 control light curves); fill set fixed before any psfcat read",
+ "fill_exposures": 724,
+ "combinations_with_fill": 33,
+ "overlap_exposures": 66,
+ "fill_by_year_approx": {
+  "2018": 4,
+  "2019": 6,
+  "2021": 1,
+  "2022": 109,
+  "2023": 403,
+  "2024": 10,
+  "2025": 191
+ },
+ "fill_mjd_range": [
+  58243.1727661998,
+  60839.26127310004
+ ],
+ "est_mb_at_214kB": 172.9,
+ "per_combination": {
+  "671_16_1": {
+   "official_infobits0": 661,
+   "gap": 7,
+   "gap_mjd_range": [
+    60687.54246529983,
+    60835.202384300064
+   ],
+   "controls": 77
+  },
+  "671_16_2": {
+   "official_infobits0": 421,
+   "gap": 5,
+   "gap_mjd_range": [
+    60829.24650460016,
+    60839.26127310004
+   ],
+   "controls": 171
+  },
+  "671_17_1": {
+   "official_infobits0": 807,
+   "gap": 7,
+   "gap_mjd_range": [
+    60818.2438542,
+    60835.202384300064
+   ],
+   "controls": 68
+  },
+  "671_17_2": {
+   "official_infobits0": 750,
+   "gap": 7,
+   "gap_mjd_range": [
+    60818.2563426001,
+    60837.24563660007
+   ],
+   "controls": 126
+  },
+  "671_18_1": {
+   "official_infobits0": 708,
+   "gap": 8,
+   "gap_mjd_range": [
+    60687.54246529983,
+    60835.202384300064
+   ],
+   "controls": 9
+  },
+  "671_18_2": {
+   "official_infobits0": 547,
+   "gap": 7,
+   "gap_mjd_range": [
+    60818.2563426001,
+    60837.24563660007
+   ],
+   "controls": 25
+  },
+  "671_19_1": {
+   "official_infobits0": 969,
+   "gap": 25,
+   "gap_mjd_range": [
+    60634.46351849986,
+    60835.202384300064
+   ],
+   "controls": 54
+  },
+  "671_19_2": {
+   "official_infobits0": 856,
+   "gap": 7,
+   "gap_mjd_range": [
+    60818.2563426001,
+    60837.24563660007
+   ],
+   "controls": 108
+  },
+  "671_34_1": {
+   "official_infobits0": 839,
+   "gap": 16,
+   "gap_mjd_range": [
+    60634.48633099999,
+    60835.202384300064
+   ],
+   "controls": 8
+  },
+  "671_34_2": {
+   "official_infobits0": 847,
+   "gap": 9,
+   "gap_mjd_range": [
+    60680.3895370001,
+    60837.24563660007
+   ],
+   "controls": 16
+  },
+  "671_35_1": {
+   "official_infobits0": 670,
+   "gap": 8,
+   "gap_mjd_range": [
+    60818.2438542,
+    60835.202384300064
+   ],
+   "controls": 63
+  },
+  "671_35_2": {
+   "official_infobits0": 600,
+   "gap": 8,
+   "gap_mjd_range": [
+    60818.2563426001,
+    60837.24563660007
+   ],
+   "controls": 115
+  },
+  "672_28_1": {
+   "official_infobits0": 600,
+   "gap": 34,
+   "gap_mjd_range": [
+    59909.485694400035,
+    60835.20190969994
+   ],
+   "controls": 34
+  },
+  "672_28_2": {
+   "official_infobits0": 697,
+   "gap": 108,
+   "gap_mjd_range": [
+    58243.1727661998,
+    60835.246307900175
+   ],
+   "controls": 69
+  },
+  "672_29_1": {
+   "official_infobits0": 553,
+   "gap": 12,
+   "gap_mjd_range": [
+    59969.39234950021,
+    60833.2257869998
+   ],
+   "controls": 67
+  },
+  "672_29_2": {
+   "official_infobits0": 497,
+   "gap": 65,
+   "gap_mjd_range": [
+    59876.521284699906,
+    60835.246307900175
+   ],
+   "controls": 149
+  },
+  "672_30_1": {
+   "official_infobits0": 673,
+   "gap": 36,
+   "gap_mjd_range": [
+    60045.32960649999,
+    60835.20190969994
+   ],
+   "controls": 45
+  },
+  "672_30_2": {
+   "official_infobits0": 707,
+   "gap": 102,
+   "gap_mjd_range": [
+    58243.1727661998,
+    60835.246307900175
+   ],
+   "controls": 95
+  },
+  "672_31_2": {
+   "official_infobits0": 708,
+   "gap": 93,
+   "gap_mjd_range": [
+    58243.1727661998,
+    60835.246307900175
+   ],
+   "controls": 2
+  },
+  "672_46_1": {
+   "official_infobits0": 623,
+   "gap": 23,
+   "gap_mjd_range": [
+    59935.45281249983,
+    60835.20190969994
+   ],
+   "controls": 50
+  },
+  "672_46_2": {
+   "official_infobits0": 686,
+   "gap": 100,
+   "gap_mjd_range": [
+    58243.1727661998,
+    60835.246307900175
+   ],
+   "controls": 98
+  },
+  "1669_40_1": {
+   "official_infobits0": 42,
+   "gap": 1,
+   "gap_mjd_range": [
+    58506.51450229995,
+    58506.51450229995
+   ],
+   "controls": 7
+  },
+  "1669_40_2": {
+   "official_infobits0": 35,
+   "gap": 6,
+   "gap_mjd_range": [
+    59994.45520830015,
+    60545.14218749991
+   ],
+   "controls": 7
+  },
+  "1669_53_1": {
+   "official_infobits0": 44,
+   "gap": 1,
+   "gap_mjd_range": [
+    58506.51450229995,
+    58506.51450229995
+   ],
+   "controls": 59
+  },
+  "1669_53_2": {
+   "official_infobits0": 33,
+   "gap": 4,
+   "gap_mjd_range": [
+    60055.30990740005,
+    60062.20839119982
+   ],
+   "controls": 127
+  },
+  "1669_54_1": {
+   "official_infobits0": 40,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 30
+  },
+  "1669_54_2": {
+   "official_infobits0": 34,
+   "gap": 3,
+   "gap_mjd_range": [
+    60055.30990740005,
+    60062.20839119982
+   ],
+   "controls": 55
+  },
+  "1669_56_1": {
+   "official_infobits0": 35,
+   "gap": 1,
+   "gap_mjd_range": [
+    58506.51450229995,
+    58506.51450229995
+   ],
+   "controls": 139
+  },
+  "1669_56_2": {
+   "official_infobits0": 18,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 283
+  },
+  "1669_57_1": {
+   "official_infobits0": 45,
+   "gap": 1,
+   "gap_mjd_range": [
+    58506.51450229995,
+    58506.51450229995
+   ],
+   "controls": 35
+  },
+  "1669_57_2": {
+   "official_infobits0": 35,
+   "gap": 5,
+   "gap_mjd_range": [
+    59994.45520830015,
+    60062.20839119982
+   ],
+   "controls": 64
+  },
+  "1669_58_1": {
+   "official_infobits0": 41,
+   "gap": 3,
+   "gap_mjd_range": [
+    58506.51450229995,
+    60046.2131829001
+   ],
+   "controls": 6
+  },
+  "1669_58_2": {
+   "official_infobits0": 34,
+   "gap": 5,
+   "gap_mjd_range": [
+    59994.45520830015,
+    60062.20839119982
+   ],
+   "controls": 20
+  },
+  "1669_59_1": {
+   "official_infobits0": 43,
+   "gap": 2,
+   "gap_mjd_range": [
+    58506.51450229995,
+    60046.2131829001
+   ],
+   "controls": 72
+  },
+  "1669_59_2": {
+   "official_infobits0": 32,
+   "gap": 5,
+   "gap_mjd_range": [
+    59994.45520830015,
+    60062.20839119982
+   ],
+   "controls": 151
+  },
+  "1713_3_1": {
+   "official_infobits0": 36,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 66
+  },
+  "1714_13_1": {
+   "official_infobits0": 23,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 2
+  },
+  "1714_13_2": {
+   "official_infobits0": 31,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 5
+  },
+  "1714_14_1": {
+   "official_infobits0": 19,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 105
+  },
+  "1714_14_2": {
+   "official_infobits0": 26,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 191
+  },
+  "1714_15_1": {
+   "official_infobits0": 21,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 24
+  },
+  "1714_15_2": {
+   "official_infobits0": 26,
+   "gap": 0,
+   "gap_mjd_range": null,
+   "controls": 41
+  }
+ },
+ "overlap": {
+  "671_16_1": [
+   {
+    "expid": 54117719,
+    "mjd": 58295.177199100144,
+    "filefracday": 20180626177176,
+    "dr24_clean_controls": 63
+   },
+   {
+    "expid": 48217362,
+    "mjd": 58236.17362269992,
+    "filefracday": 20180428173600,
+    "dr24_clean_controls": 62
+   }
+  ],
+  "671_16_2": [
+   {
+    "expid": 57016554,
+    "mjd": 58324.16554399999,
+    "filefracday": 20180725165463,
+    "dr24_clean_controls": 144
+   },
+   {
+    "expid": 47022696,
+    "mjd": 58224.226967600174,
+    "filefracday": 20180416226944,
+    "dr24_clean_controls": 143
+   }
+  ],
+  "671_17_1": [
+   {
+    "expid": 153641381,
+    "mjd": 59290.41381940013,
+    "filefracday": 20210317413819,
+    "dr24_clean_controls": 63
+   },
+   {
+    "expid": 49420267,
+    "mjd": 58248.202673600055,
+    "filefracday": 20180510202662,
+    "dr24_clean_controls": 62
+   }
+  ],
+  "671_17_2": [
+   {
+    "expid": 52423812,
+    "mjd": 58278.23812500015,
+    "filefracday": 20180609238113,
+    "dr24_clean_controls": 121
+   },
+   {
+    "expid": 74044093,
+    "mjd": 58494.44093749998,
+    "filefracday": 20190111440926,
+    "dr24_clean_controls": 121
+   }
+  ],
+  "671_18_1": [
+   {
+    "expid": 44833187,
+    "mjd": 58202.33187500015,
+    "filefracday": 20180325331852,
+    "dr24_clean_controls": 9
+   },
+   {
+    "expid": 45130359,
+    "mjd": 58205.3035995001,
+    "filefracday": 20180328303576,
+    "dr24_clean_controls": 9
+   }
+  ],
+  "671_18_2": [
+   {
+    "expid": 47028377,
+    "mjd": 58224.2837731,
+    "filefracday": 20180416283669,
+    "dr24_clean_controls": 25
+   },
+   {
+    "expid": 47028472,
+    "mjd": 58224.28472220013,
+    "filefracday": 20180416284699,
+    "dr24_clean_controls": 25
+   }
+  ],
+  "671_19_1": [
+   {
+    "expid": 44833187,
+    "mjd": 58202.33187500015,
+    "filefracday": 20180325331852,
+    "dr24_clean_controls": 50
+   },
+   {
+    "expid": 47329848,
+    "mjd": 58227.29848380014,
+    "filefracday": 20180419298426,
+    "dr24_clean_controls": 50
+   }
+  ],
+  "671_19_2": [
+   {
+    "expid": 49017284,
+    "mjd": 58244.172847200185,
+    "filefracday": 20180506172824,
+    "dr24_clean_controls": 105
+   },
+   {
+    "expid": 46424354,
+    "mjd": 58218.243541699834,
+    "filefracday": 20180410243519,
+    "dr24_clean_controls": 104
+   }
+  ],
+  "671_34_1": [
+   {
+    "expid": 159117798,
+    "mjd": 59345.17798609985,
+    "filefracday": 20210511177986,
+    "dr24_clean_controls": 8
+   },
+   {
+    "expid": 47633167,
+    "mjd": 58230.33167820005,
+    "filefracday": 20180422331620,
+    "dr24_clean_controls": 7
+   }
+  ],
+  "671_34_2": [
+   {
+    "expid": 46323812,
+    "mjd": 58217.23812500015,
+    "filefracday": 20180409238102,
+    "dr24_clean_controls": 14
+   },
+   {
+    "expid": 48917229,
+    "mjd": 58243.1722916998,
+    "filefracday": 20180505172280,
+    "dr24_clean_controls": 14
+   }
+  ],
+  "671_35_1": [
+   {
+    "expid": 44833187,
+    "mjd": 58202.33187500015,
+    "filefracday": 20180325331852,
+    "dr24_clean_controls": 57
+   },
+   {
+    "expid": 49021166,
+    "mjd": 58244.211666699965,
+    "filefracday": 20180506211644,
+    "dr24_clean_controls": 57
+   }
+  ],
+  "671_35_2": [
+   {
+    "expid": 52518657,
+    "mjd": 58279.18657410005,
+    "filefracday": 20180610186551,
+    "dr24_clean_controls": 109
+   },
+   {
+    "expid": 46330910,
+    "mjd": 58217.30910879979,
+    "filefracday": 20180409309086,
+    "dr24_clean_controls": 108
+   }
+  ],
+  "672_28_1": [
+   {
+    "expid": 44829310,
+    "mjd": 58202.29310189979,
+    "filefracday": 20180325292998,
+    "dr24_clean_controls": 33
+   },
+   {
+    "expid": 47329895,
+    "mjd": 58227.29895830015,
+    "filefracday": 20180419298935,
+    "dr24_clean_controls": 33
+   }
+  ],
+  "672_28_2": [
+   {
+    "expid": 47023785,
+    "mjd": 58224.23785880022,
+    "filefracday": 20180416237836,
+    "dr24_clean_controls": 66
+   },
+   {
+    "expid": 47026760,
+    "mjd": 58224.26760420017,
+    "filefracday": 20180416267581,
+    "dr24_clean_controls": 66
+   }
+  ],
+  "672_29_1": [
+   {
+    "expid": 52622636,
+    "mjd": 58280.2263656999,
+    "filefracday": 20180611226273,
+    "dr24_clean_controls": 56
+   },
+   {
+    "expid": 53023598,
+    "mjd": 58284.23598380014,
+    "filefracday": 20180615235914,
+    "dr24_clean_controls": 56
+   }
+  ],
+  "672_29_2": [
+   {
+    "expid": 76853391,
+    "mjd": 58522.53391199978,
+    "filefracday": 20190208533900,
+    "dr24_clean_controls": 130
+   },
+   {
+    "expid": 46330769,
+    "mjd": 58217.30769680021,
+    "filefracday": 20180409307685,
+    "dr24_clean_controls": 129
+   }
+  ],
+  "672_30_1": [
+   {
+    "expid": 44829310,
+    "mjd": 58202.29310189979,
+    "filefracday": 20180325292998,
+    "dr24_clean_controls": 44
+   },
+   {
+    "expid": 44833656,
+    "mjd": 58202.33656249987,
+    "filefracday": 20180325336493,
+    "dr24_clean_controls": 44
+   }
+  ],
+  "672_30_2": [
+   {
+    "expid": 46323670,
+    "mjd": 58217.23670140002,
+    "filefracday": 20180409236690,
+    "dr24_clean_controls": 90
+   },
+   {
+    "expid": 46323765,
+    "mjd": 58217.237650500145,
+    "filefracday": 20180409237627,
+    "dr24_clean_controls": 90
+   }
+  ],
+  "672_31_2": [
+   {
+    "expid": 46224105,
+    "mjd": 58216.24105319986,
+    "filefracday": 20180408241030,
+    "dr24_clean_controls": 2
+   },
+   {
+    "expid": 46323670,
+    "mjd": 58217.23670140002,
+    "filefracday": 20180409236690,
+    "dr24_clean_controls": 2
+   }
+  ],
+  "672_46_1": [
+   {
+    "expid": 44829310,
+    "mjd": 58202.29310189979,
+    "filefracday": 20180325292998,
+    "dr24_clean_controls": 48
+   },
+   {
+    "expid": 47633741,
+    "mjd": 58230.33741899999,
+    "filefracday": 20180422337396,
+    "dr24_clean_controls": 48
+   }
+  ],
+  "672_46_2": [
+   {
+    "expid": 47326878,
+    "mjd": 58227.26878469996,
+    "filefracday": 20180419268704,
+    "dr24_clean_controls": 96
+   },
+   {
+    "expid": 54124089,
+    "mjd": 58295.240891200025,
+    "filefracday": 20180626240880,
+    "dr24_clean_controls": 96
+   }
+  ],
+  "1669_40_1": [
+   {
+    "expid": 48024533,
+    "mjd": 58234.24533559987,
+    "filefracday": 20180426245336,
+    "dr24_clean_controls": 7
+   },
+   {
+    "expid": 48024579,
+    "mjd": 58234.245798599906,
+    "filefracday": 20180426245787,
+    "dr24_clean_controls": 7
+   }
+  ],
+  "1669_40_2": [
+   {
+    "expid": 71451788,
+    "mjd": 58468.51788190007,
+    "filefracday": 20181216517870,
+    "dr24_clean_controls": 7
+   },
+   {
+    "expid": 72245164,
+    "mjd": 58476.45164350001,
+    "filefracday": 20181224451597,
+    "dr24_clean_controls": 7
+   }
+  ],
+  "1669_53_1": [
+   {
+    "expid": 48122715,
+    "mjd": 58235.22715280019,
+    "filefracday": 20180427227130,
+    "dr24_clean_controls": 59
+   },
+   {
+    "expid": 48122760,
+    "mjd": 58235.22760420013,
+    "filefracday": 20180427227593,
+    "dr24_clean_controls": 59
+   }
+  ],
+  "1669_53_2": [
+   {
+    "expid": 72749699,
+    "mjd": 58481.49699069979,
+    "filefracday": 20181229496921,
+    "dr24_clean_controls": 125
+   },
+   {
+    "expid": 79231054,
+    "mjd": 58546.31054400001,
+    "filefracday": 20190304310544,
+    "dr24_clean_controls": 124
+   }
+  ],
+  "1669_54_2": [
+   {
+    "expid": 72749699,
+    "mjd": 58481.49699069979,
+    "filefracday": 20181229496921,
+    "dr24_clean_controls": 55
+   },
+   {
+    "expid": 80421255,
+    "mjd": 58558.21255790023,
+    "filefracday": 20190316212558,
+    "dr24_clean_controls": 55
+   }
+  ],
+  "1669_56_1": [
+   {
+    "expid": 48024533,
+    "mjd": 58234.24533559987,
+    "filefracday": 20180426245336,
+    "dr24_clean_controls": 98
+   },
+   {
+    "expid": 48122715,
+    "mjd": 58235.22715280019,
+    "filefracday": 20180427227130,
+    "dr24_clean_controls": 98
+   }
+  ],
+  "1669_57_1": [
+   {
+    "expid": 48024533,
+    "mjd": 58234.24533559987,
+    "filefracday": 20180426245336,
+    "dr24_clean_controls": 35
+   },
+   {
+    "expid": 48024579,
+    "mjd": 58234.245798599906,
+    "filefracday": 20180426245787,
+    "dr24_clean_controls": 35
+   }
+  ],
+  "1669_57_2": [
+   {
+    "expid": 71451788,
+    "mjd": 58468.51788190007,
+    "filefracday": 20181216517870,
+    "dr24_clean_controls": 64
+   },
+   {
+    "expid": 82820488,
+    "mjd": 58582.20488430001,
+    "filefracday": 20190409204861,
+    "dr24_clean_controls": 64
+   }
+  ],
+  "1669_58_1": [
+   {
+    "expid": 48122715,
+    "mjd": 58235.22715280019,
+    "filefracday": 20180427227130,
+    "dr24_clean_controls": 6
+   },
+   {
+    "expid": 48122760,
+    "mjd": 58235.22760420013,
+    "filefracday": 20180427227593,
+    "dr24_clean_controls": 6
+   }
+  ],
+  "1669_58_2": [
+   {
+    "expid": 82820488,
+    "mjd": 58582.20488430001,
+    "filefracday": 20190409204861,
+    "dr24_clean_controls": 20
+   },
+   {
+    "expid": 120226760,
+    "mjd": 58956.26760420017,
+    "filefracday": 20200417267604,
+    "dr24_clean_controls": 20
+   }
+  ],
+  "1669_59_1": [
+   {
+    "expid": 73955454,
+    "mjd": 58493.55454860022,
+    "filefracday": 20190110554549,
+    "dr24_clean_controls": 70
+   },
+   {
+    "expid": 73853815,
+    "mjd": 58492.53815970011,
+    "filefracday": 20190109538160,
+    "dr24_clean_controls": 69
+   }
+  ],
+  "1669_59_2": [
+   {
+    "expid": 71451788,
+    "mjd": 58468.51788190007,
+    "filefracday": 20181216517870,
+    "dr24_clean_controls": 148
+   },
+   {
+    "expid": 74947913,
+    "mjd": 58503.479131899774,
+    "filefracday": 20190120479120,
+    "dr24_clean_controls": 148
+   }
+  ]
+ },
+ "fill": [
+  {
+   "expid": 293354246,
+   "field": 671,
+   "rcid": 16,
+   "filt": 1,
+   "mjd": 60687.54246529983,
+   "filefracday": 20250112542222
+  },
+  {
+   "expid": 294440905,
+   "field": 671,
+   "rcid": 16,
+   "filt": 1,
+   "mjd": 60698.40905090002,
+   "filefracday": 20250123409039
+  },
+  {
+   "expid": 306424385,
+   "field": 671,
+   "rcid": 16,
+   "filt": 1,
+   "mjd": 60818.2438542,
+   "filefracday": 20250523243854
+  },
+  {
+   "expid": 306632208,
+   "field": 671,
+   "rcid": 16,
+   "filt": 1,
+   "mjd": 60820.32208329998,
+   "filefracday": 20250525322060
+  },
+  {
+   "expid": 307528888,
+   "field": 671,
+   "rcid": 16,
+   "filt": 1,
+   "mjd": 60829.288888900075,
+   "filefracday": 20250603288785
+  },
+  {
+   "expid": 307721582,
+   "field": 671,
+   "rcid": 16,
+   "filt": 1,
+   "mjd": 60831.21582179982,
+   "filefracday": 20250605215810
+  },
+  {
+   "expid": 308120238,
+   "field": 671,
+   "rcid": 16,
+   "filt": 1,
+   "mjd": 60835.202384300064,
+   "filefracday": 20250609202384
+  },
+  {
+   "expid": 307524650,
+   "field": 671,
+   "rcid": 16,
+   "filt": 2,
+   "mjd": 60829.24650460016,
+   "filefracday": 20250603246505
+  },
+  {
+   "expid": 307726843,
+   "field": 671,
+   "rcid": 16,
+   "filt": 2,
+   "mjd": 60831.26843750011,
+   "filefracday": 20250605268426
+  },
+  {
+   "expid": 308126008,
+   "field": 671,
+   "rcid": 16,
+   "filt": 2,
+   "mjd": 60835.26008100016,
+   "filefracday": 20250609260035
+  },
+  {
+   "expid": 308324563,
+   "field": 671,
+   "rcid": 16,
+   "filt": 2,
+   "mjd": 60837.24563660007,
+   "filefracday": 20250611245637
+  },
+  {
+   "expid": 308526127,
+   "field": 671,
+   "rcid": 16,
+   "filt": 2,
+   "mjd": 60839.26127310004,
+   "filefracday": 20250613261262
+  },
+  {
+   "expid": 306424385,
+   "field": 671,
+   "rcid": 17,
+   "filt": 1,
+   "mjd": 60818.2438542,
+   "filefracday": 20250523243854
+  },
+  {
+   "expid": 306632208,
+   "field": 671,
+   "rcid": 17,
+   "filt": 1,
+   "mjd": 60820.32208329998,
+   "filefracday": 20250525322060
+  },
+  {
+   "expid": 306833175,
+   "field": 671,
+   "rcid": 17,
+   "filt": 1,
+   "mjd": 60822.33175930008,
+   "filefracday": 20250527331701
+  },
+  {
+   "expid": 307026577,
+   "field": 671,
+   "rcid": 17,
+   "filt": 1,
+   "mjd": 60824.265775499865,
+   "filefracday": 20250529265764
+  },
+  {
+   "expid": 307528888,
+   "field": 671,
+   "rcid": 17,
+   "filt": 1,
+   "mjd": 60829.288888900075,
+   "filefracday": 20250603288785
+  },
+  {
+   "expid": 307721582,
+   "field": 671,
+   "rcid": 17,
+   "filt": 1,
+   "mjd": 60831.21582179982,
+   "filefracday": 20250605215810
+  },
+  {
+   "expid": 308120238,
+   "field": 671,
+   "rcid": 17,
+   "filt": 1,
+   "mjd": 60835.202384300064,
+   "filefracday": 20250609202384
+  },
+  {
+   "expid": 306425634,
+   "field": 671,
+   "rcid": 17,
+   "filt": 2,
+   "mjd": 60818.2563426001,
+   "filefracday": 20250523256343
+  },
+  {
+   "expid": 306834486,
+   "field": 671,
+   "rcid": 17,
+   "filt": 2,
+   "mjd": 60822.34486109996,
+   "filefracday": 20250527344850
+  },
+  {
+   "expid": 307030695,
+   "field": 671,
+   "rcid": 17,
+   "filt": 2,
+   "mjd": 60824.30695600016,
+   "filefracday": 20250529306944
+  },
+  {
+   "expid": 307524650,
+   "field": 671,
+   "rcid": 17,
+   "filt": 2,
+   "mjd": 60829.24650460016,
+   "filefracday": 20250603246505
+  },
+  {
+   "expid": 307726843,
+   "field": 671,
+   "rcid": 17,
+   "filt": 2,
+   "mjd": 60831.26843750011,
+   "filefracday": 20250605268426
+  },
+  {
+   "expid": 308126008,
+   "field": 671,
+   "rcid": 17,
+   "filt": 2,
+   "mjd": 60835.26008100016,
+   "filefracday": 20250609260035
+  },
+  {
+   "expid": 308324563,
+   "field": 671,
+   "rcid": 17,
+   "filt": 2,
+   "mjd": 60837.24563660007,
+   "filefracday": 20250611245637
+  },
+  {
+   "expid": 293354246,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60687.54246529983,
+   "filefracday": 20250112542222
+  },
+  {
+   "expid": 306424385,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60818.2438542,
+   "filefracday": 20250523243854
+  },
+  {
+   "expid": 306632208,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60820.32208329998,
+   "filefracday": 20250525322060
+  },
+  {
+   "expid": 306833175,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60822.33175930008,
+   "filefracday": 20250527331701
+  },
+  {
+   "expid": 307026577,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60824.265775499865,
+   "filefracday": 20250529265764
+  },
+  {
+   "expid": 307528888,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60829.288888900075,
+   "filefracday": 20250603288785
+  },
+  {
+   "expid": 307721582,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60831.21582179982,
+   "filefracday": 20250605215810
+  },
+  {
+   "expid": 308120238,
+   "field": 671,
+   "rcid": 18,
+   "filt": 1,
+   "mjd": 60835.202384300064,
+   "filefracday": 20250609202384
+  },
+  {
+   "expid": 306425634,
+   "field": 671,
+   "rcid": 18,
+   "filt": 2,
+   "mjd": 60818.2563426001,
+   "filefracday": 20250523256343
+  },
+  {
+   "expid": 306834486,
+   "field": 671,
+   "rcid": 18,
+   "filt": 2,
+   "mjd": 60822.34486109996,
+   "filefracday": 20250527344850
+  },
+  {
+   "expid": 307030695,
+   "field": 671,
+   "rcid": 18,
+   "filt": 2,
+   "mjd": 60824.30695600016,
+   "filefracday": 20250529306944
+  },
+  {
+   "expid": 307524650,
+   "field": 671,
+   "rcid": 18,
+   "filt": 2,
+   "mjd": 60829.24650460016,
+   "filefracday": 20250603246505
+  },
+  {
+   "expid": 307726843,
+   "field": 671,
+   "rcid": 18,
+   "filt": 2,
+   "mjd": 60831.26843750011,
+   "filefracday": 20250605268426
+  },
+  {
+   "expid": 308126008,
+   "field": 671,
+   "rcid": 18,
+   "filt": 2,
+   "mjd": 60835.26008100016,
+   "filefracday": 20250609260035
+  },
+  {
+   "expid": 308324563,
+   "field": 671,
+   "rcid": 18,
+   "filt": 2,
+   "mjd": 60837.24563660007,
+   "filefracday": 20250611245637
+  },
+  {
+   "expid": 288046351,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60634.46351849986,
+   "filefracday": 20241120463507
+  },
+  {
+   "expid": 291350788,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60667.50788189983,
+   "filefracday": 20241223507882
+  },
+  {
+   "expid": 292645623,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60680.45623840019,
+   "filefracday": 20250105456238
+  },
+  {
+   "expid": 292842480,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60682.42480320018,
+   "filefracday": 20250107424792
+  },
+  {
+   "expid": 293044736,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60684.4473611,
+   "filefracday": 20250109447361
+  },
+  {
+   "expid": 293047482,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60684.47482640017,
+   "filefracday": 20250109474815
+  },
+  {
+   "expid": 293346383,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60687.46383100003,
+   "filefracday": 20250112463831
+  },
+  {
+   "expid": 293354246,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60687.54246529983,
+   "filefracday": 20250112542222
+  },
+  {
+   "expid": 293434668,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60688.3466897998,
+   "filefracday": 20250113346667
+  },
+  {
+   "expid": 293446990,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60688.4699074002,
+   "filefracday": 20250113469780
+  },
+  {
+   "expid": 293552578,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60689.52578700008,
+   "filefracday": 20250114525787
+  },
+  {
+   "expid": 293642403,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60690.42403940018,
+   "filefracday": 20250115423970
+  },
+  {
+   "expid": 293645805,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60690.45805560006,
+   "filefracday": 20250115458021
+  },
+  {
+   "expid": 293743108,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60691.43108800007,
+   "filefracday": 20250116431088
+  },
+  {
+   "expid": 294440905,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60698.40905090002,
+   "filefracday": 20250123409039
+  },
+  {
+   "expid": 294541317,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60699.4131713002,
+   "filefracday": 20250124413102
+  },
+  {
+   "expid": 296752290,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60721.52290510014,
+   "filefracday": 20250215522523
+  },
+  {
+   "expid": 297442290,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60728.422905100044,
+   "filefracday": 20250222422396
+  },
+  {
+   "expid": 306424385,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60818.2438542,
+   "filefracday": 20250523243854
+  },
+  {
+   "expid": 306632208,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60820.32208329998,
+   "filefracday": 20250525322060
+  },
+  {
+   "expid": 306833175,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60822.33175930008,
+   "filefracday": 20250527331701
+  },
+  {
+   "expid": 307026577,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60824.265775499865,
+   "filefracday": 20250529265764
+  },
+  {
+   "expid": 307528888,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60829.288888900075,
+   "filefracday": 20250603288785
+  },
+  {
+   "expid": 307721582,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60831.21582179982,
+   "filefracday": 20250605215810
+  },
+  {
+   "expid": 308120238,
+   "field": 671,
+   "rcid": 19,
+   "filt": 1,
+   "mjd": 60835.202384300064,
+   "filefracday": 20250609202384
+  },
+  {
+   "expid": 306425634,
+   "field": 671,
+   "rcid": 19,
+   "filt": 2,
+   "mjd": 60818.2563426001,
+   "filefracday": 20250523256343
+  },
+  {
+   "expid": 306834486,
+   "field": 671,
+   "rcid": 19,
+   "filt": 2,
+   "mjd": 60822.34486109996,
+   "filefracday": 20250527344850
+  },
+  {
+   "expid": 307030695,
+   "field": 671,
+   "rcid": 19,
+   "filt": 2,
+   "mjd": 60824.30695600016,
+   "filefracday": 20250529306944
+  },
+  {
+   "expid": 307524650,
+   "field": 671,
+   "rcid": 19,
+   "filt": 2,
+   "mjd": 60829.24650460016,
+   "filefracday": 20250603246505
+  },
+  {
+   "expid": 307726843,
+   "field": 671,
+   "rcid": 19,
+   "filt": 2,
+   "mjd": 60831.26843750011,
+   "filefracday": 20250605268426
+  },
+  {
+   "expid": 308126008,
+   "field": 671,
+   "rcid": 19,
+   "filt": 2,
+   "mjd": 60835.26008100016,
+   "filefracday": 20250609260035
+  },
+  {
+   "expid": 308324563,
+   "field": 671,
+   "rcid": 19,
+   "filt": 2,
+   "mjd": 60837.24563660007,
+   "filefracday": 20250611245637
+  },
+  {
+   "expid": 288048633,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60634.48633099999,
+   "filefracday": 20241120486319
+  },
+  {
+   "expid": 293354246,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60687.54246529983,
+   "filefracday": 20250112542222
+  },
+  {
+   "expid": 293434668,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60688.3466897998,
+   "filefracday": 20250113346667
+  },
+  {
+   "expid": 293642403,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60690.42403940018,
+   "filefracday": 20250115423970
+  },
+  {
+   "expid": 293645805,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60690.45805560006,
+   "filefracday": 20250115458021
+  },
+  {
+   "expid": 294440905,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60698.40905090002,
+   "filefracday": 20250123409039
+  },
+  {
+   "expid": 296752290,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60721.52290510014,
+   "filefracday": 20250215522523
+  },
+  {
+   "expid": 297048130,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60724.481307900045,
+   "filefracday": 20250218481296
+  },
+  {
+   "expid": 306424385,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60818.2438542,
+   "filefracday": 20250523243854
+  },
+  {
+   "expid": 306632208,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60820.32208329998,
+   "filefracday": 20250525322060
+  },
+  {
+   "expid": 306833175,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60822.33175930008,
+   "filefracday": 20250527331701
+  },
+  {
+   "expid": 307026577,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60824.265775499865,
+   "filefracday": 20250529265764
+  },
+  {
+   "expid": 307528888,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60829.288888900075,
+   "filefracday": 20250603288785
+  },
+  {
+   "expid": 307721582,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60831.21582179982,
+   "filefracday": 20250605215810
+  },
+  {
+   "expid": 307920478,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60833.20478009991,
+   "filefracday": 20250607204745
+  },
+  {
+   "expid": 308120238,
+   "field": 671,
+   "rcid": 34,
+   "filt": 1,
+   "mjd": 60835.202384300064,
+   "filefracday": 20250609202384
+  },
+  {
+   "expid": 292638953,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60680.3895370001,
+   "filefracday": 20250105389525
+  },
+  {
+   "expid": 306425634,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60818.2563426001,
+   "filefracday": 20250523256343
+  },
+  {
+   "expid": 306834486,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60822.34486109996,
+   "filefracday": 20250527344850
+  },
+  {
+   "expid": 307030695,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60824.30695600016,
+   "filefracday": 20250529306944
+  },
+  {
+   "expid": 307524650,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60829.24650460016,
+   "filefracday": 20250603246505
+  },
+  {
+   "expid": 307726843,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60831.26843750011,
+   "filefracday": 20250605268426
+  },
+  {
+   "expid": 307924925,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60833.249259300064,
+   "filefracday": 20250607249259
+  },
+  {
+   "expid": 308126008,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60835.26008100016,
+   "filefracday": 20250609260035
+  },
+  {
+   "expid": 308324563,
+   "field": 671,
+   "rcid": 34,
+   "filt": 2,
+   "mjd": 60837.24563660007,
+   "filefracday": 20250611245637
+  },
+  {
+   "expid": 306424385,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60818.2438542,
+   "filefracday": 20250523243854
+  },
+  {
+   "expid": 306632208,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60820.32208329998,
+   "filefracday": 20250525322060
+  },
+  {
+   "expid": 306833175,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60822.33175930008,
+   "filefracday": 20250527331701
+  },
+  {
+   "expid": 307026577,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60824.265775499865,
+   "filefracday": 20250529265764
+  },
+  {
+   "expid": 307528888,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60829.288888900075,
+   "filefracday": 20250603288785
+  },
+  {
+   "expid": 307721582,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60831.21582179982,
+   "filefracday": 20250605215810
+  },
+  {
+   "expid": 307920478,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60833.20478009991,
+   "filefracday": 20250607204745
+  },
+  {
+   "expid": 308120238,
+   "field": 671,
+   "rcid": 35,
+   "filt": 1,
+   "mjd": 60835.202384300064,
+   "filefracday": 20250609202384
+  },
+  {
+   "expid": 306425634,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60818.2563426001,
+   "filefracday": 20250523256343
+  },
+  {
+   "expid": 306834486,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60822.34486109996,
+   "filefracday": 20250527344850
+  },
+  {
+   "expid": 307030695,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60824.30695600016,
+   "filefracday": 20250529306944
+  },
+  {
+   "expid": 307524650,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60829.24650460016,
+   "filefracday": 20250603246505
+  },
+  {
+   "expid": 307726843,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60831.26843750011,
+   "filefracday": 20250605268426
+  },
+  {
+   "expid": 307924925,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60833.249259300064,
+   "filefracday": 20250607249259
+  },
+  {
+   "expid": 308126008,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60835.26008100016,
+   "filefracday": 20250609260035
+  },
+  {
+   "expid": 308324563,
+   "field": 671,
+   "rcid": 35,
+   "filt": 2,
+   "mjd": 60837.24563660007,
+   "filefracday": 20250611245637
+  },
+  {
+   "expid": 215548569,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 59909.485694400035,
+   "filefracday": 20221126485694
+  },
+  {
+   "expid": 218145281,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 59935.45281249983,
+   "filefracday": 20221222452801
+  },
+  {
+   "expid": 220345378,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 59957.45378470002,
+   "filefracday": 20230113453773
+  },
+  {
+   "expid": 227721456,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60031.214560199995,
+   "filefracday": 20230328214549
+  },
+  {
+   "expid": 227815379,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60032.153796299826,
+   "filefracday": 20230329153785
+  },
+  {
+   "expid": 227830134,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60032.301342600025,
+   "filefracday": 20230329301319
+  },
+  {
+   "expid": 227846366,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60032.46366900019,
+   "filefracday": 20230329463414
+  },
+  {
+   "expid": 228229689,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60036.29689810006,
+   "filefracday": 20230402296875
+  },
+  {
+   "expid": 228837888,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60042.378888899926,
+   "filefracday": 20230408378889
+  },
+  {
+   "expid": 228927708,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60043.277083300054,
+   "filefracday": 20230409276991
+  },
+  {
+   "expid": 229033947,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60044.339479200076,
+   "filefracday": 20230410339468
+  },
+  {
+   "expid": 229132960,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60045.32960649999,
+   "filefracday": 20230411329606
+  },
+  {
+   "expid": 229221223,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60046.212233799975,
+   "filefracday": 20230412212222
+  },
+  {
+   "expid": 230034589,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60054.345891200006,
+   "filefracday": 20230420345891
+  },
+  {
+   "expid": 230639200,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60060.392002299894,
+   "filefracday": 20230426391991
+  },
+  {
+   "expid": 230842971,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60062.42971060006,
+   "filefracday": 20230428429711
+  },
+  {
+   "expid": 231025297,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60064.25297449995,
+   "filefracday": 20230430252836
+  },
+  {
+   "expid": 232228368,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60076.283680600114,
+   "filefracday": 20230512283669
+  },
+  {
+   "expid": 232432094,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60078.32094909996,
+   "filefracday": 20230514320938
+  },
+  {
+   "expid": 232825832,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60082.2583217998,
+   "filefracday": 20230518258322
+  },
+  {
+   "expid": 233221934,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60086.21934030019,
+   "filefracday": 20230522219306
+  },
+  {
+   "expid": 233226986,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60086.269861099776,
+   "filefracday": 20230522269861
+  },
+  {
+   "expid": 235121994,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60105.21994209988,
+   "filefracday": 20230610219931
+  },
+  {
+   "expid": 235522550,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60109.2255092999,
+   "filefracday": 20230614225498
+  },
+  {
+   "expid": 236326268,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60117.2626852002,
+   "filefracday": 20230622262454
+  },
+  {
+   "expid": 249551376,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60249.513761600014,
+   "filefracday": 20231101513750
+  },
+  {
+   "expid": 306424432,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60818.244328700006,
+   "filefracday": 20250523244329
+  },
+  {
+   "expid": 306632254,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60820.32254630001,
+   "filefracday": 20250525322546
+  },
+  {
+   "expid": 306830622,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60822.30622689985,
+   "filefracday": 20250527306215
+  },
+  {
+   "expid": 307026530,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60824.26530090021,
+   "filefracday": 20250529265289
+  },
+  {
+   "expid": 307520214,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60829.20214120019,
+   "filefracday": 20250603202130
+  },
+  {
+   "expid": 307721534,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60831.21534720017,
+   "filefracday": 20250605215336
+  },
+  {
+   "expid": 307922578,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60833.2257869998,
+   "filefracday": 20250607225752
+  },
+  {
+   "expid": 308120190,
+   "field": 672,
+   "rcid": 28,
+   "filt": 1,
+   "mjd": 60835.20190969994,
+   "filefracday": 20250609201875
+  },
+  {
+   "expid": 48917276,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 58243.1727661998,
+   "filefracday": 20180505172743
+  },
+  {
+   "expid": 212252128,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59876.521284699906,
+   "filefracday": 20221024520590
+  },
+  {
+   "expid": 212252376,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59876.52376159979,
+   "filefracday": 20221024523657
+  },
+  {
+   "expid": 212252623,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59876.52623840002,
+   "filefracday": 20221024526134
+  },
+  {
+   "expid": 212252871,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59876.52871529991,
+   "filefracday": 20221024528611
+  },
+  {
+   "expid": 212253119,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59876.53119210014,
+   "filefracday": 20221024531088
+  },
+  {
+   "expid": 212352334,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59877.52334489999,
+   "filefracday": 20221025522674
+  },
+  {
+   "expid": 212352590,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59877.525902799796,
+   "filefracday": 20221025525741
+  },
+  {
+   "expid": 212352844,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59877.52844909998,
+   "filefracday": 20221025528287
+  },
+  {
+   "expid": 212353100,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59877.53100690013,
+   "filefracday": 20221025530845
+  },
+  {
+   "expid": 212353356,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59877.53356479993,
+   "filefracday": 20221025533403
+  },
+  {
+   "expid": 212452109,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59878.52109949989,
+   "filefracday": 20221026520903
+  },
+  {
+   "expid": 212452365,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59878.52365740016,
+   "filefracday": 20221026523495
+  },
+  {
+   "expid": 212452620,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59878.526203699876,
+   "filefracday": 20221026526042
+  },
+  {
+   "expid": 212452876,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59878.528761600144,
+   "filefracday": 20221026528600
+  },
+  {
+   "expid": 212453130,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59878.53130789986,
+   "filefracday": 20221026531146
+  },
+  {
+   "expid": 212552410,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59879.524108800106,
+   "filefracday": 20221027524016
+  },
+  {
+   "expid": 212553173,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59879.53173610009,
+   "filefracday": 20221027531632
+  },
+  {
+   "expid": 212553428,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59879.53428239981,
+   "filefracday": 20221027534178
+  },
+  {
+   "expid": 215053406,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59904.53406250011,
+   "filefracday": 20221121534028
+  },
+  {
+   "expid": 215245440,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59906.45440969989,
+   "filefracday": 20221123454410
+  },
+  {
+   "expid": 215545043,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59909.45043980004,
+   "filefracday": 20221126450440
+  },
+  {
+   "expid": 216949438,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59923.494386599865,
+   "filefracday": 20221210494387
+  },
+  {
+   "expid": 217651223,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59930.51223379979,
+   "filefracday": 20221217512234
+  },
+  {
+   "expid": 218153982,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59935.53982640011,
+   "filefracday": 20221222539780
+  },
+  {
+   "expid": 218350921,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59937.50921300007,
+   "filefracday": 20221224509213
+  },
+  {
+   "expid": 220346796,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59957.46796299983,
+   "filefracday": 20230113467963
+  },
+  {
+   "expid": 221543273,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59969.432731499895,
+   "filefracday": 20230125432720
+  },
+  {
+   "expid": 221742341,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59971.42341439985,
+   "filefracday": 20230127423403
+  },
+  {
+   "expid": 222547374,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59979.47374999989,
+   "filefracday": 20230204473727
+  },
+  {
+   "expid": 222642814,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59980.42814810015,
+   "filefracday": 20230205428148
+  },
+  {
+   "expid": 223128439,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59985.28439809987,
+   "filefracday": 20230210284363
+  },
+  {
+   "expid": 223340083,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 59987.40083329985,
+   "filefracday": 20230212400833
+  },
+  {
+   "expid": 226242341,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60016.42341439985,
+   "filefracday": 20230313423380
+  },
+  {
+   "expid": 226634785,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60020.34785880009,
+   "filefracday": 20230317347847
+  },
+  {
+   "expid": 226738915,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60021.3891551001,
+   "filefracday": 20230318389132
+  },
+  {
+   "expid": 227542401,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60029.424016200006,
+   "filefracday": 20230326424016
+  },
+  {
+   "expid": 227642819,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60030.42819439992,
+   "filefracday": 20230327428183
+  },
+  {
+   "expid": 227731256,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60031.31256939983,
+   "filefracday": 20230328312477
+  },
+  {
+   "expid": 227828467,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60032.28467589989,
+   "filefracday": 20230329284456
+  },
+  {
+   "expid": 228223570,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60036.23570600012,
+   "filefracday": 20230402235706
+  },
+  {
+   "expid": 228245671,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60036.45671299985,
+   "filefracday": 20230402456701
+  },
+  {
+   "expid": 228830788,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60042.30788190011,
+   "filefracday": 20230408307766
+  },
+  {
+   "expid": 228830983,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60042.30983800022,
+   "filefracday": 20230408309711
+  },
+  {
+   "expid": 228935961,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60043.35961809987,
+   "filefracday": 20230409359618
+  },
+  {
+   "expid": 229018553,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60044.18553239992,
+   "filefracday": 20230410185498
+  },
+  {
+   "expid": 229130490,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60045.30490740016,
+   "filefracday": 20230411304907
+  },
+  {
+   "expid": 230040712,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60054.40712960018,
+   "filefracday": 20230420407060
+  },
+  {
+   "expid": 230632171,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60060.32171300007,
+   "filefracday": 20230426321713
+  },
+  {
+   "expid": 230817952,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60062.17952550016,
+   "filefracday": 20230428179398
+  },
+  {
+   "expid": 232426283,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60078.26283559995,
+   "filefracday": 20230514262766
+  },
+  {
+   "expid": 232622092,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60080.220925900154,
+   "filefracday": 20230516220926
+  },
+  {
+   "expid": 232819415,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60082.1941550998,
+   "filefracday": 20230518194097
+  },
+  {
+   "expid": 233023528,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60084.23528939998,
+   "filefracday": 20230520235278
+  },
+  {
+   "expid": 233423891,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60088.238911999855,
+   "filefracday": 20230524238912
+  },
+  {
+   "expid": 233619907,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60090.19907409977,
+   "filefracday": 20230526198924
+  },
+  {
+   "expid": 235520210,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60109.202106500044,
+   "filefracday": 20230614202095
+  },
+  {
+   "expid": 236130032,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60115.30032410007,
+   "filefracday": 20230620300324
+  },
+  {
+   "expid": 237022956,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60124.229560200125,
+   "filefracday": 20230629229560
+  },
+  {
+   "expid": 237224277,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60126.24277780019,
+   "filefracday": 20230701242766
+  },
+  {
+   "expid": 241016913,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60164.169131900184,
+   "filefracday": 20230808169132
+  },
+  {
+   "expid": 241017056,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60164.170567099936,
+   "filefracday": 20230808170556
+  },
+  {
+   "expid": 241017199,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60164.171990700066,
+   "filefracday": 20230808171979
+  },
+  {
+   "expid": 241116549,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60165.16549770022,
+   "filefracday": 20230809165486
+  },
+  {
+   "expid": 241116692,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60165.16692129988,
+   "filefracday": 20230809166910
+  },
+  {
+   "expid": 241116834,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60165.16834490001,
+   "filefracday": 20230809168345
+  },
+  {
+   "expid": 241116976,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60165.16976850014,
+   "filefracday": 20230809169769
+  },
+  {
+   "expid": 241117120,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60165.171203699894,
+   "filefracday": 20230809171204
+  },
+  {
+   "expid": 241216422,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60166.16422449984,
+   "filefracday": 20230810164225
+  },
+  {
+   "expid": 241216569,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60166.1656944002,
+   "filefracday": 20230810165683
+  },
+  {
+   "expid": 241216715,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60166.16715280013,
+   "filefracday": 20230810167153
+  },
+  {
+   "expid": 241216862,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60166.16862270003,
+   "filefracday": 20230810168623
+  },
+  {
+   "expid": 241217009,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60166.17009259993,
+   "filefracday": 20230810170093
+  },
+  {
+   "expid": 242015083,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60174.15083329985,
+   "filefracday": 20230818150822
+  },
+  {
+   "expid": 242015324,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60174.15324069979,
+   "filefracday": 20230818153241
+  },
+  {
+   "expid": 242015564,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60174.15564810019,
+   "filefracday": 20230818155648
+  },
+  {
+   "expid": 242514190,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60179.14190969989,
+   "filefracday": 20230823141910
+  },
+  {
+   "expid": 242514428,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60179.14428240014,
+   "filefracday": 20230823144282
+  },
+  {
+   "expid": 242514665,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60179.14665509993,
+   "filefracday": 20230823146655
+  },
+  {
+   "expid": 242514903,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60179.14903939981,
+   "filefracday": 20230823149028
+  },
+  {
+   "expid": 242515140,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60179.15140049998,
+   "filefracday": 20230823151400
+  },
+  {
+   "expid": 242714006,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60181.14006939996,
+   "filefracday": 20230825140058
+  },
+  {
+   "expid": 242714244,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60181.142442100216,
+   "filefracday": 20230825142442
+  },
+  {
+   "expid": 242714957,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60181.14957180014,
+   "filefracday": 20230825149560
+  },
+  {
+   "expid": 242813912,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60182.13912039995,
+   "filefracday": 20230826139109
+  },
+  {
+   "expid": 243114201,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60185.14201389998,
+   "filefracday": 20230829142002
+  },
+  {
+   "expid": 248752283,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60241.52283560019,
+   "filefracday": 20231024522685
+  },
+  {
+   "expid": 248752537,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60241.52537039993,
+   "filefracday": 20231024525232
+  },
+  {
+   "expid": 248752791,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60241.52791670011,
+   "filefracday": 20231024527766
+  },
+  {
+   "expid": 248753046,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60241.53046299983,
+   "filefracday": 20231024530312
+  },
+  {
+   "expid": 248851999,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60242.52000000002,
+   "filefracday": 20231025519780
+  },
+  {
+   "expid": 248852255,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60242.52255789982,
+   "filefracday": 20231025522396
+  },
+  {
+   "expid": 248852511,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60242.52511569997,
+   "filefracday": 20231025524954
+  },
+  {
+   "expid": 248852767,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60242.527673599776,
+   "filefracday": 20231025527512
+  },
+  {
+   "expid": 248853021,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60242.530219899956,
+   "filefracday": 20231025530058
+  },
+  {
+   "expid": 249052270,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60244.522708300035,
+   "filefracday": 20231027522049
+  },
+  {
+   "expid": 249052526,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60244.52526619984,
+   "filefracday": 20231027525104
+  },
+  {
+   "expid": 249052782,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60244.52782410011,
+   "filefracday": 20231027527650
+  },
+  {
+   "expid": 249053038,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60244.53038189979,
+   "filefracday": 20231027530220
+  },
+  {
+   "expid": 249053293,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60244.53293980006,
+   "filefracday": 20231027532766
+  },
+  {
+   "expid": 306425586,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60818.255868100096,
+   "filefracday": 20250523255868
+  },
+  {
+   "expid": 306627936,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60820.27936339984,
+   "filefracday": 20250525279363
+  },
+  {
+   "expid": 306834438,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60822.34438659996,
+   "filefracday": 20250527344387
+  },
+  {
+   "expid": 307030741,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60824.30741900019,
+   "filefracday": 20250529307419
+  },
+  {
+   "expid": 307524604,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60829.24604169978,
+   "filefracday": 20250603246030
+  },
+  {
+   "expid": 307726890,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60831.268900500145,
+   "filefracday": 20250605268900
+  },
+  {
+   "expid": 307924973,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60833.24973380007,
+   "filefracday": 20250607249722
+  },
+  {
+   "expid": 308124630,
+   "field": 672,
+   "rcid": 28,
+   "filt": 2,
+   "mjd": 60835.246307900175,
+   "filefracday": 20250609246308
+  },
+  {
+   "expid": 221539234,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 59969.39234950021,
+   "filefracday": 20230125392350
+  },
+  {
+   "expid": 222626518,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 59980.26518520014,
+   "filefracday": 20230205265174
+  },
+  {
+   "expid": 223150365,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 59985.50365740014,
+   "filefracday": 20230210503646
+  },
+  {
+   "expid": 227830134,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60032.301342600025,
+   "filefracday": 20230329301319
+  },
+  {
+   "expid": 227846366,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60032.46366900019,
+   "filefracday": 20230329463414
+  },
+  {
+   "expid": 233221934,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60086.21934030019,
+   "filefracday": 20230522219306
+  },
+  {
+   "expid": 235522550,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60109.2255092999,
+   "filefracday": 20230614225498
+  },
+  {
+   "expid": 249551376,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60249.513761600014,
+   "filefracday": 20231101513750
+  },
+  {
+   "expid": 306632254,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60820.32254630001,
+   "filefracday": 20250525322546
+  },
+  {
+   "expid": 306830622,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60822.30622689985,
+   "filefracday": 20250527306215
+  },
+  {
+   "expid": 307721534,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60831.21534720017,
+   "filefracday": 20250605215336
+  },
+  {
+   "expid": 307922578,
+   "field": 672,
+   "rcid": 29,
+   "filt": 1,
+   "mjd": 60833.2257869998,
+   "filefracday": 20250607225752
+  },
+  {
+   "expid": 212252128,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59876.521284699906,
+   "filefracday": 20221024520590
+  },
+  {
+   "expid": 212252376,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59876.52376159979,
+   "filefracday": 20221024523657
+  },
+  {
+   "expid": 212252623,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59876.52623840002,
+   "filefracday": 20221024526134
+  },
+  {
+   "expid": 212252871,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59876.52871529991,
+   "filefracday": 20221024528611
+  },
+  {
+   "expid": 212253119,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59876.53119210014,
+   "filefracday": 20221024531088
+  },
+  {
+   "expid": 212352590,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59877.525902799796,
+   "filefracday": 20221025525741
+  },
+  {
+   "expid": 212352844,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59877.52844909998,
+   "filefracday": 20221025528287
+  },
+  {
+   "expid": 212353100,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59877.53100690013,
+   "filefracday": 20221025530845
+  },
+  {
+   "expid": 212353356,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59877.53356479993,
+   "filefracday": 20221025533403
+  },
+  {
+   "expid": 212452109,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59878.52109949989,
+   "filefracday": 20221026520903
+  },
+  {
+   "expid": 212452365,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59878.52365740016,
+   "filefracday": 20221026523495
+  },
+  {
+   "expid": 212452620,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59878.526203699876,
+   "filefracday": 20221026526042
+  },
+  {
+   "expid": 212452876,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59878.528761600144,
+   "filefracday": 20221026528600
+  },
+  {
+   "expid": 212453130,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59878.53130789986,
+   "filefracday": 20221026531146
+  },
+  {
+   "expid": 212552410,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59879.524108800106,
+   "filefracday": 20221027524016
+  },
+  {
+   "expid": 212552665,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59879.52665509982,
+   "filefracday": 20221027526551
+  },
+  {
+   "expid": 212553173,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59879.53173610009,
+   "filefracday": 20221027531632
+  },
+  {
+   "expid": 212553428,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59879.53428239981,
+   "filefracday": 20221027534178
+  },
+  {
+   "expid": 215545043,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59909.45043980004,
+   "filefracday": 20221126450440
+  },
+  {
+   "expid": 216949438,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59923.494386599865,
+   "filefracday": 20221210494387
+  },
+  {
+   "expid": 222547374,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59979.47374999989,
+   "filefracday": 20230204473727
+  },
+  {
+   "expid": 222642814,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 59980.42814810015,
+   "filefracday": 20230205428148
+  },
+  {
+   "expid": 226242341,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60016.42341439985,
+   "filefracday": 20230313423380
+  },
+  {
+   "expid": 227828467,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60032.28467589989,
+   "filefracday": 20230329284456
+  },
+  {
+   "expid": 228223570,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60036.23570600012,
+   "filefracday": 20230402235706
+  },
+  {
+   "expid": 228245671,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60036.45671299985,
+   "filefracday": 20230402456701
+  },
+  {
+   "expid": 228830788,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60042.30788190011,
+   "filefracday": 20230408307766
+  },
+  {
+   "expid": 228830983,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60042.30983800022,
+   "filefracday": 20230408309711
+  },
+  {
+   "expid": 228935961,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60043.35961809987,
+   "filefracday": 20230409359618
+  },
+  {
+   "expid": 237022956,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60124.229560200125,
+   "filefracday": 20230629229560
+  },
+  {
+   "expid": 237224277,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60126.24277780019,
+   "filefracday": 20230701242766
+  },
+  {
+   "expid": 241016913,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60164.169131900184,
+   "filefracday": 20230808169132
+  },
+  {
+   "expid": 241017056,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60164.170567099936,
+   "filefracday": 20230808170556
+  },
+  {
+   "expid": 241017199,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60164.171990700066,
+   "filefracday": 20230808171979
+  },
+  {
+   "expid": 241116549,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60165.16549770022,
+   "filefracday": 20230809165486
+  },
+  {
+   "expid": 241116692,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60165.16692129988,
+   "filefracday": 20230809166910
+  },
+  {
+   "expid": 241116834,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60165.16834490001,
+   "filefracday": 20230809168345
+  },
+  {
+   "expid": 241116976,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60165.16976850014,
+   "filefracday": 20230809169769
+  },
+  {
+   "expid": 241117120,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60165.171203699894,
+   "filefracday": 20230809171204
+  },
+  {
+   "expid": 241216715,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60166.16715280013,
+   "filefracday": 20230810167153
+  },
+  {
+   "expid": 241216862,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60166.16862270003,
+   "filefracday": 20230810168623
+  },
+  {
+   "expid": 242015324,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60174.15324069979,
+   "filefracday": 20230818153241
+  },
+  {
+   "expid": 242015564,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60174.15564810019,
+   "filefracday": 20230818155648
+  },
+  {
+   "expid": 242514190,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60179.14190969989,
+   "filefracday": 20230823141910
+  },
+  {
+   "expid": 242514428,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60179.14428240014,
+   "filefracday": 20230823144282
+  },
+  {
+   "expid": 242514665,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60179.14665509993,
+   "filefracday": 20230823146655
+  },
+  {
+   "expid": 242514903,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60179.14903939981,
+   "filefracday": 20230823149028
+  },
+  {
+   "expid": 242515140,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60179.15140049998,
+   "filefracday": 20230823151400
+  },
+  {
+   "expid": 242714006,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60181.14006939996,
+   "filefracday": 20230825140058
+  },
+  {
+   "expid": 242714957,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60181.14957180014,
+   "filefracday": 20230825149560
+  },
+  {
+   "expid": 243113962,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60185.139629600104,
+   "filefracday": 20230829139606
+  },
+  {
+   "expid": 243114201,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60185.14201389998,
+   "filefracday": 20230829142002
+  },
+  {
+   "expid": 248752028,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60241.52028940013,
+   "filefracday": 20231024520185
+  },
+  {
+   "expid": 248752283,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60241.52283560019,
+   "filefracday": 20231024522685
+  },
+  {
+   "expid": 248752537,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60241.52537039993,
+   "filefracday": 20231024525232
+  },
+  {
+   "expid": 248752791,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60241.52791670011,
+   "filefracday": 20231024527766
+  },
+  {
+   "expid": 248753046,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60241.53046299983,
+   "filefracday": 20231024530312
+  },
+  {
+   "expid": 248851999,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60242.52000000002,
+   "filefracday": 20231025519780
+  },
+  {
+   "expid": 249052270,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60244.522708300035,
+   "filefracday": 20231027522049
+  },
+  {
+   "expid": 249052526,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60244.52526619984,
+   "filefracday": 20231027525104
+  },
+  {
+   "expid": 249053038,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60244.53038189979,
+   "filefracday": 20231027530220
+  },
+  {
+   "expid": 249053293,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60244.53293980006,
+   "filefracday": 20231027532766
+  },
+  {
+   "expid": 307524604,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60829.24604169978,
+   "filefracday": 20250603246030
+  },
+  {
+   "expid": 307726890,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60831.268900500145,
+   "filefracday": 20250605268900
+  },
+  {
+   "expid": 308124630,
+   "field": 672,
+   "rcid": 29,
+   "filt": 2,
+   "mjd": 60835.246307900175,
+   "filefracday": 20250609246308
+  },
+  {
+   "expid": 229132960,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60045.32960649999,
+   "filefracday": 20230411329606
+  },
+  {
+   "expid": 229221223,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60046.212233799975,
+   "filefracday": 20230412212222
+  },
+  {
+   "expid": 230842971,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60062.42971060006,
+   "filefracday": 20230428429711
+  },
+  {
+   "expid": 233221934,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60086.21934030019,
+   "filefracday": 20230522219306
+  },
+  {
+   "expid": 233226986,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60086.269861099776,
+   "filefracday": 20230522269861
+  },
+  {
+   "expid": 235121994,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60105.21994209988,
+   "filefracday": 20230610219931
+  },
+  {
+   "expid": 235522550,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60109.2255092999,
+   "filefracday": 20230614225498
+  },
+  {
+   "expid": 287953749,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60633.53750000009,
+   "filefracday": 20241119537500
+  },
+  {
+   "expid": 288046256,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60634.4625694002,
+   "filefracday": 20241120462558
+  },
+  {
+   "expid": 288048774,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60634.48774310015,
+   "filefracday": 20241120487732
+  },
+  {
+   "expid": 290549335,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60659.49335649982,
+   "filefracday": 20241215493345
+  },
+  {
+   "expid": 290640839,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60660.408391200006,
+   "filefracday": 20241216408310
+  },
+  {
+   "expid": 291052527,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60664.52527779993,
+   "filefracday": 20241220525278
+  },
+  {
+   "expid": 292643582,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60680.43582180003,
+   "filefracday": 20250105435810
+  },
+  {
+   "expid": 292655111,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60680.551111099776,
+   "filefracday": 20250105551076
+  },
+  {
+   "expid": 293047435,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60684.474351900164,
+   "filefracday": 20250109474340
+  },
+  {
+   "expid": 293346430,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60687.46430560015,
+   "filefracday": 20250112464294
+  },
+  {
+   "expid": 293349372,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60687.49372689985,
+   "filefracday": 20250112493727
+  },
+  {
+   "expid": 293449351,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60688.49351850012,
+   "filefracday": 20250113493472
+  },
+  {
+   "expid": 293647418,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60690.47418980021,
+   "filefracday": 20250115474190
+  },
+  {
+   "expid": 293952682,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60693.52682870021,
+   "filefracday": 20250118526794
+  },
+  {
+   "expid": 294049758,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60694.497580999974,
+   "filefracday": 20250119497546
+  },
+  {
+   "expid": 294152004,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60695.52004629979,
+   "filefracday": 20250120519873
+  },
+  {
+   "expid": 294241392,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60696.41392360022,
+   "filefracday": 20250121413912
+  },
+  {
+   "expid": 294248663,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60696.48663190007,
+   "filefracday": 20250121486620
+  },
+  {
+   "expid": 294440951,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60698.40951390006,
+   "filefracday": 20250123409514
+  },
+  {
+   "expid": 294538267,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60699.38267360022,
+   "filefracday": 20250124382674
+  },
+  {
+   "expid": 296241950,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60716.41950230021,
+   "filefracday": 20250210419491
+  },
+  {
+   "expid": 306424432,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60818.244328700006,
+   "filefracday": 20250523244329
+  },
+  {
+   "expid": 306632254,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60820.32254630001,
+   "filefracday": 20250525322546
+  },
+  {
+   "expid": 306830622,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60822.30622689985,
+   "filefracday": 20250527306215
+  },
+  {
+   "expid": 307026530,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60824.26530090021,
+   "filefracday": 20250529265289
+  },
+  {
+   "expid": 307520214,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60829.20214120019,
+   "filefracday": 20250603202130
+  },
+  {
+   "expid": 307721534,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60831.21534720017,
+   "filefracday": 20250605215336
+  },
+  {
+   "expid": 307922578,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60833.2257869998,
+   "filefracday": 20250607225752
+  },
+  {
+   "expid": 308120190,
+   "field": 672,
+   "rcid": 30,
+   "filt": 1,
+   "mjd": 60835.20190969994,
+   "filefracday": 20250609201875
+  },
+  {
+   "expid": 48917276,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 58243.1727661998,
+   "filefracday": 20180505172743
+  },
+  {
+   "expid": 212252871,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59876.52871529991,
+   "filefracday": 20221024528611
+  },
+  {
+   "expid": 212253119,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59876.53119210014,
+   "filefracday": 20221024531088
+  },
+  {
+   "expid": 212352334,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59877.52334489999,
+   "filefracday": 20221025522674
+  },
+  {
+   "expid": 212352590,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59877.525902799796,
+   "filefracday": 20221025525741
+  },
+  {
+   "expid": 212352844,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59877.52844909998,
+   "filefracday": 20221025528287
+  },
+  {
+   "expid": 212353100,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59877.53100690013,
+   "filefracday": 20221025530845
+  },
+  {
+   "expid": 212452109,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59878.52109949989,
+   "filefracday": 20221026520903
+  },
+  {
+   "expid": 212452365,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59878.52365740016,
+   "filefracday": 20221026523495
+  },
+  {
+   "expid": 212452620,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59878.526203699876,
+   "filefracday": 20221026526042
+  },
+  {
+   "expid": 212453130,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59878.53130789986,
+   "filefracday": 20221026531146
+  },
+  {
+   "expid": 212552410,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59879.524108800106,
+   "filefracday": 20221027524016
+  },
+  {
+   "expid": 212552665,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59879.52665509982,
+   "filefracday": 20221027526551
+  },
+  {
+   "expid": 212552918,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59879.52918979991,
+   "filefracday": 20221027529086
+  },
+  {
+   "expid": 212553173,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59879.53173610009,
+   "filefracday": 20221027531632
+  },
+  {
+   "expid": 212553428,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59879.53428239981,
+   "filefracday": 20221027534178
+  },
+  {
+   "expid": 215053406,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59904.53406250011,
+   "filefracday": 20221121534028
+  },
+  {
+   "expid": 215245440,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59906.45440969989,
+   "filefracday": 20221123454410
+  },
+  {
+   "expid": 215545043,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59909.45043980004,
+   "filefracday": 20221126450440
+  },
+  {
+   "expid": 216949438,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59923.494386599865,
+   "filefracday": 20221210494387
+  },
+  {
+   "expid": 217651223,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59930.51223379979,
+   "filefracday": 20221217512234
+  },
+  {
+   "expid": 218153982,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59935.53982640011,
+   "filefracday": 20221222539780
+  },
+  {
+   "expid": 218350921,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59937.50921300007,
+   "filefracday": 20221224509213
+  },
+  {
+   "expid": 220346796,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59957.46796299983,
+   "filefracday": 20230113467963
+  },
+  {
+   "expid": 221543273,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59969.432731499895,
+   "filefracday": 20230125432720
+  },
+  {
+   "expid": 221742341,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59971.42341439985,
+   "filefracday": 20230127423403
+  },
+  {
+   "expid": 222547374,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59979.47374999989,
+   "filefracday": 20230204473727
+  },
+  {
+   "expid": 222642814,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59980.42814810015,
+   "filefracday": 20230205428148
+  },
+  {
+   "expid": 223340083,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 59987.40083329985,
+   "filefracday": 20230212400833
+  },
+  {
+   "expid": 226242341,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60016.42341439985,
+   "filefracday": 20230313423380
+  },
+  {
+   "expid": 226634785,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60020.34785880009,
+   "filefracday": 20230317347847
+  },
+  {
+   "expid": 226738915,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60021.3891551001,
+   "filefracday": 20230318389132
+  },
+  {
+   "expid": 227542401,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60029.424016200006,
+   "filefracday": 20230326424016
+  },
+  {
+   "expid": 227642819,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60030.42819439992,
+   "filefracday": 20230327428183
+  },
+  {
+   "expid": 227731256,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60031.31256939983,
+   "filefracday": 20230328312477
+  },
+  {
+   "expid": 227828467,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60032.28467589989,
+   "filefracday": 20230329284456
+  },
+  {
+   "expid": 228223570,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60036.23570600012,
+   "filefracday": 20230402235706
+  },
+  {
+   "expid": 228245671,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60036.45671299985,
+   "filefracday": 20230402456701
+  },
+  {
+   "expid": 228830788,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60042.30788190011,
+   "filefracday": 20230408307766
+  },
+  {
+   "expid": 228830983,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60042.30983800022,
+   "filefracday": 20230408309711
+  },
+  {
+   "expid": 228935961,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60043.35961809987,
+   "filefracday": 20230409359618
+  },
+  {
+   "expid": 229018553,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60044.18553239992,
+   "filefracday": 20230410185498
+  },
+  {
+   "expid": 229130490,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60045.30490740016,
+   "filefracday": 20230411304907
+  },
+  {
+   "expid": 230040712,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60054.40712960018,
+   "filefracday": 20230420407060
+  },
+  {
+   "expid": 230632171,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60060.32171300007,
+   "filefracday": 20230426321713
+  },
+  {
+   "expid": 230817952,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60062.17952550016,
+   "filefracday": 20230428179398
+  },
+  {
+   "expid": 232426283,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60078.26283559995,
+   "filefracday": 20230514262766
+  },
+  {
+   "expid": 232622092,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60080.220925900154,
+   "filefracday": 20230516220926
+  },
+  {
+   "expid": 232819415,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60082.1941550998,
+   "filefracday": 20230518194097
+  },
+  {
+   "expid": 233023528,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60084.23528939998,
+   "filefracday": 20230520235278
+  },
+  {
+   "expid": 233423891,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60088.238911999855,
+   "filefracday": 20230524238912
+  },
+  {
+   "expid": 235520210,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60109.202106500044,
+   "filefracday": 20230614202095
+  },
+  {
+   "expid": 236130032,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60115.30032410007,
+   "filefracday": 20230620300324
+  },
+  {
+   "expid": 237022956,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60124.229560200125,
+   "filefracday": 20230629229560
+  },
+  {
+   "expid": 237224277,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60126.24277780019,
+   "filefracday": 20230701242766
+  },
+  {
+   "expid": 241016913,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60164.169131900184,
+   "filefracday": 20230808169132
+  },
+  {
+   "expid": 241017056,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60164.170567099936,
+   "filefracday": 20230808170556
+  },
+  {
+   "expid": 241017199,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60164.171990700066,
+   "filefracday": 20230808171979
+  },
+  {
+   "expid": 241116549,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60165.16549770022,
+   "filefracday": 20230809165486
+  },
+  {
+   "expid": 241116692,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60165.16692129988,
+   "filefracday": 20230809166910
+  },
+  {
+   "expid": 241116834,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60165.16834490001,
+   "filefracday": 20230809168345
+  },
+  {
+   "expid": 241116976,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60165.16976850014,
+   "filefracday": 20230809169769
+  },
+  {
+   "expid": 241117120,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60165.171203699894,
+   "filefracday": 20230809171204
+  },
+  {
+   "expid": 241216569,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60166.1656944002,
+   "filefracday": 20230810165683
+  },
+  {
+   "expid": 241216715,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60166.16715280013,
+   "filefracday": 20230810167153
+  },
+  {
+   "expid": 241216862,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60166.16862270003,
+   "filefracday": 20230810168623
+  },
+  {
+   "expid": 241217009,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60166.17009259993,
+   "filefracday": 20230810170093
+  },
+  {
+   "expid": 242014841,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60174.14841439994,
+   "filefracday": 20230818148414
+  },
+  {
+   "expid": 242015083,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60174.15083329985,
+   "filefracday": 20230818150822
+  },
+  {
+   "expid": 242015324,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60174.15324069979,
+   "filefracday": 20230818153241
+  },
+  {
+   "expid": 242015564,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60174.15564810019,
+   "filefracday": 20230818155648
+  },
+  {
+   "expid": 242514428,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60179.14428240014,
+   "filefracday": 20230823144282
+  },
+  {
+   "expid": 242514665,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60179.14665509993,
+   "filefracday": 20230823146655
+  },
+  {
+   "expid": 242514903,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60179.14903939981,
+   "filefracday": 20230823149028
+  },
+  {
+   "expid": 242515140,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60179.15140049998,
+   "filefracday": 20230823151400
+  },
+  {
+   "expid": 242714244,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60181.142442100216,
+   "filefracday": 20230825142442
+  },
+  {
+   "expid": 242714957,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60181.14957180014,
+   "filefracday": 20230825149560
+  },
+  {
+   "expid": 243314252,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60187.142523100134,
+   "filefracday": 20230831142465
+  },
+  {
+   "expid": 248752028,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60241.52028940013,
+   "filefracday": 20231024520185
+  },
+  {
+   "expid": 248752283,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60241.52283560019,
+   "filefracday": 20231024522685
+  },
+  {
+   "expid": 248752537,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60241.52537039993,
+   "filefracday": 20231024525232
+  },
+  {
+   "expid": 248752791,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60241.52791670011,
+   "filefracday": 20231024527766
+  },
+  {
+   "expid": 248753046,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60241.53046299983,
+   "filefracday": 20231024530312
+  },
+  {
+   "expid": 248851999,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60242.52000000002,
+   "filefracday": 20231025519780
+  },
+  {
+   "expid": 248852255,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60242.52255789982,
+   "filefracday": 20231025522396
+  },
+  {
+   "expid": 248852511,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60242.52511569997,
+   "filefracday": 20231025524954
+  },
+  {
+   "expid": 248852767,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60242.527673599776,
+   "filefracday": 20231025527512
+  },
+  {
+   "expid": 248853021,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60242.530219899956,
+   "filefracday": 20231025530058
+  },
+  {
+   "expid": 249052270,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60244.522708300035,
+   "filefracday": 20231027522049
+  },
+  {
+   "expid": 249052526,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60244.52526619984,
+   "filefracday": 20231027525104
+  },
+  {
+   "expid": 249052782,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60244.52782410011,
+   "filefracday": 20231027527650
+  },
+  {
+   "expid": 249053038,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60244.53038189979,
+   "filefracday": 20231027530220
+  },
+  {
+   "expid": 249053293,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60244.53293980006,
+   "filefracday": 20231027532766
+  },
+  {
+   "expid": 293336865,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60687.3686573999,
+   "filefracday": 20250112368646
+  },
+  {
+   "expid": 306425586,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60818.255868100096,
+   "filefracday": 20250523255868
+  },
+  {
+   "expid": 306627936,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60820.27936339984,
+   "filefracday": 20250525279363
+  },
+  {
+   "expid": 306834438,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60822.34438659996,
+   "filefracday": 20250527344387
+  },
+  {
+   "expid": 307030741,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60824.30741900019,
+   "filefracday": 20250529307419
+  },
+  {
+   "expid": 307524604,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60829.24604169978,
+   "filefracday": 20250603246030
+  },
+  {
+   "expid": 307726890,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60831.268900500145,
+   "filefracday": 20250605268900
+  },
+  {
+   "expid": 307924973,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60833.24973380007,
+   "filefracday": 20250607249722
+  },
+  {
+   "expid": 308124630,
+   "field": 672,
+   "rcid": 30,
+   "filt": 2,
+   "mjd": 60835.246307900175,
+   "filefracday": 20250609246308
+  },
+  {
+   "expid": 48917276,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 58243.1727661998,
+   "filefracday": 20180505172743
+  },
+  {
+   "expid": 169914106,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59453.14106479986,
+   "filefracday": 20210827141053
+  },
+  {
+   "expid": 212352590,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59877.525902799796,
+   "filefracday": 20221025525741
+  },
+  {
+   "expid": 212352844,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59877.52844909998,
+   "filefracday": 20221025528287
+  },
+  {
+   "expid": 212353100,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59877.53100690013,
+   "filefracday": 20221025530845
+  },
+  {
+   "expid": 212353356,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59877.53356479993,
+   "filefracday": 20221025533403
+  },
+  {
+   "expid": 212452109,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59878.52109949989,
+   "filefracday": 20221026520903
+  },
+  {
+   "expid": 212452365,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59878.52365740016,
+   "filefracday": 20221026523495
+  },
+  {
+   "expid": 212453130,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59878.53130789986,
+   "filefracday": 20221026531146
+  },
+  {
+   "expid": 212553173,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59879.53173610009,
+   "filefracday": 20221027531632
+  },
+  {
+   "expid": 212553428,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59879.53428239981,
+   "filefracday": 20221027534178
+  },
+  {
+   "expid": 215053406,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59904.53406250011,
+   "filefracday": 20221121534028
+  },
+  {
+   "expid": 215245440,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59906.45440969989,
+   "filefracday": 20221123454410
+  },
+  {
+   "expid": 215545043,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59909.45043980004,
+   "filefracday": 20221126450440
+  },
+  {
+   "expid": 216949438,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59923.494386599865,
+   "filefracday": 20221210494387
+  },
+  {
+   "expid": 217651223,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59930.51223379979,
+   "filefracday": 20221217512234
+  },
+  {
+   "expid": 218153982,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59935.53982640011,
+   "filefracday": 20221222539780
+  },
+  {
+   "expid": 218350921,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59937.50921300007,
+   "filefracday": 20221224509213
+  },
+  {
+   "expid": 220346796,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59957.46796299983,
+   "filefracday": 20230113467963
+  },
+  {
+   "expid": 221543273,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59969.432731499895,
+   "filefracday": 20230125432720
+  },
+  {
+   "expid": 221742341,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59971.42341439985,
+   "filefracday": 20230127423403
+  },
+  {
+   "expid": 222547374,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59979.47374999989,
+   "filefracday": 20230204473727
+  },
+  {
+   "expid": 222642814,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59980.42814810015,
+   "filefracday": 20230205428148
+  },
+  {
+   "expid": 223340083,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 59987.40083329985,
+   "filefracday": 20230212400833
+  },
+  {
+   "expid": 226242341,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60016.42341439985,
+   "filefracday": 20230313423380
+  },
+  {
+   "expid": 226634785,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60020.34785880009,
+   "filefracday": 20230317347847
+  },
+  {
+   "expid": 226738915,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60021.3891551001,
+   "filefracday": 20230318389132
+  },
+  {
+   "expid": 227542401,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60029.424016200006,
+   "filefracday": 20230326424016
+  },
+  {
+   "expid": 227642819,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60030.42819439992,
+   "filefracday": 20230327428183
+  },
+  {
+   "expid": 227731256,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60031.31256939983,
+   "filefracday": 20230328312477
+  },
+  {
+   "expid": 227828467,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60032.28467589989,
+   "filefracday": 20230329284456
+  },
+  {
+   "expid": 228223570,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60036.23570600012,
+   "filefracday": 20230402235706
+  },
+  {
+   "expid": 228245671,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60036.45671299985,
+   "filefracday": 20230402456701
+  },
+  {
+   "expid": 228830788,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60042.30788190011,
+   "filefracday": 20230408307766
+  },
+  {
+   "expid": 228830983,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60042.30983800022,
+   "filefracday": 20230408309711
+  },
+  {
+   "expid": 228935961,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60043.35961809987,
+   "filefracday": 20230409359618
+  },
+  {
+   "expid": 229018553,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60044.18553239992,
+   "filefracday": 20230410185498
+  },
+  {
+   "expid": 229130490,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60045.30490740016,
+   "filefracday": 20230411304907
+  },
+  {
+   "expid": 230040712,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60054.40712960018,
+   "filefracday": 20230420407060
+  },
+  {
+   "expid": 230632171,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60060.32171300007,
+   "filefracday": 20230426321713
+  },
+  {
+   "expid": 230817952,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60062.17952550016,
+   "filefracday": 20230428179398
+  },
+  {
+   "expid": 232426283,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60078.26283559995,
+   "filefracday": 20230514262766
+  },
+  {
+   "expid": 232622092,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60080.220925900154,
+   "filefracday": 20230516220926
+  },
+  {
+   "expid": 232819415,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60082.1941550998,
+   "filefracday": 20230518194097
+  },
+  {
+   "expid": 233023528,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60084.23528939998,
+   "filefracday": 20230520235278
+  },
+  {
+   "expid": 233423891,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60088.238911999855,
+   "filefracday": 20230524238912
+  },
+  {
+   "expid": 235520210,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60109.202106500044,
+   "filefracday": 20230614202095
+  },
+  {
+   "expid": 236130032,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60115.30032410007,
+   "filefracday": 20230620300324
+  },
+  {
+   "expid": 237022956,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60124.229560200125,
+   "filefracday": 20230629229560
+  },
+  {
+   "expid": 237224277,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60126.24277780019,
+   "filefracday": 20230701242766
+  },
+  {
+   "expid": 241016913,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60164.169131900184,
+   "filefracday": 20230808169132
+  },
+  {
+   "expid": 241017056,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60164.170567099936,
+   "filefracday": 20230808170556
+  },
+  {
+   "expid": 241017199,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60164.171990700066,
+   "filefracday": 20230808171979
+  },
+  {
+   "expid": 241116549,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60165.16549770022,
+   "filefracday": 20230809165486
+  },
+  {
+   "expid": 241116692,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60165.16692129988,
+   "filefracday": 20230809166910
+  },
+  {
+   "expid": 241116834,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60165.16834490001,
+   "filefracday": 20230809168345
+  },
+  {
+   "expid": 241116976,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60165.16976850014,
+   "filefracday": 20230809169769
+  },
+  {
+   "expid": 241117120,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60165.171203699894,
+   "filefracday": 20230809171204
+  },
+  {
+   "expid": 241216569,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60166.1656944002,
+   "filefracday": 20230810165683
+  },
+  {
+   "expid": 241216715,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60166.16715280013,
+   "filefracday": 20230810167153
+  },
+  {
+   "expid": 241216862,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60166.16862270003,
+   "filefracday": 20230810168623
+  },
+  {
+   "expid": 241217009,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60166.17009259993,
+   "filefracday": 20230810170093
+  },
+  {
+   "expid": 242014841,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60174.14841439994,
+   "filefracday": 20230818148414
+  },
+  {
+   "expid": 242015324,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60174.15324069979,
+   "filefracday": 20230818153241
+  },
+  {
+   "expid": 242015564,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60174.15564810019,
+   "filefracday": 20230818155648
+  },
+  {
+   "expid": 242714244,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60181.142442100216,
+   "filefracday": 20230825142442
+  },
+  {
+   "expid": 242714957,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60181.14957180014,
+   "filefracday": 20230825149560
+  },
+  {
+   "expid": 242814385,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60182.14385419991,
+   "filefracday": 20230826143854
+  },
+  {
+   "expid": 243314011,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60187.1401157002,
+   "filefracday": 20230831140069
+  },
+  {
+   "expid": 243314252,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60187.142523100134,
+   "filefracday": 20230831142465
+  },
+  {
+   "expid": 248752028,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60241.52028940013,
+   "filefracday": 20231024520185
+  },
+  {
+   "expid": 248752283,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60241.52283560019,
+   "filefracday": 20231024522685
+  },
+  {
+   "expid": 248752537,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60241.52537039993,
+   "filefracday": 20231024525232
+  },
+  {
+   "expid": 248752791,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60241.52791670011,
+   "filefracday": 20231024527766
+  },
+  {
+   "expid": 248851999,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60242.52000000002,
+   "filefracday": 20231025519780
+  },
+  {
+   "expid": 248852255,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60242.52255789982,
+   "filefracday": 20231025522396
+  },
+  {
+   "expid": 248852511,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60242.52511569997,
+   "filefracday": 20231025524954
+  },
+  {
+   "expid": 248852767,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60242.527673599776,
+   "filefracday": 20231025527512
+  },
+  {
+   "expid": 248853021,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60242.530219899956,
+   "filefracday": 20231025530058
+  },
+  {
+   "expid": 249052270,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60244.522708300035,
+   "filefracday": 20231027522049
+  },
+  {
+   "expid": 249052526,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60244.52526619984,
+   "filefracday": 20231027525104
+  },
+  {
+   "expid": 249052782,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60244.52782410011,
+   "filefracday": 20231027527650
+  },
+  {
+   "expid": 249053038,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60244.53038189979,
+   "filefracday": 20231027530220
+  },
+  {
+   "expid": 249053293,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60244.53293980006,
+   "filefracday": 20231027532766
+  },
+  {
+   "expid": 250352387,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60257.52387729986,
+   "filefracday": 20231109523866
+  },
+  {
+   "expid": 306425586,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60818.255868100096,
+   "filefracday": 20250523255868
+  },
+  {
+   "expid": 306627936,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60820.27936339984,
+   "filefracday": 20250525279363
+  },
+  {
+   "expid": 306834438,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60822.34438659996,
+   "filefracday": 20250527344387
+  },
+  {
+   "expid": 307030741,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60824.30741900019,
+   "filefracday": 20250529307419
+  },
+  {
+   "expid": 307524604,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60829.24604169978,
+   "filefracday": 20250603246030
+  },
+  {
+   "expid": 307726890,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60831.268900500145,
+   "filefracday": 20250605268900
+  },
+  {
+   "expid": 307924973,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60833.24973380007,
+   "filefracday": 20250607249722
+  },
+  {
+   "expid": 308124630,
+   "field": 672,
+   "rcid": 31,
+   "filt": 2,
+   "mjd": 60835.246307900175,
+   "filefracday": 20250609246308
+  },
+  {
+   "expid": 218145281,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 59935.45281249983,
+   "filefracday": 20221222452801
+  },
+  {
+   "expid": 228837888,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60042.378888899926,
+   "filefracday": 20230408378889
+  },
+  {
+   "expid": 229132960,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60045.32960649999,
+   "filefracday": 20230411329606
+  },
+  {
+   "expid": 229221223,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60046.212233799975,
+   "filefracday": 20230412212222
+  },
+  {
+   "expid": 230842971,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60062.42971060006,
+   "filefracday": 20230428429711
+  },
+  {
+   "expid": 231025297,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60064.25297449995,
+   "filefracday": 20230430252836
+  },
+  {
+   "expid": 232228368,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60076.283680600114,
+   "filefracday": 20230512283669
+  },
+  {
+   "expid": 232432094,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60078.32094909996,
+   "filefracday": 20230514320938
+  },
+  {
+   "expid": 233221934,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60086.21934030019,
+   "filefracday": 20230522219306
+  },
+  {
+   "expid": 233226986,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60086.269861099776,
+   "filefracday": 20230522269861
+  },
+  {
+   "expid": 235121994,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60105.21994209988,
+   "filefracday": 20230610219931
+  },
+  {
+   "expid": 235522550,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60109.2255092999,
+   "filefracday": 20230614225498
+  },
+  {
+   "expid": 236326268,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60117.2626852002,
+   "filefracday": 20230622262454
+  },
+  {
+   "expid": 292643582,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60680.43582180003,
+   "filefracday": 20250105435810
+  },
+  {
+   "expid": 292655111,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60680.551111099776,
+   "filefracday": 20250105551076
+  },
+  {
+   "expid": 306424432,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60818.244328700006,
+   "filefracday": 20250523244329
+  },
+  {
+   "expid": 306632254,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60820.32254630001,
+   "filefracday": 20250525322546
+  },
+  {
+   "expid": 306830622,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60822.30622689985,
+   "filefracday": 20250527306215
+  },
+  {
+   "expid": 307026530,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60824.26530090021,
+   "filefracday": 20250529265289
+  },
+  {
+   "expid": 307520214,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60829.20214120019,
+   "filefracday": 20250603202130
+  },
+  {
+   "expid": 307721534,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60831.21534720017,
+   "filefracday": 20250605215336
+  },
+  {
+   "expid": 307922578,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60833.2257869998,
+   "filefracday": 20250607225752
+  },
+  {
+   "expid": 308120190,
+   "field": 672,
+   "rcid": 46,
+   "filt": 1,
+   "mjd": 60835.20190969994,
+   "filefracday": 20250609201875
+  },
+  {
+   "expid": 48917276,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 58243.1727661998,
+   "filefracday": 20180505172743
+  },
+  {
+   "expid": 212252376,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59876.52376159979,
+   "filefracday": 20221024523657
+  },
+  {
+   "expid": 212252623,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59876.52623840002,
+   "filefracday": 20221024526134
+  },
+  {
+   "expid": 212252871,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59876.52871529991,
+   "filefracday": 20221024528611
+  },
+  {
+   "expid": 212253119,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59876.53119210014,
+   "filefracday": 20221024531088
+  },
+  {
+   "expid": 212352334,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59877.52334489999,
+   "filefracday": 20221025522674
+  },
+  {
+   "expid": 212352590,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59877.525902799796,
+   "filefracday": 20221025525741
+  },
+  {
+   "expid": 212352844,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59877.52844909998,
+   "filefracday": 20221025528287
+  },
+  {
+   "expid": 212353100,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59877.53100690013,
+   "filefracday": 20221025530845
+  },
+  {
+   "expid": 212353356,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59877.53356479993,
+   "filefracday": 20221025533403
+  },
+  {
+   "expid": 212452109,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59878.52109949989,
+   "filefracday": 20221026520903
+  },
+  {
+   "expid": 212452620,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59878.526203699876,
+   "filefracday": 20221026526042
+  },
+  {
+   "expid": 212452876,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59878.528761600144,
+   "filefracday": 20221026528600
+  },
+  {
+   "expid": 212453130,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59878.53130789986,
+   "filefracday": 20221026531146
+  },
+  {
+   "expid": 212552410,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59879.524108800106,
+   "filefracday": 20221027524016
+  },
+  {
+   "expid": 212552918,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59879.52918979991,
+   "filefracday": 20221027529086
+  },
+  {
+   "expid": 212553173,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59879.53173610009,
+   "filefracday": 20221027531632
+  },
+  {
+   "expid": 212553428,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59879.53428239981,
+   "filefracday": 20221027534178
+  },
+  {
+   "expid": 215053406,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59904.53406250011,
+   "filefracday": 20221121534028
+  },
+  {
+   "expid": 215245440,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59906.45440969989,
+   "filefracday": 20221123454410
+  },
+  {
+   "expid": 215545043,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59909.45043980004,
+   "filefracday": 20221126450440
+  },
+  {
+   "expid": 216949438,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59923.494386599865,
+   "filefracday": 20221210494387
+  },
+  {
+   "expid": 217651223,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59930.51223379979,
+   "filefracday": 20221217512234
+  },
+  {
+   "expid": 218350921,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59937.50921300007,
+   "filefracday": 20221224509213
+  },
+  {
+   "expid": 220346796,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59957.46796299983,
+   "filefracday": 20230113467963
+  },
+  {
+   "expid": 221543273,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59969.432731499895,
+   "filefracday": 20230125432720
+  },
+  {
+   "expid": 221742341,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59971.42341439985,
+   "filefracday": 20230127423403
+  },
+  {
+   "expid": 222547374,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59979.47374999989,
+   "filefracday": 20230204473727
+  },
+  {
+   "expid": 222642814,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59980.42814810015,
+   "filefracday": 20230205428148
+  },
+  {
+   "expid": 223128439,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59985.28439809987,
+   "filefracday": 20230210284363
+  },
+  {
+   "expid": 223340083,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 59987.40083329985,
+   "filefracday": 20230212400833
+  },
+  {
+   "expid": 226242341,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60016.42341439985,
+   "filefracday": 20230313423380
+  },
+  {
+   "expid": 226634785,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60020.34785880009,
+   "filefracday": 20230317347847
+  },
+  {
+   "expid": 227542401,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60029.424016200006,
+   "filefracday": 20230326424016
+  },
+  {
+   "expid": 227642819,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60030.42819439992,
+   "filefracday": 20230327428183
+  },
+  {
+   "expid": 227731256,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60031.31256939983,
+   "filefracday": 20230328312477
+  },
+  {
+   "expid": 227828467,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60032.28467589989,
+   "filefracday": 20230329284456
+  },
+  {
+   "expid": 228223570,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60036.23570600012,
+   "filefracday": 20230402235706
+  },
+  {
+   "expid": 228245671,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60036.45671299985,
+   "filefracday": 20230402456701
+  },
+  {
+   "expid": 228830788,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60042.30788190011,
+   "filefracday": 20230408307766
+  },
+  {
+   "expid": 228830983,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60042.30983800022,
+   "filefracday": 20230408309711
+  },
+  {
+   "expid": 228935961,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60043.35961809987,
+   "filefracday": 20230409359618
+  },
+  {
+   "expid": 229018553,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60044.18553239992,
+   "filefracday": 20230410185498
+  },
+  {
+   "expid": 230040712,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60054.40712960018,
+   "filefracday": 20230420407060
+  },
+  {
+   "expid": 230632171,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60060.32171300007,
+   "filefracday": 20230426321713
+  },
+  {
+   "expid": 230817952,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60062.17952550016,
+   "filefracday": 20230428179398
+  },
+  {
+   "expid": 232426283,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60078.26283559995,
+   "filefracday": 20230514262766
+  },
+  {
+   "expid": 232622092,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60080.220925900154,
+   "filefracday": 20230516220926
+  },
+  {
+   "expid": 232819415,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60082.1941550998,
+   "filefracday": 20230518194097
+  },
+  {
+   "expid": 233023528,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60084.23528939998,
+   "filefracday": 20230520235278
+  },
+  {
+   "expid": 233423891,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60088.238911999855,
+   "filefracday": 20230524238912
+  },
+  {
+   "expid": 233619907,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60090.19907409977,
+   "filefracday": 20230526198924
+  },
+  {
+   "expid": 235520210,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60109.202106500044,
+   "filefracday": 20230614202095
+  },
+  {
+   "expid": 235923846,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60113.23846059991,
+   "filefracday": 20230618238449
+  },
+  {
+   "expid": 236130032,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60115.30032410007,
+   "filefracday": 20230620300324
+  },
+  {
+   "expid": 237022956,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60124.229560200125,
+   "filefracday": 20230629229560
+  },
+  {
+   "expid": 237224277,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60126.24277780019,
+   "filefracday": 20230701242766
+  },
+  {
+   "expid": 241016913,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60164.169131900184,
+   "filefracday": 20230808169132
+  },
+  {
+   "expid": 241017056,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60164.170567099936,
+   "filefracday": 20230808170556
+  },
+  {
+   "expid": 241017199,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60164.171990700066,
+   "filefracday": 20230808171979
+  },
+  {
+   "expid": 241116549,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60165.16549770022,
+   "filefracday": 20230809165486
+  },
+  {
+   "expid": 241116834,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60165.16834490001,
+   "filefracday": 20230809168345
+  },
+  {
+   "expid": 241116976,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60165.16976850014,
+   "filefracday": 20230809169769
+  },
+  {
+   "expid": 241117120,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60165.171203699894,
+   "filefracday": 20230809171204
+  },
+  {
+   "expid": 241216422,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60166.16422449984,
+   "filefracday": 20230810164225
+  },
+  {
+   "expid": 241216569,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60166.1656944002,
+   "filefracday": 20230810165683
+  },
+  {
+   "expid": 241216715,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60166.16715280013,
+   "filefracday": 20230810167153
+  },
+  {
+   "expid": 241216862,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60166.16862270003,
+   "filefracday": 20230810168623
+  },
+  {
+   "expid": 241217009,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60166.17009259993,
+   "filefracday": 20230810170093
+  },
+  {
+   "expid": 242014841,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60174.14841439994,
+   "filefracday": 20230818148414
+  },
+  {
+   "expid": 242015083,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60174.15083329985,
+   "filefracday": 20230818150822
+  },
+  {
+   "expid": 242015324,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60174.15324069979,
+   "filefracday": 20230818153241
+  },
+  {
+   "expid": 242015564,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60174.15564810019,
+   "filefracday": 20230818155648
+  },
+  {
+   "expid": 242514428,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60179.14428240014,
+   "filefracday": 20230823144282
+  },
+  {
+   "expid": 242514665,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60179.14665509993,
+   "filefracday": 20230823146655
+  },
+  {
+   "expid": 242514903,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60179.14903939981,
+   "filefracday": 20230823149028
+  },
+  {
+   "expid": 242515140,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60179.15140049998,
+   "filefracday": 20230823151400
+  },
+  {
+   "expid": 242714244,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60181.142442100216,
+   "filefracday": 20230825142442
+  },
+  {
+   "expid": 242714957,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60181.14957180014,
+   "filefracday": 20230825149560
+  },
+  {
+   "expid": 248752028,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60241.52028940013,
+   "filefracday": 20231024520185
+  },
+  {
+   "expid": 248752537,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60241.52537039993,
+   "filefracday": 20231024525232
+  },
+  {
+   "expid": 248752791,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60241.52791670011,
+   "filefracday": 20231024527766
+  },
+  {
+   "expid": 248753046,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60241.53046299983,
+   "filefracday": 20231024530312
+  },
+  {
+   "expid": 248851999,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60242.52000000002,
+   "filefracday": 20231025519780
+  },
+  {
+   "expid": 248852255,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60242.52255789982,
+   "filefracday": 20231025522396
+  },
+  {
+   "expid": 248852511,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60242.52511569997,
+   "filefracday": 20231025524954
+  },
+  {
+   "expid": 248852767,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60242.527673599776,
+   "filefracday": 20231025527512
+  },
+  {
+   "expid": 248853021,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60242.530219899956,
+   "filefracday": 20231025530058
+  },
+  {
+   "expid": 249052270,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60244.522708300035,
+   "filefracday": 20231027522049
+  },
+  {
+   "expid": 249052526,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60244.52526619984,
+   "filefracday": 20231027525104
+  },
+  {
+   "expid": 249052782,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60244.52782410011,
+   "filefracday": 20231027527650
+  },
+  {
+   "expid": 249053038,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60244.53038189979,
+   "filefracday": 20231027530220
+  },
+  {
+   "expid": 249053293,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60244.53293980006,
+   "filefracday": 20231027532766
+  },
+  {
+   "expid": 306425586,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60818.255868100096,
+   "filefracday": 20250523255868
+  },
+  {
+   "expid": 306834438,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60822.34438659996,
+   "filefracday": 20250527344387
+  },
+  {
+   "expid": 307030741,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60824.30741900019,
+   "filefracday": 20250529307419
+  },
+  {
+   "expid": 307524604,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60829.24604169978,
+   "filefracday": 20250603246030
+  },
+  {
+   "expid": 307726890,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60831.268900500145,
+   "filefracday": 20250605268900
+  },
+  {
+   "expid": 307924973,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60833.24973380007,
+   "filefracday": 20250607249722
+  },
+  {
+   "expid": 308124630,
+   "field": 672,
+   "rcid": 46,
+   "filt": 2,
+   "mjd": 60835.246307900175,
+   "filefracday": 20250609246308
+  },
+  {
+   "expid": 75251450,
+   "field": 1669,
+   "rcid": 40,
+   "filt": 1,
+   "mjd": 58506.51450229995,
+   "filefracday": 20190123514444
+  },
+  {
+   "expid": 224045520,
+   "field": 1669,
+   "rcid": 40,
+   "filt": 2,
+   "mjd": 59994.45520830015,
+   "filefracday": 20230219455208
+  },
+  {
+   "expid": 230130990,
+   "field": 1669,
+   "rcid": 40,
+   "filt": 2,
+   "mjd": 60055.30990740005,
+   "filefracday": 20230421309907
+  },
+  {
+   "expid": 230523354,
+   "field": 1669,
+   "rcid": 40,
+   "filt": 2,
+   "mjd": 60059.23354170006,
+   "filefracday": 20230425233542
+  },
+  {
+   "expid": 230722690,
+   "field": 1669,
+   "rcid": 40,
+   "filt": 2,
+   "mjd": 60061.22690969985,
+   "filefracday": 20230427226898
+  },
+  {
+   "expid": 230820839,
+   "field": 1669,
+   "rcid": 40,
+   "filt": 2,
+   "mjd": 60062.20839119982,
+   "filefracday": 20230428208391
+  },
+  {
+   "expid": 279114218,
+   "field": 1669,
+   "rcid": 40,
+   "filt": 2,
+   "mjd": 60545.14218749991,
+   "filefracday": 20240823142187
+  },
+  {
+   "expid": 75251450,
+   "field": 1669,
+   "rcid": 53,
+   "filt": 1,
+   "mjd": 58506.51450229995,
+   "filefracday": 20190123514444
+  },
+  {
+   "expid": 230130990,
+   "field": 1669,
+   "rcid": 53,
+   "filt": 2,
+   "mjd": 60055.30990740005,
+   "filefracday": 20230421309907
+  },
+  {
+   "expid": 230523354,
+   "field": 1669,
+   "rcid": 53,
+   "filt": 2,
+   "mjd": 60059.23354170006,
+   "filefracday": 20230425233542
+  },
+  {
+   "expid": 230722690,
+   "field": 1669,
+   "rcid": 53,
+   "filt": 2,
+   "mjd": 60061.22690969985,
+   "filefracday": 20230427226898
+  },
+  {
+   "expid": 230820839,
+   "field": 1669,
+   "rcid": 53,
+   "filt": 2,
+   "mjd": 60062.20839119982,
+   "filefracday": 20230428208391
+  },
+  {
+   "expid": 230130990,
+   "field": 1669,
+   "rcid": 54,
+   "filt": 2,
+   "mjd": 60055.30990740005,
+   "filefracday": 20230421309907
+  },
+  {
+   "expid": 230722690,
+   "field": 1669,
+   "rcid": 54,
+   "filt": 2,
+   "mjd": 60061.22690969985,
+   "filefracday": 20230427226898
+  },
+  {
+   "expid": 230820839,
+   "field": 1669,
+   "rcid": 54,
+   "filt": 2,
+   "mjd": 60062.20839119982,
+   "filefracday": 20230428208391
+  },
+  {
+   "expid": 75251450,
+   "field": 1669,
+   "rcid": 56,
+   "filt": 1,
+   "mjd": 58506.51450229995,
+   "filefracday": 20190123514444
+  },
+  {
+   "expid": 75251450,
+   "field": 1669,
+   "rcid": 57,
+   "filt": 1,
+   "mjd": 58506.51450229995,
+   "filefracday": 20190123514444
+  },
+  {
+   "expid": 224045520,
+   "field": 1669,
+   "rcid": 57,
+   "filt": 2,
+   "mjd": 59994.45520830015,
+   "filefracday": 20230219455208
+  },
+  {
+   "expid": 230130990,
+   "field": 1669,
+   "rcid": 57,
+   "filt": 2,
+   "mjd": 60055.30990740005,
+   "filefracday": 20230421309907
+  },
+  {
+   "expid": 230523354,
+   "field": 1669,
+   "rcid": 57,
+   "filt": 2,
+   "mjd": 60059.23354170006,
+   "filefracday": 20230425233542
+  },
+  {
+   "expid": 230722690,
+   "field": 1669,
+   "rcid": 57,
+   "filt": 2,
+   "mjd": 60061.22690969985,
+   "filefracday": 20230427226898
+  },
+  {
+   "expid": 230820839,
+   "field": 1669,
+   "rcid": 57,
+   "filt": 2,
+   "mjd": 60062.20839119982,
+   "filefracday": 20230428208391
+  },
+  {
+   "expid": 75251450,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 1,
+   "mjd": 58506.51450229995,
+   "filefracday": 20190123514444
+  },
+  {
+   "expid": 219741190,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 1,
+   "mjd": 59951.411909699906,
+   "filefracday": 20230107411910
+  },
+  {
+   "expid": 229221318,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 1,
+   "mjd": 60046.2131829001,
+   "filefracday": 20230412213171
+  },
+  {
+   "expid": 224045520,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 2,
+   "mjd": 59994.45520830015,
+   "filefracday": 20230219455208
+  },
+  {
+   "expid": 230130990,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 2,
+   "mjd": 60055.30990740005,
+   "filefracday": 20230421309907
+  },
+  {
+   "expid": 230523354,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 2,
+   "mjd": 60059.23354170006,
+   "filefracday": 20230425233542
+  },
+  {
+   "expid": 230722690,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 2,
+   "mjd": 60061.22690969985,
+   "filefracday": 20230427226898
+  },
+  {
+   "expid": 230820839,
+   "field": 1669,
+   "rcid": 58,
+   "filt": 2,
+   "mjd": 60062.20839119982,
+   "filefracday": 20230428208391
+  },
+  {
+   "expid": 75251450,
+   "field": 1669,
+   "rcid": 59,
+   "filt": 1,
+   "mjd": 58506.51450229995,
+   "filefracday": 20190123514444
+  },
+  {
+   "expid": 229221318,
+   "field": 1669,
+   "rcid": 59,
+   "filt": 1,
+   "mjd": 60046.2131829001,
+   "filefracday": 20230412213171
+  },
+  {
+   "expid": 224045520,
+   "field": 1669,
+   "rcid": 59,
+   "filt": 2,
+   "mjd": 59994.45520830015,
+   "filefracday": 20230219455208
+  },
+  {
+   "expid": 230130990,
+   "field": 1669,
+   "rcid": 59,
+   "filt": 2,
+   "mjd": 60055.30990740005,
+   "filefracday": 20230421309907
+  },
+  {
+   "expid": 230523354,
+   "field": 1669,
+   "rcid": 59,
+   "filt": 2,
+   "mjd": 60059.23354170006,
+   "filefracday": 20230425233542
+  },
+  {
+   "expid": 230722690,
+   "field": 1669,
+   "rcid": 59,
+   "filt": 2,
+   "mjd": 60061.22690969985,
+   "filefracday": 20230427226898
+  },
+  {
+   "expid": 230820839,
+   "field": 1669,
+   "rcid": 59,
+   "filt": 2,
+   "mjd": 60062.20839119982,
+   "filefracday": 20230428208391
+  }
+ ]
+}

@@ -5287,6 +5287,13 @@ confining radiation at a throat is found.
   from the same PSF photometry; it is not an independent validation, and it is not tested beyond this quadrant.
   Next-step preference for this gap: psfcat before ZFPS or cutout aperture photometry. Revisit if: the owner
   authorizes a psfcat data path and a calibration re-run.
+- **Addendum 2026-10-19 (v10, `results/w3_ztf/v10/RESULT.md`):** psfcat was used as the data path for all
+  validated DR24-gap exposures of Npix 7134 (32 of 33 combinations pass the overlap test). On the same 2,000 v6
+  events, recovery rises from 711 to 872, but only 2 of 10 cells reach 0.5, so the frozen validation still fails and
+  the search was not run. 527 of the 1,128 lost events (47 %) have fewer than 3 official infobits-0 r-band exposures
+  in the umbra. Decision: keep psfcat as the gap-fill path if W3/ZTF is reopened; do not retune thresholds. Revisit
+  if: a longer-baseline release or another survey adds epochs inside these gaps, or the owner changes the model range
+  (e.g. longer t_E only).
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

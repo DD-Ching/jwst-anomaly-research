@@ -1,0 +1,33 @@
+# v10 post-run counts (calibration + control rows only): epochs the fill adds to the calibration series, and for
+# the events still stopped at MIN_BRACKET after the fill, whether official exposures would have met the bracket.
+# Usage: python stats_script.py.txt <fillset.json> <psfcat cache dir> <scratch dir>   (imports recal_script's setup)
+import json, sys, runpy
+from collections import Counter
+sys.argv = [sys.argv[0], *sys.argv[1:4]]
+g = runpy.run_path('results/w3_ztf/v10/recal_script.py.txt', run_name='stats')  # setup only (no __main__ block)
+wz, groups, rows0, cov0, rows1, cov1, HERE = (g[k] for k in ('wz', 'groups', 'rows0', 'cov0', 'rows1', 'cov1', 'HERE'))
+SCR = sys.argv[3]
+add = Counter()
+for gr in groups:
+    for filt in (2, 1):
+        a, b = wz.series(gr, rows0, cov0, filt), wz.series(gr, rows1, cov1, filt)
+        ids0 = {x[5] for x in a}
+        add[f'filter{filt}_epochs_before'] += len(a); add[f'filter{filt}_epochs_after'] += len(b)
+        add[f'filter{filt}_epochs_from_fill_exposures'] += sum(1 for x in b if x[5] in g['fill_sets'].get(x[4], ()))
+        add[f'filter{filt}_epochs_lost'] += len(ids0 - {x[5] for x in b})
+        add[f'filter{filt}_series_ge_43_before'] += len(a) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN
+        add[f'filter{filt}_series_ge_43_after'] += len(b) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN
+ev = json.load(open(f'{SCR}/events_v10.json'))
+br = {}
+for cell, out in ev.items():
+    m = [x for x in out if x['after']['stage'] == 'prescreen:MIN_BRACKET']
+    br[cell] = {'stopped_at_MIN_BRACKET_after': len(m),
+                'official_pre_lt_20': sum(x['official']['pre'] < wz.MIN_BRACKET for x in m),
+                'official_post_lt_20': sum(x['official']['post'] < wz.MIN_BRACKET for x in m),
+                'official_both_ge_20': sum(x['official']['pre'] >= wz.MIN_BRACKET and x['official']['post'] >= wz.MIN_BRACKET for x in m),
+                'no_dim_run_in_umbra_after': sum(x['after']['stage'] == 'prescreen:no_dim_run_in_umbra' for x in out),
+                'of_which_official_umbra_lt_3': sum(x['after']['stage'] == 'prescreen:no_dim_run_in_umbra' and x['official']['umbra'] < wz.MIN_RUN for x in out)}
+json.dump({'label': 'derived; post-run counts (calibration series and the v10 events)', 'series_epochs': dict(add),
+           'remaining_blocks': br}, open(HERE / 'stats_v10.json', 'w'), indent=1)
+open(HERE / 'stats_v10.json', 'a').write('\n')
+print(json.dumps(dict(add), indent=0)); print(json.dumps(br, indent=0))

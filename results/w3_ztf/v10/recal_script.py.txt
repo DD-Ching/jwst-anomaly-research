@@ -1,0 +1,316 @@
+# v10 calibration re-run with psfcat (PLAN.md sections 3-5). Usage:
+#   python recal_script.py.txt <fillset.json> <psfcat cache dir> <scratch dir>
+# Writes overlap_v10.json, merge_log.json, injections_v10.json and decision.json (with the burden) here, and
+# events_v10.json to the scratch dir (a compact copy is committed).
+import copy, json, os, sys, time
+from collections import Counter
+from multiprocessing import Pool
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+HERE = wz.OUT / 'v10'
+wz.VDIR = HERE  # usage log of this round
+FS, PSF, SCR = sys.argv[1:4]
+fs = json.load(open(FS))
+t_start = time.time()
+expo = Table.read(wz.CACHE / 'exposures.ecsv')
+groups = [g for g in json.load(open(wz.SAMPLE))['groups'] if not g['holdout']]
+rows0, cov0 = wz.context(groups)  # calibration + control only; DR24 alone (logged)
+comp = set(np.load(wz.CACHE / 'comparison_oids.npy').tolist())
+field_of = {}
+for f in fs['fill']:
+    field_of[f['expid'], f['rcid'], f['filt']] = f['field']
+
+def read_cat(expid, rcid, filt, field):
+    h = fits.open(f'{PSF}/{expid}_{rcid}_{filt}.fits')
+    t, zp = h[1].data, float(h[0].header['MAGZP'])
+    return (np.asarray(t['ra'], float), np.asarray(t['dec'], float), np.asarray(t['mag'], float) + zp,
+            np.asarray(t['sigmag'], float), np.asarray(t['flags'], int)), zp, int(h[0].header.get('INFOBITS', -1))
+
+# ---- 1. overlap test per field / quadrant / filter (v9 criteria)
+by_q = {}
+for o, r in rows0.items():
+    if o in comp:
+        by_q.setdefault((*r['quad'], r['filt']), []).append(o)
+fid = {'zg': 1, 'zr': 2, 'zi': 3}
+erow = {(int(r['expid']), (int(r['ccdid']) - 1) * 4 + int(r['qid']) - 1, fid[str(r['filtercode'])]): i for i, r in enumerate(expo)}
+ov = {}
+for qs, lst in fs['overlap'].items():
+    field, rcid, filt = map(int, qs.split('_'))
+    d, e = [], []
+    for x in lst:
+        cat, zp, ib = read_cat(x['expid'], rcid, filt, field)
+        oids = by_q.get((field, rcid, filt), [])
+        er = expo[erow[x['expid'], rcid, filt]:erow[x['expid'], rcid, filt] + 1]
+        idx = wz.psfcat_match(cat[0], cat[1], [rows0[o]['ra'] for o in oids], [rows0[o]['dec'] for o in oids])
+        for o, j in zip(oids, idx):
+            r = rows0[o]
+            if j < 0 or cat[4][j] != 0 or not len(r['t']):
+                continue
+            t = float(wz.exposure_times(er, r['ra'], r['dec'])[0])
+            k = np.argmin(np.abs(r['t'] - t))
+            if abs(r['t'][k] - t) <= wz.MATCH_TOL and r['f'][k] == 0:
+                d.append(cat[2][j] - r['m'][k]); e.append(np.hypot(cat[3][j], r['e'][k]))
+    d, e = np.array(d), np.array(e)
+    med = float(np.median(d)) if len(d) else None
+    scat = float(1.4826 * np.median(np.abs(d - med))) if len(d) else None
+    lim = float(max(0.03, 2 * np.median(e))) if len(e) else None
+    cond = {'n_ge_8': len(d) >= 8, 'abs_median_le_0.05': med is not None and abs(med) <= 0.05,
+            'scatter_le_limit': scat is not None and scat <= lim}
+    ov[qs] = {'pairs': len(d), 'median_delta': med, 'robust_scatter': scat, 'scatter_limit': lim,
+              'conditions': cond, 'passed': all(cond.values())}
+passed_q = {q for q, v in ov.items() if v['passed']}
+json.dump({'label': 'observed (psfcat, DR24) and derived; overlap test per field_rcid_filter', 'n': len(ov),
+           'passed': len(passed_q), 'combinations': ov}, open(HERE / 'overlap_v10.json', 'w'), indent=1)
+open(HERE / 'overlap_v10.json', 'a').write('\n')
+print('overlap', len(passed_q), 'of', len(ov), flush=True)
+
+# ---- 2. merge (validated combinations only)
+cats, hdr = {}, Counter()
+for f in fs['fill']:
+    qs = f"{f['field']}_{f['rcid']}_{f['filt']}"
+    if qs not in passed_q:
+        hdr['skipped_failed_combination'] += 1
+        continue
+    if not os.path.exists(f"{PSF}/{f['expid']}_{f['rcid']}_{f['filt']}.fits"):
+        hdr['file_missing'] += 1
+        continue
+    cat, zp, ib = read_cat(f['expid'], f['rcid'], f['filt'], f['field'])
+    if ib != 0:  # header INFOBITS must agree with the TAP infobits-0 selection
+        hdr['header_infobits_nonzero'] += 1
+        continue
+    cats[f['field'], f['rcid'], f['filt'], f['expid']] = cat
+    hdr['used'] += 1
+rows1 = copy.deepcopy(rows0)
+mlog = wz.merge_psfcat(rows1, cats, expo)
+fill_sets = {k: set(v) for k, v in wz.FILL.items()}
+cov1 = wz.coverage(rows1, comp, set(rows1))
+tot = Counter()
+for v in mlog.values():
+    tot.update(v)
+good0 = sum(int(c['good'].sum()) for c in cov0.values()); good1 = sum(int(c['good'].sum()) for c in cov1.values())
+json.dump({'label': 'derived; psfcat merge of validated fill exposures (calibration + control rows only)',
+           'files': dict(hdr), 'totals': dict(tot), 'good_exposures_before': good0, 'good_exposures_after': good1,
+           'per_combination': {f'{k[0]}_{k[1]}_{k[2]}': v for k, v in mlog.items()}},
+          open(HERE / 'merge_log.json', 'w'), indent=1)
+open(HERE / 'merge_log.json', 'a').write('\n')
+print('merge', dict(hdr), dict(tot), good0, good1, flush=True)
+
+# ---- 3. carriers, replay of the v6 draws, same events before / after
+def carriers_of(rows, cov):
+    out = {}
+    for g in groups:
+        s = wz.series(g, rows, cov, 2)
+        if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+            o = wz.series(g, rows, cov, 1)
+            out[g['key']] = (g, s, o, {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)})
+    return out
+C0 = carriers_of(rows0, cov0)
+C1 = carriers_of(rows1, cov1)
+order = [g['key'] for g in groups if g['key'] in C0]  # stage_inject's carrier order
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+CAL = [c for c, (r, b, te) in enumerate(cells) if not (te == 3.0 or (r == 0.1 and te == 100.0))]
+
+def hits(si, oi, cov, t0, half, base, over=None):
+    return [x for x in wz.screen(si, oi, cov, over) if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
+            and (x['t_start'], x['t_end']) not in base]
+
+def replay(c):
+    """stage_inject's exact draws for cell c on the DR24-only series; returns the events and the v6 counts."""
+    rho, blend, te = cells[c]
+    rng = np.random.default_rng(1100 + c)
+    ev, flag, rec = [], 0, 0
+    for _ in range(200):
+        key = order[rng.integers(len(order))]
+        g, s, o, base = C0[key]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov0, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov0, rng) if o else o
+        h = hits(si, oi, cov0, t0, half, base)
+        flag += bool(h); rec += any(x['pass'] for x in h)
+        ev.append((key, float(t0), float(u0)))
+    return c, ev, flag, rec
+
+def apply_seeded(s, ddm, seed, fill):
+    """apply_dmag with one generator per (seed..., expid); fainter than the limit: non-detection for a DR24
+    exposure, dropped (unknown) for a psfcat fill exposure."""
+    out = []
+    for x, dd in zip(s, ddm):
+        t, dm, nd, lim, q, k, base, *rest = x
+        if nd:
+            out.append(x); continue
+        new = dm + dd
+        if not np.isfinite(new) or new > lim:
+            if k in fill.get(q, ()):
+                continue
+            out.append((t, 0.0, True, lim, q, k, base, *rest)); continue
+        if dd != 0:
+            e_old = 0.2171 * 10 ** (0.4 * (dm - lim)); e_new = 0.2171 * 10 ** (0.4 * (new - lim))
+            new += np.random.default_rng([*seed, int(k)]).normal(0, np.sqrt(max(e_new**2 - e_old**2, 0.0)))
+        out.append((t, new, False, lim, q, k, base, *rest))
+    return out
+
+night = lambda t: np.floor(np.asarray(t) + 0.2).astype(int)
+def sampling(s, t0, half):
+    t = np.array([x[0] for x in s])
+    ins = (t >= t0 - half) & (t <= t0 + half)
+    return {'umbra_epochs': int(ins.sum()), 'umbra_nights': len(set(night(t[ins]))),
+            'pre': int((t < t0 - half).sum()), 'post': int((t > t0 + half).sum())}
+
+def official(key, t0, half, cov):
+    """Official infobits-0 r-band exposures of the carrier's r members inside the footprint (any detection state)."""
+    g = C0[key][0]; ts = set()
+    for o in g['members']:
+        r = rows1.get(o)
+        if r is None or r['filt'] != 2:
+            continue
+        c = cov.get((*r['quad'], 2))
+        if c is None:
+            continue
+        m = (c['infobits'] == 0) & c['covered'][o]
+        ts |= set(np.round(c['t'][m], 5).tolist())
+    t = np.array(sorted(ts))
+    return {'pre': int((t < t0 - half).sum()), 'umbra': int(((t >= t0 - half) & (t <= t0 + half)).sum()),
+            'post': int((t > t0 + half).sum())}
+
+def stage_of(h, si, t0, half, base):
+    if any(x['pass'] for x in h):
+        return 'recovered'
+    if h:
+        tests = ('common_mode_ok', 'sharp_ok', 'oneoff_ok', 'achromatic_ok')
+        f = [k for k in tests if not any(x[k] for x in h)]
+        return 'vet:' + (f[0] if f else 'mixed')
+    d = wz.dim_state(si); t = np.array([x[0] for x in si]); best = None
+    for i, j in wz.runs(d):
+        if not (t[i] <= t0 + half and t[j] >= t0 - half):
+            continue
+        fails = [k for k, ok in (('MIN_RUN', j - i + 1 >= wz.MIN_RUN), ('MIN_NIGHTS', len(set(night(t[i:j + 1]))) >= wz.MIN_NIGHTS),
+                                 ('MIN_BRACKET', (~d[:i]).sum() >= wz.MIN_BRACKET and (~d[j + 1:]).sum() >= wz.MIN_BRACKET)) if not ok]
+        if not fails and (t[i], t[j]) in base:
+            fails = ['already_flagged']
+        cand = (len(fails), -(j - i), fails)
+        if best is None or cand < best:
+            best = cand
+    return 'prescreen:' + (best[2][0] if best else 'no_dim_run_in_umbra')
+
+def run_cell(args):
+    c, ev = args
+    rho, blend, te = cells[c]
+    out = []
+    for i, (key, t0, u0) in enumerate(ev):
+        half = te * np.sqrt(4 - u0**2)
+        row = {'i': i, 'carrier': key, 't0': t0, 'u0': u0}
+        for tag, C, cov, fill in (('before', C0, cov0, {}), ('after', C1, cov1, fill_sets)):
+            if key not in C:
+                row[tag] = {'stage': 'carrier_lost', 'umbra_epochs': 0, 'umbra_nights': 0, 'pre': 0, 'post': 0}
+                continue
+            g, s, o, base = C[key]
+            t = np.array([x[0] for x in s])
+            si = apply_seeded(s, wz.w3_dmag(t, t0, te, u0, rho, blend), (1100 + c, i), fill)
+            to = np.array([x[0] for x in o]) if o else np.array([])
+            oi = apply_seeded(o, wz.w3_dmag(to, t0, te, u0, rho, blend), (1100 + c, i), fill) if o else o
+            h = hits(si, oi, cov, t0, half, base)
+            row[tag] = {'stage': stage_of(h, si, t0, half, base), **sampling(s, t0, half)}
+        row['official'] = official(key, t0, half, cov1)
+        out.append(row)
+    return c, out
+
+def run_controls(kk):
+    kind = ('eclipse', 'fade', 'pspl', 'common')[kk]
+    rng = np.random.default_rng(1200 + kk)
+    res = {'v6': [0, 0], 'before': [0, 0], 'after': [0, 0]}
+    for i in range(200):
+        key = order[rng.integers(len(order))]
+        g, s, o, base = C0[key]
+        t = np.array([x[0] for x in s])
+        over = model = ids = None
+        if kind == 'common':
+            k0 = rng.integers(wz.MIN_BRACKET, len(s) - wz.MIN_BRACKET - 5)
+            ddm = np.zeros(len(s)); ddm[k0:k0 + 5] = 3.0
+            ids = {s[k][5] for k in range(k0, k0 + 5)}
+            over = {k: 0.5 for k in ids}
+            si, oi = wz.apply_dmag(s, ddm, cov0, rng), o
+        else:
+            model = wz.control_model(kind, t, rng)
+            si = wz.apply_dmag(s, model(t), cov0, rng)
+            oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov0, rng) if o else o
+        sc = [x for x in wz.screen(si, oi, cov0, over) if (x['t_start'], x['t_end']) not in base]
+        res['v6'][0] += bool(sc); res['v6'][1] += any(x['pass'] for x in sc)
+        for tag, C, cov, fill in (('before', C0, cov0, {}), ('after', C1, cov1, fill_sets)):
+            g, s, o, base = C[key]
+            t = np.array([x[0] for x in s])
+            if kind == 'common':
+                ddm = np.array([3.0 if x[5] in ids else 0.0 for x in s])
+                si, oi = apply_seeded(s, ddm, (1200 + kk, i), fill), o
+            else:
+                si = apply_seeded(s, model(t), (1200 + kk, i), fill)
+                oi = apply_seeded(o, model(np.array([x[0] for x in o])), (1200 + kk, i), fill) if o else o
+            sc = [x for x in wz.screen(si, oi, cov, over) if (x['t_start'], x['t_end']) not in base]
+            res[tag][0] += bool(sc); res[tag][1] += any(x['pass'] for x in sc)
+    return kind, res
+
+if __name__ == '__main__':
+    with Pool(4) as pool:
+        rep = pool.map(replay, CAL)
+        v6 = json.load(open(wz.OUT / 'v6' / 'injections_v6.json'))['w3']
+        v6c = {(x['rho'], x['blend'], x['tE']): x for x in v6}
+        mism = [(c, fl, rc) for c, ev, fl, rc in rep if (fl, rc) != (v6c[cells[c]]['flagged'], v6c[cells[c]]['recovered'])]
+        print('replay mismatches', mism, flush=True)
+        print('replay reproduces v6', time.time() - t_start, flush=True)
+        cellres = pool.map(run_cell, [(c, ev) for c, ev, _, _ in rep])
+        ctrl = pool.map(run_controls, range(4))
+    v6ctrl = json.load(open(wz.OUT / 'v6' / 'injections_v6.json'))['controls']
+    summ, evs = [], {}
+    for (c, out), (_, _, fl, rc) in zip(cellres, rep):
+        rho, blend, te = cells[c]
+        name = f'rho{rho}_blend{blend:g}_tE{te:g}'
+        sb = Counter(x['before']['stage'] for x in out); sa = Counter(x['after']['stage'] for x in out)
+        br = lambda x, k: x[k]['pre'] >= wz.MIN_BRACKET and x[k]['post'] >= wz.MIN_BRACKET
+        el = lambda x, k: br(x, k) and x[k]['umbra_epochs'] >= wz.MIN_RUN and x[k]['umbra_nights'] >= wz.MIN_NIGHTS
+        lack = sum(1 for x in out if x['after']['stage'] != 'recovered' and not el(x, 'after'))
+        lack_off = sum(1 for x in out if x['after']['stage'] != 'recovered' and not el(x, 'after') and not (
+            x['official']['pre'] >= wz.MIN_BRACKET and x['official']['post'] >= wz.MIN_BRACKET and x['official']['umbra'] >= wz.MIN_RUN))
+        trans = Counter(f"{x['before']['stage']} -> {x['after']['stage']}" for x in out if x['before']['stage'] != x['after']['stage'])
+        summ.append({'cell': name, 'v6_stored': rc, 'before': sb['recovered'], 'after': sa['recovered'],
+                     'distinct_stars': len({x['carrier'] for x in out}),
+                     'bracket_met_before': sum(br(x, 'before') for x in out), 'bracket_met_after': sum(br(x, 'after') for x in out),
+                     'eligible_before': sum(el(x, 'before') for x in out), 'eligible_after': sum(el(x, 'after') for x in out),
+                     'stages_before': dict(sb), 'stages_after': dict(sa), 'transitions': dict(trans),
+                     'not_recovered_after_lacking_series_sampling': lack,
+                     'of_which_official_exposures_also_short': lack_off})
+        evs[name] = out
+        print(summ[-1]['cell'], rc, summ[-1]['before'], summ[-1]['after'], flush=True)
+    controls = {k: {'n': 200, 'v6_stored_passed': v6ctrl[k]['passed_vetting'], 'v6_replay': r['v6'],
+                    'before': r['before'], 'after': r['after']} for k, r in ctrl}
+    json.dump({'label': 'simulated (same v6 events; seeded noise per exposure)', 'carriers_dr24': len(C0),
+               'carriers_merged': len(C1), 'cells': summ, 'controls': controls},
+              open(HERE / 'injections_v10.json', 'w'), indent=1, default=float)
+    open(HERE / 'injections_v10.json', 'a').write('\n')
+    json.dump(evs, open(f'{SCR}/events_v10.json', 'w'), default=float)
+    # ---- 4. burden: real calibration light curves, merged
+    flags, surv, nser = 0, set(), 0
+    for g in groups:
+        for filt, other in ((2, 1), (1, 2)):
+            s = wz.series(g, rows1, cov1, filt)
+            if len(s) < 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+                continue
+            nser += 1
+            for x in wz.screen(s, wz.series(g, rows1, cov1, other), cov1):
+                flags += 1
+                if x['pass']:
+                    surv.add(g['key'])
+    burden = {'replay_mismatches_vs_v6': mism, 'combinations_failed_overlap': sorted(set(ov) - passed_q), 'series': nser, 'flagged_runs': flags, 'survivor_groups': len(surv)}
+    use = [json.loads(x) for x in open(HERE / 'source_usage.jsonl')]
+    dec = {'cells_ge_0.5': all(x['after'] >= 100 for x in summ),
+           'controls_le_10pct': all(v['after'][1] <= 20 for v in controls.values()),
+           'burden_le_5': len(surv) <= 5, 'search_member_rows_0': all(u['search_member_rows'] == 0 for u in use)}
+    json.dump({'label': 'derived', 'burden_calibration_merged': burden, 'conditions': dec, 'passed': all(dec.values()),
+               'minutes': round((time.time() - t_start) / 60, 1)}, open(HERE / 'decision.json', 'w'), indent=1)
+    open(HERE / 'decision.json', 'a').write('\n')
+    print(json.dumps(dec), burden, flush=True)

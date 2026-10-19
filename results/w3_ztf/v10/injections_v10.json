@@ -1,0 +1,441 @@
+{
+ "label": "simulated (same v6 events; seeded noise per exposure)",
+ "carriers_dr24": 509,
+ "carriers_merged": 509,
+ "cells": [
+  {
+   "cell": "rho0.01_blend1_tE10",
+   "v6_stored": 61,
+   "before": 61,
+   "after": 64,
+   "distinct_stars": 166,
+   "bracket_met_before": 104,
+   "bracket_met_after": 145,
+   "eligible_before": 65,
+   "eligible_after": 77,
+   "stages_before": {
+    "prescreen:no_dim_run_in_umbra": 97,
+    "recovered": 61,
+    "prescreen:MIN_RUN": 26,
+    "prescreen:MIN_BRACKET": 8,
+    "prescreen:MIN_NIGHTS": 4,
+    "vet:common_mode_ok": 4
+   },
+   "stages_after": {
+    "prescreen:no_dim_run_in_umbra": 97,
+    "recovered": 64,
+    "prescreen:MIN_RUN": 26,
+    "prescreen:MIN_BRACKET": 5,
+    "prescreen:MIN_NIGHTS": 4,
+    "vet:common_mode_ok": 4
+   },
+   "transitions": {
+    "prescreen:MIN_BRACKET -> recovered": 3
+   },
+   "not_recovered_after_lacking_series_sampling": 123,
+   "of_which_official_exposures_also_short": 108
+  },
+  {
+   "cell": "rho0.01_blend1_tE30",
+   "v6_stored": 80,
+   "before": 80,
+   "after": 93,
+   "distinct_stars": 166,
+   "bracket_met_before": 95,
+   "bracket_met_after": 131,
+   "eligible_before": 89,
+   "eligible_after": 113,
+   "stages_before": {
+    "prescreen:no_dim_run_in_umbra": 59,
+    "prescreen:MIN_BRACKET": 29,
+    "recovered": 80,
+    "vet:common_mode_ok": 8,
+    "prescreen:MIN_RUN": 22,
+    "prescreen:MIN_NIGHTS": 2
+   },
+   "stages_after": {
+    "prescreen:no_dim_run_in_umbra": 59,
+    "recovered": 93,
+    "prescreen:MIN_BRACKET": 15,
+    "vet:common_mode_ok": 8,
+    "prescreen:MIN_RUN": 22,
+    "prescreen:MIN_NIGHTS": 2,
+    "vet:achromatic_ok": 1
+   },
+   "transitions": {
+    "prescreen:MIN_BRACKET -> recovered": 13,
+    "prescreen:MIN_BRACKET -> vet:achromatic_ok": 1
+   },
+   "not_recovered_after_lacking_series_sampling": 87,
+   "of_which_official_exposures_also_short": 65
+  },
+  {
+   "cell": "rho0.01_blend1_tE100",
+   "v6_stored": 90,
+   "before": 90,
+   "after": 124,
+   "distinct_stars": 163,
+   "bracket_met_before": 93,
+   "bracket_met_after": 138,
+   "eligible_before": 93,
+   "eligible_after": 134,
+   "stages_before": {
+    "prescreen:no_dim_run_in_umbra": 29,
+    "recovered": 90,
+    "prescreen:MIN_BRACKET": 72,
+    "prescreen:MIN_RUN": 6,
+    "vet:sharp_ok": 3
+   },
+   "stages_after": {
+    "prescreen:no_dim_run_in_umbra": 29,
+    "recovered": 124,
+    "prescreen:MIN_BRACKET": 38,
+    "prescreen:MIN_RUN": 6,
+    "vet:sharp_ok": 3
+   },
+   "transitions": {
+    "prescreen:MIN_BRACKET -> recovered": 34
+   },
+   "not_recovered_after_lacking_series_sampling": 66,
+   "of_which_official_exposures_also_short": 43
+  },
+  {
+   "cell": "rho0.1_blend1_tE10",
+   "v6_stored": 80,
+   "before": 80,
+   "after": 81,
+   "distinct_stars": 159,
+   "bracket_met_before": 122,
+   "bracket_met_after": 156,
+   "eligible_before": 90,
+   "eligible_after": 101,
+   "stages_before": {
+    "recovered": 80,
+    "prescreen:MIN_RUN": 25,
+    "prescreen:no_dim_run_in_umbra": 82,
+    "prescreen:MIN_NIGHTS": 5,
+    "vet:sharp_ok": 4,
+    "prescreen:MIN_BRACKET": 4
+   },
+   "stages_after": {
+    "recovered": 81,
+    "prescreen:MIN_RUN": 25,
+    "prescreen:no_dim_run_in_umbra": 82,
+    "prescreen:MIN_NIGHTS": 5,
+    "vet:sharp_ok": 4,
+    "prescreen:MIN_BRACKET": 3
+   },
+   "transitions": {
+    "prescreen:MIN_BRACKET -> recovered": 1
+   },
+   "not_recovered_after_lacking_series_sampling": 99,
+   "of_which_official_exposures_also_short": 86
+  },
+  {
+   "cell": "rho0.1_blend1_tE30",
+   "v6_stored": 76,
+   "before": 76,
+   "after": 88,
+   "distinct_stars": 166,
+   "bracket_met_before": 102,
+   "bracket_met_after": 146,
+   "eligible_before": 92,
+   "eligible_after": 116,
+   "stages_before": {
+    "prescreen:no_dim_run_in_umbra": 57,
+    "recovered": 76,
+    "prescreen:MIN_RUN": 23,
+    "vet:sharp_ok": 9,
+    "prescreen:MIN_BRACKET": 30,
+    "vet:common_mode_ok": 2,
+    "prescreen:MIN_NIGHTS": 3
+   },
+   "stages_after": {
+    "prescreen:no_dim_run_in_umbra": 56,
+    "recovered": 88,
+    "prescreen:MIN_RUN": 24,
+    "vet:sharp_ok": 9,
+    "vet:common_mode_ok": 2,
+    "prescreen:MIN_BRACKET": 18,
+    "prescreen:MIN_NIGHTS": 3
+   },
+   "transitions": {
+    "prescreen:MIN_BRACKET -> recovered": 12,
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_RUN": 1
+   },
+   "not_recovered_after_lacking_series_sampling": 84,
+   "of_which_official_exposures_also_short": 64
+  },
+  {
+   "cell": "rho0.01_blend0.7_tE10",
+   "v6_stored": 80,
+   "before": 82,
+   "after": 91,
+   "distinct_stars": 166,
+   "bracket_met_before": 121,
+   "bracket_met_after": 155,
+   "eligible_before": 85,
+   "eligible_after": 95,
+   "stages_before": {
+    "recovered": 82,
+    "prescreen:no_dim_run_in_umbra": 81,
+    "prescreen:MIN_RUN": 24,
+    "prescreen:MIN_BRACKET": 8,
+    "vet:achromatic_ok": 1,
+    "vet:common_mode_ok": 1,
+    "prescreen:MIN_NIGHTS": 3
+   },
+   "stages_after": {
+    "recovered": 91,
+    "prescreen:no_dim_run_in_umbra": 72,
+    "prescreen:MIN_RUN": 24,
+    "prescreen:MIN_BRACKET": 7,
+    "vet:achromatic_ok": 1,
+    "vet:sharp_ok": 1,
+    "vet:common_mode_ok": 1,
+    "prescreen:MIN_NIGHTS": 3
+   },
+   "transitions": {
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_RUN": 5,
+    "prescreen:MIN_RUN -> prescreen:MIN_BRACKET": 1,
+    "prescreen:MIN_RUN -> recovered": 4,
+    "prescreen:MIN_BRACKET -> recovered": 3,
+    "prescreen:no_dim_run_in_umbra -> vet:sharp_ok": 1,
+    "prescreen:no_dim_run_in_umbra -> recovered": 2,
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_BRACKET": 1
+   },
+   "not_recovered_after_lacking_series_sampling": 105,
+   "of_which_official_exposures_also_short": 94
+  },
+  {
+   "cell": "rho0.01_blend0.7_tE30",
+   "v6_stored": 76,
+   "before": 79,
+   "after": 102,
+   "distinct_stars": 161,
+   "bracket_met_before": 96,
+   "bracket_met_after": 140,
+   "eligible_before": 91,
+   "eligible_after": 115,
+   "stages_before": {
+    "prescreen:MIN_BRACKET": 26,
+    "prescreen:no_dim_run_in_umbra": 55,
+    "recovered": 79,
+    "prescreen:MIN_RUN": 27,
+    "prescreen:MIN_NIGHTS": 1,
+    "vet:sharp_ok": 2,
+    "vet:achromatic_ok": 9,
+    "vet:common_mode_ok": 1
+   },
+   "stages_after": {
+    "recovered": 102,
+    "prescreen:MIN_RUN": 20,
+    "prescreen:MIN_BRACKET": 18,
+    "prescreen:no_dim_run_in_umbra": 44,
+    "prescreen:MIN_NIGHTS": 3,
+    "vet:sharp_ok": 2,
+    "vet:achromatic_ok": 10,
+    "vet:common_mode_ok": 1
+   },
+   "transitions": {
+    "prescreen:MIN_BRACKET -> recovered": 14,
+    "prescreen:no_dim_run_in_umbra -> recovered": 7,
+    "prescreen:MIN_RUN -> prescreen:MIN_BRACKET": 5,
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_BRACKET": 1,
+    "prescreen:MIN_RUN -> prescreen:MIN_NIGHTS": 2,
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_RUN": 2,
+    "prescreen:no_dim_run_in_umbra -> vet:achromatic_ok": 1,
+    "prescreen:MIN_RUN -> recovered": 2
+   },
+   "not_recovered_after_lacking_series_sampling": 85,
+   "of_which_official_exposures_also_short": 68
+  },
+  {
+   "cell": "rho0.01_blend0.7_tE100",
+   "v6_stored": 61,
+   "before": 59,
+   "after": 95,
+   "distinct_stars": 169,
+   "bracket_met_before": 84,
+   "bracket_met_after": 136,
+   "eligible_before": 83,
+   "eligible_after": 130,
+   "stages_before": {
+    "prescreen:MIN_RUN": 16,
+    "recovered": 59,
+    "prescreen:MIN_BRACKET": 80,
+    "vet:sharp_ok": 3,
+    "vet:achromatic_ok": 20,
+    "prescreen:no_dim_run_in_umbra": 21,
+    "vet:oneoff_ok": 1
+   },
+   "stages_after": {
+    "vet:achromatic_ok": 29,
+    "recovered": 95,
+    "prescreen:MIN_BRACKET": 49,
+    "vet:sharp_ok": 4,
+    "prescreen:no_dim_run_in_umbra": 14,
+    "prescreen:MIN_RUN": 7,
+    "vet:oneoff_ok": 2
+   },
+   "transitions": {
+    "prescreen:MIN_RUN -> vet:achromatic_ok": 1,
+    "prescreen:MIN_RUN -> prescreen:MIN_BRACKET": 4,
+    "prescreen:MIN_BRACKET -> vet:achromatic_ok": 8,
+    "prescreen:MIN_RUN -> vet:sharp_ok": 1,
+    "prescreen:MIN_BRACKET -> recovered": 29,
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_BRACKET": 3,
+    "prescreen:no_dim_run_in_umbra -> recovered": 4,
+    "prescreen:MIN_RUN -> recovered": 3,
+    "prescreen:MIN_BRACKET -> vet:oneoff_ok": 1
+   },
+   "not_recovered_after_lacking_series_sampling": 70,
+   "of_which_official_exposures_also_short": 49
+  },
+  {
+   "cell": "rho0.1_blend0.7_tE10",
+   "v6_stored": 51,
+   "before": 52,
+   "after": 62,
+   "distinct_stars": 174,
+   "bracket_met_before": 113,
+   "bracket_met_after": 149,
+   "eligible_before": 62,
+   "eligible_after": 74,
+   "stages_before": {
+    "prescreen:no_dim_run_in_umbra": 105,
+    "recovered": 52,
+    "prescreen:MIN_RUN": 22,
+    "vet:sharp_ok": 5,
+    "prescreen:MIN_BRACKET": 7,
+    "prescreen:MIN_NIGHTS": 8,
+    "vet:common_mode_ok": 1
+   },
+   "stages_after": {
+    "prescreen:no_dim_run_in_umbra": 95,
+    "recovered": 62,
+    "prescreen:MIN_RUN": 24,
+    "vet:sharp_ok": 6,
+    "prescreen:MIN_NIGHTS": 8,
+    "prescreen:MIN_BRACKET": 4,
+    "vet:common_mode_ok": 1
+   },
+   "transitions": {
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_RUN": 5,
+    "prescreen:no_dim_run_in_umbra -> recovered": 5,
+    "prescreen:MIN_BRACKET -> recovered": 3,
+    "prescreen:MIN_RUN -> recovered": 3,
+    "recovered -> vet:sharp_ok": 1
+   },
+   "not_recovered_after_lacking_series_sampling": 125,
+   "of_which_official_exposures_also_short": 110
+  },
+  {
+   "cell": "rho0.1_blend0.7_tE30",
+   "v6_stored": 48,
+   "before": 52,
+   "after": 72,
+   "distinct_stars": 165,
+   "bracket_met_before": 105,
+   "bracket_met_after": 148,
+   "eligible_before": 93,
+   "eligible_after": 114,
+   "stages_before": {
+    "prescreen:no_dim_run_in_umbra": 61,
+    "vet:common_mode_ok": 3,
+    "vet:sharp_ok": 31,
+    "recovered": 52,
+    "prescreen:MIN_NIGHTS": 3,
+    "vet:achromatic_ok": 5,
+    "prescreen:MIN_RUN": 20,
+    "prescreen:MIN_BRACKET": 25
+   },
+   "stages_after": {
+    "prescreen:no_dim_run_in_umbra": 54,
+    "vet:common_mode_ok": 3,
+    "vet:sharp_ok": 31,
+    "recovered": 72,
+    "prescreen:MIN_NIGHTS": 2,
+    "vet:achromatic_ok": 5,
+    "prescreen:MIN_RUN": 19,
+    "prescreen:MIN_BRACKET": 14
+   },
+   "transitions": {
+    "prescreen:MIN_BRACKET -> recovered": 13,
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_RUN": 1,
+    "prescreen:MIN_NIGHTS -> prescreen:MIN_BRACKET": 1,
+    "prescreen:MIN_RUN -> recovered": 2,
+    "prescreen:no_dim_run_in_umbra -> recovered": 5,
+    "prescreen:no_dim_run_in_umbra -> prescreen:MIN_BRACKET": 1
+   },
+   "not_recovered_after_lacking_series_sampling": 85,
+   "of_which_official_exposures_also_short": 69
+  }
+ ],
+ "controls": {
+  "eclipse": {
+   "n": 200,
+   "v6_stored_passed": 0,
+   "v6_replay": [
+    25,
+    0
+   ],
+   "before": [
+    25,
+    0
+   ],
+   "after": [
+    27,
+    0
+   ]
+  },
+  "fade": {
+   "n": 200,
+   "v6_stored_passed": 8,
+   "v6_replay": [
+    94,
+    8
+   ],
+   "before": [
+    94,
+    7
+   ],
+   "after": [
+    119,
+    16
+   ]
+  },
+  "pspl": {
+   "n": 200,
+   "v6_stored_passed": 0,
+   "v6_replay": [
+    0,
+    0
+   ],
+   "before": [
+    0,
+    0
+   ],
+   "after": [
+    0,
+    0
+   ]
+  },
+  "common": {
+   "n": 200,
+   "v6_stored_passed": 0,
+   "v6_replay": [
+    139,
+    0
+   ],
+   "before": [
+    139,
+    0
+   ],
+   "after": [
+    138,
+    0
+   ]
+  }
+ }
+}

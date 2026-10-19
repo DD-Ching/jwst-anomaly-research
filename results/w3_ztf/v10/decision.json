@@ -1,0 +1,20 @@
+{
+ "label": "derived",
+ "burden_calibration_merged": {
+  "replay_mismatches_vs_v6": [],
+  "combinations_failed_overlap": [
+   "672_31_2"
+  ],
+  "series": 1041,
+  "flagged_runs": 1,
+  "survivor_groups": 0
+ },
+ "conditions": {
+  "cells_ge_0.5": false,
+  "controls_le_10pct": true,
+  "burden_le_5": true,
+  "search_member_rows_0": true
+ },
+ "passed": false,
+ "minutes": 2.6
+}
