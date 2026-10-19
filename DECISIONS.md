@@ -3172,6 +3172,18 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 - Calibrated W3 efficiency 0.026–0.218 (ρ = 0.1). If the survivors hold, the three-field headline tightens ×2.6–6.2:
   0.020 per source per yr at t_E = 1 yr, 0.029 at 0.3 yr (`headline.json`).
 
+**Addendum 2026-10-19c (NEXUS survivors vetted).**
+- `scripts/dimming_exposure_check.py` measures each flagged point on every level-2 `_cal` exposure that covers it
+  (`results/dimming/nexus_vet/RESULT.md`).
+- The three single-band points are single-exposure, JUMP-flagged events. Two of them are covered by one exposure
+  only, and those two fail a post hoc chromatic veto: simultaneous F444W below F200W / 20 at 3σ. A lensing spike is
+  achromatic, so the veto costs no efficiency.
+- d73390's F200W variation is not reproduced on the `_cal` frames (epoch min / max 0.865). d79956 is a brightening
+  (likely an ordinary transient; TNS not reachable).
+- 0 W3 events: the ×2.6–6.2 three-field headline stands.
+- Adopted: `chromatic_veto` is a cheap first test for single-band forced points in future `forced` runs. It is
+  not yet in `dimming_screen.py`.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**
