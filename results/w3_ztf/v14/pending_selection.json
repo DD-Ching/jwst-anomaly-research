@@ -1,0 +1,306 @@
+{
+ "label": "derived; frozen selection (v14 PLAN part 1)",
+ "sci_cutouts": 17,
+ "mask_cutouts": 9,
+ "total": 26,
+ "mask_expids": [
+  60125430,
+  61321734,
+  195641184,
+  60324214,
+  62015001,
+  53526427,
+  56625954,
+  247613629,
+  247813534
+ ],
+ "mask_expids_part_b": [
+  60125430,
+  61321734,
+  195641184,
+  60324214,
+  62015001,
+  53526427,
+  56625954
+ ],
+ "sources": [
+  {
+   "key": 724208200014557,
+   "run": [
+    60230.13472534176,
+    60234.1742539287
+   ],
+   "filter": 1,
+   "part": "a",
+   "exposures": [
+    {
+     "expid": 247421729,
+     "t": 60228.215805298205,
+     "nd": false,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2
+    },
+    {
+     "expid": 247613535,
+     "t": 60230.133804699435,
+     "nd": false,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2
+    },
+    {
+     "expid": 247613629,
+     "t": 60230.13474216603,
+     "nd": true,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2,
+     "seeing": 1.95019,
+     "maglimit": 20.596701,
+     "checked_in_v13": false
+    },
+    {
+     "expid": 247813534,
+     "t": 60232.13372445449,
+     "nd": true,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2,
+     "seeing": 2.52783,
+     "maglimit": 20.3771,
+     "checked_in_v13": false
+    },
+    {
+     "expid": 248212354,
+     "t": 60236.121788597025,
+     "nd": false,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2
+    },
+    {
+     "expid": 248419982,
+     "t": 60238.19800896732,
+     "nd": false,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2
+    }
+   ],
+   "nd_pending": 0
+  },
+  {
+   "key": 723205400006654,
+   "run": [
+    58354.24781278992,
+    58368.223964010525
+   ],
+   "filter": 2,
+   "part": "b",
+   "strata_total": 3,
+   "strata_chosen": [
+    [
+     7,
+     723,
+     5,
+     4
+    ],
+    [
+     8,
+     723,
+     5,
+     4
+    ]
+   ],
+   "exposures": [
+    {
+     "expid": 60022616,
+     "t": 58354.22666244278,
+     "nd": false,
+     "field": 723,
+     "ccdid": 5,
+     "qid": 4
+    },
+    {
+     "expid": 60125430,
+     "t": 58355.25475083941,
+     "nd": true,
+     "field": 723,
+     "ccdid": 5,
+     "qid": 4,
+     "seeing": 1.87378,
+     "maglimit": 20.261,
+     "checked_in_v13": false
+    },
+    {
+     "expid": 61321734,
+     "t": 58367.21723174167,
+     "nd": true,
+     "field": 723,
+     "ccdid": 5,
+     "qid": 4,
+     "seeing": 2.27123,
+     "maglimit": 20.9004,
+     "checked_in_v13": false
+    }
+   ],
+   "nd_pending": 10
+  },
+  {
+   "key": 724208200006955,
+   "run": [
+    59709.37197090341,
+    59711.39274173954
+   ],
+   "filter": 2,
+   "part": "b",
+   "strata_total": 1,
+   "strata_chosen": [
+    [
+     1,
+     724,
+     8,
+     2
+    ]
+   ],
+   "exposures": [
+    {
+     "expid": 195445234,
+     "t": 59708.45506133425,
+     "nd": false,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2
+    },
+    {
+     "expid": 195641184,
+     "t": 59710.41458324234,
+     "nd": true,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2,
+     "seeing": 2.19481,
+     "maglimit": 20.610701,
+     "checked_in_v13": false
+    }
+   ],
+   "nd_pending": 1
+  },
+  {
+   "key": 724208200007532,
+   "run": [
+    58354.22624910413,
+    58375.16167397443
+   ],
+   "filter": 2,
+   "part": "b",
+   "strata_total": 3,
+   "strata_chosen": [
+    [
+     3,
+     724,
+     8,
+     2
+    ],
+    [
+     4,
+     724,
+     8,
+     2
+    ]
+   ],
+   "exposures": [
+    {
+     "expid": 60019376,
+     "t": 58354.194324928845,
+     "nd": false,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2
+    },
+    {
+     "expid": 60324214,
+     "t": 58357.24256584808,
+     "nd": true,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2,
+     "seeing": 2.05715,
+     "maglimit": 20.171301,
+     "checked_in_v13": false
+    },
+    {
+     "expid": 62015001,
+     "t": 58374.14966494633,
+     "nd": true,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 2,
+     "seeing": 2.07791,
+     "maglimit": 20.882999,
+     "checked_in_v13": false
+    }
+   ],
+   "nd_pending": 17
+  },
+  {
+   "key": 724208400014500,
+   "run": [
+    58288.31083580494,
+    58321.245365454415
+   ],
+   "filter": 2,
+   "part": "b",
+   "strata_total": 86,
+   "strata_chosen": [
+    [
+     10,
+     724,
+     8,
+     4
+    ],
+    [
+     11,
+     724,
+     8,
+     4
+    ]
+   ],
+   "exposures": [
+    {
+     "expid": 53428763,
+     "t": 58288.29047311754,
+     "nd": false,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 4
+    },
+    {
+     "expid": 53526427,
+     "t": 58289.26709158431,
+     "nd": true,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 4,
+     "seeing": 1.86747,
+     "maglimit": 21.162399,
+     "checked_in_v13": false
+    },
+    {
+     "expid": 56625954,
+     "t": 58320.26160169431,
+     "nd": true,
+     "field": 724,
+     "ccdid": 8,
+     "qid": 4,
+     "seeing": 1.51462,
+     "maglimit": 20.987,
+     "checked_in_v13": false
+    }
+   ],
+   "nd_pending": 628
+  }
+ ],
+ "pending_nd_after_selection": 656
+}
