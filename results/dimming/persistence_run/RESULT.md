@@ -67,3 +67,31 @@ tables (same `classify`; reads `.ecsv.gz`, used where a table is over 1 MB) and 
    8 Abell 2744 `on_sky` targets; survivors to `/vet-candidate`.
 2. Then the swap: given 0 `persistence` among 37 targets and 194 controls, the D-039 veto removes nothing that
    `forced` does not; decide whether the swap is still worth building once (1) is in.
+
+## Control completion 2026-10-19 23:11–23:33 UTC (frozen addendum of 23:12; NEXUS partial by the fixed order)
+Same code; catalogues from S3 (sha256-checked), Gaia mask from the ESA TAP. Done: Abell 2744 e2 (360 `_cal`) and
+NEXUS e0 (800), e1, e3, e4 (120 each), in the frozen order 0, 1, 3, 4, …; NEXUS e5–e7 and the e2 controls were not
+reached (stopped at the time budget, not by outcome). 0 failed reads. Per-field figures from `summarise.py` on each
+field alone; pooled in `summary.json`.
+
+| field | monitored pairs | S/N 10–20 on_sky | S/N 20–50 on_sky | persistence | rule 1 |
+|---|---|---|---|---|---|
+| MACS0416 | 121 | 8 / 8 | 113 / 113 | 0 | usable |
+| Abell 2744 | 127 | 19 / 19 | 107 / 108 (1 `undetected`) | 0 | usable |
+| NEXUS (e0, e1, e3, e4) | 190 | 14 / 16 | 129 / 174 (43 `inconclusive`, 2 `undetected`) | 0 | **not usable** (0.74 < 0.8) |
+| pooled | 438 | 41 / 43 | 349 / 395 | 0 (Wilson 95 % upper 0.9 %) | usable as written |
+
+- **Frozen reading:** the false-afterimage rate is 0 / 438 in every field. MACS0416 and Abell 2744 pass rule 1
+  (247 / 248 `on_sky`, Wilson 0.989–0.998). NEXUS fails it, so its swap needs its own efficiency (addendum rule).
+- **Post hoc (not frozen): the NEXUS loss tracks exposures per source, not mosaic S/N.** NEXUS pairs with ≤ 4
+  NIRCam exposures covering the source (the 120-file wide epochs e1, e3, e4) are `on_sky` 49 / 96 (Wilson
+  0.46–0.56); pairs with > 4 exposures 94 / 94 (0.989–1). Every `inconclusive` pair has ≤ 1 clean detection: D-039
+  needs two, and a visit's first exposure has no prior exposure to clear it. MACS0416 / Abell 2744 pairs all have
+  ≥ 8 exposures. A mosaic-S/N efficiency would therefore mis-state the swap in shallow-tiling epochs.
+
+## Next (replaces the list above)
+1. Freeze an efficiency model by exposures per (source, epoch) (e.g. ≤ 4 / > 4, from this table), and check it on
+   NEXUS e5–e7 (not yet run; held out from this reading) before using it.
+2. `forced` + epoch depth / footprint test on the 12 MACS0416 and 8 Abell 2744 `on_sky` targets (handoff of #379,
+   still open): with the swap they are unvetoed flags, so the zero-event limit needs them explained first.
+3. Then fold the swap into `inject` with the per-(source, epoch) efficiency and re-run `combine`.

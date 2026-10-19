@@ -2,8 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-19: W3 dimming: D-039 persistence-test `on_sky` efficiency vs mosaic S/N (in progress; claim)
-- Plan: measure the efficiency on monitored sources across S/N, before folding the swap into `inject`.
+## 2026-10-19: W3 dimming: D-039 persistence-test `on_sky` efficiency on the full control set; NEXUS fails rule 1
+- **Why:** #384 handoff. Control-completion addendum frozen first (`results/dimming/persistence_run/PLAN.md`,
+  23:12 UTC; NEXUS epochs in a fixed order until the time budget ends).
+- **Result (`results/dimming/persistence_run/RESULT.md` "Control completion"):** 438 monitored pairs, `persistence`
+  0. MACS0416 and Abell 2744 pass rule 1 (247 / 248 `on_sky`); NEXUS (e0, e1, e3, e4) fails it (129 / 174 at S/N
+  20–50). Post hoc: NEXUS pairs with ≤ 4 exposures are `on_sky` 49 / 96, with > 4 94 / 94 (D-052 addendum i).
+- **Failed approach:** `pkill -f drive.sh` killed the calling shell again; stop workers by PID (scripts/CLAUDE.md).
+- **Handoff:** (1) freeze a per-(source, epoch) efficiency by exposure count and check it on NEXUS e5–e7;
+  (2) `forced` + depth / footprint test on the 20 MACS0416 / Abell 2744 `on_sky` targets; (3) the swap in `inject`.
 
 ## 2026-10-19: W3 dimming: weight-map coverage term in `screen` / `inject`; corrected headline limits
 - **Why:** #382 handoff (decision `over_counts`). Plan and gates R0 / R1 frozen first

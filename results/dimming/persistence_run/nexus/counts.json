@@ -1,6 +1,12 @@
 {
  "field": "nexus",
  "n_targets": 17,
- "n_monitored": 151,
- "targets_only": true
+ "epochs_done": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "complete": false
 }
