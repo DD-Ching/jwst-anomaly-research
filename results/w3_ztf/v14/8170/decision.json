@@ -1,0 +1,116 @@
+{
+ "label": "derived; frozen v6 rule (v14 PLAN section 3) applied by code",
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "recovered": 136,
+   "n": 200,
+   "distinct_stars": 165,
+   "rate": 0.68
+  },
+  "rho0.01_blend1_tE30": {
+   "recovered": 161,
+   "n": 200,
+   "distinct_stars": 171,
+   "rate": 0.805
+  },
+  "rho0.01_blend1_tE100": {
+   "recovered": 156,
+   "n": 200,
+   "distinct_stars": 173,
+   "rate": 0.78
+  },
+  "rho0.1_blend1_tE10": {
+   "recovered": 123,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.615
+  },
+  "rho0.1_blend1_tE30": {
+   "recovered": 152,
+   "n": 200,
+   "distinct_stars": 169,
+   "rate": 0.76
+  },
+  "rho0.01_blend0.7_tE10": {
+   "recovered": 141,
+   "n": 200,
+   "distinct_stars": 169,
+   "rate": 0.705
+  },
+  "rho0.01_blend0.7_tE30": {
+   "recovered": 158,
+   "n": 200,
+   "distinct_stars": 163,
+   "rate": 0.79
+  },
+  "rho0.01_blend0.7_tE100": {
+   "recovered": 127,
+   "n": 200,
+   "distinct_stars": 166,
+   "rate": 0.635
+  },
+  "rho0.1_blend0.7_tE10": {
+   "recovered": 114,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.57
+  },
+  "rho0.1_blend0.7_tE30": {
+   "recovered": 149,
+   "n": 200,
+   "distinct_stars": 166,
+   "rate": 0.745
+  }
+ },
+ "controls": {
+  "eclipse": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 163,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "fade": {
+   "passed": 50,
+   "n": 1000,
+   "rate": 0.05,
+   "distinct_stars": 427,
+   "wilson95": [
+    0.0381,
+    0.0653
+   ]
+  },
+  "pspl": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 169,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "common": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 168,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  }
+ },
+ "calibration_real_survivors": 0,
+ "calibration_flagged_runs": 0,
+ "conditions": {
+  "all_10_cells_ge_0.5": true,
+  "controls_le_0.10": true,
+  "calibration_survivors_le_5": true
+ },
+ "passed": true,
+ "carriers": 500
+}
