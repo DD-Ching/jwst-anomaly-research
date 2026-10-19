@@ -1,0 +1,39 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uid, datatype: string}
+# - {name: n_exposures, datatype: int64}
+# - {name: n_detected, datatype: int64}
+# - {name: n_suspect, datatype: int64}
+# - {name: n_clean, datatype: int64}
+# - {name: verdict, datatype: string}
+# - {name: epoch, datatype: int64}
+# - {name: kind, datatype: string}
+# - {name: mosaic_snr, datatype: float64}
+# - {name: n_files, datatype: int64}
+# - {name: n_failed, datatype: int64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: results/dimming/persistence_run/run.py nexus}
+# - {ratio: 20.0}
+# - {min_snr: 5.0}
+# - {lookback_hours: 3.0}
+# schema: astropy-2.0
+uid n_exposures n_detected n_suspect n_clean verdict epoch kind mosaic_snr n_files n_failed
+nexus-d10423 12 10 0 10 on_sky 2 flag 27.371081734970755 2000 0
+nexus-d11436 4 1 0 1 inconclusive 2 flag 19.62453085075978 2000 0
+nexus-d12360 12 1 0 1 inconclusive 2 flag 20.128576721963146 2000 0
+nexus-d12528 10 1 0 1 inconclusive 2 flag 30.54071414531361 2000 0
+nexus-d13073 4 2 0 2 on_sky 2 flag 13.747846916321727 2000 0
+nexus-d15524 12 5 0 3 on_sky 2 flag 18.029640425304084 2000 0
+nexus-d18183 10 9 0 9 on_sky 2 flag 27.33563751619459 2000 0
+nexus-d20291 12 6 0 6 on_sky 2 flag 17.908657152434543 2000 0
+nexus-d22021 11 4 0 4 on_sky 2 flag 20.072267364542494 2000 0
+nexus-d23045 12 10 0 10 on_sky 2 flag 22.779977322172055 2000 0
+nexus-d24470 12 9 0 9 on_sky 2 flag 28.764349236657456 2000 0
+nexus-d29073 12 12 1 11 on_sky 2 flag 26.188827703762875 2000 0
+nexus-d29638 12 9 0 9 on_sky 2 flag 19.944813637424108 2000 0
+nexus-d30295 12 0 0 0 undetected 2 flag 31.98994864972924 2000 0
+nexus-d30428 7 1 0 1 inconclusive 2 flag 10.326129388356737 2000 0
+nexus-d30717 12 8 0 8 on_sky 2 flag 23.924285162180368 2000 0
+nexus-d46213 12 4 0 3 on_sky 2 flag 11.453428013680599 2000 0

@@ -51,7 +51,11 @@ for k, e in enumerate(field["epochs"]):
     summ.meta.pop("failed", None)
     rows.append(summ)
     print(
-        name, k, len(files), dict(zip(*np.unique(summ["verdict"], return_counts=True))), flush=True
+        name,
+        k,
+        len(files),
+        dict(zip(*np.unique(summ["verdict"], return_counts=True), strict=True)),
+        flush=True,
     )
 t = vstack(rows, metadata_conflicts="silent")
 t.meta.update(provenance="derived", source=f"results/dimming/persistence_run/run.py {name}")

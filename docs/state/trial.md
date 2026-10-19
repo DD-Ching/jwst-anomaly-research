@@ -283,6 +283,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | ≈ 0.4 (W3 dimming MACS0416 regeneration: frozen plan and gate, S3 catalogue route, forced + inject, joint three-field `combine`) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine 01Ep8g9c, 13:12–13:55Z |
 | 2026-W43 | ≈ 0.15 (W3 dimming: chromatic veto folded into `forced`, unit test) | — | — | 0.3 (orientation; issue #374 network-test failures diagnosed as upstream MAST/NED connection errors; state files, PR) | cloud routine 01CCHGKi, 14:12–14:50Z |
 | 2026-W43 | ≈ 0.15 (W3 dimming: D-039 persistence-swap scoping, frozen rule, workload + veto-off what-if on three fields, reproduction exact) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01Eubzuj, 15:12–15:30Z |
+| 2026-W43 | ≈ 0.45 (W3 dimming: D-039 persistence run, frozen plan + tested rules; NEXUS 17 targets, partial controls on MACS0416 / Abell 2744) | — | — | 0.2 (orientation, merged #376 per policy, claim, state files, PR) | cloud routine 01WrZoCP, 16:08–16:50Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

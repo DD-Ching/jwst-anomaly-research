@@ -1,5 +1,5 @@
 """Fetch the committed pipeline catalogues from S3 (cloud_uri in the products manifest) to the
-data root, checking sha256 against the fetch manifest. Run from the repo root: fetch_cats.py FIELD...
+data root, checking sha256 against the fetch manifest. Usage (repo root): fetch_cats.py FIELD...
 """
 
 import hashlib

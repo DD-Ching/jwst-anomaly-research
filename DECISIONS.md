@@ -3207,6 +3207,12 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
 - The swap waits for the persistence test's `on_sky` efficiency against mosaic S/N (measured on monitored
   sources); the injected copies take that efficiency, not 1.
 
+**Addendum 2026-10-19g (persistence test run, partial).**
+- On the 17 NEXUS compact single-epoch vanish flags the D-039 test gives 12 `on_sky`, 4 `inconclusive`, 1
+  `undetected`, 0 `persistence` (`results/dimming/persistence_run/RESULT.md`). `on_sky` flags go to `forced` and
+  `/vet-candidate`; the others stay vetoed.
+- Partial controls: 61 / 61 monitored pairs `on_sky` (S/N 10–50). The swap waits for the full control set.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**
