@@ -1,0 +1,24 @@
+# v16 frozen queue (PLAN.md section 2), applied to inventory.json before any light curve is read.
+# Qualifies: worst-cell necessary fraction >= 0.5, product ratio >= 0.8, >= 1,000 unused eligible groups.
+# Order: unused eligible groups per GB of light-curve partition (descending, rounded to 0.1); ties: no shared field
+# first, then Npix. At most 8 areas. Usage: python queue_script.py.txt
+import json
+inv = json.load(open('results/w3_ztf/v16/inventory.json'))['areas']
+rows = []
+for p, a in inv.items():
+    q = a['score_min_over_cells'] >= 0.5 and a['product_ratio_median'] >= 0.8 and a['groups_unused_eligible'] >= 1000
+    rows.append({'npix': int(p), 'qualifies': q, 'worst_cell': a['score_min_over_cells'], 'product_ratio': round(a['product_ratio_median'], 3),
+                 'unused': a['groups_unused_eligible'], 'search_if_500_cal': a['search_if_500_calibration'], 'lc_mb': a['lc_mb'],
+                 'unused_per_gb': a['unused_per_gb'], 'shared_fields': a['shared_fields_with_earlier']})
+qual = sorted([r for r in rows if r['qualifies']], key=lambda r: (-r['unused_per_gb'], bool(r['shared_fields']), r['npix']))
+queue = qual[:8]
+for k, r in enumerate(queue):
+    r['position'] = k + 1
+    r['seed_offset'] = 10000 + 1000 * k
+out = {'label': 'derived; frozen v16 queue', 'candidates': len(rows), 'qualifying': len(qual),
+       'catalogue_eligible_unused_total': sum(r['unused'] for r in rows),
+       'sampling_qualified_unused_total': sum(r['unused'] for r in qual),
+       'sampling_qualified_search_total': sum(r['search_if_500_cal'] for r in qual),
+       'queue': queue, 'queue_lc_mb_total': round(sum(r['lc_mb'] for r in queue), 1), 'all': sorted(rows, key=lambda r: r['npix'])}
+json.dump(out, open('results/w3_ztf/v16/queue.json', 'w'), indent=1); open('results/w3_ztf/v16/queue.json', 'a').write('\n')
+print(json.dumps({k: v for k, v in out.items() if k not in ('all',)}, indent=0)[:3000])
