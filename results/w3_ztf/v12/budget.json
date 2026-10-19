@@ -1,0 +1,16 @@
+{
+ "label": "derived; parquet metadata (compressed bytes of the 7 columns read) before any light curve",
+ "lc_mb": {
+  "2382": 1846.5,
+  "8170": 2207.9
+ },
+ "objects_mb_spent": 372.4,
+ "tap_mb_spent": 18.0,
+ "cap_mb": 3000,
+ "both_areas_mb": 4444.8,
+ "first_area_only_mb": 2236.9,
+ "decision": "both areas exceed the 3 GB cap (PLAN section 7): only the first chosen area, Npix 2382, is used; 8170 is not read",
+ "used_areas": [
+  2382
+ ]
+}
