@@ -48,14 +48,18 @@ def pair_z(lc: Table, name: str, prefix_a: str, prefix_b: str) -> dict[str, dict
         if not ra or not rb:
             out[band] = None
             continue
-        d = float(rb[0]["flux_njy"] - ra[0]["flux_njy"])
+        d = float(rb[0]["flux_njy"]) - float(ra[0]["flux_njy"])
         s = math.hypot(float(ra[0]["err_njy"]), float(rb[0]["err_njy"]))
+        if not (math.isfinite(d) and math.isfinite(s) and s > 0):
+            out[band] = None  # a masked or NaN measurement is missing, not a value
+            continue
         out[band] = {
             "flux_a_njy": round(float(ra[0]["flux_njy"]), 2),
             "flux_b_njy": round(float(rb[0]["flux_njy"]), 2),
             "delta_njy": round(d, 2),
             "sigma_njy": round(s, 2),
             "z": round(d / s, 3),
+            "z_raw": d / s,  # the rule uses the unrounded z
         }
     return out
 
@@ -72,9 +76,13 @@ def main(argv: list[str] | None = None) -> int:
     res = {}
     for name, a, b in args.entry:
         bands = pair_z(lc, name, a, b)
-        z = {k: (v["z"] if v else None) for k, v in bands.items()}
+        z = {k: (v.pop("z_raw") if v else None) for k, v in bands.items()}
         res[name] = {"pair": [a, b], "bands": bands, "outcome": classify(z)}
-        print(name, z, res[name]["outcome"])
+        print(
+            name,
+            {k: (round(v, 3) if v is not None else None) for k, v in z.items()},
+            res[name]["outcome"],
+        )
     args.out.write_text(json.dumps(res, indent=2) + "\n")
     return 0
 

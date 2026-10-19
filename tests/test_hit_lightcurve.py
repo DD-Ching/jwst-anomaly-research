@@ -176,9 +176,13 @@ def test_review_pair_rule_pair_z():
             ("x", "b-f150w", 110.0, 4.0),
             ("x", "a-f444w", 50.0, 1.0),
             ("y", "b-f444w", 50.0, 1.0),
+            ("z", "a-f150w", float("nan"), 1.0),
+            ("z", "b-f150w", 10.0, 1.0),
         ],
         names=("name", "obs_id", "flux_njy", "err_njy"),
     )
     out = rp.pair_z(lc, "x", "a", "b")
     assert out["F150W"]["delta_njy"] == 10.0 and out["F150W"]["z"] == 2.0
     assert out["F444W"] is None
+    assert out["F150W"]["z_raw"] == 2.0
+    assert rp.pair_z(lc, "z", "a", "b")["F150W"] is None
