@@ -38,7 +38,9 @@ pairs per eligible anchor:
   the Sun leaves it (1 h–1 d wide z −5.0, `control_sun_frame_null.json`).
   With the 466 joint bursts removed from both catalogues, the 1 h–4 d sum is 3,844 vs 3,863.7 ± 37.9
   (`control_lag_curve_no_counterparts.json`): the deficit is carried by the joint bursts. Why joint bursts carry
-  it is not determined (not tested). No tested channel includes GBM.
+  it is not determined (not tested).
+  Update 2026-10-19 (post hoc, `selfpair/RESULT.md`, D-074 addendum 10): the long-lag deficit behaves as the
+  jit null displacing the joint bursts predicts; frozen rule "undetermined" (100 s–1 h cell). No tested channel includes GBM.
 
 **Limitations:** the BAT 1σ comes from the BAT 90 % radius only (XRT positions not used). The Swift-orbit quantum
 (5,700 s, ASSUMPTION) keeps orbit phase only approximately over ±3 d. GW channels have no sky positions (D-074).

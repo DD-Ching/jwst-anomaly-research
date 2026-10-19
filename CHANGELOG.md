@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: E1 BAT–GBM control deficit: long lags behave as the shared-event displacement predicts; frozen rule undetermined
+- **Why:** handoff of #356 (optional: the BAT–GBM deficit, D-074 addendum 6, with the shared-event test of
+  addendum 9). Plan frozen first (`results/e1_swift/selfpair/PLAN.md`); rule `outcome` unit-tested before the run.
+- **Result (derived, `results/e1_swift/selfpair/RESULT.md`):** frozen outcome "undetermined". Without the 476
+  BAT bursts that have a GBM burst within 100 s: all-separation z −0.33 / −0.66 (1 h–1 d, 1–7 d), from
+  −4.78 / −5.04; random drop keeps −5.83 / −5.31. The rule fails on 100 s–1 h (z +4.2): 25 same-direction pairs,
+  23 within 0.1° (e.g. GRB 221009A at −3,197 s, GRB 130925A), read as joint GRBs with triggers 100 s–1 h apart.
+  **Post hoc** 1 h variant reads "explained" but is circular in that cell (deviation, exploratory).
+- **Review fixes:** GBM scrambled first so variants are paired; lag-bin windows only; the 1 h pair listing
+  stored (`joint_1h_only_pairs`); wording narrowed. Numbers are from the re-run.
+- **Handoff:** E1 waits on the CHIME uptime series (owner). Optional: a frozen joint-event rule (position match
+  over > 100 s) for EP–GBM (addendum 7) and BAT–GBM.
+
 ## 2026-10-19: E1 DR2–ICECAT control deficit explained: the null displaces the 276 shared events
 - **Why:** handoff of #354 (DR2–ICECAT wide deficit at 1 h–7 d, z −4.5 / −6.5, cause open). Plan frozen first
   (`results/e1_icetracks/selfpair/PLAN.md`); rule `outcome` unit-tested before the run.
