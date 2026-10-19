@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming edge coverage: gate V2 passed; the coverage proxy over-counts edges (`over_counts`)
+- **Why:** #381 handoff 1. Gate V re-frozen (PLAN.md addendum, 21:11 UTC, before any stamp read) on per-epoch
+  `forced` stamp cuts of every proxy-covered injection pair (608 pairs, three fields); rules `edge.stamp_edge`,
+  `edge.gate_v2` unit-tested first.
+- **Result (`results/dimming/edge_coverage/RESULT.md` "Gate V2"):** pooled sensitivity 0.915, false-edge 0.0455 →
+  passed; the frozen decision reads `over_counts` (masked veto-off exposure ×0.81–0.87). Post hoc, masking by the stamp
+  flags instead gives ×0.84–0.93, still `over_counts`. Disagreement sheet looked at: the grid rule is the conservative one.
+- **Deviation:** gate V replaced by V2 after the first gate set was mis-specified (#381); labelled in PLAN and RESULT.
+- **Handoff:** add a weight-map coverage term to `build_light_curves` coverage, re-run `inject` for MACS0416,
+  Abell 2744 and NEXUS, and quote corrected headline limits (veto-on may drop by up to about 25 % at t_E = 3 yr)
+  before using the D-039 swap gain.
 ## 2026-10-19: W3 ZTF v14: #370 pending checks (official masks), Npix 8170 passes validation, 5,000 groups searched, 1 survivor not a real dimming
 - **#370 pending checks:**
   - 26 new cutouts, 17 science and 9 official masks; 656 rebuilt NDs stay pending.
