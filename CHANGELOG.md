@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: D-039 persistence-test `on_sky` efficiency vs mosaic S/N (in progress; claim)
+- Plan: measure the efficiency on monitored sources across S/N, before folding the swap into `inject`.
+
 ## 2026-10-19: W3 dimming: weight-map coverage term in `screen` / `inject`; corrected headline limits
 - **Why:** #382 handoff (decision `over_counts`). Plan and gates R0 / R1 frozen first
   (`results/dimming/wht_coverage/PLAN.md`); `weight_edge` / `mask_weight_edges` / `wht_rel` unit-tested.
