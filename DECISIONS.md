@@ -4465,11 +4465,13 @@ into a likelihood for D_s/D_ds, the H0-free ratio R of this record, without any 
 **Addendum 9 (2026-10-19): the DR2–ICECAT control deficit is the null displacing shared events (`results/e1_icetracks/selfpair/`).**
 - **Decision.** In a channel whose two catalogues share events, the jit null moves each shared pair apart by up
   to a few days, so it over-predicts long-lag "wide" pairs. Shared events (here a DR2 track within 10 s of an
-  alert; ASSUMPTION) are removed before such a channel's null is read; addendum 6's "remove joint events first"
-  now has this mechanism. Tested channels without shared events are unaffected.
-- **Evidence.** Frozen rule "explained": dropping the 276 shared tracks gives wide z −1.23 (1 h–1 d) and +0.97
-  (1–7 d), from −4.41 and −6.65; dropping 276 random tracks leaves −4.66 and −6.76. The null falls by 122 / 449
-  pairs, the data by 60 / 240; the difference matches the planned estimate (≈ 80 / 190).
+  alert; ASSUMPTION) are removed before such a channel's long-lag cells are read; the 0–10 s control cell keeps
+  them. Addendum 6's "remove joint events first" now has this mechanism. Tested channels without shared events
+  are unaffected; the shared null code is not changed.
+- **Evidence.** Frozen rule "explained" (10³ scrambles per variant): dropping the 276 shared tracks gives wide z
+  −1.24 (1 h–1 d) and +1.01 (1–7 d), from −4.53 and −6.48; dropping 276 random tracks leaves −4.63 and −6.98. The
+  null mean falls by 122.38 / 450.22 pairs, the data by 60 / 240; the null-only parts (62.38 / 210.22) are within
+  22 % / 11 % of the planned estimate (≈ 80 / 190).
 - **Revisit if** a channel with shared events enters a tested family (remove them first), or the BAT–GBM deficit
   needs its own check.
 

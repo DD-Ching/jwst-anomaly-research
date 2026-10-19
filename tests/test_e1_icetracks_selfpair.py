@@ -34,3 +34,9 @@ def test_shared_mask():
     ic = np.array([100.0, 200.0, 300.0])
     d = np.array([100.0, 100.0 + 9 / day, 200.0 + 11 / day, 250.0, 300.0 - 5 / day, 50.0, 400.0])
     assert sp.shared_mask(d, ic).tolist() == [True, True, False, False, True, False, False]
+
+
+def test_shared_mask_short_catalogues():
+    d = np.array([10.0, 11.0])
+    assert sp.shared_mask(d, np.array([])).tolist() == [False, False]
+    assert sp.shared_mask(d, np.array([11.0])).tolist() == [False, True]

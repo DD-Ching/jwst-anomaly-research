@@ -39,7 +39,7 @@ dependent wide (GW: any-separation) pairs per eligible anchor:
   uptime jitter, and moving either side alone. So it is not downtime, the DR2 end date or one side's scramble;
   around an ICECAT alert time there are fewer DR2 tracks within 1 h–7 d than the null predicts. Cause found 2026-10-19
   (`selfpair/RESULT.md`): the null displaces the 276 shared DR2–ICECAT events into long lags; with them
-  removed the deficit is gone (z −1.23, +0.97). Like addendum 6's BAT–GBM deficit, it appears in a channel whose two catalogues
+  removed the deficit is gone (z −1.24, +1.01). Like addendum 6's BAT–GBM deficit, it appears in a channel whose two catalogues
   share events. No tested channel shows a deficit beyond z −1.7.
 
 **Limitations:** `jitday` scrambles DR2 exactly as `jit` (only the partners change), so DR2 time-of-day
