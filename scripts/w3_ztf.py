@@ -52,16 +52,18 @@ def configure(pix: int, vdir: str | None = None) -> None:
     """v4: another light-curve partition of the same order-4 pixel (independent validation). v5:
     ``vdir`` (e.g. "v5") writes the v4 method's outputs for the v1-v3 sample in its own folder."""
     global LC_PIX, LC_PART, OBJ_PART, CACHE, SAMPLE, VDIR, VERSION, N_MAX
-    if pix == 3839 and not (vdir and int(vdir.lstrip("v")) >= 11):  # v11: own sample in 3839
+    # v12: vdir may name a per-area subfolder, e.g. "v12/2380"; the version is its first part
+    ver = int((vdir or "v4").split("/")[0].lstrip("v"))
+    if pix == 3839 and not (vdir and ver >= 11):  # v11: own sample in 3839
         if vdir:
-            VDIR, VERSION = OUT / vdir, int(vdir.lstrip("v"))
+            VDIR, VERSION = OUT / vdir, ver
         return
     LC_PIX = pix
     LC_PART = LC_PART.replace("Npix=3839", f"Npix={pix}")
     CACHE = CACHE / str(pix)
     VDIR = OUT / (vdir or "v4")
     SAMPLE = VDIR / "sample.json"
-    VERSION = int((vdir or "v4").lstrip("v"))
+    VERSION = ver
     if pix // 4 != 959:  # v6: another sky area; objects from the order-4 parent pixel
         OBJ_PART = OBJ_PART.replace("Npix=959", f"Npix={pix // 4}")
         N_MAX = N_MAX6
