@@ -1,0 +1,26 @@
+{
+ "field": "nexus",
+ "n_flags_measured": 1051,
+ "n_controls": 300,
+ "noise_scale": {
+  "F200W": 1.9111659598716548,
+  "F444W": 2.5683469823011853
+ },
+ "calibrated": true,
+ "inflation_vs_catalogue": {
+  "F200W": 1.0,
+  "F444W": 2.0604217332077712
+ },
+ "forced_confirmed": 32,
+ "confirmed_by_flag": {
+  "vanish": 11,
+  "dim_achromatic": 0,
+  "rise_dip_rise": 22
+ },
+ "confirmed_and_cutout_clean": 5,
+ "survives_artefact_tests": 5,
+ "controls_flagged": 10,
+ "crossmatch": "SIMBAD and NED, 1 arcsec (crossmatch.crossmatch, batched)",
+ "unread_images": [],
+ "wall_s": 1755.7
+}
