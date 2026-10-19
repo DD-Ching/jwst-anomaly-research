@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: AT 2024jfz host redshift: no catalogued host within 1″; frozen outcome untested
+- **Why:** handoff of #360 (a host z decides which counter-image window applies). Plan and rule frozen first
+  (`results/transients/smacs_at2024jfz/host_z/PLAN.md`); `classify` / `pick_host` unit-tested.
+- **Result (`host_z/RESULT.md`):** no DJA v7.4 source within 1.0″ and no Caminha+22 MUSE source within 3″ of the TNS
+  position: outcome **untested**, host z unknown.
+- **Post hoc:** the nearest DJA source (1.632″, d / r_half 7.79) is image 6.1 of system 6, eazy z 1.597–1.634, inside
+  the undetermined window 1.55–1.70. Faint template flux at the position (31 nJy, #360) sits on a bright vertical
+  band, so a blended host is not excluded.
+- **Handoff:** if pursued, a PSF-matched difference at the z_s 1.55–1.70 track or a spectrum at the position. Not a
+  candidate.
+
 ## 2026-10-19: AT 2024jfz: no counter-image in NIRISS 4368 F150W at z_s 1.35–1.40; the transient is still visible at +116 d
 - **Why:** handoff of #358 (the only archival epoch matching the counter-image timing, if z_s ≈ 1.35–1.40). Plan
   frozen first (`results/transients/smacs_at2024jfz/niriss4368/PLAN.md`); rule `outcome` unit-tested before the run.

@@ -86,8 +86,9 @@ def main(argv=None) -> int:
     sep = tns.separation(sky).arcsec
     rh = np.asarray(phot["flux_radius"], float) * PIX
     near = np.flatnonzero(sep <= R_MAX)
-    rows = [
-        {
+
+    def row(i: int) -> dict:
+        return {
             "id": int(zout["id"][i]),
             "sep_arcsec": round(float(sep[i]), 3),
             "r_half_arcsec": round(float(rh[i]), 3),
@@ -98,8 +99,10 @@ def main(argv=None) -> int:
             "z_spec_dja": round(float(zout["z_spec"][i]), 4),
             "nusefilt": int(zout["nusefilt"][i]),
         }
-        for i in near[np.argsort(sep[near])]
-    ]
+
+    rows = [row(i) for i in near[np.argsort(sep[near])]]
+    # post hoc (added after the frozen rule returned no candidate): context beyond R_MAX
+    nearest = [row(i) for i in np.argsort(sep)[:5]]
     k = pick_host(sep, rh)
     host, lo, hi, zsrc = None, None, None, None
     muse_rows = []
@@ -128,13 +131,19 @@ def main(argv=None) -> int:
         "provenance": "derived (z_spec observed; photo-z derived; radii ASSUMPTION)",
         "tns_radec": list(TNS_RADEC),
         "rules": {"R_MAX": R_MAX, "MUSE_MATCH": MUSE_MATCH, "R_FLOOR": R_FLOOR, "DZ_SPEC": DZ_SPEC},
-        "sources": {"dja_phot_sha256": PHOT[1], "zout": log, "muse": spec["ref"]},
+        "sources": {
+            "dja_phot_sha256": PHOT[1],
+            "zout_url": log["url"],
+            "zout_sha256": log["sha256"],
+            "muse": spec["ref"],
+        },
         "candidates": rows,
         "muse_within_3arcsec": muse_rows,
         "host": host,
         "host_z_interval": None if lo is None else [round(lo, 3), round(hi, 3)],
         "host_z_source": zsrc,
         "outcome": classify(lo, hi),
+        "posthoc_nearest5": nearest,
     }
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "result.json").write_text(json.dumps(res, indent=1) + "\n")
