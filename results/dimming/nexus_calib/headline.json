@@ -1,0 +1,69 @@
+{
+ "provenance": "derived (injections simulated)",
+ "rho": 0.1,
+ "poisson_95_zero_events": 2.996,
+ "condition": "valid only if none of the 5 NEXUS artefact-test survivors is a W3 event (by-eye post hoc; /vet-candidate pending)",
+ "previous_source": "results/dimming/abell2744_calib/RESULT.md headline table (sum and per-source columns)",
+ "rows": [
+  {
+   "t_e_yr": 0.01,
+   "nexus_exposure_source_yr": 5.6,
+   "nexus_efficiency": 0.026,
+   "macs0416_plus_abell2744_source_yr": 1.29,
+   "sum_source_yr": 6.89,
+   "limit_per_source_per_yr": 0.4347,
+   "previous_limit": 2.3,
+   "tighter_by_factor": 5.3
+  },
+  {
+   "t_e_yr": 0.03,
+   "nexus_exposure_source_yr": 21.47,
+   "nexus_efficiency": 0.093,
+   "macs0416_plus_abell2744_source_yr": 5.26,
+   "sum_source_yr": 26.73,
+   "limit_per_source_per_yr": 0.1121,
+   "previous_limit": 0.57,
+   "tighter_by_factor": 5.1
+  },
+  {
+   "t_e_yr": 0.1,
+   "nexus_exposure_source_yr": 58.04,
+   "nexus_efficiency": 0.215,
+   "macs0416_plus_abell2744_source_yr": 11.08,
+   "sum_source_yr": 69.12,
+   "limit_per_source_per_yr": 0.0433,
+   "previous_limit": 0.27,
+   "tighter_by_factor": 6.2
+  },
+  {
+   "t_e_yr": 0.3,
+   "nexus_exposure_source_yr": 82.82,
+   "nexus_efficiency": 0.218,
+   "macs0416_plus_abell2744_source_yr": 21.05,
+   "sum_source_yr": 103.87,
+   "limit_per_source_per_yr": 0.0288,
+   "previous_limit": 0.14,
+   "tighter_by_factor": 4.9
+  },
+  {
+   "t_e_yr": 1.0,
+   "nexus_exposure_source_yr": 89.99,
+   "nexus_efficiency": 0.117,
+   "macs0416_plus_abell2744_source_yr": 56.57,
+   "sum_source_yr": 146.56,
+   "limit_per_source_per_yr": 0.0204,
+   "previous_limit": 0.053,
+   "tighter_by_factor": 2.6
+  },
+  {
+   "t_e_yr": 3.0,
+   "nexus_exposure_source_yr": 123.19,
+   "nexus_efficiency": 0.065,
+   "macs0416_plus_abell2744_source_yr": 68.78,
+   "sum_source_yr": 191.97,
+   "limit_per_source_per_yr": 0.0156,
+   "previous_limit": 0.044,
+   "tighter_by_factor": 2.8
+  }
+ ]
+}
