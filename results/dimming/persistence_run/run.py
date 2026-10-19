@@ -57,7 +57,11 @@ for k, e in enumerate(field["epochs"]):
         dict(zip(*np.unique(summ["verdict"], return_counts=True), strict=True)),
         flush=True,
     )
-t = vstack(rows, metadata_conflicts="silent")
+t = (
+    vstack(rows, metadata_conflicts="silent")
+    if rows
+    else Table(names=["uid", "verdict", "kind"], dtype=[str, str, str])
+)
 t.meta.update(provenance="derived", source=f"results/dimming/persistence_run/run.py {name}")
 t.write(out / "verdicts.ecsv", overwrite=True)
 (out / "counts.json").write_text(

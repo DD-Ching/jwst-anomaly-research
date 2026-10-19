@@ -79,7 +79,14 @@ if __name__ == "__main__":
             for r in tg
         ],
         "targets_to_vet": [str(r["uid"]) for r in tg if r["verdict"] == "on_sky"],
-        "n_failed_reads": int(np.sum(t["n_failed"])),
+        "n_failed_reads": int(  # n_failed is per (field, epoch), repeated on each of its rows
+            sum(
+                {
+                    (str(r["uid"]).rsplit("-d", 1)[0], int(r["epoch"])): int(r["n_failed"])
+                    for r in t
+                }.values()
+            )
+        ),
     }
     (root / "summary.json").write_text(json.dumps(res, indent=1) + "\n")
     print(json.dumps({k: v for k, v in res.items() if k != "targets"}, indent=1))

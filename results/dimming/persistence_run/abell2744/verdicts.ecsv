@@ -6,19 +6,23 @@
 # - {name: kind, datatype: string}
 # - {name: verdict, datatype: string}
 # - {name: n_exposures, datatype: int64}
+# - {name: n_detected, datatype: int64}
+# - {name: n_suspect, datatype: int64}
+# - {name: n_clean, datatype: int64}
+# - {name: n_failed, datatype: int64}
 # - {name: mosaic_snr, datatype: float64}
 # meta: !!omap
 # - {provenance: derived}
 # - {source: results/dimming/persistence_run/partial.py abell2744}
 # schema: astropy-2.0
-uid epoch kind verdict n_exposures mosaic_snr
-abell2744-d03557 0 monitored on_sky 70 32.24875560336278
-abell2744-d03591 0 monitored on_sky 70 19.002752969843243
-abell2744-d04038 0 monitored on_sky 70 32.98814865148039
-abell2744-d04285 0 monitored on_sky 80 33.25226964215495
-abell2744-d04588 0 monitored on_sky 80 32.892049965399444
-abell2744-d04843 0 monitored on_sky 20 32.646597952650055
-abell2744-d05143 0 monitored on_sky 130 23.656671784115105
-abell2744-d05388 0 monitored on_sky 140 32.128915993601424
-abell2744-d05600 0 monitored on_sky 150 24.53501146219285
-abell2744-d06064 0 monitored on_sky 121 32.40805314273548
+uid epoch kind verdict n_exposures n_detected n_suspect n_clean n_failed mosaic_snr
+abell2744-d03557 0 monitored on_sky 70 58 2 55 0 32.24875560336278
+abell2744-d03591 0 monitored on_sky 70 48 2 44 0 19.002752969843243
+abell2744-d04038 0 monitored on_sky 70 65 4 60 0 32.98814865148039
+abell2744-d04285 0 monitored on_sky 80 55 0 53 0 33.25226964215495
+abell2744-d04588 0 monitored on_sky 80 75 0 73 0 32.892049965399444
+abell2744-d04843 0 monitored on_sky 20 20 1 19 0 32.646597952650055
+abell2744-d05143 0 monitored on_sky 130 67 0 66 0 23.656671784115105
+abell2744-d05388 0 monitored on_sky 140 113 1 112 0 32.128915993601424
+abell2744-d05600 0 monitored on_sky 150 78 1 73 0 24.53501146219285
+abell2744-d06064 0 monitored on_sky 121 112 0 109 0 32.40805314273548

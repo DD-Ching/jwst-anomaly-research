@@ -25,8 +25,11 @@ for f in sorted(d.glob("exposures_e*.ecsv")):
     e = Table.read(f)
     for uid in sorted(set(e["uid"])):
         s = e[e["uid"] == uid]
+        # same uid convention as run.py; the screen is rebuilt from the sha256-checked catalogues,
+        # so the source order is the one run.py used
         i = int(uid.rsplit("-d", 1)[1])
         snr, sus, npr = (np.asarray(s[c]) for c in ("snr", "suspect", "n_prior"))
+        det = np.isfinite(snr) & (snr >= pc.MIN_SNR)
         rows.append(
             {
                 "uid": uid,
@@ -34,6 +37,10 @@ for f in sorted(d.glob("exposures_e*.ecsv")):
                 "kind": "flag" if target[i] else "monitored",
                 "verdict": pc.classify(snr, sus, npr),
                 "n_exposures": len(s),
+                "n_detected": int(det.sum()),
+                "n_suspect": int((det & sus).sum()),
+                "n_clean": int((det & ~sus & (npr > 0)).sum()),
+                "n_failed": len(e.meta.get("failed", [])),  # per epoch, as in run.py
                 "mosaic_snr": float(lc["flux"][i, k, 0] / err[i, k, 0]),
             }
         )
