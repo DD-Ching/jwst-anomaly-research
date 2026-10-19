@@ -1,0 +1,9 @@
+{
+ "field": "macs0416",
+ "n_monitored": 44,
+ "flagged": 854,
+ "single_epoch_only": 203,
+ "single_epoch_only_vanish": 201,
+ "single_epoch_only_point_like": 12,
+ "single_epoch_only_point_like_vanish": 12
+}

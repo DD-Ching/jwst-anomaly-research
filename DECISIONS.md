@@ -3200,6 +3200,13 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   inflation), and an injected W3 event scales both bands by the same factor, so its F200W / F444W ratio is the
   host's (unit test). Existing `forced.ecsv` outputs predate the column; the NEXUS reading of addendum c stands.
 
+**Addendum 2026-10-19f (persistence-test swap scoped).**
+- Replacing the `single_epoch` veto by the D-039 test is worth building
+  (`results/dimming/persistence_scope/RESULT.md`, rule frozen first): veto off, the joint ρ = 0.1 exposure grows
+  ×2.0–3.4 by t_E (simulated upper bound), and only 37 compact single-epoch vanish flags need the test.
+- The swap waits for the persistence test's `on_sky` efficiency against mosaic S/N (measured on monitored
+  sources); the injected copies take that efficiency, not 1.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**

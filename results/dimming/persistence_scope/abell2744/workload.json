@@ -1,0 +1,9 @@
+{
+ "field": "abell2744",
+ "n_monitored": 63,
+ "flagged": 530,
+ "single_epoch_only": 267,
+ "single_epoch_only_vanish": 267,
+ "single_epoch_only_point_like": 8,
+ "single_epoch_only_point_like_vanish": 8
+}
