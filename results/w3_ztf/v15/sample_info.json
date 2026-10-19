@@ -53,7 +53,8 @@
     17.398898315429687
    ]
   },
-  "lc_partition": "ipac-irsa-ztf/ztf/enhanced/dr24/lc/hats/ztf_dr24_lc-hats/dataset/Norder=5/Dir=0/Npix=3837/part0.snappy.parquet",
+  "lc_partition": "ipac-irsa-ztf/ztf/enhanced/dr24/lc/hats/ztf_dr24_lc-hats/dataset/Norder=5/Dir=0/Npix=183/part0.snappy.parquet",
   "controls": 13901
- }
+ },
+ "note": "183 lc_partition corrected after the run: configure() was called twice in one process, so the stored text and the cache folder carried the 3837 values; the selection itself used LC_PIX 183 (deviation, labelled)"
 }

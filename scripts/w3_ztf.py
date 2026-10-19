@@ -40,6 +40,11 @@ OBJ_PART = (
 LC_ORDER, LC_PIX = 5, 3839
 OUT = Path(__file__).resolve().parents[1] / "results" / "w3_ztf"
 CACHE = Path(os.environ.get("JWST_ANOMALY_DATA", "data")) / "cache" / "w3_ztf"
+_BASE = (
+    LC_PART,
+    OBJ_PART,
+    CACHE,
+)  # v15: configure() starts from these, so repeated calls do not stack
 SAMPLE = OUT / "sample.json"
 VDIR = OUT / "v3"
 VERSION = 3
@@ -59,8 +64,9 @@ def configure(pix: int, vdir: str | None = None) -> None:
             VDIR, VERSION = OUT / vdir, ver
         return
     LC_PIX = pix
-    LC_PART = LC_PART.replace("Npix=3839", f"Npix={pix}")
-    CACHE = CACHE / str(pix)
+    LC_PART = _BASE[0].replace("Npix=3839", f"Npix={pix}")
+    OBJ_PART = _BASE[1]
+    CACHE = _BASE[2] / str(pix)
     VDIR = OUT / (vdir or "v4")
     SAMPLE = VDIR / "sample.json"
     VERSION = ver
