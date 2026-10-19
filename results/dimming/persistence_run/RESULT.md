@@ -71,7 +71,9 @@ tables (same `classify`; reads `.ecsv.gz`, used where a table is over 1 MB) and 
 ## Control completion 2026-10-19 23:11–23:33 UTC (frozen addendum of 23:12; NEXUS partial by the fixed order)
 Same code; catalogues from S3 (sha256-checked), Gaia mask from the ESA TAP. Done: Abell 2744 e2 (360 `_cal`) and
 NEXUS e0 (800), e1, e3, e4 (120 each), in the frozen order 0, 1, 3, 4, …; NEXUS e5–e7 and the e2 controls were not
-reached (stopped at the time budget, not by outcome). 0 failed reads. Per-field figures from `summarise.py` on each
+reached (stopped at the time budget, not by outcome). 0 failed reads. NEXUS `counts.json` lists e2 in
+`epochs_done` because its `exposures_e2.ecsv` is the earlier targets-only run; `controls_missing_epochs` names
+the epochs still without controls (2, 5, 6, 7). Per-field figures from `summarise.py` on each
 field alone; pooled in `summary.json`.
 
 | field | monitored pairs | S/N 10–20 on_sky | S/N 20–50 on_sky | persistence | rule 1 |

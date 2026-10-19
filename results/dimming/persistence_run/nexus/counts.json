@@ -8,5 +8,12 @@
   3,
   4
  ],
- "complete": false
+ "complete": false,
+ "controls_missing_epochs": [
+  2,
+  5,
+  6,
+  7
+ ],
+ "note": "exposures_e2.ecsv is the targets-only run (no controls); complete refers to targets+controls run.py would need"
 }
