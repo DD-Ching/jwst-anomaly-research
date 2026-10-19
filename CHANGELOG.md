@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 ZTF v15: batch with the frozen v13 method; Npix 3837 searched (4,778 groups, 0 vetted survivors); Npix 183 fails validation
+- **Choice:** by metadata and cost, Npix 3837 and 183. Npix 8170 has only about 738 unused eligible groups.
+  - 3837 shares fields 826 and 1857 with v1–v5, so the sources are new but the exposures are partly shared.
+- **Validation** (frozen rule, new seeds, fade × 1,000):
+  - **3837 passes:** cells 0.62–0.83, fade 6.6 %, 0 survivors.
+  - **183 fails:** 2 short-event cells at 0.48 and 0.455, mainly from sampling (post hoc trace); fade 15.4 %. Its
+    1,803 search groups were not searched.
+- **Search of 3837:** 4,778 groups (9,519 series), 45 flagged runs in 4 groups, 0 pass vetting, so no image check.
+- **Cumulative searched new groups with the v13 rule:** 2,000 (2382) + 5,000 (8170) + 4,778 (3837) = 11,778.
+  There is no confirmed dimming. No limit is derived.
+- **Fixed:** `configure()` stacked paths on repeated calls (+ test).
+
 ## 2026-10-19: W3 dimming edge coverage: gate V2 passed; the coverage proxy over-counts edges (`over_counts`)
 - **Why:** #381 handoff 1. Gate V re-frozen (PLAN.md addendum, 21:11 UTC, before any stamp read) on per-epoch
   `forced` stamp cuts of every proxy-covered injection pair (608 pairs, three fields); rules `edge.stamp_edge`,
