@@ -242,7 +242,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      (2026-10-17, #287): every number unchanged; only 1818 (gate-failed) moves `single` → `undecided`. #279 has its
      own re-run (open). ~~RXJ2129~~ — done (2026-10-16,
      `results/arcs/rxj2129/RESULT.md`): Lenstool and GLAFIC JWST-updated maps both fail the control (8 / 12),
-     no result. Next, optional: RXJ2129 on the deeper DJA catalogue (new plan; shape source changes);
+     no result. ~~RXJ2129 on the deeper DJA catalogue~~ done 2026-10-16 (`results/arcs/rxj2129-dja/RESULT.md`: no result, controls fail);
      ~~WHL0137~~ — done (2026-10-17, `results/arcs/whl0137-relics/RESULT.md`): RELICS Lenstool 13 / 18 aligned,
      anti 1 vs 0.15 (P 0.14): does not replicate; ~~RXC J0600~~ — done (2026-10-18,
      `results/arcs/rxc0600-relics/RESULT.md`): RELICS GLAFIC v3 11 / 12 aligned, anti 1 vs 0.20 (P 0.18): does not
@@ -389,7 +389,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      model of the star). Next: the rest of the SMACS arcs (more boxes);
      ~~whether AT 2024jfz (1.8″ from image 6.1) has model counter-images~~ done 2026-10-19
      (`results/transients/smacs_at2024jfz/RESULT.md`): yes for z_s ≥ 1; "not testable" in the NIRCam epochs for
-     z_s ≤ 2.5 (z 1.71: +31 d, 4.5″), "testable" at z_s 4 only as an unresolved 0.087″ pair in 2024; ~~NIRISS 4368 F150W epoch~~ done 2026-10-19 (`results/transients/smacs_at2024jfz/niriss4368/RESULT.md`: frozen outcome absent at z_s 1.35–1.40; post hoc, single-peaked light curve: absent for z_s 1.35–1.50 and 1.75–2.50, undetermined for 1.55–1.70 next to a static source; the transient is still visible at +116 d); ~~host redshift~~ checked 2026-10-19 (`results/transients/smacs_at2024jfz/host_z/RESULT.md`: frozen outcome untested, no DJA source within 1″, no MUSE z within 3″; post hoc the nearest source is image 6.1 at 1.63″, z_phot 1.60–1.63, inside the undetermined window). Next, if pursued: a PSF-matched difference at the z_s 1.55–1.70 track, or a spectrum at the position;
+     z_s ≤ 2.5 (z 1.71: +31 d, 4.5″), "testable" at z_s 4 only as an unresolved 0.087″ pair in 2024; ~~NIRISS 4368 F150W epoch~~ done 2026-10-19 (`results/transients/smacs_at2024jfz/niriss4368/RESULT.md`: frozen outcome absent at z_s 1.35–1.40; post hoc, single-peaked light curve: absent for z_s 1.35–1.50 and 1.75–2.50, undetermined for 1.55–1.70 next to a static source; the transient is still visible at +116 d); ~~host redshift~~ checked 2026-10-19 (`results/transients/smacs_at2024jfz/host_z/RESULT.md`: frozen outcome untested, no DJA source within 1″, no MUSE z within 3″; post hoc the nearest source is image 6.1 at 1.63″, z_phot 1.60–1.63, inside the undetermined window). ~~PSF-matched difference at the z_s 1.55–1.70 track~~ done 2026-10-19 (`results/transients/smacs_at2024jfz/psfmatch/RESULT.md`: frozen outcome untestable, star core residual; post hoc absent > 0.35″ from the star). Next only a spectrum at the position or a new epoch;
    - **Full-chain known-case check** (2026-10-16, `results/transients/arc_chain/RESULT.md`):
      - MACS0416 Yan+2023: 4 / 4 pass detection, morphology and the arc mask;
      - SMACS Atalanta fails the position stage under both the 1″ rule and the mask;

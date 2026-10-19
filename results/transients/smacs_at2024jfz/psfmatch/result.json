@@ -1,0 +1,138 @@
+{
+ "provenance": {
+  "positions": "model_prediction",
+  "fluxes": "derived",
+  "thresholds": "assumption"
+ },
+ "plan": "PLAN.md",
+ "uris": {
+  "E": "s3://stpubdata/jwst/public/jw04368/L3/t/o001/jw04368-o001_t001_niriss_clear-f150w_i2d.fits",
+  "T": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f150w_i2d.fits"
+ },
+ "box_centre_radec": [
+  110.8350165,
+  -73.4531008
+ ],
+ "box_shape": [
+  201,
+  201
+ ],
+ "pixel_scale_arcsec": 0.06557,
+ "kernel_half_px": 4,
+ "kernel_sum": 0.9654,
+ "kernel_fit_chi2": 0.779,
+ "mask_arcsec": 0.5,
+ "sigma_d_njy": 6.48,
+ "control": {
+  "d_tns_njy": 228.6,
+  "f_now_njy": 223.4,
+  "passes": true
+ },
+ "static_source": {
+  "radec": [
+   110.8355656,
+   -73.4530888
+  ],
+  "d_njy": -131.9
+ },
+ "posthoc_note": "not in PLAN.md: disc points > 0.35 arcsec from the static source, with the subtraction gate waived (source_resid set to 0); does not change the frozen outcome",
+ "rows": [
+  {
+   "z_s": 1.55,
+   "ra": 110.835057,
+   "dec": -73.453215,
+   "threshold_njy": 96.9,
+   "n_disc": 81,
+   "nan_frac": 0.0,
+   "delta_max_njy": 167.2,
+   "delta_max_snr": 25.79,
+   "delta_max_radec": [
+    110.8353496,
+    -73.4531039
+   ],
+   "delta_min_njy": -85.4,
+   "inj_delta_njy": 201.2,
+   "plain_delta_max_njy": 455.9,
+   "outcome": "untestable",
+   "posthoc": {
+    "d_at_prediction_njy": 7.4,
+    "n_disc_outside_core": 75,
+    "delta_max_outside_core_njy": 9.9,
+    "outcome_outside_core": "absent"
+   }
+  },
+  {
+   "z_s": 1.6,
+   "ra": 110.83503,
+   "dec": -73.453135,
+   "threshold_njy": 98.0,
+   "n_disc": 81,
+   "nan_frac": 0.0,
+   "delta_max_njy": 111.8,
+   "delta_max_snr": 17.25,
+   "delta_max_radec": [
+    110.8353226,
+    -73.4531072
+   ],
+   "delta_min_njy": -84.0,
+   "inj_delta_njy": 179.3,
+   "plain_delta_max_njy": 1285.1,
+   "outcome": "untestable",
+   "posthoc": {
+    "d_at_prediction_njy": -16.7,
+    "n_disc_outside_core": 70,
+    "delta_max_outside_core_njy": 31.5,
+    "outcome_outside_core": "absent"
+   }
+  },
+  {
+   "z_s": 1.65,
+   "ra": 110.835003,
+   "dec": -73.453061,
+   "threshold_njy": 99.0,
+   "n_disc": 81,
+   "nan_frac": 0.0,
+   "delta_max_njy": 150.8,
+   "delta_max_snr": 23.27,
+   "delta_max_radec": [
+    110.8353931,
+    -73.453061
+   ],
+   "delta_min_njy": -30.5,
+   "inj_delta_njy": 195.9,
+   "plain_delta_max_njy": 545.8,
+   "outcome": "untestable",
+   "posthoc": {
+    "d_at_prediction_njy": -2.1,
+    "n_disc_outside_core": 69,
+    "delta_max_outside_core_njy": 45.8,
+    "outcome_outside_core": "absent"
+   }
+  },
+  {
+   "z_s": 1.7,
+   "ra": 110.834976,
+   "dec": -73.452992,
+   "threshold_njy": 99.7,
+   "n_disc": 81,
+   "nan_frac": 0.0,
+   "delta_max_njy": 97.2,
+   "delta_max_snr": 15.0,
+   "delta_max_radec": [
+    110.8353661,
+    -73.4530753
+   ],
+   "delta_min_njy": -85.0,
+   "inj_delta_njy": 216.8,
+   "plain_delta_max_njy": 188.6,
+   "outcome": "untestable",
+   "posthoc": {
+    "d_at_prediction_njy": 17.4,
+    "n_disc_outside_core": 75,
+    "delta_max_outside_core_njy": 41.8,
+    "outcome_outside_core": "absent"
+   }
+  }
+ ],
+ "window_outcome": "not absent"
+}

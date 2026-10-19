@@ -46,6 +46,9 @@ BOX_HALF_ARCSEC = 6.5  # one box holding the four predictions and the TNS positi
 KERNEL_HALF = 4  # ASSUMPTION: kernel half-width in E pixels (0.26 arcsec)
 MASK_ARCSEC = 0.5  # ASSUMPTION: excluded from the kernel fit around predictions and TNS
 CONTROL_FRAC = 0.5  # positive control: D(TNS) >= this x F_now and >= NSIGMA sigma
+POSTHOC_CORE_ARCSEC = (
+    0.35  # post hoc ASSUMPTION: disc points this close to the source are its core residual
+)
 
 
 def outcome_psfmatch(
@@ -159,6 +162,11 @@ def main(argv: list[str] | None = None) -> int:
         inj = float(phot(d_inj, e["wcs"], pt, scale, to_njy)[0])
         verdict = outcome_psfmatch(dd, sig, thr, d_src, inj, ctrl)
         i = int(np.nanargmax(dd)) if np.isfinite(dd).any() else None
+        # post hoc (not in PLAN.md): the disc without the static source's core residual
+        cosd = np.cos(np.radians(r["dec"]))
+        to_src = np.hypot((disc[:, 0] - src[0, 0]) * cosd, disc[:, 1] - src[0, 1]) * 3600.0
+        outer = dd[to_src > POSTHOC_CORE_ARCSEC]
+        d_pred = float(phot(d, e["wcs"], pt, scale, to_njy)[0])
         out_rows.append(
             {
                 "z_s": r["z_s"],
@@ -174,6 +182,12 @@ def main(argv: list[str] | None = None) -> int:
                 "inj_delta_njy": round(inj, 1),
                 "plain_delta_max_njy": r["delta_max_njy"],
                 "outcome": verdict,
+                "posthoc": {
+                    "d_at_prediction_njy": round(d_pred, 1),
+                    "n_disc_outside_core": int(outer.size),
+                    "delta_max_outside_core_njy": round(float(np.nanmax(outer)), 1),
+                    "outcome_outside_core": outcome_psfmatch(outer, sig, thr, 0.0, inj, ctrl),
+                },
             }
         )
     stamps(e, t_sci, d, centre, pred, src, TNS_RADEC, to_njy, args.out / "stamps_psfmatch.png")
@@ -202,6 +216,9 @@ def main(argv: list[str] | None = None) -> int:
             "radec": src[0].tolist(),
             "d_njy": round(d_src, 1),
         },
+        "posthoc_note": "not in PLAN.md: disc points > "
+        f"{POSTHOC_CORE_ARCSEC} arcsec from the static source, with the subtraction gate "
+        "waived (source_resid set to 0); does not change the frozen outcome",
         "rows": out_rows,
         "window_outcome": "absent"
         if all(r["outcome"] == "absent" for r in out_rows)
@@ -229,7 +246,10 @@ def stamps(e, t_sci, d, centre, pred, src, tns, to_njy, path: Path) -> None:
     panels = [("E (NIRISS 4368)", e["sci"]), ("T on E grid", t_sci), ("D = E - K*T", d)]
     tx, ty = w.all_world2pix(tns[0], tns[1], 0)
     th = h
-    ts = (slice(max(int(ty) - th, 0), int(ty) + th + 1), slice(max(int(tx) - th, 0), int(tx) + th + 1))
+    ts = (
+        slice(max(int(ty) - th, 0), int(ty) + th + 1),
+        slice(max(int(tx) - th, 0), int(tx) + th + 1),
+    )
     for ax, (name, img) in zip(axes[:3], panels, strict=True):
         sub = img[sl] * to_njy
         lo, hi = np.nanpercentile(sub, [5, 99.5]) if name != "D = E - K*T" else (-30, 30)

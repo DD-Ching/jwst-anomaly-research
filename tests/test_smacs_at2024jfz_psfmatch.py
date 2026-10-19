@@ -58,8 +58,12 @@ def test_psf_matched_diff_removes_static_source():
         g = np.exp(-((xx - x0) ** 2 + (yy - y0) ** 2) / (2 * s * s))
         return f * g / g.sum()
 
-    t = sum(gauss(x, y, 1.0, f) for x, y, f in [(20, 20, 50), (55, 30, 80), (40, 60, 30), (62, 62, 40)])
-    e = sum(gauss(x, y, 1.8, f) for x, y, f in [(20, 20, 50), (55, 30, 80), (40, 60, 30), (62, 62, 40)])
+    t = sum(
+        gauss(x, y, 1.0, f) for x, y, f in [(20, 20, 50), (55, 30, 80), (40, 60, 30), (62, 62, 40)]
+    )
+    e = sum(
+        gauss(x, y, 1.8, f) for x, y, f in [(20, 20, 50), (55, 30, 80), (40, 60, 30), (62, 62, 40)]
+    )
     e = e + gauss(30, 45, 1.8, 20.0)  # a new source in E only
     noise = 0.01
     e = e + rng.normal(0, noise, e.shape)

@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: AT 2024jfz z_s 1.55–1.70: PSF-matched difference untestable (star core residual); post hoc no counter-image beyond 0.35″
+- **Why:** handoff of #361 (the z_s 1.55–1.70 rows of #360 were undetermined: a cross-instrument residual of a
+  static source). Plan and rule frozen first (`results/transients/smacs_at2024jfz/psfmatch/PLAN.md`);
+  `outcome_psfmatch` unit-tested before the run.
+- **New:** `scripts/smacs_at2024jfz_psfmatch.py` (+ tests): T resampled to E's grid, `arc_diff.kernel_fit` kernel
+  with the predictions and TNS masked, D = E − K * T, injection through the whole chain.
+- **Result (`psfmatch/RESULT.md`):** frozen outcome **untestable** in all four rows: control passes (D at TNS
+  228.6 nJy), injections pass, but the subtraction gate fails (D −131.9 nJy at the source core; thresholds
+  96.9–99.7 nJy).
+- **Post hoc:** the source is star-like (spikes in T, by eye); outside 0.35″ of it the disc maxima are 9.9–45.8 nJy,
+  "absent" under the same rule in every row. A counter-image within ≈ 0.35″ of the star stays untested.
+- **Handoff:** the counter-image line of AT 2024jfz is done to the depth these epochs allow (z_s 1.35–2.50 under the
+  best ICLv2 model; z_s 1.55–1.70 only post hoc). Remaining deciders: a spectrum at the position or a new epoch.
+  Not a candidate.
+
 ## 2026-10-19: AT 2024jfz host redshift: no catalogued host within 1″; frozen outcome untested
 - **Why:** handoff of #360 (a host z decides which counter-image window applies). Plan and rule frozen first
   (`results/transients/smacs_at2024jfz/host_z/PLAN.md`); `classify` / `pick_host` unit-tested.
