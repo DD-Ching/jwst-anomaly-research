@@ -1,0 +1,21 @@
+{
+ "label": "derived; download accounting (parquet metadata, TAP bytes) and session wall-clock (approximate, from the session log)",
+ "objects_959_45_mb_upper": 186.2,
+ "lc_3837_mb": 1233.2,
+ "lc_183_mb": 270.2,
+ "tap_3837_mb": 9.26,
+ "tap_183_mb": 4.64,
+ "cutouts_mb": 0.0,
+ "wall_clock_min_3837": {
+  "fetch_and_exposures": 3.0,
+  "inject_and_controls": 2.8,
+  "search_4778": 3.2
+ },
+ "per_1000_searched_3837": {
+  "minutes_compute": 1.9,
+  "download_mb": 279.5,
+  "image_checks": 0
+ },
+ "note": "wall-clock values are session observations, not stored timings; 183 was read (270.2 MB) but its search was not executed",
+ "total_mb_upper": 1703.5
+}
