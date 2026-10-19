@@ -1,0 +1,82 @@
+{
+ "provenance": "derived (z_spec observed; photo-z derived; radii ASSUMPTION)",
+ "tns_radec": [
+  110.83416,
+  -73.451752
+ ],
+ "rules": {
+  "R_MAX": 1.0,
+  "MUSE_MATCH": 0.5,
+  "R_FLOOR": 0.1,
+  "DZ_SPEC": 0.01
+ },
+ "sources": {
+  "dja_phot_sha256": "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166",
+  "zout_url": "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix.photoz.tar.gz",
+  "zout_sha256": "82db8910962f3050ddb9f8209aafa487fb30f3cf46551d57ef3824d7d2c355ea",
+  "muse": "Caminha+22 MUSE (J/A+A/666/L9)"
+ },
+ "candidates": [],
+ "muse_within_3arcsec": [],
+ "host": null,
+ "host_z_interval": null,
+ "host_z_source": null,
+ "outcome": "untested",
+ "posthoc_nearest5": [
+  {
+   "id": 9171,
+   "sep_arcsec": 1.632,
+   "r_half_arcsec": 0.209,
+   "d_over_rhalf": 7.79,
+   "z_phot": 1.626,
+   "z160": 1.597,
+   "z840": 1.634,
+   "z_spec_dja": -1.0,
+   "nusefilt": 20
+  },
+  {
+   "id": 9011,
+   "sep_arcsec": 3.055,
+   "r_half_arcsec": 0.0,
+   "d_over_rhalf": 30.55,
+   "z_phot": 4.789,
+   "z160": 3.001,
+   "z840": 15.072,
+   "z_spec_dja": -1.0,
+   "nusefilt": 20
+  },
+  {
+   "id": 9114,
+   "sep_arcsec": 3.081,
+   "r_half_arcsec": 0.044,
+   "d_over_rhalf": 30.81,
+   "z_phot": 7.234,
+   "z160": 7.115,
+   "z840": 7.412,
+   "z_spec_dja": -1.0,
+   "nusefilt": 20
+  },
+  {
+   "id": 9298,
+   "sep_arcsec": 3.306,
+   "r_half_arcsec": 0.124,
+   "d_over_rhalf": 26.72,
+   "z_phot": 0.648,
+   "z160": 0.695,
+   "z840": 4.593,
+   "z_spec_dja": -1.0,
+   "nusefilt": 20
+  },
+  {
+   "id": 9060,
+   "sep_arcsec": 3.871,
+   "r_half_arcsec": 0.06,
+   "d_over_rhalf": 38.71,
+   "z_phot": 0.561,
+   "z160": 1.348,
+   "z840": 4.796,
+   "z_spec_dja": -1.0,
+   "nusefilt": 20
+  }
+ ]
+}

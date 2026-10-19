@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: AT 2024jfz host redshift: no catalogued host within 1″; frozen outcome untested
+- **Why:** handoff of #360 (a host z decides which counter-image window applies). Plan and rule frozen first
+  (`results/transients/smacs_at2024jfz/host_z/PLAN.md`); `classify` / `pick_host` unit-tested.
+- **Result (`host_z/RESULT.md`):** no DJA v7.4 source within 1.0″ and no Caminha+22 MUSE source within 3″ of the TNS
+  position: outcome **untested**, host z unknown.
+- **Post hoc:** the nearest DJA source (1.632″, d / r_half 7.79) is image 6.1 of system 6, eazy z 1.597–1.634, inside
+  the undetermined window 1.55–1.70. Faint template flux at the position (31 nJy, #360) sits on a bright vertical
+  band, so a blended host is not excluded.
+- **Handoff:** if pursued, a PSF-matched difference at the z_s 1.55–1.70 track or a spectrum at the position. Not a
+  candidate.
 ## 2026-10-19: W3 ZTF v10: psfcat in the W3 chain raises recovery by 161 of 2,000 same events; 8 of 10 cells stay below 0.5; search not executed
 - Plan and fill set fixed before any psfcat read (`results/w3_ztf/v10/PLAN.md`). The fill set has 724 exposures
   where DR24 has no detection of any control star; 32 of 33 field / quadrant / filter combinations pass the v9
