@@ -1,4 +1,4 @@
-# W3 dimming: weight-map coverage term in the screen and injection chain (frozen 2026-10-19 22:15 UTC)
+# W3 dimming: weight-map coverage term in the screen and injection chain (frozen 2026-10-19 22:13 UTC, commit before any run)
 
 Follow-up of `results/dimming/edge_coverage/RESULT.md` "Gate V2" (passed; decision `over_counts`).
 

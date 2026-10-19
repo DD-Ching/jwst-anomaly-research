@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: weight-map coverage term in `screen` / `inject`; corrected headline limits
+- **Why:** #382 handoff (decision `over_counts`). Plan and gates R0 / R1 frozen first
+  (`results/dimming/wht_coverage/PLAN.md`); `weight_edge` / `mask_weight_edges` / `wht_rel` unit-tested.
+- **Result (`results/dimming/wht_coverage/RESULT.md`):** R0 (term off = committed limits) and R1 (term on = the
+  validated gate V2 what-if) pass in all three fields. Injection sources 235 → 202; the term removes 10 compact
+  unvetoed screen flags and adds none. Corrected headline (`limits_combined.ecsv`, D-052 addendum h): per-source
+  limits ×1.07–1.33 weaker at t_E ≥ 0.03 yr, ×0.82–0.92 at 0.01 yr; D-039 swap gain ×1.80–3.52 with the term on.
+- **Handoff:** the D-039 swap can now use the corrected chain: measure the persistence test's `on_sky` efficiency
+  against mosaic S/N on monitored sources (D-052 addendum f), then fold the swap into `inject`.
+
 ## 2026-10-19: W3 dimming edge coverage: gate V2 passed; the coverage proxy over-counts edges (`over_counts`)
 - **Why:** #381 handoff 1. Gate V re-frozen (PLAN.md addendum, 21:11 UTC, before any stamp read) on per-epoch
   `forced` stamp cuts of every proxy-covered injection pair (608 pairs, three fields); rules `edge.stamp_edge`,

@@ -307,3 +307,47 @@ def test_chromatic_vetoed_spike_only_and_achromatic_injection_kept():
     ]
     # a field without the F200W / F444W pair: the test does not apply
     assert not ds.chromatic_vetoed(flux, err, ["F150W", "F444W"]).any()
+
+
+def test_wht_rel_weight_edge_and_mask():
+    from astropy.wcs import WCS
+
+    # 10 x 10 grid (step 4 px -> a 40 x 40 px image): weight 1, right column 0, one NaN node
+    grid = np.ones((10, 10), np.float32)
+    grid[:, 9] = 0.0
+    grid[2, 2] = np.nan
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [RA0, DEC0]
+    w.wcs.crpix = [1, 1]
+    w.wcs.cdelt = [-1 / 3600, 1 / 3600]
+    # pixel positions: interior (20, 20); next to the zero column (36, 20); next to the NaN
+    # node (8, 8); off the image (-40, 20)
+    x = np.array([20.0, 36.0, 8.0, -40.0])
+    y = np.array([20.0, 20.0, 8.0, 20.0])
+    ra, dec = w.all_pix2world(x, y, 0)
+    rel = ds.wht_rel(grid, w, ra, dec, 4)
+    assert rel.tolist() == [1.0, 0.0, 0.0, 0.0]
+    # per (source, epoch): epoch 1 has no detection-band image (NaN) -> never an edge;
+    # source 3 is not proxy-covered in epoch 0 -> not an edge either
+    rel2 = np.column_stack([rel, np.full(4, np.nan), [0.49, 0.5, 0.51, 0.2]])
+    covered = np.ones((4, 3), bool)
+    covered[3, 0] = False
+    edge = ds.weight_edge(covered, rel2)
+    assert edge.tolist() == [
+        [False, False, True],
+        [True, False, False],
+        [True, False, False],
+        [False, False, True],
+    ]
+    lc = {
+        "flux": np.ones((4, 3, 2)),
+        "det": np.ones((4, 3, 2), bool),
+        "ra": ra,
+    }
+    err = np.full((4, 3, 2), 0.1)
+    lcm, errm = ds.mask_weight_edges(lc, err, edge)
+    assert np.isnan(lcm["flux"][edge]).all() and np.isnan(errm[edge]).all()
+    assert not lcm["det"][edge].any()
+    assert np.isfinite(lcm["flux"][~edge]).all() and lcm["det"][~edge].all()
+    assert lc["det"].all() and np.isfinite(err).all()  # inputs untouched

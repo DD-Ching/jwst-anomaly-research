@@ -3213,6 +3213,16 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   `/vet-candidate`; the others stay vetoed.
 - Partial controls: 61 / 61 monitored pairs `on_sky` (S/N 10–50). The swap waits for the full control set.
 
+**Addendum 2026-10-19h (weight-map coverage term adopted).**
+- `screen` and `inject` uncover proxy-covered epochs whose F200W i2d `WHT` (32-pixel grid, 3 × 3 node minimum) is
+  below 0.5 × the median (`Params.wht_rel_min`, `wht_step_px`; ASSUMPTIONs), the rule gate V2 validated
+  (`results/dimming/edge_coverage/RESULT.md`); `--no-weight-coverage` restores the catalogue-count proxy alone.
+- Production reproduces the validated what-if exactly; the corrected three-field headline
+  (`results/dimming/wht_coverage/limits_combined.ecsv`) replaces `macs0416_regen/limits_combined.ecsv`: ×1.07–1.33
+  weaker per source at t_E ≥ 0.03 yr, ×0.82–0.92 at 0.01 yr (`results/dimming/wht_coverage/RESULT.md`).
+- Alternative rejected: the per-stamp `stamp_edge` rule (post hoc in gate V2; needs `forced` cutouts of every
+  monitored pair). Revisit if a finer grid or the stamp rule is validated on a new field.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**
