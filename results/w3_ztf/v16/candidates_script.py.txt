@@ -1,0 +1,31 @@
+# v16 candidate partitions (<= 30) from the HATS partition lists only. Usage: python candidates_script.py.txt <lc csv> <obj csv>
+import csv, json, sys
+import numpy as np
+import astropy.units as u
+from astropy.coordinates import SkyCoord
+from astropy_healpix import HEALPix
+lc = [r for r in csv.DictReader(open(sys.argv[1])) if r['Norder'] == '5']
+obj4 = {int(r['Npix']) for r in csv.DictReader(open(sys.argv[2])) if r['Norder'] == '4'}
+hp = HEALPix(nside=2**5, order='nested')
+USED_PARENTS = {959, 1783, 595, 2042, 45}  # every parent read in v1-v15
+ok = []
+for r in lc:
+    pix, n = int(r['Npix']), int(r['num_rows'])
+    if pix // 4 not in obj4 or pix // 4 in USED_PARENTS or not 300_000 <= n <= 700_000:
+        continue
+    lon, lat = hp.healpix_to_lonlat(pix)
+    c = SkyCoord(lon.to(u.deg), lat.to(u.deg))
+    if 25 <= c.dec.deg <= 65 and abs(c.galactic.b.deg) >= 30:
+        ok.append((pix, n, round(c.ra.deg, 2), round(c.dec.deg, 2), round(c.galactic.b.deg, 1)))
+parents = sorted({p // 4 for p, *_ in ok})
+pick = [parents[i] for i in np.unique(np.linspace(0, len(parents) - 1, 8).round().astype(int))]
+cand = []
+for par in pick:
+    cand += sorted([x for x in ok if x[0] // 4 == par], key=lambda x: (-x[1], x[0]))[:4]
+cand = cand[:30]
+out = {'label': 'derived (HATS partition_info only)', 'rule': 'Norder 5, parent has objects, parent not used before '
+       '(959, 1783, 595, 2042, 45), 300k-700k rows, centre dec +25..+65, |b| >= 30; 8 parents evenly spaced in Npix '
+       'order; up to 4 largest children each; at most 30', 'eligible_partitions': len(ok), 'eligible_parents': len(parents),
+       'parents': pick, 'candidates': [dict(zip(('npix', 'rows', 'ra', 'dec', 'b'), x)) for x in cand]}
+json.dump(out, open('results/w3_ztf/v16/candidates.json', 'w'), indent=1); open('results/w3_ztf/v16/candidates.json', 'a').write('\n')
+print(len(cand), pick)

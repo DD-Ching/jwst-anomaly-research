@@ -1,0 +1,14 @@
+# v16 dedupe list: every earlier calibration, development, validation or search group (positions + objectids).
+# Earlier reference (comparison) stars were restricted to their own partitions (3838, 3839, 7134, 2382, 8170, 3837,
+# 183), which v16 excludes by parent pixel. Usage: python dedupe_script.py.txt
+import gzip, json
+ded = json.load(open('results/w3_ztf/v12/dedupe.json'))['groups']
+srcs = [('v12/v13 (2382)', 'results/w3_ztf/v12/2382/sample.json'), ('v14 (8170)', 'results/w3_ztf/v14/8170/sample.json.gz'),
+        ('v15 (3837)', 'results/w3_ztf/v15/3837/sample.json.gz'), ('v15 (183)', 'results/w3_ztf/v15/183/sample.json')]
+for tag, f in srcs:
+    gs = json.load(gzip.open(f) if f.endswith('.gz') else open(f))['groups']
+    ded += [[tag, round(g['ra'], 7), round(g['dec'], 7), g['members']] for g in gs]
+out = {'label': 'derived; all earlier sample groups', 'groups': ded, 'n': len(ded)}
+s = json.dumps(out, separators=(',', ':'))
+gzip.open('results/w3_ztf/v16/dedupe.json.gz', 'wt').write(s + '\n')
+print(len(ded))
