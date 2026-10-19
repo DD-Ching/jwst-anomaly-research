@@ -1,0 +1,26 @@
+# v14 part 1: run the unchanged v13 image-check core (../v13/image_script.py.txt, from the IBE position search to the
+# end) on the frozen pending_selection.json. Usage: python -I pending_image_script.py.txt <cutout dir> <out json> <out png>
+import io, json, os, sys, time, urllib.parse, urllib.request, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.wcs import WCS
+from scipy import ndimage
+warnings.filterwarnings('ignore')
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+from hit_lightcurve import aperture_photometry
+CUT, OUT, PNG = sys.argv[1:4]
+R, ANN, CAP_MB = 2.0, (4.0, 6.0), 50.0
+_in_quad = wz.in_quad
+EXPO = Table(names=('field', 'ccdid', 'qid', 'filtercode', 'expid'), dtype=(int, int, int, str, int))  # info column only
+groups = {g['key']: g for g in json.load(open('results/w3_ztf/v13/2382val/sample.json'))['groups']}
+sel = []
+for s in json.load(open('results/w3_ztf/v14/pending_selection.json'))['sources']:
+    g = groups[s['key']]
+    sel.append({'key': s['key'], 'ra': g['ra'], 'dec': g['dec'], 'filter': s['filter'], 'run': s['run'],
+                'nd_pending': s['nd_pending'], 'part': s['part'],
+                'exposures': [{'expid': x['expid'], 't': x['t'], 'nd': x['nd'], 'dmag': None} for x in s['exposures']]})
+src = open('results/w3_ztf/v13/image_script.py.txt').read()
+core = src[src.index('# ---- IBE position search'):]
+exec(compile(core, 'image_core', 'exec'))

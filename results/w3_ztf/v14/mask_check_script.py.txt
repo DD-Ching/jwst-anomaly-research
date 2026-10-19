@@ -1,0 +1,67 @@
+# v14 part 1: official ZTF pixel masks (IBE _mskimg.fits cutouts) at the source position for the frozen mask_expids;
+# records the OR of mask bits within the 2" aperture and the bit names from the mask header. Also applies the v13
+# column check to the new science cutouts. Usage: python -I mask_check_script.py.txt <cutout dir> <out json>
+import io, json, sys, time, urllib.parse, urllib.request, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.wcs import WCS
+warnings.filterwarnings('ignore')
+CUT, OUT = sys.argv[1:3]
+sel = json.load(open('results/w3_ztf/v14/pending_selection.json'))
+grp = {g['key']: g for g in json.load(open('results/w3_ztf/v13/2382val/sample.json'))['groups']}
+img = json.load(open('results/w3_ztf/v14/pending_image.json'))
+key_of = {x['expid']: s['key'] for s in sel['sources'] for x in s['exposures']}
+def get(url, timeout=60):
+    for i in range(4):
+        try:
+            return urllib.request.urlopen(url, timeout=timeout).read()
+        except Exception:
+            time.sleep(5 * (i + 1))
+    return None
+res, nbytes, names = [], 0, {}
+for e in sel['mask_expids']:
+    k = key_of[e]; ra, dec = grp[k]['ra'], grp[k]['dec']
+    q = urllib.parse.urlencode({'POS': f'{ra},{dec}', 'WHERE': f'expid IN ({e})', 'ct': 'csv',
+                                'COLUMNS': 'field,ccdid,qid,filtercode,expid,filefracday'})
+    raw = get('https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + q)
+    m = Table.read(io.BytesIO(raw), format='csv') if raw and len(raw.strip().splitlines()) > 1 else []
+    if not len(m):
+        res.append({'expid': e, 'key': k, 'mask': None, 'why': 'not found'}); continue
+    m = m[0]; ffd = str(m['filefracday'])
+    url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+           f"{int(m['field']):06d}_{m['filtercode']}_c{int(m['ccdid']):02d}_o_q{int(m['qid'])}_mskimg.fits"
+           f"?center={ra},{dec}&size=30arcsec&gzip=false")
+    data = get(url)
+    if data is None:
+        res.append({'expid': e, 'key': k, 'mask': None, 'why': 'cutout failed'}); continue
+    nbytes += len(data); open(f'{CUT}/{e}_{k}_msk.fits', 'wb').write(data)
+    h = fits.open(io.BytesIO(data)); d = h[0].data.astype(np.int64); w = WCS(h[0].header)
+    names.update({kk: str(v) for kk, v in h[0].header.items() if kk.startswith('MASKB') or kk.startswith('BIT')})
+    x, y = (float(v) for v in w.world_to_pixel_values(ra, dec))
+    sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
+    yy, xx = np.mgrid[:d.shape[0], :d.shape[1]]
+    ap = np.hypot(xx - x, yy - y) <= 2.0 / sc
+    orbits = int(np.bitwise_or.reduce(d[ap])) if ap.any() else None
+    res.append({'expid': e, 'key': k, 'mask_or_in_aperture': orbits,
+                'bits_set': [b for b in range(16) if orbits is not None and orbits >> b & 1],
+                'mask_at_center': int(d[int(round(y)), int(round(x))])})
+# v13 column check on the new science cutouts
+col = []
+for s in img['sources']:
+    for r in s['exposures']:
+        if 'cutout_bytes' not in r:
+            continue
+        h = fits.open(f"{CUT}/{r['expid']}_{s['key']}.fits"); im = h[0].data.astype(float); w = WCS(h[0].header)
+        x, y = w.all_world2pix([[s['ra'], s['dec']]], 0)[0]
+        sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
+        med = np.nanmedian(im); sig = 1.4826 * np.nanmedian(np.abs(im - med)); cm = np.nanmedian(im, axis=0)
+        dark = np.flatnonzero(cm < med - 5 * sig); dist = np.abs(dark - x) * sc
+        col.append({'key': s['key'], 'expid': r['expid'], 'nd': r['nd'], 'cls': r.get('cls'),
+                    'min_dist_arcsec': float(dist.min()) if len(dark) else None,
+                    'dark_column_in_aperture': bool(len(dark) and dist.min() <= 2.0)})
+out = {'label': 'observed (IBE mskimg) and derived', 'mask_header_bit_names': names, 'mask_bytes': nbytes,
+       'masks': res, 'column_check_new_cutouts': col}
+json.dump(out, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+print(json.dumps({'masks': [(r['expid'], r.get('bits_set'), r.get('mask_at_center')) for r in res], 'names': names}, indent=0)[:1500])
+print([(c['key'] % 100000, c['expid'], c['nd'], c['cls'], c['dark_column_in_aperture']) for c in col])

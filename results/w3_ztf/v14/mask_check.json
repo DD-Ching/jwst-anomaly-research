@@ -1,0 +1,260 @@
+{
+ "label": "observed (IBE mskimg) and derived",
+ "mask_header_bit_names": {
+  "BITPIX": "16",
+  "BIT00": "0",
+  "BIT01": "1",
+  "BIT02": "2",
+  "BIT03": "3",
+  "BIT04": "4",
+  "BIT05": "5",
+  "BIT06": "6",
+  "BIT07": "7",
+  "BIT08": "8",
+  "BIT09": "9",
+  "BIT10": "10",
+  "BIT11": "11",
+  "BIT12": "12",
+  "BIT13": "13",
+  "BIT14": "14",
+  "BIT15": "15"
+ },
+ "mask_bytes": 181440,
+ "masks": [
+  {
+   "expid": 60125430,
+   "key": 723205400006654,
+   "mask_or_in_aperture": 534,
+   "bits_set": [
+    1,
+    2,
+    4,
+    9
+   ],
+   "mask_at_center": 516
+  },
+  {
+   "expid": 61321734,
+   "key": 723205400006654,
+   "mask_or_in_aperture": 662,
+   "bits_set": [
+    1,
+    2,
+    4,
+    7,
+    9
+   ],
+   "mask_at_center": 516
+  },
+  {
+   "expid": 195641184,
+   "key": 724208200006955,
+   "mask_or_in_aperture": 130,
+   "bits_set": [
+    1,
+    7
+   ],
+   "mask_at_center": 0
+  },
+  {
+   "expid": 60324214,
+   "key": 724208200007532,
+   "mask_or_in_aperture": 534,
+   "bits_set": [
+    1,
+    2,
+    4,
+    9
+   ],
+   "mask_at_center": 516
+  },
+  {
+   "expid": 62015001,
+   "key": 724208200007532,
+   "mask_or_in_aperture": 534,
+   "bits_set": [
+    1,
+    2,
+    4,
+    9
+   ],
+   "mask_at_center": 516
+  },
+  {
+   "expid": 53526427,
+   "key": 724208400014500,
+   "mask_or_in_aperture": 258,
+   "bits_set": [
+    1,
+    8
+   ],
+   "mask_at_center": 2
+  },
+  {
+   "expid": 56625954,
+   "key": 724208400014500,
+   "mask_or_in_aperture": 258,
+   "bits_set": [
+    1,
+    8
+   ],
+   "mask_at_center": 2
+  },
+  {
+   "expid": 247613629,
+   "key": 724208200014557,
+   "mask_or_in_aperture": 128,
+   "bits_set": [
+    7
+   ],
+   "mask_at_center": 0
+  },
+  {
+   "expid": 247813534,
+   "key": 724208200014557,
+   "mask_or_in_aperture": 2,
+   "bits_set": [
+    1
+   ],
+   "mask_at_center": 0
+  }
+ ],
+ "column_check_new_cutouts": [
+  {
+   "key": 724208200014557,
+   "expid": 247421729,
+   "nd": false,
+   "cls": 0,
+   "min_dist_arcsec": 25.360530647673666,
+   "dark_column_in_aperture": false
+  },
+  {
+   "key": 724208200014557,
+   "expid": 247613535,
+   "nd": false,
+   "cls": 0,
+   "min_dist_arcsec": 2.9627399749940855,
+   "dark_column_in_aperture": false
+  },
+  {
+   "key": 724208200014557,
+   "expid": 247613629,
+   "nd": true,
+   "cls": 5,
+   "min_dist_arcsec": 0.3792871234335422,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 724208200014557,
+   "expid": 247813534,
+   "nd": true,
+   "cls": 5,
+   "min_dist_arcsec": 0.30714008170253987,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 724208200014557,
+   "expid": 248212354,
+   "nd": false,
+   "cls": 0,
+   "min_dist_arcsec": 9.256048035842761,
+   "dark_column_in_aperture": false
+  },
+  {
+   "key": 724208200014557,
+   "expid": 248419982,
+   "nd": false,
+   "cls": 2,
+   "min_dist_arcsec": 32.4604171750007,
+   "dark_column_in_aperture": false
+  },
+  {
+   "key": 723205400006654,
+   "expid": 60022616,
+   "nd": false,
+   "cls": 0,
+   "min_dist_arcsec": 1.8448753341831123,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 723205400006654,
+   "expid": 60125430,
+   "nd": true,
+   "cls": 4,
+   "min_dist_arcsec": 0.10155329968599354,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 723205400006654,
+   "expid": 61321734,
+   "nd": true,
+   "cls": 5,
+   "min_dist_arcsec": 0.11232920239516905,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 724208200006955,
+   "expid": 195445234,
+   "nd": false,
+   "cls": 0,
+   "min_dist_arcsec": 1.451577052747879,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 724208200006955,
+   "expid": 195641184,
+   "nd": true,
+   "cls": 5,
+   "min_dist_arcsec": 0.2385637109055767,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 724208200007532,
+   "expid": 60019376,
+   "nd": false,
+   "cls": 0,
+   "min_dist_arcsec": 2.2858897877741327,
+   "dark_column_in_aperture": false
+  },
+  {
+   "key": 724208200007532,
+   "expid": 60324214,
+   "nd": true,
+   "cls": 4,
+   "min_dist_arcsec": 0.15302238330306472,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 724208200007532,
+   "expid": 62015001,
+   "nd": true,
+   "cls": 4,
+   "min_dist_arcsec": 0.3807930036966243,
+   "dark_column_in_aperture": true
+  },
+  {
+   "key": 724208400014500,
+   "expid": 53428763,
+   "nd": false,
+   "cls": 0,
+   "min_dist_arcsec": null,
+   "dark_column_in_aperture": false
+  },
+  {
+   "key": 724208400014500,
+   "expid": 53526427,
+   "nd": true,
+   "cls": 3,
+   "min_dist_arcsec": null,
+   "dark_column_in_aperture": false
+  },
+  {
+   "key": 724208400014500,
+   "expid": 56625954,
+   "nd": true,
+   "cls": 3,
+   "min_dist_arcsec": null,
+   "dark_column_in_aperture": false
+  }
+ ]
+}

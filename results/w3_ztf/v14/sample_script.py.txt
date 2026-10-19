@@ -1,0 +1,46 @@
+# v14 Npix 8170: re-check of the #368 metadata criteria, then the sample (PLAN.md section 2). Objects table of parent
+# 2042 is read once (11 columns) and cached in the scratch dir. Usage: python sample_script.py.txt <scratch dir>
+import json, sys, zlib
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+SCR = sys.argv[1]
+PIX = 8170
+obs = json.load(open('results/w3_ztf/v12/obs_conditions.json'))['areas'][str(PIX)]
+bud = json.load(open('results/w3_ztf/v12/budget.json'))
+dev_fields = {wz.oid_quad(m)[0] for g in json.load(open('results/w3_ztf/v12/2382/sample.json'))['groups'] for m in g['members']}
+ded = json.load(open('results/w3_ztf/v12/dedupe.json'))['groups']
+ded += [['v12/v13 (Npix 2382)', g['ra'], g['dec'], g['members']] for g in json.load(open('results/w3_ztf/v12/2382/sample.json'))['groups']]
+old_fields = set(json.load(open('results/w3_ztf/v12/obs_conditions.json'))['old_fields']) | dev_fields
+check = {'worst_cell_ge_0.5': obs['score_min_over_cells'] >= 0.5, 'product_ratio_ge_0.8': obs['product_ratio_median'] >= 0.8,
+         'no_shared_field': not (set(obs['fields']) & old_fields), 'lc_mb': bud['lc_mb'][str(PIX)],
+         'fields': obs['fields'], 'dev_fields': sorted(dev_fields)}
+check['passed'] = check['worst_cell_ge_0.5'] and check['product_ratio_ge_0.8'] and check['no_shared_field']
+print(check)
+assert check['passed'], 'Npix 8170 no longer qualifies; the round stops (PLAN section 2)'
+import pyarrow.parquet as pq
+wz.configure(PIX, 'v14/8170')
+wz.N_MAX = 5500
+cols = ['oid', 'ra', 'dec', 'field', 'ccdid', 'qid', 'fid', 'refmag', 'refsharp', 'ngoodobs', 'transient']
+obj = pq.ParquetFile(wz.s3().open(wz.OBJ_PART)).read(columns=cols).to_pandas()
+obj.to_parquet(f'{SCR}/obj2042.parquet')
+old_pos = [(g[1], g[2]) for g in ded]
+old_oid = {m for g in ded for m in g[3]}
+groups, info = wz.select(obj, old_pos)
+n0 = len(groups)
+groups = [g for g in groups if not set(g['members']) & old_oid]
+rank = sorted(groups, key=lambda g: zlib.crc32(f"v14:{int(g['key'])}".encode()))
+cal = {g['key'] for g in rank[:500]}
+for g in groups:
+    g['holdout'] = g['key'] not in cal
+pct = lambda xs: [float(np.percentile(xs, q)) for q in (5, 50, 95)]
+info.update(dropped_shared_objectid=n0 - len(groups), calibration_groups=len(cal), search_groups=len(groups) - len(cal),
+            split='lowest 500 by crc32("v14:"+key) = calibration; select() parity field "holdout" in info is pre-split',
+            refmag_r_p5_p50_p95={'calibration': pct([g['refmag_r'] for g in groups if not g['holdout']]),
+                                 'search': pct([g['refmag_r'] for g in groups if g['holdout']])},
+            lc_partition=wz.LC_PART, recheck=check)
+wz.SAMPLE.parent.mkdir(parents=True, exist_ok=True)
+wz.SAMPLE.write_text(json.dumps({'label': 'derived; v14 PLAN section 2', 'info': info, 'groups': groups}) + '\n')
+info['controls'] = wz.save_comparisons(obj, {m for g in groups for m in g['members']})
+json.dump(info, open('results/w3_ztf/v14/sample_info.json', 'w'), indent=1); open('results/w3_ztf/v14/sample_info.json', 'a').write('\n')
+print(json.dumps(info))
