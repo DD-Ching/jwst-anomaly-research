@@ -619,6 +619,12 @@ Headline (calibrated field only: MACS0416, 34 injected compact sources; ρ = 0.1
 | 1 | 6.9e-03 | 53.7 | 0.056 | 0.18 | 635 | 2.0e3 |
 | 3 | 6.2e-02 | 62.6 | 0.048 | 0.45 | 545 | 5.1e3 |
 
+Headline with Abell 2744 added (calibrated 2026-10-19, D-052 addendum; per-source rate and τ only, ρ = 0.1;
+`results/dimming/abell2744_calib/RESULT.md`): rate < 2.3 / 0.57 / 0.27 / 0.14 / 0.053 / 0.044 per source per yr
+and τ < 0.073 / 0.054 / 0.085 / 0.13 / 0.17 / 0.41 at t_E = 0.01 / 0.03 / 0.1 / 0.3 / 1 / 3 yr (5–11 % tighter).
+The per-deg² columns above stay MACS0416-only until a joint `combine`. Abell 2744's calibrated efficiency
+(0.000–0.013) replaces its uncalibrated column below, which was 4–7× too high.
+
 All three fields, **including the two uncalibrated ones** (indicative only; `limits_combined_all_fields.ecsv`,
 ρ = 0.1):
 

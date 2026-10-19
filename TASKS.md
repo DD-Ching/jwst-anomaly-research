@@ -187,8 +187,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      excess was a null (e) artefact, no excess under the fixed (e) or the companion-aware (f); D-048 clusters re-run, null): segmentation-map
      adjacency for the same-galaxy and visible-lens rules (the main efficiency losses); pixel-level injections;
      optionally CEERS / GOODS-S / PRIMER (~600 MB each);
-   - W3 (D-052, null; headline limits from MACS0416 only): re-run `forced` for all three fields when S3 cutout jobs
-     work, ≥ 300 multi-epoch controls so NEXUS and Abell 2744 become calibrated; replace the single-epoch veto for
+   - W3 (D-052, null; headline limits from MACS0416 + Abell 2744): ~~Abell 2744 `forced` with 300 controls~~ done
+     2026-10-19 (calibrated, null, headline 5–11 % tighter; `results/dimming/abell2744_calib/RESULT.md`); next NEXUS
+     `forced` with ≥ 300 controls (≈ 20–35 min, one S3 job), then a joint `combine`; replace the single-epoch veto for
      vanish flags with the D-039 persistence test (restores full-vanish sensitivity); add JADES and new NEXUS epochs;
      SN/TNS check for any survivor; leave the Sunrise transient track to its owner run;
    - ~~W5: counts N(>S) around `radial` centres~~ done 2026-10-17 (`results/w5_radial_counts/RESULT.md`): no deficit,

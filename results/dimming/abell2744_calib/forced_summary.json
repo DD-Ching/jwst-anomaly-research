@@ -1,0 +1,26 @@
+{
+ "field": "abell2744",
+ "n_flags_measured": 32,
+ "n_controls": 300,
+ "noise_scale": {
+  "F200W": 4.045428330553386,
+  "F444W": 7.206010515546432
+ },
+ "calibrated": true,
+ "inflation_vs_catalogue": {
+  "F200W": 1.0,
+  "F444W": 3.6022212541148075
+ },
+ "forced_confirmed": 0,
+ "confirmed_by_flag": {
+  "vanish": 0,
+  "dim_achromatic": 0,
+  "rise_dip_rise": 0
+ },
+ "confirmed_and_cutout_clean": 0,
+ "survives_artefact_tests": 0,
+ "controls_flagged": 0,
+ "crossmatch": "not run (no survivors)",
+ "unread_images": [],
+ "wall_s": 666.1
+}
