@@ -270,6 +270,7 @@ adds its line, with a note naming the unit.
 | 2026-W42 | ≈ 0.2 (E1 + IceTracks-DR2: plan, driver, 2 × 10⁴ scrambles, injections) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01MS6Fgg, 23:08–23:40Z |
 | 2026-W43 | — | — | ≈ 0.2 (E1 DR2–ICECAT control deficit: frozen plan and rule, three null variants; explained) | 0.1 (orientation, claim, state files, PR) | cloud routine 01EJiGRJ, 00:08–00:35Z |
 | 2026-W43 | — | — | ≈ 0.25 (E1 BAT–GBM control deficit: frozen plan and rule; frozen rule undetermined) | 0.1 (orientation, claim, state files, PR) | cloud routine 01CSzjJs, 01:08–01:40Z |
+| 2026-W43 | ≈ 0.2 (SMACS AT 2024jfz counter-images and Fermat delays in ICLv2; frozen testability rule; post hoc MAST epochs) | — | — | 0.15 (orientation, claim, state files, PR) | cloud routine 01CPQ1eo, 02:08–02:40Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
