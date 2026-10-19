@@ -1,0 +1,156 @@
+# v11 observing-condition check (PLAN.md sections 1-3) and, if an area is chosen, its sample (section 4).
+# Official metadata only (objects table, TAP, psfcat HEAD); no light curve is read.
+# Usage: python obs_script.py.txt <scratch dir>
+import io, json, sys, time, urllib.parse, urllib.request
+from multiprocessing import Pool
+import numpy as np
+from astropy.table import Table, vstack
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+SCR = sys.argv[1]
+HERE = wz.OUT / 'v11'
+AREAS = [3837, 3838, 3839]
+CELLS = [(0.01, 1.0, 10.0), (0.01, 1.0, 30.0), (0.01, 1.0, 100.0), (0.1, 1.0, 10.0), (0.1, 1.0, 30.0),
+         (0.01, 0.7, 10.0), (0.01, 0.7, 30.0), (0.01, 0.7, 100.0), (0.1, 0.7, 10.0), (0.1, 0.7, 30.0)]
+nbytes = {'objects_est_mb': None, 'tap': 0, 'head': 0}
+t_start = time.time()
+import pyarrow.parquet as pq
+cols = ['oid', 'ra', 'dec', 'field', 'ccdid', 'qid', 'fid', 'refmag', 'refsharp', 'ngoodobs', 'transient']
+pf = pq.ParquetFile(wz.s3().open(wz.OBJ_PART))
+md = pf.metadata
+nbytes['objects_est_mb'] = round(sum(md.row_group(i).column(j).total_compressed_size for i in range(md.num_row_groups)
+                                     for j in range(md.num_columns) if md.row_group(i).column(j).path_in_schema in cols) / 1e6, 1)
+obj = pf.read(columns=cols).to_pandas()
+obj.to_parquet(f'{SCR}/obj959.parquet')
+old = [(g['ra'], g['dec']) for g in json.load(open(wz.OUT / 'sample.json'))['groups']]
+old += [(g['ra'], g['dec']) for g in json.load(open(wz.OUT / 'v4' / 'sample.json'))['groups']]
+elig = {}
+for pix in AREAS:
+    wz.LC_PIX = pix
+    wz.VERSION = 11
+    groups, info = wz.select(obj, old)  # draw of <= N_MAX is not used here; all eligible groups:
+    elig[pix] = (groups, info)
+    print(pix, info, flush=True)
+
+def tap(sql):
+    url = 'https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'})
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=600).read(); nbytes['tap'] += len(raw)
+            return Table.read(io.BytesIO(raw), format='csv')
+        except OSError:
+            if k == 3:
+                raise
+            time.sleep(10 * (k + 1))
+
+rng = np.random.default_rng(11)
+pos = {}
+quads = set()
+for pix in AREAS:
+    groups = elig[pix][0]
+    pick = sorted(rng.permutation(len(groups))[:200]) if len(groups) > 200 else range(len(groups))
+    pos[pix] = [groups[i] for i in pick]
+    for g in pos[pix]:
+        for m in g['members']:
+            f, rc, filt = wz.oid_quad(m)
+            if filt == 2:
+                quads.add((f, rc))
+parts = []
+for field in sorted({f for f, _ in quads}):
+    rc = sorted(r for f, r in quads if f == field)
+    cond = ' OR '.join(f'(ccdid={r // 4 + 1} AND qid={r % 4 + 1})' for r in rc)
+    parts.append(tap('SELECT field,ccdid,qid,obsjd,exptime,expid,infobits,filefracday,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 '
+                     f"FROM ztf.ztf_current_meta_sci WHERE filtercode='zr' AND field={field} AND ({cond})"))
+expo = vstack(parts)
+expo.write(f'{SCR}/expo_r.ecsv', overwrite=True)
+print('tap rows', len(expo), nbytes, flush=True)
+fld, ccd, qid = (np.asarray(expo[c]) for c in ('field', 'ccdid', 'qid'))
+info_all = np.asarray(expo['infobits'])
+
+def group_exposures(g):
+    sel = np.zeros(len(expo), bool)
+    for m in g['members']:
+        f, rc, filt = wz.oid_quad(m)
+        if filt == 2:
+            sel |= (fld == f) & (ccd == rc // 4 + 1) & (qid == rc % 4 + 1)
+    e = expo[sel]
+    if not len(e):
+        return np.array([]), np.array([], int), 0
+    inside = wz.in_quad(e, g['ra'], g['dec'])
+    bad = int((inside & (np.asarray(e['infobits']) != 0)).sum())
+    e = e[inside & (np.asarray(e['infobits']) == 0)]
+    _, u = np.unique(np.asarray(e['expid']), return_index=True)
+    e = e[u]
+    t = wz.exposure_times(e, g['ra'], g['dec'])
+    o = np.argsort(t)
+    return t[o], np.asarray(e['expid'])[o], bad
+
+night = lambda t: np.floor(np.asarray(t) + 0.2).astype(int)
+
+def classify(t, dm, t0, half):
+    s = [(float(a), float(b), False, 99.0, (0, 0, 2), k, 0.0, 0.0) for k, (a, b) in enumerate(zip(t, dm))]
+    if any(s[i][0] <= t0 + half and s[j][0] >= t0 - half for i, j in wz.flagged_runs(s)):
+        return 'ok'
+    d = wz.dim_state(s); best = None
+    for i, j in wz.runs(d):
+        if not (t[i] <= t0 + half and t[j] >= t0 - half):
+            continue
+        f = [k for k, okk in (('MIN_RUN', j - i + 1 >= wz.MIN_RUN), ('MIN_NIGHTS', len(set(night(t[i:j + 1]))) >= wz.MIN_NIGHTS),
+                                ('MIN_BRACKET', (~d[:i]).sum() >= wz.MIN_BRACKET and (~d[j + 1:]).sum() >= wz.MIN_BRACKET)) if not okk]
+        c = (len(f), -(j - i), f)
+        if best is None or c < best:
+            best = c
+    return best[2][0] if best and best[2] else 'no_dim_epoch_in_umbra'
+
+def area_job(pix):
+    ex = [group_exposures(g) for g in pos[pix]]
+    usable = [k for k, x in enumerate(ex) if len(x[0]) >= 2]
+    out = {'groups_eligible': len(elig[pix][0]), 'positions': len(pos[pix]), 'positions_with_exposures': len(usable),
+           'median_exposures': float(np.median([len(x[0]) for x in ex])),
+           'infobits_nonzero_in_footprint_median': float(np.median([x[2] for x in ex])), 'cells': {}}
+    for c, (rho, blend, te) in enumerate(CELLS):
+        r = np.random.default_rng(2100 + c)
+        tally = {}
+        for _ in range(2000):
+            k = r.integers(len(pos[pix]))
+            t = ex[k][0]
+            t0 = r.uniform(t.min(), t.max()) if len(t) >= 2 else 0.0
+            u0 = r.uniform(0, 2)
+            if len(t) < 2:
+                key = 'no_exposures'
+            else:
+                half = te * np.sqrt(4 - u0**2)
+                key = classify(t, wz.w3_dmag(t, t0, te, u0, rho, blend), t0, half)
+            tally[key] = tally.get(key, 0) + 1
+        out['cells'][f'rho{rho}_blend{blend:g}_tE{te:g}'] = {'necessary_fraction': tally.get('ok', 0) / 2000, 'first_missing': tally}
+    out['score_min_over_cells'] = min(v['necessary_fraction'] for v in out['cells'].values())
+    return pix, out, [list(map(int, x[1])) for x in ex]
+
+if __name__ == '__main__':
+    with Pool(3) as p:
+        res = p.map(area_job, AREAS)
+    areas = {pix: o for pix, o, _ in res}
+    # psfcat existence for 20 counted exposures per area (seed 12)
+    meta = {int(r['expid']): r for r in expo}
+    r12 = np.random.default_rng(12)
+    for pix, o, ids in res:
+        allid = sorted({e for x in ids for e in x})
+        pick = [allid[i] for i in sorted(r12.permutation(len(allid))[:20])]
+        okc = 0
+        for e in pick:
+            m = meta[e]; ffd = str(m['filefracday'])
+            url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+                   f"{int(m['field']):06d}_zr_c{int(m['ccdid']):02d}_o_q{int(m['qid'])}_psfcat.fits")
+            try:
+                rq = urllib.request.Request(url, method='HEAD'); okc += urllib.request.urlopen(rq, timeout=60).status == 200
+            except Exception:
+                pass
+        o['psfcat_head_ok_of_20'] = okc
+    best = max(AREAS, key=lambda p: (areas[p]['score_min_over_cells'], areas[p]['groups_eligible']))
+    chosen = best if areas[best]['score_min_over_cells'] >= 0.5 else None
+    out = {'label': 'derived (official metadata: DR24 objects, IRSA TAP, IBE HEAD); necessary-sampling upper bound, not recovery',
+           'plan': 'PLAN.md sections 1-3', 'areas': {str(p): areas[p] for p in AREAS},
+           'eligible_info': {str(p): elig[p][1] for p in AREAS}, 'chosen': chosen, 'bytes': nbytes,
+           'tap_rows': len(expo), 'minutes': round((time.time() - t_start) / 60, 1)}
+    json.dump(out, open(HERE / 'obs_conditions.json', 'w'), indent=1, default=float); open(HERE / 'obs_conditions.json', 'a').write('\n')
+    print(json.dumps({p: (areas[p]['score_min_over_cells'], areas[p]['groups_eligible'], areas[p]['psfcat_head_ok_of_20']) for p in AREAS}), 'chosen', chosen)

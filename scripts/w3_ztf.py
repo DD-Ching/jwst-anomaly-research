@@ -52,7 +52,7 @@ def configure(pix: int, vdir: str | None = None) -> None:
     """v4: another light-curve partition of the same order-4 pixel (independent validation). v5:
     ``vdir`` (e.g. "v5") writes the v4 method's outputs for the v1-v3 sample in its own folder."""
     global LC_PIX, LC_PART, OBJ_PART, CACHE, SAMPLE, VDIR, VERSION, N_MAX
-    if pix == 3839:
+    if pix == 3839 and not (vdir and int(vdir.lstrip("v")) >= 11):  # v11: own sample in 3839
         if vdir:
             VDIR, VERSION = OUT / vdir, int(vdir.lstrip("v"))
         return
