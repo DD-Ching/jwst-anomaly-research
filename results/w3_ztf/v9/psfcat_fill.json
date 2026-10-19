@@ -1,0 +1,2909 @@
+{
+ "label": "observed (IRSA psfcat, LC API, TAP) and derived; v9 fill",
+ "plan": "PLAN.md",
+ "candidate_exposures": 60,
+ "exposures": [
+  {
+   "expid": 212252128,
+   "mjd": 59876.521284699906,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1711178110038,
+   "clrcoeff": 0.118436186733036,
+   "pcolor": "g-R",
+   "n_sources": 2730,
+   "mag_minus_zp_flux_median": -26.171123504638672,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1024/520590/ztf_20221024520590_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.20620000983835277,
+     "second_arcsec": 64.80546731855277,
+     "status": "matched",
+     "mag": 17.208117513457413,
+     "mag_instrumental": -8.963000297546387,
+     "sigmag": 0.03500000014901161,
+     "flags": 0,
+     "snr": 30.670000076293945,
+     "flux_DN": 3846.23486328125,
+     "sigflux_DN": 125.40496826171875,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.2660006617241827,
+     "second_arcsec": 17.811270613947425,
+     "status": "matched",
+     "mag": 16.524117498198624,
+     "mag_instrumental": -9.647000312805176,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 50.7400016784668,
+     "flux_DN": 7226.02734375,
+     "sigflux_DN": 142.42591857910156,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.10625840871767875,
+     "second_arcsec": 58.47772041836785,
+     "status": "matched",
+     "mag": 16.013117818633194,
+     "mag_instrumental": -10.157999992370605,
+     "sigmag": 0.014000000432133675,
+     "flags": 0,
+     "snr": 75.93000030517578,
+     "flux_DN": 11561.447265625,
+     "sigflux_DN": 152.2733612060547,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212252376,
+   "mjd": 59876.52376159979,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1648431749628,
+   "clrcoeff": 0.121228067418152,
+   "pcolor": "g-R",
+   "n_sources": 2706,
+   "mag_minus_zp_flux_median": -26.16484832763672,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1024/523657/ztf_20221024523657_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.09727076139060893,
+     "second_arcsec": 51.29683165948003,
+     "status": "matched",
+     "mag": 17.21184310629825,
+     "mag_instrumental": -8.95300006866455,
+     "sigmag": 0.024000000208616257,
+     "flags": 0,
+     "snr": 44.869998931884766,
+     "flux_DN": 3810.926513671875,
+     "sigflux_DN": 84.94183349609375,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.12527468234199438,
+     "second_arcsec": 15.868319017437155,
+     "status": "matched",
+     "mag": 16.55184325888614,
+     "mag_instrumental": -9.61299991607666,
+     "sigmag": 0.01600000075995922,
+     "flags": 0,
+     "snr": 67.0199966430664,
+     "flux_DN": 7003.09521484375,
+     "sigflux_DN": 104.49144744873047,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.17846223120720764,
+     "second_arcsec": 28.62040743404687,
+     "status": "matched",
+     "mag": 16.04484328940372,
+     "mag_instrumental": -10.119999885559082,
+     "sigmag": 0.010999999940395355,
+     "flags": 0,
+     "snr": 97.80999755859375,
+     "flux_DN": 11163.6328125,
+     "sigflux_DN": 114.13114929199219,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212252623,
+   "mjd": 59876.52623840002,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1782552883012,
+   "clrcoeff": 0.114981329991794,
+   "pcolor": "g-R",
+   "n_sources": 2881,
+   "mag_minus_zp_flux_median": -26.178260803222656,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1024/526134/ztf_20221024526134_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.2117081294390866,
+     "second_arcsec": 37.66873452370593,
+     "status": "matched",
+     "mag": 17.21325513571331,
+     "mag_instrumental": -8.96500015258789,
+     "sigmag": 0.03400000184774399,
+     "flags": 0,
+     "snr": 31.559999465942383,
+     "flux_DN": 3853.335693359375,
+     "sigflux_DN": 122.08743286132812,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.15778656907449862,
+     "second_arcsec": 48.07269551514027,
+     "status": "matched",
+     "mag": 16.5222551509721,
+     "mag_instrumental": -9.656000137329102,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 54.290000915527344,
+     "flux_DN": 7286.216796875,
+     "sigflux_DN": 134.21707153320312,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.2754009553081253,
+     "second_arcsec": 57.808875513536606,
+     "status": "matched",
+     "mag": 15.981255738435479,
+     "mag_instrumental": -10.196999549865723,
+     "sigmag": 0.017999999225139618,
+     "flags": 0,
+     "snr": 59.65999984741211,
+     "flux_DN": 11984.470703125,
+     "sigflux_DN": 200.8935089111328,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212252871,
+   "mjd": 59876.52871529991,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1709722708825,
+   "clrcoeff": 0.126940351871498,
+   "pcolor": "g-R",
+   "n_sources": 3059,
+   "mag_minus_zp_flux_median": -26.170978546142578,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1024/528611/ztf_20221024528611_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.2474813283914863,
+     "second_arcsec": 40.131436192574036,
+     "status": "matched",
+     "mag": 17.15897218695916,
+     "mag_instrumental": -9.01200008392334,
+     "sigmag": 0.023000000044703484,
+     "flags": 0,
+     "snr": 46.79999923706055,
+     "flux_DN": 4024.025390625,
+     "sigflux_DN": 85.9853286743164,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1598150007615783,
+     "second_arcsec": 16.883320334480807,
+     "status": "matched",
+     "mag": 16.507972164070978,
+     "mag_instrumental": -9.663000106811523,
+     "sigmag": 0.013000000268220901,
+     "flags": 0,
+     "snr": 82.25,
+     "flux_DN": 7333.37646484375,
+     "sigflux_DN": 89.15662384033203,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.23660565760342697,
+     "second_arcsec": 37.947631529161754,
+     "status": "matched",
+     "mag": 16.023971958077325,
+     "mag_instrumental": -10.147000312805176,
+     "sigmag": 0.013000000268220901,
+     "flags": 0,
+     "snr": 81.02999877929688,
+     "flux_DN": 11444.85546875,
+     "sigflux_DN": 141.25076293945312,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212253119,
+   "mjd": 59876.53119210014,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1760718713822,
+   "clrcoeff": 0.12739312891034,
+   "pcolor": "g-R",
+   "n_sources": 3131,
+   "mag_minus_zp_flux_median": -26.176076889038086,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1024/531088/ztf_20221024531088_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.2140490728466857,
+     "second_arcsec": 37.12830372189137,
+     "status": "matched",
+     "mag": 17.24807142124792,
+     "mag_instrumental": -8.928000450134277,
+     "sigmag": 0.03500000014901161,
+     "flags": 0,
+     "snr": 30.760000228881836,
+     "flux_DN": 3724.0654296875,
+     "sigflux_DN": 121.07868194580078,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.07269671818770068,
+     "second_arcsec": 48.279722641412334,
+     "status": "matched",
+     "mag": 16.553071726423703,
+     "mag_instrumental": -9.623000144958496,
+     "sigmag": 0.02199999988079071,
+     "flags": 0,
+     "snr": 50.27000045776367,
+     "flux_DN": 7067.9404296875,
+     "sigflux_DN": 140.61196899414062,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.21876739707827197,
+     "second_arcsec": 27.26796735971078,
+     "status": "matched",
+     "mag": 16.05807184086462,
+     "mag_instrumental": -10.118000030517578,
+     "sigmag": 0.02199999988079071,
+     "flags": 0,
+     "snr": 48.470001220703125,
+     "flux_DN": 11143.078125,
+     "sigflux_DN": 229.8946533203125,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212352590,
+   "mjd": 59877.525902799796,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2038502873279,
+   "clrcoeff": 0.121930915119341,
+   "pcolor": "g-R",
+   "n_sources": 4560,
+   "mag_minus_zp_flux_median": -26.203853607177734,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1025/525741/ztf_20221025525741_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.16423267168238903,
+     "second_arcsec": 10.66592651304654,
+     "status": "matched",
+     "mag": 17.12585021866335,
+     "mag_instrumental": -9.07800006866455,
+     "sigmag": 0.039000000804662704,
+     "flags": 1,
+     "snr": 27.700000762939453,
+     "flux_DN": 4276.5400390625,
+     "sigflux_DN": 154.40248107910156,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1412357403054452,
+     "second_arcsec": 16.656019171150568,
+     "status": "matched",
+     "mag": 16.546850699315204,
+     "mag_instrumental": -9.656999588012695,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 51.209999084472656,
+     "flux_DN": 7292.93505859375,
+     "sigflux_DN": 142.40127563476562,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.15554883380856127,
+     "second_arcsec": 28.029836905335976,
+     "status": "matched",
+     "mag": 16.037849921116962,
+     "mag_instrumental": -10.166000366210938,
+     "sigmag": 0.02500000037252903,
+     "flags": 0,
+     "snr": 43.959999084472656,
+     "flux_DN": 11646.9873046875,
+     "sigflux_DN": 264.963623046875,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212352844,
+   "mjd": 59877.52844909998,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2001547939635,
+   "clrcoeff": 0.124209475471402,
+   "pcolor": "g-R",
+   "n_sources": 4181,
+   "mag_minus_zp_flux_median": -26.20016098022461,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1025/528287/ztf_20221025528287_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.19465979022452276,
+     "second_arcsec": 48.03451639232941,
+     "status": "matched",
+     "mag": 17.237154496417112,
+     "mag_instrumental": -8.963000297546387,
+     "sigmag": 0.03500000014901161,
+     "flags": 0,
+     "snr": 31.3799991607666,
+     "flux_DN": 3846.23486328125,
+     "sigflux_DN": 122.57095336914062,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.20507809338829214,
+     "second_arcsec": 17.016260975419577,
+     "status": "matched",
+     "mag": 16.538155091509886,
+     "mag_instrumental": -9.661999702453613,
+     "sigmag": 0.02199999988079071,
+     "flags": 0,
+     "snr": 50.029998779296875,
+     "flux_DN": 7326.62109375,
+     "sigflux_DN": 146.4330596923828,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.23821114453589878,
+     "second_arcsec": 39.54264763373375,
+     "status": "matched",
+     "mag": 16.043155205950804,
+     "mag_instrumental": -10.156999588012695,
+     "sigmag": 0.041999999433755875,
+     "flags": 0,
+     "snr": 26.040000915527344,
+     "flux_DN": 11550.7998046875,
+     "sigflux_DN": 443.6329345703125,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212353100,
+   "mjd": 59877.53100690013,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2183181164649,
+   "clrcoeff": 0.116412328964802,
+   "pcolor": "g-R",
+   "n_sources": 4255,
+   "mag_minus_zp_flux_median": -26.21832275390625,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1025/530845/ztf_20221025530845_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.1502331236672,
+     "second_arcsec": 41.23435315690029,
+     "status": "matched",
+     "mag": 17.180318009653377,
+     "mag_instrumental": -9.038000106811523,
+     "sigmag": 0.029999999329447746,
+     "flags": 1,
+     "snr": 35.95000076293945,
+     "flux_DN": 4121.67236328125,
+     "sigflux_DN": 114.64525604248047,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.14802453820856834,
+     "second_arcsec": 88.10281471947357,
+     "status": "matched",
+     "mag": 16.561318528452205,
+     "mag_instrumental": -9.656999588012695,
+     "sigmag": 0.029999999329447746,
+     "flags": 0,
+     "snr": 36.06999969482422,
+     "flux_DN": 7292.93505859375,
+     "sigflux_DN": 202.18295288085938,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.12074986313557788,
+     "second_arcsec": 28.586833776491726,
+     "status": "matched",
+     "mag": 16.006318223276423,
+     "mag_instrumental": -10.211999893188477,
+     "sigmag": 0.02199999988079071,
+     "flags": 0,
+     "snr": 48.689998626708984,
+     "flux_DN": 12151.2607421875,
+     "sigflux_DN": 249.57545471191406,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212353356,
+   "mjd": 59877.53356479993,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2134978104218,
+   "clrcoeff": 0.13415403785434,
+   "pcolor": "g-R",
+   "n_sources": 3728,
+   "mag_minus_zp_flux_median": -26.213502883911133,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1025/533403/ztf_20221025533403_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.22727243803169103,
+     "second_arcsec": 62.352582513056134,
+     "status": "matched",
+     "mag": 17.22549789434514,
+     "mag_instrumental": -8.98799991607666,
+     "sigmag": 0.029999999329447746,
+     "flags": 0,
+     "snr": 36.310001373291016,
+     "flux_DN": 3935.941650390625,
+     "sigflux_DN": 108.39157104492188,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.17466586258147362,
+     "second_arcsec": 10.938092064769787,
+     "status": "matched",
+     "mag": 16.512497596798752,
+     "mag_instrumental": -9.701000213623047,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 54.02000045776367,
+     "flux_DN": 7594.76220703125,
+     "sigflux_DN": 140.60018920898438,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.14958373131468747,
+     "second_arcsec": 28.191086088653844,
+     "status": "matched",
+     "mag": 16.070498161373948,
+     "mag_instrumental": -10.142999649047852,
+     "sigmag": 0.01899999938905239,
+     "flags": 0,
+     "snr": 56.84000015258789,
+     "flux_DN": 11402.75,
+     "sigflux_DN": 200.59432983398438,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212452109,
+   "mjd": 59878.52109949989,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1856981242906,
+   "clrcoeff": 0.126817529493352,
+   "pcolor": "g-R",
+   "n_sources": 3720,
+   "mag_minus_zp_flux_median": -26.18570327758789,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1026/520903/ztf_20221026520903_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 41.178595152543814,
+     "second_arcsec": 51.242665893238566,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.21781249528566818,
+     "second_arcsec": 16.278328022586773,
+     "status": "matched",
+     "mag": 16.51469859731306,
+     "mag_instrumental": -9.670999526977539,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 52.959999084472656,
+     "flux_DN": 7387.6474609375,
+     "sigflux_DN": 139.48764038085938,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 39.380677877584674,
+     "second_arcsec": 72.58147673153307,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212452620,
+   "mjd": 59878.526203699876,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2032515307531,
+   "clrcoeff": 0.126738093654777,
+   "pcolor": "g-R",
+   "n_sources": 4010,
+   "mag_minus_zp_flux_median": -26.203256607055664,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1026/526042/ztf_20221026526042_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 40.59673492430441,
+     "second_arcsec": 51.11451493770523,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.23107647498046158,
+     "second_arcsec": 42.98343452362854,
+     "status": "matched",
+     "mag": 16.549251248465502,
+     "mag_instrumental": -9.654000282287598,
+     "sigmag": 0.017000000923871994,
+     "flags": 0,
+     "snr": 62.7599983215332,
+     "flux_DN": 7272.7978515625,
+     "sigflux_DN": 115.88395690917969,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 29.287409045040395,
+     "second_arcsec": 59.24823032446464,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212452876,
+   "mjd": 59878.528761600144,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2033069230089,
+   "clrcoeff": 0.128338906375705,
+   "pcolor": "g-R",
+   "n_sources": 3912,
+   "mag_minus_zp_flux_median": -26.203311920166016,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1026/528600/ztf_20221026528600_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 51.0334404926184,
+     "second_arcsec": 64.53211090824672,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.18804451718237858,
+     "second_arcsec": 41.91227425511871,
+     "status": "matched",
+     "mag": 16.54230667123888,
+     "mag_instrumental": -9.66100025177002,
+     "sigmag": 0.02199999988079071,
+     "flags": 0,
+     "snr": 50.27000045776367,
+     "flux_DN": 7319.87109375,
+     "sigflux_DN": 145.6239776611328,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 28.384408196704612,
+     "second_arcsec": 28.63638424254985,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212453130,
+   "mjd": 59878.53130789986,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2019105013917,
+   "clrcoeff": 0.130449176137224,
+   "pcolor": "g-R",
+   "n_sources": 4236,
+   "mag_minus_zp_flux_median": -26.201915740966797,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1026/531146/ztf_20221026531146_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 46.727455811012426,
+     "second_arcsec": 64.93243107739315,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.14772602558923612,
+     "second_arcsec": 16.596592639090954,
+     "status": "matched",
+     "mag": 16.524910455615334,
+     "mag_instrumental": -9.677000045776367,
+     "sigmag": 0.026000000536441803,
+     "flags": 0,
+     "snr": 42.25,
+     "flux_DN": 7428.61376953125,
+     "sigflux_DN": 175.8395538330078,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 84.03962096770977,
+     "second_arcsec": 115.25952999707565,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212552410,
+   "mjd": 59879.524108800106,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1763820446333,
+   "clrcoeff": 0.141173764130559,
+   "pcolor": "g-R",
+   "n_sources": 3438,
+   "mag_minus_zp_flux_median": -26.176387786865234,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1027/524016/ztf_20221027524016_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 40.23773854571727,
+     "second_arcsec": 64.22737473716863,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.31145015395578035,
+     "second_arcsec": 16.77442494141097,
+     "status": "matched",
+     "mag": 16.510381678422362,
+     "mag_instrumental": -9.666000366210938,
+     "sigmag": 0.013000000268220901,
+     "flags": 0,
+     "snr": 85.48999786376953,
+     "flux_DN": 7353.681640625,
+     "sigflux_DN": 86.01698303222656,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.1943352219120058,
+     "second_arcsec": 41.10205575334093,
+     "status": "matched",
+     "mag": 16.073382357438476,
+     "mag_instrumental": -10.102999687194824,
+     "sigmag": 0.01600000075995922,
+     "flags": 0,
+     "snr": 67.44000244140625,
+     "flux_DN": 10990.12109375,
+     "sigflux_DN": 162.9686279296875,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212552665,
+   "mjd": 59879.52665509982,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1602819911992,
+   "clrcoeff": 0.137439183980479,
+   "pcolor": "g-R",
+   "n_sources": 3577,
+   "mag_minus_zp_flux_median": -26.16028594970703,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1027/526551/ztf_20221027526551_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.20645582600844117,
+     "second_arcsec": 41.043758898424755,
+     "status": "matched",
+     "mag": 17.16828236503953,
+     "mag_instrumental": -8.991999626159668,
+     "sigmag": 0.02800000086426735,
+     "flags": 0,
+     "snr": 38.63999938964844,
+     "flux_DN": 3950.4873046875,
+     "sigflux_DN": 102.24278259277344,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1428116957377215,
+     "second_arcsec": 16.496901903353177,
+     "status": "matched",
+     "mag": 16.445281838611308,
+     "mag_instrumental": -9.71500015258789,
+     "sigmag": 0.026000000536441803,
+     "flags": 0,
+     "snr": 40.970001220703125,
+     "flux_DN": 7693.3916015625,
+     "sigflux_DN": 187.77569580078125,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.17706132945128067,
+     "second_arcsec": 74.6279375625308,
+     "status": "matched",
+     "mag": 16.111282204822245,
+     "mag_instrumental": -10.048999786376953,
+     "sigmag": 0.014999999664723873,
+     "flags": 0,
+     "snr": 71.43000030517578,
+     "flux_DN": 10466.28515625,
+     "sigflux_DN": 146.52503967285156,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212553173,
+   "mjd": 59879.53173610009,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2115837480012,
+   "clrcoeff": 0.124648898035112,
+   "pcolor": "g-R",
+   "n_sources": 3748,
+   "mag_minus_zp_flux_median": -26.211589813232422,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1027/531632/ztf_20221027531632_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.10015333336623161,
+     "second_arcsec": 51.50255017128832,
+     "status": "matched",
+     "mag": 17.204583778518778,
+     "mag_instrumental": -9.006999969482422,
+     "sigmag": 0.023000000044703484,
+     "flags": 0,
+     "snr": 46.599998474121094,
+     "flux_DN": 4005.513671875,
+     "sigflux_DN": 85.95869445800781,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.04083462117723472,
+     "second_arcsec": 15.940858258474771,
+     "status": "matched",
+     "mag": 16.52758373274241,
+     "mag_instrumental": -9.684000015258789,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 54.84000015258789,
+     "flux_DN": 7476.69482421875,
+     "sigflux_DN": 136.3485565185547,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.28752079811898446,
+     "second_arcsec": 74.75325597660674,
+     "status": "matched",
+     "mag": 16.035584106582743,
+     "mag_instrumental": -10.175999641418457,
+     "sigmag": 0.01899999938905239,
+     "flags": 0,
+     "snr": 56.2599983215332,
+     "flux_DN": 11754.8017578125,
+     "sigflux_DN": 208.95285034179688,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 212553428,
+   "mjd": 59879.53428239981,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1977079193841,
+   "clrcoeff": 0.129782980011603,
+   "pcolor": "g-R",
+   "n_sources": 3617,
+   "mag_minus_zp_flux_median": -26.19771385192871,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1027/534178/ztf_20221027534178_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.2456136495626725,
+     "second_arcsec": 52.78523546972127,
+     "status": "matched",
+     "mag": 17.184708384777167,
+     "mag_instrumental": -9.012999534606934,
+     "sigmag": 0.023000000044703484,
+     "flags": 0,
+     "snr": 47.619998931884766,
+     "flux_DN": 4027.738037109375,
+     "sigflux_DN": 84.5807876586914,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.14556950706121993,
+     "second_arcsec": 17.119243066944936,
+     "status": "matched",
+     "mag": 16.500708369518378,
+     "mag_instrumental": -9.696999549865723,
+     "sigmag": 0.01600000075995922,
+     "flags": 0,
+     "snr": 69.16000366210938,
+     "flux_DN": 7566.81494140625,
+     "sigflux_DN": 109.41792297363281,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.12167325497784248,
+     "second_arcsec": 38.82738196415835,
+     "status": "matched",
+     "mag": 16.059708384777167,
+     "mag_instrumental": -10.137999534606934,
+     "sigmag": 0.013000000268220901,
+     "flags": 0,
+     "snr": 83.5199966430664,
+     "flux_DN": 11350.3359375,
+     "sigflux_DN": 135.90260314941406,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 215545043,
+   "mjd": 59909.45043980004,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2467334942863,
+   "clrcoeff": 0.131199072471905,
+   "pcolor": "g-R",
+   "n_sources": 5491,
+   "mag_minus_zp_flux_median": -26.246740341186523,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1126/450440/ztf_20221126450440_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.13507973615961216,
+     "second_arcsec": 40.882757488227305,
+     "status": "matched",
+     "mag": 17.215733356957198,
+     "mag_instrumental": -9.031000137329102,
+     "sigmag": 0.041999999433755875,
+     "flags": 0,
+     "snr": 26.040000915527344,
+     "flux_DN": 4095.15234375,
+     "sigflux_DN": 157.2830047607422,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.09382018645450348,
+     "second_arcsec": 16.936222125579018,
+     "status": "matched",
+     "mag": 16.559733219628097,
+     "mag_instrumental": -9.687000274658203,
+     "sigmag": 0.03799999877810478,
+     "flags": 0,
+     "snr": 28.719999313354492,
+     "flux_DN": 7497.396484375,
+     "sigflux_DN": 261.0224914550781,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.18292120102946274,
+     "second_arcsec": 28.61370397612851,
+     "status": "matched",
+     "mag": 16.08673364687419,
+     "mag_instrumental": -10.15999984741211,
+     "sigmag": 0.035999998450279236,
+     "flags": -1,
+     "snr": 29.90999984741211,
+     "flux_DN": 11582.7734375,
+     "sigflux_DN": 387.2530822753906,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 216949438,
+   "mjd": 59923.494386599865,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.3186230729444,
+   "clrcoeff": 0.113815466412634,
+   "pcolor": "g-R",
+   "n_sources": 3938,
+   "mag_minus_zp_flux_median": -26.318634033203125,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2022/1210/494387/ztf_20221210494387_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.1497972861151827,
+     "second_arcsec": 32.813397393237985,
+     "status": "matched",
+     "mag": 17.230622775398015,
+     "mag_instrumental": -9.088000297546387,
+     "sigmag": 0.02800000086426735,
+     "flags": 0,
+     "snr": 38.5,
+     "flux_DN": 4316.15673828125,
+     "sigflux_DN": 112.1042251586914,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1274280106009919,
+     "second_arcsec": 34.49596688210775,
+     "status": "matched",
+     "mag": 16.5686230729444,
+     "mag_instrumental": -9.75,
+     "sigmag": 0.023000000044703484,
+     "flags": 0,
+     "snr": 48.040000915527344,
+     "flux_DN": 7945.6015625,
+     "sigflux_DN": 165.39064025878906,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 28.59533399462151,
+     "second_arcsec": 39.59842242697714,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 222547374,
+   "mjd": 59979.47374999989,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.3039725639572,
+   "clrcoeff": 0.130356795641417,
+   "pcolor": "g-R",
+   "n_sources": 3736,
+   "mag_minus_zp_flux_median": -26.303977966308594,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0204/473727/ztf_20230204473727_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.09768629182391794,
+     "second_arcsec": 28.242157490041244,
+     "status": "matched",
+     "mag": 17.242972693656906,
+     "mag_instrumental": -9.060999870300293,
+     "sigmag": 0.032999999821186066,
+     "flags": 0,
+     "snr": 32.900001525878906,
+     "flux_DN": 4210.0234375,
+     "sigflux_DN": 127.95997619628906,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.054955910465390966,
+     "second_arcsec": 51.696728999597845,
+     "status": "matched",
+     "mag": 16.54897244951628,
+     "mag_instrumental": -9.755000114440918,
+     "sigmag": 0.02800000086426735,
+     "flags": 0,
+     "snr": 39.20000076293945,
+     "flux_DN": 7982.30029296875,
+     "sigflux_DN": 203.64956665039062,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 53.89662845456652,
+     "second_arcsec": 74.86255292023122,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 222642814,
+   "mjd": 59980.42814810015,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.3374671344586,
+   "clrcoeff": 0.118903743851715,
+   "pcolor": "g-R",
+   "n_sources": 3703,
+   "mag_minus_zp_flux_median": -26.337472915649414,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0205/428148/ztf_20230205428148_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.12566326622202983,
+     "second_arcsec": 30.581122548482757,
+     "status": "matched",
+     "mag": 17.216466844541607,
+     "mag_instrumental": -9.121000289916992,
+     "sigmag": 0.03999999910593033,
+     "flags": 0,
+     "snr": 26.940000534057617,
+     "flux_DN": 4449.5107421875,
+     "sigflux_DN": 165.1554718017578,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.03214817240569615,
+     "second_arcsec": 16.692993627488182,
+     "status": "matched",
+     "mag": 16.526467264158306,
+     "mag_instrumental": -9.810999870300293,
+     "sigmag": 0.026000000536441803,
+     "flags": 0,
+     "snr": 41.91999816894531,
+     "flux_DN": 8405.0771484375,
+     "sigflux_DN": 200.50128173828125,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 29.369413859709464,
+     "second_arcsec": 74.47809933970927,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 223128439,
+   "mjd": 59985.28439809987,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.302501849827,
+   "clrcoeff": 0.102787589145574,
+   "pcolor": "g-R",
+   "n_sources": 2488,
+   "mag_minus_zp_flux_median": -26.302505493164062,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0210/284363/ztf_20230210284363_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.1581183928225848,
+     "second_arcsec": 47.9145003426097,
+     "status": "matched",
+     "mag": 17.222501926120945,
+     "mag_instrumental": -9.079999923706055,
+     "sigmag": 0.027000000700354576,
+     "flags": 0,
+     "snr": 39.630001068115234,
+     "flux_DN": 4284.43408203125,
+     "sigflux_DN": 108.12340545654297,
+     "dr24": {
+      "mag": 17.2368374,
+      "magerr": 0.0234362502,
+      "catflags": 32768
+     }
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.18126853058534512,
+     "second_arcsec": 45.0808975428191,
+     "status": "matched",
+     "mag": 16.57150190323276,
+     "mag_instrumental": -9.730999946594238,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 51.209999084472656,
+     "flux_DN": 7807.67919921875,
+     "sigflux_DN": 152.45213317871094,
+     "dr24": {
+      "mag": 16.587532,
+      "magerr": 0.0183942523,
+      "catflags": 32768
+     }
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.11967831030116936,
+     "second_arcsec": 28.959832780299145,
+     "status": "matched",
+     "mag": 16.043502025303074,
+     "mag_instrumental": -10.258999824523926,
+     "sigmag": 0.014999999664723873,
+     "flags": 0,
+     "snr": 74.37000274658203,
+     "flux_DN": 12689.0439453125,
+     "sigflux_DN": 170.63079833984375,
+     "dr24": {
+      "mag": 16.0180092,
+      "magerr": 0.0161617789,
+      "catflags": 32768
+     }
+    }
+   }
+  },
+  {
+   "expid": 226242341,
+   "mjd": 60016.42341439985,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1960792126415,
+   "clrcoeff": 0.119267207619436,
+   "pcolor": "g-R",
+   "n_sources": 4493,
+   "mag_minus_zp_flux_median": -26.196086883544922,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0313/423380/ztf_20230313423380_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.11880834192336116,
+     "second_arcsec": 48.12008771479206,
+     "status": "matched",
+     "mag": 17.229079205012106,
+     "mag_instrumental": -8.967000007629395,
+     "sigmag": 0.02800000086426735,
+     "flags": 0,
+     "snr": 38.369998931884766,
+     "flux_DN": 3860.449462890625,
+     "sigflux_DN": 100.6236343383789,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.036409334384092044,
+     "second_arcsec": 16.202072701326852,
+     "status": "matched",
+     "mag": 16.54707904479482,
+     "mag_instrumental": -9.64900016784668,
+     "sigmag": 0.023000000044703484,
+     "flags": 0,
+     "snr": 47.209999084472656,
+     "flux_DN": 7239.359375,
+     "sigflux_DN": 153.35702514648438,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 27.37104494295705,
+     "second_arcsec": 59.165508275798686,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 227828467,
+   "mjd": 60032.28467589989,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.143020033989,
+   "clrcoeff": 0.118992111546393,
+   "pcolor": "g-R",
+   "n_sources": 4750,
+   "mag_minus_zp_flux_median": -26.143024444580078,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0329/284456/ztf_20230329284456_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.05287145034523348,
+     "second_arcsec": 40.32613121706241,
+     "status": "matched",
+     "mag": 17.242020011100816,
+     "mag_instrumental": -8.901000022888184,
+     "sigmag": 0.029999999329447746,
+     "flags": 0,
+     "snr": 35.720001220703125,
+     "flux_DN": 3632.474853515625,
+     "sigflux_DN": 101.70724487304688,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.06556901242912597,
+     "second_arcsec": 16.65088609298564,
+     "status": "matched",
+     "mag": 16.54801976696019,
+     "mag_instrumental": -9.595000267028809,
+     "sigmag": 0.03200000151991844,
+     "flags": 0,
+     "snr": 34.36000061035156,
+     "flux_DN": 6887.86865234375,
+     "sigflux_DN": 200.46917724609375,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 38.51171293957459,
+     "second_arcsec": 59.104140994124066,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 228223570,
+   "mjd": 60036.23570600012,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2983687538052,
+   "clrcoeff": 0.116402919683283,
+   "pcolor": "g-R",
+   "n_sources": 3621,
+   "mag_minus_zp_flux_median": -26.29837417602539,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0402/235706/ztf_20230402235706_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.18575813734017557,
+     "second_arcsec": 34.35783342759886,
+     "status": "matched",
+     "mag": 17.24036914290432,
+     "mag_instrumental": -9.057999610900879,
+     "sigmag": 0.04399999976158142,
+     "flags": 0,
+     "snr": 24.6200008392334,
+     "flux_DN": 4198.39306640625,
+     "sigflux_DN": 170.52865600585938,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.08531195948435459,
+     "second_arcsec": 16.91965192183959,
+     "status": "matched",
+     "mag": 16.5793688911343,
+     "mag_instrumental": -9.718999862670898,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 55.11000061035156,
+     "flux_DN": 7721.8056640625,
+     "sigflux_DN": 140.1072998046875,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 28.816875547122397,
+     "second_arcsec": 44.37250848287448,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 228245671,
+   "mjd": 60036.45671299985,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.260994786238,
+   "clrcoeff": 0.127511195900147,
+   "pcolor": "g-R",
+   "n_sources": 3629,
+   "mag_minus_zp_flux_median": -26.261005401611328,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0402/456701/ztf_20230402456701_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.14198804438184695,
+     "second_arcsec": 5.7853064256315525,
+     "status": "matched",
+     "mag": 17.20699488542013,
+     "mag_instrumental": -9.053999900817871,
+     "sigmag": 0.04399999976158142,
+     "flags": 0,
+     "snr": 24.850000381469727,
+     "flux_DN": 4182.935546875,
+     "sigflux_DN": 168.35975646972656,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.0712902024655384,
+     "second_arcsec": 51.31308089099225,
+     "status": "matched",
+     "mag": 16.508994931196497,
+     "mag_instrumental": -9.751999855041504,
+     "sigmag": 0.03400000184774399,
+     "flags": 0,
+     "snr": 32.310001373291016,
+     "flux_DN": 7960.2607421875,
+     "sigflux_DN": 246.34414672851562,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 28.39594523600221,
+     "second_arcsec": 39.88347172960516,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 228830788,
+   "mjd": 60042.30788190011,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1238806871602,
+   "clrcoeff": 0.124342362765153,
+   "pcolor": "g-R",
+   "n_sources": 3595,
+   "mag_minus_zp_flux_median": -26.12389373779297,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0408/307766/ztf_20230408307766_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.09866681019425924,
+     "second_arcsec": 35.29720506732977,
+     "status": "matched",
+     "mag": 17.1238806871602,
+     "mag_instrumental": -9.0,
+     "sigmag": 0.05000000074505806,
+     "flags": 0,
+     "snr": 21.93000030517578,
+     "flux_DN": 3979.739990234375,
+     "sigflux_DN": 181.44107055664062,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.060284489685328575,
+     "second_arcsec": 14.864436105393137,
+     "status": "matched",
+     "mag": 16.543880763454144,
+     "mag_instrumental": -9.579999923706055,
+     "sigmag": 0.04899999871850014,
+     "flags": 0,
+     "snr": 22.020000457763672,
+     "flux_DN": 6793.294921875,
+     "sigflux_DN": 308.4629821777344,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 34.35261720779852,
+     "second_arcsec": 74.57316720874994,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 228830983,
+   "mjd": 60042.30983800022,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.0458477660038,
+   "clrcoeff": 0.122890724025175,
+   "pcolor": "g-R",
+   "n_sources": 3195,
+   "mag_minus_zp_flux_median": -26.045852661132812,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0408/309711/ztf_20230408309711_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.07196113436126358,
+     "second_arcsec": 41.29170457708628,
+     "status": "matched",
+     "mag": 17.203847758374405,
+     "mag_instrumental": -8.842000007629395,
+     "sigmag": 0.052000001072883606,
+     "flags": 0,
+     "snr": 20.719999313354492,
+     "flux_DN": 3443.260009765625,
+     "sigflux_DN": 166.1792449951172,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.11914750205509413,
+     "second_arcsec": 23.633385976835307,
+     "status": "matched",
+     "mag": 16.558847300610733,
+     "mag_instrumental": -9.487000465393066,
+     "sigmag": 0.06499999761581421,
+     "flags": 0,
+     "snr": 16.700000762939453,
+     "flux_DN": 6235.22119140625,
+     "sigflux_DN": 373.28533935546875,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 41.264316557976855,
+     "second_arcsec": 74.65839224314126,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 228935961,
+   "mjd": 60043.35961809987,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2928606749325,
+   "clrcoeff": 0.107943383637746,
+   "pcolor": "g-R",
+   "n_sources": 5203,
+   "mag_minus_zp_flux_median": -26.292869567871094,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0409/359618/ztf_20230409359618_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.13459944408900737,
+     "second_arcsec": 11.691087743474348,
+     "status": "matched",
+     "mag": 17.201861071661014,
+     "mag_instrumental": -9.090999603271484,
+     "sigmag": 0.04800000041723251,
+     "flags": 0,
+     "snr": 22.56999969482422,
+     "flux_DN": 4328.11279296875,
+     "sigflux_DN": 191.742919921875,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.016596080256549302,
+     "second_arcsec": 16.284005025434517,
+     "status": "matched",
+     "mag": 16.505860972478885,
+     "mag_instrumental": -9.786999702453613,
+     "sigmag": 0.0560000017285347,
+     "flags": 0,
+     "snr": 19.31999969482422,
+     "flux_DN": 8221.2138671875,
+     "sigflux_DN": 425.5473937988281,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 26.836854638922127,
+     "second_arcsec": 58.47984781682266,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 237022956,
+   "mjd": 60124.229560200125,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2638945640264,
+   "clrcoeff": 0.124766841702393,
+   "pcolor": "g-R",
+   "n_sources": 3934,
+   "mag_minus_zp_flux_median": -26.263898849487305,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0629/229560/ztf_20230629229560_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.2150857376986783,
+     "second_arcsec": 44.7253319768717,
+     "status": "matched",
+     "mag": 17.226894861572788,
+     "mag_instrumental": -9.036999702453613,
+     "sigmag": 0.03400000184774399,
+     "flags": 0,
+     "snr": 31.649999618530273,
+     "flux_DN": 4117.87353515625,
+     "sigflux_DN": 130.08966064453125,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.15140297850437243,
+     "second_arcsec": 15.952534213561139,
+     "status": "matched",
+     "mag": 16.54989481579642,
+     "mag_instrumental": -9.71399974822998,
+     "sigmag": 0.0430000014603138,
+     "flags": 0,
+     "snr": 25.020000457763672,
+     "flux_DN": 7686.30419921875,
+     "sigflux_DN": 307.24371337890625,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 74.59784259761224,
+     "second_arcsec": 74.797703060455,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241016913,
+   "mjd": 60164.169131900184,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1385523335771,
+   "clrcoeff": 0.133814553539831,
+   "pcolor": "g-R",
+   "n_sources": 3257,
+   "mag_minus_zp_flux_median": -26.13855743408203,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0808/169132/ztf_20230808169132_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 46.195873821579454,
+     "second_arcsec": 73.4188297027901,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.16740477958606656,
+     "second_arcsec": 16.65218055273722,
+     "status": "matched",
+     "mag": 16.53355279134077,
+     "mag_instrumental": -9.604999542236328,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 55.11000061035156,
+     "flux_DN": 6951.6474609375,
+     "sigflux_DN": 126.13327026367188,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.09911428318793332,
+     "second_arcsec": 27.98512377935441,
+     "status": "matched",
+     "mag": 16.030552531941357,
+     "mag_instrumental": -10.107999801635742,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 52.45000076293945,
+     "flux_DN": 11040.8720703125,
+     "sigflux_DN": 210.49868774414062,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241017056,
+   "mjd": 60164.170567099936,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1397368285152,
+   "clrcoeff": 0.124012818733951,
+   "pcolor": "g-R",
+   "n_sources": 3645,
+   "mag_minus_zp_flux_median": -26.13974380493164,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0808/170556/ztf_20230808170556_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 34.79803987217025,
+     "second_arcsec": 51.098131715948675,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.13037841039346293,
+     "second_arcsec": 16.250071383332056,
+     "status": "matched",
+     "mag": 16.544736561486392,
+     "mag_instrumental": -9.595000267028809,
+     "sigmag": 0.035999998450279236,
+     "flags": 0,
+     "snr": 30.239999771118164,
+     "flux_DN": 6887.86865234375,
+     "sigflux_DN": 227.7482147216797,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.13268602633264667,
+     "second_arcsec": 74.69464118023434,
+     "status": "matched",
+     "mag": 16.034737286278872,
+     "mag_instrumental": -10.104999542236328,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 50.5,
+     "flux_DN": 11010.3935546875,
+     "sigflux_DN": 218.0303497314453,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241017199,
+   "mjd": 60164.171990700066,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1476510821621,
+   "clrcoeff": 0.12102001024819,
+   "pcolor": "g-R",
+   "n_sources": 4270,
+   "mag_minus_zp_flux_median": -26.147659301757812,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0808/171979/ztf_20230808171979_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 40.75490773484512,
+     "second_arcsec": 73.07357845852184,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1250495520760848,
+     "second_arcsec": 16.707100851172218,
+     "status": "matched",
+     "mag": 16.559650784615712,
+     "mag_instrumental": -9.588000297546387,
+     "sigmag": 0.06199999898672104,
+     "flags": 0,
+     "snr": 17.3700008392334,
+     "flux_DN": 6843.57177734375,
+     "sigflux_DN": 393.9476623535156,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.11656835762015916,
+     "second_arcsec": 12.644123634464725,
+     "status": "matched",
+     "mag": 15.995650654916005,
+     "mag_instrumental": -10.152000427246094,
+     "sigmag": 0.04600000008940697,
+     "flags": 0,
+     "snr": 23.760000228881836,
+     "flux_DN": 11497.705078125,
+     "sigflux_DN": 483.9528503417969,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241116549,
+   "mjd": 60165.16549770022,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1527902921091,
+   "clrcoeff": 0.135820057501486,
+   "pcolor": "g-R",
+   "n_sources": 3305,
+   "mag_minus_zp_flux_median": -26.152795791625977,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0809/165486/ztf_20230809165486_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 50.3631568416382,
+     "second_arcsec": 72.55723144624965,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.12388975786909247,
+     "second_arcsec": 16.423504313838084,
+     "status": "matched",
+     "mag": 16.544790490473357,
+     "mag_instrumental": -9.607999801635742,
+     "sigmag": 0.02500000037252903,
+     "flags": 0,
+     "snr": 43.779998779296875,
+     "flux_DN": 6970.89599609375,
+     "sigflux_DN": 159.2267303466797,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.14294575949789515,
+     "second_arcsec": 38.73452573631285,
+     "status": "matched",
+     "mag": 16.059789880121794,
+     "mag_instrumental": -10.093000411987305,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 50.970001220703125,
+     "flux_DN": 10889.31640625,
+     "sigflux_DN": 213.62689208984375,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241116692,
+   "mjd": 60165.16692129988,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1588385011926,
+   "clrcoeff": 0.107679132774662,
+   "pcolor": "g-R",
+   "n_sources": 3491,
+   "mag_minus_zp_flux_median": -26.158843994140625,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0809/166910/ztf_20230809166910_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 50.73675915035849,
+     "second_arcsec": 64.83283700938404,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.13380062124759504,
+     "second_arcsec": 16.261173316911584,
+     "status": "matched",
+     "mag": 16.554838409639867,
+     "mag_instrumental": -9.604000091552734,
+     "sigmag": 0.023000000044703484,
+     "flags": 0,
+     "snr": 46.400001525878906,
+     "flux_DN": 6945.2431640625,
+     "sigflux_DN": 149.68524169921875,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.17091058909089335,
+     "second_arcsec": 28.34990223111648,
+     "status": "matched",
+     "mag": 16.059838524080785,
+     "mag_instrumental": -10.098999977111816,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 55.11000061035156,
+     "flux_DN": 10949.6875,
+     "sigflux_DN": 198.67518615722656,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241116834,
+   "mjd": 60165.16834490001,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1456158736383,
+   "clrcoeff": 0.129428533568291,
+   "pcolor": "g-R",
+   "n_sources": 3274,
+   "mag_minus_zp_flux_median": -26.14562225341797,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0809/168345/ztf_20230809168345_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 76.75360799023896,
+     "second_arcsec": 85.33950573300764,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1584011769721562,
+     "second_arcsec": 16.912012645845834,
+     "status": "matched",
+     "mag": 16.51961546928039,
+     "mag_instrumental": -9.62600040435791,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 55.11000061035156,
+     "flux_DN": 7087.5107421875,
+     "sigflux_DN": 128.59841918945312,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.11970452209794333,
+     "second_arcsec": 28.907276092596632,
+     "status": "matched",
+     "mag": 16.01561575919738,
+     "mag_instrumental": -10.130000114440918,
+     "sigmag": 0.01899999938905239,
+     "flags": 0,
+     "snr": 57.13999938964844,
+     "flux_DN": 11266.974609375,
+     "sigflux_DN": 197.16807556152344,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241116976,
+   "mjd": 60165.16976850014,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1516299844178,
+   "clrcoeff": 0.129346627636528,
+   "pcolor": "g-R",
+   "n_sources": 3552,
+   "mag_minus_zp_flux_median": -26.151636123657227,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0809/169769/ztf_20230809169769_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 64.73111840651661,
+     "second_arcsec": 76.7573687877441,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.11432263570760659,
+     "second_arcsec": 16.845761725836077,
+     "status": "matched",
+     "mag": 16.53262954954231,
+     "mag_instrumental": -9.619000434875488,
+     "sigmag": 0.02500000037252903,
+     "flags": 0,
+     "snr": 43.08000183105469,
+     "flux_DN": 7041.9306640625,
+     "sigflux_DN": 163.44361877441406,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.10964141218995126,
+     "second_arcsec": 28.438079045132728,
+     "status": "matched",
+     "mag": 16.054629862347486,
+     "mag_instrumental": -10.097000122070312,
+     "sigmag": 0.017000000923871994,
+     "flags": 0,
+     "snr": 62.400001525878906,
+     "flux_DN": 10929.52734375,
+     "sigflux_DN": 175.15650939941406,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241117120,
+   "mjd": 60165.171203699894,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1404294151338,
+   "clrcoeff": 0.13343248626428,
+   "pcolor": "g-R",
+   "n_sources": 3498,
+   "mag_minus_zp_flux_median": -26.14043426513672,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0809/171204/ztf_20230809171204_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 64.98911603894724,
+     "second_arcsec": 76.73344879291432,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.14499169165739814,
+     "second_arcsec": 15.95388367324732,
+     "status": "matched",
+     "mag": 16.553429521945322,
+     "mag_instrumental": -9.586999893188477,
+     "sigmag": 0.024000000208616257,
+     "flags": 0,
+     "snr": 44.68000030517578,
+     "flux_DN": 6837.2666015625,
+     "sigflux_DN": 153.02574157714844,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.12341098408380685,
+     "second_arcsec": 25.407665731270768,
+     "status": "matched",
+     "mag": 16.030429758456552,
+     "mag_instrumental": -10.109999656677246,
+     "sigmag": 0.02500000037252903,
+     "flags": 0,
+     "snr": 44.13999938964844,
+     "flux_DN": 11061.23828125,
+     "sigflux_DN": 250.6193084716797,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241216715,
+   "mjd": 60166.16715280013,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2225734446284,
+   "clrcoeff": 0.110105137706058,
+   "pcolor": "g-R",
+   "n_sources": 4821,
+   "mag_minus_zp_flux_median": -26.222579956054688,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0810/167153/ztf_20230810167153_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 39.59825897466115,
+     "second_arcsec": 51.33512279745746,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.10260044302971656,
+     "second_arcsec": 15.77059760558972,
+     "status": "matched",
+     "mag": 16.505573436999004,
+     "mag_instrumental": -9.717000007629395,
+     "sigmag": 0.03500000014901161,
+     "flags": 0,
+     "snr": 31.200000762939453,
+     "flux_DN": 7707.58544921875,
+     "sigflux_DN": 247.0434112548828,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 27.577358382261913,
+     "second_arcsec": 39.033169888698005,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 241216862,
+   "mjd": 60166.16862270003,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1906112444064,
+   "clrcoeff": 0.127957830446375,
+   "pcolor": "g-R",
+   "n_sources": 5073,
+   "mag_minus_zp_flux_median": -26.190616607666016,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0810/168623/ztf_20230810168623_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 43.50507404442182,
+     "second_arcsec": 51.43993012785497,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1127781641125537,
+     "second_arcsec": 16.369747445179925,
+     "status": "matched",
+     "mag": 16.54161107655972,
+     "mag_instrumental": -9.64900016784668,
+     "sigmag": 0.054999999701976776,
+     "flags": 0,
+     "snr": 19.739999771118164,
+     "flux_DN": 7239.359375,
+     "sigflux_DN": 366.72332763671875,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.6772674433442006,
+     "second_arcsec": 28.70062176216506,
+     "status": "matched",
+     "mag": 17.037611366476714,
+     "mag_instrumental": -9.152999877929688,
+     "sigmag": 0.10999999940395355,
+     "flags": -1,
+     "snr": 9.869999885559082,
+     "flux_DN": 4582.7529296875,
+     "sigflux_DN": 464.29583740234375,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242015324,
+   "mjd": 60174.15324069979,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1797272058941,
+   "clrcoeff": 0.127627042278941,
+   "pcolor": "g-R",
+   "n_sources": 2150,
+   "mag_minus_zp_flux_median": -26.179733276367188,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0818/153241/ztf_20230818153241_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 76.81220578465349,
+     "second_arcsec": 83.98879378619284,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.21157131452755007,
+     "second_arcsec": 16.457226149595915,
+     "status": "matched",
+     "mag": 16.532726893088924,
+     "mag_instrumental": -9.647000312805176,
+     "sigmag": 0.03200000151991844,
+     "flags": 0,
+     "snr": 34.470001220703125,
+     "flux_DN": 7226.02734375,
+     "sigflux_DN": 209.64564514160156,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 48.9260282385434,
+     "second_arcsec": 74.20615926964003,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242015564,
+   "mjd": 60174.15564810019,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1662377723039,
+   "clrcoeff": 0.143067809029098,
+   "pcolor": "g-R",
+   "n_sources": 2278,
+   "mag_minus_zp_flux_median": -26.166240692138672,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0818/155648/ztf_20230818155648_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 76.67862215730626,
+     "second_arcsec": 111.5285490138688,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.2414209148375228,
+     "second_arcsec": 51.73548605041587,
+     "status": "matched",
+     "mag": 16.51123803933271,
+     "mag_instrumental": -9.654999732971191,
+     "sigmag": 0.027000000700354576,
+     "flags": 0,
+     "snr": 40.81999969482422,
+     "flux_DN": 7279.50439453125,
+     "sigflux_DN": 178.34425354003906,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 74.43616715618583,
+     "second_arcsec": 156.2456238867255,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242514190,
+   "mjd": 60179.14190969989,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1173193845116,
+   "clrcoeff": 0.123379497059583,
+   "pcolor": "g-R",
+   "n_sources": 2106,
+   "mag_minus_zp_flux_median": -26.117324829101562,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0823/141910/ztf_20230823141910_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 60.726720348507726,
+     "second_arcsec": 76.86655754221312,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.17283182587629245,
+     "second_arcsec": 68.71961000537067,
+     "status": "matched",
+     "mag": 16.521319666799197,
+     "mag_instrumental": -9.595999717712402,
+     "sigmag": 0.039000000804662704,
+     "flags": 0,
+     "snr": 28.059999465942383,
+     "flux_DN": 6894.22021484375,
+     "sigflux_DN": 245.73770141601562,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 228.99198168274202,
+     "second_arcsec": 268.0822797907642,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242514428,
+   "mjd": 60179.14428240014,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.12659018283,
+   "clrcoeff": 0.11507271395118,
+   "pcolor": "g-R",
+   "n_sources": 2055,
+   "mag_minus_zp_flux_median": -26.126596450805664,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0823/144282/ztf_20230823144282_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 47.40003843339384,
+     "second_arcsec": 76.78606546193838,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.24424579273109373,
+     "second_arcsec": 73.43293855068804,
+     "status": "matched",
+     "mag": 16.56859057192912,
+     "mag_instrumental": -9.557999610900879,
+     "sigmag": 0.0430000014603138,
+     "flags": 0,
+     "snr": 25.309999465942383,
+     "flux_DN": 6656.92919921875,
+     "sigflux_DN": 263.0309753417969,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 228.37244962877134,
+     "second_arcsec": 263.46573055589596,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242514665,
+   "mjd": 60179.14665509993,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1214960148033,
+   "clrcoeff": 0.136940596426311,
+   "pcolor": "g-R",
+   "n_sources": 2342,
+   "mag_minus_zp_flux_median": -26.121501922607422,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0823/146655/ztf_20230823146655_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 51.127768804218576,
+     "second_arcsec": 65.01998682353785,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.2613195691746763,
+     "second_arcsec": 10.289214434162123,
+     "status": "matched",
+     "mag": 16.466496281832107,
+     "mag_instrumental": -9.654999732971191,
+     "sigmag": 0.02500000037252903,
+     "flags": 0,
+     "snr": 43.959999084472656,
+     "flux_DN": 7279.50439453125,
+     "sigflux_DN": 165.60537719726562,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 210.72365039158802,
+     "second_arcsec": 228.35990494097993,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242514903,
+   "mjd": 60179.14903939981,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.105787644504,
+   "clrcoeff": 0.130357225560978,
+   "pcolor": "g-R",
+   "n_sources": 2753,
+   "mag_minus_zp_flux_median": -26.105792999267578,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0823/149028/ztf_20230823149028_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 40.11412312276931,
+     "second_arcsec": 49.76232766954301,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.106250521085828,
+     "second_arcsec": 16.00319539677361,
+     "status": "matched",
+     "mag": 16.52778757583945,
+     "mag_instrumental": -9.57800006866455,
+     "sigmag": 0.02500000037252903,
+     "flags": 0,
+     "snr": 43.779998779296875,
+     "flux_DN": 6780.78369140625,
+     "sigflux_DN": 154.88424682617188,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 229.1735234448914,
+     "second_arcsec": 248.1558454285905,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242515140,
+   "mjd": 60179.15140049998,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.0997297460319,
+   "clrcoeff": 0.126357267699426,
+   "pcolor": "g-R",
+   "n_sources": 2870,
+   "mag_minus_zp_flux_median": -26.099735260009766,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0823/151400/ztf_20230823151400_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 42.820624742915236,
+     "second_arcsec": 65.00332900200704,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.10103826845510691,
+     "second_arcsec": 146.48269692137873,
+     "status": "matched",
+     "mag": 16.543729990172526,
+     "mag_instrumental": -9.555999755859375,
+     "sigmag": 0.02800000086426735,
+     "flags": 0,
+     "snr": 38.22999954223633,
+     "flux_DN": 6644.66845703125,
+     "sigflux_DN": 173.80703735351562,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 219.19272180904494,
+     "second_arcsec": 225.46464972832214,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242714006,
+   "mjd": 60181.14006939996,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.091867085961,
+   "clrcoeff": 0.135933143320477,
+   "pcolor": "g-R",
+   "n_sources": 1479,
+   "mag_minus_zp_flux_median": -26.091873168945312,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0825/140058/ztf_20230825140058_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 76.70397173256929,
+     "second_arcsec": 135.19095187111958,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.20309743711881922,
+     "second_arcsec": 183.86440267063472,
+     "status": "matched",
+     "mag": 16.52086698677887,
+     "mag_instrumental": -9.571000099182129,
+     "sigmag": 0.03500000014901161,
+     "flags": 0,
+     "snr": 30.93000030517578,
+     "flux_DN": 6737.1748046875,
+     "sigflux_DN": 217.80136108398438,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 156.28041388409278,
+     "second_arcsec": 164.60638606903376,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 242714957,
+   "mjd": 60181.14957180014,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.0654160880345,
+   "clrcoeff": 0.128326912214767,
+   "pcolor": "g-R",
+   "n_sources": 1973,
+   "mag_minus_zp_flux_median": -26.06542205810547,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0825/149560/ztf_20230825149560_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 64.00769805520608,
+     "second_arcsec": 76.79124976907667,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.13733658788670478,
+     "second_arcsec": 61.55075835078078,
+     "status": "matched",
+     "mag": 16.544416179587234,
+     "mag_instrumental": -9.520999908447266,
+     "sigmag": 0.020999999716877937,
+     "flags": 0,
+     "snr": 50.970001220703125,
+     "flux_DN": 6433.72705078125,
+     "sigflux_DN": 126.21701049804688,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.1687444731614194,
+     "second_arcsec": 156.23877087428946,
+     "status": "matched",
+     "mag": 16.028416385580886,
+     "mag_instrumental": -10.036999702453613,
+     "sigmag": 0.03999999910593033,
+     "flags": -1,
+     "snr": 27.010000228881836,
+     "flux_DN": 10351.189453125,
+     "sigflux_DN": 383.2586975097656,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 243113962,
+   "mjd": 60185.139629600104,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1064698839951,
+   "clrcoeff": 0.150589774325048,
+   "pcolor": "g-R",
+   "n_sources": 1617,
+   "mag_minus_zp_flux_median": -26.106475830078125,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/0829/139606/ztf_20230829139606_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 76.83293880829368,
+     "second_arcsec": 85.66452846107634,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.3042756263207819,
+     "second_arcsec": 159.27472130541827,
+     "status": "matched",
+     "mag": 16.64247013576512,
+     "mag_instrumental": -9.46399974822998,
+     "sigmag": 0.039000000804662704,
+     "flags": 0,
+     "snr": 27.90999984741211,
+     "flux_DN": 6104.42041015625,
+     "sigflux_DN": 218.71054077148438,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 74.80182404681454,
+     "second_arcsec": 156.31549490477042,
+     "status": "missing",
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 248752028,
+   "mjd": 60241.52028940013,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.134065540935,
+   "clrcoeff": 0.117748242657993,
+   "pcolor": "g-R",
+   "n_sources": 3010,
+   "mag_minus_zp_flux_median": -26.134069442749023,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1024/520185/ztf_20231024520185_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 58.489021618982484,
+     "second_arcsec": 73.49206078417345,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.3675300833982967,
+     "second_arcsec": 35.774569758074826,
+     "status": "matched",
+     "mag": 16.51006594529291,
+     "mag_instrumental": -9.62399959564209,
+     "sigmag": 0.02199999988079071,
+     "flags": 0,
+     "snr": 48.689998626708984,
+     "flux_DN": 7074.4580078125,
+     "sigflux_DN": 145.30270385742188,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.2905885847003251,
+     "second_arcsec": 29.06677833897505,
+     "status": "matched",
+     "mag": 15.993065746928654,
+     "mag_instrumental": -10.140999794006348,
+     "sigmag": 0.017000000923871994,
+     "flags": 0,
+     "snr": 65.01000213623047,
+     "flux_DN": 11381.755859375,
+     "sigflux_DN": 175.0658416748047,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 248752283,
+   "mjd": 60241.52283560019,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1379182982608,
+   "clrcoeff": 0.127537887131736,
+   "pcolor": "g-R",
+   "n_sources": 3091,
+   "mag_minus_zp_flux_median": -26.137924194335938,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1024/522685/ztf_20231024522685_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 50.873524718645164,
+     "second_arcsec": 59.72262279586513,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.19619468821702468,
+     "second_arcsec": 17.35551954880717,
+     "status": "matched",
+     "mag": 16.520918672101132,
+     "mag_instrumental": -9.616999626159668,
+     "sigmag": 0.017999999225139618,
+     "flags": 0,
+     "snr": 59.65999984741211,
+     "flux_DN": 7028.9619140625,
+     "sigflux_DN": 117.8252182006836,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.3581166144073936,
+     "second_arcsec": 29.73620129382608,
+     "status": "matched",
+     "mag": 16.002918069378964,
+     "mag_instrumental": -10.135000228881836,
+     "sigmag": 0.01600000075995922,
+     "flags": 0,
+     "snr": 69.16000366210938,
+     "flux_DN": 11319.00390625,
+     "sigflux_DN": 163.67544555664062,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 248752537,
+   "mjd": 60241.52537039993,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1559494260465,
+   "clrcoeff": 0.106806032160257,
+   "pcolor": "g-R",
+   "n_sources": 2592,
+   "mag_minus_zp_flux_median": -26.15595245361328,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1024/525232/ztf_20231024525232_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 64.93128831967373,
+     "second_arcsec": 76.7432265492379,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.3974816311800554,
+     "second_arcsec": 16.599570050011202,
+     "status": "matched",
+     "mag": 16.544949365011345,
+     "mag_instrumental": -9.611000061035156,
+     "sigmag": 0.01899999938905239,
+     "flags": 0,
+     "snr": 58.369998931884766,
+     "flux_DN": 6990.19775390625,
+     "sigflux_DN": 119.7507095336914,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.4393035434990538,
+     "second_arcsec": 74.30843536021474,
+     "status": "matched",
+     "mag": 16.057949853292595,
+     "mag_instrumental": -10.097999572753906,
+     "sigmag": 0.014999999664723873,
+     "flags": 0,
+     "snr": 74.37000274658203,
+     "flux_DN": 10939.6025390625,
+     "sigflux_DN": 147.10589599609375,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 248752791,
+   "mjd": 60241.52791670011,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1492979452352,
+   "clrcoeff": 0.123076852915139,
+   "pcolor": "g-R",
+   "n_sources": 3018,
+   "mag_minus_zp_flux_median": -26.149303436279297,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1024/527766/ztf_20231024527766_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 44.46776002767223,
+     "second_arcsec": 50.672480888724394,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.2844374236621766,
+     "second_arcsec": 16.433953771106705,
+     "status": "matched",
+     "mag": 16.546298258040377,
+     "mag_instrumental": -9.602999687194824,
+     "sigmag": 0.017000000923871994,
+     "flags": 0,
+     "snr": 62.7599983215332,
+     "flux_DN": 6938.8447265625,
+     "sigflux_DN": 110.56278228759766,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.18450613580394049,
+     "second_arcsec": 40.168895987817066,
+     "status": "matched",
+     "mag": 16.027298204634615,
+     "mag_instrumental": -10.121999740600586,
+     "sigmag": 0.017999999225139618,
+     "flags": 0,
+     "snr": 61.689998626708984,
+     "flux_DN": 11184.224609375,
+     "sigflux_DN": 181.2985076904297,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 248753046,
+   "mjd": 60241.53046299983,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1664747164613,
+   "clrcoeff": 0.108883163402326,
+   "pcolor": "g-R",
+   "n_sources": 2661,
+   "mag_minus_zp_flux_median": -26.166481018066406,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1024/530312/ztf_20231024530312_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 40.62226499721345,
+     "second_arcsec": 64.68070422980304,
+     "status": "missing",
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.18639240662339504,
+     "second_arcsec": 16.21121795872759,
+     "status": "matched",
+     "mag": 16.570474998748896,
+     "mag_instrumental": -9.595999717712402,
+     "sigmag": 0.017000000923871994,
+     "flags": 0,
+     "snr": 64.23999786376953,
+     "flux_DN": 6894.22021484375,
+     "sigflux_DN": 107.31181335449219,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.24647377954905297,
+     "second_arcsec": 22.538489648509994,
+     "status": "matched",
+     "mag": 16.074474708831904,
+     "mag_instrumental": -10.092000007629395,
+     "sigmag": 0.014999999664723873,
+     "flags": 0,
+     "snr": 74.87999725341797,
+     "flux_DN": 10879.287109375,
+     "sigflux_DN": 145.29281616210938,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 248851999,
+   "mjd": 60242.52000000002,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.1798152755191,
+   "clrcoeff": 0.122653974591553,
+   "pcolor": "g-R",
+   "n_sources": 5265,
+   "mag_minus_zp_flux_median": -26.179821014404297,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1025/519780/ztf_20231025519780_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.18102676959126673,
+     "second_arcsec": 40.28382477333358,
+     "status": "matched",
+     "mag": 17.21581552728912,
+     "mag_instrumental": -8.96399974822998,
+     "sigmag": 0.019999999552965164,
+     "flags": 0,
+     "snr": 53.220001220703125,
+     "flux_DN": 3849.78369140625,
+     "sigflux_DN": 72.33394622802734,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.08752608332123851,
+     "second_arcsec": 16.512948661828386,
+     "status": "matched",
+     "mag": 16.545815450995175,
+     "mag_instrumental": -9.633999824523926,
+     "sigmag": 0.026000000536441803,
+     "flags": 0,
+     "snr": 40.970001220703125,
+     "flux_DN": 7139.96337890625,
+     "sigflux_DN": 174.26795959472656,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.1922131027568939,
+     "second_arcsec": 28.982569444461074,
+     "status": "matched",
+     "mag": 16.06581495508453,
+     "mag_instrumental": -10.11400032043457,
+     "sigmag": 0.027000000700354576,
+     "flags": 0,
+     "snr": 39.91999816894531,
+     "flux_DN": 11102.0830078125,
+     "sigflux_DN": 278.1307678222656,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 249052270,
+   "mjd": 60244.522708300035,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2213123248281,
+   "clrcoeff": 0.119040227624811,
+   "pcolor": "g-R",
+   "n_sources": 3201,
+   "mag_minus_zp_flux_median": -26.221317291259766,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1027/522049/ztf_20231027522049_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.2403373110898845,
+     "second_arcsec": 51.96775615449685,
+     "status": "matched",
+     "mag": 17.255312721556617,
+     "mag_instrumental": -8.965999603271484,
+     "sigmag": 0.04100000113248825,
+     "flags": 0,
+     "snr": 26.610000610351562,
+     "flux_DN": 3856.890869140625,
+     "sigflux_DN": 144.93496704101562,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.21260342623405093,
+     "second_arcsec": 16.697848295991204,
+     "status": "matched",
+     "mag": 16.536311905211402,
+     "mag_instrumental": -9.6850004196167,
+     "sigmag": 0.029999999329447746,
+     "flags": 0,
+     "snr": 35.720001220703125,
+     "flux_DN": 7483.5888671875,
+     "sigflux_DN": 209.53627014160156,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.22851193607004816,
+     "second_arcsec": 29.858349571686897,
+     "status": "matched",
+     "mag": 16.045312683409644,
+     "mag_instrumental": -10.175999641418457,
+     "sigmag": 0.027000000700354576,
+     "flags": 0,
+     "snr": 40.209999084472656,
+     "flux_DN": 11754.8017578125,
+     "sigflux_DN": 292.31744384765625,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 249052526,
+   "mjd": 60244.52526619984,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2198423816747,
+   "clrcoeff": 0.115180992094432,
+   "pcolor": "g-R",
+   "n_sources": 3879,
+   "mag_minus_zp_flux_median": -26.2198486328125,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1027/525104/ztf_20231027525104_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.21753410453895652,
+     "second_arcsec": 16.205945254018676,
+     "status": "matched",
+     "mag": 17.234842724997453,
+     "mag_instrumental": -8.984999656677246,
+     "sigmag": 0.02800000086426735,
+     "flags": 0,
+     "snr": 39.20000076293945,
+     "flux_DN": 3925.0673828125,
+     "sigflux_DN": 100.13883972167969,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1275108308869306,
+     "second_arcsec": 15.354797486173604,
+     "status": "matched",
+     "mag": 16.564842648703507,
+     "mag_instrumental": -9.654999732971191,
+     "sigmag": 0.02199999988079071,
+     "flags": 0,
+     "snr": 48.470001220703125,
+     "flux_DN": 7279.50439453125,
+     "sigflux_DN": 150.18463134765625,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.19525595581980668,
+     "second_arcsec": 8.513593297178625,
+     "status": "matched",
+     "mag": 16.034841962058,
+     "mag_instrumental": -10.1850004196167,
+     "sigmag": 0.01899999938905239,
+     "flags": 0,
+     "snr": 57.75,
+     "flux_DN": 11852.6875,
+     "sigflux_DN": 205.2344970703125,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 249053038,
+   "mjd": 60244.53038189979,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2138907288861,
+   "clrcoeff": 0.132116254152384,
+   "pcolor": "g-R",
+   "n_sources": 4103,
+   "mag_minus_zp_flux_median": -26.21389389038086,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1027/530220/ztf_20231027530220_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.23655955224393804,
+     "second_arcsec": 21.079539107094707,
+     "status": "matched",
+     "mag": 17.227890667850943,
+     "mag_instrumental": -8.986000061035156,
+     "sigmag": 0.026000000536441803,
+     "flags": 0,
+     "snr": 41.7599983215332,
+     "flux_DN": 3928.688720703125,
+     "sigflux_DN": 94.0798568725586,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.1713187292860989,
+     "second_arcsec": 17.13723158890166,
+     "status": "matched",
+     "mag": 16.568890271122427,
+     "mag_instrumental": -9.645000457763672,
+     "sigmag": 0.01899999938905239,
+     "flags": 0,
+     "snr": 55.68000030517578,
+     "flux_DN": 7212.7197265625,
+     "sigflux_DN": 129.5416259765625,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.18705820148618252,
+     "second_arcsec": 55.67308092002046,
+     "status": "matched",
+     "mag": 16.04089039319274,
+     "mag_instrumental": -10.17300033569336,
+     "sigmag": 0.017000000923871994,
+     "flags": 0,
+     "snr": 63.4900016784668,
+     "flux_DN": 11722.353515625,
+     "sigflux_DN": 184.6233367919922,
+     "dr24": null
+    }
+   }
+  },
+  {
+   "expid": 249053293,
+   "mjd": 60244.53293980006,
+   "exptime": 30.0,
+   "infobits_tap": 0,
+   "infobits_header": 0,
+   "magzp": 26.2035143456239,
+   "clrcoeff": 0.142294629387713,
+   "pcolor": "g-R",
+   "n_sources": 3794,
+   "mag_minus_zp_flux_median": -26.20351791381836,
+   "url": "https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/2023/1027/532766/ztf_20231027532766_000672_zr_c08_o_q2_psfcat.fits",
+   "stars": {
+    "672208200000073": {
+     "sep_arcsec": 0.22830230849904093,
+     "second_arcsec": 39.66623199650731,
+     "status": "matched",
+     "mag": 17.213514574505737,
+     "mag_instrumental": -8.989999771118164,
+     "sigmag": 0.02800000086426735,
+     "flags": 0,
+     "snr": 38.779998779296875,
+     "flux_DN": 3943.207763671875,
+     "sigflux_DN": 101.69120025634766,
+     "dr24": null
+    },
+    "672208200000239": {
+     "sep_arcsec": 0.17674122333502487,
+     "second_arcsec": 16.4420520530406,
+     "status": "matched",
+     "mag": 16.527514704205444,
+     "mag_instrumental": -9.675999641418457,
+     "sigmag": 0.01600000075995922,
+     "flags": 0,
+     "snr": 67.44000244140625,
+     "flux_DN": 7421.7705078125,
+     "sigflux_DN": 110.05482482910156,
+     "dr24": null
+    },
+    "672208200002085": {
+     "sep_arcsec": 0.2938631590640038,
+     "second_arcsec": 59.945859167409694,
+     "status": "matched",
+     "mag": 16.093514688946655,
+     "mag_instrumental": -10.109999656677246,
+     "sigmag": 0.039000000804662704,
+     "flags": -1,
+     "snr": 28.059999465942383,
+     "flux_DN": 11061.23828125,
+     "sigflux_DN": 394.2669372558594,
+     "dr24": null
+    }
+   }
+  }
+ ],
+ "per_star": {
+  "672208200000073": {
+   "dr24_clean_in_gap": 2,
+   "usable_added": 28,
+   "after_fill_in_gap": 30,
+   "missing": 30,
+   "ambiguous": 0,
+   "matched_flagged": 2,
+   "meets_20": true
+  },
+  "672208200000239": {
+   "dr24_clean_in_gap": 2,
+   "usable_added": 60,
+   "after_fill_in_gap": 62,
+   "missing": 0,
+   "ambiguous": 0,
+   "matched_flagged": 0,
+   "meets_20": true
+  },
+  "672208200002085": {
+   "dr24_clean_in_gap": 1,
+   "usable_added": 31,
+   "after_fill_in_gap": 32,
+   "missing": 25,
+   "ambiguous": 0,
+   "matched_flagged": 4,
+   "meets_20": true
+  }
+ },
+ "bytes": {
+  "tap": 153001,
+  "lc_api": 330177,
+  "psfcat": 12827520
+ },
+ "seconds": 89.9
+}

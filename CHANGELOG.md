@@ -130,6 +130,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   MOA gb13 (#145), S1063 spectroscopy (116.28VK.001). Remaining TASKS items are optional or low-value (W1 1 × 10¹²
   M☉ grid ≈ 30–45× T&A; G-dependent external spike cap). No new search was started.
 
+## 2026-10-19: W3 ZTF v9: official psfcat catalogues fill the field 672 gap for 3 calibration stars (overlap test passed)
+- psfcat (IRSA IBE, per exposure and quadrant) exists and is readable for all 72 files requested. Its `mag` is
+  instrumental, so MAGZP is added. Labelled deviation: the first run omitted it.
+- Overlap with DR24: 13 pairs, median Δ −0.015 mag, robust scatter 0.0013 mag. Passes the frozen test.
+- Gap fill (60 exposures, 12.8 MB): usable gap observations rise from 2, 2, 1 to 30, 62, 32. All 55 missing targets
+  lie outside the footprint or inside its 10″ margin.
+- ZFPS not needed for these stars; difference images exist for 5 of the 6 checked.
+- One cell's #350 cases would need ≤ 533 files (≤ 114 MB, about 13 min).
+- **Handoff:** paused until the owner authorizes a psfcat data path in the W3 chain and a re-run of the calibration
+  (`results/w3_ztf/v9/RESULT.md`).
+
 ## 2026-10-18: W3 ZTF v8: field 672 gap exposures absent from DR24 in both HATS and API; image fill fails its control; paused
 - Fixed sample of 13 r-band objectids (Npix 7134). HATS and the IRSA light-curve API agree exactly on detections in
   the gap. In field 672, IRSA lists 110 covering exposures in the gap (64 with infobits 0) against 10 DR24

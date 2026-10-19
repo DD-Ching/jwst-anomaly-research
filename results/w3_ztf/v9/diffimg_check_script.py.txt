@@ -1,0 +1,14 @@
+# v9: do difference images (needed by ZFPS) exist for the 6 fixed gap exposures? HTTP HEAD only. Usage: <out json>
+import json, sys, urllib.request
+d = json.load(open('results/w3_ztf/v9/psfcat_overlap.json'))
+out = {'label': 'observed (IRSA IBE HTTP HEAD)', 'checks': []}
+for r in d['exposures'][6:]:
+    url = r['url'].replace('_psfcat.fits', '_scimrefdiffimg.fits.fz')
+    try:
+        req = urllib.request.Request(url, method='HEAD')
+        with urllib.request.urlopen(req, timeout=60) as h:
+            out['checks'].append({'expid': r['expid'], 'status': h.status, 'bytes': int(h.headers.get('Content-Length', 0))})
+    except Exception as ex:
+        out['checks'].append({'expid': r['expid'], 'error': str(ex)[:80]})
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out))

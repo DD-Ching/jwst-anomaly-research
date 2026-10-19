@@ -1,0 +1,34 @@
+{
+ "label": "observed (IRSA IBE HTTP HEAD)",
+ "checks": [
+  {
+   "expid": 212252128,
+   "status": 200,
+   "bytes": 7948800
+  },
+  {
+   "expid": 215545043,
+   "status": 200,
+   "bytes": 7873920
+  },
+  {
+   "expid": 228830788,
+   "status": 200,
+   "bytes": 8504640
+  },
+  {
+   "expid": 241116549,
+   "status": 200,
+   "bytes": 8239680
+  },
+  {
+   "expid": 248752283,
+   "status": 200,
+   "bytes": 7810560
+  },
+  {
+   "expid": 249053293,
+   "error": "<urlopen error [Errno 104] Connection reset by peer>"
+  }
+ ]
+}
