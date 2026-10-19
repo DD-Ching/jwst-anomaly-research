@@ -1,0 +1,48 @@
+{
+  "h039": {
+    "pair": [
+      "jw02736-o001_t001_nircam_clear",
+      "jw06882-o057_t057_nircam_clear"
+    ],
+    "bands": {
+      "F150W": {
+        "flux_a_njy": 513.81,
+        "flux_b_njy": 551.0,
+        "delta_njy": 37.19,
+        "sigma_njy": 14.71,
+        "z": 2.528
+      },
+      "F444W": {
+        "flux_a_njy": 227.68,
+        "flux_b_njy": 244.02,
+        "delta_njy": 16.34,
+        "sigma_njy": 8.41,
+        "z": 1.942
+      }
+    },
+    "outcome": "inconclusive"
+  },
+  "h005": {
+    "pair": [
+      "jw02282-o010_t001_nircam_clear",
+      "jw06882-o052_t052_nircam_clear"
+    ],
+    "bands": {
+      "F150W": {
+        "flux_a_njy": 953.26,
+        "flux_b_njy": 947.5,
+        "delta_njy": -5.77,
+        "sigma_njy": 9.85,
+        "z": -0.586
+      },
+      "F444W": {
+        "flux_a_njy": 490.08,
+        "flux_b_njy": 443.89,
+        "delta_njy": -46.19,
+        "sigma_njy": 6.59,
+        "z": -7.011
+      }
+    },
+    "outcome": "inconclusive"
+  }
+}

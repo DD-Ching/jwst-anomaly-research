@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: Review-list h039 (SMACS) and h005 (Sunrise o052): frozen rule inconclusive; post hoc within control scatter
+- **Why:** the two open by-eye artifact calls of `results/transients/review_list/RESULT.md`. Plan and rule frozen
+  first (`results/transients/review_list/vet_h039_h005/PLAN.md`).
+- **New:** `scripts/review_pair_rule.py` (+ tests; written after the run, implementing the frozen text: deviation).
+- **Result (`vet_h039_h005/RESULT.md`, `outcome.json`):** both **inconclusive** (one band ≥ 2σ each): h039 F150W
+  +37.2 ± 14.7 nJy (2.53σ), F444W 1.94σ; h005 F444W −46.2 ± 6.6 nJy (−7.01σ), F150W −0.59σ.
+- **Post hoc:** 40 matched compact controls per entry: |z_cal| ≤ 1.17, control tail fractions ≥ 0.375, so neither
+  changes beyond control scatter. Stamps looked at: no visible change. Closed post hoc; not candidates; no lensing
+  prediction tested (both off the arc mask and catalogued images).
+- **Handoff:** the review list has no open entries left. The arc-box line still waits on the owner's off-arc
+  efficiency choice (TASKS, Two-epoch search).
+
 ## 2026-10-19: AT 2024jfz z_s 1.55–1.70: PSF-matched difference untestable (star core residual); post hoc no counter-image beyond 0.35″
 - **Why:** handoff of #361 (the z_s 1.55–1.70 rows of #360 were undetermined: a cross-instrument residual of a
   static source). Plan and rule frozen first (`results/transients/smacs_at2024jfz/psfmatch/PLAN.md`);

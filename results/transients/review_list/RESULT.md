@@ -84,6 +84,8 @@ In total, 6 entries are added across the four acceptance pairs. These pass count
 - **What these labels mean.** The real entries are ordinary transients. None of the entries is a wormhole or exotic
   candidate.
 - **Open items.** h039 and h005 have not been vetted by photometry, so their review is not closed.
+  Update 2026-10-19 (`vet_h039_h005/RESULT.md`): frozen forced-photometry rule inconclusive for both (one band
+  ≥ 2σ each); post hoc, neither changes beyond matched-control scatter (|z_cal| ≤ 1.17). Closed post hoc; not candidates.
 
 ## What this does not show
 - **No new data.** R2 failed, so no new observation was searched.

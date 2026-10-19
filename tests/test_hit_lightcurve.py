@@ -154,3 +154,31 @@ def test_groups_radius_option():
     pts = [("a", 3.55, -30.37), ("b", 3.55, -30.3750), ("c", 3.55, -30.3830)]
     assert [len(g) for g in hl.groups(pts)] == [2, 1]  # default 20" groups
     assert [len(g) for g in hl.groups(pts, 50.0)] == [3]
+
+
+rp = _load("review_pair_rule")
+
+
+def test_review_pair_rule_classify():
+    assert rp.classify({"F150W": 1.9, "F444W": -1.9}) == "no_change"
+    assert rp.classify({"F150W": 2.0, "F444W": 3.0}) == "change"
+    assert rp.classify({"F150W": -2.5, "F444W": -7.0}) == "change"
+    assert rp.classify({"F150W": 2.5, "F444W": 1.9}) == "inconclusive"
+    assert rp.classify({"F150W": 2.5, "F444W": -2.5}) == "inconclusive"
+    assert rp.classify({"F150W": None, "F444W": 0.1}) == "untested"
+    assert rp.classify({"F150W": 0.1}) == "untested"
+
+
+def test_review_pair_rule_pair_z():
+    lc = Table(
+        rows=[
+            ("x", "a-f150w", 100.0, 3.0),
+            ("x", "b-f150w", 110.0, 4.0),
+            ("x", "a-f444w", 50.0, 1.0),
+            ("y", "b-f444w", 50.0, 1.0),
+        ],
+        names=("name", "obs_id", "flux_njy", "err_njy"),
+    )
+    out = rp.pair_z(lc, "x", "a", "b")
+    assert out["F150W"]["delta_njy"] == 10.0 and out["F150W"]["z"] == 2.0
+    assert out["F444W"] is None

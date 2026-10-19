@@ -274,6 +274,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | ≈ 0.25 (AT 2024jfz counter-image in NIRISS 4368: frozen plan and rule, injection control; post hoc z_s scan) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 01VEAQr3, 03:08–03:40Z |
 | 2026-W43 | ≈ 0.1 (AT 2024jfz host redshift: frozen plan and rule, DJA + MUSE match; untested) | — | — | 0.15 (orientation, #359 base merge, claim, state files, PR) | cloud routine 015gUbYY, 04:08–04:45Z |
 | 2026-W43 | ≈ 0.15 (AT 2024jfz z_s 1.55–1.70 PSF-matched difference: frozen plan and rule, injection, control; untestable) | — | — | 0.1 (orientation, claim, state files, PR) | cloud routine 015u2xwD, 05:09–05:35Z |
+| 2026-W43 | — | — | ≈ 0.25 (review-list h039 / h005: frozen plan and rule, forced photometry, matched controls, stamps looked at; inconclusive, post hoc within control scatter) | 0.1 (orientation, claim, state files, PR) | cloud routine 01QCVQcw, 06:16–06:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
