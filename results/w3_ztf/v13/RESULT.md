@@ -75,7 +75,7 @@
 - **The validation set never touched the search group** (`2382val/source_usage.jsonl`: search_member_rows 0 for
   inject and search dev).
 - **Coverage** (`coverage.json`, after the search): r-band series epochs 5 / 50 / 95 % were 1,611 / 2,021 / 3,822
-  (validation) against 1,651 / 2,020 / 3,822 (search). Refmag r was 14.83 / 16.56 / 17.43 against 14.82 / 16.43 /
+  (validation; median 2,020.5) against 1,651 / 2,020 / 3,822 (search). Refmag r was 14.83 / 16.56 / 17.43 against 14.82 / 16.43 /
   17.42.
 
 ## 5. Search (`2382val/search_holdout_v13_time.json`)
@@ -97,13 +97,14 @@
   - The automatic support rule called 3 groups a real sky change: 724208200007532, 723205400006654 and
     724208200006955.
 - **Looking at the contact sheet, and in a post hoc column check** (`column_check_script.py.txt`), a dark detector
-  column (column median > 5 robust σ below the cutout median) crosses the 2″ aperture in **17 of 17** class-4
-  exposures.
-  - It also lies near the aperture in 3 of the detected reference exposures, so it does not always remove the
-    source.
-  - **Reading:** these non-detections coincide with a low detector column at the source position. They are a data
-    problem in those exposures, **not image-confirmed dimming**.
-  - The automatic "real sky change" labels are overridden for that reason (post hoc).
+  column (column median > 5 robust σ below the cutout median) lies within the 2″ aperture in **17 of 17** class-4
+  exposures (nearest column ≤ 0.55″ from the source). The same holds for **0 of 20** detected reference exposures
+  (nearest 2.36″).
+  - **Post hoc reading:** the non-detections coincide with a dark column at the source. This is consistent with a
+    data problem in those exposures; it is **not image-confirmed dimming**.
+  - In 4 of the 5 groups most cutouts show 2–3 dark columns. The catalogue appears to lose the source whenever one
+    falls on it (not tested further).
+  - The automatic "real sky change" labels are therefore not accepted (post hoc).
 - **724208400014500** (86 runs): its non-detection exposures are class 3 (source present) or undetermined, so it is
   not a dimming.
 - **Result:** no flag is an image-confirmed real dimming. No ordinary-versus-W3 comparison was needed. Nothing here is

@@ -17,8 +17,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - 0 real survivors.
   - Same area and exposures as the development set, so not an independent-area validation.
 - **Search of 2,000 groups:** 96 flagged runs in 6 groups, **0 pass vetting**. Image check of 5 groups (50 cutouts):
-  all 17 "credible dimming" non-detections have a dark detector column across the aperture (post hoc check), so they
-  are a data problem. One group is pending. **No image-confirmed dimming.**
+  all 17 "credible dimming" non-detections have a dark detector column within 2″ of the source, against 0 of 20
+  detections (post hoc check). That is consistent with a data problem. One group is pending. **No image-confirmed dimming.**
 - **Handoff:** W3 / ZTF is paused. The fade-control margin (8.5 % vs 10 %) is the known weak point of the new rule.
 
 ## 2026-10-19: W3 ZTF v12: new-field batch area Npix 2382 fails validation (ρ 0.1, blend 0.7, t_E 30 d at 0.42); search not executed

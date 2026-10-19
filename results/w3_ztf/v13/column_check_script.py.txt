@@ -1,7 +1,7 @@
 # v13 post hoc data check of the image-check cutouts (owner step 1: coverage and data first). In each cutout, a
 # "dark column" is a pixel column whose median over the cutout lies > 5 robust sigma below the cutout median
-# (a bad or low column, not sky). Recorded per exposure: whether a dark column lies within the 2" photometry aperture
-# (+1 px) of the source position. Usage: python -I column_check_script.py.txt <cutout dir> <image_check.json> <out json>
+# (a bad or low column, not sky). Recorded per exposure: the distance from the source to the nearest dark column
+# (arcsec), its significance, and whether it lies within the 2" photometry aperture (review fix: strict 2"). Usage: python -I column_check_script.py.txt <cutout dir> <image_check.json> <out json>
 import json, sys, warnings
 import numpy as np
 from astropy.io import fits
@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 CUT, IC, OUT = sys.argv[1:4]
 ic = json.load(open(IC))
 res = {'label': 'derived; post hoc cutout column check', 'rule': 'column median < cutout median - 5 x 1.4826 MAD; '
-       'within aperture if |column - source x| <= 2"/scale + 1 px', 'sources': []}
+       'within aperture if |column - source x| x scale <= 2 arcsec', 'sources': []}
 for s in ic['sources']:
     rows = []
     for r in s['exposures']:
@@ -25,9 +25,12 @@ for s in ic['sources']:
         med = np.nanmedian(img); sig = 1.4826 * np.nanmedian(np.abs(img - med))
         cm = np.nanmedian(img, axis=0)
         dark = np.flatnonzero(cm < med - 5 * sig)
-        near = bool(np.any(np.abs(dark - x) <= 2.0 / sc + 1))
+        dist = np.abs(dark - x) * sc
+        k = int(np.argmin(dist)) if len(dark) else None
         rows.append({'expid': r['expid'], 'nd': r.get('nd'), 'cls': r.get('cls'), 'cutout': True,
-                     'dark_columns': len(dark), 'dark_column_in_aperture': near})
+                     'dark_columns': len(dark), 'min_dist_arcsec': float(dist[k]) if k is not None else None,
+                     'nearest_sigma': float((med - cm[dark[k]]) / sig) if k is not None else None,
+                     'dark_column_in_aperture': bool(len(dark) and dist.min() <= 2.0)})
     nd_drop = [x for x in rows if x['nd'] and x.get('cls') == 4]
     res['sources'].append({'key': s['key'], 'nd_cls4': len(nd_drop),
                            'nd_cls4_with_dark_column_in_aperture': sum(bool(x.get('dark_column_in_aperture')) for x in nd_drop),
