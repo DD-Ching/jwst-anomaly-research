@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: AT 2024jfz (SMACS 0723): counter-images not testable in the JWST epochs for z_s ≤ 2.5 under Mahler+22 ICLv2
+- **Why:** open TASKS item (SMACS arc `arc_diff`, h000 = AT 2024jfz, 1.81″ from image 6.1): does the cluster model
+  predict counter-images that existing epochs could test? Plan frozen first (`results/transients/smacs_at2024jfz/PLAN.md`).
+- **New:** `scripts/smacs_at2024jfz.py` (+ tests): images by `lensmodel.find_images`, Fermat delays from line integrals
+  of the analytic deflection (SIS and path-independence checks pass; real-model path difference 1.5 × 10⁻¹³), frozen
+  rule `testable`.
+- **Result (model_prediction, `RESULT.md`):** frozen outcome "not testable" in the four NIRCam epochs for z_s 0.6–2.5;
+  "testable" at z_s 4.0 only as the unresolved 0.087″ merging pair at the 2024 epoch itself (source on the critical
+  curve; no resolved-pair measurement done). At system 6's model z (1.71) the counter-image 4.5″ away (1.88″ from 6.2)
+  trails by +31.0 d (μ ratio −0.89), the far one led by 5,464 d. Best model only (no chain).
+- **Review fixes:** next-window formula mirrored in PLAN.md, fixed (deviation); the path gate now withholds the
+  outcome; delay factor tested against #308; epoch list and separations written by the script.
+- **Post hoc:** NIRISS 4368 F150W (MJD 60558.0) covers the near counter-image's arrival only if z_s ≈ 1.35–1.40; HST
+  WFPC2 11103 matches the far image's timing only if z_s ≈ 1.75–1.80 (depth not checked); footprints not checked.
+- **Handoff:** optional next step: footprint check plus forced photometry of the NIRISS 4368 epoch at the
+  z_s 1.35–1.40 positions (frozen plan first); a host redshift would decide which z_s applies. Not a candidate.
+
 ## 2026-10-19: E1 BAT–GBM control deficit: long lags behave as the shared-event displacement predicts; frozen rule undetermined
 - **Why:** handoff of #356 (optional: the BAT–GBM deficit, D-074 addendum 6, with the shared-event test of
   addendum 9). Plan frozen first (`results/e1_swift/selfpair/PLAN.md`); rule `outcome` unit-tested before the run.

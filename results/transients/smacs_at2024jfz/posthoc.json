@@ -1,0 +1,598 @@
+{
+ "provenance": "model_prediction",
+ "note": "post hoc (not in PLAN.md): z_s 1.00-2.50 step 0.05; epochs = unique days of mast_epochs.json (HST and JWST, any instrument); footprint coverage not checked; the NIRCam flux threshold of the frozen rule is applied to every instrument (other depths not checked); delays rounded to 0.1 d",
+ "epochs_mjd": [
+  54512.3,
+  54791.02,
+  55758.27,
+  56562.08,
+  57817.64,
+  57858.72,
+  57874.28,
+  57880.48,
+  57889.12,
+  57938.89,
+  57939.95,
+  59713.09,
+  59713.11,
+  59737.02,
+  59744.17,
+  59747.32,
+  59861.02,
+  60441.72,
+  60557.96,
+  61196.91,
+  61227.74,
+  61243.12,
+  61248.14,
+  61253.75
+ ],
+ "rows": [
+  {
+   "z_s": 1.0,
+   "ra": 110.834218,
+   "dec": -73.455797,
+   "sep_from_tns_arcsec": 14.561,
+   "mu_ratio": -2.3302,
+   "delay_days": 680.1,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.0,
+   "ra": 110.832148,
+   "dec": -73.457578,
+   "sep_from_tns_arcsec": 21.073,
+   "mu_ratio": 1.1876,
+   "delay_days": 575.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.05,
+   "ra": 110.834981,
+   "dec": -73.455124,
+   "sep_from_tns_arcsec": 12.168,
+   "mu_ratio": -1.864,
+   "delay_days": 478.7,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.05,
+   "ra": 110.831819,
+   "dec": -73.458024,
+   "sep_from_tns_arcsec": 22.705,
+   "mu_ratio": 0.8464,
+   "delay_days": 32.5,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.1,
+   "ra": 110.835251,
+   "dec": -73.454648,
+   "sep_from_tns_arcsec": 10.487,
+   "mu_ratio": -1.5666,
+   "delay_days": 354.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.1,
+   "ra": 110.831527,
+   "dec": -73.458407,
+   "sep_from_tns_arcsec": 24.108,
+   "mu_ratio": 0.6943,
+   "delay_days": -500.2,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.15,
+   "ra": 110.8353,
+   "dec": -73.454311,
+   "sep_from_tns_arcsec": 9.287,
+   "mu_ratio": -1.2934,
+   "delay_days": 272.1,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.15,
+   "ra": 110.83125,
+   "dec": -73.458751,
+   "sep_from_tns_arcsec": 25.372,
+   "mu_ratio": 0.5986,
+   "delay_days": -1016.3,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.2,
+   "ra": 110.835274,
+   "dec": -73.454068,
+   "sep_from_tns_arcsec": 8.416,
+   "mu_ratio": -1.0758,
+   "delay_days": 214.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.2,
+   "ra": 110.830969,
+   "dec": -73.459065,
+   "sep_from_tns_arcsec": 26.529,
+   "mu_ratio": 0.5292,
+   "delay_days": -1513.5,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.25,
+   "ra": 110.835234,
+   "dec": -73.453884,
+   "sep_from_tns_arcsec": 7.754,
+   "mu_ratio": -0.9402,
+   "delay_days": 171.9,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.25,
+   "ra": 110.830681,
+   "dec": -73.459351,
+   "sep_from_tns_arcsec": 27.588,
+   "mu_ratio": 0.4736,
+   "delay_days": -1990.6,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.3,
+   "ra": 110.835197,
+   "dec": -73.453735,
+   "sep_from_tns_arcsec": 7.219,
+   "mu_ratio": -0.8707,
+   "delay_days": 139.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.3,
+   "ra": 110.83039,
+   "dec": -73.459609,
+   "sep_from_tns_arcsec": 28.548,
+   "mu_ratio": 0.426,
+   "delay_days": -2447.2,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.35,
+   "ra": 110.835165,
+   "dec": -73.453608,
+   "sep_from_tns_arcsec": 6.762,
+   "mu_ratio": -0.8425,
+   "delay_days": 114.0,
+   "testable_epochs_mjd": [
+    60557.96
+   ]
+  },
+  {
+   "z_s": 1.35,
+   "ra": 110.830108,
+   "dec": -73.459841,
+   "sep_from_tns_arcsec": 29.416,
+   "mu_ratio": 0.3845,
+   "delay_days": -2882.9,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.4,
+   "ra": 110.835136,
+   "dec": -73.453496,
+   "sep_from_tns_arcsec": 6.359,
+   "mu_ratio": -0.8375,
+   "delay_days": 93.9,
+   "testable_epochs_mjd": [
+    60557.96
+   ]
+  },
+  {
+   "z_s": 1.4,
+   "ra": 110.82984,
+   "dec": -73.46005,
+   "sep_from_tns_arcsec": 30.2,
+   "mu_ratio": 0.3484,
+   "delay_days": -3297.7,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.45,
+   "ra": 110.83511,
+   "dec": -73.453395,
+   "sep_from_tns_arcsec": 5.993,
+   "mu_ratio": -0.8442,
+   "delay_days": 77.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.45,
+   "ra": 110.829589,
+   "dec": -73.46024,
+   "sep_from_tns_arcsec": 30.913,
+   "mu_ratio": 0.3173,
+   "delay_days": -3692.1,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.5,
+   "ra": 110.835083,
+   "dec": -73.453301,
+   "sep_from_tns_arcsec": 5.658,
+   "mu_ratio": -0.8554,
+   "delay_days": 64.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.5,
+   "ra": 110.829354,
+   "dec": -73.460412,
+   "sep_from_tns_arcsec": 31.565,
+   "mu_ratio": 0.2905,
+   "delay_days": -4066.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.55,
+   "ra": 110.835057,
+   "dec": -73.453215,
+   "sep_from_tns_arcsec": 5.348,
+   "mu_ratio": -0.8671,
+   "delay_days": 54.2,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.55,
+   "ra": 110.829135,
+   "dec": -73.460571,
+   "sep_from_tns_arcsec": 32.163,
+   "mu_ratio": 0.2672,
+   "delay_days": -4422.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.6,
+   "ra": 110.83503,
+   "dec": -73.453135,
+   "sep_from_tns_arcsec": 5.06,
+   "mu_ratio": -0.8774,
+   "delay_days": 45.5,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.6,
+   "ra": 110.82893,
+   "dec": -73.460716,
+   "sep_from_tns_arcsec": 32.714,
+   "mu_ratio": 0.2468,
+   "delay_days": -4761.0,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.65,
+   "ra": 110.835003,
+   "dec": -73.453061,
+   "sep_from_tns_arcsec": 4.792,
+   "mu_ratio": -0.8859,
+   "delay_days": 38.3,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.65,
+   "ra": 110.828739,
+   "dec": -73.460851,
+   "sep_from_tns_arcsec": 33.225,
+   "mu_ratio": 0.2287,
+   "delay_days": -5082.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.7,
+   "ra": 110.834976,
+   "dec": -73.452992,
+   "sep_from_tns_arcsec": 4.541,
+   "mu_ratio": -0.8927,
+   "delay_days": 32.3,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.7,
+   "ra": 110.82856,
+   "dec": -73.460976,
+   "sep_from_tns_arcsec": 33.698,
+   "mu_ratio": 0.2125,
+   "delay_days": -5388.0,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.75,
+   "ra": 110.834948,
+   "dec": -73.452927,
+   "sep_from_tns_arcsec": 4.308,
+   "mu_ratio": -0.8982,
+   "delay_days": 27.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.75,
+   "ra": 110.828392,
+   "dec": -73.461092,
+   "sep_from_tns_arcsec": 34.14,
+   "mu_ratio": 0.198,
+   "delay_days": -5678.8,
+   "testable_epochs_mjd": [
+    54791.02
+   ]
+  },
+  {
+   "z_s": 1.8,
+   "ra": 110.834921,
+   "dec": -73.452867,
+   "sep_from_tns_arcsec": 4.089,
+   "mu_ratio": -0.9029,
+   "delay_days": 23.3,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.8,
+   "ra": 110.828235,
+   "dec": -73.4612,
+   "sep_from_tns_arcsec": 34.552,
+   "mu_ratio": 0.1848,
+   "delay_days": -5955.6,
+   "testable_epochs_mjd": [
+    54512.3
+   ]
+  },
+  {
+   "z_s": 1.85,
+   "ra": 110.834895,
+   "dec": -73.45281,
+   "sep_from_tns_arcsec": 3.883,
+   "mu_ratio": -0.9071,
+   "delay_days": 19.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.85,
+   "ra": 110.828088,
+   "dec": -73.461302,
+   "sep_from_tns_arcsec": 34.938,
+   "mu_ratio": 0.1729,
+   "delay_days": -6219.3,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.9,
+   "ra": 110.834869,
+   "dec": -73.452757,
+   "sep_from_tns_arcsec": 3.69,
+   "mu_ratio": -0.9111,
+   "delay_days": 16.9,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.9,
+   "ra": 110.82795,
+   "dec": -73.461397,
+   "sep_from_tns_arcsec": 35.301,
+   "mu_ratio": 0.1619,
+   "delay_days": -6470.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.95,
+   "ra": 110.834843,
+   "dec": -73.452707,
+   "sep_from_tns_arcsec": 3.508,
+   "mu_ratio": -0.9149,
+   "delay_days": 14.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 1.95,
+   "ra": 110.827819,
+   "dec": -73.461487,
+   "sep_from_tns_arcsec": 35.643,
+   "mu_ratio": 0.1519,
+   "delay_days": -6710.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.0,
+   "ra": 110.834818,
+   "dec": -73.452659,
+   "sep_from_tns_arcsec": 3.336,
+   "mu_ratio": -0.9187,
+   "delay_days": 12.3,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.0,
+   "ra": 110.827696,
+   "dec": -73.461572,
+   "sep_from_tns_arcsec": 35.966,
+   "mu_ratio": 0.1427,
+   "delay_days": -6940.1,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.05,
+   "ra": 110.834794,
+   "dec": -73.452615,
+   "sep_from_tns_arcsec": 3.173,
+   "mu_ratio": -0.9225,
+   "delay_days": 10.5,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.05,
+   "ra": 110.82758,
+   "dec": -73.461652,
+   "sep_from_tns_arcsec": 36.272,
+   "mu_ratio": 0.1341,
+   "delay_days": -7159.3,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.1,
+   "ra": 110.83477,
+   "dec": -73.452572,
+   "sep_from_tns_arcsec": 3.018,
+   "mu_ratio": -0.9262,
+   "delay_days": 9.0,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.1,
+   "ra": 110.82747,
+   "dec": -73.461728,
+   "sep_from_tns_arcsec": 36.562,
+   "mu_ratio": 0.1262,
+   "delay_days": -7369.1,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.15,
+   "ra": 110.834746,
+   "dec": -73.452532,
+   "sep_from_tns_arcsec": 2.872,
+   "mu_ratio": -0.9299,
+   "delay_days": 7.7,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.15,
+   "ra": 110.827365,
+   "dec": -73.4618,
+   "sep_from_tns_arcsec": 36.837,
+   "mu_ratio": 0.1188,
+   "delay_days": -7569.9,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.2,
+   "ra": 110.834724,
+   "dec": -73.452494,
+   "sep_from_tns_arcsec": 2.732,
+   "mu_ratio": -0.9335,
+   "delay_days": 6.6,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.2,
+   "ra": 110.827265,
+   "dec": -73.461869,
+   "sep_from_tns_arcsec": 37.1,
+   "mu_ratio": 0.112,
+   "delay_days": -7762.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.25,
+   "ra": 110.834701,
+   "dec": -73.452457,
+   "sep_from_tns_arcsec": 2.6,
+   "mu_ratio": -0.9371,
+   "delay_days": 5.7,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.25,
+   "ra": 110.82717,
+   "dec": -73.461934,
+   "sep_from_tns_arcsec": 37.35,
+   "mu_ratio": 0.1055,
+   "delay_days": -7947.1,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.3,
+   "ra": 110.83468,
+   "dec": -73.452423,
+   "sep_from_tns_arcsec": 2.473,
+   "mu_ratio": -0.9406,
+   "delay_days": 4.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.3,
+   "ra": 110.827079,
+   "dec": -73.461997,
+   "sep_from_tns_arcsec": 37.588,
+   "mu_ratio": 0.0995,
+   "delay_days": -8124.4,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.35,
+   "ra": 110.834659,
+   "dec": -73.45239,
+   "sep_from_tns_arcsec": 2.352,
+   "mu_ratio": -0.944,
+   "delay_days": 4.1,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.35,
+   "ra": 110.826992,
+   "dec": -73.462056,
+   "sep_from_tns_arcsec": 37.817,
+   "mu_ratio": 0.0939,
+   "delay_days": -8294.8,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.4,
+   "ra": 110.834638,
+   "dec": -73.452358,
+   "sep_from_tns_arcsec": 2.236,
+   "mu_ratio": -0.9472,
+   "delay_days": 3.5,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.4,
+   "ra": 110.826908,
+   "dec": -73.462113,
+   "sep_from_tns_arcsec": 38.035,
+   "mu_ratio": 0.0886,
+   "delay_days": -8458.6,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.45,
+   "ra": 110.834618,
+   "dec": -73.452328,
+   "sep_from_tns_arcsec": 2.125,
+   "mu_ratio": -0.9503,
+   "delay_days": 3.0,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.45,
+   "ra": 110.826828,
+   "dec": -73.462168,
+   "sep_from_tns_arcsec": 38.244,
+   "mu_ratio": 0.0835,
+   "delay_days": -8616.2,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.5,
+   "ra": 110.834598,
+   "dec": -73.452299,
+   "sep_from_tns_arcsec": 2.019,
+   "mu_ratio": -0.9533,
+   "delay_days": 2.6,
+   "testable_epochs_mjd": []
+  },
+  {
+   "z_s": 2.5,
+   "ra": 110.826751,
+   "dec": -73.462221,
+   "sep_from_tns_arcsec": 38.445,
+   "mu_ratio": 0.0788,
+   "delay_days": -8767.9,
+   "testable_epochs_mjd": []
+  }
+ ]
+}

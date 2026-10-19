@@ -1,0 +1,132 @@
+{
+ "provenance": "derived",
+ "note": "separation of each predicted image (result.json) from the catalogued system 6 images of Mahler+22 ICLv2 arcs.dat (pinned sha256 in lensmodel.SMACS0723_MAHLER22_ICLV2)",
+ "catalogued_system6": {
+  "6.1": [
+   110.835854,
+   -73.4518199
+  ],
+  "6.2": [
+   110.8367611,
+   -73.4530868
+  ],
+  "6.3": [
+   110.8303933,
+   -73.4608436
+  ]
+ },
+ "rows": [
+  {
+   "z_s": 0.6,
+   "ra": 110.83416,
+   "dec": -73.451752,
+   "nearest": "6.1",
+   "sep_arcsec": 1.75
+  },
+  {
+   "z_s": 1.0,
+   "ra": 110.834218,
+   "dec": -73.455797,
+   "nearest": "6.2",
+   "sep_arcsec": 10.1
+  },
+  {
+   "z_s": 1.0,
+   "ra": 110.832148,
+   "dec": -73.457578,
+   "nearest": "6.3",
+   "sep_arcsec": 11.89
+  },
+  {
+   "z_s": 1.0,
+   "ra": 110.83416,
+   "dec": -73.451752,
+   "nearest": "6.1",
+   "sep_arcsec": 1.75
+  },
+  {
+   "z_s": 1.425,
+   "ra": 110.83416,
+   "dec": -73.451752,
+   "nearest": "6.1",
+   "sep_arcsec": 1.75
+  },
+  {
+   "z_s": 1.425,
+   "ra": 110.835123,
+   "dec": -73.453444,
+   "nearest": "6.2",
+   "sep_arcsec": 2.12
+  },
+  {
+   "z_s": 1.425,
+   "ra": 110.829712,
+   "dec": -73.460147,
+   "nearest": "6.3",
+   "sep_arcsec": 2.6
+  },
+  {
+   "z_s": 1.712766,
+   "ra": 110.83416,
+   "dec": -73.451752,
+   "nearest": "6.1",
+   "sep_arcsec": 1.75
+  },
+  {
+   "z_s": 1.712766,
+   "ra": 110.834969,
+   "dec": -73.452975,
+   "nearest": "6.2",
+   "sep_arcsec": 1.88
+  },
+  {
+   "z_s": 1.712766,
+   "ra": 110.828516,
+   "dec": -73.461006,
+   "nearest": "6.3",
+   "sep_arcsec": 2.01
+  },
+  {
+   "z_s": 2.5,
+   "ra": 110.83416,
+   "dec": -73.451752,
+   "nearest": "6.1",
+   "sep_arcsec": 1.75
+  },
+  {
+   "z_s": 2.5,
+   "ra": 110.834598,
+   "dec": -73.452299,
+   "nearest": "6.1",
+   "sep_arcsec": 2.15
+  },
+  {
+   "z_s": 2.5,
+   "ra": 110.826751,
+   "dec": -73.462221,
+   "nearest": "6.3",
+   "sep_arcsec": 6.21
+  },
+  {
+   "z_s": 4.0,
+   "ra": 110.83416,
+   "dec": -73.451752,
+   "nearest": "6.1",
+   "sep_arcsec": 1.75
+  },
+  {
+   "z_s": 4.0,
+   "ra": 110.834181,
+   "dec": -73.451776,
+   "nearest": "6.1",
+   "sep_arcsec": 1.72
+  },
+  {
+   "z_s": 4.0,
+   "ra": 110.825324,
+   "dec": -73.463191,
+   "nearest": "6.3",
+   "sep_arcsec": 9.92
+  }
+ ]
+}

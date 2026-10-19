@@ -1,0 +1,327 @@
+{
+ "provenance": "model_prediction",
+ "model": "smacs0723-iclv2",
+ "model_sha256": "73cc7881b224e4baa492eae56269d90c154521ffc7e2dd66ed174773098a7715",
+ "tns_radec": [
+  110.83416,
+  -73.451752
+ ],
+ "t0_mjd": 60441.82,
+ "f0_njy": 2579.0,
+ "epochs_mjd": [
+  59737.0,
+  60441.8,
+  61196.9,
+  61227.7
+ ],
+ "rule": {
+  "window_days": [
+   -2.0,
+   30.0
+  ],
+  "min_flux_njy": 170.0
+ },
+ "runs": [
+  {
+   "z_s": 0.6,
+   "dls_ds": 0.31256,
+   "beta_xy": [
+    -3.5083,
+    4.6657
+   ],
+   "n_images": 1,
+   "tns_to_reference_arcsec": 0.0,
+   "days_per_arcsec2": 135.876,
+   "path_check_max_rel_diff": 0.0,
+   "path_check_pass": true,
+   "outcome": "not testable",
+   "images": [
+    {
+     "ra": 110.83416,
+     "dec": -73.451752,
+     "sep_from_tns_arcsec": 0.0,
+     "magnification": 2.158,
+     "mu_ratio": 1.0,
+     "delay_days": 0.0,
+     "reference_image": true,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": null
+    }
+   ]
+  },
+  {
+   "z_s": 1.0,
+   "dls_ds": 0.54091,
+   "beta_xy": [
+    -0.7005,
+    0.2604
+   ],
+   "n_images": 3,
+   "tns_to_reference_arcsec": 0.0,
+   "days_per_arcsec2": 78.515,
+   "path_check_max_rel_diff": 4.6e-14,
+   "path_check_pass": true,
+   "outcome": "not testable",
+   "images": [
+    {
+     "ra": 110.834218,
+     "dec": -73.455797,
+     "sep_from_tns_arcsec": 14.561,
+     "magnification": -12.388,
+     "mu_ratio": -2.3302,
+     "delay_days": 680.1,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      61119.9,
+      61151.9
+     ]
+    },
+    {
+     "ra": 110.832148,
+     "dec": -73.457578,
+     "sep_from_tns_arcsec": 21.073,
+     "magnification": 6.314,
+     "mu_ratio": 1.1876,
+     "delay_days": 575.8,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      61015.6,
+      61047.6
+     ]
+    },
+    {
+     "ra": 110.83416,
+     "dec": -73.451752,
+     "sep_from_tns_arcsec": 0.0,
+     "magnification": 5.316,
+     "mu_ratio": 1.0,
+     "delay_days": 0.0,
+     "reference_image": true,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": null
+    }
+   ]
+  },
+  {
+   "z_s": 1.425,
+   "dls_ds": 0.64081,
+   "beta_xy": [
+    0.5278,
+    -1.6668
+   ],
+   "n_images": 3,
+   "tns_to_reference_arcsec": 0.0,
+   "days_per_arcsec2": 66.275,
+   "path_check_max_rel_diff": 6.44e-15,
+   "path_check_pass": true,
+   "outcome": "not testable",
+   "images": [
+    {
+     "ra": 110.83416,
+     "dec": -73.451752,
+     "sep_from_tns_arcsec": 0.0,
+     "magnification": 10.131,
+     "mu_ratio": 1.0,
+     "delay_days": 0.0,
+     "reference_image": true,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": null
+    },
+    {
+     "ra": 110.835123,
+     "dec": -73.453444,
+     "sep_from_tns_arcsec": 6.172,
+     "magnification": -8.509,
+     "mu_ratio": -0.8399,
+     "delay_days": 85.5,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      60525.3,
+      60557.3
+     ]
+    },
+    {
+     "ra": 110.829712,
+     "dec": -73.460147,
+     "sep_from_tns_arcsec": 30.565,
+     "magnification": 3.366,
+     "mu_ratio": 0.3322,
+     "delay_days": -3497.4,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      56942.4,
+      56974.4
+     ]
+    }
+   ]
+  },
+  {
+   "z_s": 1.712766,
+   "dls_ds": 0.67973,
+   "beta_xy": [
+    1.0063,
+    -2.4175
+   ],
+   "n_images": 3,
+   "tns_to_reference_arcsec": 0.0,
+   "days_per_arcsec2": 62.48,
+   "path_check_max_rel_diff": 6.86e-15,
+   "path_check_pass": true,
+   "outcome": "not testable",
+   "images": [
+    {
+     "ra": 110.83416,
+     "dec": -73.451752,
+     "sep_from_tns_arcsec": 0.0,
+     "magnification": 14.494,
+     "mu_ratio": 1.0,
+     "delay_days": 0.0,
+     "reference_image": true,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": null
+    },
+    {
+     "ra": 110.834969,
+     "dec": -73.452975,
+     "sep_from_tns_arcsec": 4.48,
+     "magnification": -12.96,
+     "mu_ratio": -0.8942,
+     "delay_days": 31.0,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      60470.8,
+      60502.8
+     ]
+    },
+    {
+     "ra": 110.828516,
+     "dec": -73.461006,
+     "sep_from_tns_arcsec": 33.814,
+     "magnification": 3.025,
+     "mu_ratio": 0.2087,
+     "delay_days": -5463.6,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      54976.2,
+      55008.2
+     ]
+    }
+   ]
+  },
+  {
+   "z_s": 2.5,
+   "dls_ds": 0.73973,
+   "beta_xy": [
+    1.7441,
+    -3.5751
+   ],
+   "n_images": 3,
+   "tns_to_reference_arcsec": 0.0,
+   "days_per_arcsec2": 57.412,
+   "path_check_max_rel_diff": 1.54e-13,
+   "path_check_pass": true,
+   "outcome": "not testable",
+   "images": [
+    {
+     "ra": 110.83416,
+     "dec": -73.451752,
+     "sep_from_tns_arcsec": 0.0,
+     "magnification": 34.724,
+     "mu_ratio": 1.0,
+     "delay_days": 0.0,
+     "reference_image": true,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": null
+    },
+    {
+     "ra": 110.834598,
+     "dec": -73.452299,
+     "sep_from_tns_arcsec": 2.019,
+     "magnification": -33.104,
+     "mu_ratio": -0.9533,
+     "delay_days": 2.6,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      60442.4,
+      60474.4
+     ]
+    },
+    {
+     "ra": 110.826751,
+     "dec": -73.462221,
+     "sep_from_tns_arcsec": 38.445,
+     "magnification": 2.736,
+     "mu_ratio": 0.0788,
+     "delay_days": -8767.9,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": [
+      51671.9,
+      51703.9
+     ]
+    }
+   ]
+  },
+  {
+   "z_s": 4.0,
+   "dls_ds": 0.78847,
+   "beta_xy": [
+    2.3434,
+    -4.5154
+   ],
+   "n_images": 3,
+   "tns_to_reference_arcsec": 0.0,
+   "days_per_arcsec2": 53.863,
+   "path_check_max_rel_diff": 1.5e-14,
+   "path_check_pass": true,
+   "outcome": "testable",
+   "images": [
+    {
+     "ra": 110.83416,
+     "dec": -73.451752,
+     "sep_from_tns_arcsec": 0.0,
+     "magnification": 863.752,
+     "mu_ratio": 1.0,
+     "delay_days": 0.0,
+     "reference_image": true,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": null
+    },
+    {
+     "ra": 110.834181,
+     "dec": -73.451776,
+     "sep_from_tns_arcsec": 0.087,
+     "magnification": -862.502,
+     "mu_ratio": -0.9986,
+     "delay_days": 0.0,
+     "reference_image": false,
+     "testable_epochs_mjd": [
+      60441.8
+     ],
+     "next_window_mjd": [
+      60439.8,
+      60471.8
+     ]
+    },
+    {
+     "ra": 110.825324,
+     "dec": -73.463191,
+     "sep_from_tns_arcsec": 42.163,
+     "magnification": 2.584,
+     "mu_ratio": 0.003,
+     "delay_days": -11646.2,
+     "reference_image": false,
+     "testable_epochs_mjd": [],
+     "next_window_mjd": null
+    }
+   ]
+  }
+ ]
+}
