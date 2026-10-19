@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-19: W3 dimming: D-039 persistence test, MACS0416 e2–3 and Abell 2744 e1–2 (in progress)
+- **Plan:** #378 handoff 1: finish `results/dimming/persistence_run/run.py` on the unfinished epochs (tests the
+  20 MACS0416 / Abell 2744 targets and adds controls), under the frozen `PLAN.md`.
+
 ## 2026-10-19: W3 dimming: NEXUS `o014` targets are mosaic-edge and catalogue-depth effects (0 survivors)
 - **Why:** #377 handoff 1. Plan, rule (`summarise.explanation`, unit-tested) and target builder frozen first
   (`results/dimming/nexus_o014/PLAN.md`).
