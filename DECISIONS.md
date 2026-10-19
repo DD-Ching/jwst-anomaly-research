@@ -5258,6 +5258,12 @@ confining radiation at a throat is found.
   fixed, with no effect on stored results. **Paused.** Reopen if a newer release fills the field 672 gap (checked
   with `entry_script.py.txt`), image photometry passes a control against DR24 (owner go-ahead needed), or the owner
   revisits the infobits rule under a new plan.
+- **Addendum 2026-10-19 (v9, `results/w3_ztf/v9/RESULT.md`):** for 3 stars in field 672 / CCD 8 / q2 (Npix 7134),
+  IRSA's single-exposure psfcat catalogues pass the frozen overlap test against DR24 (13 pairs; per-star Δ −0.015 to
+  +0.020 mag). They give ≥ 20 usable gap observations per star. This shows consistency with DR24, which is built
+  from the same PSF photometry; it is not an independent validation, and it is not tested beyond this quadrant.
+  Next-step preference for this gap: psfcat before ZFPS or cutout aperture photometry. Revisit if: the owner
+  authorizes a psfcat data path and a calibration re-run.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

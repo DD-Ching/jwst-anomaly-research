@@ -1,0 +1,130 @@
+# v9 psfcat overlap test and (if it passes) gap fill. PLAN.md sections 1-4. Usage:
+#   python psfcat_script.py.txt <cache dir> overlap <out json>
+#   python psfcat_script.py.txt <cache dir> fill <out json>
+import io, json, os, sys, time, urllib.parse, urllib.request
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+CACHE, MODE, OUT = sys.argv[1:4]
+STARS = [672208200000073, 672208200000239, 672208200002085]
+OVERLAP = [193335993, 195727655, 206514034, 206813989, 309032905, 309627976]
+GAPSEL = [212252128, 215545043, 228830788, 241116549, 248752283, 249053293]
+GAP = (59853.0, 60249.0)
+R_MATCH, R_AMB = 1.5, 3.0
+t0 = time.time(); nbytes = {'tap': 0, 'lc_api': 0, 'psfcat': 0}
+def get(url, kind, timeout=120):
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=timeout).read(); nbytes[kind] += len(raw); return raw
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (k + 1))
+    raise RuntimeError(err)
+groups = json.load(open(wz.SAMPLE))['groups']
+pos = {}
+for g in groups:
+    for m in g['members']:
+        if m in STARS:
+            pos[m] = (g['ra'], g['dec'])
+sql = ("SELECT expid,obsjd,exptime,infobits,filefracday,field,ccdid,qid,filtercode,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 "
+       "FROM ztf.ztf_current_meta_sci WHERE field=672 AND ccdid=8 AND qid=2 AND filtercode='zr'")
+meta = Table.read(io.BytesIO(get('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), 'tap', 300)), format='csv')
+dr = {}
+for o in STARS:
+    a = Table.read(io.BytesIO(get(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={o}&FORMAT=csv', 'lc_api')), format='csv')
+    dr[o] = {int(x['expid']): (float(x['mag']), float(x['magerr']), int(x['catflags'])) for x in a}
+row = {int(r['expid']): r for r in meta}
+
+def psfcat(expid):
+    r = row[expid]; ffd = str(r['filefracday'])
+    fn = f'{CACHE}/{expid}_psfcat.fits'
+    url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+           f"{int(r['field']):06d}_zr_c{int(r['ccdid']):02d}_o_q{int(r['qid'])}_psfcat.fits")
+    if not os.path.exists(fn):
+        open(fn, 'wb').write(get(url, 'psfcat'))
+    else:
+        nbytes['psfcat'] += os.path.getsize(fn)
+    h = fits.open(fn)
+    return h[0].header, Table(h[1].data), url
+
+def measure(expid):
+    hd, t, url = psfcat(expid)
+    zp = float(hd['MAGZP'])
+    ok_flux = np.isfinite(t['flux']) & (t['flux'] > 0)
+    # definition check: does mag equal -2.5 log10(flux) + MAGZP?
+    dmag_def = float(np.nanmedian(np.asarray(t['mag'])[ok_flux] - (-2.5 * np.log10(np.asarray(t['flux'])[ok_flux]) + zp)))
+    rec = {'expid': expid, 'mjd': float(row[expid]['obsjd']) - 2400000.5, 'exptime': float(row[expid]['exptime']),
+           'infobits_tap': int(row[expid]['infobits']), 'infobits_header': int(hd.get('INFOBITS', -1)), 'magzp': zp,
+           'clrcoeff': float(hd.get('CLRCOEFF', np.nan)), 'pcolor': str(hd.get('PCOLOR', '')),
+           'n_sources': len(t), 'mag_minus_zp_flux_median': dmag_def, 'url': url, 'stars': {}}
+    c = np.cos(np.radians(np.mean([p[1] for p in pos.values()])))
+    for o in STARS:
+        ra, dec = pos[o]
+        d = np.hypot((np.asarray(t['ra']) - ra) * c, np.asarray(t['dec']) - dec) * 3600
+        k = np.argsort(d)
+        s = {'sep_arcsec': float(d[k[0]]), 'second_arcsec': float(d[k[1]]) if len(k) > 1 else None}
+        if d[k[0]] > R_MATCH:
+            s['status'] = 'missing'
+        elif len(k) > 1 and d[k[1]] <= R_AMB:
+            s['status'] = 'ambiguous'
+        else:
+            j = k[0]
+            # psfcat 'mag' is instrumental (-2.5 log10 flux[DN]; checked: mag_minus_zp_flux_median = -MAGZP); the
+            # calibrated value adds the header MAGZP (run 1 omitted it: psfcat_overlap_run1_no_zeropoint.json)
+            s.update(status='matched', mag=float(t['mag'][j]) + zp, mag_instrumental=float(t['mag'][j]),
+                     sigmag=float(t['sigmag'][j]), flags=int(t['flags'][j]),
+                     snr=float(t['snr'][j]), flux_DN=float(t['flux'][j]), sigflux_DN=float(t['sigflux'][j]))
+        x = dr[o].get(expid)
+        s['dr24'] = {'mag': x[0], 'magerr': x[1], 'catflags': x[2]} if x else None
+        rec['stars'][str(o)] = s
+    return rec
+
+out = {'label': f'observed (IRSA psfcat, LC API, TAP) and derived; v9 {MODE}', 'plan': 'PLAN.md'}
+if MODE == 'overlap':
+    recs = [measure(e) for e in OVERLAP + GAPSEL]
+    pairs = []
+    for r in recs[:len(OVERLAP)]:
+        for o, s in r['stars'].items():
+            if s['status'] == 'matched' and s['flags'] == 0 and s['dr24'] and s['dr24']['catflags'] == 0:
+                pairs.append((s['mag'] - s['dr24']['mag'], np.hypot(s['sigmag'], s['dr24']['magerr'])))
+    d = np.array([p[0] for p in pairs]); e = np.array([p[1] for p in pairs])
+    med = float(np.median(d)) if len(d) else None
+    scat = float(1.4826 * np.median(np.abs(d - med))) if len(d) else None
+    lim = float(max(0.03, 2 * np.median(e))) if len(e) else None
+    cond = {'n_ge_8': len(d) >= 8, 'abs_median_le_0.05': med is not None and abs(med) <= 0.05,
+            'scatter_le_limit': scat is not None and scat <= lim}
+    out.update(exposures=recs, pairs=len(d), median_delta=med, robust_scatter=scat, scatter_limit=lim,
+               deltas=d.tolist(), conditions=cond, passed=all(cond.values()))
+    gap = recs[len(OVERLAP):]
+    out['gap_targets'] = {o: sum(r['stars'][str(o)]['status'] == 'matched' and r['stars'][str(o)]['flags'] == 0 for r in gap) for o in STARS}
+else:
+    prev = json.load(open(OUT.replace('fill', 'overlap')))
+    assert prev['passed'], 'overlap test did not pass; fill not allowed by the plan'
+    mjd = np.asarray(meta['obsjd'], float) - 2400000.5
+    cand = []
+    for r, m in zip(meta, mjd):
+        e = int(r['expid'])
+        if not (GAP[0] <= m < GAP[1]) or int(r['infobits']) != 0:
+            continue
+        need = [o for o in STARS if bool(wz.in_quad(Table(rows=[r]), *pos[o])[0]) and not (dr[o].get(e) and dr[o][e][2] == 0)]
+        if need:
+            cand.append((m, e))
+    cand = sorted(set(cand))
+    if len(cand) > 60:
+        cand = [cand[i] for i in np.unique(np.linspace(0, len(cand) - 1, 60).round().astype(int))]
+    recs = [measure(e) for _, e in cand]
+    per = {}
+    for o in STARS:
+        before_gap_dr = sum(1 for e, x in dr[o].items() if x[2] == 0 and e in row and GAP[0] <= float(row[e]['obsjd']) - 2400000.5 < GAP[1])
+        added = sum(1 for r in recs if r['stars'][str(o)]['status'] == 'matched' and r['stars'][str(o)]['flags'] == 0 and not (r['stars'][str(o)]['dr24'] and r['stars'][str(o)]['dr24']['catflags'] == 0))
+        miss = sum(1 for r in recs if r['stars'][str(o)]['status'] == 'missing')
+        amb = sum(1 for r in recs if r['stars'][str(o)]['status'] == 'ambiguous')
+        flagged = sum(1 for r in recs if r['stars'][str(o)]['status'] == 'matched' and r['stars'][str(o)]['flags'] != 0)
+        per[str(o)] = {'dr24_clean_in_gap': before_gap_dr, 'usable_added': added, 'after_fill_in_gap': before_gap_dr + added,
+                       'missing': miss, 'ambiguous': amb, 'matched_flagged': flagged, 'meets_20': before_gap_dr + added >= 20}
+    out.update(candidate_exposures=len(cand), exposures=recs, per_star=per)
+out['bytes'] = nbytes; out['seconds'] = round(time.time() - t0, 1)
+json.dump(out, open(OUT, 'w'), indent=1, default=float); open(OUT, 'a').write('\n')
+print(json.dumps({k: v for k, v in out.items() if k not in ('exposures', 'deltas')}, indent=1, default=float))

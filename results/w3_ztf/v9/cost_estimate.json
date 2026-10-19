@@ -1,0 +1,9 @@
+{
+ "label": "derived; v9 cost estimate (no new download)",
+ "psfcat_bytes_per_file": 213792,
+ "seconds_per_file": 1.5,
+ "files_upper_bound": 533,
+ "mb_upper_bound": 114.0,
+ "minutes_upper_bound": 13.3,
+ "scope": "one cell (rho 0.01, blend 1, t_E 100 d), 49 cases"
+}

@@ -1,0 +1,81 @@
+{
+ "label": "derived; footprint of psfcat-missing targets (fill run)",
+ "tap_bytes": 110049,
+ "stars": {
+  "672208200000073": {
+   "missing_inside_10as": 0,
+   "missing_inside_0as_only": 3,
+   "missing_outside": 27,
+   "missing_nearest_source_arcsec": [
+    41.2,
+    40.6,
+    51.0,
+    46.7,
+    40.2,
+    46.2,
+    34.8,
+    40.8,
+    50.4,
+    50.7,
+    76.8,
+    64.7,
+    65.0,
+    39.6,
+    43.5,
+    76.8,
+    76.7,
+    60.7,
+    47.4,
+    51.1,
+    40.1,
+    42.8,
+    76.7,
+    64.0,
+    76.8,
+    58.5,
+    50.9,
+    64.9,
+    44.5,
+    40.6
+   ]
+  },
+  "672208200000239": {
+   "missing_inside_10as": 0,
+   "missing_inside_0as_only": 0,
+   "missing_outside": 0,
+   "missing_nearest_source_arcsec": []
+  },
+  "672208200002085": {
+   "missing_inside_10as": 0,
+   "missing_inside_0as_only": 0,
+   "missing_outside": 25,
+   "missing_nearest_source_arcsec": [
+    39.4,
+    29.3,
+    28.4,
+    84.0,
+    28.6,
+    53.9,
+    29.4,
+    27.4,
+    38.5,
+    28.8,
+    28.4,
+    34.4,
+    41.3,
+    26.8,
+    74.6,
+    27.6,
+    48.9,
+    74.4,
+    229.0,
+    228.4,
+    210.7,
+    229.2,
+    219.2,
+    156.3,
+    74.8
+   ]
+  }
+ }
+}

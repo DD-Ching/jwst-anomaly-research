@@ -1,0 +1,12 @@
+# v9: psfcat cost for the 49 #350 bracket cases (one cell), from ../v8/cost_estimate.json (star x exposure bounds) and
+# the measured psfcat unit cost of this round. One psfcat file serves every star of its quadrant, so the distinct
+# files needed are at most the star x exposure count (upper bound; the true number is lower when carriers share
+# quadrants, not computed). Usage: python cost_script.py.txt
+import json
+c = json.load(open('results/w3_ztf/v8/cost_estimate.json')); f = json.load(open('results/w3_ztf/v9/psfcat_fill.json'))
+n = f['candidate_exposures']; b = f['bytes']['psfcat'] / n; s = f['seconds'] / n
+out = {'label': 'derived; v9 cost estimate (no new download)', 'psfcat_bytes_per_file': round(b), 'seconds_per_file': round(s, 2),
+       'files_upper_bound': c['star_exposures_upper'], 'mb_upper_bound': round(c['star_exposures_upper'] * b / 1e6, 1),
+       'minutes_upper_bound': round(c['star_exposures_upper'] * s / 60, 1), 'scope': 'one cell (rho 0.01, blend 1, t_E 100 d), 49 cases'}
+json.dump(out, open('results/w3_ztf/v9/cost_estimate.json', 'w'), indent=1); open('results/w3_ztf/v9/cost_estimate.json', 'a').write('\n')
+print(out)

@@ -1,0 +1,33 @@
+# v9: are the psfcat "missing" targets inside the exposure footprint (>= 10" margin, and >= 0")? Usage: <out json>
+import io, json, sys, urllib.parse, urllib.request
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+wz.configure(7134, 'v6')
+d = json.load(open('results/w3_ztf/v9/psfcat_fill.json'))
+pos = {}
+for g in json.load(open(wz.SAMPLE))['groups']:
+    for m in g['members']:
+        pos[m] = (g['ra'], g['dec'])
+sql = ("SELECT expid,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 FROM ztf.ztf_current_meta_sci WHERE field=672 AND ccdid=8 AND qid=2 AND filtercode='zr'")
+raw = urllib.request.urlopen('https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'}), timeout=300).read()
+meta = Table.read(io.BytesIO(raw), format='csv'); row = {int(r['expid']): r for r in meta}
+out = {'label': 'derived; footprint of psfcat-missing targets (fill run)', 'tap_bytes': len(raw), 'stars': {}}
+for o in ('672208200000073', '672208200000239', '672208200002085'):
+    c = {'missing_inside_10as': 0, 'missing_inside_0as_only': 0, 'missing_outside': 0, 'missing_nearest_source_arcsec': []}
+    for r in d['exposures']:
+        s = r['stars'][o]
+        if s['status'] != 'missing':
+            continue
+        t = Table(rows=[row[r['expid']]])
+        if wz.in_quad(t, *pos[int(o)])[0]:
+            c['missing_inside_10as'] += 1
+        elif wz.in_quad(t, *pos[int(o)], 0.0)[0]:
+            c['missing_inside_0as_only'] += 1
+        else:
+            c['missing_outside'] += 1
+        c['missing_nearest_source_arcsec'].append(round(s['sep_arcsec'], 1))
+    out['stars'][o] = c
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out))
