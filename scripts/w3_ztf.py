@@ -232,7 +232,8 @@ def select(obj, old=None) -> tuple[list[dict], dict]:
     for g in groups:
         g["holdout"] = holdout(g["key"]) if VERSION < 4 else False  # v4: all are validation
         if VERSION >= 6:  # v6: "holdout" is the search group, the rest the calibration group
-            g["holdout"] = zlib.crc32(f"{SPLIT6}:{int(g['key'])}".encode()) % 2 == 0
+            salt = SPLIT6 if VERSION < 11 else f"v{VERSION}"  # v11: its own split salt
+            g["holdout"] = zlib.crc32(f"{salt}:{int(g['key'])}".encode()) % 2 == 0
     info = {
         "objects_in_area": int(len(obj)),
         "r_band_passing_cuts": int(ok.sum()),
@@ -256,6 +257,11 @@ def stage_sample(_a) -> None:
     old = None
     if VERSION >= 4:
         old = [(g["ra"], g["dec"]) for g in json.loads((OUT / "sample.json").read_text())["groups"]]
+        if VERSION >= 11:  # v11: the v4 sample (Npix 3838) is used too
+            old += [
+                (g["ra"], g["dec"])
+                for g in json.loads((OUT / "v4" / "sample.json").read_text())["groups"]
+            ]
     groups, info = select(obj, old)
     if VERSION >= 6:
         info["calibration_groups"] = int(sum(not g["holdout"] for g in groups))

@@ -84,7 +84,8 @@
     side. Possible reasons, not separated here: the frozen good-exposure rule, partly covered DR24 exposures (not in the fill rule), missing psfcat rows,
     the unvalidated combination, and dim epochs of the event itself.
 - **Vetting: 128** (sharp-edge, achromatic, common-mode and one-off tests; per cell in `injections_v10.json`).
-- **Implementation:** no error found. The replay is exact, and two new unit tests cover the merge rules.
+- **Implementation:** these checks found no error: the replay is exact, and two new unit tests cover the merge
+  rules. They do not prove the absence of implementation errors.
 
 ## 4. Cost
 - **Downloads:**
@@ -105,7 +106,7 @@
 - **Deviation, too-faint injected epochs:** whether such an epoch is dropped or becomes a non-detection is decided
   by the exposure (fill or not), not by the point's source. The 261 DR24 detections kept inside fill exposures
   (`merge_log.json`) are therefore dropped instead of becoming non-detections, contrary to PLAN section 4. This is
-  conservative (it can only lower recovery) and was not re-run.
+  The direction of its effect on recovery is **not verified** (addendum below); it was not re-run.
 - **Review fix after the first run:** a psfcat row with a non-finite magnitude now counts as flagged (it was
   unguarded). The ambiguous branch also no longer writes a placeholder magnitude. The whole re-run and the stats
   were repeated, and every committed number is from that repeat. Apart from the runtime field, its decision, injections, merge,
@@ -116,3 +117,25 @@
   `overlap_v10.json` and `merge_log.json` with identical content.
 - **Not computed by code:** the time and the tests/review conditions of PLAN section 5. The verdict had already
   failed on the cells.
+
+## Addendum 2026-10-19 (after #359; from stored files only)
+- **Why "before" is 711 and v6 stored is 703.**
+  - The two runs use the same events and the same DR24 inputs.
+  - The replay used the v6 sequential-noise scheme on the re-read inputs and reproduced the v6 per-cell flagged and
+    recovered counts exactly (`decision.json`, `replay_mismatches_vs_v6: []`; the controls likewise,
+    `injections_v10.json` `v6_replay`).
+  - "Before" differs from that replay in **one thing only: the noise draws**. They come from a generator per
+    (cell seed, event, expid) instead of one sequential generator per cell, so the realised noise differs.
+  - The +8 (703 → 711) is therefore a noise-realisation difference of the same events. It is not a data or code
+    change.
+  - **What is known about the inputs:** the light-curve partition re-read gave the same 12,209 rows. The TAP
+    re-query gave the same 21,632 rows, but its byte count differed (4,509,175 vs 4,660,671; content not
+    compared). The code included the v8 fixes (exptime mid-time, single-exposure match). The exact replay shows
+    that none of these changed the stored v6 counts. It does not show the inputs are byte-identical.
+- **What +161 compares:** "before" (711) and "after" (872) use the same events, code, noise scheme and per-expid
+  seeds. They differ only in the data: DR24 alone vs DR24 + validated psfcat fill (and the FILL rules that come with
+  it). It is not a comparison with the v6 stored 703.
+- **The 261 dropped points:** the earlier "conservative (it can only lower recovery)" is withdrawn.
+  - Dropping a too-faint epoch instead of making it a non-detection removes a dim epoch. That can shorten a dim run
+    (lower recovery). It can also remove a second dim run elsewhere, and so pass the one-off test (higher recovery).
+  - The direction is **not verified**. The effect was not measured.
