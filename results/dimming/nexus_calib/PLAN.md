@@ -1,6 +1,6 @@
 # W3 dimming screen: calibrate the NEXUS forced stage (D-052 "Revisit if"; handoff of #367)
 
-Frozen 2026-10-19 10:27 UTC, before any run.
+Frozen 2026-10-19 10:19 UTC (commit 73785280), before any run.
 
 - **Question.** NEXUS (8 epochs) is the one D-052 field whose forced stage was never calibrated; its uncalibrated
   W3 efficiency (0.07–0.24) is what could move the headline. Does its forced stage pass the D-052 gate, and does it

@@ -1,0 +1,6 @@
+{
+ "check": "forced --workers 6 on Abell 2744 vs results/dimming/abell2744_calib/forced_summary.json (wall_s excluded)",
+ "identical": true,
+ "wall_s_workers6": 235.5,
+ "wall_s_sequential": 666.1
+}
