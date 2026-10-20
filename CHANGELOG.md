@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 ZTF v17: evidence check of the two v16 survivors (post hoc): both undetermined, no real-dimming evidence
+- **Plan:** committed before recomputation. The planned image-based comparison set failed (0 and 1 stars in the 180″
+  cutouts), so the planned verdict is undetermined for both. Deviations D1–D3 are labelled.
+- **1624 / 708205400009336** (r): no ND is judgeable, because all 9 carry LOW RESPONSIVITY pixels in the aperture.
+  Data-problem support:
+  - the official mask column lies 0.00–1.70 px from the source in exactly the 9 NDs and 2.11–11.06 px away in the 4
+    detections;
+  - psfcat lacks the source in those 9;
+  - 164 similar comparison stars are present in all 13 exposures;
+  - the column-interpolated ratio is ≥ 0.75 in 8 of 9. The ninth (206350717, 0.68) is undetermined.
+- **1625 / 709212400017577** (g): the 3 NDs are not judgeable.
+  - Seeing is 4.05–4.64″, with a 3.9-mag-brighter psfcat star 6.6″ away. Wing-subtracted ratios are 0.76–2.01 with
+    errors 0.31–0.69.
+  - psfcat keeps the neighbour and loses the target in exactly those 3. The one comparable pair behaves alike
+    (n = 1).
+  - Reading: a likely blend, not shown.
+- **Missing to close either:** a mask-aware PSF fit or difference-image forced photometry (not built; ZTF forced
+  photometry needs an account).
+- **Cost:** 10.34 MB, 40 cutouts and 20 psfcat files (`results/w3_ztf/v17/RESULT.md`).
+
 ## 2026-10-19: W3 ZTF v16: inventory of 25 partitions, frozen queue of 8 (3 pass); 5,995 groups searched, 2 survivors, both read as data problems
 - **Inventory** (metadata only, 48.7 min): 54,080 catalogue-eligible unused groups in 25 partitions; 44,354 in the 17
   sampling-qualified ones. The frozen queue of 8 (by unused groups per GB) holds 11,909 searchable.

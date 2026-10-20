@@ -1,0 +1,551 @@
+{
+ "label": "observed (v16 IBE images, masks, DR24) and derived; copied from committed v16 files",
+ "sources": [
+  {
+   "npix": 1624,
+   "key": 708205400009336,
+   "members": [
+    708205400009336,
+    1707215300005107,
+    708105400000973,
+    1707115300007405,
+    708305400006268
+   ],
+   "ra": 127.0853788,
+   "dec": 39.3086507,
+   "refmag_r_dr24": 15.184999465942383,
+   "final_run": {
+    "key": 708205400009336,
+    "ra": 127.0853788,
+    "dec": 39.3086507,
+    "filter": 2,
+    "t_start": 59815.50900960385,
+    "t_end": 59817.50755967043,
+    "n": 9,
+    "common_mode_frac": 0.006172839506172839,
+    "common_mode_ok": true,
+    "n_intermediate": 0,
+    "sharp_ok": true,
+    "edge_pre_d": 0.0,
+    "edge_post_d": 0.0,
+    "edge_ok": true,
+    "n_other_runs": 0,
+    "oneoff_ok": true,
+    "other_filter_epochs": 0,
+    "achromatic_ok": true,
+    "pass": true
+   },
+   "rule": "frozen v13 W3 rule, --edge time (results/w3_ztf/v16/PLAN.md section 3)",
+   "achromatic_test_note": "other_filter_epochs = 0: the achromatic test had no other-band data",
+   "v16_nd_classes": {
+    "2": 4,
+    "5": 4
+   },
+   "v16_nd_pending": 1,
+   "v16_reference_uJy": NaN,
+   "v16_bracket_detection_2arcsec_uJy": {
+    "values": [
+     2446.277942150078,
+     2469.986069826252,
+     2559.8151203119796,
+     2521.878515523731
+    ],
+    "median": 2495.9322926749915,
+    "range": [
+     2446.277942150078,
+     2559.8151203119796
+    ]
+   },
+   "visual_reading": "visual reading of v16 1624/image_check.png (not an automated class): the star is seen beside or partly on a black column in all 8 checked NDs",
+   "exposures": [
+    {
+     "expid": 206150633,
+     "t": 59815.5018101424,
+     "nd": false,
+     "dmag": -0.026387691497802734,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 2446.277942150078,
+     "err_uJy": 8.564610796337771,
+     "infobits": 0,
+     "maglimit": 19.539801,
+     "seeing": 2.31239,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 3.124031954805005
+     }
+    },
+    {
+     "expid": 206150873,
+     "t": 59815.504217663125,
+     "nd": false,
+     "dmag": -0.007556438446044922,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 2469.986069826252,
+     "err_uJy": 10.665027401844565,
+     "infobits": 0,
+     "maglimit": 19.5044,
+     "seeing": 2.07064,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 2.21181126319427
+     }
+    },
+    {
+     "expid": 206151353,
+     "t": 59815.50900960385,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+     "flux_uJy": -1321.6160922066072,
+     "err_uJy": 14.910015621691654,
+     "infobits": 0,
+     "maglimit": 19.0765,
+     "seeing": 1.97209,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.48928455179037683
+     }
+    },
+    {
+     "expid": 206250648,
+     "t": 59816.50201049539,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 5,
+     "why": "undetermined: field stars off their reference or no reference",
+     "flux_uJy": 224.4392759471791,
+     "err_uJy": 8.312399334292039,
+     "infobits": 0,
+     "maglimit": 19.768499,
+     "seeing": 2.04389,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.35186186758964544
+     }
+    },
+    {
+     "expid": 206251129,
+     "t": 59816.50682554379,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+     "flux_uJy": 1696.1736594770023,
+     "err_uJy": 10.753654269524008,
+     "infobits": 0,
+     "maglimit": 19.2819,
+     "seeing": 2.18805,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 1.7455552265389904
+     }
+    },
+    {
+     "expid": 206251369,
+     "t": 59816.50922146708,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+     "flux_uJy": 1494.1419052187994,
+     "err_uJy": 14.650227389498484,
+     "infobits": 0,
+     "maglimit": 19.1646,
+     "seeing": 1.9888,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 1.6385742426343017
+     }
+    },
+    {
+     "expid": 206350476,
+     "t": 59817.50034858949,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 5,
+     "why": "undetermined: field stars off their reference or no reference",
+     "flux_uJy": 143.74350517974662,
+     "err_uJy": 7.596321337274913,
+     "infobits": 0,
+     "maglimit": 19.816799,
+     "seeing": 2.13876,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.06689210880022588
+     }
+    },
+    {
+     "expid": 206350717,
+     "t": 59817.50275611666,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 5,
+     "why": "undetermined: field stars off their reference or no reference",
+     "flux_uJy": -393.86805237721427,
+     "err_uJy": 7.345912228537923,
+     "infobits": 0,
+     "maglimit": 19.818399,
+     "seeing": 1.9166,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.3082942420150524
+     }
+    },
+    {
+     "expid": 206350958,
+     "t": 59817.50516364383,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 5,
+     "why": "undetermined: field stars off their reference or no reference",
+     "flux_uJy": -933.4878939857831,
+     "err_uJy": 9.248119352447866,
+     "infobits": 0,
+     "maglimit": 19.5326,
+     "seeing": 1.99222,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.0007184534448388331
+     }
+    },
+    {
+     "expid": 206351197,
+     "t": 59817.50755967043,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+     "flux_uJy": 443.2804027003162,
+     "err_uJy": 11.775996284473164,
+     "infobits": 0,
+     "maglimit": 19.3043,
+     "seeing": 1.99315,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.9735607385575364
+     }
+    },
+    {
+     "expid": 206450576,
+     "t": 59818.50139655004,
+     "nd": false,
+     "dmag": -0.011456012725830078,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 2559.8151203119796,
+     "err_uJy": 6.546653316800302,
+     "infobits": 0,
+     "maglimit": 19.9534,
+     "seeing": 2.08532,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 2.481193218582736
+     }
+    },
+    {
+     "expid": 206550548,
+     "t": 59819.50117255225,
+     "nd": false,
+     "dmag": -0.012964725494384766,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 2521.878515523731,
+     "err_uJy": 5.813101982841437,
+     "infobits": 0,
+     "maglimit": 20.1553,
+     "seeing": 1.9093,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 11.203616041555662
+     }
+    }
+   ]
+  },
+  {
+   "npix": 1625,
+   "key": 709212400017577,
+   "members": [
+    709112400014898,
+    1748102300015375,
+    1748202300011891,
+    709312400008237,
+    709212400017577
+   ],
+   "ra": 128.6204723,
+   "dec": 40.9935282,
+   "refmag_r_dr24": 16.865999221801758,
+   "final_run": {
+    "key": 709212400017577,
+    "ra": 128.6204723,
+    "dec": 40.9935282,
+    "filter": 1,
+    "t_start": 59896.3819755067,
+    "t_end": 59900.47247835419,
+    "n": 3,
+    "common_mode_frac": 0.08072104194522854,
+    "common_mode_ok": true,
+    "n_intermediate": 0,
+    "sharp_ok": true,
+    "edge_pre_d": 0.0,
+    "edge_post_d": 0.0,
+    "edge_ok": true,
+    "n_other_runs": 0,
+    "oneoff_ok": true,
+    "other_filter_epochs": 0,
+    "achromatic_ok": true,
+    "pass": true
+   },
+   "rule": "frozen v13 W3 rule, --edge time (results/w3_ztf/v16/PLAN.md section 3)",
+   "achromatic_test_note": "other_filter_epochs = 0: the achromatic test had no other-band data",
+   "v16_nd_classes": {
+    "2": 3
+   },
+   "v16_nd_pending": 0,
+   "v16_reference_uJy": 153.8151367676669,
+   "v16_bracket_detection_2arcsec_uJy": {
+    "values": [
+     150.40329562246464,
+     150.45690200845254,
+     130.79758173243158,
+     156.2638044207228
+    ],
+    "median": 150.4300988154586,
+    "range": [
+     130.79758173243158,
+     156.2638044207228
+    ]
+   },
+   "visual_reading": "visual reading of v16 1625/image_check.png (not an automated class): a source is seen at the position in all 3 NDs, in wide seeing",
+   "exposures": [
+    {
+     "expid": 213941192,
+     "t": 59893.41368262366,
+     "nd": false,
+     "dmag": -0.06701850891113281,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 150.40329562246464,
+     "err_uJy": 5.7980988369531525,
+     "infobits": 0,
+     "maglimit": 19.7887,
+     "seeing": 2.26515,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     }
+    },
+    {
+     "expid": 214131946,
+     "t": 59895.3213967986,
+     "nd": false,
+     "dmag": -0.09949111938476562,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 150.45690200845254,
+     "err_uJy": 7.9193565718684615,
+     "infobits": 0,
+     "maglimit": 19.6269,
+     "seeing": 2.04604,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     }
+    },
+    {
+     "expid": 214237995,
+     "t": 59896.3819755067,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+     "flux_uJy": 146.66192889858183,
+     "err_uJy": 5.7672730319162735,
+     "infobits": 0,
+     "maglimit": 19.059401,
+     "seeing": 4.05279,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1
+      ],
+      "dark_column_min_dist_arcsec": null
+     }
+    },
+    {
+     "expid": 214543142,
+     "t": 59899.43370815626,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+     "flux_uJy": 117.88330527481307,
+     "err_uJy": 3.5246462968858054,
+     "infobits": 0,
+     "maglimit": 19.5933,
+     "seeing": 4.63552,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1
+      ],
+      "dark_column_min_dist_arcsec": null
+     }
+    },
+    {
+     "expid": 214647008,
+     "t": 59900.47247835419,
+     "nd": true,
+     "dmag": 0.0,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+     "flux_uJy": 100.8911443113823,
+     "err_uJy": 2.479170562157484,
+     "infobits": 0,
+     "maglimit": 19.917,
+     "seeing": 4.24271,
+     "field": 1748,
+     "ccdid": 2,
+     "qid": 3,
+     "mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1
+      ],
+      "dark_column_min_dist_arcsec": null
+     }
+    },
+    {
+     "expid": 214648674,
+     "t": 59900.48912179134,
+     "nd": false,
+     "dmag": -0.025676727294921875,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 130.79758173243158,
+     "err_uJy": 2.278652326059589,
+     "infobits": 0,
+     "maglimit": 20.4491,
+     "seeing": 2.81624,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     }
+    },
+    {
+     "expid": 214746563,
+     "t": 59901.46809305174,
+     "nd": false,
+     "dmag": 0.00568389892578125,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "flux_uJy": 156.2638044207228,
+     "err_uJy": 2.5515067799995017,
+     "infobits": 0,
+     "maglimit": 21.0394,
+     "seeing": 1.85979,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     }
+    }
+   ]
+  }
+ ]
+}
