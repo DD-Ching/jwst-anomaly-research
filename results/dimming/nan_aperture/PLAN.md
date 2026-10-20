@@ -43,6 +43,6 @@ earlier-exposure (illuminator) measurements. `n_ap_nan` is written per exposure.
 a monitored pair into `persistence` (the fill invents an illuminator), or G1 bias > 5 % (try area correction instead,
 under a new plan).
 
-**Amendment 2026-10-20 06:20 UTC (before G1 or any score):** the rounded centre pixel is its own reflection, so a
+**Amendment 2026-10-20 06:15 UTC (before G1 or any score):** the rounded centre pixel is its own reflection, so a
 NaN centre pixel stays unfilled (the rule above, unchanged). G1 therefore masks non-centre pixels (step 2 edited);
 the count of exposures left NaN because the centre pixel is NaN is reported.
