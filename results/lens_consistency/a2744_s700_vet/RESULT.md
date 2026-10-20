@@ -41,7 +41,8 @@ After `/code-review` (post hoc, before the final run), these were fixed: the pix
 magnitude (hypot, for the rotated mosaic); NaN S/N no longer passes the known-pair cut; an unmeasurable target pair
 is "not measurable", never "consistent" (for either image without flux; a new, post hoc `decide` branch); a member
 without a measurable magnitude is "not assessed", not "no perturber"; the ratio search covers 10⁻³–10³ instead of a
-bracket around Σf_a/Σf_b. The crude magnitudes changed with the pixel-scale fix (≈ 20.4 → 19.7 and 18.6 → 18.0).
+bracket around Σf_a/Σf_b. The crude magnitudes changed with the pixel-scale fix (≈ 20.4 → 19.7 and 18.6 → 18.0; the old values are in
+commit 36e95a7's `summary.json`). `perturber_found` is tri-state (None: no perturber, but a member not assessed).
 `summary.json` is from the run with these fixes; the outcome is unchanged.
 
 **Limitations.** One aperture size, one noise model. The random-aperture ring (0.6–1.8″) is not masked, so for the

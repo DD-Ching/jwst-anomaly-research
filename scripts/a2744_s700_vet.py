@@ -94,18 +94,43 @@ def pair_chi2(fa, sa, fb, sb) -> dict:
     lo, hi = grid[max(k - 1, 0)], grid[min(k + 1, len(grid) - 1)]
     res = optimize.minimize_scalar(chi2, bounds=(lo, hi), method="bounded")
     c = float(res.fun)
-    return {"n_bands": n, "ratio": float(res.x), "chi2": c, "p": float(stats.chi2.sf(c, n - 1))}
+    return {
+        "n_bands": n,
+        "ratio": float(res.x),
+        "chi2": c,
+        "p": float(stats.chi2.sf(c, n - 1)),
+        "ratio_at_grid_edge": k in (0, len(grid) - 1),  # the true minimum may lie outside
+    }
 
 
 def differs(p: float | None) -> bool | None:
     return None if p is None else bool(p < P_DIFFER)
 
 
-def decide(gate_passed: bool, any_differs: bool | None, perturber: bool) -> str:
+def classify_perturber(member: bool, mag: float) -> bool | None:
+    """True: member brighter than MAG_PERTURBER; None: member without a measurable magnitude
+    ("not assessed", post hoc); False otherwise."""
+    if not member:
+        return False
+    if not np.isfinite(mag):
+        return None
+    return bool(mag < MAG_PERTURBER)
+
+
+def any_perturber(flags: list[bool | None]) -> bool | None:
+    """True if any perturber; None if none but some member was not assessed; else False."""
+    if any(f is True for f in flags):
+        return True
+    return None if any(f is None for f in flags) else False
+
+
+def decide(gate_passed: bool, any_differs: bool | None, perturber: bool | None) -> str:
     """Frozen decision function of PLAN.md. The ``any_differs is None`` branch (a target pair not
     measurable, never read as "consistent") is post hoc, added after /code-review."""
     if not gate_passed:
-        tail = "member perturber present" if perturber else "no member perturber"
+        tail = {True: "member perturber present", None: "member perturber not assessed"}.get(
+            perturber, "no member perturber"
+        )
         return f"undetermined (colour test not validated; {tail})"
     if any_differs:
         return "one image (H1)"
@@ -113,6 +138,8 @@ def decide(gate_passed: bool, any_differs: bool | None, perturber: bool) -> str:
         return "undetermined (target colours not measurable)"
     if perturber:
         return "ordinary perturber possible (H2)"
+    if perturber is None:
+        return "undetermined (member perturber not assessed)"
     return "undetermined (H3)"
 
 
@@ -217,12 +244,7 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
                     "z160_z840": [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)],
                     "f200w_mag_crude": _r(mag, 2),
                     "member": member,
-                    # a member without a measurable magnitude is "not assessed" (None), not False
-                    "perturber": (
-                        None
-                        if member and not np.isfinite(mag)
-                        else bool(member and mag < MAG_PERTURBER)
-                    ),
+                    "perturber": classify_perturber(member, mag),
                 }
             )
     finally:
@@ -365,7 +387,7 @@ def main(argv=None) -> dict:
     ra_m = np.mean([pos["78.21"][0], pos["78.22"][0]])
     dec_m = np.mean([pos["78.21"][1], pos["78.22"][1]])
     pert = perturbers(Table.read(fetch_catalog(*af.ZOUT)), float(ra_m), float(dec_m))
-    has_pert = any(p["perturber"] is True for p in pert)
+    has_pert = any_perturber([p["perturber"] for p in pert])
     out = {
         "plan": "PLAN.md",
         "bands": list(BANDS),
