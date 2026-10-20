@@ -212,8 +212,8 @@
  "per_1000_searched": {
   "stage_seconds": 167.0,
   "lc_mb": 344.6,
-  "wall_clock_min_queue": 2.14
+  "wall_clock_min_queue": 2.18
  },
- "wall_clock_min": 21.4,
- "events": 41
+ "wall_clock_min": 21.8,
+ "events": 42
 }
