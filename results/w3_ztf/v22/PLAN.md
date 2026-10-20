@@ -105,3 +105,13 @@ Fixed check items for the 8124 calibration survivor 634205400002482, 9.9″ from
 - **Totals:** at most 15,501 searchable groups if all 8 pass.
 - **Projected download:** 759.7 + 3,318.9 + 8 × 30 ≈ 4,319 MB, under 5,850 MB.
 - **No new area after 09:40 UTC.**
+
+## Errata (after the run; the frozen text above is kept)
+- **Searchable total:** "at most 15,501 searchable groups" should read **14,321**, the sum of search_if_500_cal over
+  `queue.json` (= 1,882 + 12,439).
+- **Shared fields:** "1150, 1148 and 1151 share fields 619, 1615, 1616 and 1664" is wrong for 1151. 1151 shares 619
+  and 1664 with 1150, and 619, 620 and 1664 with 1148.
+- **Field basis:** the field lists here come from the inventory's 200 sampled positions per area. The full sample of
+  4989 also has fields 1597 and 1598 (review check, not stored).
+- **Dedupe size:** 64,507 groups is printed by `dedupe_script.py.txt` (git-ignored output; not stored in a committed
+  JSON).

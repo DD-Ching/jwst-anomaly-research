@@ -1,4 +1,4 @@
-# v22 (copied from ../v21; paths, salt and seeds changed) (copied from ../v20; paths, salt and seeds changed) (copied from ../v16, paths and salt changed) validation (frozen v13 rule) pass conditions (PLAN section 3) per partition. Usage: python decision_script.py.txt <npix>
+# v22 (copied from ../v21; paths, salt and seeds changed) (copied from ../v20; paths, salt and seeds changed) (copied from ../v16, paths and salt changed) validation (frozen v13 rule) pass conditions (PLAN section C) per partition. Usage: python decision_script.py.txt <npix>
 import json, sys
 A = sys.argv[1]
 inj = json.load(open(f'results/w3_ztf/v22/{A}/injections_v22_time.json'))

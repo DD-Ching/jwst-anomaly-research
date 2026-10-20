@@ -1,4 +1,4 @@
-# v22 (copied from ../v21; paths, salt and seeds changed) (copied from ../v20; paths, salt and seeds changed) (copied from ../v16, paths and salt changed) sample of one queued area (PLAN.md section 3): every eligible unused group (select(), unchanged cuts, N_MAX
+# v22 (copied from ../v21; paths, salt and seeds changed) (copied from ../v20; paths, salt and seeds changed) (copied from ../v16, paths and salt changed) sample of one queued area (PLAN.md section C): every eligible unused group (select(), unchanged cuts, N_MAX
 # lifted), deduplicated against v1-v21 (`results/w3_ztf/v22/dedupe.json.gz`; within 3" or a shared objectid); calibration = the lowest 500 by
 # crc32("v22:" + key), search = the rest; controls = comparison range minus every sample member. One configure()
 # call per process. Usage: python area_sample_script.py.txt <npix> <scratch dir>

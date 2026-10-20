@@ -5484,8 +5484,10 @@ confining radiation at a throat is found.
   - **Inventory:** a new one of 31 partitions; 25 qualify, none sharing fields.
   - **Queue:** of 8 areas only 1 passed (1,882 groups searched, 0 survivors). 7 failed the frozen fade control at
     10.2–13.8 %.
-  - **The 8124 neighbour:** it sits on the same low-responsivity column in the shared NDs; 8124 stays undetermined.
-  - **Decision:** no change to the rule this round. The fade control limits throughput in these new fields.
+  - **The 8124 neighbour:** in the shared NDs it also sits on a low-responsivity column (each within 0.5 px; column
+    identity not stored); 8124 stays undetermined.
+  - **Decision:** no change to the rule this round. The fade control was the only failing condition in 3 of the 7
+    failed areas; the other 4 also failed short-t_E cells. A similar excess occurred in v20.
   - **Revisit if:** the owner wants a method decision on the fade control, such as calibrating it per field or
     diagnosing the excess. That is not done here.
 

@@ -1,5 +1,5 @@
-# v22 inventory (copied from ../v16/inventory_script.py.txt; dedupe v1-v21, parallel objects and TAP reads) (PLAN.md section 1): the unchanged v12 indicator (../v12/obs_script.py.txt) on the v16 candidates,
-# with all eligible unused groups counted (N_MAX lifted), the dedupe list of v1-v15, the LC partition size from parquet
+# v22 inventory (copied from ../v16/inventory_script.py.txt; dedupe v1-v21, parallel objects and TAP reads) (PLAN.md section 1): the unchanged v12 indicator (../v12/obs_script.py.txt) on the v22 candidates,
+# with all eligible unused groups counted (N_MAX lifted), the dedupe list of v1-v21, the LC partition size from parquet
 # metadata, and no queue choice here (the queue rule is applied by queue_script.py.txt). Metadata only.
 # Usage: python inventory_script.py.txt <scratch dir>
 import io, json, sys, time, urllib.parse, urllib.request
@@ -162,7 +162,7 @@ if __name__ == '__main__':
         o['search_if_500_calibration'] = max(len(elig[pix][0]) - 500, 0)
         o['unused_per_gb'] = round(len(elig[pix][0]) / (lcmb[pix] / 1000), 1)
     out = {'label': 'derived (official metadata: DR24 objects, IRSA TAP, parquet metadata); necessary-sampling indicator, not recovery',
-           'plan': 'PLAN.md section 1', 'old_fields': old_fields, 'areas': {str(p): areas[p] for p in CAND},
+           'plan': 'PLAN.md section B', 'old_fields': old_fields, 'areas': {str(p): areas[p] for p in CAND},
            'eligible_info': {str(p): elig[p][1] for p in CAND},
            'bytes': nbytes, 'tap_rows': len(expo), 'minutes': round((time.time() - t_start) / 60, 1)}
     json.dump(out, open(HERE / 'inventory.json', 'w'), indent=1, default=float); open(HERE / 'inventory.json', 'a').write('\n')
