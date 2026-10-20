@@ -1,0 +1,12 @@
+# v20 dedupe list: the v16 list (v1-v15) plus every v16 area sample group (calibration and search, all 8 queued areas,
+# including failed areas whose search groups were never read). Positions + objectids. Usage: python dedupe_script.py.txt
+import gzip, json, os
+ded = json.load(gzip.open('results/w3_ztf/v16/dedupe.json.gz'))['groups']
+n0 = len(ded)
+for p in (187, 1626, 1627, 2274, 1624, 1358, 1625, 1357):
+    f = f'results/w3_ztf/v16/{p}/sample.json'
+    gs = json.load(open(f) if os.path.exists(f) else gzip.open(f + '.gz'))['groups']
+    ded += [[f'v16 ({p})', round(g['ra'], 7), round(g['dec'], 7), g['members']] for g in gs]
+out = {'label': 'derived; all earlier sample groups (v1-v16)', 'groups': ded, 'n': len(ded), 'n_before_v16': n0}
+gzip.open('results/w3_ztf/v20/dedupe.json.gz', 'wt').write(json.dumps(out, separators=(',', ':')) + '\n')
+print(n0, len(ded))

@@ -1,0 +1,21 @@
+# v20 objects tables (DR24 HATS objects, Norder 4) for the parents of the queued partitions, column projection as in
+# ../v16/inventory_script.py.txt; bytes from parquet metadata. Usage: python objects_script.py.txt <scratch dir>
+import json, sys, time
+import pyarrow.parquet as pq
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+SCR = sys.argv[1]
+cols = ['oid', 'ra', 'dec', 'field', 'ccdid', 'qid', 'fid', 'refmag', 'refsharp', 'ngoodobs', 'transient']
+q = json.load(open('results/w3_ztf/v20/queue.json'))['queue']
+t0 = time.time(); mb = {}
+for par in sorted({r['npix'] // 4 for r in q}):
+    part = wz.OBJ_PART.replace('Npix=959', f'Npix={par}')
+    pf = pq.ParquetFile(wz.s3().open(part)); md = pf.metadata
+    mb[par] = sum(md.row_group(i).column(j).total_compressed_size for i in range(md.num_row_groups)
+                  for j in range(md.num_columns) if md.row_group(i).column(j).path_in_schema in cols) / 1e6
+    pf.read(columns=cols).to_pandas().to_parquet(f'{SCR}/obj{par}.parquet')
+    print(par, round(mb[par], 1), flush=True)
+out = {'label': 'derived (parquet metadata of the read columns)', 'parents': {str(k): round(v, 1) for k, v in mb.items()},
+       'objects_mb': round(sum(mb.values()), 1), 'seconds': round(time.time() - t0, 1),
+       'note': 'the v16 objects files were deleted after #385 (owner rule), so these parents are read again'}
+json.dump(out, open('results/w3_ztf/v20/objects.json', 'w'), indent=1); open('results/w3_ztf/v20/objects.json', 'a').write('\n')

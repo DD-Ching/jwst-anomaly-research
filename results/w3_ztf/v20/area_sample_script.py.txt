@@ -1,0 +1,36 @@
+# v20 (copied from ../v16, paths and salt changed) sample of one queued area (PLAN.md section 3): every eligible unused group (select(), unchanged cuts, N_MAX
+# lifted), deduplicated against v1-v16 (`results/w3_ztf/v20/dedupe.json.gz`; within 3" or a shared objectid); calibration = the lowest 500 by
+# crc32("v20:" + key), search = the rest; controls = comparison range minus every sample member. One configure()
+# call per process. Usage: python area_sample_script.py.txt <npix> <scratch dir>
+import gzip, json, sys, zlib
+import numpy as np
+import pandas as pd
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+PIX, SCR = int(sys.argv[1]), sys.argv[2]
+wz.configure(PIX, f'v20/{PIX}')
+wz.N_MAX = 100000
+ded = json.load(gzip.open('results/w3_ztf/v20/dedupe.json.gz'))['groups']
+old_pos = [(g[1], g[2]) for g in ded]
+old_oid = {m for g in ded for m in g[3]}
+obj = pd.read_parquet(f'{SCR}/obj{PIX // 4}.parquet')
+groups, info = wz.select(obj, old_pos)
+n0 = len(groups)
+groups = [g for g in groups if not set(g['members']) & old_oid]
+rank = sorted(groups, key=lambda g: zlib.crc32(f"v20:{int(g['key'])}".encode()))
+cal = {g['key'] for g in rank[:500]}
+for g in groups:
+    g['holdout'] = g['key'] not in cal
+pct = lambda xs: [float(np.percentile(xs, q)) for q in (5, 50, 95)] if len(xs) else None
+info.update(dropped_shared_objectid=n0 - len(groups), calibration_groups=len(cal), search_groups=len(groups) - len(cal),
+            split='lowest 500 by crc32("v20:"+key) = calibration ("holdout" above is select() pre-split parity)',
+            refmag_r_p5_p50_p95={'calibration': pct([g['refmag_r'] for g in groups if not g['holdout']]),
+                                 'search': pct([g['refmag_r'] for g in groups if g['holdout']])},
+            lc_partition=wz.LC_PART, cache=str(wz.CACHE))
+wz.SAMPLE.parent.mkdir(parents=True, exist_ok=True)
+s = json.dumps({'label': 'derived; v20 PLAN section 3', 'info': info, 'groups': groups}, separators=(',', ':'))
+wz.SAMPLE.write_text(s + '\n')
+gzip.open(str(wz.SAMPLE) + '.gz', 'wt').write(s + '\n')
+info['controls'] = wz.save_comparisons(obj, {m for g in groups for m in g['members']})
+json.dump(info, open(wz.VDIR / 'sample_info.json', 'w'), indent=1); open(wz.VDIR / 'sample_info.json', 'a').write('\n')
+print(json.dumps(info))

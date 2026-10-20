@@ -1,0 +1,56 @@
+{
+ "label": "derived",
+ "summary": {
+  "version": 20,
+  "half": "dev",
+  "groups": 500,
+  "series_searched": 1000,
+  "flagged_runs": 2,
+  "flagged_groups": 2,
+  "passed_groups": []
+ },
+ "runs": [
+  {
+   "key": 760210300014197,
+   "ra": 234.5867703,
+   "dec": 48.0493758,
+   "filter": 2,
+   "t_start": 58258.390829268195,
+   "t_end": 58262.35468459468,
+   "n": 4,
+   "common_mode_frac": 0.10006265664160402,
+   "common_mode_ok": true,
+   "n_intermediate": 0,
+   "sharp_ok": true,
+   "edge_pre_d": 0.0,
+   "edge_post_d": 0.0,
+   "edge_ok": true,
+   "n_other_runs": 0,
+   "oneoff_ok": true,
+   "other_filter_epochs": 2,
+   "achromatic_ok": false,
+   "pass": false
+  },
+  {
+   "key": 760206200018985,
+   "ra": 234.4076156,
+   "dec": 47.4344239,
+   "filter": 2,
+   "t_start": 58258.39090401197,
+   "t_end": 58262.354759886955,
+   "n": 4,
+   "common_mode_frac": 0.1427612257516037,
+   "common_mode_ok": true,
+   "n_intermediate": 0,
+   "sharp_ok": true,
+   "edge_pre_d": 0.0,
+   "edge_post_d": 0.0,
+   "edge_ok": true,
+   "n_other_runs": 0,
+   "oneoff_ok": true,
+   "other_filter_epochs": 1,
+   "achromatic_ok": false,
+   "pass": false
+  }
+ ]
+}

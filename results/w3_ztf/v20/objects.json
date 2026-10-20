@@ -1,0 +1,12 @@
+{
+ "label": "derived (parquet metadata of the read columns)",
+ "parents": {
+  "339": 88.1,
+  "622": 82.5,
+  "725": 76.5,
+  "2031": 97.3
+ },
+ "objects_mb": 344.4,
+ "seconds": 203.0,
+ "note": "the v16 objects files were deleted after #385 (owner rule), so these parents are read again"
+}

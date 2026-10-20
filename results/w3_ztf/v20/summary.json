@@ -1,0 +1,707 @@
+{
+ "label": "derived (timeline.jsonl and per-area outputs)",
+ "areas": {
+  "1356": {
+   "position": 1,
+   "lc_mb": 289.2,
+   "unused": 1221,
+   "shared_fields_v1_v16": [
+    713,
+    1711,
+    1712
+   ],
+   "independent_fields": [
+    669,
+    670
+   ],
+   "started": true,
+   "stage_seconds": {
+    "sample": 7.3,
+    "fetch": 28.0,
+    "exposures": 207.1,
+    "search_dev": 27.7,
+    "inject": 78.9,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 721,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.80359935760498,
+     16.428500175476074,
+     17.408450889587403
+    ],
+    "search": [
+     14.672999382019043,
+     16.33599853515625,
+     17.408000946044922
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 118,
+    "rho0.01_blend1_tE30": 141,
+    "rho0.01_blend1_tE100": 121,
+    "rho0.1_blend1_tE10": 110,
+    "rho0.1_blend1_tE30": 139,
+    "rho0.01_blend0.7_tE10": 110,
+    "rho0.01_blend0.7_tE30": 127,
+    "rho0.01_blend0.7_tE100": 97,
+    "rho0.1_blend0.7_tE10": 89,
+    "rho0.1_blend0.7_tE30": 123
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     66,
+     1000,
+     [
+      0.0522,
+      0.0831
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 25.6,
+   "tap_mb": 6.02
+  },
+  "2490": {
+   "position": 2,
+   "lc_mb": 471.6,
+   "unused": 1901,
+   "shared_fields_v1_v16": [],
+   "independent_fields": [
+    760,
+    1759,
+    1760,
+    1796,
+    1797
+   ],
+   "started": true,
+   "stage_seconds": {
+    "sample": 7.5,
+    "fetch": 28.4,
+    "exposures": 203.5,
+    "search_dev": 32.4,
+    "inject": 94.8,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 1401,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.85039930343628,
+     16.41550064086914,
+     17.424199771881103
+    ],
+    "search": [
+     14.78499984741211,
+     16.43199920654297,
+     17.42799949645996
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 112,
+    "rho0.01_blend1_tE30": 149,
+    "rho0.01_blend1_tE100": 155,
+    "rho0.1_blend1_tE10": 113,
+    "rho0.1_blend1_tE30": 144,
+    "rho0.01_blend0.7_tE10": 104,
+    "rho0.01_blend0.7_tE30": 135,
+    "rho0.01_blend0.7_tE100": 124,
+    "rho0.1_blend0.7_tE10": 95,
+    "rho0.1_blend0.7_tE30": 128
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     124,
+     1000,
+     [
+      0.105,
+      0.1459
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 26.1,
+   "tap_mb": 6.09
+  },
+  "2491": {
+   "position": 3,
+   "lc_mb": 462.3,
+   "unused": 1828,
+   "shared_fields_v1_v16": [],
+   "independent_fields": [
+    760,
+    1796,
+    1797
+   ],
+   "started": true,
+   "stage_seconds": {
+    "sample": 5.7,
+    "fetch": 32.9,
+    "exposures": 69.2,
+    "search_dev": 29.5,
+    "inject": 92.2,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 1328,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.697799921035767,
+     16.46649932861328,
+     17.421299552917482
+    ],
+    "search": [
+     14.756799840927124,
+     16.404500007629395,
+     17.395999908447266
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 116,
+    "rho0.01_blend1_tE30": 159,
+    "rho0.01_blend1_tE100": 159,
+    "rho0.1_blend1_tE10": 104,
+    "rho0.1_blend1_tE30": 156,
+    "rho0.01_blend0.7_tE10": 120,
+    "rho0.01_blend0.7_tE30": 154,
+    "rho0.01_blend0.7_tE100": 140,
+    "rho0.1_blend0.7_tE10": 104,
+    "rho0.1_blend0.7_tE30": 147
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     139,
+     1000,
+     [
+      0.1189,
+      0.1618
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 30.3,
+   "tap_mb": 6.19
+  },
+  "8126": {
+   "position": 4,
+   "lc_mb": 1299.7,
+   "unused": 5108,
+   "shared_fields_v1_v16": [
+    634,
+    1679
+   ],
+   "independent_fields": [
+    1631,
+    1678
+   ],
+   "started": true,
+   "stage_seconds": {
+    "sample": 8.7,
+    "fetch": 59.8,
+    "exposures": 88.4,
+    "search_dev": 66.4,
+    "inject": 154.9,
+    "decision": 0.0,
+    "search_holdout": 155.0,
+    "image_check": 220
+   },
+   "calibration_groups": 500,
+   "search_groups": 4608,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.976549291610718,
+     16.51949977874756,
+     17.43410005569458
+    ],
+    "search": [
+     14.846699666976928,
+     16.5049991607666,
+     17.421650409698486
+    ]
+   },
+   "passed": true,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 132,
+    "rho0.01_blend1_tE30": 154,
+    "rho0.01_blend1_tE100": 148,
+    "rho0.1_blend1_tE10": 130,
+    "rho0.1_blend1_tE30": 153,
+    "rho0.01_blend0.7_tE10": 123,
+    "rho0.01_blend0.7_tE30": 149,
+    "rho0.01_blend0.7_tE100": 130,
+    "rho0.1_blend0.7_tE10": 110,
+    "rho0.1_blend0.7_tE30": 150
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     70,
+     1000,
+     [
+      0.0558,
+      0.0875
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "search": {
+    "groups": 4608,
+    "series_searched": 9206,
+    "flagged_runs": 35,
+    "flagged_groups": 8,
+    "passed_groups": [
+     634210200007847
+    ]
+   },
+   "fetch_read_s": 57.7,
+   "tap_mb": 8.28
+  },
+  "2488": {
+   "position": 5,
+   "lc_mb": 490.3,
+   "unused": 1860,
+   "shared_fields_v1_v16": [],
+   "independent_fields": [
+    760,
+    1759,
+    1760,
+    1796,
+    1797
+   ],
+   "started": true,
+   "stage_seconds": {
+    "sample": 5.2,
+    "fetch": 27.0,
+    "exposures": 77.2,
+    "search_dev": 33.4,
+    "inject": 95.0,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 1360,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.774999618530273,
+     16.435999870300293,
+     17.361400032043456
+    ],
+    "search": [
+     14.777799844741821,
+     16.425999641418457,
+     17.39804878234863
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 121,
+    "rho0.01_blend1_tE30": 164,
+    "rho0.01_blend1_tE100": 167,
+    "rho0.1_blend1_tE10": 117,
+    "rho0.1_blend1_tE30": 144,
+    "rho0.01_blend0.7_tE10": 115,
+    "rho0.01_blend0.7_tE30": 149,
+    "rho0.01_blend0.7_tE100": 122,
+    "rho0.1_blend0.7_tE10": 101,
+    "rho0.1_blend0.7_tE30": 147
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     128,
+     1000,
+     [
+      0.1087,
+      0.1501
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 24.7,
+   "tap_mb": 6.16
+  },
+  "2489": {
+   "position": 6,
+   "lc_mb": 515.6,
+   "unused": 1933,
+   "shared_fields_v1_v16": [],
+   "independent_fields": [
+    760,
+    1760,
+    1797
+   ],
+   "started": true,
+   "stage_seconds": {
+    "sample": 4.4,
+    "fetch": 24.8,
+    "exposures": 54.4,
+    "search_dev": 30.9,
+    "inject": 92.1,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 1433,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.82229995727539,
+     16.344999313354492,
+     17.404299354553224
+    ],
+    "search": [
+     14.792599487304688,
+     16.371999740600586,
+     17.382799911499024
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 115,
+    "rho0.01_blend1_tE30": 171,
+    "rho0.01_blend1_tE100": 161,
+    "rho0.1_blend1_tE10": 104,
+    "rho0.1_blend1_tE30": 151,
+    "rho0.01_blend0.7_tE10": 99,
+    "rho0.01_blend0.7_tE30": 156,
+    "rho0.01_blend0.7_tE100": 149,
+    "rho0.1_blend0.7_tE10": 104,
+    "rho0.1_blend0.7_tE30": 126
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     106,
+     1000,
+     [
+      0.0884,
+      0.1266
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 22.4,
+   "tap_mb": 6.85
+  },
+  "2900": {
+   "position": 7,
+   "lc_mb": 1021.4,
+   "unused": 3616,
+   "shared_fields_v1_v16": [
+    848,
+    1856
+   ],
+   "independent_fields": [
+    825
+   ],
+   "started": true,
+   "stage_seconds": {
+    "sample": 5.1,
+    "fetch": 68.6,
+    "exposures": 87.0,
+    "search_dev": 68.5,
+    "inject": 180.2,
+    "decision": 0.0,
+    "search_holdout": 122.9
+   },
+   "calibration_groups": 500,
+   "search_groups": 3116,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.86489977836609,
+     16.3125,
+     17.41019983291626
+    ],
+    "search": [
+     14.769749641418457,
+     16.415000915527344,
+     17.416500091552734
+    ]
+   },
+   "passed": true,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 145,
+    "rho0.01_blend1_tE30": 178,
+    "rho0.01_blend1_tE100": 161,
+    "rho0.1_blend1_tE10": 137,
+    "rho0.1_blend1_tE30": 164,
+    "rho0.01_blend0.7_tE10": 145,
+    "rho0.01_blend0.7_tE30": 167,
+    "rho0.01_blend0.7_tE100": 142,
+    "rho0.1_blend0.7_tE10": 147,
+    "rho0.1_blend0.7_tE30": 152
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     54,
+     1000,
+     [
+      0.0416,
+      0.0698
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "search": {
+    "groups": 3116,
+    "series_searched": 6186,
+    "flagged_runs": 11,
+    "flagged_groups": 2,
+    "passed_groups": []
+   },
+   "fetch_read_s": 66.2,
+   "tap_mb": 13.09
+  },
+  "8124": {
+   "position": 8,
+   "lc_mb": 1704.6,
+   "unused": 5604,
+   "shared_fields_v1_v16": [
+    634,
+    635,
+    1679
+   ],
+   "independent_fields": [
+    1631
+   ],
+   "started": false,
+   "stage_seconds": {}
+  },
+  "8127": {
+   "position": 9,
+   "lc_mb": 1734.0,
+   "unused": 5374,
+   "shared_fields_v1_v16": [
+    634,
+    635,
+    681,
+    1679
+   ],
+   "independent_fields": [
+    1678
+   ],
+   "started": false,
+   "stage_seconds": {}
+  }
+ },
+ "searched_groups": 7724,
+ "searched_series": 15392,
+ "final_survivors": 1,
+ "started": 7,
+ "passed": 2,
+ "downloaded_mb": 4947.2,
+ "downloaded_note": "objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured",
+ "not_started": [
+  8,
+  9
+ ],
+ "stage_seconds_of_searched_areas": 1285.5,
+ "per_1000_searched": {
+  "stage_seconds": 166.4,
+  "lc_mb": 300.5,
+  "wall_clock_min_queue": 3.86
+ },
+ "wall_clock_min": 29.8,
+ "events": 116
+}

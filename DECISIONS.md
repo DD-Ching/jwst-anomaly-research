@@ -5465,6 +5465,13 @@ confining radiation at a throat is found.
   - **Rejected:** iterating further methods on these two sources (owner rule).
   - **Revisit if:** difference-image forced photometry or the official PSF-star lists become available, or a rerun
     fixes the V1b′ σ and the per-level ρ.
+- **Addendum 2026-10-20 (v20, `results/w3_ztf/v20/RESULT.md`):**
+  - **Run:** the 9 remaining v16-inventoried partitions, with the frozen v13 method.
+  - **Result:** 2 of 7 started pass (8126, 2900), 7,724 groups searched, 1 undetermined survivor (a near-limit
+    catalogue miss is the untested leading explanation).
+  - **Decision:** 1624 and 1625 stay archived as undetermined; reopen only with new data or an already-validated
+    method. Failed areas stay unsearched. The #385 worst-cell pattern is not used as a gate.
+  - **Revisit if:** the budget allows 8124 and 8127, or a new inventory is authorized.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
