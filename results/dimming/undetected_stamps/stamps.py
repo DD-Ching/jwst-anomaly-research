@@ -97,6 +97,8 @@ def sheet(t: Table, stamps: list, path: Path) -> None:
 
     sel = [i for i, r in enumerate(t) if r["verdict"] == "undetected"]
     n = len(sel)
+    if not n:
+        return
     cols = 6
     fig, axs = plt.subplots(-(-n // cols), cols, figsize=(2 * cols, 2.2 * -(-n // cols)))
     for ax in np.ravel(axs):
