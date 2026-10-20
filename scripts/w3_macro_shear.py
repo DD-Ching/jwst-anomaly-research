@@ -177,10 +177,13 @@ def measure(lam1, lam2, sign=-1):
     tracks = {}
     for u0 in (0.0, 0.5, 1.0):
         iy = int(np.argmin(np.abs(by - u0)))
-        tracks[f"along_x_u0_{u0}"] = {
-            "min_point": float(rel[iy].min()),
-            "min_rho0.1": float(disk[iy, inner].min()),
-        }
+        if abs(by[iy] - u0) <= 0.5001 * pix and k <= iy < len(by) - k:
+            tracks[f"along_x_u0_{u0}"] = {
+                "min_point": float(rel[iy].min()),
+                "min_rho0.1": float(disk[iy, inner].min()),
+            }
+        else:
+            tracks[f"along_x_u0_{u0}"] = None  # outside the window interior: not measured
         ix = int(np.argmin(np.abs(bx - u0)))
         if abs(bx[ix] - u0) <= 0.5001 * pix and k <= ix < len(bx) - k:
             tracks[f"along_y_u0_{u0}"] = {
