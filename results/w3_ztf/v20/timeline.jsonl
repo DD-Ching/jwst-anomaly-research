@@ -6,3 +6,7 @@
 {"area": 1356, "stage": "fetch", "event": "start", "utc": "2026-10-20T05:00:51Z"}
 {"area": 2490, "stage": "sample", "event": "end", "rc": 0, "seconds": 7.5, "utc": "2026-10-20T05:00:51Z"}
 {"area": 2490, "stage": "fetch", "event": "start", "utc": "2026-10-20T05:00:51Z"}
+{"area": 1356, "stage": "fetch", "event": "end", "rc": 0, "seconds": 28.0, "utc": "2026-10-20T05:01:19Z"}
+{"area": 1356, "stage": "exposures", "event": "start", "utc": "2026-10-20T05:01:19Z"}
+{"area": 2490, "stage": "fetch", "event": "end", "rc": 0, "seconds": 28.4, "utc": "2026-10-20T05:01:20Z"}
+{"area": 2490, "stage": "exposures", "event": "start", "utc": "2026-10-20T05:01:20Z"}
