@@ -45,14 +45,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   still cannot be judged" (`results/w3_ztf/v19/RESULT.md`).
 - **Queue:** the 9 sampling-qualified, unqueued partitions of the v16 inventory, ordered by unused groups per GB.
   - **Passed:** 8126 and 2900. They were searched with 4,608 and 3,116 groups.
-  - **Failed:** 1356 and 2490 on cells; 2490, 2491, 2488 and 2489 on the fade control (10.6–13.9 %).
+  - **Failed:** 1356, 2490 and 2489 on cells; 2490, 2491, 2488 and 2489 on the fade control (10.6–13.9 %).
   - **Not started:** 8124 and 8127, by the download stop.
-- **Survivor:** 8126 / 634210200007847 (g ≈ 19.3, ND image limits 19.24–19.52).
-  - It is visible in all NDs, at the before-run flux level.
+- **Survivor:** 8126 / 634210200007847 (ND image limits 19.24–19.52).
   - Automated classes: 2 poor, 2 undetermined. No image-confirmed drop.
-- **Cumulative with the v13 rule:** 25,497 groups. No confirmed target event yet.
+  - A source is faintly visible in every ND stamp (visual reading). The aperture fluxes are uncalibrated (no
+    reference), so they give no level comparison. A near-limit catalogue miss is the untested leading explanation.
+- **Cumulative with the v13 rule:** 25,497 groups (17,773 + 7,724; not stored as one number). No confirmed target
+  event yet.
 - **Cost:** 4,947.2 MB (an estimate of bytes read). Per 1,000 searched groups: 300.5 MB of light curves and 166
-  stage-seconds in passing areas, or about 640 MB and 4.2 min for the whole round.
+  stage-seconds in passing areas, or about 640 MB and 4.3 min for the whole round (not stored; includes about 4 min
+  of deadlock idle).
 - **Incident:** the copied v16 driver deadlocked when the budget stop fired. 2900 was resumed with the same seed;
   the driver is fixed.
 - **Remaining:** 8124 and 8127, with 9,978 searchable groups in 3.44 GB (`results/w3_ztf/v20/RESULT.md`).

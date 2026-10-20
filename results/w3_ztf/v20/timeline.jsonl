@@ -96,9 +96,9 @@
 {"area": 2489, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T05:15:46Z"}
 {"area": 2489, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-20T05:15:46Z"}
 {"area": 2489, "event": "cache_deleted", "utc": "2026-10-20T05:15:46Z"}
-{"area": 2900, "stage": "exposures", "event": "end", "rc": 0, "seconds": 87.0, "utc": "2026-10-20T05:16:46Z", "note": "hand-logged from the exposures_summary.json mtime; the driver was blocked (deadlock) and did not log it"}
+{"area": 2900, "stage": "exposures", "event": "end", "rc": 0, "seconds": 87.0, "utc": "2026-10-20T05:16:46Z", "note": "hand-logged from the exposures_summary.json mtime; rc 0 inferred from that file and the scratch log (no traceback), not observed; the driver was blocked (deadlock)"}
 {"event": "stop_new_areas", "reason": "download budget", "remaining": [8124, 8127], "utc": "2026-10-20T05:15:46Z", "note": "hand-logged: the worker reached this rule and deadlocked on the log lock (v16 driver bug, fixed in this file); no area started after 2900"}
-{"event": "driver_stopped", "reason": "deadlock found at 05:20; driver killed; 2900 resumed from the validation stage with the same commands and seed", "utc": "2026-10-20T05:21:30Z"}
+{"event": "driver_stopped", "reason": "deadlock found at 05:20; driver killed; 2900 resumed from the validation stage with the same commands and seed", "utc": "2026-10-20T05:21:30Z", "note": "hand-logged; kill time not stored (line written 05:21:30, after the resume run had started at 05:20:56; the old process was deadlocked with no child process)"}
 {"area": 2900, "stage": "inject", "event": "start", "utc": "2026-10-20T05:20:56Z"}
 {"area": 2900, "stage": "search_dev", "event": "start", "utc": "2026-10-20T05:20:56Z"}
 {"area": 2900, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 68.5, "utc": "2026-10-20T05:22:04Z"}

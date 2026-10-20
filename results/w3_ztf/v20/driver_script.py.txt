@@ -1,4 +1,6 @@
-# v20 (copied from ../v16, paths and salt changed) queue driver (PLAN.md sections 2-4). Two workers take areas from the frozen queue in order. Per area:
+# v20 queue driver, copied from ../v16 (paths and salt changed; the version that ran is in commit 2242ac9). Post hoc,
+# after the run: v20 cache deletion and budget start were in the run; the deadlock fix and resume mode came after it.
+# Original header: (PLAN.md sections 2-4). Two workers take areas from the frozen queue in order. Per area:
 # sample -> fetch -> exposures -> (inject || search dev) -> decision -> search holdout if passed. Every stage is a
 # separate process (one configure() each). Start/end UTC and bytes go to timeline.jsonl. Stop rules: no new area once
 # the projected download would pass 5,900 MB (6 GB minus cutouts and a reserve) or after NO_NEW_AREA_AFTER (UTC).

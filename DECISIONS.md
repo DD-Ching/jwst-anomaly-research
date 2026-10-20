@@ -5467,8 +5467,8 @@ confining radiation at a throat is found.
     fixes the V1b′ σ and the per-level ρ.
 - **Addendum 2026-10-20 (v20, `results/w3_ztf/v20/RESULT.md`):**
   - **Run:** the 9 remaining v16-inventoried partitions, with the frozen v13 method.
-  - **Result:** 2 of 7 started pass (8126, 2900), 7,724 groups searched, 1 undetermined survivor that looks like a
-    near-limit catalogue miss.
+  - **Result:** 2 of 7 started pass (8126, 2900), 7,724 groups searched, 1 undetermined survivor (a near-limit
+    catalogue miss is the untested leading explanation).
   - **Decision:** 1624 and 1625 stay archived as undetermined; reopen only with new data or an already-validated
     method. Failed areas stay unsearched. The #385 worst-cell pattern is not used as a gate.
   - **Revisit if:** the budget allows 8124 and 8127, or a new inventory is authorized.
