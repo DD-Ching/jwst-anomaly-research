@@ -1,0 +1,39 @@
+# PLAN section 2: catalogue-only selection of <= 20 calibration stars per area (v22 4991, 2344) with an ASAS-SN
+# stellar_main match within 3" and rp_00_1 >= 16" (neighbours inside 16" add < 10 % of the G flux). No flux read.
+import gzip, json, time
+import numpy as np
+from pyasassn.client import SkyPatrolClient
+c = SkyPatrolClient(verbose=False)
+cols = ['asas_sn_id', 'ra_deg', 'dec_deg', 'gaia_id', 'gaia_mag', 'rp_00_1', 'rp_01', 'rp_10', 'nstat']
+out = {'label': 'derived (v22 calibration samples; ASAS-SN stellar_main catalogue)', 'plan': 'PLAN.md section 2', 'areas': {}}
+T0 = time.time()
+for p in (4991, 2344):
+    g = [x for x in json.loads(gzip.open(f'results/w3_ztf/v22/{p}/sample.json.gz').read())['groups'] if not x['holdout']]
+    g.sort(key=lambda x: (x['refmag_r'], x['key']))
+    rows, kept = [], []
+    for x in g[:60]:
+        r = {'key': x['key'], 'ra': x['ra'], 'dec': x['dec'], 'refmag_r': x['refmag_r']}
+        try:
+            df = c.cone_search(ra_deg=x['ra'], dec_deg=x['dec'], radius=5, units='arcsec', catalog='stellar_main', cols=cols)
+        except Exception as e:
+            r['error'] = f'{type(e).__name__}: {str(e)[:120]}'; rows.append(r); continue
+        if df is None or not len(df):
+            r['match'] = None; rows.append(r); continue
+        sep = 3600 * np.hypot((df['ra_deg'] - x['ra']) * np.cos(np.radians(x['dec'])), df['dec_deg'] - x['dec'])
+        k = int(np.argmin(sep))
+        m = df.iloc[k]
+        r['n_within_5'] = int(len(df))
+        r['match'] = None if sep.iloc[k] > 3 else {cc: (None if m[cc] is None or (isinstance(m[cc], float) and np.isnan(m[cc])) else
+                                                         (int(m[cc]) if cc in ('asas_sn_id', 'gaia_id', 'nstat') else float(m[cc]))) for cc in cols}
+        if r['match']:
+            r['match']['sep_arcsec'] = round(float(sep.iloc[k]), 3)
+        rp = (r['match'] or {}).get('rp_00_1')
+        r['passes'] = bool(rp is not None and rp >= 16.0)
+        rows.append(r)
+        if r['passes'] and len(kept) < 20:
+            kept.append(r)
+    out['areas'][p] = {'examined': len(rows), 'matched': sum(bool(r.get('match')) for r in rows),
+                       'passing': sum(r.get('passes', False) for r in rows), 'selected': kept, 'examined_rows': rows}
+out['seconds'] = round(time.time() - T0, 1)
+json.dump(out, open('results/w3_ztf/asassn/selection.json', 'w'), indent=1); open('results/w3_ztf/asassn/selection.json', 'a').write('\n')
+print({p: {k: v for k, v in a.items() if k in ('examined', 'matched', 'passing')} | {'selected': len(a['selected'])} for p, a in out['areas'].items()}, out['seconds'])
