@@ -20,8 +20,8 @@
 # - {n_rep: 20}
 # - params: {achromatic_sigma: 3.0, blend_arcsec: 0.5, bright_neighbour_arcsec: 1.5, bright_neighbour_ratio: 100.0, detect_snr: 10.0,
 #     edge_fraction: 0.5, footprint_min: 3, footprint_radius_arcsec: 5.0, gaia_saturated_g: 18.0, gaia_self_arcsec: 0.3, gone_sigma: 3.0,
-#     master_snr: 5.0, match_radius_arcsec: 0.3, min_drop: 0.2, min_sigma: 5.0, point_ci_max: 2.7, point_ci_min: 1.9, ref_snr: 30.0, sys_floor: 0.03,
-#     wht_rel_min: 0.5, wht_step_px: 32}
+#     master_snr: 5.0, match_radius_arcsec: 0.3, min_drop: 0.2, min_sigma: 5.0, persistence_eff_high: 0.961, persistence_eff_low: 0.412,
+#     persistence_max_low: 4, point_ci_max: 2.7, point_ci_min: 1.9, ref_snr: 30.0, sys_floor: 0.03, wht_rel_min: 0.5, wht_step_px: 32}
 # schema: astropy-2.0
 model t_e_yr rho depth mag_lo mag_hi n_sources n_injected n_recovered efficiency window_yr
 w3 0.01 0.01 nan 15.0 22.0 5 100 2.883 0.02883 1.7827241615332037

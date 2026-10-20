@@ -85,7 +85,13 @@ def run_field(gaia_root: Path, out_root: Path, name: str) -> None:
             & (eff["rho"] == eff["rho"][0])
         ]
         lim = ds.rate_limits(eff, area, int(np.sum(first["n_sources"])))
-        lim.meta.update(field=name, area_deg2=area, calibrated=True, variant=tag)
+        lim.meta.update(
+            field=name,
+            area_deg2=area,
+            calibrated=True,
+            variant=tag,
+            persistence_swap=pe is not None,
+        )
         eff.write(out / f"efficiency_{tag}.ecsv", overwrite=True)
         lim.write(out / f"limits_{tag}.ecsv", overwrite=True)
         return lim

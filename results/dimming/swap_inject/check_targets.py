@@ -19,7 +19,7 @@ field = ds.load_field(ds.DEFAULT_CONFIG, name)
 gaia = Table.read(gaia_root / name / "gaia.ecsv")
 cats, lc, scale, err, res, ordn = ds._screen(field, p, gaia, cache_root / name / "wht_rel.npz")
 static_veto = ds.catalogue_veto({**ordn, "single_epoch": np.zeros_like(ordn["single_epoch"])})
-t = ds.flagged(res) & ordn["single_epoch"] & ~static_veto & ordn["point_like"] & res["vanish"]
+t = res["vanish"] & ordn["single_epoch"] & ~static_veto & ordn["point_like"]
 now = {f"{name}-d{i:05d}" for i in np.flatnonzero(t)}
 v = Table.read(f"results/dimming/persistence_run/{name}/verdicts.ecsv")
 v = v[v["kind"] == "flag"]

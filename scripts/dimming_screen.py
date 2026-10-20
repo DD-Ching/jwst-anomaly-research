@@ -94,6 +94,11 @@ class Params:
     # wht_rel_min x the median positive WHT around the source is uncovered in every band
     wht_rel_min: float = 0.5
     wht_step_px: int = 32
+    # D-039 swap (D-052 addendum j): on_sky efficiency of the persistence test by covering NIRCam
+    # _cal exposures in the detection epoch, <= persistence_max_low -> low, above -> high
+    persistence_eff_low: float = 0.412
+    persistence_eff_high: float = 0.961
+    persistence_max_low: int = 4
 
 
 DEFAULT_PARAMS = Params()
@@ -789,23 +794,33 @@ def persistence_eff_by_exposures(
     verdicts: Table,
     field: str,
     shape: tuple[int, int],
-    eff_low: float = 0.412,
-    eff_high: float = 0.961,
-    max_low: int = 4,
+    eff_low: float | None = None,
+    eff_high: float | None = None,
+    p: Params = DEFAULT_PARAMS,
 ) -> np.ndarray:
-    """(source, epoch) D-039 ``on_sky`` efficiency from the committed ``n_exposures`` per pair
-    (``persistence_run/<field>/verdicts.ecsv``, uid ``<field>-d<row>``): ``eff_low`` for <=
-    ``max_low`` covering exposures, ``eff_high`` above (ASSUMPTION, ``expcount_eff/PLAN.md``); NaN
-    where no count is committed."""
+    """(source, epoch) D-039 ``on_sky`` efficiency from the committed ``n_exposures`` of the
+    monitored rows (``persistence_run/<field>/verdicts.ecsv``, uid ``<field>-d<row>``):
+    ``eff_low`` (default ``p.persistence_eff_low``) for <= ``p.persistence_max_low`` covering
+    exposures, ``eff_high`` above (ASSUMPTIONs, ``expcount_eff/PLAN.md``); NaN where no count is
+    committed. A table with no monitored row of ``field`` is an error (wrong file)."""
+    lo = p.persistence_eff_low if eff_low is None else eff_low
+    hi = p.persistence_eff_high if eff_high is None else eff_high
     out = np.full(shape, np.nan)
     pre = f"{field}-d"
-    for uid, k, n in zip(verdicts["uid"], verdicts["epoch"], verdicts["n_exposures"], strict=True):
+    kinds = verdicts["kind"] if "kind" in verdicts.colnames else ["monitored"] * len(verdicts)
+    n_used = 0
+    for uid, k, n, kind in zip(
+        verdicts["uid"], verdicts["epoch"], verdicts["n_exposures"], kinds, strict=True
+    ):
         uid = str(uid)
-        if not uid.startswith(pre):
+        if str(kind) != "monitored" or not uid.startswith(pre):
             continue
         i = int(uid[len(pre) :])
         if i < shape[0] and 0 <= int(k) < shape[1]:
-            out[i, int(k)] = eff_low if int(n) <= max_low else eff_high
+            out[i, int(k)] = lo if int(n) <= p.persistence_max_low else hi
+            n_used += 1
+    if not n_used:
+        raise ValueError(f"no monitored row of field {field!r} in the verdicts table")
     return out
 
 
@@ -1196,7 +1211,7 @@ def cmd_inject(args) -> dict:
     pe = None
     if args.persistence_verdicts is not None:
         pe = persistence_eff_by_exposures(
-            Table.read(args.persistence_verdicts), args.field, lc["flux"].shape[:2]
+            Table.read(args.persistence_verdicts), args.field, lc["flux"].shape[:2], p=p
         )
     eff = efficiency_table(
         lc,
@@ -1228,6 +1243,7 @@ def cmd_inject(args) -> dict:
         area_deg2=area,
         calibrated=calibrated,
         weight_coverage=not args.no_weight_coverage,
+        persistence_swap=eff.meta["persistence_swap"],
     )
     args.out.mkdir(parents=True, exist_ok=True)
     eff.write(args.out / "efficiency.ecsv", overwrite=True)
@@ -1616,6 +1632,8 @@ def combine_limits(per_field: dict[str, Table], calibrated_only: bool = True) ->
     use = {
         f: t for f, t in per_field.items() if t.meta.get("calibrated", False) or not calibrated_only
     }
+    if len({bool(t.meta.get("persistence_swap")) for t in use.values()}) > 1:
+        raise ValueError("fields mix limits with and without the D-039 persistence swap")
     rows = []
     if not use:
         return Table(

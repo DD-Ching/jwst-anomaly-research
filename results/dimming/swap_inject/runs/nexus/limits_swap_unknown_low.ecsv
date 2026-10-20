@@ -22,6 +22,7 @@
 # - {area_deg2: 0.021099537037037038}
 # - {calibrated: true}
 # - {variant: swap_unknown_low}
+# - {persistence_swap: true}
 # schema: astropy-2.0
 t_e_yr rho n_monitored n_injected_sources n_effective mean_efficiency window_yr exposure_source_yr area_exposure_deg2_yr limit_per_source_per_yr limit_tau limit_per_deg2_per_yr limit_per_deg2_per_epoch
 0.01 0.01 125 125 5.809500000000001 0.046476 1.5779055441478613 9.166842258727002 0.001547329022005493 0.327266458320906 0.010281379012273087 1938.8248765034475 60.909979886203686
