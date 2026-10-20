@@ -1,0 +1,31 @@
+"""Post hoc (after diag_script): fade-control rate by HEALPix order-4 parent (npix // 4) and the
+v22 remaining partitions' parents. Run from the repository root after diag_script.py.txt."""
+
+import collections
+import json
+
+import numpy as np
+from scipy import stats
+
+d = json.load(open("results/w3_ztf/fade_diag/diag.json"))
+g = collections.defaultdict(list)
+for r in d["rows"]:
+    g[int(r["npix"]) // 4].append(r["fade_passed"])
+within, wdof = 0.0, 0
+for v in g.values():
+    if len(v) > 1:
+        c, _, dof, _ = stats.chi2_contingency(np.vstack([v, 1000 - np.array(v)]), correction=False)
+        within, wdof = within + c, wdof + dof
+tot, tdof = d["homogeneity"]["chi2"], d["homogeneity"]["dof"]
+rem = json.load(open("results/w3_ztf/v22/remaining.json"))["qualifying_not_queued_npix"]
+out = {
+    "label": "derived; post hoc (pattern seen after diag_script)",
+    "parents": {str(p): [x / 1000 for x in v] for p, v in sorted(g.items())},
+    "within_parent": {"chi2": within, "dof": wdof, "p": float(stats.chi2.sf(within, wdof))},
+    "between_parent": {"chi2": tot - within, "dof": tdof - wdof, "p": float(stats.chi2.sf(tot - within, tdof - wdof))},
+    "v22_remaining_by_parent": {
+        str(n): {"parent": n // 4, "tested_sibling_fade_rates": [x / 1000 for x in g.get(n // 4, [])]} for n in rem
+    },
+}
+json.dump(out, open("results/w3_ztf/fade_diag/parent.json", "w"), indent=1)
+print(json.dumps({k: v for k, v in out.items() if k != "v22_remaining_by_parent"}, indent=1))

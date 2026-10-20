@@ -1,0 +1,100 @@
+"""W3 ZTF fade-control rate across areas (PLAN.md). Offline, committed tables only.
+
+Run from the repository root: .venv/bin/python results/w3_ztf/fade_diag/diag_script.py.txt
+"""
+
+import glob
+import json
+import os
+
+import numpy as np
+from astropy import units as u
+from astropy.coordinates import SkyCoord
+from astropy_healpix import HEALPix
+from scipy import stats
+
+ROOT = "results/w3_ztf"
+OUT = os.path.join(ROOT, "fade_diag", "diag.json")
+
+inv = {}
+for rnd in ("v16", "v22"):
+    for k, v in json.load(open(os.path.join(ROOT, rnd, "inventory.json")))["areas"].items():
+        inv[k] = (rnd, v)
+
+hp = HEALPix(nside=2**5, order="nested", frame="icrs")
+rows = []
+for f in sorted(glob.glob(f"{ROOT}/v1[6-9]/*/decision.json") + glob.glob(f"{ROOT}/v2*/*/decision.json")):
+    npix = f.split("/")[-2]
+    d = json.load(open(f))
+    fade = d["controls"]["fade"]
+    if fade["n"] != 1000 or npix not in inv:
+        continue
+    rnd, a = inv[npix]
+    c = hp.healpix_to_skycoord(int(npix))
+    c = SkyCoord(c.ra, c.dec, frame="icrs")
+    rows.append(
+        {
+            "npix": npix,
+            "round": f.split("/")[-3],
+            "inventory": rnd,
+            "fade_passed": fade["passed"],
+            "fade_rate": fade["rate"],
+            "area_passed": d["passed"],
+            "median_exposures": a["median_exposures"],
+            "infobits_nonzero_in_footprint_median": a["infobits_nonzero_in_footprint_median"],
+            "product_ratio_median": a["product_ratio_median"],
+            "score_min_over_cells": a["score_min_over_cells"],
+            "mean_necessary_fraction": float(np.mean([x["necessary_fraction"] for x in a["cells"].values()])),
+            "ecl_lat_deg": float(c.barycentrictrueecliptic.lat.to_value(u.deg)),
+            "gal_lat_deg": float(c.galactic.b.to_value(u.deg)),
+            "ra_deg": float(c.ra.deg),
+            "dec_deg": float(c.dec.deg),
+        }
+    )
+
+k = len(rows)
+passed = np.array([r["fade_passed"] for r in rows])
+table = np.vstack([passed, 1000 - passed])
+chi2, p_hom, dof, _ = stats.chi2_contingency(table)
+rate = passed / 1000
+preds = [
+    "median_exposures",
+    "infobits_nonzero_in_footprint_median",
+    "product_ratio_median",
+    "score_min_over_cells",
+    "mean_necessary_fraction",
+    "ecl_lat_deg",
+    "gal_lat_deg",
+]
+alpha = 0.01 / len(preds)
+corr = {}
+for p in preds:
+    x = np.array([r[p] for r in rows], float)
+    rho, pv = stats.spearmanr(x, rate)
+    corr[p] = {"rho": float(rho), "p": float(pv), "passes": bool(abs(rho) >= 0.6 and pv < alpha)}
+# grouping variable: inventory round
+g16 = rate[[r["inventory"] == "v16" for r in rows]]
+g22 = rate[[r["inventory"] == "v22" for r in rows]]
+mw = stats.mannwhitneyu(g16, g22)
+
+out = {
+    "label": "derived (committed decision.json and inventory.json); post hoc diagnostic, PLAN.md frozen first",
+    "n_areas": k,
+    "pooled_fade_rate": float(passed.sum() / (1000 * k)),
+    "homogeneity": {"chi2": float(chi2), "dof": int(dof), "p": float(p_hom), "heterogeneous": bool(p_hom < 0.01)},
+    "spearman": corr,
+    "bonferroni_alpha": alpha,
+    "by_inventory": {
+        "v16_median": float(np.median(g16)),
+        "v22_median": float(np.median(g22)),
+        "mannwhitney_p": float(mw.pvalue),
+    },
+    "rows": rows,
+}
+json.dump(out, open(OUT, "w"), indent=1)
+print(json.dumps({kk: v for kk, v in out.items() if kk != "rows"}, indent=1))
+for r in sorted(rows, key=lambda r: r["fade_rate"]):
+    print(
+        r["npix"], r["round"], r["fade_rate"], r["area_passed"], r["median_exposures"],
+        round(r["mean_necessary_fraction"], 3), round(r["ecl_lat_deg"], 1), round(r["gal_lat_deg"], 1),
+    )
