@@ -52,3 +52,33 @@ def test_verdict_outcomes():
     rows.append({"z": 1.2, "rms_arcsec": 0.4, "reproduced": True})
     v = s7.verdict(rows)
     assert v["outcome"].startswith("A") and v["z_reproduced"] == [1.2, 1.2]
+
+
+def test_gated_match_picks_smallest_passing_radius():
+    k = {1.0: {"fraction": 0.7}, 1.5: {"fraction": 0.85}}
+    assert s7.gated_match(k) == 1.5
+    k[1.0]["fraction"] = 0.8
+    assert s7.gated_match(k) == 1.0
+    assert s7.gated_match({1.0: {"fraction": 0.5}, 1.5: {"fraction": None}}) is None
+
+
+def test_counterparts_nearest_with_redshift_metadata(tmp_path):
+    cd = np.cos(np.radians(DEC0))
+    raw = Table(
+        {
+            "ID": [78.21, 5.1],
+            "RA": [RA0 + 0.02 * ARC / cd, RA0 + 30 * ARC / cd],
+            "Dec": [DEC0, DEC0],
+            "z": [2.3151, 1.5],
+            "Redshift_type": ["spec", "phot"],
+            "Redshift_reference": ["Price+24", "x"],
+            "Redshift_instrument": ["JWST/NIRSpec", "x"],
+        }
+    )
+    path = tmp_path / "images.fits"
+    raw.write(path)
+    cat = _t([(0, 0)])
+    cat["image_id"] = ["700.1a"]
+    (row,) = s7.counterparts(cat, path)
+    assert row["uncover_id"] == "78.21" and row["redshift_type"] == "spec"
+    assert row["sep_arcsec"] < 0.05

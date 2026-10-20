@@ -1,8 +1,10 @@
-"""Abell 2744 system 700.1: fine source-redshift scan in Bergamini+23.
+"""Abell 2744 system 700.1: fine source-redshift scan in Bergamini+23 or the UNCOVER v2.0 maps.
 
 D-036 left open whether Bergamini+23 (``abell2744-bergamini23``, z of 700.1 free, best fit 1.217)
 reproduces 700.1a/b/c as three separate images at any redshift; z = 1, 1.5, 2, 3, 5 did not.
-Plan (frozen first): ``results/lens_consistency/a2744_s700_zscan/PLAN.md``.
+Plans (frozen first): ``results/lens_consistency/a2744_s700_zscan/PLAN.md`` (Bergamini+23) and
+``results/lens_consistency/a2744_s700_uncover/PLAN.md`` (``--model uncover2``: known cases are
+UNCOVER's own list, at the radii ``UNCOVER_RADII``, gated by ``gated_match``).
 
 At each z: one source (``a2744_uncover.wls_source`` of the three back-traced images),
 ``lensmodel.find_images``, then a one-to-one assignment of the catalogued images to predicted
@@ -11,7 +13,7 @@ image gets its own predicted image within ``MATCH_ARCSEC`` (ASSUMPTION, the D-03
 
 Everything computed is ``model_prediction``; the image positions are ``observed``.
 
-Usage: python scripts/a2744_s700.py [--out results/lens_consistency/a2744_s700_zscan]
+Usage: python scripts/a2744_s700.py [--model bergamini23|uncover2] [--out DIR] [--sheet]
 """
 
 from __future__ import annotations
@@ -35,9 +37,16 @@ MODEL = "abell2744-bergamini23"
 SYSTEM = "700.1"
 Z_GRID = np.round(np.arange(1.0, 4.0001, 0.025), 3)  # source redshifts scanned
 MATCH_ARCSEC = 1.0  # each catalogued image needs its own predicted image this close (ASSUMPTION)
+# UNCOVER v2.0: the #412 radius and the D-041 match radius (1.8x its 0.84" own-list rms); the scan
+# uses the smallest one that reproduces >= KNOWN_GATE of the own-list systems (ASSUMPTIONs)
+UNCOVER_RADII = (1.0, 1.5)
+KNOWN_GATE = 0.8
 GRID_STEP = 0.25
 SHEET_BANDS = ("f150w", "f200w", "f444w")
-DEFAULT_OUT = Path("results/lens_consistency/a2744_s700_zscan")
+DEFAULT_OUT = {
+    "bergamini23": Path("results/lens_consistency/a2744_s700_zscan"),
+    "uncover2": Path("results/lens_consistency/a2744_s700_uncover"),
+}
 
 
 def _r(x: float, nd: int = 3) -> float | None:
@@ -71,6 +80,12 @@ def nearest(pred: Table, cat: Table) -> np.ndarray:
     )
 
 
+def gated_match(known: dict[float, dict], gate: float = KNOWN_GATE) -> float | None:
+    """Smallest match radius whose known-case fraction is >= ``gate`` (None: tool not validated)."""
+    ok = [r for r, k in known.items() if k["fraction"] is not None and k["fraction"] >= gate]
+    return min(ok) if ok else None
+
+
 def verdict(rows: list[dict]) -> dict:
     """Frozen outcome: A ("fitted-z artefact") if any z reproduces the system, else B."""
     good = [r["z"] for r in rows if r["reproduced"]]
@@ -94,12 +109,14 @@ def solve(model, cat: Table, grid, z: float) -> tuple[Table, np.ndarray]:
     return lensmodel.find_images(model, grid, float(bx), float(by), z), beta
 
 
-def validate(model, arcs: Table, grid) -> dict:
+def validate(model, arcs: Table, grid, match: float = MATCH_ARCSEC) -> dict:
     """Known cases: the same assignment rule on every other system with a fixed (catalogued) z
-    and at least two images. Returns the reproduced fraction and the failing systems."""
+    and at least two images. Returns the reproduced fraction, the failing systems and, per failing
+    system, the image counts and the largest assigned and nearest-image separations (a failure with
+    every nearest image inside ``match`` is a shared predicted image, not a missing one)."""
     systems = np.asarray(arcs["system"]).astype(str)
     zcol = np.asarray(arcs["z"], float)
-    done, failed = 0, []
+    done, failed, detail = 0, [], []
     for s in sorted(set(systems) - {SYSTEM}):
         cat = arcs[systems == s]
         z = float(zcol[systems == s][0])
@@ -108,17 +125,30 @@ def validate(model, arcs: Table, grid) -> dict:
         pred, _ = solve(model, cat, grid, z)
         idx, sep = assign(pred, cat)
         done += 1
-        if not (idx and np.all(sep <= MATCH_ARCSEC)):
+        if not (idx and np.all(sep <= match)):
             failed.append(s)
+            detail.append(
+                {
+                    "system": s,
+                    "n_catalogued": len(cat),
+                    "n_predicted": len(pred),
+                    "max_assigned_arcsec": _r(float(np.max(sep))) if idx else None,
+                    "max_nearest_arcsec": _r(float(np.nanmax(nearest(pred, cat)))),
+                }
+            )
     return {
         "n_systems": done,
         "n_reproduced": done - len(failed),
         "fraction": _r((done - len(failed)) / done) if done else None,
         "failed": failed,
+        "failed_detail": detail,
+        "n_failed_shared": sum(
+            d["max_nearest_arcsec"] is not None and d["max_nearest_arcsec"] <= match for d in detail
+        ),
     }
 
 
-def scan(model, cat: Table, grid) -> list[dict]:
+def scan(model, cat: Table, grid, match: float = MATCH_ARCSEC) -> list[dict]:
     rows = []
     for z in Z_GRID:
         pred, beta = solve(model, cat, grid, float(z))
@@ -133,7 +163,7 @@ def scan(model, cat: Table, grid) -> list[dict]:
                 "mu": [_r(float(pred["magnification"][k]), 1) for k in idx],
                 "nearest_arcsec": [_r(s) for s in near],
                 "source_spread_arcsec": _r(float(np.ptp(beta, axis=0).max())),
-                "reproduced": bool(idx) and bool(np.all(sep <= MATCH_ARCSEC)),
+                "reproduced": bool(idx) and bool(np.all(sep <= match)),
             }
         )
     return rows
@@ -146,7 +176,9 @@ def _stretch(img: np.ndarray) -> np.ndarray:
     return np.arcsinh((img - med) / (sig if sig > 0 else 1.0))
 
 
-def sheet(cat: Table, rows: list[dict], model, grid, path: Path) -> None:
+def sheet(
+    cat: Table, rows: list[dict], model, grid, path: Path, label: str = "Bergamini+23"
+) -> None:
     """F150W / F200W / F444W stamps around 700.1a/b and 700.1c with the catalogued positions
     (circles) and the predicted images at the best-rms z (crosses)."""
     import matplotlib
@@ -188,41 +220,108 @@ def sheet(cat: Table, rows: list[dict], model, grid, path: Path) -> None:
                 ax.set_yticks([])
         finally:
             close()
-    fig.suptitle(f'Abell 2744 700.1: catalogued (o), Bergamini+23 at z {best["z"]} (x); 8" stamps')
+    fig.suptitle(f'Abell 2744 700.1: catalogued (o), {label} at z {best["z"]} (x); 8" stamps')
     fig.tight_layout()
     fig.savefig(path, dpi=80)
     plt.close(fig)
 
 
+def load_uncover2():
+    """UNCOVER v2.0 maps as a ``MapLensModel``, its own image list, and the cached map paths."""
+    from astropy.cosmology import FlatLambdaCDM
+
+    from jwst_anomaly.photometry import fetch_catalog
+
+    files = {k: fetch_catalog(url, sha) for k, (url, sha) in au.UNCOVER_V2.items()}
+    h0, om = au.COSMOLOGY
+    model = lensmodel.MapLensModel.from_fits(
+        files["alpha_x"],
+        files["alpha_y"],
+        au.Z_LENS,
+        FlatLambdaCDM(H0=h0, Om0=om),
+        source="abell2744-uncover2",
+    )
+    return model, files["images"], [files["alpha_x"], files["alpha_y"]]
+
+
+def counterparts(cat: Table, images: Path) -> list[dict]:
+    """Nearest UNCOVER own-list image of each catalogued image, with its redshift metadata
+    (``observed`` catalogue values; post hoc, see the UNCOVER RESULT.md)."""
+    raw = Table.read(images)
+    out = []
+    for c in cat:
+        d = au._sep_arcsec(raw["RA"], raw["Dec"], float(c["ra"]), float(c["dec"]))
+        k = int(np.argmin(d))
+        out.append(
+            {
+                "image": str(c["image_id"]),
+                "uncover_id": repr(float(raw["ID"][k])),
+                "sep_arcsec": _r(float(d[k])),
+                "z": float(raw["z"][k]),
+                "redshift_type": str(raw["Redshift_type"][k]),
+                "redshift_reference": str(raw["Redshift_reference"][k]),
+                "redshift_instrument": str(raw["Redshift_instrument"][k]),
+            }
+        )
+    return out
+
+
 def main(argv=None) -> dict:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    ap.add_argument("--model", choices=sorted(DEFAULT_OUT), default="bergamini23")
+    ap.add_argument("--out", type=Path)
     ap.add_argument("--sheet", action="store_true", help="also write sheet.png (S3 range reads)")
+    ap.add_argument("--keep-maps", action="store_true", help="keep the cached UNCOVER maps")
     args = ap.parse_args(argv)
-    model, files, par = lc.load_model(MODEL)
+    out_dir = args.out or DEFAULT_OUT[args.model]
+    berg, files, par = lc.load_model(MODEL)
     arcs, _ = lc.image_list(MODEL, files, par)
     cat = arcs[np.asarray(arcs["system"]).astype(str) == SYSTEM]
     cat.sort("image_id")  # a, b, c: the sheet and the summary rely on this order
-    grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, arcs), GRID_STEP)
-    known = validate(model, arcs, grid)
-    print("known cases:", known, flush=True)
-    rows = scan(model, cat, grid)
-    out = {
-        "model": MODEL,
-        "system": SYSTEM,
-        "images": [str(i) for i in cat["image_id"]],
-        "match_arcsec": MATCH_ARCSEC,
-        "grid_step_arcsec": GRID_STEP,
-        "z_grid": [float(Z_GRID[0]), float(Z_GRID[-1]), 0.025],
-        "known_cases": known,
-        **verdict(rows),
-        "provenance": "model_prediction (positions observed)",
-        "rows": rows,
-    }
-    args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "summary.json").write_text(json.dumps(out, indent=1) + "\n")
-    if args.sheet:
-        sheet(cat, rows, model, grid, args.out / "sheet.png")
+    maps: list[Path] = []
+    if args.model == "bergamini23":
+        model, known_list, label = berg, arcs, "Bergamini+23"
+        radii: tuple[float, ...] = (MATCH_ARCSEC,)
+    else:
+        model, images, maps = load_uncover2()
+        known_list = au.uncover_images(images)
+        label, radii = "UNCOVER v2.0", UNCOVER_RADII
+    try:
+        both = Table({"ra": np.r_[arcs["ra"], known_list["ra"]]})
+        both["dec"] = np.r_[arcs["dec"], known_list["dec"]]
+        grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, both), GRID_STEP)
+        known = {r: validate(model, known_list, grid, r) for r in radii}
+        print("known cases:", known, flush=True)
+        match = gated_match(known)
+        rows = scan(model, cat, grid, match) if match is not None else []
+        out = {
+            "model": MODEL if args.model == "bergamini23" else "abell2744-uncover2",
+            "system": SYSTEM,
+            "images": [str(i) for i in cat["image_id"]],
+            "match_arcsec": match,
+            "grid_step_arcsec": GRID_STEP,
+            "z_grid": [float(Z_GRID[0]), float(Z_GRID[-1]), 0.025],
+        }
+        if args.model == "bergamini23":
+            out["known_cases"] = known[MATCH_ARCSEC]
+        else:
+            out["known_cases"] = {str(r): k for r, k in known.items()}
+            out["known_gate"] = KNOWN_GATE
+            out["uncover_counterparts"] = counterparts(cat, images)
+        if match is None:
+            out["outcome"] = "tool not validated"
+        else:
+            out.update(verdict(rows))
+        out["provenance"] = "model_prediction (positions observed)"
+        out["rows"] = rows
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "summary.json").write_text(json.dumps(out, indent=1) + "\n")
+        if args.sheet and rows:
+            sheet(cat, rows, model, grid, out_dir / "sheet.png", label)
+    finally:
+        if not args.keep_maps:  # cloud-disk rule: ~250 MB of maps, deleted after use
+            for p in maps:
+                p.unlink(missing_ok=True)
     print(json.dumps({k: v for k, v in out.items() if k != "rows"}, indent=1))
     return out
 

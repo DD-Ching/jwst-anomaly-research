@@ -1,4 +1,4 @@
-# Abell 2744 system 700.1: z scan in the UNCOVER v2.0 maps (plan, frozen 2026-10-20 21:25Z before any scan)
+# Abell 2744 system 700.1: z scan in the UNCOVER v2.0 maps (plan, frozen 2026-10-20 21:12Z before any scan; commit time is the record)
 
 **Question.** Bergamini+23 reproduces 700.1a/b/c at no z in 1–4 (`../a2744_s700_zscan/`, outcome B): a and b
 share one predicted image. D-036 says to revisit if UNCOVER v2.0 is scanned the same way. Does an independent

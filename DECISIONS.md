@@ -2265,6 +2265,12 @@ D-034's rules now remove these automatically.
   thin 1.7″ feature (two images, or one image catalogued as two: untested). The system stays model-limited and is
   not a candidate. Revisit if a model with constraints near (3.579, −30.358) appears, or if UNCOVER v2.0 is scanned the
   same way.
+- **Addendum 2026-10-20b (UNCOVER v2.0, `results/lens_consistency/a2744_s700_uncover/`):** frozen outcome "tool not
+  validated" (one-to-one rule reproduces 44 / 63 UNCOVER own systems at 1.5″, gate 0.8), so no z scan. Post hoc:
+  700.1a/b/c are UNCOVER 78.21–78.23 (0.02″), z 2.3151 spectroscopic per the UNCOVER table ("Price+24"), and UNCOVER
+  fits them as separate images (one-to-one 1.72″) with system 78 as a constraint. 700.1 is closed as a
+  Bergamini+23 model limitation (no constraint there), not a candidate. Revisit only if a model without system 78
+  as a constraint is needed as an independent prediction.
 
 ## D-037 MACS1149 screens: null; repeated-pair, fitted-redshift and model-dependent-μ rules (2026-10-08)
 
