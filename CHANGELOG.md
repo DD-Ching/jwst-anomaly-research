@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 macro-shear follow-up review: saddle dimming deeper than the tracks showed; umbra not elliptical
+- **Why:** #403 merged before a /code-review of its final diff; this run's review found wording the stored data
+  did not support. Re-run of `scripts/w3_macro_shear.py` (simulated; `results/w3_macro_shear/RESULT.md`).
+- **Corrections:** saddle images' ρ = 0.1 minimum over the whole window interior is 0.79 / 0.89 at μ_macro −10 /
+  −100 (21 % / 11 % dimming), not the 15 % / 4 % of the six tracks; still no umbra. The minimum-image umbra is not
+  an ellipse: off axis its half-width along the stretch stays near 2√λ1 (constant 0.195 at μ_macro 100), so
+  "shorter by √λ1" held only at u₀ = 0; across-stretch tracks vanish only for |u₀| < 2√λ1. The isolated-lens
+  injections are no fair approximation in arcs for either motion. The plan's 10 % / 50 % rule gave no verdict
+  (12–18 %); the doc revision is labelled a judgement.
+- **Code:** μ divided by the real bin areas (a 0.25 % bias at μ_macro 10), whole-bin windows, named gate
+  thresholds with unit-tested pass rules, cached maps and a 4-process pool (281 s → 108 s). Gates unchanged.
+- **Handoff:** none new; W3 on caustic-transient stars, if ever run, injects through the map per image.
+
 ## 2026-10-20: W3 inside a macro-lensed arc: minimum images keep a narrowed umbra, saddle images have none (simulated)
 - **Why:** TASKS focus item 2; docs/exotic_lensing.md's W3 amplitudes assumed an isolated lens. Plan frozen first
   (`results/w3_macro_shear/PLAN.md`).

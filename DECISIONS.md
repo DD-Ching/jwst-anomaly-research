@@ -5533,8 +5533,8 @@ confining radiation at a throat is found.
 ## D-106 W3 inside a macro model: in-house numpy inverse ray shooter; saddle images cannot show the W3 vanishing (2026-10-20)
 - **Decision:** `exotic_sim.macro_magnification_map` (numpy inverse ray shooting, fine grid near the lens, coarse
   grid scaled to the macro stretch, ray-area weights) models a point lens of either sign inside a macro (κ, γ).
-  Result (simulated): minimum images keep a zero-flux umbra, narrowed to half-width 2√λ1 along the stretch;
-  saddle images have none.
+  Result (simulated): minimum images keep a zero-flux umbra, narrowed to an on-axis half-width 2√λ1 along the
+  stretch (not elliptical off axis); saddle images have none in the sampled windows.
 - **Alternatives rejected:** lenstronomy (point mass parametrised by θ_E², no negative sign without a custom
   profile; a new dependency for ~60 lines); the isolated-lens formulas for arcs (wrong for saddle images, too
   wide along the stretch for minima).
