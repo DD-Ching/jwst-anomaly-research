@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 inside a macro-lensed arc: minimum images keep a narrowed umbra, saddle images have none (simulated)
+- **Why:** TASKS focus item 2; docs/exotic_lensing.md's W3 amplitudes assumed an isolated lens. Plan frozen first
+  (`results/w3_macro_shear/PLAN.md`).
+- **Tool:** `exotic_sim.macro_magnification_map` (numpy inverse ray shooting, D-106). Gates G1 (isolated profile,
+  ≤ 0.08 %) and G2 (analytic Chang-Refsdal caustic, 100 %) pass; G3 failed as written (mis-specified: a point lens
+  adds a fixed excess, not zero); the frozen replacement G3′ passes (< 0.01 %).
+- **Result (`results/w3_macro_shear/RESULT.md`):** minimum images (μ_macro 10, 100): zero-flux umbra, half-width
+  along the stretch 0.625 / 0.20 θ_E as predicted by 2√λ1, across 2 θ_E. Saddle images (μ_macro −10, −100): no
+  umbra; minimum μ / μ_macro 0.69–0.98. Saddle images cannot test W3 by vanishing.
+- **Failed approach:** G3 (window mean = μ_macro); recorded in PLAN addendum 1.
+- **Handoff:** no search changed. W3 on caustic-transient stars, if ever run, injects through this map per image.
+
 ## 2026-10-20: W3 ZTF v23: fades pass the v13 edge test mostly through unmeasured edges; the one pre-registered fix fails its gate; no validation, no search
 - **Diagnosis** (development analysis; 4991 and 2344 v22 calibration data re-read, the v22 draws reproduced exactly):
   - 129 / 138 and 76 / 81 passing fades have a "zero-day" side: no significant intermediate point within one span,
