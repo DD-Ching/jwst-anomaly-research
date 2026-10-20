@@ -8,10 +8,11 @@ Plan: `PLAN.md` (committed before the run). Labels: shapes `observed`; photo-z `
 |---|---|---|---|---|---|---|
 | Lenstool v1 (only model) | passes (κ median relative difference 4.4 × 10⁻⁵) | 4 | 3 (75 %) | 0 | 0.095 | 1.0 |
 
-**Frozen outcome: does not replicate.** The power is almost nil: with 4 strong-shear background rows the shape-noise
-expectation is 0.095 anti, and the control rests on 3 of 4 rows. The S1063 count (4 anti) could not have
-appeared in so few rows. This field adds one "does not replicate" entry to the tally that carries
-almost no weight.
+**Frozen outcome: "does not replicate", but the test had no power.** Post hoc (`posthoc.json` "reachability"): with
+4 strong-shear background rows a passing control (≥ 70 % aligned) allows at most 1 anti row, and P(≥ 1) under the
+0.095 expectation is 0.091 > 0.05, so "replicates" could not have come out of any data on this field. The field
+therefore counts as **no power** in the S1063 tally, not as a non-replication. The plan did not check before the
+run that "replicates" was reachable (deviation from good practice, recorded here; future plans should).
 
 ## Post hoc (not in the plan; does not change the outcome)
 - `posthoc.json`: 21 of the 30 strong-shear rows have no DJA photo-z row within 0.3″ (nearest 0.39–2.78″; the DJA
@@ -25,8 +26,9 @@ almost no weight.
 ## Inputs
 - `jw06882-o001_t001_nircam_clear-f200w_cat.ecsv` sha256 `9554af81fe3b73dbd03b6463b793fd310485de9719d6259b7388f613fafe92d0`.
 - `rj0018p1626-grizli-v7.5-fix.eazypy.zout.fits` sha256 `2a7f9f8eb852dea00f0ff165acc493667d161887f5fee3d255efeca4ac8d604a`.
-- Maps: `lensmodel.RXC0018_RELICS_LENSTOOL` (4 × 144 MB, cached for the run and deleted after it).
+- Maps: `lensmodel.RXC0018_RELICS_LENSTOOL` (four files of 144,005,760 B each, Content-Length on 2026-10-20, not
+  stored; cached for the run and deleted after it).
 
 ## Reading
-Under the frozen rule this field does not replicate the S1063 anti excess, but it barely tests it. A useful
+This field cannot test the S1063 anti excess under the frozen rule. A useful
 re-test needs a deeper photo-z catalogue covering the faint F200W rows (or a JWST-era model with an image list).

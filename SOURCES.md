@@ -600,8 +600,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     `2a7f9f8eb852dea00f0ff165acc493667d161887f5fee3d255efeca4ac8d604a`.
   - RELICS model: https://archive.stsci.edu/hlsps/relics/rxc0018p16/models/lenstool/v1/ (DOI 10.17909/T9SP45; the
     only model directory): x/y-arcsec-deflect, kappa, z02-magnif (sha256 in `lensmodel.RXC0018_RELICS_LENSTOOL`).
-    On 2026-10-20 archive.stsci.edu sent no intermediate certificate; the leaf's AIA intermediate
-    (http://repository.emsign.com/certs/EEEMIncommonOVG2C.crt) added to the CA file completes the chain.
+    On 2026-10-20 archive.stsci.edu sent no intermediate certificate (cloud session). Fix used: convert the leaf's AIA
+    intermediate (http://repository.emsign.com/certs/EEEMIncommonOVG2C.crt, DER) to PEM, append it to a copy of
+    the session CA bundle (`/root/.ccr/ca-bundle.crt`, which holds the emSign root) and point `SSL_CERT_FILE` (and
+    `curl --cacert`) at the copy; verification stays on.
   - z_lens 0.546: Zitrin et al. 2011, arXiv:1002.0521 (as MACS J0018.5+1626); a JWST-era model was not searched for.
 - **MAST stale product sizes** after the 2026-10-01 reprocessing (PR #29): `acquire` checks the Download
   service's Content-Length.

@@ -10,7 +10,9 @@ each strong-shear row to its nearest DJA photo-z row (the ``arcs`` match radius 
 """
 
 import json
+import math
 import sys
+from pathlib import Path
 
 import astropy.units as u
 import matplotlib.pyplot as plt
@@ -22,9 +24,9 @@ from astropy.table import Table
 from astropy.wcs import WCS
 
 plt.switch_backend("Agg")
-OUT = "results/arcs/rxc0018-relics"
+OUT = Path(__file__).resolve().parents[1] / "results" / "arcs" / "rxc0018-relics"
 MODEL = "rxc0018-relics-lenstool"
-t = Table.read(f"{OUT}/{MODEL}/arcs.ecsv")
+t = Table.read(OUT / MODEL / "arcs.ecsv")
 s = t[t["strong_shear"]]
 z = Table.read(sys.argv[1])
 _, d, _ = SkyCoord(s["ra"], s["dec"], unit="deg").match_to_catalog_sky(
@@ -39,7 +41,19 @@ post = {
     },
     "rows_without_photoz_within_0.3arcsec": int((d.arcsec > 0.3).sum()),
 }
-with open(f"{OUT}/posthoc.json", "w") as f:
+# Could the frozen rule say "replicates" here? A passing control (>= 70 % aligned) leaves at most
+# n - ceil(0.7 n) anti rows; the best case is P(>= 1 anti) under the shape-noise expectation.
+summ = json.loads((OUT / "summary.json").read_text())["runs"][MODEL]
+n = summ["strong_shear_background"]["n"]
+mu = summ["anti_expected_shape_noise_background"]["expected"]
+post["reachability"] = {
+    "n_background": n,
+    "max_anti_with_passing_control": n - math.ceil(0.7 * n),
+    "expected_anti": mu,
+    "best_case_p_ge_1": round(1 - math.exp(-mu), 4),
+    "replicates_reachable": (n - math.ceil(0.7 * n)) >= 1 and 1 - math.exp(-mu) < 0.05,
+}
+with open(OUT / "posthoc.json", "w") as f:
     f.write(json.dumps(post, indent=1) + "\n")
 print(json.dumps(post))
 
@@ -79,4 +93,4 @@ fig.suptitle(
     fontsize=7,
 )
 fig.tight_layout()
-fig.savefig(f"{OUT}/sheet_strong_shear.png", dpi=74)  # keeps the PNG under 1 MB
+fig.savefig(OUT / "sheet_strong_shear.png", dpi=74)  # keeps the PNG under 1 MB

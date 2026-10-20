@@ -55,3 +55,34 @@ def test_decide_runs_a_repeated_model_once(tmp_path, monkeypatch):
     res = rx.decide("m", "m", tmp_path, Path("c"), Path("z"), "plan")
     assert ran == ["m"]
     assert res["outcome"] == "no result"
+
+
+def test_one_model_anti_rows_are_not_cross_classified_against_themselves(tmp_path, monkeypatch):
+    from astropy.table import Table
+
+    rx = _load("arcs_rxj2129")
+    (tmp_path / "m").mkdir()
+    Table(
+        {
+            "label": [7],
+            "ra": [4.64],
+            "dec": [16.44],
+            "mag": [25.0],
+            "g_min": [0.3],
+            "z_phot": [2.0],
+            "ellipticity": [0.6],
+            "strong_shear": [True],
+            "population": ["background"],
+            "orientation_class": ["anti"],
+        }
+    ).write(tmp_path / "m" / "arcs.ecsv")
+    run = {
+        "model": "m",
+        "validate_passes": True,
+        "strong_shear_background": {"n": 10, "aligned": 9, "anti": 1},
+        "anti_expected_shape_noise_background": {"expected": 0.1, "p_ge_observed": 0.1},
+    }
+    monkeypatch.setattr(rx, "_run", lambda *a: run)
+    monkeypatch.setattr(rx, "sha256_file", lambda p: "0" * 64)
+    res = rx.decide("m", "m", tmp_path, Path("c"), Path("z"), "plan")
+    assert res["anti_background"][0]["class_m"] == "no second model"

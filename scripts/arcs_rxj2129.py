@@ -160,11 +160,12 @@ def decide(primary: str, second: str, out: Path, catalog: Path, photoz: Path, pl
             & (t["population"] == "background")
             & (t["orientation_class"] == "anti")
         ]
-        other_cls = (
-            match_class(anti, Table.read(out / other / "arcs.ecsv"), None)
-            if runs[other]["validate_passes"]
-            else ["no run"] * len(anti)
-        )
+        if other == dec:  # one-model field: there is no second run to compare with
+            other_cls = ["no second model"] * len(anti)
+        elif runs[other]["validate_passes"]:
+            other_cls = match_class(anti, Table.read(out / other / "arcs.ecsv"), None)
+        else:
+            other_cls = ["no run"] * len(anti)
         summary["anti_background"] = [
             {
                 "label": int(r["label"]),
