@@ -18,10 +18,12 @@ Plan `PLAN.md` (frozen before any catalogue was read). No images used; catalogue
 
 ## Post hoc (exploratory; does not change the frozen outcome)
 - DJA's EAZY photo-z for 16.2 (grizli v7.0 photometry, `id_phot` 14171) is **2.79** (point estimate, no interval in
-  the table). With CANUCS DR1 (2.25, 95 % 0.23–2.33), two independent photometric catalogues place 16.2 inside the
-  redshift ranges where both models merge the flagged extra image onto 16.2 (CATS 2.1–2.9, Sharon 2.5–3.3;
-  `../macs1149-cats/sys16_track.json`), and neither near the fitted 4.419. This supports D-037's reading
-  (model error from a fitted redshift) without deciding it.
+  the table). It lies inside the redshift ranges where both models merge the flagged extra image onto 16.2 (CATS
+  2.1–2.9, Sharon 2.5–3.3; `../macs1149-cats/sys16_track.json`). CANUCS DR1's 2.25 (95 % 0.23–2.33) lies inside the
+  CATS range only. Neither estimate is near the fitted 4.419. This supports D-037's reading (model error from a
+  fitted redshift) without deciding it.
+- The plan's "z 2.5–3.0" quotes D-037's single-redshift examples (CATS 2.5, Sharon 3.0); the full ranges above are
+  the stored scan.
 
 ## What would decide it
 A graded NIRSpec redshift of 16.1 or 16.2 (a DJA re-grade of 5114276, or a deeper spectrum), as D-037 already says.
