@@ -110,7 +110,10 @@ def differs(p: float | None, at_edge: bool | None = False) -> bool | None:
 
 def classify_perturber(member: bool | None, mag: float) -> bool | None:
     """True: member brighter than MAG_PERTURBER; None ("not assessed", post hoc): membership
-    unknown (no usable z) or a member without a measurable magnitude; False otherwise."""
+    unknown (no usable z) or a member without a measurable magnitude; False otherwise, including
+    any source too faint to be a perturber whatever its z."""
+    if np.isfinite(mag) and mag >= MAG_PERTURBER:
+        return False
     if member is None:
         return None
     if not member:
@@ -242,12 +245,13 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
             z = zs if zs > 0 else float(zout["z_phot"][k])
             mag = total_mag(float(zout["ra"][k]), float(zout["dec"][k]), stamp)
             # eazy marks failed fits with z < 0: membership unknown (None), not "non-member"
-            member = bool(abs(z - Z_CLUSTER) <= DZ_MEMBER) if np.isfinite(z) and z >= 0 else None
+            usable = bool(np.isfinite(z) and z >= 0)
+            member = bool(abs(z - Z_CLUSTER) <= DZ_MEMBER) if usable else None
             rows.append(
                 {
                     "dja_id": int(zout["id"][k]),
                     "sep_arcsec": _r(d[k], 2),
-                    "z": _r(z, 3),
+                    "z": _r(z, 3) if usable else None,  # eazy's failure sentinel is not a z
                     "z_type": "spec" if zs > 0 else "phot",
                     "z160_z840": [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)],
                     "f200w_mag_crude": _r(mag, 2),
@@ -297,7 +301,8 @@ def sheet(pos: dict, summary: dict, zout: Table, path: Path) -> None:
             for r in zout[sel]:
                 dx = -(float(r["ra"]) - ra0) * cos * 3600.0
                 dy = (float(r["dec"]) - dec0) * 3600.0
-                col = "tab:red" if near[int(r["id"])]["member"] else "tab:orange"
+                m = near[int(r["id"])]["member"]
+                col = {True: "tab:red", False: "tab:orange"}.get(m, "tab:purple")
                 ax.scatter(dx, dy, marker="s", s=70, facecolors="none", edgecolors=col)
                 if i == 0:
                     ax.annotate(f"z{near[int(r['id'])]['z']}", (dx, dy), fontsize=6, color=col)
@@ -307,7 +312,10 @@ def sheet(pos: dict, summary: dict, zout: Table, path: Path) -> None:
             ax.set_xticks([])
             ax.set_yticks([])
             ax.set_title(f"{band.upper()} {'raw' if i == 0 else 'high-pass'}", fontsize=9)
-    fig.suptitle('UNCOVER 78 (700.1) a/b: knots (o), DJA sources (□, red = member); 6", West = +x')
+    fig.suptitle(
+        "UNCOVER 78 (700.1) a/b: knots (o); DJA sources (□): red member, orange non-member,\n"
+        'purple z unknown; 6", West = +x'
+    )
     fig.tight_layout()
     fig.savefig(path, dpi=80)
     plt.close(fig)
@@ -419,7 +427,7 @@ def main(argv=None) -> dict:
         "any_target_pair_differs": any_diff,
         "perturbers": pert,
         "perturber_found": has_pert,
-        "members_not_assessed": [p["dja_id"] for p in pert if p["perturber"] is None],
+        "not_assessed": [p["dja_id"] for p in pert if p["perturber"] is None],
         "outcome": decide(gate, any_diff, has_pert),
         "photometry": {
             band: {

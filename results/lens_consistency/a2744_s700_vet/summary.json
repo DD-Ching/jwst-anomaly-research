@@ -280,7 +280,7 @@
   {
    "dja_id": 42125,
    "sep_arcsec": 3.85,
-   "z": -1.0,
+   "z": null,
    "z_type": "phot",
    "z160_z840": [
     0.0,
@@ -358,7 +358,7 @@
   {
    "dja_id": 42139,
    "sep_arcsec": 4.64,
-   "z": -1.0,
+   "z": null,
    "z_type": "phot",
    "z160_z840": [
     0.0,
@@ -371,7 +371,7 @@
   {
    "dja_id": 41779,
    "sep_arcsec": 4.64,
-   "z": -1.0,
+   "z": null,
    "z_type": "phot",
    "z160_z840": [
     0.0,
@@ -448,7 +448,7 @@
   }
  ],
  "perturber_found": true,
- "members_not_assessed": [
+ "not_assessed": [
   42125,
   42356,
   42139,

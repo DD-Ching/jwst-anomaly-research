@@ -73,6 +73,7 @@ def test_perturber_flags_tri_state():
     assert s7v.decide(False, False, None).endswith("member perturber not assessed)")
     assert s7v.decide(True, False, None) == "undetermined (member perturber not assessed)"
     assert s7v.classify_perturber(None, 18.0) is None
+    assert s7v.classify_perturber(None, 27.0) is False  # too faint whatever its z
 
 
 def test_grid_edge_is_not_measurable():
