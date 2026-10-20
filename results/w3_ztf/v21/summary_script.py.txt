@@ -6,7 +6,7 @@ tl = [json.loads(x) for x in open(f'{H}/timeline.jsonl')]
 T = lambda s: dt.datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ')
 areas = {}
 for r in q['queue']:
-    p = r['npix']; a = {'position': r['position'], 'lc_mb': r['lc_mb'], 'unused': r['unused'], 'shared_fields_v1_v16': r['shared_fields_v1_v16'], 'independent_fields': r['independent_fields']}
+    p = r['npix']; a = {'position': r['position'], 'lc_mb': r['lc_mb'], 'unused': r['unused'], 'shared_fields_v1_v20': r['shared_fields_v1_v20'], 'independent_fields': r['independent_fields']}
     ev = [e for e in tl if e.get('area') == p]
     a['started'] = any(e.get('event') == 'area_start' for e in ev)
     st = {e['stage']: e['seconds'] for e in ev if e.get('event') == 'end' and 'seconds' in e}

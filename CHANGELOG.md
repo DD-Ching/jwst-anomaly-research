@@ -50,6 +50,22 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `controls_missing_epochs`; `persistence_run/summary.json` regenerated (527 pairs, pooled S/N rule 1 now fails,
   superseded by the exposure-count model).
 
+## 2026-10-20: W3 ZTF v21: v20 survivor's NDs cannot discriminate; 8124 and 8127 pass, 9,978 groups searched, 1 undetermined survivor (bad column)
+- **8126 / 634210200007847 (v20 survivor):** the g baseline (member 634110200003853) is 18.92 ± 0.05.
+  - The 4 ND limits are 19.24–19.52, and only 71–89 % of comparable stars are catalogued there. So 0 of 4 NDs can
+    discriminate the rule's dimming, and a catalogue miss is expected.
+  - The NDs' flux is still unknown; the survivor stays undetermined.
+  - v20's "g ≈ 19.3" (uncorrected aperture) is superseded.
+- **Queue:** 8124 and 8127 both pass (fade 7.4 % and 5.4 %). Searched 5,104 + 4,874 = 9,978 groups (19,944 series).
+  - 8127's first injection job was killed by the system (rc −9, no output) and was rerun once with the same seed.
+- **Survivor:** 8124 / 634205400002525 (r ≈ 14.65).
+  - The official LOW RESPONSIVITY mask is at the source in all 3 NDs, with the column 0.27–0.50″ away.
+  - The star is visibly present.
+  - Automated class 4 is not reliable here. Undetermined; not a confirmed dimming.
+- **Cumulative with the v13 rule:** 35,475 groups (not stored as one number). No confirmed target event.
+- **Cost:** 3,558.8 MB (estimate) and 21.4 min. Per 1,000 searched groups: 344.6 MB and 167 stage-seconds.
+- **Inventory:** the v16 inventory is used up. Further search needs a new inventory (`results/w3_ztf/v21/RESULT.md`).
+
 ## 2026-10-20: W3 ZTF v20: frozen queue of 9 (v16 inventory), 7 started, 2 pass, 7,724 groups searched, 1 survivor (undetermined)
 - **Archived** (no new work): 1624 and 1625 are recorded as "no reliable evidence of a real dimming; some exposures
   still cannot be judged" (`results/w3_ztf/v19/RESULT.md`).

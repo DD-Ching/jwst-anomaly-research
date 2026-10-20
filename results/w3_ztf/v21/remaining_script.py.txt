@@ -5,7 +5,7 @@ s = json.load(open('results/w3_ztf/v21/summary.json'))['areas']
 ns = [p for p, a in s.items() if not a['started']]
 fail = [p for p, a in s.items() if a.get('passed') is False]
 out = {'label': 'derived from queue.json and summary.json (no new data)',
-       'not_started_budget': {p: {k: q[int(p)][k] for k in ('unused', 'search_if_500_cal', 'lc_mb', 'worst_cell', 'shared_fields_v1_v16')} for p in ns},
+       'not_started_budget': {p: {k: q[int(p)][k] for k in ('unused', 'search_if_500_cal', 'lc_mb', 'worst_cell', 'shared_fields_v1_v20')} for p in ns},
        'not_started_unused': sum(q[int(p)]['unused'] for p in ns), 'not_started_searchable': sum(q[int(p)]['search_if_500_cal'] for p in ns),
        'not_started_lc_mb': round(sum(q[int(p)]['lc_mb'] for p in ns), 1),
        'failed_calibration_unread_search_groups': {p: s[p]['search_groups'] for p in fail},

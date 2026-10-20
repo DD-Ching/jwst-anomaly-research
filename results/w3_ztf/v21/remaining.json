@@ -1,0 +1,10 @@
+{
+ "label": "derived from queue.json and summary.json (no new data)",
+ "not_started_budget": {},
+ "not_started_unused": 0,
+ "not_started_searchable": 0,
+ "not_started_lc_mb": 0,
+ "failed_calibration_unread_search_groups": {},
+ "failed_calibration_unread_total": 0,
+ "note": "failed areas stay unsearchable under the frozen rule; no inventory beyond the v16 25 partitions"
+}
