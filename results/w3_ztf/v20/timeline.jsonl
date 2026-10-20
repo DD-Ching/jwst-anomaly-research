@@ -1,0 +1,8 @@
+{"area": 1356, "event": "area_start", "position": 1, "projected_mb": 663.6, "utc": "2026-10-20T05:00:44Z"}
+{"area": 1356, "stage": "sample", "event": "start", "utc": "2026-10-20T05:00:44Z"}
+{"area": 2490, "event": "area_start", "position": 2, "projected_mb": 1165.2, "utc": "2026-10-20T05:00:44Z"}
+{"area": 2490, "stage": "sample", "event": "start", "utc": "2026-10-20T05:00:44Z"}
+{"area": 1356, "stage": "sample", "event": "end", "rc": 0, "seconds": 7.3, "utc": "2026-10-20T05:00:51Z"}
+{"area": 1356, "stage": "fetch", "event": "start", "utc": "2026-10-20T05:00:51Z"}
+{"area": 2490, "stage": "sample", "event": "end", "rc": 0, "seconds": 7.5, "utc": "2026-10-20T05:00:51Z"}
+{"area": 2490, "stage": "fetch", "event": "start", "utc": "2026-10-20T05:00:51Z"}

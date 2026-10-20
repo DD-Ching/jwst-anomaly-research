@@ -6,7 +6,7 @@ tl = [json.loads(x) for x in open(f'{H}/timeline.jsonl')]
 T = lambda s: dt.datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ')
 areas = {}
 for r in q['queue']:
-    p = r['npix']; a = {'position': r['position'], 'lc_mb': r['lc_mb'], 'shared_fields': r['shared_fields']}
+    p = r['npix']; a = {'position': r['position'], 'lc_mb': r['lc_mb'], 'unused': r['unused'], 'shared_fields_v1_v16': r['shared_fields_v1_v16'], 'independent_fields': r['independent_fields']}
     ev = [e for e in tl if e.get('area') == p]
     a['started'] = any(e.get('event') == 'area_start' for e in ev)
     st = {e['stage']: e['seconds'] for e in ev if e.get('event') == 'end' and 'seconds' in e}
@@ -44,11 +44,14 @@ out = {'label': 'derived (timeline.jsonl and per-area outputs)', 'areas': areas,
        'searched_groups': n_s, 'searched_series': sum(a['search']['series_searched'] for a in srch),
        'final_survivors': sum(len(a['search']['passed_groups']) for a in srch),
        'started': sum(a['started'] for a in areas.values()), 'passed': sum(bool(a.get('passed')) for a in areas.values()),
-       'downloaded_mb': round(json.load(open(f'{H}/inventory.json'))['bytes']['objects_mb'] + json.load(open(f'{H}/inventory.json'))['bytes']['tap'] / 1e6
+       'downloaded_mb': round(json.load(open(f'{H}/objects.json'))['objects_mb']
                               + sum(a['lc_mb'] + a.get('tap_mb', 0) for a in areas.values() if a.get('fetch_read_s') is not None), 1),
+       'downloaded_note': 'objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured',
+       'not_started': [a['position'] for a in areas.values() if not a['started']],
        'stage_seconds_of_searched_areas': round(sec, 1),
        'per_1000_searched': {'stage_seconds': round(sec / n_s * 1000, 1) if n_s else None,
                              'lc_mb': round(sum(a['lc_mb'] for a in srch) / n_s * 1000, 1) if n_s else None},
        'wall_clock_min': round((T(tl[-1]['utc']) - T(tl[0]['utc'])).total_seconds() / 60, 1), 'events': len(tl)}
+out['per_1000_searched']['wall_clock_min_queue'] = round(out['wall_clock_min'] / n_s * 1000, 2) if n_s else None
 json.dump(out, open(f'{H}/summary.json', 'w'), indent=1); open(f'{H}/summary.json', 'a').write('\n')
 print(json.dumps({k: v for k, v in out.items() if k != 'areas'}, indent=1))
