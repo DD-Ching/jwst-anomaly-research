@@ -22,7 +22,8 @@ read: ``n_prior`` is then 0). Subarray exposures are compared on full-detector p
 - ``inconclusive``: otherwise; ``undetected``: no detection.
 
 Only imaging exposures (``EXP_TYPE`` ``*_IMAGE`` with a celestial WCS) are used. Apertures that
-leave the array give NaN. A file that cannot be read is listed in ``meta["failed"]``.
+leave the array give NaN, as do apertures with no-data pixels unless ``--max-nan`` allows filling them
+(``fill_nan_aperture``). A file that cannot be read is listed in ``meta["failed"]``.
 
 Every number is ``derived``; thresholds are ASSUMPTIONs (D-039).
 
@@ -152,10 +153,36 @@ def header_info(uri: str, positions: dict[str, tuple[float, float]]) -> dict[str
     }
 
 
-def measure_pixel(uri: str, x: float, y: float, long: bool) -> dict[str, float]:
-    """Aperture flux, ERR-based error and saturated-pixel count at detector pixel (x, y).
+def fill_nan_aperture(
+    sci: np.ndarray, err: np.ndarray, x: float, y: float, r_px: float, max_nan: int
+) -> tuple[np.ndarray, np.ndarray, int]:
+    """Replace up to ``max_nan`` NaN aperture pixels of ``sci`` (and ``err``) by their point
+    reflection through the rounded centre pixel (an ASSUMPTION: the PSF core is symmetric).
 
-    Flux and error are NaN when the aperture leaves the array."""
+    Returns copies and the number of NaN aperture pixels. When there are more than ``max_nan`` or
+    a reflection is not finite, the arrays come back unfilled (``aperture_flux`` then gives NaN)."""
+    ny, nx = sci.shape
+    yy, xx = np.mgrid[0:ny, 0:nx]
+    bad = (np.hypot(xx - x, yy - y) <= r_px) & ~np.isfinite(sci)
+    n_nan = int(bad.sum())
+    if not 0 < n_nan <= max_nan:
+        return sci, err, n_nan
+    cx, cy = int(round(x)), int(round(y))
+    sci2, err2 = sci.copy(), err.copy()
+    for by, bx in zip(*np.nonzero(bad), strict=True):
+        ry, rx = 2 * cy - by, 2 * cx - bx
+        if not (0 <= ry < ny and 0 <= rx < nx and np.isfinite(sci[ry, rx])):
+            return sci, err, n_nan
+        sci2[by, bx], err2[by, bx] = sci[ry, rx], err[ry, rx]
+    return sci2, err2, n_nan
+
+
+def measure_pixel(uri: str, x: float, y: float, long: bool, max_nan: int = 0) -> dict[str, float]:
+    """Aperture flux, ERR-based error, saturated-pixel count and NaN aperture-pixel count at
+    detector pixel (x, y).
+
+    Flux and error are NaN when the aperture leaves the array, or has more than ``max_nan``
+    no-data pixels (default 0, D-039 as frozen; see ``fill_nan_aperture``)."""
     xi, yi = int(round(x)), int(round(y))
     r_px = 2.0 if long else 3.0  # ~0.1" in both channels
     with _open(uri) as hdul:
@@ -169,12 +196,18 @@ def measure_pixel(uri: str, x: float, y: float, long: bool) -> dict[str, float]:
         sci = np.asarray(hdul["SCI"].section[y0:y1, x0:x1], dtype=float)
         err = np.asarray(hdul["ERR"].section[y0:y1, x0:x1], dtype=float)
         dq = np.asarray(hdul["DQ"].section[y0:y1, x0:x1])
+    sci, err, n_nan = fill_nan_aperture(sci, err, x - x0, y - y0, r_px, max_nan)
     flux, e = aperture_flux(sci, err, x - x0, y - y0, r_px, 2 * r_px + 1, 4 * r_px)
     yy, xx = np.mgrid[y0:y1, x0:x1]
     core = np.hypot(xx - x, yy - y) <= r_px
     if not (r_px <= x <= nx - 1 - r_px and r_px <= y <= ny - 1 - r_px):
         flux = e = float("nan")
-    return {"flux": flux, "err": e, "n_sat": int(((dq[core] & SATURATED) > 0).sum())}
+    return {
+        "flux": flux,
+        "err": e,
+        "n_sat": int(((dq[core] & SATURATED) > 0).sum()),
+        "n_ap_nan": n_nan,
+    }
 
 
 def _safe(fn, *args):
@@ -191,6 +224,7 @@ def run(
     min_snr: float = MIN_SNR,
     lookback_hours: float = LOOKBACK_HOURS,
     workers: int = 12,
+    max_nan: int = 0,
 ) -> tuple[Table, Table]:
     failed: list[str] = []
     with ThreadPoolExecutor(workers) as ex:
@@ -218,16 +252,16 @@ def run(
     def one(job):
         uid, cur, prior, x, y = job
         long = "LONG" in cur["detector"].upper()
-        now, err = _safe(measure_pixel, cur["file"], x, y, long)
+        now, err = _safe(measure_pixel, cur["file"], x, y, long, max_nan)
         if now is None:
             failed.append(err)
-            now = {"flux": np.nan, "err": np.nan, "n_sat": 0}
+            now = {"flux": np.nan, "err": np.nan, "n_sat": 0, "n_ap_nan": -1}
         snr = now["flux"] / now["err"] if now["err"] > 0 else np.nan
         before = []
         n_failed = 0
         if np.isfinite(snr) and snr >= min_snr:  # priors only matter for detections
             for p, px, py in prior:
-                m, err = _safe(measure_pixel, p["file"], px, py, long)
+                m, err = _safe(measure_pixel, p["file"], px, py, long, max_nan)
                 if m is None:
                     failed.append(err)
                     n_failed += 1  # the unreadable one may be the illuminator
@@ -250,6 +284,7 @@ def run(
             "y": y,
             "flux": now["flux"],
             "snr": snr,
+            "n_ap_nan": now["n_ap_nan"],
             "n_prior": len(before) if n_failed == 0 else 0,
             "n_prior_failed": n_failed,
             "prior_file": worst[0]["file"].rsplit("/", 1)[-1] if worst else "",
@@ -293,6 +328,7 @@ def run(
         "ratio": ratio,
         "min_snr": min_snr,
         "lookback_hours": lookback_hours,
+        "max_nan": max_nan,
         "failed": failed,
     }
     per_exp.meta.update(meta)
@@ -312,11 +348,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--ratio", type=float, default=RATIO)
     ap.add_argument("--min-snr", type=float, default=MIN_SNR)
     ap.add_argument("--lookback-hours", type=float, default=LOOKBACK_HOURS)
+    ap.add_argument(
+        "--max-nan", type=int, default=0, help="fill up to this many NaN aperture pixels"
+    )
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
     positions = {u: (float(r), float(d)) for u, r, d in args.position}
     files = [f for d in args.cal_dir for f in list_cal(d)]
-    per_exp, summ = run(positions, files, args.ratio, args.min_snr, args.lookback_hours)
+    per_exp, summ = run(
+        positions, files, args.ratio, args.min_snr, args.lookback_hours, max_nan=args.max_nan
+    )
     args.out.mkdir(parents=True, exist_ok=True)
     per_exp.write(args.out / "persistence_exposures.ecsv", overwrite=True)
     summ.write(args.out / "persistence_summary.ecsv", overwrite=True)

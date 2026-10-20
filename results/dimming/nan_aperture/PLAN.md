@@ -23,8 +23,8 @@ earlier-exposure (illuminator) measurements. `n_ap_nan` is written per exposure.
    `persistence_run/nexus/exposures_e*.ecsv`), the `k = 2` flux is identical (|Δ| = 0) and the verdicts of pairs
    with no NaN exposure are unchanged.
 2. G1 (fill accuracy, known cases): `validate.py` range-reads ≤ 150 finite-aperture NEXUS exposures from the e5 run
-   (frozen sample: first 150 rows by `file`, `uid` with S/N ≥ 5), masks 1 and 2 aperture pixels (the centre pixel,
-   and the centre plus one random neighbour, seed 0) and measures with `k = 2`. Pass: median |f_fill / f_true − 1|
+   (frozen sample: first 150 rows by `file`, `uid` with S/N ≥ 5), masks 1 and 2 non-centre aperture pixels (one random
+   pixel, then two random pixels that are not each other's reflection; seed 0) and measures with `k = 2`. Pass: median |f_fill / f_true − 1|
    ≤ 0.05 for both and the S/N ≥ 5 call unchanged in ≥ 95 %.
 3. Re-run monitored + targets with `k = 2` for NEXUS, frozen order e5, e6, e7, e4, e3, e1, e0 (held out first), into
    `results/dimming/nan_aperture/nexus/`, until the run budget ends; a partial set is not chosen by outcome.
@@ -42,3 +42,7 @@ earlier-exposure (illuminator) measurements. `n_ap_nan` is written per exposure.
 **What would change the plan:** G0 failing (the change touches more than NaN apertures), a filled exposure turning
 a monitored pair into `persistence` (the fill invents an illuminator), or G1 bias > 5 % (try area correction instead,
 under a new plan).
+
+**Amendment 2026-10-20 06:20 UTC (before G1 or any score):** the rounded centre pixel is its own reflection, so a
+NaN centre pixel stays unfilled (the rule above, unchanged). G1 therefore masks non-centre pixels (step 2 edited);
+the count of exposures left NaN because the centre pixel is NaN is reported.

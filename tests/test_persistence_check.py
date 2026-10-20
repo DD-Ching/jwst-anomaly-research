@@ -149,3 +149,38 @@ def test_subarray_origin_maps_prior_pixels(tmp_path):
     ghost_sky = _wcs(0).all_pix2world(p[0] - 50, p[1] - 50, 0)  # subarray WCS = full WCS here
     per_exp, summ = pc.run({"ghost": tuple(float(v) for v in ghost_sky)}, [f1, f2], workers=1)
     assert summ["verdict"][0] == "persistence"
+
+
+def _psf(n: int = 31, x: float = 15.2, y: float = 14.8, sigma: float = 1.3) -> np.ndarray:
+    yy, xx = np.mgrid[0:n, 0:n]
+    return 1000 * np.exp(-((xx - x) ** 2 + (yy - y) ** 2) / (2 * sigma**2)) + 1.0
+
+
+def test_fill_nan_aperture_default_keeps_nan():
+    sci, err = _psf(), np.ones((31, 31))
+    sci[15, 15] = np.nan
+    out, _, n = pc.fill_nan_aperture(sci, err, 15.2, 14.8, 3.0, 0)
+    assert n == 1 and np.isnan(out[15, 15])  # max_nan = 0: D-039 as frozen
+
+
+def test_fill_nan_aperture_recovers_flux_of_symmetric_source():
+    sci, err = _psf(), np.ones((31, 31))
+    true = pc.aperture_flux(sci, err, 15.2, 14.8, 3.0, 7.0, 12.0)[0]
+    for holes in ([(15, 16)], [(15, 16), (13, 15)]):  # the centre pixel reflects onto itself
+        s = sci.copy()
+        for hy, hx in holes:
+            s[hy, hx] = np.nan
+        s2, e2, n = pc.fill_nan_aperture(s, err, 15.2, 14.8, 3.0, 2)
+        assert n == len(holes) and np.isfinite(s2).all() and np.isfinite(e2).all()
+        flux = pc.aperture_flux(s2, e2, 15.2, 14.8, 3.0, 7.0, 12.0)[0]
+        assert abs(flux / true - 1) < 0.05
+
+
+def test_fill_nan_aperture_refuses_too_many_or_unfillable():
+    sci, err = _psf(), np.ones((31, 31))
+    s = sci.copy()
+    s[14:16, 14:16] = np.nan  # 4 NaN aperture pixels > max_nan
+    assert np.isnan(pc.fill_nan_aperture(s, err, 15.2, 14.8, 3.0, 2)[0]).sum() == 4
+    s = sci.copy()
+    s[15, 13] = s[15, 17] = np.nan  # each reflection of the other is NaN
+    assert np.isnan(pc.fill_nan_aperture(s, err, 15.2, 14.8, 3.0, 2)[0]).sum() == 2
