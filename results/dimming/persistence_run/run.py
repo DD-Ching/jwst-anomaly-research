@@ -27,6 +27,10 @@ max_nan = int(next((a[8:] for a in sys.argv[4:] if a.startswith("max_nan=")), 0)
 out.mkdir(parents=True, exist_ok=True)
 p = ds.Params()
 field = ds.load_field(ds.DEFAULT_CONFIG, name)
+if only is not None and (
+    len(set(only)) != len(only) or not all(0 <= k < len(field["epochs"]) for k in only)
+):
+    raise SystemExit(f"epochs= must be distinct indices 0..{len(field['epochs']) - 1}: {only}")
 gaia = Table.read(groot / name / "gaia.ecsv")
 cats, lc, scale, err, res, ordn = ds._screen(field, p, gaia)
 static_veto = ds.catalogue_veto({**ordn, "single_epoch": np.zeros_like(ordn["single_epoch"])})
@@ -78,6 +82,7 @@ t.write(out / "verdicts.ecsv", overwrite=True)
             "n_targets": int(target.sum()),
             "n_monitored": n_mon,
             "targets_only": targets_only,
+            "max_nan": max_nan,
         },
         indent=1,
     )

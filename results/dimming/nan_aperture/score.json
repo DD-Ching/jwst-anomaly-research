@@ -16,6 +16,8 @@
    "finite_k0": 41,
    "finite_k0_changed": 0,
    "nan_k0_finite_k2": 11,
+   "pairs_without_nan_k0": 11,
+   "pairs_without_nan_k0_verdict_changed": 0,
    "nan_k2_with_1_2_nan_px": 3
   },
   "e3": {
@@ -25,6 +27,8 @@
    "finite_k0": 44,
    "finite_k0_changed": 0,
    "nan_k0_finite_k2": 8,
+   "pairs_without_nan_k0": 17,
+   "pairs_without_nan_k0_verdict_changed": 0,
    "nan_k2_with_1_2_nan_px": 0
   },
   "e4": {
@@ -34,6 +38,8 @@
    "finite_k0": 53,
    "finite_k0_changed": 0,
    "nan_k0_finite_k2": 13,
+   "pairs_without_nan_k0": 20,
+   "pairs_without_nan_k0_verdict_changed": 0,
    "nan_k2_with_1_2_nan_px": 1
   },
   "e5": {
@@ -43,6 +49,8 @@
    "finite_k0": 42,
    "finite_k0_changed": 0,
    "nan_k0_finite_k2": 12,
+   "pairs_without_nan_k0": 14,
+   "pairs_without_nan_k0_verdict_changed": 0,
    "nan_k2_with_1_2_nan_px": 1
   },
   "e6": {
@@ -52,6 +60,8 @@
    "finite_k0": 41,
    "finite_k0_changed": 0,
    "nan_k0_finite_k2": 16,
+   "pairs_without_nan_k0": 11,
+   "pairs_without_nan_k0_verdict_changed": 0,
    "nan_k2_with_1_2_nan_px": 1
   },
   "e7": {
@@ -61,6 +71,8 @@
    "finite_k0": 45,
    "finite_k0_changed": 0,
    "nan_k0_finite_k2": 21,
+   "pairs_without_nan_k0": 16,
+   "pairs_without_nan_k0_verdict_changed": 0,
    "nan_k2_with_1_2_nan_px": 1
   }
  },

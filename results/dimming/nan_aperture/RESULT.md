@@ -6,11 +6,12 @@ and `measure_pixel(max_nan=k)` (default 0 = D-039 as frozen); `persistence_run/r
 
 ## Gates
 - **G0 (code identity): pass.** In e1, e3, e4, e5, e6 and e7, all 266 exposures with finite k = 0 flux have
-  identical k = 2 flux; no row is missing (`score.json` `G0`). k = 2 makes 81 NaN exposures finite; 7 stay NaN
-  with 1–2 NaN aperture pixels (centre pixel or an unfillable reflection).
+  identical k = 2 flux, no row is missing, and the 89 pairs with no NaN exposure keep their verdict (`score.json`
+  `G0`). k = 2 makes 81 NaN exposures finite; 7 stay NaN with 1–2 NaN pixels in the stamp's aperture (centre
+  pixel, an unfillable reflection or the array edge; the cause is not split).
 - **G1 (fill accuracy on 42 known on-sky apertures, e5; `g1.json`): fails.** 1 masked pixel: median
   |f_fill / f_true − 1| 0.037 (p90 0.126), S/N ≥ 5 call unchanged 42 / 42: pass. 2 masked pixels: median 0.079
-  (p90 0.170) > 0.05, call unchanged 42 / 42: fail. The error is scatter, not bias (signed median +0.000 and
+  (p90 0.170) > 0.05, call unchanged 42 / 42: fail. No fill was refused (42 / 42 finite). The error is scatter, not bias (signed median +0.000 and
   +0.022).
 
 **Decision: D2.** k stays 0 and the swap keeps ε = 0.412 for ≤ 4 exposures. No limit changes.
@@ -21,7 +22,7 @@ Held-out (e5–e7) and train (e1, e3, e4; e0 not re-run) NEXUS monitored pairs, 
 | aperture | train `on_sky` / n (Wilson 95 %) | held out `on_sky` / n (Wilson 95 %) |
 |---|---|---|
 | k = 0 (committed) | 40 / 86 (0.363–0.570) | 33 / 89 (0.278–0.475) |
-| k = 1 (approx.: k = 2 tables minus 2-pixel exposures) | 57 / 86 (0.558–0.754) | 58 / 89 (0.548–0.743) |
+| k = 1 (approx.: k = 2 tables minus 2-pixel exposures; earlier-exposure fills not undone) | 57 / 86 (0.558–0.754) | 58 / 89 (0.548–0.743) |
 | k = 2 | 62 / 86 (0.618–0.805) | 62 / 89 (0.595–0.782) |
 
 - 0 `persistence` verdicts under k = 2 (no illuminator invented by the fill); held-out `undetected` 11 → 2.

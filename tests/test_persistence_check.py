@@ -166,7 +166,7 @@ def test_fill_nan_aperture_default_keeps_nan():
 def test_fill_nan_aperture_recovers_flux_of_symmetric_source():
     sci, err = _psf(), np.ones((31, 31))
     true = pc.aperture_flux(sci, err, 15.2, 14.8, 3.0, 7.0, 12.0)[0]
-    for holes in ([(15, 16)], [(15, 16), (13, 15)]):  # the centre pixel reflects onto itself
+    for holes in ([(15, 16)], [(15, 16), (13, 15)]):
         s = sci.copy()
         for hy, hx in holes:
             s[hy, hx] = np.nan
@@ -184,3 +184,13 @@ def test_fill_nan_aperture_refuses_too_many_or_unfillable():
     s = sci.copy()
     s[15, 13] = s[15, 17] = np.nan  # each reflection of the other is NaN
     assert np.isnan(pc.fill_nan_aperture(s, err, 15.2, 14.8, 3.0, 2)[0]).sum() == 2
+
+
+def test_fill_nan_aperture_never_fills_centre_or_nan_err():
+    sci, err = _psf(), np.ones((31, 31))
+    s = sci.copy()
+    s[15, 15] = np.nan  # the rounded centre is its own reflection
+    assert np.isnan(pc.fill_nan_aperture(s, err, 15.2, 14.8, 3.0, 2)[0][15, 15])
+    s, e = sci.copy(), err.copy()
+    s[15, 16], e[15, 14] = np.nan, np.nan  # finite SCI reflection, NaN ERR reflection
+    assert np.isnan(pc.fill_nan_aperture(s, e, 15.2, 14.8, 3.0, 2)[0][15, 16])

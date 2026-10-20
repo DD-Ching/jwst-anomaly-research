@@ -41,6 +41,11 @@ def g0(epoch: int) -> dict:
     idx = np.array([ib.get(k, -1) for k in key(a)])
     fb = np.where(idx >= 0, np.asarray(b["flux"], float)[np.maximum(idx, 0)], np.nan)
     nan_b = np.asarray(b["n_ap_nan"])
+    va = Table.read(OLD / "verdicts.ecsv")
+    va = va[va["epoch"] == epoch]
+    vb = Table.read(NEW / f"e{epoch}" / "verdicts.ecsv")
+    vb_of = dict(zip(vb["uid"], vb["verdict"], strict=True))
+    all_finite = {u for u in va["uid"] if np.isfinite(fa[a["uid"] == u]).all()}
     return {
         "rows_k0": len(a),
         "rows_k2": len(b),
@@ -48,6 +53,12 @@ def g0(epoch: int) -> dict:
         "finite_k0": int(fin.sum()),
         "finite_k0_changed": int((fin & ~(fb == fa)).sum()),
         "nan_k0_finite_k2": int((~fin & np.isfinite(fb)).sum()),
+        "pairs_without_nan_k0": len(all_finite),
+        "pairs_without_nan_k0_verdict_changed": sum(
+            str(vb_of.get(u)) != str(r)
+            for u, r in zip(va["uid"], va["verdict"], strict=True)
+            if u in all_finite
+        ),
         "nan_k2_with_1_2_nan_px": int(
             (~np.isfinite(np.asarray(b["flux"], float)) & (nan_b >= 1) & (nan_b <= 2)).sum()
         ),
@@ -104,7 +115,10 @@ def main() -> dict:
         "epochs": epochs,
         "G0": gate,
         "G0_pass": all(
-            g["finite_k0_changed"] == 0 and g["missing_in_k2"] == 0 for g in gate.values()
+            g["finite_k0_changed"] == 0
+            and g["missing_in_k2"] == 0
+            and g["pairs_without_nan_k0_verdict_changed"] == 0
+            for g in gate.values()
         ),
         "k0": table(old, epochs),
         "k2_post_hoc": table(new, epochs),  # G1 failed (g1.json): descriptive only, not adopted

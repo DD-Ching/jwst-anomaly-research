@@ -157,10 +157,12 @@ def fill_nan_aperture(
     sci: np.ndarray, err: np.ndarray, x: float, y: float, r_px: float, max_nan: int
 ) -> tuple[np.ndarray, np.ndarray, int]:
     """Replace up to ``max_nan`` NaN aperture pixels of ``sci`` (and ``err``) by their point
-    reflection through the rounded centre pixel (an ASSUMPTION: the PSF core is symmetric).
+    reflection through the rounded centre pixel (an ASSUMPTION: the PSF core is symmetric). A NaN
+    centre pixel is its own reflection and is never filled.
 
     Returns copies and the number of NaN aperture pixels. When there are more than ``max_nan`` or
-    a reflection is not finite, the arrays come back unfilled (``aperture_flux`` then gives NaN)."""
+    a reflection (SCI or ERR) is not finite, the arrays come back unfilled (``aperture_flux`` then
+    gives NaN). The count is over the stamp, so it undercounts at the array edge."""
     ny, nx = sci.shape
     yy, xx = np.mgrid[0:ny, 0:nx]
     bad = (np.hypot(xx - x, yy - y) <= r_px) & ~np.isfinite(sci)
@@ -171,7 +173,7 @@ def fill_nan_aperture(
     sci2, err2 = sci.copy(), err.copy()
     for by, bx in zip(*np.nonzero(bad), strict=True):
         ry, rx = 2 * cy - by, 2 * cx - bx
-        if not (0 <= ry < ny and 0 <= rx < nx and np.isfinite(sci[ry, rx])):
+        if not (0 <= ry < ny and 0 <= rx < nx and np.isfinite(sci[ry, rx] + err[ry, rx])):
             return sci, err, n_nan
         sci2[by, bx], err2[by, bx] = sci[ry, rx], err[ry, rx]
     return sci2, err2, n_nan

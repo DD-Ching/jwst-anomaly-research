@@ -6,6 +6,7 @@
   "median_abs_dev": 0.0369,
   "p90_abs_dev": 0.1256,
   "same_call_frac": 1.0,
+  "n_finite": 42,
   "pass": true,
   "median_signed_dev": 0.0003
  },
@@ -13,6 +14,7 @@
   "median_abs_dev": 0.0791,
   "p90_abs_dev": 0.1703,
   "same_call_frac": 1.0,
+  "n_finite": 42,
   "pass": false,
   "median_signed_dev": 0.0215
  },

@@ -115,7 +115,8 @@ for k in (1, 2):
         "median_abs_dev": round(float(np.nanmedian(dev)), 4),
         "p90_abs_dev": round(float(np.nanpercentile(dev, 90)), 4),
         "same_call_frac": round(same, 3),
-        "pass": bool(np.nanmedian(dev) <= MEDIAN_MAX and same >= CALL_MIN),
+        "n_finite": int(np.isfinite(dev).sum()),  # fills refused (NaN) are counted here, not hidden
+        "pass": bool(np.nanmedian(dev) <= MEDIAN_MAX and same >= CALL_MIN),  # refused = call lost
     }
     res[f"mask{k}"]["median_signed_dev"] = round(
         float(np.nanmedian([q[f"ratio{k}"] - 1 for q in rows])), 4
