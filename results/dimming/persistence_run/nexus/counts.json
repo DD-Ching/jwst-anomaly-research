@@ -6,14 +6,14 @@
   1,
   2,
   3,
-  4
- ],
- "complete": false,
- "controls_missing_epochs": [
-  2,
+  4,
   5,
   6,
   7
  ],
- "note": "exposures_e2.ecsv is the targets-only run (no controls); complete refers to targets+controls run.py would need"
+ "complete": false,
+ "controls_missing_epochs": [
+  2
+ ],
+ "note": "exposures_e2.ecsv is the earlier targets-only run (no controls); e2 = o014, 2,000 _cal files, its controls were started 2026-10-20 and stopped at the time budget; complete refers to targets+controls run.py would need"
 }

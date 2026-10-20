@@ -1,0 +1,72 @@
+{
+ "train": {
+  "epochs": [
+   0,
+   1,
+   3,
+   4
+  ],
+  "persistence": 0,
+  "le4": {
+   "on_sky": 49,
+   "n": 96,
+   "wilson95": [
+    0.412,
+    0.608
+   ],
+   "verdicts": {
+    "inconclusive": 45,
+    "on_sky": 49,
+    "undetected": 2
+   }
+  },
+  "gt4": {
+   "on_sky": 94,
+   "n": 94,
+   "wilson95": [
+    0.961,
+    1.0
+   ],
+   "verdicts": {
+    "on_sky": 94
+   }
+  },
+  "persistence_wilson95": [
+   0.0,
+   0.02
+  ]
+ },
+ "held_out": {
+  "epochs": [
+   5,
+   6,
+   7
+  ],
+  "persistence": 0,
+  "le4": {
+   "on_sky": 33,
+   "n": 89,
+   "wilson95": [
+    0.278,
+    0.475
+   ],
+   "verdicts": {
+    "inconclusive": 45,
+    "on_sky": 33,
+    "undetected": 11
+   },
+   "rule1": "holds"
+  },
+  "gt4": {
+   "on_sky": 0,
+   "n": 0,
+   "wilson95": null,
+   "verdicts": {},
+   "rule1": "not tested (< 10 pairs)"
+  },
+  "persistence_wilson95": [
+   0.0,
+   0.041
+  ]
+ }
+}
