@@ -166,7 +166,8 @@ def measure(lam1, lam2, sign=-1):
     disk = ndimage.convolve(rel, ker, mode="nearest")
     # sampling-noise control (post hoc, added after review): same grids, no point lens
     ctrl = as_image(es.macro_magnification_map(lam1, lam2, 0, hx, 3.0, pix))[0] / mac
-    ctrl_disk = ndimage.convolve(ctrl, ker, mode="nearest")[k:-k, k:-k]  # no padded borders
+    inner = slice(k, -k or None)  # drop the convolution's padded borders (tracks and control alike)
+    ctrl_disk = ndimage.convolve(ctrl, ker, mode="nearest")[inner, inner]
     control = {
         "point_min": float(ctrl.min()),
         "point_max": float(ctrl.max()),
@@ -178,16 +179,16 @@ def measure(lam1, lam2, sign=-1):
         iy = int(np.argmin(np.abs(by - u0)))
         tracks[f"along_x_u0_{u0}"] = {
             "min_point": float(rel[iy].min()),
-            "min_rho0.1": float(disk[iy].min()),
+            "min_rho0.1": float(disk[iy, inner].min()),
         }
-        if u0 < hx:
-            ix = int(np.argmin(np.abs(bx - u0)))
+        ix = int(np.argmin(np.abs(bx - u0)))
+        if abs(bx[ix] - u0) <= 0.5001 * pix and k <= ix < len(bx) - k:
             tracks[f"along_y_u0_{u0}"] = {
                 "min_point": float(rel[:, ix].min()),
-                "min_rho0.1": float(disk[:, ix].min()),
+                "min_rho0.1": float(disk[inner, ix].min()),
             }
         else:
-            tracks[f"along_y_u0_{u0}"] = None  # outside the window: not measured
+            tracks[f"along_y_u0_{u0}"] = None  # outside the window interior: not measured
     return {
         "lam1": lam1,
         "lam2": lam2,

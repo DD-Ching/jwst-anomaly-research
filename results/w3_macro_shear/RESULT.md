@@ -15,7 +15,7 @@ numbers in `result.json`, maps in `maps.png` (looked at).
 - **G3′** (that excess on the isolated maps, R = 2.5 and 3): agrees to < 0.01 %, both signs. Pass.
 
 ## Measurements (negative mass; λ1 = 1 − κ − γ along the macro stretch, λ2 = 1 − κ + γ = 1)
-| Case | μ_macro | umbra (μ / μ_macro < 0.1) area, θ_E² | half-width along stretch / across | predicted 2√λ (on axis) | min μ / μ_macro over u₀ = 0, 0.5, 1 tracks, ρ = 0.1 | no-lens control, ρ = 0.1 interior (point, whole map) |
+| Case | μ_macro | umbra (μ / μ_macro < 0.1) area, θ_E² | half-width along stretch / across | predicted 2√λ (on axis) | min μ / μ_macro over u₀ = 0, 0.5, 1 tracks, ρ = 0.1 (interior; ±100: 5 of 6 tracks) | no-lens control, ρ = 0.1 interior (point, whole map) |
 |---|---|---|---|---|---|---|
 | isolated | 1 | 12.49 | 1.99 / 1.99 | 2 / 2 | 0 | 0.995–1.005 (0.79–1.23) |
 | minimum | 10 | 4.47 | 0.625 / 2.00 | 0.632 / 2 | 0 | 1.000–1.008 (0.89–1.23) |
@@ -25,7 +25,8 @@ numbers in `result.json`, maps in `maps.png` (looked at).
 
 Sampling noise (post hoc, after review): the ray grid is regular, so single-pixel μ aliases. The no-lens
 control (`sign = 0`, same grids) gives the noise range in the last column; the ρ = 0.1 range excludes the
-convolution's padded borders (second review: with them it was 0.89–1.12). Zero-flux umbrae and their widths, and
+convolution's padded borders (second review: with them it was 0.89–1.12); the ρ = 0.1 track minima use the same
+interior (third review; values unchanged). Zero-flux umbrae and their widths, and
 the ρ = 0.1 saddle minima, are far outside it; point-source saddle minima (0.69 / 0.86) are not resolved from the
 point-source control and are not quoted.
 
@@ -45,7 +46,8 @@ point-source control and are not quoted.
 ## Deviations from the plan (labelled)
 - Only the negative-mass sign was measured (positive mass appears only in gates G2 / G3′), and only ρ = 0.1 (no
   ρ = 0.01 disk: the 0.005–0.01 θ_E pixels cannot resolve it); track minima are stored, not full light curves.
-- The u₀ = 1 track across the stretch is outside the ±1 θ_E window at μ_macro = ±100 (recorded as not measured).
+- The u₀ = 1 track across the stretch is outside the ±1 θ_E window interior at μ_macro = ±100 (`null` in
+  `result.json`), so those rows take the minimum over 5 of the 6 tracks.
 - G2's thresholds (local μ > 5 μ_macro in a 5 × 5 pixel maximum, μ > 20 μ_macro within 2 pixels, both ≥ 90 %)
   were set with the code, after the plan's "within two source pixels" wording; both fractions came out 100 %.
 - G1 compares radial-bin means, as the plan's "radial profile" says; single pixels scatter by up to ±9 % near

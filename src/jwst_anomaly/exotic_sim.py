@@ -480,7 +480,7 @@ def macro_magnification_map(
     shape in ``meta["shape"]`` (ny, nx). A fine ray grid covers the lens neighbourhood, a coarse
     grid (spacing set by the macro stretch) the rest; each ray carries its image-plane area.
     """
-    if isinstance(sign, bool) or sign not in (1, -1, 0):
+    if isinstance(sign, (bool, np.bool_)) or sign not in (1, -1, 0):
         raise ValueError("sign must be +1, -1 or 0 (macro model only: a sampling-noise control)")
     if lam1 == 0 or lam2 == 0:
         raise ValueError("lam1 and lam2 must be non-zero (macro critical curve)")
