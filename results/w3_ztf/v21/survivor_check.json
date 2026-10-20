@@ -1,0 +1,107 @@
+{
+ "label": "derived from observed DR24 LC API, IBE metadata and psfcat; PLAN.md part A (no target flux measured)",
+ "key": 634210200007847,
+ "g_objectid": 634110200003853,
+ "ra": 256.6696283,
+ "dec": 27.3295153,
+ "band": "g",
+ "baseline_mag_median_clean": 18.9187717,
+ "lc_filtercodes": [
+  "zg"
+ ],
+ "baseline_robust_sigma": 0.05053916531999903,
+ "clean_epochs": 1553,
+ "all_epochs": 1631,
+ "reference_catalogue_exposure": 45642834,
+ "comparison_rule": "isolated (15\"), flags 0, |mag - baseline| <= 0.25, > 15\" from the target",
+ "nd": [
+  {
+   "expid": 45450718,
+   "t": 58208.50917297405,
+   "maglimit": 19.312401,
+   "seeing": 3.27357,
+   "mask_bits_in_aperture": [],
+   "comparison_found": 230,
+   "comparison_total": 323,
+   "completeness": 0.7120743034055728,
+   "target_in_psfcat": "missing",
+   "conditions": {
+    "infobits_0": true,
+    "no_bad_mask_bits": true,
+    "depth_ge_base_plus_0.75": false,
+    "completeness_ge_0.9": false
+   },
+   "able_to_discriminate": false
+  },
+  {
+   "expid": 45546604,
+   "t": 58209.468080831255,
+   "maglimit": 19.522699,
+   "seeing": 3.57971,
+   "mask_bits_in_aperture": [
+    1,
+    7
+   ],
+   "comparison_found": 268,
+   "comparison_total": 323,
+   "completeness": 0.8297213622291022,
+   "target_in_psfcat": "missing",
+   "conditions": {
+    "infobits_0": true,
+    "no_bad_mask_bits": true,
+    "depth_ge_base_plus_0.75": false,
+    "completeness_ge_0.9": false
+   },
+   "able_to_discriminate": false
+  },
+  {
+   "expid": 45548609,
+   "t": 58209.48813975365,
+   "maglimit": 19.511,
+   "seeing": 3.5986,
+   "mask_bits_in_aperture": [
+    1,
+    7
+   ],
+   "comparison_found": 286,
+   "comparison_total": 323,
+   "completeness": 0.8854489164086687,
+   "target_in_psfcat": "missing",
+   "conditions": {
+    "infobits_0": true,
+    "no_bad_mask_bits": true,
+    "depth_ge_base_plus_0.75": false,
+    "completeness_ge_0.9": false
+   },
+   "able_to_discriminate": false
+  },
+  {
+   "expid": 45636370,
+   "t": 58210.36579255084,
+   "maglimit": 19.242399,
+   "seeing": 2.665,
+   "mask_bits_in_aperture": [
+    1,
+    7
+   ],
+   "comparison_found": 267,
+   "comparison_total": 323,
+   "completeness": 0.826625386996904,
+   "target_in_psfcat": "missing",
+   "conditions": {
+    "infobits_0": true,
+    "no_bad_mask_bits": true,
+    "depth_ge_base_plus_0.75": false,
+    "completeness_ge_0.9": false
+   },
+   "able_to_discriminate": false
+  }
+ ],
+ "n_able": 0,
+ "bytes": {
+  "lc_api": 418947,
+  "ibe_search": 633,
+  "psfcat": 0
+ },
+ "seconds": 8.7
+}

@@ -1,0 +1,85 @@
+# v21 part A (PLAN.md): depth and completeness check of the v20 survivor 8126 / 634210200007847 in its 4 NDs.
+# No target flux is measured (no validated method). Usage: python survivor_script.py.txt <cache dir> <out json>
+import io, json, os, sys, time, urllib.parse, urllib.request
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from scipy.spatial import cKDTree
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+CACHE, OUT = sys.argv[1:3]
+os.makedirs(CACHE, exist_ok=True)
+KEY = 634210200007847
+ic = json.load(open('results/w3_ztf/v20/8126/image_check.json'))['sources'][0]
+mk = {m['expid']: m for m in json.load(open('results/w3_ztf/v20/8126/mask_check.json'))['exposures']}
+ra, dec = ic['ra'], ic['dec']
+nd = [e for e in ic['exposures'] if e['nd']]
+after = [e for e in ic['exposures'] if not e['nd'] and e['t'] > ic['run'][1]]
+nbytes = {'lc_api': 0, 'ibe_search': 0, 'psfcat': 0}; t0 = time.time()
+
+
+def get(url, kind):
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=180).read(); nbytes[kind] += len(raw); return raw
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (k + 1))
+    raise RuntimeError(err)
+
+
+# baseline: clean DR24 epochs of the group's g-band objectid in the NDs' field and quadrant (ZTF objectids are per
+# filter; the group key 634210200007847 is the r-band member; fixed before recording)
+g = [x for x in json.load(__import__('gzip').open('results/w3_ztf/v20/8126/sample.json.gz'))['groups'] if x['key'] == KEY][0]
+GOID = [o for o in g['members'] if wz.oid_quad(o) == (634, 37, 1)][0]
+lc = Table.read(io.BytesIO(get(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={GOID}&FORMAT=csv', 'lc_api')), format='csv')
+clean = lc[(lc['catflags'] == 0)]
+m = np.asarray(clean['mag'], float)
+base = float(np.median(m)); rsig = float(1.4826 * np.median(np.abs(m - base)))
+expids = [e['expid'] for e in nd + after]
+q = urllib.parse.urlencode({'POS': f'{ra},{dec}', 'WHERE': f"expid IN ({','.join(map(str, expids))})", 'ct': 'csv',
+                            'COLUMNS': 'expid,filefracday,field,ccdid,qid,filtercode,maglimit,seeing,infobits'})
+meta = {int(r['expid']): r for r in Table.read(io.BytesIO(get('https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + q, 'ibe_search')), format='csv')}
+
+
+def psfcat(eid):
+    r = meta[eid]; ffd = str(r['filefracday'])
+    fn = f'{CACHE}/{eid}_psfcat.fits'
+    if not os.path.exists(fn):
+        url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+               f"{int(r['field']):06d}_{r['filtercode']}_c{int(r['ccdid']):02d}_o_q{int(r['qid'])}_psfcat.fits")
+        open(fn, 'wb').write(get(url, 'psfcat'))
+    h = fits.open(fn); t = Table(h[1].data); t['cmag'] = t['mag'] + float(h[0].header['MAGZP'])
+    return t
+
+
+# reference star list: isolated, flags 0, within +-0.25 mag of the baseline, in the deeper after-run detection
+refe = max(after, key=lambda e: e['maglimit'])['expid']
+tr = psfcat(refe)
+xy = np.c_[np.asarray(tr['ra']) * np.cos(np.radians(dec)), np.asarray(tr['dec'])] * 3600
+tree = cKDTree(xy)
+sel = [i for i in range(len(tr)) if tr['flags'][i] == 0 and abs(tr['cmag'][i] - base) <= 0.25 and len(tree.query_ball_point(xy[i], 15)) == 1
+       and np.hypot(*(xy[i] - np.array([ra * np.cos(np.radians(dec)), dec]) * 3600)) > 15]
+rows = []
+for e in nd:
+    t = psfcat(e['expid'])
+    j = wz.psfcat_match(t['ra'], t['dec'], np.asarray(tr['ra'])[sel], np.asarray(tr['dec'])[sel])
+    found = int((j != -1).sum()); comp = found / len(sel) if sel else np.nan
+    jt = wz.psfcat_match(t['ra'], t['dec'], [ra], [dec])[0]
+    bits = (mk.get(e['expid'], {}).get('mask_bits_in_aperture') or [])
+    c = {'infobits_0': int(meta[e['expid']]['infobits']) == 0,
+         'no_bad_mask_bits': not (set(bits) & {2, 8, 9, 10}),
+         'depth_ge_base_plus_0.75': float(meta[e['expid']]['maglimit']) >= base + 0.75,
+         'completeness_ge_0.9': bool(comp >= 0.9)}
+    rows.append({'expid': e['expid'], 't': e['t'], 'maglimit': float(meta[e['expid']]['maglimit']), 'seeing': float(meta[e['expid']]['seeing']),
+                 'mask_bits_in_aperture': bits, 'comparison_found': found, 'comparison_total': len(sel), 'completeness': comp,
+                 'target_in_psfcat': {-1: 'missing', -2: 'ambiguous'}.get(int(jt), 'matched'), 'conditions': c,
+                 'able_to_discriminate': all(c.values())})
+out = {'label': 'derived from observed DR24 LC API, IBE metadata and psfcat; PLAN.md part A (no target flux measured)',
+       'key': KEY, 'g_objectid': GOID, 'ra': ra, 'dec': dec, 'band': 'g',
+       'baseline_mag_median_clean': base, 'lc_filtercodes': sorted(set(str(x) for x in lc['filtercode'])), 'baseline_robust_sigma': rsig, 'clean_epochs': int(len(clean)), 'all_epochs': int(len(lc)),
+       'reference_catalogue_exposure': refe, 'comparison_rule': 'isolated (15"), flags 0, |mag - baseline| <= 0.25, > 15" from the target',
+       'nd': rows, 'n_able': sum(r['able_to_discriminate'] for r in rows), 'bytes': nbytes, 'seconds': round(time.time() - t0, 1)}
+json.dump(out, open(OUT, 'w'), indent=1, default=float); open(OUT, 'a').write('\n')
+print(json.dumps({k: v for k, v in out.items() if k != 'nd'}, default=float))
+for r in rows:
+    print(r['expid'], r['maglimit'], r['seeing'], r['completeness'], r['comparison_found'], r['comparison_total'], r['target_in_psfcat'], r['conditions'], r['able_to_discriminate'])
