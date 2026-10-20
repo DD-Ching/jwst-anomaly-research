@@ -5429,6 +5429,17 @@ confining radiation at a throat is found.
   - **Decision:** neither is a candidate. No rule changes, and the column relation is not made a veto.
   - **Revisit if:** a mask-aware PSF fit or difference-image forced photometry becomes available. That would turn
     the unknown NDs into measurements.
+- **Addendum 2026-10-20 (v18, `results/w3_ztf/v18/RESULT.md`):**
+  - **Reuse:** a mask-aware PSF fit, using the official ZTF per-exposure DAOPHOT PSF (reader adapter) with
+    photutils `PSFPhotometry`.
+  - **Validated NDs:** 1 of 9 (1624) and 1 of 3 (1625). Both are normal and exclude a 1-mag drop in that exposure.
+    1625's validation used its own PSF (not independent) and has no PSF-mismatch term.
+  - **Not validated:** the rest stay unknown.
+    - Masked-core injections (injected PSF from another exposure, fitted with the own PSF) are off by −17 % to +7 %.
+    - Blend fits with a seeing-mismatched independent PSF give recovered/true from −4.6 to 3.0.
+  - **Decision:** both sources stay undetermined and this follow-up is closed. Rejected: tuning the PSF choice
+    after the validation failed (owner rule).
+  - **Revisit if:** a seeing-matched independent PSF, or difference-image forced photometry, becomes available.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

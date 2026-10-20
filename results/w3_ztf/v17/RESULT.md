@@ -153,3 +153,6 @@
   - **`check_script.py.txt`:** fixes in branches that did not execute in the stored run, so `check.json` is
     unchanged.
 - **Pair test:** first run with the target counted as a pair; fixed before recording.
+- **Erratum (v18, `../v18/RESULT.md` section 4):** D3's 214543142 value (2.01 ± 0.31) lies 3.2σ above the normal
+  level. It is unvalidated, not merely an error too large to decide. v18's PSF blend fits (a different method) can be
+  biased high, so a bias is possible but untested here.
