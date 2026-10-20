@@ -289,6 +289,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | — | — | ≈ 0.2 (W3 dimming injection edge coverage: frozen plan, rule and gate, `WHT` grids on 15 images, 4-variant what-if, sheet looked at; gate V failed as written, post hoc diagnostic) | 0.1 (orientation, claim, state files, PR) | cloud routine 01RmqBCN, 19:09–19:40Z |
 | 2026-W43 | — | — | — | 0.5 (#380 W3 ZTF v14 brought up to date with `main` and merged under the policy; #374 live re-check of the three failing network tests) | cloud routine 01QjKQDx, 20:08–20:50Z |
 | 2026-W43 | ≈ 0.4 (W3 dimming: D-039 persistence-test controls, frozen addendum; Abell 2744 e2, NEXUS e0/e1/e3/e4; NEXUS fails rule 1, exposure-count dependence post hoc) | — | — | 0.15 (orientation, #374 NED re-check, claim, state files, PR) | cloud routine 01CCiYbc, 23:08–23:50Z |
+| 2026-W43 | — | — | — | 0.5 (#385 W3 ZTF v16 brought up to date with `main` (clean merge, offline suite green), `agent` label added; #374 NED re-check: still connection reset) | cloud routine 01EYNJfo, 00:08–00:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
