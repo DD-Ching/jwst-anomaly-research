@@ -1,0 +1,49 @@
+# `arcs`: pooled anti count over the S1063 replication fields (exploratory, post hoc)
+
+Plan: `PLAN.md` (written before the computation, after the per-field counts had been read; hence exploratory).
+Script: `scripts/arcs_pooled.py`; every number below is in `summary.json`. No new data: each field's stored
+deciding-run `arcs.ecsv` is re-read with the cuts from its `arcs.json`; the script stops unless the recomputed
+n, anti and expected (to the stored 3 decimals) match each run's stored shape-noise summary (`stored_check`).
+
+## Frozen outcome: **pooled excess** (derived)
+| Variant | Fields | Anti | Expected (σ_ε 0.26) | P(≥ anti) |
+|---|---|---|---|---|
+| A | MACS0417, MACS1423, WHL0137, RXC J0600, MACS0308, RXC J0018 | 10 | 3.222 | 0.0019 |
+| B | A without MACS1423 | 6 | 2.273 | 0.029 |
+
+Both variants are below 0.05 (ASSUMPTION threshold), so the frozen label is "pooled excess". Each field alone
+"does not replicate" (except MACS1423 at screen level, explained by its clump-pair census); together they hold
+2.6–3.1 times the shape-noise expectation.
+
+## Secondary checks (in the plan; they do not change the outcome; the whole plan is post hoc)
+- **σ_ε at P = 0.05** (`sigma_at_alpha`, solved by root-finding): variant B 0.273, variant A 0.320. The grid
+  0.26–0.40 (`sigma_scan`) is reported too (addition to the plan). σ_ε is not measured on these catalogues, so whether 0.273–0.320 is plausible here is not tested.
+- **Abell S1063** (from its stored `arcs.ecsv`; the plan asked for one σ_ε, the whole grid is an addition): 4 anti vs 0.52–1.14 expected, P 0.0021–0.029 over the grid;
+  at the solved σ_ε (`s1063_at_sigma_at_alpha`) 0.59 expected, P 0.0032 (B) and 0.82, P 0.0098 (A). Inflating σ_ε
+  alone does not take S1063 to P ≥ 0.05 anywhere on the grid.
+- **g_min split of the pooled anti** (`anti_by_gmin_pooled`; **deviation:** the plan wrote g_min < 1 / ≥ 1, the
+  script uses the boundary of `anti_probability`, |round(g_min, 2)| > 1 inside; no anti row lies between the two):
+  7 at |g_min| ≤ 1 and 3 above (MACS0417 2, MACS1423 1); variant B: 4 and 2. Most pooled anti rows lie outside the critical curves.
+
+## Post hoc: S1063 against the pooled fields' empirical rate (not in the plan)
+`s1063_vs_pooled_posthoc`: scaling S1063's expectation by the pooled observed / expected ratio (B 2.64, A 3.10; 95 %
+Poisson ranges 0.97–5.75 and 1.49–5.71) gives 1.38 / 1.63 expected and P(≥ 4) 0.052 / 0.083 at the point value;
+over the ratio's 95 % range P runs from 0.002 to 0.36, so the scaled test cannot decide. The conditional test (given
+all anti in S1063 plus the pool, the chance that S1063 holds ≥ 4 at its expected share) gives P 0.100 (B) / 0.121
+(A) at σ_ε 0.26 and 0.078–0.121 over the σ_ε grid (`sigma_scan`: σ_ε does not scale every field's λ alike).
+
+## Reading (narrowest statement)
+- The shape-noise null at σ_ε 0.26 under-predicts `anti` counts across the independent fields by a factor of about
+  2.6–3.1 (derived; 6 and 10 counts, so the factor is poorly known). The likelier explanations are ordinary
+  (null calibration: σ_ε, blends and clump pairs, photo-z contamination, model error); which one is not tested here.
+- If one observed / expected ratio is common to all fields (an untested ASSUMPTION), S1063's 4 anti are not below
+  0.05 in the conditional test (P 0.078–0.121, post hoc), against its frozen P 0.0021 under σ_ε 0.26. It is not explained by this check either:
+  1316 and 2184 stay open as in `results/arcs/abells1063-cats/RESULT.md`.
+
+## Limitations
+- Exploratory: the plan was written after the per-field numbers were seen.
+- Counts are small (6–10); the ratio's 95 % range is wide (about 1–5.7).
+- MACS0417's deciding model differs from its HST-era model, and the fields mix GLAFIC, Lenstool and CANUCS maps,
+  photo-z sources and depths; the pool treats the ratio as common to all.
+- The tuning fields (Abell 2744, El Gordo, MACS1149, MACS0416, Abell 370) are left out by the plan; they could
+  calibrate the null further, but they were used to choose `arcs` rules.

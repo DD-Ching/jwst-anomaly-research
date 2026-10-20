@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: `arcs` pooled over the S1063 replication fields: pooled excess at σ_ε 0.26; S1063 weaker against it
+- **Why:** each replication field alone has little power; pooling the six control-passing independent fields asks
+  whether the shape-noise null is calibrated. Plan `results/arcs/pooled-tally/PLAN.md`, written after the
+  per-field counts had been read, so **exploratory (post hoc)**. Stored `arcs.ecsv` only; no new data.
+- **Result (`results/arcs/pooled-tally/RESULT.md`, `summary.json`):** frozen label "pooled excess": 10 anti vs
+  3.22 expected (P 0.0019) with MACS1423, 6 vs 2.27 (P 0.029) without. P reaches 0.05 at σ_ε 0.273 (B) / 0.320 (A).
+  S1063 stays at P 0.0021–0.029 over σ_ε 0.26–0.40. If one observed / expected ratio holds for all fields
+  (ASSUMPTION), its 4 anti give P 0.078–0.121 in a conditional test (post hoc; a plug-in scaled test cannot decide).
+- **Reading:** the σ_ε 0.26 shape-noise null under-predicts `anti` across fields (×2.6–3.1; cause untested); under
+  a common ratio S1063 is not below 0.05. 1316 / 2184 stay open.
+- **Handoff:** next for this line, if any: measure σ_ε (or the anti rate) on weak-shear background rows of the same
+  catalogues, which would replace the assumed 0.26 with a calibrated null for every field.
+
 ## 2026-10-20: `arcs` on RXC J0018+16: no power to test the S1063 anti excess
 - **Why:** one more independent field for the S1063 replication tally; the 2026-10-18 survey missed it (DJA name
   `rj0018p1626`). Plan frozen first (`results/arcs/rxc0018-relics/PLAN.md`).
