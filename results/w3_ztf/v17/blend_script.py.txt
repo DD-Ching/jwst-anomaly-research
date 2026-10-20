@@ -41,6 +41,7 @@ for e in s['exposures']:
     ft = float(ap(xt, yt))
     rows.append({'expid': e['expid'], 'nd': e['nd'], 't': e['t'], 'seeing': e['seeing'], 'aperture_r_arcsec': r,
                  'neighbour_sep_arcsec': float(d[nb]), 'neighbour_mag': float(t['mag'][nb]) + float(fits.open(f"{CACHE}/{e['expid']}_psfcat.fits")[0].header['MAGZP']),
+                 'neighbour_minus_target_bracket_mag': float(t['mag'][nb]) + float(fits.open(f"{CACHE}/{e['expid']}_psfcat.fits")[0].header['MAGZP']) - s['psfcat_bracket_mag_median'],
                  'target_aperture_uJy': ft, 'wing_apertures': wing, 'wing_uJy': W, 'wing_spread_uJy': sW,
                  'net_uJy': ft - W, 'noise_uJy': e['noise_uJy'], 'scale': fu[e['expid']]['scale'],
                  'scale_stable': fu[e['expid']]['stable'], 'infobits': e['infobits'], 'bad_bits': e.get('bad_bits_in_aperture', [])})
@@ -98,9 +99,12 @@ for r in rows:
     inn = found(pb) if len(pb) else np.array([], bool)
     fp = found(pi) if len(pi) else np.array([], bool)
     fi = found(np.array(iso, int)) if iso else np.array([], bool)
-    mech.append({'pairs': [[float(tb['ra'][i]), float(tb['dec'][i]), float(mb_[i]), float(mb_[j])] for i, j in pairs], 'expid': r['expid'], 'seeing': r['seeing'], 'pairs_in_catalogue': int(inn.sum()),
-                 'pair_faint_missing': int((~fp[inn]).sum()), 'isolated_total': len(iso), 'isolated_missing': int((~fi).sum())})
+    # footprint proxy (review fix): an isolated star counts only if this catalogue has any source within 60"
+    near = np.array([np.any(np.hypot((np.asarray(t['ra']) - tb['ra'][i]) * np.cos(np.radians(dec)), np.asarray(t['dec']) - tb['dec'][i]) * 3600 < 60) for i in iso], bool)
+    fi = fi[near] if len(fi) else fi
+    mech.append({'pairs': [[float(tb['ra'][i]), float(tb['dec'][i]), float(mb_[i]), float(mb_[j]), float(mb_[i] - mb_[j])] for i, j in pairs], 'expid': r['expid'], 'seeing': r['seeing'], 'pairs_in_catalogue': int(inn.sum()),
+                 'pair_faint_missing': int((~fp[inn]).sum()), 'isolated_in_footprint': int(len(fi)), 'isolated_missing': int((~fi).sum())})
 out['blend_mechanism'] = {'bracket_catalogue': best, 'n_pairs': len(pairs), 'n_isolated': len(iso), 'exposures': mech,
-                          'note': 'isolated_missing includes stars outside a differently placed quadrant (214647008 is field 1748)'}
+                          'note': 'isolated stars counted only where the exposure catalogue has a source within 60" (footprint proxy)'}
 json.dump(out, open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
 print(out['blend_mechanism'])

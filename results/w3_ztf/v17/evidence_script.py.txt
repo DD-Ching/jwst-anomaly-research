@@ -1,6 +1,7 @@
 # v17 section 1: evidence of the two v16 final survivors from committed v16 files (no new data).
 # Usage: python evidence_script.py.txt <out json>
 import json, sys
+import numpy as np
 V = 'results/w3_ztf/v16'
 out = {'label': 'observed (v16 IBE images, masks, DR24) and derived; copied from committed v16 files', 'sources': []}
 VISUAL = {1624: 'visual reading of v16 1624/image_check.png (not an automated class): the star is seen beside or partly on a '
@@ -19,7 +20,7 @@ for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
         'achromatic_test_note': f"other_filter_epochs = {run['other_filter_epochs']}: the achromatic test had no other-band data",
         'v16_nd_classes': ic['nd_classes'], 'v16_nd_pending': ic['nd_pending_unchecked'],
         'v16_reference_uJy': s['reference_uJy'],
-        'v16_bracket_detection_2arcsec_uJy': {'values': det, 'median': float(sorted(det)[len(det) // 2 - 1] / 2 + sorted(det)[len(det) // 2] / 2), 'range': [min(det), max(det)]},
+        'v16_bracket_detection_2arcsec_uJy': {'values': det, 'median': float(np.median(det)), 'range': [min(det), max(det)]},
         'visual_reading': VISUAL[npix],
         'exposures': [{**{k: e.get(k) for k in ('expid', 't', 'nd', 'dmag', 'cls', 'why', 'flux_uJy', 'err_uJy', 'infobits',
                                                   'maglimit', 'seeing', 'field', 'ccdid', 'qid')},

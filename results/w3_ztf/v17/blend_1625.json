@@ -11,6 +11,7 @@
    "aperture_r_arcsec": 2.26515,
    "neighbour_sep_arcsec": 6.603495310106832,
    "neighbour_mag": 14.378284650461449,
+   "neighbour_minus_target_bracket_mag": -3.859056170335702,
    "target_aperture_uJy": 199.82083747229234,
    "wing_apertures": [
     {
@@ -51,6 +52,7 @@
    "aperture_r_arcsec": 2.04604,
    "neighbour_sep_arcsec": 6.550064380355864,
    "neighbour_mag": 14.379171320158797,
+   "neighbour_minus_target_bracket_mag": -3.858169500638354,
    "target_aperture_uJy": 162.78493834177846,
    "wing_apertures": [
     {
@@ -91,6 +93,7 @@
    "aperture_r_arcsec": 4.05279,
    "neighbour_sep_arcsec": 6.711711380336025,
    "neighbour_mag": 14.369470011696485,
+   "neighbour_minus_target_bracket_mag": -3.8678708091006655,
    "target_aperture_uJy": 674.6570485097143,
    "wing_apertures": [
     {
@@ -133,6 +136,7 @@
    "aperture_r_arcsec": 4.63552,
    "neighbour_sep_arcsec": 6.691877833870555,
    "neighbour_mag": 14.377122684132477,
+   "neighbour_minus_target_bracket_mag": -3.860218136664674,
    "target_aperture_uJy": 1119.126292673677,
    "wing_apertures": [
     {
@@ -175,6 +179,7 @@
    "aperture_r_arcsec": 4.24271,
    "neighbour_sep_arcsec": 6.580504226486476,
    "neighbour_mag": 14.372679090141897,
+   "neighbour_minus_target_bracket_mag": -3.8646617306552535,
    "target_aperture_uJy": 620.668533066289,
    "wing_apertures": [
     {
@@ -217,6 +222,7 @@
    "aperture_r_arcsec": 2.81624,
    "neighbour_sep_arcsec": 6.649381861440479,
    "neighbour_mag": 14.379396029829142,
+   "neighbour_minus_target_bracket_mag": -3.857944790968009,
    "target_aperture_uJy": 231.83559188262115,
    "wing_apertures": [
     {
@@ -257,6 +263,7 @@
    "aperture_r_arcsec": 2.0,
    "neighbour_sep_arcsec": 6.6147775359239755,
    "neighbour_mag": 14.390877612581669,
+   "neighbour_minus_target_bracket_mag": -3.846463208215482,
    "target_aperture_uJy": 159.09091267831735,
    "wing_apertures": [
     {
@@ -301,15 +308,16 @@
       128.8321533,
       41.2531752,
       18.55287742614746,
-      14.221878051757812
+      14.221878051757812,
+      4.330999374389648
      ]
     ],
     "expid": 214237995,
     "seeing": 4.05279,
     "pairs_in_catalogue": 1,
     "pair_faint_missing": 1,
-    "isolated_total": 162,
-    "isolated_missing": 9
+    "isolated_in_footprint": 157,
+    "isolated_missing": 4
    },
    {
     "pairs": [
@@ -317,15 +325,16 @@
       128.8321533,
       41.2531752,
       18.55287742614746,
-      14.221878051757812
+      14.221878051757812,
+      4.330999374389648
      ]
     ],
     "expid": 214543142,
     "seeing": 4.63552,
     "pairs_in_catalogue": 1,
     "pair_faint_missing": 1,
-    "isolated_total": 162,
-    "isolated_missing": 2
+    "isolated_in_footprint": 161,
+    "isolated_missing": 1
    },
    {
     "pairs": [
@@ -333,17 +342,18 @@
       128.8321533,
       41.2531752,
       18.55287742614746,
-      14.221878051757812
+      14.221878051757812,
+      4.330999374389648
      ]
     ],
     "expid": 214647008,
     "seeing": 4.24271,
     "pairs_in_catalogue": 0,
     "pair_faint_missing": 0,
-    "isolated_total": 162,
-    "isolated_missing": 106
+    "isolated_in_footprint": 58,
+    "isolated_missing": 2
    }
   ],
-  "note": "isolated_missing includes stars outside a differently placed quadrant (214647008 is field 1748)"
+  "note": "isolated stars counted only where the exposure catalogue has a source within 60\" (footprint proxy)"
  }
 }

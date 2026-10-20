@@ -29,8 +29,7 @@ out['sources']['1624'] = {
     'key': c['key'], 'members': c['members'], 'ra': c['ra'], 'dec': c['dec'], 'filter': c['filter'], 'run_hmjd': c['run'],
     'nd_exposures': len(nd), 'bracket_exposures': len(br),
     'planned_verdict': c['verdict'], 'planned_reason': 'no image-based comparison stars in the 180" cutouts (check.json)',
-    'deviation_verdict': ('real dimming evidence' if False else
-                          'data problem supported' if all(e['final'] in ('normal', 'data problem supported') for e in nd) else 'undetermined'),
+    'deviation_verdict': f['deviation_verdict'],  # PLAN section 4 rule applied to the D1/D2 classes (followup_script)
     'nd_final_counts': {k: sum(e['final'] == k for e in nd) for k in ('normal', 'dim', 'undetermined', 'unknown', 'data problem supported')},
     'bracket_R': rng([e['R'] for e in br]), 'sigma_R': rng([e['sigma_R'] for e in f['exposures']]),
     'nd_raw_R': rng([e['R'] for e in nd]), 'nd_R_i': rng([e['interp']['R_i'] for e in nd]),
@@ -50,8 +49,14 @@ out['sources']['1624'] = {
     'centroid_offset_arcsec': rng([ce[e['expid']].get('check2_centroid_offset_arcsec') for e in c['exposures']]),
     'magzp_range': rng([ce[e['expid']]['check1']['magzp'] for e in c['exposures']]),
     'image_type': sorted({ce[e['expid']]['check1']['imgtypcode'] for e in c['exposures']}),
-    'maglimit_nd': rng([ce[e['expid']]['maglimit'] for e in nd]), 'seeing_nd': rng([ce[e['expid']]['seeing'] for e in nd]),
-    'nd_R_i_by_expid': {str(e['expid']): {'R_i': round(e['interp']['R_i'], 3), 'bracket_spread_frac': round(e['interp']['bracket_spread_frac'], 3), 'final': e['final']} for e in nd},
+    'maglimit_nd': rng([ce[e['expid']]['maglimit'] for e in nd]), 'maglimit_nd_v16_checked': rng([ce[e['expid']]['maglimit'] for e in nd if e['expid'] != 206350236]),
+    'seeing_nd': rng([ce[e['expid']]['seeing'] for e in nd]),
+    'nd_R_i_by_expid': {str(e['expid']): {'R_i': round(e['interp']['R_i'], 3), 'bracket_spread_frac': round(e['interp']['bracket_spread_frac'], 3),
+                                           'sigma_R_i_approx': round(e['interp']['sigma_R_i_approx'], 3),
+                                           'sigma_above_dim_ratio': round(e['interp']['sigma_above_dim_ratio'], 2), 'final': e['final']} for e in nd},
+    'nd_R_i_below_3sigma_above_dim_ratio': [e['expid'] for e in nd if e['interp']['sigma_above_dim_ratio'] < 3],
+    'column_test_on_column_other_stars': rng([x.get('on_column_other_stars') for x in col.values()]),
+    'column_test_target_on_column_nd': sum(bool(col[e['expid']].get('on_column_target')) for e in nd),
     'nd_undetermined_expids': [e['expid'] for e in nd if e['final'] != 'data problem supported'],
     'unchecked_v16_nd_now_checked': c['window_undetected_not_checked'],
 }
@@ -65,8 +70,10 @@ out['sources']['1625'] = {
     'key': c['key'], 'members': c['members'], 'ra': c['ra'], 'dec': c['dec'], 'filter': c['filter'], 'run_hmjd': c['run'],
     'nd_exposures': len(nd), 'bracket_exposures': len(br),
     'planned_verdict': c['verdict'], 'planned_reason': 'one image-based comparison star in the 180" cutouts (check.json)',
-    'deviation_verdict': 'undetermined' if any(e['cls'] in ('unknown', 'undetermined') for e in nd) else
-                         ('data problem supported' if all(e['cls'] == 'normal' for e in nd) else 'see classes'),
+    'deviation_verdict_d1': f['deviation_verdict'],
+    'deviation_verdict_d3': 'undetermined' if any(e['cls'] in ('unknown', 'undetermined') for e in nd) else
+                            ('data problem supported' if all(e['cls'] == 'normal' for e in nd) else 'see classes'),
+    'neighbour_minus_target_mag': rng([e['neighbour_minus_target_bracket_mag'] for e in bl['exposures']]),
     'nd_classes': {str(e['expid']): e['cls'] for e in nd}, 'nd_reasons': {str(e['expid']): e['reasons'] for e in nd},
     'seeing_nd': rng([e['seeing'] for e in nd]), 'seeing_bracket': rng([e['seeing'] for e in br]),
     'nd_raw_seeing_aperture_R': rng([fe[e['expid']]['R'] for e in nd]),

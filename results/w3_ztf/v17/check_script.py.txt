@@ -1,5 +1,7 @@
 # v17 evidence check of the two v16 final survivors (PLAN.md sections 2-4; post hoc).
 # Usage: python check_script.py.txt <cache dir> <out json> <out png>
+# Review fixes after the stored run (interp neighbours, psfcat gap, dim inside the run) touch only branches that
+# did not execute there (no stable comparison set, no dim class), so check.json is unchanged by them.
 import io, json, os, sys, time, urllib.parse, urllib.request, warnings
 import numpy as np
 from astropy.io import fits
@@ -40,7 +42,7 @@ def source_verdict(ex, run):
     """PLAN section 4 from per-exposure final classes."""
     lo, hi = run
     nd = [e for e in ex if e['nd']]
-    dim = [e for e in nd if e['final'] == 'dim']
+    dim = [e for e in nd if e['final'] == 'dim' and lo <= e['t'] <= hi]
     nights = {int(np.floor(e['t'] + 0.2)) for e in dim}
     before = any(e['final'] == 'normal' and e['t'] < lo for e in ex)
     after = any(e['final'] == 'normal' and e['t'] > hi for e in ex)
@@ -124,11 +126,13 @@ def photo(img, x, y, r, sc):
     return aperture_photometry(img, x, y, r / sc, (2 * r / sc, (2 * r + 5) / sc))
 
 
-def interp_rows(img, bad):
-    """Replace bad pixels by the mean of the nearest good pixels left and right in the same row."""
+def interp_rows(img, bad, skip=None):
+    """Replace bad pixels by the mean of the nearest good pixels left and right in the same row; pixels in ``bad``
+    or ``skip`` (the image's own mask) are never used as neighbours (review fix)."""
     out = img.copy()
+    nogo = bad if skip is None else (bad | skip)
     for yy, xx in zip(*np.nonzero(bad)):
-        row = bad[yy]; L = xx - 1; Rr = xx + 1
+        row = nogo[yy]; L = xx - 1; Rr = xx + 1
         while L >= 0 and row[L]: L -= 1
         while Rr < len(row) and row[Rr]: Rr += 1
         v = [img[yy, k] for k in (L, Rr) if 0 <= k < len(row)]
@@ -315,14 +319,15 @@ for s in res:
                 for dy, dx in offs:
                     yy2, xx2 = int(round(y2 + dy)), int(round(x2 + dx))
                     if 0 <= yy2 < bb.shape[0] and 0 <= xx2 < bb.shape[1]: bb[yy2, xx2] = True
-                return photo(interp_rows(im2, bb), x2, y2, r, sc2) * k2
+                own = badmask(ims[eid][8]) if ims[eid][8] is not None else None
+                return photo(interp_rows(im2, bb, own), x2, y2, r, sc2) * k2
             fi = interp_flux(e['expid'], off)
             fib = [interp_flux(b['expid'], off) for b in good_b]
             Ri = fi / sE / float(np.median(fib)) if stable else np.nan
             e['interp'] = {'flux_uJy': float(fi), 'bracket_same_offsets_uJy': [float(v) for v in fib], 'R_i': float(Ri),
                            'n_pixels_interpolated': int(len(off))}
             ps = e.get('psfcat', {})
-            cat_gap = ps.get('status') != 'matched' or ps.get('flags', 0) != 0
+            cat_gap = str(ps.get('status', '')).startswith(('missing', 'ambiguous')) or (ps.get('status') == 'matched' and ps.get('flags', 0) != 0)
             if stable and np.isfinite(Ri) and Ri >= NORMAL_R and cat_gap:
                 e['final'] = 'data problem supported'
             else:

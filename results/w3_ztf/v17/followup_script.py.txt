@@ -17,17 +17,34 @@ NORMAL_R, DIM_R, NSIG, R_DIM = 0.75, 0.6, 3.0, 10 ** (-0.4)
 BAD_BITS = (2, 8, 9, 10)
 
 
+def source_verdict(ex, run):
+    """PLAN section 4 (as check_script.py.txt, with the dim exposures required inside the run)."""
+    lo, hi = run
+    nd = [e for e in ex if e['nd']]
+    dim = [e for e in nd if e['final'] == 'dim' and lo <= e['t'] <= hi]
+    nights = {int(np.floor(e['t'] + 0.2)) for e in dim}
+    before = any(e['final'] == 'normal' and e['t'] < lo for e in ex)
+    after = any(e['final'] == 'normal' and e['t'] > hi for e in ex)
+    if len(dim) >= 2 and len(nights) >= 2 and before and after:
+        return 'real dimming evidence'
+    if nd and all(e['final'] in ('normal', 'data problem supported') for e in nd):
+        return 'data problem supported'
+    return 'undetermined'
+
+
 def load(eid, key):
     h = fits.open(f'{CACHE}/{eid}_{key}_sci.fits')[0]; m = fits.open(f'{CACHE}/{eid}_{key}_msk.fits')[0]
     w = WCS(h.header); sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
     return h.data.astype(float), m.data.astype(np.int64), w, sc, 10 ** (-0.4 * (h.header['MAGZP'] - 23.9))
 
 
-def interp_rows(img, bad):
-    """As check_script.py.txt: bad pixels -> mean of the nearest good pixels left and right in the same row."""
+def interp_rows(img, bad, skip=None):
+    """As check_script.py.txt: bad pixels -> mean of the nearest good pixels left and right in the same row;
+    pixels in ``bad`` or ``skip`` (the image's own mask) are never used as neighbours (review fix)."""
     out = img.copy()
+    nogo = bad if skip is None else (bad | skip)
     for yy, xx in zip(*np.nonzero(bad)):
-        row = bad[yy]; L = xx - 1; Rr = xx + 1
+        row = nogo[yy]; L = xx - 1; Rr = xx + 1
         while L >= 0 and row[L]: L -= 1
         while Rr < len(row) and row[Rr]: Rr += 1
         v = [img[yy, k] for k in (L, Rr) if 0 <= k < len(row)]
@@ -42,7 +59,9 @@ def interp_flux(eid, key, ra, dec, r, offs):
     for dy, dx in offs:
         yy, xx = int(round(y + dy)), int(round(x + dx))
         if 0 <= yy < bb.shape[0] and 0 <= xx < bb.shape[1]: bb[yy, xx] = True
-    return aperture_photometry(interp_rows(img, bb), x, y, r / sc, (2 * r / sc, (2 * r + 5) / sc)) * k
+    own = np.zeros(mk.shape, bool)
+    for b in BAD_BITS: own |= ((mk >> b) & 1).astype(bool)
+    return aperture_photometry(interp_rows(img, bb, own), x, y, r / sc, (2 * r / sc, (2 * r + 5) / sc)) * k
 
 
 def bad_offsets(eid, key, ra, dec, r):
@@ -103,18 +122,21 @@ for s in chk['sources']:
     src = {'npix': s['npix'], 'key': s['key'], 'n_comparison_stars': int(len(cra)),
            'comparison_rule': 'bracket psfcat, |mag - target| <= 0.5, flags 0 in every bracket, > 15" from target',
            'exposures': []}
-    tref = s['target_bracket_uJy']['median']
     sc_b = {}
     for b in brk:
         jb = match(cats[b], cra, cde); fb = jb >= 0
         sc_b[b] = 10 ** (-0.4 * float(np.median(np.asarray(cats[b]['cmag'])[jb[fb]] - bref[fb])))
     src['bracket_scales'] = {str(b): v for b, v in sc_b.items()}
-    bscat = float(np.std(np.array(s['target_bracket_uJy']['values']) / tref, ddof=1))
+    fl = {e['expid']: e['flux_uJy'] for e in ex}
+    tvals = np.array([fl[b] / sc_b[b] for b in brk]); tref = float(np.median(tvals))  # scaled like R_i (review fix)
+    bscat = float(np.std(tvals / tref, ddof=1))
+    src['target_bracket_scaled_uJy'] = {'median': tref, 'values': [float(v) for v in tvals]}
     for e in ex:
         t = cats[e['expid']]
         j = match(t, cra, cde); found = j >= 0
-        dm = np.asarray(t['cmag'])[j[found]] - bref[found]
         flagged = int((np.asarray(t['flags'])[j[found]] != 0).sum())
+        clean = found.copy(); clean[found] &= np.asarray(t['flags'])[j[found]] == 0  # flagged ones excluded (review fix)
+        dm = np.asarray(t['cmag'])[j[clean]] - bref[clean]
         dmc = float(np.median(dm)) if len(dm) else np.nan
         scale = 10 ** (-0.4 * dmc)
         mad = float(1.4826 * np.median(np.abs(10 ** (-0.4 * dm) - scale))) if len(dm) else np.nan
@@ -126,6 +148,11 @@ for s in chk['sources']:
         if not stable: reasons.append('no stable comparison stars')
         if e.get('bad_bits_in_aperture'): reasons.append(f"bad mask bits {e['bad_bits_in_aperture']} in target aperture")
         if (1 - R_DIM) / sR < NSIG: reasons.append('too shallow')
+        # a brighter psfcat source inside the annulus outer radius contaminates the aperture photometry (review fix)
+        dd = np.hypot((np.asarray(t['ra']) - ra) * np.cos(np.radians(dec)), np.asarray(t['dec']) - dec) * 3600
+        fl_uJy = 10 ** (-0.4 * (np.asarray(t['cmag']) - 23.9))
+        cont = (dd > 1.5) & (dd <= 2 * e['aperture_r_arcsec'] + 5) & (fl_uJy > 10 ** (-0.4 * (tmag - 23.9)))
+        if cont.any(): reasons.append(f'brighter psfcat source at {float(dd[cont].min()):.1f}" (inside the annulus)')
         judge = not reasons
         d = (1 - R) / sR
         cls = 'unknown' if not judge else ('normal' if R >= NORMAL_R and d < NSIG else 'dim' if R <= DIM_R and d >= NSIG else 'undetermined')
@@ -141,15 +168,20 @@ for s in chk['sources']:
             Ri = fi / scale / float(np.median(fib))
             rec['interp'] = {'n_pixels_interpolated': int(len(off)), 'flux_uJy': float(fi),
                              'bracket_same_offsets_uJy_scaled': [float(v) for v in fib], 'R_i': float(Ri)}
+            spread = float(np.std(fib, ddof=1) / np.median(fib))
+            rec['interp'].update(bracket_spread_frac=spread, sigma_R_i_approx=float(Ri * spread),
+                                 sigma_above_dim_ratio=float((Ri - R_DIM) / (Ri * spread)))
             ps = e.get('psfcat', {})
-            cat_gap = ps.get('status') != 'matched' or ps.get('flags', 0) != 0
+            # a missing psfcat row or a flagged one; a missing file is not a gap (review fix)
+            cat_gap = str(ps.get('status', '')).startswith(('missing', 'ambiguous')) or (ps.get('status') == 'matched' and ps.get('flags', 0) != 0)
             rec['psfcat_gap'] = bool(cat_gap)
             rec['final'] = 'data problem supported' if stable and Ri >= NORMAL_R and cat_gap else 'undetermined'
         src['exposures'].append(rec)
+    src['deviation_verdict'] = source_verdict([{**r, 't': r['t']} for r in src['exposures']], s['run'])
     # ---- 1624: detector-column test with psfcat stars (same exposures)
     if s['npix'] == 1624:
         colres = []
-        ref = cats[brk[-1]]  # a bracket catalogue as the star list
+        ref = cats[brk[-1]]  # a bracket catalogue as the star list; that frame itself is not tested (review fix)
         good = (ref['flags'] == 0) & (ref['snr'] >= 20)
         lra, lde = np.asarray(ref['ra'])[good], np.asarray(ref['dec'])[good]
         for e in ex:
@@ -170,10 +202,14 @@ for s in chk['sources']:
             jj = match(t, lra, lde); det = (jj >= 0)
             det_clean = det.copy(); det_clean[det] &= np.asarray(t['flags'])[jj[det]] == 0
             on, off = dcol <= 1.0, dcol >= 5.0
+            tgt = np.hypot((lra - ra) * np.cos(np.radians(dec)), lde - dec) * 3600 < 1.5
             colres.append({'expid': e['expid'], 'nd': e['nd'], 'poly_rms_px': rms, 'bad_columns_psfcat_x': [float(c) for c in ccols],
                            'target_x': float(xt[0]), 'target_dist_to_column_px': float(np.min(np.abs(xt[0] - ccols))) if len(ccols) else None,
-                           'on_column_stars': int(on.sum()), 'on_column_detected': int(det[on].sum()), 'on_column_clean': int(det_clean[on].sum()),
+                           'on_column_stars': int(on.sum()), 'on_column_target': bool((on & tgt).any()), 'on_column_other_stars': int((on & ~tgt).sum()),
+                           'on_column_detected': int(det[on].sum()), 'on_column_clean': int(det_clean[on].sum()),
                            'off_column_stars': int(off.sum()), 'off_column_detected': int(det[off].sum()), 'off_column_clean': int(det_clean[off].sum())})
+            if e['expid'] == brk[-1]:  # the star-list frame: its star counts are true by construction (review fix)
+                colres[-1].update({k: None for k in colres[-1] if k.startswith(('on_column', 'off_column'))}, note='star-list frame; star counts not tested')
         src['column_test'] = {'rule': 'stars of one bracket psfcat (flags 0, snr >= 20) placed by a 2nd-order (ra, dec) -> pixel fit; '
                               'on column: <= 1 px from a LOW RESPONSIVITY column (>= 90 % of cutout rows); off: >= 5 px. '
                               'Assumes the column runs the whole quadrant (seen over the full 178-row cutout only).',
