@@ -258,7 +258,14 @@ def gates_isolated():
 
 
 def _init_worker():
-    os.environ["OMP_NUM_THREADS"] = "1"  # one numpy thread per process (scripts/CLAUDE.md)
+    # one numpy/BLAS thread per process (scripts/CLAUDE.md); forked workers already loaded numpy,
+    # so the environment variable alone would not reach the existing thread pools
+    os.environ["OMP_NUM_THREADS"] = "1"
+    try:
+        from threadpoolctl import threadpool_limits
+    except ImportError:  # optional; histogram2d itself is single-threaded
+        return
+    threadpool_limits(1)
 
 
 def main():
