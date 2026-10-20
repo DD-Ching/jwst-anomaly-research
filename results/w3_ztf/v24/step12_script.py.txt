@@ -1,0 +1,241 @@
+# v24 PLAN steps 1-2: replay the v23 events (same seeds as stage_inject) under v13 ("time") and bounds; per event the
+# outcome class, the bounds-limit counts (i)/(ii), and per undecided side the exposure classes A/B/C1/C2/D; then the
+# optimistic estimate (truth used only after classification). No flux is read beyond the v23 inputs.
+# Usage: python step12_script.py.txt <npix> <seed offset>
+import json, sys, time
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+P, OFF = int(sys.argv[1]), int(sys.argv[2])
+wz.configure(P, f'v23/dev{P}')
+T0 = time.time()
+groups = [g for g in json.loads(wz.SAMPLE.read_text())['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+wz.EDGE_RULE = 'time'
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        base = {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}
+        carriers.append((g, s, o, base))
+# per quadrant: does DR24 hold any control-star detection in each exposure (C1 = none)
+ctrl_det = {q: np.any([c['states'][o][0] > 0 for o in c['comp']], axis=0) for q, c in cov.items()}
+
+
+def masks(s):
+    t = np.array([x[0] for x in s]); dm = np.array([x[1] for x in s]); nd = np.array([x[2] for x in s], bool)
+    lim = np.array([x[3] for x in s], float)
+    with np.errstate(over='ignore', invalid='ignore'):
+        sig = 0.2171 * 10 ** (0.4 * (dm - lim))
+    inter = ~nd & (dm >= wz.INTER[0] + wz.EDGE_NSIG * sig) & (dm < wz.INTER[1])
+    normal = ~nd & (dm < wz.INTER[0])
+    dim = nd | (dm >= wz.DIM_MAG)
+    return t, dm, nd, sig, inter, normal, dim
+
+
+def official(g):
+    """(t, expid, infobits, good, c1, maglimit) of r-band official exposures with the star in the footprint."""
+    out = []
+    for m in g['members']:
+        r = rows.get(m)
+        if r is None or r['filt'] != 2:
+            continue
+        q = (*r['quad'], 2); c = cov.get(q)
+        if c is None or m not in c['covered']:
+            continue
+        cv = np.asarray(c['covered'][m], bool)
+        for k in np.flatnonzero(cv):
+            out.append((float(c['t'][k]), int(c['expid'][k]), int(c['infobits'][k]), bool(c['good'][k]),
+                        not bool(ctrl_det[q][k]), float(c['maglimit'][k])))
+    return out
+
+
+def side_info(s, i, j, span, off):
+    """Per side: L, U, interval, exposure classes present, the side class, limits (i) and (ii)."""
+    t, dm, nd, sig, inter, normal, dim = masks(s)
+    thr = wz.EDGE_FRAC * span
+    ser = {x[5]: k for k, x in enumerate(s)}
+    res = {}
+    for side in ('pre', 'post'):
+        if side == 'pre':
+            w = inter & (t >= t[i] - span) & (t < t[i]); a = t[w].min() if w.any() else t[i]
+            nn = normal & (t < a); tn = t[nn].max() if nn.any() else -np.inf
+            L, U = float(t[i] - a), float(t[i] - tn); edge = t[i]; lo, hi = max(tn, t[i] - span), t[i]
+            closer = bool((normal & (t > a) & (t < t[i])).any())  # limit (i): a normal point nearer than the far intermediate
+            kb = int(np.flatnonzero(nn)[-1]) if nn.any() else None
+        else:
+            w = inter & (t > t[j]) & (t <= t[j] + span); a = t[w].max() if w.any() else t[j]
+            nn = normal & (t > a); tn = t[nn].min() if nn.any() else np.inf
+            L, U = float(a - t[j]), float(tn - t[j]); edge = t[j]; lo, hi = t[j], min(tn, t[j] + span)
+            closer = bool((normal & (t < a) & (t > t[j])).any())
+            kb = int(np.flatnonzero(nn)[0]) if nn.any() else None
+        cls = 'fast' if U <= thr else ('slow' if L > thr else 'insufficient')
+        present = set(); c1_times = []
+        for (te, ex, ib, good, c1, ml) in off:
+            if not lo < te < hi:
+                continue
+            if ex in ser:
+                k = ser[ex]
+                if not (normal[k] or inter[k] or dim[k]):
+                    present.add('D')
+                continue
+            if ib != 0:
+                present.add('B')
+            elif c1:
+                present.add('C1'); c1_times.append((te, ml))
+            else:
+                present.add('C2')
+        best = next((c for c in ('C1', 'D', 'C2', 'B') if c in present), 'A')
+        # limit (ii): the bounding normal detection is not significantly normal
+        weak = bool(kb is not None and dm[kb] + wz.EDGE_NSIG * sig[kb] >= wz.INTER[0])
+        res[side] = {'L': L, 'U': U if np.isfinite(U) else None, 'class': cls, 'zero_day_v13': bool(L == 0 and U > thr),
+                     'exposure_classes': sorted(present), 'side_class': best, 'limit_i': bool(cls == 'slow' and closer),
+                     'limit_ii_weak_bound': weak, 'edge_t': float(edge), 'c1': c1_times, 'thr': thr, 'span': span}
+    return res
+
+
+def outcome(hits, rule):
+    """recovered / edge_slow / edge_insufficient / other:<first failing test>; uses the rule's vet results."""
+    if any(h['pass'] for h in hits):
+        return 'recovered'
+    others = ('common_mode_ok', 'oneoff_ok', 'achromatic_ok')
+    edge_only = [h for h in hits if all(h[k] for k in others)]
+    if edge_only:
+        if rule == 'bounds' and any(h.get('edge_class') == 'insufficient' for h in edge_only):
+            return 'edge_insufficient'
+        return 'edge_slow'
+    first = min((next(k for k in others if not h[k]) for h in hits), key=others.index)
+    return 'other:' + first
+
+
+def evaluate(kind, k, g, si, oi, hits_by_rule, model, base_mag):
+    tt = np.array([x[0] for x in si]); off = official(g)
+    rec = {'kind': kind, 'i': k, 'carrier': g['key'], 'time': outcome(hits_by_rule['time'], 'time'),
+           'bounds': outcome(hits_by_rule['bounds'], 'bounds'), 'runs': []}
+    for h in hits_by_rule['bounds']:
+        i = int(np.flatnonzero(tt == h['t_start'])[0]); j = int(np.flatnonzero(tt == h['t_end'])[0])
+        sd = side_info(si, i, j, max(tt[j] - tt[i], 1.0), off)
+        others_ok = all(h[x] for x in ('common_mode_ok', 'oneoff_ok', 'achromatic_ok'))
+        rec['runs'].append({'others_ok': others_ok, 'pass_bounds': h['pass'], 'edge_class': h['edge_class'], **sd})
+    # optimistic evaluation with the true model (after classification)
+    rec['restorable_bounds'] = False
+    if rec['bounds'] == 'edge_insufficient':
+        for r in rec['runs']:
+            if not (r['others_ok'] and r['edge_class'] == 'insufficient'):
+                continue
+            ok = True
+            for side in ('pre', 'post'):
+                sd = r[side]
+                if sd['class'] == 'fast':
+                    continue
+                cand = [(te, ml) for te, ml in sd['c1'] if abs(te - sd['edge_t']) <= sd['thr']]
+                ok &= any(float(model(np.array([te]))[0]) < wz.INTER[0] and ml >= base_mag + wz.INTER[0] for te, ml in cand)
+            if ok:
+                rec['restorable_bounds'] = True
+    rec['rejectable_v13'] = False
+    if kind == 'fade' and rec['time'] == 'recovered':
+        for r in rec['runs']:
+            for side in ('pre', 'post'):
+                sd = r[side]
+                if not sd['zero_day_v13']:
+                    continue
+                for te, ml in sd['c1']:
+                    d = float(model(np.array([te]))[0])
+                    e = 0.2171 * 10 ** (0.4 * (base_mag + d - ml))
+                    if wz.INTER[0] + wz.EDGE_NSIG * e <= d < wz.INTER[1] and base_mag + d < ml:
+                        rec['rejectable_v13'] = True
+    for r in rec['runs']:  # keep the file small
+        for side in ('pre', 'post'):
+            r[side]['n_c1'] = len(r[side].pop('c1'))
+    return rec
+
+
+def run_both(si, oi):
+    out = {}
+    for rule in ('time', 'bounds'):
+        wz.EDGE_RULE = rule
+        out[rule] = wz.screen(si, oi, cov)
+    return out
+
+
+ev = []
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    rng = np.random.default_rng(1100 + c + OFF)
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        sc = run_both(si, oi)
+        hits = {r: [x for x in v if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
+                    and (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+        if hits['bounds']:
+            model = lambda x, t0=t0, te=te, u0=u0, rho=rho, blend=blend: wz.w3_dmag(x, t0, te, u0, rho, blend)
+            ev.append(evaluate(f'rho{rho}_blend{blend:g}_tE{te:g}', k, g, si, oi, hits, model, s[0][6]))
+        else:
+            ev.append({'kind': f'rho{rho}_blend{blend:g}_tE{te:g}', 'i': k, 'time': 'not_flagged', 'bounds': 'not_flagged'})
+rng = np.random.default_rng(1201 + OFF)
+for k in range(1000):
+    g, s, o, base = carriers[rng.integers(len(carriers))]
+    t = np.array([x[0] for x in s])
+    st = rng.bit_generator.state
+    model = wz.control_model('fade', t, rng)
+    si = wz.apply_dmag(s, model(t), cov, rng)
+    oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+    sc = run_both(si, oi)
+    hits = {r: [x for x in v if (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+    if hits['bounds']:
+        ev.append(evaluate('fade', k, g, si, oi, hits, model, s[0][6]))
+    else:
+        ev.append({'kind': 'fade', 'i': k, 'time': 'not_flagged', 'bounds': 'not_flagged'})
+
+kinds = sorted({e['kind'] for e in ev})
+summ = {}
+for kd in kinds:
+    es = [e for e in ev if e['kind'] == kd]
+    d = {'n': len(es)}
+    for rule in ('time', 'bounds'):
+        cnt = {}
+        for e in es:
+            cnt[e[rule]] = cnt.get(e[rule], 0) + 1
+        d[rule] = cnt
+    lost = [e for e in es if e['time'] == 'recovered' and e['bounds'] != 'recovered']
+    d['bounds_losses'] = len(lost)
+    d['bounds_losses_all_insufficient'] = all(e['bounds'] == 'edge_insufficient' for e in lost)
+    d['bounds_slow_events_with_limit_i'] = sum(e['bounds'] == 'edge_slow' and all(
+        any(r[s_]['limit_i'] for s_ in ('pre', 'post')) for r in e['runs'] if r['others_ok'] and r['edge_class'] == 'slow')
+        for e in es if 'runs' in e)
+    d['bounds_recovered_with_weak_bound_ii'] = sum(e['bounds'] == 'recovered' and any(
+        r['pass_bounds'] and any(r[s_]['limit_ii_weak_bound'] for s_ in ('pre', 'post')) for r in e['runs']) for e in es if 'runs' in e)
+    # side classes of the undecided sides in lost (W3) or v13-passing (fade) events
+    tgt = lost if kd != 'fade' else [e for e in es if e['time'] == 'recovered']
+    sc_ = {}
+    for e in tgt:
+        for r in e['runs']:
+            if not r['others_ok']:
+                continue
+            for s_ in ('pre', 'post'):
+                if r[s_]['class'] == 'insufficient':
+                    sc_[r[s_]['side_class']] = sc_.get(r[s_]['side_class'], 0) + 1
+    d['undecided_side_classes'] = sc_
+    d['events_with_c1_side'] = sum(any(r['others_ok'] and any(r[s_]['class'] == 'insufficient' and r[s_]['side_class'] == 'C1'
+                                                              for s_ in ('pre', 'post')) for r in e['runs']) for e in tgt)
+    d['restorable_bounds_optimistic'] = sum(e.get('restorable_bounds', False) for e in es)
+    d['rejectable_v13_optimistic'] = sum(e.get('rejectable_v13', False) for e in es)
+    rb = d['bounds'].get('recovered', 0)
+    d['bounds_recovered_plus_restorable'] = rb + d['restorable_bounds_optimistic']
+    summ[kd] = d
+res = {'label': 'derived; simulated events replayed (v23 seeds); optimistic estimates use injection truth after classification',
+       'npix': P, 'seed_offset': OFF, 'carriers': len(carriers), 'summary': summ, 'seconds': round(time.time() - T0, 1)}
+json.dump(res, open(f'results/w3_ztf/v24/step12_{P}.json', 'w'), indent=1, default=float)
+open(f'results/w3_ztf/v24/step12_{P}.json', 'a').write('\n')
+import gzip
+gzip.open(f'results/w3_ztf/v24/step12_events_{P}.json.gz', 'wt').write(json.dumps(ev, default=float) + '\n')
+print(json.dumps(summ, default=float))

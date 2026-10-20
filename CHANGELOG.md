@@ -21,6 +21,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** next for 700.1: `/vet-candidate` (identify the galaxy south of the arc as a member or perturber; one image or
   two: colours of the mirrored knots). Other lines are unchanged: #409 and the other needs-human PRs wait on the
   owner, and #374 waits for a green weekly run.
+## 2026-10-20: W3 ZTF v24: existing products cannot restore the missing edge information; no psfcat download, trial closed
+- **Bookkeeping** (4991 and 2344 v23 events replayed; counts equal the stored ones):
+  - every bounds loss is "edge insufficient";
+  - the two bounds-definition limits move at most 0–4 W3 per cell and change no verdict.
+- **Undecided edge sides** (within one span):
+  - W3: 64.5 % have no further covering r-band exposure, 27.2 % only quality-flagged ones, and 8.0 % are DR24
+    product gaps (candidate psfcat fills);
+  - fades: 64.2 / 23.4 / 12.1 %.
+- **Optimistic gain:** 0–5 W3 per cell under bounds; at most 6 fade passes removed per area under v13. No cell
+  crosses 100 / 200, and the 4991 fade stays > 100. The 4991 go / no-go
+  failed, so no psfcat product was read.
+- **Cost:** 1,221 MB of re-reads, about 8 min (`results/w3_ztf/v24/RESULT.md`).
+- **Closed:** existing-product restoration for this rule set. Reopening needs new edge information or an owner
+  decision.
 
 ## 2026-10-20: Abell 2744 system 700.1: no redshift reproduces it in Bergamini+23 (D-036 addendum)
 - **Why:** D-036 left "a finer z scan is open" for 700.1, which Bergamini+23 reproduced at none of z = 1, 1.5, 2, 3,

@@ -1,0 +1,17 @@
+{
+ "label": "derived; same files as ../v23/cost.json (sizes from parquet metadata and exposures_summary.json); times hand-logged from the session's date -u prints",
+ "lc_mb": 1038.6,
+ "objects_mb": 168.4,
+ "tap_mb": 14.3,
+ "psfcat_products": 0,
+ "psfcat_mb": 0,
+ "total_mb": 1221.3,
+ "stages_utc": {
+  "start": "21:32:46",
+  "plan_commit": "21:34:19 (6eaaaab)",
+  "re_read_done": "21:37:26",
+  "steps_1_2": "21:37:31-21:39:31",
+  "gate": "21:40"
+ },
+ "caches_deleted": true
+}

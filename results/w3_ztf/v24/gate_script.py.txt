@@ -1,0 +1,34 @@
+# v24 PLAN step 2 go / no-go and totals across both areas (from step12_<npix>.json).
+import json
+out = {'label': 'derived (step12_<npix>.json); optimistic upper bounds use injection truth', 'areas': {}}
+tot = {'w3': {}, 'fade': {}}
+for p in (4991, 2344):
+    d = json.load(open(f'results/w3_ztf/v24/step12_{p}.json'))['summary']
+    cells = {k: v for k, v in d.items() if k != 'fade'}
+    a = {'cells_bounds_recovered': {k: v['bounds'].get('recovered', 0) for k, v in cells.items()},
+         'cells_optimistic': {k: v['bounds_recovered_plus_restorable'] for k, v in cells.items()},
+         'restorable_range': [min(v['restorable_bounds_optimistic'] for v in cells.values()), max(v['restorable_bounds_optimistic'] for v in cells.values())],
+         'bounds_losses': sum(v['bounds_losses'] for v in cells.values()),
+         'bounds_losses_all_insufficient': all(v['bounds_losses_all_insufficient'] for v in cells.values()),
+         'limit_i_slow_events': sum(v['bounds_slow_events_with_limit_i'] for v in cells.values()),
+         'limit_ii_weak_bound_recovered': sum(v['bounds_recovered_with_weak_bound_ii'] for v in cells.values()),
+         'fade_v13_passed': d['fade']['time'].get('recovered', 0), 'fade_rejectable_optimistic': d['fade']['rejectable_v13_optimistic'],
+         'fade_limit_i_slow_events': d['fade']['bounds_slow_events_with_limit_i']}
+    a['cells_optimistic_ge_100'] = sum(v >= 100 for v in a['cells_optimistic'].values())
+    a['fade_v13_optimistic'] = a['fade_v13_passed'] - a['fade_rejectable_optimistic']
+    for grp, src in (('w3', cells.values()), ('fade', [d['fade']])):
+        for v in src:
+            for c, n in v['undecided_side_classes'].items():
+                tot[grp][c] = tot[grp].get(c, 0) + n
+    out['areas'][p] = a
+out['undecided_sides_by_class'] = tot
+for g in tot:
+    n = sum(tot[g].values())
+    out[f'{g}_side_fractions'] = {c: round(v / n, 3) for c, v in sorted(tot[g].items())}
+a = out['areas'][4991]
+out['go_bounds'] = a['cells_optimistic_ge_100'] == 10
+out['go_v13'] = a['fade_v13_optimistic'] <= 100
+out['go'] = out['go_bounds'] or out['go_v13']
+out['next'] = 'step 3 (psfcat fill)' if out['go'] else 'stop: no psfcat download (PLAN step 2)'
+json.dump(out, open('results/w3_ztf/v24/gate.json', 'w'), indent=1); open('results/w3_ztf/v24/gate.json', 'a').write('\n')
+print(json.dumps(out, indent=1))
