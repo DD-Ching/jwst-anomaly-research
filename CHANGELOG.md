@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: NEXUS-Center-Tile-6 (o015) cannot serve as the unseen k = 1 sample (R3)
+- **Why:** the `nan_k1` handoff needed a new wide epoch; MAST shows one unused public 5105 observation,
+  `jw05105-o015_t005` (Tile-6, 1,245 s F200W, MJD 60878.76), and no Center epoch after o012. Plan frozen first.
+- **Result (`results/dimming/o015_k1/RESULT.md`):** the frozen sample (e2 S/N ≥ 50) is empty (monitored e2 S/N peaks
+  at 33.2): R3, k = 0 and ε(≤ 4) = 0.412 stay. Post hoc: 0 of the 151 monitored sources fall on any o015 exposure.
+- **Failed approach:** o015 as the unseen ≤ 4 sample; an S/N cut set without checking the e2 S/N distribution.
+- **Handoff:** (1) k = 1 waits for a new NEXUS-Center wide epoch or JADES; (2) split the held-out `inconclusive`
+  pairs by cause.
+
 ## 2026-10-20: W3 dimming: k = 1 NaN-tolerant aperture on unseen NEXUS e2 controls: not tested; ε(> 4) = 0.961 holds
 - **Why:** handoff 1 of the `nan_aperture` entry. Plan frozen first (`results/dimming/nan_k1/PLAN.md`).
 - **Result (`results/dimming/nan_k1/RESULT.md`):** G0 passes on e0 (1,006 / 1,006 finite fluxes identical) and

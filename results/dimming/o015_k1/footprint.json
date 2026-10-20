@@ -1,0 +1,14 @@
+{
+ "monitored_ra_range": [
+  268.2219253055057,
+  268.7021945618669
+ ],
+ "monitored_dec_range": [
+  65.10380484219156,
+  65.29509690461221
+ ],
+ "all_lc_ra_max": 268.9111344378262,
+ "n_lc_ra_gt_268p66": 17778,
+ "provenance": "derived",
+ "source": "ds._screen(nexus) light-curve table"
+}

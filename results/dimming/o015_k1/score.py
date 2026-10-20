@@ -1,5 +1,5 @@
-"""PLAN.md scoring: G0 (finite k = 0 fluxes unchanged under k = 1), `on_sky` / n of the o015 pairs by
-exposure class, k = 0 beside k = 1, and the frozen rules R1-R3.
+"""PLAN.md scoring: G0 (finite k = 0 fluxes unchanged under k = 1), `on_sky` / n of the o015
+pairs by exposure class, k = 0 beside k = 1, and the frozen rules R1-R3.
 Usage (repo root): score.py  -> results/dimming/o015_k1/score.json"""
 
 import json
