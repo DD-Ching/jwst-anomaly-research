@@ -1,0 +1,58 @@
+{
+ "field": "macs0416",
+ "gate_G0": true,
+ "monitored_detected_pairs": 94,
+ "monitored_detected_pairs_with_count": 94,
+ "monitored_detected_pairs_by_epoch_without_count": {
+  "0": 0,
+  "1": 0,
+  "2": 0,
+  "3": 0,
+  "4": 0
+ },
+ "swap": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": 1.2621,
+   "0.03": 1.4119,
+   "0.1": 1.4675,
+   "0.3": 1.1682,
+   "1": 1.0381,
+   "3": 1.0458
+  }
+ },
+ "swap_pooled": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": 1.2621,
+   "0.03": 1.4119,
+   "0.1": 1.4675,
+   "0.3": 1.1682,
+   "1": 1.0381,
+   "3": 1.0458
+  }
+ },
+ "swap_unknown_low": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": 1.2621,
+   "0.03": 1.4119,
+   "0.1": 1.4675,
+   "0.3": 1.1682,
+   "1": 1.0381,
+   "3": 1.0458
+  }
+ },
+ "veto_off_gain_rho0.1": {
+  "0.01": 1.2727,
+  "0.03": 1.4762,
+  "0.1": 1.9189,
+  "0.3": 1.6875,
+  "1": 1.881,
+  "3": 1.9841
+ },
+ "wall_s": 24
+}

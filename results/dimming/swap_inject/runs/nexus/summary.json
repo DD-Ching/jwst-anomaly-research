@@ -1,0 +1,61 @@
+{
+ "field": "nexus",
+ "gate_G0": true,
+ "monitored_detected_pairs": 350,
+ "monitored_detected_pairs_with_count": 234,
+ "monitored_detected_pairs_by_epoch_without_count": {
+  "0": 0,
+  "1": 0,
+  "2": 116,
+  "3": 0,
+  "4": 0,
+  "5": 0,
+  "6": 0,
+  "7": 0
+ },
+ "swap": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": 1.1886,
+   "0.03": 1.3079,
+   "0.1": 1.4461,
+   "0.3": 1.7743,
+   "1": 1.8404,
+   "3": 1.6865
+  }
+ },
+ "swap_pooled": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": 1.1872,
+   "0.03": 1.3032,
+   "0.1": 1.4394,
+   "0.3": 1.7615,
+   "1": 1.8242,
+   "3": 1.678
+  }
+ },
+ "swap_unknown_low": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": 1.2922,
+   "0.03": 1.4163,
+   "0.1": 1.6029,
+   "0.3": 2.0181,
+   "1": 2.0829,
+   "3": 1.864
+  }
+ },
+ "veto_off_gain_rho0.1": {
+  "0.01": 1.494,
+  "0.03": 1.6822,
+  "0.1": 1.9874,
+  "0.3": 2.6712,
+  "1": 2.8095,
+  "3": 2.3885
+ },
+ "wall_s": 185
+}

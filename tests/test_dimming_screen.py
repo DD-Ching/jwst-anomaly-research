@@ -380,3 +380,74 @@ def test_field_wht_rel_cache_keys_on_step_and_uris(tmp_path, monkeypatch):
     field["epochs"][0]["obs"] = "c"
     ds.field_wht_rel(field, ra, dec, ds.Params(wht_step_px=16), cache)
     assert len(calls) == 3  # image changed: recomputed
+
+
+def test_persistence_swap_weights_single_epoch_vanish_copies():
+    cats, _ = _cats(n_epochs=2, zp=(1.0, 1.1))
+    lc, err, res, _ = _screen(cats, n_epochs=2)
+    n = len(lc["ra"])
+    sel, veto = np.ones(n, bool), np.zeros(n, bool)
+    times = np.array([0.0, 1.0])
+
+    def full(pe, v=veto, infl=None):
+        eff = ds.efficiency_table(
+            lc,
+            err,
+            v,
+            sel,
+            times,
+            (0.3,),
+            (0.1,),
+            (1.0,),
+            seed=1,
+            n_rep=2,
+            persistence_eff=pe,
+            forced_inflation=infl,
+        )
+        d = eff[(eff["model"] == "dimming") & (eff["n_injected"] > 20)]
+        return np.asarray(d["efficiency"]), d
+
+    # two epochs: a full dimming leaves one detected epoch, which the plain veto always removes
+    off, d0 = full(None)
+    assert np.all(off == 0) and d0["n_recovered"].dtype.kind == "i"
+    unknown, _ = full(np.full((n, 2), np.nan))
+    assert np.all(unknown == 0)
+    one, d1 = full(np.ones((n, 2)))
+    assert np.all(one > 0.6) and d1["n_recovered"].dtype.kind == "f"
+    half, _ = full(np.full((n, 2), 0.5))
+    assert np.allclose(half, 0.5 * one)
+    vetoed, _ = full(np.ones((n, 2)), np.ones(n, bool))
+    assert np.all(vetoed == 0)
+    # the forced-noise proxy: unit inflation changes nothing; the copy must stay a vanish flag
+    same, _ = full(np.ones((n, 2)), infl=np.array([1.0, 1.0]))
+    assert np.allclose(same, one)
+    noisy, _ = full(np.ones((n, 2)), infl=np.array([1e4, 1e4]))
+    assert np.all(noisy <= one) and np.all(noisy == 0)
+
+
+def test_persistence_eff_by_exposures():
+    v = Table(
+        {
+            "uid": ["f-d00001", "f-d00002", "g-d00003", "f-d00009"],
+            "epoch": [0, 1, 0, 5],
+            "n_exposures": [4, 5, 2, 2],
+            "kind": ["monitored", "monitored", "monitored", "monitored"],
+        }
+    )
+    pe = ds.persistence_eff_by_exposures(v, "f", (4, 2))
+    assert pe[1, 0] == 0.412 and pe[2, 1] == 0.961
+    assert np.isnan(pe[3, 0]) and np.isnan(pe[0]).all() and np.isnan(pe[1, 1])
+    assert ds.persistence_eff_by_exposures(v, "f", (4, 2), eff_low=0.374)[1, 0] == 0.374
+    v["kind"][0] = "flag"
+    assert np.isnan(ds.persistence_eff_by_exposures(v, "f", (4, 2))[1, 0])
+    with pytest.raises(ValueError, match="no monitored row"):
+        ds.persistence_eff_by_exposures(v, "h", (4, 2))
+
+
+def test_combine_limits_refuses_mixed_persistence_swap():
+    t = Table({"t_e_yr": [0.1], "rho": [0.1], "exposure_source_yr": [1.0]})
+    a, b = t.copy(), t.copy()
+    a.meta.update(calibrated=True, persistence_swap="v.ecsv")
+    b.meta.update(calibrated=True)
+    with pytest.raises(ValueError, match="persistence swap"):
+        ds.combine_limits({"a": a, "b": b})

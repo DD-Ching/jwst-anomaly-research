@@ -3240,6 +3240,16 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   case. Alternative rejected: a mosaic-S/N curve (S/N 10–33 throughout, cannot separate). Revisit if the 11
   held-out `undetected` pairs turn out to be a position effect, or NEXUS e2 controls fail the > 4 class.
 
+**Addendum 2026-10-20k (persistence swap adopted in the injection chain).**
+- `inject --persistence-verdicts` swaps the per-copy `single_epoch` veto for the D-039 test: a copy detected in one
+  epoch that is a `vanish` flag counts ε by covering-exposure count (addendum j; pairs without a committed count
+  count 0). The corrected three-field headline is `results/dimming/swap_inject/runs/limits_combined_swap.ecsv`
+  (×1.54–2.51 joint exposure at ρ = 0.1 over `wht_coverage/limits_combined.ecsv`; gates G0 / G1 pass;
+  `results/dimming/swap_inject/RESULT.md`). Every real flag the swap clears was tested and explained.
+- Alternative rejected: a per-copy Bernoulli draw (adds noise; the expected weight gives the same mean).
+  Revisit if NEXUS e2 controls or the 11 `undetected` stamps change ε, or a field's swap-cleared flags survive
+  `forced`.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**

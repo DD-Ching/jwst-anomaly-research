@@ -1,0 +1,19 @@
+{
+ "field": "macs0416",
+ "n_targets_term_on": 11,
+ "n_tested_targets": 12,
+ "not_tested": [],
+ "verdicts_of_term_on_targets": {
+  "macs0416-d00365": "on_sky",
+  "macs0416-d00614": "on_sky",
+  "macs0416-d00643": "on_sky",
+  "macs0416-d00678": "on_sky",
+  "macs0416-d01166": "on_sky",
+  "macs0416-d01316": "on_sky",
+  "macs0416-d01329": "on_sky",
+  "macs0416-d02197": "on_sky",
+  "macs0416-d02261": "on_sky",
+  "macs0416-d02264": "on_sky",
+  "macs0416-d02480": "on_sky"
+ }
+}
