@@ -35,9 +35,12 @@
     within 2σ of the band;
   - **unusable exposures:** official exposures of the position that did not enter the series (infobits, sparse
     comparison coverage, flags, or missing);
-  - **no exposure:** no official exposure in the interval.
-- **Reading:** the recovery side of a passing fade is almost never measured as fast. It passes because the data
-  between the last dim epoch and the next normal detection hold no *significant* intermediate point. This has three
+  - **no exposure:** neither an ambiguous series epoch nor an unusable official exposure in the interval. Dim
+    epochs, or significant intermediates beyond the one-span window, may still lie there (not stored).
+- **Reading:** the recovery (post) side of a passing fade is never measured as fast (0 in both areas). In 128 / 138
+  and 74 / 81 it passes because the data between the last dim epoch and the next normal detection hold no
+  *significant* intermediate point under the fixed thresholds (the rest have a measured intermediate within 0.25 ×
+  span). This has three
   observed sources (post side, 4991 / 2344: 53 / 25, 52 / 36, 23 / 13):
   - noise-level points;
   - unusable exposures;
@@ -48,7 +51,8 @@
 - **A2, same events in both areas** (1,000 fixed fade models, fixed carrier fractions and noise; `diag_a3.json`):
   - 4991 passes 142 (Wilson 95 % 12.2–16.5 %) and 2344 passes 75 (6.0–9.3 %), with 129 and 70 of them on a zero-day
     side.
-  - The area difference therefore persists with identical events. It is not an artefact of the event draws, but
+  - The area difference therefore persists with identical event models (carriers and noise draws still differ
+    between areas; t1 spans the overlap of the two areas' first-to-last r-band carrier epochs). It is not an artefact of the event draws, but
     comes from the two areas' carriers (sampling and data). Which property drives it was not isolated.
 - **A3, v22 fade fractions with Wilson 95 % intervals** (`diag_a3.json`):
   - the 7 failed areas: from 8.5–12.2 % (1148) to 11.8–16.1 % (4991);
@@ -73,7 +77,9 @@
 - **Discrimination:** bounds passes no fade in either area, while it still recovers 43–114 of 200 W3 per cell.
   All its losses are injections whose edges the data do not bound ("insufficient"). They stay in the denominator.
 - **Gate B (fixed in PLAN B):** every cell ≥ 100 / 200 and fade ≤ 100 / 1,000 in both areas. **Failed**
-  (`compare.json`: `gate_B_passed` false).
+  (`compare.json`: `gate_B_passed` false). The compare script also checked eclipse, PSPL and common mode ≤ 10 %
+  (not in PLAN B; all 0, so no effect).
+- **Post hoc:** the time stamp in PLAN's status note was corrected after the comparison (see PLAN).
 - **As the plan requires:**
   - method changes stop here, and no second rule is tried;
   - **no validation area was chosen, no new light curve was read, and nothing was searched.**
@@ -87,10 +93,10 @@
 
 ## E. Cost (`cost.json`)
 - **Downloads:** 1,221.3 MB in total:
-  - two light-curve partitions streamed by `fetch`: 573.4 + 465.2 MB (parquet metadata);
+  - two light-curve partitions streamed by `fetch` (estimated from parquet metadata): 573.4 + 465.2 MB (parquet metadata);
   - objects columns: 95.0 + 73.4 MB;
   - TAP: 14.3 MB.
-- **Time:** from the start (10:18) to the gate result (10:35:54), about 18 min of processing. Stage times were
+- **Time:** from the start (10:18) to the gate result (10:35:54), about 18 min wall clock including planning. Stage times were
   hand-logged from the session (`cost.json`).
 - The light-curve caches were deleted after use.
 
@@ -100,13 +106,14 @@
     data do not measure.
   - The same convention carries a quarter to two thirds of the recovered W3 injections per cell (35–99 per
     cell; `diag_summary.json`).
-  - Requiring measured edges separates the two completely in these two areas, but recovers fewer than half of the
-    W3 injections in 17 of 20 cells.
+  - Requiring measured edges removes every fade pass (0 / 1,000) in these two areas, but loses 35–99 W3 recoveries
+    per cell, leaving fewer than half recovered in 17 of 20 cells.
 - **Not shown:**
   - that W3-like events cannot be found in these data;
   - that any searched star did or did not dim. Earlier v13-rule searches keep their results and wording.
-- **Next step:** a method decision for the owner, not taken here. The edge information missing in these events is a
-  property of the data (noise-level points, unusable or absent exposures), not a threshold choice. The options are:
+- **Next step:** a method decision for the owner, not taken here. In these events the data hold no significant
+  intermediate point and no close normal detection under the fixed thresholds (EDGE_FRAC 0.25, EDGE_NSIG 2); no
+  threshold was varied. The options are:
   - keep v13, with its 7-of-8 area failure rate in new fields;
   - accept a lower recovery target for a measured-edge rule;
   - add information to the edges (for example, the official psfcat route of v9–v10 for unusable exposures).

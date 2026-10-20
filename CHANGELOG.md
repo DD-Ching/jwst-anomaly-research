@@ -4,8 +4,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-20: W3 ZTF v23: fades pass the v13 edge test mostly through unmeasured edges; the one pre-registered fix fails its gate; no validation, no search
 - **Diagnosis** (development analysis; 4991 and 2344 v22 calibration data re-read, the v22 draws reproduced exactly):
-  - 129 / 138 and 76 / 81 passing fades have a "zero-day" side, with no significant intermediate point and no normal
-    detection within 0.25 × span;
+  - 129 / 138 and 76 / 81 passing fades have a "zero-day" side: no significant intermediate point within one span,
+    and no normal detection within 0.25 × span;
   - the post side lacks measurement through noise-level points, unusable exposures or no exposures;
   - 35–99 recovered W3 per cell rely on the same convention;
   - the same 1,000 fade events pass 142 in 4991 and 75 in 2344, so the area difference is not from event draws.
