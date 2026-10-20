@@ -269,7 +269,7 @@
    "sep_arcsec": 2.11,
    "z": 0.305,
    "z_type": "spec",
-   "z160_z840": [
+   "z160_z840_eazy": [
     0.274,
     0.314
    ],
@@ -282,7 +282,7 @@
    "sep_arcsec": 3.85,
    "z": null,
    "z_type": null,
-   "z160_z840": null,
+   "z160_z840_eazy": null,
    "f200w_mag_crude": null,
    "member": null,
    "perturber": null
@@ -292,7 +292,7 @@
    "sep_arcsec": 3.92,
    "z": 0.346,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     0.316,
     6.867
    ],
@@ -305,7 +305,7 @@
    "sep_arcsec": 4.13,
    "z": 4.859,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     4.368,
     16.341
    ],
@@ -318,7 +318,7 @@
    "sep_arcsec": 4.17,
    "z": 0.553,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     0.175,
     3.033
    ],
@@ -331,7 +331,7 @@
    "sep_arcsec": 4.43,
    "z": 0.301,
    "z_type": "spec",
-   "z160_z840": [
+   "z160_z840_eazy": [
     0.259,
     0.297
    ],
@@ -344,7 +344,7 @@
    "sep_arcsec": 4.53,
    "z": 0.879,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     0.799,
     1.02
    ],
@@ -357,7 +357,7 @@
    "sep_arcsec": 4.64,
    "z": null,
    "z_type": null,
-   "z160_z840": null,
+   "z160_z840_eazy": null,
    "f200w_mag_crude": null,
    "member": null,
    "perturber": null
@@ -367,7 +367,7 @@
    "sep_arcsec": 4.64,
    "z": null,
    "z_type": null,
-   "z160_z840": null,
+   "z160_z840_eazy": null,
    "f200w_mag_crude": null,
    "member": null,
    "perturber": null
@@ -377,7 +377,7 @@
    "sep_arcsec": 4.66,
    "z": 17.444,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     17.085,
     17.73
    ],
@@ -390,7 +390,7 @@
    "sep_arcsec": 4.67,
    "z": 3.235,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     0.471,
     3.264
    ],
@@ -403,7 +403,7 @@
    "sep_arcsec": 4.75,
    "z": 3.038,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     2.131,
     6.439
    ],
@@ -416,7 +416,7 @@
    "sep_arcsec": 4.79,
    "z": 4.898,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     3.25,
     4.979
    ],
@@ -429,7 +429,7 @@
    "sep_arcsec": 4.97,
    "z": 1.533,
    "z_type": "phot",
-   "z160_z840": [
+   "z160_z840_eazy": [
     0.026,
     1.53
    ],

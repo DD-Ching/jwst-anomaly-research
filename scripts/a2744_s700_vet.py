@@ -247,17 +247,19 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
             # failed eazy fit (z < 0) or non-finite z: membership unknown (None), not "non-member"
             usable = bool(np.isfinite(z) and z >= 0)
             member = bool(abs(z - Z_CLUSTER) <= DZ_MEMBER) if usable else None
+            zp = float(zout["z_phot"][k])
+            eazy_ok = bool(np.isfinite(zp) and zp >= 0)  # the interval is eazy's, even for spec-z
+            row = {"dja_id": int(zout["id"][k]), "sep_arcsec": _r(d[k], 2)}
+            # eazy's failure sentinels are never stored as a z or an interval
+            row["z"], row["z_type"] = (
+                (_r(z, 3), "spec" if zs > 0 else "phot") if usable else (None, None)
+            )
+            row["z160_z840_eazy"] = (
+                [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)] if eazy_ok else None
+            )
             rows.append(
-                {
-                    "dja_id": int(zout["id"][k]),
-                    "sep_arcsec": _r(d[k], 2),
-                    "z": _r(z, 3) if usable else None,  # eazy's failure sentinel is not a z
-                    "z_type": ("spec" if zs > 0 else "phot") if usable else None,
-                    "z160_z840": (
-                        [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)]
-                        if usable
-                        else None
-                    ),
+                row
+                | {
                     "f200w_mag_crude": _r(mag, 2),
                     "member": member,
                     "perturber": classify_perturber(member, mag),
