@@ -168,7 +168,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    Euclid Q1 counts would not open θ_E < 6′ (D-065: clustering-limited, ×1.0–1.4 S/N on a fifth of the area).
    **Euclid Q1 radial-shear screen (D-066, D-067):** all three Deep Fields (60 deg²) null; R = 0.56 ± 0.16 from SZ
    clusters (R = 0.5 kept); n₉₅ ≈ 0.049 / 0.051 deg⁻² at θ_E = 2′ / 4′; 1′ not limited (efficiency 0.43–0.58). Next:
-   per-tile star-ellipticity gradient test; Euclid DR1 when public; θ_E ≤ 1′ and ≈ 1° are still open.
+   ~~per-tile star-ellipticity gradient test~~ done 2026-10-20 (D-067 addendum, `results/w5_shear/psf_radial/RESULT.md`:
+   PSF term ≤ 0.42 × signal at 2′–4′, 1′ unbounded); next a per-galaxy anisotropy correction, then Euclid DR1 when
+   public; θ_E ≤ 1′ and ≈ 1° are still open.
 4. **Warp:** monitor the literature (checked 2026-10-08: no distant-observer EM template — Lentz & Felton 2024 give fluxes only; Clough et al.
    2024 waveform not public; O3 superluminal-burst search already null, Kuwahara & Cannon 2023). Recheck monthly.
 

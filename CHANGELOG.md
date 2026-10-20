@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W5 Euclid Q1: star-ellipticity (PSF) radial pattern bounded at 2′–4′; 1′ not bounded (D-067 addendum)
+- **Why:** D-067's open "Revisit if": PSF anisotropy leaks into its size-only-deconvolved galaxy shapes. Plan frozen
+  first (`results/w5_shear/psf_radial/PLAN.md`); verification share.
+- **Result (`results/w5_shear/psf_radial/RESULT.md`, `summary.json`):** 181,816 stars on 343 tiles, D-067 grid
+  spacing and coverage cut. Frozen outcome (per cell, rule code post hoc; χ²/dof 1.01–1.44 in the firing cells; at 1′–2′ read as
+  "not shown negligible") "PSF term not negligible at the edge of the resolved cut";
+  1′ is not bounded (EDF-F 1′ ρ(β = 1) 1.19, heavy-tailed star noise, χ²/dof 0.98). At 2′ / 4′ the worst radial PSF term is ≤ 0.42 / 0.17
+  × the injected annulus shear (β = 1), ≤ 0.96 / 0.40 at β = 2.3. Post hoc: a within-tile 4′ pattern (|z| > 3 at
+  77 / 107 centres vs 16 / 13 Gaussian after tile-mean subtraction, EDF-S / N), amplitude ≤ 0.018.
+- **Reading:** 2′ / 4′ limits not changed by this test; the revisit condition narrows to 1′ and galaxies near the
+  resolved cut (per-galaxy anisotropy correction before DR1).
+- **Access:** IRSA TAP answered about one tile query per minute (not stored); ESA EAS served the same rows (e, PA, size
+  ≤ 5e-10 on 2,031 rows) in ~8 s per field (not stored), plus server-side `GROUP BY` count maps. Prefer EAS for MER bulk reads (D-067 addendum, SOURCES.md).
+- **Failed approaches:** no coverage cut first (partial annuli turn a constant PSF into a radial term); per-centre
+  sample-std errors (unstable) and a rule judged on one cell only (both caught by /code-review); a max rule on a heavy-tailed star statistic where annuli hold ~10 stars.
+- **Final review (18:13Z cloud run):** NaN shape values now dropped as well as NULLs, cache written byte-exact,
+  PA difference in the IRSA identity check wrapped at 180°; a fresh re-run reproduces `summary.json` (relative
+  difference ≤ 4e-15). The outcome hinges on how cells are combined (post hoc code), so it waits for the owner.
+- **Handoff:** W5/W1 Euclid line waits for DR1; before it, add a star-interpolated anisotropy correction to
+  `galaxy_shapes` and re-run the D-067 injections at 1′.
+
 ## 2026-10-20: `arcs` null calibrated on weak-shear rows: no excess there; too little leverage to settle #406
 - **Why:** #406's handoff: is the σ_ε 0.26 shape-noise null calibrated? Plan frozen before the weak-row orientation
   classes were read (`results/arcs/null-calibration/PLAN.md`). Stored `arcs.ecsv` only; no new data.

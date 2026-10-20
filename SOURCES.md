@@ -1170,6 +1170,9 @@ Exploration Program."
   2021, ApJS 253, 3; VizieR J/ApJS/253/3), queried 2026-10-09 for clusters inside Q1 (`CLUSTERS` in the script).
 - Q1 MER tile list: IRSA ObsCore (`ivoa.obscore`, `obs_collection = 'euclid_DpdMerBksMosaic'`, VIS), 352 tiles,
   2026-10-09; whole-tile rows fetched by the indexed `tileid` column (`w5_euclid_shear.py fetch`, D-067).
+- Euclid Q1 MER catalogue on ESA's Euclid Archive (EAS TAP), table `catalogue.mer_catalogue`:
+  https://eas.esac.esa.int/tap-server/tap/sync (accessed 2026-10-20; e, PA and size agree with IRSA's
+  `euclid_q1_mer_catalogue` to ≤ 5e-10 on 2,031 star rows; `segmentation_map_id` // 10⁶ = `tileid`; D-067 addendum).
 - NFW lensing (R calibration, D-067): Wright & Brainerd 2000, ApJ 534, 34 (arXiv:astro-ph/9908213); c200(M200):
   Duffy et al. 2008, MNRAS 390, L64 (arXiv:0804.2486); astropy `Planck18` cosmology.
 - Pantheon+SH0ES distances (Scolnic et al. 2022, ApJ 938, 113, arXiv:2112.03863; Brout et al. 2022, ApJ 938, 110,
