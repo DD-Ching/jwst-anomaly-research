@@ -13,6 +13,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   20 below 100). The gate failed, so method changes stopped. No area was validated or searched.
 - **Cost:** 1,221 MB and about 18 min of processing (`results/w3_ztf/v23/RESULT.md`).
 - **Next:** a method decision on edge information is the owner's.
+## 2026-10-20: W3 ZTF fade control: per-area rates are real spread, not predicted by inventory metadata; post hoc they cluster by sky region
+- **Why:** v22 failed 7 of 8 areas on the fade control (10 % limit). Plan frozen first
+  (`results/w3_ztf/fade_diag/PLAN.md`); offline on the committed v16–v22 `decision.json` and inventories.
+- **Frozen tests (`results/w3_ztf/fade_diag/RESULT.md`):** 25 areas × 1,000 trials, pooled 9.08 %, range 3.9–13.9 %;
+  homogeneity χ² 233.8 / 24 (p 3 × 10⁻³⁶). No inventory metric (exposures, infobits, product ratio, cell scores,
+  ecliptic / Galactic latitude) reaches |ρ| ≥ 0.6 (best −0.35). Outcome C.
+- **Post hoc:** by HEALPix order-4 parent, between 207.7 / 11 dof, within 26.1 / 13 (p 0.017): siblings agree.
+  5 of v22's 7 fade failures come from parents 287 and 1247; v20's 4 from 622. Mechanism undetermined.
+- **Handoff:** next ZTF round: freeze the sibling prediction (2345–2347 predicted ≤ 10 %; 1149, 4988/4990 > 10 %;
+  2812/2813, 2876–2879 untested parents) and order the queue by it. No method change; the fade limit is the owner's.
 
 ## 2026-10-20: W3 dimming: the 12 measurable held-out NEXUS `inconclusive` pairs all lack an earlier exposure (C1)
 - **Why:** handoff item 2 of `undetected_stamps` / `o015_k1`. Plan frozen first; offline on committed tables.
