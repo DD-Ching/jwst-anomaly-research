@@ -1,7 +1,9 @@
 # v23 PLAN A1-A2: per-event edge diagnosis of the v22 validation draws (same seeds, carriers and noise as
 # stage_inject, re-played here) and a fixed-event fade comparison between two areas. Development analysis.
 # The side classification reads only the injected series (t, dm, nd, limit) and the official exposure list;
-# injection truth is attached after classification. Usage: python diag_script.py.txt <npix> <seed offset>
+# injection truth is attached after classification. Usage: python diag_script.py.txt <npix> <seed offset> [fixed]
+# (added after the run, comment only: A2 runs only with the 3rd argument, after a first pass of both areas has written
+# each area's carrier_range.json; the A2 t1 range is the overlap of the two areas' [first, last] r-band carrier epochs)
 import gzip, json, sys, time
 import numpy as np
 sys.path.insert(0, 'scripts')

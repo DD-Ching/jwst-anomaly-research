@@ -114,7 +114,8 @@ unchanged. No account, no external contact. 8124, 8126, 1624 and 1625 keep their
 - A miss is not zero flux; unvalidated photometry confirms nothing. No new PSF route.
 - The last 30 min (from 13:48) are kept for review and records.
 
-## Status before the old/new comparison (added before commit fa8f19d at 10:33:57 UTC, before any `--edge bounds` run)
+## Status before the old/new comparison (added before commit fa8f19d at 10:33:57 UTC; **post hoc correction** in b053f34, after the comparison: this
+heading first read "added 10:38 UTC", which was wrong; only the time stamp changed; before any `--edge bounds` run)
 - A0 reproduced v22 exactly in both areas (every cell, control and per-injection dump row).
 - A decision: 129 of 138 passing fades in 4991 (0.935 ≥ 0.5) have a zero-day side, so B is implemented as written
   above, with no change (`edge_bounds()`, unit test `test_v23_edge_bounds_gap_is_insufficient_not_fast`).
