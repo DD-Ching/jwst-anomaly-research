@@ -1,0 +1,27 @@
+# v22 (copied from ../v21; paths, salt and seeds changed) (copied from ../v20; paths, salt and seeds changed) (copied from ../v16, paths and salt changed) validation (frozen v13 rule) pass conditions (PLAN section 3) per partition. Usage: python decision_script.py.txt <npix>
+import json, sys
+A = sys.argv[1]
+inj = json.load(open(f'results/w3_ztf/v22/{A}/injections_v22_time.json'))
+cal = json.load(open(f'results/w3_ztf/v22/{A}/search_dev_v22_time.json'))['summary']
+CELLS = [(0.01, 1.0, 10.0), (0.01, 1.0, 30.0), (0.01, 1.0, 100.0), (0.1, 1.0, 10.0), (0.1, 1.0, 30.0),
+         (0.01, 0.7, 10.0), (0.01, 0.7, 30.0), (0.01, 0.7, 100.0), (0.1, 0.7, 10.0), (0.1, 0.7, 30.0)]
+got = {(c['rho'], c['blend'], c['tE']): c for c in inj['w3']}
+cells = {f"rho{r}_blend{b:g}_tE{t:g}": {'recovered': got[(r, b, t)]['recovered'], 'n': got[(r, b, t)]['n'],
+         'distinct_stars': got[(r, b, t)]['distinct_stars'], 'rate': got[(r, b, t)]['recovered'] / got[(r, b, t)]['n']}
+         for r, b, t in CELLS}
+ctrl = {k: {'passed': v['passed_vetting'], 'n': v['n'], 'rate': v['passed_vetting'] / v['n'],
+            'distinct_stars': v['distinct_stars']} for k, v in inj['controls'].items()}
+import math
+def wilson(k, n, z=1.96):
+    p = k / n; d = 1 + z * z / n; c = (p + z * z / (2 * n)) / d; h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return [round(c - h, 4), round(c + h, 4)]
+for v in ctrl.values():
+    v['wilson95'] = wilson(v['passed'], v['n'])
+cond = {'all_10_cells_ge_0.5': all(v['rate'] >= 0.5 for v in cells.values()),
+        'controls_le_0.10': all(v['rate'] <= 0.10 for v in ctrl.values()),
+        'calibration_survivors_le_5': len(cal['passed_groups']) <= 5}
+out = {'label': 'derived; frozen v13 rule with the v6 pass criteria (v22 PLAN section C), applied by code', 'cells': cells, 'controls': ctrl,
+       'calibration_real_survivors': len(cal['passed_groups']), 'calibration_flagged_runs': cal['flagged_runs'],
+       'conditions': cond, 'passed': all(cond.values()), 'carriers': inj['carriers']}
+json.dump(out, open(f'results/w3_ztf/v22/{A}/decision.json', 'w'), indent=1); open(f'results/w3_ztf/v22/{A}/decision.json', 'a').write('\n')
+print(json.dumps(out, indent=1))

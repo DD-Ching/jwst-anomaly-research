@@ -1,0 +1,57 @@
+# v22 (copied from ../v21) summary from timeline.jsonl and the per-area outputs (no new computation). Usage: python summary_script.py.txt
+import datetime as dt, json, os
+H = 'results/w3_ztf/v22'
+q = json.load(open(f'{H}/queue.json'))
+tl = [json.loads(x) for x in open(f'{H}/timeline.jsonl')]
+T = lambda s: dt.datetime.strptime(s, '%Y-%m-%dT%H:%M:%SZ')
+areas = {}
+for r in q['queue']:
+    p = r['npix']; a = {'position': r['position'], 'lc_mb': r['lc_mb'], 'unused': r['unused'], 'shared_fields_v1_v21': r['shared_fields_v1_v21'], 'independent_fields': r['independent_fields']}
+    ev = [e for e in tl if e.get('area') == p]
+    a['started'] = any(e.get('event') == 'area_start' for e in ev)
+    st = {e['stage']: e['seconds'] for e in ev if e.get('event') == 'end' and 'seconds' in e}
+    for e in ev:  # stages logged by hand (image check): seconds from the start/end times
+        if e.get('event') == 'end' and 'seconds' not in e and 'stage' in e:
+            s0 = [x for x in ev if x.get('stage') == e['stage'] and x.get('event') == 'start']
+            if s0:
+                st[e['stage']] = (T(e['utc']) - T(s0[0]['utc'])).total_seconds()
+    a['stage_seconds'] = st
+    si = f'{H}/{p}/sample_info.json'
+    if os.path.exists(si):
+        s = json.load(open(si)); a.update(calibration_groups=s['calibration_groups'], search_groups=s['search_groups'],
+                                         refmag_r_p5_p50_p95=s['refmag_r_p5_p50_p95'])
+    dfn = f'{H}/{p}/decision.json'
+    if os.path.exists(dfn):
+        d = json.load(open(dfn)); a['passed'] = d['passed']; a['conditions'] = d['conditions']
+        a['cells'] = {k: v['recovered'] for k, v in d['cells'].items()}
+        a['controls'] = {k: [v['passed'], v['n'], v['wilson95']] for k, v in d['controls'].items()}
+        a['calibration_survivors'] = d['calibration_real_survivors']
+    sf = f'{H}/{p}/search_holdout_v22_time.json'
+    if os.path.exists(sf):
+        s = json.load(open(sf))['summary']
+        a['search'] = {k: s[k] for k in ('groups', 'series_searched', 'flagged_runs', 'flagged_groups', 'passed_groups')}
+    fi = f'{H}/{p}/fetch_info.json'
+    if os.path.exists(fi):
+        a['fetch_read_s'] = json.load(open(fi))['read_s']
+    ex = f'{H}/{p}/exposures_summary.json'
+    if os.path.exists(ex):
+        a['tap_mb'] = round(json.load(open(ex))['tap_bytes'] / 1e6, 2)
+    areas[str(p)] = a
+srch = [a for a in areas.values() if 'search' in a]
+n_s = sum(a['search']['groups'] for a in srch)
+sec = sum(sum(a['stage_seconds'].values()) for a in srch)
+out = {'label': 'derived (timeline.jsonl and per-area outputs)', 'areas': areas,
+       'searched_groups': n_s, 'searched_series': sum(a['search']['series_searched'] for a in srch),
+       'final_survivors': sum(len(a['search']['passed_groups']) for a in srch),
+       'started': sum(a['started'] for a in areas.values()), 'passed': sum(bool(a.get('passed')) for a in areas.values()),
+       'downloaded_mb': round(json.load(open(f'{H}/objects.json'))['objects_mb']
+                              + sum(a['lc_mb'] + a.get('tap_mb', 0) for a in areas.values() if a.get('fetch_read_s') is not None), 1),
+       'downloaded_note': 'objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured',
+       'not_started': [a['position'] for a in areas.values() if not a['started']],
+       'stage_seconds_of_searched_areas': round(sec, 1),
+       'per_1000_searched': {'stage_seconds': round(sec / n_s * 1000, 1) if n_s else None,
+                             'lc_mb': round(sum(a['lc_mb'] for a in srch) / n_s * 1000, 1) if n_s else None},
+       'wall_clock_min': round((T(tl[-1]['utc']) - T(tl[0]['utc'])).total_seconds() / 60, 1), 'events': len(tl)}
+out['per_1000_searched']['wall_clock_min_queue'] = round(out['wall_clock_min'] / n_s * 1000, 2) if n_s else None
+json.dump(out, open(f'{H}/summary.json', 'w'), indent=1); open(f'{H}/summary.json', 'a').write('\n')
+print(json.dumps({k: v for k, v in out.items() if k != 'areas'}, indent=1))
