@@ -35,7 +35,7 @@ def exposure_flags(e: Table) -> dict:
         "det": int(det.sum()),
         "clean": int((det & ~sus & (npr > 0)).sum()),
         "det_no_prior_first": int((det & ~sus & (npr == 0) & (nfail == 0)).sum()),
-        "det_no_prior_failed": int((det & ~sus & (nfail > 0)).sum()),
+        "det_no_prior_failed": int((det & ~sus & (npr == 0) & (nfail > 0)).sum()),
         "det_suspect": int((det & sus).sum()),
         "finite_below_snr": int((np.isfinite(snr) & (snr < MIN_SNR)).sum()),
         "n_distinct_mjd": n_times(np.asarray(e["mjd"], float)[np.isfinite(snr)]),
