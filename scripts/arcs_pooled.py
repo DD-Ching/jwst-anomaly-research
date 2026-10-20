@@ -60,7 +60,7 @@ def field_stats(rows: Table, sigma_eps: float, min_ellipticity: float, anti_deg:
     )
     if not len(rows) or not np.isfinite(lam) or lam <= 0:
         raise ValueError(f"no usable shape-noise expectation (n {len(rows)}, λ {lam})")
-    k = int(np.sum(rows["orientation_class"] == "anti"))
+    k = int(np.sum(anti_mask(rows)))
     return {
         "n": len(rows),
         "anti": k,
@@ -164,8 +164,8 @@ def main() -> None:
     if float(ref["sigma_eps"]) != SIGMAS[0]:
         raise SystemExit(f"error: runs used σ_ε {ref['sigma_eps']}, the scan starts at {SIGMAS[0]}")
 
-    def stats_at(sigma: float) -> dict[str, dict]:
-        return {f: field_stats(t, sigma, e_min, anti_deg) for f, (t, _) in runs.items()}
+    def stats_at(sigma: float, fields: tuple[str, ...] = tuple(FIELDS)) -> dict[str, dict]:
+        return {f: field_stats(runs[f][0], sigma, e_min, anti_deg) for f in fields}
 
     per_field = stats_at(SIGMAS[0])
     checks = {
@@ -178,8 +178,8 @@ def main() -> None:
         raise SystemExit(f"error: recomputed summaries differ from the stored ones: {checks}")
     gsplit = {
         f: {
-            "g_min<=1": int(np.sum(anti_mask(t) & ~inside(t))),
-            "g_min>1": int(np.sum(anti_mask(t) & inside(t))),
+            "|g_min|<=1": int(np.sum(anti_mask(t) & ~inside(t))),
+            "|g_min|>1": int(np.sum(anti_mask(t) & inside(t))),
         }
         for f, (t, _) in runs.items()
     }
@@ -203,7 +203,7 @@ def main() -> None:
         )
     crossing = {
         v: sigma_crossing(
-            lambda x, fs=fs: pooled(stats_at(x), fs)["p_ge_observed"], SIGMAS[0], SIGMAS[-1]
+            lambda x, fs=fs: pooled(stats_at(x, fs), fs)["p_ge_observed"], SIGMAS[0], SIGMAS[-1]
         )
         for v, fs in VARIANTS.items()
     }
@@ -213,17 +213,25 @@ def main() -> None:
         "fields": FIELDS,
         "assumptions": ref,
         "stored_check": checks,
-        "per_field_sigma_0.26": per_field,
+        f"per_field_sigma_{SIGMAS[0]}": per_field,
         "anti_by_gmin": gsplit,
+        "anti_by_gmin_pooled": {
+            v: {k: sum(gsplit[f][k] for f in fs) for k in ("|g_min|<=1", "|g_min|>1")}
+            for v, fs in VARIANTS.items()
+        },
         "pooled": res,
         "outcome": outcome(res["A"]["p_ge_observed"], res["B"]["p_ge_observed"]),
         "sigma_scan": scan,
         "sigma_at_alpha": crossing,
+        "s1063_at_sigma_at_alpha": {
+            v: None if x is None else field_stats(s1063_rows, x, e_min, anti_deg)
+            for v, x in crossing.items()
+        },
         "s1063_vs_pooled_posthoc": {v: s1063_vs_pooled(s1063_ref, res[v]) for v in VARIANTS},
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    keys = ("pooled", "outcome", "sigma_at_alpha", "anti_by_gmin")
+    keys = ("pooled", "outcome", "sigma_at_alpha", "s1063_at_sigma_at_alpha", "anti_by_gmin_pooled")
     print(json.dumps({k: summary[k] for k in keys}, indent=1))
     for r in scan:
         print(
