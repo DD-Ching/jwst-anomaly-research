@@ -1,0 +1,102 @@
+# v22 part A (PLAN.md): the 8124 calibration survivor 634205400002482, 9.9" from the final survivor 634205400002525.
+# Items fixed in PLAN A: distinct sources; shared NDs; mask bits and LOW RESPONSIVITY column distance at both positions.
+# No flux is measured. Usage: python neighbour_script.py.txt <cache dir> <out json>
+import io, json, os, sys, time, urllib.parse, urllib.request, gzip
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.wcs import WCS
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+CACHE, OUT = sys.argv[1:3]
+os.makedirs(CACHE, exist_ok=True)
+T, N = 634205400002525, 634205400002482
+grp = {g['key']: g for g in json.load(gzip.open('results/w3_ztf/v21/8124/sample.json.gz'))['groups'] if g['key'] in (T, N)}
+runs = {T: [r for r in json.load(open('results/w3_ztf/v21/8124/search_holdout_v21_time.json'))['runs'] if r['key'] == T and r['pass']][0],
+        N: [r for r in json.load(open('results/w3_ztf/v21/8124/search_dev_v21_time.json'))['runs'] if r['key'] == N and r['pass']][0]}
+nb = {'lc_api': 0, 'ibe': 0, 'psfcat': 0, 'mask': 0}; t0 = time.time(); ncut = 0
+
+
+def get(url, kind):
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=180).read(); nb[kind] += len(raw); return raw
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (k + 1))
+    raise RuntimeError(err)
+
+
+out = {'label': 'derived from observed DR24 LC API, IBE metadata, psfcat and mskimg; PLAN.md part A', 'target': T, 'neighbour': N}
+for k in (T, N):
+    out[str(k)] = {'ra': grp[k]['ra'], 'dec': grp[k]['dec'], 'refmag_r': grp[k]['refmag_r'], 'band': {1: 'g', 2: 'r'}[runs[k]['filter']],
+                   'event_objectid': k, 'objectid_quad': list(wz.oid_quad(k)), 'run': [runs[k]['t_start'], runs[k]['t_end']], 'n_run': runs[k]['n']}
+sep = float(np.hypot((grp[T]['ra'] - grp[N]['ra']) * np.cos(np.radians(grp[T]['dec'])), grp[T]['dec'] - grp[N]['dec']) * 3600)
+out['separation_arcsec'] = sep
+# DR24 detections (same objectid = same band, field, quadrant)
+det = {}
+for k in (T, N):
+    lc = Table.read(io.BytesIO(get(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={k}&FORMAT=csv', 'lc_api')), format='csv')
+    det[k] = {int(x['expid']) for x in lc}
+    out[str(k)]['lc_filtercodes'] = sorted({str(x) for x in lc['filtercode']})
+# exposures in each run window (IBE, at each position, r band, the objectid's field and quadrant)
+field, rcid, filt = wz.oid_quad(T)
+nds = {}
+meta_all = {}
+for k in (T, N):
+    lo, hi = out[str(k)]['run']
+    q = urllib.parse.urlencode({'POS': f"{grp[k]['ra']},{grp[k]['dec']}", 'ct': 'csv',
+                                'WHERE': f"obsjd BETWEEN {lo + 2400000.5 - 0.02} AND {hi + 2400000.5 + 0.02} AND filtercode='zr' AND field={field} "
+                                         f"AND ccdid={rcid // 4 + 1} AND qid={rcid % 4 + 1}",
+                                'COLUMNS': 'expid,obsjd,exptime,filefracday,field,ccdid,qid,filtercode,infobits,maglimit,seeing'})
+    m = Table.read(io.BytesIO(get('https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + q, 'ibe')), format='csv')
+    t = wz.exposure_times(m, grp[k]['ra'], grp[k]['dec']) if len(m) else np.array([])
+    rows = [r for r, tt in zip(m, t) if lo - 1e-4 <= tt <= hi + 1e-4 and int(r['infobits']) == 0]
+    for r in rows:
+        meta_all[int(r['expid'])] = r
+    nds[k] = sorted(int(r['expid']) for r in rows if int(r['expid']) not in det[k])
+    out[str(k)]['window_exposures_infobits0'] = len(rows)
+    out[str(k)]['nd_expids'] = nds[k]
+shared = sorted(set(nds[T]) & set(nds[N]))
+out['shared_nd_expids'] = shared
+out['target_nds_detected_neighbour'] = sorted(set(nds[T]) - set(nds[N]))
+# item 1: distinct sources in a bracket detection's psfcat (target's first after-run detection, from v21)
+ic = json.load(open('results/w3_ztf/v21/8124/image_check.json'))['sources'][0]
+bre = [e['expid'] for e in ic['exposures'] if not e['nd']]
+qb = urllib.parse.urlencode({'POS': f"{grp[T]['ra']},{grp[T]['dec']}", 'ct': 'csv', 'WHERE': f'expid={bre[0]}',
+                             'COLUMNS': 'expid,filefracday,field,ccdid,qid,filtercode'})
+mb = Table.read(io.BytesIO(get('https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + qb, 'ibe')), format='csv')[0]
+def base(r):
+    ffd = str(r['filefracday'])
+    return (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+            f"{int(r['field']):06d}_{r['filtercode']}_c{int(r['ccdid']):02d}_o_q{int(r['qid'])}_")
+pc = Table(fits.open(io.BytesIO(get(base(mb) + 'psfcat.fits', 'psfcat')))[1].data)
+jt = wz.psfcat_match(pc['ra'], pc['dec'], [grp[T]['ra'], grp[N]['ra']], [grp[T]['dec'], grp[N]['dec']])
+out['bracket_psfcat_exposure'] = int(bre[0])
+out['distinct_in_psfcat'] = {'target_index': int(jt[0]), 'neighbour_index': int(jt[1]),
+                             'distinct': bool(jt[0] >= 0 and jt[1] >= 0 and jt[0] != jt[1])}
+# item 3: one mask cutout per shared ND (and per neighbour-only ND), centred between the two, 60"
+cm = (grp[T]['ra'] + grp[N]['ra']) / 2, (grp[T]['dec'] + grp[N]['dec']) / 2
+mask_rows = []
+for e in sorted(set(nds[N]) | set(shared)):
+    if ncut >= 12:
+        mask_rows.append({'expid': e, 'pending': 'cutout cap'}); continue
+    r = meta_all[e]
+    raw = get(base(r) + f'mskimg.fits?center={cm[0]},{cm[1]}&size=60arcsec&gzip=false', 'mask'); ncut += 1
+    h = fits.open(io.BytesIO(raw))[0]; mk = h.data.astype(np.int64); w = WCS(h.header)
+    col = np.flatnonzero(((mk >> 2) & 1).sum(0) >= 0.9 * mk.shape[0])
+    rec = {'expid': e, 'shared': e in shared}
+    for k, lab in ((T, 'target'), (N, 'neighbour')):
+        x, y = (float(v) for v in w.world_to_pixel_values(grp[k]['ra'], grp[k]['dec']))
+        xi, yi = int(round(x)), int(round(y))
+        inside = 0 <= xi < mk.shape[1] and 0 <= yi < mk.shape[0]
+        rec[lab] = {'mask_at_center': int(mk[yi, xi]) if inside else None,
+                    'bits_at_center': [b for b in range(16) if inside and (int(mk[yi, xi]) >> b) & 1],
+                    'x_dist_to_lowresp_column_px': float(np.min(np.abs(col - x))) if len(col) and inside else None}
+    mask_rows.append(rec)
+out['mask'] = mask_rows
+out['n_mask_cutouts'] = ncut
+out['bytes'] = nb; out['seconds'] = round(time.time() - t0, 1)
+json.dump(out, open(OUT, 'w'), indent=1, default=float); open(OUT, 'a').write('\n')
+print(json.dumps({k: v for k, v in out.items() if k not in ('mask',)}, default=float)[:2500])
+for r in mask_rows:
+    print(r)

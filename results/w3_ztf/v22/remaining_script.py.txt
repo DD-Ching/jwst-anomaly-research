@@ -1,0 +1,17 @@
+# v22 remaining supply (this round's inventory scope only), from queue.json and summary.json (no new data).
+# Usage: python remaining_script.py.txt
+import json
+q = json.load(open('results/w3_ztf/v22/queue.json'))
+qs = {r['npix'] for r in q['queue']}
+rest = [r for r in q['all'] if r['qualifies'] and r['npix'] not in qs]
+s = json.load(open('results/w3_ztf/v22/summary.json'))
+fail = {p: a['search_groups'] for p, a in s['areas'].items() if a.get('passed') is False}
+out = {'label': 'derived from queue.json and summary.json (no new data)', 'scope': 'this round inventory (31 partitions) only',
+       'qualifying_not_queued': len(rest), 'qualifying_not_queued_unused': sum(r['unused'] for r in rest),
+       'qualifying_not_queued_searchable': sum(r['search_if_500_cal'] for r in rest),
+       'qualifying_not_queued_lc_mb': round(sum(r['lc_mb'] for r in rest), 1),
+       'qualifying_not_queued_npix': sorted(r['npix'] for r in rest),
+       'failed_calibration_unread_search_groups': fail, 'failed_calibration_unread_total': sum(fail.values()),
+       'not_qualifying': sum(not r['qualifies'] for r in q['all'])}
+json.dump(out, open('results/w3_ztf/v22/remaining.json', 'w'), indent=1); open('results/w3_ztf/v22/remaining.json', 'a').write('\n')
+print(out)

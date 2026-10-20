@@ -1,0 +1,52 @@
+# v21 (copied from ../v20; paths, salt and seeds changed) (copied from ../v16, paths and salt changed): official mask (_mskimg) at the survivor's position for its run NDs, plus the v13 dark-column distance, using the
+# cutouts of image_check.json. Bit names from the mask header comments. Usage:
+#   python -I mask_check_script.py.txt <npix> <cutout dir> <out json>
+import io, json, sys, time, urllib.parse, urllib.request, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.wcs import WCS
+warnings.filterwarnings('ignore')
+PIX, CUT, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
+ic = json.load(open(f'results/w3_ztf/v22/{PIX}/image_check.json'))
+def get(url):
+    for i in range(4):
+        try:
+            return urllib.request.urlopen(url, timeout=60).read()
+        except Exception:
+            time.sleep(5 * (i + 1))
+res, names, nbytes = [], {}, 0
+for s in ic['sources']:
+    ra, dec = s['ra'], s['dec']
+    for r in s['exposures']:
+        rec = {'key': s['key'], 'expid': r['expid'], 'nd': r['nd'], 'cls': r.get('cls')}
+        if 'cutout_bytes' in r:  # dark column distance in the science cutout
+            h = fits.open(f"{CUT}/{r['expid']}_{s['key']}.fits"); im = h[0].data.astype(float); w = WCS(h[0].header)
+            x, y = w.all_world2pix([[ra, dec]], 0)[0]; sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
+            med = np.nanmedian(im); sig = 1.4826 * np.nanmedian(np.abs(im - med)); cm = np.nanmedian(im, axis=0)
+            dark = np.flatnonzero(cm < med - 5 * sig)
+            rec['dark_column_min_dist_arcsec'] = float(np.min(np.abs(dark - x)) * sc) if len(dark) else None
+        if r['nd']:
+            q = urllib.parse.urlencode({'POS': f'{ra},{dec}', 'WHERE': f"expid IN ({r['expid']})", 'ct': 'csv',
+                                        'COLUMNS': 'field,ccdid,qid,filtercode,expid,filefracday'})
+            raw = get('https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + q)
+            m = Table.read(io.BytesIO(raw), format='csv') if raw and len(raw.strip().splitlines()) > 1 else []
+            if len(m):
+                m = m[0]; ffd = str(m['filefracday'])
+                url = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+                       f"{int(m['field']):06d}_{m['filtercode']}_c{int(m['ccdid']):02d}_o_q{int(m['qid'])}_mskimg.fits"
+                       f"?center={ra},{dec}&size=30arcsec&gzip=false")
+                data = get(url)
+                if data:
+                    nbytes += len(data); hm = fits.open(io.BytesIO(data))[0]; d = hm.data.astype(np.int64); wm = WCS(hm.header)
+                    names.update({k: hm.header.comments[k] for k in hm.header if k.startswith('BIT') and k != 'BITPIX'})
+                    xm, ym = (float(v) for v in wm.world_to_pixel_values(ra, dec))
+                    scm = float(np.sqrt(abs(np.linalg.det(wm.pixel_scale_matrix)))) * 3600
+                    yy, xx = np.mgrid[:d.shape[0], :d.shape[1]]; ap = np.hypot(xx - xm, yy - ym) <= 2.0 / scm
+                    o = int(np.bitwise_or.reduce(d[ap]))
+                    rec.update(mask_at_center=int(d[int(round(ym)), int(round(xm))]), mask_bits_in_aperture=[b for b in range(16) if o >> b & 1])
+        res.append(rec)
+json.dump({'label': 'observed (IBE mskimg) and derived', 'bit_names': names, 'mask_bytes': nbytes, 'exposures': res},
+          open(OUT, 'w'), indent=1); open(OUT, 'a').write('\n')
+for r in res: print(r)
+print(nbytes)

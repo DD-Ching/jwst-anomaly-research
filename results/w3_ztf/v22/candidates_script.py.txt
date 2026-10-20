@@ -1,0 +1,48 @@
+# v22 candidate partitions (<= 32, cap 50) from the HATS partition lists only (no data read).
+# Same per-partition rule as ../v16/candidates_script.py.txt (Norder 5, parent has objects, 300k-700k rows, centre
+# dec +25..+65, |b| >= 30); excluded: every parent read before (v1-v21) and Npix >= 10000 (Dir=10000 path not used).
+# Parents with >= 3 eligible children only; 8 of them, chosen by farthest-point order (each next parent maximises its minimum angular distance to all used and
+# already chosen parents), so that new ZTF fields are more likely; up to 4 largest children each.
+# Usage: python candidates_script.py.txt
+import csv, io, json, sys
+import numpy as np
+import astropy.units as u
+from astropy.coordinates import SkyCoord
+from astropy_healpix import HEALPix
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+fs = wz.s3()
+lcb = wz.LC_PART.split('/dataset/')[0]; obb = wz.OBJ_PART.split('/dataset/')[0]
+lc = [r for r in csv.DictReader(io.StringIO(fs.cat(f'{lcb}/partition_info.csv').decode())) if r['Norder'] == '5']
+obj4 = {int(r['Npix']) for r in csv.DictReader(io.StringIO(fs.cat(f'{obb}/partition_info.csv').decode())) if r['Norder'] == '4'}
+USED = {959, 1783, 595, 2042, 45} | {46, 339, 406, 568, 622, 674, 725, 2031}  # v1-v15 and v16/v20/v21 parents
+hp5, hp4 = HEALPix(nside=2**5, order='nested'), HEALPix(nside=2**4, order='nested')
+ok = []
+for r in lc:
+    pix, n = int(r['Npix']), int(r['num_rows'])
+    if pix >= 10000 or pix // 4 not in obj4 or pix // 4 in USED or not 300_000 <= n <= 700_000:
+        continue
+    lon, lat = hp5.healpix_to_lonlat(pix)
+    c = SkyCoord(lon.to(u.deg), lat.to(u.deg))
+    if 25 <= c.dec.deg <= 65 and abs(c.galactic.b.deg) >= 30:
+        ok.append((pix, n, round(c.ra.deg, 2), round(c.dec.deg, 2), round(c.galactic.b.deg, 1)))
+nchild = {}
+for x in ok:
+    nchild[x[0] // 4] = nchild.get(x[0] // 4, 0) + 1
+parents = sorted(p for p, k in nchild.items() if k >= 3)  # >= 3 eligible children: more partitions per objects read
+def sc(par):
+    lon, lat = hp4.healpix_to_lonlat(par); return SkyCoord(lon.to(u.deg), lat.to(u.deg))
+used = [sc(p) for p in sorted(USED)]
+pick = []
+for _ in range(8):
+    best = max(parents, key=lambda p: (min(sc(p).separation(q).deg for q in used + [sc(x) for x in pick]), -p) if p not in pick else (-1, 0))
+    pick.append(best)
+cand = []
+for par in pick:
+    cand += sorted([x for x in ok if x[0] // 4 == par], key=lambda x: (-x[1], x[0]))[:4]
+out = {'label': 'derived (HATS partition_info only)', 'rule': 'v16 per-partition rule; parents not read before (v1-v21); '
+       'Npix < 10000; parents with >= 3 eligible children; 8 parents by farthest-point order from the used parents; up to 4 largest children each; at most 50',
+       'eligible_partitions': len(ok), 'eligible_parents': len(nchild), 'parents_with_ge3_children': len(parents), 'used_parents': sorted(USED), 'parents': pick,
+       'candidates': [dict(zip(('npix', 'rows', 'ra', 'dec', 'b'), x)) for x in cand][:50]}
+json.dump(out, open('results/w3_ztf/v22/candidates.json', 'w'), indent=1); open('results/w3_ztf/v22/candidates.json', 'a').write('\n')
+print(len(out['candidates']), pick, [(c['npix'], c['ra'], c['dec']) for c in out['candidates']])

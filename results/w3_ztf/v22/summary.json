@@ -1,0 +1,742 @@
+{
+ "label": "derived (timeline.jsonl and per-area outputs)",
+ "areas": {
+  "1853": {
+   "position": 1,
+   "lc_mb": 275.0,
+   "unused": 2031,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    816,
+    1820,
+    1847,
+    1848
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 21.1,
+    "exposures": 80.7,
+    "search_dev": 25.0,
+    "inject": 66.2,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 1531,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.720899724960328,
+     16.355499267578125,
+     17.384998321533203
+    ],
+    "search": [
+     14.797499656677246,
+     16.369998931884766,
+     17.38249969482422
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 107,
+    "rho0.01_blend1_tE30": 143,
+    "rho0.01_blend1_tE100": 138,
+    "rho0.1_blend1_tE10": 89,
+    "rho0.1_blend1_tE30": 127,
+    "rho0.01_blend0.7_tE10": 103,
+    "rho0.01_blend0.7_tE30": 125,
+    "rho0.01_blend0.7_tE100": 106,
+    "rho0.1_blend0.7_tE10": 85,
+    "rho0.1_blend0.7_tE30": 112
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     117,
+     1000,
+     [
+      0.0985,
+      0.1384
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 18.9,
+   "tap_mb": 5.31
+  },
+  "1150": {
+   "position": 2,
+   "lc_mb": 211.5,
+   "unused": 1574,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    619,
+    1615,
+    1616,
+    1664
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 16.5,
+    "exposures": 72.1,
+    "search_dev": 17.8,
+    "inject": 51.9,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 1074,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.75789942741394,
+     16.25399875640869,
+     17.39739933013916
+    ],
+    "search": [
+     14.733949565887452,
+     16.435999870300293,
+     17.42434959411621
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 107,
+    "rho0.01_blend1_tE30": 158,
+    "rho0.01_blend1_tE100": 140,
+    "rho0.1_blend1_tE10": 106,
+    "rho0.1_blend1_tE30": 136,
+    "rho0.01_blend0.7_tE10": 100,
+    "rho0.01_blend0.7_tE30": 153,
+    "rho0.01_blend0.7_tE100": 121,
+    "rho0.1_blend0.7_tE10": 96,
+    "rho0.1_blend0.7_tE30": 128
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     117,
+     1000,
+     [
+      0.0985,
+      0.1384
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 14.1,
+   "tap_mb": 4.04
+  },
+  "1148": {
+   "position": 3,
+   "lc_mb": 210.9,
+   "unused": 1446,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    619,
+    620,
+    1615,
+    1616,
+    1664
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 12.5,
+    "exposures": 90.2,
+    "search_dev": 19.7,
+    "inject": 55.8,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 946,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.783999824523926,
+     16.311999320983887,
+     17.392148399353026
+    ],
+    "search": [
+     14.75124979019165,
+     16.302499771118164,
+     17.38124990463257
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 104,
+    "rho0.01_blend1_tE30": 143,
+    "rho0.01_blend1_tE100": 135,
+    "rho0.1_blend1_tE10": 105,
+    "rho0.1_blend1_tE30": 130,
+    "rho0.01_blend0.7_tE10": 102,
+    "rho0.01_blend0.7_tE30": 134,
+    "rho0.01_blend0.7_tE100": 131,
+    "rho0.1_blend0.7_tE10": 84,
+    "rho0.1_blend0.7_tE30": 123
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     102,
+     1000,
+     [
+      0.0847,
+      0.1223
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 10.0,
+   "tap_mb": 4.51
+  },
+  "1151": {
+   "position": 4,
+   "lc_mb": 225.2,
+   "unused": 1481,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    619,
+    620,
+    667,
+    1664
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 13.1,
+    "exposures": 63.2,
+    "search_dev": 20.1,
+    "inject": 57.9,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 981,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.791899824142456,
+     16.3149995803833,
+     17.392298316955568
+    ],
+    "search": [
+     14.795000076293945,
+     16.334999084472656,
+     17.4010009765625
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 118,
+    "rho0.01_blend1_tE30": 151,
+    "rho0.01_blend1_tE100": 146,
+    "rho0.1_blend1_tE10": 100,
+    "rho0.1_blend1_tE30": 135,
+    "rho0.01_blend0.7_tE10": 114,
+    "rho0.01_blend0.7_tE30": 138,
+    "rho0.01_blend0.7_tE100": 125,
+    "rho0.1_blend0.7_tE10": 101,
+    "rho0.1_blend0.7_tE30": 133
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     114,
+     1000,
+     [
+      0.0958,
+      0.1352
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 10.7,
+   "tap_mb": 4.77
+  },
+  "5054": {
+   "position": 5,
+   "lc_mb": 816.6,
+   "unused": 3881,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    646,
+    1643,
+    1690
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 58.5,
+    "exposures": 64.1,
+    "search_dev": 54.1,
+    "inject": 138.0,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 3381,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.711499881744384,
+     16.26349925994873,
+     17.379049682617186
+    ],
+    "search": [
+     14.769000053405762,
+     16.40399932861328,
+     17.416000366210938
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 134,
+    "rho0.01_blend1_tE30": 176,
+    "rho0.01_blend1_tE100": 164,
+    "rho0.1_blend1_tE10": 125,
+    "rho0.1_blend1_tE30": 171,
+    "rho0.01_blend0.7_tE10": 144,
+    "rho0.01_blend0.7_tE30": 167,
+    "rho0.01_blend0.7_tE100": 141,
+    "rho0.1_blend0.7_tE10": 111,
+    "rho0.1_blend0.7_tE30": 154
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     104,
+     1000,
+     [
+      0.0866,
+      0.1245
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 56.0,
+   "tap_mb": 7.96
+  },
+  "4991": {
+   "position": 6,
+   "lc_mb": 573.4,
+   "unused": 2845,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    601,
+    602,
+    649,
+    1646,
+    1647
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 30.8,
+    "exposures": 69.3,
+    "search_dev": 45.8,
+    "inject": 125.6,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 2345,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.774499607086181,
+     16.424500465393066,
+     17.411099243164063
+    ],
+    "search": [
+     14.786599349975585,
+     16.38599967956543,
+     17.40999984741211
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 125,
+    "rho0.01_blend1_tE30": 164,
+    "rho0.01_blend1_tE100": 159,
+    "rho0.1_blend1_tE10": 134,
+    "rho0.1_blend1_tE30": 164,
+    "rho0.01_blend0.7_tE10": 137,
+    "rho0.01_blend0.7_tE30": 151,
+    "rho0.01_blend0.7_tE100": 132,
+    "rho0.1_blend0.7_tE10": 115,
+    "rho0.1_blend0.7_tE30": 142
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     138,
+     1000,
+     [
+      0.118,
+      0.1608
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 28.2,
+   "tap_mb": 8.26
+  },
+  "2344": {
+   "position": 7,
+   "lc_mb": 465.2,
+   "unused": 2382,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    632,
+    678,
+    679,
+    1676
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 34.7,
+    "exposures": 55.0,
+    "search_dev": 31.6,
+    "inject": 89.4,
+    "decision": 0.0,
+    "search_holdout": 52.8
+   },
+   "calibration_groups": 500,
+   "search_groups": 1882,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.855149936676025,
+     16.458999633789062,
+     17.37504997253418
+    ],
+    "search": [
+     14.830049896240235,
+     16.458499908447266,
+     17.414950847625732
+    ]
+   },
+   "passed": true,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 141,
+    "rho0.01_blend1_tE30": 164,
+    "rho0.01_blend1_tE100": 159,
+    "rho0.1_blend1_tE10": 117,
+    "rho0.1_blend1_tE30": 155,
+    "rho0.01_blend0.7_tE10": 127,
+    "rho0.01_blend0.7_tE30": 157,
+    "rho0.01_blend0.7_tE100": 139,
+    "rho0.1_blend0.7_tE10": 110,
+    "rho0.1_blend0.7_tE30": 145
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     81,
+     1000,
+     [
+      0.0656,
+      0.0996
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "search": {
+    "groups": 1882,
+    "series_searched": 3709,
+    "flagged_runs": 2,
+    "flagged_groups": 2,
+    "passed_groups": []
+   },
+   "fetch_read_s": 31.9,
+   "tap_mb": 6.38
+  },
+  "4989": {
+   "position": 8,
+   "lc_mb": 541.1,
+   "unused": 2681,
+   "shared_fields_v1_v21": [],
+   "independent_fields": [
+    601,
+    602,
+    1646,
+    1647
+   ],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 27.9,
+    "exposures": 78.1,
+    "search_dev": 39.8,
+    "inject": 107.4,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 2181,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.764299392700195,
+     16.33699893951416,
+     17.354200077056884
+    ],
+    "search": [
+     14.758999824523926,
+     16.3799991607666,
+     17.404998779296875
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 101,
+    "rho0.01_blend1_tE30": 138,
+    "rho0.01_blend1_tE100": 134,
+    "rho0.1_blend1_tE10": 93,
+    "rho0.1_blend1_tE30": 122,
+    "rho0.01_blend0.7_tE10": 109,
+    "rho0.01_blend0.7_tE30": 117,
+    "rho0.01_blend0.7_tE100": 124,
+    "rho0.1_blend0.7_tE10": 93,
+    "rho0.1_blend0.7_tE30": 127
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     112,
+     1000,
+     [
+      0.0939,
+      0.1331
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 25.3,
+   "tap_mb": 7.42
+  }
+ },
+ "searched_groups": 1882,
+ "searched_series": 3709,
+ "final_survivors": 0,
+ "started": 8,
+ "passed": 1,
+ "downloaded_mb": 4127.2,
+ "downloaded_note": "objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured",
+ "not_started": [],
+ "stage_seconds_of_searched_areas": 263.5,
+ "per_1000_searched": {
+  "stage_seconds": 140.0,
+  "lc_mb": 247.2,
+  "wall_clock_min_queue": 13.6
+ },
+ "wall_clock_min": 25.6,
+ "events": 109
+}

@@ -1,0 +1,85 @@
+# v22 queue driver (copied from ../v21, the fixed v20 version; v22 paths; samples drawn before the run). Original v20 note:
+# after the run: v20 cache deletion and budget start were in the run; the deadlock fix and resume mode came after it.
+# Original header: (PLAN.md sections 2-4). Two workers take areas from the frozen queue in order. Per area:
+# sample -> fetch -> exposures -> (inject || search dev) -> decision -> search holdout if passed. Every stage is a
+# separate process (one configure() each). Start/end UTC and bytes go to timeline.jsonl. Stop rules: no new area once
+# the projected download would pass 5,900 MB (6 GB minus cutouts and a reserve) or after NO_NEW_AREA_AFTER (UTC).
+# Usage: python driver_script.py.txt <scratch dir> <no-new-area-after ISO UTC>
+import datetime as dt, fcntl, json, os, subprocess, sys, threading
+SCR, DEADLINE = sys.argv[1], dt.datetime.fromisoformat(sys.argv[2])
+H = 'results/w3_ztf/v22'
+PY = '.venv/bin/python'
+q = json.load(open(f'{H}/queue.json'))['queue']
+lock = threading.Lock()
+state = {'next': 0, 'mb': json.load(open(f'{H}/objects.json'))['objects_mb']}  # v20: measured objects download
+def now():
+    return dt.datetime.now(dt.timezone.utc)
+def log(**kw):
+    kw['utc'] = now().strftime('%Y-%m-%dT%H:%M:%SZ')
+    with lock, open(f'{H}/timeline.jsonl', 'a') as f:
+        f.write(json.dumps(kw) + '\n')
+def run(area, stage, args, logf):
+    t0 = now(); log(area=area, stage=stage, event='start')
+    r = subprocess.run([PY] + args, stdout=open(logf, 'a'), stderr=subprocess.STDOUT,
+                       env={**os.environ, 'JWST_ANOMALY_DATA': os.path.abspath('data'), 'OMP_NUM_THREADS': '1'})
+    log(area=area, stage=stage, event='end', rc=r.returncode, seconds=round((now() - t0).total_seconds(), 1))
+    return r.returncode == 0
+def area_job(a, resume=False):
+    p, off = a['npix'], a['seed_offset']
+    v = f'v22/{p}'; L = f'{SCR}/v22_{p}.log'
+    ok = True
+    if not resume:
+        import os  # v21: samples are drawn and committed before the driver runs; only re-drawn if missing
+        if not os.path.exists(f'{H}/{p}/sample_info.json'):
+            ok = run(p, 'sample', [f'{H}/area_sample_script.py.txt', str(p), SCR], L)
+        ok = ok and run(p, 'fetch', ['scripts/w3_ztf.py', 'fetch', '--pix', str(p), '--vdir', v], L)
+        ok = ok and run(p, 'exposures', ['scripts/w3_ztf.py', 'exposures', '--pix', str(p), '--vdir', v], L)
+    if not ok:
+        log(area=p, event='stopped', reason='a data stage failed'); return
+    res = {}
+    def bg(name, args):
+        res[name] = run(p, name, args, L)
+    ts = [threading.Thread(target=bg, args=('inject', ['scripts/w3_ztf.py', 'inject', '--pix', str(p), '--vdir', v, '--cells',
+                           'calibrated', '--n', '200', '--n-fade', '1000', '--edge', 'time', '--seed-offset', str(off), '--dump', 'dump_time.json'])),
+          threading.Thread(target=bg, args=('search_dev', ['scripts/w3_ztf.py', 'search', '--half', 'dev', '--pix', str(p), '--vdir', v, '--edge', 'time']))]
+    [t.start() for t in ts]; [t.join() for t in ts]
+    if not all(res.values()):
+        log(area=p, event='stopped', reason='validation stage failed to run'); return
+    run(p, 'decision', [f'{H}/decision_script.py.txt', str(p)], L)
+    d = json.load(open(f'{H}/{p}/decision.json'))
+    log(area=p, event='verdict', passed=d['passed'], conditions=d['conditions'])
+    if d['passed']:
+        run(p, 'search_holdout', ['scripts/w3_ztf.py', 'search', '--half', 'holdout', '--pix', str(p), '--vdir', v, '--edge', 'time'], L)
+        s = json.load(open(f'{H}/{p}/search_holdout_v22_time.json'))['summary']
+        log(area=p, event='searched', **{k: s[k] for k in ('groups', 'series_searched', 'flagged_runs', 'flagged_groups', 'passed_groups')})
+        if s['passed_groups']:
+            return  # v20: keep the cache for the image check of the vetted survivors
+    # v20 (cloud disk rule): delete the area's light-curve cache once it is not needed
+    import shutil
+    shutil.rmtree(f'data/cache/w3_ztf/{p}', ignore_errors=True); log(area=p, event='cache_deleted')
+def worker():
+    while True:
+        stop = None  # v20 fix: log() takes the same lock, so stop events are logged after releasing it
+        with lock:
+            if state['next'] >= len(q):
+                return
+            a = q[state['next']]
+            if now() > DEADLINE:
+                stop = ('time', [x['npix'] for x in q[state['next']:]]); state['next'] = len(q)
+            elif state['mb'] + a['lc_mb'] + 30 > 5900:
+                stop = ('download budget', [x['npix'] for x in q[state['next']:]]); state['next'] = len(q)
+            else:
+                state['mb'] += a['lc_mb'] + 30
+                state['next'] += 1
+        if stop:
+            log(event='stop_new_areas', reason=stop[0], remaining=stop[1]); return
+        log(area=a['npix'], event='area_start', position=a['position'], projected_mb=round(state['mb'], 1))
+        area_job(a)
+if len(sys.argv) > 3:  # v20 resume after the deadlock: '<npix>' runs that area from the validation stage only
+    area_job(next(x for x in q if x['npix'] == int(sys.argv[3])), resume=True)
+    log(event='queue_done')
+    sys.exit(0)
+import os as _os  # v22: worker count from W3_WORKERS (default 2); 1 used here after the v21 out-of-memory kill
+ws = [threading.Thread(target=worker) for _ in range(int(_os.environ.get('W3_WORKERS', '2')))]
+[w.start() for w in ws]; [w.join() for w in ws]
+log(event='queue_done')

@@ -1,0 +1,116 @@
+{
+ "label": "derived; frozen v13 rule with the v6 pass criteria (v22 PLAN section C), applied by code",
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "recovered": 134,
+   "n": 200,
+   "distinct_stars": 162,
+   "rate": 0.67
+  },
+  "rho0.01_blend1_tE30": {
+   "recovered": 176,
+   "n": 200,
+   "distinct_stars": 165,
+   "rate": 0.88
+  },
+  "rho0.01_blend1_tE100": {
+   "recovered": 164,
+   "n": 200,
+   "distinct_stars": 164,
+   "rate": 0.82
+  },
+  "rho0.1_blend1_tE10": {
+   "recovered": 125,
+   "n": 200,
+   "distinct_stars": 172,
+   "rate": 0.625
+  },
+  "rho0.1_blend1_tE30": {
+   "recovered": 171,
+   "n": 200,
+   "distinct_stars": 160,
+   "rate": 0.855
+  },
+  "rho0.01_blend0.7_tE10": {
+   "recovered": 144,
+   "n": 200,
+   "distinct_stars": 170,
+   "rate": 0.72
+  },
+  "rho0.01_blend0.7_tE30": {
+   "recovered": 167,
+   "n": 200,
+   "distinct_stars": 163,
+   "rate": 0.835
+  },
+  "rho0.01_blend0.7_tE100": {
+   "recovered": 141,
+   "n": 200,
+   "distinct_stars": 162,
+   "rate": 0.705
+  },
+  "rho0.1_blend0.7_tE10": {
+   "recovered": 111,
+   "n": 200,
+   "distinct_stars": 165,
+   "rate": 0.555
+  },
+  "rho0.1_blend0.7_tE30": {
+   "recovered": 154,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.77
+  }
+ },
+ "controls": {
+  "eclipse": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 159,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "fade": {
+   "passed": 104,
+   "n": 1000,
+   "rate": 0.104,
+   "distinct_stars": 428,
+   "wilson95": [
+    0.0866,
+    0.1245
+   ]
+  },
+  "pspl": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 161,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "common": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 164,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  }
+ },
+ "calibration_real_survivors": 0,
+ "calibration_flagged_runs": 9,
+ "conditions": {
+  "all_10_cells_ge_0.5": true,
+  "controls_le_0.10": false,
+  "calibration_survivors_le_5": true
+ },
+ "passed": false,
+ "carriers": 500
+}

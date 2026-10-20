@@ -1,0 +1,30 @@
+# v22 frozen queue (PLAN.md section B): from inventory.json. Qualifies: worst-cell necessary fraction >= 0.5, product
+# ratio >= 0.8, >= 1,000 unused eligible groups. Order: areas with no field shared with v1-v21 samples first, then the
+# rest; within each, searchable (unused - 500) groups per GB of light curves, descending; ties by Npix. At most 8.
+# Usage: python queue_script.py.txt
+import json
+inv = json.load(open('results/w3_ztf/v22/inventory.json'))
+rows = []
+for p, a in inv['areas'].items():
+    q = a['score_min_over_cells'] >= 0.5 and a['product_ratio_median'] >= 0.8 and a['groups_unused_eligible'] >= 1000
+    srch = a['search_if_500_calibration']
+    rows.append({'npix': int(p), 'qualifies': q, 'worst_cell': a['score_min_over_cells'], 'product_ratio': round(a['product_ratio_median'], 3),
+                 'unused': a['groups_unused_eligible'], 'search_if_500_cal': srch, 'lc_mb': a['lc_mb'],
+                 'search_per_gb': round(srch / (a['lc_mb'] / 1000), 1), 'fields': a['fields'],
+                 'shared_fields_v1_v21': a['shared_fields_with_earlier'],
+                 'independent_fields': sorted(set(a['fields']) - set(a['shared_fields_with_earlier']))})
+qual = [r for r in rows if r['qualifies']]
+qual.sort(key=lambda r: (bool(r['shared_fields_v1_v21']), -r['search_per_gb'], r['npix']))
+queue = qual[:8]
+for k, r in enumerate(queue):
+    r['position'] = k + 1
+    r['seed_offset'] = 40000 + 1000 * k
+out = {'label': 'derived; frozen v22 queue (inventory.json)', 'scope': 'this round inventory only (31 partitions); not the remaining supply of ZTF',
+       'candidates': len(rows), 'qualifying': len(qual), 'qualifying_no_shared_field': sum(not r['shared_fields_v1_v21'] for r in qual),
+       'catalogue_eligible_unused_total': sum(r['unused'] for r in rows), 'qualifying_unused_total': sum(r['unused'] for r in qual),
+       'qualifying_search_total': sum(r['search_if_500_cal'] for r in qual),
+       'queue': queue, 'queue_lc_mb_total': round(sum(r['lc_mb'] for r in queue), 1), 'all': sorted(rows, key=lambda r: r['npix'])}
+json.dump(out, open('results/w3_ztf/v22/queue.json', 'w'), indent=1); open('results/w3_ztf/v22/queue.json', 'a').write('\n')
+for r in queue:
+    print(r['position'], r['npix'], r['worst_cell'], r['unused'], r['search_if_500_cal'], r['lc_mb'], r['search_per_gb'], r['shared_fields_v1_v21'], r['independent_fields'])
+print({k: v for k, v in out.items() if k not in ('queue', 'all')})

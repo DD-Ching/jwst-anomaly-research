@@ -1,0 +1,3 @@
+{"stage": "inject", "groups": 500, "search_groups_in_use": 0, "rows_loaded": 9404, "control_rows": 6992, "search_member_rows": 0}
+{"stage": "search", "groups": 500, "search_groups_in_use": 0, "rows_loaded": 9404, "control_rows": 6992, "search_member_rows": 0}
+{"stage": "search", "groups": 1882, "search_groups_in_use": 1882, "rows_loaded": 15970, "control_rows": 6992, "search_member_rows": 8978}

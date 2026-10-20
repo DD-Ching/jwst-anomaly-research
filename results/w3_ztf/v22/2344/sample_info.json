@@ -1,0 +1,29 @@
+{
+ "objects_in_area": 713002,
+ "r_band_passing_cuts": 2622,
+ "isolated": 2572,
+ "groups_before_draw": 2382,
+ "groups": 2382,
+ "holdout": 1197,
+ "ambiguous_groups_dropped": 0,
+ "groups_dropped_near_old_sample": 0,
+ "dropped_shared_objectid": 0,
+ "calibration_groups": 500,
+ "search_groups": 1882,
+ "split": "lowest 500 by crc32(\"v22:\"+key) = calibration (\"holdout\" above is select() pre-split parity)",
+ "refmag_r_p5_p50_p95": {
+  "calibration": [
+   14.855149936676025,
+   16.458999633789062,
+   17.37504997253418
+  ],
+  "search": [
+   14.830049896240235,
+   16.458499908447266,
+   17.414950847625732
+  ]
+ },
+ "lc_partition": "ipac-irsa-ztf/ztf/enhanced/dr24/lc/hats/ztf_dr24_lc-hats/dataset/Norder=5/Dir=0/Npix=2344/part0.snappy.parquet",
+ "cache": "data/cache/w3_ztf/2344",
+ "controls": 7188
+}
