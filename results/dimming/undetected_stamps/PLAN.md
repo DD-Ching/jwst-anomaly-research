@@ -1,10 +1,11 @@
-# W3 dimming: why NEXUS monitored pairs come out `undetected` (frozen 2026-10-20 05:25 UTC)
+# W3 dimming: why NEXUS monitored pairs come out `undetected` (frozen 2026-10-20 05:11 UTC)
 
 Handoff 1 of the 2026-10-20 swap_inject entry (`results/dimming/expcount_eff/RESULT.md` "Next" 2).
 
 **Seen before this plan (observed, from the committed `persistence_run/nexus/exposures_e*.ecsv`):** all 13
-`undetected` NEXUS pairs (11 held out e5–e7, 2 train e4, plus flag d30295 in e2) have NaN flux in *every*
-covering exposure, i.e. no per-exposure measurement, not a low S/N. NaN-flux exposures are 70 / 1076 of the
+monitored `undetected` NEXUS pairs (11 held out e5–e7, 2 train e4) have NaN flux in *every* covering exposure,
+i.e. no per-exposure measurement, not a low S/N. (The `undetected` flag d30295 in e2 has 4 finite exposures, all
+S/N < 5, and 8 NaN ones.) NaN-flux exposures are 70 / 1076 of the
 monitored exposures in e0 and 11–26 per epoch (about a quarter to a third) in e1 and e3–e7. Nothing below has
 been computed yet.
 
