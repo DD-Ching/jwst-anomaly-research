@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import itertools
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -124,11 +125,11 @@ def solve(model, cat: Table, grid, z: float) -> tuple[Table, np.ndarray]:
 
 def failure_kind(n_cat: int, nearest_idx: list[int], nearest_sep, match: float, n_pred: int) -> str:
     """Why a system is not reproduced: "missing" (fewer predicted images than catalogued),
-    "shared" (every catalogued image has a predicted image within ``match``, but two share it),
-    or "offset" (some catalogued image has no predicted image within ``match``)."""
+    "shared" (two catalogued images have the same nearest predicted image, at any distance), or
+    "offset" (distinct nearest images, but one is farther than ``match``)."""
     if n_pred < n_cat:
         return "missing"
-    if np.all(np.asarray(nearest_sep, float) <= match) and len(set(nearest_idx)) < n_cat:
+    if len(set(nearest_idx)) < n_cat:
         return "shared"
     return "offset"
 
@@ -277,12 +278,13 @@ def counterparts(cat: Table, images: Path) -> list[dict]:
     for c in cat:
         d = au._sep_arcsec(raw["RA"], raw["Dec"], float(c["ra"]), float(c["dec"]))
         k = int(np.argmin(d))
+        cols = ("Redshift_type", "Redshift_reference", "Redshift_instrument")
         row = {"image": str(c["image_id"]), "uncover_id": None, "sep_arcsec": _r(float(d[k]))}
+        row.update({"z": None, **{col.lower(): None for col in cols}})
         if d[k] <= COUNTERPART_ARCSEC:
             row["uncover_id"] = repr(float(raw["ID"][k]))
-            row["z"] = au._col(raw, "z", k, np.nan)
-            for col in ("Redshift_type", "Redshift_reference", "Redshift_instrument"):
-                row[col.lower()] = au._col(raw, col, k, "")
+            row["z"] = _r(au._col(raw, "z", k, np.nan), 4)
+            row.update({col.lower(): au._col(raw, col, k, "") for col in cols})
         out.append(row)
     return out
 
@@ -323,7 +325,9 @@ def main(argv=None) -> dict:
     ap.add_argument("--model", choices=sorted(DEFAULT_OUT), default="bergamini23")
     ap.add_argument("--out", type=Path)
     ap.add_argument("--sheet", action="store_true", help="also write sheet.png (S3 range reads)")
-    ap.add_argument("--keep-maps", action="store_true", help="keep the cached UNCOVER maps")
+    ap.add_argument(
+        "--keep-maps", action="store_true", help="keep the cached UNCOVER maps in a cloud session"
+    )
     args = ap.parse_args(argv)
     out_dir = args.out or DEFAULT_OUT[args.model]
     berg, files, par = lc.load_model(MODEL)
@@ -385,7 +389,8 @@ def main(argv=None) -> dict:
         if args.sheet and rows:
             sheet(cat, rows, model, grid, out_dir / "sheet.png", label)
     finally:
-        if not args.keep_maps:  # cloud-disk rule: ~250 MB of maps, deleted after use
+        # cloud-disk rule: ~250 MB of maps, deleted after use in cloud sessions only
+        if os.environ.get("CLAUDE_CODE_REMOTE") == "true" and not args.keep_maps:
             for p in maps:
                 p.unlink(missing_ok=True)
     print(json.dumps({k: v for k, v in out.items() if k != "rows"}, indent=1))

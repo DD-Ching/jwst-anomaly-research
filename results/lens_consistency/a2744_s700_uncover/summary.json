@@ -221,7 +221,7 @@
       0.493,
       1.386
      ],
-     "kind": "offset"
+     "kind": "shared"
     },
     {
      "system": "3.2",
@@ -259,7 +259,7 @@
       2.28,
       0.629
      ],
-     "kind": "offset"
+     "kind": "shared"
     },
     {
      "system": "34.1",
@@ -407,7 +407,7 @@
       0.818,
       1.092
      ],
-     "kind": "offset"
+     "kind": "shared"
     },
     {
      "system": "77.1",
@@ -667,8 +667,8 @@
    ],
    "n_failed": {
     "missing": 0,
-    "shared": 6,
-    "offset": 23
+    "shared": 9,
+    "offset": 20
    }
   },
   "1.5": {
@@ -856,7 +856,7 @@
       2.28,
       0.629
      ],
-     "kind": "offset"
+     "kind": "shared"
     },
     {
      "system": "34.1",
@@ -1019,8 +1019,8 @@
    ],
    "n_failed": {
     "missing": 0,
-    "shared": 6,
-    "offset": 10
+    "shared": 7,
+    "offset": 9
    }
   }
  },
@@ -1090,7 +1090,7 @@
       1.08,
       1.05
      ],
-     "kind": "offset"
+     "kind": "shared"
     },
     {
      "system": "78.2",
@@ -1112,7 +1112,7 @@
       1.342,
       0.988
      ],
-     "kind": "offset"
+     "kind": "shared"
     },
     {
      "system": "78.3",
@@ -1136,8 +1136,8 @@
    ],
    "n_failed": {
     "missing": 0,
-    "shared": 1,
-    "offset": 2
+    "shared": 3,
+    "offset": 0
    }
   },
   "1.5": {

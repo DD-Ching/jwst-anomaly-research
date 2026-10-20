@@ -88,7 +88,7 @@ def test_failure_kind():
     assert s7.failure_kind(3, [0, 1], [0.1, 0.1, 0.1], 1.5, n_pred=2) == "missing"
     assert s7.failure_kind(3, [0, 0, 1], [0.5, 1.2, 0.3], 1.5, n_pred=3) == "shared"
     assert s7.failure_kind(3, [0, 1, 2], [0.5, 1.7, 0.3], 1.5, n_pred=3) == "offset"
-    assert s7.failure_kind(2, [0, 0], [0.5, 1.7], 1.5, n_pred=3) == "offset"
+    assert s7.failure_kind(2, [0, 0], [0.5, 1.7], 1.5, n_pred=3) == "shared"
 
 
 def test_nearest_index_shares():
@@ -116,7 +116,7 @@ def test_counterparts_beyond_radius_is_none(tmp_path):
     cat = _t([(0, 0)])
     cat["image_id"] = ["700.1a"]
     (row,) = s7.counterparts(cat, tmp_path / "i.fits")
-    assert row["uncover_id"] is None and row["sep_arcsec"] > 29
+    assert row["uncover_id"] is None and row["sep_arcsec"] > 29 and row["z"] is None
     assert s7.counterpart_sources([row]) == frozenset()
     assert s7.counterpart_sources([{"uncover_id": "78.21"}]) == frozenset({"78"})
 
