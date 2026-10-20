@@ -3255,6 +3255,9 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   (`results/dimming/nan_k1/RESULT.md`). The k = 1 NaN fill (G1 passed in `nan_aperture`) stays unadopted: e2 has
   8 ≤ 4 pairs (frozen minimum 10), all `on_sky` with or without it, so ε(≤ 4) stays 0.412. Revisit if a new wide
   NEXUS or JADES epoch gives ≥ 10 unseen ≤ 4 pairs (frozen value 0.584 in `results/dimming/nan_k1/PLAN.md`).
+**Addendum 2026-10-20m (o015 Tile-6 checked).** The only unused public 5105 observation, `jw05105-o015_t005`,
+  holds none of the 151 monitored sources (`results/dimming/o015_k1/RESULT.md`): no unseen ≤ 4 sample; k = 0 and
+  0.412 stay. The revisit condition above is unchanged (a new Center wide epoch or JADES).
 
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
