@@ -16,6 +16,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   calibration plans need the interval to exclude it.
 - **Handoff:** no more `arcs` null calibration from these tables. S1063 waits on 116.28VK.001 spectroscopy (owner
   decision). A sharper calibration needs many more rows at 0.2 ≲ g < 1 (deeper catalogues or more fields).
+- **Upkeep:** this run's trial tally line landed separately (#408).
 
 ## 2026-10-20: `arcs` pooled over the S1063 replication fields: pooled excess at σ_ε 0.26; S1063 weaker against it
 - **Why:** each replication field alone has little power; pooling the six control-passing independent fields asks
