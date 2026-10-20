@@ -87,7 +87,8 @@ Notes.
   macro model (`results/w3_macro_shear/RESULT.md`, simulated): in a **minimum** image the umbra keeps zero flux but
   narrows to an on-axis half-width 2√λ1 along the macro stretch (λ1 = 1 − κ − γ; not an ellipse off axis); in a
   **saddle** image there is no umbra in the sampled window (≤ 21 % dimming for a ρ = 0.1 θ_E source at
-  μ_macro = −10, ≤ 11 % at −100), so saddle images cannot show the W3 vanishing.
+  μ_macro = −10, ≤ 11 % at −100; windows |β_x| ≤ 1.9 / 1 θ_E, |β_y| ≤ 3 θ_E), so within them saddle images
+  do not show the W3 vanishing.
 - Injection helpers: `inject_images` (image positions, μ, stretch and position angle for catalogue painting) and
   `inject_light_curve` (fluxes per epoch, with a blend fraction). Both return `simulated` tables.
 

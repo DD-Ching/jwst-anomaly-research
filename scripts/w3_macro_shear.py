@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
@@ -173,6 +174,8 @@ def measure(lam1, lam2, sign=-1):
     # whole bins, so the bin width is exactly `pix` (review: 2 hx / pix was not an integer)
     hx = math.ceil(round(max(3 * 2 * np.sqrt(abs(lam1)), 1.0) / pix, 6)) * pix
     t = es.macro_magnification_map(lam1, lam2, sign, hx, 3.0, pix)
+    # widths and areas below count bins x pix, so the bins must be exactly pix wide
+    assert abs(t.meta["pixel_x"] - pix) < 1e-12 and abs(t.meta["pixel_y"] - pix) < 1e-12
     mu, bx, by = as_image(t)
     mac = 1 / abs(lam1 * lam2)
     rel = mu / mac
@@ -191,7 +194,7 @@ def measure(lam1, lam2, sign=-1):
     ker /= ker.sum()
     disk = ndimage.convolve(rel, ker, mode="nearest")
     # sampling-noise control (post hoc, added after review): same grids, no point lens
-    # the sign = 0 control depends on |lam1| only, so +-lam1 cases share one map
+    # the sign = 0 control depends on |lam1| only (same map for +-lam1)
     ctrl = as_image(cached_map(abs(lam1), lam2, 0, hx, 3.0, pix))[0] / mac
     inner = slice(k, -k or None)  # drop the convolution's padded borders (tracks and control alike)
     ctrl_disk = ndimage.convolve(ctrl, ker, mode="nearest")[inner, inner]
@@ -205,9 +208,10 @@ def measure(lam1, lam2, sign=-1):
     chords = {}
     for yv in CHORD_Y:
         iy = int(np.argmin(np.abs(by - yv)))
+        y_row = float(by[iy])  # the row actually sampled (pixel centre), not the nominal yv
         got = float(central[iy].sum() * pix / 2)
-        ell = hw_x * math.sqrt(max(0.0, 1 - (yv / hw_y) ** 2)) if hw_y > 0 else None
-        chords[f"y_{yv}"] = {"halfwidth_x": got, "ellipse_from_onaxis": ell}
+        ell = hw_x * math.sqrt(max(0.0, 1 - (y_row / hw_y) ** 2)) if hw_y > 0 else None
+        chords[f"y_{yv}"] = {"beta_y": y_row, "halfwidth_x": got, "ellipse_from_onaxis": ell}
     tracks = {}
     for u0 in (0.0, 0.5, 1.0):
         iy = int(np.argmin(np.abs(by - u0)))
@@ -253,10 +257,15 @@ def gates_isolated():
     return gate_g1(), gate_g3prime()
 
 
+def _init_worker():
+    os.environ["OMP_NUM_THREADS"] = "1"  # one numpy thread per process (scripts/CLAUDE.md)
+
+
 def main():
     t0 = time.time()
     res = {"provenance": "simulated", "plan": "results/w3_macro_shear/PLAN.md"}
-    with ProcessPoolExecutor(max_workers=4) as pool:  # independent maps: one per core
+    workers = min(os.cpu_count() or 1, len(CASES))
+    with ProcessPoolExecutor(workers, initializer=_init_worker) as pool:  # independent maps
         jobs = {"G1+G3prime": pool.submit(gates_isolated), "G2": pool.submit(gate_g2)}
         jobs["G3"] = pool.submit(gate_g3)
         g = {name: job.result() for name, job in jobs.items()}

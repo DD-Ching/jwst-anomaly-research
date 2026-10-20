@@ -495,7 +495,8 @@ def macro_magnification_map(
     big_y = (half_y + margin) / abs(lam2) + 1.0
     # 1/r^2 ≤ 1 for r ≥ 1 gives ray_step / (1 + max|lam|); the extra ray_step / 4 cap covers r < 1,
     # where the point-lens Jacobian exceeds 1 (ASSUMPTION, checked by the plan's gates G1 / G3').
-    # The fine box stays at _MACRO_FINE_HALF whatever the window, so inner images stay on it.
+    # The fine box stays at _MACRO_FINE_HALF whatever the window. Images farther out (|theta| near
+    # 1 / sqrt|lam1| = 10 for lam1 = +-0.01) fall on the coarse grid; its 2 / f^2 term samples them.
     d_fine = min(ray_step / (1.0 + max(abs(lam1), abs(lam2))), ray_step / 4)
     d_fine = 2 * f / math.ceil(2 * f / d_fine)  # fine cells end exactly on the box edges too
     # coarse spacings divide 2f, so coarse cell edges fall on the fine box's edges (no seam)

@@ -9,10 +9,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   −100 (21 % / 11 % dimming), not the 15 % / 4 % of the six tracks; still no umbra. The minimum-image umbra is not
   an ellipse: off axis its half-width along the stretch stays near 2√λ1 (constant 0.195 at μ_macro 100), so
   "shorter by √λ1" held only at u₀ = 0; across-stretch tracks vanish only for |u₀| < 2√λ1. The isolated-lens
-  injections are no fair approximation in arcs for either motion. The plan's 10 % / 50 % rule gave no verdict
+  injections are no fair approximation in arcs for either motion. Saddle claims are limited to the sampled
+  windows. The plan's 10 % / 50 % rule gave no verdict
   (12–18 %); the doc revision is labelled a judgement.
-- **Code:** μ divided by the real bin areas (a 0.25 % bias at μ_macro 10), whole-bin windows, named gate
-  thresholds with unit-tested pass rules, cached maps and a 4-process pool (281 s → 108 s). Gates unchanged.
+- **Code:** μ divided by the real bin areas (a 0.125 % bias at μ_macro 10), whole-bin windows, named gate
+  thresholds with unit-tested pass rules, G1 / G3′ sharing their maps and a process pool (`seconds` in
+  `result.json`: 281.3 → 108.6). Gates unchanged.
 - **Handoff:** none new; W3 on caustic-transient stars, if ever run, injects through the map per image.
 
 ## 2026-10-20: W3 inside a macro-lensed arc: minimum images keep a narrowed umbra, saddle images have none (simulated)

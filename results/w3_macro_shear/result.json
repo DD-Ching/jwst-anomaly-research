@@ -64,16 +64,19 @@
    "pred_halfwidth_y": 2.0,
    "umbra_chords": {
     "y_0.5": {
+     "beta_y": 0.4950000000000001,
      "halfwidth_x": 1.93,
-     "ellipse_from_onaxis": 1.9261619869574833
+     "ellipse_from_onaxis": 1.9274529825653335
     },
     "y_1.0": {
+     "beta_y": 0.9950000000000001,
      "halfwidth_x": 1.73,
-     "ellipse_from_onaxis": 1.7204941150727604
+     "ellipse_from_onaxis": 1.7233905535310328
     },
     "y_1.5": {
+     "beta_y": 1.495,
      "halfwidth_x": 1.32,
-     "ellipse_from_onaxis": 1.3077079184588583
+     "ellipse_from_onaxis": 1.3134211053580642
     }
    },
    "tracks": {
@@ -127,16 +130,19 @@
    "pred_halfwidth_y": 2.0,
    "umbra_chords": {
     "y_0.5": {
+     "beta_y": 0.4950000000000001,
      "halfwidth_x": 0.62,
-     "ellipse_from_onaxis": 0.6099948770276682
+     "ellipse_from_onaxis": 0.6103993728494485
     },
     "y_1.0": {
+     "beta_y": 0.9950000000000001,
      "halfwidth_x": 0.6,
-     "ellipse_from_onaxis": 0.5455960043841963
+     "ellipse_from_onaxis": 0.5465023050042882
     },
     "y_1.5": {
+     "beta_y": 1.495,
      "halfwidth_x": 0.55,
-     "ellipse_from_onaxis": 0.41670583149267304
+     "ellipse_from_onaxis": 0.4184849392451298
     }
    },
    "tracks": {
@@ -190,16 +196,19 @@
    "pred_halfwidth_y": 2.0,
    "umbra_chords": {
     "y_0.5": {
+     "beta_y": 0.49750000000000005,
      "halfwidth_x": 0.195,
-     "ellipse_from_onaxis": 0.19364916731037085
+     "ellipse_from_onaxis": 0.19371354495749646
     },
     "y_1.0": {
+     "beta_y": 0.9975,
      "halfwidth_x": 0.195,
-     "ellipse_from_onaxis": 0.17320508075688773
+     "ellipse_from_onaxis": 0.17334917796170826
     },
     "y_1.5": {
+     "beta_y": 1.4975,
      "halfwidth_x": 0.195,
-     "ellipse_from_onaxis": 0.13228756555322954
+     "ellipse_from_onaxis": 0.13257050011220445
     }
    },
    "tracks": {
@@ -250,14 +259,17 @@
    "pred_halfwidth_y": null,
    "umbra_chords": {
     "y_0.5": {
+     "beta_y": 0.4950000000000001,
      "halfwidth_x": 0.0,
      "ellipse_from_onaxis": null
     },
     "y_1.0": {
+     "beta_y": 0.9950000000000001,
      "halfwidth_x": 0.0,
      "ellipse_from_onaxis": null
     },
     "y_1.5": {
+     "beta_y": 1.495,
      "halfwidth_x": 0.0,
      "ellipse_from_onaxis": null
     }
@@ -313,14 +325,17 @@
    "pred_halfwidth_y": null,
    "umbra_chords": {
     "y_0.5": {
+     "beta_y": 0.49750000000000005,
      "halfwidth_x": 0.0,
      "ellipse_from_onaxis": null
     },
     "y_1.0": {
+     "beta_y": 0.9975,
      "halfwidth_x": 0.0,
      "ellipse_from_onaxis": null
     },
     "y_1.5": {
+     "beta_y": 1.4975,
      "halfwidth_x": 0.0,
      "ellipse_from_onaxis": null
     }
@@ -360,5 +375,5 @@
    }
   }
  },
- "seconds": 106.1
+ "seconds": 108.6
 }

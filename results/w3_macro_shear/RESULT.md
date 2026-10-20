@@ -15,7 +15,7 @@ numbers in `result.json`, maps in `maps.png` (looked at).
 - **G3′** (that excess on the isolated maps, R = 2.5 and 3): agrees to < 0.01 %, both signs. Pass.
 
 ## Measurements (negative mass; λ1 = 1 − κ − γ along the macro stretch, λ2 = 1 − κ + γ = 1)
-| Case | μ_macro | window \|β_x\| × \|β_y\|, θ_E | umbra (μ / μ_macro < 0.1) area, θ_E² | half-width along stretch / across | predicted 2√λ (on axis) | umbra half-width along stretch at β_y = 0.5 / 1.0 / 1.5 (ellipse from on-axis) | min μ / μ_macro, ρ = 0.1: six tracks (±100: 5) / whole window interior | no-lens control, ρ = 0.1 interior (point, whole map) |
+| Case | μ_macro | window \|β_x\| × \|β_y\|, θ_E | umbra (μ / μ_macro < 0.1) area, θ_E² | half-width along stretch / across | predicted 2√λ (on axis) | umbra half-width along stretch at β_y ≈ 0.5 / 1.0 / 1.5 (ellipse from on-axis; sampled rows in `result.json`) | min μ / μ_macro, ρ = 0.1: six tracks (±100: 5) / whole window interior | no-lens control, ρ = 0.1 interior (point, whole map) |
 |---|---|---|---|---|---|---|---|---|
 | isolated | 1 | 6 × 3 | 12.49 | 1.99 / 1.99 | 2 / 2 | 1.93 / 1.73 / 1.32 (1.93 / 1.72 / 1.31) | 0 / 0 | 0.995–1.005 (0.79–1.23) |
 | minimum | 10 | 1.9 × 3 | 4.48 | 0.63 / 2.00 | 0.632 / 2 | 0.62 / 0.60 / 0.55 (0.61 / 0.55 / 0.42) | 0 / 0 | 0.999–1.001 (0.89–1.11) |
@@ -27,7 +27,7 @@ Sampling noise (post hoc, after review): the ray grid is regular, so single-pixe
 control (`sign = 0`, same grids) gives the noise range in the last column; the ρ = 0.1 range excludes the
 convolution's padded borders (second review: with them it was 0.89–1.12); the ρ = 0.1 track minima use the same
 interior (third review; values unchanged). Fifth review: the windows now span whole bins (μ_macro = 10 window
-1.897 → 1.9 θ_E; before, the real bin width was 0.25 % off `pixel` and μ was biased by that much; the area
+1.897 → 1.9 θ_E; before, the real x bin width was 0.125 % off `pixel` and μ was biased by that much; the area
 4.47 → 4.48 and the ±10 control ranges moved, nothing else), the minimum over the whole window interior is
 stored next to the six tracks (for the saddles it is deeper: 0.79 / 0.89 against 0.85 / 0.96), and the umbra
 half-width along the stretch is stored at β_y = 0.5, 1.0 and 1.5. Zero-flux umbrae and their widths, and the
@@ -77,4 +77,4 @@ half-width along the stretch is stored at β_y = 0.5, 1.0 and 1.5. Zero-flux umb
 
 ## Next
 - If a W3 search ever targets caustic-transient stars in arcs (e.g. the Dragon arc), inject through this map
-  with the image's (κ, γ) and parity; saddle images cannot test W3 by vanishing.
+  with the image's (κ, γ) and parity; saddle images showed no vanishing in the sampled windows.
