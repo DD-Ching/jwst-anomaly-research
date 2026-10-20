@@ -2343,6 +2343,15 @@ CATS-fitted z = 4.419.
   5106117 have none). Post hoc: DJA's EAZY photo-z of 16.2 is 2.79, inside both models' merging
   ranges (CANUCS DR1's 2.25 is inside the CATS range only; exploratory). Revisit condition unchanged; a DJA grade of `1208_5114276` would meet it.
 
+**Addendum 2026-10-20 (Sharon v4cor pinned, `scripts/m1149_sharon.py`).**
+- **Decision.** Sharon v4cor is the `MODELS` entry `macs1149-sharon` (sha256-pinned maps, z_lens 0.543). Its frozen
+  known-case gate G2 failed as written, because system 9 lies off the 200″ maps; it is used only inside the map
+  footprint (post hoc condition).
+- **Evidence.** G1: κ and z = 2 |μ| reproduce the published maps (median relative difference 0.00025 / 0.016). G2:
+  readme Table 5 gold images, rms 0.226″, 7 / 7 in-footprint systems. CATS on the same images: system 13 needs its
+  fitted z 1.301, not the spec-z 1.24. `results/lens_consistency/macs1149_sharon/RESULT.md`.
+- **Revisit if** a wider Sharon map release appears, or a D-037 row lies outside the footprint.
+
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
 **Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″
@@ -5541,6 +5550,12 @@ confining radiation at a throat is found.
   - **Decision:** existing-product restoration (the v9–v10 psfcat route) is closed for the v13 and bounds rules.
   - **Revisit if:** new edge information exists (another survey or band covering the same stars), or the owner
     decides on using infobits ≠ 0 exposures or on a lower recovery target.
+- **Addendum 2026-10-20 (ASAS-SN, `results/w3_ztf/asassn/RESULT.md`):**
+  - **Trial:** ASAS-SN Sky Patrol, via the official `skypatrol` client, is the edge-information source tried.
+  - **Outcome:** its light-curve service was down (maintenance), so the trial did not run.
+  - **Kept for the re-run:** 40 stars selected by catalogue (bright, clean 16″ apertures) and their ZTF-only
+    baseline.
+  - **Revisit if:** `get_block_servers` is non-empty. Re-run the committed plan unchanged.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

@@ -1,0 +1,54 @@
+# Cloud-session shim (not part of the method): pyasassn talks plain HTTP to port 9006, and this sandbox only egresses
+# through a CONNECT proxy ($HTTPS_PROXY). This local proxy accepts absolute-URI HTTP requests and forwards each one
+# through a CONNECT tunnel. Usage: python http_shim.py.txt <listen port>; then HTTP_PROXY=http://127.0.0.1:<port>.
+import os, socket, sys, threading
+from urllib.parse import urlsplit
+UP = urlsplit(os.environ['HTTPS_PROXY'])
+
+
+def pipe(a, b):
+    try:
+        while (d := a.recv(65536)):
+            b.sendall(d)
+    except OSError:
+        pass
+    finally:
+        for s in (a, b):
+            try:
+                s.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
+
+
+def handle(c):
+    buf = b''
+    while b'\r\n\r\n' not in buf:
+        d = c.recv(65536)
+        if not d:
+            return c.close()
+        buf += d
+    head, rest = buf.split(b'\r\n\r\n', 1)
+    lines = head.split(b'\r\n')
+    method, url, ver = lines[0].split(b' ')
+    u = urlsplit(url.decode())
+    host, port = u.hostname, u.port or 80
+    up = socket.create_connection((UP.hostname, UP.port), timeout=60)
+    up.sendall(f'CONNECT {host}:{port} HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n'.encode())
+    r = b''
+    while b'\r\n\r\n' not in r:
+        r += up.recv(4096)
+    if b' 200' not in r.split(b'\r\n')[0]:
+        c.sendall(b'HTTP/1.1 502 Bad Gateway\r\nContent-Length: 0\r\n\r\n'); return c.close()
+    path = (u.path or '/') + (('?' + u.query) if u.query else '')
+    hdr = [ln for ln in lines[1:] if not ln.lower().startswith((b'proxy-', b'connection'))] + [b'Connection: close']
+    up.sendall(method + b' ' + path.encode() + b' ' + ver + b'\r\n' + b'\r\n'.join(hdr) + b'\r\n\r\n' + rest)
+    up.settimeout(None)
+    threading.Thread(target=pipe, args=(c, up), daemon=True).start()
+    pipe(up, c)
+
+
+srv = socket.socket(); srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+srv.bind(('127.0.0.1', int(sys.argv[1]))); srv.listen(64)
+while True:
+    cs, _ = srv.accept()
+    threading.Thread(target=handle, args=(cs,), daemon=True).start()

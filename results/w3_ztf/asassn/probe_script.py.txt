@@ -1,0 +1,38 @@
+# ASAS-SN entry probe (PLAN section 1): service message, light-curve block servers, one catalogue cone and, if servers
+# exist, one test light curve. Appends one record to probe.json. Needs HTTP_PROXY pointing at http_shim in this sandbox.
+import json, os, sys, time
+import requests
+B = 'http://asassn-lb01.ifa.hawaii.edu:9006'
+T = (60, 120)
+rec = {'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}
+def get(path):
+    t = time.time()
+    try:
+        r = requests.get(B + path, timeout=T)
+        return r.status_code, r.content, round(time.time() - t, 1)
+    except Exception as e:
+        return None, str(e)[:200].encode(), round(time.time() - t, 1)
+st, body, s = get('/get_current_message'); rec['message'] = {'status': st, 'seconds': s, 'text': body.decode(errors='replace')}
+st, body, s = get('/get_block_servers'); rec['block_servers'] = {'status': st, 'seconds': s, 'text': body.decode(errors='replace')}
+from pyasassn.client import SkyPatrolClient
+t = time.time()
+try:
+    c = SkyPatrolClient(verbose=False)
+    df = c.cone_search(ra_deg=269.99787, dec_deg=-29.99994, radius=2, units='arcsec', catalog='master_list')
+    rec['cone'] = {'ok': True, 'rows': len(df), 'seconds': round(time.time() - t, 1)}
+except Exception as e:
+    rec['cone'] = {'ok': False, 'error': f'{type(e).__name__}: {str(e)[:200]}'}
+rec['lightcurve'] = {'tried': False}
+if rec['cone'].get('ok') and c.block_servers:
+    t = time.time()
+    try:
+        lc = c.cone_search(ra_deg=269.99787, dec_deg=-29.99994, radius=2, units='arcsec', catalog='master_list', download=True)
+        rec['lightcurve'] = {'tried': True, 'ok': True, 'rows': int(len(lc.data)), 'columns': list(lc.data.columns), 'seconds': round(time.time() - t, 1)}
+    except Exception as e:
+        rec['lightcurve'] = {'tried': True, 'ok': False, 'error': f'{type(e).__name__}: {str(e)[:200]}'}
+rec['available'] = bool(rec['lightcurve'].get('ok'))
+p = 'results/w3_ztf/asassn/probe.json'
+d = json.load(open(p)) if os.path.exists(p) else {'label': 'observed (service responses)', 'probes': []}
+d['probes'].append(rec)
+json.dump(d, open(p, 'w'), indent=1); open(p, 'a').write('\n')
+print(json.dumps(rec)[:800])

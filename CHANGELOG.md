@@ -20,6 +20,26 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** 700.1 needs a local re-fit of the northern group (O4/O9/20036 free, 78 as a constraint) or spectra of
   both arc ends. Neither is cheap, so the line is parked. Other lines are unchanged: #409 and the other needs-human
   PRs wait on the owner, and #374 waits for a green weekly run.
+## 2026-10-20: MACS1149 Sharon v4cor pinned as `macs1149-sharon`: maps check passes; gold-image gate fails as written (system 9 off the map)
+- **Why:** TASKS "second models as pinned `MapLensModel` entries" (MACS1149); the D-037 second model was scratch code
+  only (`docs/fields/macs1149.md`).
+- **Result:** G1 passes (κ 0.00025, z = 2 |μ| 0.016 median relative difference). G2 fails as written: system 9's
+  images 9.2–9.4 lie outside the 200″ maps. Post hoc, inside the footprint 7 / 7 gold systems are reproduced at rms
+  0.226″. CATS v4.1 on the same images: rms 4.35″, all from system 13 at its spec-z 1.24 (CATS fitted 1.301; at
+  1.301, rms 0.853″). No lensing residual (`results/lens_consistency/macs1149_sharon/RESULT.md`).
+- **Access:** archive.stsci.edu again sent an incomplete TLS chain; the SOURCES.md AIA fix worked for curl, and
+  Python's urllib still failed, so the CATS maps were fetched with curl into the cache.
+- **Handoff:** next, use `macs1149-sharon` (inside its footprint) as the second model for the D-037 rules in
+  `forced_check`.
+
+## 2026-10-20: W3 ZTF × ASAS-SN: Sky Patrol light-curve service down; 40 stars selected and baselined, trial not run
+- **Entry:** the official client works for catalogue cones (through a CONNECT shim in the cloud sandbox), but the
+  light-curve service had no block servers in 3 probes (22:11–22:31 UTC); it was announced as down for maintenance
+  since 13 Oct. No flux was read and no injection ran.
+- **Selection:** 40 stars, the brightest calibration stars of 4991 and 2344 (r 14.5–14.8) with a clean 16″
+  aperture (`rp_00_1` ≥ 16″). Their ZTF-only targets: 63 bounds-insufficient W3 events and 12 insufficient fades.
+- **Status:** paused, not closed. Re-run the same plan once the service is back
+  (`results/w3_ztf/asassn/RESULT.md`).
 
 ## 2026-10-20: Abell 2744 system 700.1 in UNCOVER v2.0: tool not validated; 700.1 = UNCOVER 78 (z_spec 2.3151), merged in both models
 - **Why:** D-036 revisit condition ("if UNCOVER v2.0 is scanned the same way") after #412's outcome B. Plan frozen

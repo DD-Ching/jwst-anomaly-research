@@ -663,7 +663,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 
 - JWST CANUCS program 1208, NIRCam level 3 `jw01208-o008_t004_nircam_clear-*`, 8 bands (F090W–F444W), jwst 3.0.0,
   S3 `s3://stpubdata/jwst/public/jw01208/L3/t/o008/`. Manifests: `data/manifests/macs1149*.ecsv`.
-- HFF Sharon v4cor MACS1149 deflection maps (second model for the comparison only; not in `MODELS`):
+- HFF Sharon v4cor MACS1149 deflection maps (in `MODELS` as `macs1149-sharon` since 2026-10-20, with the kappa and
+  z02-magnif maps; sha256 in `lensmodel.MACS1149_SHARON_V4COR`; readme
+  `hlsp_frontier_model_macs1149_sharon_v4cor_readme.pdf`, sha256
+  `12a284d22368f29491670180d07f5776d35a28ed754743b866fdf7184af39636`, Table 5 gold images; accessed 2026-10-20):
   `https://archive.stsci.edu/pub/hlsp/frontier/macs1149/models/sharon/v4cor/hlsp_frontier_model_macs1149_sharon_v4cor_{x,y}-arcsec-deflect.fits`,
   64,008,000 B each. sha256: x `44f1d21a78cead051c08295d13d7c9189638971cf1e9445bb2caa641a129324f`,
   y `54508deb502d9bcafca9733c3b28f3b4d794b64f11167589b56c1fc37d66a15c`.
@@ -1608,6 +1611,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   s3://ipac-irsa-ztf/ztf/enhanced/dr24/ (anonymous; read 2026-10-18); tutorial
   https://caltech-ipac.github.io/irsa-tutorials/ztf-lightcurves/; release notes
   https://irsa.ipac.caltech.edu/data/ZTF/docs/releases/dr24/ztf_release_notes_dr24.pdf. Used by `scripts/w3_ztf.py`.
+- ASAS-SN Sky Patrol v2 (Hart et al. 2023, arXiv:2304.03791; title not re-checked this round), official client
+  `skypatrol` 0.6.21 on PyPI (module `pyasassn`; https://github.com/asas-sn/skypatrol), server
+  http://asassn-lb01.ifa.hawaii.edu:9006 (deployment 0.6.20). Probed 2026-10-20: catalogue cones work, light-curve
+  service down for maintenance (`results/w3_ztf/asassn/probe.json`). Installed in the session venv only; not a
+  project dependency.
 - Metacalibration: Huff & Mandelbaum 2017, arXiv:1702.02600 ("Metacalibration: Direct Self-Calibration of Biases in
   Shear Measurement"); Sheldon & Huff 2017, arXiv:1702.02601 ("Practical Weak Lensing Shear Measurement with
   Metacalibration"); titles checked via the arXiv API 2026-10-18. JADES 1181 o001 F200W i2d:
