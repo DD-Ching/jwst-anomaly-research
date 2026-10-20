@@ -1,0 +1,49 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uid, datatype: string}
+# - {name: n_exposures, datatype: int64}
+# - {name: n_detected, datatype: int64}
+# - {name: n_suspect, datatype: int64}
+# - {name: n_clean, datatype: int64}
+# - {name: verdict, datatype: string}
+# - {name: epoch, datatype: int64}
+# - {name: kind, datatype: string}
+# - {name: mosaic_snr, datatype: float64}
+# - {name: n_files, datatype: int64}
+# - {name: n_failed, datatype: int64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: results/dimming/persistence_run/run.py nexus}
+# - {ratio: 20.0}
+# - {min_snr: 5.0}
+# - {lookback_hours: 3.0}
+# - {max_nan: 2}
+# schema: astropy-2.0
+uid n_exposures n_detected n_suspect n_clean verdict epoch kind mosaic_snr n_files n_failed
+nexus-d12401 2 2 0 2 on_sky 3 monitored 24.786315394606497 120 0
+nexus-d12704 2 2 0 2 on_sky 3 monitored 21.682662786881462 120 0
+nexus-d12855 2 2 0 2 on_sky 3 monitored 28.792409237106636 120 0
+nexus-d13247 2 2 0 2 on_sky 3 monitored 30.646824520140605 120 0
+nexus-d19961 2 1 0 0 inconclusive 3 monitored 26.47109744748848 120 0
+nexus-d20068 2 2 0 0 inconclusive 3 monitored 32.34666182664309 120 0
+nexus-d20578 2 2 0 0 inconclusive 3 monitored 15.620543846476966 120 0
+nexus-d20750 2 2 0 0 inconclusive 3 monitored 32.42308332736902 120 0
+nexus-d21013 2 2 0 0 inconclusive 3 monitored 26.89323464108506 120 0
+nexus-d21420 4 4 0 2 on_sky 3 monitored 32.60123199119021 120 0
+nexus-d21831 2 2 0 2 on_sky 3 monitored 21.65454349875086 120 0
+nexus-d21946 2 2 0 2 on_sky 3 monitored 28.857296312978704 120 0
+nexus-d22035 2 2 0 2 on_sky 3 monitored 32.856492356627356 120 0
+nexus-d23010 2 2 0 2 on_sky 3 monitored 32.056534063507215 120 0
+nexus-d45498 2 2 0 2 on_sky 3 monitored 32.95780754102723 120 0
+nexus-d47121 2 2 0 0 inconclusive 3 monitored 32.85551313622995 120 0
+nexus-d47294 2 2 0 0 inconclusive 3 monitored 32.79613895142178 120 0
+nexus-d47330 2 1 0 0 inconclusive 3 monitored 32.941768831540436 120 0
+nexus-d47565 2 2 0 0 inconclusive 3 monitored 32.86802734026749 120 0
+nexus-d47615 2 2 0 0 inconclusive 3 monitored 32.94066489845056 120 0
+nexus-d47796 3 2 0 2 on_sky 3 monitored 32.71697605896407 120 0
+nexus-d47843 2 2 0 2 on_sky 3 monitored 32.82552591918651 120 0
+nexus-d47944 2 2 0 2 on_sky 3 monitored 22.532446787972077 120 0
+nexus-d48241 2 2 0 2 on_sky 3 monitored 32.90357548328514 120 0
+nexus-d48267 2 2 0 2 on_sky 3 monitored 32.769976974367964 120 0
+nexus-d48331 2 2 0 2 on_sky 3 monitored 32.67574399695886 120 0

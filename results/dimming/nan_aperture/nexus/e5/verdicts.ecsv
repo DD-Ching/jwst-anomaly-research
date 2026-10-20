@@ -1,0 +1,50 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uid, datatype: string}
+# - {name: n_exposures, datatype: int64}
+# - {name: n_detected, datatype: int64}
+# - {name: n_suspect, datatype: int64}
+# - {name: n_clean, datatype: int64}
+# - {name: verdict, datatype: string}
+# - {name: epoch, datatype: int64}
+# - {name: kind, datatype: string}
+# - {name: mosaic_snr, datatype: float64}
+# - {name: n_files, datatype: int64}
+# - {name: n_failed, datatype: int64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: results/dimming/persistence_run/run.py nexus}
+# - {ratio: 20.0}
+# - {min_snr: 5.0}
+# - {lookback_hours: 3.0}
+# - {max_nan: 2}
+# schema: astropy-2.0
+uid n_exposures n_detected n_suspect n_clean verdict epoch kind mosaic_snr n_files n_failed
+nexus-d13038 2 2 0 0 inconclusive 5 monitored 29.57338710058476 120 0
+nexus-d19001 2 2 0 2 on_sky 5 monitored 22.40976934573675 120 0
+nexus-d19884 2 2 0 2 on_sky 5 monitored 26.17198724032268 120 0
+nexus-d19911 2 2 0 2 on_sky 5 monitored 19.83818447122363 120 0
+nexus-d19991 2 2 0 2 on_sky 5 monitored 26.083171049893725 120 0
+nexus-d20011 2 2 0 2 on_sky 5 monitored 33.02175379955228 120 0
+nexus-d20578 4 4 0 4 on_sky 5 monitored 19.53263015635967 120 0
+nexus-d20750 2 2 0 2 on_sky 5 monitored 32.25622098655674 120 0
+nexus-d20888 2 2 0 2 on_sky 5 monitored 19.069109649827567 120 0
+nexus-d21013 2 2 0 2 on_sky 5 monitored 27.249949955303585 120 0
+nexus-d21402 2 2 0 2 on_sky 5 monitored 25.58686377499814 120 0
+nexus-d21420 2 2 0 2 on_sky 5 monitored 31.77126119653818 120 0
+nexus-d21728 2 2 0 2 on_sky 5 monitored 31.168082811935825 120 0
+nexus-d21831 2 2 0 2 on_sky 5 monitored 20.963810778453325 120 0
+nexus-d21897 2 1 0 1 inconclusive 5 monitored 23.13411019854857 120 0
+nexus-d21946 2 2 0 2 on_sky 5 monitored 28.560014346501692 120 0
+nexus-d22105 2 2 0 2 on_sky 5 monitored 29.604892917933707 120 0
+nexus-d22968 2 2 0 2 on_sky 5 monitored 31.118044310405306 120 0
+nexus-d45375 1 0 0 0 undetected 5 monitored 32.195771319758904 120 0
+nexus-d47320 2 2 0 2 on_sky 5 monitored 32.98364344755018 120 0
+nexus-d47330 2 2 0 2 on_sky 5 monitored 32.80213239902177 120 0
+nexus-d47565 2 2 0 2 on_sky 5 monitored 32.7506325450847 120 0
+nexus-d47615 2 2 0 2 on_sky 5 monitored 32.746276154118746 120 0
+nexus-d47621 2 2 0 2 on_sky 5 monitored 32.83264991889037 120 0
+nexus-d47796 4 4 0 4 on_sky 5 monitored 33.109035024675016 120 0
+nexus-d47843 2 2 0 2 on_sky 5 monitored 32.89438971446877 120 0
+nexus-d47944 2 1 0 1 inconclusive 5 monitored 21.47848902673577 120 0

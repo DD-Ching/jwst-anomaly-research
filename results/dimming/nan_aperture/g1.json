@@ -1,0 +1,44 @@
+{
+ "n": 42,
+ "provenance": "derived",
+ "source": "NEXUS e5 _cal stamps (S3 range reads)",
+ "mask1": {
+  "median_abs_dev": 0.0369,
+  "p90_abs_dev": 0.1256,
+  "same_call_frac": 1.0,
+  "n_finite": 42,
+  "pass": true,
+  "median_signed_dev": 0.0003
+ },
+ "mask2": {
+  "median_abs_dev": 0.0791,
+  "p90_abs_dev": 0.1703,
+  "same_call_frac": 1.0,
+  "n_finite": 42,
+  "pass": false,
+  "median_signed_dev": 0.0215
+ },
+ "G1_pass": false,
+ "post_hoc_alternatives": {
+  "mask1_bilinear": {
+   "median_abs_dev": 0.041,
+   "median_signed_dev": 0.0023,
+   "p90_abs_dev": 0.1101
+  },
+  "mask1_area": {
+   "median_abs_dev": 0.0314,
+   "median_signed_dev": 0.029,
+   "p90_abs_dev": 0.0662
+  },
+  "mask2_bilinear": {
+   "median_abs_dev": 0.0688,
+   "median_signed_dev": 0.0146,
+   "p90_abs_dev": 0.1419
+  },
+  "mask2_area": {
+   "median_abs_dev": 0.0531,
+   "median_signed_dev": 0.0173,
+   "p90_abs_dev": 0.0901
+  }
+ }
+}
