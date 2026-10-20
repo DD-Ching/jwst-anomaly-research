@@ -41,6 +41,9 @@ MATCH_ARCSEC = 1.0  # each catalogued image needs its own predicted image this c
 # uses the smallest one that reproduces >= KNOWN_GATE of the own-list systems (ASSUMPTIONs)
 UNCOVER_RADII = (1.0, 1.5)
 KNOWN_GATE = 0.8
+COUNTERPART_ARCSEC = (
+    0.5  # an UNCOVER image this close to a catalogued one is the same image (ASSUMPTION)
+)
 GRID_STEP = 0.25
 SHEET_BANDS = ("f150w", "f200w", "f444w")
 DEFAULT_OUT = {
@@ -86,6 +89,16 @@ def gated_match(known: dict[float, dict], gate: float = KNOWN_GATE) -> float | N
     return min(ok) if ok else None
 
 
+def nearest_index(pred: Table, cat: Table) -> tuple[list[int], np.ndarray]:
+    """Index of, and separation (arcsec) to, each catalogued image's nearest predicted image."""
+    if len(pred) == 0:
+        return [-1] * len(cat), np.full(len(cat), np.nan)
+    d = np.array(
+        [au._sep_arcsec(pred["ra"], pred["dec"], float(c["ra"]), float(c["dec"])) for c in cat]
+    )
+    return [int(k) for k in d.argmin(axis=1)], d.min(axis=1)
+
+
 def verdict(rows: list[dict]) -> dict:
     """Frozen outcome: A ("fitted-z artefact") if any z reproduces the system, else B."""
     good = [r["z"] for r in rows if r["reproduced"]]
@@ -109,15 +122,28 @@ def solve(model, cat: Table, grid, z: float) -> tuple[Table, np.ndarray]:
     return lensmodel.find_images(model, grid, float(bx), float(by), z), beta
 
 
-def validate(model, arcs: Table, grid, match: float = MATCH_ARCSEC) -> dict:
-    """Known cases: the same assignment rule on every other system with a fixed (catalogued) z
-    and at least two images. Returns the reproduced fraction, the failing systems and, per failing
-    system, the image counts and the largest assigned and nearest-image separations (a failure with
-    every nearest image inside ``match`` is a shared predicted image, not a missing one)."""
+def failure_kind(n_cat: int, nearest_idx: list[int], nearest_sep, match: float, n_pred: int) -> str:
+    """Why a system is not reproduced: "missing" (fewer predicted images than catalogued),
+    "shared" (every catalogued image has a predicted image within ``match``, but two share it),
+    or "offset" (some catalogued image has no predicted image within ``match``)."""
+    if n_pred < n_cat:
+        return "missing"
+    if np.all(np.asarray(nearest_sep, float) <= match) and len(set(nearest_idx)) < n_cat:
+        return "shared"
+    return "offset"
+
+
+def validate(
+    model, arcs: Table, grid, match: float = MATCH_ARCSEC, exclude: frozenset = frozenset()
+) -> dict:
+    """Known cases: the same assignment rule on every other system (not ``SYSTEM``, not in
+    ``exclude``) with a fixed (catalogued) z and at least two images. Returns the reproduced
+    fraction, the failing systems and, per failing system, the image counts, each catalogued
+    image's nearest predicted image (index, separation) and the ``failure_kind``."""
     systems = np.asarray(arcs["system"]).astype(str)
     zcol = np.asarray(arcs["z"], float)
     done, failed, detail = 0, [], []
-    for s in sorted(set(systems) - {SYSTEM}):
+    for s in sorted(set(systems) - {SYSTEM} - set(exclude)):
         cat = arcs[systems == s]
         z = float(zcol[systems == s][0])
         if len(cat) < 2 or not z > 0:
@@ -127,13 +153,17 @@ def validate(model, arcs: Table, grid, match: float = MATCH_ARCSEC) -> dict:
         done += 1
         if not (idx and np.all(sep <= match)):
             failed.append(s)
+            near_idx, near = nearest_index(pred, cat)
             detail.append(
                 {
                     "system": s,
+                    "images": [str(i) for i in cat["image_id"]],
                     "n_catalogued": len(cat),
                     "n_predicted": len(pred),
                     "max_assigned_arcsec": _r(float(np.max(sep))) if idx else None,
-                    "max_nearest_arcsec": _r(float(np.nanmax(nearest(pred, cat)))),
+                    "nearest_pred": near_idx,
+                    "nearest_arcsec": [_r(float(x)) for x in near],
+                    "kind": failure_kind(len(cat), near_idx, near, match, len(pred)),
                 }
             )
     return {
@@ -142,9 +172,9 @@ def validate(model, arcs: Table, grid, match: float = MATCH_ARCSEC) -> dict:
         "fraction": _r((done - len(failed)) / done) if done else None,
         "failed": failed,
         "failed_detail": detail,
-        "n_failed_shared": sum(
-            d["max_nearest_arcsec"] is not None and d["max_nearest_arcsec"] <= match for d in detail
-        ),
+        "n_failed": {
+            k: sum(d["kind"] == k for d in detail) for k in ("missing", "shared", "offset")
+        },
     }
 
 
@@ -226,22 +256,17 @@ def sheet(
     plt.close(fig)
 
 
-def load_uncover2():
-    """UNCOVER v2.0 maps as a ``MapLensModel``, its own image list, and the cached map paths."""
-    from astropy.cosmology import FlatLambdaCDM
-
+def load_uncover2(maps: list[Path]):
+    """UNCOVER v2.0 maps as a ``MapLensModel`` and the image-table path; each map path is
+    appended to ``maps`` as soon as it is cached, so the caller can delete it on failure."""
     from jwst_anomaly.photometry import fetch_catalog
 
-    files = {k: fetch_catalog(url, sha) for k, (url, sha) in au.UNCOVER_V2.items()}
-    h0, om = au.COSMOLOGY
-    model = lensmodel.MapLensModel.from_fits(
-        files["alpha_x"],
-        files["alpha_y"],
-        au.Z_LENS,
-        FlatLambdaCDM(H0=h0, Om0=om),
-        source="abell2744-uncover2",
-    )
-    return model, files["images"], [files["alpha_x"], files["alpha_y"]]
+    files = {}
+    for key, (url, sha) in au.UNCOVER_V2.items():
+        files[key] = fetch_catalog(url, sha)
+        if key != "images":
+            maps.append(files[key])
+    return au.uncover2_model(files), files["images"]
 
 
 def counterparts(cat: Table, images: Path) -> list[dict]:
@@ -252,18 +277,45 @@ def counterparts(cat: Table, images: Path) -> list[dict]:
     for c in cat:
         d = au._sep_arcsec(raw["RA"], raw["Dec"], float(c["ra"]), float(c["dec"]))
         k = int(np.argmin(d))
+        row = {"image": str(c["image_id"]), "uncover_id": None, "sep_arcsec": _r(float(d[k]))}
+        if d[k] <= COUNTERPART_ARCSEC:
+            row["uncover_id"] = repr(float(raw["ID"][k]))
+            row["z"] = au._col(raw, "z", k, np.nan)
+            for col in ("Redshift_type", "Redshift_reference", "Redshift_instrument"):
+                row[col.lower()] = au._col(raw, col, k, "")
+        out.append(row)
+    return out
+
+
+def pair_geometry(images: Table) -> list[dict]:
+    """Per system: separation of its first two images and their midpoint, as offsets (arcsec,
+    West = +x) from the first system's first image (``observed`` positions, derived numbers)."""
+    systems = np.asarray(images["system"]).astype(str)
+    ra0, dec0 = float(images["ra"][0]), float(images["dec"][0])
+    cos = np.cos(np.deg2rad(dec0))
+    out = []
+    for s in dict.fromkeys(systems):
+        t = images[systems == s]
+        if len(t) < 2:
+            continue
+        ra, dec = np.asarray(t["ra"][:2], float), np.asarray(t["dec"][:2], float)
         out.append(
             {
-                "image": str(c["image_id"]),
-                "uncover_id": repr(float(raw["ID"][k])),
-                "sep_arcsec": _r(float(d[k])),
-                "z": float(raw["z"][k]),
-                "redshift_type": str(raw["Redshift_type"][k]),
-                "redshift_reference": str(raw["Redshift_reference"][k]),
-                "redshift_instrument": str(raw["Redshift_instrument"][k]),
+                "system": s,
+                "images": [str(i) for i in t["image_id"][:2]],
+                "sep_arcsec": _r(float(au._sep_arcsec(ra[1:], dec[1:], ra[0], dec[0])[0])),
+                "mid_dx_arcsec": _r(-(ra.mean() - ra0) * cos * 3600.0),
+                "mid_dy_arcsec": _r((dec.mean() - dec0) * 3600.0),
             }
         )
     return out
+
+
+def counterpart_sources(rows: list[dict]) -> frozenset:
+    """UNCOVER systems of the target's own source (every knot "S.K" of each matched "S")."""
+    return frozenset(
+        au.uncover_system(r["uncover_id"]).split(".")[0] for r in rows if r["uncover_id"]
+    )
 
 
 def main(argv=None) -> dict:
@@ -279,20 +331,29 @@ def main(argv=None) -> dict:
     cat = arcs[np.asarray(arcs["system"]).astype(str) == SYSTEM]
     cat.sort("image_id")  # a, b, c: the sheet and the summary rely on this order
     maps: list[Path] = []
-    if args.model == "bergamini23":
-        model, known_list, label = berg, arcs, "Bergamini+23"
-        radii: tuple[float, ...] = (MATCH_ARCSEC,)
-    else:
-        model, images, maps = load_uncover2()
-        known_list = au.uncover_images(images)
-        label, radii = "UNCOVER v2.0", UNCOVER_RADII
     try:
+        exclude: frozenset = frozenset()
+        if args.model == "bergamini23":
+            model, known_list, label = berg, arcs, "Bergamini+23"
+            radii: tuple[float, ...] = (MATCH_ARCSEC,)
+        else:
+            model, images = load_uncover2(maps)
+            known_list = au.uncover_images(images)
+            label, radii = "UNCOVER v2.0", UNCOVER_RADII
+            found = counterparts(cat, images)
+            # the target's own source is not a known case (post hoc, RESULT.md)
+            src = counterpart_sources(found)
+            sys_src = np.char.partition(np.asarray(known_list["system"]).astype(str), ".")[:, 0]
+            exclude = frozenset(
+                np.asarray(known_list["system"]).astype(str)[np.isin(sys_src, list(src))]
+            )
         both = Table({"ra": np.r_[arcs["ra"], known_list["ra"]]})
         both["dec"] = np.r_[arcs["dec"], known_list["dec"]]
         grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, both), GRID_STEP)
-        known = {r: validate(model, known_list, grid, r) for r in radii}
+        known = {r: validate(model, known_list, grid, r, exclude) for r in radii}
         print("known cases:", known, flush=True)
-        match = gated_match(known)
+        # the gate is the UNCOVER plan's; the Bergamini+23 plan has none
+        match = MATCH_ARCSEC if args.model == "bergamini23" else gated_match(known)
         rows = scan(model, cat, grid, match) if match is not None else []
         out = {
             "model": MODEL if args.model == "bergamini23" else "abell2744-uncover2",
@@ -307,7 +368,12 @@ def main(argv=None) -> dict:
         else:
             out["known_cases"] = {str(r): k for r, k in known.items()}
             out["known_gate"] = KNOWN_GATE
-            out["uncover_counterparts"] = counterparts(cat, images)
+            out["uncover_counterparts"] = found
+            out["known_excluded"] = sorted(exclude)
+            # UNCOVER's own fit of the target's source (a constraint of that model, not a test)
+            own = known_list[np.isin(np.asarray(known_list["system"]).astype(str), list(exclude))]
+            out["target_systems_fit"] = {str(r): validate(model, own, grid, r) for r in radii}
+            out["target_pairs"] = pair_geometry(own)
         if match is None:
             out["outcome"] = "tool not validated"
         else:

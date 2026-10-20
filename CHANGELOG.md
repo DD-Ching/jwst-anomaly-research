@@ -2,22 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-20: Abell 2744 system 700.1 in UNCOVER v2.0: tool not validated; 700.1 = UNCOVER 78, z_spec 2.3151
+## 2026-10-20: Abell 2744 system 700.1 in UNCOVER v2.0: tool not validated; 700.1 = UNCOVER 78 (z_spec 2.3151), merged in both models
 - **Why:** D-036 revisit condition ("if UNCOVER v2.0 is scanned the same way") after #412's outcome B. Plan frozen
   and committed first (`results/lens_consistency/a2744_s700_uncover/PLAN.md`).
 - **Result (`RESULT.md`, `summary.json`):** frozen outcome "tool not validated", so no z scan. The one-to-one rule
-  reproduces 31 / 63 (1.0″) and 44 / 63 (1.5″) of UNCOVER's own systems, below the 0.8 gate. Of the 19 failures at
-  1.5″, 9 are shared predicted images and 10 lie 1.77–2.31″ off.
-- **Post hoc:** 700.1a/b/c are UNCOVER 78.21/78.22/78.23 (0.02″). UNCOVER lists system 78 at z 2.3151 (spec,
-  "Price+24", NIRSpec). UNCOVER, constrained by it, fits a/b as separate images (78.2: nearest ≤ 1.34″, one-to-one
-  1.72″). Bergamini+23 fails at z 2.30–2.325 too (rms ≈ 10.9″). Reading: Bergamini+23 lacks the constraint
-  (ordinary model limitation). Not a candidate.
+  reproduces 31 / 60 (1.0″) and 44 / 60 (1.5″) of UNCOVER's own systems, below the 0.8 gate. At 1.5″ the failures
+  are 6 shared and 10 offset (1.77–2.31″).
+- **Post hoc:** 700.1a/b/c are UNCOVER 78.21–78.23 (0.02″). The UNCOVER table lists system 78 at z 2.3151 (spec,
+  "Price+24", NIRSpec). At that z both models merge a and b into one predicted image: UNCOVER (constrained by 78)
+  for all three knots, and Bergamini+23 (rms ≈ 10.9″). The three a/b knot pairs are nested (0.50 / 1.21 / 1.74″),
+  with midpoints within 0.05″: a fold arc or one symmetric edge-on galaxy. Undetermined, not a candidate.
 - **Failed approach:** a one-to-one image assignment at ≤ 1.5″ is not a usable reproduction test for a map model
-  with a 0.84″ rms: shared predicted images occur in known systems. Do not rerun it on UNCOVER without a looser,
-  pre-validated rule.
-- **New:** `scripts/a2744_s700.py --model uncover2` (own-list known cases, `gated_match`, `counterparts`).
-- **Handoff:** 700.1 is closed as model-limited unless a model without system 78 as a constraint is wanted. Other
-  lines unchanged (#409 and other needs-human PRs wait on the owner; #374 waits for a green weekly run).
+  with a 0.84″ rms: shared predicted images occur in 6 / 60 known systems. Do not rerun it on UNCOVER without a
+  looser, pre-validated rule.
+- **New:** `scripts/a2744_s700.py --model uncover2` (own-list known cases, `gated_match`, `failure_kind`,
+  `counterparts`, `pair_geometry`); `a2744_uncover.uncover2_model`.
+- **Handoff:** next for 700.1: `/vet-candidate` (cluster members or a perturber near the arc's midpoint; one image or
+  two: colours of the mirrored knots). Other lines are unchanged: #409 and the other needs-human PRs wait on the
+  owner, and #374 waits for a green weekly run.
 
 ## 2026-10-20: Abell 2744 system 700.1: no redshift reproduces it in Bergamini+23 (D-036 addendum)
 - **Why:** D-036 left "a finer z scan is open" for 700.1, which Bergamini+23 reproduced at none of z = 1, 1.5, 2, 3,
