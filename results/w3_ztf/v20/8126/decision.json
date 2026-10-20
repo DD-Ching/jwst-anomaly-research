@@ -1,0 +1,116 @@
+{
+ "label": "derived; frozen v13 rule with the v6 pass criteria (v20 PLAN section 3), applied by code",
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "recovered": 132,
+   "n": 200,
+   "distinct_stars": 163,
+   "rate": 0.66
+  },
+  "rho0.01_blend1_tE30": {
+   "recovered": 154,
+   "n": 200,
+   "distinct_stars": 168,
+   "rate": 0.77
+  },
+  "rho0.01_blend1_tE100": {
+   "recovered": 148,
+   "n": 200,
+   "distinct_stars": 160,
+   "rate": 0.74
+  },
+  "rho0.1_blend1_tE10": {
+   "recovered": 130,
+   "n": 200,
+   "distinct_stars": 162,
+   "rate": 0.65
+  },
+  "rho0.1_blend1_tE30": {
+   "recovered": 153,
+   "n": 200,
+   "distinct_stars": 164,
+   "rate": 0.765
+  },
+  "rho0.01_blend0.7_tE10": {
+   "recovered": 123,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.615
+  },
+  "rho0.01_blend0.7_tE30": {
+   "recovered": 149,
+   "n": 200,
+   "distinct_stars": 160,
+   "rate": 0.745
+  },
+  "rho0.01_blend0.7_tE100": {
+   "recovered": 130,
+   "n": 200,
+   "distinct_stars": 169,
+   "rate": 0.65
+  },
+  "rho0.1_blend0.7_tE10": {
+   "recovered": 110,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.55
+  },
+  "rho0.1_blend0.7_tE30": {
+   "recovered": 150,
+   "n": 200,
+   "distinct_stars": 164,
+   "rate": 0.75
+  }
+ },
+ "controls": {
+  "eclipse": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 173,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "fade": {
+   "passed": 70,
+   "n": 1000,
+   "rate": 0.07,
+   "distinct_stars": 445,
+   "wilson95": [
+    0.0558,
+    0.0875
+   ]
+  },
+  "pspl": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 163,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "common": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 167,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  }
+ },
+ "calibration_real_survivors": 0,
+ "calibration_flagged_runs": 9,
+ "conditions": {
+  "all_10_cells_ge_0.5": true,
+  "controls_le_0.10": true,
+  "calibration_survivors_le_5": true
+ },
+ "passed": true,
+ "carriers": 500
+}
