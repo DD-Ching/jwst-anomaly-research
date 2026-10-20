@@ -67,7 +67,9 @@ def eas_stars(name: str, tiles, cache: Path) -> Table:
     q = eas_query(name)
     t = eas_csv(q, cache / f"eas_stars_{name}_{w5._key(q)}.csv")
     t["tileid"] = np.asarray(t["segmentation_map_id"], np.int64) // 10**6
-    keep = ~np.ma.getmaskarray(t["point_like_prob"]) & np.isin(t["tileid"], [x[0] for x in tiles])
+    shape = ("point_like_prob", "ellipticity", "position_angle", "semimajor_axis")
+    keep = ~np.any([np.ma.getmaskarray(t[c]) for c in shape], axis=0)  # NULLs dropped, not 0
+    keep &= np.isin(t["tileid"], [x[0] for x in tiles])
     return t[keep]
 
 
@@ -90,16 +92,23 @@ def coverage_query(name: str) -> str:
 
 
 def eas_csv(q: str, path: Path) -> Table:
-    """EAS TAP sync query as CSV, cached at ``path`` (atomic write)."""
+    """EAS TAP sync query as CSV, cached at ``path`` (atomic write; 5xx / errors retried)."""
     if not path.exists():
-        r = requests.get(
-            EAS_TAP,
-            params={"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": q},
-            timeout=600,
-        )
-        r.raise_for_status()
-        if r.text.lstrip().startswith("<"):
-            raise RuntimeError(f"EAS TAP error: {r.text[:400]}")
+        for attempt in range(5):
+            try:
+                r = requests.get(
+                    EAS_TAP,
+                    params={"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": q},
+                    timeout=600,
+                )
+                r.raise_for_status()
+                if r.text.lstrip().startswith("<"):  # TAP errors come back as a VOTable
+                    raise RuntimeError(f"EAS TAP error: {r.text[:400]}")
+                break
+            except (requests.RequestException, RuntimeError):
+                if attempt == 4:
+                    raise
+                time.sleep(5 * 2**attempt)
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".part")
         tmp.write_text(r.text)
@@ -134,8 +143,11 @@ def irsa_identity(stars: Table, cache: Path) -> dict:
     n_irsa = n_match = n_eas = 0
     max_de = 0.0
     for f in sorted((cache / "tiles").glob("star_*.ecsv")):
+        tid = int(f.name.split("_")[1])
+        if f.name != f"star_{tid}_{w5._key(w5.tile_query(tid, True))}.ecsv":
+            continue  # a cache file from another selection
         a = Table.read(f)
-        b = stars[stars["tileid"] == int(f.name.split("_")[1])]
+        b = stars[stars["tileid"] == tid]
         n_irsa, n_eas = n_irsa + len(a), n_eas + len(b)
         if not (len(a) and len(b)):
             continue
@@ -158,8 +170,11 @@ def star_ellipticity(stars) -> np.ndarray:
 
 def annulus_radial(x, y, e, cx, cy, r_in: float, r_out: float, min_n: int = MIN_STARS) -> dict:
     """Per centre: mean radial component of ``e`` over sources in r_in <= r < r_out, its error
-    (rms / sqrt(n)) and n. Radial is positive, the sign of ``w5.radial_shear``."""
+    and n. The error is the field rms of one component, sqrt(<|e|²>/2), over sqrt(n) (as
+    ``w5.star_psf``): a per-centre sample std of ~5 values is unstable. Radial is positive, the
+    sign of ``w5.radial_shear``."""
     x, y, e = np.asarray(x, float), np.asarray(y, float), np.asarray(e, complex)
+    sigma = math.sqrt(float(np.mean(np.abs(e) ** 2)) / 2.0) if len(e) else np.nan
     tree = cKDTree(np.c_[x, y])
     mean, err, n = (np.full(len(cx), np.nan) for _ in range(3))
     for i, (px, py) in enumerate(zip(cx, cy, strict=True)):
@@ -171,17 +186,47 @@ def annulus_radial(x, y, e, cx, cy, r_in: float, r_out: float, min_n: int = MIN_
             continue
         er = np.real(e[rows][keep] * np.exp(-2j * np.arctan2(de[keep], dn[keep])))
         mean[i] = er.mean()
-        err[i] = er.std(ddof=1) / math.sqrt(n[i])
+        err[i] = sigma / math.sqrt(n[i])
     return {"mean": mean, "err": err, "n": n}
 
 
-def decide(rho: dict[str, float]) -> str:
-    """Frozen PLAN rule on ρ(β) = β max|ē_r| / SIGNAL, maximised over fields and θ_E."""
+def decide(rho: dict[str, float], chi2_over_dof: float) -> str:
+    """Frozen PLAN rule on ρ(β) = β max|ē_r| / SIGNAL, maximised over fields and θ_E, with the
+    plan's condition that rules 2-3 are read as a pattern only if χ² > dof in that (field, θ_E)."""
     if rho["2.3"] < 0.2:
         return "PSF gradients cannot fake or hide a flag"
+    if chi2_over_dof <= 1.0:
+        return "no PSF pattern above noise where rho is largest (rules 2-3 not read)"
     if rho["1"] < 1.0:
         return "PSF term not negligible at the edge of the resolved cut"
     return "PSF could fake or hide a flag"
+
+
+def ring_stats(r: dict) -> dict:
+    """Summary of one ``annulus_radial`` map: max |ē_r|, its significance, χ², |z| > 3 counts."""
+    v = np.isfinite(r["mean"])
+    if not v.any():
+        return {"n_centres": 0}
+    m, s = r["mean"][v], r["err"][v]
+    z = m / s
+    i = int(np.argmax(np.abs(m)))
+    upper = np.median(np.abs(m) + 2.0 * s)  # typical 95 % upper bound
+    return {
+        "n_centres": int(v.sum()),
+        "median_n_stars": float(np.median(r["n"][v])),
+        "max_abs_er": float(abs(m[i])),
+        "max_abs_er_sigma": float(abs(z[i])),
+        "max_abs_z": float(np.max(np.abs(z))),
+        "mean_er": float(np.mean(m)),
+        "median_err": float(np.median(s)),
+        # independent-centre approximation: annuli overlap, so dof is over-counted (label)
+        "chi2_over_dof": float(np.mean(z**2)),
+        "n_abs_z_gt_3": int(np.sum(np.abs(z) > 3)),
+        "gauss_expect_abs_z_gt_3": float(0.0027 * len(z)),
+        "median_upper95": float(upper),
+        "rho": {f"{b:g}": float(b * abs(m[i]) / SIGNAL) for b in BETAS},
+        "rho_median_upper95": {f"{b:g}": float(b * upper / SIGNAL) for b in BETAS},
+    }
 
 
 def field_stats(name: str, stars: Table, tiles, cells) -> dict:
@@ -191,7 +236,12 @@ def field_stats(name: str, stars: Table, tiles, cells) -> dict:
     ra0 = float(np.degrees(np.angle(np.mean(np.exp(1j * np.radians([t[1] for t in tiles]))))) % 360)
     dec0 = float(np.mean([t[2] for t in tiles]))
     x, y = w5.tangent_plane(ra[ok], dec[ok], ra0, dec0)
-    e = e[ok]
+    e, tid = e[ok], np.asarray(stars["tileid"])[ok]
+    # post hoc: star e minus its tile's mean, so a tile-constant PSF in a partly covered annulus
+    # cannot pose as a radial gradient
+    _, inv = np.unique(tid, return_inverse=True)
+    tile_mean = (np.bincount(inv, e.real) + 1j * np.bincount(inv, e.imag)) / np.bincount(inv)
+    e_sub = e - tile_mean[inv]
     out = {
         "n_stars": int(ok.sum()),
         "n_tiles_with_stars": int(len(np.unique(stars["tileid"]))),
@@ -210,49 +260,18 @@ def field_stats(name: str, stars: Table, tiles, cells) -> dict:
         covered = ng >= w5.COVERAGE_MIN * np.median(ng[ng > 0])
         cx, cy = gx.ravel()[covered], gy.ravel()[covered]
         r = annulus_radial(x, y, e, cx, cy, 1.5 * te, 3.0 * te)
-        v = np.isfinite(r["mean"])
-        m, s = r["mean"][v], r["err"][v]
-        i = int(np.argmax(np.abs(m)))
-        z = m / s
-        # Post hoc (not in the frozen plan): significance counts against a Gaussian, the typical
-        # 95 % upper bound |ē_r| + 2σ, and the same max statistic on stars with |e| < 0.2.
+        cell = {"n_grid": int(gx.size), "n_covered": int(covered.sum())}
+        cell |= ring_stats(r)
+        # Post hoc (not in the frozen plan): the same statistics on stars with |e| < 0.2, and on
+        # star e minus the tile mean.
         clip = np.abs(e) < POST_HOC_MAX_ABS_E
         rc = annulus_radial(x[clip], y[clip], e[clip], cx, cy, 1.5 * te, 3.0 * te)
-        vc = np.isfinite(rc["mean"])
-        mc, sc = rc["mean"][vc], rc["err"][vc]
-        ic = int(np.argmax(np.abs(mc)))
-        upper = np.abs(m) + 2.0 * s
-        post_hoc = {
-            "n_abs_z_gt_3": int(np.sum(np.abs(z) > 3)),
-            "gauss_expect_abs_z_gt_3": float(0.0027 * len(z)),
-            "max_abs_z": float(np.max(np.abs(z))),
-            "median_upper95": float(np.median(upper)),
-            "rho_median_upper95": {f"{b:g}": float(b * np.median(upper) / SIGNAL) for b in BETAS},
-            "clipped": {
-                "n_stars": int(clip.sum()),
-                "max_abs_er": float(abs(mc[ic])),
-                "max_abs_er_sigma": float(abs(mc[ic]) / sc[ic]),
-                "max_abs_z": float(np.max(np.abs(mc / sc))),
-                "chi2_over_dof": float(np.mean((mc / sc) ** 2)),
-                "median_upper95": float(np.median(np.abs(mc) + 2.0 * sc)),
-                "rho": {f"{b:g}": float(b * abs(mc[ic]) / SIGNAL) for b in BETAS},
-            },
+        rs = annulus_radial(x, y, e_sub, cx, cy, 1.5 * te, 3.0 * te)
+        cell["post_hoc"] = {
+            "clipped": {"n_stars": int(clip.sum())} | ring_stats(rc),
+            "tile_mean_subtracted": ring_stats(rs),
         }
-        out["theta_e"][f"{te:g}"] = {
-            "n_grid": int(gx.size),
-            "n_covered": int(covered.sum()),
-            "n_centres": int(v.sum()),
-            "median_n_stars": float(np.median(r["n"][v])),
-            "max_abs_er": float(abs(m[i])),
-            "max_abs_er_sigma": float(abs(m[i]) / s[i]),
-            "mean_er": float(np.mean(m)),
-            "median_err": float(np.median(s)),
-            # independent-centre approximation: annuli overlap, so this over-counts dof (label)
-            "chi2": float(np.sum((m / s) ** 2)),
-            "dof": int(v.sum()),
-            "rho": {f"{b:g}": float(b * abs(m[i]) / SIGNAL) for b in BETAS},
-            "post_hoc": post_hoc,
-        }
+        out["theta_e"][f"{te:g}"] = cell
         print(name, te, json.dumps(out["theta_e"][f"{te:g}"]), flush=True)
     return out
 
@@ -263,10 +282,9 @@ def main() -> int:
     stars = {n: eas_stars(n, v, cache) for n, v in tiles.items()}
     res = {n: field_stats(n, stars[n], v, galaxy_cells(n, cache)) for n, v in tiles.items()}
     ident = irsa_identity(vstack(list(stars.values())), cache)
-    rho = {
-        f"{b:g}": max(t["rho"][f"{b:g}"] for f in res.values() for t in f["theta_e"].values())
-        for b in BETAS
-    }
+    cells = [t for f in res.values() for t in f["theta_e"].values() if t["n_centres"]]
+    worst = max(cells, key=lambda t: t["rho"]["1"])  # ρ ∝ max|ē_r|: same cell for every β
+    rho = worst["rho"]
     summary = {
         "provenance": {
             "stars": "observed (Euclid Q1 MER catalogue, ESA EAS TAP; SExtractor moments)",
@@ -285,7 +303,8 @@ def main() -> int:
         "irsa_identity": ident,
         "fields": res,
         "rho_max": rho,
-        "decision": decide(rho),
+        "chi2_over_dof_at_rho_max": worst["chi2_over_dof"],
+        "decision": decide(rho, worst["chi2_over_dof"]),
     }
     out = paths.repo_root() / "results" / "w5_shear" / "psf_radial" / "summary.json"
     out.write_text(json.dumps(summary, indent=1) + "\n")

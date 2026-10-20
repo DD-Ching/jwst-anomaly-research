@@ -49,11 +49,19 @@ def test_min_stars_skips_sparse_centres():
 
 def test_signal_and_decide():
     assert math.isclose(pr.SIGNAL, 0.5 * 2 * math.log(2) / 6.75)
-    assert pr.decide({"1": 0.05, "2.3": 0.115}) == "PSF gradients cannot fake or hide a flag"
-    assert pr.decide({"1": 0.5, "2.3": 1.15}) == (
+    assert pr.decide({"1": 0.05, "2.3": 0.115}, 3.0) == "PSF gradients cannot fake or hide a flag"
+    assert pr.decide({"1": 0.5, "2.3": 1.15}, 1.5) == (
         "PSF term not negligible at the edge of the resolved cut"
     )
-    assert pr.decide({"1": 1.0, "2.3": 2.3}) == "PSF could fake or hide a flag"
+    assert pr.decide({"1": 1.0, "2.3": 2.3}, 1.5) == "PSF could fake or hide a flag"
+    assert pr.decide({"1": 1.0, "2.3": 2.3}, 0.9).startswith("no PSF pattern above noise")
+
+
+def test_error_uses_field_rms():
+    x, y = _grid()
+    e = np.where(np.arange(len(x)) % 2, 0.03 + 0j, -0.03 + 0j)
+    r = pr.annulus_radial(x, y, e, [0.0], [0.0], 90.0, 180.0)
+    assert math.isclose(r["err"][0], math.sqrt(0.03**2 / 2) / math.sqrt(r["n"][0]))
 
 
 def test_annulus_counts():
