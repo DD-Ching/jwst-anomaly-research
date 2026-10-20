@@ -1,6 +1,6 @@
 {
  "provenance": "derived",
- "monitored_pairs": 438,
+ "monitored_pairs": 527,
  "monitored_persistence_rate": 0.0,
  "efficiency_by_mosaic_snr": [
   {
@@ -16,22 +16,22 @@
   {
    "snr_lo": 10,
    "snr_hi": 20,
-   "n_pairs": 43,
-   "n_on_sky": 41,
+   "n_pairs": 49,
+   "n_on_sky": 43,
    "n_persistence": 0,
-   "n_inconclusive": 2,
-   "n_undetected": 0,
-   "on_sky_fraction": 0.9534883720930233
+   "n_inconclusive": 5,
+   "n_undetected": 1,
+   "on_sky_fraction": 0.8775510204081632
   },
   {
    "snr_lo": 20,
    "snr_hi": 50,
-   "n_pairs": 395,
-   "n_on_sky": 349,
+   "n_pairs": 478,
+   "n_on_sky": 380,
    "n_persistence": 0,
-   "n_inconclusive": 43,
-   "n_undetected": 3,
-   "on_sky_fraction": 0.8835443037974684
+   "n_inconclusive": 85,
+   "n_undetected": 13,
+   "on_sky_fraction": 0.7949790794979079
   },
   {
    "snr_lo": 50,
@@ -44,7 +44,7 @@
    "on_sky_fraction": null
   }
  ],
- "rule1_usable": true,
+ "rule1_usable": false,
  "targets": [
   {
    "uid": "abell2744-d03227",

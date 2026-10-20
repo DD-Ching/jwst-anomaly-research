@@ -3232,6 +3232,14 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   first. Alternative rejected: one pooled mosaic-S/N curve (passes rule 1 only because MACS0416 / Abell 2744
   dominate). Revisit if the efficiency model fails on e5–e7.
 
+**Addendum 2026-10-20j (exposure-count efficiency checked on held-out NEXUS e5–e7).**
+- Frozen model (`results/dimming/expcount_eff/PLAN.md`): swap efficiency 0.412 for `n_exposures` ≤ 4 and 0.961 for
+  > 4 (training Wilson 95 % lower bounds). Held out e5–e7: ≤ 4 33 / 89 `on_sky` (Wilson 0.278–0.475), so the rule
+  holds as written; > 4 untested (no pairs); `persistence` 0 / 89 (`results/dimming/expcount_eff/RESULT.md`).
+- Post hoc: the held-out rate is lower (0.37); quote the swap with the pooled ≤ 4 lower bound 0.374 as a sensitivity
+  case. Alternative rejected: a mosaic-S/N curve (S/N 10–33 throughout, cannot separate). Revisit if the 11
+  held-out `undetected` pairs turn out to be a position effect, or NEXUS e2 controls fail the > 4 class.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**

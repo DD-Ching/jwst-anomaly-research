@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: D-039 `on_sky` efficiency by exposure count holds on held-out NEXUS e5–e7 (≤ 4 class); > 4 untested
+- **Why:** #386 handoff 1. Model and rule frozen first (`results/dimming/expcount_eff/PLAN.md`).
+- **Result (`results/dimming/expcount_eff/RESULT.md`):** held-out ≤ 4 exposures 33 / 89 `on_sky` (Wilson
+  0.278–0.475) contains the swap value 0.412, so the model holds as written; > 4 has no held-out pairs.
+  `persistence` 0 / 89 (0 / 279 over NEXUS). Post hoc: held-out rate 0.37 < 0.412; pooled lower bound 0.374 as
+  sensitivity; 11 `undetected` controls at S/N 13–33 not yet looked at.
+- **Failed approach:** NEXUS e2 controls (2,000 files) do not fit after e5–e7 in one 40-minute run; stopped.
+- **Issue #374:** NED endpoints answer again (200 in 0.8–1.3 s), but `test_live_fallback_backends` still hangs
+  past 200 s; no code change.
+- **Handoff:** (1) fold the swap into `inject` with 0.412 / 0.961 by covering-exposure count, re-run `combine`;
+  (2) stamps of the 11 `undetected` controls; (3) NEXUS e2 controls in a run of their own.
+- **Review fixes:** `score.py` evaluates rules 1 (unrounded, with the pooled fallback) and 3; `partial.py` writes
+  `controls_missing_epochs`; `persistence_run/summary.json` regenerated (527 pairs, pooled S/N rule 1 now fails,
+  superseded by the exposure-count model).
+
 ## 2026-10-20: W3 ZTF v18: PSF photometry check of the two v17 sources (post hoc): the validated NDs are normal; both sources stay undetermined
 - **Method:** the official per-exposure DAOPHOT PSF, read by an adapter validated against the official centre image
   (≤ 5.24e-4), and photutils 3.1.1 `PSFPhotometry`. Plan committed before any target fit. Download 48.4 MB.
