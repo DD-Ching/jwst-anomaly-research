@@ -1,0 +1,14 @@
+# v22 dedupe list: the v21 list (v1-v20) plus the v21 area samples (8124, 8127). Positions + objectids.
+# Usage: python dedupe_script.py.txt
+import gzip, json, os, subprocess
+if not os.path.exists('results/w3_ztf/v21/dedupe.json.gz'):
+    subprocess.run(['.venv/bin/python', 'results/w3_ztf/v21/dedupe_script.py.txt'], check=True)
+ded = json.load(gzip.open('results/w3_ztf/v21/dedupe.json.gz'))['groups']
+n0 = len(ded)
+for p in (8124, 8127):
+    f = f'results/w3_ztf/v21/{p}/sample.json'
+    gs = json.load(open(f) if os.path.exists(f) else gzip.open(f + '.gz'))['groups']
+    ded += [[f'v21 ({p})', round(g['ra'], 7), round(g['dec'], 7), g['members']] for g in gs]
+out = {'label': 'derived; all earlier sample groups (v1-v21)', 'groups': ded, 'n': len(ded), 'n_before_v21': n0}
+gzip.open('results/w3_ztf/v22/dedupe.json.gz', 'wt').write(json.dumps(out, separators=(',', ':')) + '\n')
+print(n0, len(ded))

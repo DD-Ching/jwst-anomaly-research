@@ -1,0 +1,170 @@
+# v22 inventory (copied from ../v16/inventory_script.py.txt; dedupe v1-v21, parallel objects and TAP reads) (PLAN.md section 1): the unchanged v12 indicator (../v12/obs_script.py.txt) on the v16 candidates,
+# with all eligible unused groups counted (N_MAX lifted), the dedupe list of v1-v15, the LC partition size from parquet
+# metadata, and no queue choice here (the queue rule is applied by queue_script.py.txt). Metadata only.
+# Usage: python inventory_script.py.txt <scratch dir>
+import io, json, sys, time, urllib.parse, urllib.request
+from multiprocessing import Pool
+import numpy as np
+import pandas as pd
+from astropy.table import Table, vstack
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+SCR = sys.argv[1]
+HERE = wz.OUT / 'v22'
+CAND = [c['npix'] for c in json.load(open(HERE / 'candidates.json'))['candidates']]
+CELLS = [(0.01, 1.0, 10.0), (0.01, 1.0, 30.0), (0.01, 1.0, 100.0), (0.1, 1.0, 10.0), (0.1, 1.0, 30.0),
+         (0.01, 0.7, 10.0), (0.01, 0.7, 30.0), (0.01, 0.7, 100.0), (0.1, 0.7, 10.0), (0.1, 0.7, 30.0)]
+nbytes = {'objects_mb': 0.0, 'tap': 0, 'head': 0}
+t_start = time.time()
+import pyarrow.parquet as pq
+cols = ['oid', 'ra', 'dec', 'field', 'ccdid', 'qid', 'fid', 'refmag', 'refsharp', 'ngoodobs', 'transient']
+import gzip
+ded = json.load(gzip.open(HERE / 'dedupe.json.gz'))['groups']
+old_pos = [(g[1], g[2]) for g in ded]
+old_oid = {m for g in ded for m in g[3]}
+old_fields = sorted({wz.oid_quad(m)[0] for g in ded for m in g[3]})
+objs, elig, ngood = {}, {}, {}
+from concurrent.futures import ThreadPoolExecutor  # v22: objects tables read 4 at a time (I/O bound)
+def _read_obj(par):
+    part = wz.OBJ_PART.replace('Npix=959', f'Npix={par}')
+    pf = pq.ParquetFile(wz.s3().open(part)); md = pf.metadata
+    mb = sum(md.row_group(i).column(j).total_compressed_size for i in range(md.num_row_groups)
+             for j in range(md.num_columns) if md.row_group(i).column(j).path_in_schema in cols) / 1e6
+    df = pf.read(columns=cols).to_pandas(); df.to_parquet(f'{SCR}/obj{par}.parquet')
+    return par, mb, df
+with ThreadPoolExecutor(4) as ex_:
+    for par, mb, df in ex_.map(_read_obj, sorted({p // 4 for p in CAND})):
+        objs[par] = df; nbytes['objects_mb'] += mb
+        print('objects', par, round(nbytes['objects_mb'], 1), flush=True)
+for pix in CAND:
+    par = pix // 4
+    obj = objs[par]
+    ngood.update(dict(zip(obj['oid'].astype(int), obj['ngoodobs'].astype(int))))
+    wz.LC_PIX, wz.VERSION, wz.N_MAX = pix, 22, 100000
+    groups, info = wz.select(obj, old_pos)
+    n0 = len(groups)
+    groups = [g for g in groups if not set(g['members']) & old_oid]
+    info['dropped_shared_objectid'] = n0 - len(groups)
+    elig[pix] = (groups, info)
+    print(pix, info, flush=True)
+
+lcmb = {}
+lccols = ['objectid', 'filterid', 'fieldid', 'rcid', 'objra', 'objdec', 'lightcurve']
+for pix in CAND:
+    part = wz.LC_PART.replace('Npix=3839', f'Npix={pix}')
+    md = pq.ParquetFile(wz.s3().open(part)).metadata
+    lcmb[pix] = round(sum(md.row_group(i).column(j).total_compressed_size for i in range(md.num_row_groups)
+                          for j in range(md.num_columns) if md.row_group(i).column(j).path_in_schema.split('.')[0] in lccols) / 1e6, 1)
+print('lc sizes', lcmb, flush=True)
+
+def tap(sql):
+    url = 'https://irsa.ipac.caltech.edu/TAP/sync?' + urllib.parse.urlencode({'QUERY': sql, 'FORMAT': 'csv'})
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=600).read(); nbytes['tap'] += len(raw)
+            return Table.read(io.BytesIO(raw), format='csv')
+        except OSError:
+            if k == 3:
+                raise
+            time.sleep(10 * (k + 1))
+
+rng = np.random.default_rng(11)
+pos, quads = {}, set()
+for pix in CAND:
+    groups = elig[pix][0]
+    pick = sorted(rng.permutation(len(groups))[:200]) if len(groups) > 200 else range(len(groups))
+    pos[pix] = [groups[i] for i in pick]
+    for g in pos[pix]:
+        for m in g['members']:
+            f, rc, filt = wz.oid_quad(m)
+            if filt == 2:
+                quads.add((f, rc))
+def _tap_field(field):  # v22: 4 TAP queries at a time
+    rc = sorted(r for f, r in quads if f == field)
+    cond = ' OR '.join(f'(ccdid={r // 4 + 1} AND qid={r % 4 + 1})' for r in rc)
+    return tap('SELECT field,ccdid,qid,obsjd,exptime,expid,infobits,filefracday,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4 '
+               f"FROM ztf.ztf_current_meta_sci WHERE filtercode='zr' AND field={field} AND ({cond})")
+with ThreadPoolExecutor(4) as ex_:
+    parts = list(ex_.map(_tap_field, sorted({f for f, _ in quads})))
+expo = vstack(parts)
+expo.write(f'{SCR}/expo_r_v12.ecsv', overwrite=True)
+print('tap rows', len(expo), nbytes, flush=True)
+fld, ccd, qid = (np.asarray(expo[c]) for c in ('field', 'ccdid', 'qid'))
+
+def group_exposures(g):
+    sel = np.zeros(len(expo), bool)
+    for m in g['members']:
+        f, rc, filt = wz.oid_quad(m)
+        if filt == 2:
+            sel |= (fld == f) & (ccd == rc // 4 + 1) & (qid == rc % 4 + 1)
+    e = expo[sel]
+    if not len(e):
+        return np.array([]), np.array([], int), 0
+    inside = wz.in_quad(e, g['ra'], g['dec'])
+    bad = int((inside & (np.asarray(e['infobits']) != 0)).sum())
+    e = e[inside & (np.asarray(e['infobits']) == 0)]
+    _, u = np.unique(np.asarray(e['expid']), return_index=True)
+    e = e[u]
+    t = wz.exposure_times(e, g['ra'], g['dec'])
+    o = np.argsort(t)
+    return t[o], np.asarray(e['expid'])[o], bad
+
+night = lambda t: np.floor(np.asarray(t) + 0.2).astype(int)
+
+def classify(t, dm, t0, half):  # as ../v11/obs_script.py.txt
+    s = [(float(a), float(b), False, 99.0, (0, 0, 2), k, 0.0, 0.0) for k, (a, b) in enumerate(zip(t, dm))]
+    if any(s[i][0] <= t0 + half and s[j][0] >= t0 - half for i, j in wz.flagged_runs(s)):
+        return 'ok'
+    d = wz.dim_state(s); best = None
+    for i, j in wz.runs(d):
+        if not (t[i] <= t0 + half and t[j] >= t0 - half):
+            continue
+        f = [k for k, okk in (('MIN_RUN', j - i + 1 >= wz.MIN_RUN), ('MIN_NIGHTS', len(set(night(t[i:j + 1]))) >= wz.MIN_NIGHTS),
+                                ('MIN_BRACKET', (~d[:i]).sum() >= wz.MIN_BRACKET and (~d[j + 1:]).sum() >= wz.MIN_BRACKET)) if not okk]
+        c = (len(f), -(j - i), f)
+        if best is None or c < best:
+            best = c
+    return best[2][0] if best and best[2] else 'no_dim_epoch_in_umbra'
+
+def area_job(pix):
+    ex = [group_exposures(g) for g in pos[pix]]
+    ratio = [sum(ngood.get(m, 0) for m in g['members'] if wz.oid_quad(m)[2] == 2) / len(x[0])
+             for g, x in zip(pos[pix], ex) if len(x[0])]
+    fields = sorted({wz.oid_quad(m)[0] for g in pos[pix] for m in g['members']})
+    out = {'groups_eligible_drawn': len(elig[pix][0]), 'positions': len(pos[pix]),
+           'positions_with_exposures': sum(len(x[0]) >= 2 for x in ex),
+           'median_exposures': float(np.median([len(x[0]) for x in ex])) if ex else 0.0,
+           'infobits_nonzero_in_footprint_median': float(np.median([x[2] for x in ex])) if ex else 0.0,
+           'product_ratio_median': float(np.median(ratio)) if ratio else 0.0,
+           'product_ratio_p10_p90': [float(np.percentile(ratio, 10)), float(np.percentile(ratio, 90))] if ratio else None,
+           'fields': fields, 'shared_fields_with_earlier': sorted(set(fields) & set(old_fields)), 'cells': {}}
+    for c, (rho, blend, te) in enumerate(CELLS):
+        r = np.random.default_rng(2100 + c)
+        tally = {}
+        for _ in range(2000):
+            k = r.integers(len(pos[pix]))
+            t = ex[k][0]
+            t0 = r.uniform(t.min(), t.max()) if len(t) >= 2 else 0.0
+            u0 = r.uniform(0, 2)
+            key = 'no_exposures' if len(t) < 2 else classify(t, wz.w3_dmag(t, t0, te, u0, rho, blend), t0, te * np.sqrt(4 - u0**2))
+            tally[key] = tally.get(key, 0) + 1
+        out['cells'][f'rho{rho}_blend{blend:g}_tE{te:g}'] = {'necessary_fraction': tally.get('ok', 0) / 2000, 'first_missing': tally}
+    out['score_min_over_cells'] = min(v['necessary_fraction'] for v in out['cells'].values())
+    return pix, out, [list(map(int, x[1])) for x in ex]
+
+if __name__ == '__main__':
+    with Pool(4) as p:  # 25 areas
+        res = p.map(area_job, CAND)
+    areas = {pix: o for pix, o, _ in res}
+    for pix, o, ids in res:
+        o['groups_unused_eligible'] = len(elig[pix][0])
+        o['lc_mb'] = lcmb[pix]
+        o['search_if_500_calibration'] = max(len(elig[pix][0]) - 500, 0)
+        o['unused_per_gb'] = round(len(elig[pix][0]) / (lcmb[pix] / 1000), 1)
+    out = {'label': 'derived (official metadata: DR24 objects, IRSA TAP, parquet metadata); necessary-sampling indicator, not recovery',
+           'plan': 'PLAN.md section 1', 'old_fields': old_fields, 'areas': {str(p): areas[p] for p in CAND},
+           'eligible_info': {str(p): elig[p][1] for p in CAND},
+           'bytes': nbytes, 'tap_rows': len(expo), 'minutes': round((time.time() - t_start) / 60, 1)}
+    json.dump(out, open(HERE / 'inventory.json', 'w'), indent=1, default=float); open(HERE / 'inventory.json', 'a').write('\n')
+    print(json.dumps({p: (areas[p]['score_min_over_cells'], round(areas[p]['product_ratio_median'], 3), areas[p]['groups_unused_eligible'],
+                          areas[p]['lc_mb'], areas[p]['shared_fields_with_earlier']) for p in CAND}))
