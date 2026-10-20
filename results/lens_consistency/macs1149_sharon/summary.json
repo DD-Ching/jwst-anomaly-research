@@ -1,0 +1,84 @@
+{
+ "model": "macs1149-sharon",
+ "model_sha256": "d0232613a36da26117954885d0035e4253e659b44a5c6900abd00183b855075e",
+ "maps": {
+  "kappa": {
+   "map": "f6960c30aa55_hlsp_frontier_model_macs1149_sharon_v4cor_kappa.fits",
+   "quantity": "kappa",
+   "z_s": null,
+   "n_points": 11623,
+   "median_rel_diff": 0.0002515935847618441,
+   "p95_rel_diff": 0.00036943669438539245,
+   "median_ratio": 1.0002511497152944,
+   "parity_agree": null
+  },
+  "mu_z2": {
+   "map": "3fe6de1b8679_hlsp_frontier_model_macs1149_sharon_v4cor_z02-magnif.fits",
+   "quantity": "mu",
+   "z_s": 2.0,
+   "n_points": 11135,
+   "median_rel_diff": 0.01635699339110409,
+   "p95_rel_diff": 0.07515245622226169,
+   "median_ratio": 1.015868737955084,
+   "parity_agree": null
+  }
+ },
+ "gates": {
+  "G1": {
+   "median_rel_diff": {
+    "kappa": 0.0002515935847618441,
+    "mu_z2": 0.01635699339110409
+   },
+   "max": 0.05,
+   "passes": true
+  },
+  "G2": {
+   "rms_dtheta_arcsec": 0.22551457750696746,
+   "max_rms": 1.0,
+   "systems_reproduced": {
+    "1": true,
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true,
+    "13": true,
+    "110": true,
+    "9": false
+   },
+   "max_match_arcsec": 3.0,
+   "passes": false
+  },
+  "pinned_for_use": false
+ },
+ "post_hoc": {
+  "images_outside_maps": [
+   "9.2",
+   "9.3",
+   "9.4"
+  ],
+  "systems_outside_maps": [
+   "9"
+  ],
+  "G2_inside_footprint": {
+   "rms_dtheta_arcsec": 0.22551457750696746,
+   "max_rms": 1.0,
+   "systems_reproduced": {
+    "1": true,
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true,
+    "13": true,
+    "110": true
+   },
+   "max_match_arcsec": 3.0,
+   "passes": true
+  }
+ },
+ "rms_macs1149-sharon": 0.22551457750696746,
+ "n_solved_macs1149-sharon": 19,
+ "rms_macs1149-cats": 4.354548285071072,
+ "n_solved_macs1149-cats": 23,
+ "rms_macs1149-cats-fittedz": 0.85286148853884,
+ "n_solved_macs1149-cats-fittedz": 23
+}
