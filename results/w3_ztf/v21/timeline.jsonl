@@ -2,3 +2,22 @@
 {"area": 8127, "event": "area_start", "position": 2, "projected_mb": 3595.9, "utc": "2026-10-20T06:05:07Z"}
 {"area": 8124, "stage": "fetch", "event": "start", "utc": "2026-10-20T06:05:07Z"}
 {"area": 8127, "stage": "fetch", "event": "start", "utc": "2026-10-20T06:05:07Z"}
+{"area": 8124, "stage": "fetch", "event": "end", "rc": 0, "seconds": 138.0, "utc": "2026-10-20T06:07:25Z"}
+{"area": 8124, "stage": "exposures", "event": "start", "utc": "2026-10-20T06:07:25Z"}
+{"area": 8127, "stage": "fetch", "event": "end", "rc": 0, "seconds": 144.2, "utc": "2026-10-20T06:07:31Z"}
+{"area": 8127, "stage": "exposures", "event": "start", "utc": "2026-10-20T06:07:31Z"}
+{"area": 8127, "stage": "exposures", "event": "end", "rc": 0, "seconds": 88.6, "utc": "2026-10-20T06:08:59Z"}
+{"area": 8127, "stage": "inject", "event": "start", "utc": "2026-10-20T06:08:59Z"}
+{"area": 8127, "stage": "search_dev", "event": "start", "utc": "2026-10-20T06:08:59Z"}
+{"area": 8124, "stage": "exposures", "event": "end", "rc": 0, "seconds": 95.1, "utc": "2026-10-20T06:09:00Z"}
+{"area": 8124, "stage": "inject", "event": "start", "utc": "2026-10-20T06:09:00Z"}
+{"area": 8124, "stage": "search_dev", "event": "start", "utc": "2026-10-20T06:09:00Z"}
+{"area": 8127, "stage": "inject", "event": "end", "rc": -9, "seconds": 82.1, "utc": "2026-10-20T06:10:22Z"}
+{"area": 8124, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 87.8, "utc": "2026-10-20T06:10:28Z"}
+{"area": 8127, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 92.0, "utc": "2026-10-20T06:10:31Z"}
+{"area": 8127, "event": "stopped", "reason": "validation stage failed to run", "utc": "2026-10-20T06:10:31Z"}
+{"area": 8124, "stage": "inject", "event": "end", "rc": 0, "seconds": 193.5, "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "stage": "decision", "event": "start", "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "stage": "search_holdout", "event": "start", "utc": "2026-10-20T06:12:13Z"}
