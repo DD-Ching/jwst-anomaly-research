@@ -1,5 +1,12 @@
 # W3 ZTF v18 — PSF photometry check of the two v17 sources: validation passes in 1 of 9 NDs (1624) and 1 of 3 NDs (1625); both validated NDs are normal; both sources stay undetermined
 
+> **Superseded in part by v19 (`../v19/RESULT.md`).**
+> - The validation here fitted controls with another exposure's PSF. It is a **stress test of cross-exposure PSF
+>   mismatch**, not of the measurement as made.
+> - The 1624 / 206251129 "normal, 1-mag drop excluded" claim is suspended. It is not validated under v19's stored
+>   criterion, whose injection σ is narrower than the measurement's (a known v19 defect).
+> - The 1625 / 214647008 claim is conditional after v19 (dim-level ρ 0.92).
+
 - **Post hoc:** these are known items, so this is not a blind test.
   - `PLAN.md` (3d67081) fixed the method, controls, error terms and pass conditions after the data fetch and before
     any target fit.
