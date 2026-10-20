@@ -28,3 +28,20 @@ source across a critical curve that both models miss, or two parts of one image?
 **What changes the plan.** "Colours differ" closes 700.1 as one image (not a candidate). "Consistent" plus a
 member perturber keeps it ordinary (H2) and records a perturber-model test as the next step. "Consistent" with no
 perturber keeps it undetermined and records it in the candidates list for a lens-model expert.
+
+**Specification (added 22:20Z, before any photometry was run).**
+- Bands: F115W, F150W, F200W, F277W, F356W, F410M, F444W of `jw02561-o001_t003`. Stamp half-width 2″.
+- Position: the UNCOVER catalogue position, re-centred once on the F200W high-pass peak within 0.1″; the same
+  position in every band.
+- Noise: per stamp, 200 random r = 0.15″ apertures with centres 0.6–1.8″ from the target on the high-pass image;
+  σ = 1.4826 × MAD of their sums.
+- Pair χ²: min over r of Σ_band (f_a − r f_b)² / (σ_a² + r² σ_b²), dof = n_bands − 1 (bands with finite values
+  only); p from χ². "Differ" if p < 0.01 (ASSUMPTION).
+- Known cases: every UNCOVER system other than 78 with a spectroscopic z, taking its first two images, when both
+  have F200W S/N ≥ 10 (at most the first 20 such pairs by system order). Gate (ASSUMPTION): ≥ 80 % of them give
+  "consistent". If the gate fails, the colour test is "not validated" and decides nothing.
+- Perturber: DJA v7.2 eazy zout (`z_spec` if > 0, else `z_phot`) within 5″ of the 78.2 a/b midpoint; F200W
+  magnitude from an r = 0.5″ aperture on the stamp minus its median beyond 1.5″ (ASSUMPTION; a crude total).
+- Decision function `decide(colour_gate_passed, any_pair_differs, perturber_found)`:
+  not validated → "undetermined (colour test not validated)" plus the perturber result; differs → "one image (H1)";
+  consistent and perturber → "ordinary perturber possible (H2)"; consistent, no perturber → "undetermined (H3)".
