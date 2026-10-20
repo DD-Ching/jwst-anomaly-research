@@ -1,0 +1,55 @@
+{
+ "label": "derived from queue.json (no new data)",
+ "sampling_qualified_not_queued": 9,
+ "not_queued_unused": 28445,
+ "not_queued_searchable": 23945,
+ "not_queued_worst_cell_ge_0.59": {
+  "npix": [
+   2900,
+   8124,
+   8126,
+   8127
+  ],
+  "unused": 19702,
+  "searchable": 17702,
+  "lc_mb": 5759.7,
+  "shared_fields": {
+   "2900": [
+    848,
+    1856
+   ],
+   "8124": [
+    634,
+    635,
+    1679
+   ],
+   "8126": [
+    634,
+    1679
+   ],
+   "8127": [
+    634,
+    635,
+    681,
+    1679
+   ]
+  }
+ },
+ "not_queued_worst_cell_lt_0.59": {
+  "npix": [
+   1356,
+   2488,
+   2489,
+   2490,
+   2491
+  ],
+  "unused": 8743
+ },
+ "observed_pattern_post_hoc": "in v15-v16, areas with worst-cell fraction >= 0.593 passed (1627, 1624, 1625, 3837) and areas <= 0.578 failed (187, 1626, 2274, 1358, 1357, 183); 10 areas, post hoc, not a calibrated rule",
+ "cutouts_mb": {
+  "1624_science": 0.97,
+  "1624_masks": 0.16,
+  "1625_science": 0.56,
+  "1625_masks": 0.06
+ }
+}

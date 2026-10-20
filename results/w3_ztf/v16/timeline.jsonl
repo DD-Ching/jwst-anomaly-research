@@ -1,0 +1,128 @@
+{"event":"inventory_start","utc":"2026-10-19T22:36:13Z"}
+{"event":"inventory_end","utc":"2026-10-19T23:25:05Z"}
+{"area": 187, "event": "area_start", "position": 1, "projected_mb": 1045.7, "utc": "2026-10-19T23:25:19Z"}
+{"area": 187, "stage": "sample", "event": "start", "utc": "2026-10-19T23:25:19Z"}
+{"area": 1626, "event": "area_start", "position": 2, "projected_mb": 1439.3, "utc": "2026-10-19T23:25:19Z"}
+{"area": 1626, "stage": "sample", "event": "start", "utc": "2026-10-19T23:25:19Z"}
+{"area": 1626, "stage": "sample", "event": "end", "rc": 0, "seconds": 6.7, "utc": "2026-10-19T23:25:26Z"}
+{"area": 1626, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:25:26Z"}
+{"area": 187, "stage": "sample", "event": "end", "rc": 0, "seconds": 7.1, "utc": "2026-10-19T23:25:26Z"}
+{"area": 187, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:25:26Z"}
+{"area": 187, "stage": "fetch", "event": "end", "rc": 0, "seconds": 23.0, "utc": "2026-10-19T23:25:49Z"}
+{"area": 187, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:25:49Z"}
+{"area": 1626, "stage": "fetch", "event": "end", "rc": 0, "seconds": 26.1, "utc": "2026-10-19T23:25:52Z"}
+{"area": 1626, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:25:52Z"}
+{"area": 187, "stage": "exposures", "event": "end", "rc": 0, "seconds": 65.3, "utc": "2026-10-19T23:26:54Z"}
+{"area": 187, "stage": "inject", "event": "start", "utc": "2026-10-19T23:26:54Z"}
+{"area": 187, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:26:54Z"}
+{"area": 187, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 26.5, "utc": "2026-10-19T23:27:21Z"}
+{"area": 1626, "stage": "exposures", "event": "end", "rc": 0, "seconds": 101.7, "utc": "2026-10-19T23:27:34Z"}
+{"area": 1626, "stage": "inject", "event": "start", "utc": "2026-10-19T23:27:34Z"}
+{"area": 1626, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:27:34Z"}
+{"area": 187, "stage": "inject", "event": "end", "rc": 0, "seconds": 67.5, "utc": "2026-10-19T23:28:02Z"}
+{"area": 187, "stage": "decision", "event": "start", "utc": "2026-10-19T23:28:02Z"}
+{"area": 187, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:28:02Z"}
+{"area": 187, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:28:02Z"}
+{"area": 1627, "event": "area_start", "position": 3, "projected_mb": 1894.9, "utc": "2026-10-19T23:28:02Z"}
+{"area": 1627, "stage": "sample", "event": "start", "utc": "2026-10-19T23:28:02Z"}
+{"area": 1626, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 29.2, "utc": "2026-10-19T23:28:03Z"}
+{"area": 1627, "stage": "sample", "event": "end", "rc": 0, "seconds": 4.2, "utc": "2026-10-19T23:28:06Z"}
+{"area": 1627, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:28:06Z"}
+{"area": 1627, "stage": "fetch", "event": "end", "rc": 0, "seconds": 33.2, "utc": "2026-10-19T23:28:39Z"}
+{"area": 1627, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:28:39Z"}
+{"area": 1626, "stage": "inject", "event": "end", "rc": 0, "seconds": 80.3, "utc": "2026-10-19T23:28:54Z"}
+{"area": 1626, "stage": "decision", "event": "start", "utc": "2026-10-19T23:28:54Z"}
+{"area": 1626, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:28:54Z"}
+{"area": 1626, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:28:54Z"}
+{"area": 2274, "event": "area_start", "position": 4, "projected_mb": 2169.7, "utc": "2026-10-19T23:28:54Z"}
+{"area": 2274, "stage": "sample", "event": "start", "utc": "2026-10-19T23:28:54Z"}
+{"area": 2274, "stage": "sample", "event": "end", "rc": 0, "seconds": 5.6, "utc": "2026-10-19T23:29:00Z"}
+{"area": 2274, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:29:00Z"}
+{"area": 2274, "stage": "fetch", "event": "end", "rc": 0, "seconds": 17.8, "utc": "2026-10-19T23:29:17Z"}
+{"area": 2274, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:29:17Z"}
+{"area": 1627, "stage": "exposures", "event": "end", "rc": 0, "seconds": 62.0, "utc": "2026-10-19T23:29:41Z"}
+{"area": 1627, "stage": "inject", "event": "start", "utc": "2026-10-19T23:29:41Z"}
+{"area": 1627, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:29:41Z"}
+{"area": 1627, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 35.1, "utc": "2026-10-19T23:30:16Z"}
+{"area": 2274, "stage": "exposures", "event": "end", "rc": 0, "seconds": 82.0, "utc": "2026-10-19T23:30:39Z"}
+{"area": 2274, "stage": "inject", "event": "start", "utc": "2026-10-19T23:30:39Z"}
+{"area": 2274, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:30:39Z"}
+{"area": 2274, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 18.8, "utc": "2026-10-19T23:30:58Z"}
+{"area": 1627, "stage": "inject", "event": "end", "rc": 0, "seconds": 100.1, "utc": "2026-10-19T23:31:21Z"}
+{"area": 1627, "stage": "decision", "event": "start", "utc": "2026-10-19T23:31:21Z"}
+{"area": 1627, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:31:22Z"}
+{"area": 1627, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:31:22Z"}
+{"area": 1627, "stage": "search_holdout", "event": "start", "utc": "2026-10-19T23:31:22Z"}
+{"area": 2274, "stage": "inject", "event": "end", "rc": 0, "seconds": 58.0, "utc": "2026-10-19T23:31:37Z"}
+{"area": 2274, "stage": "decision", "event": "start", "utc": "2026-10-19T23:31:37Z"}
+{"area": 2274, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:31:37Z"}
+{"area": 2274, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:31:37Z"}
+{"area": 1624, "event": "area_start", "position": 5, "projected_mb": 2633.6, "utc": "2026-10-19T23:31:37Z"}
+{"area": 1624, "stage": "sample", "event": "start", "utc": "2026-10-19T23:31:37Z"}
+{"area": 1624, "stage": "sample", "event": "end", "rc": 0, "seconds": 4.2, "utc": "2026-10-19T23:31:41Z"}
+{"area": 1624, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:31:41Z"}
+{"area": 1624, "stage": "fetch", "event": "end", "rc": 0, "seconds": 23.2, "utc": "2026-10-19T23:32:05Z"}
+{"area": 1624, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:32:05Z"}
+{"area": 1627, "stage": "search_holdout", "event": "end", "rc": 0, "seconds": 58.9, "utc": "2026-10-19T23:32:20Z"}
+{"area": 1627, "event": "searched", "groups": 2064, "series_searched": 4094, "flagged_runs": 9, "flagged_groups": 2, "passed_groups": [], "utc": "2026-10-19T23:32:20Z"}
+{"area": 1358, "event": "area_start", "position": 6, "projected_mb": 2856.9, "utc": "2026-10-19T23:32:20Z"}
+{"area": 1358, "stage": "sample", "event": "start", "utc": "2026-10-19T23:32:20Z"}
+{"area": 1358, "stage": "sample", "event": "end", "rc": 0, "seconds": 5.0, "utc": "2026-10-19T23:32:26Z"}
+{"area": 1358, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:32:26Z"}
+{"area": 1358, "stage": "fetch", "event": "end", "rc": 0, "seconds": 15.0, "utc": "2026-10-19T23:32:41Z"}
+{"area": 1358, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:32:41Z"}
+{"area": 1358, "stage": "exposures", "event": "end", "rc": 0, "seconds": 36.1, "utc": "2026-10-19T23:33:17Z"}
+{"area": 1358, "stage": "inject", "event": "start", "utc": "2026-10-19T23:33:17Z"}
+{"area": 1358, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:33:17Z"}
+{"area": 1624, "stage": "exposures", "event": "end", "rc": 0, "seconds": 87.0, "utc": "2026-10-19T23:33:32Z"}
+{"area": 1624, "stage": "inject", "event": "start", "utc": "2026-10-19T23:33:32Z"}
+{"area": 1624, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:33:32Z"}
+{"area": 1358, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 19.3, "utc": "2026-10-19T23:33:36Z"}
+{"area": 1624, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 36.2, "utc": "2026-10-19T23:34:08Z"}
+{"area": 1358, "stage": "inject", "event": "end", "rc": 0, "seconds": 59.5, "utc": "2026-10-19T23:34:16Z"}
+{"area": 1358, "stage": "decision", "event": "start", "utc": "2026-10-19T23:34:16Z"}
+{"area": 1358, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:34:16Z"}
+{"area": 1358, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:34:16Z"}
+{"area": 1625, "event": "area_start", "position": 7, "projected_mb": 3460.3, "utc": "2026-10-19T23:34:16Z"}
+{"area": 1625, "stage": "sample", "event": "start", "utc": "2026-10-19T23:34:16Z"}
+{"area": 1625, "stage": "sample", "event": "end", "rc": 0, "seconds": 6.0, "utc": "2026-10-19T23:34:22Z"}
+{"area": 1625, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:34:22Z"}
+{"area": 1625, "stage": "fetch", "event": "end", "rc": 0, "seconds": 46.9, "utc": "2026-10-19T23:35:09Z"}
+{"area": 1625, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:35:09Z"}
+{"area": 1624, "stage": "inject", "event": "end", "rc": 0, "seconds": 98.7, "utc": "2026-10-19T23:35:10Z"}
+{"area": 1624, "stage": "decision", "event": "start", "utc": "2026-10-19T23:35:10Z"}
+{"area": 1624, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:35:10Z"}
+{"area": 1624, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:35:10Z"}
+{"area": 1624, "stage": "search_holdout", "event": "start", "utc": "2026-10-19T23:35:10Z"}
+{"area": 1625, "stage": "exposures", "event": "end", "rc": 0, "seconds": 51.5, "utc": "2026-10-19T23:36:01Z"}
+{"area": 1625, "stage": "inject", "event": "start", "utc": "2026-10-19T23:36:01Z"}
+{"area": 1625, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:36:01Z"}
+{"area": 1624, "stage": "search_holdout", "event": "end", "rc": 0, "seconds": 54.9, "utc": "2026-10-19T23:36:05Z"}
+{"area": 1624, "event": "searched", "groups": 1887, "series_searched": 3766, "flagged_runs": 16, "flagged_groups": 2, "passed_groups": [708205400009336], "utc": "2026-10-19T23:36:05Z"}
+{"area": 1357, "event": "area_start", "position": 8, "projected_mb": 3753.6, "utc": "2026-10-19T23:36:05Z"}
+{"area": 1357, "stage": "sample", "event": "start", "utc": "2026-10-19T23:36:05Z"}
+{"area": 1357, "stage": "sample", "event": "end", "rc": 0, "seconds": 5.9, "utc": "2026-10-19T23:36:11Z"}
+{"area": 1357, "stage": "fetch", "event": "start", "utc": "2026-10-19T23:36:11Z"}
+{"area": 1357, "stage": "fetch", "event": "end", "rc": 0, "seconds": 20.7, "utc": "2026-10-19T23:36:32Z"}
+{"area": 1357, "stage": "exposures", "event": "start", "utc": "2026-10-19T23:36:32Z"}
+{"area":1624,"stage":"image_check","event":"start","utc":"2026-10-19T23:36:39Z"}
+{"area": 1625, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 44.3, "utc": "2026-10-19T23:36:45Z"}
+{"area": 1357, "stage": "exposures", "event": "end", "rc": 0, "seconds": 40.6, "utc": "2026-10-19T23:37:13Z"}
+{"area": 1357, "stage": "inject", "event": "start", "utc": "2026-10-19T23:37:13Z"}
+{"area": 1357, "stage": "search_dev", "event": "start", "utc": "2026-10-19T23:37:13Z"}
+{"area": 1357, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 25.6, "utc": "2026-10-19T23:37:38Z"}
+{"area":1624,"stage":"image_check","event":"end","utc":"2026-10-19T23:38:00Z"}
+{"area": 1625, "stage": "inject", "event": "end", "rc": 0, "seconds": 128.0, "utc": "2026-10-19T23:38:09Z"}
+{"area": 1625, "stage": "decision", "event": "start", "utc": "2026-10-19T23:38:09Z"}
+{"area": 1625, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:38:09Z"}
+{"area": 1625, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:38:09Z"}
+{"area": 1625, "stage": "search_holdout", "event": "start", "utc": "2026-10-19T23:38:09Z"}
+{"area": 1357, "stage": "inject", "event": "end", "rc": 0, "seconds": 73.0, "utc": "2026-10-19T23:38:26Z"}
+{"area": 1357, "stage": "decision", "event": "start", "utc": "2026-10-19T23:38:26Z"}
+{"area": 1357, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-19T23:38:26Z"}
+{"area": 1357, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-19T23:38:26Z"}
+{"area": 1625, "stage": "search_holdout", "event": "end", "rc": 0, "seconds": 75.7, "utc": "2026-10-19T23:39:24Z"}
+{"area": 1625, "event": "searched", "groups": 2044, "series_searched": 4059, "flagged_runs": 5, "flagged_groups": 2, "passed_groups": [709212400017577], "utc": "2026-10-19T23:39:24Z"}
+{"event": "queue_done", "utc": "2026-10-19T23:39:24Z"}
+{"area":1625,"stage":"image_check","event":"start","utc":"2026-10-19T23:41:01Z"}
+{"area":1625,"stage":"image_check","event":"end","utc":"2026-10-19T23:42:52Z"}

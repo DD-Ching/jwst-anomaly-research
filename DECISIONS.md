@@ -5404,6 +5404,15 @@ confining radiation at a throat is found.
   - **Decision:** keep the per-area validation gate before any search; the metadata sampling margin (183: 0.547) is
     a weak predictor of passing.
   - **Revisit if:** a larger batch is wanted, then choose areas with a worst-cell margin ≳ 0.65 first.
+- **Addendum 2026-10-19 (v16, `results/w3_ztf/v16/RESULT.md`):**
+  - A frozen 8-area queue ran with the v13 method: 3 areas passed and 5,995 groups were searched. The 2 survivors are
+    consistent with a low-response detector column and with poor-seeing images (no confirmed dimming).
+  - **Post hoc** (v15–v16, 10 areas): inventory worst-cell sampling fraction (a sampling estimate, not the injected
+    recovery rate) ≥ 0.593 passed and ≤ 0.578 failed. Not a calibrated rule.
+  - **Decision:** as a heuristic, future queues may rank by that sampling fraction (≥ 0.59) before cost; the
+    per-area validation gate stays. The remaining identified supply is
+    4 partitions (17,702 searchable groups, 5.76 GB, shared fields).
+  - **Revisit if:** a new partition list or a later DR adds unused areas.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

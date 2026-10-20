@@ -1,0 +1,148 @@
+{
+ "label": "observed (IBE mskimg) and derived",
+ "bit_names": {
+  "BIT00": "AIRCRAFT/SATELLITE TRACK",
+  "BIT01": "CONTAINS SEXTRACTOR DETECTION",
+  "BIT02": "LOW RESPONSIVITY",
+  "BIT03": "HIGH RESPONSIVITY",
+  "BIT04": "NOISY",
+  "BIT05": "GHOST FROM BRIGHT SOURCE",
+  "BIT06": "POSSIBLE GHOST FROM CHARGE SPILLAGE",
+  "BIT07": "PIXEL SPIKE (POSSIBLE RAD HIT)",
+  "BIT08": "SATURATED",
+  "BIT09": "DEAD (UNRESPONSIVE)",
+  "BIT10": "NAN (not a number)",
+  "BIT11": "CONTAINS PSF-EXTRACTED SOURCE POSITION",
+  "BIT12": "HALO FROM BRIGHT SOURCE",
+  "BIT13": "RESERVED FOR FUTURE USE",
+  "BIT14": "RESERVED FOR FUTURE USE",
+  "BIT15": "RESERVED FOR FUTURE USE"
+ },
+ "mask_bytes": 161280,
+ "exposures": [
+  {
+   "key": 708205400009336,
+   "expid": 206150633,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 3.124031954805005
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206150873,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 2.21181126319427
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206151353,
+   "nd": true,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": 0.48928455179037683,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206250648,
+   "nd": true,
+   "cls": 5,
+   "dark_column_min_dist_arcsec": 0.35186186758964544,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206251129,
+   "nd": true,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": 1.7455552265389904,
+   "mask_at_center": 2,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206251369,
+   "nd": true,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": 1.6385742426343017,
+   "mask_at_center": 2,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206350476,
+   "nd": true,
+   "cls": 5,
+   "dark_column_min_dist_arcsec": 0.06689210880022588,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206350717,
+   "nd": true,
+   "cls": 5,
+   "dark_column_min_dist_arcsec": 0.3082942420150524,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206350958,
+   "nd": true,
+   "cls": 5,
+   "dark_column_min_dist_arcsec": 0.0007184534448388331,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206351197,
+   "nd": true,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": 0.9735607385575364,
+   "mask_at_center": 2,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206450576,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 2.481193218582736
+  },
+  {
+   "key": 708205400009336,
+   "expid": 206550548,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 11.203616041555662
+  }
+ ]
+}

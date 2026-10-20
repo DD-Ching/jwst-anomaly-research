@@ -1,0 +1,116 @@
+{
+ "label": "derived; frozen v13 rule with the v6 pass criteria (v16 PLAN section 3), applied by code",
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "recovered": 93,
+   "n": 200,
+   "distinct_stars": 154,
+   "rate": 0.465
+  },
+  "rho0.01_blend1_tE30": {
+   "recovered": 126,
+   "n": 200,
+   "distinct_stars": 168,
+   "rate": 0.63
+  },
+  "rho0.01_blend1_tE100": {
+   "recovered": 120,
+   "n": 200,
+   "distinct_stars": 168,
+   "rate": 0.6
+  },
+  "rho0.1_blend1_tE10": {
+   "recovered": 70,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.35
+  },
+  "rho0.1_blend1_tE30": {
+   "recovered": 109,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.545
+  },
+  "rho0.01_blend0.7_tE10": {
+   "recovered": 100,
+   "n": 200,
+   "distinct_stars": 164,
+   "rate": 0.5
+  },
+  "rho0.01_blend0.7_tE30": {
+   "recovered": 117,
+   "n": 200,
+   "distinct_stars": 167,
+   "rate": 0.585
+  },
+  "rho0.01_blend0.7_tE100": {
+   "recovered": 97,
+   "n": 200,
+   "distinct_stars": 161,
+   "rate": 0.485
+  },
+  "rho0.1_blend0.7_tE10": {
+   "recovered": 74,
+   "n": 200,
+   "distinct_stars": 169,
+   "rate": 0.37
+  },
+  "rho0.1_blend0.7_tE30": {
+   "recovered": 107,
+   "n": 200,
+   "distinct_stars": 170,
+   "rate": 0.535
+  }
+ },
+ "controls": {
+  "eclipse": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 154,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "fade": {
+   "passed": 97,
+   "n": 1000,
+   "rate": 0.097,
+   "distinct_stars": 425,
+   "wilson95": [
+    0.0802,
+    0.1169
+   ]
+  },
+  "pspl": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 170,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "common": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 172,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  }
+ },
+ "calibration_real_survivors": 0,
+ "calibration_flagged_runs": 0,
+ "conditions": {
+  "all_10_cells_ge_0.5": false,
+  "controls_le_0.10": true,
+  "calibration_survivors_le_5": true
+ },
+ "passed": false,
+ "carriers": 500
+}
