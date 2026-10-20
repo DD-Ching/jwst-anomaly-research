@@ -1,4 +1,4 @@
-# W3 dimming: NEXUS-Center-Tile-6 (o015) as an unseen ≤ 4-exposure sample for the k = 1 aperture (frozen 2026-10-20 08:30 UTC)
+# W3 dimming: NEXUS-Center-Tile-6 (o015) as an unseen ≤ 4-exposure sample for the k = 1 aperture (frozen 2026-10-20 08:11 UTC)
 
 Handoff 1 of `results/dimming/nan_k1/RESULT.md` ("a k = 1 adoption needs new wide-epoch data"). Written before any
 o015 pixel was read.
