@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: the NEXUS `undetected` control pairs are visible sources lost to no-data aperture pixels
+- **Why:** handoff 1 of the swap_inject entry. Plan frozen first (`results/dimming/undetected_stamps/PLAN.md`).
+- **Result (`results/dimming/undetected_stamps/RESULT.md`):** all 13 monitored `undetected` pairs have NaN flux
+  in all 24 covering exposures: 22 have DO_NOT_USE pixels in the aperture (21 of them only 1–2 pixels), and 2
+  are at the array edge. Every stamp shows the source. Over measurable pairs (≥ 2 finite exposures), held-out
+  ≤ 4 `on_sky` is 33 / 45 (Wilson 0.59–0.84; all pairs 0.28–0.48). Frozen decision R2: measurability explains
+  about half of the ≤ 4 deficit, not all of it. Limits unchanged (these pairs already count as misses).
+- **Handoff:** (1) frozen plan + NaN-tolerant aperture in `persistence_check`, re-run NEXUS e1–e7 controls,
+  re-score; (2) split the 12 measurable held-out `inconclusive` pairs by cause; (3) NEXUS e2 controls.
+
 ## 2026-10-20: W3 dimming: D-039 persistence swap in `inject`: joint exposure ×1.54–2.51 at ρ = 0.1; zero surviving events still holds
 - **Why:** handoff 1 of #390. Plan frozen first (`results/dimming/swap_inject/PLAN.md`).
 - **Code:** `efficiency_table(persistence_eff=...)` credits an injected copy detected in one epoch k that is a

@@ -1,0 +1,130 @@
+{
+ "train": {
+  "le4": {
+   "all": {
+    "on_sky": 49,
+    "n": 96,
+    "wilson95": [
+     0.412,
+     0.608
+    ],
+    "verdicts": {
+     "inconclusive": 45,
+     "on_sky": 49,
+     "undetected": 2
+    }
+   },
+   "measurable": {
+    "on_sky": 49,
+    "n": 62,
+    "wilson95": [
+     0.674,
+     0.873
+    ],
+    "verdicts": {
+     "inconclusive": 13,
+     "on_sky": 49
+    }
+   },
+   "measurable_fraction": 0.646
+  },
+  "gt4": {
+   "all": {
+    "on_sky": 94,
+    "n": 94,
+    "wilson95": [
+     0.961,
+     1.0
+    ],
+    "verdicts": {
+     "on_sky": 94
+    }
+   },
+   "measurable": {
+    "on_sky": 94,
+    "n": 94,
+    "wilson95": [
+     0.961,
+     1.0
+    ],
+    "verdicts": {
+     "on_sky": 94
+    }
+   },
+   "measurable_fraction": 1.0
+  }
+ },
+ "held_out": {
+  "le4": {
+   "all": {
+    "on_sky": 33,
+    "n": 89,
+    "wilson95": [
+     0.278,
+     0.475
+    ],
+    "verdicts": {
+     "inconclusive": 45,
+     "on_sky": 33,
+     "undetected": 11
+    }
+   },
+   "measurable": {
+    "on_sky": 33,
+    "n": 45,
+    "wilson95": [
+     0.59,
+     0.84
+    ],
+    "verdicts": {
+     "inconclusive": 12,
+     "on_sky": 33
+    }
+   },
+   "measurable_fraction": 0.506
+  },
+  "gt4": {
+   "all": {
+    "on_sky": 0,
+    "n": 0,
+    "wilson95": null,
+    "verdicts": {}
+   },
+   "measurable": {
+    "on_sky": 0,
+    "n": 0,
+    "wilson95": null,
+    "verdicts": {}
+   },
+   "measurable_fraction": null
+  }
+ },
+ "decision": "R2",
+ "stamps": {
+  "undetected_pairs": {
+   "pairs": 13,
+   "exposures": 24,
+   "reason": {
+    "aperture_no_data": 22,
+    "edge": 2
+   },
+   "aperture_no_data_nan_pixels_le2": 21,
+   "stamp_nan_frac_median": 0.0198
+  },
+  "all": {
+   "pairs": 62,
+   "exposures": 76,
+   "reason": {
+    "aperture_no_data": 71,
+    "edge": 5
+   },
+   "aperture_no_data_nan_pixels_le2": 66,
+   "stamp_nan_frac_median": 0.0219
+  }
+ },
+ "meta": {
+  "provenance": "derived",
+  "mosaic_snr_min": 10,
+  "r1_lower": 0.8
+ }
+}
