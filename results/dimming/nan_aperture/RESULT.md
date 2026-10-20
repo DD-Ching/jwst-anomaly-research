@@ -29,7 +29,7 @@ Held-out (e5–e7) and train (e1, e3, e4; e0 not re-run) NEXUS monitored pairs, 
 - Post hoc alternatives for 2 masked pixels (`g1.json`): bilinear reflection through the true centre 0.069,
   area correction 0.053; neither meets 0.05 either.
 - Reading: the NaN-aperture loss is most of the ≤ 4 deficit, and k = 1 passed G1 as written. The 5 % flux gate is
-  stricter than the D-039 call needs (S/N ≥ 5 and a 20× illuminator ratio; both calls unchanged 42 / 42), but it
+  stricter than the D-039 call needs (S/N ≥ 5, unchanged 42 / 42; the 20× illuminator ratio was not tested here), but it
   was frozen and is kept.
 
 ## Failed approach
