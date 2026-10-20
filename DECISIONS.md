@@ -5521,6 +5521,13 @@ confining radiation at a throat is found.
     rule this round.
   - **Revisit if:** the owner accepts a lower recovery target for a measured-edge rule, or edge information is
     added (e.g. psfcat fills for unusable exposures).
+- **Addendum 2026-10-20 (v24, `results/w3_ztf/v24/RESULT.md`):**
+  - **Finding:** the undecided edge sides are mostly uncovered (64 %) or quality-flagged (27 %). psfcat-fillable
+    DR24 gaps are 8 % (W3) and 12 % (fades).
+  - **Gain:** the optimistic gain changes no verdict.
+  - **Decision:** existing-product restoration (the v9–v10 psfcat route) is closed for the v13 and bounds rules.
+  - **Revisit if:** new edge information exists (another survey or band covering the same stars), or the owner
+    decides on using infobits ≠ 0 exposures or on a lower recovery target.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

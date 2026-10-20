@@ -1,0 +1,115 @@
+{
+ "label": "derived (step12_<npix>.json); optimistic upper bounds use injection truth",
+ "areas": {
+  "4991": {
+   "cells_bounds_recovered": {
+    "rho0.01_blend0.7_tE10": 66,
+    "rho0.01_blend0.7_tE100": 84,
+    "rho0.01_blend0.7_tE30": 52,
+    "rho0.01_blend1_tE10": 61,
+    "rho0.01_blend1_tE100": 103,
+    "rho0.01_blend1_tE30": 71,
+    "rho0.1_blend0.7_tE10": 43,
+    "rho0.1_blend0.7_tE30": 46,
+    "rho0.1_blend1_tE10": 56,
+    "rho0.1_blend1_tE30": 68
+   },
+   "cells_optimistic": {
+    "rho0.01_blend0.7_tE10": 71,
+    "rho0.01_blend0.7_tE100": 87,
+    "rho0.01_blend0.7_tE30": 52,
+    "rho0.01_blend1_tE10": 62,
+    "rho0.01_blend1_tE100": 104,
+    "rho0.01_blend1_tE30": 72,
+    "rho0.1_blend0.7_tE10": 45,
+    "rho0.1_blend0.7_tE30": 47,
+    "rho0.1_blend1_tE10": 59,
+    "rho0.1_blend1_tE30": 72
+   },
+   "restorable_range": [
+    0,
+    5
+   ],
+   "bounds_losses": 773,
+   "bounds_losses_all_insufficient": true,
+   "limit_i_slow_events": 4,
+   "limit_ii_weak_bound_recovered": 7,
+   "fade_v13_passed": 138,
+   "fade_rejectable_optimistic": 6,
+   "fade_limit_i_slow_events": 13,
+   "cells_optimistic_ge_100": 1,
+   "fade_v13_optimistic": 132
+  },
+  "2344": {
+   "cells_bounds_recovered": {
+    "rho0.01_blend0.7_tE10": 48,
+    "rho0.01_blend0.7_tE100": 104,
+    "rho0.01_blend0.7_tE30": 71,
+    "rho0.01_blend1_tE10": 66,
+    "rho0.01_blend1_tE100": 114,
+    "rho0.01_blend1_tE30": 73,
+    "rho0.1_blend0.7_tE10": 43,
+    "rho0.1_blend0.7_tE30": 65,
+    "rho0.1_blend1_tE10": 46,
+    "rho0.1_blend1_tE30": 71
+   },
+   "cells_optimistic": {
+    "rho0.01_blend0.7_tE10": 49,
+    "rho0.01_blend0.7_tE100": 104,
+    "rho0.01_blend0.7_tE30": 71,
+    "rho0.01_blend1_tE10": 66,
+    "rho0.01_blend1_tE100": 118,
+    "rho0.01_blend1_tE30": 74,
+    "rho0.1_blend0.7_tE10": 44,
+    "rho0.1_blend0.7_tE30": 65,
+    "rho0.1_blend1_tE10": 46,
+    "rho0.1_blend1_tE30": 71
+   },
+   "restorable_range": [
+    0,
+    4
+   ],
+   "bounds_losses": 713,
+   "bounds_losses_all_insufficient": true,
+   "limit_i_slow_events": 9,
+   "limit_ii_weak_bound_recovered": 4,
+   "fade_v13_passed": 81,
+   "fade_rejectable_optimistic": 6,
+   "fade_limit_i_slow_events": 17,
+   "cells_optimistic_ge_100": 2,
+   "fade_v13_optimistic": 75
+  }
+ },
+ "undecided_sides_by_class": {
+  "w3": {
+   "B": 536,
+   "A": 1274,
+   "C1": 157,
+   "C2": 3,
+   "D": 4
+  },
+  "fade": {
+   "B": 75,
+   "A": 206,
+   "C1": 39,
+   "D": 1
+  }
+ },
+ "w3_side_fractions": {
+  "A": 0.645,
+  "B": 0.272,
+  "C1": 0.08,
+  "C2": 0.002,
+  "D": 0.002
+ },
+ "fade_side_fractions": {
+  "A": 0.642,
+  "B": 0.234,
+  "C1": 0.121,
+  "D": 0.003
+ },
+ "go_bounds": false,
+ "go_v13": false,
+ "go": false,
+ "next": "stop: no psfcat download (PLAN step 2)"
+}

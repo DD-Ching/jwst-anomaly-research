@@ -1,0 +1,324 @@
+{
+ "label": "derived; simulated events replayed (v23 seeds); optimistic estimates use injection truth after classification",
+ "npix": 2344,
+ "seed_offset": 46000,
+ "carriers": 500,
+ "summary": {
+  "fade": {
+   "n": 1000,
+   "time": {
+    "edge_slow": 564,
+    "recovered": 81,
+    "not_flagged": 128,
+    "other:oneoff_ok": 69,
+    "other:achromatic_ok": 158
+   },
+   "bounds": {
+    "edge_slow": 564,
+    "edge_insufficient": 81,
+    "not_flagged": 128,
+    "other:oneoff_ok": 69,
+    "other:achromatic_ok": 158
+   },
+   "bounds_losses": 81,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 17,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "A": 80,
+    "B": 20,
+    "C1": 15
+   },
+   "events_with_c1_side": 15,
+   "restorable_bounds_optimistic": 0,
+   "rejectable_v13_optimistic": 6,
+   "bounds_recovered_plus_restorable": 0
+  },
+  "rho0.01_blend0.7_tE10": {
+   "n": 200,
+   "time": {
+    "recovered": 127,
+    "not_flagged": 67,
+    "other:achromatic_ok": 4,
+    "edge_slow": 2
+   },
+   "bounds": {
+    "edge_insufficient": 79,
+    "recovered": 48,
+    "not_flagged": 67,
+    "other:achromatic_ok": 4,
+    "edge_slow": 2
+   },
+   "bounds_losses": 79,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 1,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "B": 30,
+    "C1": 6,
+    "A": 80
+   },
+   "events_with_c1_side": 6,
+   "restorable_bounds_optimistic": 1,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 49
+  },
+  "rho0.01_blend0.7_tE100": {
+   "n": 200,
+   "time": {
+    "other:achromatic_ok": 28,
+    "recovered": 139,
+    "not_flagged": 26,
+    "edge_slow": 4,
+    "other:oneoff_ok": 3
+   },
+   "bounds": {
+    "other:achromatic_ok": 28,
+    "edge_insufficient": 35,
+    "not_flagged": 26,
+    "recovered": 104,
+    "edge_slow": 4,
+    "other:oneoff_ok": 3
+   },
+   "bounds_losses": 35,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 4,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "A": 28,
+    "B": 12,
+    "C1": 2
+   },
+   "events_with_c1_side": 2,
+   "restorable_bounds_optimistic": 0,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 104
+  },
+  "rho0.01_blend0.7_tE30": {
+   "n": 200,
+   "time": {
+    "recovered": 157,
+    "not_flagged": 35,
+    "other:achromatic_ok": 7,
+    "edge_slow": 1
+   },
+   "bounds": {
+    "edge_insufficient": 86,
+    "not_flagged": 35,
+    "recovered": 71,
+    "other:achromatic_ok": 7,
+    "edge_slow": 1
+   },
+   "bounds_losses": 86,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 1,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "A": 79,
+    "B": 19,
+    "C1": 13
+   },
+   "events_with_c1_side": 12,
+   "restorable_bounds_optimistic": 0,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 71
+  },
+  "rho0.01_blend1_tE10": {
+   "n": 200,
+   "time": {
+    "recovered": 141,
+    "not_flagged": 59
+   },
+   "bounds": {
+    "edge_insufficient": 75,
+    "not_flagged": 59,
+    "recovered": 66
+   },
+   "bounds_losses": 75,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 0,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "A": 82,
+    "B": 24,
+    "C1": 5
+   },
+   "events_with_c1_side": 4,
+   "restorable_bounds_optimistic": 0,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 66
+  },
+  "rho0.01_blend1_tE100": {
+   "n": 200,
+   "time": {
+    "recovered": 159,
+    "not_flagged": 40,
+    "edge_slow": 1
+   },
+   "bounds": {
+    "edge_insufficient": 45,
+    "not_flagged": 40,
+    "edge_slow": 1,
+    "recovered": 114
+   },
+   "bounds_losses": 45,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 1,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "A": 37,
+    "B": 6,
+    "C1": 10
+   },
+   "events_with_c1_side": 10,
+   "restorable_bounds_optimistic": 4,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 118
+  },
+  "rho0.01_blend1_tE30": {
+   "n": 200,
+   "time": {
+    "recovered": 164,
+    "not_flagged": 35,
+    "edge_slow": 1
+   },
+   "bounds": {
+    "edge_insufficient": 91,
+    "not_flagged": 35,
+    "recovered": 73,
+    "edge_slow": 1
+   },
+   "bounds_losses": 91,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 0,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "C1": 14,
+    "A": 79,
+    "B": 24
+   },
+   "events_with_c1_side": 14,
+   "restorable_bounds_optimistic": 1,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 74
+  },
+  "rho0.1_blend0.7_tE10": {
+   "n": 200,
+   "time": {
+    "not_flagged": 85,
+    "recovered": 110,
+    "edge_slow": 4,
+    "other:achromatic_ok": 1
+   },
+   "bounds": {
+    "not_flagged": 85,
+    "recovered": 43,
+    "edge_insufficient": 67,
+    "edge_slow": 4,
+    "other:achromatic_ok": 1
+   },
+   "bounds_losses": 67,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 0,
+   "bounds_recovered_with_weak_bound_ii": 1,
+   "undecided_side_classes": {
+    "A": 82,
+    "B": 13,
+    "C2": 1,
+    "C1": 2
+   },
+   "events_with_c1_side": 2,
+   "restorable_bounds_optimistic": 1,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 44
+  },
+  "rho0.1_blend0.7_tE30": {
+   "n": 200,
+   "time": {
+    "not_flagged": 42,
+    "recovered": 145,
+    "other:achromatic_ok": 10,
+    "edge_slow": 3
+   },
+   "bounds": {
+    "not_flagged": 42,
+    "edge_insufficient": 80,
+    "recovered": 65,
+    "other:achromatic_ok": 10,
+    "edge_slow": 3
+   },
+   "bounds_losses": 80,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 0,
+   "bounds_recovered_with_weak_bound_ii": 2,
+   "undecided_side_classes": {
+    "A": 79,
+    "B": 22,
+    "D": 1,
+    "C1": 6
+   },
+   "events_with_c1_side": 6,
+   "restorable_bounds_optimistic": 0,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 65
+  },
+  "rho0.1_blend1_tE10": {
+   "n": 200,
+   "time": {
+    "recovered": 117,
+    "not_flagged": 81,
+    "other:achromatic_ok": 1,
+    "edge_slow": 1
+   },
+   "bounds": {
+    "recovered": 46,
+    "not_flagged": 81,
+    "edge_insufficient": 71,
+    "other:achromatic_ok": 1,
+    "edge_slow": 1
+   },
+   "bounds_losses": 71,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 0,
+   "bounds_recovered_with_weak_bound_ii": 0,
+   "undecided_side_classes": {
+    "B": 22,
+    "A": 76,
+    "C1": 3,
+    "D": 1
+   },
+   "events_with_c1_side": 3,
+   "restorable_bounds_optimistic": 0,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 46
+  },
+  "rho0.1_blend1_tE30": {
+   "n": 200,
+   "time": {
+    "recovered": 155,
+    "not_flagged": 35,
+    "edge_slow": 10
+   },
+   "bounds": {
+    "recovered": 71,
+    "edge_insufficient": 84,
+    "not_flagged": 35,
+    "edge_slow": 10
+   },
+   "bounds_losses": 84,
+   "bounds_losses_all_insufficient": true,
+   "bounds_slow_events_with_limit_i": 2,
+   "bounds_recovered_with_weak_bound_ii": 1,
+   "undecided_side_classes": {
+    "C1": 5,
+    "A": 75,
+    "B": 25
+   },
+   "events_with_c1_side": 5,
+   "restorable_bounds_optimistic": 0,
+   "rejectable_v13_optimistic": 0,
+   "bounds_recovered_plus_restorable": 71
+  }
+ },
+ "seconds": 88.6
+}
