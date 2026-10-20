@@ -672,6 +672,14 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   https://archive.stsci.edu/hlsps/canucs/dr1/macs1149/clu/hlsp_canucs_jwst-hst_multi_macs1149-clu_multi_v1_photometry-cat.fits.gz,
   29,779,449 B, sha256 `08ab67347f2c3dfe4f743cc1b2a9d4b77a1e40eb66ddeb611648bb296adc0739`. The same directory tree has
   CANUCS lens models (`model/`: deflection, κ, γ, best and samples), not yet used.
+- System 16 spec-z check (accessed 2026-10-20; D-037 addendum):
+  - Treu et al. 2016, ApJ 817, 60, doi:10.3847/0004-637X/817/1/60; VizieR J/ApJ/817/60 (table3: multiple images with
+    `z` and new `zspec` from HST-GO-13459/14041 grism and VLT-MUSE 294.A-5032), doi:10.26093/cds/vizier.18170060.
+  - DJA NIRSpec emission-line table v4.4 (msaexp extractions):
+    https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.4.csv.gz, 133,004,545 B,
+    Last-Modified 2025-09-04, sha256 `728afcdd5ec4d164b9d816ea903e648b1d4937ae52c8a271056c9119cabf1ccf`. Per-spectrum
+    files under `extractions/macs1149-v4/` returned 403 from the cloud session.
+  - CATS v4.1 `arcs.txt` (already pinned in `lensmodel.MODELS["macs1149-cats"]`).
 ### MACS0416 field run (accessed 2026-10-08; D-038)
 
 - JWST CANUCS program 1208, NIRCam level 3 `jw01208-o004_t002`, 8 bands, jwst 3.0.0. Manifests:
