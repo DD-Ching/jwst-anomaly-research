@@ -1,5 +1,6 @@
-"""Apply the frozen PLAN.md rule to `forced.ecsv` of one field's targets and write <field>_summary.json and
-<field>_targets.ecsv (small). Usage (repo root): summarise.py FIELD SCREEN_OUT
+"""Apply the frozen PLAN.md rule to `forced.ecsv` of one field's targets and write
+<field>_summary.json and <field>_targets.ecsv (small).
+Usage (repo root): summarise.py FIELD SCREEN_OUT
 """
 
 import json

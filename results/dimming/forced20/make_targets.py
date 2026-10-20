@@ -1,5 +1,5 @@
-"""Copy of a field's lightcurves.ecsv in which only its D-039 `on_sky` flag targets are unvetoed flags
-(PLAN.md "Screen" / "Measurement"). Usage (repo root): make_targets.py FIELD OUT
+"""Copy of a field's lightcurves.ecsv in which only its D-039 `on_sky` flag targets are unvetoed
+flags (PLAN.md "Screen" / "Measurement"). Usage (repo root): make_targets.py FIELD OUT
 (rewrites OUT/lightcurves.ecsv; writes OUT/targets_match.json with the weight_edge-removed targets)
 """
 
@@ -25,7 +25,11 @@ uid = np.asarray(t["uid"], str)
 is_t = np.isin(uid, on_sky)
 assert is_t.sum() == N
 det = np.stack(
-    [np.asarray(t[c], bool) for c in sorted(t.colnames) if c.startswith("F200W_e") and c.endswith("_det")],
+    [
+        np.asarray(t[c], bool)
+        for c in sorted(t.colnames)
+        if c.startswith("F200W_e") and c.endswith("_det")
+    ],
     axis=1,
 )
 other = np.delete(det, DET_EPOCH, axis=1)

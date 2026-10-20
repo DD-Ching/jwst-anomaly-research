@@ -1,5 +1,5 @@
-"""F200W / F444W forced-photometry cutouts of the targets of one field, all epochs (blank: no coverage).
-Usage (repo root): sheet.py FIELD OUT PNG
+"""F200W / F444W forced-photometry cutouts of one field's targets, all epochs (blank: no
+coverage). Usage (repo root): sheet.py FIELD OUT PNG
 """
 
 import sys
