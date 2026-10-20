@@ -1,6 +1,6 @@
 # W3 ZTF fade-control rate across areas: diagnostic plan (frozen before computing)
 
-Written 2026-10-20 10:20 UTC, before any number below `RESULT.md` was computed. Post hoc with respect to the
+Written 2026-10-20 about 10:12 UTC (commit time is the record), before any number below `RESULT.md` was computed. Post hoc with respect to the
 v13–v22 rounds (their outcomes are known); offline on committed tables only. **No method change:** the frozen
 v13 rule, the v6 pass criteria and the 10 % fade limit stay as they are; anything found here is input for the
 owner's method decision (v22 RESULT section F).
