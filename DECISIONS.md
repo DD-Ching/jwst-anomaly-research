@@ -3874,6 +3874,16 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 - Euclid DR1 (≈ 2000 deg², PSF-corrected shapes) is public: the same code scales by tile.
 - A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
 
+**Addendum (2026-10-20, PSF radial pattern; `results/w5_shear/psf_radial/RESULT.md`).** Star ellipticities (181,816
+stars, 343 tiles) on the D-067 grid with its coverage cut: frozen rule "PSF could fake or hide a flag", set by star
+noise at θ_E = 1′ (EDF-F, 1.3σ). At 2′ / 4′ the worst radial PSF term is ≤ 0.42 / 0.17 × the annulus-mean injected
+shear at leakage β = 1 (≤ 0.96 / 0.40 at β = 2.3). This test does not change the 2′ / 4′ limits (efficiency 1.0 there; the β = 2.3 bound is not propagated through
+injections); the PSF revisit condition is narrowed
+to 1′ and to galaxies near the resolved cut: correct anisotropy per galaxy before a DR1 run. Star rows came from
+ESA EAS TAP (`catalogue.mer_catalogue`; identical to IRSA on 2,031 / 2,031 rows) because IRSA answered about one
+tile query per minute on 2026-10-20; EAS gives a whole Deep Field's stars in ~8 s and server-side count maps by
+`GROUP BY`. Prefer EAS for Q1/DR1 MER bulk reads; `tileid` = `segmentation_map_id` // 10⁶.
+
 ## D-068 W3 MOA-II: calibrated variable-baseline test, LF-drawn injections and a streaming per-field pipeline; eleven fields, 0 candidates, limits withdrawn pending the corrected chain (2026-10-08, amended 2026-10-09)
 
 **Decision.**

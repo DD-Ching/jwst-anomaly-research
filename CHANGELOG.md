@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W5 Euclid Q1: star-ellipticity (PSF) radial pattern bounded at 2′–4′; 1′ not bounded (D-067 addendum)
+- **Why:** D-067's open "Revisit if": PSF anisotropy leaks into its size-only-deconvolved galaxy shapes. Plan frozen
+  first (`results/w5_shear/psf_radial/PLAN.md`); verification share.
+- **Result (`results/w5_shear/psf_radial/RESULT.md`, `summary.json`):** 181,816 stars on 343 tiles, D-067 grid and
+  coverage cut. Frozen rule fires "PSF could fake or hide a flag" from θ_E = 1′ star noise (EDF-F, 1.3σ, ~9 stars per
+  annulus). At 2′ / 4′ the worst radial PSF term is ≤ 0.42 / 0.17 × the injected annulus shear (β = 1), ≤ 0.96 / 0.40
+  at β = 2.3. Post hoc: a real 4′ pattern (|z| > 3 at 103 / 116 centres vs 16 / 13 Gaussian, EDF-S / N), amplitude ≤ 0.018.
+- **Reading:** 2′ / 4′ limits not changed by this test; the revisit condition narrows to 1′ and galaxies near the
+  resolved cut (per-galaxy anisotropy correction before DR1).
+- **Access:** IRSA TAP answered about one tile query per minute; ESA EAS served the same rows (2,031 / 2,031 identical) in ~8 s
+  per field, plus server-side `GROUP BY` count maps. Prefer EAS for MER bulk reads (D-067 addendum, SOURCES.md).
+- **Failed approaches:** no coverage cut first (partial annuli turn a constant PSF into a radial term); a max rule on
+  a noisy star statistic cannot pass where annuli hold ~10 stars.
+- **Handoff:** W5/W1 Euclid line waits for DR1; before it, add a star-interpolated anisotropy correction to
+  `galaxy_shapes` and re-run the D-067 injections at 1′.
+
 ## 2026-10-20: `arcs` null calibrated on weak-shear rows: no excess there; too little leverage to settle #406
 - **Why:** #406's handoff: is the σ_ε 0.26 shape-noise null calibrated? Plan frozen before the weak-row orientation
   classes were read (`results/arcs/null-calibration/PLAN.md`). Stored `arcs.ecsv` only; no new data.
