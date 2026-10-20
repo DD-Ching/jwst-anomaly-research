@@ -41,9 +41,14 @@ def test_minimum_image_keeps_a_narrowed_umbra():
 def test_saddle_image_has_no_umbra():
     t = es.macro_magnification_map(-0.1, 1.0, -1, 1.5, 3.0, pixel=0.02, ray_step=0.01)
     assert (np.asarray(t["mu"]) * 0.1).min() > 0.5
-    assert es.macro_hole_halfwidths(-0.1, 1.0) == (0.0, 2.0)
+    assert es.macro_hole_halfwidths(-0.1, 1.0) == (0.0, 0.0)
 
 
 def test_rejects_macro_critical_curve():
     with pytest.raises(ValueError):
         es.macro_magnification_map(0.0, 1.0)
+
+
+def test_no_lens_control_is_the_macro_magnification():
+    t = es.macro_magnification_map(0.5, 1.0, 0, 1.0, 1.0, pixel=0.05, ray_step=0.01)
+    assert np.allclose(np.asarray(t["mu"]), 2.0, rtol=0.05)

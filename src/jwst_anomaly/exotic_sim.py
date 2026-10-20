@@ -449,11 +449,15 @@ def macro_hole_halfwidths(lam1: float, lam2: float) -> tuple[float, float]:
     """On-axis half-widths of a repulsive point lens's umbra in a macro model (model_prediction).
 
     Along axis i, ``beta_i = lam_i t + 1 / t`` for an image at ``t > 0``; its minimum
-    ``2 sqrt(lam_i)`` bounds the umbra when ``lam_i > 0``. For ``lam_i <= 0`` the map covers every
-    beta_i, so the
-    on-axis umbra closes (returned as 0).
+    ``2 sqrt(lam_i)`` bounds the umbra in a minimum image (both ``lam_i > 0``). In a saddle
+    (``lam1 lam2 < 0``) off-axis images fill the centre and the ray-shooting map shows no umbra
+    (results/w3_macro_shear/RESULT.md), so both half-widths are 0; maxima are not covered.
     """
-    return tuple(2.0 * math.sqrt(lam) if lam > 0 else 0.0 for lam in (lam1, lam2))
+    if lam1 <= 0 or lam2 <= 0:
+        if lam1 < 0 and lam2 < 0:
+            raise ValueError("maximum images (lam1, lam2 < 0) are not covered")
+        return (0.0, 0.0)
+    return (2.0 * math.sqrt(lam1), 2.0 * math.sqrt(lam2))
 
 
 def _rays(x0: float, x1: float, dx: float, y0: float, y1: float, dy: float):
@@ -478,8 +482,8 @@ def macro_magnification_map(
     shape in ``meta["shape"]`` (ny, nx). A fine ray grid covers the lens neighbourhood, a coarse
     grid (spacing set by the macro stretch) the rest; each ray carries its image-plane area.
     """
-    if sign not in (1, -1):
-        raise ValueError("sign must be +1 or -1")
+    if sign not in (1, -1, 0):
+        raise ValueError("sign must be +1, -1 or 0 (macro model only: a sampling-noise control)")
     if lam1 == 0 or lam2 == 0:
         raise ValueError("lam1 and lam2 must be non-zero (macro critical curve)")
     nx, ny = round(2 * half_x / pixel), round(2 * half_y / pixel)
@@ -490,8 +494,9 @@ def macro_magnification_map(
     big_x = (half_x + margin) / abs(lam1) + 1.0
     big_y = (half_y + margin) / abs(lam2) + 1.0
     d_fine = min(ray_step / (1.0 + max(abs(lam1), abs(lam2))), ray_step / 4)  # 1/r^2 ≤ 1 for r ≥ 1
-    dx = ray_step / (abs(lam1) + 2 / f**2)
-    dy = ray_step / (abs(lam2) + 2 / f**2)
+    # coarse spacings divide 2f, so coarse cell edges fall on the fine box's edges (no seam)
+    dx = 2 * f / math.ceil(2 * f * (abs(lam1) + 2 / f**2) / ray_step)
+    dy = 2 * f / math.ceil(2 * f * (abs(lam2) + 2 / f**2) / ray_step)
 
     def shoot(xs: np.ndarray, ys: np.ndarray, area: float, outside_box: bool) -> None:
         rows = max(1, _MACRO_CHUNK // max(len(xs), 1))
@@ -500,7 +505,7 @@ def macro_magnification_map(
             if outside_box:
                 keep = (np.abs(tx) >= f) | (np.abs(ty) >= f)
                 tx, ty = tx[keep], ty[keep]
-            r2 = tx * tx + ty * ty
+            r2 = tx * tx + ty * ty if sign else 1.0
             bx = lam1 * tx - sign * tx / r2
             by = lam2 * ty - sign * ty / r2
             h, _, _ = np.histogram2d(by.ravel(), bx.ravel(), bins=edges)
@@ -509,7 +514,9 @@ def macro_magnification_map(
     xs, ys = _rays(-f, f, d_fine, -f, f, d_fine)
     shoot(xs, ys, d_fine * d_fine, outside_box=False)
     if big_x > f or big_y > f:
-        xs, ys = _rays(-max(big_x, f), max(big_x, f), dx, -max(big_y, f), max(big_y, f), dy)
+        ex = f + math.ceil(max(big_x - f, 0.0) / dx) * dx
+        ey = f + math.ceil(max(big_y - f, 0.0) / dy) * dy
+        xs, ys = _rays(-ex, ex, dx, -ey, ey, dy)
         shoot(xs, ys, dx * dy, outside_box=True)
     mu = acc / pixel**2
     cx = 0.5 * (edges[1][1:] + edges[1][:-1])

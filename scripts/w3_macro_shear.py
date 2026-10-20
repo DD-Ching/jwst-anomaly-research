@@ -142,7 +142,7 @@ CASES = {
 }
 
 
-def measure(name, lam1, lam2, sign=-1):
+def measure(lam1, lam2, sign=-1):
     hx = max(3 * 2 * np.sqrt(abs(lam1)), 1.0)
     pix = 0.005 if abs(lam1) < 0.05 else 0.01
     t = es.macro_magnification_map(lam1, lam2, sign, hx, 3.0, pix)
@@ -164,19 +164,30 @@ def measure(name, lam1, lam2, sign=-1):
     ker = (xx**2 + yy**2 <= k * k).astype(float)
     ker /= ker.sum()
     disk = ndimage.convolve(rel, ker, mode="nearest")
+    # sampling-noise control (post hoc, added after review): same grids, no point lens
+    ctrl = as_image(es.macro_magnification_map(lam1, lam2, 0, hx, 3.0, pix))[0] / mac
+    ctrl_disk = ndimage.convolve(ctrl, ker, mode="nearest")
+    control = {
+        "point_min": float(ctrl.min()),
+        "point_max": float(ctrl.max()),
+        "rho0.1_min": float(ctrl_disk.min()),
+        "rho0.1_max": float(ctrl_disk.max()),
+    }
     tracks = {}
     for u0 in (0.0, 0.5, 1.0):
-        iy = int(round((u0 + 3.0) / pix))
-        ix = int(round((u0 + hx) / pix))
+        iy = int(np.argmin(np.abs(by - u0)))
         tracks[f"along_x_u0_{u0}"] = {
-            "min_point": float(rel[min(iy, mu.shape[0] - 1)].min()),
-            "min_rho0.1": float(disk[min(iy, mu.shape[0] - 1)].min()),
+            "min_point": float(rel[iy].min()),
+            "min_rho0.1": float(disk[iy].min()),
         }
-        if ix < mu.shape[1]:
+        if u0 < bx[-1]:
+            ix = int(np.argmin(np.abs(bx - u0)))
             tracks[f"along_y_u0_{u0}"] = {
                 "min_point": float(rel[:, ix].min()),
                 "min_rho0.1": float(disk[:, ix].min()),
             }
+        else:
+            tracks[f"along_y_u0_{u0}"] = "not measured: outside the window"
     return {
         "lam1": lam1,
         "lam2": lam2,
@@ -190,6 +201,7 @@ def measure(name, lam1, lam2, sign=-1):
         "pred_halfwidth_x": pred[0],
         "pred_halfwidth_y": pred[1],
         "tracks": tracks,
+        "no_lens_control": control,
     }, (rel, bx, by)
 
 
@@ -208,7 +220,7 @@ def main():
         res["cases"] = {}
         fig, axes = plt.subplots(1, len(CASES), figsize=(4 * len(CASES), 4))
         for ax, (name, (l1, l2)) in zip(axes, CASES.items(), strict=True):
-            res["cases"][name], (rel, bx, by) = measure(name, l1, l2)
+            res["cases"][name], (rel, bx, by) = measure(l1, l2)
             print(name, res["cases"][name], round(time.time() - t0), file=sys.stderr)
             ax.imshow(
                 np.log10(np.clip(rel, 1e-3, 1e2)),
