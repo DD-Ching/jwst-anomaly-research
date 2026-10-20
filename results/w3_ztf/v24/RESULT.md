@@ -1,4 +1,4 @@
-# W3 ZTF v24 — existing products cannot restore the missing edge information: 8 % of undecided W3 edge sides are psfcat-fillable, optimistic gain 0–5 per cell; no download, trial closed
+# W3 ZTF v24 — existing products cannot restore the missing edge information: 8 % of undecided W3 edge sides are candidate psfcat fills, optimistic gain 0–5 per cell; no download, trial closed
 
 - **Pre-registration:** the plan was committed at 21:34:19 (6eaaaab), before any data read. It sets the categories,
   the optimistic estimate and the go / no-go rule.
@@ -38,16 +38,18 @@ that is insufficient under bounds, or a fade side of a v13 pass.
 
 | class | W3 sides (both areas) | fade sides |
 |---|---|---|
-| A no official exposure covering the star | 1,274 (64.5 %) | 206 (64.2 %) |
+| A no further r-band exposure with the star in the footprint (besides series epochs) | 1,274 (64.5 %) | 206 (64.2 %) |
 | B only exposures with infobits ≠ 0 (excluded by quality) | 536 (27.2 %) | 75 (23.4 %) |
-| C1 valid exposure, DR24 product gap (psfcat-fillable) | 157 (8.0 %) | 39 (12.1 %) |
+| C1 valid exposure, DR24 product gap (candidate psfcat fill) | 157 (8.0 %) | 39 (12.1 %) |
 | C2 valid exposure, not in the series for another reason | 3 | 0 |
 | D in the series but too shallow or noisy | 4 | 1 |
 
 - **Reading:**
   - Only C1 can be restored with existing products, and even there psfcat may lack the star (then it stays
     unknown).
-  - A cannot be restored: there is no observation.
+  - A cannot be restored with these products: besides the series' own epochs, there is no r-band exposure of the
+    star's DR24 quadrants with the star in the footprint. A also covers quadrants or fields without a DR24 member
+    of the star, and 40 of 1,480 A sides hold an in-series significant intermediate (L > 0; not stored).
   - B is excluded by the official quality bits, which this trial does not relax.
   - C2 and D are negligible within one span. Unlike v23's interval with no span cap, ambiguous epochs mostly lie
     beyond one span.
@@ -61,6 +63,18 @@ that is insufficient under bounds, or a fade side of a v13 pass.
   reach ≤ 100 under v13. **Neither (`gate.json`: `go` false).** As planned, no psfcat product was downloaded and
   steps 3–4 did not run.
 
+## Deviations from PLAN (not labelled before review; none changes the gate)
+- Steps 1 and 2 ran as one script (`step12_*`), not `step1_*` / `step2_*`.
+- **Fade rejectable test:** stricter than PLAN. It requires dm ≥ INTER[0] + 2σ and a detectable point, while PLAN
+  asks only for dm in [INTER[0], INTER[1]). Under PLAN's definition at most 21 of the 138 4991 passes have a C1
+  exposure on a zero-day side (not stored), so the 4991 fade stays ≥ 117 > 100.
+- **Star baseline:** taken from the series' first epoch (`s[0][6]`). Groups with members in several quadrants may
+  have another baseline in the C1 exposure's quadrant; this is an approximation.
+- **Fade sides counted:** the bounds-insufficient sides of v13-passing fades, not only v13 zero-day sides. This
+  includes 18 (4991) and 12 (2344) sides with L > 0 (not stored).
+- **Class D:** excludes dim and ND series epochs, which are counted in no class. Such a side can fall to A.
+- "Rejectable" is set from any hit run of the event, not only v13-passing runs (still an upper bound).
+
 ## 3. Cost (`cost.json`)
 - 1,221.3 MB: the two calibration re-reads, the same files as v23. psfcat products: 0.
 - About 8 min from the start (21:32:46) to the gate (21:40).
@@ -68,10 +82,11 @@ that is insufficient under bounds, or a fade side of a v13 pass.
 
 ## 4. What this shows and what it does not
 - **Shown:**
-  - For these two areas, the edge information that the bounds rule finds missing is mostly absent from the archive
-    (no covering exposure: 64 %) or flagged by the survey's quality bits (27 %).
-  - The psfcat route of v9–v10 could fill at most 8 % of the undecided W3 sides. Even if every fill succeeded, it
-    would not change any verdict under either rule.
+  - For these two areas, the edge information that the bounds rule finds missing mostly has no further covering
+    r-band exposure in the star's DR24 quadrants (64 %) or flagged by the survey's quality bits (27 %).
+  - The psfcat route of v9–v10 could fill at most 8 % of the undecided W3 sides. Even if every fill succeeded, no
+    cell would cross 100 / 200 in 4991 and the 4991 fade would stay > 100 / 1,000 (`gate.json`); individual events
+    could still change.
 - **Not shown:**
   - that W3-like events cannot be found;
   - that unflagged quality-B exposures hold no usable measurement (not tested; a quality relaxation is outside this

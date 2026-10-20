@@ -5522,9 +5522,10 @@ confining radiation at a throat is found.
   - **Revisit if:** the owner accepts a lower recovery target for a measured-edge rule, or edge information is
     added (e.g. psfcat fills for unusable exposures).
 - **Addendum 2026-10-20 (v24, `results/w3_ztf/v24/RESULT.md`):**
-  - **Finding:** the undecided edge sides are mostly uncovered (64 %) or quality-flagged (27 %). psfcat-fillable
+  - **Finding:** the undecided edge sides are mostly without a further covering r-band exposure (64 %) or quality-flagged
+    (27 %). Candidate psfcat
     DR24 gaps are 8 % (W3) and 12 % (fades).
-  - **Gain:** the optimistic gain changes no verdict.
+  - **Gain:** the optimistic gain moves no cell across 100 / 200 and leaves the 4991 fade > 100 / 1,000.
   - **Decision:** existing-product restoration (the v9–v10 psfcat route) is closed for the v13 and bounds rules.
   - **Revisit if:** new edge information exists (another survey or band covering the same stars), or the owner
     decides on using infobits ≠ 0 exposures or on a lower recovery target.

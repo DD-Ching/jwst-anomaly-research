@@ -7,9 +7,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - every bounds loss is "edge insufficient";
   - the two bounds-definition limits move at most 0–4 W3 per cell and change no verdict.
 - **Undecided edge sides** (within one span):
-  - W3: 64.5 % have no covering exposure, 27.2 % only quality-flagged ones, and 8.0 % are psfcat-fillable DR24 gaps;
+  - W3: 64.5 % have no further covering r-band exposure, 27.2 % only quality-flagged ones, and 8.0 % are DR24
+    product gaps (candidate psfcat fills);
   - fades: 64.2 / 23.4 / 12.1 %.
-- **Optimistic gain:** 0–5 W3 per cell under bounds; at most 6 fade passes removed under v13. The 4991 go / no-go
+- **Optimistic gain:** 0–5 W3 per cell under bounds; at most 6 fade passes removed per area under v13. No cell
+  crosses 100 / 200, and the 4991 fade stays > 100. The 4991 go / no-go
   failed, so no psfcat product was read.
 - **Cost:** 1,221 MB of re-reads, about 8 min (`results/w3_ztf/v24/RESULT.md`).
 - **Closed:** existing-product restoration for this rule set. Reopening needs new edge information or an owner
