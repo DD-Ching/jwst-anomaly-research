@@ -83,7 +83,10 @@ Notes.
   outer image is always radial.
 - The isolated-lens formulas ignore cluster shear and macro-magnification (**assumption**). Inside a cluster arc, a
   negative-mass microlens sits on a macro-caustic network. Treat the W3 amplitudes as indicative, and the source-plane
-  velocities and t_E as lower limits on how fast things change.
+  velocities and t_E as lower limits on how fast things change. Tested 2026-10-20 for one negative-mass lens in a
+  macro model (`results/w3_macro_shear/RESULT.md`, simulated): in a **minimum** image the umbra keeps zero flux but
+  narrows to a half-width 2√λ1 along the macro stretch (λ1 = 1 − κ − γ); in a **saddle** image there is no umbra
+  (≤ 15 % dimming for a ρ = 0.1 θ_E source), so saddle images cannot show the W3 vanishing.
 - Injection helpers: `inject_images` (image positions, μ, stretch and position angle for catalogue painting) and
   `inject_light_curve` (fluxes per epoch, with a blend fraction). Both return `simulated` tables.
 

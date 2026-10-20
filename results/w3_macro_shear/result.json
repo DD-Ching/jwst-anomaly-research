@@ -1,0 +1,274 @@
+{
+ "provenance": "simulated",
+ "plan": "results/w3_macro_shear/PLAN.md",
+ "G1": {
+  "sign+1": {
+   "max_rel_dev_radial_profile": 0.000759473642312658,
+   "mean_mu_inside_r1.95": null
+  },
+  "sign-1": {
+   "max_rel_dev_radial_profile": 0.0005188650376368731,
+   "mean_mu_inside_r1.95": 0.0
+  },
+  "pass": true
+ },
+ "G2": {
+  "lam1": 0.7,
+  "lam2": 1.3,
+  "n_caustic_points": 4000,
+  "frac_caustic_points_with_local_mu_gt_5macro": 1.0,
+  "frac_pixels_mu_gt_20macro_within_2px": 1.0,
+  "pass": true
+ },
+ "G3": {
+  "sign+1": 0.14292044230614787,
+  "sign-1": -0.17328682587363964,
+  "pass": false,
+  "note": "mis-specified as written (PLAN addendum 1); replaced by G3prime"
+ },
+ "G3prime": {
+  "sign+1_R2.5": {
+   "got": 5.5101125,
+   "pred": 5.5100559954910215,
+   "rel": 1.0254797596420673e-05
+  },
+  "sign+1_R3.0": {
+   "got": 5.707140625,
+   "pred": 5.707186315108791,
+   "rel": -8.00571529790961e-06
+  },
+  "sign-1_R2.5": {
+   "got": -7.8538531250000005,
+   "pred": -7.853981633974483,
+   "rel": -1.6362270816361324e-05
+  },
+  "sign-1_R3.0": {
+   "got": -7.199668750000001,
+   "pred": -7.199889689185959,
+   "rel": -3.068646819548437e-05
+  },
+  "pass": true
+ },
+ "cases": {
+  "isolated": {
+   "lam1": 1.0,
+   "lam2": 1.0,
+   "mu_macro": 1.0,
+   "pixel": 0.01,
+   "window_half_x": 6.0,
+   "hole_area_thetaE2": 12.488399999999999,
+   "hole_area_all_lt0.1": 12.488399999999999,
+   "hole_halfwidth_x": 1.99,
+   "hole_halfwidth_y": 1.99,
+   "pred_halfwidth_x": 2.0,
+   "pred_halfwidth_y": 2.0,
+   "tracks": {
+    "along_x_u0_0.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_0.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_x_u0_0.5": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_0.5": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_x_u0_1.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_1.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    }
+   },
+   "no_lens_control": {
+    "point_min": 0.7901234567901234,
+    "point_max": 1.2345679012345678,
+    "rho0.1_min_interior": 0.994976048603806,
+    "rho0.1_max_interior": 1.0048292245978852
+   }
+  },
+  "min_mu10": {
+   "lam1": 0.1,
+   "lam2": 1.0,
+   "mu_macro": 10.0,
+   "pixel": 0.01,
+   "window_half_x": 1.8973665961010275,
+   "hole_area_thetaE2": 4.4708,
+   "hole_area_all_lt0.1": 4.4708,
+   "hole_halfwidth_x": 0.625,
+   "hole_halfwidth_y": 2.0,
+   "pred_halfwidth_x": 0.6324555320336759,
+   "pred_halfwidth_y": 2.0,
+   "tracks": {
+    "along_x_u0_0.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_0.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_x_u0_0.5": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_0.5": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_x_u0_1.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_1.0": {
+     "min_point": 0.9892168209876543,
+     "min_rho0.1": 1.0946001802439937
+    }
+   },
+   "no_lens_control": {
+    "point_min": 0.888888888888889,
+    "point_max": 1.234567901234568,
+    "rho0.1_min_interior": 0.9996494917630537,
+    "rho0.1_max_interior": 1.0077501265724162
+   }
+  },
+  "min_mu100": {
+   "lam1": 0.01,
+   "lam2": 1.0,
+   "mu_macro": 100.0,
+   "pixel": 0.005,
+   "window_half_x": 1.0,
+   "hole_area_thetaE2": 1.5493000000000001,
+   "hole_area_all_lt0.1": 2.2289000000000003,
+   "hole_halfwidth_x": 0.2,
+   "hole_halfwidth_y": 2.0,
+   "pred_halfwidth_x": 0.2,
+   "pred_halfwidth_y": 2.0,
+   "tracks": {
+    "along_x_u0_0.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_0.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_x_u0_0.5": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_0.5": {
+     "min_point": 0.9219669495884771,
+     "min_rho0.1": 1.0437973229544246
+    },
+    "along_x_u0_1.0": {
+     "min_point": 0.0,
+     "min_rho0.1": 0.0
+    },
+    "along_y_u0_1.0": null
+   },
+   "no_lens_control": {
+    "point_min": 0.8888888888888888,
+    "point_max": 1.333333333333333,
+    "rho0.1_min_interior": 0.9977901529214168,
+    "rho0.1_max_interior": 1.002033059312299
+   }
+  },
+  "sad_mu10": {
+   "lam1": -0.1,
+   "lam2": 1.0,
+   "mu_macro": -10.0,
+   "pixel": 0.01,
+   "window_half_x": 1.8973665961010275,
+   "hole_area_thetaE2": 0.0,
+   "hole_area_all_lt0.1": 0.0,
+   "hole_halfwidth_x": 0.0,
+   "hole_halfwidth_y": 0.0,
+   "pred_halfwidth_x": null,
+   "pred_halfwidth_y": null,
+   "tracks": {
+    "along_x_u0_0.0": {
+     "min_point": 0.7680459104938272,
+     "min_rho0.1": 0.9091299180687004
+    },
+    "along_y_u0_0.0": {
+     "min_point": 0.875,
+     "min_rho0.1": 0.9103657334384847
+    },
+    "along_x_u0_0.5": {
+     "min_point": 0.760889274691358,
+     "min_rho0.1": 0.928114822482182
+    },
+    "along_y_u0_0.5": {
+     "min_point": 0.694483024691358,
+     "min_rho0.1": 0.8504501992298547
+    },
+    "along_x_u0_1.0": {
+     "min_point": 0.7944830246913581,
+     "min_rho0.1": 0.9415355759775282
+    },
+    "along_y_u0_1.0": {
+     "min_point": 0.7920765817901235,
+     "min_rho0.1": 0.928314478302567
+    }
+   },
+   "no_lens_control": {
+    "point_min": 0.888888888888889,
+    "point_max": 1.234567901234568,
+    "rho0.1_min_interior": 0.9996494917630537,
+    "rho0.1_max_interior": 1.0077501265724162
+   }
+  },
+  "sad_mu100": {
+   "lam1": -0.01,
+   "lam2": 1.0,
+   "mu_macro": -100.0,
+   "pixel": 0.005,
+   "window_half_x": 1.0,
+   "hole_area_thetaE2": 0.0,
+   "hole_area_all_lt0.1": 0.0,
+   "hole_halfwidth_x": 0.0,
+   "hole_halfwidth_y": 0.0,
+   "pred_halfwidth_x": null,
+   "pred_halfwidth_y": null,
+   "tracks": {
+    "along_x_u0_0.0": {
+     "min_point": 0.8578266460905349,
+     "min_rho0.1": 0.9889376692169909
+    },
+    "along_y_u0_0.0": {
+     "min_point": 0.8888888888888888,
+     "min_rho0.1": 0.9879817057400339
+    },
+    "along_x_u0_0.5": {
+     "min_point": 0.8559670781893003,
+     "min_rho0.1": 0.9894811258597955
+    },
+    "along_y_u0_0.5": {
+     "min_point": 0.8561233281893003,
+     "min_rho0.1": 0.9612262707439209
+    },
+    "along_x_u0_1.0": {
+     "min_point": 0.8597170781893003,
+     "min_rho0.1": 0.9929755739259338
+    },
+    "along_y_u0_1.0": null
+   },
+   "no_lens_control": {
+    "point_min": 0.8888888888888888,
+    "point_max": 1.333333333333333,
+    "rho0.1_min_interior": 0.9977901529214168,
+    "rho0.1_max_interior": 1.002033059312299
+   }
+  }
+ },
+ "seconds": 281.3
+}

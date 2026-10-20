@@ -206,7 +206,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - ~~W5: counts N(>S) around `radial` centres~~ done 2026-10-17 (`results/w5_radial_counts/RESULT.md`): no deficit,
      but no power: at JWST depth the model predicts an excess; the post hoc excess (Q ≈ 1.26 at 9″ without arc
      neighbours) is flat in R. An excess test needs a density-matched control (low priority).
-2. W3 inside caustic-crossing arcs needs a microlens with macro shear (Chang-Refsdal-type; reuse-check first).
+2. ~~W3 inside caustic-crossing arcs needs a microlens with macro shear~~ done 2026-10-20 (simulated, `results/w3_macro_shear/RESULT.md`: minimum images keep a zero-flux umbra narrowed to 2√λ1 along the stretch; saddle images have none). Next only with a W3 search on caustic-transient stars: inject through `macro_magnification_map` with each image's (κ, γ) and parity.
 3. Warp: recheck only when a paper gives an electromagnetic prediction for a distant observer.
 
 ## Supporting (M3 lensing-violation search, D-023; serves the focus above)

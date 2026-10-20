@@ -434,3 +434,98 @@ def inject_light_curve(
         ),
     )
     return out
+
+
+# --- Point lens inside a macro model (Chang-Refsdal type; results/w3_macro_shear/PLAN.md) ---------
+# beta = A theta - sign * theta / |theta|^2 with A = diag(lam1, lam2), lam1 = 1 - kappa - gamma and
+# lam2 = 1 - kappa + gamma (Einstein radii of |M|). The isolated lens is lam1 = lam2 = 1.
+
+_MACRO_RAY_STEP = 0.0025  # ASSUMPTION: largest source-plane ray spacing, Einstein radii
+_MACRO_FINE_HALF = 4.0  # ASSUMPTION: fine ray grid covers |theta_x|, |theta_y| < 4 around the lens
+_MACRO_CHUNK = 2_000_000  # rays per histogram call (memory bound)
+
+
+def macro_hole_halfwidths(lam1: float, lam2: float) -> tuple[float, float]:
+    """On-axis half-widths of a repulsive point lens's umbra in a minimum image (model_prediction).
+
+    Along axis i, ``beta_i = lam_i t + 1 / t`` for an image at ``t > 0``; its minimum
+    ``2 sqrt(lam_i)`` bounds the umbra when both ``lam_i > 0``. Saddles, maxima and critical
+    curves are not covered by this formula (the simulated saddle maps show no umbra,
+    results/w3_macro_shear/RESULT.md) and raise.
+    """
+    if lam1 <= 0 or lam2 <= 0:
+        raise ValueError("the on-axis formula covers minimum images only (lam1, lam2 > 0)")
+    return (2.0 * math.sqrt(lam1), 2.0 * math.sqrt(lam2))
+
+
+def _rays(x0: float, x1: float, dx: float, y0: float, y1: float, dy: float):
+    xs = np.arange(x0 + dx / 2, x1, dx)
+    ys = np.arange(y0 + dy / 2, y1, dy)
+    return xs, ys
+
+
+def macro_magnification_map(
+    lam1: float,
+    lam2: float,
+    sign: int = -1,
+    half_x: float = 3.0,
+    half_y: float = 3.0,
+    pixel: float = 0.01,
+    ray_step: float = _MACRO_RAY_STEP,
+) -> Table:
+    """Point-source magnification map of a point lens inside a macro model, by inverse ray shooting.
+
+    Returns a ``simulated`` table with one row per source pixel (columns ``beta_x``, ``beta_y``,
+    ``mu``; ``mu`` is Σ|μ| over images, the macro ``1 / |lam1 lam2|`` far from the lens) and the map
+    shape in ``meta["shape"]`` (ny, nx). A fine ray grid covers the lens neighbourhood, a coarse
+    grid (spacing set by the macro stretch) the rest; each ray carries its image-plane area.
+    """
+    if isinstance(sign, (bool, np.bool_)) or sign not in (1, -1, 0):
+        raise ValueError("sign must be +1, -1 or 0 (macro model only: a sampling-noise control)")
+    if lam1 == 0 or lam2 == 0:
+        raise ValueError("lam1 and lam2 must be non-zero (macro critical curve)")
+    nx, ny = round(2 * half_x / pixel), round(2 * half_y / pixel)
+    edges = (np.linspace(-half_y, half_y, ny + 1), np.linspace(-half_x, half_x, nx + 1))
+    acc = np.zeros((ny, nx))
+    f = _MACRO_FINE_HALF
+    margin = 1.0 / f  # largest point-lens deflection outside the fine box
+    big_x = (half_x + margin) / abs(lam1) + 1.0
+    big_y = (half_y + margin) / abs(lam2) + 1.0
+    d_fine = min(ray_step / (1.0 + max(abs(lam1), abs(lam2))), ray_step / 4)  # 1/r^2 ≤ 1 for r ≥ 1
+    d_fine = 2 * f / math.ceil(2 * f / d_fine)  # fine cells end exactly on the box edges too
+    # coarse spacings divide 2f, so coarse cell edges fall on the fine box's edges (no seam)
+    dx = 2 * f / math.ceil(2 * f * (abs(lam1) + 2 / f**2) / ray_step)
+    dy = 2 * f / math.ceil(2 * f * (abs(lam2) + 2 / f**2) / ray_step)
+
+    def shoot(xs: np.ndarray, ys: np.ndarray, area: float, outside_box: bool) -> None:
+        rows = max(1, _MACRO_CHUNK // max(len(xs), 1))
+        for i in range(0, len(ys), rows):
+            tx, ty = np.meshgrid(xs, ys[i : i + rows])
+            if outside_box:
+                keep = (np.abs(tx) >= f) | (np.abs(ty) >= f)
+                tx, ty = tx[keep], ty[keep]
+            r2 = tx * tx + ty * ty if sign else 1.0
+            bx = lam1 * tx - sign * tx / r2
+            by = lam2 * ty - sign * ty / r2
+            h, _, _ = np.histogram2d(by.ravel(), bx.ravel(), bins=edges)
+            acc[:] += h * area
+
+    xs, ys = _rays(-f, f, d_fine, -f, f, d_fine)
+    shoot(xs, ys, d_fine * d_fine, outside_box=False)
+    if big_x > f or big_y > f:
+        ex = f + math.ceil(max(big_x - f, 0.0) / dx) * dx
+        ey = f + math.ceil(max(big_y - f, 0.0) / dy) * dy
+        xs, ys = _rays(-ex, ex, dx, -ey, ey, dy)
+        shoot(xs, ys, dx * dy, outside_box=True)
+    mu = acc / pixel**2
+    cx = 0.5 * (edges[1][1:] + edges[1][:-1])
+    cy = 0.5 * (edges[0][1:] + edges[0][:-1])
+    gx, gy = np.meshgrid(cx, cy)
+    t = Table({"beta_x": gx.ravel(), "beta_y": gy.ravel(), "mu": mu.ravel()})
+    t.meta.update(
+        provenance=schema.Provenance.SIMULATED.value,
+        source=f"exotic_sim.macro_magnification_map lam1={lam1} lam2={lam2} sign={sign}",
+        shape=(ny, nx),
+        pixel=pixel,
+    )
+    return t

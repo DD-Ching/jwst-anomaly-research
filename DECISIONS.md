@@ -5529,3 +5529,16 @@ confining radiation at a throat is found.
   gives R = 0.707 ± 0.169 against 1.006 ± 0.134 for the analytic PSF_d in the same run. R = 0.414 kept; the route is
   paused, because the PSF model moves R by about 0.3 (`results/w1_r_realmetacal/v3/RESULT.md`). Revisit with a
   validated drizzled STPSF or a field with ≥ 5 usable stars.
+
+## D-106 W3 inside a macro model: in-house numpy inverse ray shooter; saddle images cannot show the W3 vanishing (2026-10-20)
+- **Decision:** `exotic_sim.macro_magnification_map` (numpy inverse ray shooting, fine grid near the lens, coarse
+  grid scaled to the macro stretch, ray-area weights) models a point lens of either sign inside a macro (κ, γ).
+  Result (simulated): minimum images keep a zero-flux umbra, narrowed to half-width 2√λ1 along the stretch;
+  saddle images have none.
+- **Alternatives rejected:** lenstronomy (point mass parametrised by θ_E², no negative sign without a custom
+  profile; a new dependency for ~60 lines); the isolated-lens formulas for arcs (wrong for saddle images, too
+  wide along the stretch for minima).
+- **Evidence:** `results/w3_macro_shear/RESULT.md`, `result.json`, `maps.png`; gates G1, G2, G3′ pass (G3 as written
+  was mis-specified, PLAN addendum 1); `tests/test_w3_macro_shear.py`.
+- **Revisit if:** a W3 search targets caustic-transient stars (then add a microlens population κ_* and λ2 ≠ 1), or
+  a published treatment of negative-mass microlensing with external shear disagrees.
