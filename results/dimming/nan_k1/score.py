@@ -104,7 +104,7 @@ def main() -> dict:
         return res
     t = res["e2_k1"] = table(k1[1])
     le4, mon = t["le4"], t["monitored"]
-    g0_ok = res.get("G0_e0", {}).get("pass", False)
+    g0_ok = all(res.get(g, {}).get("pass", False) for g in ("G0_e0", "G0_e2"))
     if le4["n"] < 10:
         res["decision"] = f"R3 (n(<= 4) = {le4['n']} < 10)"
     elif (
