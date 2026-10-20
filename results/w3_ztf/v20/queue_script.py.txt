@@ -1,0 +1,32 @@
+# v20 frozen queue (PLAN.md section 2) from the v16 inventory only (no new inventory): the sampling-qualified partitions
+# not queued in v16, same qualification (worst-cell necessary fraction >= 0.5, product ratio >= 0.8, >= 1,000 unused
+# eligible groups), ordered by unused eligible groups per GB (descending; ties: no shared field first, then Npix).
+# The #385 "worst cell ~0.59" pattern is not used. Shared fields are recomputed against v1-v16 samples.
+# Usage: python queue_script.py.txt
+import gzip, json, sys
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+q16 = json.load(open('results/w3_ztf/v16/queue.json'))
+inv = json.load(open('results/w3_ztf/v16/inventory.json'))['areas']
+done = {r['npix'] for r in q16['queue']}
+ded = json.load(gzip.open('results/w3_ztf/v20/dedupe.json.gz'))['groups']
+old_fields = {wz.oid_quad(m)[0] for g in ded for m in g[3]}
+v16_fields = {wz.oid_quad(m)[0] for g in ded if g[0].startswith('v16') for m in g[3]}
+rows = [r for r in q16['all'] if r['qualifies'] and r['npix'] not in done]
+for r in rows:
+    f = set(inv[str(r['npix'])]['fields'])
+    r['fields'] = sorted(f)
+    r['shared_fields_v1_v16'] = sorted(f & old_fields)
+    r['shared_fields_with_v16_samples'] = sorted(f & v16_fields)
+    r['independent_fields'] = sorted(f - old_fields)
+queue = sorted(rows, key=lambda r: (-r['unused_per_gb'], bool(r['shared_fields_v1_v16']), r['npix']))[:12]
+for k, r in enumerate(queue):
+    r['position'] = k + 1
+    r['seed_offset'] = 20000 + 1000 * k
+out = {'label': 'derived; frozen v20 queue (from v16 inventory.json; no new inventory)', 'queue': queue,
+       'queue_unused_total': sum(r['unused'] for r in queue), 'queue_search_if_500_total': sum(r['search_if_500_cal'] for r in queue),
+       'queue_lc_mb_total': round(sum(r['lc_mb'] for r in queue), 1)}
+json.dump(out, open('results/w3_ztf/v20/queue.json', 'w'), indent=1); open('results/w3_ztf/v20/queue.json', 'a').write('\n')
+for r in queue:
+    print(r['position'], r['npix'], r['worst_cell'], r['unused'], r['search_if_500_cal'], r['lc_mb'], r['unused_per_gb'], r['shared_fields_v1_v16'], r['independent_fields'])
+print({k: v for k, v in out.items() if k != 'queue'})
