@@ -77,6 +77,18 @@ QUOTED_RMS = 0.60  # README v2.0, lens-plane rms (arcsec)
 MATCH_ARCSEC = 1.5  # a predicted image within this of a catalogued one is that image (ASSUMPTION)
 
 
+def uncover2_model(files: dict[str, Path]) -> lensmodel.MapLensModel:
+    """The v2.0 maps (``files["alpha_x"]``, ``files["alpha_y"]``) as a ``MapLensModel``."""
+    h0, om = COSMOLOGY
+    return lensmodel.MapLensModel.from_fits(
+        files["alpha_x"],
+        files["alpha_y"],
+        Z_LENS,
+        FlatLambdaCDM(H0=h0, Om0=om),
+        source="abell2744-uncover2",
+    )
+
+
 def wls_source(beta: np.ndarray, jac: np.ndarray) -> np.ndarray:
     """Magnification-weighted least-squares source of one family.
 
@@ -545,14 +557,7 @@ def main(argv=None) -> dict:
     args = ap.parse_args(argv)
     args.out.mkdir(parents=True, exist_ok=True)
     files = {k: fetch_catalog(url, sha) for k, (url, sha) in UNCOVER_V2.items()}
-    h0, om = COSMOLOGY
-    model = lensmodel.MapLensModel.from_fits(
-        files["alpha_x"],
-        files["alpha_y"],
-        Z_LENS,
-        FlatLambdaCDM(H0=h0, Om0=om),
-        source="abell2744-uncover2",
-    )
+    model = uncover2_model(files)
     summary = {
         "model": "abell2744-uncover2",
         "model_sha256": model.sha256,

@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: Abell 2744 system 700.1 in UNCOVER v2.0: tool not validated; 700.1 = UNCOVER 78 (z_spec 2.3151), merged in both models
+- **Why:** D-036 revisit condition ("if UNCOVER v2.0 is scanned the same way") after #412's outcome B. Plan frozen
+  and committed first (`results/lens_consistency/a2744_s700_uncover/PLAN.md`).
+- **Result (`RESULT.md`, `summary.json`):** frozen outcome "tool not validated", so no z scan. The one-to-one rule
+  reproduces 31 / 60 (1.0″) and 44 / 60 (1.5″) of UNCOVER's own systems, below the 0.8 gate. At 1.5″ the failures
+  are 7 shared and 9 offset (1.77–2.31″).
+- **Post hoc:** 700.1a/b/c are UNCOVER 78.21–78.23 (0.02″). The UNCOVER table lists system 78 at z 2.3151 (spec,
+  "Price+24", NIRSpec). At that z both models merge a and b into one predicted image: UNCOVER (constrained by 78)
+  for all three knots, and Bergamini+23 (rms ≈ 10.9″). The three a/b knot pairs are nested (0.50 / 1.21 / 1.74″),
+  with midpoints within 0.05″: a fold arc or one symmetric edge-on galaxy. A bright galaxy lies about 2–3″ south
+  of the feature (#412 sheet, by eye). Undetermined, not a candidate.
+- **Failed approach:** a one-to-one image assignment at ≤ 1.5″ is not a usable reproduction test for a map model
+  with a 0.84″ rms: shared predicted images occur in 7 / 60 known systems (1.5″). Do not rerun it on UNCOVER without a
+  looser, pre-validated rule.
+- **New:** `scripts/a2744_s700.py --model uncover2` (own-list known cases, `gated_match`, `failure_kind`,
+  `counterparts`, `pair_geometry`); `a2744_uncover.uncover2_model`.
+- **Handoff:** next for 700.1: `/vet-candidate` (identify the galaxy south of the arc as a member or perturber; one image or
+  two: colours of the mirrored knots). Other lines are unchanged: #409 and the other needs-human PRs wait on the
+  owner, and #374 waits for a green weekly run.
 ## 2026-10-20: W3 ZTF v24: existing products cannot restore the missing edge information; no psfcat download, trial closed
 - **Bookkeeping** (4991 and 2344 v23 events replayed; counts equal the stored ones):
   - every bounds loss is "edge insufficient";
