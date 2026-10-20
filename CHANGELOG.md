@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: k = 1 NaN-tolerant aperture on unseen NEXUS e2 controls: not tested; ε(> 4) = 0.961 holds
+- **Why:** handoff 1 of the `nan_aperture` entry. Plan frozen first (`results/dimming/nan_k1/PLAN.md`).
+- **Result (`results/dimming/nan_k1/RESULT.md`):** G0 passes on e0 (1,006 / 1,006 finite fluxes identical) and
+  e2 (1,453 / 1,453). The first NEXUS e2 controls (151 monitored pairs, 2,000 `_cal` files streamed): ≤ 4 class
+  8 / 8 `on_sky` at k = 0 and k = 1, so decision R3 (n < 10): k = 1 not tested, ε(≤ 4) stays 0.412. > 4 class
+  143 / 143 (Wilson 0.974–1.000): ε(> 4) = 0.961 holds on held-out NEXUS (D-052 addendum l). `persistence` 0 / 151.
+- **Failed approach:** NEXUS e0 / e2 as the unseen ≤ 4 sample (10 and 8 pairs, near 1 already); no unseen ≤ 4 sample
+  exists in the three fields.
+- **Handoff:** (1) k = 1 adoption waits for a new wide epoch (NEXUS or JADES) as the held-out sample; (2) split the
+  held-out `inconclusive` pairs by cause; (3) d30295 turns `inconclusive` at k = 1 (note for its vetting).
+
 ## 2026-10-20: W3 dimming: NaN-tolerant aperture fails its fill-accuracy gate at 2 pixels; D-039 keeps k = 0
 - **Why:** handoff 1 of the `undetected_stamps` entry. Plan frozen first (`results/dimming/nan_aperture/PLAN.md`).
 - **Code:** `persistence_check.fill_nan_aperture` / `measure_pixel(max_nan=k)` (point-reflection fill of ≤ k NaN
