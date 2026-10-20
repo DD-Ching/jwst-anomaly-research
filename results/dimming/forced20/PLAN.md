@@ -10,7 +10,8 @@ screen code, thresholds and `forced` unchanged from `main` (c4ee84a).
 - **Screen.** Rebuilt with the production chain as on `main`, i.e. with the weight-map coverage term on (D-052
   addendum h; the persistence run used the screen before it). Catalogues from S3 by sha256
   (`persistence_run/fetch_cats.py`), Gaia mask from the ESA TAP (`persistence_scope/gaia_esa.py`). Targets are
-  matched by uid and checked by position (≤ 0.05″). A target that is no longer a flag under the term is
+  matched by uid (amended 03:14 UTC, before any forced flux: the verdict tables carry no positions, so the
+  check is that each uid is catalogue-detected in F200W in its detection epoch only). A target that is no longer a flag under the term is
   explained by `weight_edge` (the committed term removes it) and is not measured.
 - **Hypotheses.** (H0) Each is a real source present in every epoch that the other epochs' pipeline catalogues
   miss (footprint, depth or deblending), i.e. not a vanish. (H1) It is fainter by the screen's vanish criterion in
