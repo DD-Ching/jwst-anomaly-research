@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: D-039 persistence swap folded into `inject` (in progress)
+- Claim: handoff (1) of #390; plan follows.
+
 ## 2026-10-20: W3 dimming: `forced` + depth / footprint test on the 20 MACS0416 / Abell 2744 `on_sky` targets: 0 survivors
 - **Why:** #386 handoff 2 (still open after #388). Plan frozen first (`results/dimming/forced20/PLAN.md`); screens
   rebuilt with the coverage term on.
