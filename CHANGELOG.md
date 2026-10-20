@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 ZTF v18: PSF photometry check of the two v17 sources (post hoc): the validated NDs are normal; both sources stay undetermined
+- **Method:** the official per-exposure DAOPHOT PSF, read by an adapter validated against the official centre image
+  (≤ 5.24e-4), and photutils 3.1.1 `PSFPhotometry`. Plan committed before any target fit. Download 48.4 MB.
+- **Validation** (controls fitted with an independent PSF from another exposure):
+  - 1624 bad columns: 1 of 9 ND geometries passes. Elsewhere the masked-core flux scale is biased −17 % to +8 %,
+    or the errors under-cover. Every 1.0-level injection was classed normal and every 0.398-level one dim.
+  - 1625 blend: 2 of 7 exposures pass. Where the independent PSF's seeing differs by up to 2″, the faint source is
+    over- or under-recovered by up to 3×. No flux degeneracy.
+- **Targets:**
+  - 1624 ND 206251129: R 0.968 ± 0.052, normal, a 1-mag drop excluded.
+  - 1625 ND 214647008: R 1.000 ± 0.058, normal, a 1-mag drop excluded; validated with its own PSF only (the single
+    field-1748 exposure).
+  - The other 8 + 2 NDs are unknown, with unvalidated ratios not used.
+  - Both sources remain undetermined, with no dim exposure.
+- **Erratum:** v17 D3's 2.01 ± 0.31 is a biased, unvalidated value, not merely an error too large to decide.
+- **Closed for this round.** Reopen only with an independent, seeing-matched PSF or with difference-image forced
+  photometry (`results/w3_ztf/v18/RESULT.md`).
+
 ## 2026-10-20: W3 ZTF v17: evidence check of the two v16 survivors (post hoc): both undetermined, no real-dimming evidence
 - **Planned check:** both undetermined. The image-based comparison set failed (0 and 1 stars in the 180″ cutouts),
   so every exposure is unknown. Deviations D1–D3 are labelled.

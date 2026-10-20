@@ -1,0 +1,47 @@
+# v18 summary: the numbers quoted in RESULT.md, from measure.json and manifest.json.
+# Usage: python summary_script.py.txt <out json>
+import json, sys
+import numpy as np
+d = json.load(open('results/w3_ztf/v18/measure.json')); man = json.load(open('results/w3_ztf/v18/manifest.json'))
+see = {e['expid']: e['seeing'] for e in man['exposures']}
+out = {'label': 'derived; summary of measure.json (post hoc, PLAN.md)', 'download_mb': man['mb'],
+       'reader_max_abs_diff_vs_centre_image': max(e['reader_max_abs_diff_vs_centre_image'] for e in man['exposures']),
+       'sources': {}}
+for k, s in d['sources'].items():
+    ex = s['exposures']; v = s['validation']
+    rows = {}
+    for e, r in ex.items():
+        o = s['other_psf_exposure'][e]
+        row = {'nd': r['nd'], 'seeing': r['seeing'], 'other_psf_exposure': o, 'other_psf_seeing': see[int(o)],
+               'validation_pass': r['validation_pass'], 'info': round(r['info'], 3), 'R': round(r['R'], 3),
+               'sigma_R': round(r['sigma_R'], 3), 'class': r['class'], 'excludes_1mag_drop': r['excludes_1mag_drop'],
+               'reduced_chi2_target_box': round(r['reduced_chi2_target_box'], 2), 'reasons': r['reasons']}
+        if k == '1624' and r['nd']:
+            a, b = v['V1a'][e], v['V1b'][e]
+            row['V1a'] = {c: {q: a[c][q] for q in ('median_r', 'robust_sigma', 'frac_within_3sigma', 'pass')} for c in 'AB'}
+            row['V1b'] = {q: b.get(q) for q in ('median_ratio_1', 'median_ratio_0398', 'frac_normal_1', 'frac_dim_0398', 'pass')}
+        if k == '1625':
+            b = v['V2'][e]
+            row['V2'] = {q: b.get(q) for q in ('n_stamps', 'n_trials_per_level', 'median_ratio_1', 'median_ratio_0398', 'robust_sigma_1',
+                                               'robust_sigma_0398', 'frac_normal_1', 'frac_dim_0398', 'neighbour_flux_change_median',
+                                               'own_psf_used_for_controls', 'pass')}
+            row['neighbour_ring'] = r['neighbour_ring']
+        rows[e] = row
+    nd = [r for r in rows.values() if r['nd']]
+    out['sources'][k] = {
+        'verdict': s['verdict'], 'F_ref_uJy': s['F_ref_uJy'], 'F_ref_scatter_uJy': s['F_ref_scatter_uJy'],
+        'target_psfcat_ref_mag': s['target_psfcat_ref_mag'],
+        'nd_total': len(nd), 'nd_judgeable': sum(r['class'] != 'unknown' for r in nd),
+        'nd_classes': {c: sum(r['class'] == c for r in nd) for c in ('normal', 'dim', 'undetermined', 'unknown')},
+        'nd_excluding_1mag': [e for e, r in rows.items() if r['nd'] and r['excludes_1mag_drop']],
+        'detections_judgeable': [e for e, r in rows.items() if not r['nd'] and r['class'] != 'unknown'],
+        'unvalidated_nd_R_range': [min(r['R'] for r in nd if r['class'] == 'unknown'), max(r['R'] for r in nd if r['class'] == 'unknown')]
+        if any(r['class'] == 'unknown' for r in nd) else None,
+        'exposures': rows}
+    if k == '1624':
+        out['sources'][k]['controls'] = {c: sum(x['class'] == c for x in s['controls_v1']) for c in 'AB'}
+        out['sources'][k]['V1a_trials'] = v['V1a_trials']
+        out['sources'][k]['detections_repeatability_robust_sigma'] = v['detections_repeatability_robust_sigma']
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+for k, s in out['sources'].items():
+    print(k, {q: s[q] for q in s if q != 'exposures'})
