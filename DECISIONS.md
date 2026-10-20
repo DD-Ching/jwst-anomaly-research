@@ -5448,10 +5448,13 @@ confining radiation at a throat is found.
     - real-stamp injections with their noise counted;
     - a reference from validated detections only;
     - a cross-exposure repeatability term.
-  - **Result:** judgeable NDs 1 of 9 (1624) and 2 of 3 (1625), all normal. The v18 1624 / 206251129 claim is
-    withdrawn. Both sources stay undetermined.
+  - **Result:** NDs passing the corrected validation are 1 of 9 (1624) and 2 of 3 (1625), all normal. The 1625 /
+    214647008 pass is conditional (dim-level ρ 0.92). The v18 1624 / 206251129 claim is suspended: it fails a V1b′
+    criterion whose injection σ is narrower than the measurement's (a known defect). Both sources stay
+    undetermined.
   - **Rejected:** iterating further methods on these two sources (owner rule).
-  - **Revisit if:** difference-image forced photometry, or the official PSF-star lists, become available.
+  - **Revisit if:** difference-image forced photometry or the official PSF-star lists become available, or a rerun
+    fixes the V1b′ σ and the per-level ρ.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

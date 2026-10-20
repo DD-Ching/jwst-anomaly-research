@@ -28,7 +28,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   superseded by the exposure-count model).
 
 ## 2026-10-20: W3 ZTF v19: v18 validation audit and one correction (post hoc): judgeable NDs 1 of 9 (1624) and 2 of 3 (1625), all normal; both undetermined
-- **Audit:** v18's V2 and V1a fitted controls with another exposure's PSF (up to 2.0″ seeing apart), and V1b
+- **Audit:** v18's V2 (up to 2.0″ seeing apart) and V1a fitted controls with another exposure's PSF, and V1b
   injected an ideal model. They mostly tested cross-exposure mismatch. The reference was unvalidated, and the
   injected noise was missing from σ. v18's tables are now a stress test.
 - **Correction:**
@@ -36,14 +36,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - phase-matched masking of real controls;
   - real-stamp injections with their noise counted;
   - the reference built from validated detections only;
-  - cross-exposure control repeatability (1.4 %, 6.2 %) added to σ.
+  - cross-exposure control repeatability (1.4 %, 6.2 %) added to σ (a deviation from PLAN).
   - It ran once (0 MB downloaded).
 - **1624:**
   - Validation passes for 1 of 9 NDs (206251369): R 0.985 ± 0.027, normal.
   - Real stamps on the real columns come back 2–17 % low in several NDs, beyond what masking explains.
-  - v18's 206251129 claim is withdrawn: in v19 its errors under-cover.
-- **1625:** 2 of 3 NDs pass: 214237995 (R 0.918 ± 0.091) and 214647008 (0.874 ± 0.091), both normal, with a
-  validated reference. 214543142 over-recovers by 13–33 % and stays unknown.
+  - v18's 206251129 claim is suspended. It fails the stored V1b′ criterion, whose injection σ is narrower than the
+    measurement's; with the measurement's σ it would pass (post hoc, not adopted).
+- **1625:** 2 of 3 NDs pass: 214237995 (R 0.918 ± 0.091) and 214647008 (0.874 ± 0.091), both normal. 214647008 is
+  conditional: its dim-level ρ is 0.92 and its neighbour change sits at the limit under PLAN's wording. 214543142 over-recovers by 13–33 % and stays unknown.
 - **1-mag drop:** excluded in those three exposures only. The controls may include PSF stars (the list is not
   public), so the PSF systematic is a lower bound.
 - **Closed** (`results/w3_ztf/v19/RESULT.md`).

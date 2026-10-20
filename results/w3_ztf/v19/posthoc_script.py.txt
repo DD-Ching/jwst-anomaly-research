@@ -1,0 +1,43 @@
+# v19 post hoc review checks on the stored trials (no rerun, no new fit; RESULT.md "Review notes").
+# 1) V1b' classes recomputed with the measurement's sigma_R composition (fit, V1', repeatability, position, reference)
+#    instead of the v18-inherited injection sigma (fit and V1' only).
+# 2) V2' correlation per level, and the neighbour change normalised by the dim-level faint truth flux.
+# Usage: python posthoc_script.py.txt <out json>
+import json, sys
+import numpy as np
+d = json.load(open('results/w3_ztf/v19/v19.json'))
+R_DIM = 10 ** (-0.4)
+
+
+def classify(R, sR):
+    dd = (1 - R) / sR
+    return 'normal' if R >= 0.75 and dd < 3 else 'dim' if R <= 0.6 and dd >= 3 else 'undetermined'
+
+
+out = {'label': 'derived post hoc from v19.json stored trials (review); not a rerun', 'V1b_target_sigma': {}, 'V2_per_level': {}}
+s = d['sources']['1624']
+for e, b in s['validation']["V1b'"].items():
+    if not b['trials']:
+        continue
+    t = s['exposures'][e]
+    rel = np.hypot(t['sigma_R'] / t['R'], 0) if t['R'] else np.nan  # the target's relative sigma_R (all terms)
+    res = {}
+    for lev in (1.0, R_DIM):
+        cl = [classify(r['R'], abs(r['R']) * rel) for r in b['trials'] if r['level'] == lev]
+        res[str(round(lev, 3))] = {'n': len(cl), 'frac_normal': float(np.mean([c == 'normal' for c in cl])),
+                                   'frac_dim': float(np.mean([c == 'dim' for c in cl]))}
+    out['V1b_target_sigma'][e] = {'target_rel_sigma_R': float(rel), 'stored_injection_sigma_median': float(np.median([r['sigma_R'] for r in b['trials'] if r['level'] == 1.0])), **res}
+s = d['sources']['1625']
+for e, v in s['validation']["V2'"].items():
+    res = {}
+    for lev in (1.0, R_DIM):
+        tr = [r for r in v['trials'] if r['level'] == lev]
+        ef = np.array([r['F_fit'] - r['F_true'] for r in tr]); en = np.array([r['neighbour_flux'] for r in tr])
+        res[str(round(lev, 3))] = float(np.corrcoef(ef, en - np.median(en))[0, 1]) if len(tr) > 3 else None
+    a1 = {(r['stamp'], r['angle']): r for r in v['trials'] if r['level'] == 1.0}
+    dn = [abs(r['neighbour_flux'] - a1[(r['stamp'], r['angle'])]['neighbour_flux']) / r['F_true'] for r in v['trials']
+          if r['level'] != 1.0 and (r['stamp'], r['angle']) in a1]
+    out['V2_per_level'][e] = {'rho_level_1': res['1.0'], 'rho_level_0398': res[str(round(R_DIM, 3))],
+                              'neighbour_change_over_dim_truth_median': float(np.median(dn)) if dn else None}
+json.dump(out, open(sys.argv[1], 'w'), indent=1); open(sys.argv[1], 'a').write('\n')
+print(json.dumps(out, indent=1))
