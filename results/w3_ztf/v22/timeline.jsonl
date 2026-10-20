@@ -71,3 +71,32 @@
 {"area": 4991, "stage": "exposures", "event": "end", "rc": 0, "seconds": 69.3, "utc": "2026-10-20T08:01:04Z"}
 {"area": 4991, "stage": "inject", "event": "start", "utc": "2026-10-20T08:01:04Z"}
 {"area": 4991, "stage": "search_dev", "event": "start", "utc": "2026-10-20T08:01:04Z"}
+{"area": 4991, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 45.8, "utc": "2026-10-20T08:01:50Z"}
+{"area": 4991, "stage": "inject", "event": "end", "rc": 0, "seconds": 125.6, "utc": "2026-10-20T08:03:10Z"}
+{"area": 4991, "stage": "decision", "event": "start", "utc": "2026-10-20T08:03:10Z"}
+{"area": 4991, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T08:03:10Z"}
+{"area": 4991, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-20T08:03:10Z"}
+{"area": 4991, "event": "cache_deleted", "utc": "2026-10-20T08:03:10Z"}
+{"area": 2344, "event": "area_start", "position": 7, "projected_mb": 3747.5, "utc": "2026-10-20T08:03:10Z"}
+{"area": 2344, "stage": "fetch", "event": "start", "utc": "2026-10-20T08:03:10Z"}
+{"area": 2344, "stage": "fetch", "event": "end", "rc": 0, "seconds": 34.7, "utc": "2026-10-20T08:03:45Z"}
+{"area": 2344, "stage": "exposures", "event": "start", "utc": "2026-10-20T08:03:45Z"}
+{"area": 2344, "stage": "exposures", "event": "end", "rc": 0, "seconds": 55.0, "utc": "2026-10-20T08:04:40Z"}
+{"area": 2344, "stage": "inject", "event": "start", "utc": "2026-10-20T08:04:40Z"}
+{"area": 2344, "stage": "search_dev", "event": "start", "utc": "2026-10-20T08:04:40Z"}
+{"area": 2344, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 31.6, "utc": "2026-10-20T08:05:11Z"}
+{"area": 2344, "stage": "inject", "event": "end", "rc": 0, "seconds": 89.4, "utc": "2026-10-20T08:06:09Z"}
+{"area": 2344, "stage": "decision", "event": "start", "utc": "2026-10-20T08:06:09Z"}
+{"area": 2344, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T08:06:09Z"}
+{"area": 2344, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-20T08:06:09Z"}
+{"area": 2344, "stage": "search_holdout", "event": "start", "utc": "2026-10-20T08:06:09Z"}
+{"area": 2344, "stage": "search_holdout", "event": "end", "rc": 0, "seconds": 52.8, "utc": "2026-10-20T08:07:02Z"}
+{"area": 2344, "event": "searched", "groups": 1882, "series_searched": 3709, "flagged_runs": 2, "flagged_groups": 2, "passed_groups": [], "utc": "2026-10-20T08:07:02Z"}
+{"area": 2344, "event": "cache_deleted", "utc": "2026-10-20T08:07:02Z"}
+{"area": 4989, "event": "area_start", "position": 8, "projected_mb": 4318.6, "utc": "2026-10-20T08:07:02Z"}
+{"area": 4989, "stage": "fetch", "event": "start", "utc": "2026-10-20T08:07:02Z"}
+{"area": 4989, "stage": "fetch", "event": "end", "rc": 0, "seconds": 27.9, "utc": "2026-10-20T08:07:30Z"}
+{"area": 4989, "stage": "exposures", "event": "start", "utc": "2026-10-20T08:07:30Z"}
+{"area": 4989, "stage": "exposures", "event": "end", "rc": 0, "seconds": 78.1, "utc": "2026-10-20T08:08:48Z"}
+{"area": 4989, "stage": "inject", "event": "start", "utc": "2026-10-20T08:08:48Z"}
+{"area": 4989, "stage": "search_dev", "event": "start", "utc": "2026-10-20T08:08:48Z"}
