@@ -1,0 +1,16 @@
+{
+ "provenance": "derived",
+ "eps_k1_proposed": 0.584,
+ "G0_e0": {
+  "rows_k0": 1076,
+  "rows_k1": 1076,
+  "missing_in_k1": 0,
+  "finite_k0": 1006,
+  "finite_k0_changed": 0,
+  "nan_k0_finite_k1": 36,
+  "pairs_without_nan_k0": 66,
+  "pairs_without_nan_k0_verdict_changed": 0,
+  "pass": true
+ },
+ "decision": "R3 (e2 k = 1 unfinished)"
+}
