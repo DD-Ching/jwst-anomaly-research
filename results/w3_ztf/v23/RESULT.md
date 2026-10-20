@@ -111,6 +111,14 @@
 - **Not shown:**
   - that W3-like events cannot be found in these data;
   - that any searched star did or did not dim. Earlier v13-rule searches keep their results and wording.
+- **Limits of the bounds rule as pre-registered** (found in review after the gate; not tested, no rule changed):
+  - L is the v13 edge, so a noise-level significant intermediate beyond a closer normal detection still makes a
+    side "slow". Some of the W3 losses may come from this definition rather than from unmeasured edges.
+  - A "normal" detection (dm < INTER[0]) needs no significance, so a near-limit point can set U and make a side
+    "fast". The 0 / 1,000 fade result may depend on this asymmetry.
+  - Any rule that changes either definition is post hoc and needs calibration data not used here.
+  - A2's fixed-event runs both flag 857 / 1,000 (different carriers); their pass counts differ (142 vs 75), so the
+    runs are not duplicates. The equal flag count is read as a coincidence; nothing beyond that was checked.
 - **Next step:** a method decision for the owner, not taken here. In these events the data hold no significant
   intermediate point and no close normal detection under the fixed thresholds (EDGE_FRAC 0.25, EDGE_NSIG 2); no
   threshold was varied. The options are:

@@ -1030,11 +1030,12 @@ def stage_search(a) -> None:
         "flagged_runs": len(out),
         "flagged_groups": len({x["key"] for x in out}),
         "passed_groups": sorted({x["key"] for x in out if x["pass"]}),
-        # v23 (bounds): every other test passed, edges not bounded by the data; not survivors
-        "insufficient_groups": sorted(
-            {x["key"] for x in out if x["insufficient"]} - {x["key"] for x in out if x["pass"]}
-        ),
     }
+    # v23 (bounds): every other test passed, edges not bounded by the data; not survivors
+    if EDGE_RULE == "bounds":
+        summ["insufficient_groups"] = sorted(
+            {x["key"] for x in out if x["insufficient"]} - {x["key"] for x in out if x["pass"]}
+        )
     VDIR.mkdir(parents=True, exist_ok=True)
     tag = f"_{EDGE_RULE}" if VERSION >= 13 else ""  # v13: one file per edge rule
     (VDIR / f"search_{a.half}_v{VERSION}{tag}.json").write_text(
