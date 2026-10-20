@@ -299,3 +299,4 @@ adds its line, with a note naming the unit.
 | 2026-W43 | ≈ 0.25 (W3 dimming edge coverage: gate V2, stamp-mask sensitivity) | — | — | 0.1 (orientation, #374 re-check, claim, PR) | cloud routine 01FdEN2q, 21:09–21:35Z |
 | 2026-W43 | ≈ 0.15 (W3 dimming: weight-map coverage term in `screen` / `inject`, gates R0 / R1, corrected headline) | — | — | 0.1 (orientation, claim, state files, review, PR) | cloud routine 01AUvG96, 22:08–22:40Z |
 | 2026-W43 | — | — | ≈ 0.25 (W3 dimming: exposure-count `on_sky` efficiency, frozen plan, NEXUS e5–e7 controls held out; ≤ 4 class holds, e2 stopped) | 0.2 (orientation, #374 NED re-check, claim, state files, review, PR) | cloud routine 012vL5CG, 01:08–01:50Z |
+| 2026-W43 | ≈ 0.25 (W3 dimming: D-039 persistence swap in `inject`, frozen plan, gates G0 / G1, joint re-`combine`, swap-cleared flags checked) | — | — | 0.1 (orientation, claim, state files, review, PR) | cloud routine 01EEgGY3, 04:08–04:45Z |

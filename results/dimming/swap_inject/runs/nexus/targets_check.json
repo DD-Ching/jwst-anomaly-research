@@ -1,0 +1,19 @@
+{
+ "field": "nexus",
+ "n_targets_term_on": 11,
+ "n_tested_targets": 17,
+ "not_tested": [],
+ "verdicts_of_term_on_targets": {
+  "nexus-d12360": "inconclusive",
+  "nexus-d12528": "inconclusive",
+  "nexus-d13073": "on_sky",
+  "nexus-d15524": "on_sky",
+  "nexus-d20291": "on_sky",
+  "nexus-d22021": "on_sky",
+  "nexus-d23045": "on_sky",
+  "nexus-d24470": "on_sky",
+  "nexus-d29638": "on_sky",
+  "nexus-d30295": "undetected",
+  "nexus-d46213": "on_sky"
+ }
+}

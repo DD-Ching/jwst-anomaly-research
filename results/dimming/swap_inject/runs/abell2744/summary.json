@@ -1,0 +1,56 @@
+{
+ "field": "abell2744",
+ "gate_G0": true,
+ "monitored_detected_pairs": 106,
+ "monitored_detected_pairs_with_count": 106,
+ "monitored_detected_pairs_by_epoch_without_count": {
+  "0": 0,
+  "1": 0,
+  "2": 0
+ },
+ "swap": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": null,
+   "0.03": 104.788,
+   "0.1": 270.08,
+   "0.3": 517.057,
+   "1": 108.3117,
+   "3": 61.543
+  }
+ },
+ "swap_pooled": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": null,
+   "0.03": 104.788,
+   "0.1": 270.08,
+   "0.3": 517.057,
+   "1": 108.3117,
+   "3": 61.543
+  }
+ },
+ "swap_unknown_low": {
+  "gate_G1_lower": true,
+  "gate_G1_upper": true,
+  "gain_vs_veto_on_rho0.1": {
+   "0.01": null,
+   "0.03": 104.788,
+   "0.1": 270.08,
+   "0.3": 517.057,
+   "1": 108.3117,
+   "3": 61.543
+  }
+ },
+ "veto_off_gain_rho0.1": {
+  "0.01": null,
+  "0.03": 109.0,
+  "0.1": 281.0,
+  "0.3": 540.0,
+  "1": 113.0,
+  "3": 65.0
+ },
+ "wall_s": 31
+}

@@ -708,6 +708,7 @@ def efficiency_table(
     seed: int = 0,
     n_rep: int = 20,
     forced_inflation: np.ndarray | None = None,
+    persistence_eff: np.ndarray | None = None,
 ) -> Table:
     """Recovery fraction per magnification model and magnitude bin (``simulated``).
 
@@ -715,6 +716,10 @@ def efficiency_table(
     the injection's), ``n_rep`` times each. Recovered = flagged, no static catalogue veto
     (``static_veto``: star, neighbour, edge, blend, sharp) and, per injected copy, detected in >= 2
     detection-band epochs (the light-curve-dependent ``single_epoch`` veto).
+    With ``persistence_eff`` (per source and epoch, the D-039 test's ``on_sky`` probability; NaN =
+    unknown, counted as 0) the ``single_epoch`` veto is swapped for that test: a copy detected in
+    one epoch k that is a ``vanish`` flag counts ``persistence_eff[i, k]`` (expected recoveries, so
+    ``n_recovered`` is a float).
     W3: every copy gets one event per (t_E, rho) with u0 ~
     U[0, 2) (umbra crossings) and t0 ~ U[t_first - 2 t_E, t_last + 2 t_E], so the umbra (half-length
     <= 2 t_E) can overlap the baseline; recovered = any flag and no catalogue veto. ``window_yr`` =
@@ -729,6 +734,7 @@ def efficiency_table(
     det = lc["det"][idx]
     e = err[idx]
     v = static_veto[idx]
+    pe = None if persistence_eff is None else np.asarray(persistence_eff, float)[idx]
     mag = ab_mag(reference_flux(flux, det)[:, 0])
     t_first, t_last = float(times_yr.min()), float(times_yr.max())
     rows = []
@@ -746,7 +752,7 @@ def efficiency_table(
                     "mag_hi": hi,
                     "n_sources": int(m.sum()) // n_rep,
                     "n_injected": int(m.sum()),
-                    "n_recovered": int(rec[m].sum()),
+                    "n_recovered": float(rec[m].sum()) if pe is not None else int(rec[m].sum()),
                     "efficiency": float(rec[m].mean()) if m.any() else np.nan,
                     "window_yr": window,
                 }
@@ -757,14 +763,14 @@ def efficiency_table(
             t0 = rng.uniform(t_first - 2 * t_e, t_last + 2 * t_e, len(flux))
             u0 = rng.uniform(0.0, 2.0, len(flux))
             fi, ei = apply_factor(flux, e, w3_factor(times_yr, t0, t_e, u0, rho), rng, p.sys_floor)
-            rec = _recovered(fi, ei, det, p, forced_inflation) & ~v
+            rec = _swap_recovered(fi, ei, det, p, forced_inflation, pe, v)
             record("w3", t_e, rho, np.nan, rec, (t_last - t_first) + 4 * t_e)
     covered = np.isfinite(flux[:, :, 0])
     for depth in depths:
         ep = np.array([rng.choice(np.flatnonzero(c)) for c in covered])
         fac = dimming_factor(flux.shape[1], ep, depth)
         fi, ei = apply_factor(flux, e, fac, rng, p.sys_floor)
-        rec = _recovered(fi, ei, det, p, forced_inflation) & ~v
+        rec = _swap_recovered(fi, ei, det, p, forced_inflation, pe, v)
         record("dimming", np.nan, np.nan, depth, rec, np.nan)
     out = Table(rows=rows)
     out.meta.update(
@@ -777,6 +783,46 @@ def efficiency_table(
         params=asdict(p),
     )
     return out
+
+
+def persistence_eff_by_exposures(
+    verdicts: Table,
+    field: str,
+    shape: tuple[int, int],
+    eff_low: float = 0.412,
+    eff_high: float = 0.961,
+    max_low: int = 4,
+) -> np.ndarray:
+    """(source, epoch) D-039 ``on_sky`` efficiency from the committed ``n_exposures`` per pair
+    (``persistence_run/<field>/verdicts.ecsv``, uid ``<field>-d<row>``): ``eff_low`` for <=
+    ``max_low`` covering exposures, ``eff_high`` above (ASSUMPTION, ``expcount_eff/PLAN.md``); NaN
+    where no count is committed."""
+    out = np.full(shape, np.nan)
+    pre = f"{field}-d"
+    for uid, k, n in zip(verdicts["uid"], verdicts["epoch"], verdicts["n_exposures"], strict=True):
+        uid = str(uid)
+        if not uid.startswith(pre):
+            continue
+        i = int(uid[len(pre) :])
+        if i < shape[0] and 0 <= int(k) < shape[1]:
+            out[i, int(k)] = eff_low if int(n) <= max_low else eff_high
+    return out
+
+
+def _swap_recovered(fi, ei, det, p: Params, inflation, pe: np.ndarray | None, veto: np.ndarray):
+    """Recovery per copy: ``_recovered`` (bool) without ``pe``; with it, a float weight where copies
+    detected in one epoch k that are ``vanish`` flags (at both noise levels) count ``pe[i, k]``."""
+    if pe is None:
+        return _recovered(fi, ei, det, p, inflation) & ~veto
+    res, det_i = _classify_injected(fi, ei, det, p)
+    rec = _recovered(fi, ei, det, p, inflation)
+    d = det_i[:, :, 0]
+    single = (d.sum(axis=1) == 1) & res["vanish"]
+    if inflation is not None:
+        res2, _ = _classify_injected(fi, ei * np.asarray(inflation)[None, None, :], det, p)
+        single &= res2["vanish"]
+    w = np.nan_to_num(pe[np.arange(len(d)), np.argmax(d, axis=1)], nan=0.0)
+    return np.where(veto, 0.0, np.where(rec, 1.0, np.where(single, w, 0.0)))
 
 
 def _recovered(fi, ei, det, p: Params, inflation: np.ndarray | None) -> np.ndarray:
@@ -1147,6 +1193,11 @@ def cmd_inject(args) -> dict:
             "uncalibrated and left out of the headline combination",
             file=sys.stderr,
         )
+    pe = None
+    if args.persistence_verdicts is not None:
+        pe = persistence_eff_by_exposures(
+            Table.read(args.persistence_verdicts), args.field, lc["flux"].shape[:2]
+        )
     eff = efficiency_table(
         lc,
         err,
@@ -1159,7 +1210,9 @@ def cmd_inject(args) -> dict:
         p,
         seed=args.seed,
         forced_inflation=inflation,
+        persistence_eff=pe,
     )
+    eff.meta["persistence_swap"] = None if pe is None else str(args.persistence_verdicts)
     eff.meta["forced_inflation"] = None if inflation is None else [float(x) for x in inflation]
     eff.meta["calibrated"] = calibrated
     first = eff[(eff["model"] == eff["model"][0]) & (eff["t_e_yr"] == eff["t_e_yr"][0])]
@@ -1190,6 +1243,7 @@ def cmd_inject(args) -> dict:
         **_weight_summary(lc),
         "baseline_yr": float(times.max() - times.min()),
         "forced_inflation": eff.meta["forced_inflation"],
+        "persistence_swap": eff.meta["persistence_swap"],
         "wall_s": round(time.time() - t_start, 1),
     }
     (args.out / "inject_summary.json").write_text(json.dumps(summary, indent=1) + "\n")
@@ -1632,6 +1686,13 @@ def main(argv: list[str] | None = None) -> int:
         "catalogue-count proxy only)",
     )
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument(
+        "--persistence-verdicts",
+        type=Path,
+        default=None,
+        help="inject: swap the per-copy single_epoch veto for the D-039 test, with the on_sky "
+        "efficiency by covering-exposure count from this verdicts.ecsv (unknown pairs: veto kept)",
+    )
     ap.add_argument(
         "--max-flags",
         type=int,

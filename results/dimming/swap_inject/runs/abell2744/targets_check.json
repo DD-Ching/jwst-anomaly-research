@@ -1,0 +1,13 @@
+{
+ "field": "abell2744",
+ "n_targets_term_on": 5,
+ "n_tested_targets": 8,
+ "not_tested": [],
+ "verdicts_of_term_on_targets": {
+  "abell2744-d03227": "on_sky",
+  "abell2744-d03574": "on_sky",
+  "abell2744-d04445": "on_sky",
+  "abell2744-d04474": "on_sky",
+  "abell2744-d04698": "on_sky"
+ }
+}

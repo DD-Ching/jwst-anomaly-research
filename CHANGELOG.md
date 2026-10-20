@@ -2,8 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-20: W3 dimming: D-039 persistence swap folded into `inject` (in progress)
-- Claim: handoff (1) of #390; plan follows.
+## 2026-10-20: W3 dimming: D-039 persistence swap in `inject`: joint exposure ×1.54–2.51 at ρ = 0.1; zero surviving events still holds
+- **Why:** handoff 1 of #390. Plan frozen first (`results/dimming/swap_inject/PLAN.md`).
+- **Code:** `efficiency_table(persistence_eff=...)` credits an injected copy detected in one epoch k that is a
+  `vanish` flag with ε(i, k) (0.412 for ≤ 4 covering exposures, 0.961 above; unknown pairs 0);
+  `persistence_eff_by_exposures` reads `n_exposures` from `persistence_run/<field>/verdicts.ecsv`;
+  `inject --persistence-verdicts` runs it. Default path unchanged (gate G0 reproduces the headline exactly).
+- **Result (`results/dimming/swap_inject/RESULT.md`):** gates G0 / G1 pass in all fields. Joint exposure at ρ = 0.1
+  ×1.54 (t_E 0.01 yr) to ×2.51 (0.3 yr) over the veto-on headline; pooled ≤ 4 sensitivity ≤ 1 % lower; Abell 2744
+  gains most. All 27 compact single-epoch vanish flags of the production screen were tested; their `on_sky`
+  members were all explained, so the limits stay zero-event limits.
+- **Handoff:** (1) the 11 NEXUS `undetected` control stamps; (2) NEXUS e2 controls (116 monitored pairs without a
+  count, ε = 0 now; crediting them at 0.374 adds 5–8 %); (3) new fields / epochs.
 
 ## 2026-10-20: W3 dimming: `forced` + depth / footprint test on the 20 MACS0416 / Abell 2744 `on_sky` targets: 0 survivors
 - **Why:** #386 handoff 2 (still open after #388). Plan frozen first (`results/dimming/forced20/PLAN.md`); screens
