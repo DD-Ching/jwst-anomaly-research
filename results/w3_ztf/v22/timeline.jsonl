@@ -1,0 +1,1 @@
+{"event": "driver_config", "workers": 1, "utc": "2026-10-20T07:45:00Z", "note": "one worker (inject and dev search still run together), to avoid the v21 memory kill; execution setting only"}

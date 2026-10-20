@@ -79,6 +79,7 @@ if len(sys.argv) > 3:  # v20 resume after the deadlock: '<npix>' runs that area 
     area_job(next(x for x in q if x['npix'] == int(sys.argv[3])), resume=True)
     log(event='queue_done')
     sys.exit(0)
-ws = [threading.Thread(target=worker) for _ in range(2)]
+import os as _os  # v22: worker count from W3_WORKERS (default 2); 1 used here after the v21 out-of-memory kill
+ws = [threading.Thread(target=worker) for _ in range(int(_os.environ.get('W3_WORKERS', '2')))]
 [w.start() for w in ws]; [w.join() for w in ws]
 log(event='queue_done')
