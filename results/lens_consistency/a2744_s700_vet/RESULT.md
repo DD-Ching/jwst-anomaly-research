@@ -39,16 +39,18 @@ systematic floor calibrated on known pairs first.
 **Deviations (labelled).** Post hoc: the `--model-check` block and the sheet's stretch (vmax 10 → 5 σ, display only).
 After `/code-review` (post hoc, before the final run), these were fixed: the pixel solid angle of the crude
 magnitude (hypot, for the rotated mosaic); NaN S/N no longer passes the known-pair cut; an unmeasurable target pair
-is "not measurable", never "consistent" (for either image without flux; a new, post hoc `decide` branch); a member
-without a measurable magnitude is "not assessed", not "no perturber"; the ratio search covers 10⁻³–10³ instead of a
-bracket around Σf_a/Σf_b. The crude magnitudes changed with the pixel-scale fix (≈ 20.4 → 19.7 and 18.6 → 18.0; the old values are in
-commit 36e95a7's `summary.json`). `perturber_found` is tri-state (None: no perturber, but a member not assessed).
+is "not measurable", never "consistent" (either image without flux, or a ratio fit at the 10⁻³ / 10³ grid edge);
+a member without a measurable magnitude, or a source without a usable z (eazy z < 0), is "not assessed", not "no
+perturber"; the ratio search covers 10⁻³–10³ instead of a bracket around Σf_a/Σf_b. Both "not measurable" and "not
+assessed" are new, post hoc `decide` branches (`perturber_found` is tri-state). The crude magnitudes changed with
+the pixel-scale fix (≈ 20.4 → 19.7 and 18.6 → 18.0; the old values are in commit 36e95a7's `summary.json`).
 `summary.json` is from the run with these fixes; the outcome is unchanged.
 
 **Limitations.** One aperture size, one noise model. The random-aperture ring (0.6–1.8″) is not masked, so for the
 78 knots it also covers the other knots of the same arc; that inflates σ and favours "consistent" for the target
 (one reason the target p values decide nothing). The crude magnitude is a 0.5″ aperture minus a local median, not
 a total magnitude; it is null where the local median exceeds the aperture, as for the photo-z member DJA 42356
-(z_phot 0.346, 3.92″, 68 % interval 0.316–6.867), which is therefore "not assessed" (`members_not_assessed`).
+(z_phot 0.346, 3.92″, 68 % interval 0.316–6.867), which is therefore "not assessed". Three further sources within 5″ have no usable eazy z (z < 0) and are also
+"not assessed"; `members_not_assessed` lists all four.
 Target pairs have no S/N cut (the known pairs do); this cannot change the outcome while the gate fails. Both flagged
 perturbers are spec-z members. The UNCOVER model's member list was not checked.

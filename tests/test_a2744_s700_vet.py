@@ -67,8 +67,17 @@ def test_perturber_flags_tri_state():
     assert s7v.classify_perturber(True, float("nan")) is None
     assert s7v.classify_perturber(True, 19.7) is True
     assert s7v.classify_perturber(True, 23.0) is False
-    assert s7v.any_perturber([False, None, True]) is True
-    assert s7v.any_perturber([False, None]) is None
-    assert s7v.any_perturber([False]) is False
+    assert s7v.tri_any([False, None, True]) is True
+    assert s7v.tri_any([False, None]) is None
+    assert s7v.tri_any([False]) is False
     assert s7v.decide(False, False, None).endswith("member perturber not assessed)")
     assert s7v.decide(True, False, None) == "undetermined (member perturber not assessed)"
+    assert s7v.classify_perturber(None, 18.0) is None
+
+
+def test_grid_edge_is_not_measurable():
+    fb = np.array([1.0, 2.0, 3.0])
+    r = s7v.pair_chi2(1e4 * fb, np.full(3, 0.01), fb, np.full(3, 0.01))
+    assert r["ratio_at_grid_edge"] is True
+    assert s7v.differs(r["p"], r["ratio_at_grid_edge"]) is None
+    assert s7v.pair_chi2([1.0], [0.1], [1.0], [0.1])["ratio_at_grid_edge"] is None

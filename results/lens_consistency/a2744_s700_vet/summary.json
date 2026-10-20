@@ -287,8 +287,8 @@
     0.0
    ],
    "f200w_mag_crude": null,
-   "member": false,
-   "perturber": false
+   "member": null,
+   "perturber": null
   },
   {
    "dja_id": 42356,
@@ -365,8 +365,8 @@
     0.0
    ],
    "f200w_mag_crude": null,
-   "member": false,
-   "perturber": false
+   "member": null,
+   "perturber": null
   },
   {
    "dja_id": 41779,
@@ -378,8 +378,8 @@
     0.0
    ],
    "f200w_mag_crude": null,
-   "member": false,
-   "perturber": false
+   "member": null,
+   "perturber": null
   },
   {
    "dja_id": 42782,
@@ -449,7 +449,10 @@
  ],
  "perturber_found": true,
  "members_not_assessed": [
-  42356
+  42125,
+  42356,
+  42139,
+  41779
  ],
  "outcome": "undetermined (colour test not validated; member perturber present)",
  "photometry": {

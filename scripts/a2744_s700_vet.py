@@ -82,7 +82,7 @@ def pair_chi2(fa, sa, fb, sb) -> dict:
     fa, sa, fb, sb = fa[ok], sa[ok], fb[ok], sb[ok]
     n = int(ok.sum())
     if n < 2 or not np.any(fb > 0) or not np.any(fa > 0):
-        return {"n_bands": n, "ratio": None, "chi2": None, "p": None}
+        return {"n_bands": n, "ratio": None, "chi2": None, "p": None, "ratio_at_grid_edge": None}
 
     def chi2(r):
         r = np.asarray(r, float)[..., None]
@@ -103,13 +103,16 @@ def pair_chi2(fa, sa, fb, sb) -> dict:
     }
 
 
-def differs(p: float | None) -> bool | None:
-    return None if p is None else bool(p < P_DIFFER)
+def differs(p: float | None, at_edge: bool | None = False) -> bool | None:
+    """None (not measurable) without a p value or with a ratio fit at the grid edge (post hoc)."""
+    return None if p is None or at_edge else bool(p < P_DIFFER)
 
 
-def classify_perturber(member: bool, mag: float) -> bool | None:
-    """True: member brighter than MAG_PERTURBER; None: member without a measurable magnitude
-    ("not assessed", post hoc); False otherwise."""
+def classify_perturber(member: bool | None, mag: float) -> bool | None:
+    """True: member brighter than MAG_PERTURBER; None ("not assessed", post hoc): membership
+    unknown (no usable z) or a member without a measurable magnitude; False otherwise."""
+    if member is None:
+        return None
     if not member:
         return False
     if not np.isfinite(mag):
@@ -117,20 +120,24 @@ def classify_perturber(member: bool, mag: float) -> bool | None:
     return bool(mag < MAG_PERTURBER)
 
 
-def any_perturber(flags: list[bool | None]) -> bool | None:
-    """True if any perturber; None if none but some member was not assessed; else False."""
+def tri_any(flags: list[bool | None]) -> bool | None:
+    """True if any flag is True; None if none is but some is None; else False."""
     if any(f is True for f in flags):
         return True
     return None if any(f is None for f in flags) else False
 
 
 def decide(gate_passed: bool, any_differs: bool | None, perturber: bool | None) -> str:
-    """Frozen decision function of PLAN.md. The ``any_differs is None`` branch (a target pair not
-    measurable, never read as "consistent") is post hoc, added after /code-review."""
+    """Decision function of PLAN.md. Post hoc additions (after /code-review): the
+    ``any_differs is None`` branch (a target pair not measurable is never "consistent") and the
+    ``perturber is None`` branch and tail (a nearby source not assessed is never "no perturber")."""
     if not gate_passed:
-        tail = {True: "member perturber present", None: "member perturber not assessed"}.get(
-            perturber, "no member perturber"
-        )
+        if perturber is None:
+            tail = "member perturber not assessed"
+        elif perturber:
+            tail = "member perturber present"
+        else:
+            tail = "no member perturber"
         return f"undetermined (colour test not validated; {tail})"
     if any_differs:
         return "one image (H1)"
@@ -186,7 +193,7 @@ def pair_result(phot: dict, a: str, b: str) -> dict:
     sa = [phot[band][a]["sigma"] for band in BANDS]
     sb = [phot[band][b]["sigma"] for band in BANDS]
     r = pair_chi2(fa, sa, fb, sb)
-    return {"a": a, "b": b, **r, "differs": differs(r["p"])}
+    return {"a": a, "b": b, **r, "differs": differs(r["p"], r["ratio_at_grid_edge"])}
 
 
 def known_pairs(images: Table) -> list[tuple[str, str]]:
@@ -234,7 +241,8 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
             zs = float(zout["z_spec"][k])
             z = zs if zs > 0 else float(zout["z_phot"][k])
             mag = total_mag(float(zout["ra"][k]), float(zout["dec"][k]), stamp)
-            member = bool(abs(z - Z_CLUSTER) <= DZ_MEMBER)
+            # eazy marks failed fits with z < 0: membership unknown (None), not "non-member"
+            member = bool(abs(z - Z_CLUSTER) <= DZ_MEMBER) if np.isfinite(z) and z >= 0 else None
             rows.append(
                 {
                     "dja_id": int(zout["id"][k]),
@@ -382,12 +390,11 @@ def main(argv=None) -> dict:
     frac = sum(not k["differs"] for k in judged) / len(judged) if judged else 0.0
     gate = bool(judged and frac >= KNOWN_GATE)
     target = [pair_result(phot, a, b) for a, b in TARGET_PAIRS]
-    flags = [t["differs"] for t in target]
-    any_diff = True if any(flags) else (None if None in flags else False)
+    any_diff = tri_any([t["differs"] for t in target])
     ra_m = np.mean([pos["78.21"][0], pos["78.22"][0]])
     dec_m = np.mean([pos["78.21"][1], pos["78.22"][1]])
     pert = perturbers(Table.read(fetch_catalog(*af.ZOUT)), float(ra_m), float(dec_m))
-    has_pert = any_perturber([p["perturber"] for p in pert])
+    has_pert = tri_any([p["perturber"] for p in pert])
     out = {
         "plan": "PLAN.md",
         "bands": list(BANDS),
