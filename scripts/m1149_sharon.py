@@ -42,6 +42,7 @@ def gold_images(path: Path) -> Table:
 def footprint(name: str, images: Table) -> np.ndarray:
     """Whether each image lies inside the model's deflection maps (finite deflection)."""
     model, _, _ = lc.load_model(name)
+    lc.apply_frame_offset(name, model)  # same frame as image_plane
     x, y = model.to_frame(np.asarray(images["ra"], float), np.asarray(images["dec"], float))
     lm = model.lens_map(x, y, np.asarray(images["z"], float))
     return np.isfinite(np.asarray(lm["beta_x"], float))
