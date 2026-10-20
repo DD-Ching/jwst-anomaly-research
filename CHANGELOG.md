@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: MACS1149 system 16: no published spectroscopic redshift; D-037 unchanged
+- **Why:** D-037's revisit condition (a spec-z for 16.1 / 16.2 decides whether the flagged extra image is a
+  fitted-redshift artefact); a cheap catalogue check while the other lines wait on owner decisions. Plan frozen first
+  (`results/lens_consistency/macs1149_s16_specz/PLAN.md`).
+- **Result (`RESULT.md`, `summary.json`):** frozen outcome *not decided*. Treu et al. 2016 (GLASS + MUSE compilation)
+  lists 16.1 / 16.2 as 27.1 / 27.2 with no redshift; the DJA NIRSpec v4.4 table has an ungraded CANUCS PRISM spectrum
+  on 16.2 (`z_best` −1, automated `zline` 0.44 at S/N 1.3) and nothing on 16.1 or 5106117. Post hoc: DJA's EAZY
+  photo-z of 16.2 is 2.79, inside both models' merging ranges, not near the fitted 4.419 (exploratory).
+- **Failed approach:** the per-spectrum DJA files (`extractions/macs1149-v4/…spec.fits`) return 403 from the cloud
+  session, so the 16.2 spectrum was not looked at.
+- **Handoff:** recheck when DJA grades `1208_5114276`. Remaining lines are blocked on owner decisions (ZTF edge
+  method, VENUS batches, X-units, #409 and the other needs-human PRs); #374 waits for a green weekly run.
+
 ## 2026-10-20: `arcs` null calibrated on weak-shear rows: no excess there; too little leverage to settle #406
 - **Why:** #406's handoff: is the σ_ε 0.26 shape-noise null calibrated? Plan frozen before the weak-row orientation
   classes were read (`results/arcs/null-calibration/PLAN.md`). Stored `arcs.ecsv` only; no new data.

@@ -1,0 +1,10 @@
+{
+  "plan": "PLAN.md",
+  "outcome": "not decided",
+  "targets": {"16.1": [177.40971, 22.387662], "16.2": [177.40989, 22.387828]},
+  "match_radius_arcsec": 0.5,
+  "treu2016": {"catalogue": "J/ApJ/817/60/table3", "ids": ["27.1", "27.2"], "sep_arcsec": [0.0, 0.0], "z": null, "zspec": null, "set": "Silver"},
+  "dja_v4_4": {"table_sha256": "728afcdd5ec4d164b9d816ea903e648b1d4937ae52c8a271056c9119cabf1ccf", "16.1": null,
+    "16.2": {"file": "macs1149-v4_prism-clear_1208_5114276.spec.fits", "sep_arcsec": 0.04, "z_best": -1.0, "grade": null, "zline_auto": 0.441, "sn50": 1.34, "z_phot": 2.79}},
+  "post_hoc": "two photometric redshifts (CANUCS DR1 2.25, DJA EAZY 2.79) in both models' merging ranges; exploratory"
+}
