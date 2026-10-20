@@ -1,3 +1,44 @@
 {"event": "driver_config", "workers": 1, "utc": "2026-10-20T07:45:00Z", "note": "one worker (inject and dev search still run together), to avoid the v21 memory kill; execution setting only"}
 {"area": 1853, "event": "area_start", "position": 1, "projected_mb": 1064.7, "utc": "2026-10-20T07:45:02Z"}
 {"area": 1853, "stage": "fetch", "event": "start", "utc": "2026-10-20T07:45:02Z"}
+{"area": 1853, "stage": "fetch", "event": "end", "rc": 0, "seconds": 21.1, "utc": "2026-10-20T07:45:23Z"}
+{"area": 1853, "stage": "exposures", "event": "start", "utc": "2026-10-20T07:45:23Z"}
+{"area": 1853, "stage": "exposures", "event": "end", "rc": 0, "seconds": 80.7, "utc": "2026-10-20T07:46:44Z"}
+{"area": 1853, "stage": "inject", "event": "start", "utc": "2026-10-20T07:46:44Z"}
+{"area": 1853, "stage": "search_dev", "event": "start", "utc": "2026-10-20T07:46:44Z"}
+{"area": 1853, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 25.0, "utc": "2026-10-20T07:47:09Z"}
+{"area": 1853, "stage": "inject", "event": "end", "rc": 0, "seconds": 66.2, "utc": "2026-10-20T07:47:50Z"}
+{"area": 1853, "stage": "decision", "event": "start", "utc": "2026-10-20T07:47:50Z"}
+{"area": 1853, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T07:47:50Z"}
+{"area": 1853, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-20T07:47:50Z"}
+{"area": 1853, "event": "cache_deleted", "utc": "2026-10-20T07:47:50Z"}
+{"area": 1150, "event": "area_start", "position": 2, "projected_mb": 1306.2, "utc": "2026-10-20T07:47:50Z"}
+{"area": 1150, "stage": "fetch", "event": "start", "utc": "2026-10-20T07:47:50Z"}
+{"area": 1150, "stage": "fetch", "event": "end", "rc": 0, "seconds": 16.5, "utc": "2026-10-20T07:48:07Z"}
+{"area": 1150, "stage": "exposures", "event": "start", "utc": "2026-10-20T07:48:07Z"}
+{"area": 1150, "stage": "exposures", "event": "end", "rc": 0, "seconds": 72.1, "utc": "2026-10-20T07:49:19Z"}
+{"area": 1150, "stage": "inject", "event": "start", "utc": "2026-10-20T07:49:19Z"}
+{"area": 1150, "stage": "search_dev", "event": "start", "utc": "2026-10-20T07:49:19Z"}
+{"area": 1150, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 17.8, "utc": "2026-10-20T07:49:37Z"}
+{"area": 1150, "stage": "inject", "event": "end", "rc": 0, "seconds": 51.9, "utc": "2026-10-20T07:50:11Z"}
+{"area": 1150, "stage": "decision", "event": "start", "utc": "2026-10-20T07:50:11Z"}
+{"area": 1150, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T07:50:11Z"}
+{"area": 1150, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-20T07:50:11Z"}
+{"area": 1150, "event": "cache_deleted", "utc": "2026-10-20T07:50:11Z"}
+{"area": 1148, "event": "area_start", "position": 3, "projected_mb": 1547.1, "utc": "2026-10-20T07:50:11Z"}
+{"area": 1148, "stage": "fetch", "event": "start", "utc": "2026-10-20T07:50:11Z"}
+{"area": 1148, "stage": "fetch", "event": "end", "rc": 0, "seconds": 12.5, "utc": "2026-10-20T07:50:23Z"}
+{"area": 1148, "stage": "exposures", "event": "start", "utc": "2026-10-20T07:50:23Z"}
+{"area": 1148, "stage": "exposures", "event": "end", "rc": 0, "seconds": 90.2, "utc": "2026-10-20T07:51:53Z"}
+{"area": 1148, "stage": "inject", "event": "start", "utc": "2026-10-20T07:51:53Z"}
+{"area": 1148, "stage": "search_dev", "event": "start", "utc": "2026-10-20T07:51:53Z"}
+{"area": 1148, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 19.7, "utc": "2026-10-20T07:52:13Z"}
+{"area": 1148, "stage": "inject", "event": "end", "rc": 0, "seconds": 55.8, "utc": "2026-10-20T07:52:49Z"}
+{"area": 1148, "stage": "decision", "event": "start", "utc": "2026-10-20T07:52:49Z"}
+{"area": 1148, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T07:52:49Z"}
+{"area": 1148, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-20T07:52:49Z"}
+{"area": 1148, "event": "cache_deleted", "utc": "2026-10-20T07:52:49Z"}
+{"area": 1151, "event": "area_start", "position": 4, "projected_mb": 1802.3, "utc": "2026-10-20T07:52:49Z"}
+{"area": 1151, "stage": "fetch", "event": "start", "utc": "2026-10-20T07:52:49Z"}
+{"area": 1151, "stage": "fetch", "event": "end", "rc": 0, "seconds": 13.1, "utc": "2026-10-20T07:53:02Z"}
+{"area": 1151, "stage": "exposures", "event": "start", "utc": "2026-10-20T07:53:02Z"}
