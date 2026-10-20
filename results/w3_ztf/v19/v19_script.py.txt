@@ -1,0 +1,378 @@
+# v19 corrected validation and measurement (PLAN.md sections 2-3): own-exposure PSF everywhere, phase-matched V1',
+# real-stamp V1b', own-PSF V2' with injected noise in the error array, reference from validated detections only.
+# Shared components are copied unchanged from ../v18/psfphot_script.py.txt except fit() (optional error array).
+# Usage: python v19_script.py.txt <data dir> <out json>
+import importlib.util, json, sys, time, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.stats import SigmaClip
+from astropy.table import Table
+from astropy.wcs import WCS
+from photutils.background import Background2D, MedianBackground
+from photutils.psf import PSFPhotometry, SourceGrouper
+from scipy.spatial import cKDTree
+warnings.filterwarnings('ignore')
+D, OUT = sys.argv[1], sys.argv[2]
+m = importlib.util.module_from_spec(importlib.util.spec_from_loader('daopsf', loader=None))
+exec(open('results/w3_ztf/v18/daopsf.py.txt').read(), m.__dict__)
+man = json.load(open('results/w3_ztf/v18/manifest.json'))
+fu = {s['npix']: {e['expid']: e for e in s['exposures']} for s in json.load(open('results/w3_ztf/v17/followup.json'))['sources']}
+chk = {s['npix']: s for s in json.load(open('results/w3_ztf/v17/check.json'))['sources']}
+BAD_BITS = (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12)
+R_DIM, NORMAL_R, DIM_R, NSIG, MIN_INFO = 10 ** (-0.4), 0.75, 0.6, 3.0, 0.30
+BOX = {1624: 9, 1625: 11}
+t0 = time.time()
+
+
+def classify(R, sR):
+    d = (1 - R) / sR
+    if R >= NORMAL_R and d < NSIG:
+        return 'normal'
+    if R <= DIM_R and d >= NSIG:
+        return 'dim'
+    return 'undetermined'
+
+
+def rstd(v):
+    v = np.asarray(v, float); v = v[np.isfinite(v)]
+    return float(1.4826 * np.median(np.abs(v - np.median(v)))) if len(v) > 2 else np.nan
+
+
+class Exp:
+    def __init__(self, rec):
+        e = rec['expid']; self.rec = rec; self.expid = e
+        h = fits.open(f'{D}/{e}_sci.fits')[0]
+        self.sci = h.data.astype(float); self.w = WCS(h.header); self.gain = float(h.header['GAIN'])
+        self.k = 10 ** (-0.4 * (float(h.header['MAGZP']) - 23.9)); self.magzp = float(h.header['MAGZP'])
+        mk = fits.open(f'{D}/{e}_msk.fits')[0].data.astype(np.int64)
+        self.bad = np.zeros(mk.shape, bool)
+        for b in BAD_BITS:
+            self.bad |= ((mk >> b) & 1).astype(bool)
+        self.bad |= ~np.isfinite(self.sci)
+        self.p = m.read(f'{D}/{e}_psf.psf')
+        c = fits.open(f'{D}/{e}_psfcat.fits'); self.cat = Table(c[1].data); self.cat['cmag'] = self.cat['mag'] + float(c[0].header['MAGZP'])
+        px, py = self.w.world_to_pixel_values(np.asarray(self.cat['ra']), np.asarray(self.cat['dec']))
+        self.cat['px'], self.cat['py'] = px, py
+        ins = (px >= 0) & (px < self.sci.shape[1]) & (py >= 0) & (py < self.sci.shape[0])
+        # cutout (0-based) -> quadrant (1-based DAOPHOT) offsets from the psfcat stars inside the cutout
+        self.offx = float(np.median(np.asarray(self.cat['xpos'])[ins] - (px[ins] + 1)))
+        self.offy = float(np.median(np.asarray(self.cat['ypos'])[ins] - (py[ins] + 1)))
+        srcm = np.zeros(self.sci.shape, bool)
+        yy, xx = np.mgrid[:self.sci.shape[0], :self.sci.shape[1]]
+        for x, y in zip(px[ins], py[ins]):
+            x0, y0 = int(round(x)), int(round(y))
+            srcm[max(y0 - 4, 0):y0 + 5, max(x0 - 4, 0):x0 + 5] = True
+        bk = Background2D(self.sci, 50, mask=self.bad | srcm, sigma_clip=SigmaClip(3.0), bkg_estimator=MedianBackground())
+        self.sub = self.sci - bk.background
+        self.err = np.sqrt(bk.background_rms ** 2 + np.clip(self.sub, 0, None) / self.gain)
+        self._models = {}
+
+    def quad(self, x, y):
+        return x + 1 + self.offx, y + 1 + self.offy
+
+    def model(self, x, y):
+        key = (round(x / 50), round(y / 50))  # PSF varies slowly (linear terms over 3072 px): one model per 50 px
+        if key not in self._models:
+            self._models[key] = m.image_psf(self.p, *self.quad(x, y), half=11, os=4, analytic_scale=self.p['bright'])
+        return self._models[key]
+
+    def pix(self, ra, dec, dra=0.0, ddec=0.0):
+        # registration() gives reference - exposure; back into this exposure is minus (review fix: sign)
+        x, y = self.w.world_to_pixel_values(ra - dra, dec - ddec)
+        return float(x), float(y)
+
+
+def fit(ex, img, srcs, box, bad, model_exp=None, err=None):
+    """Joint PSF fit, positions fixed. srcs: list of (x, y). Returns fluxes (DN), errors, valid PSF fractions."""
+    me = model_exp or ex
+    mod = me.model(*srcs[0]).copy()
+    mod.x_0.fixed = True; mod.y_0.fixed = True
+    grp = SourceGrouper(min_separation=2 * box) if len(srcs) > 1 else None
+    ph = PSFPhotometry(mod, (box, box), grouper=grp, aperture_radius=3)
+    init = Table({'x': [s[0] for s in srcs], 'y': [s[1] for s in srcs], 'flux': [max(float(np.nansum(img[int(round(s[1])) - 2:int(round(s[1])) + 3, int(round(s[0])) - 2:int(round(s[0])) + 3])), 1.0) for s in srcs]})
+    try:
+        r = ph(img, mask=bad, error=ex.err if err is None else err, init_params=init)
+    except Exception as exn:
+        return [np.nan] * len(srcs), [np.nan] * len(srcs), [0.0] * len(srcs), str(exn)[:80]
+    info = []
+    for s in srcs:
+        h = box // 2; x0, y0 = int(round(s[0])), int(round(s[1]))
+        st = m.stamp(me.p, *me.quad(*s), half=h, analytic_scale=me.p['bright'], frac=(s[0] - x0, s[1] - y0))
+        b = bad[y0 - h:y0 + h + 1, x0 - h:x0 + h + 1]
+        info.append(float(st[~b].sum() / st.sum()) if b.shape == st.shape else 0.0)
+    return [float(v) for v in r['flux_fit']], [float(v) for v in r['flux_err']], info, None
+
+
+def isolated(ex, lo, hi, avoid=()):
+    c = ex.cat; xy = np.c_[c['px'], c['py']]; tr = cKDTree(xy)
+    ok = []
+    for i in range(len(c)):
+        x, y = xy[i]
+        if not (lo <= c['cmag'][i] <= hi and c['flags'][i] == 0 and 25 < x < ex.sci.shape[1] - 25 and 25 < y < ex.sci.shape[0] - 25):
+            continue
+        if len(tr.query_ball_point(xy[i], 15)) > 1 or any(np.hypot(x - ax, y - ay) < 30 for ax, ay in avoid):
+            continue
+        ok.append(i)
+    return ok
+
+
+def registration(ex, ref):
+    """Median (dRA, dDec) of this exposure's psfcat positions against the reference catalogue for bright isolated stars."""
+    a = ref.cat; b = ex.cat
+    sel = (a['flags'] == 0) & (a['snr'] > 20)
+    j = __import__('w3_ztf').psfcat_match(b['ra'], b['dec'], np.asarray(a['ra'])[sel], np.asarray(a['dec'])[sel])
+    ok = j >= 0
+    return (float(np.median(np.asarray(a['ra'])[sel][ok] - np.asarray(b['ra'])[j[ok]])),
+            float(np.median(np.asarray(a['dec'])[sel][ok] - np.asarray(b['dec'])[j[ok]])), int(ok.sum()))
+
+
+
+
+def phase(x):
+    return x - np.floor(x)
+
+
+def pdiff(a, b):
+    return abs(phase(a) - phase(b))  # no wrap-around: a wrapped pair is skipped, not shifted
+
+
+def cls_frac(rec, lev, c):
+    a = [r for r in rec if r['level'] == lev]
+    return float(np.mean([r['class'] == c for r in a])) if a else None
+
+
+sys.path.insert(0, 'scripts')
+out = {'label': 'derived from observed IBE sciimg, mskimg, psfcat and sciimgdao.psf (cached v18 data); post hoc (PLAN.md)',
+       'sources': {}}
+PH = 0.20
+for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
+    recs = sorted([e for e in man['exposures'] if e['npix'] == npix], key=lambda e: next(x['t'] for x in chk[npix]['exposures'] if x['expid'] == e['expid']))
+    tt = {x['expid']: x for x in chk[npix]['exposures']}
+    exps = {r['expid']: Exp(r) for r in recs}
+    order = [r['expid'] for r in recs]
+    nd = [e for e in order if tt[e]['nd']]; br = [e for e in order if not tt[e]['nd']]
+    ra, dec = chk[npix]['ra'], chk[npix]['dec']
+    ref = exps[min(br, key=lambda e: exps[e].rec['seeing'])]
+
+    def mean_pos(r0, d0):
+        pts = []
+        for e in br:
+            c = exps[e].cat; d = np.hypot((np.asarray(c['ra']) - r0) * np.cos(np.radians(d0)), np.asarray(c['dec']) - d0) * 3600
+            k = int(np.argmin(d))
+            if d[k] < 1.5:
+                rg = registration(exps[e], ref)
+                pts.append((float(c['ra'][k]) + rg[0], float(c['dec'][k]) + rg[1]))
+        mean_pos.last = pts
+        return tuple(np.mean(pts, axis=0))
+    tpos = mean_pos(ra, dec); tp = np.array(mean_pos.last)
+    sig_pos_px = float(np.hypot(np.std(tp[:, 0], ddof=1) * np.cos(np.radians(dec)), np.std(tp[:, 1], ddof=1)) * 3600 / 1.012 / np.sqrt(2))
+    reg = {e: registration(exps[e], ref) for e in order}
+    tmag_ref = float(np.median([exps[e].cat['cmag'][int(np.argmin(np.hypot(exps[e].cat['ra'] - ra, exps[e].cat['dec'] - dec)))] for e in br]))
+    box = BOX[npix]; h = box // 2
+    src = {'key': key, 'reference_exposure': ref.expid, 'target_ref_radec': tpos, 'sigma_pos_px': sig_pos_px,
+           'target_psfcat_ref_mag': tmag_ref, 'validation': {}, 'exposures': {}}
+    tgt = {e: exps[e].pix(*tpos, *reg[e][:2]) for e in order}
+    # cross-exposure repeatability of constant controls fitted with their own PSF (unmasked), used for every R
+    mlo, mhi = (tmag_ref - 0.5, tmag_ref + 1.5)
+    ctrl_idx = isolated(ref, mlo, mhi, avoid=[ref.pix(*tpos)])
+    ctrl = [(float(ref.cat['ra'][i]), float(ref.cat['dec'][i]), float(ref.cat['cmag'][i])) for i in ctrl_idx]
+    full = {}
+    for e in order:
+        ex = exps[e]
+        for j, (cra, cde, cm) in enumerate(ctrl):
+            x, y = ex.pix(cra, cde, *reg[e][:2]); x0, y0 = int(np.floor(x)), int(np.floor(y))
+            if not (h + 3 < x0 < ex.sci.shape[1] - h - 3 and h + 3 < y0 < ex.sci.shape[0] - h - 3):
+                continue
+            if ex.bad[y0 - h:y0 + h + 2, x0 - h:x0 + h + 2].any():
+                continue
+            ff, fe, _, err = fit(ex, ex.sub, [(x, y)], box, ex.bad)
+            if np.isfinite(ff[0]) and ff[0] > 0:
+                full[(j, e)] = (x, y, ff[0], fe[0])
+    rel = []
+    for j in range(len(ctrl)):
+        v = np.array([full[(j, e)][2] * exps[e].k / fu[npix][e]['scale'] for e in order if (j, e) in full])
+        if len(v) >= 3:
+            rel += list(v / np.median(v))
+    sig_rep = rstd(rel)
+    src['controls'] = [{'ra': a, 'dec': b, 'mag': c} for a, b, c in ctrl]
+    src['validation']['repeatability'] = {'n_stars': len(ctrl), 'n_values': len(rel), 'robust_sigma': sig_rep,
+                                          'note': 'own-PSF unmasked control fluxes across exposures (zero point and v17 D1 scale applied)'}
+    val_ok, sig_val = {}, {}
+    if npix == 1624:
+        v1, v1b = {}, {}
+        for e in order:
+            ex = exps[e]; xt, yt = tgt[e]; xt0, yt0 = int(np.floor(xt)), int(np.floor(yt))
+            geom = np.argwhere(ex.bad[yt0 - h:yt0 + h + 2, xt0 - h:xt0 + h + 2]) - h  # relative to floor(target)
+            # ---- V1': phase-matched real controls, own PSF, masked vs unmasked
+            trials = []
+            for (j, e2), (x, y, F, Fe) in full.items():
+                if pdiff(x, xt) > PH:
+                    continue
+                ex2 = exps[e2]; x0, y0 = int(np.floor(x)), int(np.floor(y))
+                bb = ex2.bad.copy()
+                for dy, dx in geom:
+                    bb[y0 + dy, x0 + dx] = True
+                fm, fme, inf, _ = fit(ex2, ex2.sub, [(x, y)], box, bb)
+                cm = ctrl[j][2]
+                trials.append({'star': j, 'expid': e2, 'class': 'A' if cm <= tmag_ref + 0.5 else 'B', 'r': fm[0] / F,
+                               'r_err': float(np.hypot(fme[0] / fm[0], Fe / F)) if fm[0] else np.nan, 'info': inf[0]})
+            res = {}
+            for c in ('A', 'B'):
+                r = np.array([t['r'] for t in trials if t['class'] == c]); fr = np.array([t['r_err'] for t in trials if t['class'] == c])
+                ok_ = np.isfinite(r) & np.isfinite(fr); r, fr = r[ok_], fr[ok_]; s = rstd(r)
+                within = float(np.mean(np.abs(r - 1) <= 3 * np.sqrt(s ** 2 + fr ** 2))) if len(r) else np.nan
+                res[c] = {'n': int(len(r)), 'n_stars': len({t['star'] for t in trials if t['class'] == c}),
+                          'median_r': float(np.median(r)) if len(r) else None, 'robust_sigma': s, 'frac_within_3sigma': within,
+                          'pass': bool(len(r) >= 10 and abs(np.median(r) - 1) <= 0.05 and s <= 0.20 and within >= 0.95)}
+            sv = float(np.nanmax([res['A']['robust_sigma'] or np.nan, res['B']['robust_sigma'] or np.nan])) if trials else np.nan
+            v1[str(e)] = {**res, 'geometry_n_bad': int(len(geom)), 'target_x_phase': float(phase(xt)),
+                          'info_median': float(np.median([t['info'] for t in trials])) if trials else None,
+                          'pass': bool(res['A']['pass'] and res['B']['pass']) if len(geom) else True}
+            # ---- V1b': real stamps from e, phase-matched, on the real columns of e
+            rec = []
+            if len(geom):
+                colx = np.flatnonzero(ex.bad.mean(0) > 0.9)
+                cx = int(colx[np.argmin(np.abs(colx - xt))]) if len(colx) else None
+            else:
+                cx = None
+            if cx is not None:
+                dcol = xt0 - cx
+                stamps = [i for i in isolated(ex, mlo, mhi, avoid=[(xt, yt)]) if pdiff(ex.cat['px'][i], xt) <= PH]
+                ys = [yy for yy in range(30, ex.sci.shape[0] - 30, 7) if abs(yy - yt) > 25 and
+                      np.min(np.hypot(ex.cat['px'] - (cx + dcol), ex.cat['py'] - yy)) * 1.01 > 15][:6]
+                ftrue = 10 ** (-0.4 * (tmag_ref - ex.magzp))
+                for i in stamps:
+                    sx, sy = float(ex.cat['px'][i]), float(ex.cat['py'][i]); sx0, sy0 = int(np.floor(sx)), int(np.floor(sy))
+                    if ex.bad[sy0 - 10:sy0 + 11, sx0 - 10:sx0 + 11].any():
+                        continue
+                    fi, _, _, _ = fit(ex, ex.sub, [(sx, sy)], box, ex.bad)
+                    if not (np.isfinite(fi[0]) and fi[0] > 0):
+                        continue
+                    st = ex.sub[sy0 - 10:sy0 + 11, sx0 - 10:sx0 + 11]; se = ex.err[sy0 - 10:sy0 + 11, sx0 - 10:sx0 + 11]
+                    for yy in ys:
+                        ix, iy = cx + dcol, yy
+                        tx, ty = ix + (sx - sx0), iy + (sy - sy0)
+                        for lev in (1.0, R_DIM):
+                            k = lev * ftrue / fi[0]
+                            img = ex.sub.copy(); er = ex.err.copy()
+                            img[iy - 10:iy + 11, ix - 10:ix + 11] += k * st
+                            er[iy - 10:iy + 11, ix - 10:ix + 11] = np.sqrt(er[iy - 10:iy + 11, ix - 10:ix + 11] ** 2 + (k * se) ** 2)
+                            ff, fe, inf, _ = fit(ex, img, [(tx, ty)], box, ex.bad, err=er)
+                            R = ff[0] / ftrue; sR = float(np.hypot(fe[0] / ftrue, np.nan_to_num(sv) * max(R, R_DIM)))
+                            rec.append({'stamp': int(i), 'row': yy, 'level': lev, 'ratio': ff[0] / (lev * ftrue), 'R': R, 'sigma_R': sR,
+                                        'class': classify(R, sR), 'info': inf[0]})
+            a1 = [r['ratio'] for r in rec if r['level'] == 1.0]; a2 = [r['ratio'] for r in rec if r['level'] != 1.0]
+            okb = (len(geom) == 0) or (len(a1) >= 6 and abs(np.median(a1) - 1) <= 0.05 and abs(np.median(a2) - 1) <= 0.05
+                                       and cls_frac(rec, 1.0, 'normal') >= 0.9 and cls_frac(rec, R_DIM, 'dim') >= 0.9)
+            v1b[str(e)] = {'n_stamps': len({r['stamp'] for r in rec}), 'n_trials_per_level': len(a1),
+                           'median_ratio_1': float(np.median(a1)) if a1 else None, 'median_ratio_0398': float(np.median(a2)) if a2 else None,
+                           'frac_normal_1': cls_frac(rec, 1.0, 'normal'), 'frac_dim_0398': cls_frac(rec, R_DIM, 'dim'),
+                           'pass': bool(okb), 'note': 'no bad pixel in the box: nothing to inject against' if not len(geom) else None,
+                           'trials': rec}
+            val_ok[e] = bool(v1[str(e)]['pass'] and okb); sig_val[e] = sv if len(geom) else 0.0
+        src['validation'].update({"V1'": v1, "V1b'": v1b})
+    else:
+        dd = np.hypot((np.asarray(ref.cat['ra']) - ra) * np.cos(np.radians(dec)), np.asarray(ref.cat['dec']) - dec) * 3600
+        kk = int(np.argmin(np.where(dd > 4, dd, np.inf)))
+        npos = mean_pos(float(ref.cat['ra'][kk]), float(ref.cat['dec'][kk])); src['neighbour_ref_radec'] = npos
+        v2 = {}
+        for e in order:
+            ex = exps[e]; xt, yt = tgt[e]; xn, yn = ex.pix(*npos, *reg[e][:2])
+            ftrue = 10 ** (-0.4 * (tmag_ref - ex.magzp))
+            stamps = isolated(ex, 17.7, 18.7, avoid=[(xt, yt), (xn, yn)])
+            others_near = [(float(ex.cat['px'][i]), float(ex.cat['py'][i])) for i in range(len(ex.cat))
+                           if 1.5 < np.hypot(ex.cat['px'][i] - xn, ex.cat['py'][i] - yn) < 20 and np.hypot(ex.cat['px'][i] - xt, ex.cat['py'][i] - yt) > 1.5]
+            rec = []
+            for i in stamps:
+                sx, sy = float(ex.cat['px'][i]), float(ex.cat['py'][i]); sx0, sy0 = int(round(sx)), int(round(sy))
+                fi, _, _, _ = fit(ex, ex.sub, [(sx, sy)], box, ex.bad)
+                if not (np.isfinite(fi[0]) and fi[0] > 0):
+                    continue
+                st = ex.sub[sy0 - 10:sy0 + 11, sx0 - 10:sx0 + 11]; se = ex.err[sy0 - 10:sy0 + 11, sx0 - 10:sx0 + 11]
+                for ang in (90, 180, 270):
+                    c, s_ = np.cos(np.radians(ang)), np.sin(np.radians(ang))
+                    px, py = xn + c * (xt - xn) - s_ * (yt - yn), yn + s_ * (xt - xn) + c * (yt - yn)
+                    if np.min(np.hypot(ex.cat['px'] - px, ex.cat['py'] - py)) < 4 / 1.01:
+                        continue
+                    ix, iy = int(round(px)), int(round(py)); tx, ty = ix + (sx - sx0), iy + (sy - sy0)
+                    for lev in (1.0, R_DIM):
+                        k = lev * ftrue / fi[0]
+                        img = ex.sub.copy(); er = ex.err.copy()
+                        img[iy - 10:iy + 11, ix - 10:ix + 11] += k * st
+                        er[iy - 10:iy + 11, ix - 10:ix + 11] = np.sqrt(er[iy - 10:iy + 11, ix - 10:ix + 11] ** 2 + (k * se) ** 2)
+                        ff, fe, _, _ = fit(ex, img, [(tx, ty), (xn, yn), (xt, yt)] + others_near, box, ex.bad, err=er)
+                        rec.append({'stamp': int(i), 'angle': ang, 'level': lev, 'F_true': lev * ftrue, 'F_fit': ff[0], 'F_err': fe[0],
+                                    'ratio': ff[0] / (lev * ftrue), 'R': ff[0] / ftrue, 'neighbour_flux': ff[1]})
+            a1 = [r for r in rec if r['level'] == 1.0]; a2 = [r for r in rec if r['level'] != 1.0]
+            s1, s2 = rstd([r['ratio'] for r in a1]), rstd([r['ratio'] for r in a2])
+            sv = float(np.nanmax([s1, s2 * R_DIM])) if a1 else np.nan
+            for r in rec:
+                r['sigma_R'] = float(np.hypot(r['F_err'] / ftrue, sv)); r['class'] = classify(r['R'], r['sigma_R'])
+            d1 = {(r['stamp'], r['angle']): r for r in a1}
+            pairs = [(d1[(r['stamp'], r['angle'])], r) for r in a2 if (r['stamp'], r['angle']) in d1]
+            dnb = [abs(b['neighbour_flux'] - a['neighbour_flux']) / ((1 - R_DIM) * ftrue) for a, b in pairs]  # vs faint flux change
+            ef = np.array([r['F_fit'] - r['F_true'] for r in rec]); en = np.array([r['neighbour_flux'] for r in rec])
+            rho = float(np.corrcoef(ef, en - np.median(en))[0, 1]) if len(rec) > 3 else np.nan
+            ok = (len(a1) >= 6 and abs(np.median([r['ratio'] for r in a1]) - 1) <= 0.10 and abs(np.median([r['ratio'] for r in a2]) - 1) <= 0.10
+                  and s1 <= 0.20 and s2 <= 0.20 and cls_frac(rec, 1.0, 'normal') >= 0.9 and cls_frac(rec, R_DIM, 'dim') >= 0.9
+                  and (np.median(dnb) if dnb else 1) <= 0.10 and np.isfinite(rho) and abs(rho) < 0.9)
+            v2[str(e)] = {'n_stamps': len({r['stamp'] for r in rec}), 'n_trials_per_level': len(a1),
+                          'median_ratio_1': float(np.median([r['ratio'] for r in a1])) if a1 else None,
+                          'median_ratio_0398': float(np.median([r['ratio'] for r in a2])) if a2 else None,
+                          'robust_sigma_1': s1, 'robust_sigma_0398': s2,
+                          'frac_normal_1': cls_frac(rec, 1.0, 'normal'), 'frac_dim_0398': cls_frac(rec, R_DIM, 'dim'),
+                          'neighbour_change_over_faint_change_median': float(np.median(dnb)) if dnb else None,
+                          'corr_faint_err_vs_neighbour': rho, 'pass': bool(ok), 'trials': rec}
+            val_ok[e] = bool(ok); sig_val[e] = sv
+        src['validation']["V2'"] = v2
+    # ---- targets, own PSF (as v18) with the v19 error terms
+    for e in order:
+        ex = exps[e]; x, y = tgt[e]; srcs = [(x, y)]
+        if npix == 1625:
+            xn, yn = ex.pix(*src['neighbour_ref_radec'], *reg[e][:2]); srcs.append((xn, yn))
+            srcs += [(float(ex.cat['px'][i]), float(ex.cat['py'][i])) for i in range(len(ex.cat))
+                     if 1.5 < np.hypot(ex.cat['px'][i] - xn, ex.cat['py'][i] - yn) < 20 and np.hypot(ex.cat['px'][i] - x, ex.cat['py'][i] - y) > 1.5]
+        ff, fe, inf, err = fit(ex, ex.sub, srcs, box, ex.bad)
+        fpos = [fit(ex, ex.sub, [(x + a, y + b)] + srcs[1:], box, ex.bad)[0][0]
+                for a, b in ((sig_pos_px, 0), (-sig_pos_px, 0), (0, sig_pos_px), (0, -sig_pos_px))]
+        sc = fu[npix][e]['scale']
+        src['exposures'][str(e)] = {'nd': bool(tt[e]['nd']), 't': tt[e]['t'], 'seeing': ex.rec['seeing'], 'info': inf[0],
+                                    'flux_uJy': ff[0] * ex.k / sc, 'fit_err_uJy': fe[0] * ex.k / sc,
+                                    'position_term_uJy': float(np.nanmax(np.abs(np.array(fpos) - ff[0]))) * ex.k / sc,
+                                    'validation_pass': bool(val_ok.get(e)), 'validation_sigma_rel': sig_val.get(e),
+                                    'repeatability_sigma_rel': sig_rep, 'error': err,
+                                    'neighbour_flux_uJy': ff[1] * ex.k / sc if npix == 1625 else None}
+    for e in order:
+        r = src['exposures'][str(e)]
+        r['sigma_F_uJy'] = float(np.sqrt(r['fit_err_uJy'] ** 2 + (np.nan_to_num(r['validation_sigma_rel']) * abs(r['flux_uJy'])) ** 2
+                                         + (sig_rep * abs(r['flux_uJy'])) ** 2 + r['position_term_uJy'] ** 2))
+    good_br = [e for e in br if src['exposures'][str(e)]['validation_pass'] and src['exposures'][str(e)]['info'] >= MIN_INFO]
+    src['reference_detections'] = good_br
+    if len(good_br) >= 2:
+        fb = np.array([src['exposures'][str(e)]['flux_uJy'] for e in good_br]); sb = np.array([src['exposures'][str(e)]['sigma_F_uJy'] for e in good_br])
+        Fref = float(np.median(fb)); sref = float(max(np.std(fb, ddof=1), np.median(sb)) / np.sqrt(len(fb)))
+    else:
+        Fref = sref = np.nan
+    src['F_ref_uJy'], src['sigma_F_ref_uJy'] = Fref, sref
+    for e in order:
+        r = src['exposures'][str(e)]
+        R = r['flux_uJy'] / Fref; sR = float(abs(R) * np.hypot(r['sigma_F_uJy'] / abs(r['flux_uJy']), sref / Fref)) if np.isfinite(Fref) else np.nan
+        reasons = []
+        if not np.isfinite(Fref): reasons.append('fewer than 2 validated detections for the reference')
+        if not r['validation_pass']: reasons.append('validation failed for this exposure')
+        if r['info'] < MIN_INFO: reasons.append(f"PSF fraction on valid pixels {r['info']:.3f} < {MIN_INFO}")
+        if r['error']: reasons.append('fit error')
+        r.update(R=float(R), sigma_R=sR, reasons=reasons, cls='unknown' if reasons else classify(R, sR))
+        r['excludes_1mag_drop'] = bool(not reasons and (R - R_DIM) / sR >= NSIG)
+        r['in_reference'] = e in good_br
+    lo, hi = chk[npix]['run']
+    dim = [e for e in nd if src['exposures'][str(e)]['cls'] == 'dim' and lo <= tt[e]['t'] <= hi]
+    nights = {int(np.floor(tt[e]['t'] + 0.2)) for e in dim}
+    bef = any(src['exposures'][str(e)]['cls'] == 'normal' and tt[e]['t'] < lo for e in order)
+    aft = any(src['exposures'][str(e)]['cls'] == 'normal' and tt[e]['t'] > hi for e in order)
+    src['verdict'] = ('real dimming evidence' if len(dim) >= 2 and len(nights) >= 2 and bef and aft else
+                      'no dimming in any ND' if all(src['exposures'][str(e)]['cls'] == 'normal' for e in nd) else 'undetermined')
+    out['sources'][str(npix)] = src
+out['seconds'] = round(time.time() - t0, 1)
+json.dump(out, open(OUT, 'w'), indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o)); open(OUT, 'a').write('\n')
+print('seconds', out['seconds'])

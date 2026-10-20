@@ -5440,6 +5440,18 @@ confining radiation at a throat is found.
   - **Decision:** both sources stay undetermined and this follow-up is closed. Rejected: tuning the PSF choice
     after the validation failed (owner rule).
   - **Revisit if:** a seeing-matched independent PSF, or difference-image forced photometry, becomes available.
+- **Addendum 2026-10-20 (v19, `results/w3_ztf/v19/RESULT.md`):**
+  - **Finding:** v18's validation mostly tested cross-exposure PSF mismatch. It is relabelled a stress test.
+  - **Decision:** validate with the measurement's own conditions. That means:
+    - the own-exposure PSF;
+    - real controls at a matched sub-pixel phase;
+    - real-stamp injections with their noise counted;
+    - a reference from validated detections only;
+    - a cross-exposure repeatability term.
+  - **Result:** judgeable NDs 1 of 9 (1624) and 2 of 3 (1625), all normal. The v18 1624 / 206251129 claim is
+    withdrawn. Both sources stay undetermined.
+  - **Rejected:** iterating further methods on these two sources (owner rule).
+  - **Revisit if:** difference-image forced photometry, or the official PSF-star lists, become available.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
