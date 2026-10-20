@@ -286,6 +286,41 @@ def test_v13_edge_time_uses_time_not_count():
         wz.EDGE_RULE = "count"
 
 
+def test_v23_edge_bounds_gap_is_insufficient_not_fast():
+    # run on days 40-59 (span 19 d, threshold 4.75 d); baseline detections elsewhere
+    wz.EDGE_RULE, wz.EDGE_FRAC = "bounds", 0.25
+    try:
+        dim = set(range(40, 60))
+        base = [(*x, 0.0) for x in mk(n=120, nd_at=dim)]
+        base = [(x[0], x[1], x[2], 6.0, *x[4:]) for x in base]
+        # dense sampling, no intermediate: both edges bounded by 1 d -> fast
+        v = wz.vet(base, (40, 59), [], COV)
+        assert v["edge_class"] == "fast" and v["sharp_ok"] and v["edge_post_max_d"] == 1.0
+        assert not v["insufficient"] and v["pass"]
+        # a 10-d gap after the run (days 60-69 absent), no intermediate: insufficient, not fast
+        gap = [x for i, x in enumerate(base) if not 60 <= i < 70]
+        v = wz.vet(gap, (40, 59), [], COV)
+        assert v["edge_post_d"] == 0.0 and v["edge_post_max_d"] == 11.0
+        assert v["edge_post_class"] == "insufficient" and v["edge_pre_class"] == "fast"
+        assert v["edge_class"] == "insufficient" and not v["sharp_ok"]
+        assert v["insufficient"] and not v["pass"]
+        # the same gap under v13 records 0 d and passes
+        wz.EDGE_RULE = "time"
+        assert wz.vet(gap, (40, 59), [], COV)["sharp_ok"]
+        wz.EDGE_RULE = "bounds"
+        # a significant intermediate 8 d after the run: slow (L > threshold), as in v13
+        slow = [(x[0], 0.6, *x[2:]) if i == 67 else x for i, x in enumerate(base)]
+        v = wz.vet(slow, (40, 59), [], COV)
+        assert v["edge_post_class"] == "slow" and v["edge_class"] == "slow"
+        assert not v["insufficient"]
+        # an ambiguous epoch (0.3 <= dm < 0.3 + 2 sigma) is neither normal nor intermediate
+        amb = [(x[0], 0.35, x[2], 0.5, *x[4:]) if i == 60 else x for i, x in enumerate(base)]
+        v = wz.vet(amb, (40, 59), [], COV)
+        assert v["edge_post_d"] == 0.0 and v["edge_post_max_d"] == 2.0 and v["sharp_ok"]
+    finally:
+        wz.EDGE_RULE = "count"
+
+
 def test_v15_configure_twice_does_not_stack():
     saved = (wz.LC_PIX, wz.LC_PART, wz.OBJ_PART, wz.CACHE, wz.SAMPLE, wz.VDIR, wz.VERSION, wz.N_MAX)
     try:

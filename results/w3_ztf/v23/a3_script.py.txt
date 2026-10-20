@@ -1,0 +1,19 @@
+# v23 PLAN A3: Wilson 95 % intervals of the v22 fade pass fractions (committed decision files) and of the A2
+# fixed-event comparison; the A decision rule (>= 50 % of 4991's passing fades depend on a zero-day side).
+import json, math
+def wilson(k, n, z=1.959964):
+    p = k / n; d = 1 + z * z / n; c = (p + z * z / (2 * n)) / d; h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return [round(c - h, 4), round(c + h, 4)]
+q = json.load(open('results/w3_ztf/v22/queue.json'))['queue']
+out = {'label': 'derived (v22 decision files; v23 diag_summary.json)', 'v22_fade': {}}
+for a in q:
+    c = json.load(open(f"results/w3_ztf/v22/{a['npix']}/injections_v22_time.json"))['controls']['fade']
+    out['v22_fade'][a['npix']] = {'passed': c['passed_vetting'], 'n': c['n'], 'wilson95': wilson(c['passed_vetting'], c['n'])}
+d = {p: json.load(open(f'results/w3_ztf/v23/dev{p}/diag_summary.json')) for p in (4991, 2344)}
+out['fixed_events'] = {p: {**d[p]['fixed_events'], 'wilson95': wilson(d[p]['fixed_events']['passed_vetting'], 1000)} for p in d}
+f = d[4991]['fade']
+out['decision_A'] = {'passing_fades_4991': f['recovered_or_passed'], 'with_zero_day_side': f['passing_events_with_zero_day_side'],
+                     'fraction': round(f['passing_events_with_zero_day_side'] / f['recovered_or_passed'], 3), 'threshold': 0.5}
+out['decision_A']['mechanism_important'] = out['decision_A']['fraction'] >= 0.5
+json.dump(out, open('results/w3_ztf/v23/diag_a3.json', 'w'), indent=1); open('results/w3_ztf/v23/diag_a3.json', 'a').write('\n')
+print(json.dumps(out))

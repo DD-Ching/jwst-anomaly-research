@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 ZTF v23: fades pass the v13 edge test mostly through unmeasured edges; the one pre-registered fix fails its gate; no validation, no search
+- **Diagnosis** (development analysis; 4991 and 2344 v22 calibration data re-read, the v22 draws reproduced exactly):
+  - 129 / 138 and 76 / 81 passing fades have a "zero-day" side: no significant intermediate point within one span,
+    and no normal detection within 0.25 × span;
+  - the post side lacks measurement through noise-level points, unusable exposures or no exposures;
+  - 35–99 recovered W3 per cell rely on the same convention;
+  - the same 1,000 fade events pass 142 in 4991 and 75 in 2344, so the area difference is not from event draws.
+- **Bounds rule** (fixed before the diagnosis): fades 138 → 0 and 81 → 0, but W3 cells fall to 43–114 / 200 (17 of
+  20 below 100). The gate failed, so method changes stopped. No area was validated or searched.
+- **Cost:** 1,221 MB and about 18 min of processing (`results/w3_ztf/v23/RESULT.md`).
+- **Next:** a method decision on edge information is the owner's.
 ## 2026-10-20: W3 ZTF fade control: per-area rates are real spread, not predicted by inventory metadata; post hoc they cluster by sky region
 - **Why:** v22 failed 7 of 8 areas on the fade control (10 % limit). Plan frozen first
   (`results/w3_ztf/fade_diag/PLAN.md`); offline on the committed v16–v22 `decision.json` and inventories.

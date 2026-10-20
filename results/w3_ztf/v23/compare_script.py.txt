@@ -1,0 +1,26 @@
+# v23 PLAN B: v13 ("time") vs bounds on the same events, seeds and noise (A0 draws) in 4991 and 2344, and the B gate
+# (every cell >= 100 / 200 and fade <= 100 / 1,000 in both areas, plus the other v22 controls <= 10 %).
+import json
+out = {'label': 'derived; simulated injections (v22 draws replayed); development comparison', 'areas': {}}
+ok = True
+for p in (4991, 2344):
+    a = json.load(open(f'results/w3_ztf/v23/dev{p}/injections_v23_time.json'))
+    b = json.load(open(f'results/w3_ztf/v23/dev{p}/injections_v23_bounds.json'))
+    cells = {}
+    for x, y in zip(a['w3'], b['w3']):
+        k = f"rho{x['rho']}_blend{x['blend']:g}_tE{x['tE']:g}"
+        cells[k] = {'n': x['n'], 'v13': x['recovered'], 'bounds': y['recovered'], 'lost': x['recovered'] - y['recovered'],
+                    'bounds_insufficient': y['insufficient'], 'bounds_ok': y['recovered'] >= 0.5 * y['n']}
+    ctrl = {k: {'n': a['controls'][k]['n'], 'v13': a['controls'][k]['passed_vetting'], 'bounds': b['controls'][k]['passed_vetting'],
+                'bounds_insufficient': b['controls'][k]['insufficient'],
+                'bounds_ok': b['controls'][k]['passed_vetting'] <= 0.1 * b['controls'][k]['n']} for k in a['controls']}
+    ok_area = all(c['bounds_ok'] for c in cells.values()) and all(c['bounds_ok'] for c in ctrl.values())
+    ok = ok and ok_area
+    out['areas'][p] = {'cells': cells, 'controls': ctrl, 'cells_below_100': sum(not c['bounds_ok'] for c in cells.values()),
+                       'bounds_recovered_range': [min(c['bounds'] for c in cells.values()), max(c['bounds'] for c in cells.values())],
+                       'lost_range': [min(c['lost'] for c in cells.values()), max(c['lost'] for c in cells.values())],
+                       'gate_ok': ok_area}
+out['gate_B_passed'] = ok
+out['next'] = 'C (validation)' if ok else 'stop method changes (PLAN B); no validation, no search'
+json.dump(out, open('results/w3_ztf/v23/compare.json', 'w'), indent=1); open('results/w3_ztf/v23/compare.json', 'a').write('\n')
+print(json.dumps({p: {k: v for k, v in a.items() if k not in ('cells', 'controls')} for p, a in out['areas'].items()}), out['gate_B_passed'])

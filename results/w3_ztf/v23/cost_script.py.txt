@@ -1,0 +1,27 @@
+# v23 cost record: light-curve partitions streamed by fetch (parquet metadata, as in v22), objects columns read for the
+# comparison stars (parquet metadata), TAP bytes (exposures_summary.json); A0 reproduction check; stage times are
+# copied from the session's `date -u` prints (hand-logged, not machine-recorded).
+import json, sys
+sys.path.insert(0, 'scripts')
+import pyarrow.parquet as pq
+import w3_ztf as wz
+out = {'label': 'derived (parquet metadata; exposures_summary.json); times hand-logged from the session', 'areas': {}}
+for p in (4991, 2344):
+    wz.configure(p, f'v23/dev{p}')
+    md = pq.ParquetFile(wz.s3().open(wz.LC_PART)).metadata
+    lc = sum(md.row_group(i).column(j).total_compressed_size for i in range(md.num_row_groups) for j in range(md.num_columns)
+             if md.row_group(i).column(j).path_in_schema.split('.')[0] in ('objectid', 'filterid', 'fieldid', 'rcid', 'objra', 'objdec', 'lightcurve')) / 1e6
+    mo = pq.ParquetFile(wz.s3().open(wz.OBJ_PART)).metadata
+    ob = sum(mo.row_group(i).column(j).total_compressed_size for i in range(mo.num_row_groups) for j in range(mo.num_columns)
+             if mo.row_group(i).column(j).path_in_schema in ('oid', 'ra', 'dec', 'refmag', 'transient')) / 1e6
+    tap = json.load(open(f'results/w3_ztf/v23/dev{p}/exposures_summary.json'))['tap_bytes'] / 1e6
+    a = json.load(open(f'results/w3_ztf/v22/{p}/injections_v22_time.json')); b = json.load(open(f'results/w3_ztf/v23/dev{p}/injections_v23_time.json'))
+    d1 = json.load(open(f'results/w3_ztf/v22/{p}/dump_time.json'))['rows']; d2 = json.load(open(f'results/w3_ztf/v23/dev{p}/dump_time.json'))['rows']
+    same = all((x['flagged'], x['recovered']) == (y['flagged'], y['recovered']) for x, y in zip(a['w3'], b['w3'])) and a['controls'] == b['controls']
+    out['areas'][p] = {'lc_mb': round(lc, 1), 'objects_mb': round(ob, 1), 'tap_mb': round(tap, 1), 'a0_counts_equal': same, 'a0_dump_rows_equal': d1 == d2}
+out['total_mb'] = round(sum(sum(v[k] for k in ('lc_mb', 'objects_mb', 'tap_mb')) for v in out['areas'].values()), 1)
+out['stages_utc'] = {'start': '10:18', 'plan_commit': '10:22:21 (da3411b)', 'setup_fetch_exposures': '10:22:50-10:25:20 (approx.)',
+                     'a0_reproduction': '10:25:49-10:27:36', 'a1_diagnosis': '10:28:33-10:30:24', 'a2_fixed_events': '10:30:32-10:32:31',
+                     'rule_commit': '10:33:57 (fa8f19d)', 'b_comparison': '10:34:07-10:35:54'}
+json.dump(out, open('results/w3_ztf/v23/cost.json', 'w'), indent=1); open('results/w3_ztf/v23/cost.json', 'a').write('\n')
+print(json.dumps(out))
