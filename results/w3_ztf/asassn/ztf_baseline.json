@@ -38,8 +38,8 @@
      }
     },
     "undecided_side_classes": {
-     "A": 10,
-     "B": 5,
+     "B": 2,
+     "A": 7,
      "C1": 2
     }
    }
@@ -83,9 +83,9 @@
      }
     },
     "undecided_side_classes": {
-     "A": 9,
-     "C1": 3,
-     "B": 4
+     "A": 3,
+     "C1": 1,
+     "B": 3
     }
    }
   }

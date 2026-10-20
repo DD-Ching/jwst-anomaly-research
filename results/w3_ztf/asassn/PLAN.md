@@ -1,6 +1,7 @@
 # W3 ZTF × ASAS-SN — can ASAS-SN Sky Patrol supply the missing edge information? (one development trial)
 
-Plan fixed 2026-10-20, 22:10 UTC (commit 5ac8dc2 at 22:10:58), before any ASAS-SN flux is read. Owner authorization after #414: 3 h, ≤ 2 GB, one
+Plan fixed 2026-10-20, 22:10 UTC (commit 5ac8dc2 at 22:10:58; **post hoc:** this time stamp first read "22:12", later than its own commit, and was
+corrected in 4df1b86 after probe 1 and the selection had run; no content change), before any ASAS-SN flux is read. Owner authorization after #414: 3 h, ≤ 2 GB, one
 small measured trial. Uses the official client `skypatrol` (pyasassn 0.6.21) and the existing W3 code. ZTF psfcat
 restoration stays closed (v24); 8124, 8126, 1624, 1625 untouched; no search group read.
 

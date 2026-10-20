@@ -19,6 +19,8 @@ for p in ('4991', '2344'):
             cnt[rule] = c
         sides = {}
         for e in es:
+            if e['bounds'] != 'edge_insufficient':  # review fix: sides of bounds-insufficient events only
+                continue
             for r in e.get('runs', []):
                 if r['others_ok']:
                     for s_ in ('pre', 'post'):
