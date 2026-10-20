@@ -81,3 +81,27 @@ Fixed check items for the 8124 calibration survivor 634205400002482, 9.9″ from
 - **If a reliable real dimming appears:** stop starting new areas, and check the other band, independent exposures
   and ordinary explanations.
 - The last 30 min are kept for review and records.
+
+## E. Frozen queue (added after the inventory, before any light curve; `queue.json`, `objects.json`)
+- **Inventory:** 31 candidates, 25 qualifying, all 25 with **no field shared** with v1–v21 samples.
+  - 56,519 qualifying unused groups, 44,019 searchable (this round's scope only).
+  - The inventory took 49.0 min against the 30-min cap (deviation: 320k TAP rows and the sampling computation).
+  - It downloaded 759.7 MB: objects tables 698.2 MB (parquet metadata) and TAP 61.6 MB.
+
+| pos | Npix | worst cell | calibration / search | LC MB | new fields (none shared) | seed |
+|---|---|---|---|---|---|---|
+| 1 | 1853 | 0.513 | 500 / 1,531 | 275.0 | 816, 1820, 1847, 1848 | 40000 |
+| 2 | 1150 | 0.526 | 500 / 1,074 | 211.5 | 619, 1615, 1616, 1664 | 41000 |
+| 3 | 1148 | 0.5485 | 500 / 946 | 210.9 | 619, 620, 1615, 1616, 1664 | 42000 |
+| 4 | 1151 | 0.5475 | 500 / 981 | 225.2 | 619, 620, 667, 1664 | 43000 |
+| 5 | 5054 | 0.641 | 500 / 3,381 | 816.6 | 646, 1643, 1690 | 44000 |
+| 6 | 4991 | 0.627 | 500 / 2,345 | 573.4 | 601, 602, 649, 1646, 1647 | 45000 |
+| 7 | 2344 | 0.6115 | 500 / 1,882 | 465.2 | 632, 678, 679, 1676 | 46000 |
+| 8 | 4989 | 0.6295 | 500 / 2,181 | 541.1 | 601, 602, 1646, 1647 | 47000 |
+
+- **Fields between queued areas:** 1150, 1148 and 1151 share fields 619, 1615, 1616 and 1664, and 4991 and 4989
+  share 601, 602, 1646 and 1647. Their exposures are therefore not independent of each other.
+- **Samples:** 0 groups dropped for a shared objectid.
+- **Totals:** at most 15,501 searchable groups if all 8 pass.
+- **Projected download:** 759.7 + 3,318.9 + 8 × 30 ≈ 4,319 MB, under 5,850 MB.
+- **No new area after 09:40 UTC.**

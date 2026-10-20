@@ -1,0 +1,6 @@
+{
+ "label": "derived; inventory downloads (objects from parquet metadata of the read columns, TAP measured)",
+ "objects_mb": 759.7,
+ "objects_only_mb": 698.2,
+ "tap_mb": 61.6
+}
