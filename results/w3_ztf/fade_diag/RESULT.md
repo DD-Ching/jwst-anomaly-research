@@ -26,8 +26,9 @@ Plan: `PLAN.md` (committed before computing). Scripts: `diag_script.py.txt` (fro
   2812/2813 and 2876–2879 have no tested sibling.
 
 ## What this changes
-- Nothing in the frozen calibration, the 10 % limit or any result. The v22 "7 of 8 fail" mostly reflects that
-  the v22 queue drew several partitions from two high-rate parents (287, 622 in v20; 287, 1247 in v22).
+- Nothing in the frozen calibration, the 10 % limit or any result. Post hoc reading: 5 of v22's 7 fade failures
+  come from two high-rate parents (287: 1148/1150/1151; 1247: 4989/4991), as v20's 4 come from one (622:
+  2488–2491).
 - **Testable prediction for the next round (to be frozen in its plan, not adopted here):** siblings of a
   fade-passing parent pass the fade control more often than siblings of a failing parent. A v23 queue ordered
   "untested parents and passing-parent siblings first" would test it (2345–2347 predicted ≤ 10 %; 1149 and
