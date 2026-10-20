@@ -379,6 +379,32 @@ MACS0308_RELICS_ZITRIN: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS Lenstool v1 maps of RXC J0018.5+1626 (MACS J0018.5+1626; z_lens 0.546, Zitrin et al. 2011,
+#: arXiv:1002.0521; HLSP DOI 10.17909/T9SP45, accessed 2026-10-20), deflection in arcsec at
+#: D_LS/D_S = 1. The only model in the HLSP; the ``arcs`` primary.
+_RELICS_RXC0018 = (
+    "https://archive.stsci.edu/hlsps/relics/rxc0018p16/models/lenstool/v1/"
+    "hlsp_relics_model_model_rxc0018p16_lenstool_v1"
+)
+RXC0018_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_RXC0018}_x-arcsec-deflect.fits",
+        "85510c1791fe341366638b1236361e99a2066b47c24618e2f574c4ca07418b54",
+    ),
+    "alpha_y": (
+        f"{_RELICS_RXC0018}_y-arcsec-deflect.fits",
+        "dbf3451c987f00a0ca68215179b8564827c12d70847798b5b30b73e51192dea0",
+    ),
+    "kappa_map": (
+        f"{_RELICS_RXC0018}_kappa.fits",
+        "ea5877fd80c918b60e3d2d1d1ec75d0e6b332114a652be0c9e748b1268ea3bf6",
+    ),
+    "mag_z2": (
+        f"{_RELICS_RXC0018}_z02-magnif.fits",
+        "166fa66e06a16ee8e95a23d61778084a0bce7e2f85f75511b9621fc05565310d",
+    ),
+}
+
 #: RELICS Lenstool v1 maps of MACS J0417.5-1154 (Mahler et al. 2019, MNRAS 485, 3954; HLSP DOI
 #: 10.17909/T9SP45, accessed 2026-10-16), deflection in arcsec at D_LS/D_S = 1. Lens redshift 0.443.
 _RELICS_MACS0417 = (

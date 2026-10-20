@@ -127,7 +127,8 @@ def _run(model: str, out: Path, catalog: Path, photoz: Path) -> dict:
 def decide(primary: str, second: str, out: Path, catalog: Path, photoz: Path, plan: str) -> dict:
     """Run both models, apply the frozen outcome rule and list the deciding run's anti rows with
     the other model's class; writes ``out/summary.json`` and returns it."""
-    runs = {m: _run(m, out, catalog, photoz) for m in (primary, second)}
+    # dict.fromkeys: a one-model field passes the same name twice and is run once
+    runs = {m: _run(m, out, catalog, photoz) for m in dict.fromkeys((primary, second))}
     res = outcome(runs[primary], runs[second])
     summary = {
         "plan": plan,

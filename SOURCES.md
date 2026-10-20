@@ -592,6 +592,17 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     Lenstool v1 x/y-arcsec-deflect, kappa, z02-magnif (sha256 in `lensmodel.RXC0600_RELICS_*`).
   - z_lens 0.43: Fujimoto et al. 2021, arXiv:2101.01937 (ALCS [CII] at z = 6.0719 behind the cluster). Newer model:
     Fujimoto et al. 2024, arXiv:2404.03286 (maps not found public on 2026-10-18).
+- **RXC J0018.5+1626 (MACS J0018.5+1626, Cl 0016+16)** (`arcs` only; accessed 2026-10-20).
+  - Data: MAST 6882 `jw06882-o001_t001_nircam_clear-f200w_cat.ecsv` (PUBLIC; sha256 in
+    `results/arcs/rxc0018-relics/summary.json`); i2d stamps by S3 byte range from `s3://stpubdata/jwst/public/jw06882/L3/t/o001/`.
+  - DJA v7.5 photo-z: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/rj0018p1626-grizli-v7.5-fix.photoz.tar.gz
+    (31,118,096 B), member `rj0018p1626-grizli-v7.5-fix.eazypy.zout.fits`, sha256
+    `2a7f9f8eb852dea00f0ff165acc493667d161887f5fee3d255efeca4ac8d604a`.
+  - RELICS model: https://archive.stsci.edu/hlsps/relics/rxc0018p16/models/lenstool/v1/ (DOI 10.17909/T9SP45; the
+    only model directory): x/y-arcsec-deflect, kappa, z02-magnif (sha256 in `lensmodel.RXC0018_RELICS_LENSTOOL`).
+    On 2026-10-20 archive.stsci.edu sent no intermediate certificate; the leaf's AIA intermediate
+    (http://repository.emsign.com/certs/EEEMIncommonOVG2C.crt) added to the CA file completes the chain.
+  - z_lens 0.546: Zitrin et al. 2011, arXiv:1002.0521 (as MACS J0018.5+1626); a JWST-era model was not searched for.
 - **MAST stale product sizes** after the 2026-10-01 reprocessing (PR #29): `acquire` checks the Download
   service's Content-Length.
 ## HFF CATS lens models (accessed 2026-10-08; D-035)

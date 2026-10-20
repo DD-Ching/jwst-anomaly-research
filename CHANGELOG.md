@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: `arcs` on RXC J0018+16: does not replicate the S1063 anti excess, with almost no power
+- **Why:** one more independent field for the S1063 replication tally; the 2026-10-18 survey missed it (DJA name
+  `rj0018p1626`). Plan frozen first (`results/arcs/rxc0018-relics/PLAN.md`).
+- **Result (`results/arcs/rxc0018-relics/RESULT.md`):** RELICS Lenstool v1 (only model) passes `validate`; 4
+  strong-shear background rows, 3 aligned (control passes), 0 anti vs 0.095 expected (P 1.0). Post hoc: 21 / 30
+  strong-shear rows have no DJA photo-z within 0.3″, so the test has almost no power. Sheet looked at.
+- **Code:** `arcs_rxj2129.decide` runs a repeated model name once (one-model fields).
+- **Access:** archive.stsci.edu sent an incomplete TLS chain; completed with the leaf's AIA intermediate (SOURCES.md).
+- **Handoff:** tally now MACS0417, WHL0137, RXC J0600, MACS0308, RXC J0018 do not replicate; three no result; one
+  explained. A further replication needs a deeper photo-z or a JWST-era model.
+
 ## 2026-10-20: W3 macro-shear follow-up review: saddle dimming deeper than the tracks showed; umbra not elliptical
 - **Why:** #403 merged before a /code-review of its final diff; this run's review found wording the stored data
   did not support. Re-run of `scripts/w3_macro_shear.py` (simulated; `results/w3_macro_shear/RESULT.md`).
