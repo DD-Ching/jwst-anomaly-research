@@ -2243,7 +2243,7 @@ D-034's rules now remove these automatically.
 
 **Evidence.**
 - `validate`: χ² 146.64 against 146.60.
-- `images`, after D-034: absent only for 700.1, which the model reproduces at none of the sampled z = 1, 1.5, 2, 3, 5 (a finer z scan is open).
+- `images`, after D-034: absent only for 700.1, which the model reproduces at none of the sampled z = 1, 1.5, 2, 3, 5 (finer scan: addendum 2026-10-20 at the end of this entry).
 - `fluxratio`: 30 consistent, 0 under- or overluminous, 3 chromatic (a 602.1 blend).
 - `radial`: 35 peaks against a random mean of 50.4; p ≥ 0.575.
 - Cutouts were inspected for every flag.
@@ -2257,6 +2257,14 @@ D-034's rules now remove these automatically.
 **Revisit if.**
 - `bayes.dat` position spreads do not cover 34.1 / 700.1.
 - An independent model (UNCOVER v2.0, or the CATS v4.1 maps of D-035) predicts a bright image where none is seen.
+- **Addendum 2026-10-20 (700.1 fine z scan, `results/lens_consistency/a2744_s700_zscan/`):** frozen outcome B, "not
+  reproduced at any z". Bergamini+23 gives 700.1a and 700.1b separate images at none of z 1.000–4.000 (step 0.025);
+  at z 1.075–1.275 they share one image (μ ≈ −3) and 700.1c is reproduced; above z 1.3 the back-traced sources spread.
+  The same rule reproduces 39 / 40 fixed-z systems (failure: the known 34.1 fold pair). So the residual is a missing
+  critical curve between a and b in the infall region, not the fitted z. In the stamps a/b are the two ends of one
+  thin 1.7″ feature (two images, or one image catalogued as two: untested). The system stays model-limited and is
+  not a candidate. Revisit if a model with constraints near (3.579, −30.358) appears, or if UNCOVER v2.0 is scanned the
+  same way.
 
 ## D-037 MACS1149 screens: null; repeated-pair, fitted-redshift and model-dependent-μ rules (2026-10-08)
 

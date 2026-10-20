@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: Abell 2744 system 700.1: no redshift reproduces it in Bergamini+23 (D-036 addendum)
+- **Why:** D-036 left "a finer z scan is open" for 700.1, which Bergamini+23 reproduced at none of z = 1, 1.5, 2, 3,
+  5. Is the failure a fitted-redshift artefact? Plan frozen first (`results/lens_consistency/a2744_s700_zscan/PLAN.md`).
+- **Result (`RESULT.md`, `summary.json`):** frozen outcome B, "not reproduced at any z" (121 z values, 1.000–4.000).
+  Known cases: the same rule reproduces 39 / 40 fixed-z systems; the failure is the known 34.1 fold pair. At z
+  1.075–1.275 (fitted 1.217) 700.1a/b share one predicted image (μ ≈ −3) and 700.1c is reproduced; best rms 8.28″
+  at z 1.10. Sheet looked at: a/b are the two ends of one thin, straight 1.7″ feature, and the model's single
+  image (μ −2.8) lies on it; two images or one is untested.
+- **Reading:** the residual is a missing critical curve between 700.1a and 700.1b, 160″ out in the infall region,
+  not the fitted z. Model-limited system, not a candidate (one model; UNCOVER not re-scanned).
+- **New:** `scripts/a2744_s700.py` (z scan with known-case check and `--sheet`), `tests/test_a2744_s700.py`.
+- **Failed approach:** stamps drawn north-up misplace markers on the rotated UNCOVER mosaic; plot on the stamper's
+  sky offsets (`xx`, `yy`).
+- **Handoff:** unchanged elsewhere: the other lines wait on owner decisions (#409 and the other needs-human PRs);
+  #374 waits for a green weekly run. Optional next for 700.1: the same scan on the UNCOVER v2.0 maps.
+
 ## 2026-10-20: MACS1149 system 16: no published spectroscopic redshift; D-037 unchanged
 - **Why:** D-037's revisit condition (a spec-z for 16.1 / 16.2 decides whether the flagged extra image is a
   fitted-redshift artefact); a cheap catalogue check while the other lines wait on owner decisions. Plan frozen first

@@ -1,6 +1,6 @@
 """Abell 2744 system 700.1: fine source-redshift scan in Bergamini+23.
 
-D-034 left open whether Bergamini+23 (``abell2744-bergamini23``, z of 700.1 free, best fit 1.217)
+D-036 left open whether Bergamini+23 (``abell2744-bergamini23``, z of 700.1 free, best fit 1.217)
 reproduces 700.1a/b/c as three separate images at any redshift; z = 1, 1.5, 2, 3, 5 did not.
 Plan (frozen first): ``results/lens_consistency/a2744_s700_zscan/PLAN.md``.
 
@@ -36,6 +36,7 @@ SYSTEM = "700.1"
 Z_GRID = np.round(np.arange(1.0, 4.0001, 0.025), 3)  # source redshifts scanned
 MATCH_ARCSEC = 1.0  # each catalogued image needs its own predicted image this close (ASSUMPTION)
 GRID_STEP = 0.25
+SHEET_BANDS = ("f150w", "f200w", "f444w")
 DEFAULT_OUT = Path("results/lens_consistency/a2744_s700_zscan")
 
 
@@ -138,9 +139,61 @@ def scan(model, cat: Table, grid) -> list[dict]:
     return rows
 
 
+def _stretch(img: np.ndarray) -> np.ndarray:
+    """arcsinh of the stamp in units of its robust noise (median-subtracted, MAD sigma)."""
+    med = np.nanmedian(img)
+    sig = 1.4826 * np.nanmedian(np.abs(img - med))
+    return np.arcsinh((img - med) / (sig if sig > 0 else 1.0))
+
+
+def sheet(cat: Table, rows: list[dict], model, grid, path: Path) -> None:
+    """F150W / F200W / F444W stamps around 700.1a/b and 700.1c with the catalogued positions
+    (circles) and the predicted images at the best-rms z (crosses)."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    best = min((r for r in rows if r["rms_arcsec"] is not None), key=lambda r: r["rms_arcsec"])
+    pred, _ = solve(model, cat, grid, best["z"])
+    centres = {
+        "700.1a/b": (float(np.mean(cat["ra"][:2])), float(np.mean(cat["dec"][:2])), 4.0),
+        "700.1c": (float(cat["ra"][2]), float(cat["dec"][2]), 4.0),
+    }
+    fig, axes = plt.subplots(2, len(SHEET_BANDS), figsize=(3.2 * len(SHEET_BANDS), 6.4))
+    for j, band in enumerate(SHEET_BANDS):
+        stamper, close = lc.image_stamper(au.S3_I2D.format(band), 4.0)
+        try:
+            for i, (name, (ra0, dec0, half)) in enumerate(centres.items()):
+                img, _, xx, yy = stamper(ra0, dec0)
+                ax = axes[i, j]
+                # the mosaic is not north-up: plot on the stamper's sky offsets (West = +x)
+                ax.pcolormesh(xx, yy, _stretch(img), cmap="gray_r", vmin=-1, vmax=8)
+                ax.set_xlim(-half, half)
+                ax.set_ylim(-half, half)
+                ax.set_aspect("equal")
+                cos = np.cos(np.deg2rad(dec0))
+                for t, mk, col in ((cat, "o", "tab:blue"), (pred, "x", "tab:red")):
+                    dx = -(np.asarray(t["ra"], float) - ra0) * cos * 3600.0
+                    dy = (np.asarray(t["dec"], float) - dec0) * 3600.0
+                    inside = (np.abs(dx) < half) & (np.abs(dy) < half)
+                    style = {"facecolors": "none", "edgecolors": col} if mk == "o" else {"c": col}
+                    ax.scatter(dx[inside], dy[inside], marker=mk, s=60, **style)
+                ax.set_title(f"{name} {band.upper()}", fontsize=9)
+                ax.set_xticks([])
+                ax.set_yticks([])
+        finally:
+            close()
+    fig.suptitle(f'Abell 2744 700.1: catalogued (o), Bergamini+23 at z {best["z"]} (x); 8" stamps')
+    fig.tight_layout()
+    fig.savefig(path, dpi=80)
+    plt.close(fig)
+
+
 def main(argv=None) -> dict:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    ap.add_argument("--sheet", action="store_true", help="also write sheet.png (S3 range reads)")
     args = ap.parse_args(argv)
     model, files, par = lc.load_model(MODEL)
     arcs, _ = lc.image_list(MODEL, files, par)
@@ -163,6 +216,8 @@ def main(argv=None) -> dict:
     }
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "summary.json").write_text(json.dumps(out, indent=1) + "\n")
+    if args.sheet:
+        sheet(cat, rows, model, grid, args.out / "sheet.png")
     print(json.dumps({k: v for k, v in out.items() if k != "rows"}, indent=1))
     return out
 
