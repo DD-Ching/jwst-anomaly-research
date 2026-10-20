@@ -13,6 +13,8 @@ Plan `PLAN.md` (frozen before any catalogue was read). No images used; catalogue
 
 - Not system 16: `1208_5106431` (Treu 26.2) 1.6″ from 16.1 has grade 2, z 3.189; it is a different catalogued
   system and is not used.
+- Grillo et al. 2016 (MUSE 294.A-5032) has no VizieR table under J/ApJ/822/78; its redshifts are covered here through
+  the Treu et al. 2016 compilation (`r_zspec` 2–4), not read from the paper itself.
 - CANUCS 5106117 (the possible far image, D-037) has no row in the DJA table.
 - The 16.2 spectrum file could not be read (S3 path 403), so it was not inspected by eye.
 

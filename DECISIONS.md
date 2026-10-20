@@ -2320,8 +2320,8 @@ CATS-fitted z = 4.419.
 - **Addendum 2026-10-20 (spec-z check, `results/lens_consistency/macs1149_s16_specz/`):** frozen outcome *not
   decided*. No spectroscopic z for 16.1 / 16.2 in Treu et al. 2016 (their 27.1 / 27.2, compiling GLASS and MUSE
   redshifts) or in the DJA NIRSpec v4.4 table (16.2 has an ungraded CANUCS PRISM spectrum, `z_best` −1; 16.1 and
-  5106117 have none). Post hoc: DJA's EAZY photo-z of 16.2 is 2.79, a second photometric estimate inside both
-  models' merging ranges (exploratory). Revisit condition unchanged; a DJA grade of `1208_5114276` would meet it.
+  5106117 have none). Post hoc: DJA's EAZY photo-z of 16.2 is 2.79, inside both models' merging
+  ranges (CANUCS DR1's 2.25 is inside the CATS range only; exploratory). Revisit condition unchanged; a DJA grade of `1208_5114276` would meet it.
 
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
