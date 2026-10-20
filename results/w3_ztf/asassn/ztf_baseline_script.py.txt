@@ -1,0 +1,30 @@
+# ZTF-only baseline for the 40 selected stars (no new data): from the committed v24 replay of the v23 events
+# (../v24/step12_events_<npix>.json.gz), the events whose carrier is a selected star, by outcome under v13 and bounds,
+# and the class of each undecided side (A/B/C1/C2/D). This is the "ZTF alone" column a later ASAS-SN read compares with.
+import gzip, json
+sel = json.load(open('results/w3_ztf/asassn/selection.json'))
+out = {'label': 'derived (../v24/step12_events_*.json.gz; selection.json); simulated events', 'areas': {}}
+for p in ('4991', '2344'):
+    keys = {s['key'] for s in sel['areas'][p]['selected']}
+    ev = json.loads(gzip.open(f'results/w3_ztf/v24/step12_events_{p}.json.gz').read())
+    mine = [e for e in ev if e.get('carrier') in keys]
+    d = {'selected': len(keys), 'events_on_selected_carriers': len(mine)}
+    for grp, f in (('w3', lambda e: e['kind'] != 'fade'), ('fade', lambda e: e['kind'] == 'fade')):
+        es = [e for e in mine if f(e)]
+        cnt = {}
+        for rule in ('time', 'bounds'):
+            c = {}
+            for e in es:
+                c[e[rule]] = c.get(e[rule], 0) + 1
+            cnt[rule] = c
+        sides = {}
+        for e in es:
+            for r in e.get('runs', []):
+                if r['others_ok']:
+                    for s_ in ('pre', 'post'):
+                        if r[s_]['class'] == 'insufficient':
+                            sides[r[s_]['side_class']] = sides.get(r[s_]['side_class'], 0) + 1
+        d[grp] = {'events': len(es), 'outcomes': cnt, 'undecided_side_classes': sides}
+    out['areas'][p] = d
+json.dump(out, open('results/w3_ztf/asassn/ztf_baseline.json', 'w'), indent=1); open('results/w3_ztf/asassn/ztf_baseline.json', 'a').write('\n')
+print(json.dumps(out, indent=1))

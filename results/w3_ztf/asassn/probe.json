@@ -22,6 +22,28 @@
     "tried": false
    },
    "available": false
+  },
+  {
+   "utc": "2026-10-20T22:21:26Z",
+   "message": {
+    "status": 200,
+    "seconds": 0.9,
+    "text": "Welcome to ASAS-SN Skypatrol!\n\nCurrent Deployment Version: 0.6.20 (11 SEPTEMBER 2025)\nPlease upgrade your client if not up to date.\n\nThe light curve service will be down for several days while we run mainanence on our cluster.\nKyle Hart \n13 October 2026\n"
+   },
+   "block_servers": {
+    "status": 200,
+    "seconds": 0.3,
+    "text": "[]"
+   },
+   "cone": {
+    "ok": true,
+    "rows": 1,
+    "seconds": 1.7
+   },
+   "lightcurve": {
+    "tried": false
+   },
+   "available": false
   }
  ]
 }
