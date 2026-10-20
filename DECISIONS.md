@@ -5472,6 +5472,14 @@ confining radiation at a throat is found.
   - **Decision:** 1624 and 1625 stay archived as undetermined; reopen only with new data or an already-validated
     method. Failed areas stay unsearched. The #385 worst-cell pattern is not used as a gate.
   - **Revisit if:** the budget allows 8124 and 8127, or a new inventory is authorized.
+- **Addendum 2026-10-20 (v21, `results/w3_ztf/v21/RESULT.md`):**
+  - **8124 and 8127:** both pass; 9,978 groups searched.
+  - **The v20 survivor:** its NDs fail the frozen depth and completeness criteria (0.32–0.60 mag below the
+    baseline; 71–89 % catalogue completeness for comparable stars).
+  - **The new survivor:** it sits on an official low-responsivity column (consistent with it, not proven).
+  - **Decision:** both survivors stay undetermined, with no new photometry. The column relation is still not made a
+    global veto.
+  - **Revisit if:** a new inventory is authorized.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

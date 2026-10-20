@@ -1,0 +1,42 @@
+{"area": 8124, "event": "area_start", "position": 1, "projected_mb": 1831.9, "utc": "2026-10-20T06:05:07Z"}
+{"area": 8127, "event": "area_start", "position": 2, "projected_mb": 3595.9, "utc": "2026-10-20T06:05:07Z"}
+{"area": 8124, "stage": "fetch", "event": "start", "utc": "2026-10-20T06:05:07Z"}
+{"area": 8127, "stage": "fetch", "event": "start", "utc": "2026-10-20T06:05:07Z"}
+{"area": 8124, "stage": "fetch", "event": "end", "rc": 0, "seconds": 138.0, "utc": "2026-10-20T06:07:25Z"}
+{"area": 8124, "stage": "exposures", "event": "start", "utc": "2026-10-20T06:07:25Z"}
+{"area": 8127, "stage": "fetch", "event": "end", "rc": 0, "seconds": 144.2, "utc": "2026-10-20T06:07:31Z"}
+{"area": 8127, "stage": "exposures", "event": "start", "utc": "2026-10-20T06:07:31Z"}
+{"area": 8127, "stage": "exposures", "event": "end", "rc": 0, "seconds": 88.6, "utc": "2026-10-20T06:08:59Z"}
+{"area": 8127, "stage": "inject", "event": "start", "utc": "2026-10-20T06:08:59Z"}
+{"area": 8127, "stage": "search_dev", "event": "start", "utc": "2026-10-20T06:08:59Z"}
+{"area": 8124, "stage": "exposures", "event": "end", "rc": 0, "seconds": 95.1, "utc": "2026-10-20T06:09:00Z"}
+{"area": 8124, "stage": "inject", "event": "start", "utc": "2026-10-20T06:09:00Z"}
+{"area": 8124, "stage": "search_dev", "event": "start", "utc": "2026-10-20T06:09:00Z"}
+{"area": 8127, "stage": "inject", "event": "end", "rc": -9, "seconds": 82.1, "utc": "2026-10-20T06:10:22Z"}
+{"area": 8124, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 87.8, "utc": "2026-10-20T06:10:28Z"}
+{"area": 8127, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 92.0, "utc": "2026-10-20T06:10:31Z"}
+{"area": 8127, "event": "stopped", "reason": "validation stage failed to run", "utc": "2026-10-20T06:10:31Z"}
+{"area": 8124, "stage": "inject", "event": "end", "rc": 0, "seconds": 193.5, "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "stage": "decision", "event": "start", "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "stage": "search_holdout", "event": "start", "utc": "2026-10-20T06:12:13Z"}
+{"area": 8124, "stage": "search_holdout", "event": "end", "rc": 0, "seconds": 203.4, "utc": "2026-10-20T06:15:37Z"}
+{"area": 8124, "event": "searched", "groups": 5104, "series_searched": 10199, "flagged_runs": 29, "flagged_groups": 14, "passed_groups": [634205400002525], "utc": "2026-10-20T06:15:37Z"}
+{"event": "queue_done", "utc": "2026-10-20T06:15:37Z"}
+{"area": 8127, "event": "rerun", "utc": "2026-10-20T06:15:55Z", "note": "hand-logged: inject was killed by the system (rc -9, no output written; most likely memory with 4 heavy jobs at once); the same validation (same seed 31000) is run once more, alone; not a retry after a verdict"}
+{"area": 8127, "stage": "inject", "event": "start", "utc": "2026-10-20T06:15:55Z"}
+{"area": 8127, "stage": "search_dev", "event": "start", "utc": "2026-10-20T06:15:55Z"}
+{"area": 8127, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 88.7, "utc": "2026-10-20T06:17:23Z"}
+{"area": 8127, "stage": "inject", "event": "end", "rc": 0, "seconds": 210.8, "utc": "2026-10-20T06:19:25Z"}
+{"area": 8127, "stage": "decision", "event": "start", "utc": "2026-10-20T06:19:25Z"}
+{"area": 8127, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-20T06:19:25Z"}
+{"area": 8127, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-20T06:19:25Z"}
+{"area": 8127, "stage": "search_holdout", "event": "start", "utc": "2026-10-20T06:19:25Z"}
+{"area": 8127, "stage": "search_holdout", "event": "end", "rc": 0, "seconds": 213.9, "utc": "2026-10-20T06:22:59Z"}
+{"area": 8127, "event": "searched", "groups": 4874, "series_searched": 9745, "flagged_runs": 24, "flagged_groups": 5, "passed_groups": [], "utc": "2026-10-20T06:22:59Z"}
+{"area": 8127, "event": "cache_deleted", "utc": "2026-10-20T06:23:00Z"}
+{"event": "queue_done", "utc": "2026-10-20T06:23:00Z"}
+{"area": 8124, "stage": "image_check", "event": "start", "utc": "2026-10-20T06:23:11Z"}
+{"area": 8124, "stage": "image_check", "event": "end", "rc": 0, "seconds": 202, "utc": "2026-10-20T06:26:33Z"}
+{"area": 8124, "event": "cache_deleted", "utc": "2026-10-20T06:26:54Z", "note": "after the image check; objects table in scratch deleted too"}

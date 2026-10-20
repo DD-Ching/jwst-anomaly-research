@@ -1,0 +1,88 @@
+{
+ "label": "observed (IBE mskimg) and derived",
+ "bit_names": {
+  "BIT00": "AIRCRAFT/SATELLITE TRACK",
+  "BIT01": "CONTAINS SEXTRACTOR DETECTION",
+  "BIT02": "LOW RESPONSIVITY",
+  "BIT03": "HIGH RESPONSIVITY",
+  "BIT04": "NOISY",
+  "BIT05": "GHOST FROM BRIGHT SOURCE",
+  "BIT06": "POSSIBLE GHOST FROM CHARGE SPILLAGE",
+  "BIT07": "PIXEL SPIKE (POSSIBLE RAD HIT)",
+  "BIT08": "SATURATED",
+  "BIT09": "DEAD (UNRESPONSIVE)",
+  "BIT10": "NAN (not a number)",
+  "BIT11": "CONTAINS PSF-EXTRACTED SOURCE POSITION",
+  "BIT12": "HALO FROM BRIGHT SOURCE",
+  "BIT13": "RESERVED FOR FUTURE USE",
+  "BIT14": "RESERVED FOR FUTURE USE",
+  "BIT15": "RESERVED FOR FUTURE USE"
+ },
+ "mask_bytes": 60480,
+ "exposures": [
+  {
+   "key": 634205400002525,
+   "expid": 214109164,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 3.052353535167352
+  },
+  {
+   "key": 634205400002525,
+   "expid": 214109957,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 1.741049343774401
+  },
+  {
+   "key": 634205400002525,
+   "expid": 214310269,
+   "nd": true,
+   "cls": 4,
+   "dark_column_min_dist_arcsec": 0.3289563990801719,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 634205400002525,
+   "expid": 214408748,
+   "nd": true,
+   "cls": 4,
+   "dark_column_min_dist_arcsec": 0.27067485930654883,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 634205400002525,
+   "expid": 214508458,
+   "nd": true,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": 0.5048277280457082,
+   "mask_at_center": 4,
+   "mask_bits_in_aperture": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": 634205400002525,
+   "expid": 222554365,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 9.4462878203768
+  },
+  {
+   "key": 634205400002525,
+   "expid": 223153696,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": 15.627112595839428
+  }
+ ]
+}

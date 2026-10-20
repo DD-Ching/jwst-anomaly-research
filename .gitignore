@@ -41,3 +41,5 @@ results/w3_ztf/v14/8170/sample.json
 results/w3_ztf/v15/3837/sample.json
 results/w3_ztf/v20/dedupe.json.gz
 results/w3_ztf/v20/*/sample.json
+results/w3_ztf/v21/dedupe.json.gz
+results/w3_ztf/v21/*/sample.json

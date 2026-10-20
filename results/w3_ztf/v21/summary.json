@@ -1,0 +1,219 @@
+{
+ "label": "derived (timeline.jsonl and per-area outputs)",
+ "areas": {
+  "8124": {
+   "position": 1,
+   "lc_mb": 1704.6,
+   "unused": 5604,
+   "shared_fields_v1_v20": [
+    634,
+    635,
+    1631,
+    1679
+   ],
+   "independent_fields": [],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 138.0,
+    "exposures": 95.1,
+    "search_dev": 87.8,
+    "inject": 193.5,
+    "decision": 0.0,
+    "search_holdout": 203.4,
+    "image_check": 202
+   },
+   "calibration_groups": 500,
+   "search_groups": 5104,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.833899641036988,
+     16.43600082397461,
+     17.407049655914307
+    ],
+    "search": [
+     14.847999572753906,
+     16.493000030517578,
+     17.41899871826172
+    ]
+   },
+   "passed": true,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 138,
+    "rho0.01_blend1_tE30": 164,
+    "rho0.01_blend1_tE100": 154,
+    "rho0.1_blend1_tE10": 132,
+    "rho0.1_blend1_tE30": 164,
+    "rho0.01_blend0.7_tE10": 136,
+    "rho0.01_blend0.7_tE30": 160,
+    "rho0.01_blend0.7_tE100": 130,
+    "rho0.1_blend0.7_tE10": 126,
+    "rho0.1_blend0.7_tE30": 148
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     74,
+     1000,
+     [
+      0.0594,
+      0.0919
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 1,
+   "search": {
+    "groups": 5104,
+    "series_searched": 10199,
+    "flagged_runs": 29,
+    "flagged_groups": 14,
+    "passed_groups": [
+     634205400002525
+    ]
+   },
+   "fetch_read_s": 135.2,
+   "tap_mb": 10.95
+  },
+  "8127": {
+   "position": 2,
+   "lc_mb": 1734.0,
+   "unused": 5374,
+   "shared_fields_v1_v20": [
+    634,
+    635,
+    681,
+    1678,
+    1679
+   ],
+   "independent_fields": [],
+   "started": true,
+   "stage_seconds": {
+    "fetch": 144.2,
+    "exposures": 88.6,
+    "inject": 210.8,
+    "search_dev": 88.7,
+    "decision": 0.0,
+    "search_holdout": 213.9
+   },
+   "calibration_groups": 500,
+   "search_groups": 4874,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     15.044599914550782,
+     16.552499771118164,
+     17.412098789215086
+    ],
+    "search": [
+     14.82699966430664,
+     16.52899932861328,
+     17.41299819946289
+    ]
+   },
+   "passed": true,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 143,
+    "rho0.01_blend1_tE30": 168,
+    "rho0.01_blend1_tE100": 167,
+    "rho0.1_blend1_tE10": 127,
+    "rho0.1_blend1_tE30": 159,
+    "rho0.01_blend0.7_tE10": 147,
+    "rho0.01_blend0.7_tE30": 164,
+    "rho0.01_blend0.7_tE100": 136,
+    "rho0.1_blend0.7_tE10": 118,
+    "rho0.1_blend0.7_tE30": 148
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     54,
+     1000,
+     [
+      0.0416,
+      0.0698
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "search": {
+    "groups": 4874,
+    "series_searched": 9745,
+    "flagged_runs": 24,
+    "flagged_groups": 5,
+    "passed_groups": []
+   },
+   "fetch_read_s": 141.2,
+   "tap_mb": 11.99
+  }
+ },
+ "searched_groups": 9978,
+ "searched_series": 19944,
+ "final_survivors": 1,
+ "started": 2,
+ "passed": 2,
+ "downloaded_mb": 3558.8,
+ "downloaded_note": "objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured",
+ "not_started": [],
+ "stage_seconds_of_searched_areas": 1666.0,
+ "per_1000_searched": {
+  "stage_seconds": 167.0,
+  "lc_mb": 344.6,
+  "wall_clock_min_queue": 2.18
+ },
+ "wall_clock_min": 21.8,
+ "events": 42
+}

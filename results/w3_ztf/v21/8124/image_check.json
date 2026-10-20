@@ -1,0 +1,252 @@
+{
+ "label": "derived; v4 image check",
+ "cutout_bytes": 564480,
+ "ibe_search_bytes": 772,
+ "n_cutouts": 7,
+ "nd_classes": {
+  "4": 2,
+  "2": 1
+ },
+ "nd_pending_unchecked": 0,
+ "sources": [
+  {
+   "key": 634205400002525,
+   "ra": 259.0304237,
+   "dec": 25.0066109,
+   "passed_vetting": true,
+   "filter": 2,
+   "run": [
+    59897.09936423121,
+    59899.08120068212
+   ],
+   "nd_in_run": 3,
+   "nd_checked": 3,
+   "nd_pending": 0,
+   "exposures": [
+    {
+     "expid": 214109164,
+     "t": 59895.088366033284,
+     "nd": false,
+     "dmag": 0.011071205139160156,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.9305,
+     "seeing": 2.27487,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 3554.3086646301826,
+     "err_uJy": 5.118266490839159,
+     "field_uJy": [
+      1156.5620755039852,
+      588.206126978778,
+      169.8103234581074,
+      114.75983547563166,
+      47.580788619755644
+     ],
+     "field_ratio_median": 0.927661793940967,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "ratio": 1.1611214796096092,
+     "deficit_sigma": -67.0211723859435
+    },
+    {
+     "expid": 214109957,
+     "t": 59895.09629409874,
+     "nd": false,
+     "dmag": -0.02557373046875,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.9692,
+     "seeing": 2.05911,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 3819.4760872388833,
+     "err_uJy": 6.43709234692842,
+     "field_uJy": [
+      1436.9956056447456,
+      741.3555619603617,
+      221.0818049280375,
+      129.88587025899773,
+      59.12226139326206
+     ],
+     "field_ratio_median": 1.169194265433205,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "ratio": 0.9899865813619712,
+     "deficit_sigma": 4.169561720861505
+    },
+    {
+     "expid": 214310269,
+     "t": 59897.09936423121,
+     "nd": true,
+     "dmag": 0.0,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.666599,
+     "seeing": 2.7605,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 80.63011939949479,
+     "err_uJy": 6.721078011178201,
+     "field_uJy": [
+      1178.9938320711017,
+      -276.9307610571475,
+      164.919330280893,
+      91.72107799213178,
+      46.61903212043487
+     ],
+     "field_ratio_median": 0.8956478650046857,
+     "ratio": 0.027281748261121962,
+     "deficit_sigma": 340.6169379902653,
+     "cls": 4,
+     "why": "credible dimming / non-detection: ratio 0.03, deficit 340.6 sigma"
+    },
+    {
+     "expid": 214408748,
+     "t": 59898.08413044012,
+     "nd": true,
+     "dmag": 0.0,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.164,
+     "seeing": 2.11006,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 113.97753931052685,
+     "err_uJy": 6.677014090346746,
+     "field_uJy": [
+      1397.5470298449661,
+      -363.65789833344945,
+      199.36717552709376,
+      139.51031734893914,
+      59.51727602345687
+     ],
+     "field_ratio_median": 1.114664187512964,
+     "ratio": 0.030987562649002636,
+     "deficit_sigma": 386.7074834043059,
+     "cls": 4,
+     "why": "credible dimming / non-detection: ratio 0.03, deficit 386.7 sigma"
+    },
+    {
+     "expid": 214508458,
+     "t": 59899.08120068212,
+     "nd": true,
+     "dmag": 0.0,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.490499,
+     "seeing": 3.21615,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 22.448973381095474,
+     "err_uJy": 6.4000275074643005,
+     "field_uJy": [
+      950.9439281007296,
+      -313.1455751134358,
+      140.99581436995211,
+      86.22172685313788,
+      43.82234846322215
+     ],
+     "field_ratio_median": 0.758459728617772,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)"
+    },
+    {
+     "expid": 222554365,
+     "t": 59979.54192268319,
+     "nd": false,
+     "dmag": 0.006936073303222656,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.002899,
+     "seeing": 2.06781,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 3591.2793934837573,
+     "err_uJy": 6.2814840283532565,
+     "field_uJy": [
+      1351.0039618748053,
+      679.941663133206,
+      198.45791392563314,
+      131.97924392908473,
+      48.490793638703956
+     ],
+     "field_ratio_median": 1.0775420800379296,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "ratio": 1.010013418638029,
+     "deficit_sigma": -4.052785701343945
+    },
+    {
+     "expid": 223153696,
+     "t": 59985.53559149638,
+     "nd": false,
+     "dmag": 0.03220367431640625,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.9221,
+     "seeing": 3.05249,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 2768.055130068637,
+     "err_uJy": 5.054299915768624,
+     "field_uJy": [
+      1099.1477986441087,
+      536.9865273096998,
+      161.2208974923002,
+      95.95702881257634,
+      45.43718595932885
+     ],
+     "field_ratio_median": 0.8755623272734532,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)",
+     "ratio": 0.9580757721277495,
+     "deficit_sigma": 17.052999206703028
+    }
+   ],
+   "reference_uJy": 3299.801462718963,
+   "support": {
+    "drop_exposures": 2,
+    "drop_nights": 2,
+    "before_detected": 2,
+    "after_recovered": 1,
+    "real_sky_change": true
+   }
+  }
+ ]
+}
