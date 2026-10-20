@@ -1,0 +1,227 @@
+{
+ "calibrated": true,
+ "n_controls": 300,
+ "controls_flagged": 0,
+ "run_counts": true,
+ "noise_scale": {
+  "F200W": 3.2582829863734686,
+  "F444W": 4.732955296295787
+ },
+ "median_control_F200W_ferr_ujy": {
+  "e0": 0.016489235845343383,
+  "e1": 0.013724293114289587,
+  "e2": 0.012135394663266486,
+  "e3": 0.01420120708778726,
+  "e4": NaN
+ },
+ "det_epoch": 2,
+ "weight_edge_removed": [
+  "macs0416-d00193"
+ ],
+ "explanations": {
+  "catalogue_depth_or_deblend": 11,
+  "weight_edge": 1
+ },
+ "targets": [
+  {
+   "uid": "macs0416-d00365",
+   "det_epoch_flux_ujy": 0.021208641200323966,
+   "det_epoch_snr": 4.42146725901845,
+   "snr_by_epoch": {
+    "e0": 2.7942377538894174,
+    "e1": 2.6944820549900195,
+    "e2": 4.42146725901845,
+    "e3": 3.5865465883066183,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 3.652215801927875,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d00614",
+   "det_epoch_flux_ujy": 0.045656100987924074,
+   "det_epoch_snr": 10.968656563627128,
+   "snr_by_epoch": {
+    "e0": 7.1474275184842995,
+    "e1": 8.22745000187473,
+    "e2": 10.968656563627128,
+    "e3": 7.762251366607378,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 7.581274143601584,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d00643",
+   "det_epoch_flux_ujy": 0.020752002867398728,
+   "det_epoch_snr": 5.346190479069754,
+   "snr_by_epoch": {
+    "e0": 3.7162420979165005,
+    "e1": 3.4692844007325814,
+    "e2": 5.346190479069754,
+    "e3": 3.9092500686488565,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 3.5693340701369096,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d00678",
+   "det_epoch_flux_ujy": 0.031005799326820235,
+   "det_epoch_snr": 7.637859743083877,
+   "snr_by_epoch": {
+    "e0": 5.4587004154909025,
+    "e1": 5.765195426003172,
+    "e2": 7.637859743083877,
+    "e3": 5.016857771061605,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 5.230967837471643,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d01166",
+   "det_epoch_flux_ujy": 0.040877425751990625,
+   "det_epoch_snr": 9.984765674950662,
+   "snr_by_epoch": {
+    "e0": 6.7451953288650905,
+    "e1": 4.871079703171173,
+    "e2": 9.984765674950662,
+    "e3": 7.367679236474913,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 6.716244659954309,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d01316",
+   "det_epoch_flux_ujy": 0.023072614125529533,
+   "det_epoch_snr": 5.115627675458266,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 5.233179383739133,
+    "e2": 5.115627675458266,
+    "e3": 4.450238284724093,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 4.2715159315273965,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d01329",
+   "det_epoch_flux_ujy": 0.03998392535761481,
+   "det_epoch_snr": 7.983390796183568,
+   "snr_by_epoch": {
+    "e0": 6.818500709949158,
+    "e1": 6.724395971914017,
+    "e2": 7.983390796183568,
+    "e3": 6.674918718089045,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 6.778682764313326,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d02197",
+   "det_epoch_flux_ujy": 0.02149351383677659,
+   "det_epoch_snr": 4.4535196496020895,
+   "snr_by_epoch": {
+    "e0": 3.235311209447796,
+    "e1": 2.3966405010487803,
+    "e2": 4.4535196496020895,
+    "e3": 4.030010572137344,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 3.5333153847681062,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d02261",
+   "det_epoch_flux_ujy": 0.029704679332959037,
+   "det_epoch_snr": 7.370734612425611,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 3.440801925532276,
+    "e2": 7.370734612425611,
+    "e3": NaN,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 3.7376016853742384,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d02264",
+   "det_epoch_flux_ujy": 0.02828260022176888,
+   "det_epoch_snr": 6.968384470975402,
+   "snr_by_epoch": {
+    "e0": 3.537752630471567,
+    "e1": 4.638200748419206,
+    "e2": 6.968384470975402,
+    "e3": 2.9488887265397405,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 3.5632204348198915,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [
+    "cut_low_weight"
+   ],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "macs0416-d02480",
+   "det_epoch_flux_ujy": 0.047013530437304336,
+   "det_epoch_snr": 11.758977270248801,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 8.420134572611287,
+    "e2": 11.758977270248801,
+    "e3": NaN,
+    "e4": NaN
+   },
+   "expected_snr_other_median": 8.651958800866858,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  }
+ ]
+}

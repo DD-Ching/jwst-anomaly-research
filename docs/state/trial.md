@@ -290,6 +290,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | — | — | — | 0.5 (#380 W3 ZTF v14 brought up to date with `main` and merged under the policy; #374 live re-check of the three failing network tests) | cloud routine 01QjKQDx, 20:08–20:50Z |
 | 2026-W43 | ≈ 0.4 (W3 dimming: D-039 persistence-test controls, frozen addendum; Abell 2744 e2, NEXUS e0/e1/e3/e4; NEXUS fails rule 1, exposure-count dependence post hoc) | — | — | 0.15 (orientation, #374 NED re-check, claim, state files, PR) | cloud routine 01CCiYbc, 23:08–23:50Z |
 | 2026-W43 | — | — | — | 0.5 (#385 W3 ZTF v16 brought up to date with `main` (clean merge, offline suite green), `agent` label added; #374 NED re-check: still connection reset) | cloud routine 01EYNJfo, 00:08–00:45Z |
+| 2026-W43 | — | — | ≈ 0.15 (W3 dimming: frozen `forced` + depth / footprint test on the 20 MACS0416 / Abell 2744 `on_sky` targets; 0 survivors, sheets looked at) | 0.1 (orientation, #374 status read, claim, state files, review, PR) | cloud routine 01L4CY8s, 03:08–03:30Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

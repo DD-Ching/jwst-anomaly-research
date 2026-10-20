@@ -1,0 +1,109 @@
+{
+ "calibrated": true,
+ "n_controls": 300,
+ "controls_flagged": 0,
+ "run_counts": true,
+ "noise_scale": {
+  "F200W": 4.117502126206391,
+  "F444W": 7.983744289319693
+ },
+ "median_control_F200W_ferr_ujy": {
+  "e0": 0.016263287366864637,
+  "e1": 0.012297370582990744,
+  "e2": 0.01227051395124442
+ },
+ "det_epoch": 1,
+ "weight_edge_removed": [
+  "abell2744-d04554",
+  "abell2744-d05952",
+  "abell2744-d07198"
+ ],
+ "explanations": {
+  "catalogue_depth_or_deblend": 5,
+  "weight_edge": 3
+ },
+ "targets": [
+  {
+   "uid": "abell2744-d03227",
+   "det_epoch_flux_ujy": 0.022811324432287408,
+   "det_epoch_snr": 6.886238236067695,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 6.886238236067695,
+    "e2": 3.771377963225303
+   },
+   "expected_snr_other_median": 4.234785698672535,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "abell2744-d03574",
+   "det_epoch_flux_ujy": 0.019020507515129396,
+   "det_epoch_snr": 5.099040228131758,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 5.099040228131758,
+    "e2": 3.8437747878716064
+   },
+   "expected_snr_other_median": 3.513870171745939,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "abell2744-d04445",
+   "det_epoch_flux_ujy": 0.029314089350191412,
+   "det_epoch_snr": 9.52393391979687,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 9.52393391979687,
+    "e2": 5.815684323605342
+   },
+   "expected_snr_other_median": 6.297465267702782,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "abell2744-d04474",
+   "det_epoch_flux_ujy": 0.029236499431366126,
+   "det_epoch_snr": 7.263418581657746,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 7.263418581657746,
+    "e2": 5.3285732628775495
+   },
+   "expected_snr_other_median": 5.282771457214955,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  },
+  {
+   "uid": "abell2744-d04698",
+   "det_epoch_flux_ujy": 0.0249713979372673,
+   "det_epoch_snr": 6.722092132163839,
+   "snr_by_epoch": {
+    "e0": NaN,
+    "e1": 6.722092132163839,
+    "e2": 3.9363849245599236
+   },
+   "expected_snr_other_median": 4.59449944332612,
+   "forced_vanish": false,
+   "forced_confirmed": false,
+   "cut": [
+    "cut_spike"
+   ],
+   "chromatic_veto": false,
+   "explanation": "catalogue_depth_or_deblend"
+  }
+ ]
+}
