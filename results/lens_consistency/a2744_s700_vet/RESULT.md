@@ -53,9 +53,11 @@ the pixel-scale fix (≈ 20.4 → 19.7 and 18.6 → 18.0; the old values are in 
 (one reason the target p values decide nothing). The crude magnitude is a 0.5″ aperture minus a local median, not
 a total magnitude; it is null where the local median exceeds the aperture, as for the photo-z member DJA 42356
 (z_phot 0.346, 3.92″, eazy 68 % interval 0.316–6.867), which is therefore "not assessed". Sources within 5″
-without a usable z (eazy z < 0 or not finite) are also "not assessed", whatever their crude magnitude, unless it
-is ≥ 22 (post hoc). Three such sources lie within 5″, none with a measurable crude magnitude; with DJA 42356 they
-make the four `not_assessed` entries. Their z, z type and interval are stored as null. `z160_z840_eazy` is the eazy
-68 % interval, also for spec-z sources (null when the eazy fit failed).
+without a usable z (eazy z < 0 or not finite) are also "not assessed", unless their crude magnitude is ≥ 22
+(post hoc). There are three of them, none with a measurable crude magnitude; with DJA 42356 they make the four
+`not_assessed` entries, and their z, z type and interval are stored as null. Sources with a usable z outside the
+member range are never perturbers, also when their crude magnitude is null (e.g. DJA 42218, z_phot 4.859).
+`z160_z840_eazy` is the eazy 68 % interval, also for spec-z sources (null when the eazy z_phot failed; it need not
+contain a spectroscopic z).
 Target pairs have no S/N cut (the known pairs do); this cannot change the outcome while the gate fails. Both flagged
 perturbers are spec-z members. The UNCOVER model's member list was not checked.
