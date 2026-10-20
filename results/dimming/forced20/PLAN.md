@@ -1,6 +1,6 @@
 # W3 dimming: `forced` + footprint/depth test on the 20 MACS0416 / Abell 2744 `on_sky` persistence targets
 
-Frozen 2026-10-20 03:20 UTC, before any forced flux was read (handoff 2 of #386, still open after #388;
+Frozen 2026-10-20 03:10 UTC, before any forced flux was read (handoff 2 of #386, still open after #388;
 `results/dimming/persistence_run/RESULT.md` "Next" 2). Same method as `results/dimming/nexus_o014/PLAN.md`;
 screen code, thresholds and `forced` unchanged from `main` (c4ee84a).
 
