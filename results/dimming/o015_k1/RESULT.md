@@ -4,7 +4,7 @@ Plan frozen first (`PLAN.md`). Every number below is derived and stored in `foot
 `posthoc_k0/counts.json`; thresholds are ASSUMPTIONs.
 
 ## New input (observed)
-- MAST (2026-10-20 08:15 UTC): program 5105 has exactly one public NIRCam level-3 observation outside
+- MAST (2026-10-20, about 08:10 UTC; `PLAN.md` says 08:15, a typo): program 5105 has exactly one public NIRCam level-3 observation outside
   `configs/dimming_screen.yaml`: `jw05105-o015_t005` (NEXUS-Center-Tile-6, F200W t_exptime 1,245 s, MJD 60878.76;
   80 `_nrc` `_cal` files, 8 per detector). No NEXUS-Center epoch after o012 (MJD 61127.37) is public (not stored:
   query output in the session only).
