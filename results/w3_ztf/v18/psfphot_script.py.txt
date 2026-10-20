@@ -77,7 +77,8 @@ class Exp:
         return self._models[key]
 
     def pix(self, ra, dec, dra=0.0, ddec=0.0):
-        x, y = self.w.world_to_pixel_values(ra + dra, dec + ddec)
+        # registration() gives reference - exposure; back into this exposure is minus (review fix: sign)
+        x, y = self.w.world_to_pixel_values(ra - dra, dec - ddec)
         return float(x), float(y)
 
 
@@ -143,8 +144,12 @@ for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
             k = int(np.argmin(d))
             if d[k] < 1.5:
                 pts.append((float(c['ra'][k]) + registration(exps[e], ref)[0], float(c['dec'][k]) + registration(exps[e], ref)[1]))
+        mean_pos.last = pts
         return tuple(np.mean(pts, axis=0))
     tpos = mean_pos(ra, dec)
+    # DEVIATION (review): position uncertainty of the target = scatter of its registered bracket positions (px)
+    tp = np.array(mean_pos.last)
+    sig_pos_px = float(np.hypot(np.std(tp[:, 0], ddof=1) * np.cos(np.radians(dec)), np.std(tp[:, 1], ddof=1)) * 3600 / 1.012 / np.sqrt(2)) if len(tp) > 1 else np.nan
     others = {}
     for e in order:  # nearest-in-time other exposure of the same quadrant (for control fits and the mismatch term)
         q = (exps[e].rec['field'], exps[e].rec['ccdid'], exps[e].rec['qid'])
@@ -317,6 +322,11 @@ for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
                          if 1.5 < np.hypot(ex.cat['px'][i] - xn, ex.cat['py'][i] - yn) < 20 and np.hypot(ex.cat['px'][i] - x, ex.cat['py'][i] - y) > 1.5]
             ff, fe, inf, err = fit(ex, ex.sub, srcs, box, ex.bad)
             fo, _, _, _ = fit(ex, ex.sub, srcs, box, ex.bad, exps[others[e]])
+            fpos = []  # DEVIATION (review): flux sensitivity to the target position, shifted by +-sig_pos_px in x and y
+            for ddx, ddy in ((sig_pos_px, 0), (-sig_pos_px, 0), (0, sig_pos_px), (0, -sig_pos_px)):
+                fp, _, _, _ = fit(ex, ex.sub, [(x + ddx, y + ddy)] + srcs[1:], box, ex.bad)
+                fpos.append(fp[0])
+            dpos = float(np.nanmax(np.abs(np.array(fpos) - ff[0])))
             # residual of the full fitted group (every source subtracted), on a 41x41 region around the target
             x0, y0 = int(round(x)), int(round(y)); H = 20
             Y, X = np.mgrid[y0 - H:y0 + H + 1, x0 - H:x0 + H + 1]
@@ -341,7 +351,7 @@ for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
             rec = {'nd': bool(tt[e]['nd']), 't': tt[e]['t'], 'seeing': ex.rec['seeing'], 'x': x, 'y': y,
                    'valid_pixels_in_box': int(good.sum()), 'box_pixels': int(good.size), 'info': inf[0],
                    'flux_DN': ff[0], 'flux_err_DN': fe[0], 'flux_uJy': ff[0] * ex.k / sc, 'flux_err_uJy': fe[0] * ex.k / sc,
-                   'flux_other_psf_uJy': fo[0] * ex.k / sc, 'reduced_chi2_target_box': chi, 'scale_v17_D1': sc, 'neighbour_ring': ring,
+                   'flux_other_psf_uJy': fo[0] * ex.k / sc, 'position_term_uJy': dpos * ex.k / sc, 'sigma_pos_px': sig_pos_px, 'reduced_chi2_target_box': chi, 'scale_v17_D1': sc, 'neighbour_ring': ring,
                    'validation_pass': bool(val_ok.get(e)), 'validation_sigma_rel': sig_val.get(e), 'error': err}
             if npix == 1625:
                 rec['neighbour_flux_uJy'] = ff[1] * ex.k / sc
@@ -351,7 +361,8 @@ for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
         src['F_ref_uJy'], src['F_ref_scatter_uJy'] = Fref, sref
         for e in order:
             r = src['exposures'][str(e)]
-            sF = np.sqrt(r['flux_err_uJy'] ** 2 + (np.nan_to_num(r['validation_sigma_rel']) * abs(r['flux_uJy'])) ** 2 + (r['flux_uJy'] - r['flux_other_psf_uJy']) ** 2)
+            sF = np.sqrt(r['flux_err_uJy'] ** 2 + (np.nan_to_num(r['validation_sigma_rel']) * abs(r['flux_uJy'])) ** 2
+                         + (r['flux_uJy'] - r['flux_other_psf_uJy']) ** 2 + r['position_term_uJy'] ** 2)
             R = r['flux_uJy'] / Fref; sR = float(np.hypot(sF / Fref, R * sref / Fref))
             r.update(R=float(R), sigma_R=sR)
             reasons = []
