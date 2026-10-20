@@ -477,8 +477,10 @@ def macro_magnification_map(
 
     Returns a ``simulated`` table with one row per source pixel (columns ``beta_x``, ``beta_y``,
     ``mu``; ``mu`` is Σ|μ| over images, the macro ``1 / |lam1 lam2|`` far from the lens) and the map
-    shape in ``meta["shape"]`` (ny, nx). A fine ray grid covers the lens neighbourhood, a coarse
-    grid (spacing set by the macro stretch) the rest; each ray carries its image-plane area.
+    shape in ``meta["shape"]`` (ny, nx); ``2 half / pixel`` is rounded to whole bins, whose real
+    widths are ``meta["pixel_x"]`` and ``meta["pixel_y"]``. A fine ray grid covers the lens
+    neighbourhood, a coarse grid (spacing set by the macro stretch) the rest; each ray carries its
+    image-plane area.
     """
     if isinstance(sign, (bool, np.bool_)) or sign not in (1, -1, 0):
         raise ValueError("sign must be +1, -1 or 0 (macro model only: a sampling-noise control)")
@@ -491,7 +493,11 @@ def macro_magnification_map(
     margin = 1.0 / f  # largest point-lens deflection outside the fine box
     big_x = (half_x + margin) / abs(lam1) + 1.0
     big_y = (half_y + margin) / abs(lam2) + 1.0
-    d_fine = min(ray_step / (1.0 + max(abs(lam1), abs(lam2))), ray_step / 4)  # 1/r^2 ≤ 1 for r ≥ 1
+    # 1/r^2 ≤ 1 for r ≥ 1 gives ray_step / (1 + max|lam|); the extra ray_step / 4 cap covers r < 1,
+    # where the point-lens Jacobian exceeds 1 (ASSUMPTION, checked by the plan's gates G1 / G3').
+    # The fine box stays at _MACRO_FINE_HALF whatever the window. Images farther out (|theta| near
+    # 1 / sqrt|lam1| = 10 for lam1 = +-0.01) fall on the coarse grid; its 2 / f^2 term samples them.
+    d_fine = min(ray_step / (1.0 + max(abs(lam1), abs(lam2))), ray_step / 4)
     d_fine = 2 * f / math.ceil(2 * f / d_fine)  # fine cells end exactly on the box edges too
     # coarse spacings divide 2f, so coarse cell edges fall on the fine box's edges (no seam)
     dx = 2 * f / math.ceil(2 * f * (abs(lam1) + 2 / f**2) / ray_step)
@@ -517,7 +523,8 @@ def macro_magnification_map(
         ey = f + math.ceil(max(big_y - f, 0.0) / dy) * dy
         xs, ys = _rays(-ex, ex, dx, -ey, ey, dy)
         shoot(xs, ys, dx * dy, outside_box=True)
-    mu = acc / pixel**2
+    # divide by the real bin areas: round() can make them differ slightly from `pixel`
+    mu = acc / np.outer(np.diff(edges[0]), np.diff(edges[1]))
     cx = 0.5 * (edges[1][1:] + edges[1][:-1])
     cy = 0.5 * (edges[0][1:] + edges[0][:-1])
     gx, gy = np.meshgrid(cx, cy)
@@ -527,5 +534,7 @@ def macro_magnification_map(
         source=f"exotic_sim.macro_magnification_map lam1={lam1} lam2={lam2} sign={sign}",
         shape=(ny, nx),
         pixel=pixel,
+        pixel_x=2 * half_x / nx,
+        pixel_y=2 * half_y / ny,
     )
     return t

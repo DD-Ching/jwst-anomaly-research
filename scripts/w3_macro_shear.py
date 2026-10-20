@@ -8,8 +8,12 @@ Everything is simulated / model_prediction. Writes results/w3_macro_shear/result
 from __future__ import annotations
 
 import json
+import math
+import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
+from functools import lru_cache
 from pathlib import Path
 
 import matplotlib
@@ -23,6 +27,31 @@ from jwst_anomaly import exotic_sim as es
 
 OUT = Path(__file__).resolve().parents[1] / "results" / "w3_macro_shear"
 HOLE_FRAC = 0.1  # ASSUMPTION (plan): "hole" = mu / mu_macro < 0.1
+G1_TOL = 0.03  # ASSUMPTION (plan): radial-profile deviation from total_magnification
+G2_LOCAL_MU = 5.0  # ASSUMPTION (set with the code): 5x5 local max > 5 mu_macro
+G2_HIGH_MU = 20.0  # ASSUMPTION (set with the code): a "high" pixel has mu > 20 mu_macro
+G2_FRAC = 0.9  # ASSUMPTION (set with the code): both G2 fractions at least this
+G3_TOL = 0.02  # ASSUMPTION (plan; addendum 1 for G3'): relative tolerance
+RHO = 0.1  # ASSUMPTION (plan): finite-source radius, Einstein radii
+CHORD_Y = (0.5, 1.0, 1.5)  # umbra chords compared with an ellipse (review addition)
+
+
+def g1_pass(devs) -> bool:
+    return all(d < G1_TOL for d in devs)
+
+
+def g2_pass(frac_caustic_high: float, frac_high_near: float) -> bool:
+    return frac_caustic_high >= G2_FRAC and frac_high_near >= G2_FRAC
+
+
+def g3_pass(rels) -> bool:
+    return all(abs(r) < G3_TOL for r in rels)
+
+
+@lru_cache(maxsize=8)
+def cached_map(lam1, lam2, sign, half_x, half_y, pixel):
+    """One map per argument tuple (G1 and G3' share the isolated maps)."""
+    return es.macro_magnification_map(lam1, lam2, sign, half_x, half_y, pixel)
 
 
 def as_image(t):
@@ -37,7 +66,7 @@ def as_image(t):
 def gate_g1():
     out = {}
     for sign in (1, -1):
-        mu, bx, by = as_image(es.macro_magnification_map(1.0, 1.0, sign, 3.0, 3.0, 0.01))
+        mu, bx, by = as_image(cached_map(1.0, 1.0, sign, 3.0, 3.0, 0.01))
         r = np.hypot(*np.meshgrid(bx, by))
         exact = es.total_magnification(r.ravel(), 1.0, sign).reshape(r.shape)
         sel = (
@@ -54,9 +83,7 @@ def gate_g1():
             "max_rel_dev_radial_profile": float(max(dev)),
             "mean_mu_inside_r1.95": float(mu[hole].mean()) if sign == -1 else None,
         }
-    out["pass"] = all(
-        v["max_rel_dev_radial_profile"] < 0.03 for v in out.values() if isinstance(v, dict)
-    )
+    out["pass"] = g1_pass(v["max_rel_dev_radial_profile"] for v in out.values())
     return out
 
 
@@ -90,11 +117,11 @@ def gate_g2():
     iy = np.clip(((pts[:, 1] + 2.0) / 0.01).astype(int), 0, mu.shape[0] - 1)
     inwin = (np.abs(pts[:, 0]) < 1.98) & (np.abs(pts[:, 1]) < 1.98)
     local_max = ndimage.maximum_filter(mu, size=5)
-    frac_caustic_high = float(np.mean(local_max[iy[inwin], ix[inwin]] > 5 * mac))
+    frac_caustic_high = float(np.mean(local_max[iy[inwin], ix[inwin]] > G2_LOCAL_MU * mac))
     cmask = np.zeros_like(mu, bool)
     cmask[iy[inwin], ix[inwin]] = True
     near = ndimage.binary_dilation(cmask, iterations=2)
-    high = mu > 20 * mac
+    high = mu > G2_HIGH_MU * mac
     frac_high_near = float(near[high].mean()) if high.any() else float("nan")
     return {
         "lam1": lam1,
@@ -102,7 +129,7 @@ def gate_g2():
         "n_caustic_points": int(inwin.sum()),
         "frac_caustic_points_with_local_mu_gt_5macro": frac_caustic_high,
         "frac_pixels_mu_gt_20macro_within_2px": frac_high_near,
-        "pass": frac_caustic_high >= 0.9 and frac_high_near >= 0.9,
+        "pass": g2_pass(frac_caustic_high, frac_high_near),
     }
 
 
@@ -112,7 +139,7 @@ def gate_g3():
         mu, _, _ = as_image(es.macro_magnification_map(0.7, 1.3, sign, 3.0, 3.0, 0.01))
         mac = 1 / (0.7 * 1.3)
         out[f"sign{sign:+d}"] = float(mu.mean() / mac - 1)
-    out["pass"] = all(abs(v) < 0.02 for k, v in out.items() if k.startswith("sign"))
+    out["pass"] = g3_pass(v for k, v in out.items() if k.startswith("sign"))
     out["note"] = "mis-specified as written (PLAN addendum 1); replaced by G3prime"
     return out
 
@@ -121,14 +148,14 @@ def gate_g3prime():
     """Disk integral of mu - 1 on the isolated lens vs pi (R sqrt(R^2 + 4 s) - R^2) (addendum 1)."""
     out = {}
     for sign in (1, -1):
-        t = es.macro_magnification_map(1.0, 1.0, sign, 3.0, 3.0, 0.01)
+        t = cached_map(1.0, 1.0, sign, 3.0, 3.0, 0.01)
         r = np.hypot(t["beta_x"], t["beta_y"])
         mu = np.asarray(t["mu"])
         for rad in (2.5, 3.0):
             got = float((mu[r < rad] - 1).sum() * 0.01**2)
             pred = float(np.pi * (rad * np.sqrt(rad * rad + 4 * sign) - rad * rad))
             out[f"sign{sign:+d}_R{rad}"] = {"got": got, "pred": pred, "rel": got / pred - 1}
-    out["pass"] = all(abs(v["rel"]) < 0.02 for v in out.values())
+    out["pass"] = g3_pass(v["rel"] for v in out.values())
     return out
 
 
@@ -143,9 +170,12 @@ CASES = {
 
 
 def measure(lam1, lam2, sign=-1):
-    hx = max(3 * 2 * np.sqrt(abs(lam1)), 1.0)
     pix = 0.005 if abs(lam1) < 0.05 else 0.01
+    # whole bins, so the bin width is exactly `pix` (review: 2 hx / pix was not an integer)
+    hx = math.ceil(round(max(3 * 2 * np.sqrt(abs(lam1)), 1.0) / pix, 6)) * pix
     t = es.macro_magnification_map(lam1, lam2, sign, hx, 3.0, pix)
+    # widths and areas below count bins x pix, so the bins must be exactly pix wide
+    assert abs(t.meta["pixel_x"] - pix) < 1e-12 and abs(t.meta["pixel_y"] - pix) < 1e-12
     mu, bx, by = as_image(t)
     mac = 1 / abs(lam1 * lam2)
     rel = mu / mac
@@ -158,14 +188,14 @@ def measure(lam1, lam2, sign=-1):
     col = central[:, cx]
     hw_x = float(row.sum() * pix / 2)
     hw_y = float(col.sum() * pix / 2)
-    rho = 0.1
-    k = int(round(rho / pix))
+    k = int(round(RHO / pix))
     yy, xx = np.mgrid[-k : k + 1, -k : k + 1]
     ker = (xx**2 + yy**2 <= k * k).astype(float)
     ker /= ker.sum()
     disk = ndimage.convolve(rel, ker, mode="nearest")
     # sampling-noise control (post hoc, added after review): same grids, no point lens
-    ctrl = as_image(es.macro_magnification_map(lam1, lam2, 0, hx, 3.0, pix))[0] / mac
+    # the sign = 0 control depends on |lam1| only (same map for +-lam1)
+    ctrl = as_image(cached_map(abs(lam1), lam2, 0, hx, 3.0, pix))[0] / mac
     inner = slice(k, -k or None)  # drop the convolution's padded borders (tracks and control alike)
     ctrl_disk = ndimage.convolve(ctrl, ker, mode="nearest")[inner, inner]
     control = {
@@ -174,6 +204,14 @@ def measure(lam1, lam2, sign=-1):
         "rho0.1_min_interior": float(ctrl_disk.min()),
         "rho0.1_max_interior": float(ctrl_disk.max()),
     }
+    # umbra chord half-length along x at fixed beta_y vs an ellipse with the on-axis half-widths
+    chords = {}
+    for yv in CHORD_Y:
+        iy = int(np.argmin(np.abs(by - yv)))
+        y_row = float(by[iy])  # the row actually sampled (pixel centre), not the nominal yv
+        got = float(central[iy].sum() * pix / 2)
+        ell = hw_x * math.sqrt(max(0.0, 1 - (y_row / hw_y) ** 2)) if hw_y > 0 else None
+        chords[f"y_{yv}"] = {"beta_y": y_row, "halfwidth_x": got, "ellipse_from_onaxis": ell}
     tracks = {}
     for u0 in (0.0, 0.5, 1.0):
         iy = int(np.argmin(np.abs(by - u0)))
@@ -204,27 +242,52 @@ def measure(lam1, lam2, sign=-1):
         "hole_halfwidth_y": hw_y,
         "pred_halfwidth_x": pred[0],
         "pred_halfwidth_y": pred[1],
+        "umbra_chords": chords,
         "tracks": tracks,
+        "map_interior_min": {  # whole window interior, not only the six tracks (review addition)
+            "point": float(rel[inner, inner].min()),
+            "rho0.1": float(disk[inner, inner].min()),
+        },
         "no_lens_control": control,
     }, (rel, bx, by)
+
+
+def gates_isolated():
+    """G1 and G3' in one process, so they share the two isolated maps."""
+    return gate_g1(), gate_g3prime()
+
+
+def _init_worker():
+    # one numpy/BLAS thread per process (scripts/CLAUDE.md); forked workers already loaded numpy,
+    # so the environment variable alone would not reach the existing thread pools
+    os.environ["OMP_NUM_THREADS"] = "1"
+    try:
+        from threadpoolctl import threadpool_limits
+    except ImportError:  # optional; histogram2d itself is single-threaded
+        return
+    threadpool_limits(1)
 
 
 def main():
     t0 = time.time()
     res = {"provenance": "simulated", "plan": "results/w3_macro_shear/PLAN.md"}
-    res["G1"] = gate_g1()
-    print("G1", res["G1"], round(time.time() - t0), file=sys.stderr)
-    res["G2"] = gate_g2()
-    print("G2", res["G2"], round(time.time() - t0), file=sys.stderr)
-    res["G3"] = gate_g3()
-    print("G3", res["G3"], round(time.time() - t0), file=sys.stderr)
-    res["G3prime"] = gate_g3prime()
-    print("G3prime", res["G3prime"], round(time.time() - t0), file=sys.stderr)
-    if res["G1"]["pass"] and res["G2"]["pass"] and res["G3prime"]["pass"]:
+    workers = min(os.cpu_count() or 1, len(CASES))
+    with ProcessPoolExecutor(workers, initializer=_init_worker) as pool:  # independent maps
+        jobs = {"G1+G3prime": pool.submit(gates_isolated), "G2": pool.submit(gate_g2)}
+        jobs["G3"] = pool.submit(gate_g3)
+        g = {name: job.result() for name, job in jobs.items()}
+        res["G1"], res["G3prime"] = g["G1+G3prime"]
+        res["G2"], res["G3"] = g["G2"], g["G3"]
+        for name in ("G1", "G2", "G3", "G3prime"):
+            print(name, res[name], round(time.time() - t0), file=sys.stderr)
+        ok = res["G1"]["pass"] and res["G2"]["pass"] and res["G3prime"]["pass"]
+        measured = {n: pool.submit(measure, *lams) for n, lams in CASES.items()} if ok else {}
+        measured = {n: job.result() for n, job in measured.items()}
+    if measured:
         res["cases"] = {}
         fig, axes = plt.subplots(1, len(CASES), figsize=(4 * len(CASES), 4))
         for ax, (name, (l1, l2)) in zip(axes, CASES.items(), strict=True):
-            res["cases"][name], (rel, bx, by) = measure(l1, l2)
+            res["cases"][name], (rel, bx, by) = measured[name]
             print(name, res["cases"][name], round(time.time() - t0), file=sys.stderr)
             ax.imshow(
                 np.log10(np.clip(rel, 1e-3, 1e2)),
