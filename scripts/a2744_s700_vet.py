@@ -252,7 +252,7 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
                     "dja_id": int(zout["id"][k]),
                     "sep_arcsec": _r(d[k], 2),
                     "z": _r(z, 3) if usable else None,  # eazy's failure sentinel is not a z
-                    "z_type": "spec" if zs > 0 else "phot",
+                    "z_type": ("spec" if zs > 0 else "phot") if usable else None,
                     "z160_z840": (
                         [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)]
                         if usable
