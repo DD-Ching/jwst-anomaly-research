@@ -1,0 +1,66 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: uid, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: control, datatype: bool}
+# - {name: F200W_e0_fflux, datatype: float64}
+# - {name: F200W_e0_ferr, datatype: float64}
+# - {name: F200W_e1_fflux, datatype: float64}
+# - {name: F200W_e1_ferr, datatype: float64}
+# - {name: F200W_e2_fflux, datatype: float64}
+# - {name: F200W_e2_ferr, datatype: float64}
+# - {name: F444W_e0_fflux, datatype: float64}
+# - {name: F444W_e0_ferr, datatype: float64}
+# - {name: F444W_e1_fflux, datatype: float64}
+# - {name: F444W_e1_ferr, datatype: float64}
+# - {name: F444W_e2_fflux, datatype: float64}
+# - {name: F444W_e2_ferr, datatype: float64}
+# - {name: forced_vanish, datatype: bool}
+# - {name: forced_vanish_bands, datatype: int64}
+# - {name: forced_dim_achromatic, datatype: bool}
+# - {name: forced_dim_bands, datatype: int64}
+# - {name: forced_dim_epoch, datatype: int64}
+# - {name: forced_max_drop, datatype: float64}
+# - {name: forced_rise_dip_rise, datatype: bool}
+# - {name: forced_rdr_bands, datatype: int64}
+# - {name: forced_max_snr, datatype: float64}
+# - {name: forced_flagged, datatype: bool}
+# - {name: cut_edge, datatype: bool}
+# - {name: cut_low_weight, datatype: bool}
+# - {name: cut_spike, datatype: bool}
+# - {name: forced_confirmed, datatype: bool}
+# - {name: near_star, datatype: bool}
+# - {name: bright_neighbour, datatype: bool}
+# - {name: edge_proxy, datatype: bool}
+# - {name: blended, datatype: bool}
+# - {name: single_epoch, datatype: bool}
+# - {name: point_like, datatype: bool}
+# - {name: chromatic_veto, datatype: bool}
+# - {name: survives_artefact_tests, datatype: bool}
+# - {name: known_object, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: scripts/dimming_screen.py forced --field abell2744}
+# - noise_scale: {F200W: 4.117502126206391, F444W: 7.983744289319693}
+# - noise_calibrated: {F200W: true, F444W: true}
+# - zero_point_uncalibrated: []
+# - {calibrated: true}
+# - inflation_vs_catalogue: {F200W: 1.0, F444W: 3.718440688802916}
+# - {flux_unit: uJy}
+# - {aperture_arcsec: 0.15}
+# - {recentre_arcsec: 0.1}
+# - {crossmatch: not run (no survivors)}
+# - unread_images: []
+# - params: {achromatic_sigma: 3.0, blend_arcsec: 0.5, bright_neighbour_arcsec: 1.5, bright_neighbour_ratio: 100.0, detect_snr: 10.0,
+#     edge_fraction: 0.5, footprint_min: 3, footprint_radius_arcsec: 5.0, gaia_saturated_g: 18.0, gaia_self_arcsec: 0.3, gone_sigma: 3.0,
+#     master_snr: 5.0, match_radius_arcsec: 0.3, min_drop: 0.2, min_sigma: 5.0, point_ci_max: 2.7, point_ci_min: 1.9, ref_snr: 30.0, sys_floor: 0.03,
+#     wht_rel_min: 0.5, wht_step_px: 32}
+# schema: astropy-2.0
+uid ra dec control F200W_e0_fflux F200W_e0_ferr F200W_e1_fflux F200W_e1_ferr F200W_e2_fflux F200W_e2_ferr F444W_e0_fflux F444W_e0_ferr F444W_e1_fflux F444W_e1_ferr F444W_e2_fflux F444W_e2_ferr forced_vanish forced_vanish_bands forced_dim_achromatic forced_dim_bands forced_dim_epoch forced_max_drop forced_rise_dip_rise forced_rdr_bands forced_max_snr forced_flagged cut_edge cut_low_weight cut_spike forced_confirmed near_star bright_neighbour edge_proxy blended single_epoch point_like chromatic_veto survives_artefact_tests known_object
+abell2744-d03227 3.605245619616487 -30.44901925821124 False nan nan 0.022811324432287408 0.0033125958833096583 0.02031510739796804 0.005386653789691885 nan nan 0.005753615941130997 0.005958963312059138 0.0038194433775032297 0.011686192343695499 False 0 False 0 -1 0.33616643575406324 False 0 6.886238236067695 False False False False False False False False False True True False False ""
+abell2744-d03574 3.602457325658327 -30.456812875902333 False nan nan 0.019020507515129396 0.003730213268409207 0.02080627446825968 0.005412979588166931 nan nan 0.026565602104616882 0.007603721278177209 0.023750617684076006 0.011236949635572759 False 0 False 0 -1 0.10596350910682562 False 0 5.099040228131758 False False False False False False False False False True True False False ""
+abell2744-d04445 3.597633227443736 -30.48576031646588 False nan nan 0.029314089350191412 0.003077939179025366 0.027071445835359646 0.004654902902050421 nan nan 0.008877174169155871 0.005643839462859843 0.00920678128855291 0.008165107138457356 False 0 False 0 -1 0.07650394620964485 False 0 9.52393391979687 False False False False False False False False False True True False False ""
+abell2744-d04474 3.5997473788917635 -30.510328894398246 False nan nan 0.029236499431366126 0.004025170668973537 0.02948998086172047 0.005534310857123361 nan nan 0.009179942212482537 0.006809922324906506 0.010487574864838353 0.01033399770458215 False 0 False 0 -1 0.1246839874049348 False 0 7.263418581657746 False False False False False False False False False True True False False ""
+abell2744-d04698 3.5982739401266475 -30.514383562914084 False nan nan 0.0249713979372673 0.00371482530234661 0.021394503492264023 0.005435063872635847 nan nan 0.006393914469455874 0.0062013992659093915 0.007048132662031094 0.009897928099032503 False 0 False 0 -1 0.143239655784954 False 0 6.722092132163839 False False False True False False False False False True True False False ""

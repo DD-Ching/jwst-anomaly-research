@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: `forced` + depth / footprint test on the 20 MACS0416 / Abell 2744 `on_sky` targets: 0 survivors
+- **Why:** #386 handoff 2 (still open after #388). Plan frozen first (`results/dimming/forced20/PLAN.md`); screens
+  rebuilt with the coverage term on.
+- **Result (`results/dimming/forced20/RESULT.md`):** both fields calibrated (0 / 300 controls flagged each).
+  16 targets measured: all `catalogue_depth_or_deblend`, visibly present in every covering epoch; post hoc flux
+  ratio other / detection epoch 0.997 ± 0.044 (MACS0416) and 0.94 ± 0.11 (Abell 2744). 4 targets are weight-map
+  edges the committed term removes. With `nexus_o014`, all 32 `on_sky` persistence targets are explained.
+- **Handoff:** (1) fold the D-039 swap into `inject` (0.412 / 0.961 by exposure count, pooled 0.374 as
+  sensitivity), re-run `combine`; (2) the 11 NEXUS `undetected` control stamps; (3) NEXUS e2 controls.
+
 ## 2026-10-20: W3 dimming: D-039 `on_sky` efficiency by exposure count holds on held-out NEXUS e5–e7 (≤ 4 class); > 4 untested
 - **Why:** #386 handoff 1. Model and rule frozen first (`results/dimming/expcount_eff/PLAN.md`).
 - **Result (`results/dimming/expcount_eff/RESULT.md`):** held-out ≤ 4 exposures 33 / 89 `on_sky` (Wilson
