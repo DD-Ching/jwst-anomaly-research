@@ -1,0 +1,82 @@
+{
+ "label": "derived; frozen v21 queue (v20 remaining.json; no new inventory)",
+ "queue": [
+  {
+   "npix": 8124,
+   "qualifies": true,
+   "worst_cell": 0.6355,
+   "product_ratio": 1.049,
+   "unused": 5604,
+   "search_if_500_cal": 5104,
+   "lc_mb": 1704.6,
+   "unused_per_gb": 3287.6,
+   "shared_fields": [
+    634,
+    635,
+    1679
+   ],
+   "fields": [
+    634,
+    635,
+    1631,
+    1679
+   ],
+   "shared_fields_v1_v16": [
+    634,
+    635,
+    1679
+   ],
+   "shared_fields_with_v16_samples": [],
+   "independent_fields": [],
+   "position": 1,
+   "seed_offset": 30000,
+   "shared_fields_v1_v20": [
+    634,
+    635,
+    1631,
+    1679
+   ]
+  },
+  {
+   "npix": 8127,
+   "qualifies": true,
+   "worst_cell": 0.6565,
+   "product_ratio": 1.053,
+   "unused": 5374,
+   "search_if_500_cal": 4874,
+   "lc_mb": 1734.0,
+   "unused_per_gb": 3099.2,
+   "shared_fields": [
+    634,
+    635,
+    681,
+    1679
+   ],
+   "fields": [
+    634,
+    635,
+    681,
+    1678,
+    1679
+   ],
+   "shared_fields_v1_v16": [
+    634,
+    635,
+    681,
+    1679
+   ],
+   "shared_fields_with_v16_samples": [],
+   "independent_fields": [],
+   "position": 2,
+   "seed_offset": 31000,
+   "shared_fields_v1_v20": [
+    634,
+    635,
+    681,
+    1678,
+    1679
+   ]
+  }
+ ],
+ "queue_lc_mb_total": 3438.6
+}

@@ -1,0 +1,26 @@
+# v21 frozen queue (PLAN.md): the two v16-inventoried partitions not started in v20 (8124, 8127; v20 remaining.json),
+# same qualification and order rule (unused eligible groups per GB, descending). Shared fields against v1-v20 samples.
+# Usage: python queue_script.py.txt
+import gzip, json, sys
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+q20 = {r['npix']: r for r in json.load(open('results/w3_ztf/v20/queue.json'))['queue']}
+rem = json.load(open('results/w3_ztf/v20/remaining.json'))['not_started_budget']
+inv = json.load(open('results/w3_ztf/v16/inventory.json'))['areas']
+ded = json.load(gzip.open('results/w3_ztf/v21/dedupe.json.gz'))['groups']
+old_fields = {wz.oid_quad(m)[0] for g in ded for m in g[3]}
+rows = []
+for p in rem:
+    r = dict(q20[int(p)])
+    f = set(inv[str(p)]['fields'])
+    r.update(shared_fields_v1_v20=sorted(f & old_fields), independent_fields=sorted(f - old_fields))
+    rows.append(r)
+queue = sorted(rows, key=lambda r: (-r['unused_per_gb'], bool(r['shared_fields_v1_v20']), r['npix']))
+for k, r in enumerate(queue):
+    r['position'] = k + 1
+    r['seed_offset'] = 30000 + 1000 * k
+out = {'label': 'derived; frozen v21 queue (v20 remaining.json; no new inventory)', 'queue': queue,
+       'queue_lc_mb_total': round(sum(r['lc_mb'] for r in queue), 1)}
+json.dump(out, open('results/w3_ztf/v21/queue.json', 'w'), indent=1); open('results/w3_ztf/v21/queue.json', 'a').write('\n')
+for r in queue:
+    print(r['position'], r['npix'], r['unused'], r['search_if_500_cal'], r['lc_mb'], r['unused_per_gb'], r['shared_fields_v1_v20'], r['independent_fields'], r['seed_offset'])
