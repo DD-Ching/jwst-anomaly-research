@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 ZTF × ASAS-SN: Sky Patrol light-curve service down; 40 stars selected and baselined, trial not run
+- **Entry:** the official client works for catalogue cones (through a CONNECT shim in the cloud sandbox), but the
+  light-curve service had no block servers in 3 probes (22:11–22:31 UTC); it was announced as down for maintenance
+  since 13 Oct. No flux was read and no injection ran.
+- **Selection:** 40 stars, the brightest calibration stars of 4991 and 2344 (r 14.5–14.8) with a clean 16″
+  aperture (`rp_00_1` ≥ 16″). Their ZTF-only targets: 63 bounds-insufficient W3 events and 12 insufficient fades.
+- **Status:** paused, not closed. Re-run the same plan once the service is back
+  (`results/w3_ztf/asassn/RESULT.md`).
+
 ## 2026-10-20: Abell 2744 system 700.1 in UNCOVER v2.0: tool not validated; 700.1 = UNCOVER 78 (z_spec 2.3151), merged in both models
 - **Why:** D-036 revisit condition ("if UNCOVER v2.0 is scanned the same way") after #412's outcome B. Plan frozen
   and committed first (`results/lens_consistency/a2744_s700_uncover/PLAN.md`).

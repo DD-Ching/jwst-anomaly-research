@@ -1,0 +1,93 @@
+{
+ "label": "derived (../v24/step12_events_*.json.gz; selection.json); simulated events",
+ "areas": {
+  "4991": {
+   "selected": 20,
+   "events_on_selected_carriers": 98,
+   "w3": {
+    "events": 66,
+    "outcomes": {
+     "time": {
+      "recovered": 66
+     },
+     "bounds": {
+      "edge_insufficient": 39,
+      "recovered": 27
+     }
+    },
+    "undecided_side_classes": {
+     "A": 27,
+     "B": 20,
+     "C1": 4
+    }
+   },
+   "fade": {
+    "events": 32,
+    "outcomes": {
+     "time": {
+      "other:achromatic_ok": 2,
+      "edge_slow": 22,
+      "recovered": 7,
+      "other:oneoff_ok": 1
+     },
+     "bounds": {
+      "other:achromatic_ok": 2,
+      "edge_slow": 22,
+      "edge_insufficient": 7,
+      "other:oneoff_ok": 1
+     }
+    },
+    "undecided_side_classes": {
+     "B": 2,
+     "A": 7,
+     "C1": 2
+    }
+   }
+  },
+  "2344": {
+   "selected": 20,
+   "events_on_selected_carriers": 88,
+   "w3": {
+    "events": 47,
+    "outcomes": {
+     "time": {
+      "recovered": 45,
+      "edge_slow": 2
+     },
+     "bounds": {
+      "edge_insufficient": 24,
+      "recovered": 21,
+      "edge_slow": 2
+     }
+    },
+    "undecided_side_classes": {
+     "A": 25,
+     "C1": 3,
+     "B": 9
+    }
+   },
+   "fade": {
+    "events": 41,
+    "outcomes": {
+     "time": {
+      "edge_slow": 34,
+      "other:achromatic_ok": 1,
+      "other:oneoff_ok": 1,
+      "recovered": 5
+     },
+     "bounds": {
+      "edge_slow": 34,
+      "other:achromatic_ok": 1,
+      "other:oneoff_ok": 1,
+      "edge_insufficient": 5
+     }
+    },
+    "undecided_side_classes": {
+     "A": 3,
+     "C1": 1,
+     "B": 3
+    }
+   }
+  }
+ }
+}

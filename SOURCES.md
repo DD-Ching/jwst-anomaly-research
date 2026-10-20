@@ -1608,6 +1608,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   s3://ipac-irsa-ztf/ztf/enhanced/dr24/ (anonymous; read 2026-10-18); tutorial
   https://caltech-ipac.github.io/irsa-tutorials/ztf-lightcurves/; release notes
   https://irsa.ipac.caltech.edu/data/ZTF/docs/releases/dr24/ztf_release_notes_dr24.pdf. Used by `scripts/w3_ztf.py`.
+- ASAS-SN Sky Patrol v2 (Hart et al. 2023, arXiv:2304.03791; title not re-checked this round), official client
+  `skypatrol` 0.6.21 on PyPI (module `pyasassn`; https://github.com/asas-sn/skypatrol), server
+  http://asassn-lb01.ifa.hawaii.edu:9006 (deployment 0.6.20). Probed 2026-10-20: catalogue cones work, light-curve
+  service down for maintenance (`results/w3_ztf/asassn/probe.json`). Installed in the session venv only; not a
+  project dependency.
 - Metacalibration: Huff & Mandelbaum 2017, arXiv:1702.02600 ("Metacalibration: Direct Self-Calibration of Biases in
   Shear Measurement"); Sheldon & Huff 2017, arXiv:1702.02601 ("Practical Weak Lensing Shear Measurement with
   Metacalibration"); titles checked via the arXiv API 2026-10-18. JADES 1181 o001 F200W i2d:
