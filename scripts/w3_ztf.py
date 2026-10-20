@@ -705,6 +705,45 @@ def edge_time(s, run, span) -> dict:
     return {"edge_pre_d": e_pre, "edge_post_d": e_post, "edge_ok": bool(ok)}
 
 
+def edge_bounds(s, run, span) -> dict:
+    """v23 edge test ("bounds"): per side, L is the v13 edge (edge_time) and U the time from the run
+    edge to the nearest normal detection (dm < INTER[0]) beyond the farthest significant
+    intermediate, searched without a window (inf if none). The data bound the edge to [L, U]. A
+    side is fast if U <= EDGE_FRAC * span, slow if L > EDGE_FRAC * span, else insufficient; the run
+    is fast if both sides are fast, slow if either is slow, else insufficient."""
+    i, j = run
+    t = np.array([x[0] for x in s])
+    dm = np.array([x[1] for x in s])
+    nd = np.array([x[2] for x in s], bool)
+    lim = np.array([x[3] for x in s], float)
+    with np.errstate(over="ignore", invalid="ignore"):
+        sig = 0.2171 * 10 ** (0.4 * (dm - lim))
+    inter = ~nd & (dm >= INTER[0] + EDGE_NSIG * sig) & (dm < INTER[1])
+    normal = ~nd & (dm < INTER[0])
+    thr = EDGE_FRAC * span
+    pre = inter & (t >= t[i] - span) & (t < t[i])
+    post = inter & (t > t[j]) & (t <= t[j] + span)
+    a_pre = t[pre].min() if pre.any() else t[i]
+    a_post = t[post].max() if post.any() else t[j]
+    n_pre, n_post = normal & (t < a_pre), normal & (t > a_post)
+    lo = {"pre": float(t[i] - a_pre), "post": float(a_post - t[j])}
+    hi = {
+        "pre": float(t[i] - t[n_pre].max()) if n_pre.any() else np.inf,
+        "post": float(t[n_post].min() - t[j]) if n_post.any() else np.inf,
+    }
+    cls = {k: "fast" if hi[k] <= thr else ("slow" if lo[k] > thr else "insufficient") for k in lo}
+    run_cls = (
+        "fast"
+        if all(c == "fast" for c in cls.values())
+        else ("slow" if "slow" in cls.values() else "insufficient")
+    )
+    out = {"edge_pre_d": lo["pre"], "edge_post_d": lo["post"], "edge_class": run_cls}
+    for k in lo:
+        out[f"edge_{k}_max_d"] = hi[k] if np.isfinite(hi[k]) else None
+        out[f"edge_{k}_class"] = cls[k]
+    return out
+
+
 def vet(s, run, other, cov, dimfrac_override=None) -> dict:
     """Plan section 6; returns each test's outcome."""
     i, j = run
@@ -730,6 +769,9 @@ def vet(s, run, other, cov, dimfrac_override=None) -> dict:
     if EDGE_RULE == "time":  # v13: edge duration in time instead of a point count
         res.update(edge_time(s, run, span))
         res["sharp_ok"] = res["edge_ok"]
+    elif EDGE_RULE == "bounds":  # v23: the data must bound both edges below EDGE_FRAC * span
+        res.update(edge_bounds(s, run, span))
+        res["sharp_ok"] = res["edge_class"] == "fast"
     # 3 one-off: no other D-run of >= MIN_RUN epochs
     others = [r for r in runs(d) if r != (i, j) and r[1] - r[0] + 1 >= MIN_RUN]
     res["n_other_runs"] = len(others)
@@ -745,6 +787,10 @@ def vet(s, run, other, cov, dimfrac_override=None) -> dict:
         res["other_filter_epochs"] = 0
         res["achromatic_ok"] = True
     res["pass"] = all(res[k] for k in ("common_mode_ok", "sharp_ok", "oneoff_ok", "achromatic_ok"))
+    # v23: every other test passed, but the data cannot bound the edges (not a survivor)
+    res["insufficient"] = res.get("edge_class") == "insufficient" and all(
+        res[k] for k in ("common_mode_ok", "oneoff_ok", "achromatic_ok")
+    )
     return res
 
 
@@ -886,7 +932,7 @@ def stage_inject(a) -> None:
         if a.cells == "calibrated" and (te == 3.0 or (rho == 0.1 and te == 100.0)):
             continue  # v6: only the 10 cells that reached 0.5 in v4 (seeds keep their cell index)
         rng = np.random.default_rng(1100 + c + a.seed_offset)  # v13: offset for new draws
-        rec = flag = 0
+        rec = flag = insuf = 0
         used = set()
         for _ in range(n):
             g, s, o, base = carriers[rng.integers(len(carriers))]
@@ -906,6 +952,7 @@ def stage_inject(a) -> None:
             ]
             flag += bool(hit)
             rec += any(x["pass"] for x in hit)
+            insuf += not any(x["pass"] for x in hit) and any(x["insufficient"] for x in hit)
             if dump is not None:  # v13: per-injection outcome
                 tests = ("common_mode_ok", "sharp_ok", "oneoff_ok", "achromatic_ok")
                 fails = [k for k in tests if hit and not any(x[k] for x in hit)]
@@ -914,10 +961,12 @@ def stage_inject(a) -> None:
             {"rho": rho, "blend": blend, "tE": te, "n": n, "flagged": flag, "recovered": rec}
         )
         res["w3"][-1]["distinct_stars"] = len(used)
+        if EDGE_RULE == "bounds":  # v23: not recovered, edges not bounded (in the denominator)
+            res["w3"][-1]["insufficient"] = insuf
         print(res["w3"][-1], flush=True)
     for kk, kind in enumerate(("eclipse", "fade", "pspl", "common")):
         rng = np.random.default_rng(1200 + kk + a.seed_offset)
-        flag = passed = 0
+        flag = passed = insuf = 0
         used = set()
         nk = getattr(a, "n_fade", None) or n if kind == "fade" else n  # v14: larger fade control
         for _ in range(nk):
@@ -938,10 +987,13 @@ def stage_inject(a) -> None:
             sc = [x for x in screen(si, oi, cov, over) if (x["t_start"], x["t_end"]) not in base]
             flag += bool(sc)
             passed += any(x["pass"] for x in sc)
+            insuf += not any(x["pass"] for x in sc) and any(x["insufficient"] for x in sc)
             if dump is not None:
                 dump.append([kind, len(dump), g["key"], bool(sc), any(x["pass"] for x in sc), []])
         res["controls"][kind] = {"n": nk, "flagged": flag, "passed_vetting": passed}
         res["controls"][kind]["distinct_stars"] = len(used)
+        if EDGE_RULE == "bounds":
+            res["controls"][kind]["insufficient"] = insuf
         print(kind, res["controls"][kind], flush=True)
     VDIR.mkdir(parents=True, exist_ok=True)
     name = "injections_dev_v3.json" if VERSION < 4 else f"injections_v{VERSION}.json"
@@ -978,6 +1030,8 @@ def stage_search(a) -> None:
         "flagged_runs": len(out),
         "flagged_groups": len({x["key"] for x in out}),
         "passed_groups": sorted({x["key"] for x in out if x["pass"]}),
+        # v23 (bounds): every other test passed, edges not bounded by the data; not survivors
+        "insufficient_groups": sorted({x["key"] for x in out if x["insufficient"]}),
     }
     VDIR.mkdir(parents=True, exist_ok=True)
     tag = f"_{EDGE_RULE}" if VERSION >= 13 else ""  # v13: one file per edge rule
@@ -1039,7 +1093,9 @@ def main(argv=None) -> int:
     ap.add_argument("--half", choices=["dev", "holdout", "all"], default="dev")
     ap.add_argument("--n", type=int, default=200)
     ap.add_argument("--cells", choices=["all", "calibrated"], default="all")
-    ap.add_argument("--edge", choices=["count", "time"], default="count", help="v13 edge test")
+    ap.add_argument(
+        "--edge", choices=["count", "time", "bounds"], default="count", help="v13/v23 edge test"
+    )
     ap.add_argument("--seed-offset", type=int, default=0, help="v13: added to injection seeds")
     ap.add_argument("--dump", default=None, help="v13: per-injection outcome file in VDIR")
     ap.add_argument("--n-fade", type=int, default=None, help="v14: fade-control injections")

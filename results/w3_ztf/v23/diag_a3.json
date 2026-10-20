@@ -1,0 +1,106 @@
+{
+ "label": "derived (v22 decision files; v23 diag_summary.json)",
+ "v22_fade": {
+  "1853": {
+   "passed": 117,
+   "n": 1000,
+   "wilson95": [
+    0.0985,
+    0.1384
+   ]
+  },
+  "1150": {
+   "passed": 117,
+   "n": 1000,
+   "wilson95": [
+    0.0985,
+    0.1384
+   ]
+  },
+  "1148": {
+   "passed": 102,
+   "n": 1000,
+   "wilson95": [
+    0.0847,
+    0.1223
+   ]
+  },
+  "1151": {
+   "passed": 114,
+   "n": 1000,
+   "wilson95": [
+    0.0958,
+    0.1352
+   ]
+  },
+  "5054": {
+   "passed": 104,
+   "n": 1000,
+   "wilson95": [
+    0.0866,
+    0.1245
+   ]
+  },
+  "4991": {
+   "passed": 138,
+   "n": 1000,
+   "wilson95": [
+    0.118,
+    0.1608
+   ]
+  },
+  "2344": {
+   "passed": 81,
+   "n": 1000,
+   "wilson95": [
+    0.0656,
+    0.0996
+   ]
+  },
+  "4989": {
+   "passed": 112,
+   "n": 1000,
+   "wilson95": [
+    0.0939,
+    0.1331
+   ]
+  }
+ },
+ "fixed_events": {
+  "4991": {
+   "t1_range": [
+    58268.44482275887,
+    60957.14802026573
+   ],
+   "n": 1000,
+   "flagged": 857,
+   "passed_vetting": 142,
+   "passed_with_zero_day_side": 129,
+   "wilson95": [
+    0.1217,
+    0.165
+   ]
+  },
+  "2344": {
+   "t1_range": [
+    58268.44482275887,
+    60957.14802026573
+   ],
+   "n": 1000,
+   "flagged": 857,
+   "passed_vetting": 75,
+   "passed_with_zero_day_side": 70,
+   "wilson95": [
+    0.0603,
+    0.093
+   ]
+  }
+ },
+ "decision_A": {
+  "passing_fades_4991": 138,
+  "with_zero_day_side": 129,
+  "fraction": 0.935,
+  "threshold": 0.5,
+  "mechanism_important": true
+ }
+}

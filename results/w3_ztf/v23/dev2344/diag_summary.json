@@ -1,0 +1,268 @@
+{
+ "label": "derived (development analysis; v22 draws replayed); simulated events",
+ "npix": 2344,
+ "seed_offset": 46000,
+ "carriers": 500,
+ "fade": {
+  "events": 872,
+  "recovered_or_passed": 81,
+  "passing_events_with_zero_day_side": 76,
+  "passing_runs_pre_category": {
+   "measured_fast": 12,
+   "unusable_exposures": 11,
+   "intermediate_measured": 40,
+   "no_exposure": 18
+  },
+  "passing_runs_post_category": {
+   "unusable_exposures": 36,
+   "ambiguous_epochs": 25,
+   "no_exposure": 13,
+   "intermediate_measured": 7
+  },
+  "passing_events_band_check_by_absence": 7,
+  "not_passed_events_failing_test_in_every_run": {
+   "sharp_ok": 781,
+   "oneoff_ok": 69,
+   "achromatic_ok": 172
+  }
+ },
+ "w3": {
+  "rho0.01_blend0.7_tE10": {
+   "events": 133,
+   "recovered_or_passed": 127,
+   "passing_events_with_zero_day_side": 79,
+   "passing_runs_pre_category": {
+    "unusable_exposures": 20,
+    "measured_fast": 64,
+    "no_exposure": 43
+   },
+   "passing_runs_post_category": {
+    "measured_fast": 74,
+    "unusable_exposures": 23,
+    "no_exposure": 30
+   },
+   "passing_events_band_check_by_absence": 4,
+   "not_passed_events_failing_test_in_every_run": {
+    "achromatic_ok": 4,
+    "sharp_ok": 2
+   }
+  },
+  "rho0.01_blend0.7_tE100": {
+   "events": 174,
+   "recovered_or_passed": 139,
+   "passing_events_with_zero_day_side": 35,
+   "passing_runs_pre_category": {
+    "no_exposure": 15,
+    "measured_fast": 112,
+    "intermediate_measured": 6,
+    "unusable_exposures": 6
+   },
+   "passing_runs_post_category": {
+    "measured_fast": 115,
+    "unusable_exposures": 8,
+    "intermediate_measured": 3,
+    "no_exposure": 13
+   },
+   "passing_events_band_check_by_absence": 1,
+   "not_passed_events_failing_test_in_every_run": {
+    "achromatic_ok": 28,
+    "sharp_ok": 4,
+    "oneoff_ok": 3
+   }
+  },
+  "rho0.01_blend0.7_tE30": {
+   "events": 165,
+   "recovered_or_passed": 157,
+   "passing_events_with_zero_day_side": 86,
+   "passing_runs_pre_category": {
+    "measured_fast": 100,
+    "no_exposure": 38,
+    "unusable_exposures": 19
+   },
+   "passing_runs_post_category": {
+    "unusable_exposures": 21,
+    "measured_fast": 101,
+    "no_exposure": 33,
+    "intermediate_measured": 2
+   },
+   "passing_events_band_check_by_absence": 12,
+   "not_passed_events_failing_test_in_every_run": {
+    "achromatic_ok": 7,
+    "sharp_ok": 1
+   }
+  },
+  "rho0.01_blend1_tE10": {
+   "events": 141,
+   "recovered_or_passed": 141,
+   "passing_events_with_zero_day_side": 75,
+   "passing_runs_pre_category": {
+    "no_exposure": 33,
+    "unusable_exposures": 21,
+    "measured_fast": 87
+   },
+   "passing_runs_post_category": {
+    "no_exposure": 39,
+    "measured_fast": 83,
+    "unusable_exposures": 18,
+    "intermediate_measured": 1
+   },
+   "passing_events_band_check_by_absence": 13,
+   "not_passed_events_failing_test_in_every_run": {}
+  },
+  "rho0.01_blend1_tE100": {
+   "events": 160,
+   "recovered_or_passed": 159,
+   "passing_events_with_zero_day_side": 45,
+   "passing_runs_pre_category": {
+    "measured_fast": 124,
+    "unusable_exposures": 6,
+    "no_exposure": 24,
+    "intermediate_measured": 5
+   },
+   "passing_runs_post_category": {
+    "no_exposure": 13,
+    "unusable_exposures": 10,
+    "measured_fast": 130,
+    "intermediate_measured": 6
+   },
+   "passing_events_band_check_by_absence": 1,
+   "not_passed_events_failing_test_in_every_run": {
+    "sharp_ok": 1
+   }
+  },
+  "rho0.01_blend1_tE30": {
+   "events": 165,
+   "recovered_or_passed": 164,
+   "passing_events_with_zero_day_side": 91,
+   "passing_runs_pre_category": {
+    "unusable_exposures": 27,
+    "measured_fast": 94,
+    "no_exposure": 42,
+    "intermediate_measured": 1
+   },
+   "passing_runs_post_category": {
+    "measured_fast": 113,
+    "unusable_exposures": 27,
+    "no_exposure": 21,
+    "intermediate_measured": 3
+   },
+   "passing_events_band_check_by_absence": 5,
+   "not_passed_events_failing_test_in_every_run": {
+    "sharp_ok": 1
+   }
+  },
+  "rho0.1_blend0.7_tE10": {
+   "events": 115,
+   "recovered_or_passed": 110,
+   "passing_events_with_zero_day_side": 65,
+   "passing_runs_pre_category": {
+    "measured_fast": 51,
+    "no_exposure": 37,
+    "unusable_exposures": 10,
+    "intermediate_measured": 12
+   },
+   "passing_runs_post_category": {
+    "measured_fast": 55,
+    "unusable_exposures": 14,
+    "no_exposure": 32,
+    "intermediate_measured": 9
+   },
+   "passing_events_band_check_by_absence": 8,
+   "not_passed_events_failing_test_in_every_run": {
+    "sharp_ok": 4,
+    "achromatic_ok": 1
+   }
+  },
+  "rho0.1_blend0.7_tE30": {
+   "events": 158,
+   "recovered_or_passed": 145,
+   "passing_events_with_zero_day_side": 79,
+   "passing_runs_pre_category": {
+    "no_exposure": 37,
+    "intermediate_measured": 36,
+    "measured_fast": 53,
+    "unusable_exposures": 19
+   },
+   "passing_runs_post_category": {
+    "no_exposure": 25,
+    "unusable_exposures": 23,
+    "intermediate_measured": 29,
+    "measured_fast": 67,
+    "ambiguous_epochs": 1
+   },
+   "passing_events_band_check_by_absence": 8,
+   "not_passed_events_failing_test_in_every_run": {
+    "achromatic_ok": 10,
+    "sharp_ok": 3
+   }
+  },
+  "rho0.1_blend1_tE10": {
+   "events": 119,
+   "recovered_or_passed": 117,
+   "passing_events_with_zero_day_side": 69,
+   "passing_runs_pre_category": {
+    "measured_fast": 51,
+    "unusable_exposures": 16,
+    "intermediate_measured": 12,
+    "no_exposure": 36,
+    "ambiguous_epochs": 2
+   },
+   "passing_runs_post_category": {
+    "measured_fast": 66,
+    "no_exposure": 32,
+    "unusable_exposures": 11,
+    "intermediate_measured": 8
+   },
+   "passing_events_band_check_by_absence": 10,
+   "not_passed_events_failing_test_in_every_run": {
+    "achromatic_ok": 1,
+    "sharp_ok": 1
+   }
+  },
+  "rho0.1_blend1_tE30": {
+   "events": 165,
+   "recovered_or_passed": 155,
+   "passing_events_with_zero_day_side": 81,
+   "passing_runs_pre_category": {
+    "measured_fast": 81,
+    "intermediate_measured": 24,
+    "unusable_exposures": 18,
+    "no_exposure": 32
+   },
+   "passing_runs_post_category": {
+    "measured_fast": 77,
+    "unusable_exposures": 22,
+    "no_exposure": 29,
+    "intermediate_measured": 27
+   },
+   "passing_events_band_check_by_absence": 4,
+   "not_passed_events_failing_test_in_every_run": {
+    "sharp_ok": 10
+   }
+  }
+ },
+ "fade_passed": 81,
+ "w3_recovered": {
+  "rho0.01_blend0.7_tE10": 127,
+  "rho0.01_blend0.7_tE100": 139,
+  "rho0.01_blend0.7_tE30": 157,
+  "rho0.01_blend1_tE10": 141,
+  "rho0.01_blend1_tE100": 159,
+  "rho0.01_blend1_tE30": 164,
+  "rho0.1_blend0.7_tE10": 110,
+  "rho0.1_blend0.7_tE30": 145,
+  "rho0.1_blend1_tE10": 117,
+  "rho0.1_blend1_tE30": 155
+ },
+ "fixed_events": {
+  "t1_range": [
+   58268.44482275887,
+   60957.14802026573
+  ],
+  "n": 1000,
+  "flagged": 857,
+  "passed_vetting": 75,
+  "passed_with_zero_day_side": 70
+ },
+ "seconds": 90.8
+}

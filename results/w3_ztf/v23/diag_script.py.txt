@@ -1,0 +1,199 @@
+# v23 PLAN A1-A2: per-event edge diagnosis of the v22 validation draws (same seeds, carriers and noise as
+# stage_inject, re-played here) and a fixed-event fade comparison between two areas. Development analysis.
+# The side classification reads only the injected series (t, dm, nd, limit) and the official exposure list;
+# injection truth is attached after classification. Usage: python diag_script.py.txt <npix> <seed offset>
+import gzip, json, sys, time
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+P, OFF = int(sys.argv[1]), int(sys.argv[2])
+wz.configure(P, f'v23/dev{P}')
+wz.EDGE_RULE = 'time'
+T0 = time.time()
+groups = [g for g in json.loads(wz.SAMPLE.read_text())['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        base = {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}
+        carriers.append((g, s, o, base))
+
+
+def official_times(g):
+    """Official r-band exposure times with the group's position inside the footprint (any infobits)."""
+    ts = []
+    for m in g['members']:
+        r = rows.get(m)
+        if r is None or r['filt'] != 2:
+            continue
+        c = cov.get((*r['quad'], 2))
+        if c is None or m not in c['covered']:
+            continue
+        ts.append(np.asarray(c['t'])[np.asarray(c['covered'][m], bool)])
+    return np.unique(np.concatenate(ts)) if ts else np.array([])
+
+
+def sides(s, i, j, offt):
+    """Per side: L (v13), U (to the nearest normal detection beyond the farthest intermediate), thr, the interval's
+    ambiguous series epochs and unusable official exposures, and the category of an L = 0 side."""
+    t = np.array([x[0] for x in s]); dm = np.array([x[1] for x in s]); nd = np.array([x[2] for x in s], bool)
+    lim = np.array([x[3] for x in s], float)
+    with np.errstate(over='ignore', invalid='ignore'):
+        sig = 0.2171 * 10 ** (0.4 * (dm - lim))
+    inter = ~nd & (dm >= wz.INTER[0] + wz.EDGE_NSIG * sig) & (dm < wz.INTER[1])
+    normal = ~nd & (dm < wz.INTER[0])
+    span = max(t[j] - t[i], 1.0); thr = wz.EDGE_FRAC * span
+    out = {'span_d': float(span), 'thr_d': float(thr)}
+    for side in ('pre', 'post'):
+        if side == 'pre':
+            w = inter & (t >= t[i] - span) & (t < t[i])
+            L = float(t[i] - t[w].min()) if w.any() else 0.0
+            a = t[w].min() if w.any() else t[i]
+            nn = normal & (t < a)
+            tn = t[nn].max() if nn.any() else -np.inf
+            U = float(t[i] - tn)
+            lo, hi = tn, t[i]
+        else:
+            w = inter & (t > t[j]) & (t <= t[j] + span)
+            L = float(t[w].max() - t[j]) if w.any() else 0.0
+            a = t[w].max() if w.any() else t[j]
+            nn = normal & (t > a)
+            tn = t[nn].min() if nn.any() else np.inf
+            U = float(tn - t[j])
+            lo, hi = t[j], tn
+        inside = (t > lo) & (t < hi)
+        amb = int((inside & ~inter & ~normal & ~(nd | (dm >= wz.DIM_MAG))).sum())
+        ser = set(np.round(t, 5))
+        un = int(sum(1 for x in offt if lo < x < hi and round(float(x), 5) not in ser))
+        if L > 0:
+            cat = 'intermediate_measured'
+        elif U <= thr:
+            cat = 'measured_fast'
+        elif amb:
+            cat = 'ambiguous_epochs'
+        elif un:
+            cat = 'unusable_exposures'
+        else:
+            cat = 'no_exposure'
+        out[side] = {'L_d': L, 'U_d': U if np.isfinite(U) else None, 'n_ambiguous': amb, 'n_unusable_official': un,
+                     'category': cat, 'zero_day': bool(L == 0 and U > thr)}
+    return out
+
+
+def record(kind, idx, g, si, oi, hits, truth):
+    """hits: screen entries of the event; each gets its run indices, sides and tests."""
+    tt = np.array([x[0] for x in si]); offt = official_times(g)
+    runs = []
+    for h in hits:
+        i = int(np.flatnonzero(tt == h['t_start'])[0]); j = int(np.flatnonzero(tt == h['t_end'])[0])
+        sd = sides(si, i, j, offt)
+        runs.append({'t_start': h['t_start'], 't_end': h['t_end'], 'n': h['n'], 'pass': h['pass'],
+                     'tests': {k: h[k] for k in ('common_mode_ok', 'sharp_ok', 'oneoff_ok', 'achromatic_ok')},
+                     'other_filter_epochs': h['other_filter_epochs'], **sd})
+    return {'kind': kind, 'i': idx, 'carrier': g['key'], 'recovered': any(h['pass'] for h in hits), 'runs': runs,
+            'truth': truth}  # truth attached after classification
+
+
+ev = []
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    rng = np.random.default_rng(1100 + c + OFF)
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        hit = [x for x in wz.screen(si, oi, cov) if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
+               and (x['t_start'], x['t_end']) not in base]
+        if hit:
+            ev.append(record(f'rho{rho}_blend{blend:g}_tE{te:g}', k, g, si, oi, hit,
+                             {'t0': t0, 'u0': u0, 'tE': te, 'umbra_half_d': half}))
+rng = np.random.default_rng(1201 + OFF)  # fade (kk = 1)
+for k in range(1000):
+    g, s, o, base = carriers[rng.integers(len(carriers))]
+    t = np.array([x[0] for x in s])
+    st = rng.bit_generator.state
+    model = wz.control_model('fade', t, rng)
+    r2 = np.random.default_rng(); r2.bit_generator.state = st  # read the drawn parameters only after classification
+    si = wz.apply_dmag(s, model(t), cov, rng)
+    oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+    sc = [x for x in wz.screen(si, oi, cov) if (x['t_start'], x['t_end']) not in base]
+    if sc:
+        rec = record('fade', k, g, si, oi, sc, None)
+        t1, td, tr = r2.uniform(t.min(), t.max()), r2.uniform(5, 20), r2.uniform(30, 200)
+        rec['truth'] = {'t1': t1, 'td': td, 'tau': tr}
+        ev.append(rec)
+
+
+def summ(es):
+    out = {'events': len(es), 'recovered_or_passed': sum(e['recovered'] for e in es)}
+    pas = [e for e in es if e['recovered']]
+    pr = [r for e in pas for r in e['runs'] if r['pass']]
+    out['passing_events_with_zero_day_side'] = sum(any(r['pre']['zero_day'] or r['post']['zero_day'] for r in e['runs'] if r['pass']) for e in pas)
+    for sd in ('pre', 'post'):
+        cats = {}
+        for r in pr:
+            cats[r[sd]['category']] = cats.get(r[sd]['category'], 0) + 1
+        out[f'passing_runs_{sd}_category'] = cats
+    out['passing_events_band_check_by_absence'] = sum(any(r['pass'] and r['other_filter_epochs'] == 0 for r in e['runs']) for e in pas)
+    nrec = [e for e in es if not e['recovered']]
+    fails = {}
+    for e in nrec:
+        for t in ('common_mode_ok', 'sharp_ok', 'oneoff_ok', 'achromatic_ok'):
+            if not any(r['tests'][t] for r in e['runs']):
+                fails[t] = fails.get(t, 0) + 1
+    out['not_passed_events_failing_test_in_every_run'] = fails
+    return out
+
+
+res = {'label': 'derived (development analysis; v22 draws replayed); simulated events', 'npix': P, 'seed_offset': OFF,
+       'carriers': len(carriers), 'fade': summ([e for e in ev if e['kind'] == 'fade']), 'w3': {}}
+for c in sorted({e['kind'] for e in ev if e['kind'] != 'fade'}):
+    res['w3'][c] = summ([e for e in ev if e['kind'] == c])
+res['fade_passed'] = res['fade']['recovered_or_passed']
+res['w3_recovered'] = {c: v['recovered_or_passed'] for c, v in res['w3'].items()}
+# A2: fixed fade events (seeds 2300-2302); t1 over the overlap of both areas' carrier time ranges (from the other's file)
+other = {4991: 2344, 2344: 4991}[P]
+rng_ = json.load(open(f'results/w3_ztf/v23/dev{other}/carrier_range.json')) if len(sys.argv) > 3 else None
+mine = [min(x[1][0][0] for x in carriers), max(x[1][-1][0] for x in carriers)]
+json.dump({'npix': P, 'range': mine}, open(f'results/w3_ztf/v23/dev{P}/carrier_range.json', 'w')); open(f'results/w3_ztf/v23/dev{P}/carrier_range.json', 'a').write('\n')
+if rng_ is not None:
+    lo, hi = max(mine[0], rng_['range'][0]), min(mine[1], rng_['range'][1])
+    pm = np.random.default_rng(2300); pc = np.random.default_rng(2301)
+    par = [(pm.uniform(lo, hi), pm.uniform(5, 20), pm.uniform(30, 200)) for _ in range(1000)]
+    us = pc.uniform(0, 1, 1000)
+    npass = nflag = 0; zero = 0
+    for k, ((t1, td, tr), u) in enumerate(zip(par, us)):
+        g, s, o, base = carriers[int(u * len(carriers))]
+        rn = np.random.default_rng(2302 + k)
+        def fade(x, t1=t1, td=td, tr=tr):
+            x = np.asarray(x)
+            return np.where(x < t1 - td, 0.0, np.where(x < t1, 3.0 * (x - (t1 - td)) / td, 3.0 * np.exp(-(x - t1) / tr)))
+        t = np.array([x[0] for x in s])
+        si = wz.apply_dmag(s, fade(t), cov, rn)
+        oi = wz.apply_dmag(o, fade(np.array([x[0] for x in o])), cov, rn) if o else o
+        sc = [x for x in wz.screen(si, oi, cov) if (x['t_start'], x['t_end']) not in base]
+        nflag += bool(sc); p_ = any(x['pass'] for x in sc); npass += p_
+        if p_:
+            tt = np.array([x[0] for x in si]); offt = official_times(g)
+            for h in sc:
+                if h['pass']:
+                    i = int(np.flatnonzero(tt == h['t_start'])[0]); j = int(np.flatnonzero(tt == h['t_end'])[0])
+                    sd = sides(si, i, j, offt)
+                    if sd['pre']['zero_day'] or sd['post']['zero_day']:
+                        zero += 1
+                        break
+    res['fixed_events'] = {'t1_range': [lo, hi], 'n': 1000, 'flagged': nflag, 'passed_vetting': npass,
+                           'passed_with_zero_day_side': zero}
+res['seconds'] = round(time.time() - T0, 1)
+gzip.open(f'results/w3_ztf/v23/dev{P}/diag_events.json.gz', 'wt').write(json.dumps({'label': res['label'], 'events': ev}, default=float) + '\n')
+json.dump(res, open(f'results/w3_ztf/v23/dev{P}/diag_summary.json', 'w'), indent=1, default=float)
+open(f'results/w3_ztf/v23/dev{P}/diag_summary.json', 'a').write('\n')
+print(json.dumps({k: res[k] for k in ('fade', 'fade_passed', 'w3_recovered')}, default=float)[:3000], res.get('fixed_events'))

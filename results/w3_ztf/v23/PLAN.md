@@ -113,3 +113,11 @@ unchanged. No account, no external contact. 8124, 8126, 1624 and 1625 keep their
 - First list for each: the event band, that band's objectid, the ND expids, depth, mask and the same-band baseline.
 - A miss is not zero flux; unvalidated photometry confirms nothing. No new PSF route.
 - The last 30 min (from 13:48) are kept for review and records.
+
+## Status before the old/new comparison (added 10:38 UTC, before any `--edge bounds` run)
+- A0 reproduced v22 exactly in both areas (every cell, control and per-injection dump row).
+- A decision: 129 of 138 passing fades in 4991 (0.935 ≥ 0.5) have a zero-day side, so B is implemented as written
+  above, with no change (`edge_bounds()`, unit test `test_v23_edge_bounds_gap_is_insufficient_not_fast`).
+- **Disclosure:** A1 also counts recovered W3 injections with a zero-day side (`dev<npix>/diag_summary.json`, 35–99
+  per cell). Under B those become insufficient unless another passing run exists, so A1 already shows that B costs a
+  large share of W3 recovery. B's definition was fixed at 10:22 (da3411b), before A1. It is run unchanged as planned.

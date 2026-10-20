@@ -1,0 +1,14 @@
+# v23 PLAN A: calibration-only copy of a v22 sample (no search group is fetched) and the v22 control group (comparison
+# range minus every v22 sample member), rebuilt from the objects table. Usage: python dev_setup_script.py.txt <npix>
+import gzip, json, sys
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+P = int(sys.argv[1])
+wz.configure(P, f'v22/{P}')
+full = json.loads(gzip.open(str(wz.SAMPLE) + '.gz').read())
+wz.stage_comparisons(None)  # writes CACHE/comparison_oids.npy from the full v22 sample (VERSION 22 >= 6)
+wz.configure(P, f'v23/dev{P}')
+cal = [g for g in full['groups'] if not g['holdout']]
+wz.SAMPLE.parent.mkdir(parents=True, exist_ok=True)
+wz.SAMPLE.write_text(json.dumps({'label': 'derived; v22 calibration groups only (v23 PLAN A)', 'info': full['info'], 'groups': cal}) + '\n')
+print(P, len(cal), 'calibration groups of', len(full['groups']))
