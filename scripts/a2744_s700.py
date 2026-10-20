@@ -154,7 +154,11 @@ def sheet(cat: Table, rows: list[dict], model, grid, path: Path) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    best = min((r for r in rows if r["rms_arcsec"] is not None), key=lambda r: r["rms_arcsec"])
+    finite = [r for r in rows if r["rms_arcsec"] is not None]
+    if not finite:
+        print("no z predicts three images: no sheet", flush=True)
+        return
+    best = min(finite, key=lambda r: r["rms_arcsec"])
     pred, _ = solve(model, cat, grid, best["z"])
     centres = {
         "700.1a/b": (float(np.mean(cat["ra"][:2])), float(np.mean(cat["dec"][:2])), 4.0),
@@ -198,6 +202,7 @@ def main(argv=None) -> dict:
     model, files, par = lc.load_model(MODEL)
     arcs, _ = lc.image_list(MODEL, files, par)
     cat = arcs[np.asarray(arcs["system"]).astype(str) == SYSTEM]
+    cat.sort("image_id")  # a, b, c: the sheet and the summary rely on this order
     grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, arcs), GRID_STEP)
     known = validate(model, arcs, grid)
     print("known cases:", known, flush=True)
