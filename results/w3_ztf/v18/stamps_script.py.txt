@@ -1,0 +1,26 @@
+# v18 small reusable stamps (owner request: avoid a re-download next round): per exposure a 61x61 px science and mask
+# stamp around the source with its WCS header, and the parsed official DAOPHOT PSF model (header, parameters, tables).
+# Usage: python stamps_script.py.txt <data dir> <out npz>
+import importlib.util, json, sys
+import numpy as np
+from astropy.io import fits
+from astropy.wcs import WCS
+from astropy.nddata import Cutout2D
+D, OUT = sys.argv[1:3]
+m = importlib.util.module_from_spec(importlib.util.spec_from_loader('daopsf', loader=None))
+exec(open('results/w3_ztf/v18/daopsf.py.txt').read(), m.__dict__)
+man = json.load(open('results/w3_ztf/v18/manifest.json'))
+chk = {s['npix']: s for s in json.load(open('results/w3_ztf/v17/check.json'))['sources']}
+arr = {}
+for e in man['exposures']:
+    s = chk[e['npix']]; x = e['expid']
+    for kind in ('sci', 'msk'):
+        h = fits.open(f'{D}/{x}_{kind}.fits')[0]; w = WCS(h.header)
+        c = Cutout2D(h.data, w.world_to_pixel_values(s['ra'], s['dec']), 61, wcs=w)
+        arr[f'{x}_{kind}'] = c.data.astype(np.float32 if kind == 'sci' else np.int16)
+        arr[f'{x}_{kind}_wcs'] = np.array(c.wcs.to_header_string())
+    p = m.read(f'{D}/{x}_psf.psf')
+    arr[f'{x}_psf_tab'] = p['tab'].astype(np.float32); arr[f'{x}_psf_par'] = p['par']
+    arr[f'{x}_psf_hdr'] = np.array([p['npsf'], p['nexp'], p['psfmag'], p['bright'], p['xpsf'], p['ypsf']])
+    arr[f'{x}_hdr'] = np.array(fits.getheader(f'{D}/{x}_sci.fits').tostring())
+np.savez_compressed(OUT, **arr)
