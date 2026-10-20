@@ -1,0 +1,50 @@
+{
+ "photoz_rows": 5002,
+ "strong_shear_rows": 30,
+ "nearest_photoz_arcsec": {
+  "background": [
+   0.03,
+   0.04,
+   0.07,
+   0.14
+  ],
+  "member_or_foreground": [
+   0.03,
+   0.03,
+   0.04,
+   0.16
+  ],
+  "unknown": [
+   0.02,
+   0.39,
+   0.4,
+   0.57,
+   0.59,
+   0.64,
+   0.76,
+   0.83,
+   0.92,
+   1.23,
+   1.29,
+   1.32,
+   1.35,
+   1.35,
+   1.36,
+   1.39,
+   1.69,
+   1.89,
+   2.21,
+   2.34,
+   2.49,
+   2.78
+  ]
+ },
+ "rows_without_photoz_within_0.3arcsec": 21,
+ "reachability": {
+  "n_background": 4,
+  "max_anti_with_passing_control": 1,
+  "expected_anti": 0.095,
+  "best_case_p_ge_1": 0.0906,
+  "replicates_reachable": false
+ }
+}

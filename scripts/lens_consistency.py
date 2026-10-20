@@ -210,6 +210,14 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    # z_lens 0.546 (Zitrin et al. 2011)
+    "rxc0018-relics-lenstool": {
+        "files": lensmodel.RXC0018_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.546,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     "macs0417-relics-lenstool": {
         "files": lensmodel.MACS0417_RELICS_LENSTOOL,
         "kind": "maps",

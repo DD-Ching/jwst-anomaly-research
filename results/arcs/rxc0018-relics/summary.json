@@ -1,0 +1,43 @@
+{
+ "plan": "results/arcs/rxc0018-relics/PLAN.md",
+ "inputs": {
+  "catalog": "jw06882-o001_t001_nircam_clear-f200w_cat.ecsv",
+  "catalog_sha256": "9554af81fe3b73dbd03b6463b793fd310485de9719d6259b7388f613fafe92d0",
+  "photoz": "rj0018p1626-grizli-v7.5-fix.eazypy.zout.fits",
+  "photoz_sha256": "2a7f9f8eb852dea00f0ff165acc493667d161887f5fee3d255efeca4ac8d604a"
+ },
+ "runs": {
+  "rxc0018-relics-lenstool": {
+   "validate_passes": true,
+   "strong_shear_background": {
+    "n": 4,
+    "aligned": 3,
+    "anti": 0,
+    "p_random": 0.3333333333333333,
+    "p_aligned_excess": 0.11111111111111112
+   },
+   "anti_expected_shape_noise_background": {
+    "n": 4,
+    "anti": 0,
+    "expected": 0.095,
+    "p_ge_observed": 1.0
+   }
+  }
+ },
+ "deciding_model": "rxc0018-relics-lenstool",
+ "outcome": "does not replicate",
+ "p_ge_observed": 1.0,
+ "background_by_gmin": {
+  "g_min<1": {
+   "n": 4,
+   "aligned": 3,
+   "anti": 0
+  },
+  "g_min>=1": {
+   "n": 0,
+   "aligned": 0,
+   "anti": 0
+  }
+ },
+ "anti_background": []
+}

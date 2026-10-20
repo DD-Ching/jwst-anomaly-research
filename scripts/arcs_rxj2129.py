@@ -127,7 +127,8 @@ def _run(model: str, out: Path, catalog: Path, photoz: Path) -> dict:
 def decide(primary: str, second: str, out: Path, catalog: Path, photoz: Path, plan: str) -> dict:
     """Run both models, apply the frozen outcome rule and list the deciding run's anti rows with
     the other model's class; writes ``out/summary.json`` and returns it."""
-    runs = {m: _run(m, out, catalog, photoz) for m in (primary, second)}
+    # dict.fromkeys: a one-model field passes the same name twice and is run once
+    runs = {m: _run(m, out, catalog, photoz) for m in dict.fromkeys((primary, second))}
     res = outcome(runs[primary], runs[second])
     summary = {
         "plan": plan,
@@ -159,11 +160,12 @@ def decide(primary: str, second: str, out: Path, catalog: Path, photoz: Path, pl
             & (t["population"] == "background")
             & (t["orientation_class"] == "anti")
         ]
-        other_cls = (
-            match_class(anti, Table.read(out / other / "arcs.ecsv"), None)
-            if runs[other]["validate_passes"]
-            else ["no run"] * len(anti)
-        )
+        if other == dec:  # one-model field: there is no second run to compare with
+            other_cls = ["no second model"] * len(anti)
+        elif runs[other]["validate_passes"]:
+            other_cls = match_class(anti, Table.read(out / other / "arcs.ecsv"), None)
+        else:
+            other_cls = ["no run"] * len(anti)
         summary["anti_background"] = [
             {
                 "label": int(r["label"]),
