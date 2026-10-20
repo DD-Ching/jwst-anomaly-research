@@ -326,7 +326,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - Abell 2744: UNCOVER v2.0 maps (validated 2026-10-14, `scripts/a2744_uncover.py`);
    - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
-     - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1: both models merge a/b at z_spec 2.3151 (D-036 addenda 2026-10-20); next `/vet-candidate 700.1`;
+     - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1: both models merge a/b at z_spec 2.3151; vetted 2026-10-20 (D-036 addendum c): undetermined, two modelled members nearby (group halo O4 at 4.4″); parked until a local re-fit or spectra;
      - search radii from `bayes.dat` instead of a fixed 1″;
      - ~~Abell 2744 multiplicity residual~~ — done (D-045): model resolution at folds. Next: `bayes.dat` μ errors in
        `fluxratios` (Abell 2744 and El Gordo chains validated; El Gordo's chain uses σ² = a·b, D-045);
