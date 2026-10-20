@@ -1,0 +1,212 @@
+{
+ "label": "derived from observed DR24 LC API, IBE metadata, psfcat and mskimg; PLAN.md part A",
+ "target": 634205400002525,
+ "neighbour": 634205400002482,
+ "634205400002525": {
+  "ra": 259.0304237,
+  "dec": 25.0066109,
+  "refmag_r": 14.651000022888184,
+  "band": "r",
+  "event_objectid": 634205400002525,
+  "objectid_quad": [
+   634,
+   19,
+   2
+  ],
+  "run": [
+   59897.09936423121,
+   59899.08120068212
+  ],
+  "n_run": 3,
+  "lc_filtercodes": [
+   "zr"
+  ],
+  "window_exposures_infobits0": 7,
+  "nd_expids": [
+   214310269,
+   214408748,
+   214508458
+  ]
+ },
+ "634205400002482": {
+  "ra": 259.0303619,
+  "dec": 25.009346,
+  "refmag_r": 16.472999572753906,
+  "band": "r",
+  "event_objectid": 634205400002482,
+  "objectid_quad": [
+   634,
+   19,
+   2
+  ],
+  "run": [
+   59897.09936423121,
+   59956.51709300125
+  ],
+  "n_run": 7,
+  "lc_filtercodes": [
+   "zr"
+  ],
+  "window_exposures_infobits0": 8,
+  "nd_expids": [
+   214310269,
+   214408356,
+   214408748,
+   214409141,
+   214409533,
+   214508458,
+   220251997
+  ]
+ },
+ "separation_arcsec": 9.848424122230169,
+ "shared_nd_expids": [
+  214310269,
+  214408748,
+  214508458
+ ],
+ "target_nds_detected_neighbour": [],
+ "bracket_psfcat_exposure": 214109164,
+ "distinct_in_psfcat": {
+  "target_index": 1055,
+  "neighbour_index": 1036,
+  "distinct": true
+ },
+ "mask": [
+  {
+   "expid": 214310269,
+   "shared": true,
+   "target": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.3246901142622889
+   },
+   "neighbour": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.13566659657435665
+   }
+  },
+  {
+   "expid": 214408356,
+   "shared": false,
+   "target": {
+    "mask_at_center": 2,
+    "bits_at_center": [
+     1
+    ],
+    "x_dist_to_lowresp_column_px": 1.246217792348311
+   },
+   "neighbour": {
+    "mask_at_center": 2,
+    "bits_at_center": [
+     1
+    ],
+    "x_dist_to_lowresp_column_px": 0.7865346135144833
+   }
+  },
+  {
+   "expid": 214408748,
+   "shared": true,
+   "target": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.2672627034957529
+   },
+   "neighbour": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.27383123664947817
+   }
+  },
+  {
+   "expid": 214409141,
+   "shared": false,
+   "target": {
+    "mask_at_center": 2050,
+    "bits_at_center": [
+     1,
+     11
+    ],
+    "x_dist_to_lowresp_column_px": 0.7732298795812618
+   },
+   "neighbour": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.31373380685207763
+   }
+  },
+  {
+   "expid": 214409533,
+   "shared": false,
+   "target": {
+    "mask_at_center": 2,
+    "bits_at_center": [
+     1
+    ],
+    "x_dist_to_lowresp_column_px": 1.1156591778194134
+   },
+   "neighbour": {
+    "mask_at_center": 2,
+    "bits_at_center": [
+     1
+    ],
+    "x_dist_to_lowresp_column_px": 0.6561065187660944
+   }
+  },
+  {
+   "expid": 214508458,
+   "shared": true,
+   "target": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.49848934686789903
+   },
+   "neighbour": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.042825160823596775
+   }
+  },
+  {
+   "expid": 220251997,
+   "shared": false,
+   "target": {
+    "mask_at_center": 6,
+    "bits_at_center": [
+     1,
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.2820352825780823
+   },
+   "neighbour": {
+    "mask_at_center": 4,
+    "bits_at_center": [
+     2
+    ],
+    "x_dist_to_lowresp_column_px": 0.17461843430170276
+   }
+  }
+ ],
+ "n_mask_cutouts": 7,
+ "bytes": {
+  "lc_api": 926659,
+  "ibe": 4804,
+  "psfcat": 509760,
+  "mask": 181440
+ },
+ "seconds": 80.4
+}
