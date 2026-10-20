@@ -12,5 +12,85 @@
   "pairs_without_nan_k0_verdict_changed": 0,
   "pass": true
  },
- "decision": "R3 (e2 k = 1 unfinished)"
+ "G0_e2": {
+  "rows_k0": 1852,
+  "rows_k1": 1852,
+  "missing_in_k1": 0,
+  "finite_k0": 1453,
+  "finite_k0_changed": 0,
+  "nan_k0_finite_k1": 253,
+  "pairs_without_nan_k0": 36,
+  "pairs_without_nan_k0_verdict_changed": 0,
+  "pass": true
+ },
+ "e2_k0": {
+  "le4": {
+   "on_sky": 8,
+   "n": 8,
+   "wilson95": [
+    0.676,
+    1.0
+   ],
+   "persistence": 0,
+   "verdicts": {
+    "on_sky": 8
+   }
+  },
+  "gt4": {
+   "on_sky": 143,
+   "n": 143,
+   "wilson95": [
+    0.974,
+    1.0
+   ],
+   "persistence": 0,
+   "verdicts": {
+    "on_sky": 143
+   }
+  },
+  "monitored": {
+   "n": 151,
+   "persistence": 0,
+   "wilson95": [
+    0.0,
+    0.025
+   ]
+  }
+ },
+ "gt4_rule": "holds",
+ "e2_k1": {
+  "le4": {
+   "on_sky": 8,
+   "n": 8,
+   "wilson95": [
+    0.676,
+    1.0
+   ],
+   "persistence": 0,
+   "verdicts": {
+    "on_sky": 8
+   }
+  },
+  "gt4": {
+   "on_sky": 143,
+   "n": 143,
+   "wilson95": [
+    0.974,
+    1.0
+   ],
+   "persistence": 0,
+   "verdicts": {
+    "on_sky": 143
+   }
+  },
+  "monitored": {
+   "n": 151,
+   "persistence": 0,
+   "wilson95": [
+    0.0,
+    0.025
+   ]
+  }
+ },
+ "decision": "R3 (n(<= 4) = 8 < 10)"
 }

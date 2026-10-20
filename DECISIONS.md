@@ -3250,6 +3250,12 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   Revisit if NEXUS e2 controls or the 11 `undetected` stamps change ε, or a field's swap-cleared flags survive
   `forced`.
 
+**Addendum 2026-10-20l (NEXUS e2 controls; k = 1 aperture not tested).**
+- ε(> 4) = 0.961 holds on held-out NEXUS e2: 143 / 143 `on_sky` (Wilson 0.974–1.000), `persistence` 0 / 151
+  (`results/dimming/nan_k1/RESULT.md`). The k = 1 NaN fill (G1 passed in `nan_aperture`) stays unadopted: e2 has
+  8 ≤ 4 pairs (frozen minimum 10), all `on_sky` with or without it, so ε(≤ 4) stays 0.412. Revisit if a new wide
+  NEXUS or JADES epoch gives ≥ 10 unseen ≤ 4 pairs (frozen value 0.584 in `results/dimming/nan_k1/PLAN.md`).
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**

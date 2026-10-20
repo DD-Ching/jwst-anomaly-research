@@ -1,6 +1,7 @@
 """PLAN.md steps 1 and 3: G0 (finite k = 0 fluxes unchanged under k = 1; e0 against the committed
-persistence_run table, e2 against this run's k = 0 table) and the `on_sky` fraction of NEXUS e2 monitored
-pairs (mosaic S/N >= 10) by exposure class, k = 0 beside k = 1, with the frozen rules R1-R3.
+persistence_run table, e2 against this run's k = 0 table) and the `on_sky` fraction of NEXUS e2
+monitored pairs (mosaic S/N >= 10) by exposure class, k = 0 beside k = 1,
+with the frozen rules R1-R3.
 Usage (repo root): score.py  -> results/dimming/nan_k1/score.json"""
 
 import json
@@ -25,8 +26,8 @@ def wilson(k: int, n: int, z: float = 1.96) -> list[float] | None:
 
 
 def g0(exp_a: Table, ver_a: Table, exp_b: Table, ver_b: Table) -> dict:
-    """Exposures with finite k = 0 flux keep the identical flux; pairs with no NaN k = 0 exposure keep
-    their verdict; count what k = 1 adds."""
+    """Exposures with finite k = 0 flux keep the identical flux; pairs with no NaN k = 0
+    exposure keep their verdict; count what k = 1 adds."""
     key = lambda t: [f"{u}/{f}" for u, f in zip(t["uid"], t["file"], strict=True)]  # noqa: E731
     ib = {k: i for i, k in enumerate(key(exp_b))}
     fa = np.asarray(exp_a["flux"], float)
@@ -69,7 +70,8 @@ def table(v: Table) -> dict:
             "wilson95": wilson(k, len(q)),
             "persistence": int((q["verdict"] == "persistence").sum()),
             "verdicts": {
-                str(a): int(b) for a, b in zip(*np.unique(q["verdict"], return_counts=True), strict=True)
+                str(a): int(b)
+                for a, b in zip(*np.unique(q["verdict"], return_counts=True), strict=True)
             },
         }
     n_mon = len(m)
