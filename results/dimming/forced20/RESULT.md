@@ -6,11 +6,27 @@ detection pattern, the verdict tables carry no positions). Screens rebuilt with 
 controls per field. Numbers: `<field>_summary.json` (rule outcome, depth), `<field>_targets.ecsv` (forced fluxes and
 flags). Provenance: derived from observed pipeline products.
 
+Commands (repo root; `$S` a scratch directory, `F` = macs0416 or abell2744):
+```
+results/dimming/persistence_run/fetch_cats.py macs0416 abell2744
+results/dimming/persistence_scope/gaia_esa.py $S macs0416 abell2744     # $S/$F/gaia.ecsv
+scripts/dimming_screen.py screen --field $F --out $S/$F
+scripts/dimming_screen.py screen --field $F --out $S/${F}_noterm --no-weight-coverage
+results/dimming/forced20/make_targets.py $F $S/$F $S/${F}_noterm
+scripts/dimming_screen.py forced --field $F --out $S/$F --workers 8
+results/dimming/forced20/summarise.py $F $S/$F
+results/dimming/forced20/sheet.py $F $S/$F results/dimming/forced20/${F}_sheet.png
+```
+The first run used a looser selection (eligibility from `catalogue_veto` and `single_epoch`); the review
+version in `make_targets.py` (each other veto checked by name, uid check on the no-term screen) gives an identical
+`forced` input in both fields.
+
 ## Target match (derived)
 - Without the coverage term (`--no-weight-coverage`) all 20 uids are flags vetoed by `single_epoch` alone and
   F200W-catalogued only in their detection epoch (MACS0416 e2 `jw01208-o004`, Abell 2744 e1 `jw02561-o002`), as in
   the persistence run.
-- With the term on, 4 are no longer measurable flags: macs0416-d00193 (its detection-epoch pair is a weight edge)
+- With the term on, 4 are no longer eligible (flagged and vetoed by `single_epoch` alone); for each, at least
+  one F200W pair is finite without the term and masked with it (asserted in `make_targets.py`): macs0416-d00193 (its detection-epoch pair is a weight edge)
   and abell2744-d04554, d05952, d07198. They are explained by the committed term (D-052 addendum h) and were not
   measured or looked at.
 
@@ -34,7 +50,7 @@ Both fields meet the frozen requirement (≤ 1 %), so both count as calibrated.
 - Forced F200W S/N in the detection epoch 4.4–11.8 (MACS0416) and 5.1–9.5 (Abell 2744); in the other covering
   epochs 2.4–8.4 and 3.8–5.8.
 - **Post hoc (not part of the frozen rule):** inverse-variance mean flux ratio, other epoch / detection epoch:
-  MACS0416 0.997 ± 0.044 (28 epoch pairs, per target 0.68–1.21), Abell 2744 0.94 ± 0.11 (5 pairs, 0.86–1.09).
+  MACS0416 0.997 ± 0.044 (28 epoch pairs, single pairs 0.68–1.21), Abell 2744 0.94 ± 0.11 (5 pairs, 0.86–1.09).
   Constant flux, no dimming at the ~5–10 % level per field.
 - **Sheets looked at** (`macs0416_sheet.png`, `abell2744_sheet.png`): every one of the 16 is visibly present at the
   same position in every covering F200W epoch and in F444W. abell2744-d03574 e1 has a diagonal streak a few pixels
