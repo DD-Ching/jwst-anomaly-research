@@ -1,0 +1,36 @@
+{
+ "nexus": {
+  "monitored": {
+   "one_time": 67,
+   "multi": 109
+  },
+  "flag": {
+   "one_time": 0,
+   "multi": 12
+  }
+ },
+ "macs0416": {
+  "monitored": {
+   "one_time": 0,
+   "multi": 121
+  },
+  "flag": {
+   "one_time": 0,
+   "multi": 12
+  }
+ },
+ "abell2744": {
+  "monitored": {
+   "one_time": 0,
+   "multi": 126
+  },
+  "flag": {
+   "one_time": 0,
+   "multi": 8
+  }
+ },
+ "meta": {
+  "provenance": "derived",
+  "posthoc": true
+ }
+}

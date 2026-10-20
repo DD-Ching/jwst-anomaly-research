@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: the 12 measurable held-out NEXUS `inconclusive` pairs all lack an earlier exposure (C1)
+- **Why:** handoff item 2 of `undetected_stamps` / `o015_k1`. Plan frozen first; offline on committed tables.
+- **Result (`results/dimming/inconclusive_split/RESULT.md`):** 12 / 12 fail D-039 only because `n_prior` = 0
+  (S/N 20–538, none suspect); 11 are one first-of-visit dither read in SW + LW. Frozen decision C1: with
+  measurability this explains the whole held-out ≤ 4 deficit (33 + 12 = 45 / 45). No limit changes (ε(≤ 4) 0.412).
+- **Post hoc:** train 12 / 13 C1. 67 of 176 NEXUS monitored `on_sky` pairs rest on SW + LW at one time; all 32
+  target `on_sky` verdicts have ≥ 2 times.
+- **Handoff:** (1) optional D-039 method change: a cross-visit prior for first dithers (upper bound 45 / 45, Wilson
+  lower 0.921); (2) k = 1 waits for a new NEXUS-Center epoch or JADES.
+
 ## 2026-10-20: W3 dimming: NEXUS-Center-Tile-6 (o015) cannot serve as the unseen k = 1 sample (R3)
 - **Why:** the `nan_k1` handoff needed a new wide epoch; MAST shows one unused public 5105 observation,
   `jw05105-o015_t005` (Tile-6, 1,245 s F200W, MJD 60878.76), and no Center epoch after o012. Plan frozen first.

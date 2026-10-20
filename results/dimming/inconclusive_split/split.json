@@ -1,0 +1,511 @@
+{
+ "n_pairs": 12,
+ "cause_counts": {
+  "C1_n_prior": 12
+ },
+ "c1_subsplit": {
+  "first_of_visit": 12,
+  "prior_failed": 0
+ },
+ "single_time_pairs": 11,
+ "pairs": [
+  {
+   "uid": "nexus-d13038",
+   "epoch": 5,
+   "n_exposures": 2,
+   "mosaic_snr": 29.6,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    112.75,
+    50.25
+   ]
+  },
+  {
+   "uid": "nexus-d21946",
+   "epoch": 6,
+   "n_exposures": 2,
+   "mosaic_snr": 28.7,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    38.9,
+    95.35
+   ]
+  },
+  {
+   "uid": "nexus-d47796",
+   "epoch": 6,
+   "n_exposures": 4,
+   "mosaic_snr": 33.1,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 1,
+   "det_no_prior_first": 1,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 2,
+   "snr": [
+    NaN,
+    372.17,
+    NaN,
+    538.24
+   ]
+  },
+  {
+   "uid": "nexus-d47843",
+   "epoch": 6,
+   "n_exposures": 2,
+   "mosaic_snr": 32.9,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    284.75,
+    371.85
+   ]
+  },
+  {
+   "uid": "nexus-d47944",
+   "epoch": 6,
+   "n_exposures": 2,
+   "mosaic_snr": 22.3,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    20.53,
+    49.32
+   ]
+  },
+  {
+   "uid": "nexus-d48241",
+   "epoch": 6,
+   "n_exposures": 2,
+   "mosaic_snr": 33.0,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    366.44,
+    405.28
+   ]
+  },
+  {
+   "uid": "nexus-d48267",
+   "epoch": 6,
+   "n_exposures": 2,
+   "mosaic_snr": 32.9,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    402.29,
+    349.45
+   ]
+  },
+  {
+   "uid": "nexus-d28933",
+   "epoch": 7,
+   "n_exposures": 2,
+   "mosaic_snr": 25.4,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    65.29,
+    55.48
+   ]
+  },
+  {
+   "uid": "nexus-d29560",
+   "epoch": 7,
+   "n_exposures": 2,
+   "mosaic_snr": 32.6,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    277.03,
+    146.35
+   ]
+  },
+  {
+   "uid": "nexus-d30183",
+   "epoch": 7,
+   "n_exposures": 2,
+   "mosaic_snr": 32.6,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    268.82,
+    202.94
+   ]
+  },
+  {
+   "uid": "nexus-d50176",
+   "epoch": 7,
+   "n_exposures": 2,
+   "mosaic_snr": 33.0,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    394.93,
+    359.24
+   ]
+  },
+  {
+   "uid": "nexus-d50179",
+   "epoch": 7,
+   "n_exposures": 2,
+   "mosaic_snr": 32.7,
+   "cause": "C1_n_prior",
+   "finite": 2,
+   "det": 2,
+   "clean": 0,
+   "det_no_prior_first": 2,
+   "det_no_prior_failed": 0,
+   "det_suspect": 0,
+   "finite_below_snr": 0,
+   "n_distinct_mjd": 1,
+   "snr": [
+    319.58,
+    246.05
+   ]
+  }
+ ],
+ "posthoc_train": {
+  "n_pairs": 13,
+  "cause_counts": {
+   "C3_other": 1,
+   "C1_n_prior": 12
+  },
+  "single_time_pairs": 11,
+  "pairs": [
+   {
+    "uid": "nexus-d44759",
+    "epoch": 0,
+    "n_exposures": 2,
+    "mosaic_snr": 32.3,
+    "cause": "C3_other",
+    "finite": 2,
+    "det": 2,
+    "clean": 1,
+    "det_no_prior_first": 0,
+    "det_no_prior_failed": 0,
+    "det_suspect": 1,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 2,
+    "snr": [
+     258.75,
+     242.06
+    ]
+   },
+   {
+    "uid": "nexus-d20068",
+    "epoch": 3,
+    "n_exposures": 2,
+    "mosaic_snr": 32.3,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     240.44,
+     165.23
+    ]
+   },
+   {
+    "uid": "nexus-d20750",
+    "epoch": 3,
+    "n_exposures": 2,
+    "mosaic_snr": 32.4,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     251.49,
+     140.21
+    ]
+   },
+   {
+    "uid": "nexus-d21013",
+    "epoch": 3,
+    "n_exposures": 2,
+    "mosaic_snr": 26.9,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     77.9,
+     33.11
+    ]
+   },
+   {
+    "uid": "nexus-d21420",
+    "epoch": 3,
+    "n_exposures": 4,
+    "mosaic_snr": 32.6,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 1,
+    "det_no_prior_first": 1,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 2,
+    "snr": [
+     NaN,
+     402.17,
+     202.37,
+     NaN
+    ]
+   },
+   {
+    "uid": "nexus-d47121",
+    "epoch": 3,
+    "n_exposures": 2,
+    "mosaic_snr": 32.9,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     362.85,
+     427.66
+    ]
+   },
+   {
+    "uid": "nexus-d47294",
+    "epoch": 3,
+    "n_exposures": 2,
+    "mosaic_snr": 32.8,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     338.62,
+     484.79
+    ]
+   },
+   {
+    "uid": "nexus-d47565",
+    "epoch": 3,
+    "n_exposures": 2,
+    "mosaic_snr": 32.9,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     379.19,
+     519.76
+    ]
+   },
+   {
+    "uid": "nexus-d12462",
+    "epoch": 4,
+    "n_exposures": 2,
+    "mosaic_snr": 24.8,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     62.72,
+     28.01
+    ]
+   },
+   {
+    "uid": "nexus-d12704",
+    "epoch": 4,
+    "n_exposures": 2,
+    "mosaic_snr": 21.8,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     51.72,
+     109.56
+    ]
+   },
+   {
+    "uid": "nexus-d12766",
+    "epoch": 4,
+    "n_exposures": 2,
+    "mosaic_snr": 32.9,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     356.99,
+     299.89
+    ]
+   },
+   {
+    "uid": "nexus-d12855",
+    "epoch": 4,
+    "n_exposures": 2,
+    "mosaic_snr": 28.9,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     99.41,
+     47.18
+    ]
+   },
+   {
+    "uid": "nexus-d12882",
+    "epoch": 4,
+    "n_exposures": 2,
+    "mosaic_snr": 30.1,
+    "cause": "C1_n_prior",
+    "finite": 2,
+    "det": 2,
+    "clean": 0,
+    "det_no_prior_first": 2,
+    "det_no_prior_failed": 0,
+    "det_suspect": 0,
+    "finite_below_snr": 0,
+    "n_distinct_mjd": 1,
+    "snr": [
+     125.12,
+     69.79
+    ]
+   }
+  ]
+ },
+ "meta": {
+  "provenance": "derived",
+  "min_snr": 5.0,
+  "epochs": [
+   5,
+   6,
+   7
+  ]
+ }
+}
