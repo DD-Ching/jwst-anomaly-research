@@ -1,13 +1,17 @@
-"""PLAN.md steps 1 and 4: G0 (finite k = 0 fluxes unchanged under k = 2) and the `on_sky` fraction of
-NEXUS monitored pairs (mosaic S/N >= 10) by exposure class and split, k = 0 (committed
+"""PLAN.md steps 1 and 4: G0 (finite k = 0 fluxes unchanged under k = 2) and the `on_sky` fraction
+of NEXUS monitored pairs (mosaic S/N >= 10) by exposure class and split, k = 0 (committed
 persistence_run) beside k = 2 (this run), over the epochs this run finished.
 Usage (repo root): score.py  -> results/dimming/nan_aperture/score.json"""
 
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
 from astropy.table import Table, vstack
+
+sys.path.insert(0, "scripts")
+import persistence_check as pc  # noqa: E402
 
 OLD, NEW = Path("results/dimming/persistence_run/nexus"), Path("results/dimming/nan_aperture/nexus")
 TRAIN, HELD = {0, 1, 3, 4}, {5, 6, 7}  # as expcount_eff
@@ -71,6 +75,22 @@ def table(v: Table, epochs: list[int]) -> dict:
     return out
 
 
+def k1_approx(epochs: list[int]) -> Table:
+    """POST HOC: k = 1 verdicts approximated from the k = 2 tables by dropping exposures whose own
+    aperture had 2 NaN pixels (earlier-exposure fills are not undone; no k = 2 row is suspect)."""
+    rows = []
+    for k in epochs:
+        v = Table.read(NEW / f"e{k}" / "verdicts.ecsv")
+        e = Table.read(NEW / f"e{k}" / f"exposures_e{k}.ecsv")
+        snr = np.where(np.asarray(e["n_ap_nan"]) >= 2, np.nan, np.asarray(e["snr"], float))
+        for r in v:
+            s = e["uid"] == r["uid"]
+            r = dict(zip(r.colnames, r, strict=True))
+            r["verdict"] = pc.classify(snr[s], e["suspect"][s], e["n_prior"][s])
+            rows.append(r)
+    return Table(rows=rows)
+
+
 def main() -> dict:
     epochs = sorted(int(p.name[1:]) for p in NEW.glob("e*") if (p / "verdicts.ecsv").exists())
     new = vstack(
@@ -88,6 +108,8 @@ def main() -> dict:
         ),
         "k0": table(old, epochs),
         "k2_post_hoc": table(new, epochs),  # G1 failed (g1.json): descriptive only, not adopted
+        "k1_post_hoc_approx": table(k1_approx(epochs), epochs),
+        "persistence_k2": int((new["verdict"] == "persistence").sum()),
     }
     Path("results/dimming/nan_aperture/score.json").write_text(json.dumps(res, indent=1) + "\n")
     return res

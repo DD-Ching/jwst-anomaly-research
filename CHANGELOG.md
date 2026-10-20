@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: W3 dimming: NaN-tolerant aperture fails its fill-accuracy gate at 2 pixels; D-039 keeps k = 0
+- **Why:** handoff 1 of the `undetected_stamps` entry. Plan frozen first (`results/dimming/nan_aperture/PLAN.md`).
+- **Code:** `persistence_check.fill_nan_aperture` / `measure_pixel(max_nan=k)` (point-reflection fill of ≤ k NaN
+  aperture pixels; default 0 unchanged); `persistence_run/run.py ... max_nan=K` (epochs run in the given order).
+- **Result (`results/dimming/nan_aperture/RESULT.md`):** G0 passes (266 / 266 finite fluxes identical, e1, e3–e7).
+  G1 on 42 known apertures: 1 pixel median 3.7 % (pass), 2 pixels 7.9 % > 5 % (fail; scatter, not bias; S/N
+  call unchanged 42 / 42). Decision D2: k stays 0, ε = 0.412 unchanged, no limit changes. Post hoc: held-out ≤ 4
+  `on_sky` 33 / 89 → 58 / 89 (k = 1, approx.) and 62 / 89 (k = 2), 0 `persistence`.
+- **Failed approach:** k = 2 reflection fill (undersampled PSF about the rounded centre; centre pixel unfillable).
+- **Handoff:** (1) new frozen plan for k = 1 with its efficiency checked on unseen NEXUS e0 / e2 controls, then
+  the 37 targets and `inject`; (2) split the held-out `inconclusive` pairs by cause; (3) NEXUS e2 controls.
+
 ## 2026-10-20: W3 dimming: the NEXUS `undetected` control pairs are visible sources lost to no-data aperture pixels
 - **Why:** handoff 1 of the swap_inject entry. Plan frozen first (`results/dimming/undetected_stamps/PLAN.md`).
 - **Result (`results/dimming/undetected_stamps/RESULT.md`):** all 13 monitored `undetected` pairs have NaN flux

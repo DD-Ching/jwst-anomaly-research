@@ -22,8 +22,8 @@ read: ``n_prior`` is then 0). Subarray exposures are compared on full-detector p
 - ``inconclusive``: otherwise; ``undetected``: no detection.
 
 Only imaging exposures (``EXP_TYPE`` ``*_IMAGE`` with a celestial WCS) are used. Apertures that
-leave the array give NaN, as do apertures with no-data pixels unless ``--max-nan`` allows filling them
-(``fill_nan_aperture``). A file that cannot be read is listed in ``meta["failed"]``.
+leave the array give NaN, as do apertures with no-data pixels unless ``--max-nan`` allows filling
+them (``fill_nan_aperture``). A file that cannot be read is listed in ``meta["failed"]``.
 
 Every number is ``derived``; thresholds are ASSUMPTIONs (D-039).
 
