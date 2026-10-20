@@ -1,0 +1,139 @@
+{
+ "label": "simulated",
+ "version": 23,
+ "carriers": 500,
+ "w3": [
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 125,
+   "recovered": 61,
+   "distinct_stars": 168,
+   "insufficient": 64
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 165,
+   "recovered": 71,
+   "distinct_stars": 167,
+   "insufficient": 93
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 100.0,
+   "n": 200,
+   "flagged": 160,
+   "recovered": 103,
+   "distinct_stars": 164,
+   "insufficient": 56
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 136,
+   "recovered": 56,
+   "distinct_stars": 168,
+   "insufficient": 78
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 168,
+   "recovered": 68,
+   "distinct_stars": 164,
+   "insufficient": 96
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 140,
+   "recovered": 66,
+   "distinct_stars": 163,
+   "insufficient": 71
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 163,
+   "recovered": 52,
+   "distinct_stars": 169,
+   "insufficient": 99
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 100.0,
+   "n": 200,
+   "flagged": 157,
+   "recovered": 84,
+   "distinct_stars": 162,
+   "insufficient": 48
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 10.0,
+   "n": 200,
+   "flagged": 119,
+   "recovered": 43,
+   "distinct_stars": 170,
+   "insufficient": 72
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 30.0,
+   "n": 200,
+   "flagged": 163,
+   "recovered": 46,
+   "distinct_stars": 166,
+   "insufficient": 96
+  }
+ ],
+ "controls": {
+  "eclipse": {
+   "n": 200,
+   "flagged": 26,
+   "passed_vetting": 0,
+   "distinct_stars": 163,
+   "insufficient": 0
+  },
+  "fade": {
+   "n": 1000,
+   "flagged": 879,
+   "passed_vetting": 0,
+   "distinct_stars": 434,
+   "insufficient": 138
+  },
+  "pspl": {
+   "n": 200,
+   "flagged": 0,
+   "passed_vetting": 0,
+   "distinct_stars": 166,
+   "insufficient": 0
+  },
+  "common": {
+   "n": 200,
+   "flagged": 139,
+   "passed_vetting": 0,
+   "distinct_stars": 167,
+   "insufficient": 0
+  }
+ },
+ "edge_rule": "bounds",
+ "seed_offset": 45000
+}

@@ -1,0 +1,255 @@
+{
+ "label": "derived; simulated injections (v22 draws replayed); development comparison",
+ "areas": {
+  "4991": {
+   "cells": {
+    "rho0.01_blend1_tE10": {
+     "n": 200,
+     "v13": 125,
+     "bounds": 61,
+     "lost": 64,
+     "bounds_insufficient": 64,
+     "bounds_ok": false
+    },
+    "rho0.01_blend1_tE30": {
+     "n": 200,
+     "v13": 164,
+     "bounds": 71,
+     "lost": 93,
+     "bounds_insufficient": 93,
+     "bounds_ok": false
+    },
+    "rho0.01_blend1_tE100": {
+     "n": 200,
+     "v13": 159,
+     "bounds": 103,
+     "lost": 56,
+     "bounds_insufficient": 56,
+     "bounds_ok": true
+    },
+    "rho0.1_blend1_tE10": {
+     "n": 200,
+     "v13": 134,
+     "bounds": 56,
+     "lost": 78,
+     "bounds_insufficient": 78,
+     "bounds_ok": false
+    },
+    "rho0.1_blend1_tE30": {
+     "n": 200,
+     "v13": 164,
+     "bounds": 68,
+     "lost": 96,
+     "bounds_insufficient": 96,
+     "bounds_ok": false
+    },
+    "rho0.01_blend0.7_tE10": {
+     "n": 200,
+     "v13": 137,
+     "bounds": 66,
+     "lost": 71,
+     "bounds_insufficient": 71,
+     "bounds_ok": false
+    },
+    "rho0.01_blend0.7_tE30": {
+     "n": 200,
+     "v13": 151,
+     "bounds": 52,
+     "lost": 99,
+     "bounds_insufficient": 99,
+     "bounds_ok": false
+    },
+    "rho0.01_blend0.7_tE100": {
+     "n": 200,
+     "v13": 132,
+     "bounds": 84,
+     "lost": 48,
+     "bounds_insufficient": 48,
+     "bounds_ok": false
+    },
+    "rho0.1_blend0.7_tE10": {
+     "n": 200,
+     "v13": 115,
+     "bounds": 43,
+     "lost": 72,
+     "bounds_insufficient": 72,
+     "bounds_ok": false
+    },
+    "rho0.1_blend0.7_tE30": {
+     "n": 200,
+     "v13": 142,
+     "bounds": 46,
+     "lost": 96,
+     "bounds_insufficient": 96,
+     "bounds_ok": false
+    }
+   },
+   "controls": {
+    "eclipse": {
+     "n": 200,
+     "v13": 0,
+     "bounds": 0,
+     "bounds_insufficient": 0,
+     "bounds_ok": true
+    },
+    "fade": {
+     "n": 1000,
+     "v13": 138,
+     "bounds": 0,
+     "bounds_insufficient": 138,
+     "bounds_ok": true
+    },
+    "pspl": {
+     "n": 200,
+     "v13": 0,
+     "bounds": 0,
+     "bounds_insufficient": 0,
+     "bounds_ok": true
+    },
+    "common": {
+     "n": 200,
+     "v13": 0,
+     "bounds": 0,
+     "bounds_insufficient": 0,
+     "bounds_ok": true
+    }
+   },
+   "cells_below_100": 9,
+   "bounds_recovered_range": [
+    43,
+    103
+   ],
+   "lost_range": [
+    48,
+    99
+   ],
+   "gate_ok": false
+  },
+  "2344": {
+   "cells": {
+    "rho0.01_blend1_tE10": {
+     "n": 200,
+     "v13": 141,
+     "bounds": 66,
+     "lost": 75,
+     "bounds_insufficient": 75,
+     "bounds_ok": false
+    },
+    "rho0.01_blend1_tE30": {
+     "n": 200,
+     "v13": 164,
+     "bounds": 73,
+     "lost": 91,
+     "bounds_insufficient": 91,
+     "bounds_ok": false
+    },
+    "rho0.01_blend1_tE100": {
+     "n": 200,
+     "v13": 159,
+     "bounds": 114,
+     "lost": 45,
+     "bounds_insufficient": 45,
+     "bounds_ok": true
+    },
+    "rho0.1_blend1_tE10": {
+     "n": 200,
+     "v13": 117,
+     "bounds": 46,
+     "lost": 71,
+     "bounds_insufficient": 71,
+     "bounds_ok": false
+    },
+    "rho0.1_blend1_tE30": {
+     "n": 200,
+     "v13": 155,
+     "bounds": 71,
+     "lost": 84,
+     "bounds_insufficient": 84,
+     "bounds_ok": false
+    },
+    "rho0.01_blend0.7_tE10": {
+     "n": 200,
+     "v13": 127,
+     "bounds": 48,
+     "lost": 79,
+     "bounds_insufficient": 79,
+     "bounds_ok": false
+    },
+    "rho0.01_blend0.7_tE30": {
+     "n": 200,
+     "v13": 157,
+     "bounds": 71,
+     "lost": 86,
+     "bounds_insufficient": 86,
+     "bounds_ok": false
+    },
+    "rho0.01_blend0.7_tE100": {
+     "n": 200,
+     "v13": 139,
+     "bounds": 104,
+     "lost": 35,
+     "bounds_insufficient": 35,
+     "bounds_ok": true
+    },
+    "rho0.1_blend0.7_tE10": {
+     "n": 200,
+     "v13": 110,
+     "bounds": 43,
+     "lost": 67,
+     "bounds_insufficient": 67,
+     "bounds_ok": false
+    },
+    "rho0.1_blend0.7_tE30": {
+     "n": 200,
+     "v13": 145,
+     "bounds": 65,
+     "lost": 80,
+     "bounds_insufficient": 80,
+     "bounds_ok": false
+    }
+   },
+   "controls": {
+    "eclipse": {
+     "n": 200,
+     "v13": 0,
+     "bounds": 0,
+     "bounds_insufficient": 0,
+     "bounds_ok": true
+    },
+    "fade": {
+     "n": 1000,
+     "v13": 81,
+     "bounds": 0,
+     "bounds_insufficient": 81,
+     "bounds_ok": true
+    },
+    "pspl": {
+     "n": 200,
+     "v13": 0,
+     "bounds": 0,
+     "bounds_insufficient": 0,
+     "bounds_ok": true
+    },
+    "common": {
+     "n": 200,
+     "v13": 0,
+     "bounds": 0,
+     "bounds_insufficient": 0,
+     "bounds_ok": true
+    }
+   },
+   "cells_below_100": 8,
+   "bounds_recovered_range": [
+    43,
+    114
+   ],
+   "lost_range": [
+    35,
+    91
+   ],
+   "gate_ok": false
+  }
+ },
+ "gate_B_passed": false,
+ "next": "stop method changes (PLAN B); no validation, no search"
+}

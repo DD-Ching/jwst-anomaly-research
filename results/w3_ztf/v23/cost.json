@@ -1,0 +1,30 @@
+{
+ "label": "derived (parquet metadata; exposures_summary.json); times hand-logged from the session",
+ "areas": {
+  "4991": {
+   "lc_mb": 573.4,
+   "objects_mb": 95.0,
+   "tap_mb": 7.9,
+   "a0_counts_equal": true,
+   "a0_dump_rows_equal": true
+  },
+  "2344": {
+   "lc_mb": 465.2,
+   "objects_mb": 73.4,
+   "tap_mb": 6.4,
+   "a0_counts_equal": true,
+   "a0_dump_rows_equal": true
+  }
+ },
+ "total_mb": 1221.3,
+ "stages_utc": {
+  "start": "10:18",
+  "plan_commit": "10:22:21 (da3411b)",
+  "setup_fetch_exposures": "10:22:50-10:25:20 (approx.)",
+  "a0_reproduction": "10:25:49-10:27:36",
+  "a1_diagnosis": "10:28:33-10:30:24",
+  "a2_fixed_events": "10:30:32-10:32:31",
+  "rule_commit": "10:33:57 (fa8f19d)",
+  "b_comparison": "10:34:07-10:35:54"
+ }
+}
