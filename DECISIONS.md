@@ -3213,6 +3213,25 @@ docs/exotic_limits.md "W3 inverted microlensing / dimming (multi-epoch)"; epochs
   `/vet-candidate`; the others stay vetoed.
 - Partial controls: 61 / 61 monitored pairs `on_sky` (S/N 10–50). The swap waits for the full control set.
 
+**Addendum 2026-10-19h (weight-map coverage term adopted).**
+- `screen` and `inject` uncover proxy-covered epochs whose F200W i2d `WHT` (32-pixel grid, 3 × 3 node minimum) is
+  below 0.5 × the median (`Params.wht_rel_min`, `wht_step_px`; ASSUMPTIONs), the rule gate V2 validated
+  (`results/dimming/edge_coverage/RESULT.md`); `--no-weight-coverage` restores the catalogue-count proxy alone.
+- Production reproduces the validated what-if exactly; the corrected three-field headline
+  (`results/dimming/wht_coverage/limits_combined.ecsv`) replaces `macs0416_regen/limits_combined.ecsv`: ×1.07–1.33
+  weaker per source at t_E ≥ 0.03 yr, ×0.82–0.92 at 0.01 yr (`results/dimming/wht_coverage/RESULT.md`).
+- Alternative rejected: the per-stamp `stamp_edge` rule (post hoc in gate V2; needs `forced` cutouts of every
+  monitored pair). Revisit if a finer grid or the stamp rule is validated on a new field.
+
+**Addendum 2026-10-19i (persistence-test efficiency on the full control set, NEXUS partial).**
+- Monitored pairs 438 (MACS0416 121, Abell 2744 127, NEXUS 190 from e0, e1, e3, e4): `persistence` 0 / 438. Rule 1
+  passes in MACS0416 and Abell 2744 (247 / 248 `on_sky`) and fails in NEXUS (129 / 174 at S/N 20–50)
+  (`results/dimming/persistence_run/RESULT.md` "Control completion").
+- Post hoc: the NEXUS loss is set by exposures per source (≤ 4: 49 / 96 `on_sky`; > 4: 94 / 94), not mosaic S/N, so
+  the swap will take a per-(source, epoch) efficiency by exposure count, to be frozen and checked on NEXUS e5–e7
+  first. Alternative rejected: one pooled mosaic-S/N curve (passes rule 1 only because MACS0416 / Abell 2744
+  dominate). Revisit if the efficiency model fails on e5–e7.
+
 ## D-053 W1 shear screen built and adopted for W1 limits at ≥ 2 × 10¹² M☉; four cluster fields null (2026-10-08)
 
 **Decision.**

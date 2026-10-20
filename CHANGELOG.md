@@ -19,6 +19,25 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Still open:** 4 unqueued partitions with worst cell ≥ 0.59 (2900, 8124, 8126, 8127) hold 17,702 searchable groups
   in 5.76 GB, all sharing fields with earlier samples (`results/w3_ztf/v16/RESULT.md`).
 
+## 2026-10-19: W3 dimming: D-039 persistence-test `on_sky` efficiency on the full control set; NEXUS fails rule 1
+- **Why:** #384 handoff. Control-completion addendum frozen first (`results/dimming/persistence_run/PLAN.md`,
+  23:12 UTC; NEXUS epochs in a fixed order until the time budget ends).
+- **Result (`results/dimming/persistence_run/RESULT.md` "Control completion"):** 438 monitored pairs, `persistence`
+  0. MACS0416 and Abell 2744 pass rule 1 (247 / 248 `on_sky`); NEXUS (e0, e1, e3, e4) fails it (129 / 174 at S/N
+  20–50). Post hoc: NEXUS pairs with ≤ 4 exposures are `on_sky` 49 / 96, with > 4 94 / 94 (D-052 addendum i).
+- **Failed approach:** `pkill -f drive.sh` killed the calling shell again; stop workers by PID (scripts/CLAUDE.md).
+- **Handoff:** (1) freeze a per-(source, epoch) efficiency by exposure count and check it on NEXUS e5–e7;
+  (2) `forced` + depth / footprint test on the 20 MACS0416 / Abell 2744 `on_sky` targets; (3) the swap in `inject`.
+
+## 2026-10-19: W3 dimming: weight-map coverage term in `screen` / `inject`; corrected headline limits
+- **Why:** #382 handoff (decision `over_counts`). Plan and gates R0 / R1 frozen first
+  (`results/dimming/wht_coverage/PLAN.md`); `weight_edge` / `mask_weight_edges` / `wht_rel` unit-tested.
+- **Result (`results/dimming/wht_coverage/RESULT.md`):** R0 (term off = committed limits) and R1 (term on = the
+  validated gate V2 what-if) pass in all three fields. Injection sources 235 → 202; the term removes 10 compact
+  unvetoed screen flags and adds none. Corrected headline (`limits_combined.ecsv`, D-052 addendum h): per-source
+  limits ×1.07–1.33 weaker at t_E ≥ 0.03 yr, ×0.82–0.92 at 0.01 yr; D-039 swap gain ×1.80–3.52 with the term on.
+- **Handoff:** the D-039 swap can now use the corrected chain: measure the persistence test's `on_sky` efficiency
+  against mosaic S/N on monitored sources (D-052 addendum f), then fold the swap into `inject`.
 ## 2026-10-19: W3 ZTF v15: batch with the frozen v13 method; Npix 3837 searched (4,778 groups, 0 vetted survivors); Npix 183 fails validation
 - **Choice:** by metadata and cost, Npix 3837 and 183. Npix 8170 has only about 738 unused eligible groups.
   - 3837 shares fields 826 and 1857 with v1–v5, so the sources are new but the exposures are partly shared.

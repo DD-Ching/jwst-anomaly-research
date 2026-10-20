@@ -1,6 +1,6 @@
 {
  "provenance": "derived",
- "monitored_pairs": 194,
+ "monitored_pairs": 438,
  "monitored_persistence_rate": 0.0,
  "efficiency_by_mosaic_snr": [
   {
@@ -16,22 +16,22 @@
   {
    "snr_lo": 10,
    "snr_hi": 20,
-   "n_pairs": 19,
-   "n_on_sky": 19,
+   "n_pairs": 43,
+   "n_on_sky": 41,
    "n_persistence": 0,
-   "n_inconclusive": 0,
+   "n_inconclusive": 2,
    "n_undetected": 0,
-   "on_sky_fraction": 1.0
+   "on_sky_fraction": 0.9534883720930233
   },
   {
    "snr_lo": 20,
    "snr_hi": 50,
-   "n_pairs": 175,
-   "n_on_sky": 175,
+   "n_pairs": 395,
+   "n_on_sky": 349,
    "n_persistence": 0,
-   "n_inconclusive": 0,
-   "n_undetected": 0,
-   "on_sky_fraction": 1.0
+   "n_inconclusive": 43,
+   "n_undetected": 3,
+   "on_sky_fraction": 0.8835443037974684
   },
   {
    "snr_lo": 50,

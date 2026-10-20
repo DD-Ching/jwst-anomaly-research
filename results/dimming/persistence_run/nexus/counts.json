@@ -1,6 +1,19 @@
 {
  "field": "nexus",
  "n_targets": 17,
- "n_monitored": 151,
- "targets_only": true
+ "epochs_done": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "complete": false,
+ "controls_missing_epochs": [
+  2,
+  5,
+  6,
+  7
+ ],
+ "note": "exposures_e2.ecsv is the targets-only run (no controls); complete refers to targets+controls run.py would need"
 }

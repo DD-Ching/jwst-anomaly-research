@@ -2,38 +2,224 @@
 # ---
 # datatype:
 # - {name: uid, datatype: string}
+# - {name: epoch, datatype: int64}
+# - {name: kind, datatype: string}
+# - {name: verdict, datatype: string}
 # - {name: n_exposures, datatype: int64}
 # - {name: n_detected, datatype: int64}
 # - {name: n_suspect, datatype: int64}
 # - {name: n_clean, datatype: int64}
-# - {name: verdict, datatype: string}
-# - {name: epoch, datatype: int64}
-# - {name: kind, datatype: string}
-# - {name: mosaic_snr, datatype: float64}
-# - {name: n_files, datatype: int64}
 # - {name: n_failed, datatype: int64}
+# - {name: mosaic_snr, datatype: float64}
 # meta: !!omap
 # - {provenance: derived}
-# - {source: results/dimming/persistence_run/run.py nexus}
-# - {ratio: 20.0}
-# - {min_snr: 5.0}
-# - {lookback_hours: 3.0}
+# - {source: results/dimming/persistence_run/partial.py nexus}
 # schema: astropy-2.0
-uid n_exposures n_detected n_suspect n_clean verdict epoch kind mosaic_snr n_files n_failed
-nexus-d10423 12 10 0 10 on_sky 2 flag 27.371081734970755 2000 0
-nexus-d11436 4 1 0 1 inconclusive 2 flag 19.62453085075978 2000 0
-nexus-d12360 12 1 0 1 inconclusive 2 flag 20.128576721963146 2000 0
-nexus-d12528 10 1 0 1 inconclusive 2 flag 30.54071414531361 2000 0
-nexus-d13073 4 2 0 2 on_sky 2 flag 13.747846916321727 2000 0
-nexus-d15524 12 5 0 3 on_sky 2 flag 18.029640425304084 2000 0
-nexus-d18183 10 9 0 9 on_sky 2 flag 27.33563751619459 2000 0
-nexus-d20291 12 6 0 6 on_sky 2 flag 17.908657152434543 2000 0
-nexus-d22021 11 4 0 4 on_sky 2 flag 20.072267364542494 2000 0
-nexus-d23045 12 10 0 10 on_sky 2 flag 22.779977322172055 2000 0
-nexus-d24470 12 9 0 9 on_sky 2 flag 28.764349236657456 2000 0
-nexus-d29073 12 12 1 11 on_sky 2 flag 26.188827703762875 2000 0
-nexus-d29638 12 9 0 9 on_sky 2 flag 19.944813637424108 2000 0
-nexus-d30295 12 0 0 0 undetected 2 flag 31.98994864972924 2000 0
-nexus-d30428 7 1 0 1 inconclusive 2 flag 10.326129388356737 2000 0
-nexus-d30717 12 8 0 8 on_sky 2 flag 23.924285162180368 2000 0
-nexus-d46213 12 4 0 3 on_sky 2 flag 11.453428013680599 2000 0
+uid epoch kind verdict n_exposures n_detected n_suspect n_clean n_failed mosaic_snr
+nexus-d11057 0 monitored on_sky 12 10 0 10 0 32.534911117471886
+nexus-d11278 0 monitored on_sky 10 7 0 7 0 15.209801237014167
+nexus-d11358 0 monitored on_sky 12 10 0 10 0 25.839912951889016
+nexus-d11498 0 monitored on_sky 10 10 0 10 0 33.091451377887424
+nexus-d11589 0 monitored on_sky 12 8 0 8 0 24.03694256630607
+nexus-d11671 0 monitored on_sky 3 2 0 2 0 27.722425635290655
+nexus-d11908 0 monitored on_sky 14 13 0 13 0 23.955026689219018
+nexus-d12305 0 monitored on_sky 4 4 0 4 0 32.77008564302138
+nexus-d12854 0 monitored on_sky 4 4 0 4 0 27.89987896035834
+nexus-d13038 0 monitored on_sky 9 8 0 8 0 31.19185906569142
+nexus-d13250 0 monitored on_sky 8 8 0 8 0 32.95744937953306
+nexus-d13334 0 monitored on_sky 12 12 0 12 0 28.92425883567242
+nexus-d15293 0 monitored on_sky 4 4 0 4 0 31.88862153102666
+nexus-d15312 0 monitored on_sky 4 4 0 4 0 32.43079797596043
+nexus-d15410 0 monitored on_sky 10 8 0 8 0 23.447988937731896
+nexus-d15494 0 monitored on_sky 4 4 0 4 0 21.260973176870497
+nexus-d15859 0 monitored on_sky 12 9 0 9 0 18.424696442519508
+nexus-d15882 0 monitored on_sky 12 12 0 12 0 32.03664547458048
+nexus-d15906 0 monitored on_sky 12 5 0 5 0 16.277978677751676
+nexus-d15907 0 monitored on_sky 12 5 0 5 0 13.143435899514806
+nexus-d15935 0 monitored on_sky 12 7 0 7 0 14.372745655594912
+nexus-d16088 0 monitored on_sky 12 4 1 3 0 16.512446112927943
+nexus-d16110 0 monitored on_sky 12 9 0 9 0 19.304897925108516
+nexus-d16185 0 monitored on_sky 12 7 0 7 0 24.24129795151563
+nexus-d16207 0 monitored on_sky 12 12 0 12 0 33.15619934272124
+nexus-d16211 0 monitored on_sky 12 12 0 12 0 32.106108117304494
+nexus-d16501 0 monitored on_sky 12 12 0 12 0 30.68454684916893
+nexus-d16568 0 monitored on_sky 12 12 0 12 0 33.08534624899889
+nexus-d16821 0 monitored on_sky 12 12 0 12 0 30.64607471353545
+nexus-d16950 0 monitored on_sky 10 8 0 8 0 16.218140271116262
+nexus-d17070 0 monitored on_sky 8 8 1 7 0 32.98379165486282
+nexus-d17100 0 monitored on_sky 8 8 0 8 0 26.654272185633328
+nexus-d17236 0 monitored on_sky 12 12 0 12 0 24.84069583189207
+nexus-d17260 0 monitored on_sky 12 11 0 11 0 30.50880425917129
+nexus-d17261 0 monitored on_sky 12 12 0 12 0 31.707093144718183
+nexus-d17368 0 monitored on_sky 12 11 1 10 0 32.737879628302544
+nexus-d18865 0 monitored on_sky 8 6 0 6 0 31.92951458621312
+nexus-d19991 0 monitored on_sky 2 2 0 2 0 29.335511475195453
+nexus-d20011 0 monitored on_sky 6 6 2 4 0 33.11904362805659
+nexus-d20578 0 monitored on_sky 10 10 0 10 0 21.734064565794238
+nexus-d22758 0 monitored on_sky 8 8 0 8 0 18.058770290882894
+nexus-d22857 0 monitored on_sky 8 8 0 8 0 16.39733078923515
+nexus-d24011 0 monitored on_sky 12 11 0 11 0 32.82788802764934
+nexus-d24240 0 monitored on_sky 6 2 0 2 0 31.871387464796324
+nexus-d24411 0 monitored on_sky 12 12 0 12 0 30.444334809509158
+nexus-d24767 0 monitored on_sky 8 8 0 8 0 30.891937234437798
+nexus-d24830 0 monitored on_sky 12 12 0 12 0 24.989422707428457
+nexus-d24869 0 monitored on_sky 12 10 1 9 0 33.01293798266471
+nexus-d25029 0 monitored on_sky 2 2 0 2 0 15.743771936616115
+nexus-d25039 0 monitored on_sky 12 12 0 12 0 27.408335879102466
+nexus-d26066 0 monitored on_sky 10 10 0 10 0 31.669820097617865
+nexus-d28327 0 monitored on_sky 12 11 0 11 0 24.43850014994519
+nexus-d28388 0 monitored on_sky 16 16 0 16 0 32.76972949158139
+nexus-d28405 0 monitored on_sky 12 12 0 12 0 33.006168668500734
+nexus-d28560 0 monitored on_sky 21 19 0 19 0 32.569787229382435
+nexus-d28597 0 monitored on_sky 11 11 2 9 0 32.640478076125845
+nexus-d28687 0 monitored on_sky 8 8 0 8 0 32.8260806713475
+nexus-d28723 0 monitored on_sky 12 10 0 10 0 32.78124552218774
+nexus-d29076 0 monitored on_sky 11 11 0 11 0 24.187634078416473
+nexus-d29254 0 monitored on_sky 22 22 0 22 0 32.35834210166653
+nexus-d29892 0 monitored on_sky 9 7 0 7 0 27.14406380813423
+nexus-d29952 0 monitored on_sky 11 11 0 11 0 31.750230606751327
+nexus-d30191 0 monitored on_sky 8 8 0 8 0 23.341184809996037
+nexus-d30494 0 monitored on_sky 12 12 0 12 0 17.7487583857987
+nexus-d30518 0 monitored on_sky 12 12 0 12 0 25.354990944227502
+nexus-d30617 0 monitored on_sky 12 12 0 12 0 32.056465132624425
+nexus-d30692 0 monitored on_sky 11 10 0 10 0 25.469329672684765
+nexus-d30923 0 monitored on_sky 8 6 0 6 0 17.88366221124504
+nexus-d30981 0 monitored on_sky 12 10 0 10 0 31.564874290591213
+nexus-d31158 0 monitored on_sky 6 6 0 6 0 27.96629034272359
+nexus-d31284 0 monitored on_sky 6 6 0 6 0 29.813931460803165
+nexus-d31368 0 monitored on_sky 6 6 0 6 0 28.36695594747029
+nexus-d44523 0 monitored on_sky 10 10 0 10 0 32.60694624102125
+nexus-d44524 0 monitored on_sky 10 10 0 10 0 33.106399675978984
+nexus-d44759 0 monitored inconclusive 2 2 1 1 0 32.32051595890806
+nexus-d45002 0 monitored on_sky 12 12 0 12 0 32.69430871381925
+nexus-d45053 0 monitored on_sky 12 11 2 9 0 33.08653423052961
+nexus-d45059 0 monitored on_sky 10 6 0 6 0 33.06563797886695
+nexus-d45099 0 monitored on_sky 18 15 4 11 0 33.138081208441044
+nexus-d45375 0 monitored on_sky 12 12 3 9 0 33.11148171326297
+nexus-d46097 0 monitored on_sky 10 9 3 6 0 33.11683671652834
+nexus-d46125 0 monitored on_sky 8 7 2 5 0 32.99540474388186
+nexus-d46134 0 monitored on_sky 10 10 3 7 0 33.0872194190338
+nexus-d46281 0 monitored on_sky 12 12 1 11 0 33.13830205551117
+nexus-d46346 0 monitored on_sky 12 12 0 12 0 33.14125415998635
+nexus-d46451 0 monitored on_sky 10 8 2 6 0 32.482302965461
+nexus-d46470 0 monitored on_sky 11 11 0 11 0 33.14204437292819
+nexus-d46512 0 monitored on_sky 8 8 1 7 0 32.61382621347662
+nexus-d46663 0 monitored on_sky 12 12 3 9 0 33.1227721118604
+nexus-d46793 0 monitored on_sky 12 10 1 9 0 33.13906114692916
+nexus-d47330 0 monitored on_sky 10 9 0 9 0 33.08429977888233
+nexus-d47796 0 monitored on_sky 12 10 3 7 0 33.11941487360915
+nexus-d47944 0 monitored on_sky 2 2 0 2 0 27.03889259664734
+nexus-d48546 0 monitored on_sky 12 11 0 11 0 33.0694015369238
+nexus-d48664 0 monitored on_sky 12 11 1 10 0 33.014292370081776
+nexus-d48865 0 monitored on_sky 12 12 3 9 0 33.04672080945042
+nexus-d49669 0 monitored on_sky 12 12 0 12 0 33.095208271041585
+nexus-d49670 0 monitored on_sky 10 9 0 9 0 32.90317718459332
+nexus-d49766 0 monitored on_sky 14 14 0 14 0 33.14094305048617
+nexus-d49908 0 monitored on_sky 10 10 0 10 0 32.870790031515355
+nexus-d49968 0 monitored on_sky 12 12 1 11 0 33.04708011079532
+nexus-d50056 0 monitored on_sky 19 16 0 16 0 33.11727051865884
+nexus-d50189 0 monitored on_sky 10 8 0 8 0 32.781701418199965
+nexus-d50218 0 monitored on_sky 10 9 2 7 0 32.80330730266808
+nexus-d19001 1 monitored on_sky 2 2 0 2 0 22.206658816527863
+nexus-d19911 1 monitored inconclusive 2 1 0 1 0 21.25800072219257
+nexus-d19961 1 monitored inconclusive 1 1 0 1 0 26.151394564236952
+nexus-d19991 1 monitored inconclusive 2 1 0 1 0 25.759739822575863
+nexus-d20011 1 monitored on_sky 2 2 0 2 0 32.90693447999391
+nexus-d20068 1 monitored on_sky 2 2 0 2 0 32.329698385761596
+nexus-d20578 1 monitored inconclusive 2 1 0 1 0 17.08106845732939
+nexus-d20750 1 monitored inconclusive 2 1 0 1 0 32.42370213741671
+nexus-d21420 1 monitored on_sky 2 2 0 2 0 31.91710186189081
+nexus-d21831 1 monitored on_sky 2 2 0 2 0 20.68412326539682
+nexus-d21897 1 monitored on_sky 2 2 0 2 0 22.841149982373544
+nexus-d21946 1 monitored inconclusive 2 1 0 1 0 28.523649533252655
+nexus-d22105 1 monitored inconclusive 2 1 0 1 0 29.60514009985831
+nexus-d23010 1 monitored inconclusive 2 1 0 1 0 31.962883430406652
+nexus-d47121 1 monitored on_sky 4 2 0 2 0 33.09206565202041
+nexus-d47294 1 monitored inconclusive 2 1 0 1 0 32.86248873819429
+nexus-d47320 1 monitored on_sky 2 2 0 2 0 32.79041998792634
+nexus-d47330 1 monitored inconclusive 2 1 0 1 0 32.904782099976124
+nexus-d47565 1 monitored inconclusive 2 1 0 1 0 32.888266011629106
+nexus-d47621 1 monitored on_sky 2 2 0 2 0 32.728728672224435
+nexus-d47796 1 monitored on_sky 2 2 0 2 0 32.757812969767166
+nexus-d47843 1 monitored on_sky 2 2 0 2 0 32.605687286210504
+nexus-d47944 1 monitored inconclusive 2 1 0 1 0 22.125510811474857
+nexus-d48241 1 monitored on_sky 4 3 0 3 0 33.08906493794604
+nexus-d48267 1 monitored inconclusive 2 1 0 1 0 32.709953379087885
+nexus-d48331 1 monitored on_sky 4 3 0 3 0 32.99661337974804
+nexus-d10423 2 flag on_sky 12 10 0 10 0 27.371081734970755
+nexus-d11436 2 flag inconclusive 4 1 0 1 0 19.62453085075978
+nexus-d12360 2 flag inconclusive 12 1 0 1 0 20.128576721963146
+nexus-d12528 2 flag inconclusive 10 1 0 1 0 30.54071414531361
+nexus-d13073 2 flag on_sky 4 2 0 2 0 13.747846916321727
+nexus-d15524 2 flag on_sky 12 5 0 3 0 18.029640425304084
+nexus-d18183 2 flag on_sky 10 9 0 9 0 27.33563751619459
+nexus-d20291 2 flag on_sky 12 6 0 6 0 17.908657152434543
+nexus-d22021 2 flag on_sky 11 4 0 4 0 20.072267364542494
+nexus-d23045 2 flag on_sky 12 10 0 10 0 22.779977322172055
+nexus-d24470 2 flag on_sky 12 9 0 9 0 28.764349236657456
+nexus-d29073 2 flag on_sky 12 12 1 11 0 26.188827703762875
+nexus-d29638 2 flag on_sky 12 9 0 9 0 19.944813637424108
+nexus-d30295 2 flag undetected 12 0 0 0 0 31.98994864972924
+nexus-d30428 2 flag inconclusive 7 1 0 1 0 10.326129388356737
+nexus-d30717 2 flag on_sky 12 8 0 8 0 23.924285162180368
+nexus-d46213 2 flag on_sky 12 4 0 3 0 11.453428013680599
+nexus-d12401 3 monitored on_sky 2 2 0 2 0 24.786315394606497
+nexus-d12704 3 monitored on_sky 2 2 0 2 0 21.682662786881462
+nexus-d12855 3 monitored on_sky 2 2 0 2 0 28.792409237106636
+nexus-d13247 3 monitored on_sky 2 2 0 2 0 30.646824520140605
+nexus-d19961 3 monitored inconclusive 2 1 0 0 0 26.47109744748848
+nexus-d20068 3 monitored inconclusive 2 2 0 0 0 32.34666182664309
+nexus-d20578 3 monitored inconclusive 2 1 0 0 0 15.620543846476966
+nexus-d20750 3 monitored inconclusive 2 2 0 0 0 32.42308332736902
+nexus-d21013 3 monitored inconclusive 2 2 0 0 0 26.89323464108506
+nexus-d21420 3 monitored inconclusive 4 2 0 1 0 32.60123199119021
+nexus-d21831 3 monitored on_sky 2 2 0 2 0 21.65454349875086
+nexus-d21946 3 monitored on_sky 2 2 0 2 0 28.857296312978704
+nexus-d22035 3 monitored inconclusive 2 1 0 1 0 32.856492356627356
+nexus-d23010 3 monitored on_sky 2 2 0 2 0 32.056534063507215
+nexus-d45498 3 monitored on_sky 2 2 0 2 0 32.95780754102723
+nexus-d47121 3 monitored inconclusive 2 2 0 0 0 32.85551313622995
+nexus-d47294 3 monitored inconclusive 2 2 0 0 0 32.79613895142178
+nexus-d47330 3 monitored inconclusive 2 1 0 0 0 32.941768831540436
+nexus-d47565 3 monitored inconclusive 2 2 0 0 0 32.86802734026749
+nexus-d47615 3 monitored inconclusive 2 1 0 0 0 32.94066489845056
+nexus-d47796 3 monitored inconclusive 3 1 0 1 0 32.71697605896407
+nexus-d47843 3 monitored on_sky 2 2 0 2 0 32.82552591918651
+nexus-d47944 3 monitored on_sky 2 2 0 2 0 22.532446787972077
+nexus-d48241 3 monitored inconclusive 2 1 0 1 0 32.90357548328514
+nexus-d48267 3 monitored inconclusive 2 1 0 1 0 32.769976974367964
+nexus-d48331 3 monitored on_sky 2 2 0 2 0 32.67574399695886
+nexus-d12401 4 monitored inconclusive 2 1 0 0 0 24.48016949612992
+nexus-d12462 4 monitored inconclusive 2 2 0 0 0 24.77783054078723
+nexus-d12704 4 monitored inconclusive 2 2 0 0 0 21.795938236058145
+nexus-d12766 4 monitored inconclusive 2 2 0 0 0 32.85372017830499
+nexus-d12854 4 monitored undetected 2 0 0 0 0 24.237186333512785
+nexus-d12855 4 monitored inconclusive 2 2 0 0 0 28.91056283438683
+nexus-d12882 4 monitored inconclusive 2 2 0 0 0 30.088041067582765
+nexus-d13038 4 monitored on_sky 2 2 0 2 0 29.600996300767584
+nexus-d13247 4 monitored inconclusive 2 1 0 0 0 29.95862820817534
+nexus-d13250 4 monitored on_sky 2 2 0 2 0 32.80973545197664
+nexus-d13334 4 monitored on_sky 2 2 0 2 0 21.660068583644456
+nexus-d28327 4 monitored on_sky 2 2 0 2 0 15.827926497336128
+nexus-d28388 4 monitored on_sky 2 2 0 2 0 31.547914566358816
+nexus-d28405 4 monitored inconclusive 2 1 0 1 0 32.32292453378405
+nexus-d28560 4 monitored on_sky 2 2 0 2 0 29.506604038071167
+nexus-d28597 4 monitored on_sky 2 2 0 2 0 30.98108476123548
+nexus-d28687 4 monitored on_sky 2 2 0 2 0 32.855590603187814
+nexus-d28723 4 monitored undetected 2 0 0 0 0 31.612326110628814
+nexus-d28933 4 monitored inconclusive 2 1 0 1 0 25.103660784891712
+nexus-d28993 4 monitored on_sky 4 2 0 2 0 32.29313081045196
+nexus-d29254 4 monitored inconclusive 2 1 0 1 0 28.6575291615124
+nexus-d29560 4 monitored on_sky 2 2 0 2 0 32.44218636302222
+nexus-d29620 4 monitored on_sky 2 2 0 2 0 28.437544575166918
+nexus-d29718 4 monitored on_sky 2 2 0 2 0 32.28891348778781
+nexus-d30183 4 monitored inconclusive 2 1 0 1 0 32.380137554496166
+nexus-d45375 4 monitored on_sky 2 2 0 2 0 32.91205141883732
+nexus-d45498 4 monitored inconclusive 2 1 0 0 0 33.03015284578557
+nexus-d49669 4 monitored on_sky 2 2 0 2 0 32.71828318163379
+nexus-d49670 4 monitored inconclusive 2 1 0 1 0 32.740608855497136
+nexus-d49766 4 monitored inconclusive 2 1 0 1 0 32.561434808079966
+nexus-d49843 4 monitored on_sky 2 2 0 2 0 32.73479248876142
+nexus-d49908 4 monitored inconclusive 2 1 0 1 0 32.21463934174968
+nexus-d49968 4 monitored inconclusive 2 1 0 1 0 32.681505927235406
+nexus-d50056 4 monitored on_sky 2 2 0 2 0 32.76864996958633

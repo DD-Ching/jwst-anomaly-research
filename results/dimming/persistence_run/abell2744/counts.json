@@ -3,7 +3,8 @@
  "n_targets": 8,
  "epochs_done": [
   0,
-  1
+  1,
+  2
  ],
- "complete": false
+ "complete": true
 }
