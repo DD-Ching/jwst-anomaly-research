@@ -62,6 +62,25 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `controls_missing_epochs`; `persistence_run/summary.json` regenerated (527 pairs, pooled S/N rule 1 now fails,
   superseded by the exposure-count model).
 
+## 2026-10-20: W3 ZTF v22: new inventory (31 partitions, 25 qualify, none sharing fields), queue of 8: 1 passes, 1,882 groups searched, 0 survivors
+- **Undetermined W3 ZTF items** (this unit only): 8126 and 8124 are tracked from v20–v21; 1624 and 1625 are archived
+  in v19.
+- **8124 neighbour:** a distinct source 9.85″ away (634205400002482).
+  - It is missing in all 3 of the target's NDs.
+  - In those NDs both positions carry official LOW RESPONSIVITY at the centre and lie 0.04–0.50 px from the same
+    column.
+  - Consistent with one detector problem, not proven. 8124 stays undetermined.
+- **Inventory:** 31 partitions under 8 new parents. It took 49.0 min (over the 30-min cap) and 759.7 MB.
+  - 25 qualify (44,019 searchable). None shares a field with v1–v21.
+- **Queue of 8:**
+  - **Passed:** only 2344, searched with 1,882 groups and 0 survivors, all in exposures with no earlier sample data.
+  - **Failed:** 7 areas, all on the fade control (10.2–13.8 %), 4 also on short-event cells. No retries.
+- **Cumulative with the v13 rule:** 37,357 groups (not stored as one number). No confirmed target event.
+- **Cost:** 4,127 MB (estimate). Per 1,000 searched groups: about 2.2 GB and 40 min for the whole round (not stored),
+  or 247 MB and 140 stage-seconds in the passing area.
+- **Remaining in this inventory:** 17 qualifying partitions (29,698 searchable, 10.3 GB).
+- **Main limit:** the frozen fade control, not data supply (`results/w3_ztf/v22/RESULT.md`).
+
 ## 2026-10-20: W3 ZTF v21: v20 survivor's NDs fail the frozen depth/completeness criteria; 8124 and 8127 pass, 9,978 groups searched, 1 undetermined survivor (on an official low-responsivity column)
 - **8126 / 634210200007847 (v20 survivor):** the g baseline (member 634110200003853) is 18.92 ± 0.05.
   - The 4 ND limits are 19.24–19.52, and only 71–89 % of comparable stars are catalogued there. So 0 of 4 NDs meet

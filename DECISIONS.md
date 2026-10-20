@@ -5480,6 +5480,14 @@ confining radiation at a throat is found.
   - **Decision:** both survivors stay undetermined, with no new photometry. The column relation is still not made a
     global veto.
   - **Revisit if:** a new inventory is authorized.
+- **Addendum 2026-10-20 (v22, `results/w3_ztf/v22/RESULT.md`):**
+  - **Inventory:** a new one of 31 partitions; 25 qualify, none sharing fields.
+  - **Queue:** of 8 areas only 1 passed (1,882 groups searched, 0 survivors). 7 failed the frozen fade control at
+    10.2–13.8 %.
+  - **The 8124 neighbour:** it sits on the same low-responsivity column in the shared NDs; 8124 stays undetermined.
+  - **Decision:** no change to the rule this round. The fade control limits throughput in these new fields.
+  - **Revisit if:** the owner wants a method decision on the fade control, such as calibrating it per field or
+    diagnosing the excess. That is not done here.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
