@@ -266,8 +266,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      `results/arcs/rxc0018-relics/RESULT.md`; DJA `rj0018p1626`): RELICS Lenstool 3 / 4 aligned, anti 0 vs 0.095: no power
      ("replicates" unreachable, best P 0.091; 21 / 30 strong-shear rows lack a DJA photo-z). ~~Pooled tally~~ done 2026-10-20 (exploratory,
      `results/arcs/pooled-tally/RESULT.md`: six fields 10 anti vs 3.22, P 0.0019; without MACS1423 6 vs 2.27, P 0.029;
-     P 0.05 at σ_ε 0.273 / 0.320; S1063 vs a common pooled rate, conditional, P 0.078–0.121, post hoc). Next: calibrate σ_ε / the anti rate on
-     weak-shear background rows of the same catalogues. Next, optional: VENUS (6882) clusters with
+     P 0.05 at σ_ε 0.273 / 0.320; S1063 vs a common pooled rate, conditional, P 0.078–0.121, post hoc). ~~Calibrate on
+     weak-shear rows~~ done 2026-10-20 (`results/arcs/null-calibration/RESULT.md`: 9 anti vs 11.06 / 9.14, no excess;
+     σ̂_ε 0.24 / 0.27, f̂ 0 / 0.06 with wide intervals; frozen label "explains" rests on f̂ only, in substance no power;
+     no further calibration from these tables). Next, optional: VENUS (6882) clusters with
      RELICS/CLASH maps (no photo-z yet); Bullet (LAM atlas Lenstool model, JWST 4598) once a photo-z source exists;
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
      Gordo 2527 explained by its model); critical curves at z_s = 1, 2, 4 still open;

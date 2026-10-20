@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: `arcs` null calibrated on weak-shear rows: no excess there; too little leverage to settle #406
+- **Why:** #406's handoff: is the σ_ε 0.26 shape-noise null calibrated? Plan frozen before the weak-row orientation
+  classes were read (`results/arcs/null-calibration/PLAN.md`). Stored `arcs.ecsv` only; no new data.
+- **Result (`results/arcs/null-calibration/RESULT.md`, `summary.json`):** weak-shear background rows show 9 anti vs
+  11.06 expected (six fields) and 9 vs 9.14 (without MACS1423). σ̂_ε 0.24 (0.18–0.46) / 0.27 (0.19–0.60); isotropic
+  fraction f̂ 0 (0–0.36) / 0.06 (0–0.58). Frozen label "calibration explains the pooled excess", which fires only on
+  f̂ 0.06 (pooled B P 0.250). At σ̂_ε, pooled B is at P 0.0438 and S1063 at 0.0029. S1063 stays below 0.05
+  except at the f upper bounds and pool B's σ_ε upper bound (P 0.072).
+- **Reading:** the label overstates the evidence. The weak rows agree with the null but allow calibrations from "no
+  change" to "removes the excess". In substance: no power.
+- **Failed approach:** the rule accepted a point estimate whose interval contains the as-run value. Future
+  calibration plans need the interval to exclude it.
+- **Handoff:** no more `arcs` null calibration from these tables. S1063 waits on 116.28VK.001 spectroscopy (owner
+  decision). A sharper calibration needs many more rows at 0.2 ≲ g < 1 (deeper catalogues or more fields).
+
 ## 2026-10-20: `arcs` pooled over the S1063 replication fields: pooled excess at σ_ε 0.26; S1063 weaker against it
 - **Why:** each replication field alone has little power; pooling the six control-passing independent fields asks
   whether the shape-noise null is calibrated. Plan `results/arcs/pooled-tally/PLAN.md`, written after the
