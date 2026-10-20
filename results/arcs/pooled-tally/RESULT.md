@@ -15,14 +15,14 @@ Both variants are below 0.05 (ASSUMPTION threshold), so the frozen label is "poo
 "does not replicate" (except MACS1423 at screen level, explained by its clump-pair census); together they hold
 2.6–3.1 times the shape-noise expectation.
 
-## Secondary checks (pre-registered; they do not change the outcome)
-- **σ_ε scan** (ASSUMPTION grid 0.26–0.40): variant B reaches P ≥ 0.05 at σ_ε 0.28 (P 0.064), variant A at
-  0.32 (P 0.051). The pooled excess is about the size of a modest error in the null's intrinsic ellipticity
+## Secondary checks (in the plan; they do not change the outcome; the whole plan is post hoc)
+- **σ_ε at P = 0.05** (`sigma_at_alpha`, solved by root-finding): variant B 0.273, variant A 0.320. The grid
+  0.26–0.40 (`sigma_scan`) is reported too (addition to the plan). The pooled excess is about the size of a modest error in the null's intrinsic ellipticity
   dispersion. (σ_ε is not measured on these catalogues; that check is not done.)
-- **Abell S1063 at each σ_ε** (from its stored `arcs.ecsv`): 4 anti vs 0.52–1.14 expected, P 0.0021–0.029. Inflating
+- **Abell S1063** (from its stored `arcs.ecsv`; the plan asked for one σ_ε, the whole grid is an addition): 4 anti vs 0.52–1.14 expected, P 0.0021–0.029. Inflating
   σ_ε alone does not remove the S1063 excess anywhere on the grid.
-- **g_min split of the pooled anti:** 7 at g_min < 1 and 3 at g_min ≥ 1 (MACS0417 2, MACS1423 1); variant B: 4 and 2.
-  Most pooled anti rows lie at g_min < 1, outside the critical curves.
+- **g_min split of the pooled anti** (boundary as in `anti_probability`, |g| > 1 inside): 7 at g_min ≤ 1 and 3
+  at g_min > 1 (MACS0417 2, MACS1423 1); variant B: 4 and 2. Most pooled anti rows lie outside the critical curves.
 
 ## Post hoc: S1063 against the pooled fields' empirical rate (not in the plan)
 `s1063_vs_pooled_posthoc`: scaling S1063's expectation by the pooled observed / expected ratio (B 2.64, A 3.10; 95 %
@@ -35,8 +35,8 @@ all anti in S1063 plus the pool, the chance that S1063 holds ≥ 4 at its expect
 - The shape-noise null at σ_ε 0.26 under-predicts `anti` counts across the independent fields by a factor of about
   2.6–3.1 (derived; 6 and 10 counts, so the factor is poorly known). The likelier explanations are ordinary
   (null calibration: σ_ε, blends and clump pairs, photo-z contamination, model error); which one is not tested here.
-- Measured against that empirical rate, S1063's 4 anti are not below 0.05 in the conditional test (P 0.078–0.121,
-  post hoc). The S1063 anti excess is therefore weaker than its frozen P 0.0021 suggested. It is not explained by this check either:
+- If one observed / expected ratio is common to all fields (an untested ASSUMPTION), S1063's 4 anti are not below
+  0.05 in the conditional test (P 0.078–0.121, post hoc), against its frozen P 0.0021 under σ_ε 0.26. It is not explained by this check either:
   1316 and 2184 stay open as in `results/arcs/abells1063-cats/RESULT.md`.
 
 ## Limitations

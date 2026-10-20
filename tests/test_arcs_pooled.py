@@ -6,6 +6,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 _DIR = Path(__file__).resolve().parents[1] / "scripts"
@@ -87,3 +88,23 @@ def test_frozen_fields_point_at_stored_runs():
     for rel in (*ap.FIELDS.values(), ap.S1063):
         path = ap.ROOT / rel
         assert path.exists() and (path.parent / "arcs.json").exists()
+
+
+def test_sigma_crossing_finds_root_or_none():
+    assert ap.sigma_crossing(lambda s: s, 0.0, 0.1) == pytest.approx(0.05, abs=1e-3)
+    assert ap.sigma_crossing(lambda s: 0.5, 0.0, 0.1) is None
+
+
+def test_inside_matches_anti_probability_boundary():
+    from astropy.table import Table
+
+    t = Table({"g_min": [0.5, 0.996, 1.004, 1.2]})
+    assert list(ap.inside(t)) == [False, False, False, True]
+
+
+def test_field_stats_rejects_empty_rows():
+    from astropy.table import Table
+
+    t = Table({"g_min": np.array([], float), "orientation_class": np.array([], str)})
+    with pytest.raises(ValueError):
+        ap.field_stats(t, 0.26, 0.5, 60.0)

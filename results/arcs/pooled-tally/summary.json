@@ -9,9 +9,16 @@
   "MACS0308": "macs0308-relics/macs0308-relics-glafic/arcs.ecsv",
   "RXC J0018": "rxc0018-relics/rxc0018-relics-lenstool/arcs.ecsv"
  },
- "cuts": {
+ "assumptions": {
   "min_ellipticity": 0.5,
-  "anti_deg": 60.0
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0,
+  "max_radius": 50.0,
+  "min_shear": 0.2,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "z_margin": 0.1,
+  "sigma_eps": 0.26
  },
  "stored_check": {
   "MACS0417": {
@@ -118,28 +125,28 @@
  },
  "anti_by_gmin": {
   "MACS0417": {
-   "g_min<1": 1,
-   "g_min>=1": 2
+   "g_min<=1": 1,
+   "g_min>1": 2
   },
   "MACS1423": {
-   "g_min<1": 3,
-   "g_min>=1": 1
+   "g_min<=1": 3,
+   "g_min>1": 1
   },
   "WHL0137": {
-   "g_min<1": 1,
-   "g_min>=1": 0
+   "g_min<=1": 1,
+   "g_min>1": 0
   },
   "RXC J0600": {
-   "g_min<1": 1,
-   "g_min>=1": 0
+   "g_min<=1": 1,
+   "g_min>1": 0
   },
   "MACS0308": {
-   "g_min<1": 1,
-   "g_min>=1": 0
+   "g_min<=1": 1,
+   "g_min>1": 0
   },
   "RXC J0018": {
-   "g_min<1": 0,
-   "g_min>=1": 0
+   "g_min<=1": 0,
+   "g_min>1": 0
   }
  },
  "pooled": {
@@ -277,6 +284,10 @@
    "p_conditional_B": 0.0784744711180177
   }
  ],
+ "sigma_at_alpha": {
+  "A": 0.3197155718202701,
+  "B": 0.27324081119645915
+ },
  "s1063_vs_pooled_posthoc": {
   "A": {
    "pool_ratio": 3.10372806295933,

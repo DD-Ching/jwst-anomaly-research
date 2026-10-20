@@ -16,6 +16,7 @@ from pathlib import Path
 
 import numpy as np
 from astropy.table import Table
+from scipy.optimize import brentq
 from scipy.stats import binom, chi2, poisson
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -57,6 +58,8 @@ def field_stats(rows: Table, sigma_eps: float, min_ellipticity: float, anti_deg:
         _p_anti(round(float(g), 2), sigma_eps, min_ellipticity, anti_deg)
         for g in np.asarray(rows["g_min"], float)
     )
+    if not len(rows) or not np.isfinite(lam) or lam <= 0:
+        raise ValueError(f"no usable shape-noise expectation (n {len(rows)}, λ {lam})")
     k = int(np.sum(rows["orientation_class"] == "anti"))
     return {
         "n": len(rows),
@@ -113,6 +116,26 @@ def s1063_vs_pooled(s1063: dict, pool: dict) -> dict:
     }
 
 
+def anti_mask(rows: Table) -> np.ndarray:
+    return np.asarray(rows["orientation_class"] == "anti")
+
+
+def inside(rows: Table) -> np.ndarray:
+    """Inside the critical curve as `anti_probability` treats it: |round(g_min, 2)| > 1."""
+    return np.abs(np.round(np.asarray(rows["g_min"], float), 2)) > 1
+
+
+def sigma_crossing(p_of_sigma, lo: float, hi: float, alpha: float = ALPHA) -> float | None:
+    """σ_ε in [lo, hi] at which a pooled P reaches alpha (brentq), or None without a sign change."""
+
+    def f(s: float) -> float:
+        return p_of_sigma(s) - alpha
+
+    if f(lo) * f(hi) > 0:
+        return None
+    return float(brentq(f, lo, hi, xtol=1e-3))
+
+
 def load_run(rel: str) -> tuple[Table, dict]:
     """Background rows plus the run's stored `arcs.json` (assumptions and shape-noise summary)."""
     path = ROOT / rel
@@ -132,13 +155,14 @@ def stored_check(stats: dict, stored: dict) -> dict:
 def main() -> None:
     runs = {f: load_run(p) for f, p in FIELDS.items()}
     s1063_rows, s1063_meta = load_run(S1063)
-    cuts = {}
-    for name, (_, meta) in [*runs.items(), ("S1063", (s1063_rows, s1063_meta))]:
-        a = meta["assumptions"]
-        cuts[name] = (float(a["min_ellipticity"]), float(a["anti_deg"]))
-    if len(set(cuts.values())) != 1:
-        raise SystemExit(f"error: runs use different ellipticity / anti cuts: {cuts}")
-    e_min, anti_deg = next(iter(cuts.values()))
+    assumptions = {name: meta["assumptions"] for name, (_, meta) in runs.items()}
+    assumptions["S1063"] = s1063_meta["assumptions"]
+    ref = next(iter(assumptions.values()))
+    if any(a != ref for a in assumptions.values()):
+        raise SystemExit(f"error: runs use different `arcs` assumptions: {assumptions}")
+    e_min, anti_deg = float(ref["min_ellipticity"]), float(ref["anti_deg"])
+    if float(ref["sigma_eps"]) != SIGMAS[0]:
+        raise SystemExit(f"error: runs used σ_ε {ref['sigma_eps']}, the scan starts at {SIGMAS[0]}")
 
     def stats_at(sigma: float) -> dict[str, dict]:
         return {f: field_stats(t, sigma, e_min, anti_deg) for f, (t, _) in runs.items()}
@@ -154,8 +178,8 @@ def main() -> None:
         raise SystemExit(f"error: recomputed summaries differ from the stored ones: {checks}")
     gsplit = {
         f: {
-            "g_min<1": int(np.sum((t["orientation_class"] == "anti") & (t["g_min"] < 1))),
-            "g_min>=1": int(np.sum((t["orientation_class"] == "anti") & (t["g_min"] >= 1))),
+            "g_min<=1": int(np.sum(anti_mask(t) & ~inside(t))),
+            "g_min>1": int(np.sum(anti_mask(t) & inside(t))),
         }
         for f, (t, _) in runs.items()
     }
@@ -177,22 +201,29 @@ def main() -> None:
                 },
             }
         )
+    crossing = {
+        v: sigma_crossing(
+            lambda x, fs=fs: pooled(stats_at(x), fs)["p_ge_observed"], SIGMAS[0], SIGMAS[-1]
+        )
+        for v, fs in VARIANTS.items()
+    }
     summary = {
         "plan": "results/arcs/pooled-tally/PLAN.md",
         "label": "exploratory (post hoc)",
         "fields": FIELDS,
-        "cuts": {"min_ellipticity": e_min, "anti_deg": anti_deg},
+        "assumptions": ref,
         "stored_check": checks,
         "per_field_sigma_0.26": per_field,
         "anti_by_gmin": gsplit,
         "pooled": res,
         "outcome": outcome(res["A"]["p_ge_observed"], res["B"]["p_ge_observed"]),
         "sigma_scan": scan,
+        "sigma_at_alpha": crossing,
         "s1063_vs_pooled_posthoc": {v: s1063_vs_pooled(s1063_ref, res[v]) for v in VARIANTS},
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    keys = ("pooled", "outcome", "s1063_vs_pooled_posthoc")
+    keys = ("pooled", "outcome", "sigma_at_alpha", "anti_by_gmin")
     print(json.dumps({k: summary[k] for k in keys}, indent=1))
     for r in scan:
         print(
