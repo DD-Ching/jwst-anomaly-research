@@ -22,4 +22,5 @@ S1063 itself are excluded.
 - **Pooled excess** if P < 0.05 in **both** variants; **no pooled excess** if P ≥ 0.05 in both; otherwise
   **mixed**.
 - Secondary (does not change the outcome): the σ_ε at which variant B reaches P = 0.05, and the split of pooled
-  anti rows by g_min < 1 / ≥ 1 (critical-curve flips).
+  anti rows by g_min < 1 / ≥ 1 (critical-curve flips); and Abell S1063's own P(≥ observed anti) recomputed from its stored
+  `arcs.ecsv` at that σ_ε (added before the run, still post hoc).
