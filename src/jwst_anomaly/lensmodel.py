@@ -430,6 +430,33 @@ MACS0417_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: HFF Sharon & Johnson v4cor Lenstool maps of MACS J1149.5+2223 (readme
+#: ``hlsp_frontier_model_macs1149_sharon_v4cor_readme.pdf``, accessed 2026-10-20): best fit,
+#: 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second model for the
+#: D-037 MACS1149 rows (known-case gates: ``results/lens_consistency/macs1149_sharon/``).
+_HFF_SHARON_MACS1149 = (
+    "https://archive.stsci.edu/pub/hlsp/frontier/macs1149/models/sharon/v4cor/"
+    "hlsp_frontier_model_macs1149_sharon_v4cor"
+)
+MACS1149_SHARON_V4COR: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_HFF_SHARON_MACS1149}_x-arcsec-deflect.fits",
+        "44f1d21a78cead051c08295d13d7c9189638971cf1e9445bb2caa641a129324f",
+    ),
+    "alpha_y": (
+        f"{_HFF_SHARON_MACS1149}_y-arcsec-deflect.fits",
+        "54508deb502d9bcafca9733c3b28f3b4d794b64f11167589b56c1fc37d66a15c",
+    ),
+    "kappa_map": (
+        f"{_HFF_SHARON_MACS1149}_kappa.fits",
+        "f6960c30aa55806a42a5d41be63a28828be3639319d280eac5630b9b3a9d1435",
+    ),
+    "mag_z2": (
+        f"{_HFF_SHARON_MACS1149}_z02-magnif.fits",
+        "3fe6de1b86794061aaac9e1b8a6dfacf96118a57bacb2e864cd99a8187ba2e35",
+    ),
+}
+
 #: CANUCS DR1 Lenstool maps of MACS J0417.5-1154 (Desprez, preliminary v1: 30 spectroscopic
 #: multiple-image systems; readme ``macs0417-lenstool-readme``; accessed 2026-10-16): best fit,
 #: 100 mas, 500 arcsec, D_LS/D_S = 1, deflection in arcsec (``dpl1`` x, ``dpl2`` y); 85-89 MB

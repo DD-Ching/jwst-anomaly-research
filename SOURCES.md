@@ -663,7 +663,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 
 - JWST CANUCS program 1208, NIRCam level 3 `jw01208-o008_t004_nircam_clear-*`, 8 bands (F090W–F444W), jwst 3.0.0,
   S3 `s3://stpubdata/jwst/public/jw01208/L3/t/o008/`. Manifests: `data/manifests/macs1149*.ecsv`.
-- HFF Sharon v4cor MACS1149 deflection maps (second model for the comparison only; not in `MODELS`):
+- HFF Sharon v4cor MACS1149 deflection maps (in `MODELS` as `macs1149-sharon` since 2026-10-20, with the kappa and
+  z02-magnif maps; sha256 in `lensmodel.MACS1149_SHARON_V4COR`; readme
+  `hlsp_frontier_model_macs1149_sharon_v4cor_readme.pdf`, sha256
+  `12a284d22368f29491670180d07f5776d35a28ed754743b866fdf7184af39636`, Table 5 gold images; accessed 2026-10-20):
   `https://archive.stsci.edu/pub/hlsp/frontier/macs1149/models/sharon/v4cor/hlsp_frontier_model_macs1149_sharon_v4cor_{x,y}-arcsec-deflect.fits`,
   64,008,000 B each. sha256: x `44f1d21a78cead051c08295d13d7c9189638971cf1e9445bb2caa641a129324f`,
   y `54508deb502d9bcafca9733c3b28f3b4d794b64f11167589b56c1fc37d66a15c`.
