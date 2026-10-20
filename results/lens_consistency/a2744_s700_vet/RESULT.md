@@ -7,16 +7,17 @@ photo-z `model_prediction`); lens-model components are `model_prediction` inputs
 
 **Frozen outcome (from `decide`): "undetermined (colour test not validated; member perturber present)".**
 
-1. **Colour test not validated.** Of 56 spec-z UNCOVER systems, the first 20 pairs with F200W S/N ≥ 10 in both
-   images were tested; only 10 / 20 (0.5) read "consistent" at p ≥ 0.01, below the 0.8 gate (ASSUMPTION). With
+1. **Colour test not validated.** Of the 56 spec-z UNCOVER knot sub-systems ("S.K"; `n_known_candidates`), the
+   first 20 pairs with F200W S/N ≥ 10 in both images were tested. They come from 10 distinct (`n_known_sources`)
+   sources, so they are correlated knots of a few galaxies, not 20 independent systems; only 10 / 20 (0.5) read "consistent" at p ≥ 0.01, below the 0.8 gate (ASSUMPTION). With
    r = 0.15″ high-pass apertures and random-aperture noise, true multiple images often differ by more than the
    noise (χ² up to 254 for 7 bands; `known_pairs`). So "consistent" colours for 78 decide nothing.
    For the record (not a decision): the three 78 a/b pairs give p 0.96, 0.93, 0.68 (`target_pairs`).
 2. **Member perturbers present.** Within 5″ of the 78.2 a/b midpoint, the DJA v7.2 table has two spec-z cluster
-   members brighter than F200W 22 (crude r = 0.5″ aperture): DJA 45749 (z_spec 0.305, 2.11″, ≈ 20.4) and DJA
-   45736 (z_spec 0.301, 4.43″, ≈ 18.6) (`perturbers`).
-3. **Sheet** (`sheet.png`, by eye): the six 78 knots lie on one thin, straight arc about 2.5″ long, elongated
-   roughly perpendicular to the direction of DJA 45749, which lies about 2″ south.
+   members brighter than F200W 22 (crude r = 0.5″ aperture): DJA 45749 (z_spec 0.305, 2.11″, ≈ 19.7) and DJA
+   45736 (z_spec 0.301, 4.43″, ≈ 18.0) (`perturbers`).
+3. **Sheet** (`sheet.png`, by eye; length and direction not stored): the six 78 knots lie on one thin, straight
+   arc, elongated roughly perpendicular to the direction of DJA 45749, which lies to the south (2.11″, stored).
 
 **Post hoc (after the frozen outcome; `post_hoc_bergamini23_components`).** Both members are already mass
 components of Bergamini+23 (`best.par`): DJA 45749 is member potential 20036 (0.11″; σ 119 km/s, cut 21.9 kpc),
@@ -36,9 +37,14 @@ of known UNCOVER multiple images (10 / 20). Do not use pair colour χ² for one-
 systematic floor calibrated on known pairs first.
 
 **Deviations (labelled).** Post hoc: the `--model-check` block and the sheet's stretch (vmax 10 → 5 σ, display only).
-The run was made on a script version whose only later changes are the sheet, the model check and the
-docstring (no change to measurement or decision code).
+After `/code-review` (post hoc, before the final run), these were fixed: the pixel solid angle of the crude
+magnitude (hypot, for the rotated mosaic); NaN S/N no longer passes the known-pair cut; an unmeasurable target pair
+is "not measurable", never "consistent"; the ratio search covers 10⁻³–10³ instead of a bracket around Σf_a/Σf_b.
+`summary.json` is from the run with these fixes.
 
-**Limitations.** One aperture size, one noise model. The crude magnitude is a 0.5″ aperture, not a total magnitude.
-Photo-z membership was not used for any perturber that mattered (both are spec-z). The UNCOVER model's member list
-was not checked.
+**Limitations.** One aperture size, one noise model. The random-aperture ring (0.6–1.8″) is not masked, so for the
+78 knots it also covers the other knots of the same arc; that inflates σ and favours "consistent" for the target
+(one reason the target p values decide nothing). The crude magnitude is a 0.5″ aperture minus a local median, not
+a total magnitude; it is null where the local median exceeds the aperture, as for the photo-z member DJA 42356
+(z_phot 0.346, 3.92″, 68 % interval 0.316–6.867), which was therefore not assessed as a perturber. Both flagged
+perturbers are spec-z members. The UNCOVER model's member list was not checked.

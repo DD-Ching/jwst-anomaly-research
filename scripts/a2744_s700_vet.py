@@ -8,7 +8,8 @@ Plan (frozen before the run): ``results/lens_consistency/a2744_s700_vet/PLAN.md`
 * Perturber: DJA v7.2 eazy zout sources within 5" of the 78.2 a/b midpoint, with a crude F200W
   aperture magnitude from the mosaic.
 
-Usage: ``python scripts/a2744_s700_vet.py [--out DIR] [--sheet]``.
+Usage: ``python scripts/a2744_s700_vet.py [--out DIR]``, then ``--sheet-only`` (sheet.png) and
+``--model-check`` (post hoc Bergamini+23 components); both read the written summary.json.
 """
 
 from __future__ import annotations
@@ -80,14 +81,16 @@ def pair_chi2(fa, sa, fb, sb) -> dict:
     ok = np.isfinite(fa) & np.isfinite(fb) & (sa > 0) & (sb > 0)
     fa, sa, fb, sb = fa[ok], sa[ok], fb[ok], sb[ok]
     n = int(ok.sum())
-    if n < 2 or np.sum(fb) <= 0:
+    if n < 2 or not np.any(fb > 0):
         return {"n_bands": n, "ratio": None, "chi2": None, "p": None}
 
     def chi2(r: float) -> float:
         return float(np.sum((fa - r * fb) ** 2 / (sa**2 + r**2 * sb**2)))
 
-    r0 = float(np.sum(fa) / np.sum(fb))
-    lo, hi = (r0 / 10, r0 * 10) if r0 > 0 else (1e-3, 1e3)
+    # coarse log grid over 1e-3..1e3, then a bounded refinement around the best grid point
+    grid = np.logspace(-3, 3, 601)
+    k = int(np.argmin([chi2(r) for r in grid]))
+    lo, hi = grid[max(k - 1, 0)], grid[min(k + 1, len(grid) - 1)]
     res = optimize.minimize_scalar(chi2, bounds=(lo, hi), method="bounded")
     c = float(res.fun)
     return {"n_bands": n, "ratio": float(res.x), "chi2": c, "p": float(stats.chi2.sf(c, n - 1))}
@@ -97,13 +100,16 @@ def differs(p: float | None) -> bool | None:
     return None if p is None else bool(p < P_DIFFER)
 
 
-def decide(gate_passed: bool, any_differs: bool, perturber: bool) -> str:
-    """Frozen decision function of PLAN.md."""
+def decide(gate_passed: bool, any_differs: bool | None, perturber: bool) -> str:
+    """Frozen decision function of PLAN.md; ``any_differs`` None means a target pair was not
+    measurable, which is never read as "consistent"."""
     if not gate_passed:
         tail = "member perturber present" if perturber else "no member perturber"
         return f"undetermined (colour test not validated; {tail})"
     if any_differs:
         return "one image (H1)"
+    if any_differs is None:
+        return "undetermined (target colours not measurable)"
     if perturber:
         return "ordinary perturber possible (H2)"
     return "undetermined (H3)"
@@ -179,7 +185,8 @@ def total_mag(ra: float, dec: float, stamp) -> float:
     sci, _, xx, yy = stamp(ra, dec)
     rr = np.hypot(xx, yy)
     bg = np.nanmedian(sci[rr > R_BG])
-    pix_sr = (abs(float(xx[0, 1] - xx[0, 0])) / 206264.806) ** 2  # pixel solid angle
+    # pixel solid angle; hypot, because the mosaic may be rotated relative to north
+    pix_sr = (float(np.hypot(xx[0, 1] - xx[0, 0], yy[0, 1] - yy[0, 0])) / 206264.806) ** 2
     fjy = float(np.nansum(sci[rr <= R_TOTAL] - bg)) * 1e6 * pix_sr
     return float(-2.5 * np.log10(fjy / 3631.0)) if fjy > 0 else np.nan
 
@@ -340,13 +347,15 @@ def main(argv=None) -> dict:
     def snr(i: str) -> float:
         return float(phot[REF_BAND][i]["snr"])
 
-    bright = [p for p in kp if min(snr(p[0]), snr(p[1])) >= SNR_MIN][:MAX_KNOWN]
+    # NaN S/N (no data) never passes: min() would let it through
+    bright = [p for p in kp if all(snr(i) >= SNR_MIN for i in p)][:MAX_KNOWN]
     known = [pair_result(phot, a, b) for a, b in bright]
     judged = [k for k in known if k["differs"] is not None]
     frac = sum(not k["differs"] for k in judged) / len(judged) if judged else 0.0
     gate = bool(judged and frac >= KNOWN_GATE)
     target = [pair_result(phot, a, b) for a, b in TARGET_PAIRS]
-    any_diff = any(t["differs"] for t in target)
+    flags = [t["differs"] for t in target]
+    any_diff = True if any(flags) else (None if None in flags else False)
     ra_m = np.mean([pos["78.21"][0], pos["78.22"][0]])
     dec_m = np.mean([pos["78.21"][1], pos["78.22"][1]])
     pert = perturbers(Table.read(fetch_catalog(*af.ZOUT)), float(ra_m), float(dec_m))
@@ -366,7 +375,8 @@ def main(argv=None) -> dict:
             "dz_member": DZ_MEMBER,
             "mag_perturber": MAG_PERTURBER,
         },
-        "n_known_candidates": len(kp),
+        "n_known_candidates": len(kp),  # knot sub-systems "S.K", not independent sources
+        "n_known_sources": len({a.split(".")[0] for a, _ in bright}),
         "known_pairs": known,
         "known_consistent_fraction": _r(frac),
         "colour_gate_passed": gate,

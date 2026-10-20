@@ -7,7 +7,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (`results/lens_consistency/a2744_s700_vet/PLAN.md`, computable specification before the run).
 - **Result (`RESULT.md`, `summary.json`):** frozen outcome "undetermined (colour test not validated; member perturber
   present)". Known UNCOVER pairs read "consistent" in 10 / 20 (gate 0.8), so the 78 a/b colour χ² (p 0.96 / 0.93 /
-  0.68) decides nothing. Spec-z members DJA 45749 (z 0.305, 2.11″) and 45736 (z 0.301, 4.43″) lie near the arc.
+  0.68) decides nothing (20 pairs from 10 sources). Spec-z members DJA 45749 (z 0.305, 2.11″) and 45736 (z 0.301, 4.43″) lie near the arc.
   Sheet looked at: one thin straight arc of six knots, with 45749 about 2″ south.
 - **Post hoc:** both are Bergamini+23 components: member 20036 (σ 119 km/s), and the northern group halo O4 (σ 839
   km/s) plus O9. A misplaced critical curve near a modelled group core stays a plausible ordinary explanation

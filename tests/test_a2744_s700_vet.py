@@ -33,6 +33,14 @@ def test_decide_is_the_frozen_rule():
     assert s7v.decide(True, True, True) == "one image (H1)"
     assert s7v.decide(True, False, True) == "ordinary perturber possible (H2)"
     assert s7v.decide(True, False, False) == "undetermined (H3)"
+    assert s7v.decide(True, None, True) == "undetermined (target colours not measurable)"
+
+
+def test_pair_chi2_ratio_outside_the_sum_ratio():
+    # sum(fb) nearly cancels: the old [r0/10, 10 r0] bracket missed the true ratio 2
+    fb = np.array([1.0, -0.99, 0.5, -0.5])
+    r = s7v.pair_chi2(2 * fb, np.full(4, 0.01), fb, np.full(4, 0.01))
+    assert r["ratio"] == pytest.approx(2.0, rel=1e-3) and r["p"] > 0.99
 
 
 def test_recentre_and_aperture_noise():
