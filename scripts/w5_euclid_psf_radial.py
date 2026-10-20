@@ -46,7 +46,8 @@ SIGNAL = w5.RESPONSIVITY * 2.0 * math.log(2.0) / (3.0**2 - 1.5**2)
 
 
 EAS_TAP = "https://eas.esac.esa.int/tap-server/tap/sync"
-# Cone radius per Deep Field: >= max tile-centre distance from w5.PILOTS + 0.36° (tile half-diagonal).
+# Cone radius per Deep Field: >= max tile-centre distance from w5.PILOTS
+# + 0.36° (tile half-diagonal); checked in eas_stars.
 CONE_DEG = {"EDF-F": 3.1, "EDF-S": 4.8, "EDF-N": 3.9}
 
 
