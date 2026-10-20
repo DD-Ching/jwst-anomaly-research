@@ -17,6 +17,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   ≤ 5e-10 on 2,031 rows) in ~8 s per field (not stored), plus server-side `GROUP BY` count maps. Prefer EAS for MER bulk reads (D-067 addendum, SOURCES.md).
 - **Failed approaches:** no coverage cut first (partial annuli turn a constant PSF into a radial term); per-centre
   sample-std errors (unstable) and a rule judged on one cell only (both caught by /code-review); a max rule on a heavy-tailed star statistic where annuli hold ~10 stars.
+- **Final review (18:13Z cloud run):** NaN shape values now dropped as well as NULLs, cache written byte-exact,
+  PA difference in the IRSA identity check wrapped at 180°; a fresh re-run reproduces `summary.json` (relative
+  difference ≤ 4e-15). The outcome hinges on how cells are combined (post hoc code), so it waits for the owner.
 - **Handoff:** W5/W1 Euclid line waits for DR1; before it, add a star-interpolated anisotropy correction to
   `galaxy_shapes` and re-run the D-067 injections at 1′.
 

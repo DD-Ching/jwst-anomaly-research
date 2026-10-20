@@ -75,6 +75,7 @@ def eas_stars(name: str, tiles, cache: Path) -> Table:
     t["tileid"] = np.asarray(t["segmentation_map_id"], np.int64) // 10**6
     shape = ("point_like_prob", "ellipticity", "position_angle", "semimajor_axis")
     keep = ~np.any([np.ma.getmaskarray(t[c]) for c in shape], axis=0)  # NULLs dropped, not 0
+    keep &= np.all([np.isfinite(np.ma.filled(t[c], np.nan)) for c in shape], axis=0)  # and NaNs
     keep &= np.isin(t["tileid"], [x[0] for x in tiles])
     return t[keep]
 
@@ -123,7 +124,7 @@ def eas_csv(q: str, path: Path) -> Table:
                 time.sleep(5 * 2**attempt)
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".part")
-        tmp.write_text(r.text)
+        tmp.write_bytes(r.content)  # byte-exact on every platform
         tmp.replace(path)
     return Table.read(path, format="ascii.csv")
 
@@ -168,6 +169,8 @@ def irsa_identity(stars: Table, cache: Path) -> dict:
         n_match += int(ok.sum())
         for c in max_d:  # the radial projection depends on the PA as much as on |e|
             d_c = np.abs(np.asarray(a[c], float)[ok] - np.asarray(b[c], float)[i[ok]])
+            if c == "position_angle":  # an axis: 180 deg apart is the same orientation
+                d_c = np.abs(np.mod(d_c + 90.0, 180.0) - 90.0)
             max_d[c] = max(max_d[c], float(d_c.max(initial=0.0)))
     return {
         "n_tiles": n_tiles,
