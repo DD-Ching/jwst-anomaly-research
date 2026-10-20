@@ -21,11 +21,10 @@ static_veto = ds.catalogue_veto({**ordn, "single_epoch": np.zeros_like(ordn["sin
 target = ds.flagged(res) & ordn["single_epoch"] & ~static_veto & ordn["point_like"] & res["vanish"]
 det = lc["det"][:, :, 0]
 # the epochs run.py writes a table for (it skips epochs without a target or control detected there)
-needed = {
-    k
-    for k, e in enumerate(field["epochs"])
-    if "F200W" in e["bands"] and ((target | ds.monitored(lc, err, ordn, p)) & det[:, k]).any()
-}
+f200w = [k for k, e in enumerate(field["epochs"]) if "F200W" in e["bands"]]
+monitored = ds.monitored(lc, err, ordn, p)
+needed = {k for k in f200w if ((target | monitored) & det[:, k]).any()}
+needed_controls = {k for k in f200w if (monitored & det[:, k]).any()}
 tables = {}
 for f in sorted(d.glob("exposures_e*.ecsv*")):  # .ecsv.gz where the plain file is over 1 MB
     k = int(f.name.split(".")[0].rsplit("_e", 1)[1])
@@ -56,6 +55,8 @@ for k, f in sorted(tables.items()):
                 "mosaic_snr": float(lc["flux"][i, k, 0] / err[i, k, 0]),
             }
         )
+done_controls = {r["epoch"] for r in rows if r["kind"] == "monitored"}
+controls_missing = sorted(needed_controls - done_controls)
 t = Table(rows=rows)
 t.meta.update(provenance="derived", source=f"results/dimming/persistence_run/partial.py {name}")
 t.write(d / "verdicts.ecsv", overwrite=True)
@@ -65,7 +66,9 @@ t.write(d / "verdicts.ecsv", overwrite=True)
             "field": name,
             "n_targets": int(target.sum()),
             "epochs_done": sorted(tables),
-            "complete": needed <= set(tables),
+            # a targets-only table (an earlier run) does not complete an epoch that has controls
+            "controls_missing_epochs": controls_missing,
+            "complete": needed <= set(tables) and not controls_missing,
         },
         indent=1,
     )

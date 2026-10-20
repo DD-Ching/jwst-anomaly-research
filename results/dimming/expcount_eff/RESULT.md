@@ -12,11 +12,11 @@ for K = 5, 6, 7 (120 `_cal` files each, about 2 min each, 0 failed reads), table
 | held out | > 4 | 0 / 0 | — | 0.961 | not tested (no pairs) |
 
 - **Frozen reading:** the ≤ 4 class holds as written; the > 4 class is untested on NEXUS held-out data (e5–e7 are
-  all wide 120-file epochs). Monitored `persistence` 0 / 89 (Wilson upper 4.1 %; rule 3 not triggered).
+  all wide 120-file epochs). Monitored `persistence` 0 / 89 (Wilson upper 4.1 %; `score.json` rule 3: not triggered).
   Combined over all NEXUS controls run so far: 0 / 279 `persistence`.
 - **Post hoc (not frozen):**
   - The held-out point estimate (0.37) sits below the swap value 0.412; the pooled ≤ 4 rate is 82 / 185
-    (Wilson 0.374–0.515). The rule passes on width, not on agreement, so the swap result should be quoted with the
+    (Wilson 0.374–0.515; `score.json` `pooled`). The rule passes on width, not on agreement, so the swap result should be quoted with the
     pooled lower bound 0.374 as a sensitivity case.
   - The ≤ 4 class is almost all two-exposure pairs (train 39 / 83, held out 29 / 81 `on_sky` at n = 2; n = 4:
     9 / 10 and 4 / 5). S/N is 10–33 in both splits, so S/N cannot be separated from exposure count here.
@@ -24,7 +24,8 @@ for K = 5, 6, 7 (120 `_cal` files each, about 2 min each, 0 failed reads), table
     or two covering exposures; not examined (stamps not looked at). They lower the ≤ 4 rate and could be a
     position (detector-gap / edge) effect rather than an exposure-count one.
 - **Not done:** NEXUS e2 (`o014`, 2,000 files) controls, the last epoch in the 23:12 addendum's order; started and
-  stopped at the time budget (`nexus/counts.json` lists it as missing).
+  stopped at the time budget (`nexus/counts.json` `controls_missing_epochs`, now written by `partial.py`:
+  a targets-only epoch table no longer counts as complete).
 - **Failed approach:** running e2 after e5–e7 in the same 40-minute run (2,000 files; the 120-file epochs took
   2 min, e2 did not finish in 11 min).
 

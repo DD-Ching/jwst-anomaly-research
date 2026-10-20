@@ -83,6 +83,10 @@ field alone; pooled in `summary.json`.
 | NEXUS (e0, e1, e3, e4) | 190 | 14 / 16 | 129 / 174 (43 `inconclusive`, 2 `undetected`) | 0 | **not usable** (0.74 < 0.8) |
 | pooled | 438 | 41 / 43 | 349 / 395 | 0 (Wilson 95 % upper 0.9 %) | usable as written |
 
+`summary.json` was regenerated on 2026-10-20 after the NEXUS e5–e7 controls (#388): 527 pairs, S/N 20–50
+`on_sky` 380 / 478 (0.795), pooled rule 1 now "not usable". The table above is the 438-pair state of #386; the
+pooled mosaic-S/N reading is superseded by the exposure-count model (D-052 addenda i, j).
+
 - **Frozen reading:** the false-afterimage rate is 0 / 438 in every field. MACS0416 and Abell 2744 pass rule 1
   (247 / 248 `on_sky`, Wilson 0.989–0.998). NEXUS fails it, so its swap needs its own efficiency (addendum rule).
 - **Post hoc (not frozen): the NEXUS loss tracks exposures per source, not mosaic S/N.** NEXUS pairs with ≤ 4

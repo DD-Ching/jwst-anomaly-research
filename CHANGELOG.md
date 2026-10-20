@@ -13,6 +13,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   past 200 s; no code change.
 - **Handoff:** (1) fold the swap into `inject` with 0.412 / 0.961 by covering-exposure count, re-run `combine`;
   (2) stamps of the 11 `undetected` controls; (3) NEXUS e2 controls in a run of their own.
+- **Review fixes:** `score.py` evaluates rules 1 (unrounded, with the pooled fallback) and 3; `partial.py` writes
+  `controls_missing_epochs`; `persistence_run/summary.json` regenerated (527 pairs, pooled S/N rule 1 now fails,
+  superseded by the exposure-count model).
+
 ## 2026-10-20: W3 ZTF v18: PSF photometry check of the two v17 sources (post hoc): the validated NDs are normal; both sources stay undetermined
 - **Method:** the official per-exposure DAOPHOT PSF, read by an adapter validated against the official centre image
   (≤ 5.24e-4), and photutils 3.1.1 `PSFPhotometry`. Plan committed before any target fit. Download 48.4 MB.
