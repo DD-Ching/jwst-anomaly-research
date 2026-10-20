@@ -11,11 +11,12 @@ from __future__ import annotations
 
 import json
 import sys
+from functools import cache
 from pathlib import Path
 
 import numpy as np
 from astropy.table import Table
-from scipy.stats import binom, poisson
+from scipy.stats import binom, chi2, poisson
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
@@ -39,15 +40,36 @@ SIGMAS = (0.26, 0.28, 0.30, 0.32, 0.34, 0.36, 0.38, 0.40)
 
 
 def background(path: Path) -> Table:
+    """Strong-shear background rows of one run, as `lens_consistency` counts them."""
     t = Table.read(path)
     t = t[t["strong_shear"]]
     return t[t["population"] == "background"]
 
 
+@cache
+def _p_anti(g: float, sigma_eps: float, min_ellipticity: float, anti_deg: float) -> float:
+    return lc.anti_probability(g, sigma_eps, min_ellipticity, anti_deg)
+
+
+def field_stats(rows: Table, sigma_eps: float, min_ellipticity: float, anti_deg: float) -> dict:
+    """Like `lens_consistency.anti_expected` (same rounding of g_min), but λ is kept unrounded."""
+    lam = sum(
+        _p_anti(round(float(g), 2), sigma_eps, min_ellipticity, anti_deg)
+        for g in np.asarray(rows["g_min"], float)
+    )
+    k = int(np.sum(rows["orientation_class"] == "anti"))
+    return {
+        "n": len(rows),
+        "anti": k,
+        "expected": lam,
+        "p_ge_observed": float(poisson.sf(k - 1, lam)),
+    }
+
+
 def pooled(stats: dict[str, dict], fields: tuple[str, ...]) -> dict:
     n = sum(stats[f]["anti"] for f in fields)
     lam = sum(stats[f]["expected"] for f in fields)
-    return {"anti": n, "expected": round(lam, 3), "p_ge_observed": float(poisson.sf(n - 1, lam))}
+    return {"anti": n, "expected": lam, "p_ge_observed": float(poisson.sf(n - 1, lam))}
 
 
 def outcome(p_a: float, p_b: float, alpha: float = ALPHA) -> str:
@@ -59,72 +81,125 @@ def outcome(p_a: float, p_b: float, alpha: float = ALPHA) -> str:
     return "mixed"
 
 
+def ratio_interval(n: int, lam: float, cl: float = 0.95) -> tuple[float, float]:
+    """Central Poisson (Garwood) interval on n over λ: range of the observed / expected ratio."""
+    a = 1 - cl
+    lo = chi2.ppf(a / 2, 2 * n) / 2 if n > 0 else 0.0
+    hi = chi2.ppf(1 - a / 2, 2 * n + 2) / 2
+    return float(lo / lam), float(hi / lam)
+
+
 def s1063_vs_pooled(s1063: dict, pool: dict) -> dict:
     """Post hoc: is S1063's anti count in line with the pooled fields' anti rate per expected count?
 
-    ``scaled``: S1063's λ times the pooled observed/expected ratio, P(>= observed).
+    ``scaled``: S1063's λ times the pooled observed / expected ratio (a plug-in point value; its
+    uncertainty is not propagated), P(>= observed), also at the ratio's 95 % bounds.
     ``conditional``: given the combined count, P(S1063 holds >= its share) with binomial
-    p = λ_S1063 / (λ_S1063 + λ_pool); this cancels a common scale error in σ_ε (first order).
+    p = λ_S1063 / (λ_S1063 + λ_pool). This cancels a common factor in λ, but a change of σ_ε does
+    not scale every field's λ by the same factor (see the σ_ε scan).
     """
     ratio = pool["anti"] / pool["expected"]
-    lam = ratio * s1063["expected"]
-    total = s1063["anti"] + pool["anti"]
+    lo, hi = ratio_interval(pool["anti"], pool["expected"])
+    k = s1063["anti"]
+    total = k + pool["anti"]
     share = s1063["expected"] / (s1063["expected"] + pool["expected"])
     return {
-        "pool_ratio": round(ratio, 3),
-        "scaled_expected": round(lam, 3),
-        "p_scaled": float(poisson.sf(s1063["anti"] - 1, lam)),
-        "p_conditional": float(binom.sf(s1063["anti"] - 1, total, share)),
+        "pool_ratio": ratio,
+        "pool_ratio_95": [lo, hi],
+        "scaled_expected": ratio * s1063["expected"],
+        "p_scaled": float(poisson.sf(k - 1, ratio * s1063["expected"])),
+        "p_scaled_at_ratio_95": [float(poisson.sf(k - 1, r * s1063["expected"])) for r in (lo, hi)],
+        "p_conditional": float(binom.sf(k - 1, total, share)),
     }
+
+
+def load_run(rel: str) -> tuple[Table, dict]:
+    """Background rows plus the run's stored `arcs.json` (assumptions and shape-noise summary)."""
+    path = ROOT / rel
+    return background(path), json.loads((path.parent / "arcs.json").read_text())
+
+
+def stored_check(stats: dict, stored: dict) -> dict:
+    """Recomputed vs stored shape-noise summary (stored `expected` is rounded to 3 decimals)."""
+    same = (
+        stats["n"] == stored["n"]
+        and stats["anti"] == stored["anti"]
+        and abs(stats["expected"] - stored["expected"]) <= 5e-4
+    )
+    return {"stored": stored, "matches": bool(same)}
 
 
 def main() -> None:
-    tables = {f: background(ROOT / p) for f, p in FIELDS.items()}
-    args = (0.5, 60.0)  # D-024 defaults: min ellipticity, anti_deg
-    per_field = {f: lc.anti_expected(t, 0.26, *args) for f, t in tables.items()}
+    runs = {f: load_run(p) for f, p in FIELDS.items()}
+    s1063_rows, s1063_meta = load_run(S1063)
+    cuts = {}
+    for name, (_, meta) in [*runs.items(), ("S1063", (s1063_rows, s1063_meta))]:
+        a = meta["assumptions"]
+        cuts[name] = (float(a["min_ellipticity"]), float(a["anti_deg"]))
+    if len(set(cuts.values())) != 1:
+        raise SystemExit(f"error: runs use different ellipticity / anti cuts: {cuts}")
+    e_min, anti_deg = next(iter(cuts.values()))
+
+    def stats_at(sigma: float) -> dict[str, dict]:
+        return {f: field_stats(t, sigma, e_min, anti_deg) for f, (t, _) in runs.items()}
+
+    per_field = stats_at(SIGMAS[0])
+    checks = {
+        f: stored_check(per_field[f], meta["anti_expected_shape_noise_background"])
+        for f, (_, meta) in runs.items()
+    }
+    s1063_ref = field_stats(s1063_rows, SIGMAS[0], e_min, anti_deg)
+    checks["S1063"] = stored_check(s1063_ref, s1063_meta["anti_expected_shape_noise_background"])
+    if not all(c["matches"] for c in checks.values()):
+        raise SystemExit(f"error: recomputed summaries differ from the stored ones: {checks}")
     gsplit = {
         f: {
-            "g_min<1": int(np.sum((t["orientation_class"] == "anti") & (np.abs(t["g_min"]) < 1))),
-            "g_min>=1": int(np.sum((t["orientation_class"] == "anti") & (np.abs(t["g_min"]) >= 1))),
+            "g_min<1": int(np.sum((t["orientation_class"] == "anti") & (t["g_min"] < 1))),
+            "g_min>=1": int(np.sum((t["orientation_class"] == "anti") & (t["g_min"] >= 1))),
         }
-        for f, t in tables.items()
+        for f, (t, _) in runs.items()
     }
     res = {v: pooled(per_field, fs) for v, fs in VARIANTS.items()}
-    s1063 = background(ROOT / S1063)
     scan = []
     for s in SIGMAS:
-        pf = {f: lc.anti_expected(t, s, *args) for f, t in tables.items()}
+        pf = per_field if s == SIGMAS[0] else stats_at(s)
+        pv = {v: pooled(pf, fs) for v, fs in VARIANTS.items()}
+        s1063 = field_stats(s1063_rows, s, e_min, anti_deg)
         scan.append(
             {
                 "sigma_eps": s,
-                **{f"p_{v}": pooled(pf, fs)["p_ge_observed"] for v, fs in VARIANTS.items()},
-                **{f"expected_{v}": pooled(pf, fs)["expected"] for v, fs in VARIANTS.items()},
-                "s1063": lc.anti_expected(s1063, s, *args),
+                **{f"expected_{v}": r["expected"] for v, r in pv.items()},
+                **{f"p_{v}": r["p_ge_observed"] for v, r in pv.items()},
+                "s1063": s1063,
+                **{
+                    f"p_conditional_{v}": s1063_vs_pooled(s1063, r)["p_conditional"]
+                    for v, r in pv.items()
+                },
             }
         )
     summary = {
         "plan": "results/arcs/pooled-tally/PLAN.md",
         "label": "exploratory (post hoc)",
         "fields": FIELDS,
+        "cuts": {"min_ellipticity": e_min, "anti_deg": anti_deg},
+        "stored_check": checks,
         "per_field_sigma_0.26": per_field,
         "anti_by_gmin": gsplit,
         "pooled": res,
         "outcome": outcome(res["A"]["p_ge_observed"], res["B"]["p_ge_observed"]),
         "sigma_scan": scan,
-        "s1063_vs_pooled_posthoc": {v: s1063_vs_pooled(scan[0]["s1063"], res[v]) for v in VARIANTS},
+        "s1063_vs_pooled_posthoc": {v: s1063_vs_pooled(s1063_ref, res[v]) for v in VARIANTS},
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    print(
-        json.dumps(
-            {k: summary[k] for k in ("pooled", "outcome", "s1063_vs_pooled_posthoc")}, indent=1
-        )
-    )
+    keys = ("pooled", "outcome", "s1063_vs_pooled_posthoc")
+    print(json.dumps({k: summary[k] for k in keys}, indent=1))
     for r in scan:
         print(
             f"sigma {r['sigma_eps']:.2f}: A {r['expected_A']:.2f} P {r['p_A']:.4f} | "
             f"B {r['expected_B']:.2f} P {r['p_B']:.4f} | S1063 {r['s1063']['anti']} vs "
-            f"{r['s1063']['expected']:.2f} P {r['s1063']['p_ge_observed']:.4f}"
+            f"{r['s1063']['expected']:.2f} P {r['s1063']['p_ge_observed']:.4f} | "
+            f"cond A {r['p_conditional_A']:.3f} B {r['p_conditional_B']:.3f}"
         )
 
 

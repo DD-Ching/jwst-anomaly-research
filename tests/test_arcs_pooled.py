@@ -50,3 +50,40 @@ def test_s1063_vs_pooled_scales_and_conditions():
     r = ap.s1063_vs_pooled({"anti": 1, "expected": 1.0}, {"anti": 2, "expected": 1.0})
     assert r["pool_ratio"] == 2.0 and r["scaled_expected"] == 2.0
     assert r["p_conditional"] == pytest.approx(1 - 0.5**3)  # P(>= 1 of 3 at p = 0.5)
+
+
+def test_background_keeps_strong_shear_background_only(tmp_path):
+    from astropy.table import Table
+
+    t = Table(
+        {
+            "strong_shear": [True, True, False, True],
+            "population": ["background", "member_or_foreground", "background", "background"],
+            "g_min": [0.3, 0.5, 0.1, 1.2],
+            "orientation_class": ["anti", "anti", "anti", "aligned"],
+        }
+    )
+    path = tmp_path / "arcs.ecsv"
+    t.write(path)
+    b = ap.background(path)
+    assert list(b["g_min"]) == [0.3, 1.2]
+
+
+def test_stored_check_tolerates_only_rounding():
+    stored = {"n": 4, "anti": 1, "expected": 0.095}
+    assert ap.stored_check({"n": 4, "anti": 1, "expected": 0.09512}, stored)["matches"]
+    assert not ap.stored_check({"n": 4, "anti": 1, "expected": 0.0962}, stored)["matches"]
+    assert not ap.stored_check({"n": 5, "anti": 1, "expected": 0.095}, stored)["matches"]
+
+
+def test_ratio_interval_garwood():
+    lo, hi = ap.ratio_interval(0, 1.0)
+    assert lo == 0.0 and hi == pytest.approx(3.6889, abs=1e-3)
+    lo, hi = ap.ratio_interval(6, 2.0)
+    assert lo == pytest.approx(2.2019 / 2, abs=1e-3) and hi == pytest.approx(13.059 / 2, abs=1e-3)
+
+
+def test_frozen_fields_point_at_stored_runs():
+    for rel in (*ap.FIELDS.values(), ap.S1063):
+        path = ap.ROOT / rel
+        assert path.exists() and (path.parent / "arcs.json").exists()
