@@ -111,7 +111,7 @@ def differs(p: float | None, at_edge: bool | None = False) -> bool | None:
 def classify_perturber(member: bool | None, mag: float) -> bool | None:
     """True: member brighter than MAG_PERTURBER; None ("not assessed", post hoc): membership
     unknown (no usable z) or a member without a measurable magnitude; False otherwise, including
-    any source too faint to be a perturber whatever its z."""
+    any source too faint to be a perturber whatever its z (post hoc, like the None state)."""
     if np.isfinite(mag) and mag >= MAG_PERTURBER:
         return False
     if member is None:
@@ -120,7 +120,7 @@ def classify_perturber(member: bool | None, mag: float) -> bool | None:
         return False
     if not np.isfinite(mag):
         return None
-    return bool(mag < MAG_PERTURBER)
+    return True  # a finite magnitude brighter than MAG_PERTURBER (fainter ones returned above)
 
 
 def tri_any(flags: list[bool | None]) -> bool | None:
@@ -244,7 +244,7 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
             zs = float(zout["z_spec"][k])
             z = zs if zs > 0 else float(zout["z_phot"][k])
             mag = total_mag(float(zout["ra"][k]), float(zout["dec"][k]), stamp)
-            # eazy marks failed fits with z < 0: membership unknown (None), not "non-member"
+            # failed eazy fit (z < 0) or non-finite z: membership unknown (None), not "non-member"
             usable = bool(np.isfinite(z) and z >= 0)
             member = bool(abs(z - Z_CLUSTER) <= DZ_MEMBER) if usable else None
             rows.append(
@@ -253,7 +253,11 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
                     "sep_arcsec": _r(d[k], 2),
                     "z": _r(z, 3) if usable else None,  # eazy's failure sentinel is not a z
                     "z_type": "spec" if zs > 0 else "phot",
-                    "z160_z840": [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)],
+                    "z160_z840": (
+                        [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)]
+                        if usable
+                        else None
+                    ),
                     "f200w_mag_crude": _r(mag, 2),
                     "member": member,
                     "perturber": classify_perturber(member, mag),
@@ -305,7 +309,8 @@ def sheet(pos: dict, summary: dict, zout: Table, path: Path) -> None:
                 col = {True: "tab:red", False: "tab:orange"}.get(m, "tab:purple")
                 ax.scatter(dx, dy, marker="s", s=70, facecolors="none", edgecolors=col)
                 if i == 0:
-                    ax.annotate(f"z{near[int(r['id'])]['z']}", (dx, dy), fontsize=6, color=col)
+                    zr = near[int(r["id"])]["z"]
+                    ax.annotate("z?" if zr is None else f"z{zr}", (dx, dy), fontsize=6, color=col)
             ax.set_xlim(-3, 3)
             ax.set_ylim(-3, 3)
             ax.set_aspect("equal")

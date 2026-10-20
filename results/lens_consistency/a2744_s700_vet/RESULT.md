@@ -53,7 +53,7 @@ the pixel-scale fix (≈ 20.4 → 19.7 and 18.6 → 18.0; the old values are in 
 (one reason the target p values decide nothing). The crude magnitude is a 0.5″ aperture minus a local median, not
 a total magnitude; it is null where the local median exceeds the aperture, as for the photo-z member DJA 42356
 (z_phot 0.346, 3.92″, 68 % interval 0.316–6.867), which is therefore "not assessed". Sources within 5″
-without a usable eazy z (z < 0 or not finite) that are not too faint to matter are also "not assessed"
+without a usable eazy z (z < 0 or not finite) that are not too faint to matter (crude F200W < 22; post hoc) are also "not assessed"
 (`not_assessed`; their z is stored as null).
 Target pairs have no S/N cut (the known pairs do); this cannot change the outcome while the gate fails. Both flagged
 perturbers are spec-z members. The UNCOVER model's member list was not checked.

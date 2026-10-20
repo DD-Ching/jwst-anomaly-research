@@ -282,10 +282,7 @@
    "sep_arcsec": 3.85,
    "z": null,
    "z_type": "phot",
-   "z160_z840": [
-    0.0,
-    0.0
-   ],
+   "z160_z840": null,
    "f200w_mag_crude": null,
    "member": null,
    "perturber": null
@@ -360,10 +357,7 @@
    "sep_arcsec": 4.64,
    "z": null,
    "z_type": "phot",
-   "z160_z840": [
-    0.0,
-    0.0
-   ],
+   "z160_z840": null,
    "f200w_mag_crude": null,
    "member": null,
    "perturber": null
@@ -373,10 +367,7 @@
    "sep_arcsec": 4.64,
    "z": null,
    "z_type": "phot",
-   "z160_z840": [
-    0.0,
-    0.0
-   ],
+   "z160_z840": null,
    "f200w_mag_crude": null,
    "member": null,
    "perturber": null
