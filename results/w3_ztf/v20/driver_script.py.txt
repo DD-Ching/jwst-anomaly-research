@@ -22,12 +22,14 @@ def run(area, stage, args, logf):
                        env={**os.environ, 'JWST_ANOMALY_DATA': os.path.abspath('data'), 'OMP_NUM_THREADS': '1'})
     log(area=area, stage=stage, event='end', rc=r.returncode, seconds=round((now() - t0).total_seconds(), 1))
     return r.returncode == 0
-def area_job(a):
+def area_job(a, resume=False):
     p, off = a['npix'], a['seed_offset']
     v = f'v20/{p}'; L = f'{SCR}/v20_{p}.log'
-    ok = run(p, 'sample', [f'{H}/area_sample_script.py.txt', str(p), SCR], L)
-    ok = ok and run(p, 'fetch', ['scripts/w3_ztf.py', 'fetch', '--pix', str(p), '--vdir', v], L)
-    ok = ok and run(p, 'exposures', ['scripts/w3_ztf.py', 'exposures', '--pix', str(p), '--vdir', v], L)
+    ok = True
+    if not resume:
+        ok = run(p, 'sample', [f'{H}/area_sample_script.py.txt', str(p), SCR], L)
+        ok = ok and run(p, 'fetch', ['scripts/w3_ztf.py', 'fetch', '--pix', str(p), '--vdir', v], L)
+        ok = ok and run(p, 'exposures', ['scripts/w3_ztf.py', 'exposures', '--pix', str(p), '--vdir', v], L)
     if not ok:
         log(area=p, event='stopped', reason='a data stage failed'); return
     res = {}
@@ -53,18 +55,26 @@ def area_job(a):
     shutil.rmtree(f'data/cache/w3_ztf/{p}', ignore_errors=True); log(area=p, event='cache_deleted')
 def worker():
     while True:
+        stop = None  # v20 fix: log() takes the same lock, so stop events are logged after releasing it
         with lock:
             if state['next'] >= len(q):
                 return
             a = q[state['next']]
             if now() > DEADLINE:
-                log(event='stop_new_areas', reason='time', remaining=[x['npix'] for x in q[state['next']:]]); state['next'] = len(q); return
-            if state['mb'] + a['lc_mb'] + 30 > 5900:
-                log(event='stop_new_areas', reason='download budget', remaining=[x['npix'] for x in q[state['next']:]]); state['next'] = len(q); return
-            state['mb'] += a['lc_mb'] + 30
-            state['next'] += 1
+                stop = ('time', [x['npix'] for x in q[state['next']:]]); state['next'] = len(q)
+            elif state['mb'] + a['lc_mb'] + 30 > 5900:
+                stop = ('download budget', [x['npix'] for x in q[state['next']:]]); state['next'] = len(q)
+            else:
+                state['mb'] += a['lc_mb'] + 30
+                state['next'] += 1
+        if stop:
+            log(event='stop_new_areas', reason=stop[0], remaining=stop[1]); return
         log(area=a['npix'], event='area_start', position=a['position'], projected_mb=round(state['mb'], 1))
         area_job(a)
+if len(sys.argv) > 3:  # v20 resume after the deadlock: '<npix>' runs that area from the validation stage only
+    area_job(next(x for x in q if x['npix'] == int(sys.argv[3])), resume=True)
+    log(event='queue_done')
+    sys.exit(0)
 ws = [threading.Thread(target=worker) for _ in range(2)]
 [w.start() for w in ws]; [w.join() for w in ws]
 log(event='queue_done')

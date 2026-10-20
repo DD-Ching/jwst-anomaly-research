@@ -1,0 +1,40 @@
+{
+ "label": "derived from queue.json and summary.json (no new data)",
+ "not_started_budget": {
+  "8124": {
+   "unused": 5604,
+   "search_if_500_cal": 5104,
+   "lc_mb": 1704.6,
+   "worst_cell": 0.6355,
+   "shared_fields_v1_v16": [
+    634,
+    635,
+    1679
+   ]
+  },
+  "8127": {
+   "unused": 5374,
+   "search_if_500_cal": 4874,
+   "lc_mb": 1734.0,
+   "worst_cell": 0.6565,
+   "shared_fields_v1_v16": [
+    634,
+    635,
+    681,
+    1679
+   ]
+  }
+ },
+ "not_started_unused": 10978,
+ "not_started_searchable": 9978,
+ "not_started_lc_mb": 3438.6,
+ "failed_calibration_unread_search_groups": {
+  "1356": 721,
+  "2490": 1401,
+  "2491": 1328,
+  "2488": 1360,
+  "2489": 1433
+ },
+ "failed_calibration_unread_total": 6243,
+ "note": "failed areas stay unsearchable under the frozen rule; no inventory beyond the v16 25 partitions"
+}

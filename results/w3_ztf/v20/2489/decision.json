@@ -1,0 +1,116 @@
+{
+ "label": "derived; frozen v13 rule with the v6 pass criteria (v20 PLAN section 3), applied by code",
+ "cells": {
+  "rho0.01_blend1_tE10": {
+   "recovered": 115,
+   "n": 200,
+   "distinct_stars": 163,
+   "rate": 0.575
+  },
+  "rho0.01_blend1_tE30": {
+   "recovered": 171,
+   "n": 200,
+   "distinct_stars": 175,
+   "rate": 0.855
+  },
+  "rho0.01_blend1_tE100": {
+   "recovered": 161,
+   "n": 200,
+   "distinct_stars": 170,
+   "rate": 0.805
+  },
+  "rho0.1_blend1_tE10": {
+   "recovered": 104,
+   "n": 200,
+   "distinct_stars": 160,
+   "rate": 0.52
+  },
+  "rho0.1_blend1_tE30": {
+   "recovered": 151,
+   "n": 200,
+   "distinct_stars": 166,
+   "rate": 0.755
+  },
+  "rho0.01_blend0.7_tE10": {
+   "recovered": 99,
+   "n": 200,
+   "distinct_stars": 162,
+   "rate": 0.495
+  },
+  "rho0.01_blend0.7_tE30": {
+   "recovered": 156,
+   "n": 200,
+   "distinct_stars": 174,
+   "rate": 0.78
+  },
+  "rho0.01_blend0.7_tE100": {
+   "recovered": 149,
+   "n": 200,
+   "distinct_stars": 158,
+   "rate": 0.745
+  },
+  "rho0.1_blend0.7_tE10": {
+   "recovered": 104,
+   "n": 200,
+   "distinct_stars": 168,
+   "rate": 0.52
+  },
+  "rho0.1_blend0.7_tE30": {
+   "recovered": 126,
+   "n": 200,
+   "distinct_stars": 163,
+   "rate": 0.63
+  }
+ },
+ "controls": {
+  "eclipse": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 167,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "fade": {
+   "passed": 106,
+   "n": 1000,
+   "rate": 0.106,
+   "distinct_stars": 432,
+   "wilson95": [
+    0.0884,
+    0.1266
+   ]
+  },
+  "pspl": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 159,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  },
+  "common": {
+   "passed": 0,
+   "n": 200,
+   "rate": 0.0,
+   "distinct_stars": 165,
+   "wilson95": [
+    0.0,
+    0.0188
+   ]
+  }
+ },
+ "calibration_real_survivors": 0,
+ "calibration_flagged_runs": 1,
+ "conditions": {
+  "all_10_cells_ge_0.5": false,
+  "controls_le_0.10": false,
+  "calibration_survivors_le_5": true
+ },
+ "passed": false,
+ "carriers": 500
+}

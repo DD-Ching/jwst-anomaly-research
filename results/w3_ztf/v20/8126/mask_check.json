@@ -1,0 +1,97 @@
+{
+ "label": "observed (IBE mskimg) and derived",
+ "bit_names": {
+  "BIT00": "AIRCRAFT/SATELLITE TRACK",
+  "BIT01": "OBJECT (detected by SExtractor)",
+  "BIT02": "LOW RESPONSIVITY",
+  "BIT03": "HIGH RESPONSIVITY",
+  "BIT04": "NOISY",
+  "BIT05": "GHOST ** not yet implemented **",
+  "BIT06": "CCD BLEED ** not yet implemented **",
+  "BIT07": "PIXEL SPIKE (POSSIBLE RAD HIT)",
+  "BIT08": "SATURATED",
+  "BIT09": "DEAD (UNRESPONSIVE)",
+  "BIT10": "NAN (not a number)",
+  "BIT11": "OBJECT (contains DAOPhot PSF-fit position)",
+  "BIT12": "HALO FROM BRIGHT SOURCE",
+  "BIT13": "RESERVED FOR FUTURE USE",
+  "BIT14": "RESERVED FOR FUTURE USE",
+  "BIT15": "RESERVED FOR FUTURE USE"
+ },
+ "mask_bytes": 80640,
+ "exposures": [
+  {
+   "key": 634210200007847,
+   "expid": 45444658,
+   "nd": false,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": null
+  },
+  {
+   "key": 634210200007847,
+   "expid": 45448815,
+   "nd": false,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": null
+  },
+  {
+   "key": 634210200007847,
+   "expid": 45450718,
+   "nd": true,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": null,
+   "mask_at_center": 0,
+   "mask_bits_in_aperture": []
+  },
+  {
+   "key": 634210200007847,
+   "expid": 45546604,
+   "nd": true,
+   "cls": 5,
+   "dark_column_min_dist_arcsec": null,
+   "mask_at_center": 130,
+   "mask_bits_in_aperture": [
+    1,
+    7
+   ]
+  },
+  {
+   "key": 634210200007847,
+   "expid": 45548609,
+   "nd": true,
+   "cls": 5,
+   "dark_column_min_dist_arcsec": null,
+   "mask_at_center": 130,
+   "mask_bits_in_aperture": [
+    1,
+    7
+   ]
+  },
+  {
+   "key": 634210200007847,
+   "expid": 45636370,
+   "nd": true,
+   "cls": 2,
+   "dark_column_min_dist_arcsec": null,
+   "mask_at_center": 130,
+   "mask_bits_in_aperture": [
+    1,
+    7
+   ]
+  },
+  {
+   "key": 634210200007847,
+   "expid": 45640517,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": null
+  },
+  {
+   "key": 634210200007847,
+   "expid": 45642834,
+   "nd": false,
+   "cls": 0,
+   "dark_column_min_dist_arcsec": null
+  }
+ ]
+}

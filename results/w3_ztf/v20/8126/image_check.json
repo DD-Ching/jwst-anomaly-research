@@ -1,0 +1,221 @@
+{
+ "label": "derived; v4 image check",
+ "cutout_bytes": 645120,
+ "ibe_search_bytes": 813,
+ "n_cutouts": 8,
+ "nd_classes": {
+  "2": 2,
+  "5": 2
+ },
+ "nd_pending_unchecked": 0,
+ "sources": [
+  {
+   "key": 634210200007847,
+   "ra": 256.6696283,
+   "dec": 27.3295153,
+   "passed_vetting": true,
+   "filter": 1,
+   "run": [
+    58208.50917297405,
+    58210.36579255084
+   ],
+   "nd_in_run": 4,
+   "nd_checked": 4,
+   "nd_pending": 0,
+   "exposures": [
+    {
+     "expid": 45444658,
+     "t": 58208.44856764973,
+     "nd": false,
+     "dmag": 0.1930675506591797,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 18.957899,
+     "seeing": 2.61293,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 44.102519508576705,
+     "err_uJy": 14.52509559001809,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)"
+    },
+    {
+     "expid": 45448815,
+     "t": 58208.4901441017,
+     "nd": false,
+     "dmag": -0.04993247985839844,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 19.405399,
+     "seeing": 2.79818,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 47.21907535586248,
+     "err_uJy": 9.271957342426752,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)"
+    },
+    {
+     "expid": 45450718,
+     "t": 58208.50917297405,
+     "nd": true,
+     "dmag": 0.0,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 19.312401,
+     "seeing": 3.27357,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 52.29985338715004,
+     "err_uJy": 8.067504451689958,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)"
+    },
+    {
+     "expid": 45546604,
+     "t": 58209.468080831255,
+     "nd": true,
+     "dmag": 0.0,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 19.522699,
+     "seeing": 3.57971,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 43.162474321626256,
+     "err_uJy": 7.314136402178893,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 5,
+     "why": "undetermined: field stars off their reference or no reference"
+    },
+    {
+     "expid": 45548609,
+     "t": 58209.48813975365,
+     "nd": true,
+     "dmag": 0.0,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 19.511,
+     "seeing": 3.5986,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 46.550640168331135,
+     "err_uJy": 7.358652464396764,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 5,
+     "why": "undetermined: field stars off their reference or no reference"
+    },
+    {
+     "expid": 45636370,
+     "t": 58210.36579255084,
+     "nd": true,
+     "dmag": 0.0,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 19.242399,
+     "seeing": 2.665,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 66.89922691279597,
+     "err_uJy": 8.01924558432619,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 2,
+     "why": "poor image (seeing > 4\" or maglimit < 19.5)"
+    },
+    {
+     "expid": 45640517,
+     "t": 58210.407264773574,
+     "nd": false,
+     "dmag": -0.06329536437988281,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 19.790501,
+     "seeing": 2.26277,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 66.25686174056875,
+     "err_uJy": 5.790169289079546,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)"
+    },
+    {
+     "expid": 45642834,
+     "t": 58210.43043736616,
+     "nd": false,
+     "dmag": -0.04114532470703125,
+     "v4_inside_member_quadrant": [
+      true
+     ],
+     "field": 634,
+     "ccdid": 10,
+     "qid": 2,
+     "infobits": 0,
+     "maglimit": 19.883101,
+     "seeing": 2.30499,
+     "member_quadrant": true,
+     "cutout_bytes": 80640,
+     "flux_uJy": 71.89412032840593,
+     "err_uJy": 5.630727585832788,
+     "field_uJy": [],
+     "field_ratio_median": NaN,
+     "cls": 0,
+     "why": "catalogue detection (reference / bracket)"
+    }
+   ],
+   "reference_uJy": NaN,
+   "support": {
+    "drop_exposures": 0,
+    "drop_nights": 0,
+    "before_detected": 0,
+    "after_recovered": 0,
+    "real_sky_change": false
+   }
+  }
+ ]
+}

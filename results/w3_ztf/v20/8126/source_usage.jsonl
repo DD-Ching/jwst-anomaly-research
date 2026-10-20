@@ -1,3 +1,4 @@
 {"stage": "search", "groups": 500, "search_groups_in_use": 0, "rows_loaded": 16904, "control_rows": 14359, "search_member_rows": 0}
 {"stage": "inject", "groups": 500, "search_groups_in_use": 0, "rows_loaded": 16904, "control_rows": 14359, "search_member_rows": 0}
 {"stage": "search", "groups": 4608, "search_groups_in_use": 4608, "rows_loaded": 37956, "control_rows": 14359, "search_member_rows": 23597}
+{"stage": "image_check", "groups": 5108, "search_groups_in_use": 4608, "rows_loaded": 40501, "control_rows": 14359, "search_member_rows": 23597}
