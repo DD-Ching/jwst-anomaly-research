@@ -1,0 +1,367 @@
+# v17 evidence check of the two v16 final survivors (PLAN.md sections 2-4; post hoc).
+# Usage: python check_script.py.txt <cache dir> <out json> <out png>
+# Review fixes after the stored run (interp neighbours, psfcat gap, dim inside the run) touch only branches that
+# did not execute there (no stable comparison set, no dim class), so check.json is unchanged by them.
+import io, json, os, sys, time, urllib.parse, urllib.request, warnings
+import numpy as np
+from astropy.io import fits
+from astropy.table import Table
+from astropy.wcs import WCS
+from scipy import ndimage
+warnings.filterwarnings('ignore')
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+from hit_lightcurve import aperture_photometry
+CACHE, OUT, PNG = sys.argv[1:4]
+os.makedirs(CACHE, exist_ok=True)
+V16 = 'results/w3_ztf/v16'
+SIZE = 180  # arcsec cutouts
+CAP_CUT, CAP_CAT, CAP_MB, STOP_MB = 40, 20, 200.0, 180.0
+BAD_BITS = (2, 8, 9, 10)  # LOW RESPONSIVITY, SATURATED, DEAD, NAN (mask header names, v14 mask_bitnames.json)
+R_DIM = 10 ** (-0.4 * 1.0)  # frozen DIM_MAG 1.0
+NORMAL_R, DIM_R, NSIG = 0.75, 0.6, 3.0
+
+
+def classify(judgeable, R, sR):
+    """PLAN section 3 for a judgeable exposure: 'normal', 'dim' or 'undetermined'."""
+    if not judgeable:
+        return 'unknown'
+    d = (1 - R) / sR
+    if R >= NORMAL_R and d < NSIG:
+        return 'normal'
+    if R <= DIM_R and d >= NSIG:
+        return 'dim'
+    return 'undetermined'
+
+
+def depth_ok(sR):
+    return (1 - R_DIM) / sR >= NSIG
+
+
+def source_verdict(ex, run):
+    """PLAN section 4 from per-exposure final classes."""
+    lo, hi = run
+    nd = [e for e in ex if e['nd']]
+    dim = [e for e in nd if e['final'] == 'dim' and lo <= e['t'] <= hi]
+    nights = {int(np.floor(e['t'] + 0.2)) for e in dim}
+    before = any(e['final'] == 'normal' and e['t'] < lo for e in ex)
+    after = any(e['final'] == 'normal' and e['t'] > hi for e in ex)
+    if len(dim) >= 2 and len(nights) >= 2 and before and after:
+        return 'real dimming evidence'
+    if nd and all(e['final'] in ('normal', 'data problem supported') for e in nd):
+        return 'data problem supported'
+    return 'undetermined'
+
+
+# unit assertions of the frozen criteria (run before any data)
+assert classify(True, 1.0, 0.05) == 'normal' and classify(True, 0.3, 0.05) == 'dim'
+assert classify(True, 0.7, 0.05) == 'undetermined' and classify(False, 1.0, 0.05) == 'unknown'
+assert classify(True, 0.55, 0.2) == 'undetermined' and depth_ok(0.2) and not depth_ok(0.21)
+_e = lambda t, nd, f: {'t': t, 'nd': nd, 'final': f}
+assert source_verdict([_e(0, 0, 'normal'), _e(1, 1, 'dim'), _e(2.5, 1, 'dim'), _e(4, 0, 'normal')], (1, 3)) == 'real dimming evidence'
+assert source_verdict([_e(0, 0, 'normal'), _e(1, 1, 'dim'), _e(1.01, 1, 'dim'), _e(4, 0, 'normal')], (1, 3)) == 'undetermined'
+assert source_verdict([_e(1, 1, 'normal'), _e(2, 1, 'data problem supported')], (1, 3)) == 'data problem supported'
+assert source_verdict([_e(1, 1, 'normal'), _e(2, 1, 'unknown')], (1, 3)) == 'undetermined'
+
+t0 = time.time(); nbytes = {'ibe_search': 0, 'lc_api': 0, 'sci': 0, 'msk': 0, 'psfcat': 0}; ncut = ncat = 0
+
+
+def mb():
+    return sum(nbytes.values()) / 1e6
+
+
+def get(url, kind, timeout=120):
+    err = None
+    for k in range(4):
+        try:
+            raw = urllib.request.urlopen(url, timeout=timeout).read(); nbytes[kind] += len(raw); return raw
+        except Exception as ex:
+            err = str(ex)[:80]; time.sleep(5 * (k + 1))
+    raise RuntimeError(err)
+
+
+def cached(fn, url, kind):
+    global ncut, ncat
+    if not os.path.exists(fn):
+        if mb() > STOP_MB:
+            return None
+        if kind in ('sci', 'msk'):
+            if ncut >= CAP_CUT:
+                return None
+            ncut += 1
+        if kind == 'psfcat':
+            if ncat >= CAP_CAT:
+                return None
+            ncat += 1
+        open(fn, 'wb').write(get(url, kind))
+    return fn
+
+
+# ---- section 1 sources (committed v16 files)
+SRC = []
+for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
+    ic = json.load(open(f'{V16}/{npix}/image_check.json'))['sources'][0]
+    mk = {m['expid']: m for m in json.load(open(f'{V16}/{npix}/mask_check.json'))['exposures']}
+    g = [g for g in json.load(open(f'{V16}/{npix}/sample.json'))['groups'] if g['key'] == key][0]
+    SRC.append({'npix': npix, 'key': key, 'ra': g['ra'], 'dec': g['dec'], 'members': g['members'],
+                'filter': {1: 'zg', 2: 'zr'}[ic['filter']], 'run': ic['run'], 'v16': ic, 'v16_mask': mk})
+
+COLS = 'field,ccdid,qid,filtercode,expid,filefracday,infobits,maglimit,seeing,obsjd,exptime'
+
+
+def ibe(ra, dec, where):
+    q = urllib.parse.urlencode({'POS': f'{ra},{dec}', 'WHERE': where, 'ct': 'csv', 'COLUMNS': COLS})
+    raw = get('https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + q, 'ibe_search')
+    return Table.read(io.BytesIO(raw), format='csv') if len(raw.strip().splitlines()) > 1 else Table()
+
+
+def url_of(m, suffix, cut=True):
+    ffd = str(m['filefracday'])
+    u = (f"https://irsa.ipac.caltech.edu/ibe/data/ztf/products/sci/{ffd[:4]}/{ffd[4:8]}/{ffd[8:]}/ztf_{ffd}_"
+         f"{int(m['field']):06d}_{m['filtercode']}_c{int(m['ccdid']):02d}_o_q{int(m['qid'])}_{suffix}")
+    return u + (f"?center={{ra}},{{dec}}&size={SIZE}arcsec&gzip=false" if cut else '')
+
+
+def photo(img, x, y, r, sc):
+    return aperture_photometry(img, x, y, r / sc, (2 * r / sc, (2 * r + 5) / sc))
+
+
+def interp_rows(img, bad, skip=None):
+    """Replace bad pixels by the mean of the nearest good pixels left and right in the same row; pixels in ``bad``
+    or ``skip`` (the image's own mask) are never used as neighbours (review fix)."""
+    out = img.copy()
+    nogo = bad if skip is None else (bad | skip)
+    for yy, xx in zip(*np.nonzero(bad)):
+        row = nogo[yy]; L = xx - 1; Rr = xx + 1
+        while L >= 0 and row[L]: L -= 1
+        while Rr < len(row) and row[Rr]: Rr += 1
+        v = [img[yy, k] for k in (L, Rr) if 0 <= k < len(row)]
+        out[yy, xx] = np.mean(v) if v else np.nan
+    return out
+
+
+def bits_in(mask, x, y, r_px):
+    yy, xx = np.ogrid[:mask.shape[0], :mask.shape[1]]
+    ap = (xx - x) ** 2 + (yy - y) ** 2 <= r_px ** 2
+    vals = np.bitwise_or.reduce(mask[ap].astype(np.int64)) if ap.any() else 0
+    return [b for b in range(16) if vals >> b & 1], ap
+
+
+def badmask(mask):
+    m = np.zeros(mask.shape, bool)
+    for b in BAD_BITS:
+        m |= (mask.astype(np.int64) >> b & 1).astype(bool)
+    return m
+
+
+res, stamps = [], []
+for s in SRC:
+    ra, dec = s['ra'], s['dec']
+    ids = [e['expid'] for e in s['v16']['exposures']]
+    meta = ibe(ra, dec, f"expid IN ({','.join(map(str, ids))})")
+    # 1624: the unchecked ND (9 in the run, 8 checked): exposures inside the run window, same filter
+    lo, hi = s['run']
+    win = ibe(ra, dec, f"obsjd BETWEEN {lo + 2400000.5 - 0.02} AND {hi + 2400000.5 + 0.02} AND filtercode='{s['filter']}'")
+    # DR24 records of every member (LC API, current release; expid matched)
+    det = {}
+    for o in s['members']:
+        a = Table.read(io.BytesIO(get(f'https://irsa.ipac.caltech.edu/cgi-bin/ZTF/nph_light_curves?ID={o}&FORMAT=csv', 'lc_api')), format='csv')
+        for x in a:
+            det.setdefault(int(x['expid']), []).append({'oid': o, 'mag': float(x['mag']), 'magerr': float(x['magerr']), 'catflags': int(x['catflags'])})
+    v16ids = set(ids)
+    extra = [m for m in win if int(m['expid']) not in v16ids and int(m['expid']) not in det and int(m['infobits']) == 0]
+    s['window_exposures'] = len(win)
+    s['window_undetected_not_checked'] = [int(m['expid']) for m in extra]
+    rows = list(meta) + extra
+    tt = wz.exposure_times(Table(rows=[tuple(m[c] for c in meta.colnames) for m in rows], names=meta.colnames), ra, dec)
+    ex = []
+    for m, t in sorted(zip(rows, tt), key=lambda z: z[1]):
+        e = {'expid': int(m['expid']), 't': float(t), 'field': int(m['field']), 'ccdid': int(m['ccdid']), 'qid': int(m['qid']),
+             'infobits': int(m['infobits']), 'maglimit': float(m['maglimit']), 'seeing': float(m['seeing']),
+             'dr24': det.get(int(m['expid'])), 'nd': int(m['expid']) not in det}
+        v = [x for x in s['v16']['exposures'] if x['expid'] == e['expid']]
+        e['v16'] = ({k: v[0].get(k) for k in ('nd', 'cls', 'why', 'flux_uJy', 'err_uJy', 'field_ratio_median', 'ratio')}
+                    if v else 'not checked in v16')
+        mk = s['v16_mask'].get(e['expid'], {})
+        e['v16_mask'] = {k: mk.get(k) for k in ('mask_at_center', 'mask_bits_in_aperture', 'dark_column_min_dist_arcsec')}
+        fs = cached(f"{CACHE}/{e['expid']}_{s['key']}_sci.fits", url_of(m, 'sciimg.fits').format(ra=ra, dec=dec), 'sci')
+        fm = cached(f"{CACHE}/{e['expid']}_{s['key']}_msk.fits", url_of(m, 'mskimg.fits').format(ra=ra, dec=dec), 'msk')
+        fc = cached(f"{CACHE}/{e['expid']}_psfcat.fits", url_of(m, 'psfcat.fits', cut=False), 'psfcat')
+        e['files'] = {'sci': bool(fs), 'msk': bool(fm), 'psfcat': bool(fc)}
+        e['_paths'] = (fs, fm, fc)
+        ex.append(e)
+    s['exposures'] = ex
+    res.append(s)
+
+# ---- section 2 measurements
+for s in res:
+    ra, dec = s['ra'], s['dec']; brk = [e for e in s['exposures'] if not e['nd']]
+    ims = {}
+    for e in s['exposures']:
+        fs, fm, fc = e.pop('_paths')
+        if not fs:
+            e['missing'] = 'cutout cap'; continue
+        h = fits.open(fs); img = h[0].data.astype(float); hd = h[0].header; w = WCS(hd)
+        msk = fits.open(fm)[0].data if fm else None
+        sc = float(np.sqrt(abs(np.linalg.det(w.pixel_scale_matrix)))) * 3600
+        k = 10 ** (-0.4 * (hd['MAGZP'] - 23.9))
+        x, y = (float(v) for v in w.world_to_pixel_values(ra, dec))
+        e['check1'] = {'file': os.path.basename(fs).split('_')[0] + ' _sciimg', 'imgtypcode': hd.get('IMGTYPE', hd.get('IMGTYP', None)),
+                       'bunit': hd.get('BUNIT'), 'magzp': float(hd['MAGZP']), 'magzp_rms': float(hd.get('MAGZPRMS', np.nan)),
+                       'pixscale_arcsec': sc, 'in_image': bool(0 <= x < img.shape[1] and 0 <= y < img.shape[0])}
+        # flux-weighted centroid within 3" of the DR24 position (background-subtracted)
+        yy, xx = np.mgrid[:img.shape[0], :img.shape[1]]
+        near = (xx - x) ** 2 + (yy - y) ** 2 <= (3 / sc) ** 2
+        ring = ((xx - x) ** 2 + (yy - y) ** 2 >= (8 / sc) ** 2) & ((xx - x) ** 2 + (yy - y) ** 2 <= (12 / sc) ** 2)
+        wgt = np.clip(img - np.nanmedian(img[ring]), 0, None) * near
+        if np.nansum(wgt) > 0:
+            cx, cy = np.nansum(wgt * xx) / np.nansum(wgt), np.nansum(wgt * yy) / np.nansum(wgt)
+            e['check2_centroid_offset_arcsec'] = float(np.hypot(cx - x, cy - y) * sc)
+        r = max(2.0, e['seeing'])
+        e['aperture_r_arcsec'] = r
+        rng = np.random.default_rng(e['expid'] % 2**32); rnd = []
+        for _ in range(1500):
+            xr, yr = rng.uniform(25 / sc, img.shape[1] - 25 / sc), rng.uniform(25 / sc, img.shape[0] - 25 / sc)
+            if np.hypot(xr - x, yr - y) * sc < 3 * r: continue
+            q = photo(img, xr, yr, r, sc)
+            if np.isfinite(q): rnd.append(q)
+            if len(rnd) >= 200: break
+        rnd = np.array(rnd)
+        e['noise_uJy'] = float(1.4826 * np.median(np.abs(rnd - np.median(rnd))) * k) if len(rnd) > 30 else float('nan')
+        e['flux_uJy'] = float(photo(img, x, y, r, sc) * k)
+        ap_ann = img[((xx - x) ** 2 + (yy - y) ** 2 >= (2 * r / sc) ** 2) & ((xx - x) ** 2 + (yy - y) ** 2 <= ((2 * r + 5) / sc) ** 2)]
+        e['annulus_median_DN'] = float(np.nanmedian(ap_ann)); e['image_median_DN'] = float(np.nanmedian(img))
+        if msk is not None:
+            bits, ap = bits_in(msk, x, y, r / sc)
+            bad = badmask(msk)
+            e['mask_bits_in_aperture'] = bits
+            e['bad_pixels_in_aperture'] = int((bad & ap).sum()); e['aperture_pixels'] = int(ap.sum())
+            e['bad_bits_in_aperture'] = sorted(set(bits) & set(BAD_BITS))
+            # low-response column level: median of bad pixels vs the good pixels beside them, away from the star
+            far = ((xx - x) ** 2 + (yy - y) ** 2 >= (15 / sc) ** 2) & bad
+            if far.sum() > 20:
+                nbr = np.zeros_like(bad)
+                nbr[:, 1:] |= far[:, :-1]; nbr[:, :-1] |= far[:, 1:]
+                nbr &= ~bad
+                e['bad_pixel_level_vs_neighbours_DN'] = float(np.nanmedian(img[far]) - np.nanmedian(img[nbr]))
+        else:
+            bad = None
+        ims[e['expid']] = (img, w, sc, k, x, y, r, bad, msk)
+        if fc:
+            hdc = fits.open(fc); zp = float(hdc[0].header['MAGZP']); t = Table(hdc[1].data)
+            j = wz.psfcat_match(t['ra'], t['dec'], [ra], [dec])[0]
+            dd = np.hypot((np.asarray(t['ra']) - ra) * np.cos(np.radians(dec)), np.asarray(t['dec']) - dec) * 3600
+            e['psfcat'] = {'nearest_arcsec': float(np.min(dd)), 'n_sources': len(t)}
+            if j >= 0:
+                e['psfcat'].update(status='matched', mag=float(t['mag'][j]) + zp, sigmag=float(t['sigmag'][j]),
+                                   flags=int(t['flags'][j]), snr=float(t['snr'][j]))
+            else:
+                e['psfcat']['status'] = {-1: 'missing (none within 1.5")', -2: 'ambiguous'}[int(j)]
+            e['_cat'] = (t, zp)
+        stamps.append((s['npix'], e['expid'], e['nd'], img[int(y) - 12:int(y) + 13, int(x) - 12:int(x) + 13]))
+    # ---- section 2.3 comparison stars from the first bracket image
+    b0 = [e for e in s['exposures'] if not e['nd'] and e['expid'] in ims and e['infobits'] == 0]
+    img, w, sc, k, x, y, r, bad, msk = ims[b0[0]['expid']]
+    sm = ndimage.gaussian_filter(np.nan_to_num(img), 1.0)
+    thr = np.nanmedian(sm) + 10 * 1.4826 * np.nanmedian(np.abs(sm - np.nanmedian(sm)))
+    pk = np.argwhere((sm == ndimage.maximum_filter(sm, 7)) & (sm > thr))
+    cands = [w.pixel_to_world_values(p[1], p[0]) for p in pk if np.hypot(p[1] - x, p[0] - y) * sc >= 15]
+
+    def cflux(eid, cra, cde):
+        img, w, sc, k, x, y, r, bad, msk = ims[eid]
+        cx, cy = (float(v) for v in w.world_to_pixel_values(cra, cde))
+        if bad is not None:
+            _, ap = bits_in(msk, cx, cy, r / sc)
+            if (bad & ap).any():
+                return np.nan
+        return photo(img, cx, cy, r, sc) * k
+    good_b = [e for e in s['exposures'] if not e['nd'] and e['expid'] in ims and e['infobits'] == 0]
+    s['bracket_exposures'] = [e['expid'] for e in good_b]
+    tref = np.median([e['flux_uJy'] for e in good_b])
+    s['target_bracket_uJy'] = {'median': float(tref), 'values': [e['flux_uJy'] for e in good_b],
+                               'note': 'seeing-scaled aperture (PLAN 2.2); not the PSF total flux'}
+    ctrl = []
+    for cra, cde in cands:
+        fb = [cflux(e['expid'], cra, cde) for e in good_b]
+        if np.all(np.isfinite(fb)) and 0.25 * tref <= np.median(fb) <= 4 * tref:
+            ctrl.append((cra, cde, float(np.median(fb))))
+    s['controls'] = [{'ra': float(a), 'dec': float(b), 'bracket_uJy': c} for a, b, c in ctrl]
+    bscat = float(np.std([v / tref for v in s['target_bracket_uJy']['values']], ddof=1)) if len(good_b) > 1 else np.nan
+    for e in s['exposures']:
+        if e['expid'] not in ims:
+            e['final'] = 'unknown'; e['reasons'] = ['no cutout']; continue
+        img, w, sc, k, x, y, r, bad, msk = ims[e['expid']]
+        rat = np.array([cflux(e['expid'], a, b) / c for a, b, c in ctrl])
+        rat = rat[np.isfinite(rat)]
+        sE = float(np.median(rat)) if len(rat) else np.nan
+        mad = float(1.4826 * np.median(np.abs(rat - sE))) if len(rat) else np.nan
+        stable = len(rat) >= 3 and mad / sE <= 0.15
+        e['controls'] = {'n': int(len(rat)), 'scale': sE, 'mad': mad, 'stable': bool(stable)}
+        R = e['flux_uJy'] / sE / tref if stable else np.nan
+        sR = float(np.sqrt((e['noise_uJy'] / sE / tref) ** 2 + bscat ** 2 + (R * mad / sE / np.sqrt(max(len(rat), 1))) ** 2)) if stable else np.nan
+        e['R'], e['sigma_R'] = float(R), sR
+        reasons = []
+        if e['infobits'] != 0: reasons.append(f"infobits {e['infobits']}")
+        if not stable: reasons.append('no stable comparison stars')
+        if e.get('bad_bits_in_aperture'): reasons.append(f"bad mask bits {e['bad_bits_in_aperture']} in target aperture")
+        if msk is None: reasons.append('no mask cutout')
+        if stable and not depth_ok(sR): reasons.append(f'too shallow: 1-mag drop would be {(1 - R_DIM) / sR:.1f} sigma')
+        judge = not reasons
+        e['judgeable'], e['reasons'] = judge, reasons
+        e['class'] = classify(judge, R, sR)
+        e['final'] = e['class']
+        # column-interpolated ratio for exposures whose only problem is bad bits (PLAN section 3)
+        if not judge and e.get('bad_bits_in_aperture') and all(x.startswith('bad mask bits') for x in reasons):
+            off = np.argwhere(bad & bits_in(msk, x, y, r / sc)[1]) - np.array([y, x])  # bad pixel offsets from the star
+            def interp_flux(eid, offs):
+                im2, w2, sc2, k2, x2, y2, r2, _, _ = ims[eid]
+                bb = np.zeros(im2.shape, bool)
+                for dy, dx in offs:
+                    yy2, xx2 = int(round(y2 + dy)), int(round(x2 + dx))
+                    if 0 <= yy2 < bb.shape[0] and 0 <= xx2 < bb.shape[1]: bb[yy2, xx2] = True
+                own = badmask(ims[eid][8]) if ims[eid][8] is not None else None
+                return photo(interp_rows(im2, bb, own), x2, y2, r, sc2) * k2
+            fi = interp_flux(e['expid'], off)
+            fib = [interp_flux(b['expid'], off) for b in good_b]
+            Ri = fi / sE / float(np.median(fib)) if stable else np.nan
+            e['interp'] = {'flux_uJy': float(fi), 'bracket_same_offsets_uJy': [float(v) for v in fib], 'R_i': float(Ri),
+                           'n_pixels_interpolated': int(len(off))}
+            ps = e.get('psfcat', {})
+            cat_gap = str(ps.get('status', '')).startswith(('missing', 'ambiguous')) or (ps.get('status') == 'matched' and ps.get('flags', 0) != 0)
+            if stable and np.isfinite(Ri) and Ri >= NORMAL_R and cat_gap:
+                e['final'] = 'data problem supported'
+            else:
+                e['final'] = 'undetermined'
+        # same-exposure psfcat comparison: PSF magnitudes of the comparison stars (PSF vs PSF only)
+        if '_cat' in e:
+            t, zp = e.pop('_cat')
+            cm = wz.psfcat_match(t['ra'], t['dec'], [a for a, b, c in ctrl], [b for a, b, c in ctrl])
+            e['psfcat_controls_mag'] = [float(t['mag'][j]) + zp if j >= 0 else None for j in cm]
+    for e in s['exposures']:
+        e.pop('_cat', None)
+    # psfcat: target PSF magnitude minus the median bracket PSF magnitude, and the same for controls (PSF vs PSF)
+    bm = [e['psfcat']['mag'] for e in good_b if e.get('psfcat', {}).get('status') == 'matched']
+    s['psfcat_bracket_mag_median'] = float(np.median(bm)) if bm else None
+    cb = np.array([e['psfcat_controls_mag'] for e in good_b if 'psfcat_controls_mag' in e], dtype=float)
+    for e in s['exposures']:
+        if e.get('psfcat', {}).get('status') == 'matched' and bm:
+            e['psfcat']['dmag_vs_bracket'] = e['psfcat']['mag'] - float(np.median(bm))
+        if 'psfcat_controls_mag' in e and len(cb):
+            d = np.array(e['psfcat_controls_mag'], dtype=float) - np.nanmedian(cb, axis=0)
+            e['psfcat_controls_dmag_median'] = float(np.nanmedian(d)) if np.isfinite(d).any() else None
+    s['verdict'] = source_verdict(s['exposures'], s['run'])
+    s.pop('v16'); s.pop('v16_mask')
+
+summ = {'label': 'observed (IBE sciimg, mskimg, psfcat; LC API) and derived; post hoc (PLAN.md)',
+        'bytes': nbytes, 'mb': round(mb(), 3), 'n_cutouts': ncut, 'n_psfcat': ncat, 'seconds': round(time.time() - t0, 1)}
+json.dump({**summ, 'sources': res}, open(OUT, 'w'), indent=1, default=lambda o: o.item() if hasattr(o, 'item') else str(o))
+open(OUT, 'a').write('\n')
+print(summ, [(s['npix'], s['verdict']) for s in res])
+import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+nc = 7; nr = int(np.ceil(len(stamps) / nc))
+fig, ax = plt.subplots(nr, nc, figsize=(nc * 1.7, nr * 1.9))
+for a in np.ravel(ax): a.axis('off')
+for a, (npix, eid, nd, st) in zip(np.ravel(ax), stamps):
+    v = np.nanpercentile(st, [5, 99.5]) if np.isfinite(st).any() else (0, 1)
+    a.imshow(st, origin='lower', cmap='gray', vmin=v[0], vmax=v[1]); a.set_title(f"{npix} {eid}{' ND' if nd else ''}", fontsize=6)
+plt.tight_layout(); plt.savefig(PNG, dpi=90)

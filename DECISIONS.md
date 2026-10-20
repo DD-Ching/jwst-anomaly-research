@@ -5413,6 +5413,14 @@ confining radiation at a throat is found.
     per-area validation gate stays. The remaining identified supply is
     4 partitions (17,702 searchable groups, 5.76 GB, shared fields).
   - **Revisit if:** a new partition list or a later DR adds unused areas.
+- **Addendum 2026-10-20 (v17, `results/w3_ztf/v17/RESULT.md`):**
+  - Post hoc evidence check of the two v16 survivors: both are **undetermined**.
+    - 1624: a data problem is supported, not proven (a LOW RESPONSIVITY column within 1.70 px of the source in all
+      9 NDs, ≥ 2.11 px away in the detections; split post hoc).
+    - 1625: consistent with a wide-seeing blend, not tested to a decision.
+  - **Decision:** neither is a candidate. No rule changes, and the column relation is not made a veto.
+  - **Revisit if:** a mask-aware PSF fit or difference-image forced photometry becomes available. That would turn
+    the unknown NDs into measurements.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

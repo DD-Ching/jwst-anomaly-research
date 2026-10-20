@@ -1,0 +1,1755 @@
+{
+ "label": "observed (IBE sciimg, mskimg, psfcat; LC API) and derived; post hoc (PLAN.md)",
+ "bytes": {
+  "ibe_search": 4921,
+  "lc_api": 1231750,
+  "sci": 3052800,
+  "msk": 1670400,
+  "psfcat": 4380480
+ },
+ "mb": 10.34,
+ "n_cutouts": 40,
+ "n_psfcat": 20,
+ "seconds": 162.8,
+ "sources": [
+  {
+   "npix": 1624,
+   "key": 708205400009336,
+   "ra": 127.0853788,
+   "dec": 39.3086507,
+   "members": [
+    708205400009336,
+    1707215300005107,
+    708105400000973,
+    1707115300007405,
+    708305400006268
+   ],
+   "filter": "zr",
+   "run": [
+    59815.50900960385,
+    59817.50755967043
+   ],
+   "window_exposures": 15,
+   "window_undetected_not_checked": [
+    206350236
+   ],
+   "exposures": [
+    {
+     "expid": 206150633,
+     "t": 59815.501805874504,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.539801,
+     "seeing": 2.31239,
+     "dr24": [
+      {
+       "oid": 708205400009336,
+       "mag": 15.1238537,
+       "magerr": 0.0111855306,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 2446.277942150078,
+      "err_uJy": 8.564610796337771,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 3.124031954805005
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206150633 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.940444,
+      "magzp_rms": 0.040323,
+      "pixscale_arcsec": 1.013335129645581,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.27791119516167556,
+     "aperture_r_arcsec": 2.31239,
+     "noise_uJy": 7.7365026843160205,
+     "flux_uJy": 2717.776515400292,
+     "annulus_median_DN": 820.4823303222656,
+     "image_median_DN": 822.7739868164062,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 17,
+     "bad_bits_in_aperture": [],
+     "bad_pixel_level_vs_neighbours_DN": -752.5263690948486,
+     "psfcat": {
+      "nearest_arcsec": 0.2624778840411511,
+      "n_sources": 3634,
+      "status": "matched",
+      "mag": 15.126443616540094,
+      "sigmag": 0.024000000208616257,
+      "flags": 0,
+      "snr": 45.810001373291016,
+      "dmag_vs_bracket": -0.014138075404128259
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206150873,
+     "t": 59815.50421339508,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.5044,
+     "seeing": 2.07064,
+     "dr24": [
+      {
+       "oid": 708205400009336,
+       "mag": 15.1426849,
+       "magerr": 0.0111934515,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 2469.986069826252,
+      "err_uJy": 10.665027401844565,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 2.21181126319427
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206150873 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.963323,
+      "magzp_rms": 0.039248,
+      "pixscale_arcsec": 1.0132741872747753,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.4501641829255534,
+     "aperture_r_arcsec": 2.07064,
+     "noise_uJy": 9.091368577138049,
+     "flux_uJy": 2474.1082220537032,
+     "annulus_median_DN": 1186.131103515625,
+     "image_median_DN": 1184.301513671875,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 13,
+     "bad_bits_in_aperture": [],
+     "bad_pixel_level_vs_neighbours_DN": -1110.9065399169922,
+     "psfcat": {
+      "nearest_arcsec": 0.4634508079035161,
+      "n_sources": 3882,
+      "status": "matched",
+      "mag": 15.145323104259386,
+      "sigmag": 0.032999999821186066,
+      "flags": 0,
+      "snr": 32.70000076293945,
+      "dmag_vs_bracket": 0.0047414123151643395
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206151353,
+     "t": 59815.5090053355,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.0765,
+     "seeing": 1.97209,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 2,
+      "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+      "flux_uJy": -1321.6160922066072,
+      "err_uJy": 14.910015621691654,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.48928455179037683
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206151353 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.992804,
+      "magzp_rms": 0.047236,
+      "pixscale_arcsec": 1.013205426641901,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.724842850991462,
+     "aperture_r_arcsec": 2.0,
+     "noise_uJy": 12.431155361641638,
+     "flux_uJy": -1314.2965715635191,
+     "annulus_median_DN": 3156.070068359375,
+     "image_median_DN": 3156.91015625,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 6,
+     "aperture_pixels": 12,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -3080.1427726745605,
+     "psfcat": {
+      "nearest_arcsec": 67.57104135984042,
+      "n_sources": 3187,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206250648,
+     "t": 59816.50200616436,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.768499,
+     "seeing": 2.04389,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 5,
+      "why": "undetermined: field stars off their reference or no reference",
+      "flux_uJy": 224.4392759471791,
+      "err_uJy": 8.312399334292039,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.35186186758964544
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206250648 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.006461,
+      "magzp_rms": 0.032741,
+      "pixscale_arcsec": 1.0132701483588546,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.8123472806470252,
+     "aperture_r_arcsec": 2.04389,
+     "noise_uJy": 6.850048676421424,
+     "flux_uJy": 235.81469170404253,
+     "annulus_median_DN": 799.9508666992188,
+     "image_median_DN": 798.1041870117188,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 7,
+     "aperture_pixels": 13,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -737.114086151123,
+     "psfcat": {
+      "nearest_arcsec": 35.48204450362145,
+      "n_sources": 4700,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206251129,
+     "t": 59816.50682121247,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.2819,
+     "seeing": 2.18805,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 2,
+      "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+      "flux_uJy": 1696.1736594770023,
+      "err_uJy": 10.753654269524008,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 1.7455552265389904
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206251129 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.019658,
+      "magzp_rms": 0.041299,
+      "pixscale_arcsec": 1.0132250713659072,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.2724820050515802,
+     "aperture_r_arcsec": 2.18805,
+     "noise_uJy": 9.880270614356265,
+     "flux_uJy": 1544.50091705134,
+     "annulus_median_DN": 1807.347900390625,
+     "image_median_DN": 1806.6449584960938,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 3,
+     "aperture_pixels": 15,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -1736.4263763427734,
+     "psfcat": {
+      "nearest_arcsec": 78.57501658346811,
+      "n_sources": 3028,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206251369,
+     "t": 59816.50921713561,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.1646,
+     "seeing": 1.9888,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 2,
+      "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+      "flux_uJy": 1494.1419052187994,
+      "err_uJy": 14.650227389498484,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 1.6385742426343017
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206251369 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.053272,
+      "magzp_rms": 0.040065,
+      "pixscale_arcsec": 1.0132524105204306,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.2418692137432138,
+     "aperture_r_arcsec": 2.0,
+     "noise_uJy": 12.76527390728544,
+     "flux_uJy": 1501.4070653641645,
+     "annulus_median_DN": 2992.551513671875,
+     "image_median_DN": 2991.9195556640625,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 2,
+     "aperture_pixels": 13,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -2917.5250759124756,
+     "psfcat": {
+      "nearest_arcsec": 42.96663876548128,
+      "n_sources": 2649,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206350236,
+     "t": 59817.49793666968,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.9415,
+     "seeing": 2.05835,
+     "dr24": null,
+     "nd": true,
+     "v16": "not checked in v16",
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206350236 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.915185,
+      "magzp_rms": 0.03172,
+      "pixscale_arcsec": 1.0132902759994433,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.42779160583372317,
+     "aperture_r_arcsec": 2.05835,
+     "noise_uJy": 6.180424790106669,
+     "flux_uJy": 59.38989760310353,
+     "annulus_median_DN": 460.5390167236328,
+     "image_median_DN": 458.9943084716797,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 8,
+     "aperture_pixels": 14,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -400.75100326538086,
+     "psfcat": {
+      "nearest_arcsec": 55.689441956434614,
+      "n_sources": 4850,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206350476,
+     "t": 59817.50034419669,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.816799,
+     "seeing": 2.13876,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 5,
+      "why": "undetermined: field stars off their reference or no reference",
+      "flux_uJy": 143.74350517974662,
+      "err_uJy": 7.596321337274913,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.06689210880022588
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206350476 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.932971,
+      "magzp_rms": 0.031904,
+      "pixscale_arcsec": 1.013281311275256,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.7933032336522766,
+     "aperture_r_arcsec": 2.13876,
+     "noise_uJy": 6.461333070077932,
+     "flux_uJy": 166.9666379696129,
+     "annulus_median_DN": 564.5279541015625,
+     "image_median_DN": 563.2697143554688,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 8,
+     "aperture_pixels": 15,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -501.97080421447754,
+     "psfcat": {
+      "nearest_arcsec": 47.84850021408362,
+      "n_sources": 4397,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206350717,
+     "t": 59817.50275172371,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.818399,
+     "seeing": 1.9166,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 5,
+      "why": "undetermined: field stars off their reference or no reference",
+      "flux_uJy": -393.86805237721427,
+      "err_uJy": 7.345912228537923,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.3082942420150524
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206350717 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.936461,
+      "magzp_rms": 0.030011,
+      "pixscale_arcsec": 1.0132728275832248,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.6701458458051412,
+     "aperture_r_arcsec": 2.0,
+     "noise_uJy": 6.839761578550018,
+     "flux_uJy": -388.5527890218751,
+     "annulus_median_DN": 766.2811584472656,
+     "image_median_DN": 764.916748046875,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 8,
+     "aperture_pixels": 13,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -697.0006523132324,
+     "psfcat": {
+      "nearest_arcsec": 41.81639536187737,
+      "n_sources": 4488,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206350958,
+     "t": 59817.50515925074,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.5326,
+     "seeing": 1.99222,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 5,
+      "why": "undetermined: field stars off their reference or no reference",
+      "flux_uJy": -933.4878939857831,
+      "err_uJy": 9.248119352447866,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 4,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.0007184534448388331
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206350958 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.947144,
+      "magzp_rms": 0.032372,
+      "pixscale_arcsec": 1.0132456130724294,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.6151334667662759,
+     "aperture_r_arcsec": 2.0,
+     "noise_uJy": 9.018190907044945,
+     "flux_uJy": -927.7197300925748,
+     "annulus_median_DN": 1163.0267333984375,
+     "image_median_DN": 1161.327392578125,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 8,
+     "aperture_pixels": 12,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -1091.403636932373,
+     "psfcat": {
+      "nearest_arcsec": 38.15301290068755,
+      "n_sources": 3712,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206351197,
+     "t": 59817.50755527719,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.3043,
+     "seeing": 1.99315,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 2,
+      "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+      "flux_uJy": 443.2804027003162,
+      "err_uJy": 11.775996284473164,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1,
+       2
+      ],
+      "dark_column_min_dist_arcsec": 0.9735607385575364
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206351197 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 25.978037,
+      "magzp_rms": 0.046487,
+      "pixscale_arcsec": 1.0131917501411134,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.5082145198958326,
+     "aperture_r_arcsec": 2.0,
+     "noise_uJy": 10.670383293390547,
+     "flux_uJy": 452.11617473625586,
+     "annulus_median_DN": 1915.4653930664062,
+     "image_median_DN": 1912.928955078125,
+     "mask_bits_in_aperture": [
+      1,
+      2
+     ],
+     "bad_pixels_in_aperture": 4,
+     "aperture_pixels": 11,
+     "bad_bits_in_aperture": [
+      2
+     ],
+     "bad_pixel_level_vs_neighbours_DN": -1841.5438652038574,
+     "psfcat": {
+      "nearest_arcsec": 3.3419383897105783,
+      "n_sources": 3131,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars",
+      "bad mask bits [2] in target aperture"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206450576,
+     "t": 59818.501392096565,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.9534,
+     "seeing": 2.08532,
+     "dr24": [
+      {
+       "oid": 708205400009336,
+       "mag": 15.1387854,
+       "magerr": 0.0111917621,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 2559.8151203119796,
+      "err_uJy": 6.546653316800302,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 2.481193218582736
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206450576 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.074314,
+      "magzp_rms": 0.027739,
+      "pixscale_arcsec": 1.0132427964903752,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.3039600862332518,
+     "aperture_r_arcsec": 2.08532,
+     "noise_uJy": 5.839087259833345,
+     "flux_uJy": 2599.6178615432946,
+     "annulus_median_DN": 564.9082946777344,
+     "image_median_DN": 564.2472839355469,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 14,
+     "bad_bits_in_aperture": [],
+     "bad_pixel_level_vs_neighbours_DN": -499.06752014160156,
+     "psfcat": {
+      "nearest_arcsec": 0.3007825585239271,
+      "n_sources": 4748,
+      "status": "matched",
+      "mag": 15.141314036087422,
+      "sigmag": 0.03400000184774399,
+      "flags": 0,
+      "snr": 32.310001373291016,
+      "dmag_vs_bracket": 0.0007323441432003364
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    },
+    {
+     "expid": 206550548,
+     "t": 59819.50116803946,
+     "field": 708,
+     "ccdid": 5,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.1553,
+     "seeing": 1.9093,
+     "dr24": [
+      {
+       "oid": 708205400009336,
+       "mag": 15.1372766,
+       "magerr": 0.0111911148,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 2521.878515523731,
+      "err_uJy": 5.813101982841437,
+      "field_ratio_median": NaN,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": 11.203616041555662
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "206550548 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.072849,
+      "magzp_rms": 0.025927,
+      "pixscale_arcsec": 1.0132186253997049,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.2570903867704378,
+     "aperture_r_arcsec": 2.0,
+     "noise_uJy": 4.537272941542454,
+     "flux_uJy": 2530.5131325425227,
+     "annulus_median_DN": 487.81358337402344,
+     "image_median_DN": 484.23065185546875,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 11,
+     "bad_bits_in_aperture": [],
+     "bad_pixel_level_vs_neighbours_DN": -434.3585729598999,
+     "psfcat": {
+      "nearest_arcsec": 0.227499865386468,
+      "n_sources": 5580,
+      "status": "matched",
+      "mag": 15.139849347801022,
+      "sigmag": 0.03099999949336052,
+      "flags": 0,
+      "snr": 35.25,
+      "dmag_vs_bracket": -0.0007323441432003364
+     },
+     "controls": {
+      "n": 0,
+      "scale": NaN,
+      "mad": NaN,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [],
+     "psfcat_controls_dmag_median": null
+    }
+   ],
+   "bracket_exposures": [
+    206150633,
+    206150873,
+    206450576,
+    206550548
+   ],
+   "target_bracket_uJy": {
+    "median": 2565.0654970429086,
+    "values": [
+     2717.776515400292,
+     2474.1082220537032,
+     2599.6178615432946,
+     2530.5131325425227
+    ],
+    "note": "seeing-scaled aperture (PLAN 2.2); not the PSF total flux"
+   },
+   "controls": [],
+   "psfcat_bracket_mag_median": 15.140581691944222,
+   "verdict": "undetermined"
+  },
+  {
+   "npix": 1625,
+   "key": 709212400017577,
+   "ra": 128.6204723,
+   "dec": 40.9935282,
+   "members": [
+    709112400014898,
+    1748102300015375,
+    1748202300011891,
+    709312400008237,
+    709212400017577
+   ],
+   "filter": "zg",
+   "run": [
+    59896.3819755067,
+    59900.47247835419
+   ],
+   "window_exposures": 5,
+   "window_undetected_not_checked": [],
+   "exposures": [
+    {
+     "expid": 213941192,
+     "t": 59893.41367115485,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.7887,
+     "seeing": 2.26515,
+     "dr24": [
+      {
+       "oid": 709112400014898,
+       "mag": 18.2219028,
+       "magerr": 0.0319622643,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 150.40329562246464,
+      "err_uJy": 5.7980988369531525,
+      "field_ratio_median": 0.9337149482229854,
+      "ratio": 1.0472345573932587
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "213941192 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.331285,
+      "magzp_rms": 0.03662,
+      "pixscale_arcsec": 1.0127269713850067,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.6798939265522903,
+     "aperture_r_arcsec": 2.26515,
+     "noise_uJy": 5.543792831545495,
+     "flux_uJy": 199.82083747229234,
+     "annulus_median_DN": 1135.5399169921875,
+     "image_median_DN": 1126.575439453125,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 17,
+     "bad_bits_in_aperture": [],
+     "psfcat": {
+      "nearest_arcsec": 0.11448058169350045,
+      "n_sources": 2382,
+      "status": "matched",
+      "mag": 18.216284948007836,
+      "sigmag": 0.07400000095367432,
+      "flags": 0,
+      "snr": 14.729999542236328,
+      "dmag_vs_bracket": -0.02105587278931509
+     },
+     "controls": {
+      "n": 1,
+      "scale": 1.110868980831985,
+      "mad": 0.0,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [
+      17.768284993784203
+     ],
+     "psfcat_controls_dmag_median": -0.017055685869149073
+    },
+    {
+     "expid": 214131946,
+     "t": 59895.32138568017,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.6269,
+     "seeing": 2.04604,
+     "dr24": [
+      {
+       "oid": 709112400014898,
+       "mag": 18.1894302,
+       "magerr": 0.0313007385,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 150.45690200845254,
+      "err_uJy": 7.9193565718684615,
+      "field_ratio_median": 1.0779662869644866,
+      "ratio": 0.9074189834461169
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "214131946 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.191172,
+      "magzp_rms": 0.038101,
+      "pixscale_arcsec": 1.0132089919466183,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.6624007645855099,
+     "aperture_r_arcsec": 2.04604,
+     "noise_uJy": 8.255586661948817,
+     "flux_uJy": 162.78493834177846,
+     "annulus_median_DN": 1419.3740844726562,
+     "image_median_DN": 1407.537109375,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 13,
+     "bad_bits_in_aperture": [],
+     "psfcat": {
+      "nearest_arcsec": 0.05728379412714964,
+      "n_sources": 2419,
+      "status": "matched",
+      "mag": 18.183171220976668,
+      "sigmag": 0.10499999672174454,
+      "flags": 0,
+      "snr": 10.380000114440918,
+      "dmag_vs_bracket": -0.05416959982048297
+     },
+     "controls": {
+      "n": 1,
+      "scale": 0.9994352725181659,
+      "mad": 0.0,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [
+      17.75717157955821
+     ],
+     "psfcat_controls_dmag_median": -0.028169100095141175
+    },
+    {
+     "expid": 214237995,
+     "t": 59896.381964588814,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.059401,
+     "seeing": 4.05279,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 2,
+      "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+      "flux_uJy": 146.66192889858183,
+      "err_uJy": 5.7672730319162735,
+      "field_ratio_median": 0.4474281529908454,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1
+      ],
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "214237995 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.27847,
+      "magzp_rms": 0.034136,
+      "pixscale_arcsec": 1.012776879319662,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.9641276588696722,
+     "aperture_r_arcsec": 4.05279,
+     "noise_uJy": 12.711431399779766,
+     "flux_uJy": 674.6570485097143,
+     "annulus_median_DN": 1123.1845092773438,
+     "image_median_DN": 1115.1901245117188,
+     "mask_bits_in_aperture": [
+      1
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 50,
+     "bad_bits_in_aperture": [],
+     "psfcat": {
+      "nearest_arcsec": 6.711711380336025,
+      "n_sources": 1558,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 1,
+      "scale": 0.9772395316532864,
+      "mad": 0.0,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [
+      17.853470217690138
+     ],
+     "psfcat_controls_dmag_median": 0.06812953803678568
+    },
+    {
+     "expid": 214543142,
+     "t": 59899.43369783568,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 19.5933,
+     "seeing": 4.63552,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 2,
+      "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+      "flux_uJy": 117.88330527481307,
+      "err_uJy": 3.5246462968858054,
+      "field_ratio_median": 0.4452775895127906,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1
+      ],
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "214543142 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.355122,
+      "magzp_rms": 0.044183,
+      "pixscale_arcsec": 1.0126886328422895,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.8040633752142319,
+     "aperture_r_arcsec": 4.63552,
+     "noise_uJy": 9.189584479072586,
+     "flux_uJy": 1119.126292673677,
+     "annulus_median_DN": 348.46641540527344,
+     "image_median_DN": 343.8105773925781,
+     "mask_bits_in_aperture": [
+      1
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 67,
+     "bad_bits_in_aperture": [],
+     "psfcat": {
+      "nearest_arcsec": 6.691877833870555,
+      "n_sources": 1946,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 1,
+      "scale": 1.074024140812885,
+      "mad": 0.0,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [
+      17.817122264515778
+     ],
+     "psfcat_controls_dmag_median": 0.03178158486242566
+    },
+    {
+     "expid": 214647008,
+     "t": 59900.47244356856,
+     "field": 1748,
+     "ccdid": 2,
+     "qid": 3,
+     "infobits": 0,
+     "maglimit": 19.917,
+     "seeing": 4.24271,
+     "dr24": null,
+     "nd": true,
+     "v16": {
+      "nd": true,
+      "cls": 2,
+      "why": "poor image (seeing > 4\" or maglimit < 19.5)",
+      "flux_uJy": 100.8911443113823,
+      "err_uJy": 2.479170562157484,
+      "field_ratio_median": 0.5922784585547621,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": 2,
+      "mask_bits_in_aperture": [
+       1
+      ],
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "214647008 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.403679,
+      "magzp_rms": 0.039303,
+      "pixscale_arcsec": 1.0127796196910719,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.7904437499972666,
+     "aperture_r_arcsec": 4.24271,
+     "noise_uJy": 6.212593242091735,
+     "flux_uJy": 620.668533066289,
+     "annulus_median_DN": 227.9267120361328,
+     "image_median_DN": 223.0332794189453,
+     "mask_bits_in_aperture": [
+      1
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 55,
+     "bad_bits_in_aperture": [],
+     "psfcat": {
+      "nearest_arcsec": 6.580504226486476,
+      "n_sources": 2393,
+      "status": "missing (none within 1.5\")"
+     },
+     "controls": {
+      "n": 1,
+      "scale": 1.1227755482850998,
+      "mad": 0.0,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [
+      17.858679151177054
+     ],
+     "psfcat_controls_dmag_median": 0.07333847152370154
+    },
+    {
+     "expid": 214648674,
+     "t": 59900.48911168439,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 20.4491,
+     "seeing": 2.81624,
+     "dr24": [
+      {
+       "oid": 709112400014898,
+       "mag": 18.2632446,
+       "magerr": 0.0328325406,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 130.79758173243158,
+      "err_uJy": 2.278652326059589,
+      "field_ratio_median": 0.790916982615438,
+      "ratio": null
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "214648674 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.396396,
+      "magzp_rms": 0.033139,
+      "pixscale_arcsec": 1.0127224132790964,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.6935658439781345,
+     "aperture_r_arcsec": 2.81624,
+     "noise_uJy": 3.6026151184962623,
+     "flux_uJy": 231.83559188262115,
+     "annulus_median_DN": 230.63433074951172,
+     "image_median_DN": 224.93760681152344,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 22,
+     "bad_bits_in_aperture": [],
+     "psfcat": {
+      "nearest_arcsec": 0.03330391382385408,
+      "n_sources": 3143,
+      "status": "matched",
+      "mag": 18.258396693586466,
+      "sigmag": 0.039000000804662704,
+      "flags": 0,
+      "snr": 27.84000015258789,
+      "dmag_vs_bracket": 0.02105587278931509
+     },
+     "controls": {
+      "n": 1,
+      "scale": 1.0005647274818341,
+      "mad": 0.0,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [
+      17.8023963655225
+     ],
+     "psfcat_controls_dmag_median": 0.017055685869149073
+    },
+    {
+     "expid": 214746563,
+     "t": 59901.468083145824,
+     "field": 709,
+     "ccdid": 12,
+     "qid": 4,
+     "infobits": 0,
+     "maglimit": 21.0394,
+     "seeing": 1.85979,
+     "dr24": [
+      {
+       "oid": 709112400014898,
+       "mag": 18.2946053,
+       "magerr": 0.033514265,
+       "catflags": 0
+      }
+     ],
+     "nd": false,
+     "v16": {
+      "nd": false,
+      "cls": 0,
+      "why": "catalogue detection (reference / bracket)",
+      "flux_uJy": 156.2638044207228,
+      "err_uJy": 2.5515067799995017,
+      "field_ratio_median": 1.0662850517770146,
+      "ratio": 0.9527654426067412
+     },
+     "v16_mask": {
+      "mask_at_center": null,
+      "mask_bits_in_aperture": null,
+      "dark_column_min_dist_arcsec": null
+     },
+     "files": {
+      "sci": true,
+      "msk": true,
+      "psfcat": true
+     },
+     "check1": {
+      "file": "214746563 _sciimg",
+      "imgtypcode": "object",
+      "bunit": "Data Value",
+      "magzp": 26.398878,
+      "magzp_rms": 0.027863,
+      "pixscale_arcsec": 1.012722377185383,
+      "in_image": true
+     },
+     "check2_centroid_offset_arcsec": 0.5602164259604961,
+     "aperture_r_arcsec": 2.0,
+     "noise_uJy": 2.5379038512833905,
+     "flux_uJy": 159.09091267831735,
+     "annulus_median_DN": 181.11553955078125,
+     "image_median_DN": 174.4678497314453,
+     "mask_bits_in_aperture": [
+      1,
+      11
+     ],
+     "bad_pixels_in_aperture": 0,
+     "aperture_pixels": 11,
+     "bad_bits_in_aperture": [],
+     "psfcat": {
+      "nearest_arcsec": 0.05271672624631143,
+      "n_sources": 5208,
+      "status": "matched",
+      "mag": 18.28987778042835,
+      "sigmag": 0.05000000074505806,
+      "flags": 0,
+      "snr": 21.670000076293945,
+      "dmag_vs_bracket": 0.05253695963119753
+     },
+     "controls": {
+      "n": 1,
+      "scale": 0.9912938904522919,
+      "mad": 0.0,
+      "stable": false
+     },
+     "R": NaN,
+     "sigma_R": NaN,
+     "judgeable": false,
+     "reasons": [
+      "no stable comparison stars"
+     ],
+     "class": "unknown",
+     "final": "unknown",
+     "psfcat_controls_mag": [
+      17.841877826204716
+     ],
+     "psfcat_controls_dmag_median": 0.05653714655136355
+    }
+   ],
+   "bracket_exposures": [
+    213941192,
+    214131946,
+    214648674,
+    214746563
+   ],
+   "target_bracket_uJy": {
+    "median": 181.3028879070354,
+    "values": [
+     199.82083747229234,
+     162.78493834177846,
+     231.83559188262115,
+     159.09091267831735
+    ],
+    "note": "seeing-scaled aperture (PLAN 2.2); not the PSF total flux"
+   },
+   "controls": [
+    {
+     "ra": 128.61873978540834,
+     "dec": 40.983350730437685,
+     "bracket_uJy": 206.68950038988592
+    }
+   ],
+   "psfcat_bracket_mag_median": 18.23734082079715,
+   "verdict": "undetermined"
+  }
+ ]
+}

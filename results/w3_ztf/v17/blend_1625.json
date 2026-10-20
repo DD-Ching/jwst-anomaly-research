@@ -1,0 +1,359 @@
+{
+ "label": "derived from observed sciimg and psfcat (cached by check_script); DEVIATION, post hoc",
+ "bracket_net_median_uJy": 179.70077656101844,
+ "bracket_scatter": 0.12274192258426826,
+ "exposures": [
+  {
+   "expid": 213941192,
+   "nd": false,
+   "t": 59893.41367115485,
+   "seeing": 2.26515,
+   "aperture_r_arcsec": 2.26515,
+   "neighbour_sep_arcsec": 6.603495310106832,
+   "neighbour_mag": 14.378284650461449,
+   "neighbour_minus_target_bracket_mag": -3.859056170335702,
+   "target_aperture_uJy": 199.82083747229234,
+   "wing_apertures": [
+    {
+     "angle": 90,
+     "flux_uJy": 10.589973929548304,
+     "other_source": false
+    },
+    {
+     "angle": 180,
+     "flux_uJy": -10.414178128132368,
+     "other_source": false
+    },
+    {
+     "angle": 270,
+     "flux_uJy": -0.9935362799508808,
+     "other_source": false
+    }
+   ],
+   "wing_uJy": -0.9935362799508808,
+   "wing_spread_uJy": 10.520619478492788,
+   "net_uJy": 200.81437375224323,
+   "noise_uJy": 5.543792831545495,
+   "scale": 1.006280637461082,
+   "scale_stable": true,
+   "infobits": 0,
+   "bad_bits": [],
+   "R_net": 1.1105183141516117,
+   "sigma_R": 0.13924926002686155,
+   "judgeable": true,
+   "reasons": [],
+   "cls": "normal"
+  },
+  {
+   "expid": 214131946,
+   "nd": false,
+   "t": 59895.32138568017,
+   "seeing": 2.04604,
+   "aperture_r_arcsec": 2.04604,
+   "neighbour_sep_arcsec": 6.550064380355864,
+   "neighbour_mag": 14.379171320158797,
+   "neighbour_minus_target_bracket_mag": -3.858169500638354,
+   "target_aperture_uJy": 162.78493834177846,
+   "wing_apertures": [
+    {
+     "angle": 90,
+     "flux_uJy": 13.836825586693985,
+     "other_source": false
+    },
+    {
+     "angle": 180,
+     "flux_uJy": -1.9110378673382613,
+     "other_source": false
+    },
+    {
+     "angle": 270,
+     "flux_uJy": -15.394604050179392,
+     "other_source": false
+    }
+   ],
+   "wing_uJy": -1.9110378673382613,
+   "wing_spread_uJy": 14.630323754616532,
+   "net_uJy": 164.6959762091167,
+   "noise_uJy": 8.255586661948817,
+   "scale": 1.013082909628884,
+   "scale_stable": true,
+   "infobits": 0,
+   "bad_bits": [],
+   "R_net": 0.9046655361467625,
+   "sigma_R": 0.15355868131284975,
+   "judgeable": true,
+   "reasons": [],
+   "cls": "normal"
+  },
+  {
+   "expid": 214237995,
+   "nd": true,
+   "t": 59896.381964588814,
+   "seeing": 4.05279,
+   "aperture_r_arcsec": 4.05279,
+   "neighbour_sep_arcsec": 6.711711380336025,
+   "neighbour_mag": 14.369470011696485,
+   "neighbour_minus_target_bracket_mag": -3.8678708091006655,
+   "target_aperture_uJy": 674.6570485097143,
+   "wing_apertures": [
+    {
+     "angle": 90,
+     "flux_uJy": 406.99788006845506,
+     "other_source": false
+    },
+    {
+     "angle": 180,
+     "flux_uJy": 256.1408931031959,
+     "other_source": false
+    },
+    {
+     "angle": 270,
+     "flux_uJy": 500.54355044136344,
+     "other_source": false
+    }
+   ],
+   "wing_uJy": 406.99788006845506,
+   "wing_spread_uJy": 123.3161802547358,
+   "net_uJy": 267.6591684412592,
+   "noise_uJy": 12.711431399779766,
+   "scale": 1.0184146829190746,
+   "scale_stable": true,
+   "infobits": 0,
+   "bad_bits": [],
+   "R_net": 1.4625392108304174,
+   "sigma_R": 0.688423267266488,
+   "judgeable": false,
+   "reasons": [
+    "too shallow (1-mag drop < 3 sigma)"
+   ],
+   "cls": "unknown"
+  },
+  {
+   "expid": 214543142,
+   "nd": true,
+   "t": 59899.43369783568,
+   "seeing": 4.63552,
+   "aperture_r_arcsec": 4.63552,
+   "neighbour_sep_arcsec": 6.691877833870555,
+   "neighbour_mag": 14.377122684132477,
+   "neighbour_minus_target_bracket_mag": -3.860218136664674,
+   "target_aperture_uJy": 1119.126292673677,
+   "wing_apertures": [
+    {
+     "angle": 90,
+     "flux_uJy": 809.2909004584417,
+     "other_source": false
+    },
+    {
+     "angle": 180,
+     "flux_uJy": 706.1717200981349,
+     "other_source": false
+    },
+    {
+     "angle": 270,
+     "flux_uJy": 753.310036724463,
+     "other_source": false
+    }
+   ],
+   "wing_uJy": 753.310036724463,
+   "wing_spread_uJy": 51.62273942903414,
+   "net_uJy": 365.816255949214,
+   "noise_uJy": 9.189584479072586,
+   "scale": 1.013406869762003,
+   "scale_stable": true,
+   "infobits": 0,
+   "bad_bits": [],
+   "R_net": 2.0087653231526907,
+   "sigma_R": 0.31299722021409504,
+   "judgeable": false,
+   "reasons": [
+    "too shallow (1-mag drop < 3 sigma)"
+   ],
+   "cls": "unknown"
+  },
+  {
+   "expid": 214647008,
+   "nd": true,
+   "t": 59900.47244356856,
+   "seeing": 4.24271,
+   "aperture_r_arcsec": 4.24271,
+   "neighbour_sep_arcsec": 6.580504226486476,
+   "neighbour_mag": 14.372679090141897,
+   "neighbour_minus_target_bracket_mag": -3.8646617306552535,
+   "target_aperture_uJy": 620.668533066289,
+   "wing_apertures": [
+    {
+     "angle": 90,
+     "flux_uJy": 411.108761187221,
+     "other_source": false
+    },
+    {
+     "angle": 180,
+     "flux_uJy": 487.91277698873256,
+     "other_source": false
+    },
+    {
+     "angle": 270,
+     "flux_uJy": 546.9057479680708,
+     "other_source": false
+    }
+   ],
+   "wing_uJy": 487.91277698873256,
+   "wing_spread_uJy": 68.09288886876783,
+   "net_uJy": 132.75575607755644,
+   "noise_uJy": 6.212593242091735,
+   "scale": 0.9762998131130805,
+   "scale_stable": true,
+   "infobits": 0,
+   "bad_bits": [],
+   "R_net": 0.756693843294661,
+   "sigma_R": 0.40860549383030537,
+   "judgeable": false,
+   "reasons": [
+    "too shallow (1-mag drop < 3 sigma)"
+   ],
+   "cls": "unknown"
+  },
+  {
+   "expid": 214648674,
+   "nd": false,
+   "t": 59900.48911168439,
+   "seeing": 2.81624,
+   "aperture_r_arcsec": 2.81624,
+   "neighbour_sep_arcsec": 6.649381861440479,
+   "neighbour_mag": 14.379396029829142,
+   "neighbour_minus_target_bracket_mag": -3.857944790968009,
+   "target_aperture_uJy": 231.83559188262115,
+   "wing_apertures": [
+    {
+     "angle": 90,
+     "flux_uJy": 51.819833840468846,
+     "other_source": false
+    },
+    {
+     "angle": 180,
+     "flux_uJy": 32.92062837938536,
+     "other_source": false
+    },
+    {
+     "angle": 270,
+     "flux_uJy": 35.59319349846265,
+     "other_source": false
+    }
+   ],
+   "wing_uJy": 35.59319349846265,
+   "wing_spread_uJy": 10.227629475793982,
+   "net_uJy": 196.2423983841585,
+   "noise_uJy": 3.6026151184962623,
+   "scale": 0.9970022455490541,
+   "scale_stable": true,
+   "infobits": 0,
+   "bad_bits": [],
+   "R_net": 1.0953344638532376,
+   "sigma_R": 0.13685290370922928,
+   "judgeable": true,
+   "reasons": [],
+   "cls": "normal"
+  },
+  {
+   "expid": 214746563,
+   "nd": false,
+   "t": 59901.468083145824,
+   "seeing": 1.85979,
+   "aperture_r_arcsec": 2.0,
+   "neighbour_sep_arcsec": 6.6147775359239755,
+   "neighbour_mag": 14.390877612581669,
+   "neighbour_minus_target_bracket_mag": -3.846463208215482,
+   "target_aperture_uJy": 159.09091267831735,
+   "wing_apertures": [
+    {
+     "angle": 90,
+     "flux_uJy": 2.2917026550312376,
+     "other_source": false
+    },
+    {
+     "angle": 180,
+     "flux_uJy": -5.9804598530463675,
+     "other_source": false
+    },
+    {
+     "angle": 270,
+     "flux_uJy": 2.2636722996099103,
+     "other_source": false
+    }
+   ],
+   "wing_uJy": 2.2636722996099103,
+   "wing_spread_uJy": 4.767864183107059,
+   "net_uJy": 156.82724037870744,
+   "noise_uJy": 2.5379038512833905,
+   "scale": 0.993760308513568,
+   "scale_stable": true,
+   "infobits": 0,
+   "bad_bits": [],
+   "R_net": 0.8781928559572871,
+   "sigma_R": 0.126413517287191,
+   "judgeable": true,
+   "reasons": [],
+   "cls": "normal"
+  }
+ ],
+ "blend_mechanism": {
+  "bracket_catalogue": 214746563,
+  "n_pairs": 1,
+  "n_isolated": 162,
+  "exposures": [
+   {
+    "pairs": [
+     [
+      128.8321533,
+      41.2531752,
+      18.55287742614746,
+      14.221878051757812,
+      4.330999374389648
+     ]
+    ],
+    "expid": 214237995,
+    "seeing": 4.05279,
+    "pairs_in_catalogue": 1,
+    "pair_faint_missing": 1,
+    "isolated_in_footprint": 157,
+    "isolated_missing": 4
+   },
+   {
+    "pairs": [
+     [
+      128.8321533,
+      41.2531752,
+      18.55287742614746,
+      14.221878051757812,
+      4.330999374389648
+     ]
+    ],
+    "expid": 214543142,
+    "seeing": 4.63552,
+    "pairs_in_catalogue": 1,
+    "pair_faint_missing": 1,
+    "isolated_in_footprint": 161,
+    "isolated_missing": 1
+   },
+   {
+    "pairs": [
+     [
+      128.8321533,
+      41.2531752,
+      18.55287742614746,
+      14.221878051757812,
+      4.330999374389648
+     ]
+    ],
+    "expid": 214647008,
+    "seeing": 4.24271,
+    "pairs_in_catalogue": 0,
+    "pair_faint_missing": 0,
+    "isolated_in_footprint": 58,
+    "isolated_missing": 2
+   }
+  ],
+  "note": "isolated stars counted only where the exposure catalogue has a source within 60\" (footprint proxy)"
+ }
+}

@@ -1,0 +1,30 @@
+# v17 section 1: evidence of the two v16 final survivors from committed v16 files (no new data).
+# Usage: python evidence_script.py.txt <out json>
+import json, sys
+import numpy as np
+V = 'results/w3_ztf/v16'
+out = {'label': 'observed (v16 IBE images, masks, DR24) and derived; copied from committed v16 files', 'sources': []}
+VISUAL = {1624: 'visual reading of v16 1624/image_check.png (not an automated class): the star is seen beside or partly on a '
+                'black column in all 8 checked NDs',
+          1625: 'visual reading of v16 1625/image_check.png (not an automated class): a source is seen at the position in all 3 '
+                'NDs, in wide seeing'}
+for npix, key in ((1624, 708205400009336), (1625, 709212400017577)):
+    run = [r for r in json.load(open(f'{V}/{npix}/search_holdout_v16_time.json'))['runs'] if r['key'] == key][0]
+    g = [g for g in json.load(open(f'{V}/{npix}/sample.json'))['groups'] if g['key'] == key][0]
+    ic = json.load(open(f'{V}/{npix}/image_check.json'))
+    s = ic['sources'][0]; mk = {m['expid']: m for m in json.load(open(f'{V}/{npix}/mask_check.json'))['exposures']}
+    det = [e['flux_uJy'] for e in s['exposures'] if not e['nd']]
+    out['sources'].append({
+        'npix': npix, 'key': key, 'members': g['members'], 'ra': g['ra'], 'dec': g['dec'], 'refmag_r_dr24': g['refmag_r'],
+        'final_run': run, 'rule': 'frozen v13 W3 rule, --edge time (results/w3_ztf/v16/PLAN.md section 3)',
+        'achromatic_test_note': f"other_filter_epochs = {run['other_filter_epochs']}: the achromatic test had no other-band data",
+        'v16_nd_classes': ic['nd_classes'], 'v16_nd_pending': ic['nd_pending_unchecked'],
+        'v16_reference_uJy': s['reference_uJy'],
+        'v16_bracket_detection_2arcsec_uJy': {'values': det, 'median': float(np.median(det)), 'range': [min(det), max(det)]},
+        'visual_reading': VISUAL[npix],
+        'exposures': [{**{k: e.get(k) for k in ('expid', 't', 'nd', 'dmag', 'cls', 'why', 'flux_uJy', 'err_uJy', 'infobits',
+                                                  'maglimit', 'seeing', 'field', 'ccdid', 'qid')},
+                       'mask': {k: mk.get(e['expid'], {}).get(k) for k in ('mask_at_center', 'mask_bits_in_aperture',
+                                                                            'dark_column_min_dist_arcsec')}}
+                      for e in s['exposures']]})
+json.dump(out, open(sys.argv[1], 'w'), indent=1, default=float); open(sys.argv[1], 'a').write('\n')
