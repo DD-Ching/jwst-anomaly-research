@@ -1,0 +1,86 @@
+# v18 reader for the official ZTF per-exposure DAOPHOT PSF file (`*_sciimgdao.psf`). Adapter only: it evaluates the
+# stored model (GAUSSIAN analytic part + lookup tables with linear spatial terms) the way DAOPHOT II USEPSF does, and
+# builds a photutils ImagePSF for a given quadrant position. Validated against the official `*_sciimgdaopsfcent.fits`
+# (the same model rendered at the quadrant centre) by `validate_reader` before any use.
+import re
+
+import numpy as np
+
+
+def read(fn):
+    tok = open(fn).read().split('\n')
+    h = tok[0].split()
+    lab, npsf, npar, nexp, nfrac = h[0], int(h[1]), int(h[2]), int(h[3]), int(h[4])
+    psfmag, bright, xpsf, ypsf = (float(v) for v in h[5:9])
+    if lab != 'GAUSSIAN' or nfrac != 0 or nexp not in (1, 3, 6):
+        raise ValueError(f'unsupported PSF file: {h}')
+    vals = np.array([float(v) for v in re.findall(r'-?\d\.\d+E[+-]\d\d', '\n'.join(tok[1:]))])
+    par = vals[:npar]
+    tab = vals[npar:npar + npsf * npsf * nexp].reshape(nexp, npsf, npsf)  # [k, y, x]: Fortran x fastest
+    return dict(npsf=npsf, npar=npar, nexp=nexp, par=par, tab=tab, psfmag=psfmag, bright=bright, xpsf=xpsf, ypsf=ypsf)
+
+
+def _daoerf(x, beta):
+    """Integral over [x-0.5, x+0.5] of exp(-ln2 (u/beta)^2), Gauss-Legendre 4 points (DAOPHOT DAOERF)."""
+    d = np.array([-0.4305681558, -0.1699905218, 0.1699905218, 0.4305681558])
+    w = np.array([0.1739274226, 0.3260725774, 0.3260725774, 0.1739274226])
+    u = np.asarray(x)[..., None] + d
+    return (np.exp(-0.6931472 * (u / beta) ** 2) * w).sum(-1)
+
+
+def _bicubic(f, lx, ly, fx, fy):
+    """DAOPHOT BICUBC (cubic convolution) on table f[y, x] with 0-based corner (lx, ly) = Fortran (LX-1, LY-1)."""
+    def cub(p0, p1, p2, p3, t):
+        c1 = 0.5 * (p2 - p0); c2 = 2 * p2 + p0 - 0.5 * (5 * p1 + p3); c3 = 0.5 * (3 * (p1 - p2) + p3 - p0)
+        return t * (t * (t * c3 + c2) + c1) + p1
+    rows = [cub(f[ly + j, lx], f[ly + j, lx + 1], f[ly + j, lx + 2], f[ly + j, lx + 3], fx) for j in range(4)]
+    return cub(*rows, fy)
+
+
+def value(p, dx, dy, xc, yc, analytic_scale=1.0):
+    """PSF value of the pixel offset (dx, dy) from a star at quadrant position (xc, yc) (1-based DAOPHOT pixels)."""
+    dx, dy = np.asarray(dx, float), np.asarray(dy, float)
+    out = analytic_scale * _daoerf(dx, p['par'][0]) * _daoerf(dy, p['par'][1]) / (p['par'][0] * p['par'][1])
+    mid = (p['npsf'] + 1) // 2
+    xx, yy = 2 * dx + mid, 2 * dy + mid
+    LX, LY = np.floor(xx).astype(int), np.floor(yy).astype(int)
+    ok = (LX >= 2) & (LX <= p['npsf'] - 2) & (LY >= 2) & (LY <= p['npsf'] - 2)
+    ddx, ddy = (xc - 1.0) / p['xpsf'] - 1.0, (yc - 1.0) / p['ypsf'] - 1.0
+    junk = [1.0, ddx, ddy, 1.5 * ddx ** 2 - 0.5, ddx * ddy, 1.5 * ddy ** 2 - 0.5][:p['nexp']]
+    corr = np.zeros_like(out)
+    for i in np.flatnonzero(ok.ravel()):
+        lx, ly = LX.ravel()[i] - 2, LY.ravel()[i] - 2  # Fortran LX-1 -> 0-based LX-2
+        fx, fy = xx.ravel()[i] - LX.ravel()[i], yy.ravel()[i] - LY.ravel()[i]
+        corr.ravel()[i] = sum(j * _bicubic(p['tab'][k], lx, ly, fx, fy) for k, j in enumerate(junk))
+    out = out + corr
+    out[~ok] = 0.0  # outside the stored PSF radius
+    return out
+
+
+def stamp(p, xc, yc, half=11, analytic_scale=1.0, frac=(0.0, 0.0)):
+    """Integer-pixel stamp (2 half + 1)^2 of a star at (xc, yc) displaced by frac, normalized to unit sum."""
+    g = np.arange(-half, half + 1, dtype=float)
+    dx, dy = np.meshgrid(g - frac[0], g - frac[1])
+    s = value(p, dx, dy, xc, yc, analytic_scale)
+    return s / s.sum()
+
+
+def image_psf(p, xc, yc, half=11, os=4, analytic_scale=1.0):
+    """photutils ImagePSF (oversampling os) of the model at quadrant position (xc, yc); unit flux."""
+    from photutils.psf import ImagePSF
+    g = np.arange(-half * os, half * os + 1) / os
+    dx, dy = np.meshgrid(g, g)
+    d = value(p, dx, dy, xc, yc, analytic_scale)
+    d = d / (d.sum() / os ** 2)
+    return ImagePSF(d, flux=1.0, x_0=0.0, y_0=0.0, oversampling=os)
+
+
+def validate_reader(p, cent):
+    """Max |difference| between the model rendered at the quadrant centre and the official centre image."""
+    half = cent.shape[0] // 2
+    xc, yc = p['xpsf'] + 1.0, p['ypsf'] + 1.0  # DELTAX = DELTAY = 0
+    best = {}
+    for sc in (1.0, p['bright']):
+        s = stamp(p, xc, yc, half, sc)
+        best[sc] = float(np.max(np.abs(s - cent / cent.sum())))
+    return best
