@@ -49,12 +49,17 @@ def test_min_stars_skips_sparse_centres():
 
 def test_signal_and_decide():
     assert math.isclose(pr.SIGNAL, 0.5 * 2 * math.log(2) / 6.75)
-    assert pr.decide({"1": 0.05, "2.3": 0.115}, 3.0) == "PSF gradients cannot fake or hide a flag"
-    assert pr.decide({"1": 0.5, "2.3": 1.15}, 1.5) == (
+
+    def c(r1, chi2):
+        return {"rho": {"1": r1, "2.3": 2.3 * r1}, "chi2_over_dof": chi2}
+
+    assert pr.decide([c(0.05, 3.0), c(0.08, 0.5)]) == "PSF gradients cannot fake or hide a flag"
+    # the largest rho sits in a cell with chi2 <= dof; another cell still meets rule 2
+    assert pr.decide([c(1.2, 0.98), c(0.5, 1.01)]) == (
         "PSF term not negligible at the edge of the resolved cut"
     )
-    assert pr.decide({"1": 1.0, "2.3": 2.3}, 1.5) == "PSF could fake or hide a flag"
-    assert pr.decide({"1": 1.0, "2.3": 2.3}, 0.9).startswith("no PSF pattern above noise")
+    assert pr.decide([c(1.0, 1.5), c(0.5, 1.5)]) == "PSF could fake or hide a flag"
+    assert pr.decide([c(1.2, 0.9), c(0.5, 0.95)]).startswith("no PSF pattern above noise")
 
 
 def test_error_uses_field_rms():

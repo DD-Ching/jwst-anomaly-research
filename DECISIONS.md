@@ -3875,8 +3875,9 @@ efficiency 0.43–0.58 at 1′ (no limit), 1.0 at 2′–4′; n₉₅ ≈ 0.049
 - A flag appears, or per-tile star ellipticity gradients show radial patterns on 1–12′ scales.
 
 **Addendum (2026-10-20, PSF radial pattern; `results/w5_shear/psf_radial/RESULT.md`).** Star ellipticities (181,816
-stars, 343 tiles) on D-067's grid spacing with its coverage cut. Frozen outcome: "no PSF pattern above noise where
-rho is largest" (EDF-F θ_E = 1′, χ²/dof 0.98, ρ(β = 1) 1.19 from single stars), so the 1′ PSF term is not bounded.
+stars, 343 tiles) on D-067's grid spacing with its coverage cut. Frozen outcome (per cell): "PSF term not negligible
+at the edge of the resolved cut" (e.g. EDF-F 2′: ρ(β = 2.3) 0.96 with χ² > dof); the 1′ PSF term is not bounded
+(EDF-F 1′ ρ(β = 1) 1.19, heavy-tailed star noise).
 At 2′ / 4′ the worst radial PSF term is ≤ 0.42 / 0.17 × the annulus-mean injected shear at leakage β = 1 (≤ 0.96 /
 0.40 at β = 2.3); a within-tile pattern is detected at 4′ (post hoc). This test does not change the 2′ / 4′
 limits (efficiency 1.0; the β = 2.3 bound is not propagated through injections). The PSF revisit condition

@@ -13,15 +13,19 @@ model_prediction; β, the star-count floor and the |e| clip are ASSUMPTIONs.
   resolved galaxies'), so they are offset from D-067's screened centres by up to one step. Coverage cut as D-067
   (annulus galaxy count ≥ 0.8 × field median), counted on a server-side 0.5′ map of D-067 galaxies before the
   resolved cut (D-067 counted resolved galaxies).
+- Sign: ē_r is positive for radial (the sign of `w5.radial_shear`); the PLAN wrote it with a minus (**deviation**,
+  only |ē_r| enters the rule).
 - Per-centre error: field rms of one component / √n (as `w5.star_psf`). The first committed run used the
   per-centre sample std; /code-review found it unstable at n ≈ 5–9 and it was replaced before this result.
 
 ## Frozen outcome
-ρ_max(β = 1) 1.19, ρ_max(β = 2.3) 2.73, both at EDF-F θ_E = 1′, where χ²/dof is 0.98 →
-**"no PSF pattern above noise where rho is largest (rules 2-3 not read)"** (`decide`, with the plan's χ² > dof
-condition). There the maximum |ē_r| 0.122 (8.6σ against the field rms) comes from 41,747 centres with a median of 9
-stars, i.e. from single heavy-tailed stars, not from a map-wide pattern. The frozen rule therefore does not
-close D-067's PSF revisit condition at 1′.
+`decide` applies the rules per (field, θ_E) cell. Rule 1 fails: ρ(β = 2.3) ≥ 0.2 in 8 of 9 cells. Rule 3 fires on no
+cell with χ² > dof (the only ρ(β = 1) ≥ 1 cell, EDF-F 1′ at 1.19, has χ²/dof 0.98). Rule 2 fires (e.g. EDF-F 2′:
+ρ(β = 2.3) 0.96, χ²/dof 1.035; EDF-N 1′: 1.19, 1.01) → **"PSF term not negligible at the edge of the resolved
+cut"**. A first version of `decide` judged only the largest-ρ cell and returned "no pattern above noise"; the final
+/code-review caught it before merge.
+The χ² gate is weak here. At 1′, χ²/dof is ≤ 1.01 in all fields while |z| > 3 counts are 3–6 × the Gaussian
+expectation: the star e_r distribution is heavy-tailed, so χ² cannot separate outlier stars from a pattern.
 
 ## By θ_E (same stored numbers; the split per θ_E is post hoc)
 | θ_E | max ρ(β = 1) | max ρ(β = 2.3) | χ²/dof (F / S / N) |
@@ -40,6 +44,7 @@ close D-067's PSF revisit condition at 1′.
 - Clipping stars at |e| < 0.2 lowers the 1′ maximum to 0.087 / 0.049 / 0.032 (ρ(β = 1) ≤ 0.85).
 
 ## Reading
+- Frozen reading: correct PSF anisotropy before using galaxies near the resolved cut (D-067 itself stands).
 - PSF anisotropy gradients are measured. At 2′–4′ the largest radial term is ≤ 0.42 (2′) and ≤ 0.17 (4′) × the
   annulus-mean injected radial shear at β = 1. At 1′ the star sample cannot bound it below the signal.
 - This test does not change D-067's 2′ / 4′ limits. Their injection efficiency was 1.0, and the worst PSF term is

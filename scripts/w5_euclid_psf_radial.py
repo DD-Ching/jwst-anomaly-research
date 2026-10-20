@@ -46,8 +46,8 @@ SIGNAL = w5.RESPONSIVITY * 2.0 * math.log(2.0) / (3.0**2 - 1.5**2)
 
 
 EAS_TAP = "https://eas.esac.esa.int/tap-server/tap/sync"
-# Cone radius per Deep Field: max tile-centre distance from w5.PILOTS + 0.36° (tile half-diagonal).
-CONE_DEG = {"EDF-F": 3.0, "EDF-S": 4.7, "EDF-N": 3.8}
+# Cone radius per Deep Field: >= max tile-centre distance from w5.PILOTS + 0.36° (tile half-diagonal).
+CONE_DEG = {"EDF-F": 3.1, "EDF-S": 4.8, "EDF-N": 3.9}
 
 
 def eas_query(name: str) -> str:
@@ -64,6 +64,11 @@ def eas_query(name: str) -> str:
 
 def eas_stars(name: str, tiles, cache: Path) -> Table:
     """Stars of one Deep Field from EAS, on the field's D-067 tiles only (cached CSV)."""
+    far = max(w5._sep_deg(r, d, *w5.PILOTS[name]) for _, r, d in tiles) + 0.36
+    if far > CONE_DEG[name]:
+        raise RuntimeError(
+            f"{name}: tiles reach {far:.2f} deg, beyond the {CONE_DEG[name]} deg cone"
+        )
     q = eas_query(name)
     t = eas_csv(q, cache / f"eas_stars_{name}_{w5._key(q)}.csv")
     t["tileid"] = np.asarray(t["segmentation_map_id"], np.int64) // 10**6
@@ -98,7 +103,13 @@ def eas_csv(q: str, path: Path) -> Table:
             try:
                 r = requests.get(
                     EAS_TAP,
-                    params={"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": q},
+                    params={
+                        "REQUEST": "doQuery",
+                        "LANG": "ADQL",
+                        "FORMAT": "csv",
+                        "MAXREC": 10_000_000,  # no silent server-default truncation
+                        "QUERY": q,
+                    },
                     timeout=600,
                 )
                 r.raise_for_status()
@@ -172,7 +183,7 @@ def annulus_radial(x, y, e, cx, cy, r_in: float, r_out: float, min_n: int = MIN_
     """Per centre: mean radial component of ``e`` over sources in r_in <= r < r_out, its error
     and n. The error is the field rms of one component, sqrt(<|e|²>/2), over sqrt(n) (as
     ``w5.star_psf``): a per-centre sample std of ~5 values is unstable. Radial is positive, the
-    sign of ``w5.radial_shear``."""
+    sign of ``w5.radial_shear`` (the PLAN wrote ē_r with the opposite sign; only |ē_r| is used)."""
     x, y, e = np.asarray(x, float), np.asarray(y, float), np.asarray(e, complex)
     sigma = math.sqrt(float(np.mean(np.abs(e) ** 2)) / 2.0) if len(e) else np.nan
     tree = cKDTree(np.c_[x, y])
@@ -190,16 +201,18 @@ def annulus_radial(x, y, e, cx, cy, r_in: float, r_out: float, min_n: int = MIN_
     return {"mean": mean, "err": err, "n": n}
 
 
-def decide(rho: dict[str, float], chi2_over_dof: float) -> str:
-    """Frozen PLAN rule on ρ(β) = β max|ē_r| / SIGNAL, maximised over fields and θ_E, with the
-    plan's condition that rules 2-3 are read as a pattern only if χ² > dof in that (field, θ_E)."""
-    if rho["2.3"] < 0.2:
+def decide(cells: list[dict]) -> str:
+    """Frozen PLAN rule over every (field, θ_E) cell, each {"rho": {"1", "2.3"}, "chi2_over_dof"}:
+    rule 1 needs ρ(2.3) < 0.2 in every cell; rules 3 and 2 fire on any cell that meets them and
+    has χ² > dof (the plan's condition for reading them as a pattern); otherwise undetermined."""
+    if all(c["rho"]["2.3"] < 0.2 for c in cells):
         return "PSF gradients cannot fake or hide a flag"
-    if chi2_over_dof <= 1.0:
-        return "no PSF pattern above noise where rho is largest (rules 2-3 not read)"
-    if rho["1"] < 1.0:
+    read = [c for c in cells if c["chi2_over_dof"] > 1.0]
+    if any(c["rho"]["1"] >= 1.0 for c in read):
+        return "PSF could fake or hide a flag"
+    if any(c["rho"]["2.3"] >= 0.2 for c in read):
         return "PSF term not negligible at the edge of the resolved cut"
-    return "PSF could fake or hide a flag"
+    return "no PSF pattern above noise (rules 2-3 not read)"
 
 
 def ring_stats(r: dict) -> dict:
@@ -283,8 +296,7 @@ def main() -> int:
     res = {n: field_stats(n, stars[n], v, galaxy_cells(n, cache)) for n, v in tiles.items()}
     ident = irsa_identity(vstack(list(stars.values())), cache)
     cells = [t for f in res.values() for t in f["theta_e"].values() if t["n_centres"]]
-    worst = max(cells, key=lambda t: t["rho"]["1"])  # ρ ∝ max|ē_r|: same cell for every β
-    rho = worst["rho"]
+    rho = {f"{b:g}": max(t["rho"][f"{b:g}"] for t in cells) for b in BETAS}
     summary = {
         "provenance": {
             "stars": "observed (Euclid Q1 MER catalogue, ESA EAS TAP; SExtractor moments)",
@@ -303,8 +315,7 @@ def main() -> int:
         "irsa_identity": ident,
         "fields": res,
         "rho_max": rho,
-        "chi2_over_dof_at_rho_max": worst["chi2_over_dof"],
-        "decision": decide(rho, worst["chi2_over_dof"]),
+        "decision": decide(cells),
     }
     out = paths.repo_root() / "results" / "w5_shear" / "psf_radial" / "summary.json"
     out.write_text(json.dumps(summary, indent=1) + "\n")

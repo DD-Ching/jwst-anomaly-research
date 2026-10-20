@@ -6,8 +6,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Why:** D-067's open "Revisit if": PSF anisotropy leaks into its size-only-deconvolved galaxy shapes. Plan frozen
   first (`results/w5_shear/psf_radial/PLAN.md`); verification share.
 - **Result (`results/w5_shear/psf_radial/RESULT.md`, `summary.json`):** 181,816 stars on 343 tiles, D-067 grid
-  spacing and coverage cut. Frozen outcome "no PSF pattern above noise where rho is largest" (EDF-F 1′: ρ(β = 1)
-  1.19 from single stars, χ²/dof 0.98), so 1′ is not bounded. At 2′ / 4′ the worst radial PSF term is ≤ 0.42 / 0.17
+  spacing and coverage cut. Frozen outcome (per cell) "PSF term not negligible at the edge of the resolved cut";
+  1′ is not bounded (EDF-F 1′ ρ(β = 1) 1.19, heavy-tailed star noise, χ²/dof 0.98). At 2′ / 4′ the worst radial PSF term is ≤ 0.42 / 0.17
   × the injected annulus shear (β = 1), ≤ 0.96 / 0.40 at β = 2.3. Post hoc: a within-tile 4′ pattern (|z| > 3 at
   77 / 107 centres vs 16 / 13 Gaussian after tile-mean subtraction, EDF-S / N), amplitude ≤ 0.018.
 - **Reading:** 2′ / 4′ limits not changed by this test; the revisit condition narrows to 1′ and galaxies near the
@@ -15,7 +15,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Access:** IRSA TAP answered about one tile query per minute; ESA EAS served the same rows (2,031 / 2,031 identical) in ~8 s
   per field, plus server-side `GROUP BY` count maps. Prefer EAS for MER bulk reads (D-067 addendum, SOURCES.md).
 - **Failed approaches:** no coverage cut first (partial annuli turn a constant PSF into a radial term); per-centre
-  sample-std errors (unstable; /code-review); a max rule on a heavy-tailed star statistic where annuli hold ~10 stars.
+  sample-std errors (unstable) and a rule judged on one cell only (both caught by /code-review); a max rule on a heavy-tailed star statistic where annuli hold ~10 stars.
 - **Handoff:** W5/W1 Euclid line waits for DR1; before it, add a star-interpolated anisotropy correction to
   `galaxy_shapes` and re-run the D-067 injections at 1′.
 
