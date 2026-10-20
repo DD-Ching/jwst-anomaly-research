@@ -81,15 +81,16 @@ def pair_chi2(fa, sa, fb, sb) -> dict:
     ok = np.isfinite(fa) & np.isfinite(fb) & (sa > 0) & (sb > 0)
     fa, sa, fb, sb = fa[ok], sa[ok], fb[ok], sb[ok]
     n = int(ok.sum())
-    if n < 2 or not np.any(fb > 0):
+    if n < 2 or not np.any(fb > 0) or not np.any(fa > 0):
         return {"n_bands": n, "ratio": None, "chi2": None, "p": None}
 
-    def chi2(r: float) -> float:
-        return float(np.sum((fa - r * fb) ** 2 / (sa**2 + r**2 * sb**2)))
+    def chi2(r):
+        r = np.asarray(r, float)[..., None]
+        return np.sum((fa - r * fb) ** 2 / (sa**2 + r**2 * sb**2), axis=-1)
 
     # coarse log grid over 1e-3..1e3, then a bounded refinement around the best grid point
     grid = np.logspace(-3, 3, 601)
-    k = int(np.argmin([chi2(r) for r in grid]))
+    k = int(np.argmin(chi2(grid)))
     lo, hi = grid[max(k - 1, 0)], grid[min(k + 1, len(grid) - 1)]
     res = optimize.minimize_scalar(chi2, bounds=(lo, hi), method="bounded")
     c = float(res.fun)
@@ -101,8 +102,8 @@ def differs(p: float | None) -> bool | None:
 
 
 def decide(gate_passed: bool, any_differs: bool | None, perturber: bool) -> str:
-    """Frozen decision function of PLAN.md; ``any_differs`` None means a target pair was not
-    measurable, which is never read as "consistent"."""
+    """Frozen decision function of PLAN.md. The ``any_differs is None`` branch (a target pair not
+    measurable, never read as "consistent") is post hoc, added after /code-review."""
     if not gate_passed:
         tail = "member perturber present" if perturber else "no member perturber"
         return f"undetermined (colour test not validated; {tail})"
@@ -216,7 +217,12 @@ def perturbers(zout: Table, ra0: float, dec0: float) -> list[dict]:
                     "z160_z840": [_r(float(zout["z160"][k]), 3), _r(float(zout["z840"][k]), 3)],
                     "f200w_mag_crude": _r(mag, 2),
                     "member": member,
-                    "perturber": bool(member and np.isfinite(mag) and mag < MAG_PERTURBER),
+                    # a member without a measurable magnitude is "not assessed" (None), not False
+                    "perturber": (
+                        None
+                        if member and not np.isfinite(mag)
+                        else bool(member and mag < MAG_PERTURBER)
+                    ),
                 }
             )
     finally:
@@ -303,7 +309,7 @@ def model_components(pert: list[dict], zout: Table, radius: float = 1.0) -> list
     py = np.array([pots[n]["y_centre"] for n in names], float)
     rows = []
     for p in pert:
-        if not p["perturber"]:
+        if p["perturber"] is not True:
             continue
         r = zout[np.asarray(zout["id"]) == p["dja_id"]][0]
         x, y = model.to_frame(np.array([float(r["ra"])]), np.array([float(r["dec"])]))
@@ -359,7 +365,7 @@ def main(argv=None) -> dict:
     ra_m = np.mean([pos["78.21"][0], pos["78.22"][0]])
     dec_m = np.mean([pos["78.21"][1], pos["78.22"][1]])
     pert = perturbers(Table.read(fetch_catalog(*af.ZOUT)), float(ra_m), float(dec_m))
-    has_pert = any(p["perturber"] for p in pert)
+    has_pert = any(p["perturber"] is True for p in pert)
     out = {
         "plan": "PLAN.md",
         "bands": list(BANDS),
@@ -376,7 +382,7 @@ def main(argv=None) -> dict:
             "mag_perturber": MAG_PERTURBER,
         },
         "n_known_candidates": len(kp),  # knot sub-systems "S.K", not independent sources
-        "n_known_sources": len({a.split(".")[0] for a, _ in bright}),
+        "n_tested_sources": len({a.split(".")[0] for a, _ in bright}),
         "known_pairs": known,
         "known_consistent_fraction": _r(frac),
         "colour_gate_passed": gate,
@@ -384,6 +390,7 @@ def main(argv=None) -> dict:
         "any_target_pair_differs": any_diff,
         "perturbers": pert,
         "perturber_found": has_pert,
+        "members_not_assessed": [p["dja_id"] for p in pert if p["perturber"] is None],
         "outcome": decide(gate, any_diff, has_pert),
         "photometry": {
             band: {

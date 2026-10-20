@@ -14,6 +14,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (untested). Not a candidate.
 - **Failed approach:** r = 0.15″ high-pass pair colours with random-aperture noise fail on known multiple images; a
   systematic floor calibrated on known pairs is needed first.
+- **Deviation:** re-run after two /code-review rounds (pixel scale, unmeasurable pairs and members, ratio search; RESULT
+  "Deviations"); stored crude magnitudes changed, the outcome did not.
 - **New:** `scripts/a2744_s700_vet.py`, `tests/test_a2744_s700_vet.py`.
 - **Handoff:** 700.1 needs a local re-fit of the northern group (O4/O9/20036 free, 78 as a constraint) or spectra of
   both arc ends. Neither is cheap, so the line is parked. Other lines are unchanged: #409 and the other needs-human

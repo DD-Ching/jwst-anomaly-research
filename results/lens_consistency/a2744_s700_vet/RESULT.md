@@ -8,8 +8,8 @@ photo-z `model_prediction`); lens-model components are `model_prediction` inputs
 **Frozen outcome (from `decide`): "undetermined (colour test not validated; member perturber present)".**
 
 1. **Colour test not validated.** Of the 56 spec-z UNCOVER knot sub-systems ("S.K"; `n_known_candidates`), the
-   first 20 pairs with F200W S/N ≥ 10 in both images were tested. They come from 10 distinct (`n_known_sources`)
-   sources, so they are correlated knots of a few galaxies, not 20 independent systems; only 10 / 20 (0.5) read "consistent" at p ≥ 0.01, below the 0.8 gate (ASSUMPTION). With
+   first 20 pairs with F200W S/N ≥ 10 in both images were tested. These 20 come from 10 distinct sources
+   (`n_tested_sources`), so they are correlated knots of a few galaxies, not 20 independent systems; only 10 / 20 (0.5) read "consistent" at p ≥ 0.01, below the 0.8 gate (ASSUMPTION). With
    r = 0.15″ high-pass apertures and random-aperture noise, true multiple images often differ by more than the
    noise (χ² up to 254 for 7 bands; `known_pairs`). So "consistent" colours for 78 decide nothing.
    For the record (not a decision): the three 78 a/b pairs give p 0.96, 0.93, 0.68 (`target_pairs`).
@@ -39,12 +39,15 @@ systematic floor calibrated on known pairs first.
 **Deviations (labelled).** Post hoc: the `--model-check` block and the sheet's stretch (vmax 10 → 5 σ, display only).
 After `/code-review` (post hoc, before the final run), these were fixed: the pixel solid angle of the crude
 magnitude (hypot, for the rotated mosaic); NaN S/N no longer passes the known-pair cut; an unmeasurable target pair
-is "not measurable", never "consistent"; the ratio search covers 10⁻³–10³ instead of a bracket around Σf_a/Σf_b.
-`summary.json` is from the run with these fixes.
+is "not measurable", never "consistent" (for either image without flux; a new, post hoc `decide` branch); a member
+without a measurable magnitude is "not assessed", not "no perturber"; the ratio search covers 10⁻³–10³ instead of a
+bracket around Σf_a/Σf_b. The crude magnitudes changed with the pixel-scale fix (≈ 20.4 → 19.7 and 18.6 → 18.0).
+`summary.json` is from the run with these fixes; the outcome is unchanged.
 
 **Limitations.** One aperture size, one noise model. The random-aperture ring (0.6–1.8″) is not masked, so for the
 78 knots it also covers the other knots of the same arc; that inflates σ and favours "consistent" for the target
 (one reason the target p values decide nothing). The crude magnitude is a 0.5″ aperture minus a local median, not
 a total magnitude; it is null where the local median exceeds the aperture, as for the photo-z member DJA 42356
-(z_phot 0.346, 3.92″, 68 % interval 0.316–6.867), which was therefore not assessed as a perturber. Both flagged
+(z_phot 0.346, 3.92″, 68 % interval 0.316–6.867), which is therefore "not assessed" (`members_not_assessed`).
+Target pairs have no S/N cut (the known pairs do); this cannot change the outcome while the gate fails. Both flagged
 perturbers are spec-z members. The UNCOVER model's member list was not checked.

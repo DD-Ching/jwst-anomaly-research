@@ -27,7 +27,7 @@ def test_pair_chi2_different_colours_and_nan_bands():
     assert s7v.differs(None) is None
 
 
-def test_decide_is_the_frozen_rule():
+def test_decide_frozen_rule_and_post_hoc_branch():
     assert s7v.decide(False, True, True).startswith("undetermined (colour test not validated;")
     assert "no member perturber" in s7v.decide(False, False, False)
     assert s7v.decide(True, True, True) == "one image (H1)"
@@ -37,10 +37,14 @@ def test_decide_is_the_frozen_rule():
 
 
 def test_pair_chi2_ratio_outside_the_sum_ratio():
-    # sum(fb) nearly cancels: the old [r0/10, 10 r0] bracket missed the true ratio 2
-    fb = np.array([1.0, -0.99, 0.5, -0.5])
-    r = s7v.pair_chi2(2 * fb, np.full(4, 0.01), fb, np.full(4, 0.01))
-    assert r["ratio"] == pytest.approx(2.0, rel=1e-3) and r["p"] > 0.99
+    # sum(fb) nearly cancels, so r0 = sum(fa) / sum(fb) ≈ 302 and the old [r0/10, 10 r0] bracket
+    # excluded the best ratio near 2
+    fb = np.array([1.0, -0.999, 0.5, -0.5])
+    fa = 2 * fb + np.array([0.3, 0.0, 0.0, 0.0])
+    r = s7v.pair_chi2(fa, np.full(4, 0.1), fb, np.full(4, 0.1))
+    assert 1.5 < r["ratio"] < 3.0
+    # an image a without flux is not measurable, as an image b without flux
+    assert s7v.pair_chi2(-np.abs(fb), np.full(4, 0.1), np.abs(fb), np.full(4, 0.1))["p"] is None
 
 
 def test_recentre_and_aperture_noise():
