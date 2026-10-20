@@ -22,3 +22,6 @@ separation). Recorded per z: number of images, the three separations, rms, parit
 
 **What would change the plan.** Outcome B together with UNCOVER also failing at its own z would make 700.1 a
 two-model lens-model residual worth `/vet-candidate` (are 700.1a/b/c one source? colours, photo-z).
+
+## Follow-up claim (2026-10-20 21:15Z)
+UNCOVER v2.0 z scan of 700.1 (D-036 revisit condition): plan in `results/lens_consistency/a2744_s700_uncover/PLAN.md`.
