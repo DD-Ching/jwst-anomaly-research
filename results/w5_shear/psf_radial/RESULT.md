@@ -5,10 +5,13 @@ Plan: `PLAN.md`, committed at 17:11Z (its header's "17:22Z" is a typo) before an
 model_prediction; β, the star-count floor and the |e| clip are ASSUMPTIONs.
 
 ## Data
-- 181,816 stars (VIS 19–22, `point_like_prob > 0.9`) on 343 of 344 D-067 tiles (EDF-F 20,391 / 72; EDF-S 63,839 /
+- 181,816 stars (VIS 19–22, `point_like_prob > 0.9`) on 343 of the 344 D-067 tiles (`n_tiles`, `n_tiles_with_stars`) (EDF-F 20,391 / 72; EDF-S 63,839 /
   148; EDF-N 97,586 / 123), from ESA's Euclid archive (EAS TAP), not IRSA (**deviation**: IRSA answered about one
-  tile query per minute this run). Identity check on the 12 tiles also fetched from IRSA: 2,031 / 2,031 rows matched,
-  max |Δe| 5 × 10⁻¹² (`irsa_identity`), after dropping EAS rows with a NULL `point_like_prob` (or shape column).
+  tile query per minute this run; rate not stored). Identity check on the 12 tiles also fetched from IRSA: 2,031 /
+  2,031 rows matched; ellipticity, position angle and semimajor axis agree to ≤ 5 × 10⁻¹⁰ (`irsa_identity`), after dropping EAS rows with a NULL `point_like_prob` (or shape column).
+- Coverage limitation: galaxy cells come from the whole EAS cone, and stars only from the D-067 tiles. The one
+  star-less tile (EDF-N) can leave annuli that pass the cut while their star ring is partly empty. The
+  tile-mean-subtracted diagnostic removes the constant-PSF part of that leakage.
 - Grid (**deviation**): D-067's step θ_E and annulus 1.5–3 θ_E, but centres laid from the stars' extent (not the
   resolved galaxies'), so they are offset from D-067's screened centres by up to one step. Coverage cut as D-067
   (annulus galaxy count ≥ 0.8 × field median), counted on a server-side 0.5′ map of D-067 galaxies before the
@@ -22,8 +25,14 @@ model_prediction; β, the star-count floor and the |e| clip are ASSUMPTIONs.
 `decide` applies the rules per (field, θ_E) cell. Rule 1 fails: ρ(β = 2.3) ≥ 0.2 in 8 of 9 cells. Rule 3 fires on no
 cell with χ² > dof (the only ρ(β = 1) ≥ 1 cell, EDF-F 1′ at 1.19, has χ²/dof 0.98). Rule 2 fires (e.g. EDF-F 2′:
 ρ(β = 2.3) 0.96, χ²/dof 1.035; EDF-N 1′: 1.19, 1.01) → **"PSF term not negligible at the edge of the resolved
-cut"**. A first version of `decide` judged only the largest-ρ cell and returned "no pattern above noise"; the final
-/code-review caught it before merge.
+cut"**.
+**Deviation (post hoc rule code):** `decide` was coded after the first run. The plan text fixed the rules and the χ² > dof
+condition but not their aggregation. A first version judged only the largest-ρ cell ("no pattern above noise").
+The per-cell version follows the plan's wording ("at every field and θ_E", "anywhere"), but it was chosen after
+the data were seen. **Fragility:** the cells that fire rule 2 have χ²/dof 1.01–1.18 at 1′–2′. Overlapping annuli
+make the effective dof much smaller than the centre count, so χ²/dof this close to 1 is not a significant excess.
+Read the outcome as "not shown to be negligible" rather than as a detected leak at those scales. The 4′ cells that
+fire (χ²/dof 1.20, 1.44) are backed by the post hoc |z| > 3 excess below.
 The χ² gate is weak here. At 1′, χ²/dof is ≤ 1.01 in all fields while |z| > 3 counts are 3–6 × the Gaussian
 expectation: the star e_r distribution is heavy-tailed, so χ² cannot separate outlier stars from a pattern.
 

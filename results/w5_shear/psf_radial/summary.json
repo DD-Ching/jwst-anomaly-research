@@ -4,7 +4,7 @@
   "service": "https://eas.esac.esa.int/tap-server/tap/sync table catalogue.mer_catalogue",
   "statistics": "derived",
   "signal": "model_prediction (annulus-mean injected radial shear, R = 0.5)",
-  "run_utc": "2026-10-20T17:46Z",
+  "run_utc": "2026-10-20T17:59Z",
   "assumptions": {
    "betas": [
     1.0,
@@ -20,10 +20,15 @@
   }
  },
  "irsa_identity": {
+  "n_tiles": 12,
   "n_irsa": 2031,
   "n_eas_same_tiles": 2031,
   "n_matched": 2031,
-  "max_abs_de": 4.961850375018173e-12
+  "max_abs_diff": {
+   "ellipticity": 4.961850375018173e-12,
+   "position_angle": 4.999947122996673e-10,
+   "semimajor_axis": 5.000000413701855e-11
+  }
  },
  "fields": {
   "EDF-F": {
@@ -235,7 +240,8 @@
       }
      }
     }
-   }
+   },
+   "n_tiles": 72
   },
   "EDF-S": {
    "n_stars": 63839,
@@ -446,7 +452,8 @@
       }
      }
     }
-   }
+   },
+   "n_tiles": 148
   },
   "EDF-N": {
    "n_stars": 97586,
@@ -657,7 +664,8 @@
       }
      }
     }
-   }
+   },
+   "n_tiles": 124
   }
  },
  "rho_max": {

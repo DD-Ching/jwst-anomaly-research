@@ -152,23 +152,30 @@ def annulus_counts(x, y, n, cx, cy, r_in: float, r_out: float) -> np.ndarray:
 
 def irsa_identity(stars: Table, cache: Path) -> dict:
     """Row-by-row check against IRSA star tiles cached by ``w5_euclid_shear.py`` (if any)."""
-    n_irsa = n_match = n_eas = 0
-    max_de = 0.0
+    n_irsa = n_match = n_eas = n_tiles = 0
+    max_d = {"ellipticity": 0.0, "position_angle": 0.0, "semimajor_axis": 0.0}
     for f in sorted((cache / "tiles").glob("star_*.ecsv")):
         tid = int(f.name.split("_")[1])
         if f.name != f"star_{tid}_{w5._key(w5.tile_query(tid, True))}.ecsv":
             continue  # a cache file from another selection
         a = Table.read(f)
         b = stars[stars["tileid"] == tid]
-        n_irsa, n_eas = n_irsa + len(a), n_eas + len(b)
+        n_irsa, n_eas, n_tiles = n_irsa + len(a), n_eas + len(b), n_tiles + 1
         if not (len(a) and len(b)):
             continue
         d, i = cKDTree(np.c_[b["ra"], b["dec"]]).query(np.c_[a["ra"], a["dec"]])
         ok = d < 1e-6  # deg
         n_match += int(ok.sum())
-        de = np.abs(np.asarray(a["ellipticity"])[ok] - np.asarray(b["ellipticity"])[i[ok]])
-        max_de = max(max_de, float(de.max(initial=0.0)))
-    return {"n_irsa": n_irsa, "n_eas_same_tiles": n_eas, "n_matched": n_match, "max_abs_de": max_de}
+        for c in max_d:  # the radial projection depends on the PA as much as on |e|
+            d_c = np.abs(np.asarray(a[c], float)[ok] - np.asarray(b[c], float)[i[ok]])
+            max_d[c] = max(max_d[c], float(d_c.max(initial=0.0)))
+    return {
+        "n_tiles": n_tiles,
+        "n_irsa": n_irsa,
+        "n_eas_same_tiles": n_eas,
+        "n_matched": n_match,
+        "max_abs_diff": max_d,
+    }
 
 
 def star_ellipticity(stars) -> np.ndarray:
@@ -295,8 +302,12 @@ def main() -> int:
     tiles = w5.q1_tiles(cache)
     stars = {n: eas_stars(n, v, cache) for n, v in tiles.items()}
     res = {n: field_stats(n, stars[n], v, galaxy_cells(n, cache)) for n, v in tiles.items()}
+    for n, v in tiles.items():
+        res[n]["n_tiles"] = len(v)
     ident = irsa_identity(vstack(list(stars.values())), cache)
-    cells = [t for f in res.values() for t in f["theta_e"].values() if t["n_centres"]]
+    cells = [t for f in res.values() for t in f["theta_e"].values()]
+    if not all(t["n_centres"] for t in cells):  # rule 1 is "every field and θ_E"
+        raise RuntimeError("a (field, θ_E) cell has no usable centre; the frozen rule cannot run")
     rho = {f"{b:g}": max(t["rho"][f"{b:g}"] for t in cells) for b in BETAS}
     summary = {
         "provenance": {
