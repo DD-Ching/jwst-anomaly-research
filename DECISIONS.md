@@ -5536,6 +5536,12 @@ confining radiation at a throat is found.
   - **Decision:** existing-product restoration (the v9–v10 psfcat route) is closed for the v13 and bounds rules.
   - **Revisit if:** new edge information exists (another survey or band covering the same stars), or the owner
     decides on using infobits ≠ 0 exposures or on a lower recovery target.
+- **Addendum 2026-10-20 (ASAS-SN, `results/w3_ztf/asassn/RESULT.md`):**
+  - **Trial:** ASAS-SN Sky Patrol, via the official `skypatrol` client, is the edge-information source tried.
+  - **Outcome:** its light-curve service was down (maintenance), so the trial did not run.
+  - **Kept for the re-run:** 40 stars selected by catalogue (bright, clean 16″ apertures) and their ZTF-only
+    baseline.
+  - **Revisit if:** `get_block_servers` is non-empty. Re-run the committed plan unchanged.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
