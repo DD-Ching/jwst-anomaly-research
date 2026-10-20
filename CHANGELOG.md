@@ -10,7 +10,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   adds a fixed excess, not zero); the frozen replacement G3′ passes (< 0.01 %).
 - **Result (`results/w3_macro_shear/RESULT.md`):** minimum images (μ_macro 10, 100): zero-flux umbra, half-width
   along the stretch 0.625 / 0.20 θ_E as predicted by 2√λ1, across 2 θ_E. Saddle images (μ_macro −10, −100): no
-  umbra; ρ = 0.1 minima 0.85 / 0.96 (no-lens sampling-noise control 0.94–1.06 / 0.95–1.00). Saddle images cannot
+  umbra; ρ = 0.1 minima 0.85 / 0.96 (no-lens sampling-noise control within ±0.8 %). Saddle images cannot
   test W3 by vanishing.
 - **Failed approach:** G3 (window mean = μ_macro); recorded in PLAN addendum 1.
 - **Handoff:** no search changed. W3 on caustic-transient stars, if ever run, injects through this map per image.

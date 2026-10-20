@@ -15,17 +15,19 @@ numbers in `result.json`, maps in `maps.png` (looked at).
 - **G3′** (that excess on the isolated maps, R = 2.5 and 3): agrees to < 0.01 %, both signs. Pass.
 
 ## Measurements (negative mass; λ1 = 1 − κ − γ along the macro stretch, λ2 = 1 − κ + γ = 1)
-| Case | μ_macro | umbra (μ / μ_macro < 0.1) area, θ_E² | half-width along stretch / across | predicted 2√λ (on axis) | min μ / μ_macro over u₀ = 0, 0.5, 1 tracks, ρ = 0.1 | no-lens control, ρ = 0.1 (point) |
+| Case | μ_macro | umbra (μ / μ_macro < 0.1) area, θ_E² | half-width along stretch / across | predicted 2√λ (on axis) | min μ / μ_macro over u₀ = 0, 0.5, 1 tracks, ρ = 0.1 | no-lens control, ρ = 0.1 interior (point, whole map) |
 |---|---|---|---|---|---|---|
-| isolated | 1 | 12.49 | 1.99 / 1.99 | 2 / 2 | 0 | 0.89–1.12 (0.79–1.24) |
-| minimum | 10 | 4.47 | 0.625 / 2.00 | 0.632 / 2 | 0 | 0.94–1.06 (0.89–1.24) |
-| minimum | 100 | 1.55 (2.23 incl. side regions) | 0.20 / 2.00 | 0.20 / 2 | 0 | 0.95–1.00 (0.89–1.33) |
-| saddle | −10 | 0 | — | — (no umbra) | 0.85 | 0.94–1.06 (0.89–1.24) |
-| saddle | −100 | 0 | — | — (no umbra) | 0.96 | 0.95–1.00 (0.89–1.33) |
+| isolated | 1 | 12.49 | 1.99 / 1.99 | 2 / 2 | 0 | 0.995–1.005 (0.79–1.23) |
+| minimum | 10 | 4.47 | 0.625 / 2.00 | 0.632 / 2 | 0 | 1.000–1.008 (0.89–1.23) |
+| minimum | 100 | 1.55 (2.23 incl. side regions) | 0.20 / 2.00 | 0.20 / 2 | 0 | 0.998–1.002 (0.89–1.33) |
+| saddle | −10 | 0 | — | — (formula covers minima only) | 0.85 | 1.000–1.008 (0.89–1.23) |
+| saddle | −100 | 0 | — | — (formula covers minima only) | 0.96 | 0.998–1.002 (0.89–1.33) |
 
 Sampling noise (post hoc, after review): the ray grid is regular, so single-pixel μ aliases. The no-lens
-control (`sign = 0`, same grids) gives the noise range in the last column. Zero-flux umbrae and their widths are far
-outside it; point-source dimming depths in saddles (minima 0.69–0.89) are not resolved from it and are not quoted.
+control (`sign = 0`, same grids) gives the noise range in the last column; the ρ = 0.1 range excludes the
+convolution's padded borders (second review: with them it was 0.89–1.12). Zero-flux umbrae and their widths, and
+the ρ = 0.1 saddle minima, are far outside it; point-source saddle minima (0.69 / 0.86) are not resolved from the
+point-source control and are not quoted.
 
 ## What this shows
 - **Minimum-parity macro images:** the W3 "vanishing" survives macro magnification. The umbra keeps zero flux,
@@ -33,8 +35,7 @@ outside it; point-source dimming depths in saddles (minima 0.69–0.89) are not 
   across it stays 2 θ_E. A source crossing along the stretch axis vanishes for a time shorter by √λ1 than the
   isolated formula 2 t_E √(4 − u₀²) gives.
 - **Saddle-parity macro images:** there is **no umbra** (no pixel below 0.1 μ_macro in either case). For
-  ρ = 0.1 the deepest dimming is 15 % at μ_macro = −10 (control floor 6 %) and is not resolved from sampling
-  noise at −100. That looks like ordinary microlensing near a saddle (the known mimic in docs/exotic_lensing.md),
+  ρ = 0.1 the deepest dimming is 15 % at μ_macro = −10 and 4 % at −100 (control interior within ±0.8 %). That looks like ordinary microlensing near a saddle (the known mimic in docs/exotic_lensing.md),
   not a vanishing.
 - Hence the isolated-lens W3 injections (`inject_light_curve`) are a fair approximation only for minimum
   images and only for motion across the stretch. The plan's decision rule: hole area at μ_macro = 100 is 12 %
@@ -49,8 +50,9 @@ outside it; point-source dimming depths in saddles (minima 0.69–0.89) are not 
   were set with the code, after the plan's "within two source pixels" wording; both fractions came out 100 %.
 - G1 compares radial-bin means, as the plan's "radial profile" says; single pixels scatter by up to ±9 % near
   r = 2.5–2.9 (aliasing, see the control).
-- The no-lens control and the coarse-grid alignment to the fine box (no seam) were added after review; the re-run
-  left every gate and umbra number unchanged.
+- The no-lens control and the alignment of both ray grids to the fine box (no seam) were added after review; the
+  re-runs left every gate and umbra number unchanged. `macro_hole_halfwidths` now raises outside minimum images
+  (the saddle "no umbra" is a simulated result, not this formula).
 
 ## Not shown / limits
 - One microlens, no microlens population (κ_* = 0), λ2 = 1 only, two |μ_macro| values; point and ρ = 0.1 disk

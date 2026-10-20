@@ -153,7 +153,7 @@ def measure(lam1, lam2, sign=-1):
     lab, _ = ndimage.label(hole)
     cy, cx = mu.shape[0] // 2, mu.shape[1] // 2
     central = lab == lab[cy, cx] if hole[cy, cx] else np.zeros_like(hole)
-    pred = es.macro_hole_halfwidths(lam1, lam2)
+    pred = es.macro_hole_halfwidths(lam1, lam2) if lam1 > 0 and lam2 > 0 else (None, None)
     row = central[cy]
     col = central[:, cx]
     hw_x = float(row.sum() * pix / 2)
@@ -166,12 +166,12 @@ def measure(lam1, lam2, sign=-1):
     disk = ndimage.convolve(rel, ker, mode="nearest")
     # sampling-noise control (post hoc, added after review): same grids, no point lens
     ctrl = as_image(es.macro_magnification_map(lam1, lam2, 0, hx, 3.0, pix))[0] / mac
-    ctrl_disk = ndimage.convolve(ctrl, ker, mode="nearest")
+    ctrl_disk = ndimage.convolve(ctrl, ker, mode="nearest")[k:-k, k:-k]  # no padded borders
     control = {
         "point_min": float(ctrl.min()),
         "point_max": float(ctrl.max()),
-        "rho0.1_min": float(ctrl_disk.min()),
-        "rho0.1_max": float(ctrl_disk.max()),
+        "rho0.1_min_interior": float(ctrl_disk.min()),
+        "rho0.1_max_interior": float(ctrl_disk.max()),
     }
     tracks = {}
     for u0 in (0.0, 0.5, 1.0):
@@ -180,14 +180,14 @@ def measure(lam1, lam2, sign=-1):
             "min_point": float(rel[iy].min()),
             "min_rho0.1": float(disk[iy].min()),
         }
-        if u0 < bx[-1]:
+        if u0 < hx:
             ix = int(np.argmin(np.abs(bx - u0)))
             tracks[f"along_y_u0_{u0}"] = {
                 "min_point": float(rel[:, ix].min()),
                 "min_rho0.1": float(disk[:, ix].min()),
             }
         else:
-            tracks[f"along_y_u0_{u0}"] = "not measured: outside the window"
+            tracks[f"along_y_u0_{u0}"] = None  # outside the window: not measured
     return {
         "lam1": lam1,
         "lam2": lam2,
