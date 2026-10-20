@@ -15,7 +15,7 @@ Plan: `PLAN.md` (committed before computing). Scripts: `diag_script.py.txt` (fro
 
 ## Post hoc (pattern seen after the frozen tests; not a tested rule)
 - Grouping the order-5 partitions by their HEALPix order-4 parent (npix // 4, ≈ 13 deg²): **between parents
-  χ² = 207.9 / 11 dof (p 1.7 × 10⁻³⁸); within parents 25.8 / 13 dof (p 0.018)**. About 89 % of the excess spread
+  χ² = 207.7 / 11 dof (p 1.9 × 10⁻³⁸); within parents 26.1 / 13 dof (p 0.017; Pearson, no continuity correction)**. About 89 % of the excess spread
   sits between sky regions; siblings agree to within binomial-plus-small scatter. Examples: parent 622 (2488–2491)
   10.6–13.9 %, all fail; 2031 (8124/8126/8127) 5.4–7.4 %, all pass the fade limit; 339 (1356–1358) 3.9–6.6 %.
 - The mechanism is undetermined: no stored sampling metric tracks it (above). Seeds differ per area, so a shared

@@ -14,7 +14,7 @@ for r in d["rows"]:
 within, wdof = 0.0, 0
 for v in g.values():
     if len(v) > 1:
-        c, _, dof, _ = stats.chi2_contingency(np.vstack([v, 1000 - np.array(v)]))
+        c, _, dof, _ = stats.chi2_contingency(np.vstack([v, 1000 - np.array(v)]), correction=False)
         within, wdof = within + c, wdof + dof
 tot, tdof = d["homogeneity"]["chi2"], d["homogeneity"]["dof"]
 rem = json.load(open("results/w3_ztf/v22/remaining.json"))["qualifying_not_queued_npix"]
