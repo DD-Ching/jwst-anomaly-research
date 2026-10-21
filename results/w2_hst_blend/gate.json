@@ -1,0 +1,20 @@
+{
+  "n_controls": 10,
+  "n_decided": 10,
+  "n_light": 9,
+  "efficiency": 0.9,
+  "passed": true,
+  "cpu_s_measure_controls": 43.8,
+  "statuses": {
+    "SDSSJ0246-0825": "none between images",
+    "HE0047-1756": "light between images",
+    "SDSSJ0806+2006": "light between images",
+    "WG0214-2105": "light between images",
+    "SDSSJ1620+1203": "light between images",
+    "WGD2038-4008": "light between images",
+    "J1042+1641": "light between images",
+    "WISEJ0259-1635": "light between images",
+    "DESJ0408-5354": "light between images",
+    "SDSSJ1251+2935": "light between images"
+  }
+}
