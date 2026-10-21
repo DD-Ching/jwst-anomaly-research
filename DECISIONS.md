@@ -4171,6 +4171,25 @@ column (the error grows faster than λ_L). Revisit if: DES Y3 Gold or a spec-z /
 - CHIME/FRB Catalog 2 is added (the S1 second half).
 - The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.
 
+**Addendum (2026-10-21): S1 on CHIME/FRB Catalog 2, 30-event validation; the criteria do not carry over as frozen.**
+- **Decision.** The D-071 chain (eligibility ≥ 2 pulses at 5σ, pulse-shuffled ρ\*, scaled-shifted-copy χ² with a 10 %
+  systematic) is not used on CHIME dynamic spectra, and no CHIME search or limit is run.
+  - Adapter `scripts/s1_chime_lib.py`: four 100-MHz sub-bands averaged in S/N units, band Jy scale = median fcf·σ.
+  - The issue #153 χ² fixes (union window, detected per-band gain ≥ 0) plus a sub-bin lag (best p among δ with
+    detected gains; corrected after /code-review, no outcome changed).
+  - `burst_twins.py` is unchanged. Prior work not redone: issue #153 (route, format, 307-burst pilot).
+- **Alternatives rejected.** Unweighted or 1/(fcf σ)² channel means (a few channels dominate the noise); integer lags
+  (fail exact copies of ~1-bin pulses); fitburst models as noise-free templates (misfit χ²/dof up to 135);
+  time-reversal null (#153).
+- **Evidence** (`results/s1_chime/`; plan frozen first, `PLAN.md`):
+  - 17 / 30 eligible; ρ\* 0.870; 0 / 133 chance and 0 / 3 same-repeater pairs pass.
+  - Frozen recovery 6.9 % / 5.9 % / 3.1 % at ratio 1 / 0.5 / 0.3 (G_cal), against ≥ 50 % required (T1 fails).
+  - Post hoc: 70.5 % for exact copies in Gaussian noise, 23.6 % in real host residuals, 10.0 % with +1 ms
+    scattering at 600 MHz. The beam/calibration gain imprint (RMS 0.18 per band) costs ≤ 1 pp.
+  - Same-source ρ median 0.411 (26 pairs) vs different-source 0.513 (380), over all 29 usable files (post hoc).
+- **Revisit if.** Real same-signal CHIME pairs (multi-station or multi-beam data of one burst) calibrate the χ²
+  systematic, or the owner approves a fitted scattering re-convolution in the twin model.
+
 ## D-072 S3 hybrid images: COSMOGRAIL XIX doubles, SIS leg-split lag window, template regression; null without a useful limit (2026-10-09)
 
 **Decision.** S3 (D-069) is tested with `scripts/s3_hybrid.py` on the COSMOGRAIL XIX R-band curves (CDS

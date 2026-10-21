@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: S1 burst twins on CHIME/FRB Catalog 2 (30 events): the S1 criteria do not carry over as frozen
+- **Why:** owner authorization 2026-10-21 (parallel round line B; `docs/plans/2026-10-21-parallel-round.md`): the S1
+  second half, a validation, not a search. Prior work issue #153 (route, format, 307-burst pilot) not redone; #167 and
+  #169 not touched. Plan frozen first (`results/s1_chime/PLAN.md`).
+- **Result (`results/s1_chime/RESULT.md`, `summary.json`):** 17 / 30 eligible; ρ\* 0.870; 0 / 133 different-source and
+  0 / 3 same-repeater pairs pass. T1 fails: recovery 6.9 % at ratio 1 (G_cal), required ≥ 50 %. Tool not validated for
+  CHIME; no limit. The one flag (FRB20221215H / FRB20200207A) fails χ² (p 2.6 × 10⁻⁸³): single-pulse look-alikes. Sheet
+  looked at.
+- **Post hoc (`posthoc.json`):** exact copies in Gaussian noise 70.5 %; in real host residuals 23.6 %; +1 ms scattering
+  at 600 MHz 10.0 %. Fitburst misfit χ²/dof 1.0–135. Same-source ρ not above different-source (median 0.411 vs 0.513).
+- **Failed approaches:** unweighted or 1/(fcf σ)² channel means (a few channels dominate the noise); integer-lag χ² on
+  ~1-bin pulses; fitburst models as noise-free templates. FRB20200314A has no calibration group; the Dec-2018 files
+  are off the Jy scale by ~10³.
+- **Deviation:** re-run after /code-review: `chi2_union` takes the best p among sub-bin δ with detected gains (v1 could
+  discard a passing δ). Frozen chain unchanged (no pass changed in 4,680 injections or 136 real pairs); post hoc I3
+  +3 passes (≤ 0.2 pp). v1 outputs kept as `results/s1_chime/*_v1.*`. Fetch now keeps ≤ 4 files in flight.
+- **New:** `scripts/s1_chime.py`, `scripts/s1_chime_lib.py`, `tests/test_s1_chime.py`,
+  `data/manifests/s1_chime_dynspec.ecsv`. 0.90 GB streamed and deleted.
+- **Handoff:** S1-CHIME parked. Reopen only with real same-signal pairs to calibrate the χ² systematic, or an
+  owner-approved scattering re-convolution in the twin model.
+
 ## 2026-10-20: Abell 2744 system 700.1 vetting: colour test not validated; two modelled cluster members at 2.1″ and 4.4″
 - **Why:** the #413 handoff (`/vet-candidate` for 700.1: one image or two, perturber). Plan frozen first
   (`results/lens_consistency/a2744_s700_vet/PLAN.md`, computable specification before the run).

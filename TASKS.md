@@ -76,8 +76,11 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 1. **S1 burst twins** (D-071): Fermi GBM null, < 7.2 × 10⁻³ twin pairs per eligible burst (ratio 1, 15 % band
    mismatch). **Done on unmerged PRs (provisional; see `docs/state/pending.md`; do not redo):** the s ≠ 1 chain and
    the full M2 re-screen (#167); TTE for short and faint bursts and the catalogue E_peak joint constraint (#169; the
-   S1 energy upgrade is paused). Remaining: CHIME/FRB Catalog 2 (CANFAR downloads reset by the proxy; try another
-   route), a generative pulse-model null.
+   S1 energy upgrade is paused). CHIME/FRB Catalog 2: route and 307-burst pilot in issue #153 (research note); 30-event
+   validation 2026-10-21 (D-071 addendum, `results/s1_chime/RESULT.md`): the criteria do not carry over as frozen
+   (recovery 6.9 % at ratio 1; 0 / 133 chance and 0 / 3 same-repeater passes), so no CHIME search. Reopen only with
+   real same-signal pairs to calibrate the χ² systematic, or an owner-approved scattering re-convolution in the twin
+   model. Remaining: a generative pulse-model null.
 2. **S2 flat-kernel SN residuals** (D-070 + addendum): Pantheon+ × LS DR9 null (γ < 0.025), DES-SN5YR × LS DR9 null
    (γ < 0.019 mag per unit T/⟨T⟩, α = 2, one-sided 95 %, dilution- and chain-corrected); α = 1 is kernel-degenerate. The
    lensing positive control is only ~1.7σ (DES) / ~2σ combined. ~~LS DR10 z < 22 column~~ done 2026-10-18, control
