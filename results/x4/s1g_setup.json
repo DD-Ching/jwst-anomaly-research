@@ -1,0 +1,41 @@
+{
+ "label": "timing only (not a result); measured 2026-10-21 in this cloud session before the S1g plan",
+ "machine": "4 cores (Intel Xeon 2.10 GHz, 1 thread per core), 15 GiB RAM",
+ "benchmark": {
+  "what": "50 P-objective evaluations (x4_s1d_de.objective with an exact lens factor) at uniform random box points, on the V9 injection target; 3 concurrent processes, OMP threads 1",
+  "s_per_eval": [
+   0.01904,
+   0.01834,
+   0.01924
+  ],
+  "s_per_generation_144": [
+   2.741,
+   2.641,
+   2.771
+  ],
+  "lens_exact_s": [
+   [
+    1.064,
+    0.834
+   ],
+   [
+    1.029,
+    0.86
+   ],
+   [
+    1.025,
+    0.867
+   ]
+  ],
+  "started_utc": "2026-10-21T00:24Z"
+ },
+ "lens_grid_rebuild": {
+  "why": "the S1c 1,271-node cache of exact lens factors was not on disk in this session",
+  "nodes": 1271,
+  "processes": 3,
+  "wall_s": 1008,
+  "cpu_s_sum": 2979,
+  "started_utc": "2026-10-21T00:25:44Z",
+  "cache_dir": "$JWST_ANOMALY_DATA/derived/x4/lens_f20-1024_df0.25 (scratch; untracked)"
+ }
+}
