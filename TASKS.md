@@ -101,7 +101,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
    gate failed (γ_L 1.1σ, `results/s2_flat_kernel/dr10/RESULT.md`): **S2 paused**. Reopen only with DES Y3 Gold or a
    spec-z / deeper column, plus the full DES-SN5YR covariance.
 3. **S3 hybrid images** (D-072): COSMOGRAIL doubles null, sensitivity only r ≈ 0.4–2.4 (red quasar variability makes
-   the copy collinear with the main image). Next, low priority: SN Refsdal / SN H0pe imaging at the model lags.
+   the copy collinear with the main image). SN Refsdal light curves done 2026-10-21 (D-072 addendum,
+   `results/s3_hybrid/refsdal/RESULT.md`): no flag, r95 0.21–1.69 (slow SN). Paused; reopen only with a
+   day-scale lensed transient.
 4. **System A rounds paused** (D-076: rounds 2–3 gave no testable survivor). Restart only with a new owner brief.
    Optional: the B0218+357 VLA polarisation sign test (R2-B).
 

@@ -1312,6 +1312,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   J/A+A/640/A105 (https://cdsarc.cds.unistra.fr/ftp/J/A+A/640/A105/, `lcab/*.dat`); delays and redshifts from the
   paper's Tables 1 and 4 (arXiv source `tabdelay.tex`, `tabdata.tex`). `scripts/s3_hybrid.py`.
 
+## SN Refsdal light curves (accessed 2026-10-21; D-072 addendum)
+- Kelly et al. 2023, ApJ 948, 93, arXiv:2305.06377: HST F105W / F125W / F160W difference-image photometry of
+  S1–S4 and SX, CDS J/ApJ/948/93 (`table3`, 805 rows; `images`), streamed via TAPVizieR
+  (https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync); SX − S1 delay 376.0 +5.6 −5.5 d from the abstract.
+  `scripts/s3_refsdal.py`.
+
 ## D1 distance self-consistency (accessed 2026-10-09; D-073)
 
 - H0LiCOW public distance posteriors, https://github.com/shsuyu/H0LiCOW-public (commit 57cf973, 2025-05-14):

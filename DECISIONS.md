@@ -4260,6 +4260,13 @@ r95 ≈ 0.38–2.4 per system and direction, i.e. only copies comparable to the 
   then a copy at r ~ 10⁻² is reachable (B-on-A1).
 - Lens models with image positions and a source position are wanted for quads (the SIS window does not apply).
 
+**Addendum 2026-10-21 (SN Refsdal).** The first "Revisit if" was tested on Kelly et al. 2023's HST light curves
+(`scripts/s3_refsdal.py`, `results/s3_hybrid/refsdal/`): S1 as template, copy lags 30–400 d, frozen two-filter
+5σ rule. Gates pass; 0 flags; sensitivity r95 0.21–1.69, because the SN 1987A-like light curve is slow and the
+F125W main-term fits have χ²/dof up to 3.85. A transient with weeks-long evolution is not sharp enough; the
+condition is narrowed to day-scale lensed transients (lensed FRB, fast-rising SN) or a joint microlensing model.
+SN H0pe not attempted (three images, fewer epochs; expected no better).
+
 ## D-073 D1 distance self-consistency: per-lens H0-free ratio R = D_dt/((1+z_d) D_d) and per-FRB DM-z predictive tails (2026-10-09)
 
 **Decision.**
