@@ -21,16 +21,22 @@ unchanged) and the refinement's intrinsic restarts (to save each round's x, lens
 
 from __future__ import annotations
 
-import importlib.util
-import json
 import os
-import sys
-import time
-from datetime import UTC, datetime
-from multiprocessing import Pool
-from pathlib import Path
 
-import numpy as np
+# Thread limits must be set before numpy / scipy load their BLAS and FFT backends (one fit per
+# process). setdefault keeps an explicit shell setting.
+for _k in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
+    os.environ.setdefault(_k, "1")
+
+import importlib.util  # noqa: E402
+import json  # noqa: E402
+import sys  # noqa: E402
+import time  # noqa: E402
+from datetime import UTC, datetime  # noqa: E402
+from multiprocessing import Pool  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+import numpy as np  # noqa: E402
 
 _DIR = Path(__file__).resolve().parent
 
@@ -61,6 +67,10 @@ SEED_AGREE = 2e-4
 FF_SCREEN = j.FF_SCREEN  # rho_req > 30  <=>  FF > 0.994987
 INTRINSIC_MAX = 100.0
 SNR_RATIO_R1 = 0.19338258649590495  # lensed / unlensed SNR of the R1 family-D target (s1c_summary)
+# intrinsic SNR needed > 100  <=>  rho_req > 100 * ratio  <=>  FF > 0.98790
+FF_FEASIBLE = float(np.sqrt(1.0 - 9.0 / (INTRINSIC_MAX * SNR_RATIO_R1) ** 2))
+ROUND_TRIP_TOL = 1e-9  # formal path: |from_cart(to_cart(x)) - x| per box coordinate
+TRUTH_OBJ_TOL = 1e-6  # formal path: production objective at the truth (S1d rule)
 
 VAL_SEED = 20261021
 N_VAL = 2
@@ -104,7 +114,8 @@ def fit_status(eps, ff_case=None) -> str:
 
 
 def tool_verdict(statuses) -> str:
-    """Whole tool: "pass" iff every fit passes; "fail" if any fails; otherwise "unfinished"."""
+    """Whole tool: "pass" iff every fit passes; "fail" if any fails; else "error" if any fit raised;
+    otherwise "unfinished"."""
     statuses = list(statuses)
     if not statuses:
         return "unfinished"
@@ -112,7 +123,50 @@ def tool_verdict(statuses) -> str:
         return "fail"
     if all(s == "pass" for s in statuses):
         return "pass"
+    if any(s == "error" for s in statuses):
+        return "error"
     return "unfinished"
+
+
+def row_status(row: dict, ff_case=None) -> str:
+    """Status of one validation row: the pass rule if it finished; "error" if it raised;
+    otherwise "unfinished" (stopped at the deadline)."""
+    if row.get("status") == "finished":
+        return fit_status(row.get("eps_final"), ff_case)
+    if row.get("status") == "error":
+        return "error"
+    return "unfinished"
+
+
+def screen_flags(ff_conservative, spread, legal: bool) -> dict:
+    """S1f step 3 for one verified solution: FF minus the largest score disagreement, against the
+    screen (outcome 1) and against the intrinsic-SNR bound (0.98790 < FF <= 0.994987)."""
+    v = float(ff_conservative) - float(spread)
+    return {
+        "counterexample_verified": bool(legal and v > FF_SCREEN),
+        "feasibility_fail_verified": bool(legal and FF_FEASIBLE < v <= FF_SCREEN),
+    }
+
+
+def is_legal(inside: bool, chi_mags, q, waveform_error) -> bool:
+    """S1f step 1: inside the box, spins <= 0.99, q <= 15, the waveform generated without error."""
+    return bool(inside and max(chi_mags) <= 0.99 + 1e-12 and q <= 15.0 and waveform_error is None)
+
+
+def formal_path_ok(inside: bool, round_trip_max_diff, objective_at_truth) -> bool:
+    """Validation-truth acceptance (frozen plan): inside the box, box round trip within
+    ROUND_TRIP_TOL, production objective with the exact lens at the truth <= TRUTH_OBJ_TOL."""
+    return bool(
+        inside
+        and float(round_trip_max_diff) <= ROUND_TRIP_TOL
+        and float(objective_at_truth) <= TRUTH_OBJ_TOL
+    )
+
+
+def r1_seeds_to_run(rows) -> list:
+    """Resume: R1 seeds without a finished row (finished rows are kept, never re-run)."""
+    done = {r["seed"] for r in rows if r.get("status") == "finished"}
+    return [s for s in R1_SEEDS if s not in done]
 
 
 def seeds_agree(ffs, tol=SEED_AGREE) -> bool:
@@ -133,6 +187,7 @@ def r1_outcome(
     counterexample_verified: bool,
     p_unfinished: int = 0,
     ratio: float = SNR_RATIO_R1,
+    feasibility_verified: bool = False,
 ) -> dict:
     """R1 outcome under the S1e outcomes and the S1f gate revision (frozen in X4.md S1g).
 
@@ -141,12 +196,18 @@ def r1_outcome(
     2: tool passes (with FF_case), both ordinary models reliable (two best seeds within 2e-4),
        rho_req <= 30 and intrinsic SNR <= 100.
     3: otherwise undetermined, with every cause named.
+    Pre-registered clarification, checked right after outcome 1 and, like it, constructive: a
+    verified solution with 0.98790 < FF <= 0.994987 (rho_req <= 30, intrinsic SNR > 100) is
+    reported as failing the screen's intrinsic-SNR feasibility condition.
     """
     rho = rho_req(best_ff)
     intrinsic = rho / ratio
     base = {"best_ordinary_FF": best_ff, "rho_req": rho, "intrinsic_snr_needed": intrinsic}
     if counterexample_verified:
         return {"outcome": 1, "causes": [], **base}
+    if feasibility_verified:
+        cause = "verified ordinary solution needs intrinsic SNR > 100 (rho_req <= 30)"
+        return {"outcome": "feasibility", "causes": [cause], **base}
     causes = []
     if tool != "pass":
         causes.append(f"P tool validation: {tool}")
@@ -158,8 +219,8 @@ def r1_outcome(
         causes.append("U search reliability (S1f, not re-run): two best seeds differ by > 2e-4")
     if best_ff > FF_SCREEN:
         causes.append("FF above the screen threshold but not verified")
-    if not causes and intrinsic > INTRINSIC_MAX:
-        return {"outcome": "feasibility", "causes": ["intrinsic SNR needed > 100"], **base}
+    elif intrinsic > INTRINSIC_MAX:
+        causes.append("intrinsic SNR needed > 100 but not verified")
     if not causes:
         return {"outcome": 2, "causes": [], **base}
     return {"outcome": 3, "causes": causes, **base}
@@ -215,8 +276,9 @@ _ORIG: dict = {}
 
 
 def _state_path(key: str) -> Path:
-    default = b.lens_cache_dir().parent / "s1g_state"  # data root (untracked), never results/
-    d = Path(os.environ.get("X4_S1G_STATE", str(default)))
+    env = os.environ.get("X4_S1G_STATE")
+    # default: the data root (untracked), never results/
+    d = Path(env) if env else b.lens_cache_dir().parent / "s1g_state"
     d.mkdir(parents=True, exist_ok=True)
     return d / f"{key}.json"
 
@@ -226,12 +288,40 @@ def _write_state(rec: dict) -> None:
         return
     p = _state_path(_RUN["key"])
     tmp = p.with_suffix(f".{os.getpid()}.tmp")
-    tmp.write_text(json.dumps({**rec, "utc": _now()}, default=float) + "\n")
+    rec = {**rec, "run_id": _RUN.get("run_id"), "utc": _now()}
+    tmp.write_text(json.dumps(rec, default=float) + "\n")
     os.replace(tmp, p)
+
+
+def read_state(key: str, run_id: str):
+    """The saved state of one fit, or None when absent or written by another run (stale)."""
+    p = _state_path(key)
+    if not p.exists():
+        return None
+    st = json.loads(p.read_text())
+    return st if st.get("run_id") == run_id else None
 
 
 def _now() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _run_id() -> str:
+    return f"{_now()}_{os.getpid()}"
+
+
+def refine_state(p: dict, x, f_in: float, lens, rnd: int) -> dict:
+    """Refinement state after one intrinsic restart: refine accepts the restart iff it lowers
+    1 - FF below the value it started from (the test in `x4_s1e_joint.refine`)."""
+    accepted = float(p["f"]) < float(f_in)
+    return {
+        "stage": "refine",
+        "round": rnd,
+        "accepted": accepted,
+        "f": float(p["f"]) if accepted else float(f_in),
+        "x": [float(v) for v in (p["x"] if accepted else x)],
+        "lens": lens,
+    }
 
 
 def _install_hooks() -> None:
@@ -262,20 +352,13 @@ def _install_hooks() -> None:
         return _ORIG["lens_exact"](m_lz, y, s)
 
     def nm_hooked(t, lensf, x):
+        f_in = float(e.objective(x, t, lensf))  # refine's current value (pure; search unchanged)
         p = _ORIG["nm"](t, lensf, x)
         rr = _RUN.setdefault("refine_hook", [])
         calls = _RUN.get("lens_calls", 0)
         rr.append({"nm_nfev": int(p["nfev"]), "lens_evals": calls - _RUN.get("lens_calls_prev", 0)})
         _RUN["lens_calls_prev"] = calls
-        _write_state(
-            {
-                "stage": "refine",
-                "round": len(rr) - 1,
-                "f": float(p["f"]),
-                "x": [float(v) for v in p["x"]],
-                "lens": _RUN.get("last_lens"),
-            }
-        )
+        _write_state(refine_state(p, x, f_in, _RUN.get("last_lens"), len(rr) - 1))
         return p
 
     j.differential_evolution = de_hooked
@@ -284,8 +367,7 @@ def _install_hooks() -> None:
 
 
 def _init_worker() -> None:
-    for k in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
-        os.environ[k] = "1"
+    # thread limits are set at import (module top), before numpy / scipy load
     apply_budget()
     _install_hooks()
 
@@ -296,7 +378,8 @@ def _key(kind: str, name: str, seed: int) -> str:
 
 
 def specs() -> dict:
-    """Development (S1e V5, V9) and validation (committed VA draws) injection specs."""
+    """Development (S1e V5, V9) and validation (committed VA draws) injection specs. Resolved once
+    in the parent (`main_run`) and passed to every job, so one run cannot mix truths."""
     base = e.injections()
     out = {n: base[n] for n in ("V5", "V9")}
     rec = json.loads((OUT / "s1g_injections.json").read_text())
@@ -313,13 +396,14 @@ def s1e_trace(name: str, seed: int):
 
 
 def _job(args):
-    kind, name, seed, x0 = args
+    """One fit. args = (kind, name, seed, payload, run_id); payload is the injection spec
+    ("valid") or the R1 initial-population member x0 ("r1")."""
+    kind, name, seed, payload, run_id = args
     _RUN.clear()
-    _RUN["key"] = _key(kind, name, seed)
+    _RUN.update({"key": _key(kind, name, seed), "run_id": run_id})
     t0 = time.time()
     if kind == "valid":
-        spec = specs()[name]
-        t, truth_mm = e.injection_target(spec)
+        t, truth_mm = e.injection_target(payload)
         r = e.finish(t, j.fit_p(t, seed), "P")
         r.update({"name": name, "seed": seed, "set": LABEL[name], "truth_mismatch": truth_mm})
         r["eps_final"] = 1.0 - r["FF_pad64"]
@@ -336,7 +420,7 @@ def _job(args):
                 ),
             }
     else:
-        r = j._case_job(("P", seed, x0))
+        r = j._case_job(("P", seed, payload))
         r.update({"name": "R1", "set": "R1 case"})
     info = r["log"][0]
     info["de_spread_every_10"] = _RUN.get("spread_every_10", [])
@@ -350,27 +434,40 @@ def _job(args):
     }
     info["refine_n_rounds"] = len(info.get("refine_rounds", []))
     r.update({"kind": kind, "status": "finished", "wall_s": round(time.time() - t0, 1)})
-    r["budget"] = {"DE_P_maxiter": j.DE_P["maxiter"], "MAX_ROUNDS": j.MAX_ROUNDS}
+    r.update({"run_id": run_id, "budget": {"DE_P_maxiter": j.DE_P["maxiter"]}})
+    r["budget"]["MAX_ROUNDS"] = j.MAX_ROUNDS
     return r
 
 
-def _partial_row(kind, name, seed, t=None):
-    """A fit stopped at the deadline: its last saved state, re-scored exactly (pad 64)."""
-    row = {"kind": kind, "name": name, "seed": seed, "status": "unfinished"}
-    if kind == "valid":
-        row["set"] = LABEL[name]
-    p = _state_path(_key(kind, name, seed))
-    if not p.exists():
+def _base_row(job, status: str) -> dict:
+    kind, name, seed, _payload, run_id = job
+    row = {"kind": kind, "name": name, "seed": seed, "status": status, "run_id": run_id}
+    row["set"] = LABEL[name] if kind == "valid" else "R1 case"
+    return row
+
+
+def collect(job, ar) -> dict:
+    """The finished row of one job, or an "error" row if the fit raised (the round goes on)."""
+    try:
+        return ar.get()
+    except Exception as exc:  # noqa: BLE001
+        return {**_base_row(job, "error"), "error": repr(exc)}
+
+
+def _partial_row(job) -> dict:
+    """A fit stopped at the deadline: its last saved state of this run, re-scored exactly."""
+    kind, name, seed, payload, run_id = job
+    row = _base_row(job, "unfinished")
+    st = read_state(_key(kind, name, seed), run_id)
+    if st is None:
         return row
-    st = json.loads(p.read_text())
     x = np.asarray(st["x"][:10])
     if st["stage"] == "de":
         node = m.grid()["nodes"][j.node_index(st["x"][10], st["x"][11])]
         lens = [float(node[0]), float(node[1])]
     else:
         lens = st["lens"]
-    if t is None:
-        t = e.injection_target(specs()[name])[0] if kind == "valid" else m.target("D")[1]
+    t = e.injection_target(payload)[0] if kind == "valid" else m.target("D")[1]
     r = e.finish(t, {"f": float(st["f"]), "x": [float(v) for v in x], "lens": lens}, "P")
     row.update({"partial_state": st, "x": r["x"], "lens": lens, "FF_pad64": r["FF_pad64"]})
     row.update({"bounds": r["bounds"], "physical": r["physical"]})
@@ -383,21 +480,23 @@ def _deadline() -> float:
 
 def run_round(jobs, on_row) -> list:
     rows = []
+    for jb in jobs:  # no stale state: this run's job keys start empty
+        _state_path(_key(*jb[:3])).unlink(missing_ok=True)
     with Pool(N_PROC, initializer=_init_worker) as pool:
-        pending = {(jb[0], jb[1], jb[2]): pool.apply_async(_job, (jb,)) for jb in jobs}
+        pending = {i: (jb, pool.apply_async(_job, (jb,))) for i, jb in enumerate(jobs)}
         while pending:
-            for k, ar in list(pending.items()):
+            for i, (jb, ar) in list(pending.items()):
                 if ar.ready():
-                    rows.append(ar.get())
-                    del pending[k]
+                    rows.append(collect(jb, ar))
+                    del pending[i]
                     on_row(rows[-1])
             if pending and time.time() >= _deadline():
                 pool.terminate()
                 break
             if pending:
                 time.sleep(15)
-    for kind, name, seed in pending:
-        rows.append(_partial_row(kind, name, seed))
+    for jb, _ar in pending.values():
+        rows.append(_partial_row(jb))
         on_row(rows[-1])
     return rows
 
@@ -409,11 +508,14 @@ def _dump(name: str, rec: dict) -> None:
 def main_run() -> None:
     apply_budget()
     m.grid()  # load the cached grid once; workers inherit it
+    run_id = _run_id()
+    sp = specs()  # resolved once: every fit of this run uses the same truths
     rec = {
         "label": "simulated injections; derived FF; S1g P-search validation "
         "(S1e procedure, budget top-up)",
         "budget": {"DE_P_maxiter": DE_P_MAXITER, "MAX_ROUNDS": MAX_ROUNDS, "S1e": S1E_BUDGET},
         "deadline_utc": DEADLINE_UTC,
+        "run_id": run_id,
         "rounds": [],
     }
     for i, rnd in enumerate(ROUNDS, start=1):
@@ -427,14 +529,10 @@ def main_run() -> None:
                 _now(), r.get("name"), r.get("seed"), r.get("status"), r.get("FF_pad64"), flush=True
             )
 
-        run_round([("valid", n, s, None) for n, s in rnd], on_row)
+        run_round([("valid", n, s, sp[n], run_id) for n, s in rnd], on_row)
         cur["end_utc"] = _now()
-        st = [
-            fit_status(r.get("eps_final") if r["status"] == "finished" else None)
-            for r in cur["rows"]
-        ]
-        cur["statuses"] = st
-        cur["verdict_eps_only"] = tool_verdict(st)
+        cur["statuses"] = [row_status(r) for r in cur["rows"]]
+        cur["verdict_eps_only"] = tool_verdict(cur["statuses"])
         _dump("s1g_validate.json", rec)
         print(_now(), f"round {i} verdict", cur["verdict_eps_only"], flush=True)
         if cur["verdict_eps_only"] != "pass":
@@ -443,30 +541,44 @@ def main_run() -> None:
             )
             print(json.dumps(summary(), indent=1, default=float))
             return
-    main_r1()
+    main_r1(run_id)
 
 
-def main_r1() -> None:
-    saved = j.saved_best()
+def _x0_saved_best_p(saved):
     best = max((z for z in saved if z["model"] == "P"), key=lambda z: z["FF_pad64"])
-    x0 = np.asarray(
-        list(best["x"]) + [float(np.log(best["lens"][0])), float(np.log(best["lens"][1]))]
-    )
-    rec = {
-        "label": "simulated R1 family-D target; derived FF; S1g R1 P fits (S1e case procedure)",
-        "budget": {"DE_P_maxiter": DE_P_MAXITER, "MAX_ROUNDS": MAX_ROUNDS},
-        "start_utc": _now(),
-        "x0_saved_best_P": {"start": best["start"], "FF_pad64": best["FF_pad64"]},
-        "saved_rescored": saved,
-        "rows": [],
-    }
+    x0 = list(best["x"]) + [float(np.log(best["lens"][0])), float(np.log(best["lens"][1]))]
+    return best, np.asarray(x0)
+
+
+def main_r1(run_id: str) -> None:
+    path = OUT / "s1g_r1.json"
+    if path.exists():  # resume: keep finished rows; run only the missing or unfinished seeds
+        rec = json.loads(path.read_text())
+        rec["rows"] = [r for r in rec["rows"] if r.get("status") == "finished"]
+        rec.setdefault("resumed", []).append({"utc": _now(), "run_id": run_id})
+        saved = rec["saved_rescored"]
+        _, x0 = _x0_saved_best_p(saved)
+    else:
+        saved = j.saved_best()
+        best, x0 = _x0_saved_best_p(saved)
+        rec = {
+            "label": "simulated R1 family-D target; derived FF; S1g R1 P fits (S1e case procedure)",
+            "budget": {"DE_P_maxiter": DE_P_MAXITER, "MAX_ROUNDS": MAX_ROUNDS},
+            "start_utc": _now(),
+            "run_id": run_id,
+            "x0_saved_best_P": {"start": best["start"], "FF_pad64": best["FF_pad64"]},
+            "saved_rescored": saved,
+            "rows": [],
+        }
 
     def on_row(r):
         rec["rows"].append(r)
         _dump("s1g_r1.json", rec)
         print(_now(), "R1", r.get("seed"), r.get("status"), r.get("FF_pad64"), flush=True)
 
-    run_round([("r1", "R1", s, x0) for s in R1_SEEDS], on_row)
+    todo = r1_seeds_to_run(rec["rows"])
+    if todo:
+        run_round([("r1", "R1", s, x0, run_id) for s in todo], on_row)
     rec["end_utc"] = _now()
     cands = [r for r in rec["rows"] if r.get("FF_pad64") is not None]
     cands += [
@@ -501,7 +613,7 @@ def verify_p(x, lens, label="") -> dict:
         "waveform_error": err,
     }
     if err is not None:
-        out["counterexample_verified"] = False
+        out.update({"counterexample_verified": False, "feasibility_fail_verified": False})
         return out
     lf = b.lens_exact(float(lens[0]), float(lens[1]), +1)
     hp, hc = hp * lf, hc * lf
@@ -516,7 +628,7 @@ def verify_p(x, lens, label="") -> dict:
     }
     spread = max(scores.values()) - min(scores.values())
     ff_cons = min(scores.values())
-    legal = out["in_box"] and max(out["chi_mags"]) <= 0.99 + 1e-12 and q <= 15.0
+    legal = is_legal(out["in_box"], out["chi_mags"], q, err)
     rho = rho_req(ff_cons)
     out.update(
         {
@@ -525,7 +637,8 @@ def verify_p(x, lens, label="") -> dict:
             "score_spread": spread,
             "FF_conservative": ff_cons,
             "FF_screen": FF_SCREEN,
-            "counterexample_verified": bool(legal and ff_cons - spread > FF_SCREEN),
+            "FF_feasible": FF_FEASIBLE,
+            **screen_flags(ff_cons, spread, legal),
             "rho_req_observed": rho,
             "intrinsic_snr_needed": rho / SNR_RATIO_R1,
         }
@@ -544,7 +657,7 @@ def summary() -> dict:
     p_ffs, p_unf, best_p = [], 0, None
     if r1 is not None:
         p_ffs = [r["FF_pad64"] for r in r1["rows"] if r["status"] == "finished"]
-        p_unf = sum(1 for r in r1["rows"] if r["status"] != "finished")
+        p_unf = sum(1 for r in r1["rows"] if r["status"] != "finished")  # unfinished or error
         allp = [r.get("FF_pad64") for r in r1["rows"]] + [
             z["FF_pad64"] for z in r1["saved_rescored"] if z["model"] == "P"
         ]
@@ -567,8 +680,8 @@ def summary() -> dict:
                     "eps_partial": None
                     if eps is not None or "FF_pad64" not in r
                     else 1 - r["FF_pad64"],
-                    "rule_eps_only": fit_status(eps),
-                    "rule_with_ff_case": fit_status(eps, ff_case),
+                    "rule_eps_only": row_status(r),
+                    "rule_with_ff_case": row_status(r, ff_case),
                     "de_message": info.get("de_message"),
                     "de_nit": info.get("de_nit"),
                     "de_spread": info.get("de_spread"),
@@ -580,19 +693,27 @@ def summary() -> dict:
                     "wall_s": r.get("wall_s"),
                 }
             )
-    tool_eps = tool_verdict(f["rule_eps_only"] for f in fits)
     ran_all = len(fits) == sum(len(rnd) for rnd in ROUNDS)
+
+    def guarded(v):  # a set that did not run completely can only fail, never pass
+        return v if ran_all or v == "fail" else "unfinished"
+
     out = {
         "label": "derived; S1g summary (rule functions applied to the saved rows)",
         "fits": fits,
-        "tool_eps_only": tool_eps if ran_all or tool_eps == "fail" else "unfinished",
+        "tool_eps_only": guarded(tool_verdict(f["rule_eps_only"] for f in fits)),
         "FF_case_P": ff_case,
         "tool_final": None,
         "r1": None,
     }
     if r1 is not None:
-        out["tool_final"] = tool_verdict(f["rule_with_ff_case"] for f in fits)
+        out["tool_final"] = guarded(tool_verdict(f["rule_with_ff_case"] for f in fits))
         ver = r1.get("verify_best_P", {})
+        if "FF_conservative" in ver:  # step 3 recomputed from the stored verification
+            legal = is_legal(ver["in_box"], ver["chi_mags"], ver["q"], ver.get("waveform_error"))
+            flags = screen_flags(ver["FF_conservative"], ver["score_spread"], legal)
+        else:
+            flags = {"counterexample_verified": False, "feasibility_fail_verified": False}
         best_any = max(best_p, max(u_ffs))
         out["r1"] = {
             "P_FF_seeds": {str(r["seed"]): r.get("FF_pad64") for r in r1["rows"]},
@@ -602,16 +723,17 @@ def summary() -> dict:
             "P_seeds_agree": seeds_agree(p_ffs),
             "U_seeds_agree": seeds_agree(u_ffs),
             "verify_best_P": {
-                k: ver.get(k)
-                for k in ("label", "FF_conservative", "score_spread", "counterexample_verified")
+                **{k: ver.get(k) for k in ("label", "FF_conservative", "score_spread")},
+                **flags,
             },
             **r1_outcome(
                 out["tool_final"],
                 p_ffs,
                 u_ffs,
                 best_any,
-                bool(ver.get("counterexample_verified")),
+                flags["counterexample_verified"],
                 p_unf,
+                feasibility_verified=flags["feasibility_fail_verified"],
             ),
         }
     _dump("s1g_summary.json", out)
@@ -657,7 +779,9 @@ def main_injections() -> dict:
                     "truth_mismatch_stat": float(mm),
                 }
             )
-            ok = rec["in_box"] and rec["objective_at_truth"] <= 1e-6
+            ok = formal_path_ok(
+                rec["in_box"], rec["round_trip_max_diff"], rec["objective_at_truth"]
+            )
         except Exception as exc:  # noqa: BLE001
             rec["error"], ok = repr(exc), False
         (acc if ok else rej).append(rec)
@@ -669,6 +793,7 @@ def main_injections() -> dict:
         "label": "simulated; S1g validation injections (generator frozen in X4.md S1g); truths are "
         "never used as starts",
         "rng_seed": VAL_SEED,
+        "accept": {"round_trip_tol": ROUND_TRIP_TOL, "objective_at_truth_tol": TRUTH_OBJ_TOL},
         "region": {k: [float(a), float(c)] for k, (a, c) in VAL_REGION.items()},
         "accepted": acc,
         "rejected": rej,
@@ -771,7 +896,7 @@ def main(argv=None) -> int:
             return 1
         apply_budget()
         m.grid()
-        main_r1()
+        main_r1(_run_id())
     elif what == "summary":
         print(json.dumps(summary(), indent=1, default=float))
     else:

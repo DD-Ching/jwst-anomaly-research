@@ -170,7 +170,8 @@
    "label": "21",
    "FF_conservative": 0.9476377694069565,
    "score_spread": 4.440892098500626e-16,
-   "counterexample_verified": false
+   "counterexample_verified": false,
+   "feasibility_fail_verified": false
   },
   "outcome": 3,
   "causes": [

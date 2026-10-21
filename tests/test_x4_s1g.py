@@ -62,7 +62,76 @@ def test_tool_verdict():
     assert g.tool_verdict(["pass"] * 6) == "pass"
     assert g.tool_verdict(["pass", "fail", "unfinished"]) == "fail"
     assert g.tool_verdict(["pass", "unfinished"]) == "unfinished"
+    assert g.tool_verdict(["pass", "error", "unfinished"]) == "error"
+    assert g.tool_verdict(["fail", "error"]) == "fail"
     assert g.tool_verdict([]) == "unfinished"
+
+
+def test_row_status():
+    assert g.row_status({"status": "finished", "eps_final": 1e-5}) == "pass"
+    assert g.row_status({"status": "finished", "eps_final": 1e-5}, 0.9999) == "fail"
+    assert g.row_status({"status": "error", "error": "x"}) == "error"
+    assert g.row_status({"status": "unfinished", "FF_pad64": 0.99999}) == "unfinished"
+
+
+class _Raises:
+    def get(self):
+        raise RuntimeError("boom")
+
+
+class _Returns:
+    def get(self):
+        return {"status": "finished", "name": "V5"}
+
+
+def test_collect_turns_an_exception_into_an_error_row():
+    job = ("valid", "VA1", 11, None, "run-x")
+    row = g.collect(job, _Raises())
+    assert row["status"] == "error" and "boom" in row["error"]
+    assert (row["name"], row["seed"], row["set"], row["run_id"]) == (
+        "VA1",
+        11,
+        "validation",
+        "run-x",
+    )
+    assert g.collect(job, _Returns())["status"] == "finished"
+
+
+def test_stale_state_is_ignored(tmp_path, monkeypatch):
+    monkeypatch.setenv("X4_S1G_STATE", str(tmp_path))
+    monkeypatch.setattr(g, "_RUN", {"key": "valid_V9_s11", "run_id": "run-old"})
+    g._write_state({"stage": "de", "nit": 11, "f": 0.1, "x": [0.0] * 12})
+    assert g.read_state("valid_V9_s11", "run-old")["nit"] == 11
+    assert g.read_state("valid_V9_s11", "run-new") is None  # an earlier run's file is not used
+    assert g.read_state("valid_V5_s11", "run-old") is None
+
+
+def test_refine_state_saves_only_the_accepted_state():
+    x, lens = [1.0, 2.0], [1400.0, 0.2]
+    better = g.refine_state({"f": 1e-4, "x": [1.1, 2.1]}, x, 2e-4, lens, 3)
+    assert better["accepted"] and better["f"] == 1e-4 and better["x"] == [1.1, 2.1]
+    same = g.refine_state({"f": 2e-4, "x": [1.1, 2.1]}, x, 2e-4, lens, 3)
+    assert not same["accepted"] and same["f"] == 2e-4 and same["x"] == x
+    assert same["lens"] == lens and same["round"] == 3
+
+
+def test_r1_resume_keeps_finished_rows():
+    rows = [{"seed": 21, "status": "finished"}, {"seed": 22, "status": "unfinished"}]
+    assert g.r1_seeds_to_run(rows) == [22, 23]
+    assert g.r1_seeds_to_run([{"seed": s, "status": "finished"} for s in (21, 22, 23)]) == []
+
+
+def test_formal_path_accepts_the_committed_validation_truths():
+    import json
+
+    rec = json.loads((g.OUT / "s1g_injections.json").read_text())
+    for z in rec["accepted"]:
+        assert z["round_trip_max_diff"] <= g.ROUND_TRIP_TOL
+        assert g.formal_path_ok(z["in_box"], z["round_trip_max_diff"], z["objective_at_truth"])
+    assert [z["name"] for z in rec["accepted"]] == ["VA1", "VA2"] and rec["rejected"] == []
+    assert not g.formal_path_ok(True, 1e-8, 0.0)
+    assert not g.formal_path_ok(True, 0.0, 1e-5)
+    assert not g.formal_path_ok(False, 0.0, 0.0)
 
 
 def test_seeds_agree():
@@ -100,9 +169,57 @@ def test_r1_outcome_2_and_causes():
     # unverified FF above the screen is not outcome 1
     o = g.r1_outcome("pass", [0.996, 0.996], u_ok, 0.996, False)
     assert o["outcome"] == 3
-    # rho_req <= 30 but intrinsic SNR > 100: reported as the feasibility condition
+    # rho_req <= 30 but intrinsic SNR > 100, not verified: undetermined, cause named
     o = g.r1_outcome("pass", [0.99, 0.99], u_ok, 0.99, False)
+    assert o["outcome"] == 3 and o["causes"] == ["intrinsic SNR needed > 100 but not verified"]
+
+
+def test_r1_outcome_feasibility_is_constructive_like_outcome_1():
+    """Frozen order: outcome 1, then the verified feasibility case, whatever causes exist."""
+    o = g.r1_outcome("fail", [0.99, 0.95], U_S1F, 0.99, False, 1, feasibility_verified=True)
     assert o["outcome"] == "feasibility" and o["intrinsic_snr_needed"] > 100
+    o = g.r1_outcome("fail", [0.996], U_S1F, 0.996, True, feasibility_verified=False)
+    assert o["outcome"] == 1
+
+
+def test_screen_flags():
+    assert g.FF_FEASIBLE == pytest.approx(0.98790, abs=1e-5)
+    assert g.rho_req(g.FF_FEASIBLE) / g.SNR_RATIO_R1 == pytest.approx(100.0, rel=1e-9)
+    f = g.screen_flags
+    assert f(0.996, 1e-7, True) == {
+        "counterexample_verified": True,
+        "feasibility_fail_verified": False,
+    }
+    assert f(0.990, 1e-7, True) == {
+        "counterexample_verified": False,
+        "feasibility_fail_verified": True,
+    }
+    assert f(0.9476, 0.0, True) == {
+        "counterexample_verified": False,
+        "feasibility_fail_verified": False,
+    }
+    assert not any(f(0.999, 0.0, False).values())  # illegal parameters never count
+    assert f(0.99499, 1e-5, True)["counterexample_verified"] is False  # spread is subtracted
+    assert g.is_legal(True, [0.99, 0.5], 2.8, None)
+    assert not g.is_legal(True, [0.995, 0.5], 2.8, None)
+    assert not g.is_legal(True, [0.5, 0.5], 15.5, None)
+    assert not g.is_legal(True, [0.5, 0.5], 2.8, "RuntimeError()")
+
+
+def test_stored_r1_summary_inputs_give_outcome_3():
+    """R1's committed best (rho_req 9.4, intrinsic SNR 48.6) enters neither constructive branch."""
+    import json
+
+    r1 = json.loads((g.OUT / "s1g_r1.json").read_text())
+    ver = r1["verify_best_P"]
+    legal = g.is_legal(ver["in_box"], ver["chi_mags"], ver["q"], ver["waveform_error"])
+    flags = g.screen_flags(ver["FF_conservative"], ver["score_spread"], legal)
+    assert flags == {"counterexample_verified": False, "feasibility_fail_verified": False}
+    p_ffs = [r["FF_pad64"] for r in r1["rows"] if r["status"] == "finished"]
+    o = g.r1_outcome("pass", p_ffs, U_S1F, max(p_ffs), False, 0, feasibility_verified=False)
+    assert o["outcome"] == 3 and len(o["causes"]) == 2
+    assert o["rho_req"] == pytest.approx(9.394, abs=1e-3)
+    assert o["intrinsic_snr_needed"] == pytest.approx(48.58, abs=1e-2)
 
 
 def test_screen_threshold():
@@ -147,8 +264,11 @@ def test_in_box_rejects_outside():
 
 
 # ------------------------------------------------------------------ budget change only
-def test_apply_budget_changes_only_the_two_budgets():
+def test_apply_budget_changes_only_the_two_budgets(monkeypatch):
     j = g.j
+    # restore the shared x4_s1e_joint module after this test
+    monkeypatch.setattr(j, "DE_P", dict(j.DE_P))
+    monkeypatch.setattr(j, "MAX_ROUNDS", j.MAX_ROUNDS)
     src = (_S / "x4_s1e_joint.py").read_text()
     assert re.search(r'^DE_P = \{"popsize": 12, "maxiter": 400\}$', src, re.M)
     assert re.search(r"^MAX_ROUNDS = 10$", src, re.M)
