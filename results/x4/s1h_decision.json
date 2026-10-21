@@ -23,7 +23,13 @@
    },
    "best_src": "S1g seed 21",
    "FF_case": 0.9476377694069567,
-   "eps_limit": 0.005236223059304335
+   "eps_limit": {
+    "abs": 0.0005,
+    "case": 0.005236223059304335,
+    "effective": 0.0005
+   },
+   "n_unfinished": 0,
+   "n_error": 0
   },
   "U": {
    "seeds": {
@@ -47,7 +53,13 @@
    },
    "best_src": "S1f seed 23",
    "FF_case": 0.9135105524586078,
-   "eps_limit": 0.00864894475413922
+   "eps_limit": {
+    "abs": 0.0005,
+    "case": 0.00864894475413922,
+    "effective": 0.0005
+   },
+   "n_unfinished": 0,
+   "n_error": 0
   }
  },
  "validation_recomputed": {
@@ -64,6 +76,60 @@
    "V6 s12": "pass",
    "V7 s11": "pass",
    "V7 s12": "pass"
+  },
+  "P_rows": [
+   [
+    "V9 s11",
+    "pass"
+   ],
+   [
+    "VA2 s11",
+    "pass"
+   ],
+   [
+    "VA1 s11",
+    "pass"
+   ],
+   [
+    "V5 s11",
+    "pass"
+   ],
+   [
+    "V5 s12",
+    "pass"
+   ],
+   [
+    "V9 s12",
+    "pass"
+   ]
+  ],
+  "U_rows": [
+   [
+    "V6 s11",
+    "pass"
+   ],
+   [
+    "V6 s12",
+    "pass"
+   ],
+   [
+    "V7 s11",
+    "pass"
+   ],
+   [
+    "V7 s12",
+    "pass"
+   ]
+  ],
+  "P_count_check": {
+   "duplicates": [],
+   "missing": [],
+   "extra": []
+  },
+  "U_count_check": {
+   "duplicates": [],
+   "missing": [],
+   "extra": []
   },
   "eps_P": {
    "V9 s11": 8.060760394612565e-06,
@@ -167,13 +233,14 @@
  },
  "best_overall_model": "P",
  "best_overall_FF_conservative": 0.9476377694069565,
+ "best_overall_FF_pad64_unverified": 0.9476377694069567,
  "outcome": 3,
  "wording": "tool/optimization undetermined",
  "causes": [
   "P search reliability: two best seeds differ by 0.00175 > 2e-4",
   "U search reliability: two best seeds differ by 0.0212 > 2e-4"
  ],
- "best_ordinary_FF": 0.9476377694069567,
- "rho_req": 9.394162996482311,
- "intrinsic_snr_needed": 48.57812260506321
+ "best_ordinary_FF": 0.9476377694069565,
+ "rho_req": 9.3941629964823,
+ "intrinsic_snr_needed": 48.57812260506315
 }

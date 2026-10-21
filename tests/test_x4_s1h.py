@@ -99,3 +99,94 @@ def test_outcome_order_and_wording():
 def test_top_two_gap():
     assert h.top_two_gap(S1G_P)[2] == pytest.approx(1.7544e-3, abs=1e-7)
     assert h.top_two_gap([0.9]) == (0.9, None, None)
+
+
+# ------------------------------------------------------------------ review fixes (2026-10-21)
+def test_eps_limits_report_the_binding_term():
+    lim = h.eps_limits(0.9476377694069567)
+    assert lim["abs"] == 5e-4 and lim["case"] == pytest.approx(5.236e-3, abs=1e-6)
+    assert lim["effective"] == 5e-4
+    assert h.eps_limits(0.9999)["effective"] == pytest.approx(1e-5)
+
+
+def test_row_statuses_keep_the_row_status_guard():
+    rows = [
+        {"name": "V9", "seed": 11, "status": "finished", "eps_final": 8e-6},
+        {"name": "VA1", "seed": 11, "status": "error", "error": "x"},
+        {"name": "VA2", "seed": 11, "status": "unfinished", "FF_pad64": 0.9999},
+        {"name": "V6", "seed": 11, "eps_final": 2e-10},  # S1e rows carry no status
+        {"name": "V7", "seed": 12},  # no final eps: never graded as finished
+    ]
+    assert h.row_statuses(rows, 0.95) == [
+        ("V9 s11", "pass"),
+        ("VA1 s11", "error"),
+        ("VA2 s11", "unfinished"),
+        ("V6 s11", "pass"),
+        ("V7 s12", "unfinished"),
+    ]
+
+
+def test_tool_status_duplicates_counts_and_fail_precedence():
+    exp = ["A s1", "B s1"]
+    assert h.tool_status([("A s1", "pass"), ("B s1", "pass")], exp)["verdict"] == "pass"
+    t = h.tool_status([("A s1", "pass"), ("A s1", "pass"), ("B s1", "pass")], exp)
+    assert t["verdict"] == "inconsistent" and t["duplicates"] == ["A s1"]
+    t = h.tool_status([("A s1", "pass")], exp)
+    assert t["verdict"] == "inconsistent" and t["missing"] == ["B s1"]
+    t = h.tool_status([("A s1", "fail"), ("A s1", "pass"), ("C s1", "pass")], exp)
+    assert t["verdict"] == "fail" and t["extra"] == ["C s1"]  # a real fail is never hidden
+    assert h.tool_status([("A s1", "error"), ("B s1", "pass")], exp)["verdict"] == "error"
+    assert len(h.EXPECTED_P) == 6 and len(h.EXPECTED_U) == 4
+
+
+def test_outcome_names_errors_and_unverified_best():
+    ok_p, ok_u = [0.95, 0.94995], [0.92, 0.91995]
+    o = h.s1h_outcome("pass", "pass", ok_p, ok_u, 0.95, False, False, 0, n_error=1)
+    assert o["outcome"] == 3 and o["causes"] == ["fits that raised an error: 1"]
+    o = h.s1h_outcome("pass", "pass", ok_p, ok_u, 0.95, False, False, 0, best_verified=False)
+    assert o["causes"] == ["best ordinary solution not verified"]
+
+
+def test_resume_guard_and_per_run_state_keys():
+    rec = json.loads((h.OUT / "s1h_r1.json").read_text())
+    x0 = rec["x0"]
+    assert h.resume_compatible(rec, h.BUDGET, x0) == (True, "")
+    bad = {**h.BUDGET, "P": {"DE_maxiter": 2000, "refine_round_cap": 20}}
+    assert h.resume_compatible(rec, bad, x0)[0] is False
+    assert (
+        h.resume_compatible(rec, h.BUDGET, {**x0, "U": {"start": "x", "FF_pad64": 0.9}})[0] is False
+    )
+    k1 = h._key("P", 24, "2026-10-21T06:11:00Z_971")
+    assert k1 != h._key("P", 24, "2026-10-21T07:00:00Z_5") and ":" not in k1
+
+
+class _Ready:
+    def __init__(self, ok):
+        self.ok = ok
+
+    def ready(self):
+        return self.ok
+
+    def get(self):
+        return {"status": "finished", "seed": 24}
+
+
+def test_finish_pending_collects_results_that_arrived():
+    rows = []
+    pending = {
+        ("P", 24): (("P", 24, None, "r"), _Ready(True)),
+        ("P", 25): (("P", 25, None, "r"), _Ready(False)),
+    }
+    h.finish_pending(
+        pending, rows.append, partial=lambda jb: {"status": "unfinished", "seed": jb[1]}
+    )
+    assert rows == [{"status": "finished", "seed": 24}, {"status": "unfinished", "seed": 25}]
+
+
+def test_u_verification_scores_equal_s1f_record():
+    """The U branch of verify() reproduces S1f's own verify_u scores for the same solution."""
+    d = json.loads((h.OUT / "s1h_decision.json").read_text())["verify"]["U"]
+    s1f = json.loads((h.OUT / "s1f_verify.json").read_text())
+    assert d["label"] == "S1f seed 23" and s1f["best_label"] == "seed23"
+    assert d["scores"] == s1f["scores"]
+    assert d["FF_conservative"] == s1f["FF_conservative"]

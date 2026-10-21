@@ -100,6 +100,63 @@ def validation_statuses(eps_by_fit: dict, ff_case: float) -> dict:
     return {k: g.fit_status(v, ff_case) for k, v in eps_by_fit.items()}
 
 
+def eps_limits(ff_case: float) -> dict:
+    """Both terms of the pass rule and the binding limit min(5e-4, 0.1 (1 - FF_case))."""
+    case = g.EPS_CASE_FRAC * (1.0 - float(ff_case))
+    return {"abs": g.EPS_MAX, "case": case, "effective": min(g.EPS_MAX, case)}
+
+
+def row_statuses(rows, ff_case: float) -> list:
+    """[(fit key, status)] with S1g's row-status guard: a finished row is graded by the pass rule;
+    an "error" row gives "error"; anything else (unfinished, or no final eps) gives "unfinished".
+    S1e rows carry no status field; they count as finished only when they hold a final eps."""
+    out = []
+    for r in rows:
+        key = f"{r.get('name')} s{r.get('seed')}"
+        if "status" not in r:
+            r = {**r, "status": "finished" if r.get("eps_final") is not None else "unfinished"}
+        out.append((key, g.row_status(r, ff_case)))
+    return out
+
+
+def tool_status(keyed: list, expected: list) -> dict:
+    """Tool verdict over every row (a list, so duplicates cannot collapse): any fail -> "fail"
+    (never hidden by a count problem); else duplicates, missing or extra fits -> "inconsistent";
+    else the S1g verdict (pass / error / unfinished)."""
+    keys = [k for k, _ in keyed]
+    dup = sorted({k for k in keys if keys.count(k) > 1})
+    missing = sorted(set(expected) - set(keys))
+    extra = sorted(set(keys) - set(expected))
+    verdict = g.tool_verdict(st for _, st in keyed)
+    if verdict != "fail" and (dup or missing or extra):
+        verdict = "inconsistent"
+    return {"verdict": verdict, "duplicates": dup, "missing": missing, "extra": extra}
+
+
+def resume_compatible(rec: dict, budget: dict, x0_info: dict) -> tuple:
+    """A stored record may be resumed only if it was made with the same per-model budget and the
+    same initial-population members (start label and FF)."""
+    for r in rec.get("rows", []):
+        if "budget" in r and r["budget"] != budget[r["model"]]:
+            return (
+                False,
+                f"row {r['model']}{r['seed']} budget {r['budget']} != {budget[r['model']]}",
+            )
+    if rec.get("budget", budget) != budget:
+        return False, f"record budget {rec.get('budget')} != {budget}"
+    if rec.get("x0", x0_info) != x0_info:
+        return False, f"record x0 {rec.get('x0')} != {x0_info}"
+    return True, ""
+
+
+BUDGET = {
+    "P": {"DE_maxiter": g.DE_P_MAXITER, "refine_round_cap": g.MAX_ROUNDS},
+    "U": {"DE_maxiter": 600, "nm_max_restarts": 8},
+}
+EXPECTED_P = [f"{n} s{s}" for rnd in g.ROUNDS for n, s in rnd]
+EXPECTED_U = [f"{n} s{s}" for n in ("V6", "V7") for s in (11, 12)]
+
+
 def s1h_outcome(
     tool_p: str,
     tool_u: str,
@@ -110,8 +167,11 @@ def s1h_outcome(
     feasibility_verified: bool,
     n_unfinished: int,
     ratio: float = g.SNR_RATIO_R1,
+    n_error: int = 0,
+    best_verified: bool = True,
 ) -> dict:
-    """Decision order frozen in X4.md S1h."""
+    """Decision order frozen in X4.md S1h. best_ff is the verified conservative FF of the best
+    ordinary solution (S1f step 3), not its unverified pad-64 score."""
     rho = g.rho_req(best_ff)
     intrinsic = rho / ratio
     base = {"best_ordinary_FF": best_ff, "rho_req": rho, "intrinsic_snr_needed": intrinsic}
@@ -131,6 +191,10 @@ def s1h_outcome(
         causes.append(f"U tool validation with the updated FF_case: {tool_u}")
     if n_unfinished:
         causes.append(f"fits unfinished at the stop: {n_unfinished}")
+    if n_error:
+        causes.append(f"fits that raised an error: {n_error}")
+    if not best_verified:
+        causes.append("best ordinary solution not verified")
     for name, ffs in (("P", p_seeds), ("U", u_seeds)):
         if not g.seeds_agree(ffs, SEED_AGREE):
             gap = top_two_gap(ffs)[2]
@@ -149,8 +213,11 @@ def s1h_outcome(
 
 
 # ------------------------------------------------------------------ fits
-def _key(model: str, seed: int) -> str:
-    return f"s1h_{model}_R1_s{seed}"
+def _key(model: str, seed: int, run_id: str = "") -> str:
+    """State-file key; per run, so a resumed run never overwrites or deletes an earlier run's
+    state that a stored row may depend on."""
+    tag = "".join(ch for ch in run_id if ch.isalnum())
+    return f"s1h_{model}_R1_s{seed}" + (f"_{tag}" if tag else "")
 
 
 def _job(args):
@@ -158,7 +225,7 @@ def _job(args):
     `x4_s1g.apply_budget`) or fit_u (S1e / S1f budget, unchanged)."""
     model, seed, x0, run_id = args
     g._RUN.clear()
-    g._RUN.update({"key": _key(model, seed), "run_id": run_id})
+    g._RUN.update({"key": _key(model, seed, run_id), "run_id": run_id})
     t0 = time.time()
     r = j._case_job((model, seed, x0))
     info = r["log"][0]
@@ -185,7 +252,7 @@ def _partial_row(job) -> dict:
     """A fit stopped at the deadline: its last saved state of this run, re-scored exactly."""
     model, seed, _x0, run_id = job
     row = {"name": "R1", "model": model, "seed": seed, "status": "unfinished", "run_id": run_id}
-    st = g.read_state(_key(model, seed), run_id)
+    st = g.read_state(_key(model, seed, run_id), run_id)
     if st is None:
         return row
     x = np.asarray(st["x"][:10])
@@ -212,6 +279,14 @@ def _collect(job, ar) -> dict:
         return {**row, "error": repr(exc)}
 
 
+def finish_pending(pending: dict, on_row, partial=None) -> None:
+    """After the stop: a job whose result arrived meanwhile is collected as finished; only the
+    others get a partial row (deadline race)."""
+    partial = partial or _partial_row
+    for jb, ar in pending.values():
+        on_row(_collect(jb, ar) if ar.ready() else partial(jb))
+
+
 def _dump(name: str, rec: dict) -> None:
     (OUT / name).write_text(json.dumps(rec, indent=1, default=float) + "\n")
 
@@ -222,9 +297,18 @@ def main_run() -> None:
     run_id = g._run_id()
     path = OUT / "s1h_r1.json"
     saved = j.saved_best()
-    if path.exists():  # resume: keep finished rows, run only missing or unfinished seeds
+    x0, x0_info = {}, {}
+    for mdl in MODELS:
+        best, x0[mdl] = x0_for(mdl, saved)
+        x0_info[mdl] = {"start": best["start"], "FF_pad64": best["FF_pad64"]}
+    if path.exists():  # resume: keep every row (unfinished ones stay in the pool, archived)
         rec = json.loads(path.read_text())
-        rec["rows"] = [r for r in rec["rows"] if r.get("status") == "finished"]
+        ok, why = resume_compatible(rec, BUDGET, x0_info)
+        if not ok:
+            raise SystemExit(f"refused to resume: {why}")
+        for r in rec["rows"]:
+            if r.get("status") != "finished":
+                r["archived"] = True  # kept with its run ID and partial FF; its seed runs again
         rec.setdefault("runs", []).append({"run_id": run_id, "start_utc": g._now()})
     else:
         rec = {
@@ -233,17 +317,13 @@ def main_run() -> None:
             "deadline_utc": DEADLINE_UTC,
             "runs": [{"run_id": run_id, "start_utc": g._now()}],
             "saved_rescored": saved,
+            "budget": BUDGET,
+            "x0": x0_info,
             "rows": [],
         }
-    x0 = {}
-    for mdl in MODELS:
-        best, x0[mdl] = x0_for(mdl, saved)
-        rec.setdefault("x0", {})[mdl] = {"start": best["start"], "FF_pad64": best["FF_pad64"]}
-    done = {(r["model"], r["seed"]) for r in rec["rows"]}
+    done = {(r["model"], r["seed"]) for r in rec["rows"] if r.get("status") == "finished"}
     jobs = [(mdl, s, x0[mdl], run_id) for mdl, s in jobs_order() if (mdl, s) not in done]
     _dump("s1h_r1.json", rec)
-    for jb in jobs:  # this run's state files start empty
-        g._state_path(_key(jb[0], jb[1])).unlink(missing_ok=True)
     deadline = datetime.fromisoformat(DEADLINE_UTC).timestamp()
 
     def on_row(r):
@@ -259,19 +339,26 @@ def main_run() -> None:
                     del pending[k]
                     on_row(_collect(jb, ar))
             if pending and time.time() >= deadline:
+                for k, (jb, ar) in list(pending.items()):  # last look before stopping
+                    if ar.ready():
+                        del pending[k]
+                        on_row(_collect(jb, ar))
                 pool.terminate()
                 break
             if pending:
                 time.sleep(15)
-    for jb, _ar in pending.values():
-        on_row(_partial_row(jb))
+    finish_pending(pending, on_row)
     rec["runs"][-1]["end_utc"] = g._now()
     _dump("s1h_r1.json", rec)
 
 
 # ------------------------------------------------------------------ verification and decision
 def verify(x, lens, label="") -> dict:
-    """S1f's three steps for a lensed (P) or unlensed (U, lens None) solution."""
+    """S1f's three steps for a lensed (P, `x4_s1g.verify_p`) or unlensed (U, lens None) solution.
+
+    The U branch repeats verify_p's steps without the lens factor: verify_p needs a lens, and S1g's
+    committed code is left unchanged. It uses the same primitives (explicit_psi, stat, ov, is_legal,
+    screen_flags); its scores equal S1f's own `verify_u` record (tests/test_x4_s1h.py)."""
     if lens is not None:
         return g.verify_p(x, lens, label)
     x = np.asarray(x, float)
@@ -365,7 +452,9 @@ def pooled() -> dict:
         out[mdl] = {
             "seeds": seeds,
             "new_status": {str(r["seed"]): r["status"] for r in new},
-            "n_unfinished": sum(1 for r in new if r["status"] != "finished"),
+            "n_unfinished": sum(1 for r in new if r["status"] == "unfinished"),
+            "n_error": sum(1 for r in new if r["status"] == "error"),
+            "finished_seed_rows": sorted(r["seed"] for r in new if r["status"] == "finished"),
             "best": best_of(cands),
             "n_candidates": len(cands),
         }
@@ -380,27 +469,30 @@ def main_decide() -> dict:
         ver[mdl] = verify(bst["x"], bst["lens"], label=bst["src"])
     ff_case = {mdl: pool_[mdl]["best"]["FF_pad64"] for mdl in ("P", "U")}
     s1gv = json.loads((OUT / "s1g_validate.json").read_text())
-    eps_p = {
-        f"{r['name']} s{r['seed']}": r["eps_final"] for rnd in s1gv["rounds"] for r in rnd["rows"]
-    }
+    rows_p = [r for rnd in s1gv["rounds"] for r in rnd["rows"]]
     s1ev = json.loads((OUT / "s1e_validate.json").read_text())["rows"]
-    eps_u = {f"{r['name']} s{r['seed']}": r["eps_final"] for r in s1ev if r["model"] == "U"}
-    st_p, st_u = validation_statuses(eps_p, ff_case["P"]), validation_statuses(eps_u, ff_case["U"])
-    tool_p = g.tool_verdict(st_p.values()) if len(st_p) == 6 else "unfinished"
-    tool_u = g.tool_verdict(st_u.values()) if len(st_u) == 4 else "unfinished"
+    rows_u = [r for r in s1ev if r["model"] == "U"]
+    keyed_p, keyed_u = row_statuses(rows_p, ff_case["P"]), row_statuses(rows_u, ff_case["U"])
+    ts_p, ts_u = tool_status(keyed_p, EXPECTED_P), tool_status(keyed_u, EXPECTED_U)
+    tool_p, tool_u = ts_p["verdict"], ts_u["verdict"]
+    eps_p = {f"{r['name']} s{r['seed']}": r.get("eps_final") for r in rows_p}
+    eps_u = {f"{r['name']} s{r['seed']}": r.get("eps_final") for r in rows_u}
     best_mdl = max(("P", "U"), key=lambda k: ff_case[k])
     vb = ver[best_mdl]
     cex = any(v.get("counterexample_verified") for v in ver.values())
     feas = any(v.get("feasibility_fail_verified") for v in ver.values())
+    best_verified = vb.get("FF_conservative") is not None
     outcome = s1h_outcome(
         tool_p,
         tool_u,
         list(pool_["P"]["seeds"].values()),
         list(pool_["U"]["seeds"].values()),
-        ff_case[best_mdl],
+        vb["FF_conservative"] if best_verified else ff_case[best_mdl],
         cex,
         feas,
         pool_["P"]["n_unfinished"] + pool_["U"]["n_unfinished"],
+        n_error=pool_["P"]["n_error"] + pool_["U"]["n_error"],
+        best_verified=best_verified,
     )
     out = {
         "label": "derived; S1h pooled decision (rule functions in scripts/x4_s1h.py)",
@@ -412,13 +504,19 @@ def main_decide() -> dict:
                 "new_status": pool_[mdl]["new_status"],
                 "best_src": pool_[mdl]["best"]["src"],
                 "FF_case": ff_case[mdl],
-                "eps_limit": 0.1 * (1.0 - ff_case[mdl]),
+                "eps_limit": eps_limits(ff_case[mdl]),
+                "n_unfinished": pool_[mdl]["n_unfinished"],
+                "n_error": pool_[mdl]["n_error"],
             }
             for mdl in ("P", "U")
         },
         "validation_recomputed": {
-            "P_S1g": st_p,
-            "U_S1e": st_u,
+            "P_S1g": dict(keyed_p),
+            "U_S1e": dict(keyed_u),
+            "P_rows": keyed_p,
+            "U_rows": keyed_u,
+            "P_count_check": {k: ts_p[k] for k in ("duplicates", "missing", "extra")},
+            "U_count_check": {k: ts_u[k] for k in ("duplicates", "missing", "extra")},
             "eps_P": eps_p,
             "eps_U": eps_u,
             "tool_P": tool_p,
@@ -427,6 +525,7 @@ def main_decide() -> dict:
         "verify": ver,
         "best_overall_model": best_mdl,
         "best_overall_FF_conservative": vb.get("FF_conservative"),
+        "best_overall_FF_pad64_unverified": ff_case[best_mdl],
         **outcome,
     }
     _dump("s1h_decision.json", out)
