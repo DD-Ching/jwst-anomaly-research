@@ -1670,6 +1670,13 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   http://asassn-lb01.ifa.hawaii.edu:9006 (deployment 0.6.20). Probed 2026-10-20: catalogue cones work, light-curve
   service down for maintenance (`results/w3_ztf/asassn/probe.json`). Installed in the session venv only; not a
   project dependency.
+- PyCBC 2.11.0 (PyPI, GPLv3; https://github.com/gwastro/pycbc): `pycbc.filter.matchedfilter.compute_max_snr_over_sky_loc_stat_no_phase`
+  (Harry et al., arXiv:1709.09181), `pycbc.waveform.get_fd_waveform`, `pycbc.filter.matched_filter`; `bin/pycbc_optimize_snr`
+  with `pycbc/live/snr_optimizer.py` (aligned-spin, 4-D); `bin/pycbc_banksim` (finite bank). Checked 2026-10-21 in a separate
+  environment (`results/x4/handoff/pycbc_check.json`); not a project dependency.
+- Surveyed, not installed (2026-10-21): Bilby relative binning `find_maximum_likelihood_parameters`
+  (https://git.ligo.org/lscsoft/bilby/-/blob/master/bilby/gw/likelihood/relative.py); simple-pe `find_peak_snr`
+  (https://git.ligo.org/stephen-fairhurst/simple-pe); ripple (JAX; no IMRPhenomXPHM listed).
 - Metacalibration: Huff & Mandelbaum 2017, arXiv:1702.02600 ("Metacalibration: Direct Self-Calibration of Biases in
   Shear Measurement"); Sheldon & Huff 2017, arXiv:1702.02601 ("Practical Weak Lensing Shear Measurement with
   Metacalibration"); titles checked via the arXiv API 2026-10-18. JADES 1181 o001 F200W i2d:
