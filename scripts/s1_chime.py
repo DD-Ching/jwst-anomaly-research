@@ -107,6 +107,7 @@ def _fetch_one(args):
             break
         time.sleep(10 * 3**attempt)
     else:
+        dest.unlink(missing_ok=True)  # a partial transfer is not a usable raw file
         return name, None, f"curl failed: {r.stderr.strip()[:200]}"
     h = hashlib.sha256(dest.read_bytes()).hexdigest()
     size = dest.stat().st_size

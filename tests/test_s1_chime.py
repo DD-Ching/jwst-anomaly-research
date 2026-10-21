@@ -487,3 +487,27 @@ def test_fetch_and_reduce_keep_raw_keeps_files(tmp_path):
             window=2,
         )
     assert len(list(tmp_path.iterdir())) >= 1
+
+
+def test_fetch_one_deletes_partial_file_after_failed_attempts(tmp_path, monkeypatch):
+    import subprocess
+
+    import s1_chime as drv
+
+    calls = []
+
+    def fake_run(cmd, **kw):
+        out = Path(cmd[cmd.index("-o") + 1])
+        out.write_bytes(b"partial")
+        calls.append(out)
+        return subprocess.CompletedProcess(cmd, 22, "", "HTTP 503")
+
+    monkeypatch.setattr(drv.subprocess, "run", fake_run)
+    monkeypatch.setattr(drv.time, "sleep", lambda s: None)
+    log = tmp_path / "downloads.log"
+    log.write_text("")
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    name, info, err = drv._fetch_one(("FRBX_stokesi_dynamic_spectrum.h5", raw, log))
+    assert len(calls) == 3 and info is None and "curl failed" in err
+    assert list(raw.iterdir()) == [] and log.read_text() == ""
