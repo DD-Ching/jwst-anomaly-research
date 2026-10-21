@@ -1678,6 +1678,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (https://git.ligo.org/lscsoft/bilby/-/blob/master/bilby/gw/likelihood/relative.py); simple-pe `find_peak_snr`
   (https://git.ligo.org/stephen-fairhurst/simple-pe); ripple (JAX; no IMRPhenomXPHM listed). pesummary "maxL" and gwfast
   were assessed from memory, not checked.
+- cogwheel 1.6.0 (PyPI `cogwheel-pe`, GPL-3.0-or-later; https://github.com/jroulet/cogwheel; docs
+  https://cogwheel.readthedocs.io/en/stable/; paper arXiv:2207.03508, title not re-checked): `Posterior.from_event`,
+  `Posterior.refine_reference_waveform`, `IASPrior`, `RelativeBinningLikelihood`, `ReferenceWaveformFinder`, `EventData`;
+  read from the installed source 2026-10-21 in a separate environment (`results/x4/handoff/cogwheel_checks.json`,
+  `cogwheel_runs.json`); not a project dependency.
 - Metacalibration: Huff & Mandelbaum 2017, arXiv:1702.02600 ("Metacalibration: Direct Self-Calibration of Biases in
   Shear Measurement"); Sheldon & Huff 2017, arXiv:1702.02601 ("Practical Weak Lensing Shear Measurement with
   Metacalibration"); titles checked via the arXiv API 2026-10-18. JADES 1181 o001 F200W i2d:

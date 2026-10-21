@@ -70,16 +70,18 @@ def to_par(x):
 
 
 def physical(par):
-    """cogwheel parameters -> (mc, q, s1, s2, inc, phi) in our frame, spin magnitudes unclipped."""
-    from cogwheel.waveform import inplane_spins_xy_n_to_xy
-
-    d = dict(par)
-    inplane_spins_xy_n_to_xy(d)
-    m1, m2 = max(d["m1"], d["m2"]), min(d["m1"], d["m2"])
+    """cogwheel parameters -> (mc, q, s1, s2, inc, phi) in our frame, spin magnitudes unclipped.
+    In-plane spins rotate by -phi_ref (cogwheel's `inplane_spins_xy_n_to_xy`, written out here
+    so the PyCBC environment needs no cogwheel)."""
+    m1, m2, phi = par["m1"], par["m2"], par["phi_ref"]
+    assert m1 >= m2  # cogwheel samples q = m2 / m1 <= 1
+    c, s_ = np.cos(phi), np.sin(phi)
+    spins = []
+    for i in (1, 2):
+        xn, yn = par[f"s{i}x_n"], par[f"s{i}y_n"]
+        spins.append((float(c * xn + s_ * yn), float(-s_ * xn + c * yn), float(par[f"s{i}z"])))
     mc = (m1 * m2) ** 0.6 / (m1 + m2) ** 0.2
-    s1 = (d["s1x"], d["s1y"], d["s1z"])
-    s2 = (d["s2x"], d["s2y"], d["s2z"])
-    return float(mc), float(m1 / m2), s1, s2, float(d["iota"]), float(d["phi_ref"])
+    return float(mc), float(m1 / m2), spins[0], spins[1], float(par["iota"]), float(phi)
 
 
 def to_box(par):
@@ -372,6 +374,20 @@ def main(argv=None) -> int:
         r = run_one(argv[1], int(argv[2]))
         (OUT_DIR / f".cogwheel_{argv[1]}.json").write_text(json.dumps(r, default=float) + "\n")
         print(r["name"], r["final"]["eps"], r["de"], r["wall_s"], flush=True)
+    elif cmd == "pycbc":  # PyCBC environment: the #447 check at cogwheel's start and final points
+        p = OUT_DIR / "cogwheel_runs.json"
+        runs = json.loads(p.read_text())
+        for r in runs["rows"]:
+            if "final" not in r:
+                continue
+            t, _ = k.target(r["name"])
+            for lab in ("start", "final"):
+                mc, q, s1, s2, inc, phi = physical(r[f"par_{lab}"])
+                ph = {"mc": mc, "q": q, "chi1": s1, "chi2": s2, "inc": inc, "phi": phi}
+                ff = H.pycbc_ff(t, ph, pad=64)
+                r[lab]["FF_pycbc"] = ff
+                r[lab]["pycbc_minus_ours"] = ff - r[lab]["FF_pad64"]
+        p.write_text(json.dumps(runs, indent=1, default=float) + "\n")
     elif cmd == "runs":
         procs = {
             n: subprocess.Popen([sys.executable, __file__, "one", n, str(sd)])

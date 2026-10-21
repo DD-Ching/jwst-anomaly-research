@@ -183,21 +183,19 @@ def pack():
     return case
 
 
-def pycbc_check(pad=64):
-    """Score layer re-computed with PyCBC only (no X4 code): PyCBC's wrapper around the same
+def pycbc_ff(target, ph, pad=64):
+    """FF of the template at physical parameters `ph` (mc, q, chi1, chi2, inc, phi) against
+    `target`, computed with PyCBC only (no X4 code): PyCBC's wrapper around the same
     lalsimulation XPHM build, its matched filter and the no-phase sky-location statistic
-    (arXiv:1709.09181), against case.json."""
-    import pycbc
-    import scipy
+    (arXiv:1709.09181)."""
     from pycbc.filter import matched_filter, overlap_cplx, sigma
     from pycbc.filter.matchedfilter import compute_max_snr_over_sky_loc_stat_no_phase
     from pycbc.types import FrequencySeries
     from pycbc.waveform import get_fd_waveform
 
     case = json.loads((OUT_DIR / "case.json").read_text())
-    z = np.load(OUT_DIR / "targets.npz")
     df, (flo, fhi) = case["df_hz"], case["band_hz"]
-    w = z["weight_1_over_psd"]
+    w = np.load(OUT_DIR / "targets.npz")["weight_1_over_psd"]
     n = len(w)
     m = n * pad  # zero-padded length: finer time lags, as the X4 score's pad
     psd_arr = np.ones(m)
@@ -209,40 +207,49 @@ def pycbc_check(pad=64):
         out[: min(len(a), n)] = a[:n]
         return FrequencySeries(out, delta_f=df)
 
+    d = fs(target)
+    sd = sigma(d, psd=psd, low_frequency_cutoff=flo, high_frequency_cutoff=fhi)
+    q, mc = ph["q"], ph["mc"]
+    mt = mc * (1 + q) ** 1.2 / q**0.6
+    hp, hc = get_fd_waveform(
+        approximant="IMRPhenomXPHM",
+        mass1=mt * q / (1 + q),
+        mass2=mt / (1 + q),
+        spin1x=ph["chi1"][0],
+        spin1y=ph["chi1"][1],
+        spin1z=ph["chi1"][2],
+        spin2x=ph["chi2"][0],
+        spin2y=ph["chi2"][1],
+        spin2z=ph["chi2"][2],
+        inclination=ph["inc"],
+        coa_phase=ph["phi"],
+        distance=100.0,
+        delta_f=df,
+        f_lower=flo,
+        f_ref=flo,
+        f_final=fhi,
+    )
+    hp, hc = fs(np.asarray(hp)), fs(np.asarray(hc))
+    kw = {"psd": psd, "low_frequency_cutoff": flo, "high_frequency_cutoff": fhi}
+    rp, rc = matched_filter(hp, d, **kw), matched_filter(hc, d, **kw)
+    corr = overlap_cplx(hp, hc, normalized=True, **kw).real
+    stat = compute_max_snr_over_sky_loc_stat_no_phase(
+        rp.numpy(), rc.numpy(), corr, hpnorm=1.0, hcnorm=1.0
+    )
+    return float(np.max(np.abs(np.asarray(stat)))) / sd
+
+
+def pycbc_check(pad=64):
+    """Score layer re-computed with PyCBC only (`pycbc_ff`) at the stored points vs case.json."""
+    import pycbc
+    import scipy
+
+    case = json.loads((OUT_DIR / "case.json").read_text())
+    z = np.load(OUT_DIR / "targets.npz")
     rows = {}
     for name, c in case["cases"].items():
-        d = fs(z[f"{name}_target"])
-        sd = sigma(d, psd=psd, low_frequency_cutoff=flo, high_frequency_cutoff=fhi)
         for lab in ("truth", "found"):
-            ph = c[f"{lab}_physical"]
-            q, mc = ph["q"], ph["mc"]
-            mt = mc * (1 + q) ** 1.2 / q**0.6
-            hp, hc = get_fd_waveform(
-                approximant="IMRPhenomXPHM",
-                mass1=mt * q / (1 + q),
-                mass2=mt / (1 + q),
-                spin1x=ph["chi1"][0],
-                spin1y=ph["chi1"][1],
-                spin1z=ph["chi1"][2],
-                spin2x=ph["chi2"][0],
-                spin2y=ph["chi2"][1],
-                spin2z=ph["chi2"][2],
-                inclination=ph["inc"],
-                coa_phase=ph["phi"],
-                distance=100.0,
-                delta_f=df,
-                f_lower=flo,
-                f_ref=flo,
-                f_final=fhi,
-            )
-            hp, hc = fs(np.asarray(hp)), fs(np.asarray(hc))
-            kw = {"psd": psd, "low_frequency_cutoff": flo, "high_frequency_cutoff": fhi}
-            rp, rc = matched_filter(hp, d, **kw), matched_filter(hc, d, **kw)
-            corr = overlap_cplx(hp, hc, normalized=True, **kw).real
-            stat = compute_max_snr_over_sky_loc_stat_no_phase(
-                rp.numpy(), rc.numpy(), corr, hpnorm=1.0, hcnorm=1.0
-            )
-            ff = float(np.max(np.abs(np.asarray(stat)))) / sd
+            ff = pycbc_ff(z[f"{name}_target"], c[f"{lab}_physical"], pad)
             ours = c[f"FF_{lab}"][f"pad{pad}"]
             rows[f"{name}_{lab}"] = {"FF_pycbc": ff, "FF_ours_pad64": ours, "diff": ff - ours}
     out = {
