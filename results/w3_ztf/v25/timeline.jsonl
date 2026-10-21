@@ -76,3 +76,8 @@
 {"area": 4990, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-21T06:20:33Z"}
 {"area": 4990, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-21T06:20:33Z"}
 {"area": 4990, "event": "cache_deleted", "utc": "2026-10-21T06:20:33Z"}
+{"area": 2347, "stage": "inject", "event": "end", "rc": 0, "seconds": 144.8, "utc": "2026-10-21T06:21:48Z"}
+{"area": 2347, "stage": "decision", "event": "start", "utc": "2026-10-21T06:21:48Z"}
+{"area": 2347, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-21T06:21:48Z"}
+{"area": 2347, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-21T06:21:48Z"}
+{"area": 2347, "stage": "search_holdout", "event": "start", "utc": "2026-10-21T06:21:48Z"}
