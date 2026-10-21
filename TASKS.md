@@ -38,7 +38,10 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   stays undetermined. S1e done: the joint search makes U reliable; P passes 3/4 runs, so the tool still fails
   and R1 stays undetermined. No pilot proposed. Open, on the owner's go: more P budget (an estimated 4–5 h on 4
   cores) or precession-parametrisation advice; or an R1 U fit testing outcome 1 only (about 0.5 h). S1f done: that U fit finds no counter-example (best FF 0.9135,
-  ρ_req 7.4); R1 stays undetermined.
+  ρ_req 7.4); R1 stays undetermined. S1g done (2026-10-21): with only the budget raised (DE 1,000 generations, 20
+  refinement rounds) the P search passes 6 / 6 frozen checks, S1e's failure and 2 new validation injections included;
+  on R1 its seeds converge to different optima (0.9476 vs 0.9459), so R1 stays undetermined (P and U search
+  reliability). Open, on the owner's go: R1 reliability (more seeds, about 1 h wall) or specialist advice.
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet
   published; waiting for the DR4 release documentation) (authorized 2026-10-14 by S0-2026-10-14): state file

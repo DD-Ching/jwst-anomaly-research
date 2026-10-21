@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: X4 S1g: with only more budget the positive-lens search passes its injection checks; on R1 its seeds disagree, so R1 stays undetermined (simulated)
+- **Question (owner, parallel round line A):** does one bounded budget top-up of the S1e P search (DE 400 → 1,000
+  generations, refinement cap 10 → 20; nothing else changed) pass the frozen check, new controls included? Plan
+  frozen first (`docs/state/units/X4.md`, S1g; afcdf9c).
+- **Version check:** re-scores of S1c/S1e/S1f solutions and a DE replay on the rebuilt lens grid match bitwise
+  (`s1g_version_check.json`); the development fits replay S1e's first 400 generations exactly.
+- **Validation (`s1g_validate.json`):** 6 / 6 pass (ε ≤ 5e-4 and ≤ 0.1 (1 − FF_case)). V9 seed 11, S1e's failure: ε
+  8.1e-6. New injections VA1 / VA2 (RNG seed 20261021, not used for tuning): 3.9e-6 / 2.8e-5. Both V9 DEs stopped at
+  the 1,000-generation cap; their refinements converged and the frozen rule decides by ε (whether a stage cap should
+  count as "undetermined" is recorded in X4.md as an owner reading, not applied).
+- **R1 (`s1g_r1.json`):** P seeds 21–23 converge to FF 0.947638, 0.945876, 0.945883; every DE stopped on its tolerance and
+  every refinement converged. The two best differ by 1.75e-3 > 2e-4. Best ordinary FF 0.9476 (ρ_req 9.4, intrinsic SNR
+  48.6), verified; no counter-example. **Outcome 3, undetermined** (P and U search reliability). Not evidence for or
+  against the negative-mass model; no pilot; S2 not started; no real data read.
+- **Implementation bug:** SciPy dispatches the DE callback on the parameter name `intermediate_result`; the first
+  launch crashed at generation 1 with no output; fixed and relaunched with the plan unchanged (890b9f3).
+- **Handoff:** the gap is a reliable optimum on R1 for P and U. Owner's call: more seeds of the validated procedures
+  (about 1 h wall for 3 + 3 on 3–4 cores) or specialist advice. 6.8 CPU-h; about 3.1 h used; X4 has about 4.1 h left.
+
 ## 2026-10-21: W2 at HST resolution for the D-056 blended / too-close lensed quasars: method validation fails
 - **Why:** owner authorization 2026-10-21 (parallel round line C); the D-060 revisit condition. Plan frozen first
   (`results/w2_hst_blend/PLAN.md`, 2a44d9b).
