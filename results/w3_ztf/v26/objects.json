@@ -1,0 +1,8 @@
+{
+ "label": "observed (DR24 objects tables; MB from parquet metadata)",
+ "parents_mb": {
+  "703": 85.4,
+  "719": 86.1
+ },
+ "objects_mb": 171.5
+}
