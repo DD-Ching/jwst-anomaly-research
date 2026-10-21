@@ -417,8 +417,11 @@ def pooled() -> dict:
     out = {}
     for mdl, old_rows, old_src in (("P", s1g["rows"], "S1g"), ("U", s1f["rows"], "S1f")):
         new = [r for r in h["rows"] if r["model"] == mdl]
+        # archived rows (unfinished rows of an earlier run whose seed ran again) stay candidates for
+        # the best solution but no longer describe a seed's status
+        live = [r for r in new if not r.get("archived")]
         old = [{**r, "status": r.get("status", "finished")} for r in old_rows]
-        seeds = {**seed_ffs(old), **seed_ffs(new)}
+        seeds = {**seed_ffs(old), **seed_ffs(live)}
         cands = (
             [
                 {
@@ -451,10 +454,11 @@ def pooled() -> dict:
         )
         out[mdl] = {
             "seeds": seeds,
-            "new_status": {str(r["seed"]): r["status"] for r in new},
-            "n_unfinished": sum(1 for r in new if r["status"] == "unfinished"),
-            "n_error": sum(1 for r in new if r["status"] == "error"),
-            "finished_seed_rows": sorted(r["seed"] for r in new if r["status"] == "finished"),
+            "new_status": {str(r["seed"]): r["status"] for r in live},
+            "n_unfinished": sum(1 for r in live if r["status"] == "unfinished"),
+            "n_error": sum(1 for r in live if r["status"] == "error"),
+            "n_archived": len(new) - len(live),
+            "finished_seed_rows": sorted(r["seed"] for r in live if r["status"] == "finished"),
             "best": best_of(cands),
             "n_candidates": len(cands),
         }

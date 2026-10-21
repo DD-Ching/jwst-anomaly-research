@@ -190,3 +190,22 @@ def test_u_verification_scores_equal_s1f_record():
     assert d["label"] == "S1f seed 23" and s1f["best_label"] == "seed23"
     assert d["scores"] == s1f["scores"]
     assert d["FF_conservative"] == s1f["FF_conservative"]
+
+
+def test_pooled_archived_rows_are_candidates_not_seed_statuses(tmp_path, monkeypatch):
+    # coordinator check of 9f26cab: after a resume, an archived unfinished row of seed 24 must not
+    # count as unfinished once seed 24 has finished, but its partial FF stays a candidate
+    real = h.OUT
+    for name in ("s1g_r1.json", "s1f_case_u.json"):
+        (tmp_path / name).write_text((real / name).read_text())
+    rows = [
+        {"model": "P", "seed": 24, "status": "unfinished", "archived": True, "FF_pad64": 0.999,
+         "x": [0.0] * 10, "lens": [100.0, 0.5]},
+        {"model": "P", "seed": 24, "status": "finished", "FF_pad64": 0.9, "x": [0.0] * 10,
+         "lens": [100.0, 0.5]},
+    ]  # fmt: skip
+    (tmp_path / "s1h_r1.json").write_text(json.dumps({"rows": rows}))
+    monkeypatch.setattr(h, "OUT", tmp_path)
+    p = h.pooled()["P"]
+    assert p["n_unfinished"] == 0 and p["n_archived"] == 1 and p["new_status"] == {"24": "finished"}
+    assert p["seeds"][24] == 0.9 and p["best"]["FF_pad64"] == 0.999  # partial kept as a candidate

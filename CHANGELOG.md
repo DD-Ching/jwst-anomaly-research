@@ -20,7 +20,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Post-run code review (9f26cab):** 8 code fixes (ε-limit reporting, resume and deadline paths, row-status guard,
   duplicate checks, error counts, verified FF in the outcome); none of the fixed paths ran (one run, 6 / 6 finished).
   No fit re-run; decision recomputed from stored rows, outcome unchanged; previous file kept as
-  `s1h_decision_v1.json`.
+  `s1h_decision_v1.json`. Check of the fixes: archived rows of a resumed run no longer count as a seed's status
+  (path not run; `s1h_decision.json` recomputed with no field changed).
 - **Handoff:** the extra-seed route is closed. Needed instead: a search with a global-coverage diagnostic (e.g. nested
   sampling on the same score, injection-validated) or GW data-analysis advice on precessing fitting factors (all
   best fits sit at |χ| = 0.99). 2.6 CPU-h, 44 min wall on 4 cores; X4 has about 3.0 h left.
