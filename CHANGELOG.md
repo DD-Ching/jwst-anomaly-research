@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: W3 ZTF v25: the fade_diag sibling prediction holds in 4 / 4 decided areas (partial); 2346 passes and is searched, 0 survivors
+- **Why:** routine search under its T1 share; the testable prediction of `results/w3_ztf/fade_diag/RESULT.md` (siblings
+  of a fade-passing parent pass the fade control, siblings of failing parents do not). Plan frozen first
+  (`results/w3_ztf/v25/PLAN.md`, edeb5d0); samples committed before any light curve.
+- **Result (`results/w3_ztf/v25/RESULT.md`, `summary.json`):** fade passing / 1,000: 2346 72 and 2345 67 (parent 586,
+  predicted ≤ 10 %); 1149 121 and 4988 132 (parents 287 / 1247, predicted > 10 %). 4 / 4 as predicted; 2347 and 4990
+  not reached (time stop), so the frozen outcome (≥ 5 / 6) is still open. 2346 passes calibration: 2,009 groups
+  searched, 0 survivors (cumulative v13: 39,366 groups, no confirmed target event). 2345 fails one injection cell
+  (0.475 < 0.5); not retried.
+- **Blocked route:** the paused W3 ZTF × ASAS-SN trial needs a CONNECT shim to reach Sky Patrol's plain-HTTP port;
+  this session's permission policy refused starting it, so the service status was not probed. Re-probe from a
+  session where the shim is allowed.
+- **Cost:** ≈ 2.7 GB streamed, caches deleted; queue 19.5 min.
+- **Handoff:** next run finishes 2347 and 4990 (rebuild their control caches first: RESULT "Carry-over"), then the
+  tally decides whether queues are ordered by parent. Other lines unchanged: #409 and the other needs-human PRs wait on
+  the owner, #374 on a green weekly run.
+
 ## 2026-10-21: X4 S1g: with only more budget the positive-lens search passes its injection checks; on R1 its seeds disagree, so R1 stays undetermined (simulated)
 - **Question (owner, parallel round line A):** does one bounded budget top-up of the S1e P search (DE 400 → 1,000
   generations, refinement cap 10 → 20; nothing else changed) pass the frozen check, new controls included? Plan

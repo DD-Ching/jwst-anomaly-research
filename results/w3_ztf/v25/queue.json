@@ -1,0 +1,53 @@
+{
+ "label": "derived; v25 PLAN section 3 (frozen order, from ../v22/inventory.json)",
+ "queue": [
+  {
+   "npix": 2346,
+   "parent": 586,
+   "prediction_fade_le_10pct": true,
+   "lc_mb": 725.5,
+   "position": 1,
+   "seed_offset": 50000
+  },
+  {
+   "npix": 1149,
+   "parent": 287,
+   "prediction_fade_le_10pct": false,
+   "lc_mb": 270.2,
+   "position": 2,
+   "seed_offset": 51000
+  },
+  {
+   "npix": 2345,
+   "parent": 586,
+   "prediction_fade_le_10pct": true,
+   "lc_mb": 880.6,
+   "position": 3,
+   "seed_offset": 52000
+  },
+  {
+   "npix": 4988,
+   "parent": 1247,
+   "prediction_fade_le_10pct": false,
+   "lc_mb": 531.8,
+   "position": 4,
+   "seed_offset": 53000
+  },
+  {
+   "npix": 2347,
+   "parent": 586,
+   "prediction_fade_le_10pct": true,
+   "lc_mb": 947.8,
+   "position": 5,
+   "seed_offset": 54000
+  },
+  {
+   "npix": 4990,
+   "parent": 1247,
+   "prediction_fade_le_10pct": false,
+   "lc_mb": 536.3,
+   "position": 6,
+   "seed_offset": 55000
+  }
+ ]
+}
