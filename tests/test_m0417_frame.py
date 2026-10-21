@@ -49,3 +49,20 @@ def test_gate_f1_needs_count_precision_and_halves():
 def test_gate_f2_threshold():
     assert mf.gate_f2(0.18)
     assert not mf.gate_f2(0.181)
+
+
+def test_shifted_loader_moves_east_and_south_by_the_offset():
+    base = lambda field: Table({"ra": [64.39], "dec": [-11.90]})  # noqa: E731
+    t = mf.shifted_loader(0.101, -0.292, base=base)("macs0417")
+    c0 = SkyCoord(64.39 * u.deg, -11.90 * u.deg)
+    dra, ddec = c0.spherical_offsets_to(SkyCoord(t["ra"][0] * u.deg, t["dec"][0] * u.deg))
+    assert abs(dra.to_value(u.arcsec) - 0.101) < 1e-6
+    assert abs(ddec.to_value(u.arcsec) + 0.292) < 1e-6
+
+
+def test_empty_match_is_json_safe_and_fails_f1():
+    relics, jwst = _synthetic(n=5)
+    far = SkyCoord(jwst.ra + 1 * u.deg, jwst.dec)
+    m = mf.measure(relics, far)
+    assert m["offset"]["n"] == 0 and not m["F1"]
+    assert not mf.gate_f2(None)

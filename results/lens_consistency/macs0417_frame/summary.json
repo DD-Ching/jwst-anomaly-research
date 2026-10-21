@@ -1,4 +1,9 @@
 {
+ "inputs": {
+  "relics_sha256": "26a210e599f37ae066cc3cfb5e8d53777f39ad322710cdc002f6372fc79f24b8",
+  "jwst_cat": "jw01208-o006_t003_nircam_clear-f200w_cat.ecsv",
+  "jwst_cat_sha256": "e55dffb990a8e8124e37658933a47952a77b357b36dc5c8f523a5b487d423c24"
+ },
  "measurement": {
   "pass1": {
    "n": 503,
@@ -30,6 +35,13 @@
   },
   "halves_max_diff": 0.0017206492618246777,
   "F1": true,
+  "posthoc_unique_matches": {
+   "n": 465,
+   "dra": 0.10084636860364347,
+   "dra_err": 0.0008611490679574401,
+   "ddec": -0.2917131053097502,
+   "ddec_err": 0.0010629418235614228
+  },
   "n_relics_selected": 728
  },
  "shifted_peak_offsets": {
