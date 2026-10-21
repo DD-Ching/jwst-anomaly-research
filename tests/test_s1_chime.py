@@ -466,6 +466,9 @@ def test_bounded_map_cleanup_alone_deletes_unhandled_results(tmp_path):
     assert list(tmp_path.iterdir()) == []
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="os.kill(SIGINT) terminates the whole process on Windows"
+)
 def test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting(tmp_path):
     # /code-review round 3, finding 1: an interrupt during the head future's result() wait must
     # still clean that future's file (v2 had popped it from pending before waiting)
@@ -582,7 +585,9 @@ def test_run_cancellable_terminates_a_running_transfer():
     ev = threading.Event()
     threading.Timer(0.3, ev.set).start()
     t0 = time.time()
-    rc, err = drv._run_cancellable(["sleep", "30"], ev, poll_s=0.1)
+    # a portable long-running child (no `sleep` binary on Windows)
+    cmd = [sys.executable, "-c", "import time; time.sleep(30)"]
+    rc, err = drv._run_cancellable(cmd, ev, poll_s=0.1)
     assert rc is None and err == "cancelled" and time.time() - t0 < 3.0
 
 
