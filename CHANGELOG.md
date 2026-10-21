@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: MACS1149 D-041 cross-model rule with the pinned Sharon v4cor: gate passes; D-037 tally unchanged
+- **Why:** #417 handoff (use `macs1149-sharon` as the second model for the D-037 rows). Plan frozen first
+  (`results/lens_consistency/macs1149_crossmodel/PLAN.md`).
+- **Result (`RESULT.md`, `summary.json`):** gate 38 / 39 catalogued images reproduced (rule ≥ 0.8); 16 CATS extra rows:
+  `no_flag` 15, `lensing_residual_input` 1. The flag is system 16's `absent` image at the CATS-fitted z 4.419, where
+  Sharon reproduces only 16.2; at the adopted z 2.7 (pre-declared secondary) it is CATS-only. D-037's fitted-redshift
+  rule explains it (post hoc reading: the frozen function omitted that rule). Not a candidate.
+- The 11 `no_reference` readings equal the 2026-10-14 scratch-Sharon ones (0 / 11 differ).
+- **Access:** archive.stsci.edu still sends an incomplete TLS chain to urllib; the maps were fetched with curl and the
+  SOURCES.md AIA bundle into the cache.
+- **New:** `scripts/m1149_crossmodel.py`, `tests/test_m1149_crossmodel.py`.
+- **Handoff:** the MACS1149 lens-consistency line has no open row; it reopens only on a system 16 spec-z or a JWST-era
+  model (D-037). Other lines unchanged: #409 and the other needs-human PRs wait on the owner, #374 on a green weekly run.
+
 ## 2026-10-20: Abell 2744 system 700.1 vetting: colour test not validated; two modelled cluster members at 2.1″ and 4.4″
 - **Why:** the #413 handoff (`/vet-candidate` for 700.1: one image or two, perturber). Plan frozen first
   (`results/lens_consistency/a2744_s700_vet/PLAN.md`, computable specification before the run).

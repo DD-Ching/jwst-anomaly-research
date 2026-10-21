@@ -1,0 +1,586 @@
+{
+ "provenance": "positions and mu: model_prediction (CATS v4.1, Sharon v4cor); catalogued positions: observed; forced classes: derived (CATS images run 2026-10-14)",
+ "inputs": {
+  "pred": "results/lens_consistency/macs1149-cats/images_predicted.ecsv",
+  "second_model": "macs1149-sharon"
+ },
+ "assumptions": {
+  "grid_step_arcsec": 0.25,
+  "match_arcsec": 1.5,
+  "xmodel_loose_arcsec": 3.0,
+  "gate_min_reproduced": 0.8,
+  "secondary_z": {
+   "16": 2.7
+  }
+ },
+ "gate": {
+  "reproduced": 38,
+  "tested": 39,
+  "passes": true
+ },
+ "outcome": {
+  "no_flag": 15,
+  "lensing_residual_input": 1
+ },
+ "n_systems": 14,
+ "d041_counts": {
+  "model-dependent (CATS only)": 4,
+  "catalogued image misplaced by CATS": 1,
+  "both models": 11
+ },
+ "scratch_disagreements": [],
+ "rows": [
+  {
+   "system": "2",
+   "radec": [
+    177.405367,
+    22.391987
+   ],
+   "image_class": "candidate",
+   "mu_cats": -16.53,
+   "forced_class": "confused",
+   "inside_footprint": true,
+   "catalogued": [
+    "2.1",
+    "2.2",
+    "2.3"
+   ],
+   "sharon": {
+    "z": 1.894,
+    "n_images": 3,
+    "n_extra": 0,
+    "reproduced": [
+     "2.1",
+     "2.2",
+     "2.3"
+    ],
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 2.88,
+    "nearest_catalogued_id": "2.2",
+    "d041": "model-dependent (CATS only)"
+   },
+   "outcome": "no_flag"
+  },
+  {
+   "system": "13",
+   "radec": [
+    177.403169,
+    22.397025
+   ],
+   "image_class": "missing",
+   "mu_cats": -9.96,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "13.1",
+    "13.2",
+    "13.3"
+   ],
+   "sharon": {
+    "z": 1.301,
+    "n_images": 3,
+    "n_extra": 0,
+    "reproduced": [
+     "13.1",
+     "13.2",
+     "13.3"
+    ],
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 1.52,
+    "nearest_catalogued_id": "13.2",
+    "d041": "catalogued image misplaced by CATS"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "catalogued image misplaced by CATS",
+   "scratch_agrees": true
+  },
+  {
+   "system": "14",
+   "radec": [
+    177.399384,
+    22.407575
+   ],
+   "image_class": "candidate",
+   "mu_cats": 5.09,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "14.1",
+    "14.2"
+   ],
+   "sharon": {
+    "z": 2.672,
+    "n_images": 3,
+    "n_extra": 1,
+    "reproduced": [
+     "14.1",
+     "14.2"
+    ],
+    "nearest_extra_sep_arcsec": 0.65,
+    "nearest_extra_mu": 4.67,
+    "nearest_catalogued_sep_arcsec": 29.29,
+    "nearest_catalogued_id": "14.1",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  },
+  {
+   "system": "16",
+   "radec": [
+    177.41115,
+    22.389165
+   ],
+   "image_class": "missing",
+   "mu_cats": 15.82,
+   "forced_class": "absent",
+   "inside_footprint": true,
+   "catalogued": [
+    "16.1",
+    "16.2"
+   ],
+   "sharon": {
+    "z": 4.419,
+    "n_images": 3,
+    "n_extra": 2,
+    "reproduced": [
+     "16.2"
+    ],
+    "nearest_extra_sep_arcsec": 0.9,
+    "nearest_extra_mu": 30.18,
+    "nearest_catalogued_sep_arcsec": 6.68,
+    "nearest_catalogued_id": "16.2",
+    "d041": "both models"
+   },
+   "sharon_secondary": {
+    "z": 2.7,
+    "n_images": 3,
+    "n_extra": 1,
+    "reproduced": [
+     "16.1"
+    ],
+    "nearest_extra_sep_arcsec": 20.18,
+    "nearest_extra_mu": 5.2,
+    "nearest_catalogued_sep_arcsec": 6.97,
+    "nearest_catalogued_id": "16.1",
+    "d041": "model-dependent (CATS only)"
+   },
+   "outcome": "lensing_residual_input"
+  },
+  {
+   "system": "16",
+   "radec": [
+    177.405524,
+    22.384962
+   ],
+   "image_class": "faint",
+   "mu_cats": 4.04,
+   "forced_class": "recovered",
+   "inside_footprint": true,
+   "catalogued": [
+    "16.1",
+    "16.2"
+   ],
+   "sharon": {
+    "z": 4.419,
+    "n_images": 3,
+    "n_extra": 2,
+    "reproduced": [
+     "16.2"
+    ],
+    "nearest_extra_sep_arcsec": 0.96,
+    "nearest_extra_mu": 4.11,
+    "nearest_catalogued_sep_arcsec": 17.53,
+    "nearest_catalogued_id": "16.2",
+    "d041": "both models"
+   },
+   "sharon_secondary": {
+    "z": 2.7,
+    "n_images": 3,
+    "n_extra": 1,
+    "reproduced": [
+     "16.1"
+    ],
+    "nearest_extra_sep_arcsec": 4.28,
+    "nearest_extra_mu": 5.2,
+    "nearest_catalogued_sep_arcsec": 16.95,
+    "nearest_catalogued_id": "16.1",
+    "d041": "model-dependent (CATS only)"
+   },
+   "outcome": "no_flag"
+  },
+  {
+   "system": "21",
+   "radec": [
+    177.392005,
+    22.41262
+   ],
+   "image_class": "candidate",
+   "mu_cats": 111.03,
+   "forced_class": "recovered",
+   "inside_footprint": true,
+   "catalogued": [
+    "21.1",
+    "21.2",
+    "21.3"
+   ],
+   "sharon": {
+    "z": 2.525,
+    "n_images": 3,
+    "n_extra": 0,
+    "reproduced": [
+     "21.1",
+     "21.2",
+     "21.3"
+    ],
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 3.16,
+    "nearest_catalogued_id": "21.1",
+    "d041": "model-dependent (CATS only)"
+   },
+   "outcome": "no_flag"
+  },
+  {
+   "system": "1002",
+   "radec": [
+    177.399926,
+    22.396986
+   ],
+   "image_class": "candidate",
+   "mu_cats": -3.59,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1002.2",
+    "1002.3",
+    "1002.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 3,
+    "n_extra": 0,
+    "reproduced": [
+     "1002.1",
+     "1002.2",
+     "1002.3"
+    ],
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 2.31,
+    "nearest_catalogued_id": "1002.3",
+    "d041": "model-dependent (CATS only)"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "model-dependent (CATS only)",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1007",
+   "radec": [
+    177.398381,
+    22.398146
+   ],
+   "image_class": "candidate",
+   "mu_cats": 18.31,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1007.2",
+    "1007.3",
+    "1007.4",
+    "1007.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 5,
+    "n_extra": 1,
+    "reproduced": [
+     "1007.1",
+     "1007.2",
+     "1007.3",
+     "1007.4"
+    ],
+    "nearest_extra_sep_arcsec": 0.75,
+    "nearest_extra_mu": 0.1,
+    "nearest_catalogued_sep_arcsec": 2.02,
+    "nearest_catalogued_id": "1007.3",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1009",
+   "radec": [
+    177.403317,
+    22.402697
+   ],
+   "image_class": "candidate",
+   "mu_cats": 3.58,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1009.2",
+    "1009.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 5,
+    "n_extra": 3,
+    "reproduced": [
+     "1009.1",
+     "1009.2"
+    ],
+    "nearest_extra_sep_arcsec": 0.12,
+    "nearest_extra_mu": 3.4,
+    "nearest_catalogued_sep_arcsec": 23.3,
+    "nearest_catalogued_id": "1009.1",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1010",
+   "radec": [
+    177.403298,
+    22.402675
+   ],
+   "image_class": "candidate",
+   "mu_cats": 3.6,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1010.2",
+    "1010.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 5,
+    "n_extra": 3,
+    "reproduced": [
+     "1010.1",
+     "1010.2"
+    ],
+    "nearest_extra_sep_arcsec": 0.08,
+    "nearest_extra_mu": 3.41,
+    "nearest_catalogued_sep_arcsec": 23.09,
+    "nearest_catalogued_id": "1010.1",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1020",
+   "radec": [
+    177.400158,
+    22.396812
+   ],
+   "image_class": "no_flux_ref",
+   "mu_cats": -4.07,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1020.2",
+    "1020.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 5,
+    "n_extra": 3,
+    "reproduced": [
+     "1020.1",
+     "1020.2"
+    ],
+    "nearest_extra_sep_arcsec": 0.83,
+    "nearest_extra_mu": -2.35,
+    "nearest_catalogued_sep_arcsec": 10.97,
+    "nearest_catalogued_id": "1020.2",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1192",
+   "radec": [
+    177.398523,
+    22.398314
+   ],
+   "image_class": "candidate",
+   "mu_cats": 7.52,
+   "forced_class": "confused",
+   "inside_footprint": true,
+   "catalogued": [
+    "1192.2",
+    "1192.3",
+    "1192.4",
+    "1192.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 5,
+    "n_extra": 1,
+    "reproduced": [
+     "1192.1",
+     "1192.2",
+     "1192.3",
+     "1192.4"
+    ],
+    "nearest_extra_sep_arcsec": 0.44,
+    "nearest_extra_mu": 3.63,
+    "nearest_catalogued_sep_arcsec": 2.39,
+    "nearest_catalogued_id": "1192.3",
+    "d041": "both models"
+   },
+   "outcome": "no_flag"
+  },
+  {
+   "system": "1211",
+   "radec": [
+    177.400229,
+    22.396865
+   ],
+   "image_class": "missing",
+   "mu_cats": -4.01,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1211.2",
+    "1211.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 5,
+    "n_extra": 3,
+    "reproduced": [
+     "1211.1",
+     "1211.2"
+    ],
+    "nearest_extra_sep_arcsec": 0.83,
+    "nearest_extra_mu": -2.05,
+    "nearest_catalogued_sep_arcsec": 11.69,
+    "nearest_catalogued_id": "1211.2",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1222",
+   "radec": [
+    177.399883,
+    22.397048
+   ],
+   "image_class": "candidate",
+   "mu_cats": -3.66,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1222.2",
+    "1222.3",
+    "1222.1"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 3,
+    "n_extra": 0,
+    "reproduced": [
+     "1222.1",
+     "1222.2",
+     "1222.3"
+    ],
+    "nearest_extra_sep_arcsec": null,
+    "nearest_extra_mu": null,
+    "nearest_catalogued_sep_arcsec": 2.29,
+    "nearest_catalogued_id": "1222.3",
+    "d041": "model-dependent (CATS only)"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "model-dependent (CATS only)",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1999",
+   "radec": [
+    177.400254,
+    22.396626
+   ],
+   "image_class": "no_flux_ref",
+   "mu_cats": -5.0,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1999.1",
+    "1999.2",
+    "1999.3",
+    "1999.4"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 7,
+    "n_extra": 2,
+    "reproduced": [
+     "1999.1",
+     "1999.2",
+     "1999.3",
+     "1999.4"
+    ],
+    "nearest_extra_sep_arcsec": 0.68,
+    "nearest_extra_mu": -4.42,
+    "nearest_catalogued_sep_arcsec": 7.67,
+    "nearest_catalogued_id": "1999.1",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  },
+  {
+   "system": "1999",
+   "radec": [
+    177.403679,
+    22.402114
+   ],
+   "image_class": "candidate",
+   "mu_cats": 3.64,
+   "forced_class": "no_reference",
+   "inside_footprint": true,
+   "catalogued": [
+    "1999.1",
+    "1999.2",
+    "1999.3",
+    "1999.4"
+   ],
+   "sharon": {
+    "z": 1.4888,
+    "n_images": 7,
+    "n_extra": 2,
+    "reproduced": [
+     "1999.1",
+     "1999.2",
+     "1999.3",
+     "1999.4"
+    ],
+    "nearest_extra_sep_arcsec": 0.42,
+    "nearest_extra_mu": 3.88,
+    "nearest_catalogued_sep_arcsec": 29.59,
+    "nearest_catalogued_id": "1999.1",
+    "d041": "both models"
+   },
+   "outcome": "no_flag",
+   "scratch_d041": "both models",
+   "scratch_agrees": true
+  }
+ ]
+}
