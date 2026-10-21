@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-20: Abell 2744 system 700.1 vetting: colour test not validated; two modelled cluster members at 2.1″ and 4.4″
+- **Why:** the #413 handoff (`/vet-candidate` for 700.1: one image or two, perturber). Plan frozen first
+  (`results/lens_consistency/a2744_s700_vet/PLAN.md`, computable specification before the run).
+- **Result (`RESULT.md`, `summary.json`):** frozen outcome "undetermined (colour test not validated; member perturber
+  present)". Known UNCOVER pairs read "consistent" in 10 / 20 (gate 0.8), so the 78 a/b colour χ² (p 0.96 / 0.93 /
+  0.68) decides nothing (20 pairs from 10 sources). Spec-z members DJA 45749 (z 0.305, 2.11″) and 45736 (z 0.301, 4.43″) lie near the arc.
+  Sheet looked at: one thin straight arc of six knots, with 45749 about 2″ south.
+- **Post hoc:** both are Bergamini+23 components: member 20036 (σ 119 km/s), and the northern group halo O4 (σ 839
+  km/s) plus O9. A misplaced critical curve near a modelled group core stays a plausible ordinary explanation
+  (untested). Not a candidate.
+- **Failed approach:** r = 0.15″ high-pass pair colours with random-aperture noise fail on known multiple images; a
+  systematic floor calibrated on known pairs is needed first.
+- **Deviation:** re-run after two /code-review rounds (pixel scale, unmeasurable pairs and members, ratio search; RESULT
+  "Deviations"); the crude magnitudes changed in the first re-run (pixel scale), the outcome in none.
+- **New:** `scripts/a2744_s700_vet.py`, `tests/test_a2744_s700_vet.py`.
+- **Handoff:** 700.1 needs a local re-fit of the northern group (O4/O9/20036 free, 78 as a constraint) or spectra of
+  both arc ends. Neither is cheap, so the line is parked. Other lines are unchanged: #409 and the other needs-human
+  PRs wait on the owner, and #374 waits for a green weekly run.
 ## 2026-10-20: MACS1149 Sharon v4cor pinned as `macs1149-sharon`: maps check passes; gold-image gate fails as written (system 9 off the map)
 - **Why:** TASKS "second models as pinned `MapLensModel` entries" (MACS1149); the D-037 second model was scratch code
   only (`docs/fields/macs1149.md`).

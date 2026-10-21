@@ -2272,6 +2272,11 @@ D-034's rules now remove these automatically.
   pairs (midpoints within 0.05″) fit a fold arc or one symmetric galaxy. 700.1 is undetermined and not a candidate;
   next is `/vet-candidate` (perturber near the midpoint; one image or two). Revisit if that vetting or a model with a
   local perturber there changes the picture.
+- **Addendum 2026-10-20c (vetting, `results/lens_consistency/a2744_s700_vet/`):** frozen outcome "undetermined
+  (colour test not validated; member perturber present)". Pair colours fail on known UNCOVER pairs (10 / 20, gate
+  0.8). Spec-z members at 2.11″ (DJA 45749 = Bergamini+23 member 20036) and 4.43″ (DJA 45736 = group halo O4/O9
+  centre) are both in the model (post hoc). 700.1 is parked as model-limited near the northern group core, not a
+  candidate. Revisit if a local re-fit with O4/O9/20036 free, or spectra of both arc ends, becomes available.
 
 ## D-037 MACS1149 screens: null; repeated-pair, fitted-redshift and model-dependent-μ rules (2026-10-08)
 
