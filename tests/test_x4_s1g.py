@@ -106,13 +106,34 @@ def test_stale_state_is_ignored(tmp_path, monkeypatch):
     assert g.read_state("valid_V5_s11", "run-old") is None
 
 
-def test_refine_state_saves_only_the_accepted_state():
+def test_refine_state_keeps_the_best_exact_lens_point():
     x, lens = [1.0, 2.0], [1400.0, 0.2]
     better = g.refine_state({"f": 1e-4, "x": [1.1, 2.1]}, x, 2e-4, lens, 3)
-    assert better["accepted"] and better["f"] == 1e-4 and better["x"] == [1.1, 2.1]
+    assert better["improves_exact"] and better["f"] == 1e-4 and better["x"] == [1.1, 2.1]
     same = g.refine_state({"f": 2e-4, "x": [1.1, 2.1]}, x, 2e-4, lens, 3)
-    assert not same["accepted"] and same["f"] == 2e-4 and same["x"] == x
+    assert not same["improves_exact"] and same["f"] == 2e-4 and same["x"] == x
     assert same["lens"] == lens and same["round"] == 3
+
+
+def test_r1_fresh_run_ignores_and_resume_checks_the_stored_record(tmp_path, monkeypatch):
+    # a fresh run must not reuse committed R1 rows; resume refuses a record made with another budget
+    import json
+
+    rec = {"budget": {"DE_P_maxiter": 1, "MAX_ROUNDS": 1}, "rows": [], "saved_rescored": []}
+    (tmp_path / "s1g_r1.json").write_text(json.dumps(rec))
+    monkeypatch.setattr(g, "OUT", tmp_path)
+    with pytest.raises(SystemExit, match="refused to resume"):
+        g.main_r1("run-x", resume=True)
+
+    class Fresh(Exception):
+        pass
+
+    def saved_best():
+        raise Fresh
+
+    monkeypatch.setattr(g.j, "saved_best", saved_best)
+    with pytest.raises(Fresh):  # the fresh path builds a new record instead of reading the file
+        g.main_r1("run-x")
 
 
 def test_r1_resume_keeps_finished_rows():

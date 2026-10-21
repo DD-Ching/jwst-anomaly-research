@@ -68,8 +68,35 @@ def hapcut_with_retry(c: SkyCoord, size: int, path: Path, tries: int = 3):
 NOT_ATTEMPTED = "not attempted"
 
 
-def write_status(sf: Path, status: dict) -> None:
-    sf.write_text(json.dumps(status, indent=2) + "\n")
+def set_status(sf: Path, status: dict, key: str, value: dict) -> None:
+    """Record one key in ``status`` and in the status file. The file is re-read and only ``key``
+    is replaced, then written atomically, so a stage never erases another stage's entries."""
+    status[key] = value
+    disk = json.loads(sf.read_text()) if sf.exists() else {}
+    disk[key] = value
+    tmp = sf.with_suffix(".tmp")
+    tmp.write_text(json.dumps(disk, indent=2) + "\n")
+    tmp.replace(sf)
+
+
+def download_set(sf: Path, status: dict, key: str, name: str, c, size: int, d: Path, log: Path):
+    """One cutout set with its status record (shared by ``download`` and ``psf``): a partial or
+    failed earlier attempt is removed and redone; "in progress" is recorded first, so an
+    interruption never leaves "ok"; the final record overwrites any earlier one."""
+    import shutil
+
+    if d.exists():
+        shutil.rmtree(d)
+    d.mkdir(parents=True, exist_ok=True)
+    set_status(sf, status, key, {"name": name, "status": "in progress"})
+    t, st, msg = hapcut_with_retry(c, size, d)
+    for f in t["Local Path"] if t is not None else []:
+        log_download(log, f"hapcut ra={c.ra.deg:.6f} dec={c.dec.deg:.6f} size={size}", f)
+    set_status(sf, status, key, {
+        "name": name, "status": st, "n_files": len(t) if t is not None else 0, "message": msg,
+        "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    })  # fmt: skip
+    return t, st, msg
 
 
 def cutout_complete(status: dict, sid: str, d: Path) -> bool:
@@ -87,7 +114,6 @@ def needs_download(status: dict, key: str, d: Path, force: bool = False) -> bool
 
 
 def cmd_download(args) -> None:
-    import shutil
 
     p = ch.Params()
     sel = Table.read(RES / "selection.ecsv")
@@ -99,23 +125,8 @@ def cmd_download(args) -> None:
         d = Path(args.cut) / sid
         if not needs_download(status, sid, d, args.force):
             continue  # complete, or a recorded no-data answer (final unless --force)
-        if d.exists():
-            shutil.rmtree(d)  # partial or failed earlier attempt: redo from scratch
-        d.mkdir(parents=True, exist_ok=True)
-        status[sid] = {"name": str(r["name"]), "status": "in progress"}
-        write_status(sf, status)  # an interruption leaves "in progress", never "ok"
         c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
-        t, st, msg = hapcut_with_retry(c, p.size_px, d)
-        for f in t["Local Path"] if t is not None else []:
-            log_download(log, f"hapcut ra={c.ra.deg:.6f} dec={c.dec.deg:.6f} size={p.size_px}", f)
-        status[sid] = {  # overwrites any earlier record, including an earlier failure
-            "name": str(r["name"]),
-            "status": st,
-            "n_files": len(t) if t is not None else 0,
-            "message": msg,
-            "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        }
-        write_status(sf, status)  # after every system
+        t, st, msg = download_set(sf, status, sid, str(r["name"]), c, p.size_px, d, log)
         print(r["name"], st, len(t) if t is not None else 0, "files", flush=True)
     bad = [v["name"] for v in status.values() if v["status"] == FAILED]
     if bad:  # fail loudly: a service error is not "no data"
@@ -380,7 +391,6 @@ def gaia_with_retry(c: SkyCoord, radius_deg: float, tries: int = 3):
 
 def psf_one(sid, r, m, d: Path, log: Path, p: ch.Params, epp) -> tuple[list, bool]:
     """One control: wide cutout, Gaia-star ePSF, simulated stamps. Returns (rows, has_epsf)."""
-    import shutil
 
     import w12_niq_epsf as ep
 
@@ -388,18 +398,7 @@ def psf_one(sid, r, m, d: Path, log: Path, p: ch.Params, epp) -> tuple[list, boo
     sf, key = RES / DOWNLOAD_STATUS, f"wide_{sid}"
     status = json.loads(sf.read_text()) if sf.exists() else {}
     if needs_download(status, key, d):
-        if d.exists():
-            shutil.rmtree(d)  # partial or failed earlier attempt: redo from scratch
-        d.mkdir(parents=True, exist_ok=True)
-        status[key] = {"name": str(r["name"]), "status": "in progress"}
-        write_status(sf, status)
-        t, st, msg = hapcut_with_retry(c, WIDE_PX, d)
-        for f in t["Local Path"] if t is not None else []:
-            log_download(log, f"hapcut ra={c.ra.deg:.6f} dec={c.dec.deg:.6f} size={WIDE_PX}", f)
-        status[key] = {"name": str(r["name"]), "status": st, "message": msg,
-                       "n_files": len(t) if t is not None else 0,
-                       "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}  # fmt: skip
-        write_status(sf, status)
+        _, st, msg = download_set(sf, status, key, str(r["name"]), c, WIDE_PX, d, log)
         if st == FAILED:
             raise RuntimeError(f"{r['name']}: wide hapcut download failed: {msg}")
     cu = load_cutout(d, c, p) if cutout_complete(status, key, d) else None

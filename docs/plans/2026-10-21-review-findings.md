@@ -61,9 +61,29 @@ Fixes in 7dada57; run-record checks and small recomputations from stored inputs 
 Caveat: the shell launch lines and the empty state-directory listings come from the session transcript; the state
 files and logs are in scratch, and the values used above are copied into `s1g_review_checks.json`.
 
+## Round 4: bounded verification of the round-3 fixes (coordinator)
+Scope: only the diffs of 7dada57, 4912f2b, c3b1373 and ed78c98. Result: 17 of 18 round-3 findings fixed as listed;
+the refinement-state fix was partial, and the fixes introduced the regressions below. All are on paths no committed run
+used (no fit, reduction or measurement was re-run after round 3), so none can change a committed number. Fixed by the
+coordinator in one commit (code and tests only):
+
+| Finding | Fix | Test | Effect on committed numbers |
+|---|---|---|---|
+| A: `refine_state` compares with the exact-lens start value, while `refine` may compare with the DE grid-lens value in round 0, so "accepted" can disagree with `refine` | the state is now named and documented as the best exact-lens point seen (`improves_exact`), which is what a partial row should re-score; `refine` unchanged | renamed test | None: states are read only for fits stopped at the deadline (none) |
+| A: thread limits used `setdefault`, so an inherited value > 1 was kept | always set to 1 before numpy loads | — | None: every committed launch exported 1 (above) |
+| A: a fresh `run` resumed from the committed `s1g_r1.json` | only the `r1` command resumes, and only if the stored budget equals the current one | fresh path ignores the file; resume refuses a budget mismatch | None: R1 ran once, before this code existed |
+| A: resumed record kept the first run's budget | covered by the budget-equality check | same | None |
+| A: budget recorded in two steps | one dict literal | — | None |
+| C: `psf_one` deletes a complete wide cutout that has no `wide_*` record | not changed: `psf_one` deletes every wide cutout after use (cloud-disk rule), so a later run downloads it in any case | — | None |
+| C: whole-file status writes can drop another stage's key | `set_status` re-reads the file, replaces one key and writes atomically | key-merge test | None (stages ran sequentially) |
+| C: download-with-status sequence duplicated in `download` and `psf` | one shared `download_set` | existing download / partial-dir tests | None |
+| C: `run_system` re-reads the status file per system | not changed (a cheap read; stages run sequentially) | — | None |
+
+No further review round was opened (owner instruction: verify the fixes; do not widen the review).
+
 ## Review process
 - Round 1: B and C first versions (10 findings). Round 2: their fix commits (10). Round 3: the final PR diff (10 in
-  line A) and the B / C fix commits (10). Round 4: a bounded verification of the round-3 fixes only (below).
+  line A) and the B / C fix commits (10). Round 4: a bounded verification of the round-3 fixes only (above).
 - The coordinator extended B's and C's code-fix window from 03:30 to 04:15 UTC (code only: no re-runs, no downloads).
   This changes the coordinator's allocation, not the owner's 6 h budget. Line A's computation stop (05:15) was not
   used past 03:03.

@@ -473,3 +473,18 @@ def test_pick_reuse_refusal_and_missing_column():
     assert rows is None and mism
     nocol = Table(rows=[{k: v for k, v in dict(cur, system_id="S").items() if k != "zp_ab"}])
     assert not run.reuse_ok(nocol[0], cur)  # missing input column: mismatch, recompute
+
+
+def test_set_status_replaces_one_key_and_keeps_the_others(tmp_path):
+    # round 4: a stage's write must not erase entries another stage wrote in the meantime
+    import json
+
+    import w2_hst_blend_run as run
+
+    sf = tmp_path / run.DOWNLOAD_STATUS
+    mine = {"A": {"status": "ok"}}  # this stage's snapshot, taken before B was written
+    sf.write_text(json.dumps({"A": {"status": "ok"}, "B": {"status": run.NO_HAP}}))
+    run.set_status(sf, mine, "wide_A", {"status": "ok"})
+    disk = json.loads(sf.read_text())
+    assert disk == {"A": {"status": "ok"}, "B": {"status": run.NO_HAP}, "wide_A": {"status": "ok"}}
+    assert mine["wide_A"] == {"status": "ok"} and not (tmp_path / "download_status.tmp").exists()

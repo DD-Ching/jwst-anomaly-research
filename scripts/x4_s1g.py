@@ -23,10 +23,10 @@ from __future__ import annotations
 
 import os
 
-# Thread limits must be set before numpy / scipy load their BLAS and FFT backends (one fit per
-# process). setdefault keeps an explicit shell setting.
+# Thread limits must be set before numpy / scipy load their BLAS and FFT backends. The frozen plan
+# is one single-threaded fit per process, so an inherited larger value is overridden.
 for _k in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
-    os.environ.setdefault(_k, "1")
+    os.environ[_k] = "1"
 
 import importlib.util  # noqa: E402
 import json  # noqa: E402
@@ -311,15 +311,19 @@ def _run_id() -> str:
 
 
 def refine_state(p: dict, x, f_in: float, lens, rnd: int) -> dict:
-    """Refinement state after one intrinsic restart: refine accepts the restart iff it lowers
-    1 - FF below the value it started from (the test in `x4_s1e_joint.refine`)."""
-    accepted = float(p["f"]) < float(f_in)
+    """Refinement state after one intrinsic restart: the better of the incoming and the restarted
+    intrinsics, both scored with the exact lens (``f_in`` is the exact-lens score of ``x``).
+
+    This is the best exact-lens point seen, which is what a partial row should re-score. It can
+    differ from `x4_s1e_joint.refine`'s own acceptance, which in round 0 may still compare against
+    the DE's grid-lens value; refine itself is unchanged."""
+    improves = float(p["f"]) < float(f_in)
     return {
         "stage": "refine",
         "round": rnd,
-        "accepted": accepted,
-        "f": float(p["f"]) if accepted else float(f_in),
-        "x": [float(v) for v in (p["x"] if accepted else x)],
+        "improves_exact": improves,
+        "f": float(p["f"]) if improves else float(f_in),
+        "x": [float(v) for v in (p["x"] if improves else x)],
         "lens": lens,
     }
 
@@ -434,8 +438,12 @@ def _job(args):
     }
     info["refine_n_rounds"] = len(info.get("refine_rounds", []))
     r.update({"kind": kind, "status": "finished", "wall_s": round(time.time() - t0, 1)})
-    r.update({"run_id": run_id, "budget": {"DE_P_maxiter": j.DE_P["maxiter"]}})
-    r["budget"]["MAX_ROUNDS"] = j.MAX_ROUNDS
+    r.update(
+        {
+            "run_id": run_id,
+            "budget": {"DE_P_maxiter": j.DE_P["maxiter"], "MAX_ROUNDS": j.MAX_ROUNDS},
+        }
+    )
     return r
 
 
@@ -550,10 +558,16 @@ def _x0_saved_best_p(saved):
     return best, np.asarray(x0)
 
 
-def main_r1(run_id: str) -> None:
+def main_r1(run_id: str, resume: bool = False) -> None:
+    """R1 P fits. A fresh run (``run``) always starts a new record. ``resume`` (the ``r1``
+    command) keeps the finished rows of the existing record and runs only the missing seeds, and
+    only if that record was made with the current budget."""
     path = OUT / "s1g_r1.json"
-    if path.exists():  # resume: keep finished rows; run only the missing or unfinished seeds
+    budget = {"DE_P_maxiter": DE_P_MAXITER, "MAX_ROUNDS": MAX_ROUNDS}
+    if resume and path.exists():
         rec = json.loads(path.read_text())
+        if rec.get("budget") != budget:
+            raise SystemExit(f"refused to resume: record budget {rec.get('budget')} != {budget}")
         rec["rows"] = [r for r in rec["rows"] if r.get("status") == "finished"]
         rec.setdefault("resumed", []).append({"utc": _now(), "run_id": run_id})
         saved = rec["saved_rescored"]
@@ -563,7 +577,7 @@ def main_r1(run_id: str) -> None:
         best, x0 = _x0_saved_best_p(saved)
         rec = {
             "label": "simulated R1 family-D target; derived FF; S1g R1 P fits (S1e case procedure)",
-            "budget": {"DE_P_maxiter": DE_P_MAXITER, "MAX_ROUNDS": MAX_ROUNDS},
+            "budget": budget,
             "start_utc": _now(),
             "run_id": run_id,
             "x0_saved_best_P": {"start": best["start"], "FF_pad64": best["FF_pad64"]},
@@ -896,7 +910,7 @@ def main(argv=None) -> int:
             return 1
         apply_budget()
         m.grid()
-        main_r1(_run_id())
+        main_r1(_run_id(), resume=True)
     elif what == "summary":
         print(json.dumps(summary(), indent=1, default=float))
     else:
