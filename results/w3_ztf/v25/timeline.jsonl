@@ -55,3 +55,7 @@
 {"area": 4988, "event": "cache_deleted", "utc": "2026-10-21T05:34:46Z"}
 {"event": "stop_new_areas", "reason": "time", "remaining": [2347, 4990], "utc": "2026-10-21T05:34:46Z"}
 {"event": "queue_done", "utc": "2026-10-21T05:34:46Z"}
+{"area": 4990, "event": "area_start", "position": 6, "projected_mb": 1810.1, "utc": "2026-10-21T06:17:30Z"}
+{"area": 4990, "stage": "fetch", "event": "start", "utc": "2026-10-21T06:17:30Z"}
+{"area": 2347, "event": "area_start", "position": 5, "projected_mb": 1243.8, "utc": "2026-10-21T06:17:30Z"}
+{"area": 2347, "stage": "fetch", "event": "start", "utc": "2026-10-21T06:17:30Z"}
