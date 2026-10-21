@@ -728,6 +728,15 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - CLASH Zitrin v2 maps (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762, L30; CLASH, Postman et al. 2012,
     ApJS 199, 25): https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{nfw,ltm-gauss}/v2/
     (sha256 in `lensmodel.MACS0647_CLASH_NFW`, `MACS0647_CLASH_LTM`; readme 2015-02, z_lens 0.591).
+- MACS0417 / MACS1423 multiple-image lists (`results/lens_consistency/macs0417_images/`, accessed 2026-10-21):
+  - Jauzac et al. 2019, MNRAS 483, 3082, arXiv:1811.02505, DOI 10.1093/mnras/sty3312: Table 4 from
+    https://arxiv.org/e-print/1811.02505 (`table4.tex`, sha256 `7e05be79da64fcfb62e71f081c1b18bebc249b6641e6f598930f01c6be53b4cc`).
+  - Mahler et al. 2019, ApJ 873, 96, arXiv:1810.13439, DOI 10.3847/1538-4357/ab042b (RELICS; the gold/silver set
+    Jauzac+19 reuse; `arcs_bronze.tex` in its e-print; not transcribed).
+  - KALEIDOSCOPE, MNRAS 533, 4500 (2024), arXiv:2405.04577, DOI 10.1093/mnras/stae2069: table `tab:mulimg` from
+    https://arxiv.org/e-print/2405.04577 (`strong_lensing.tex`, sha256 `86fd419c82d5d97c06c0542b1b621bf327728cd0ac5889918f5e28ab59f0c69d`).
+  - Not in VizieR (checked J/ApJ/873/96, J/MNRAS/483/3082, J/MNRAS/533/4500). CANUCS v1 has no image catalogue
+    (readme: with v2, Desprez et al. in prep.).
 - MACS1423 (`arcs`, accessed 2026-10-16; `results/arcs/macs1423-canucs/`):
   - JWST 1208 F200W pipeline catalogue `jw01208-o010_t005_nircam_clear-f200w_cat.ecsv` (MAST
     `mast:JWST/product/...`), 4,987,129 B, sha256 `1a968574d0f206c72a74554c1b3cbbf71e9a5219a70a553a1458e80dd4d5bfa3`;

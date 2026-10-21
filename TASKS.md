@@ -301,7 +301,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        #11, #13: E2 not validatable, no public spectra), 0 anomalies; deciding data: spectra of both members (a
        redshift difference would argue against one lensed source; equal redshifts alone would not confirm lensing). Not
        pursued now: a resource decision (owner, 2026-10-16), not an exclusion. Left:
-       MACS0417, MACS1423 cluster pointings (need published image lists);
+       MACS0417, MACS1423 cluster pointings (published lists now transcribed: Jauzac+19, KALEIDOSCOPE; see the
+       image-position item below);
        MACS1149 image list when CANUCS v2 is out;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
      - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
@@ -317,6 +318,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        p 0.69; `results/radial_macs0717/RESULT.md`; photo-z cover ~17 % of rows);
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
+     - ~~MACS0417 / MACS1423 published images vs CANUCS v1 maps~~ done 2026-10-21
+       (`results/lens_consistency/macs0417_images/RESULT.md`): gate K fails for every model (CANUCS rms 1.12″ / 1.59″, one
+       central image each: MACS0417 1b.4, MACS1423 1.5; RELICS v1 9.3″, maps load correctly); post hoc without them
+       0.38″ / 0.37″, every other image reproduced, no flag. Next, optional: forced photometry at the CANUCS
+       `extra_predicted` positions; re-run when CANUCS v2 (image catalogues) is public;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows

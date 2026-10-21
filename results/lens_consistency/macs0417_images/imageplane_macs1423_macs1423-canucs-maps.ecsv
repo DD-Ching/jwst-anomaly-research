@@ -1,0 +1,45 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: z_used, datatype: float64}
+# - {name: dtheta_arcsec, datatype: float64}
+# - {name: magnification, datatype: float64}
+# - {name: n_predicted, datatype: int64}
+# - {name: shared_match, datatype: bool}
+# - {name: z_fit, datatype: float64}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'KALEIDOSCOPE, arXiv:2405.04577 (MNRAS 533, 4500), Table tab:mulimg, from the arXiv LaTeX source strong_lensing.tex (sha256
+#     86fd419c82d5d97c06c0542b1b621bf327728cd0ac5889918f5e28ab59f0c69d), parsed 2026-10-21; system 4 z is model-optimised (z_spec False)
+#     traced with macs1423-canucs-maps, image-plane solve'}
+# - {model_sha256: d01e5a06b8e9f8faf45a1f857f6de85e4e8e0bccf1e07c9be5b1d8386b07ae6d}
+# - {z_lens: 0.545}
+# - reference_radec: [215.949485, 24.078455000000005, 215.949485, 24.078455000000005]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.10002000400080012
+#     shape: [5000, 5000, 5000, 5000]
+# - {model: macs1423-canucs-maps}
+# schema: astropy-2.0
+image_id system z_used dtheta_arcsec magnification n_predicted shared_match z_fit
+1.1 1 2.84 1.0135312031339538 3.603173594974267 5 False ""
+1.2 1 2.84 1.4889552411921325 -5.5455044179015225 5 False ""
+1.3 1 2.84 4.1556016603039065 17.32989609624504 5 False ""
+1.4 1 2.84 2.041536103086478 -8.816133973124185 5 False ""
+1.5 1 2.84 2.1518519267163305 0.3939217744275708 5 False ""
+2.1 2 2.84 0.4723169770257352 3.4969195925978886 5 False ""
+2.2 2 2.84 0.2269050202839575 -5.5494901071964 5 False ""
+2.3 2 2.84 0.2881216041758704 15.045076093153273 5 False ""
+2.4 2 2.84 0.4432606233893812 -6.634199965926628 5 False ""
+3.1 3 1.779 0.5013967767958866 10.092896546062182 3 False ""
+3.2 3 1.779 0.47925842457746776 -19.652756393090623 3 False ""
+3.3 3 1.779 0.3093981234187017 11.772676504406641 3 False ""
+4.1 4 1.796702533895514 0.6416714635561132 -5.209483222185065 5 False 1.796702533895514
+4.2 4 1.796702533895514 1.0522739336914282 4.485935067090043 5 False 1.796702533895514
+4.3 4 1.796702533895514 0.7943608559117314 -6.943518802802256 5 False 1.796702533895514
+4.4 4 1.796702533895514 0.3699168954887144 7.363250412687865 5 False 1.796702533895514
+4.5 4 1.796702533895514 0.22367252293339346 1.2560120894395808 5 False 1.796702533895514

@@ -75,6 +75,28 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `data/manifests/s1_chime_dynspec.ecsv`. 0.90 GB streamed and deleted.
 - **Handoff:** S1-CHIME parked. Reopen only with real same-signal pairs to calibrate the χ² systematic, or an
   owner-approved scattering re-convolution in the twin model.
+## 2026-10-21: MACS0417 and MACS1423 published images vs the pinned CANUCS v1 maps: gate fails on one central image each
+- **Why:** TASKS "MACS0417, MACS1423 cluster pointings (need published image lists)"; two clusters without an
+  image-position test. CANUCS v1 releases no image catalogue (readme: with v2), so the lists come from Jauzac+19
+  (MACS0417, 56 images, MUSE spectroscopy for systems 1–3) and KALEIDOSCOPE (MACS1423, 17 images), transcribed from
+  the arXiv LaTeX. Plan frozen first (`results/lens_consistency/macs0417_images/PLAN.md`; a loading check on the
+  MACS0417 spectroscopic images preceded it and is stated there).
+- **Result (`RESULT.md`, `summary.json`):** frozen outcome "tool not validated": gate K (spectroscopic images, rms
+  ≤ 1.0″ and ≥ 0.8 matched within 3″) fails for CANUCS on both (rms 1.12″ / 1.59″) and for RELICS v1 (9.29″). No
+  reading, no flag. Post hoc: each CANUCS failure is one catalogued radial / central image by the BCG: MACS0417 1b.4
+  (CANUCS predicts no central image for knot 1b; Jauzac+19 use it to fix the DM-to-BCG offset) and MACS1423 1.5
+  (dropping it gives 0.37″; CANUCS's central image, μ 0.43, lies 2.56″ away). Without them 0.38″ / 0.37″; all
+  non-spectroscopic images reproduced at fitted z. Central-image offsets are the usual core sensitivity; not candidates.
+- RELICS v1 κ and |μ(z = 2)| from its deflection maps match the published maps (median rel. diff. ≤ 3 × 10⁻⁵): its
+  K failure is the model, not loading.
+- **Access:** archive.stsci.edu still sends an incomplete chain; maps fetched with curl and the AIA intermediate into
+  the cache, sha256 verified (CANUCS 4 × ~87 MB, streamed into the session cache only; RELICS 4 × 4 MB). arXiv API
+  returned 429 once; the e-print pages worked.
+- **New:** `scripts/m0417_images.py`, `tests/test_m0417_images.py`.
+- **Handoff:** optional next on this line: forced photometry at CANUCS `extra_predicted` positions (MACS0417 families
+  8, 9, 10, 11, 17; MACS1423 system 2's central image); re-run with CANUCS v2 catalogues. Other lines unchanged: #409
+  and the other needs-human PRs wait on the owner, #374 on a green weekly run.
+
 ## 2026-10-21: MACS0717 D-041 cross-model re-reading with the pinned Keeton / Sharon: gate fails at CATS-fitted z
 - **Why:** #420 handoff (replace the scratch Step 6 cross-model readings in `docs/fields/macs0717.md`). Plan frozen first
   (`results/lens_consistency/macs0717_crossmodel/PLAN.md`; per-model known-case gate, frozen Step 6 record).

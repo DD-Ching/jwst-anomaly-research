@@ -1,0 +1,278 @@
+{
+ "macs0417": {
+  "images": 56,
+  "spectroscopic": 25,
+  "macs0417-canucs-maps": {
+   "model_sha256": "5aaf465b55747226ff4fcf36345c60e7fa2a064267eeeb6ad57f9da4d6443da4",
+   "gate_K": {
+    "n_images": 25,
+    "rms_arcsec": 1.1206254192273635,
+    "matched_fraction": 0.96,
+    "passes": false
+   },
+   "z_fit": {
+    "4": 2.0568675346493577,
+    "5": 2.0568675346493577,
+    "6": 2.0568675346493577,
+    "8": 2.2573866452301394,
+    "9": 5.462637953121137,
+    "10": 2.1547958844690833,
+    "11": 2.4774538856884063,
+    "12": 2.4774538856884063,
+    "13": 2.4774538856884063,
+    "15": 1.9633897046062538,
+    "16": 3.5942153250051097,
+    "17": 2.1547958844690833
+   },
+   "extra_predicted": {
+    "8": [
+     2,
+     3
+    ],
+    "9": [
+     2,
+     3
+    ],
+    "10": [
+     2,
+     5
+    ],
+    "11": [
+     2,
+     3
+    ],
+    "17": [
+     2,
+     3
+    ]
+   },
+   "fewer_predicted": {
+    "1b": [
+     4,
+     3
+    ]
+   },
+   "post_hoc": {
+    "dropped": [
+     "1b.4"
+    ],
+    "leave_one_out_rms": {},
+    "held_out_offset": {},
+    "gate_K_without_dropped": {
+     "n_images": 24,
+     "rms_arcsec": 0.38153200416688304,
+     "matched_fraction": 1.0,
+     "passes": true
+    },
+    "families_refit": {
+     "1b.1": 0.30630045595390437,
+     "1b.2": 0.628080669888501,
+     "1b.3": 0.14172749572553334
+    }
+   }
+  },
+  "macs0417-relics-lenstool": {
+   "model_sha256": "72b2b8913674af0e7111d5984face2921b7b2508bc5de1ff65d84464da0fea56",
+   "gate_K": {
+    "n_images": 25,
+    "rms_arcsec": 9.294378683098106,
+    "matched_fraction": 0.12,
+    "passes": false
+   },
+   "z_fit": {
+    "4": 1.0725287117149422,
+    "5": 0.9772581457266745,
+    "6": 1.0237858272359328,
+    "8": 1.0237858272359328,
+    "9": 1.3533433623068927,
+    "10": 1.0237858272359328,
+    "11": 1.2331285963102963,
+    "12": 1.1235922659318287,
+    "13": 1.1235922659318287,
+    "15": 0.9772581457266745,
+    "16": 1.0725287117149422,
+    "17": 0.9772581457266745
+   },
+   "extra_predicted": {
+    "1a": [
+     3,
+     4
+    ],
+    "1c": [
+     3,
+     4
+    ],
+    "1m": [
+     3,
+     4
+    ],
+    "2a": [
+     3,
+     4
+    ],
+    "2b": [
+     3,
+     4
+    ],
+    "2c": [
+     3,
+     4
+    ],
+    "8": [
+     2,
+     3
+    ],
+    "9": [
+     2,
+     3
+    ],
+    "10": [
+     2,
+     3
+    ],
+    "11": [
+     2,
+     3
+    ],
+    "16": [
+     3,
+     5
+    ],
+    "17": [
+     2,
+     3
+    ]
+   },
+   "fewer_predicted": {},
+   "post_hoc": {
+    "dropped": [
+     "1a.1",
+     "1a.2",
+     "1a.3",
+     "1b.1",
+     "1b.2",
+     "1b.3",
+     "1b.4",
+     "1c.1",
+     "1c.2",
+     "1c.3",
+     "1m.1",
+     "1m.2",
+     "1m.3",
+     "2a.1",
+     "2a.2",
+     "2a.3",
+     "2b.1",
+     "2b.3",
+     "2c.1",
+     "2c.3",
+     "3.1",
+     "3.3"
+    ],
+    "leave_one_out_rms": {},
+    "held_out_offset": {},
+    "gate_K_without_dropped": {
+     "n_images": 3,
+     "rms_arcsec": NaN,
+     "matched_fraction": 0.0,
+     "passes": false
+    },
+    "families_refit": {
+     "2b.2": NaN,
+     "2c.2": NaN,
+     "3.2": NaN
+    },
+    "map_check": {
+     "kappa": {
+      "map": "2ddbde81eb11_hlsp_relics_model_model_macs0417m11_lenstool_v1_kappa.fits",
+      "quantity": "kappa",
+      "z_s": null,
+      "n_points": 718,
+      "median_rel_diff": 2.623551961341971e-05,
+      "p95_rel_diff": 0.0012953450700402078,
+      "median_ratio": 1.0000062424516285,
+      "parity_agree": null
+     },
+     "mu_z2": {
+      "map": "3bd002c1dfad_hlsp_relics_model_model_macs0417m11_lenstool_v1_z02-magnif.fits",
+      "quantity": "mu",
+      "z_s": 2.0,
+      "n_points": 653,
+      "median_rel_diff": 1.4295201526326777e-05,
+      "p95_rel_diff": 0.001567641384205018,
+      "median_ratio": 1.0000031892139165,
+      "parity_agree": null
+     }
+    }
+   }
+  },
+  "passing_models": [],
+  "flags": []
+ },
+ "macs1423": {
+  "images": 17,
+  "spectroscopic": 12,
+  "macs1423-canucs-maps": {
+   "model_sha256": "d01e5a06b8e9f8faf45a1f857f6de85e4e8e0bccf1e07c9be5b1d8386b07ae6d",
+   "gate_K": {
+    "n_images": 12,
+    "rms_arcsec": 1.5927563258384445,
+    "matched_fraction": 0.9166666666666666,
+    "passes": false
+   },
+   "z_fit": {
+    "4": 1.796702533895514
+   },
+   "extra_predicted": {
+    "2": [
+     4,
+     5
+    ]
+   },
+   "fewer_predicted": {},
+   "post_hoc": {
+    "dropped": [
+     "1.3"
+    ],
+    "leave_one_out_rms": {
+     "1": {
+      "1.1": 2.9746091921049786,
+      "1.2": 3.0801584221575773,
+      "1.3": 1.921881329544389,
+      "1.4": 3.1022755073698676,
+      "1.5": 0.37156200037207343
+     }
+    },
+    "held_out_offset": {
+     "1.5": {
+      "n_predicted": 5,
+      "nearest_predicted_arcsec": 2.556593636351348,
+      "nearest_predicted_magnification": 0.42776428478861384
+     }
+    },
+    "gate_K_without_dropped": {
+     "n_images": 11,
+     "rms_arcsec": 1.2024743126172361,
+     "matched_fraction": 1.0,
+     "passes": false
+    },
+    "families_refit": {
+     "1.1": 1.302865293245914,
+     "1.2": 1.800742491658026,
+     "1.4": 2.3593149662809925,
+     "1.5": 2.0659169333930723
+    }
+   }
+  },
+  "passing_models": [],
+  "flags": []
+ },
+ "rules": {
+  "K_MAX_RMS_ARCSEC": 1.0,
+  "K_MIN_MATCHED": 0.8,
+  "MATCH_ARCSEC": 3.0,
+  "Z_STEPS": 60,
+  "Z_MIN_OFFSET": 0.2,
+  "Z_MAX": 10.0
+ }
+}
