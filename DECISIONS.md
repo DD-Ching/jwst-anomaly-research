@@ -4173,7 +4173,8 @@ column (the error grows faster than λ_L). Revisit if: DES Y3 Gold or a spec-z /
 
 **Addendum (2026-10-21): S1 on CHIME/FRB Catalog 2, 30-event validation; the criteria do not carry over as frozen.**
 - **Decision.** The D-071 chain (eligibility ≥ 2 pulses at 5σ, pulse-shuffled ρ\*, scaled-shifted-copy χ² with a 10 %
-  systematic) is not used on CHIME dynamic spectra, and no CHIME search or limit is run.
+  systematic) is not used on CHIME dynamic spectra, and no CHIME search or limit is run. The conclusion is limited to
+  "this frozen method did not transfer to CHIME"; it says nothing about whether CHIME holds same-signal replays.
   - Adapter `scripts/s1_chime_lib.py`: four 100-MHz sub-bands averaged in S/N units, band Jy scale = median fcf·σ.
   - The issue #153 χ² fixes (union window, detected per-band gain ≥ 0) plus a sub-bin lag (best p among δ with
     detected gains; corrected after /code-review, no outcome changed).

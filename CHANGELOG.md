@@ -9,9 +9,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result (`results/s1_chime/RESULT.md`, `summary.json`):** 17 / 30 eligible; ρ\* 0.870; 0 / 133 different-source and
   0 / 3 same-repeater pairs pass. T1 fails: recovery 6.9 % at ratio 1 (G_cal), required ≥ 50 %. Tool not validated for
   CHIME; no limit. The one flag (FRB20221215H / FRB20200207A) fails χ² (p 2.6 × 10⁻⁸³): single-pulse look-alikes. Sheet
-  looked at.
+  looked at. Scope: this frozen method did not transfer to CHIME; that is not evidence that CHIME holds no same-signal
+  replays (at 6.9 % recovery it could not have found them).
 - **Post hoc (`posthoc.json`):** exact copies in Gaussian noise 70.5 %; in real host residuals 23.6 %; +1 ms scattering
-  at 600 MHz 10.0 %. Fitburst misfit χ²/dof 1.0–135. Same-source ρ not above different-source (median 0.411 vs 0.513).
+  at 600 MHz 10.0 %. Fitburst misfit χ²/dof 1.0–135. In this sample, same-source ρ is not above different-source
+  (median 0.411 vs 0.513).
 - **Failed approaches:** unweighted or 1/(fcf σ)² channel means (a few channels dominate the noise); integer-lag χ² on
   ~1-bin pulses; fitburst models as noise-free templates. FRB20200314A has no calibration group; the Dec-2018 files
   are off the Jy scale by ~10³.

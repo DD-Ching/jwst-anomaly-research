@@ -116,6 +116,8 @@ pairs.
   - The tool is **not validated** for CHIME twins that differ by propagation.
   - It cannot search the catalogue.
   - A false-pass rate cannot be quoted beyond these pairs (0 of 133 frozen, 0 of 380 post hoc).
+  - **Scope (owner, 2026-10-21):** the conclusion is that this frozen method did not transfer to CHIME. It does not
+    show that CHIME holds no same-signal replays: with recovery 6.9 %, the method could not have found them.
 
 ## Not done
 No all-catalogue pairing, no Fermi re-run, no energy study, no s ≠ 1 stretch, no scattering re-convolution in the
