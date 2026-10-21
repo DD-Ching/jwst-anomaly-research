@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: X4 S1i: dynesty nested sampling finds better unlensed fits on R1 than DE (0.9146 / 0.9151 vs 0.9135); optimum still not established
+- **Method:** dynesty 3.1.0 on the unchanged S1d score. The search distribution is ln L = −(ρ²/2)(1 − FF²) with
+  ρ = 20, a monotone transform of FF; its evidence is not used. The S1e polish follows. About 120 lines of
+  interface.
+- **Validation:** U validation passes on V7 (ε 2.7e-4) and the new V10 (ε 4.5e-4).
+- **R1:** two prior-only runs reach FF 0.914588 and 0.915149 (verified ≤ 1e-6). Both are above the old best
+  0.913511, but in a different region, and they disagree by 5.6e-4. R1 stays undetermined (`docs/state/units/X4.md`
+  § S1i).
+- **Cost:** 1.8 CPU-h per R1 run, 4–5× a DE U fit; 7.4 CPU-h in total.
+- **P (not run):** it needs a validated interpolated lens factor (the exact one costs about 1 s per call), an
+  estimated 15–24 CPU-h.
+
 ## 2026-10-21: W3 ZTF v26: both parent heads fail the fade control, H-sib skips four siblings; v22 inventory exhausted
 - **Plan** (`results/w3_ztf/v26/PLAN.md`, frozen first): head-then-siblings queue on the two untested parents left
   in `v22/inventory.json` (703: 2812 / 2813; 719: 2876–2879); 463 and 1263 excluded under H-sib.

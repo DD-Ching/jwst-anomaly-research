@@ -1,0 +1,34 @@
+{
+ "label": "derived; wall times from the committed rows; CPU-h = wall x 2 pool processes (upper bound; the parent mostly waits)",
+ "runs_wall_s": {
+  "pilot_V6": 410.0,
+  "validate_V10": 2949.0,
+  "validate_V7": 3403.7,
+  "r1_seed31": 3264.9,
+  "r1_seed32": 3269.0
+ },
+ "calls": {
+  "pilot_V6": 20411,
+  "validate_V10": 165430,
+  "validate_V7": 220409,
+  "r1_seed31": 220413,
+  "r1_seed32": 220404
+ },
+ "de_u_s1f_wall_s_single_core": [
+  1215.8,
+  1297.2,
+  1559.0
+ ],
+ "lens_exact_s_per_call_measured": 1.05,
+ "lens_exact_note": "mean of 3 calls (M_Lz, y) = (1000, 0.3), (250, 0.7), (3000, 0.1); session print, timing only",
+ "cpu_h_total": 7.39,
+ "cpu_h_per_r1_run": [
+  1.81,
+  1.82
+ ],
+ "de_cpu_h_per_u_fit": [
+  0.34,
+  0.36,
+  0.43
+ ]
+}

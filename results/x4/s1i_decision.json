@@ -1,0 +1,69 @@
+{
+ "label": "derived; S1i decision by frozen rules",
+ "validation": {
+  "V10": {
+   "stop": "dlogz",
+   "eps_final": 0.00044638505865235434,
+   "ncall": 165430
+  },
+  "V7": {
+   "stop": "maxcall",
+   "eps_final": 0.0002729764550094549,
+   "ncall": 220409
+  }
+ },
+ "validation_pass": true,
+ "ff_target": 0.9133105524586078,
+ "ff_known_u": 0.9135105524586078,
+ "r1": {
+  "31": {
+   "stop": "maxcall",
+   "FF_pad64": 0.9145877562899597,
+   "ncall": 220413,
+   "counted": true,
+   "success": true
+  },
+  "32": {
+   "stop": "maxcall",
+   "FF_pad64": 0.9151494033695111,
+   "ncall": 220404,
+   "counted": true,
+   "success": true
+  }
+ },
+ "verified": {
+  "31": {
+   "in_box": true,
+   "chi_mags": [
+    0.9898719835119139,
+    0.5609756860071605
+   ],
+   "scores": {
+    "stat_pad32": 0.9145877562899598,
+    "stat_pad64": 0.9145877562899597,
+    "stat_pad256": 0.9145877562899597,
+    "explicit_psi_ov_pad64": 0.9145877562899599,
+    "explicit_psi_ov_pad256": 0.9145877562899599
+   },
+   "spread": 2.220446049250313e-16,
+   "FF_conservative": 0.9145877562899597
+  },
+  "32": {
+   "in_box": true,
+   "chi_mags": [
+    0.9893056812835579,
+    0.4723840542326998
+   ],
+   "scores": {
+    "stat_pad32": 0.9151491310027972,
+    "stat_pad64": 0.9151494033695111,
+    "stat_pad256": 0.9151501147137773,
+    "explicit_psi_ov_pad64": 0.9151494033695112,
+    "explicit_psi_ov_pad256": 0.915149912496788
+   },
+   "spread": 9.837109801180688e-07,
+   "FF_conservative": 0.9151491310027972
+  }
+ },
+ "outcome": "both runs recovered the known better U solution (not a global-optimum proof)"
+}
