@@ -1,11 +1,11 @@
-"""X4 handoff: a self-contained reproduction pack of the U fitting-factor problem (cases C1, C2 of S1k).
+"""X4 handoff: a self-contained reproduction pack of the U fitting-factor problem (S1k C1, C2).
 
 Unit file: docs/state/units/X4.md (handoff round). `simulated` / `derived`; no data. Needs lalsuite
-(the X4 environment). Writes only to results/x4/handoff/; reads the stored S1k files and never runs a
-search. Truths are used only to check the score and to compute the recovery error.
+(the X4 environment). Writes only to results/x4/handoff/; reads the stored S1k files and never runs
+a search. Truths are used only to check the score and to compute the recovery error.
 
   python scripts/x4_handoff.py pack        # -> results/x4/handoff/case.json, targets.npz
-  python scripts/x4_handoff.py pycbc       # -> results/x4/handoff/pycbc_check.json (PyCBC environment)
+  python scripts/x4_handoff.py pycbc       # -> results/x4/handoff/pycbc_check.json (PyCBC env)
 """
 
 from __future__ import annotations
@@ -73,13 +73,18 @@ def pack():
         "label": "derived; X4 U fitting-factor problem, reproduction pack (simulated targets)",
         "quantity": (
             "FF(x) = max over time shift (inverse FFT, pad 64 for final scores, 32 in searches), "
-            "polarisation angle psi and amplitude > 0 of Re<t, a h+ + c hx> / (||t|| ||a h+ + c hx||), "
-            "noise-weighted <a, b> = sum_f a conj(b) / S_n(f) over 20-1024 Hz; no free overall phase "
+            "polarisation angle psi and amplitude > 0 of "
+            "Re<t, a h+ + c hx> / (||t|| ||a h+ + c hx||), "
+            "noise-weighted <a, b> = sum_f a conj(b) / S_n(f) over 20-1024 Hz; "
+            "no free overall phase "
             "(the reference phase is a parameter). Analytic: max_{a,c} = sqrt(v^T G^-1 v) / ||t||, "
             "v = (Re<t,h+>, Re<t,hx>), G = Gram matrix of (h+, hx). Objective = 1 - FF."
         ),
         "code": "scripts/x4_s1d_de.py: stat(), objective(), hpc(), to_cart(); BOUNDS",
-        "waveform": "IMRPhenomXPHM via lalsimulation.SimInspiralChooseFDWaveform, distance 100 Mpc, f_ref = f_low = 20 Hz",
+        "waveform": (
+            "IMRPhenomXPHM via lalsimulation.SimInspiralChooseFDWaveform, "
+            "distance 100 Mpc, f_ref = f_low = 20 Hz"
+        ),
         "parameters": {
             "names": [
                 "ln Mc",
@@ -95,12 +100,17 @@ def pack():
             ],
             "bounds": [list(map(float, bd)) for bd in e.BOUNDS],
             "periodic": [4, 7, 9],
-            "spin_representation": "Cartesian chi = |chi| (sin t cos az, sin t sin az, cos t) at f_ref, frame of L",
+            "spin_representation": (
+                "Cartesian chi = |chi| (sin t cos az, sin t sin az, cos t) at f_ref, frame of L"
+            ),
         },
         "noise": "lalsimulation.SimNoisePSDaLIGODesignSensitivityP1200087, single detector",
         "band_hz": [b.F_LOW, b.F_HIGH],
         "df_hz": b.DF,
-        "accuracy_rule": "injection recovery: eps = 1 - FF(found) <= 5e-4 and <= 0.1 (1 - FF_case), FF_case 0.915149",
+        "accuracy_rule": (
+            "injection recovery: eps = 1 - FF(found) <= 5e-4 and <= 0.1 (1 - FF_case), "
+            "FF_case 0.915149"
+        ),
         "versions": {
             "python": platform.python_version(),
             "numpy": np.__version__,
@@ -109,10 +119,13 @@ def pack():
             "lalsimulation": ls.__version__,
         },
         "reproduce": [
-            "uv venv lalenv --python 3.12; uv pip install --python lalenv/bin/python lalsuite==7.26.16 numpy==2.5.4 scipy==1.18.1 mpmath dynesty",
+            "uv venv lalenv --python 3.12; uv pip install --python lalenv/bin/python "
+            "lalsuite==7.26.16 numpy==2.5.4 scipy==1.18.1 mpmath dynesty",
             "PYTHONPATH=src lalenv/bin/python scripts/x4_handoff.py pack",
-            "the failing search: set DEADLINE_UTC in scripts/x4_s1k.py to a future time, copy results/x4/s1k_validate.json, "
-            "then PYTHONPATH=src lalenv/bin/python scripts/x4_s1k.py one_v C1 (about 35 min on 2 processes)",
+            "the failing search: set DEADLINE_UTC in scripts/x4_s1k.py to a future time, "
+            "copy results/x4/s1k_validate.json, then "
+            "PYTHONPATH=src lalenv/bin/python scripts/x4_s1k.py one_v C1 "
+            "(about 35 min on 2 processes)",
         ],
         "cases": {},
     }
