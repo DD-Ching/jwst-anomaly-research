@@ -1,0 +1,12 @@
+{
+  "systems_with_epsf": [
+    "L00058"
+  ],
+  "wide_cutouts_tried": 5,
+  "epsf_no_lens_max_snr": 12.993760937749348,
+  "psf_mismatch_not_excluded": true,
+  "m_lim_L00058_epsf_reff0.3": 24.0,
+  "m_lim_L00058_epsf_reff0.6": 24.0,
+  "m_lim_L00058_moffat_reff0.3": 24.0,
+  "m_lim_L00058_moffat_reff0.6": 24.0
+}

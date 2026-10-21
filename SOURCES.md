@@ -1043,6 +1043,14 @@ jwst 3.0.0 / photutils 3.0.0 (file headers).
   332,581 bricks / 23.5 MB, recorded in the run's summary.json; not pinned, the service output may change): footprint
   (nexp_r, nexp_z) and per-brick 5σ galaxy depth for D-056. He et al. 2025, lensed-quasar confirmations
   (arXiv:2509.03858; HSC J2212−0103 lens-light fit).
+- D-060 addendum (line C, accessed 2026-10-21):
+  - MAST CAOM TAP, `https://mast.stsci.edu/vo-tap/api/v0.1/caom/sync`, `dbo.ObsPointing` (HST calib_level 3, F814W and
+    F160W): coverage of the D-056 class, `results/w2_hst_blend/hst_coverage.ecsv`.
+  - MAST HAPcut (`astroquery.mast.Hapcut`, `https://mast.stsci.edu/hapcut/api/v0.1/astrocut`): HAP-MVM F814W cutouts
+    (programmes 9744, 14254, 15320, 15652, 17199 among the selected systems).
+  - Gaia DR3 `gaiadr3.gaia_source` via astroquery.gaia: PSF stars.
+  - Gilman et al. 2020a, MNRAS 491, 6077 (DESJ0405-3308 photometric z_d ∼ 0.3), as quoted in Nierenberg et al. 2023,
+    arXiv:2309.10101 §3 (coordinator literature check, post hoc).
 
 ## OGLE-IV microlensing samples (accessed 2026-10-08; D-057)
 
@@ -1232,6 +1240,15 @@ Exploration Program."
 - Prior lensed-GRB search (method and gap): Ahlgren & Larsson 2020 (arXiv:2006.07095).
 - Fermi GBM Data Tools (GDT), https://astro-gdt.readthedocs.io/projects/astro-gdt-fermi/en/latest/ (docs 2.2.x,
   opened 2026-10-09): TTE, PHAII, RSP, trigdat, poshist, scat, tcat and catalogue finders; no bcat reader listed.
+
+## S1 burst twins: CHIME/FRB Catalog 2 dynamic spectra (accessed 2026-10-21; D-071 addendum)
+
+- CHIME/FRB Catalog 2 Stokes-I dynamic spectra, CANFAR doi:10.11570/25.0066,
+  `data/dynamic_spectra/data/<TNS>_stokesi_dynamic_spectrum.h5` (4,536 files, 56.4 GB in the listing). Listing
+  https://cadc-west-01.canfar.net/vault/nodes/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/dynamic_spectra/data?limit=10000 ;
+  files https://cadc-west-01.canfar.net/vault/files/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/dynamic_spectra/data/<file>
+  (`curl -L` to a minoc pre-signed URL). Route from issue #153 (2026-10-11); 30 files pinned in
+  `data/manifests/s1_chime_dynspec.ecsv`. Format: arXiv:2601.09399 §3.3. Read with h5py 3.16.0 (PyPI).
 
 ## E1 + Einstein Probe (accessed 2026-10-18; D-074 addendum 7)
 - GCN Circulars JSON archive, https://gcn.nasa.gov/circulars/archive.json.tar.gz (redirects to the GCN S3 bucket;
@@ -1442,8 +1459,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   `scripts/x3_bulk.py` `FILES`. No `rejected_by_photometry` column (rebuilt from `g_transit_n_obs`).
 - Reference variables: `gaiadr3.vari_classifier_result` (ECL, YSO, LPV; score > 0.5) in the M31 and Orion fields;
   SIMBAD and Gaia DR3 (VizieR I/355/gaiadr3) via CDS XMatch for vetting.
-- X4 S1 tools (2026-10-15): lalsuite 7.7.1 / lalsimulation 6.2.1 from PyPI (GPL-2.0-or-later; used in a separate
+- X4 S1 tools (2026-10-15): lal 7.7.1 / lalsimulation 6.2.1 from PyPI (GPL-2.0-or-later; used in a separate
   environment, not a project dependency); IMRPhenomXAS and IMRPhenomD; aLIGO design PSD
+  (correction 2026-10-21: "7.7.1" is the lal version; the PyPI package providing it is lalsuite 7.26.16, used again
+  for S1g);
   `SimNoisePSDaLIGODesignSensitivityP1200087` (LIGO-P1200087).
 - S0-2026-10-15b Kapitza screen (accessed 2026-10-15; read in the body, versions as listed):
   - Bukov, D'Alessio & Polkovnikov, arXiv:1407.4803v6, §5, Eqs. 92–106.

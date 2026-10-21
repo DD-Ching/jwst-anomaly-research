@@ -1,0 +1,53 @@
+{
+  "min_t814_s": 1000.0,
+  "instruments": [
+    "ACS/WFC",
+    "WFC3/UVIS"
+  ],
+  "max_targets": 10,
+  "max_controls": 10,
+  "size_px": 250,
+  "search_arcsec": 3.0,
+  "peak_sigma": 20.0,
+  "peak_frac": 0.01,
+  "peak_min_sep_arcsec": 0.15,
+  "conc_r_in_px": 2.0,
+  "conc_r_out_px": 5.0,
+  "conc_frac": 0.7,
+  "max_images": 4,
+  "image_mask_arcsec": 0.3,
+  "min_config_arcsec": 0.8,
+  "detect_sigma": 5.0,
+  "sep_match_arcsec": 0.5,
+  "fit_margin_px": 25,
+  "gate_eff": 0.9,
+  "gate_min_decided": 5,
+  "inj_mags": [
+    19.0,
+    20.0,
+    21.0,
+    22.0,
+    23.0,
+    24.0,
+    25.0
+  ],
+  "inj_reff_arcsec": [
+    0.3,
+    0.6
+  ],
+  "inj_n": 4.0,
+  "inj_ellip": 0.2,
+  "fj": {
+    "a": 20.41,
+    "k": 0.67,
+    "slope": -10.0,
+    "rms": 0.88,
+    "n": 605
+  },
+  "f814w_minus_z": [
+    0.0,
+    0.6
+  ],
+  "z_l_default": 0.5,
+  "z_s_default": 2.0
+}

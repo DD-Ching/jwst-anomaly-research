@@ -2,6 +2,79 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: X4 S1g: with only more budget the positive-lens search passes its injection checks; on R1 its seeds disagree, so R1 stays undetermined (simulated)
+- **Question (owner, parallel round line A):** does one bounded budget top-up of the S1e P search (DE 400 → 1,000
+  generations, refinement cap 10 → 20; nothing else changed) pass the frozen check, new controls included? Plan
+  frozen first (`docs/state/units/X4.md`, S1g; afcdf9c).
+- **Version check:** re-scores of S1c/S1e/S1f solutions and a DE replay on the rebuilt lens grid match bitwise
+  (`s1g_version_check.json`); the development fits replay S1e's first 400 generations exactly.
+- **Validation (`s1g_validate.json`):** 6 / 6 pass (ε ≤ 5e-4 and ≤ 0.1 (1 − FF_case)). V9 seed 11, S1e's failure: ε
+  8.1e-6. New injections VA1 / VA2 (RNG seed 20261021, not used for tuning): 3.9e-6 / 2.8e-5. Both V9 DEs stopped at
+  the 1,000-generation cap; their refinements converged and the frozen rule decides by ε (whether a stage cap should
+  count as "undetermined" is recorded in X4.md as an owner reading, not applied).
+- **R1 (`s1g_r1.json`):** P seeds 21–23 converge to FF 0.947638, 0.945876, 0.945883; every DE stopped on its tolerance and
+  every refinement converged. The two best differ by 1.75e-3 > 2e-4. Best ordinary FF 0.9476 (ρ_req 9.4, intrinsic SNR
+  48.6), verified; no counter-example. **Outcome 3, undetermined** (P and U search reliability). Not evidence for or
+  against the negative-mass model; no pilot; S2 not started; no real data read.
+- **Implementation bug:** SciPy dispatches the DE callback on the parameter name `intermediate_result`; the first
+  launch crashed at generation 1 with no output; fixed and relaunched with the plan unchanged (890b9f3).
+- **Post-run code review (7dada57, 898212e):** ten code fixes (thread limits before the numpy import, round trip
+  enforced at a post hoc 1e-9, feasibility-branch order, accepted-state saving, run IDs, error rows, resume, `ran_all`
+  guard). No fit re-run. Run-record checks and re-scores (`s1g_review_checks.json`): VA1 / VA2 round trips 0.0; all 9
+  best fits re-score with |ΔFF| 0.0 under 1 and 4 threads; all 9 fits finished. Findings list:
+  `docs/plans/2026-10-21-review-findings.md`.
+- **Handoff:** the gap is a reliable optimum on R1 for P and U. Owner's call: more seeds of the validated procedures
+  (about 1 h wall for 3 + 3 on 3–4 cores) or specialist advice. 6.8 CPU-h; about 3.1 h used; X4 has about 4.1 h left.
+
+## 2026-10-21: W2 at HST resolution for the D-056 blended / too-close lensed quasars: method validation fails
+- **Why:** owner authorization 2026-10-21 (parallel round line C); the D-060 revisit condition. Plan frozen first
+  (`results/w2_hst_blend/PLAN.md`, 2a44d9b).
+- **Selection (v2):** D-056 class rebuilt (same counts: quasar blended 242, too close 65); HST F814W coverage from one
+  CAOM TAP query per filter (81 of 307). Depth is counted once per visit, an implementation fix after /code-review: v1
+  summed overlapping MVM / SVM / pipeline products, over-counting 1.9–7× (v1 kept as `*_v1`). 7 targets (no catalogued
+  lens z) and 10 same-programme controls.
+- **Result (`RESULT.md`, `verdict.json`):**
+  - [pre-registered] Control gate 9/10 = 0.9 (lower 95 % 0.61), passes (9/10 in v1 too).
+  - [pre-registered] The one no-lens empirical-PSF negative control (SDSSJ0806+2006) gives S/N 13.0 ≥ 5σ through the
+    Moffat chain (Moffat-made stamp −0.3).
+  - [owner decision, after freezing] A negative control at threshold fails the method validation: target residuals are
+    stored measurements, "not interpreted"; no candidate list.
+- **Post hoc:** DESJ0405-3308 (chain output "not detected") has a published deflector, photometric z_d ∼ 0.3 (Gilman et
+  al. 2020a, MNRAS 491, 6077, quoted in Nierenberg et al. 2023, arXiv:2309.10101 §3): the chain missed a known lens.
+  Flux-scaled false-positive diagnostics are stored for controls only.
+- **Failed approaches:** the Moffat N-image residual is not specific to lens light (PSF mismatch alone gives S/N 13);
+  Gaia-star ePSFs need ≥ 3 stars and only 1 of 5 HAP fields (88″) had them; summing CAOM level-3 exposure times counts
+  the same exposures several times.
+- **New:** `scripts/w2_hst_blend.py`, `scripts/w2_hst_blend_chain.py`, `scripts/w2_hst_blend_run.py`,
+  `tests/test_w2_hst_blend.py`. 2.28 GB downloaded (1.98 GB for the 2200-px PSF cutouts), all deleted.
+- **Review round 2 (a1a4694):** explicit per-visit depth rule (selection identical); PSF rows reused only after an
+  input check (all 5 pass; 3 v1 labels normalised to "not detected"); no number changed.
+- **Handoff:** the gap is named and the line stopped. It needs a per-image PSF matched to the HAP-MVM drizzle (STScI
+  ACS/WFC3 empirical PSF grids, photutils) or a lens-light + point-source model (lenstronomy); both are new
+  dependencies. Success = no-lens negative controls < 5σ with controls ≥ 0.9.
+
+## 2026-10-21: S1 burst twins on CHIME/FRB Catalog 2 (30 events): the S1 criteria do not carry over as frozen
+- **Why:** owner authorization 2026-10-21 (parallel round line B; `docs/plans/2026-10-21-parallel-round.md`): the S1
+  second half, a validation, not a search. Prior work issue #153 (route, format, 307-burst pilot) not redone; #167 and
+  #169 not touched. Plan frozen first (`results/s1_chime/PLAN.md`).
+- **Result (`results/s1_chime/RESULT.md`, `summary.json`):** 17 / 30 eligible; ρ\* 0.870; 0 / 133 different-source and
+  0 / 3 same-repeater pairs pass. T1 fails: recovery 6.9 % at ratio 1 (G_cal), required ≥ 50 %. Tool not validated for
+  CHIME; no limit. The one flag (FRB20221215H / FRB20200207A) fails χ² (p 2.6 × 10⁻⁸³): single-pulse look-alikes. Sheet
+  looked at. Scope: this frozen method did not transfer to CHIME; that is not evidence that CHIME holds no same-signal
+  replays (at 6.9 % recovery it could not have found them).
+- **Post hoc (`posthoc.json`):** exact copies in Gaussian noise 70.5 %; in real host residuals 23.6 %; +1 ms scattering
+  at 600 MHz 10.0 %. Fitburst misfit χ²/dof 1.0–135. In this sample, same-source ρ is not above different-source
+  (median 0.411 vs 0.513).
+- **Failed approaches:** unweighted or 1/(fcf σ)² channel means (a few channels dominate the noise); integer-lag χ² on
+  ~1-bin pulses; fitburst models as noise-free templates. FRB20200314A has no calibration group; the Dec-2018 files
+  are off the Jy scale by ~10³.
+- **Deviation:** re-run after /code-review: `chi2_union` takes the best p among sub-bin δ with detected gains (v1 could
+  discard a passing δ). Frozen chain unchanged (no pass changed in 4,680 injections or 136 real pairs); post hoc I3
+  +3 passes (≤ 0.2 pp). v1 outputs kept as `results/s1_chime/*_v1.*`. Fetch now keeps ≤ 4 files in flight.
+- **New:** `scripts/s1_chime.py`, `scripts/s1_chime_lib.py`, `tests/test_s1_chime.py`,
+  `data/manifests/s1_chime_dynspec.ecsv`. 0.90 GB streamed and deleted.
+- **Handoff:** S1-CHIME parked. Reopen only with real same-signal pairs to calibrate the χ² systematic, or an
+  owner-approved scattering re-convolution in the twin model.
 ## 2026-10-21: MACS0417 and MACS1423 published images vs the pinned CANUCS v1 maps: gate fails on one central image each
 - **Why:** TASKS "MACS0417, MACS1423 cluster pointings (need published image lists)"; two clusters without an
   image-position test. CANUCS v1 releases no image catalogue (readme: with v2), so the lists come from Jauzac+19

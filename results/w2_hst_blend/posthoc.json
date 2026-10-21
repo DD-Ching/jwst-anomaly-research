@@ -1,0 +1,91 @@
+{
+  "reference": "SDSSJ0806+2006",
+  "fp_snr_ref": 12.993760937749348,
+  "systems": {
+    "SDSSJ0246-0825": {
+      "role": "control",
+      "status": "not detected between images",
+      "resid_snr": -3.459564116097089,
+      "fp_snr_scaled": 35.56414202318213,
+      "snr_over_fp_scaled": -0.09727674897490869,
+      "psf_alpha_at_bound": true,
+      "centre_ap_arcsec": 0.2,
+      "centre_flux": -2.349287137939834,
+      "centre_snr": -27.80466869614576,
+      "centre_mag": null
+    },
+    "HE0047-1756": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 134.28067439424902,
+      "fp_snr_scaled": 57.23148565837742,
+      "snr_over_fp_scaled": 2.346272735182671,
+      "psf_alpha_at_bound": true
+    },
+    "WG0214-2105": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 42.50239668009394,
+      "fp_snr_scaled": 10.828758185432008,
+      "snr_over_fp_scaled": 3.9249557476749883,
+      "psf_alpha_at_bound": false
+    },
+    "SDSSJ0806+2006": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 95.35616419811865,
+      "fp_snr_scaled": 12.993760937749347,
+      "snr_over_fp_scaled": 7.338611557881665,
+      "psf_alpha_at_bound": false
+    },
+    "SDSSJ0248+1913": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 8.21891515902166,
+      "fp_snr_scaled": 3.1297552681625707,
+      "snr_over_fp_scaled": 2.6260568174861976,
+      "psf_alpha_at_bound": false
+    },
+    "WISEJ0259-1635": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 28.61261160518304,
+      "fp_snr_scaled": 51.541036280753936,
+      "snr_over_fp_scaled": 0.5551423422944902,
+      "psf_alpha_at_bound": false
+    },
+    "DESJ0408-5354": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 92.72542885460288,
+      "fp_snr_scaled": 8.590210243564458,
+      "snr_over_fp_scaled": 10.794314251396832,
+      "psf_alpha_at_bound": false
+    },
+    "SDSSJ1251+2935": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 52.919278242183445,
+      "fp_snr_scaled": 4.657147923060145,
+      "snr_over_fp_scaled": 11.36302284497997,
+      "psf_alpha_at_bound": false
+    },
+    "2M1310-1714": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 208.5306126863783,
+      "fp_snr_scaled": 2.147308339019332,
+      "snr_over_fp_scaled": 97.11256129225181,
+      "psf_alpha_at_bound": false
+    },
+    "SDSSJ1330+1810": {
+      "role": "control",
+      "status": "light between images",
+      "resid_snr": 112.34887672862996,
+      "fp_snr_scaled": 6.073564936170309,
+      "snr_over_fp_scaled": 18.498011943455342,
+      "psf_alpha_at_bound": false
+    }
+  },
+  "provenance": "derived; POST HOC diagnostics, not pre-registered in PLAN.md; not used to interpret targets; scope: controls only, on purpose: targets not interpreted (method validation failed) (verdict.json: failed (PSF-mismatch false positive on a negative control))"
+}

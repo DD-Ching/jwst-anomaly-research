@@ -3636,6 +3636,26 @@ missing from the catalogue, not mis-typed, in the four inspected misses: H1413+1
 **Revisit if.** PSF-subtracted HST image models (or another deeper/sharper survey) reach an efficiency ≥ 0.9 on
 the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
 
+**Addendum (2026-10-21, line C: PSF-subtracted HST models of the D-056 blended / too-close quasars).**
+- **Decision.** The Moffat N-image residual chain (`scripts/w2_hst_blend_chain.py`) does not validate.
+  - [pre-registered] It recovers 9/10 same-programme known lenses (0.9, one-sided 95 % lower bound 0.61).
+  - [pre-registered] Its one negative control (a no-lens stamp with empirical-PSF images, SDSSJ0806+2006) gives S/N 13.0
+    ≥ 5σ; the same stamp with Moffat images gives −0.3.
+  - [owner decision 2026-10-21, after freezing] A negative control at threshold fails the method: target residuals are
+    stored but not interpreted, and no candidate list is made.
+  - A "not detected" from this chain is not a missing lens: [post hoc] DESJ0405-3308, "not detected", has a published
+    deflector (photometric z_d ∼ 0.3, Gilman et al. 2020a, MNRAS 491, 6077, via Nierenberg et al. 2023,
+    arXiv:2309.10101). "No catalogued lens z" ≠ "no lens".
+- **Alternatives rejected.** Reading the "light" targets as deflectors; a post hoc flux-scaled false-positive threshold
+  (stored only; a known control, WISEJ0259-1635, falls below it); a second PSF method or new thresholds inside this
+  unit (owner decision); summing CAOM level-3 exposure times as depth (multiple products of the same exposures,
+  over-counted 1.9–7×; fixed after /code-review, v1 kept as `*_v1`).
+- **Evidence.** `results/w2_hst_blend/` (`PLAN.md` frozen first, `gate.json`, `psf_mismatch.json`, `verdict.json`,
+  `selection_diff.ecsv`, `RESULT.md`).
+- **Revisit if.** A per-image PSF matched to the HAP-MVM drizzle (STScI empirical PSF grids via photutils) or a joint
+  lens-light + point-source model (lenstronomy) keeps no-lens negative controls below 5σ while recovering ≥ 0.9 of
+  controls. More negative controls need a library PSF or star-rich fields (the Gaia ePSF found ≥ 3 stars in 1 of 5).
+
 ## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)
 
 **Decision.** Do not use `gaiadr3.vari_microlensing` (Wyrzykowski et al. 2023) to limit W3: its Sample A selection
@@ -4189,6 +4209,26 @@ column (the error grows faster than λ_L). Revisit if: DES Y3 Gold or a spec-z /
 - TTE-based light curves are needed for short GRBs (64 ms is coarse for T90 < 1 s).
 - CHIME/FRB Catalog 2 is added (the S1 second half).
 - The χ² systematic (10 %) is calibrated on real same-burst data, e.g. GBM vs. Swift-BAT.
+
+**Addendum (2026-10-21): S1 on CHIME/FRB Catalog 2, 30-event validation; the criteria do not carry over as frozen.**
+- **Decision.** The D-071 chain (eligibility ≥ 2 pulses at 5σ, pulse-shuffled ρ\*, scaled-shifted-copy χ² with a 10 %
+  systematic) is not used on CHIME dynamic spectra, and no CHIME search or limit is run. The conclusion is limited to
+  "this frozen method did not transfer to CHIME"; it says nothing about whether CHIME holds same-signal replays.
+  - Adapter `scripts/s1_chime_lib.py`: four 100-MHz sub-bands averaged in S/N units, band Jy scale = median fcf·σ.
+  - The issue #153 χ² fixes (union window, detected per-band gain ≥ 0) plus a sub-bin lag (best p among δ with
+    detected gains; corrected after /code-review, no outcome changed).
+  - `burst_twins.py` is unchanged. Prior work not redone: issue #153 (route, format, 307-burst pilot).
+- **Alternatives rejected.** Unweighted or 1/(fcf σ)² channel means (a few channels dominate the noise); integer lags
+  (fail exact copies of ~1-bin pulses); fitburst models as noise-free templates (misfit χ²/dof up to 135);
+  time-reversal null (#153).
+- **Evidence** (`results/s1_chime/`; plan frozen first, `PLAN.md`):
+  - 17 / 30 eligible; ρ\* 0.870; 0 / 133 chance and 0 / 3 same-repeater pairs pass.
+  - Frozen recovery 6.9 % / 5.9 % / 3.1 % at ratio 1 / 0.5 / 0.3 (G_cal), against ≥ 50 % required (T1 fails).
+  - Post hoc: 70.5 % for exact copies in Gaussian noise, 23.6 % in real host residuals, 10.0 % with +1 ms
+    scattering at 600 MHz. The beam/calibration gain imprint (RMS 0.18 per band) costs ≤ 1 pp.
+  - Same-source ρ median 0.411 (26 pairs) vs different-source 0.513 (380), over all 29 usable files (post hoc).
+- **Revisit if.** Real same-signal CHIME pairs (multi-station or multi-beam data of one burst) calibrate the χ²
+  systematic, or the owner approves a fitted scattering re-convolution in the twin model.
 
 ## D-072 S3 hybrid images: COSMOGRAIL XIX doubles, SIS leg-split lag window, template regression; null without a useful limit (2026-10-09)
 

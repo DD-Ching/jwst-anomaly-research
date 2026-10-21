@@ -1,0 +1,225 @@
+{
+  "gate": {
+    "n_controls": 10,
+    "n_decided": 10,
+    "n_light": 9,
+    "efficiency": 0.9,
+    "passed": true,
+    "efficiency_lower95_one_sided": 0.6058366975634952
+  },
+  "psf_mismatch": {
+    "systems_with_epsf": [
+      "L00058"
+    ],
+    "wide_cutouts_tried": 5,
+    "rows_reused": [
+      "L00031",
+      "L00005",
+      "L00023",
+      "L00058",
+      "L00033"
+    ],
+    "reuse_refused_input_mismatch": [],
+    "epsf_no_lens_max_snr": 12.993760937749348,
+    "epsf_no_lens_max_snr_system": "L00058",
+    "psf_mismatch_not_excluded": true,
+    "provenance": "simulated; pre-registered PSF-mismatch test with negative controls (no-lens empirical-PSF stamps), PLAN.md 4.2",
+    "m_lim_L00058_epsf_reff0.3": 24.0,
+    "m_lim_L00058_epsf_reff0.6": 24.0,
+    "m_lim_L00058_moffat_reff0.3": 24.0,
+    "m_lim_L00058_moffat_reff0.6": 24.0
+  },
+  "injections_recovered_of_n": {
+    "control_reff0.3": {
+      "19": [
+        10,
+        10
+      ],
+      "20": [
+        10,
+        10
+      ],
+      "21": [
+        10,
+        10
+      ],
+      "22": [
+        7,
+        10
+      ],
+      "23": [
+        4,
+        10
+      ],
+      "24": [
+        1,
+        10
+      ],
+      "25": [
+        0,
+        10
+      ]
+    },
+    "control_reff0.3_flux_frac_median": 0.8147792210605409,
+    "control_reff0.3_flux_frac_p10_p90": [
+      0.6203705085351978,
+      0.9319748248144804
+    ],
+    "control_reff0.6": {
+      "19": [
+        10,
+        10
+      ],
+      "20": [
+        10,
+        10
+      ],
+      "21": [
+        10,
+        10
+      ],
+      "22": [
+        6,
+        10
+      ],
+      "23": [
+        3,
+        10
+      ],
+      "24": [
+        0,
+        10
+      ],
+      "25": [
+        0,
+        10
+      ]
+    },
+    "control_reff0.6_flux_frac_median": 0.626688407253165,
+    "control_reff0.6_flux_frac_p10_p90": [
+      0.466041140500846,
+      0.7092979300184196
+    ],
+    "target_reff0.3": {
+      "19": [
+        5,
+        5
+      ],
+      "20": [
+        5,
+        5
+      ],
+      "21": [
+        5,
+        5
+      ],
+      "22": [
+        5,
+        5
+      ],
+      "23": [
+        4,
+        5
+      ],
+      "24": [
+        1,
+        5
+      ],
+      "25": [
+        0,
+        5
+      ]
+    },
+    "target_reff0.3_flux_frac_median": 0.7514823607718295,
+    "target_reff0.3_flux_frac_p10_p90": [
+      0.4681145504244125,
+      1.4507848797941032
+    ],
+    "target_reff0.6": {
+      "19": [
+        5,
+        5
+      ],
+      "20": [
+        5,
+        5
+      ],
+      "21": [
+        5,
+        5
+      ],
+      "22": [
+        4,
+        5
+      ],
+      "23": [
+        4,
+        5
+      ],
+      "24": [
+        0,
+        5
+      ],
+      "25": [
+        0,
+        5
+      ]
+    },
+    "target_reff0.6_flux_frac_median": 0.5410039632002076,
+    "target_reff0.6_flux_frac_p10_p90": [
+      0.3247394883262229,
+      1.2323914224538393
+    ]
+  },
+  "control_status_counts": {
+    "light between images": 9,
+    "not detected between images": 1
+  },
+  "control_m_lim_reff0.3": {
+    "n": 10,
+    "min": 21.0,
+    "median": 22.0,
+    "max": 24.0
+  },
+  "control_max_sep_range": [
+    1.430024695261353,
+    5.0248161516084835
+  ],
+  "target_status_counts": {
+    "not interpreted (method validation failed)": 7
+  },
+  "target_m_lim_reff0.3": {
+    "n": 5,
+    "min": 22.0,
+    "median": 23.0,
+    "max": 24.0
+  },
+  "target_max_sep_range": [
+    1.037053440985418,
+    3.2866970483574467
+  ],
+  "psf_alpha_at_lower_bound": 4,
+  "psf_fits": 16,
+  "downloads": {
+    "files": 356,
+    "bytes": 2278679171,
+    "hapcut 250 px": {
+      "files": 304,
+      "bytes": 197064000
+    },
+    "hapcut 2200 px": {
+      "files": 42,
+      "bytes": 1978194240
+    }
+  },
+  "verdict": {
+    "verdict": "failed (PSF-mismatch false positive on a negative control)",
+    "validated": false,
+    "gate_efficiency": 0.9,
+    "negative_control_max_snr": 12.993760937749348,
+    "detect_sigma": 5.0,
+    "target_interpretation": "not interpreted (method validation failed)",
+    "rule": "owner decision 2026-10-21, applied after the frozen plan"
+  },
+  "provenance": "derived; gate, injections and psf_mismatch are pre-registered (PLAN.md); verdict is the owner decision of 2026-10-21 applied after the plan was frozen; nothing here is post hoc (post hoc diagnostics are only in posthoc.json)"
+}

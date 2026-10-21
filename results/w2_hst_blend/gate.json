@@ -1,0 +1,21 @@
+{
+  "n_controls": 10,
+  "n_decided": 10,
+  "n_light": 9,
+  "efficiency": 0.9,
+  "passed": true,
+  "provenance": "derived; pre-registered control gate (PLAN.md 4.1)",
+  "cpu_s_measure_controls": 37.0,
+  "statuses": {
+    "SDSSJ0246-0825": "not detected between images",
+    "HE0047-1756": "light between images",
+    "WG0214-2105": "light between images",
+    "SDSSJ0806+2006": "light between images",
+    "SDSSJ0248+1913": "light between images",
+    "WISEJ0259-1635": "light between images",
+    "DESJ0408-5354": "light between images",
+    "SDSSJ1251+2935": "light between images",
+    "2M1310-1714": "light between images",
+    "SDSSJ1330+1810": "light between images"
+  }
+}

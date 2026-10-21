@@ -1,0 +1,49 @@
+{
+ "provenance": "observed",
+ "date_utc": "2026-10-21",
+ "route": "issue #153 (cadc-west-01.canfar.net vault nodes/files, curl -L to a minoc pre-signed URL)",
+ "listing": {
+  "url": "https://cadc-west-01.canfar.net/vault/nodes/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/dynamic_spectra/data?limit=10000",
+  "http": 200,
+  "bytes": 3651493,
+  "n_files": 4536,
+  "total_bytes": 56379112010,
+  "median_bytes": 11762499.5,
+  "min_bytes": 3016183,
+  "max_bytes": 154536787
+ },
+ "catalogue_csv": {
+  "url": "https://cadc-west-01.canfar.net/vault/files/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/table/chimefrbcat2.csv",
+  "http": 200,
+  "bytes": 4057396,
+  "sha256": "5108ada779d279a2547d9f9e73ae25bfdd40d8496d6ba7255ec29c6629057a48",
+  "matches_e1_pin": true
+ },
+ "format_check": {
+  "url": "https://cadc-west-01.canfar.net/vault/files/AstroDataCitationDOI/CISTI.CANFAR/25.0066/data/dynamic_spectra/data/FRB20180725A_stokesi_dynamic_spectrum.h5",
+  "http": 200,
+  "redirects": 1,
+  "redirect_host": "ws-uv.canfar.net/minoc",
+  "bytes": 10200204,
+  "sha256": "18d3e40f366c6fe681c28d5fd64f2f60d953955d17d2d6da10c6f7bef7f25d64",
+  "shape": [
+   16384,
+   162
+  ]
+ },
+ "sample_downloads": {
+  "n_transfers": 70,
+  "n_files": 30,
+  "bytes": 881197121,
+  "all_repeat_sha256_identical": true,
+  "why_repeats": "fetch 1 crashed on FRB20200314A (no calibration group) after 17 transfers; fetch 2 (v1 reduction) reused the 7 files left and transferred 23, then deleted all 30; fetch 3 transferred all 30 again with --keep-raw for the v2 and v3 reductions (v1 and v2 needed fixes); fetch 4 (v3) reused them; raw files deleted at 00:48 UTC",
+  "transfers_per_fetch": [
+   17,
+   23,
+   30,
+   0
+  ]
+ },
+ "bytes_total_logged": 895454721,
+ "bytes_total_incl_listing": 899106214
+}

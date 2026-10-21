@@ -1,0 +1,53 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system_id, datatype: string}
+# - {name: name, datatype: string}
+# - {name: n_psf_stars, datatype: int64}
+# - {name: psf, datatype: string}
+# - {name: reff_arcsec, datatype: float64}
+# - {name: inject_mag, datatype: float64}
+# - {name: status, datatype: string}
+# - {name: n_img, datatype: int64}
+# - {name: resid_snr, datatype: float64}
+# - {name: recovered, datatype: bool}
+# meta: !!omap
+# - {provenance: simulated}
+# - {source: 'w2_hst_blend_run.py psf: white noise at the control''s sigma_pix, its fitted images made with a Gaia-star empirical PSF
+#     (w12_niq_epsf.build_epsf) or the fitted Moffat, optional Sersic lens convolved with the same PSF, measured by the Moffat chain'}
+# schema: astropy-2.0
+system_id name n_psf_stars psf reff_arcsec inject_mag status n_img resid_snr recovered
+L00031 SDSSJ0246-0825 0 "" nan nan "too few PSF stars" 0 nan False
+L00005 HE0047-1756 1 "" nan nan "too few PSF stars" 0 nan False
+L00058 SDSSJ0806+2006 5 epsf nan nan "light between images" 2 12.993760937749348 False
+L00058 SDSSJ0806+2006 5 epsf 0.3 19.0 "light between images" 2 687.6025179630705 True
+L00058 SDSSJ0806+2006 5 epsf 0.3 20.0 "light between images" 2 281.45057435886235 True
+L00058 SDSSJ0806+2006 5 epsf 0.3 21.0 "light between images" 2 119.96257283955457 True
+L00058 SDSSJ0806+2006 5 epsf 0.3 22.0 "light between images" 2 55.67600128390376 True
+L00058 SDSSJ0806+2006 5 epsf 0.3 23.0 "light between images" 2 29.927784717282382 True
+L00058 SDSSJ0806+2006 5 epsf 0.3 24.0 "light between images" 2 19.720271358556467 True
+L00058 SDSSJ0806+2006 5 epsf 0.3 25.0 "light between images" 2 15.672436304286212 False
+L00058 SDSSJ0806+2006 5 epsf 0.6 19.0 "light between images" 2 521.7692731032279 True
+L00058 SDSSJ0806+2006 5 epsf 0.6 20.0 "light between images" 2 215.25997041959388 True
+L00058 SDSSJ0806+2006 5 epsf 0.6 21.0 "light between images" 2 93.47166171133038 True
+L00058 SDSSJ0806+2006 5 epsf 0.6 22.0 "light between images" 2 45.21218000068329 True
+L00058 SDSSJ0806+2006 5 epsf 0.6 23.0 "light between images" 2 25.77198145762668 True
+L00058 SDSSJ0806+2006 5 epsf 0.6 24.0 "light between images" 2 18.060944809897137 True
+L00058 SDSSJ0806+2006 5 epsf 0.6 25.0 "light between images" 2 15.012051639772833 False
+L00058 SDSSJ0806+2006 5 moffat nan nan "none between images" 2 -0.3301670913743224 False
+L00058 SDSSJ0806+2006 5 moffat 0.3 19.0 "light between images" 2 1282.2180044507372 True
+L00058 SDSSJ0806+2006 5 moffat 0.3 20.0 "light between images" 2 504.7139646260095 True
+L00058 SDSSJ0806+2006 5 moffat 0.3 21.0 "light between images" 2 200.91450146211886 True
+L00058 SDSSJ0806+2006 5 moffat 0.3 22.0 "light between images" 2 79.74145225439908 True
+L00058 SDSSJ0806+2006 5 moffat 0.3 23.0 "light between images" 2 31.58302456147806 True
+L00058 SDSSJ0806+2006 5 moffat 0.3 24.0 "light between images" 2 12.35138661804809 True
+L00058 SDSSJ0806+2006 5 moffat 0.3 25.0 "none between images" 2 4.710794573182017 False
+L00058 SDSSJ0806+2006 5 moffat 0.6 19.0 "light between images" 2 964.0978846232292 True
+L00058 SDSSJ0806+2006 5 moffat 0.6 20.0 "light between images" 2 379.2607022791039 True
+L00058 SDSSJ0806+2006 5 moffat 0.6 21.0 "light between images" 2 150.90326514047743 True
+L00058 SDSSJ0806+2006 5 moffat 0.6 22.0 "light between images" 2 59.860706672202944 True
+L00058 SDSSJ0806+2006 5 moffat 0.6 23.0 "light between images" 2 23.667694549256012 True
+L00058 SDSSJ0806+2006 5 moffat 0.6 24.0 "light between images" 2 9.19128000652345 True
+L00058 SDSSJ0806+2006 5 moffat 0.6 25.0 "none between images" 2 3.455650194716463 False
+L00023 WG0214-2105 1 "" nan nan "too few PSF stars" 0 nan False
+L00165 SDSSJ1620+1203 2 "" nan nan "too few PSF stars" 0 nan False

@@ -1,0 +1,393 @@
+{
+ "label": "derived; S1g post-run review checks (2026-10-21, after all results). Small recomputations from stored inputs and best parameters; no fit re-run",
+ "b_threads": {
+  "lalsuite_linking": "ldd of lal/_lal, lalsimulation/_lalsimulation and every lalsuite.libs/*.so: no libgomp / OpenMP; FFTW is libfftw3 (no _threads / _omp build); GSL uses libgslcblas (single-threaded). numpy and scipy load scipy_openblas (multi-threaded by default)",
+  "threadpool_info_1thread": [
+   {
+    "user_api": "blas",
+    "internal_api": "openblas",
+    "num_threads": 1,
+    "prefix": "libscipy_openblas",
+    "version": "0.3.34.106.0"
+   },
+   {
+    "user_api": "blas",
+    "internal_api": "openblas",
+    "num_threads": 1,
+    "prefix": "libscipy_openblas",
+    "version": "0.3.31.dev"
+   }
+  ],
+  "threadpool_info_default": [
+   {
+    "user_api": "blas",
+    "internal_api": "openblas",
+    "num_threads": 4,
+    "prefix": "libscipy_openblas",
+    "version": "0.3.31.dev"
+   },
+   {
+    "user_api": "blas",
+    "internal_api": "openblas",
+    "num_threads": 4,
+    "prefix": "libscipy_openblas",
+    "version": "0.3.34.106.0"
+   }
+  ],
+  "scipy_fft_default_workers": [
+   1,
+   1
+  ],
+  "run_env": "every launch (benchmark, grid, version check, both run launches) exported OMP_NUM_THREADS=MKL_NUM_THREADS=OPENBLAS_NUM_THREADS=1 in the shell before python started (session transcript; not stored elsewhere)",
+  "load_average_coordinator_0053": 3.33,
+  "seconds_per_generation": {
+   "V9 s11": 2.688,
+   "VA2 s11": 2.825,
+   "VA1 s11": 3.076,
+   "V5 s11": 2.825,
+   "V5 s12": 2.829,
+   "V9 s12": 2.745,
+   "R1 s22": 2.346,
+   "R1 s23": 2.326,
+   "R1 s21": 2.33
+  },
+  "benchmark_s_per_generation_3proc": [
+   2.741,
+   2.641,
+   2.771
+  ],
+  "rescore": [
+   {
+    "fit": "V9 s11",
+    "stored_FF_pad64": 0.9999919392396054,
+    "FF_pad64_1thread": 0.9999919392396054,
+    "FF_pad64_default_threads": 0.9999919392396054,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "VA2 s11",
+    "stored_FF_pad64": 0.999972117547306,
+    "FF_pad64_1thread": 0.999972117547306,
+    "FF_pad64_default_threads": 0.999972117547306,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "VA1 s11",
+    "stored_FF_pad64": 0.9999960666231602,
+    "FF_pad64_1thread": 0.9999960666231602,
+    "FF_pad64_default_threads": 0.9999960666231602,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "V5 s11",
+    "stored_FF_pad64": 0.999958002305405,
+    "FF_pad64_1thread": 0.999958002305405,
+    "FF_pad64_default_threads": 0.999958002305405,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "V5 s12",
+    "stored_FF_pad64": 0.9999775870019857,
+    "FF_pad64_1thread": 0.9999775870019857,
+    "FF_pad64_default_threads": 0.9999775870019857,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "V9 s12",
+    "stored_FF_pad64": 0.9999872308312053,
+    "FF_pad64_1thread": 0.9999872308312053,
+    "FF_pad64_default_threads": 0.9999872308312053,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "R1 s22",
+    "stored_FF_pad64": 0.9458756195092743,
+    "FF_pad64_1thread": 0.9458756195092743,
+    "FF_pad64_default_threads": 0.9458756195092743,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "R1 s23",
+    "stored_FF_pad64": 0.9458833800179149,
+    "FF_pad64_1thread": 0.9458833800179149,
+    "FF_pad64_default_threads": 0.9458833800179149,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   },
+   {
+    "fit": "R1 s21",
+    "stored_FF_pad64": 0.9476377694069567,
+    "FF_pad64_1thread": 0.9476377694069567,
+    "FF_pad64_default_threads": 0.9476377694069567,
+    "abs_diff_threads": 0.0,
+    "abs_diff_vs_stored": 0.0,
+    "abs_diff_f_pad32_vs_stored": 0.0
+   }
+  ],
+  "max_abs_diff_threads": 0.0,
+  "max_abs_diff_vs_stored": 0.0
+ },
+ "a_round_trip": {
+  "tolerance_now_enforced": 1e-09,
+  "stored_round_trip_max_diff": {
+   "VA1": 0.0,
+   "VA2": 0.0
+  },
+  "rescored_1thread": [
+   {
+    "truth": "V5",
+    "round_trip_max_diff": 0.0,
+    "objective_pad32_truth": 0.0,
+    "objective_pad32_round_trip": 0.0,
+    "objective_change": 0.0,
+    "FF_pad64_truth": 0.9999999999999999,
+    "FF_pad64_round_trip": 0.9999999999999999,
+    "FF_pad64_change": 0.0
+   },
+   {
+    "truth": "V9",
+    "round_trip_max_diff": 0.0,
+    "objective_pad32_truth": 1.1102230246251565e-16,
+    "objective_pad32_round_trip": 1.1102230246251565e-16,
+    "objective_change": 0.0,
+    "FF_pad64_truth": 0.9999999999999999,
+    "FF_pad64_round_trip": 0.9999999999999999,
+    "FF_pad64_change": 0.0
+   },
+   {
+    "truth": "VA1",
+    "round_trip_max_diff": 0.0,
+    "objective_pad32_truth": 0.0,
+    "objective_pad32_round_trip": 0.0,
+    "objective_change": 0.0,
+    "FF_pad64_truth": 1.0,
+    "FF_pad64_round_trip": 1.0,
+    "FF_pad64_change": 0.0
+   },
+   {
+    "truth": "VA2",
+    "round_trip_max_diff": 0.0,
+    "objective_pad32_truth": -2.220446049250313e-16,
+    "objective_pad32_round_trip": -2.220446049250313e-16,
+    "objective_change": 0.0,
+    "FF_pad64_truth": 1.0000000000000002,
+    "FF_pad64_round_trip": 1.0000000000000002,
+    "FF_pad64_change": 0.0
+   }
+  ],
+  "max_abs_objective_change": 0.0,
+  "max_abs_FF_pad64_change": 0.0
+ },
+ "c_run_records": {
+  "relaunch_log_lines": 195,
+  "relaunch_log_has_traceback": false,
+  "relaunch_log_finished_lines": [
+   "2026-10-21T01:39:06Z V9 11 finished 0.9999919392396054",
+   "2026-10-21T01:39:06Z VA2 11 finished 0.999972117547306",
+   "2026-10-21T01:41:36Z VA1 11 finished 0.9999960666231602",
+   "2026-10-21T01:41:36Z round 1 verdict pass",
+   "2026-10-21T02:12:06Z V5 11 finished 0.999958002305405",
+   "2026-10-21T02:21:36Z V5 12 finished 0.9999775870019857",
+   "2026-10-21T02:31:06Z V9 12 finished 0.9999872308312053",
+   "2026-10-21T02:31:06Z round 2 verdict pass",
+   "2026-10-21T02:59:22Z R1 22 finished 0.9458756195092743",
+   "2026-10-21T03:01:37Z R1 23 finished 0.9458833800179149",
+   "2026-10-21T03:03:22Z R1 21 finished 0.9476377694069567"
+  ],
+  "relaunch_log_mentions_unfinished_error_or_stop": [],
+  "row_status_counts": {
+   "finished": 9
+  },
+  "rows_with_partial_state": 0,
+  "last_fit_finished_utc": "2026-10-21T03:03:22Z",
+  "deadline_utc": "2026-10-21T05:15:00Z",
+  "validation_rounds": [
+   {
+    "round": 1,
+    "start_utc": "2026-10-21T00:49:36Z",
+    "end_utc": "2026-10-21T01:41:36Z",
+    "statuses": [
+     "pass",
+     "pass",
+     "pass"
+    ]
+   },
+   {
+    "round": 2,
+    "start_utc": "2026-10-21T01:41:36Z",
+    "end_utc": "2026-10-21T02:31:06Z",
+    "statuses": [
+     "pass",
+     "pass",
+     "pass"
+    ]
+   }
+  ],
+  "r1_start_end": [
+   "2026-10-21T02:31:22Z",
+   "2026-10-21T03:03:22Z"
+  ],
+  "r1_resumed_key_present": false,
+  "crash_launch_1": {
+   "launched_utc": "2026-10-21T00:43:49Z",
+   "error": "TypeError: _install_hooks.<locals>.de_hooked.<locals>.cb() takes 1 positional argument but 2 were given",
+   "why_no_state": "the TypeError is raised when SciPy calls the hook's callback, so the callback body (which writes the state file) never ran",
+   "state_dir_after_crash_and_at_relaunch": "empty (listed at 00:44:14 and at 00:49:35; session transcript)",
+   "results_files_after_crash": "only s1g_injections, s1g_setup, s1g_version_check (listed before the relaunch; session transcript)"
+  },
+  "state_dir_files_now": [
+   "r1_R1_s21.json",
+   "r1_R1_s22.json",
+   "r1_R1_s23.json",
+   "valid_V5_s11.json",
+   "valid_V5_s12.json",
+   "valid_V9_s11.json",
+   "valid_V9_s12.json",
+   "valid_VA1_s11.json",
+   "valid_VA2_s11.json"
+  ],
+  "dry_runs_and_hook_test": "used X4_S1G_STATE=scratch/x4/dryrun/state and scratch/x4/state_hooktest and OUT=scratch/x4/dryrun/out, never the production state dir or results/x4",
+  "finding4_last_state_vs_final_row": [
+   {
+    "fit": "V9 s11",
+    "state_stage": "refine",
+    "state_round": 4,
+    "final_round": 4,
+    "state_f": 8.060760394612565e-06,
+    "row_f": 8.060760394612565e-06,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T01:39:04Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "VA2 s11",
+    "state_stage": "refine",
+    "state_round": 3,
+    "final_round": 3,
+    "state_f": 2.7882452694028004e-05,
+    "row_f": 2.7882452694028004e-05,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T01:38:55Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "VA1 s11",
+    "state_stage": "refine",
+    "state_round": 1,
+    "final_round": 1,
+    "state_f": 3.933376839793112e-06,
+    "row_f": 3.933376839793112e-06,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T01:41:25Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "V5 s11",
+    "state_stage": "refine",
+    "state_round": 4,
+    "final_round": 4,
+    "state_f": 4.199769459500846e-05,
+    "row_f": 4.199769459500846e-05,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T02:12:01Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "V5 s12",
+    "state_stage": "refine",
+    "state_round": 6,
+    "final_round": 6,
+    "state_f": 2.2412998014309515e-05,
+    "row_f": 2.2412998014309515e-05,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T02:21:26Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "V9 s12",
+    "state_stage": "refine",
+    "state_round": 3,
+    "final_round": 3,
+    "state_f": 1.2769168794668495e-05,
+    "row_f": 1.2769168794668495e-05,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T02:31:04Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "R1 s22",
+    "state_stage": "refine",
+    "state_round": 3,
+    "final_round": 3,
+    "state_f": 0.054124380490725876,
+    "row_f": 0.054124380490725876,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T02:59:13Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "R1 s23",
+    "state_stage": "refine",
+    "state_round": 3,
+    "final_round": 3,
+    "state_f": 0.05411661998208528,
+    "row_f": 0.05411661998208528,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T03:01:26Z",
+    "has_run_id": false
+   },
+   {
+    "fit": "R1 s21",
+    "state_stage": "refine",
+    "state_round": 2,
+    "final_round": 2,
+    "state_f": 0.05236223059304346,
+    "row_f": 0.05236223059304346,
+    "equal_f": true,
+    "equal_x": true,
+    "equal_lens": true,
+    "state_file_mtime_utc": "2026-10-21T03:03:19Z",
+    "has_run_id": false
+   }
+  ]
+ },
+ "d_summary_change": {
+  "changed_paths_before_after": {
+   "/r1/verify_best_P/feasibility_fail_verified": [
+    null,
+    false
+   ]
+  }
+ }
+}

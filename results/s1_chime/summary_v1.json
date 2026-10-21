@@ -1,0 +1,564 @@
+{
+ "provenance": "derived (real pairs) and simulated (injections)",
+ "plan": "results/s1_chime/PLAN.md",
+ "n_reduced": 30,
+ "n_eligible": 17,
+ "per_burst": [
+  {
+   "tns_name": "FRB20221116F",
+   "source": "FRB20220912A",
+   "group": "repeater",
+   "n_pulses": 5,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20230314D",
+   "source": "FRB20220912A",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20221216B",
+   "source": "FRB20220912A",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20221114B",
+   "source": "FRB20220912A",
+   "group": "repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20230826A",
+   "source": "FRB20220912A",
+   "group": "repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20181222A",
+   "source": "FRB20180916B",
+   "group": "repeater",
+   "n_pulses": 4,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20210712A",
+   "source": "FRB20180916B",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20190825A",
+   "source": "FRB20180916B",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20190604F",
+   "source": "FRB20180916B",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20190605B",
+   "source": "FRB20180916B",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20200314A",
+   "source": "FRB20190208A",
+   "group": "repeater",
+   "n_pulses": 0,
+   "eligible": false,
+   "band_ok": [
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  {
+   "tns_name": "FRB20211229A",
+   "source": "FRB20190208A",
+   "group": "repeater",
+   "n_pulses": 4,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20211228A",
+   "source": "FRB20190208A",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20190208A",
+   "source": "FRB20190208A",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20211009B",
+   "source": "FRB20190208A",
+   "group": "repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20190423A",
+   "source": "FRB20190423A",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20221215H",
+   "source": "FRB20221215H",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20200116B",
+   "source": "FRB20200116B",
+   "group": "non_repeater",
+   "n_pulses": 5,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20220316B",
+   "source": "FRB20220316B",
+   "group": "non_repeater",
+   "n_pulses": 3,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20201010B",
+   "source": "FRB20201010B",
+   "group": "non_repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20230911B",
+   "source": "FRB20230911B",
+   "group": "non_repeater",
+   "n_pulses": 3,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20200315A",
+   "source": "FRB20200315A",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20200615C",
+   "source": "FRB20200615C",
+   "group": "non_repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20220426A",
+   "source": "FRB20220426A",
+   "group": "non_repeater",
+   "n_pulses": 1,
+   "eligible": false,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20181226B",
+   "source": "FRB20181226B",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20190111A",
+   "source": "FRB20190111A",
+   "group": "non_repeater",
+   "n_pulses": 3,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20190124C",
+   "source": "FRB20190124C",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20200207A",
+   "source": "FRB20200207A",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20200318B",
+   "source": "FRB20200318B",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  },
+  {
+   "tns_name": "FRB20230205A",
+   "source": "FRB20230205A",
+   "group": "non_repeater",
+   "n_pulses": 2,
+   "eligible": true,
+   "band_ok": [
+    true,
+    true,
+    true,
+    true
+   ]
+  }
+ ],
+ "rho_star": 0.8700802583294718,
+ "chance_pairs": {
+  "n": 133,
+  "rho_median": 0.4848732656590283,
+  "rho_max": 0.8822866376514921,
+  "n_flag": 1,
+  "n_chi2_pass_any_rho": 0,
+  "n_passed_chain": 0,
+  "n_untestable": 12
+ },
+ "same_source_pairs": {
+  "n": 3,
+  "rho_median": 0.4536320302155359,
+  "rho_max": 0.4850494615583943,
+  "n_flag": 0,
+  "n_chi2_pass_any_rho": 0,
+  "n_passed_chain": 0,
+  "n_untestable": 1
+ },
+ "same_source_by_repeater": {
+  "FRB20220912A": {
+   "n": 3,
+   "rho_median": 0.4536320302155359,
+   "rho_max": 0.4850494615583943,
+   "n_flag": 0,
+   "n_chi2_pass_any_rho": 0,
+   "n_passed_chain": 0,
+   "n_untestable": 1
+  }
+ },
+ "injections": {
+  "G0_r1.0": {
+   "n": 390,
+   "eligible_copy": 0.8717948717948718,
+   "flagged": 0.7384615384615385,
+   "passed": 0.06923076923076923,
+   "chi2_pass_given_flag": 0.09375,
+   "rho_median": 0.9399485088872475,
+   "lag_within_2": 0.9974358974358974
+  },
+  "G0_r0.5": {
+   "n": 390,
+   "eligible_copy": 0.6794871794871795,
+   "flagged": 0.47692307692307695,
+   "passed": 0.0641025641025641,
+   "chi2_pass_given_flag": 0.13440860215053763,
+   "rho_median": 0.9085452392998852,
+   "lag_within_2": 0.9923076923076923
+  },
+  "G0_r0.3": {
+   "n": 390,
+   "eligible_copy": 0.5282051282051282,
+   "flagged": 0.24358974358974358,
+   "passed": 0.020512820512820513,
+   "chi2_pass_given_flag": 0.08421052631578947,
+   "rho_median": 0.8408504986278458,
+   "lag_within_2": 0.9641025641025641
+  },
+  "G_cal_r1.0": {
+   "n": 390,
+   "eligible_copy": 0.8769230769230769,
+   "flagged": 0.7435897435897436,
+   "passed": 0.06923076923076923,
+   "chi2_pass_given_flag": 0.09310344827586207,
+   "rho_median": 0.933816348716962,
+   "lag_within_2": 1.0
+  },
+  "G_cal_r0.5": {
+   "n": 390,
+   "eligible_copy": 0.6692307692307692,
+   "flagged": 0.46153846153846156,
+   "passed": 0.05897435897435897,
+   "chi2_pass_given_flag": 0.12777777777777777,
+   "rho_median": 0.8970909476934219,
+   "lag_within_2": 0.9948717948717949
+  },
+  "G_cal_r0.3": {
+   "n": 390,
+   "eligible_copy": 0.5435897435897435,
+   "flagged": 0.24871794871794872,
+   "passed": 0.03076923076923077,
+   "chi2_pass_given_flag": 0.12371134020618557,
+   "rho_median": 0.8367943550845316,
+   "lag_within_2": 0.9564102564102565
+  },
+  "G_beam_r1.0": {
+   "n": 390,
+   "eligible_copy": 0.8769230769230769,
+   "flagged": 0.7512820512820513,
+   "passed": 0.06666666666666667,
+   "chi2_pass_given_flag": 0.08873720136518772,
+   "rho_median": 0.9437668382048389,
+   "lag_within_2": 0.9974358974358974
+  },
+  "G_beam_r0.5": {
+   "n": 390,
+   "eligible_copy": 0.7025641025641025,
+   "flagged": 0.47692307692307695,
+   "passed": 0.06153846153846154,
+   "chi2_pass_given_flag": 0.12903225806451613,
+   "rho_median": 0.9000254931492317,
+   "lag_within_2": 0.9923076923076923
+  },
+  "G_beam_r0.3": {
+   "n": 390,
+   "eligible_copy": 0.5153846153846153,
+   "flagged": 0.2230769230769231,
+   "passed": 0.03076923076923077,
+   "chi2_pass_given_flag": 0.13793103448275862,
+   "rho_median": 0.8485111063442388,
+   "lag_within_2": 0.9641025641025641
+  },
+  "P_path_r1.0": {
+   "n": 390,
+   "eligible_copy": 0.6282051282051282,
+   "flagged": 0.28974358974358977,
+   "passed": 0.002564102564102564,
+   "chi2_pass_given_flag": 0.008849557522123894,
+   "rho_median": 0.8795315911404961,
+   "lag_within_2": 0.9641025641025641
+  },
+  "P_path_r0.5": {
+   "n": 390,
+   "eligible_copy": 0.45384615384615384,
+   "flagged": 0.18974358974358974,
+   "passed": 0.002564102564102564,
+   "chi2_pass_given_flag": 0.013513513513513514,
+   "rho_median": 0.8325798492724319,
+   "lag_within_2": 0.9538461538461539
+  },
+  "P_path_r0.3": {
+   "n": 390,
+   "eligible_copy": 0.3487179487179487,
+   "flagged": 0.08974358974358974,
+   "passed": 0.005128205128205128,
+   "chi2_pass_given_flag": 0.05714285714285714,
+   "rho_median": 0.7688990820581407,
+   "lag_within_2": 0.8923076923076924
+  }
+ },
+ "injection_excluded_scale": [
+  "FRB20181222A",
+  "FRB20200314A",
+  "FRB20181226B"
+ ],
+ "band_sigma_median_jy": 0.176125,
+ "cal_shape_rms_per_band": 0.13042636177433478,
+ "cal_shape_pair_diff_rms_per_band": 0.17901047626104707,
+ "verdict_inputs": {
+  "n_eligible": 17,
+  "eff_gcal_r1": 0.06923076923076923,
+  "n_chance_pairs": 133,
+  "n_chance_pass": 0,
+  "rho_inj_gcal_r1_median": 0.933816348716962,
+  "rho_chance_q": 0.7676733174026812,
+  "n_rep_pairs": 3,
+  "n_rep_pass": 0
+ },
+ "verdict": {
+  "testable": true,
+  "T1": false,
+  "T2": true,
+  "T3": true,
+  "T4": false,
+  "carries_over": false
+ }
+}

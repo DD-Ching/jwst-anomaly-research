@@ -1,0 +1,39 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system_id, datatype: string}
+# - {name: name, datatype: string}
+# - {name: t814_v1, datatype: float64}
+# - {name: t814_v2, datatype: float64}
+# - {name: n_rows, datatype: int64}
+# - {name: role_v1, datatype: string}
+# - {name: role_v2, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'selection_v1.ecsv vs selection.ecsv (v2: w2_hst_blend_chain.visit_exposure, each exposure once); implementation fix 2026-10-21
+#     (coordinator review), not a re-tuning'}
+# schema: astropy-2.0
+system_id name t814_v1 t814_v2 n_rows role_v1 role_v2
+L00033 SDSSJ0248+1913 2956.0 1428.0 3 "" control
+L00125 SDSSJ1330+1810 4284.0 1428.0 3 "" control
+L00119 2M1310-1714 4284.0 1428.0 3 "" control
+L00036 WISEJ0259-1635 4284.0 1428.0 3 control control
+L00114 SDSSJ1251+2935 4284.0 1428.0 3 control control
+L00041 DESJ0408-5354 4284.0 1428.0 3 control control
+L00093 J1042+1641 5192.0 1298.0 4 control ""
+L00190 WGD2038-4008 5712.0 1428.0 4 control ""
+L00165 SDSSJ1620+1203 5712.0 1428.0 4 control ""
+L00023 WG0214-2105 7240.0 2856.0 5 control control
+L00058 SDSSJ0806+2006 11424.0 2856.0 6 control control
+L00005 HE0047-1756 20408.0 10696.0 3 control control
+L00031 SDSSJ0246-0825 67232.0 21648.0 9 control control
+L00039 DESJ0407-5006 2856.0 1428.0 2 target target
+L00018 J0146-1133 4044.0 674.0 6 target ""
+L00207 J2257+2349 4049.0 674.0 7 target ""
+L00049 J0530-3730 4284.0 1428.0 3 target target
+L00038 DESJ0405-3308 4284.0 1428.0 3 target target
+L00155 J1537-3010 4284.0 1428.0 3 target target
+L00161 PSJ1606-2333 4284.0 1428.0 3 target target
+L00022 J0203+1612 4718.0 674.0 7 target ""
+L00178 J1817+2729 5712.0 1428.0 4 target target
+L00202 HS2209+1914 28476.0 14238.0 3 target target

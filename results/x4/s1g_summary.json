@@ -1,0 +1,185 @@
+{
+ "label": "derived; S1g summary (rule functions applied to the saved rows)",
+ "fits": [
+  {
+   "round": 1,
+   "name": "V9",
+   "seed": 11,
+   "set": "development",
+   "status_run": "finished",
+   "eps": 8.060760394612565e-06,
+   "eps_partial": null,
+   "rule_eps_only": "pass",
+   "rule_with_ff_case": "pass",
+   "de_message": "Maximum number of iterations has been exceeded.",
+   "de_nit": 1000,
+   "de_spread": 2.8095599276932848e-05,
+   "refine_rounds": 5,
+   "refine_last_gain": 7.318645687259817e-06,
+   "refine_converged": true,
+   "bounds": [
+    "chi"
+   ],
+   "lens": [
+    1434.4025457326852,
+    0.21497237724073326
+   ],
+   "wall_s": 2969.3
+  },
+  {
+   "round": 1,
+   "name": "VA2",
+   "seed": 11,
+   "set": "validation",
+   "status_run": "finished",
+   "eps": 2.7882452694028004e-05,
+   "eps_partial": null,
+   "rule_eps_only": "pass",
+   "rule_with_ff_case": "pass",
+   "de_message": "Optimization terminated successfully.",
+   "de_nit": 972,
+   "de_spread": 4.34814724396288e-08,
+   "refine_rounds": 4,
+   "refine_last_gain": 3.2345269971312263e-06,
+   "refine_converged": true,
+   "bounds": [],
+   "lens": [
+    983.0899604734607,
+    0.176073590307406
+   ],
+   "wall_s": 2960.5
+  },
+  {
+   "round": 1,
+   "name": "VA1",
+   "seed": 11,
+   "set": "validation",
+   "status_run": "finished",
+   "eps": 3.933376839793112e-06,
+   "eps_partial": null,
+   "rule_eps_only": "pass",
+   "rule_with_ff_case": "pass",
+   "de_message": "Optimization terminated successfully.",
+   "de_nit": 975,
+   "de_spread": 2.1823627656812073e-08,
+   "refine_rounds": 2,
+   "refine_last_gain": 1.3850674218662817e-07,
+   "refine_converged": true,
+   "bounds": [],
+   "lens": [
+    1553.9729889421876,
+    0.1515430640865712
+   ],
+   "wall_s": 3110.1
+  },
+  {
+   "round": 2,
+   "name": "V5",
+   "seed": 11,
+   "set": "development",
+   "status_run": "finished",
+   "eps": 4.199769459500846e-05,
+   "eps_partial": null,
+   "rule_eps_only": "pass",
+   "rule_with_ff_case": "pass",
+   "de_message": "Optimization terminated successfully.",
+   "de_nit": 552,
+   "de_spread": 9.247159660492794e-08,
+   "refine_rounds": 5,
+   "refine_last_gain": 9.666142272934941e-06,
+   "refine_converged": true,
+   "bounds": [],
+   "lens": [
+    1084.2809103360562,
+    0.1844155249415773
+   ],
+   "wall_s": 1825.7
+  },
+  {
+   "round": 2,
+   "name": "V5",
+   "seed": 12,
+   "set": "development",
+   "status_run": "finished",
+   "eps": 2.2412998014309515e-05,
+   "eps_partial": null,
+   "rule_eps_only": "pass",
+   "rule_with_ff_case": "pass",
+   "de_message": "Optimization terminated successfully.",
+   "de_nit": 713,
+   "de_spread": 9.607673110734049e-08,
+   "refine_rounds": 7,
+   "refine_last_gain": 7.5742679235268895e-06,
+   "refine_converged": true,
+   "bounds": [],
+   "lens": [
+    1034.7119451738454,
+    0.1933319180926646
+   ],
+   "wall_s": 2391.1
+  },
+  {
+   "round": 2,
+   "name": "V9",
+   "seed": 12,
+   "set": "development",
+   "status_run": "finished",
+   "eps": 1.2769168794668495e-05,
+   "eps_partial": null,
+   "rule_eps_only": "pass",
+   "rule_with_ff_case": "pass",
+   "de_message": "Maximum number of iterations has been exceeded.",
+   "de_nit": 1000,
+   "de_spread": 4.749062559972287e-07,
+   "refine_rounds": 4,
+   "refine_last_gain": 5.6539382240483604e-06,
+   "refine_converged": true,
+   "bounds": [
+    "chi"
+   ],
+   "lens": [
+    1471.0965744011703,
+    0.20970564216351056
+   ],
+   "wall_s": 2968.6
+  }
+ ],
+ "tool_eps_only": "pass",
+ "FF_case_P": 0.9476377694069567,
+ "tool_final": "pass",
+ "r1": {
+  "P_FF_seeds": {
+   "22": 0.9458756195092743,
+   "23": 0.9458833800179149,
+   "21": 0.9476377694069567
+  },
+  "P_status": {
+   "22": "finished",
+   "23": "finished",
+   "21": "finished"
+  },
+  "P_best_incl_saved": 0.9476377694069567,
+  "U_FF_seeds_S1f": [
+   0.8922899445342309,
+   0.8922911658790608,
+   0.9135105524586078
+  ],
+  "P_seeds_agree": false,
+  "U_seeds_agree": false,
+  "verify_best_P": {
+   "label": "21",
+   "FF_conservative": 0.9476377694069565,
+   "score_spread": 4.440892098500626e-16,
+   "counterexample_verified": false,
+   "feasibility_fail_verified": false
+  },
+  "outcome": 3,
+  "causes": [
+   "P search reliability: two best R1 seeds differ by > 2e-4",
+   "U search reliability (S1f, not re-run): two best seeds differ by > 2e-4"
+  ],
+  "best_ordinary_FF": 0.9476377694069567,
+  "rho_req": 9.394162996482311,
+  "intrinsic_snr_needed": 48.57812260506321
+ }
+}
