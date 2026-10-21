@@ -1561,7 +1561,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   https://archive.stsci.edu/pub/hlsp/frontier/abells1063/models/<team>/v4/ (each map ~105.8 MB; GLAFIC kappa
   105,756,480 B). Read by HTTP byte ranges at 24 positions only; no whole-file sha256 (not downloaded).
 - Chan et al. 2020, ApJ 888, 35 — redshifts of lensed systems toward RXC J2248.7−4431 (Abell S1063), VizieR
-  `J/ApJ/888/35` table1 (121 rows), queried 2026-10-16 for the `arcs` anti positions.
+  `J/ApJ/888/35` table1 (121 rows), queried 2026-10-16 for the `arcs` anti positions. Streamed again 2026-10-21 as the D-035
+  image list (`scripts/s1063_imagelist.py`, `results/lens_consistency/abells1063_images/chan20_images.ecsv`).
 - ESO Science Archive, MUSE reduced cubes towards Abell S1063, accessed 2026-10-16 (`scripts/arcs_vet_spectra.py`):
   ObsCore TAP https://archive.eso.org/tap_obs (`ivoa.ObsCore`, instrument MUSE, cubes) and SODA sync cutouts
   https://dataportal.eso.org/dataPortal/soda/sync. Products used: ADP.2017-03-28T12:46:01.331 (095.A-0653, 5.78 GB,

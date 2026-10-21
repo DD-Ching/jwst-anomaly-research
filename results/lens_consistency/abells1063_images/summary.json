@@ -1,0 +1,22 @@
+{
+ "catalog": "J/ApJ/888/35/table1",
+ "retrieved": "2026-10-21",
+ "n_images": 121,
+ "n_systems": 42,
+ "n_systems_zspec": 12,
+ "n_images_system_zspec": 36,
+ "dup_position_ids": [
+  "26.1",
+  "27.1",
+  "27.2",
+  "27.3"
+ ],
+ "n_images_no_z": 0,
+ "cl_counts": {
+  "1": 72,
+  "2": 20,
+  "3": 29
+ },
+ "max_zspec_spread_within_system": 0.0,
+ "median_abs_zspec_minus_geoz": 0.12899994850158691
+}

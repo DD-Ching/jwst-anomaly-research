@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: Abell S1063 multiple-image list ready for the D-035 revisit (Chan+2020, VizieR)
+- **Correction of the 18:08Z entry:** a published list with MUSE redshifts is on VizieR, `J/ApJ/888/35` (Chan+2020;
+  already in SOURCES.md since 2026-10-16). Written as `results/lens_consistency/abells1063_images/chan20_images.ecsv`
+  by `scripts/s1063_imagelist.py`: 121 images, 42 systems, 12 with z_spec (36 images), the rest at Chan's model z
+  (`summary.json`). Source defect: 27.1–27.3 repeat 26.1's coordinates in the VizieR table; the four rows are flagged
+  `dup_position` (leave out until checked against the paper).
+- **Still blocked here:** the CATS v4.1 maps (`archive.stsci.edu` TLS fails again at 19:15Z; MAST Download 404), so no
+  `validate` / `images` reading. Next is that run in a local session (`RESULT.md` "Next").
+
 ## 2026-10-21: Abell S1063 image-list route queued; HFF CATS files unreachable from cloud sessions
 - **Why:** D-035's revisit condition for Abell S1063 (fitted or spectroscopic system redshifts) may be met by the
   published MUSE redshifts; opening its image list would add the cluster with the `arcs` anti excess to the
