@@ -69,7 +69,7 @@ def test_decide_outcomes(tmp_path, monkeypatch):
         ],
     )
     d = s.decide()
-    assert d["outcome"].startswith("both runs recovered") and 32 in d["verified"]
+    assert d["outcome"].startswith("both runs met the frozen target") and 32 in d["verified"]
     write(
         "s1i_r1.json",
         [

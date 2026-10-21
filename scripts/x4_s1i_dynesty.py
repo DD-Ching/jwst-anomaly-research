@@ -285,8 +285,11 @@ def decide():
     elif len(runs) < 2 or not all(v["counted"] for v in out["r1"].values()):
         out["outcome"] = "unfinished"
     elif n_ok == 2:
+        # post hoc wording correction (review): the frozen phrase said "recovered the known better
+        # U solution"; the runs meet the target without re-finding a specific point
         out["outcome"] = (
-            "both runs recovered the known better U solution (not a global-optimum proof)"
+            "both runs met the frozen target from prior-only initialisation"
+            " (not a global-optimum proof)"
         )
     else:
         out["outcome"] = f"method did not pass this test ({n_ok} of 2 runs reached the target)"

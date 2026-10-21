@@ -65,5 +65,5 @@
    "FF_conservative": 0.9151491310027972
   }
  },
- "outcome": "both runs recovered the known better U solution (not a global-optimum proof)"
+ "outcome": "both runs met the frozen target from prior-only initialisation (not a global-optimum proof)"
 }
