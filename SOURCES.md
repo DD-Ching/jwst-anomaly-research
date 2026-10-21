@@ -658,6 +658,14 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - `hlsp_frontier_model_macs0717_williams_v4.1_gamma.fits` 3,090,240 B `75ed37026ecedf04b250684669ab7263a3fb20e66754a017fc272dfd94cd87d3`
   - `hlsp_frontier_model_macs0717_diego_v4.1_kappa.fits` 1,056,960 B `e3304e045a04639df725351bdfd12aec2dc530bc2b863b52e3631f927d10e69f`
   - `hlsp_frontier_model_macs0717_diego_v4.1_gamma.fits` 1,056,960 B `316ab0e8953021b4ad0cef8d085aa0bb8c5df1acb5f74bcdee66fcc95bdfe9da`
+  - Pinned 2026-10-21 as `macs0717-sharon` / `macs0717-keeton` (`lensmodel.MACS0717_SHARON_V4COR`,
+    `MACS0717_KEETON_V4`; the deflection and κ files above, re-downloaded and matching), plus
+    `hlsp_frontier_model_macs0717_sharon_v4cor_z02-magnif.fits` 64,008,000 B `133be386832dda060afd180c716bb644e6ee000523add666bf5ad97edfffd436`
+    and `hlsp_frontier_model_macs0717_keeton_v4_z02-magnif.fits` 64,039,680 B `26750c9f50083de610f7ab42ba8c02ee2d45310195a54cd9f484b3fcf97f8415`.
+    Readmes (accessed 2026-10-21): `sharon/v4cor/hlsp_frontier_model_macs0717_sharon_v4cor_readme.pdf` (the shared
+    four-cluster v4 document, sha256 `12a284d22368f29491670180d07f5776d35a28ed754743b866fdf7184af39636`, Table 7) and
+    `keeton/v4/hlsp_frontier_model_macs0717_keeton_v4_readme.txt` (sha256
+    `2a85d85ebb041c3f6fa1736bd88fe75bfe1afe2f3c104bdf5b87310c79c7cda6`; 29 images of 9 gold systems, rms 0.79″).
 
 ### MACS1149 field run (accessed 2026-10-08; D-037)
 

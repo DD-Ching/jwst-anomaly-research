@@ -248,6 +248,22 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    # z_lens 0.545 as macs0717-cats; both readmes give flat H0 70, Om 0.3 (known-case gates:
+    # results/lens_consistency/macs0717_models/RESULT.md)
+    "macs0717-sharon": {
+        "files": lensmodel.MACS0717_SHARON_V4COR,
+        "kind": "maps",
+        "z_lens": 0.545,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "macs0717-keeton": {
+        "files": lensmodel.MACS0717_KEETON_V4,
+        "kind": "maps",
+        "z_lens": 0.545,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     # z_lens 0.234 (CLASH cluster list, Postman et al. 2012); GLAFIC normalised at z_s 3 (header)
     "rxj2129-lenstool-maps": {
         "files": lensmodel.RXJ2129_LENSTOOL_MAPS,

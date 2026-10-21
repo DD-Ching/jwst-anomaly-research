@@ -1,4 +1,4 @@
-# MACS0717: Sharon v4cor and Keeton v4 as pinned map models (frozen plan, 2026-10-21 01:22Z)
+# MACS0717: Sharon v4cor and Keeton v4 as pinned map models (frozen plan, 2026-10-21 01:11Z)
 
 **Question.** Do the HFF Sharon & Johnson v4cor (Lenstool) and Keeton v4 (parametric) models of MACS J0717.5+3745
 load correctly as `MapLensModel`s, so they can replace the scratch-only second models of D-036 / D-041 for this field

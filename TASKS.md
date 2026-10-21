@@ -307,7 +307,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        p 0.69; `results/radial_macs0717/RESULT.md`; photo-z cover ~17 % of rows);
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; classify model copies of
        unpredicted catalogued images automatically (D-041);
-     - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);
+     - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
+       2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
+       written, 6.2 off the map, in-footprint use only). Next: the D-041 cross-model readings of the MACS0717 forced rows
+       with them (replaces the scratch readings in `docs/fields/macs0717.md` Step 6);
      - ~~MACS1149 `no_reference` rows~~ — done (D-037 addendum 2026-10-14, `m1149_refs.py`): 11 rows, 0 `absent`, none
        unmet in both models;
      - MACS1149: ~~`macs1149-sharon` in `MODELS`~~ done 2026-10-20 (`results/lens_consistency/macs1149_sharon/RESULT.md`: maps gate passes, gold-image gate fails as written on system 9 off the map; use inside the footprint only); ~~D-041 cross-model rule with it on the 16 CATS extra rows~~ done 2026-10-21 (`results/lens_consistency/macs1149_crossmodel/RESULT.md`: gate 38 / 39; one frozen flag, system 16 at its fitted z, D-037's case; tally unchanged); the D-037 rules as code in `forced_check` (open); re-run `images` with CANUCS DR1
