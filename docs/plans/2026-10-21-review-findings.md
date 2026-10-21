@@ -79,7 +79,9 @@ coordinator in one commit (code and tests only):
 | C: download-with-status sequence duplicated in `download` and `psf` | one shared `download_set` | existing download / partial-dir tests | None |
 | C: `run_system` re-reads the status file per system | not changed (a cheap read; stages run sequentially) | — | None |
 
-No further review round was opened (owner instruction: verify the fixes; do not widen the review).
+A last verification of the round-4 commit (188102b) raised two points: concurrent `psf_one` writes (not applicable:
+`cmd_psf` calls `psf_one` sequentially in one loop) and two blank lines left by removed imports (removed, 5616671). No
+further review round was opened (owner instruction: verify the fixes; do not widen the review).
 
 ## Review process
 - Round 1: B and C first versions (10 findings). Round 2: their fix commits (10). Round 3: the final PR diff (10 in
