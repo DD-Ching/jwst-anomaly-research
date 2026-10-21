@@ -310,7 +310,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, MACS0717), Keeton v4 (MACS0717);
      - ~~MACS1149 `no_reference` rows~~ — done (D-037 addendum 2026-10-14, `m1149_refs.py`): 11 rows, 0 `absent`, none
        unmet in both models;
-     - MACS1149: ~~`macs1149-sharon` in `MODELS`~~ done 2026-10-20 (`results/lens_consistency/macs1149_sharon/RESULT.md`: maps gate passes, gold-image gate fails as written on system 9 off the map; use inside the footprint only); the D-037 rules in `forced_check`; re-run `images` with CANUCS DR1
+     - MACS1149: ~~`macs1149-sharon` in `MODELS`~~ done 2026-10-20 (`results/lens_consistency/macs1149_sharon/RESULT.md`: maps gate passes, gold-image gate fails as written on system 9 off the map; use inside the footprint only); ~~D-041 cross-model rule with it on the 16 CATS extra rows~~ done 2026-10-21 (`results/lens_consistency/macs1149_crossmodel/RESULT.md`: gate 38 / 39; one frozen flag, system 16 at its fitted z, D-037's case; tally unchanged); the D-037 rules as code in `forced_check` (open); re-run `images` with CANUCS DR1
        photo-z; ~~fix system 16's z~~ — done (D-037 addendum 2026-10-14: z ≈ 2.5–2.9 from the pair in both models; CANUCS
        5106117 is a possible far image; a spectrum would settle both; ~~published spec-z~~ checked 2026-10-20, none
        (`results/lens_consistency/macs1149_s16_specz/RESULT.md`: Treu+16 and DJA NIRSpec v4.4; 16.2's CANUCS PRISM

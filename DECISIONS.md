@@ -2352,6 +2352,15 @@ CATS-fitted z = 4.419.
   fitted z 1.301, not the spec-z 1.24. `results/lens_consistency/macs1149_sharon/RESULT.md`.
 - **Revisit if** a wider Sharon map release appears, or a D-037 row lies outside the footprint.
 
+**Addendum 2026-10-21 (D-041 rule with the pinned Sharon, `scripts/m1149_crossmodel.py`).**
+- **Decision.** All 16 non-`observed` CATS rows are read with the D-041 cross-model rule against `macs1149-sharon`;
+  D-037's tally (0 surviving) stands. The one frozen flag (system 16's `absent` image at the CATS-fitted z 4.419,
+  Sharon extra image 0.90″ away) is D-037's fitted-redshift case: at 4.419 Sharon reproduces only 16.2, and at the
+  adopted z 2.7 Sharon's nearest extra image is 20.2″ away (model-dependent).
+- **Evidence.** Known-case gate 38 / 39 catalogued images (rule ≥ 0.8, ASSUMPTION); all rows inside the footprint;
+  the 11 `no_reference` readings equal the scratch-Sharon ones. `results/lens_consistency/macs1149_crossmodel/RESULT.md`.
+- **Revisit if** a spectroscopic z for system 16 is published (as above), or a JWST-era MACS1149 model appears.
+
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
 **Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″
