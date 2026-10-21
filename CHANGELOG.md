@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: X4 S1k: graded polish fixes the polish, but the S1i search misses the basin on an R1-like U injection (C1, ε 4.2e-3); R1 not polished
+- **Diagnosis of the old polish:** its 150-evaluation restarts with a fixed simplex report "converged" on a zero
+  gain. Vertices beyond the box or past 2π score as walls.
+- **New polish (one frozen procedure):** SciPy Nelder–Mead at steps ×1, 0.1, 0.01, with angles wrapped and
+  vertices mirrored inside the box, 10,000 evaluations.
+- **Development (saved solutions):** B2 6.9e-4 → 7.5e-5. A same-start, same-budget scale-1 control reached
+  1.8e-5, so the gain is the long Nelder–Mead runs, not finer steps.
+- **New validation:** C2 (near B2) passes, 9.2e-6. C1 (near R1) fails, 4.2e-3: the search ended at q 4.99 against
+  2.73. R1 not polished; tool/optimization undetermined (`docs/state/units/X4.md` § S1k).
+- **Cost:** 2.3 CPU-h.
+
 ## 2026-10-21: Abell S1063 multiple-image list ready for the D-035 revisit (Chan+2020, VizieR)
 - **Correction of the 18:08Z entry:** a published list with MUSE redshifts is on VizieR, `J/ApJ/888/35` (Chan+2020;
   already in SOURCES.md since 2026-10-16). Written as `results/lens_consistency/abells1063_images/chan20_images.ecsv`

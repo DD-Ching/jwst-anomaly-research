@@ -1,0 +1,19 @@
+{
+ "label": "derived; S1k decision by frozen rules",
+ "validation": {
+  "C1": {
+   "status": "fail",
+   "eps_final": 0.004237878478365209,
+   "polish_stop": "completed",
+   "s1i_stop": "maxcall"
+  },
+  "C2": {
+   "status": "pass",
+   "eps_final": 9.176444708103304e-06,
+   "polish_stop": "completed",
+   "s1i_stop": "maxcall"
+  }
+ },
+ "validation_pass": false,
+ "outcome": "graded polish failed or did not finish its new validation; R1 not refined"
+}
