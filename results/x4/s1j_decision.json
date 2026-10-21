@@ -1,0 +1,23 @@
+{
+ "label": "derived; S1j decision by frozen rules",
+ "validation": {
+  "B1": {
+   "status": "pass",
+   "eps_final": 6.513655486861669e-05,
+   "s1i_stop": "dlogz",
+   "extend_stop": "converged",
+   "extra_fev": 150
+  },
+  "B2": {
+   "status": "fail",
+   "eps_final": 0.0006948776673343371,
+   "s1i_stop": "maxcall",
+   "extend_stop": "converged",
+   "extra_fev": 150
+  }
+ },
+ "validation_pass": false,
+ "refine": {},
+ "verified": {},
+ "outcome": "spin-bound validation failed or unfinished; R1 not refined (tool/optimization undetermined)"
+}

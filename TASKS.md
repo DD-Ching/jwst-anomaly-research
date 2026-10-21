@@ -48,7 +48,10 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   (2026-10-21): dynesty nested sampling passes U validation (V7, new V10) and, with the S1e polish, both R1 runs beat the old U best
   (0.9146, 0.9151 vs 0.9135; verified), in a different region, disagreeing by 5.6e-4; U optimum still not
   established, R1 undetermined. Open, on the owner's go: P with the same method needs a validated interpolated lens
-  factor first (exact factor about 1 s per call; estimated 12.5–20 CPU-h plus that check).
+  factor first (exact factor about 1 s per call; estimated 12.5–20 CPU-h plus that check). S1j done (2026-10-21):
+  spin-bound U validation fails on B2 (near-cap, anti-aligned, q 9.35; ε 6.9e-4 with a converged polish), B1 passes;
+  R1 not refined; tool/optimization undetermined. P acceleration not supported until the U search handles R1's spin
+  regime; the owner decides (spin parametrisation or GW data-analysis advice).
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet
   published; waiting for the DR4 release documentation) (authorized 2026-10-14 by S0-2026-10-14): state file
