@@ -1,0 +1,24 @@
+{
+ "label": "derived; S1h cache / version check before the fits",
+ "checks": {
+  "s1g_R1_s21_exact": {
+   "stored": 0.9476377694069567,
+   "now": 0.9476377694069567,
+   "abs_diff": 0.0
+  },
+  "saved_rescored_vs_s1g": {
+   "n": 14,
+   "abs_diff": 0.0
+  },
+  "grid_de_replay_R1_s21_gen1": {
+   "stored": 0.05968246668468846,
+   "now": 0.05968246668468846,
+   "abs_diff": 0.0
+  },
+  "grid": {
+   "nodes": 1271,
+   "cache_files_s+1": 1271
+  }
+ },
+ "pass": true
+}
