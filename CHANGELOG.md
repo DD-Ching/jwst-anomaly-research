@@ -25,6 +25,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** the extra-seed route is closed. Needed instead: a search with a global-coverage diagnostic (e.g. nested
   sampling on the same score, injection-validated) or GW data-analysis advice on precessing fitting factors (all
   best fits sit at |χ| = 0.99). 2.6 CPU-h, 44 min wall on 4 cores; X4 has about 3.0 h left.
+## 2026-10-21: W3 ZTF v25 complete: sibling prediction 6 / 6, H-sib becomes the queue rule; 2347 searched, 0 survivors
+- **Carry-over of the frozen v25 queue** (`results/w3_ztf/v25/RESULT.md` "Carry-over run"). The objects tables and the
+  2347 and 4990 samples were rebuilt and reproduced exactly; the driver was not changed.
+- **Result:** 2347 fade 73 / 1,000 (predicted ≤ 10 %), and it passes calibration: 1,917 groups searched, 8 flagged
+  runs in 4 groups, 0 survivors. 4990 fade 124 / 1,000 (predicted > 10 %), so it fails calibration. Tally 6 / 6 ≥ 5 / 6,
+  so by the frozen outcome H-sib is usable as a queue rule. The six fade rates split by parent (586: 67–73;
+  287 / 1247: 121–132). This tests queue ordering, not physics: shared fields, seasons and crowding are not separated.
+- **Cumulative (v13 rule):** 41,283 groups, no confirmed target event. Cost: ≈ 1.8 GB streamed, caches deleted,
+  queue 5.7 min on 2 workers.
+- **Handoff:** next run builds a v26 queue from `v22/inventory.json` under H-sib (frozen plan first).
 
 ## 2026-10-21: W3 ZTF v25: the fade_diag sibling prediction holds in 4 / 4 decided areas (partial); 2346 passes and is searched, 0 survivors
 - **Why:** routine search under its T1 share; the testable prediction of `results/w3_ztf/fade_diag/RESULT.md` (siblings

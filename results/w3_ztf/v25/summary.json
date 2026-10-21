@@ -354,8 +354,15 @@
    "lc_mb": 947.8,
    "parent": 586,
    "prediction_fade_le_10pct": true,
-   "started": false,
-   "stage_seconds": {},
+   "started": true,
+   "stage_seconds": {
+    "fetch": 64.1,
+    "exposures": 49.0,
+    "search_dev": 50.4,
+    "inject": 144.8,
+    "decision": 0.0,
+    "search_holdout": 83.4
+   },
    "calibration_groups": 500,
    "search_groups": 1917,
    "refmag_r_p5_p50_p95": {
@@ -369,15 +376,85 @@
      16.488998413085938,
      17.42099952697754
     ]
-   }
+   },
+   "passed": true,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 124,
+    "rho0.01_blend1_tE30": 159,
+    "rho0.01_blend1_tE100": 152,
+    "rho0.1_blend1_tE10": 123,
+    "rho0.1_blend1_tE30": 153,
+    "rho0.01_blend0.7_tE10": 121,
+    "rho0.01_blend0.7_tE30": 135,
+    "rho0.01_blend0.7_tE100": 126,
+    "rho0.1_blend0.7_tE10": 110,
+    "rho0.1_blend0.7_tE30": 135
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     73,
+     1000,
+     [
+      0.0585,
+      0.0908
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 1,
+   "search": {
+    "groups": 1917,
+    "series_searched": 3826,
+    "flagged_runs": 8,
+    "flagged_groups": 4,
+    "passed_groups": []
+   },
+   "fetch_read_s": 61.5,
+   "tap_mb": 10.3,
+   "fade_le_10pct": true,
+   "as_predicted": true
   },
   "4990": {
    "position": 6,
    "lc_mb": 536.3,
    "parent": 1247,
    "prediction_fade_le_10pct": false,
-   "started": false,
-   "stage_seconds": {},
+   "started": true,
+   "stage_seconds": {
+    "fetch": 41.3,
+    "exposures": 42.3,
+    "search_dev": 39.2,
+    "inject": 98.9,
+    "decision": 0.0
+   },
    "calibration_groups": 500,
    "search_groups": 2135,
    "refmag_r_p5_p50_p95": {
@@ -391,33 +468,87 @@
      16.371999740600586,
      17.395999908447266
     ]
-   }
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 121,
+    "rho0.01_blend1_tE30": 162,
+    "rho0.01_blend1_tE100": 155,
+    "rho0.1_blend1_tE10": 100,
+    "rho0.1_blend1_tE30": 151,
+    "rho0.01_blend0.7_tE10": 122,
+    "rho0.01_blend0.7_tE30": 152,
+    "rho0.01_blend0.7_tE100": 135,
+    "rho0.1_blend0.7_tE10": 93,
+    "rho0.1_blend0.7_tE30": 135
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     124,
+     1000,
+     [
+      0.105,
+      0.1459
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 38.7,
+   "tap_mb": 6.8,
+   "fade_le_10pct": false,
+   "as_predicted": true
   }
  },
- "searched_groups": 2009,
- "searched_series": 3998,
+ "searched_groups": 3926,
+ "searched_series": 7824,
  "final_survivors": 0,
- "started": 4,
- "passed": 1,
- "downloaded_mb": 2704.2,
+ "started": 6,
+ "passed": 2,
+ "downloaded_mb": 4205.4,
  "downloaded_note": "objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured",
- "not_started": [
-  5,
-  6
- ],
- "stage_seconds_of_searched_areas": 438.2,
+ "not_started": [],
+ "stage_seconds_of_searched_areas": 829.9,
  "per_1000_searched": {
-  "stage_seconds": 218.1,
-  "lc_mb": 361.1,
-  "wall_clock_min_queue": 9.71
+  "stage_seconds": 211.4,
+  "lc_mb": 426.2,
+  "wall_clock_min_queue": 17.32
  },
- "wall_clock_min": 19.5,
- "events": 57,
+ "wall_clock_min": 68.0,
+ "events": 87,
  "sibling_tally": {
-  "decided": 4,
-  "as_predicted": 4,
+  "decided": 6,
+  "as_predicted": 6,
   "of": 6,
-  "complete": false,
-  "frozen_outcome": null
+  "complete": true,
+  "frozen_outcome": "H-sib usable as a queue rule"
  }
 }
