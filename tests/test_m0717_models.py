@@ -1,4 +1,4 @@
-"""Offline tests for scripts/m0717_models.py (registered models, transcribed image list; no network)."""
+"""Offline tests for scripts/m0717_models.py (registered models, transcribed images; no network)."""
 
 from __future__ import annotations
 

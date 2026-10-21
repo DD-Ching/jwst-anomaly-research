@@ -457,10 +457,10 @@ MACS1149_SHARON_V4COR: dict[str, tuple[str, str]] = {
     ),
 }
 
-#: HFF Sharon & Johnson v4cor (Lenstool) and Keeton v4 (parametric) maps of MACS J0717.5+3745 (readmes
-#: ``hlsp_frontier_model_macs0717_sharon_v4cor_readme.pdf`` and ``..._keeton_v4_readme.txt``, accessed
-#: 2026-10-21): best fit, 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second
-#: models for the D-036 / D-041 MACS0717 rows (known-case gates: ``results/lens_consistency/macs0717_models/``).
+#: HFF Sharon & Johnson v4cor (Lenstool) and Keeton v4 (parametric) maps of MACS J0717.5+3745
+#: (readmes ``..._sharon_v4cor_readme.pdf`` and ``..._keeton_v4_readme.txt``, accessed 2026-10-21):
+#: best fit, 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second models
+#: for the D-041 MACS0717 rows (gates: ``results/lens_consistency/macs0717_models/``).
 _HFF_MACS0717 = "https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models"
 _HFF_SHARON_MACS0717 = f"{_HFF_MACS0717}/sharon/v4cor/hlsp_frontier_model_macs0717_sharon_v4cor"
 _HFF_KEETON_MACS0717 = f"{_HFF_MACS0717}/keeton/v4/hlsp_frontier_model_macs0717_keeton_v4"
