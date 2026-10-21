@@ -53,9 +53,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   points to the polish step scale), B1 passes; R1 not refined; tool/optimization undetermined. U accuracy not
   established for this regime, so no P acceleration yet; the owner decides (a validated finer polish step, a spin
   parametrisation or GW data-analysis advice). S1k done (2026-10-21): graded Nelder–Mead polish works where the
-  search found the basin (B2 dev 7.5e-5, C2 9.2e-6), but the R1-like validation C1 fails (4.2e-3, wrong basin
-  from the S1i search); R1 not polished; tool/optimization undetermined; the obstacle is global search in R1's
-  region; P not supported; the owner decides (spin/precession parametrisation or GW data-analysis advice).
+  search found the right region (B2 dev 7.5e-5, C2 9.2e-6), but the R1-like validation C1 fails (4.2e-3; ended at q
+  4.99, polish at its cap, cause not isolated); R1 not polished; tool/optimization undetermined; no P acceleration;
+  the owner decides (spin/precession parametrisation or GW data-analysis advice).
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet
   published; waiting for the DR4 release documentation) (authorized 2026-10-14 by S0-2026-10-14): state file

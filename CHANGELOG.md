@@ -2,15 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-21: X4 S1k: graded polish fixes the polish, but the S1i search misses the basin on an R1-like U injection (C1, ε 4.2e-3); R1 not polished
+## 2026-10-21: X4 S1k: graded polish passes B2 (development) and C2, but fails the R1-like U injection C1 (ε 4.2e-3); R1 not polished
 - **Diagnosis of the old polish:** its 150-evaluation restarts with a fixed simplex report "converged" on a zero
   gain. Vertices beyond the box or past 2π score as walls.
 - **New polish (one frozen procedure):** SciPy Nelder–Mead at steps ×1, 0.1, 0.01, with angles wrapped and
   vertices mirrored inside the box, 10,000 evaluations.
-- **Development (saved solutions):** B2 6.9e-4 → 7.5e-5. A same-start, same-budget scale-1 control reached
-  1.8e-5, so the gain is the long Nelder–Mead runs, not finer steps.
-- **New validation:** C2 (near B2) passes, 9.2e-6. C1 (near R1) fails, 4.2e-3: the search ended at q 4.99 against
-  2.73. R1 not polished; tool/optimization undetermined (`docs/state/units/X4.md` § S1k).
+- **Development (saved solutions):** B2 6.9e-4 → 7.5e-5. A same-start, same-budget control with fresh scale-1
+  simplices reached 1.8e-5 and did at least as well on V7 and V10, so finer steps are not shown to help.
+- **New validation:** C2 (near B2) passes, 9.2e-6. C1 (near R1) fails, 4.2e-3: the search and polishes ended at
+  q 4.99 against 2.73, with the polish still gaining at its cap; cause not isolated. R1 not polished; tool/optimization undetermined (`docs/state/units/X4.md` § S1k).
 - **Cost:** 2.3 CPU-h.
 
 ## 2026-10-21: Abell S1063 multiple-image list ready for the D-035 revisit (Chan+2020, VizieR)
