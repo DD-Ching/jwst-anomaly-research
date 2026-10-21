@@ -1,0 +1,36 @@
+{
+ "label": "derived",
+ "summary": {
+  "version": 25,
+  "half": "dev",
+  "groups": 500,
+  "series_searched": 1000,
+  "flagged_runs": 1,
+  "flagged_groups": 1,
+  "passed_groups": []
+ },
+ "runs": [
+  {
+   "key": 601210100001578,
+   "ra": 9.8169528,
+   "dec": 27.7858072,
+   "filter": 1,
+   "t_start": 58769.16461658025,
+   "t_end": 58771.16489185223,
+   "n": 3,
+   "common_mode_frac": 0.04568519097765266,
+   "common_mode_ok": true,
+   "n_intermediate": 0,
+   "sharp_ok": true,
+   "edge_pre_d": 0.0,
+   "edge_post_d": 0.0,
+   "edge_ok": true,
+   "n_other_runs": 0,
+   "oneoff_ok": true,
+   "other_filter_epochs": 2,
+   "achromatic_ok": false,
+   "pass": false,
+   "insufficient": false
+  }
+ ]
+}
