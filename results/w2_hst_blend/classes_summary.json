@@ -1,0 +1,37 @@
+{
+  "galaxy_scale": 20986,
+  "quasar_radio_galaxy_scale": 444,
+  "quasar_radio_covered": 343,
+  "status_by_selection": {
+    "quasar": {
+      "blended": 242,
+      "faint galaxy": 8,
+      "none": 10,
+      "too close": 65
+    },
+    "radio": {
+      "blended": 1,
+      "faint galaxy": 7,
+      "none": 9,
+      "too close": 1
+    }
+  },
+  "quasar_blended_or_too_close": 307,
+  "d056_expected": {
+    "quasar": {
+      "blended": 242,
+      "too close": 65
+    },
+    "radio": {
+      "blended": 1,
+      "too close": 1
+    }
+  },
+  "bricks": {
+    "query": "SELECT brickname, ra1, ra2, dec1, dec2, nexp_r, nexp_z, galdepth_z FROM ls_dr10.bricks_s WHERE survey_primary = 1 AND nexp_z > 0",
+    "bytes": 23535682,
+    "sha256": "784df2df9454a3097d1d602d129ffbc746e8951f766a3ad67784de7ce4f743f9",
+    "rows": 332581
+  },
+  "note": "deflector/faint galaxy/none labels use defl_mag_max = -inf (no FJ calibration) and are not the D-056 labels; only blended/too close are used"
+}

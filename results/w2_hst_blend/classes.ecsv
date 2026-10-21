@@ -1,0 +1,330 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system_id, datatype: string}
+# - {name: name, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: selection, datatype: string}
+# - {name: status, datatype: string}
+# - {name: ls_n_psf, datatype: int64}
+# - {name: ls_sep, datatype: float64}
+# - {name: theta_e, datatype: float64}
+# - {name: z_lens, datatype: float64}
+# - {name: lens_z_known, datatype: bool}
+# - {name: z_source, datatype: float64}
+# - {name: catalogues, datatype: string}
+# - {name: refs, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: 'w12_lenscats.deflector_test on lenscat 1.1.3 + Euclid Q1 + SuGOHI (sha256-pinned), LS DR10 bricks_s and Tractor boxes (Data
+#     Lab TAP); scripts/w2_hst_blend.py classes'}
+# schema: astropy-2.0
+system_id name ra dec selection status ls_n_psf ls_sep theta_e z_lens lens_z_known z_source catalogues refs
+L00000 J0011-0845 2.83435 -8.7643 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00002 PSJ0028+0631 7.09369 6.5317 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00004 J0047+2514 11.9465943 25.2411 quasar "too close" 2 1.7282286982358515 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00005 HE0047-1756 12.6158 -17.6693 quasar "too close" 2 1.4276760616271678 nan 0.407 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00007 J0102+2445 15.69675 24.7544 quasar blended 0 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00008 DESJ0112-1650 18.141188 -16.840955 quasar blended 1 nan nan 0.54 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00009 SDSSJ0114+0722 18.6598 7.3747 quasar blended 1 nan nan 0.408 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00010 DESJ0115-5244 18.98883 -52.73978 quasar blended 0 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00011 PSJ0123-0455 20.841 -4.93275 quasar blended 0 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00012 J0124-0033 21.239432 -0.5532 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00014 PMNJ0134-0931 23.64858 -9.51747 quasar blended 1 nan nan 0.765 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00015 J0140-1152 25.01251 -11.87206 quasar blended 0 nan nan 0.28 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00017 Q0142-100 26.3194 -9.75475 quasar blended 1 nan nan 0.491 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00018 J0146-1133 26.6369 -11.5608 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00020 DESJ0150-4041 27.7372 -40.6956 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00021 QJ0158-4325 29.6724 -43.4178 quasar "too close" 2 1.222199238962132 nan 0.317 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00022 J0203+1612 30.9975 16.2024 quasar blended 0 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00023 WG0214-2105 33.568125 -21.093072 quasar "too close" 2 1.4050246648200864 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00024 OGLEJ0218-7335 34.55142 -73.59328 quasar "too close" 2 1.483575434684252 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00027 HE0230-2130 38.13829 -21.29046 quasar blended 0 nan nan 0.523 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00028 J0235-2433 38.8642 -24.5538 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00029 DESJ0245-0556 41.356506 -5.9499 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00030 J0246-1845 41.5508333 -18.7513889 quasar "too close" 2 1.0008257133703835 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00031 SDSSJ0246-0825 41.64204 -8.42669 quasar "too close" 2 1.0960901772161198 nan 0.723 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00032 DESJ0247-6349 41.9779 -63.8233 quasar blended 1 nan nan 0.43 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00033 SDSSJ0248+1913 42.2031 19.22528 quasar "too close" 2 1.1716250628926994 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00034 SDSSJ0256+0153 44.1697 1.8915 quasar "too close" 2 1.9370190421549778 nan 0.603 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00035 J0259-2338 44.8899 -23.6338 quasar blended 0 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00036 WISEJ0259-1635 44.92858 -16.5953 quasar "too close" 2 1.3549197004413045 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00037 DESJ0340-2545 55.03549 -25.760984 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00038 DESJ0405-3308 61.49875 -33.1475 quasar "too close" 2 1.3968554827046271 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00039 DESJ0407-5006 61.7928 -50.10042 quasar "too close" 2 1.7207055642075633 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00040 DESJ0407-1931 61.97413 -19.5228 quasar blended 1 nan nan 0.29 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00041 DESJ0408-5354 62.0905 -53.8999 quasar blended 1 nan nan 0.597 True nan lenscat "https://research.ast.cam.ac.uk/lensedquasars/index.html | https://iopscience.iop.org/article/10.3847/1538-4365/ab26b6#apjsab26b6t5"
+L00044 HE0435-1223 69.5619 -12.28745 quasar "too close" 4 1.5763809013649213 nan 0.454 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00047 DESJ0501-4118 75.4419 -41.3003 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00048 HE0512-3329 78.54541 -33.43958 quasar "too close" 2 0.6459689105054334 nan 0.93 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00049 J0530-3730 82.6541 -37.5031 quasar "too close" 3 0.6556848151925204 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00050 DESJ0600-4649 90.1246 -46.8169 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00056 ULASJ0743+2457 115.96921 24.96211 quasar blended 0 nan nan 0.381 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00058 SDSSJ0806+2006 121.59867 20.10874 quasar "too close" 2 1.4866684398859045 nan 0.573 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00059 HS0810+2554 123.38033 25.75083 quasar "too close" 2 0.8168543425018105 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00060 SDSSJ0818+0601 124.6268 6.0271 quasar "too close" 2 1.1470242385201312 nan 1.01 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00062 ULASJ0820+0812 125.06706 8.20466 quasar blended 1 nan nan 0.803 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00063 HS0818+1227 125.4121 12.29191 quasar blended 1 nan nan 0.39 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00066 SDSSJ0832+0404 128.0711 4.06789 quasar blended 0 nan nan 0.659 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00070 SDSSJ0904+1512 136.01744 15.21507 quasar "too close" 2 1.0656510632748222 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00071 J0907+0003 136.7937 0.0559 quasar "too close" 2 0.982297712832345 0.66 nan False nan lenscat;sugohi "https://research.ast.cam.ac.uk/lensedquasars/index.html | https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L00073 RXJ0911+0551 137.86471 5.84834 quasar "too close" 4 0.4871132437090555 nan 0.769 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00075 SDSSJ0921+2854 140.3142 28.9124 quasar blended 0 nan nan 0.445 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00076 SDSSJ0924+0219 141.23246 2.32358 quasar blended 1 nan 0.84 0.393 True nan lenscat;sugohi "https://research.ast.cam.ac.uk/lensedquasars/index.html | https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L00077 J0941+0518 145.3439 5.3066 quasar blended 0 nan nan 0.343 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00078 SDSSJ0946+1835 146.52017 18.59453 quasar blended 1 nan nan 0.388 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00080 FBQ0951+2635 147.84404 26.58719 quasar "too close" 3 1.099321457563958 nan 0.26 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00081 BRI0952-0115 148.75038 -1.50187 quasar "too close" 2 0.9968360336631943 nan 0.632 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00082 COSMOS5921+0638 149.84071 2.11063 quasar blended 0 nan 0.69 0.551 True nan lenscat;sugohi "https://research.ast.cam.ac.uk/lensedquasars/index.html | https://iopscience.iop.org/article/10.3847/1538-4357/aaae6a | https://iopscience.iop.org/article/10.1088/0004-637X/785/2/144#apj492878t1 | https://arxiv.org/abs/1109.1821 https://arxiv.org/abs/1911.02587 | SuGOHI4 SL2S"
+L00085 J1004+1229 151.10379 12.48966 quasar blended 1 nan nan 0.95 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00087 LBQS1009-0252 153.06622 -3.11767 quasar "too close" 2 1.536853070481322 nan 0.871 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00088 Q1017-207 154.3498 -20.7829 quasar "too close" 2 0.8462717042325376 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00091 SDSSJ1029+2623 157.30765 26.39171 quasar blended 0 nan nan 0.584 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00093 J1042+1641 160.592125 16.6875833 quasar blended 0 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00094 KIDS1042+0023 160.6552 0.3839 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00095 SDSSJ1054+2733 163.67036 27.5517 quasar "too close" 2 1.2499806963440245 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00098 HE1113-0641 169.09805 -6.9608 quasar "too close" 2 0.6610095124031765 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00099 PG1115+080 169.57035 7.76627 quasar "too close" 4 0.4754018617375532 nan 0.311 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00100 SDSSJ1128+2402 172.07704 24.03817 quasar "too close" 2 0.7788461039920502 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00103 RXJ1131-1231 172.9644 -12.5329 quasar blended 1 nan nan 0.295 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00104 SDSSJ1131+1915 172.9908 19.25761 quasar "too close" 2 1.401460275670484 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00106 SDSSJ1138+0314 174.51554 3.24939 quasar blended 0 nan nan 0.445 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00110 Q1208+101* 182.73764 9.90749 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00112 SDSSJ1226-0006 186.53342 -0.10061 quasar "too close" 2 1.2579958029469325 nan 0.517 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00113 J1238+2846 189.677778 28.7829659 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00114 SDSSJ1251+2935 192.78154 29.59458 quasar blended 0 nan nan 0.41 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00115 SDSSJ1254+2235 193.57917 22.59334 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00116 SDSSJ1254+1857 193.6681 18.95333 quasar blended 1 nan nan 0.555 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00117 SDSSJ1258+1657 194.58017 16.95489 quasar "too close" 2 1.2548948507567983 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00118 SDSSJ1304+2001 196.18166 20.01805 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00119 2M1310-1714 197.5835 -17.24939 quasar blended 1 nan nan 0.293 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00121 SDSSJ1320+1644* 200.24778 16.73437 quasar blended 0 nan nan 0.899 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00125 SDSSJ1330+1810 202.57772 18.17581 quasar blended 0 nan nan 0.373 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00126 SDSSJ1332+0347 203.09425 3.79442 quasar blended 0 nan nan 0.191 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00128 SDSSJ1335+0118 203.89496 1.30153 quasar "too close" 2 1.6241961807657985 nan 0.44 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00129 SDSSJ1339+1310 204.77999 13.1775 quasar "too close" 2 1.701112936425318 nan 0.607 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00131 SDSSJ1353+1138 208.27642 11.63464 quasar "too close" 2 1.3915248046427184 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00132 Q1355-2257 208.9308 -22.9565 quasar "too close" 2 1.2245639516993483 nan 0.701 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00133 SDSSJ1400+3134 210.05341 31.58141 quasar "too close" 2 1.7445797412414976 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00135 ULASJ1405+0959 211.31434 9.99162 quasar blended 0 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00139 H1413+117 213.94267 11.49539 quasar "too close" 3 1.1957878382053235 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00144 SDSSJ1455+1447 223.75782 14.79301 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00145 SDSSJ1458-0202 224.6984 -2.0348 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00148 J1515+3137 228.916 31.6279 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00153 ULASJ1527+0141 231.83424 1.69448 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00154 ULASJ1529+1038 232.41203 10.63454 quasar "too close" 2 1.3134871877525196 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00155 J1537-3010 234.355598 -30.171335 quasar blended 0 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00156 SDSSJ1537+3014 234.39335 30.2485 quasar blended 0 nan nan 0.49 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00157 J1553+3149 238.409197 31.8254202 quasar "too close" 2 1.5938250659617743 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00161 PSJ1606-2333 241.5009 -23.55612 quasar "too close" 4 1.7248532197037985 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00164 J1616+1415 244.193401 14.2622 quasar "too close" 2 1.5402525716645303 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00165 SDSSJ1620+1203 245.10931 12.0613 quasar blended 1 nan nan 0.398 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00168 PMNJ1632-0033 248.24033 -0.55586 quasar "too close" 2 1.294568477184836 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00169 FBQ1633+3134* 248.45408 31.56997 quasar "too close" 2 0.6606414248007141 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00170 PSJ1640+1045 250.0757 10.7515 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00171 SDSSJ1640+1932 250.19029 19.54921 quasar blended 0 nan nan 0.195 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00178 J1817+2729 274.378545 27.494468 quasar "too close" 3 1.796090716312034 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00187 WGD2021-4115 305.414 -41.266 quasar blended 0 nan nan 0.335 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00188 WFI2026-4536 306.54346 -45.60753 quasar "too close" 3 0.3004589617380252 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00189 WFI2033-4723 308.4257 -47.3956 quasar "too close" 4 0.7225331307768946 nan 0.661 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00190 WGD2038-4008 309.5113 -40.1371 quasar blended 0 nan nan 0.23 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00192 J2100-4452 315.061905 -44.868508 quasar blended 1 nan nan 0.203 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00195 PSJ2124+1632 321.0702 16.5381 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00198 SDSSJ2146-0047 326.6918 -0.7957 quasar "too close" 2 1.3941598311896697 nan 0.799 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00200 DESJ2158-5812 329.6555 -58.2011 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00201 CY2201-3201 330.38667 -32.02889 quasar blended 0 nan nan 0.32 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00202 HS2209+1914 332.87625 19.4869 quasar "too close" 2 1.0400985273622902 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00204 SDSSJ2222+2745 335.5354 27.7594 quasar blended 1 nan nan 0.49 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00205 Q2237+030 340.1258 3.35855 quasar blended 1 nan nan 0.039 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00206 J2250+2117 342.6437 21.29 quasar "too close" 2 1.8935931827040269 nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00207 J2257+2349 344.3557 23.8251 quasar blended 0 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00210 KIDS2307-3039 346.8286 -30.6544 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00212 PSS2322+1944 350.52985 19.73972 quasar "too close" 2 1.496433832290711 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00213 VDESJ2325-5229 351.4217 -52.4875 quasar blended 0 nan nan 0.4 True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00214 WISE2329-1258 352.491 -12.98306 quasar "too close" 2 1.257266483406462 nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00216 ULASJ2343-0050 355.79975 -0.84286 quasar blended 1 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00217 WISE2344-3056 356.0706 -30.94056 quasar blended 0 nan nan nan True nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L00218 DESJ2349-4518 357.4919 -45.3147 quasar blended 1 nan nan nan False nan lenscat https://research.ast.cam.ac.uk/lensedquasars/index.html
+L01662 015756-021809 29.485893 -2.302767 quasar blended 0 nan 1.48 0.372 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | HOLISMOKES16 HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1"
+L01673 015833-042044 29.637506 -4.345645 quasar blended 0 nan 0.66 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01801 021200-040806 33.003831 -4.135244 quasar blended 1 nan 1.59 0.485 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L01835 021519-034811 33.830154 -3.803059 quasar blended 1 nan 0.68 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01854 021722-040636 34.341886 -4.110093 quasar blended 0 nan 0.59 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01892 022040-052056 35.167639 -5.348907 quasar blended 1 nan 0.96 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01899 022059-045554 35.249349 -4.931855 quasar blended 0 nan 1.02 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01911 022245-050659 35.688171 -5.116434 quasar blended 1 nan 0.81 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01936 022622-042521 36.59273 -4.422687 quasar blended 0 nan 0.81 1.119 True 2.14 lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01939 022632-044547 36.636787 -4.763081 quasar blended 0 nan 0.66 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01950 022841-050005 37.17301 -5.001398 quasar blended 1 nan 0.73 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L01978 023102-044312 37.761606 -4.720033 quasar blended 0 nan 1.16 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 https://arxiv.org/abs/2312.07333 | SuGOHI4 SuGOHI10"
+L02048 023817-054555 39.574024 -5.765422 quasar blended 0 nan 0.92 0.599 True 1.763 lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1904.10465 https://arxiv.org/abs/1911.02587 https://arxiv.org/abs/2312.07333 | HOLISMOKES16 SuGOHI3 SuGOHI4 SuGOHI1 SuGOHI10"
+L02070 083409-001653 128.540416 -0.281613 quasar blended 1 nan 1.4 0.321 True nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 https://arxiv.org/abs/1812.03168 | LinKS SuGOHI4"
+L02095 083943+004740 129.9293 0.794665 quasar blended 1 nan 1.4 0.621 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/2312.07333 | HOLISMOKES16 HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1 SuGOHI10"
+L02108 084118-004212 130.327286 -0.703451 quasar blended 1 nan 0.68 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02123 084315+003737 130.813827 0.627024 quasar blended 0 nan 0.72 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02249 085932-005532 134.884625 -0.925754 quasar blended 0 nan 0.89 0.448 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L02269 090135+040835 135.398342 4.143217 quasar blended 0 nan 1.25 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02297 090412+000420 136.051151 0.072388 quasar blended 0 nan 0.55 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02303 090453+040750 136.223918 4.130561 quasar blended 0 nan 0.96 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02307 090507-001030 136.280612 -0.175009 quasar blended 0 nan 1.06 0.48 True nan lenscat;sugohi "HOLISMOKES16 HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1 | https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587"
+L02325 090613+032939 136.554747 3.494438 quasar blended 0 nan 0.94 0.617 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L02334 090709+005648 136.790417 0.946782 quasar blended 0 nan 1.32 0.478 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L02430 091506+041716 138.775729 4.287982 quasar blended 0 nan 1.23 0.686 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L02436 091608+034710 139.035547 3.786224 quasar blended 0 nan 1.21 0.531 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/1911.02587 | HOLISMOKES16 SuGOHI6 SuGOHI4 HOLISMOKES8 HOLISMOKES6+13 SuGOHI1"
+L02441 091628-003540 139.119037 -0.594664 quasar blended 0 nan 2.25 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02454 091843-022007 139.680754 -2.335366 quasar blended 1 nan 1.11 0.59 True nan lenscat;sugohi "https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/2006.16584 | SuGOHI6 SuGOHI7"
+L02468 092101+035521 140.25647 3.92275 quasar blended 0 nan 1.21 0.472 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 https://arxiv.org/abs/2312.07333 | HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1 SuGOHI10"
+L02627 100201+020330 150.5063 2.0582 quasar blended 1 nan 0.48 0.439 True 2.015 lenscat;sugohi "https://arxiv.org/abs/2006.16584 | SuGOHI7"
+L02788 115143-011440 177.931306 -1.244544 quasar blended 0 nan 0.68 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02796 115224-001258 178.103059 -0.216204 quasar blended 0 nan 0.56 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02803 115307+002305 178.283051 0.384826 quasar blended 0 nan 0.96 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02806 115312+000206 178.303741 0.035261 quasar blended 0 nan 0.58 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02810 115324-003022 178.352343 -0.506171 quasar blended 0 nan 0.54 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02812 115335-005805 178.398699 -0.968196 quasar blended 0 nan 0.6 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02832 115530+004141 178.879082 0.694776 quasar blended 0 nan 0.64 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02869 115943+012846 179.930897 1.479478 quasar blended 0 nan 0.57 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L02878 120045-005740 180.188974 -0.961346 quasar blended 0 nan 1.57 0.65 True nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 https://arxiv.org/abs/2312.07333 | SuGOHI4 SuGOHI10"
+L02964 121052-011905 182.718689 -1.318104 quasar blended 0 nan 1.25 0.7 True 2.295 lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1904.10465 https://arxiv.org/abs/2312.07333 | SuGOHI3 HOLISMOKES16 HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1 SuGOHI10 | https://arxiv.org/abs/1911.02587"
+L02987 121504+004726 183.7685 0.790556 quasar blended 0 nan 1.52 0.642 True 1.297 lenscat;sugohi "https://arxiv.org/abs/1112.3683 https://arxiv.org/abs/1904.10465 https://arxiv.org/abs/2312.07333 | SuGOHI3 BELLS SuGOHI9 HOLISMOKES13 SuGOHI10"
+L02998 122018+011253 185.078965 1.21497 quasar blended 1 nan 1.01 0.488 True 1.708 lenscat;sugohi "HOLISMOKES8 SuGOHI10 SuGOHI9 HOLISMOKES16 | https://arxiv.org/abs/2312.07333"
+L03204 135944+012809 209.934208 1.469389 quasar blended 1 nan 0.53 0.35 True nan lenscat;sugohi "https://arxiv.org/abs/2006.16584 | SuGOHI7"
+L03265 140929-011410 212.373806 -1.236311 quasar blended 0 nan 1.32 0.584 True 2.302 lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1904.10465 https://arxiv.org/abs/1911.02587 | SuGOHI3 HOLISMOKES16 HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1"
+L03277 141129-003129 212.87373 -0.524978 quasar blended 0 nan 0.81 0.34 True nan lenscat;sugohi "https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/1911.02587 | SuGOHI6 SuGOHI4 HOLISMOKES8"
+L03289 141300-012608 213.2503 -1.4356 quasar blended 0 nan 1.08 0.749 True 2.666 lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1904.10465 https://arxiv.org/abs/1911.02587 https://arxiv.org/abs/2312.07333 | SuGOHI3 HOLISMOKES16 HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1 SuGOHI10"
+L03293 141323-000649 213.349543 -0.113828 quasar blended 0 nan 0.56 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03306 141412-000730 213.553621 -0.125151 quasar blended 0 nan 1.07 0.574 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L03336 141646-015228 214.191979 -1.874653 quasar blended 0 nan 0.81 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03359 141812-012404 214.553388 -1.401227 quasar blended 0 nan 1.04 0.592 True nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03379 142017+011848 215.071841 1.313345 quasar blended 0 nan 0.6 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03415 142249-003311 215.706939 -0.553219 quasar blended 0 nan 1.7 0.453 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1812.03168 https://arxiv.org/abs/1911.02587 | SuGOHI1 LinKS SuGOHI4"
+L03417 142304+012318 215.768399 1.38856 quasar blended 0 nan 0.49 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03497 143153-013352 217.972551 -1.564484 quasar blended 1 nan 1.41 0.7 True nan lenscat;sugohi "https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/2312.07333 | https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | HOLISMOKES16 SuGOHI6 SuGOHI4 HOLISMOKES8 SuGOHI1 HOLISMOKES13 SuGOHI10"
+L03560 144230-002353 220.629062 -0.398107 quasar blended 1 nan 1.5 0.4 True nan lenscat;sugohi "https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/1812.03168 https://arxiv.org/abs/1911.02587 https://arxiv.org/abs/2312.07333 | HOLISMOKES16 SuGOHI6 SuGOHI4 HOLISMOKES8 HOLISMOKES6+13 LinKS SuGOHI10"
+L03562 144307-004056 220.779854 -0.682249 quasar blended 1 nan 1.22 0.5 True 1.07 lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1904.10465 https://arxiv.org/abs/1911.02587 | SuGOHI3 HOLISMOKES16 HOLISMOKES8 SuGOHI4 HOLISMOKES6+13 SuGOHI1"
+L03564 144320-012537 220.835982 -1.426985 quasar blended 1 nan 1.12 1.16 True nan lenscat;sugohi "https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/2312.07333 | SuGOHI6 SuGOHI4 SuGOHI10 HOLISMOKES16 | https://arxiv.org/abs/1911.02587"
+L03574 144443+004538 221.180964 0.760737 quasar blended 0 nan 0.6 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03926 220553+000454 331.473334 0.081856 quasar blended 0 nan 1.27 0.684 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L03983 221352+011745 333.468193 1.296041 quasar blended 0 nan 0.48 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03985 221409+010504 333.540463 1.084624 quasar blended 1 nan 0.63 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L03986 221411+004742 333.547486 0.795041 quasar blended 0 nan 0.67 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04011 221606+023139 334.02598 2.527747 quasar blended 1 nan 0.58 0.543 True nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | https://arxiv.org/abs/2312.07333 | SuGOHI4 SuGOHI10"
+L04012 221608+005538 334.036218 0.92749 quasar blended 1 nan 0.65 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04021 221729+000349 334.371825 0.063723 quasar blended 0 nan 0.65 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04029 221856+001653 334.736611 0.281608 quasar blended 1 nan 1.57 0.593 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L04036 222012+012023 335.053499 1.339934 quasar blended 0 nan 0.64 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04038 222022+000710 335.094779 0.119642 quasar blended 0 nan 0.62 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04047 222116-004456 335.320024 -0.749155 quasar blended 1 nan 0.64 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04071 222425+012121 336.107974 1.356076 quasar blended 0 nan 0.56 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04081 222618-011940 336.576035 -1.32796 quasar blended 0 nan 0.57 nan False nan lenscat;sugohi "https://arxiv.org/abs/1911.02587 | SuGOHI4"
+L04092 222801+012805 337.008235 1.46826 quasar blended 0 nan 1.56 0.647 True 2.462 lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1904.10465 https://arxiv.org/abs/1911.02587 | SuGOHI3 HOLISMOKES16 HOLISMOKES8 SuGOHI4 SuGOHI1 HOLISMOKES13"
+L04129 223359+015826 338.49971 1.974104 quasar blended 0 nan 0.85 0.253 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI4"
+L04130 223406+012057 338.529029 1.34927 quasar blended 1 nan 1.47 0.67 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/1911.02587 | HOLISMOKES16 SuGOHI6 SuGOHI4 HOLISMOKES8 HOLISMOKES6+13 SuGOHI1"
+L04232 224822+015005 342.09566 1.834973 quasar blended 0 nan 1.79 0.567 True nan lenscat;sugohi "https://arxiv.org/abs/1704.01585 https://arxiv.org/abs/2004.00634 https://arxiv.org/abs/1911.02587 | SuGOHI1 SuGOHI6 SuGOHI4"
+L05256 DESI-011.9124+03.3756 11.91237 3.3756 quasar blended 1 nan nan 0.732 True 2.086 lenscat;sugohi "Storfer et al. (2022) - arXiv:2206.02764 | SuGOHI9"
+L05743 DESI-354.9215+00.0122 354.92154 0.01216 quasar blended 1 nan 0.8 0.627 True 1.97 lenscat;sugohi "Storfer et al. (2022) - arXiv:2206.02764 | HOLISMOKES16 SuGOHI9 Andika+24"
+L10877 J1334-0120 203.54658 -1.34784 quasar "too close" 2 1.0952190853386627 nan nan False nan lenscat;sugohi "Moustakas et al. (2012) - adsabs:2012hst..prop12833M | SuGOHI9"
+L35284 000157+030146 0.489217 3.029465 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35285 000341-001011 0.923763 -0.169828 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35286 000716+041544 1.816698 4.262469 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35290 001508+014516 3.786619 1.754679 quasar blended 0 nan 0.68 0.35 True 2.81 sugohi "SuGOHI9 Andika+24"
+L35292 002500-002721 6.253408 -0.456018 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35298 010109-013006 15.29082 -1.501892 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35309 012243+003736 20.682424 0.626798 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35314 012645+013651 21.688665 1.614272 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35315 013015+001059 22.562941 0.183304 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35316 013034+012036 22.642658 1.343466 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35317 013827+031518 24.613569 3.25511 quasar blended 1 nan nan nan False 2.406 sugohi SuGOHI9
+L35318 014152+003956 25.468628 0.665588 quasar blended 0 nan nan nan False 2.206 sugohi SuGOHI9
+L35319 015035-001856 27.647481 -0.315818 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35320 015043+022239 27.681565 2.377538 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35326 020251+014319 30.714681 1.722141 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35349 022252-015650 35.719655 -1.94728 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35351 022418+024703 36.076293 2.784369 quasar blended 1 nan 1.0 0.67 True 3.67 sugohi "SuGOHI9 Andika+24"
+L35364 083351+010554 128.464891 1.098478 quasar "too close" 2 1.4474392831181528 nan nan False nan sugohi SuGOHI9
+L35369 083907+051552 129.78106 5.264559 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35370 083947+010238 129.949813 1.044056 quasar "too close" 2 1.1311291624409978 nan nan False nan sugohi SuGOHI9
+L35375 084307-015310 130.782963 -1.886293 quasar "too close" 2 1.1333973192246558 nan nan False nan sugohi SuGOHI9
+L35378 084710-001302 131.793355 -0.217367 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35380 084856+011540 132.233697 1.261151 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35381 085003+042924 132.512991 4.490062 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35401 090212+044105 135.551417 4.684906 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35417 091151-004406 137.964866 -0.735081 quasar blended 0 nan nan nan False 2.375 sugohi SuGOHI9
+L35420 091315+051840 138.31623 5.311164 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35421 091442+021018 138.676621 2.171698 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35423 091526-004136 138.861961 -0.693524 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35428 091904+041802 139.769742 4.300708 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35440 093158+002942 142.993395 0.495155 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35442 093805-021153 144.521668 -2.198314 quasar "too close" 2 1.3896989049963906 nan nan False nan sugohi SuGOHI9
+L35444 093952-021401 144.968377 -2.233758 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35447 094526+031029 146.359582 3.174973 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35448 094713+024742 146.804584 2.795174 quasar "too close" 2 1.4951304432775117 nan nan False nan sugohi SuGOHI9
+L35450 094943+000535 147.430346 0.093201 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35454 095406-002225 148.529041 -0.373677 quasar blended 1 nan nan nan False 2.26 sugohi SuGOHI9
+L35455 095613+050326 149.056324 5.057322 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35456 095659-002035 149.247607 -0.343281 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35463 100358-014953 150.993709 -1.831603 quasar "too close" 3 1.1571413711107055 nan nan False nan sugohi SuGOHI9
+L35465 100859+035104 152.248168 3.851162 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35475 102633-013925 156.63928 -1.657137 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35491 104303+010438 160.762983 1.077418 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35513 110426+012100 166.110833 1.350218 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35531 111340-011417 168.419985 -1.238093 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35533 111455+001114 168.730641 0.187346 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35534 111552+032135 168.967523 3.35987 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35543 112757+042414 171.990419 4.403943 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35557 114015+014155 175.06591 1.698669 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35561 114213+043127 175.555705 4.524356 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35572 115100+022900 177.752743 2.483339 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35577 115334+000741 178.394009 0.128271 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35586 115927+023701 179.86623 2.617025 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35588 120034+020929 180.143132 2.158261 quasar "too close" 2 0.8835966308525542 nan nan False nan sugohi SuGOHI9
+L35589 120106+043618 180.278177 4.605222 quasar "too close" 2 1.39035606478904 nan nan False nan sugohi SuGOHI9
+L35592 120257-021434 180.740787 -2.242944 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35595 120559+011256 181.498445 1.215812 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35604 121652+004112 184.218605 0.6868 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35613 123211+015932 188.048666 1.992294 quasar blended 1 nan 0.78 nan False nan sugohi "SuGOHI9 HOLISMOKES16"
+L35618 124104+000255 190.269856 0.048677 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35629 125221+035751 193.091405 3.96425 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35630 125820+041618 194.585101 4.271747 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35631 130006+025253 195.026033 2.881486 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35635 130733+001122 196.888803 0.189658 quasar "too close" 2 0.8332001598342286 nan nan False 2.664 sugohi SuGOHI9
+L35637 131118+011740 197.828037 1.294614 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35638 131438+015715 198.661028 1.954338 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35642 132044+032043 200.185492 3.345479 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35649 133004-005738 202.517777 -0.960672 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35652 133849+040628 204.705584 4.107964 quasar "too close" 3 1.8691185131789358 nan nan False nan sugohi SuGOHI9
+L35656 134148+000908 205.450424 0.152394 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35663 134910+032231 207.295286 3.375356 quasar "too close" 2 0.966240463078026 nan nan False nan sugohi SuGOHI9
+L35667 135209-021009 208.040787 -2.169167 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35669 135326-000730 208.358868 -0.125164 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35671 135516+004552 208.817689 0.764456 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35674 140138+020739 210.410831 2.127656 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35678 140622-011230 211.593509 -1.20857 quasar "too close" 3 1.2149551179392644 nan nan False nan sugohi SuGOHI9
+L35681 140838-013341 212.160912 -1.56151 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35682 141044+001119 212.686693 0.188742 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35688 141725+022147 214.358177 2.363329 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35691 141830+001801 214.626884 0.300308 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35698 142242+013700 215.677668 1.616869 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35702 142350-001527 215.960533 -0.25775 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35708 142827-011846 217.114641 -1.313045 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35716 143601-002641 219.007587 -0.444933 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35719 143830-020610 219.626823 -2.10292 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35720 144016+041247 220.069873 4.213264 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35723 144307-004430 220.780108 -0.741738 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35734 144642-014659 221.676431 -1.783056 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35739 145040+035804 222.668927 3.967973 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35742 145347+003927 223.447798 0.657522 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35772 220405+043454 331.021369 4.581936 quasar blended 0 nan nan 0.992 True nan sugohi SuGOHI9
+L35774 220457-011829 331.239563 -1.308067 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35775 220501+003122 331.254923 0.523038 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35786 221958+011043 334.994433 1.178695 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35787 222027+005018 335.115248 0.838401 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35793 222556+040937 336.484637 4.160303 quasar blended 1 nan nan nan False nan sugohi "He2025 SuGOHI9"
+L35794 222608+010921 336.535254 1.156081 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35808 223654+051118 339.226277 5.188411 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35828 225607+012534 344.031107 1.426382 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35833 230756+035607 346.985715 3.935367 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35838 232156+031442 350.485037 3.245266 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35839 232316+005012 350.819526 0.836751 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
+L35845 233017+045845 352.572135 4.97931 quasar blended 0 nan nan nan False nan sugohi SuGOHI9
+L35853 233558-005000 353.993383 -0.833345 quasar blended 1 nan nan nan False nan sugohi SuGOHI9
