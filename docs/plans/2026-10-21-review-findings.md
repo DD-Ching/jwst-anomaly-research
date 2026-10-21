@@ -1,0 +1,45 @@
+# Parallel round 2026-10-21: /code-review findings, fixes and their effect on committed results
+
+Companion to `docs/plans/2026-10-21-parallel-round.md`. Each row gives the fix, the test, whether the affected path
+ran in the committed runs (with the evidence), and the effect on committed numbers. "The result file did not change"
+is not used as proof on its own: the evidence is the run records (logs, JSON row statuses, timestamps, sha256) or a
+targeted recomputation.
+
+Run records outside git (session scratchpad, not committed): the line B download log (72 lines, URL / bytes / sha256),
+the line C per-stage logs, the line A per-fit state and logs. Their content that matters is quoted below.
+
+## Line B (`scripts/s1_chime.py`, `scripts/s1_chime_lib.py`, `tests/test_s1_chime.py`)
+| Round | Finding | Fix (commit) | Test | Path ran in committed run? (evidence) | Effect on committed numbers (evidence) |
+|---|---|---|---|---|---|
+| 1 | `chi2_union` keeps the sub-bin δ with the best p even when its gains fail | best p among δ with detected gains (1531dd9) | failure case d = 0.2 / −0.3 | **Yes**, every pair and injection | **Verified by re-run** from stored profiles: no pass changed in 4,680 injections or 136 real pairs; frozen verdict identical; post hoc I3 +3 passes (≤ 0.2 pp). v1 outputs kept (`*_v1.*`) |
+| 1 | `run --plots` ignores its directory | always writes into `--plots` (1531dd9) | — | Yes | Regenerated contact sheet byte-identical |
+| 1 | downloads run ahead of reduction | bounded window of 4 (1531dd9) | fake downloader | Yes (old code) | Disk only (sample 374 MB); data integrity below |
+| 2 | exception inside the fetch loop leaves files on disk | cancel, wait, delete, re-raise (3d676bb) | reducer that raises | **Yes, once**: fetch pass 1 stopped at 00:36 UTC after 17 transfers, on a reduction error (FRB20200314A has no calibration group; later code marks it ineligible) | None. The profiles behind every committed number come from the complete pass at 00:40 UTC (30 transfers, 30 distinct files); every repeated transfer of a file has the same sha256 (30 files, 70 transfers, 0 files with two hashes) and all 30 hashes equal the pins in `data/manifests/s1_chime_dynspec.ecsv`. Leftover raw files were deleted by hand (scratch data root now 20 kB) |
+| 2 | partial file kept when curl fails all attempts | delete before returning (44d845b) | fake curl, 3 failures | Not shown by the log (failures are not logged) | None: a failed transfer is never reduced, in old or new code |
+| 3 | head future invisible to cleanup during `.result()` | per-thread result registry (4912f2b) | SIGINT during wait (POSIX only, c3b1373) | No interrupt in the committed run | None (cleanup path only) |
+| 3 | cleanup deletes files the run never touched | delete only touched paths (4912f2b) | reused + unrelated file survive | No (no `--keep-raw` files existed) | None |
+| 3 | cleanup waits on retrying downloads | cancel event before retries / sleeps (4912f2b) | back-off cancelled < 3 s; portable child (c3b1373) | No | None (timing only) |
+| — | Windows CI: `os.kill(SIGINT)` terminates the process; no `sleep` binary | skip on Windows; `sys.executable` child (c3b1373) | — | — | CI only |
+
+## Line C (`scripts/w2_hst_blend*.py`, `tests/test_w2_hst_blend.py`)
+| Round | Finding | Fix (commit) | Test | Path ran in committed run? (evidence) | Effect on committed numbers (evidence) |
+|---|---|---|---|---|---|
+| 1 | depth sums overlapping CAOM level-3 products | count each visit once (d9dab07) | `visit_exposure` | **Yes**, all 23 systems over-counted 1.9–7× | **Changed and re-run**: targets 10 → 7 (J0203+1612, J2257+2349, J0146-1133 out), 3 controls swapped; gate 9/10 = 0.9 unchanged; negative control S/N 13.0 unchanged (same stamp); control injection limit median 22.5 → 22.0. v1 kept (`*_v1`, `selection_diff.ecsv`) |
+| 1 | `measure --only` drops other rows and rewrites the gate | merge rows, recompute on the full set (d9dab07) | merge test | No: the worker's command record has no `measure … --only` call (controls measured once with `--no-inject`, then three times with injections; targets twice, all full-set) | None |
+| 1 | post hoc false-positive scaling mixes systems | same system for S/N, flux and error (d9dab07) | reference choice | Yes | None: one ePSF system, so reference 13.0 in v1 and v2 |
+| 1 | `cmd_summary` crashes on an empty role | guard (d9dab07) | empty role | No (targets measured) | None |
+| 1 | a failed download recorded as "no data" | distinct "download failed" (d9dab07) | failed vs no-data | No: every hapcut request in the v1, v2 and v3 download logs ends "[Done]"; no retry, error or traceback line; the one empty answer is DESJ0407-5006 with astroquery's explicit "Missing HAP files … Cutout not performed" | None (DESJ0407-5006 is a real no-data answer) |
+| 1 | TAP COUNT(*) check and wide hapcut without retries | retries and back-off (d9dab07) | — | No (no error in the class and PSF logs) | None |
+| 2 | `write_psf` / `fp_reference` crash on all-NaN S/N | guards, null in JSON (a1a4694) | all-NaN | No (finite; max 13.0) | None |
+| 2 | `cmd_verdict` not idempotent | status always re-derived from the chain output (a1a4694) | pass and fail | Yes (run in d9dab07 and a1a4694) | None: all target statuses identical between the two runs |
+| 2 | `cmd_posthoc` silently drops targets after `verdict` | controls-only on purpose, stated in provenance (a1a4694) | — | **Yes** (d9dab07 posthoc ran after verdict) | `posthoc.json` holds controls only, as the owner's rule requires; the v1 target diagnostics stay in `posthoc_v1.json`, withdrawn as readings |
+| 2 | stale "download failed" never replaced; status file written only at the end | per-system status, overwrite on success (a1a4694) | — | No (no failure or interruption, logs above) | None |
+| 2 | `cmd_psf --reuse` without an input check | inputs must be equal, else recompute (a1a4694) | mismatch refused | **Yes** (v2 reused 4 v1 rows) | **Checked**: all 5 reused rows have identical inputs; 3 labels normalised to "not detected"; no number changed |
+| 2 | `--no-inject` leaves stale injection rows | drop them (a1a4694) | — | Only in the first v1 control pass, before any injection file existed | None |
+| 2 | hard-coded "not interpreted" labels | read from `verdict.json` (a1a4694) | — | Yes | None under the failed verdict |
+| 2 | `_CLASSIC` also matches individual exposures | explicit per-visit rule (a1a4694) | rule test | Yes | **Recomputed**: no depth changed in any of the 82 systems; `selection.ecsv` byte-identical (the 10 mixed visits pair a 674 s association with a separate 5 s exposure, and each has a single-visit mosaic) |
+| 3 | partial cutout directory used by `run_system` / `psf_one` | require status "ok" (ed78c98) | partial folder refused | No (every request "[Done]", logs above) | None |
+| 3 | NaN / inf into `allow_nan=False` JSON; reuse refusal bookkeeping; missing reuse column; NO_HAP re-queried | guards and bookkeeping (ed78c98) | six tests | No (committed JSON written without error; `reuse_refused_input_mismatch` is `[]`) | None |
+
+## Line A (`scripts/x4_s1g.py`, `tests/test_x4_s1g.py`)
+To be filled from line A's evidence report.
