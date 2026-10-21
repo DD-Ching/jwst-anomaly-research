@@ -452,6 +452,166 @@ def cmd_run(a) -> None:
         contact_sheet(reds, meta, elig, pt, OUT / "contact_sheet.png")
 
 
+def cmd_posthoc(a) -> None:
+    """Post hoc supplements (labelled deviations; the frozen verdict is not changed by them).
+
+    D1: fitburst misfit chi2/dof of each eligible burst's sub-band profile (data vs model, crop,
+        no systematic): the diagnosis of the frozen recovery result.
+    I2: injections with the D-071 template design: both members carry the same template, A' =
+        model_A + N(0, sigma_A) (simulated noise at A's off-pulse sigma), B' as frozen. Same sets,
+        ratios, hosts and draws scheme; seed 20261023.
+    I3: as I2, but the host noise is N(0, sigma_B) instead of B's residual (which keeps B's
+        fitburst misfit under the copy): exact copies in radiometer-like noise, the best case.
+    R2: same-source vs different-source pairs over all reduced files with a usable band and a
+        consistent Jy scale or not (rho and chi2 are scale-free), eligibility not required.
+    """
+    reds, meta = load_profiles()
+    n = len(reds)
+    nul = json.loads((OUT / "null.json").read_text())
+    rho_star = float(nul["rho_star"])
+    elig = [lib.is_eligible(r, P) for r in reds]
+    ei = [i for i in range(n) if elig[i]]
+    d1 = {}
+    for i in ei:
+        r = reds[i]
+        c0, c1 = r["crop"]
+        ok = r["band_ok"]
+        res = (r["flux"] - r["model"])[ok, c0:c1] / r["err"][ok, c0:c1]
+        d1[meta[i]["tns_name"]] = {
+            "misfit_chi2_per_dof": float((res**2).sum() / res.size),
+            "dof": int(res.size),
+            "model_peak_snr": float((r["model"][ok, c0:c1] / r["err"][ok, c0:c1]).max()),
+        }
+    sig = np.array(
+        [np.median(r["err"][r["band_ok"], 0]) if r["band_ok"].any() else np.nan for r in reds]
+    )
+    med = float(np.nanmedian(sig))
+    scale_ok = [bool(np.isfinite(x) and med / 10 <= x <= 10 * med) for x in sig]
+    hosts = [i for i in range(n) if scale_ok[i]]
+    src = [i for i in ei if scale_ok[i]]
+    cal = np.array([r["cal_shape"] for r in reds])
+    rng = np.random.default_rng(SEED + 2)
+    inj = []
+    for design in ("I2", "I3"):
+        for kind in lib.GAIN_SETS:
+            for ratio in P.ratios:
+                for ia in src:
+                    for ib in hosts:
+                        if ib == ia:
+                            continue
+                        g = lib.draw_gains(kind, rng, cal, P)
+                        sh = float(rng.uniform(-P.shift_max_bins, P.shift_max_bins))
+                        am = lib.noisy_template(reds[ia], rng)
+                        hn = rng if design == "I3" else None
+                        cp = lib.make_copy(
+                            reds[ia], reds[ib], ratio, g, sh, kind == "P_path", P, hn
+                        )
+                        r = lib.run_chain(am, cp, rho_star, P)
+                        inj.append(
+                            {
+                                "design": design,
+                                "set": kind,
+                                "ratio": ratio,
+                                "a": meta[ia]["tns_name"],
+                                "host": meta[ib]["tns_name"],
+                                "elig_a": r["elig_a"],
+                                "elig_b": r["elig_b"],
+                                "rho": r["rho"],
+                                "flag": r["flag"],
+                                "chi2_p": r["chi2"]["p"],
+                                "gains_ok": r["chi2"]["gains_ok"],
+                                "passed": r["passed"],
+                            }
+                        )
+    it = Table(rows=inj)
+    it.meta["provenance"] = "simulated"
+    it.meta["source"] = (
+        "post hoc: A' = model_A + N(0, sigma_A); B' = copy in the host residual (I2) or in "
+        "N(0, sigma_B) (I3)"
+    )
+    write_ecsv_gz(it, OUT / "posthoc_injections.ecsv.gz")
+    eff = {}
+    for design, kind, ratio in [
+        (d, k, r) for d in ("I2", "I3") for k in lib.GAIN_SETS for r in P.ratios
+    ]:
+        m = (it["design"] == design) & (it["set"] == kind) & (it["ratio"] == ratio)
+        fl = m & it["flag"]
+        eff[f"{design}_{kind}_r{ratio}"] = {
+            "n": int(m.sum()),
+            "eligible_both": float(np.mean(it["elig_a"][m] & it["elig_b"][m])),
+            "flagged": float(np.mean(it["flag"][m])),
+            "passed": float(np.mean(it["passed"][m])),
+            "chi2_pass_given_flag": float(np.mean(it["passed"][fl])) if fl.any() else None,
+            "rho_median": float(np.median(it["rho"][m])),
+        }
+    use = [i for i in range(n) if reds[i]["band_ok"].any()]
+    rows = []
+    for k, i in enumerate(use):
+        for j in use[k + 1 :]:
+            rho, lag = lib.pair_rho(reds[i], reds[j])
+            c = lib.chi2_union(reds[i], reds[j], lag, P)
+            same = meta[i]["source"] == meta[j]["source"]
+            rows.append(
+                (
+                    same,
+                    rho,
+                    bool(rho > rho_star),
+                    c["testable"],
+                    c["passed"],
+                    meta[i]["tns_name"],
+                    meta[j]["tns_name"],
+                )
+            )
+
+    def side(sel):
+        if not sel:
+            return {"n": 0}
+        r = np.array([x[1] for x in sel])
+        return {
+            "n": len(sel),
+            "rho_median": float(np.median(r)),
+            "rho_q95": float(np.quantile(r, 0.95)),
+            "rho_max": float(r.max()),
+            "n_rho_gt_rho_star": int(sum(x[2] for x in sel)),
+            "n_chi2_pass": int(sum(x[4] for x in sel)),
+            "n_untestable": int(sum(not x[3] for x in sel)),
+            "chi2_pass_pairs": [f"{x[5]}/{x[6]}" for x in sel if x[4]],
+        }
+
+    r2 = {
+        "same_source": side([x for x in rows if x[0]]),
+        "different_source": side([x for x in rows if not x[0]]),
+        "same_source_by_repeater": {
+            s: side(
+                [
+                    x
+                    for x in rows
+                    if x[0] and meta[[m["tns_name"] for m in meta].index(x[5])]["source"] == s
+                ]
+            )
+            for s in sorted({m["source"] for m in meta if m["group"] == "repeater"})
+        },
+    }
+    write_json(
+        {
+            "provenance": "derived (D1, R2), simulated (I2); post hoc, not in the frozen verdict",
+            "rho_star_frozen": rho_star,
+            "P_path_kernels": lib.path_kernel_bins(P.path_tau600_ms, P.path_ddm, P),
+            "D1_fitburst_misfit": d1,
+            "I2_I3_template_both_members": eff,
+            "R2_all_usable_pairs": r2,
+        },
+        OUT / "posthoc.json",
+    )
+    print(
+        json.dumps(
+            {"I2": {k: (v["passed"], v["rho_median"]) for k, v in eff.items()}, "R2": r2},
+            indent=1,
+            default=float,
+        )
+    )
+
+
 def contact_sheet(reds, meta, elig, pt, path: Path) -> None:
     import matplotlib
 
@@ -538,8 +698,9 @@ def main(argv=None) -> None:
     f.add_argument("--keep-raw", action="store_true", help="keep raw files (delete by hand)")
     r = sub.add_parser("run")
     r.add_argument("--plots", default=None)
+    sub.add_parser("posthoc")
     a = ap.parse_args(argv)
-    {"select": cmd_select, "fetch": cmd_fetch, "run": cmd_run}[a.cmd](a)
+    {"select": cmd_select, "fetch": cmd_fetch, "run": cmd_run, "posthoc": cmd_posthoc}[a.cmd](a)
 
 
 if __name__ == "__main__":

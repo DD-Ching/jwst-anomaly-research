@@ -428,6 +428,15 @@ def path_broaden(x: np.ndarray, tau600_ms: float, ddm: float, p: Params = DEFAUL
     return out
 
 
+def path_kernel_bins(tau600_ms: float, ddm: float, p: Params = DEFAULT) -> dict:
+    """Scattering time and DM-smearing boxcar width (bins) per sub-band centre, as path_broaden
+    uses them (a boxcar narrower than 2 bins is not applied)."""
+    nu = band_centres(p)
+    tau = tau600_ms * 1e-3 * (nu / 600.0) ** -4 / RES_TIME_S
+    box = 8.3e-6 * ddm * RES_FREQ_MHZ * (nu / 1000.0) ** -3 / RES_TIME_S
+    return {"band_centre_mhz": nu.tolist(), "tau_bins": tau.tolist(), "dm_box_bins": box.tolist()}
+
+
 def draw_gains(kind: str, rng, cal_shapes: np.ndarray, p: Params = DEFAULT) -> np.ndarray:
     """Per-sub-band gain of the copy relative to the original (simulated), geometric mean 1.
 
@@ -458,11 +467,13 @@ def make_copy(
     shift: float,
     path: bool,
     p: Params = DEFAULT,
+    rng=None,
 ) -> dict:
     """Injected twin of A in B's noise (simulated): B' = ratio * g_b * shift(model_A) + (data_B -
     model_B). The copy's emission region is A's moved so its centre lands at B's region centre plus
     ``shift`` bins; B's own burst is removed with B's fitburst model, so the noise (and B's model
-    misfit) is B's real one. Errors are B's off-pulse sigma. Bands missing in A or B are missing."""
+    misfit) is B's real one. Errors are B's off-pulse sigma. Bands missing in A or B are missing.
+    With ``rng`` given (post hoc I3), the host noise is N(0, sigma_B) instead of B's residual."""
     ca = 0.5 * (ra["region"][0] + ra["region"][1])
     cb = 0.5 * (rb["region"][0] + rb["region"][1])
     s = cb - ca + shift
@@ -471,7 +482,10 @@ def make_copy(
         tmpl = path_broaden(tmpl, p.path_tau600_ms, p.path_ddm, p)
     nbt = rb["n_time"]
     cp = fshift(tmpl, s, nbt)
-    resid = rb["flux"] - rb["model"]
+    if rng is None:
+        resid = rb["flux"] - rb["model"]
+    else:
+        resid = rng.normal(size=rb["flux"].shape) * rb["err"]
     ok = ra["band_ok"] & rb["band_ok"]
     flux = np.where(ok[:, None], ratio * gains[:, None] * cp + resid, 0.0)
     err = np.where(ok[:, None], rb["err"], 0.0)
@@ -487,6 +501,13 @@ def make_copy(
         "n_time": nbt,
         "true_lag": s,
     }
+
+
+def noisy_template(ra: dict, rng) -> dict:
+    """Post hoc I2 member A' = model_A + N(0, sigma_A) (simulated; the D-071 template design, so
+    both members of an injected pair carry the same noise-free signal)."""
+    noise = rng.normal(size=ra["flux"].shape) * ra["err"]
+    return dict(ra, flux=np.where(ra["band_ok"][:, None], ra["model"] + noise, 0.0))
 
 
 def run_chain(ra: dict, rb: dict, rho_star: float, p: Params = DEFAULT) -> dict:

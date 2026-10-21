@@ -226,6 +226,21 @@ def test_make_copy_in_quiet_host_is_recovered_by_the_chain():
     assert out["rho"] > 0.9 and out["passed"]
 
 
+def test_posthoc_members_and_path_kernels():
+    rng = np.random.default_rng(9)
+    m = double()
+    ra = red_from(m, np.full(4, 0.5), (55, 95), region=(65, 84), model=m)
+    a2 = lib.noisy_template(ra, rng)
+    assert np.std(a2["flux"] - m) == pytest.approx(0.5, rel=0.1)
+    host = np.zeros((4, 170))
+    rb = red_from(host + 100.0, np.ones(4), (60, 100), region=(70, 89), model=host)
+    cp = lib.make_copy(ra, rb, 1.0, np.ones(4), 0.0, False, P, rng)
+    assert abs(np.median(cp["flux"])) < 0.2  # Gaussian host noise, not the host residual (100)
+    k = lib.path_kernel_bins(1.0, 300.0)
+    assert k["tau_bins"][0] > k["tau_bins"][3]
+    assert max(k["dm_box_bins"]) < 2  # the DM-smearing boxcar of the P_path set is not applied
+
+
 # ------------------------------------------------------------------------------- verdict
 
 
