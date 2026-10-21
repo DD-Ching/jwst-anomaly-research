@@ -132,7 +132,8 @@ def run_one(name, seed, cfg=CFG):
                 stop = "deadline"
                 break
         else:
-            stop = "maxcall" if s.ncall >= cfg["maxcall"] else "dlogz"
+            # sample() counts its calls after the nlive initial ones (review fix)
+            stop = "maxcall" if s.ncall - cfg["nlive"] > cfg["maxcall"] else "dlogz"
         # dead points plus the final live points (the best point may still be live)
         logl = np.concatenate([np.asarray(s.saved_run["logl"]), np.asarray(s.live_logl)])
         xs = np.concatenate([np.asarray(s.saved_run["v"]), np.asarray(s.live_v)])
@@ -212,15 +213,103 @@ def equiv():
     }
 
 
+FF_TARGET = FF_KNOWN_U - 2e-4  # R1 success per run (pad 64)
+EPS_PASS = 5e-4  # validation (S1e rule)
+
+
+def counted(r):
+    """A row counts if sampling ended by dlogz or the call cap; a deadline stop is unfinished."""
+    return r["stop"] in ("dlogz", "maxcall")
+
+
+def verify(x):
+    """S1f's checks on one U solution: box legality, pad 32 / 64 / 256, explicit-psi rebuild."""
+    t, _ = target("R1")
+    x = np.asarray(x)
+    mc, q, s1, s2, inc, phi = e.to_cart(x)
+    hp, hc = e.hpc(mc, q, s1, s2, inc, phi)
+    psi = j.explicit_psi(t, hp, hc)
+    hh = np.cos(2 * psi) * hp + np.sin(2 * psi) * hc
+    sc = {
+        "stat_pad32": e.stat(t, hp, hc, 32),
+        "stat_pad64": e.stat(t, hp, hc, 64),
+        "stat_pad256": e.stat(t, hp, hc, 256),
+        "explicit_psi_ov_pad64": j.m.ov(t, hh, "D", pad=64),
+        "explicit_psi_ov_pad256": j.m.ov(t, hh, "D", pad=256),
+    }
+    return {
+        "in_box": bool(np.all((x >= LO) & (x <= HI))),
+        "chi_mags": [float(np.linalg.norm(s1)), float(np.linalg.norm(s2))],
+        "scores": sc,
+        "spread": max(sc.values()) - min(sc.values()),
+        "FF_conservative": min(sc.values()),
+    }
+
+
+def _rows(name):
+    p = OUT / name
+    return json.loads(p.read_text())["rows"] if p.exists() else []
+
+
+def decide():
+    """Frozen S1i decision (X4.md S1i), applied to the stored rows."""
+    vrows = {r["name"]: r for r in _rows("s1i_validate.json")}
+    v_ok = all(
+        n in vrows and counted(vrows[n]) and vrows[n]["eps_final"] <= EPS_PASS
+        for n in ("V7", "V10")
+    )
+    out = {
+        "label": "derived; S1i decision by frozen rules",
+        "validation": {
+            n: {k: r[k] for k in ("stop", "eps_final", "ncall")} for n, r in vrows.items()
+        },
+        "validation_pass": v_ok,
+        "ff_target": FF_TARGET,
+        "ff_known_u": FF_KNOWN_U,
+    }
+    runs = {r["seed"]: r for r in _rows("s1i_r1.json")}
+    out["r1"] = {
+        s: {
+            "stop": r["stop"],
+            "FF_pad64": r["FF_pad64"],
+            "ncall": r["ncall"],
+            "counted": counted(r),
+            "success": counted(r) and r["FF_pad64"] >= FF_TARGET,
+        }
+        for s, r in runs.items()
+    }
+    out["verified"] = {s: verify(r["x"]) for s, r in runs.items() if r["FF_pad64"] > FF_KNOWN_U}
+    n_ok = sum(v["success"] for v in out["r1"].values())
+    if not v_ok:
+        out["outcome"] = "validation failed or unfinished; R1 not run or not counted"
+    elif len(runs) < 2 or not all(v["counted"] for v in out["r1"].values()):
+        out["outcome"] = "unfinished"
+    elif n_ok == 2:
+        out["outcome"] = (
+            "both runs recovered the known better U solution (not a global-optimum proof)"
+        )
+    else:
+        out["outcome"] = f"method did not pass this test ({n_ok} of 2 runs reached the target)"
+    return out
+
+
 def save(name, obj):
     (OUT / name).write_text(json.dumps(obj, indent=1, default=float) + "\n")
 
 
 def append_row(name, row, label):
+    """Locked read-modify-write with an atomic rename (review fix: two runs may finish together)."""
+    import fcntl
+    import os
+
     p = OUT / name
-    d = json.loads(p.read_text()) if p.exists() else {"label": label, "rows": []}
-    d["rows"].append(row)
-    save(name, d)
+    with open(OUT / f".{name}.lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        d = json.loads(p.read_text()) if p.exists() else {"label": label, "rows": []}
+        d["rows"].append(row)
+        tmp = OUT / f".{name}.tmp"
+        tmp.write_text(json.dumps(d, indent=1, default=float) + "\n")
+        os.replace(tmp, p)
 
 
 def run_pair(jobs, out_name, label):
@@ -231,7 +320,13 @@ def run_pair(jobs, out_name, label):
         subprocess.Popen([sys.executable, __file__, "one", n, str(s), out_name, label])
         for n, s in jobs
     ]
-    return [p.wait() for p in procs]
+    codes = [p.wait() for p in procs]
+    # review fix: a crashed run (non-zero exit or no row) counts as unfinished
+    save(
+        out_name.replace(".json", "_exit.json"),
+        {"jobs": [[n, s, c] for (n, s), c in zip(jobs, codes, strict=True)]},
+    )
+    return codes
 
 
 def main(argv=None) -> int:
@@ -263,6 +358,8 @@ def main(argv=None) -> int:
             r["wall_s"],
             flush=True,
         )
+    elif cmd == "decide":
+        save("s1i_decision.json", decide())
     elif cmd == "validate":
         run_pair(
             [("V7", 41), ("V10", 41)],
