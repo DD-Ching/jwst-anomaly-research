@@ -8,6 +8,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result:** v4.6 (99,478 rows, streamed) carries the 16.2 PRISM row `1208_5114276` unchanged: no grade, `z_best` −1,
   automated `zline` 0.441 at S/N 1.3, EAZY 2.79; no row for 16.1 or CANUCS 5106117. Frozen outcome "not decided";
   D-037 unchanged.
+- **CI fix:** `tests/test_x4_s1j.py` failed on every PR (and `main`) once `scripts/x4_s1j.py`'s frozen
+  `DEADLINE_UTC` (2026-10-21 14:05Z) passed; an autouse fixture now sets a far-future deadline in the tests. The
+  script is unchanged.
 - **Handoff:** recheck only when a DJA table newer than v4.6 appears. Other lines unchanged (X4 next step and the
   needs-human backlog are the owner's).
 

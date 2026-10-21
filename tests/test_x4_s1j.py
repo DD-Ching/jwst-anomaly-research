@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 _S = Path(__file__).resolve().parents[1] / "scripts"
 
@@ -24,6 +25,12 @@ def _load(name):
 
 
 m = _load("x4_s1j")
+
+
+@pytest.fixture(autouse=True)
+def _future_deadline(monkeypatch):
+    # DEADLINE_UTC is the frozen run's wall-clock stop; keep it out of the unit tests.
+    monkeypatch.setattr(m, "DEADLINE_UTC", "9999-01-01T00:00:00+00:00")
 
 
 def test_extend_never_worse_and_converges_on_a_bowl(monkeypatch):
