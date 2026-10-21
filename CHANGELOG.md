@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: MACS0717 Sharon v4cor and Keeton v4 pinned: Keeton passes both gates; Sharon fails G2 as written (6.2 off the map)
+- **Why:** TASKS "second models as pinned `MapLensModel` entries" (MACS0717); D-041's second models were scratch code.
+  Plan frozen first (`results/lens_consistency/macs0717_models/PLAN.md`; known cases: Sharon readme Table 7, 26 images
+  of 8 spectroscopic systems).
+- **Result (`RESULT.md`, `summary.json`):** Keeton: G1 κ / μ 0.00002 / 0.00002, G2 rms 0.853″, 8 / 8 systems → pinned
+  for use. Sharon: G1 0.00025 / 0.024; G2 fails as written, 6.2 is ~101″ west of the map centre (off the 200″ maps);
+  post hoc on the 7 in-footprint systems rms 0.662″. CATS v4.1 on the same images: 2.77″. No lensing residual.
+- **Access:** archive.stsci.edu again sent an incomplete TLS chain; maps fetched with curl and the SOURCES.md AIA
+  bundle into the cache (8 × 64 MB, sha256 verified; 4 already pinned in SOURCES.md on 2026-10-08).
+- **New:** `scripts/m0717_models.py`, `tests/test_m0717_models.py`; `MODELS` `macs0717-sharon`, `macs0717-keeton`.
+- **Handoff:** next on this line, re-run the D-041 cross-model readings of the MACS0717 forced rows with the pinned
+  models (replaces the scratch readings in `docs/fields/macs0717.md` Step 6). Other lines unchanged: #409 and the other
+  needs-human PRs wait on the owner, #374 on a green weekly run.
+
 ## 2026-10-21: MACS1149 D-041 cross-model rule with the pinned Sharon v4cor: gate passes; D-037 tally unchanged
 - **Why:** #417 handoff (use `macs1149-sharon` as the second model for the D-037 rows). Plan frozen first
   (`results/lens_consistency/macs1149_crossmodel/PLAN.md`).

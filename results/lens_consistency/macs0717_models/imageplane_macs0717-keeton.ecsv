@@ -1,0 +1,53 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: z_used, datatype: float64}
+# - {name: dtheta_arcsec, datatype: float64}
+# - {name: magnification, datatype: float64}
+# - {name: n_predicted, datatype: int64}
+# - {name: shared_match, datatype: bool}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'Sharon & Johnson HFF v4 readme (hlsp_frontier_model_macs0717_sharon_v4cor_readme.pdf, sha256 12a284d22368f29491670180d07f5776d35a28ed754743b866fdf7184af39636),
+#     Table 7, the systems with a spectroscopic z used by the model (1, 3, 4, 6, 12, 13, 14 flagged Gold; 19 at z 6.387 without a comment;
+#     15 "z not used", excluded); transcribed with pdftotext -layout 2026-10-21 traced with macs0717-keeton, image-plane solve'}
+# - {model_sha256: 312aef50011e97250fcc6879617fb80563d856c1d8ee7fe79d58d41e8e9d54b3}
+# - {z_lens: 0.545}
+# - reference_radec: [109.39166667, 37.74694444]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.06000000000000012
+#     shape: [4001, 4001]
+# - {model: macs0717-keeton}
+# schema: astropy-2.0
+image_id system z_used dtheta_arcsec magnification n_predicted shared_match
+1.1 1 2.963 1.7874497924543165 -56.880944520021885 7 False
+1.2 1 2.963 0.9336521066472375 29.93151194905508 7 False
+1.3 1 2.963 0.6079110852878035 -5.298895438327717 7 False
+1.4 1 2.963 0.432281111188944 6.823083273352596 7 False
+1.5 1 2.963 0.5324861877328203 3.993177982760748 7 False
+3.1 3 1.855 0.5632903707478771 -11.230736752574646 3 False
+3.2 3 1.855 0.6042617233975222 12.030646162313024 3 False
+3.3 3 1.855 0.2868315326623073 5.46966748720518 3 False
+4.1 4 1.855 0.22197013603193058 -7.46864872817508 3 False
+4.2 4 1.855 0.36167416837062366 4.094012870461212 3 False
+4.3 4 1.855 0.33974123135865864 3.6475172860664875 3 False
+6.1 6 2.393 1.50434311945886 -3.738544476069322 3 False
+6.2 6 2.393 1.6513815745632134 4.353164120403922 3 False
+6.3 6 2.393 1.6943025286806574 2.89862550121054 3 False
+12.1 12 1.71 0.17814980892177437 -5.6559627356888065 3 False
+12.2 12 1.71 0.9533257131152552 3.3268630133724124 3 False
+12.3 12 1.71 0.7720779526069917 5.188963896307915 3 False
+13.1 13 2.547 0.3400083031780314 -7.404118901079669 3 False
+13.2 13 2.547 0.908137536500402 3.16735455344533 3 False
+13.3 13 2.547 0.9301547870208999 4.187899307237449 3 False
+14.1 14 1.85 0.3999307049950261 -17.180472094034503 3 False
+14.2 14 1.85 0.3304997126062145 3.2091659039264053 3 False
+14.3 14 1.85 0.5891368194526087 5.49465549565329 3 False
+19.1 19 6.387 0.7536535017888409 9.042321754821161 3 False
+19.2 19 6.387 0.32744407914638946 -21.557306007732066 3 False
+19.3 19 6.387 0.689144620804897 2.932801531700572 3 False

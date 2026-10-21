@@ -2520,6 +2520,16 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
   34.1) that Bergamini places ≤ 2.7″ away on observed images. No row is unmet in both models. CHANGELOG 2026-10-14.
 - **Revisit if** a third Abell 2744 model is added, or a both-model `no_reference` row gets a reference flux.
 
+**Addendum 2026-10-21 (Sharon v4cor and Keeton v4 pinned, `scripts/m0717_models.py`).**
+- **Decision.** The scratch second models of this record are now `MODELS` entries `macs0717-keeton` (pinned for use:
+  both frozen gates pass) and `macs0717-sharon` (G2 failed as written because image 6.2 lies off the 200″ maps; used
+  only inside the map footprint, a post hoc condition as for `macs1149-sharon`). Deflection and κ sha256 are the
+  2026-10-08 SOURCES.md values; the z = 2 magnification maps are new pins.
+- **Evidence.** G1: κ / |μ(z = 2)| median relative differences 0.00002 / 0.00002 (Keeton) and 0.00025 / 0.024
+  (Sharon). G2 on the 26 Table 7 spectroscopic images: Keeton rms 0.853″, 8 / 8 systems; Sharon 0.639″, 7 / 8 (0.662″
+  on the 7 inside the maps). CATS on the same images: 2.77″. `results/lens_consistency/macs0717_models/RESULT.md`.
+- **Revisit if** a forced row lies outside Sharon's footprint, or a JWST-era MACS0717 model is released.
+
 ## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
 
 **Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result
