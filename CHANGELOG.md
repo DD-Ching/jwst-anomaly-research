@@ -12,6 +12,29 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** no qualifying v22 partition is left. The next W3 ZTF batch needs a new-area inventory; check the
   owner's v22 authorization (4 h, ≤ 6 GB, after #395) covers it before starting.
 
+## 2026-10-21: X4 S1h: three extra seeds per ordinary model reproduce the common optima; R1's ordinary fits stay unreliable (tool/optimization undetermined; simulated)
+- **Question (owner, interactive):** with seeds 24–26 per model and unchanged procedures (P: S1g, DE 1,000
+  generations, 20 refinement rounds; U: S1f, DE 600 generations, restarts) and the original initialisation (best
+  re-scored saved S1c solution), do the two best seeds agree within 2e-4? Plan frozen first (69e2e2a; coordinator
+  plan `docs/plans/2026-10-21-x4-s1h-round.md`).
+- **Fits (`s1h_r1.json`):** all 6 finished; every DE stopped by its tolerance, every refinement / restart converged.
+  P 0.945882, 0.945884, 0.945884; U 0.892292, 0.892291, 0.892292.
+- **Decision (`s1h_decision.json`):** pooled seeds 21–26: P best 0.947638 (S1g seed 21) vs 0.945884, gap 1.75e-3;
+  U best 0.913511 (S1f seed 23) vs 0.892292, gap 0.0212; both > 2e-4. Five of six seeds share one optimum per model.
+  Validation recomputed with the updated FF_case passes (P 6 / 6, U 4 / 4; effective ε limit 5e-4 for both models,
+  the FF_case term 5.2e-3 / 8.6e-3 does not bind); best solutions verified; no
+  counter-example. **Tool/optimization undetermined;** R1 undetermined. No grounds added for real data; no pilot;
+  S2 not started. Not evidence for any special model, and not an exclusion of ordinary models.
+- **S1g wording:** the V9 DE cap is a separate limitation; both fits passed the injection validation; no retroactive
+  stage-cap rule; passing proves no global optimum.
+- **Post-run code review (9f26cab):** 8 code fixes (ε-limit reporting, resume and deadline paths, row-status guard,
+  duplicate checks, error counts, verified FF in the outcome); none of the fixed paths ran (one run, 6 / 6 finished).
+  No fit re-run; decision recomputed from stored rows, outcome unchanged; previous file kept as
+  `s1h_decision_v1.json`. Check of the fixes: archived rows of a resumed run no longer count as a seed's status
+  (path not run; `s1h_decision.json` recomputed with no field changed).
+- **Handoff:** the extra-seed route is closed. Needed instead: a search with a global-coverage diagnostic (e.g. nested
+  sampling on the same score, injection-validated) or GW data-analysis advice on precessing fitting factors (all
+  best fits sit at |χ| = 0.99). 2.6 CPU-h, 44 min wall on 4 cores; X4 has about 3.0 h left.
 ## 2026-10-21: W3 ZTF v25 complete: sibling prediction 6 / 6, H-sib becomes the queue rule; 2347 searched, 0 survivors
 - **Carry-over of the frozen v25 queue** (`results/w3_ztf/v25/RESULT.md` "Carry-over run"). The objects tables and the
   2347 and 4990 samples were rebuilt and reproduced exactly; the driver was not changed.
