@@ -1,0 +1,67 @@
+{
+ "label": "derived; S1g version check before the fits",
+ "checks": {
+  "s1f_seed23_U": {
+   "stored": 0.9135105524586078,
+   "now": 0.9135105524586078,
+   "abs_diff": 0.0
+  },
+  "s1c_best_P_rescored": {
+   "stored": 0.9453926729426831,
+   "now": 0.9453926729426831,
+   "abs_diff": 0.0
+  },
+  "s1e_V5_s11_final": {
+   "stored": 2.3688120843523564e-05,
+   "now": 2.3688120843523564e-05,
+   "abs_diff": 0.0
+  },
+  "s1e_V9_s12_final": {
+   "stored": 0.00014628480123957122,
+   "now": 0.00014628480123957122,
+   "abs_diff": 0.0
+  },
+  "s1e_V9_s11_final": {
+   "stored": 0.001547438508953114,
+   "now": 0.001547438508953114,
+   "abs_diff": 0.0
+  },
+  "s1e_V5_s12_final": {
+   "stored": 3.6598222242445466e-05,
+   "now": 3.6598222242445466e-05,
+   "abs_diff": 0.0
+  },
+  "truth_V5": {
+   "eps": 0.0,
+   "in_box": true
+  },
+  "truth_V9": {
+   "eps": 1.1102230246251565e-16,
+   "in_box": true
+  },
+  "grid": {
+   "nodes": 1271,
+   "cache_files": 1271
+  },
+  "de_replay_V9_s11_gen1_gen11": {
+   "stored": [
+    0.3598062834940734,
+    0.1781945628632302
+   ],
+   "now": [
+    0.3598062834940734,
+    0.1781945628632302
+   ],
+   "abs_diff": 0.0,
+   "seconds": 26.3
+  }
+ },
+ "versions": {
+  "lal": "7.7.1",
+  "lalsimulation": "6.2.1",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "mpmath": "1.4.1"
+ },
+ "pass": true
+}

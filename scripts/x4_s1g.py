@@ -242,7 +242,8 @@ def _install_hooks() -> None:
     def de_hooked(*a, callback=None, **kw):
         _RUN["lens_calls_prev"] = _RUN.get("lens_calls", 0)  # refinement counts start after the DE
 
-        def cb(res):
+        def cb(intermediate_result):  # SciPy dispatches on this parameter name
+            res = intermediate_result
             nit = int(res.nit)
             if (nit - 1) % 10 == 0:
                 _RUN.setdefault("spread_every_10", []).append(
