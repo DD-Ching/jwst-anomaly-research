@@ -98,6 +98,12 @@ def scan_delta(tpl, t, f, e, tau):
     return np.asarray(r), np.asarray(sr)
 
 
+def _frac(cond, values):
+    """Fraction of measurable (finite) lags where cond holds."""
+    ok = np.isfinite(values)
+    return float(np.mean(cond[ok])) if ok.any() else float("nan")
+
+
 def flagged(r1, s1, r2, s2, snr_min=FLAG_SNR):
     """Frozen rule (PLAN.md), per lag: r/sigma >= snr_min in both filters AND |r1 - r2| < 2 sigma.
 
@@ -177,8 +183,12 @@ def run(data: dict) -> dict:
             "snr_F160W_same_delta": float(rb[k] / sb[k]),
             "r_F125W": float(ra[k]),
             "r_F160W": float(rb[k]),
-            "frac_lags_r_positive_F125W_delta_gt_0": float(np.mean(ra[DELTA_GRID > 0] > 0)),
-            "frac_lags_r_negative_F125W_delta_lt_0": float(np.mean(ra[DELTA_GRID < 0] < 0)),
+            "frac_lags_r_positive_F125W_delta_gt_0": _frac(
+                ra[DELTA_GRID > 0] > 0, ra[DELTA_GRID > 0]
+            ),
+            "frac_lags_r_negative_F125W_delta_lt_0": _frac(
+                ra[DELTA_GRID < 0] < 0, ra[DELTA_GRID < 0]
+            ),
         }
     res["post_hoc_F125W_peaks"] = post
     return res

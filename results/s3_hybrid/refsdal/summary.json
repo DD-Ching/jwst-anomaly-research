@@ -136,7 +136,7 @@
       "snr_F160W_same_delta": -2.641817420873297,
       "r_F125W": 0.2657243048780438,
       "r_F160W": -0.18214335270407198,
-      "frac_lags_r_positive_F125W_delta_gt_0": 0.20430107526881722,
+      "frac_lags_r_positive_F125W_delta_gt_0": 0.20994475138121546,
       "frac_lags_r_negative_F125W_delta_lt_0": 0.07526881720430108
     }
   }
