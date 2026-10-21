@@ -33,7 +33,7 @@ FIELDS = {
 # Frozen rules (PLAN.md; ASSUMPTIONs)
 GATE_C_MIN = 0.8  # recovered (or confused) fraction of the testable catalogued images
 TESTABLE = ("recovered", "absent", "confused", "ambiguous")
-NOT_TARGETS = ("observed", "demagnified", "outside")
+NOT_TARGETS = lc.FORCED_SKIP
 GRID_STEP = 0.1  # arcsec, as ``lens_consistency images``
 
 
@@ -47,7 +47,7 @@ def gate_c(forced_classes) -> dict:
     fc = [str(c) for c in forced_classes]
     testable = [c for c in fc if c in TESTABLE]
     ok = sum(c in ("recovered", "confused") for c in testable)
-    frac = ok / len(testable) if testable else float("nan")
+    frac = ok / len(testable) if testable else None
     return {
         "n_targets": len(fc),
         "n_testable": len(testable),
@@ -101,6 +101,7 @@ def run_field(field: str, cache: Path) -> dict:
     lc._write(table, OUT / f"predicted_{field}.ecsv")
     lc._write(control, OUT / f"control_{field}.ecsv")
     cls = np.asarray(table["image_class"], str)
+    tfc = np.asarray(table["forced_class"], str)[~np.isin(cls, NOT_TARGETS)]
     return {
         "model": name,
         "model_sha256": model.sha256,
@@ -108,12 +109,7 @@ def run_field(field: str, cache: Path) -> dict:
         "depth_mag": depth,
         "unpredicted": unpredicted,
         "image_classes": {c: int((cls == c).sum()) for c in sorted(set(cls))},
-        "forced_classes_targets": {
-            c: int(
-                ((np.asarray(table["forced_class"], str) == c) & ~np.isin(cls, NOT_TARGETS)).sum()
-            )
-            for c in sorted(set(np.asarray(table["forced_class"], str)))
-        },
+        "forced_classes_targets": {c: int((tfc == c).sum()) for c in sorted(set(tfc))},
         "gate_C": gc,
         "flags": (
             [
@@ -136,7 +132,7 @@ def main(argv: list[str] | None = None) -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     summary = {f: run_field(f, args.cache) for f in args.fields}
     summary["rules"] = {"GATE_C_MIN": GATE_C_MIN, "TESTABLE": TESTABLE, "NOT_TARGETS": NOT_TARGETS}
-    (OUT / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+    (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")
     print(json.dumps({f: (summary[f]["gate_C"], summary[f]["flags"]) for f in args.fields}))
     return 0
 

@@ -13,14 +13,13 @@
    "observed": 55
   },
   "forced_classes_targets": {
-   "": 0,
    "no_reference": 7
   },
   "gate_C": {
    "n_targets": 55,
    "n_testable": 0,
    "n_recovered": 0,
-   "fraction": NaN,
+   "fraction": null,
    "passes": false,
    "classes": {
     "no_reference": 55
@@ -46,7 +45,6 @@
    "observed": 14
   },
   "forced_classes_targets": {
-   "": 0,
    "confused": 1,
    "recovered": 1
   },

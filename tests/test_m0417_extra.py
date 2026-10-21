@@ -1,37 +1,31 @@
 """Frozen rules of scripts/m0417_extra.py (flag and gate C)."""
 
 import importlib.util
+import sys
 from pathlib import Path
 
-_P = Path(__file__).resolve().parents[1] / "scripts"
-_spec = importlib.util.spec_from_file_location("m0417_extra", _P / "m0417_extra.py")
-
-
-def _mod():
-    import sys
-
-    sys.path.insert(0, str(_P))
-    m = importlib.util.module_from_spec(_spec)
-    _spec.loader.exec_module(m)
-    return m
+_SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
+sys.path.insert(0, str(_SCRIPTS))
+_spec = importlib.util.spec_from_file_location("m0417_extra", _SCRIPTS / "m0417_extra.py")
+mx = importlib.util.module_from_spec(_spec)
+sys.modules["m0417_extra"] = mx
+_spec.loader.exec_module(mx)
 
 
 def test_flag_only_absent_unmatched_magnified():
-    m = _mod()
-    assert m.flag("missing", "absent")
-    assert m.flag("candidate", "absent")
-    assert not m.flag("observed", "absent")
-    assert not m.flag("demagnified", "absent")
-    assert not m.flag("outside", "absent")
-    assert not m.flag("missing", "ambiguous")
-    assert not m.flag("missing", "undetectable")
+    assert mx.flag("missing", "absent")
+    assert mx.flag("candidate", "absent")
+    assert not mx.flag("observed", "absent")
+    assert not mx.flag("demagnified", "absent")
+    assert not mx.flag("outside", "absent")
+    assert not mx.flag("missing", "ambiguous")
+    assert not mx.flag("missing", "undetectable")
 
 
 def test_gate_c_counts_testable_only():
-    m = _mod()
-    g = m.gate_c(["recovered"] * 4 + ["absent", "undetectable", "no_reference"])
+    g = mx.gate_c(["recovered"] * 4 + ["absent", "undetectable", "no_reference"])
     assert g["n_testable"] == 5 and g["n_recovered"] == 4
     assert g["passes"]
-    g = m.gate_c(["recovered"] * 3 + ["absent", "ambiguous"])
-    assert not g["passes"]
-    assert not m.gate_c(["undetectable"])["passes"]
+    assert not mx.gate_c(["recovered"] * 3 + ["absent", "ambiguous"])["passes"]
+    g = mx.gate_c(["undetectable"])
+    assert not g["passes"] and g["fraction"] is None

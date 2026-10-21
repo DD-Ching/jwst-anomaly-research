@@ -8,7 +8,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   mosaics by S3 byte range; gate C = catalogued images recovered as forced targets ≥ 0.8.
 - **Result** (`RESULT.md`, `summary.json`): MACS1423 gate C 11 / 11, its two non-catalogued system 1 predictions
   have flux (recovered / confused), system 2's extra image is the demagnified central one (μ 0.43, not tested):
-  0 flags. MACS0417 gate C fails (55 / 55 `no_reference`): no reading.
+  0 flags (2 predictions tested; no injections, so no limit). MACS0417 gate C fails (55 / 55 `no_reference`): no reading.
 - **Post hoc** (`offsets_posthoc.json`): the MACS0417 references are thin extended arcs and the F200W peaks sit a
   median 0.30″ (dy −0.27″) from the Jauzac+19 positions (MACS1423: 0.06″); the 7 MACS0417 predictions were looked
   at (empty sky at |μ| 3–4, or beside a bright galaxy / the arc itself); none tested.

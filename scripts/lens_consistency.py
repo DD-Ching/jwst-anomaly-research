@@ -1528,6 +1528,9 @@ def system_search_radius(table: Table, sys_id: str, base: float, has_unpredicted
     return max(base, min(widen, MAX_SEARCH_ARCSEC))
 
 
+FORCED_SKIP = ("observed", "demagnified", "outside")  # image classes forced_check does not test
+
+
 def forced_check(
     table: Table,
     backtrace: Table,
@@ -1564,7 +1567,7 @@ def forced_check(
     ref_cache: dict[str, tuple[float, float, str]] = {}
     systems = np.asarray(backtrace["system"]).astype(str)
     for i, row in enumerate(table):
-        if row["image_class"] in ("observed", "demagnified", "outside"):
+        if row["image_class"] in FORCED_SKIP:
             continue
         sys_id = str(row["system"])
         if sys_id not in ref_cache:
