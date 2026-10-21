@@ -2,11 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-21: X4 handoff: PyCBC reproduces our fitting-factor statistic (3.1e-6); no existing tool takes over the 10-D precessing search (decision C)
+## 2026-10-21: X4 handoff: PyCBC reproduces our fitting-factor statistic (3.1e-6); no equivalent 10-D precessing maximiser found in a bounded survey (decision C)
 - **Reproduction package** (`results/x4/handoff/`): problem definition, C1 and C2 targets, truths and solutions;
   exact scores reproduce the stored ε.
-- **Score layer:** PyCBC 2.11 `compute_max_snr_over_sky_loc_stat_no_phase`, with PyCBC's own XPHM generator and
-  matched filter, agrees with our score to 3.1e-6 at 4 fixed points. Our statistic re-implements it.
+- **Score layer:** PyCBC 2.11 agrees with our score to 3.1e-6 at 4 fixed points. It used
+  `compute_max_snr_over_sky_loc_stat_no_phase`, its own matched filter, and its wrapper around the same
+  lalsimulation build. The difference tracks time-lag resolution. Our statistic is numerically equivalent at
+  these points (the same statistic as arXiv:1709.09181).
 - **Search layer:** `pycbc_optimize_snr` is aligned-spin (4-D), simple-pe uses a reduced χ_p model, Bilby is a
   set of samplers, and ripple has no XPHM. No search test was run. Three questions for a specialist are recorded
   (`docs/state/units/X4.md` § Handoff results).

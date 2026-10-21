@@ -1676,7 +1676,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   environment (`results/x4/handoff/pycbc_check.json`); not a project dependency.
 - Surveyed, not installed (2026-10-21): Bilby relative binning `find_maximum_likelihood_parameters`
   (https://git.ligo.org/lscsoft/bilby/-/blob/master/bilby/gw/likelihood/relative.py); simple-pe `find_peak_snr`
-  (https://git.ligo.org/stephen-fairhurst/simple-pe); ripple (JAX; no IMRPhenomXPHM listed).
+  (https://git.ligo.org/stephen-fairhurst/simple-pe); ripple (JAX; no IMRPhenomXPHM listed). pesummary "maxL" and gwfast
+  were assessed from memory, not checked.
 - Metacalibration: Huff & Mandelbaum 2017, arXiv:1702.02600 ("Metacalibration: Direct Self-Calibration of Biases in
   Shear Measurement"); Sheldon & Huff 2017, arXiv:1702.02601 ("Practical Weak Lensing Shear Measurement with
   Metacalibration"); titles checked via the arXiv API 2026-10-18. JADES 1181 o001 F200W i2d:

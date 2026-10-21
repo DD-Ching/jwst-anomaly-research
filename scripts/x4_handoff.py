@@ -104,7 +104,21 @@ def pack():
                 "Cartesian chi = |chi| (sin t cos az, sin t sin az, cos t) at f_ref, frame of L"
             ),
         },
-        "noise": "lalsimulation.SimNoisePSDaLIGODesignSensitivityP1200087, single detector",
+        "noise": (
+            "lalsimulation.SimNoisePSDaLIGODesignSensitivityP1200087, single detector; zero-noise "
+            "targets (no noise realisation)"
+        ),
+        "details": {
+            "units": "Mc in solar masses (detector frame); q = m1/m2 >= 1; angles in rad",
+            "laldict": "default lal.CreateDict(): default XPHM mode content and precession version",
+            "effective_band": "(20, 1024] Hz: the design PSD is 0 at the 20 Hz bin (weight 0)",
+            "inner_product": "one-sided sum over bins, no factor 4 (cancels in FF)",
+            "time_lag": "cyclic, from a complex inverse FFT of length next_fast_len(pad * n); no "
+            "sub-sample interpolation; pad 64 under-resolves the lag by about 3e-6 in FF on C1",
+            "degenerate_branch": "if h+ and hx are parallel (Gram determinant <= 1e-12 g11 g22), "
+            "the score uses h+ alone",
+            "ff_case": "0.915149 = best U FF on R1 (s1i_decision.json, S1i seed 32, pad 64)",
+        },
         "band_hz": [b.F_LOW, b.F_HIGH],
         "df_hz": b.DF,
         "accuracy_rule": (
@@ -122,6 +136,9 @@ def pack():
             "uv venv lalenv --python 3.12; uv pip install --python lalenv/bin/python "
             "lalsuite==7.26.16 numpy==2.5.4 scipy==1.18.1 mpmath dynesty",
             "PYTHONPATH=src lalenv/bin/python scripts/x4_handoff.py pack",
+            "uv venv pycbcenv --python 3.12; uv pip install --python pycbcenv/bin/python "
+            "pycbc==2.11.0 lalsuite==7.26.16 (used: numpy 2.3.5, scipy 1.16.3)",
+            "pycbcenv/bin/python scripts/x4_handoff.py pycbc",
             "the failing search: set DEADLINE_UTC in scripts/x4_s1k.py to a future time, "
             "copy results/x4/s1k_validate.json, then "
             "PYTHONPATH=src lalenv/bin/python scripts/x4_s1k.py one_v C1 "
@@ -167,8 +184,9 @@ def pack():
 
 
 def pycbc_check(pad=64):
-    """Score layer re-computed with PyCBC only (no X4 code): its IMRPhenomXPHM generator, matched
-    filter and the no-phase sky-location statistic (arXiv:1709.09181), against case.json."""
+    """Score layer re-computed with PyCBC only (no X4 code): PyCBC's wrapper around the same
+    lalsimulation XPHM build, its matched filter and the no-phase sky-location statistic
+    (arXiv:1709.09181), against case.json."""
     import pycbc
     import scipy
     from pycbc.filter import matched_filter, overlap_cplx, sigma
