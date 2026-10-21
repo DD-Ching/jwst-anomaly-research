@@ -155,11 +155,13 @@ def drop_unreproduced(solver: Solver, sp: Table, ip_sp: Table) -> dict:
         row = sub[sub["image_id"] == out_id]
         ox, oy = solver.model.to_frame(np.asarray(row["ra"], float), np.asarray(row["dec"], float))
         dist = np.hypot(np.asarray(pred["x"]) - ox[0], np.asarray(pred["y"]) - oy[0])
-        k = int(np.argmin(dist))
+        k = int(np.argmin(dist)) if len(dist) else None  # no image predicted: NaN, not a crash
         held_out[out_id] = {
             "n_predicted": len(pred),
-            "nearest_predicted_arcsec": float(dist[k]),
-            "nearest_predicted_magnification": float(pred["magnification"][k]),
+            "nearest_predicted_arcsec": float(dist[k]) if k is not None else float("nan"),
+            "nearest_predicted_magnification": (
+                float(pred["magnification"][k]) if k is not None else float("nan")
+            ),
         }
     return {
         "dropped": dropped,

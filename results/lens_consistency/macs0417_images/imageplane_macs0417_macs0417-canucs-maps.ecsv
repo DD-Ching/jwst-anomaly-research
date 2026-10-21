@@ -11,7 +11,10 @@
 # - {name: z_fit, datatype: float64}
 # meta: !!omap
 # - {provenance: model_prediction}
-# - {source: '../results/lens_consistency/macs0417_images/jauzac19_images.ecsv traced with macs0417-canucs-maps, image-plane solve'}
+# - {source: 'Jauzac et al. 2019, arXiv:1811.02505 (MNRAS 483, 3082), Table 4 (gold + silver set of Mahler et al. 2019), from the arXiv
+#     LaTeX source table4.tex (sha256 7e05be79da64fcfb62e71f081c1b18bebc249b6641e6f598930f01c6be53b4cc), parsed 2026-10-21; z of non-spectroscopic
+#     systems is the Jauzac model z of image x.1 (z_spec False); the commented-out row 1m.4 is excluded traced with macs0417-canucs-maps,
+#     image-plane solve'}
 # - {model_sha256: 5aaf465b55747226ff4fcf36345c60e7fa2a064267eeeb6ad57f9da4d6443da4}
 # - {z_lens: 0.443}
 # - reference_radec: [64.394582, -11.908963999999997, 64.394582, -11.908963999999997, 64.394582, -11.908963999999997, 64.394582, -11.908963999999997,

@@ -11,8 +11,9 @@
 # - {name: z_fit, datatype: float64}
 # meta: !!omap
 # - {provenance: model_prediction}
-# - {source: '../results/lens_consistency/macs0417_images/kaleidoscope_m1423_images.ecsv traced with macs1423-canucs-maps, image-plane
-#     solve'}
+# - {source: 'KALEIDOSCOPE, arXiv:2405.04577 (MNRAS 533, 4500), Table tab:mulimg, from the arXiv LaTeX source strong_lensing.tex (sha256
+#     86fd419c82d5d97c06c0542b1b621bf327728cd0ac5889918f5e28ab59f0c69d), parsed 2026-10-21; system 4 z is model-optimised (z_spec False)
+#     traced with macs1423-canucs-maps, image-plane solve'}
 # - {model_sha256: d01e5a06b8e9f8faf45a1f857f6de85e4e8e0bccf1e07c9be5b1d8386b07ae6d}
 # - {z_lens: 0.545}
 # - reference_radec: [215.949485, 24.078455000000005, 215.949485, 24.078455000000005]
