@@ -163,8 +163,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    metric predicts them; post hoc they cluster by HEALPix order-4 parent (between 208 / 11, within 26 / 13 dof).
    v25 (2026-10-21, `results/w3_ztf/v25/RESULT.md`): the frozen sibling prediction holds in 6 / 6 areas, so H-sib
    is the queue rule (untested parents and fade-passing parents' siblings first; siblings of failing parents are
-   not fetched). 2346 and 2347 searched (3,926 groups), 0 survivors. Next: a v26 queue from `v22/inventory.json`
-   under that rule. The fade limit stays an owner decision.
+   not fetched). 2346 and 2347 searched (3,926 groups), 0 survivors. v26 (`results/w3_ztf/v26/RESULT.md`): both
+   remaining untested parents fail at their heads (2878 fade 11.7 %, 2813 14.3 %), so four siblings were skipped;
+   **the v22 inventory is exhausted** (0 searched). Next: a new-area inventory (the v22 round ran under the owner's
+   4 h / ≤ 6 GB authorization after #395; check that it covers another inventory first). The fade limit stays an
+   owner decision.
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.31 (typical, 3/25 after the 2026-10-08
    pair-match and one-entry-per-lens amendment) for quasar/radio-selected lenses, the only selections sensitive to a
    dark lens). Next: HSC PDR3 photometry, or a *validated* PSF-subtracted HST

@@ -1,0 +1,29 @@
+{
+ "objects_in_area": 891977,
+ "r_band_passing_cuts": 3469,
+ "isolated": 3394,
+ "groups_before_draw": 2023,
+ "groups": 2023,
+ "holdout": 1015,
+ "ambiguous_groups_dropped": 1,
+ "groups_dropped_near_old_sample": 0,
+ "dropped_shared_objectid": 0,
+ "calibration_groups": 500,
+ "search_groups": 1523,
+ "split": "lowest 500 by crc32(\"v26:\"+key) = calibration (\"holdout\" above is select() pre-split parity)",
+ "refmag_r_p5_p50_p95": {
+  "calibration": [
+   14.737549924850464,
+   16.429499626159668,
+   17.42099952697754
+  ],
+  "search": [
+   14.769099998474122,
+   16.41699981689453,
+   17.405598449707032
+  ]
+ },
+ "lc_partition": "ipac-irsa-ztf/ztf/enhanced/dr24/lc/hats/ztf_dr24_lc-hats/dataset/Norder=5/Dir=0/Npix=2877/part0.snappy.parquet",
+ "cache": "/home/user/jwst-anomaly-research/data/cache/w3_ztf/2877",
+ "controls": 7276
+}

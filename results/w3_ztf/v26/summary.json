@@ -1,0 +1,305 @@
+{
+ "label": "derived (timeline.jsonl and per-area outputs)",
+ "areas": {
+  "2878": {
+   "position": 1,
+   "lc_mb": 441.0,
+   "parent": 719,
+   "head": null,
+   "started": true,
+   "skipped_head_gate": false,
+   "stage_seconds": {
+    "fetch": 33.1,
+    "exposures": 35.8,
+    "search_dev": 29.1,
+    "inject": 73.0,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 1313,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.780849599838257,
+     16.526498794555664,
+     17.388999938964844
+    ],
+    "search": [
+     14.710599327087403,
+     16.322999954223633,
+     17.407400131225586
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 118,
+    "rho0.01_blend1_tE30": 164,
+    "rho0.01_blend1_tE100": 158,
+    "rho0.1_blend1_tE10": 112,
+    "rho0.1_blend1_tE30": 143,
+    "rho0.01_blend0.7_tE10": 105,
+    "rho0.01_blend0.7_tE30": 147,
+    "rho0.01_blend0.7_tE100": 149,
+    "rho0.1_blend0.7_tE10": 87,
+    "rho0.1_blend0.7_tE30": 135
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     117,
+     1000,
+     [
+      0.0985,
+      0.1384
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 30.6,
+   "tap_mb": 5.91,
+   "fade_le_10pct": false
+  },
+  "2813": {
+   "position": 2,
+   "lc_mb": 440.2,
+   "parent": 703,
+   "head": null,
+   "started": true,
+   "skipped_head_gate": false,
+   "stage_seconds": {
+    "fetch": 36.9,
+    "exposures": 65.7,
+    "search_dev": 33.2,
+    "inject": 86.4,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 954,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.809549474716187,
+     16.43000030517578,
+     17.430999755859375
+    ],
+    "search": [
+     14.762299585342408,
+     16.34149932861328,
+     17.389049911499022
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 94,
+    "rho0.01_blend1_tE30": 129,
+    "rho0.01_blend1_tE100": 126,
+    "rho0.1_blend1_tE10": 98,
+    "rho0.1_blend1_tE30": 118,
+    "rho0.01_blend0.7_tE10": 94,
+    "rho0.01_blend0.7_tE30": 102,
+    "rho0.01_blend0.7_tE100": 101,
+    "rho0.1_blend0.7_tE10": 92,
+    "rho0.1_blend0.7_tE30": 108
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     143,
+     1000,
+     [
+      0.1227,
+      0.1661
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 34.7,
+   "tap_mb": 7.54,
+   "fade_le_10pct": false
+  },
+  "2876": {
+   "position": 3,
+   "lc_mb": 542.3,
+   "parent": 719,
+   "head": 2878,
+   "started": false,
+   "skipped_head_gate": true,
+   "stage_seconds": {},
+   "calibration_groups": 500,
+   "search_groups": 1322,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.76644926071167,
+     16.485498428344727,
+     17.43199920654297
+    ],
+    "search": [
+     14.799049758911133,
+     16.349998474121094,
+     17.39274969100952
+    ]
+   }
+  },
+  "2812": {
+   "position": 4,
+   "lc_mb": 442.6,
+   "parent": 703,
+   "head": 2813,
+   "started": false,
+   "skipped_head_gate": true,
+   "stage_seconds": {},
+   "calibration_groups": 500,
+   "search_groups": 943,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.799599266052246,
+     16.352999687194824,
+     17.39939832687378
+    ],
+    "search": [
+     14.755599212646484,
+     16.336999893188477,
+     17.411798858642577
+    ]
+   }
+  },
+  "2879": {
+   "position": 5,
+   "lc_mb": 726.4,
+   "parent": 719,
+   "head": 2878,
+   "started": false,
+   "skipped_head_gate": true,
+   "stage_seconds": {},
+   "calibration_groups": 500,
+   "search_groups": 1484,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.712499380111694,
+     16.404500007629395,
+     17.42799949645996
+    ],
+    "search": [
+     14.775599575042724,
+     16.399499893188477,
+     17.40584831237793
+    ]
+   }
+  },
+  "2877": {
+   "position": 6,
+   "lc_mb": 820.4,
+   "parent": 719,
+   "head": 2878,
+   "started": false,
+   "skipped_head_gate": true,
+   "stage_seconds": {},
+   "calibration_groups": 500,
+   "search_groups": 1523,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.737549924850464,
+     16.429499626159668,
+     17.42099952697754
+    ],
+    "search": [
+     14.769099998474122,
+     16.41699981689453,
+     17.405598449707032
+    ]
+   }
+  }
+ },
+ "searched_groups": 0,
+ "searched_series": 0,
+ "final_survivors": 0,
+ "started": 2,
+ "passed": 0,
+ "downloaded_mb": 1066.2,
+ "downloaded_note": "objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured",
+ "not_started": [],
+ "stage_seconds_of_searched_areas": 0,
+ "per_1000_searched": {
+  "stage_seconds": null,
+  "lc_mb": null,
+  "wall_clock_min_queue": null
+ },
+ "wall_clock_min": 3.4,
+ "events": 31,
+ "sibling_agreement": {
+  "719": {
+   "fade_rates": [
+    0.117
+   ],
+   "span_points": null,
+   "within_4_points": null
+  },
+  "703": {
+   "fade_rates": [
+    0.143
+   ],
+   "span_points": null,
+   "within_4_points": null
+  }
+ },
+ "skipped_head_gate": [
+  2876,
+  2812,
+  2879,
+  2877
+ ]
+}
