@@ -1,0 +1,29 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: ra, unit: deg, datatype: float64}
+# - {name: dec, unit: deg, datatype: float64}
+# - {name: z, datatype: float64}
+# - {name: z_spec, datatype: bool}
+# meta: !!omap
+# - {provenance: observed}
+# schema: astropy-2.0
+image_id ra dec z z_spec
+1.1 215.9577155 24.0746537 2.84 True
+1.2 215.9494609 24.081827 2.84 True
+1.3 215.9444674 24.0806542 2.84 True
+1.4 215.9459355 24.0763898 2.84 True
+1.5 215.9497029 24.0791219 2.84 True
+2.1 215.9576456 24.0745519 2.84 True
+2.2 215.9495433 24.0817288 2.84 True
+2.3 215.9443426 24.0803974 2.84 True
+2.4 215.9458112 24.0763495 2.84 True
+3.1 215.9465404 24.0836281 1.779 True
+3.2 215.952302 24.0831945 1.779 True
+3.3 215.9551508 24.0811756 1.779 True
+4.1 215.9481287 24.0771353 1.797 False
+4.2 215.9558429 24.0771761 1.797 False
+4.3 215.9502463 24.0821356 1.797 False
+4.4 215.9459358 24.0817256 1.797 False
+4.5 215.94902 24.078083 1.797 False
