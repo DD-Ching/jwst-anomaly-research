@@ -38,3 +38,13 @@ here prospectively because 1.0″ failed the known case) goes to multi-epoch for
 
 **What changes the plan.** A `/vet-candidate` survivor → needs-human PR. A clean set of validated boxes → depth
 statement per box and the SMACS arc line closes for this pair.
+
+## Addendum 1 (2026-10-21T16:21Z, after b1, before its control test): b1 h019
+- b1 h019 (morph `pass`, 1.51″ from 17.1; arc_diff sign −) has forced-photometry changes 2022 → 2026-06 of
+  +73.6 ± 16.1 nJy F150W (4.6σ) and +33.4 ± 5.1 nJy F444W (6.5σ) on a ≈ 1.7 / 1.0 μJy source, so the frozen rule
+  sends it to `/vet-candidate`. A uniform +3–4 % with the opposite sign to the kernel-matched difference points first
+  to an epoch-to-epoch flux-scale (zero-point) difference, which the random-aperture errors do not include.
+- **Test (frozen here):** `hit_lightcurve_controls.py pick` on the 2022 F150W mosaic, flux range 500–5,000 nJy,
+  n 60, half-box 16″; `hit_lightcurve.py` at h019 + controls; `compare` for the o001 → o057 pairs in F150W and
+  F444W. z_cal = (z_h019 − median z_ctrl) / (1.4826 × MAD z_ctrl) per band. **explained** |z_cal| < 2 in both
+  bands; **open** |z_cal| ≥ 3 in either (→ counter-image check of system 17); else **undetermined**. ASSUMPTIONs.
