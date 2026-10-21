@@ -74,3 +74,17 @@ def test_box_diff_wraps_angles():
     assert abs(X.box_diff(a, b) - 0.02) < 1e-12
     b[0] = 0.5
     assert X.box_diff(a, b) == 0.5
+
+
+def test_gate_blocks_search_unless_all_checks_pass(tmp_path, capsys):
+    p = tmp_path / "checks.json"
+    assert X.gate(p) == ["no checks file"]
+    p.write_text('{"F1_pass": true, "F2_pass": false, "F3_pass": false}')
+    assert X.gate(p) == ["F2", "F3"]
+    p.write_text('{"F1_pass": true, "F2_pass": true, "F3_pass": true}')
+    assert X.gate(p) == []
+    # the committed checks fail F2 and F3, so both search commands refuse before any import
+    assert X.gate() == ["F2", "F3"]
+    assert X.main(["runs"]) == 2
+    assert X.main(["one", "C1", "71"]) == 2
+    assert "F2" in capsys.readouterr().err

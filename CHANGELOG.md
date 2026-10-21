@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: X4 cogwheel: interface consistency failed (F2, F3); C1/C2 runs were exploratory and stopped unfinished
+- **Reading:** cogwheel 1.6.0 `refine_reference_waveform` runs SciPy DE on the relative-binning lnL over all 15
+  IASPrior parameters (all 6 spin components, inclination, φ_ref); start from an aligned-spin (2,2) finder.
+- **Fixed-point checks** (`results/x4/handoff/cogwheel_checks.json`): F1 parameter round trip passes (1.8e-15).
+  F2 fails: cogwheel's waveform is lal XPHM without multibanding, ours multibands (fixed-parameter difference up to
+  3.9e-5; not an ε). F3 fails: cogwheel's auto asd_drift (with drift 1: 2.3e-8 and 7.8e-5 at the two truths; the RB
+  lnL is off by 3e-3 to 7e-3 even at its own reference, cause open).
+- **Exploratory runs (outside the plan):** started by hand despite the failed gate; attempt 1 crashed (q_min 1/15 vs
+  an aligned-spin start at q ≈ 17.9), attempt 2 (q_min 0.05, a deviation) was stopped unfinished after 7.7 min on
+  the owner's instruction; no point saved, nothing re-scored (`cogwheel_runs.json`). No measured gain.
+- **Gate:** `scripts/x4_cogwheel.py` now refuses to search unless F1–F3 pass (tested). X4 search layer stays paused;
+  conditions for a valid next comparison in `docs/state/units/X4.md` § cogwheel round.
+
 ## 2026-10-21: X4 handoff: PyCBC reproduces our fitting-factor statistic (3.1e-6); no equivalent 10-D precessing maximiser found in a bounded survey (decision C)
 - **Reproduction package** (`results/x4/handoff/`): problem definition, C1 and C2 targets, truths and solutions;
   exact scores reproduce the stored ε.

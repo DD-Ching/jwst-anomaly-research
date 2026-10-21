@@ -274,6 +274,16 @@ def _versions():
     }
 
 
+def gate(path=None):
+    """Names of the fixed-point checks (F1-F3) that did not pass; a search may start only if empty.
+    Added after this round's runs were started by hand although F2 and F3 had failed."""
+    path = OUT_DIR / "cogwheel_checks.json" if path is None else Path(path)
+    if not path.exists():
+        return ["no checks file"]
+    out = json.loads(path.read_text())
+    return [f for f in ("F1", "F2", "F3") if out.get(f"{f}_pass") is not True]
+
+
 def run_one(name, seed):
     """Published workflow: Posterior.from_event (RWF aligned-spin start) then one DE refinement."""
     import cogwheel.posterior as cp
@@ -370,6 +380,9 @@ def main(argv=None) -> int:
             json.dumps(out, indent=1, default=float) + "\n"
         )
         print(json.dumps({k_: out[k_] for k_ in out if k_.endswith(("pass", "worst"))}))
+    elif cmd in ("one", "runs") and gate():
+        print(f"refused: fixed-point checks not passed: {gate()}", file=sys.stderr)
+        return 2
     elif cmd == "one":
         r = run_one(argv[1], int(argv[2]))
         (OUT_DIR / f".cogwheel_{argv[1]}.json").write_text(json.dumps(r, default=float) + "\n")
