@@ -1,0 +1,18 @@
+{
+ "label": "derived; wall times from the committed rows (S1i stage wall + extended polish seconds); CPU-h = wall x 2 pool processes (upper bound)",
+ "runs": {
+  "B2": {
+   "s1i_wall_s": 3021.1,
+   "extend_s": 4.2,
+   "ncall": 220430,
+   "extra_fev": 150
+  },
+  "B1": {
+   "s1i_wall_s": 3427.9,
+   "extend_s": 5.4,
+   "ncall": 179974,
+   "extra_fev": 150
+  }
+ },
+ "cpu_h_total": 3.59
+}
