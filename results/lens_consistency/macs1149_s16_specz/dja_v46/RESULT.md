@@ -7,14 +7,14 @@ Plan `PLAN.md` (frozen before the table was read). Catalogue rows only; no spect
 
 | Row (v4.6, 99,478 rows, sha256 `ee64bb46…6ddf3`) | Match | v4.6 values | Change vs v4.4 (`../summary.json`) |
 |---|---|---|---|
-| `macs1149-v4_prism-clear_1208_5114276` | 16.2 at 0.045″ (derived) | `grade` empty, `z_best` −1, automated `zline` 0.441 at `sn50` 1.34, EAZY `z_phot` 2.79 | none (same msaexp version 0.9.5.dev2+g80b81b4) |
+| `macs1149-v4_prism-clear_1208_5114276` | 16.2 at 0.045″ (derived) | `grade` empty, `z_best` −1, automated `zline` 0.441 at `sn50` 1.34, EAZY `z_phot` 2.79 | none in the values v4.4 recorded (v4.6 msaexp version 0.9.5.dev2+g80b81b4; v4.4's was not recorded) |
 | 16.1 | no row within 0.5″ | — | none |
 | CANUCS 5106117 (D-037's possible far image) | no row | — | none |
 | `…_1208_5106431` (Treu 26.2, not system 16; context only) | 1.6″ from 16.1 | grade 2, `zline` 3.189 | none |
 
 - v4.5 (2026-02-23) was not read: it is older than v4.6, which supersedes it.
-- The 16.2 extraction has not been re-reduced or re-graded since v4.4; the 2026-10-20 recheck condition
-  ("when DJA grades `1208_5114276`") still holds.
+- The 16.2 row is still ungraded with identical automated values; the 2026-10-20 recheck condition ("when DJA
+  grades `1208_5114276`") still holds.
 
 ## What would decide it
 Unchanged: a graded NIRSpec redshift of 16.1 or 16.2 (a DJA re-grade of 5114276 or a deeper spectrum). Next check
