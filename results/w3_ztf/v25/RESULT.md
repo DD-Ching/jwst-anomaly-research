@@ -35,3 +35,4 @@
   rebuild their control files in the data cache; the committed `sample.json.gz` must come out identical (same salt,
   same objects; check it). Then run the driver unchanged; it skips areas that already have `decision.json`.
 - Then re-run `summary_script.py.txt` for the complete tally.
+- 2026-10-21 06:16Z: carry-over run started (2347, 4990), cloud routine.
