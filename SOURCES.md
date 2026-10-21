@@ -745,6 +745,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   model maps (`lensmodel.MACS0417_CANUCS_MAPS`, `MACS1423_CANUCS_MAPS`, sha256 as pinned) fetched through
   `https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HLSP/canucs/dr1/<field>/model/<file>` (archive.stsci.edu
   failed TLS from the cloud session).
+- MACS0417 frame offset (accessed 2026-10-21; `results/lens_consistency/macs0417_frame/`): RELICS macs0417m11 HST
+  catalogue v1, `https://archive.stsci.edu/hlsps/relics/macs0417m11/catalogs/hlsp_relics_hst_acs-wfc3ir_macs0417m11_multi_v1_cat.txt`,
+  2,182,873 B, sha256 `26a210e599f37ae066cc3cfb5e8d53777f39ad322710cdc002f6372fc79f24b8` (header: produced 2017-06-19
+  by Dan Coe, GO 14096); the o006_t003 F200W `_cat.ecsv` above via `https://stpubdata.s3.amazonaws.com/`, sha256
+  `e55dffb990a8e8124e37658933a47952a77b357b36dc5c8f523a5b487d423c24`.
 - MACS1423 (`arcs`, accessed 2026-10-16; `results/arcs/macs1423-canucs/`):
   - JWST 1208 F200W pipeline catalogue `jw01208-o010_t005_nircam_clear-f200w_cat.ecsv` (MAST
     `mast:JWST/product/...`), 4,987,129 B, sha256 `1a968574d0f206c72a74554c1b3cbbf71e9a5219a70a553a1458e80dd4d5bfa3`;

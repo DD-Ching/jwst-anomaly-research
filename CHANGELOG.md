@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: MACS0417 published image list put on the JWST frame; extra-image test still untestable (arc references)
+- **Plan** (`results/lens_consistency/macs0417_frame/PLAN.md`, frozen first): measure the Jauzac+19 list → JWST 1208
+  F200W frame offset from the RELICS HST catalogue (gate F1), check that it moves the list onto its F200W peaks (F2),
+  then re-run `m0417_extra.run_field` unchanged.
+- **Result** (`RESULT.md`, `summary.json`): O = (+0.101″, −0.292″) ± 0.001″ from 471 matches (F1 passes); the 56
+  shifted images sit a median 0.038″ from their peaks, against 0.300″ unshifted (F2 passes). Gate C now passes
+  (12 / 12 testable controls), 0 flags, but the 6 predicted extra images (families 8, 9, 10, 17) are all
+  `no_reference`: their references are thin arcs (contact sheet looked at). The test stays untested there.
+- **Handoff:** next for MACS0417 is an arc-aware reference flux, frozen and checked on the 12 controls first, or the
+  CANUCS v2 image catalogues. Next lensing step otherwise from TASKS Supporting as before.
+
 ## 2026-10-21: X4 S1k: graded polish passes B2 (development) and C2, but fails the R1-like U injection C1 (ε 4.2e-3); R1 not polished
 - **Diagnosis of the old polish:** its 150-evaluation restarts with a fixed simplex report "converged" on a zero
   gain. Vertices beyond the box or past 2π score as walls.

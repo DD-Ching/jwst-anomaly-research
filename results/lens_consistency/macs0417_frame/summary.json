@@ -1,0 +1,86 @@
+{
+ "measurement": {
+  "pass1": {
+   "n": 503,
+   "dra": 0.10047200363997787,
+   "dra_err": 0.0009405214527251003,
+   "ddec": -0.2909279256399112,
+   "ddec_err": 0.0011894515712222746
+  },
+  "offset": {
+   "n": 471,
+   "dra": 0.10084636860364347,
+   "dra_err": 0.0008659623959436239,
+   "ddec": -0.2917131053097502,
+   "ddec_err": 0.0010874155984705338
+  },
+  "even": {
+   "n": 248,
+   "dra": 0.10056565578629004,
+   "dra_err": 0.0011023423808375428,
+   "ddec": -0.29173168926435533,
+   "ddec_err": 0.0014290150384851591
+  },
+  "odd": {
+   "n": 223,
+   "dra": 0.10228630504811471,
+   "dra_err": 0.001351605198334051,
+   "ddec": -0.29136854068039475,
+   "ddec_err": 0.0016782284202203875
+  },
+  "halves_max_diff": 0.0017206492618246777,
+  "F1": true,
+  "n_relics_selected": 728
+ },
+ "shifted_peak_offsets": {
+  "n_images": 56,
+  "median_abs_offset_arcsec": 0.03753112924193167,
+  "F2": true
+ },
+ "macs0417": {
+  "model": "macs0417-canucs-maps",
+  "model_sha256": "5aaf465b55747226ff4fcf36345c60e7fa2a064267eeeb6ad57f9da4d6443da4",
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 27.150849180457826,
+  "unpredicted": [
+   "1b.4",
+   "11.1"
+  ],
+  "image_classes": {
+   "candidate": 1,
+   "faint": 3,
+   "missing": 2,
+   "observed": 54
+  },
+  "forced_classes_targets": {
+   "no_reference": 6
+  },
+  "gate_C": {
+   "n_targets": 54,
+   "n_testable": 12,
+   "n_recovered": 12,
+   "fraction": 1.0,
+   "passes": true,
+   "classes": {
+    "confused": 3,
+    "no_reference": 41,
+    "off_image": 1,
+    "recovered": 9
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ },
+ "rules": {
+  "MAX_FWHM": 0.5,
+  "MIN_NF5SIG": 3,
+  "PASS1": 1.0,
+  "PASS2": 0.3,
+  "F1": [
+   30,
+   0.02,
+   0.03
+  ],
+  "F2_MAX_MEDIAN": 0.18
+ }
+}

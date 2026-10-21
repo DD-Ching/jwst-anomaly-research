@@ -73,11 +73,18 @@ def measure(relics: Table, jwst: SkyCoord) -> dict:
     odd = summarize(t2[t2["id"] % 2 == 1])
     halves = max(abs(even["dra"] - odd["dra"]), abs(even["ddec"] - odd["ddec"]))
     f1 = gate_f1(p2, halves)
-    return {"pass1": p1, "offset": p2, "even": even, "odd": odd, "halves_max_diff": halves, "F1": f1}
+    return {
+        "pass1": p1,
+        "offset": p2,
+        "even": even,
+        "odd": odd,
+        "halves_max_diff": halves,
+        "F1": f1,
+    }
 
 
 def gate_f1(offset: dict, halves_max_diff: float) -> bool:
-    """Frozen gate F1: N >= 30 and error <= 0.02" on each axis and halves within 0.03" on each axis."""
+    """Frozen gate F1: N >= 30, error <= 0.02" per axis, halves within 0.03" per axis."""
     return bool(
         offset["n"] >= F1_MIN_N
         and max(offset["dra_err"], offset["ddec_err"]) <= F1_MAX_ERR
@@ -95,9 +102,8 @@ def shifted_loader(dra: float, ddec: float):
 
     def load(field: str) -> Table:
         t = base(field)
-        c = SkyCoord(t["ra"] * u.deg, t["dec"] * u.deg).spherical_offsets_by(
-            dra * u.arcsec, ddec * u.arcsec
-        )
+        ra, dec = np.asarray(t["ra"], float), np.asarray(t["dec"], float)
+        c = SkyCoord(ra * u.deg, dec * u.deg).spherical_offsets_by(dra * u.arcsec, ddec * u.arcsec)
         t["ra"], t["dec"] = c.ra.deg, c.dec.deg
         return t
 
@@ -129,7 +135,9 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     relics = read_relics(args.relics)
     jw = lc.load_shapes(args.jwst)
-    m = measure(relics, SkyCoord(jw["ra"] * u.deg, jw["dec"] * u.deg))
+    m = measure(
+        relics, SkyCoord(np.asarray(jw["ra"], float) * u.deg, np.asarray(jw["dec"], float) * u.deg)
+    )
     m["n_relics_selected"] = len(relics)
     summary = {"measurement": m}
     if m["F1"]:
