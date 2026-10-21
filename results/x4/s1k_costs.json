@@ -1,0 +1,28 @@
+{
+ "label": "derived; from committed rows (S1i stage wall x 2 pool processes + graded polish seconds; dev polish seconds, single process); written in the session",
+ "validation": {
+  "C2": {
+   "s1i_wall_s": 1528.6,
+   "polish_s": 80.5,
+   "polish_nfev": 7311
+  },
+  "C1": {
+   "s1i_wall_s": 2042.0,
+   "polish_s": 132.1,
+   "polish_nfev": 8598
+  }
+ },
+ "dev_polish_s": {
+  "B1_control_scale1x3": 74.7,
+  "B1_graded": 85.6,
+  "B2_graded": 140.1,
+  "B2_control_scale1x3": 150.0,
+  "V7_graded": 104.0,
+  "V7_control_scale1x3": 115.8,
+  "V10_control_scale1x3": 145.3,
+  "V10_graded": 175.2
+ },
+ "cpu_h_validation": 2.04,
+ "cpu_h_dev": 0.28,
+ "cpu_h_total": 2.32
+}
