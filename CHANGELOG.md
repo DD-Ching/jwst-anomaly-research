@@ -22,7 +22,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   Gaia-star ePSFs need ≥ 3 stars and only 1 of 5 HAP fields (88″) had them; summing CAOM level-3 exposure times counts
   the same exposures several times.
 - **New:** `scripts/w2_hst_blend.py`, `scripts/w2_hst_blend_chain.py`, `scripts/w2_hst_blend_run.py`,
-  `tests/test_w2_hst_blend.py`. 2.22 GB downloaded (1.98 GB for the 2200-px PSF cutouts), all deleted.
+  `tests/test_w2_hst_blend.py`. 2.28 GB downloaded (1.98 GB for the 2200-px PSF cutouts), all deleted.
+- **Review round 2 (a1a4694):** explicit per-visit depth rule (selection identical); PSF rows reused only after an
+  input check (all 5 pass; 3 v1 labels normalised to "not detected"); no number changed.
 - **Handoff:** the gap is named and the line stopped. It needs a per-image PSF matched to the HAP-MVM drizzle (STScI
   ACS/WFC3 empirical PSF grids, photutils) or a lens-light + point-source model (lenstronomy); both are new
   dependencies. Success = no-lens negative controls < 5σ with controls ≥ 0.9.
