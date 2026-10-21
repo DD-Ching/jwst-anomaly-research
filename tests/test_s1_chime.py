@@ -414,3 +414,76 @@ def test_bounded_map_keeps_at_most_window_files_on_disk(tmp_path):
     assert seen == list(range(12))  # submission order
     assert max_on_disk <= 3
     assert state["max_running"] <= 3
+
+
+def _fake_fetch(tmp_path, fail_at=None):
+    import time
+
+    def fetch(job):
+        k = job
+        f = tmp_path / f"f{k}.h5"
+        f.write_bytes(b"x")  # (partial) transfer on disk
+        time.sleep(0.01)
+        if k == fail_at:
+            raise RuntimeError("download failed")
+        return f"f{k}.h5", {"dest": str(f)}, None
+
+    return fetch
+
+
+def test_fetch_and_reduce_deletes_everything_when_the_reducer_raises(tmp_path):
+    import s1_chime as drv
+
+    done = []
+
+    def handle(res):
+        if len(done) == 2:
+            raise ValueError("reader bug")
+        done.append(res[0])
+        Path(res[1]["dest"]).unlink()
+
+    with pytest.raises(ValueError):
+        drv.fetch_and_reduce(
+            range(10),
+            _fake_fetch(tmp_path),
+            handle,
+            [],  # no leftovers: bounded_map itself must clean up
+            window=3,
+        )
+    assert done == ["f0.h5", "f1.h5"]
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_fetch_and_reduce_deletes_everything_when_a_download_raises(tmp_path):
+    import s1_chime as drv
+
+    def handle(res):
+        Path(res[1]["dest"]).unlink()
+
+    with pytest.raises(RuntimeError):
+        drv.fetch_and_reduce(
+            range(10),
+            _fake_fetch(tmp_path, fail_at=4),
+            handle,
+            [tmp_path / f"f{k}.h5" for k in range(10)],
+            window=3,
+        )
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_fetch_and_reduce_keep_raw_keeps_files(tmp_path):
+    import s1_chime as drv
+
+    def handle(res):
+        raise ValueError("reader bug")
+
+    with pytest.raises(ValueError):
+        drv.fetch_and_reduce(
+            range(5),
+            _fake_fetch(tmp_path),
+            handle,
+            [tmp_path / f"f{k}.h5" for k in range(5)],
+            keep_raw=True,
+            window=2,
+        )
+    assert len(list(tmp_path.iterdir())) >= 1

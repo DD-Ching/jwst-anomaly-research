@@ -164,18 +164,66 @@ def unpack(d: dict) -> dict:
 FETCH_WINDOW = 4
 
 
-def bounded_map(fn, items, window: int = FETCH_WINDOW):
+def bounded_map(fn, items, window: int = FETCH_WINDOW, cleanup=None):
     """Yield fn(item) in submission order with at most ``window`` calls submitted and unconsumed.
 
     The next call is submitted only after the caller has handled (reduced and deleted) the result
-    just yielded, so at most ``window`` downloaded or downloading files exist at any time."""
+    just yielded, so at most ``window`` downloaded or downloading files exist at any time.
+    On any exception (a call raising, or the caller closing the generator after its own error):
+    pending calls are cancelled, running ones are waited for, ``cleanup`` is applied to the result
+    being handled and to every finished result not yet handled, and the exception is re-raised."""
     items = iter(items)
-    with cf.ThreadPoolExecutor(window) as ex:
-        pending = collections.deque(ex.submit(fn, x) for x in itertools.islice(items, window))
+    ex = cf.ThreadPoolExecutor(window)
+    pending: collections.deque = collections.deque()
+    current = None
+    try:
+        pending.extend(ex.submit(fn, x) for x in itertools.islice(items, window))
         while pending:
-            yield pending.popleft().result()
+            current = pending.popleft().result()
+            yield current
+            current = None
             for x in itertools.islice(items, 1):
                 pending.append(ex.submit(fn, x))
+    except BaseException:
+        for f in pending:
+            f.cancel()
+        cf.wait(pending)
+        if cleanup is not None:
+            if current is not None:
+                cleanup(current)
+            for f in pending:
+                if not f.cancelled() and f.exception() is None:
+                    cleanup(f.result())
+        raise
+    finally:
+        ex.shutdown(wait=True)
+
+
+def _drop(res) -> None:
+    """Delete the downloaded file of one _fetch_one result, if it is still on disk."""
+    info = res[1]
+    if info is not None:
+        Path(info["dest"]).unlink(missing_ok=True)
+
+
+def fetch_and_reduce(
+    jobs, fetch, handle, leftovers, keep_raw: bool = False, window: int = FETCH_WINDOW
+):
+    """Run ``fetch(job)`` through :func:`bounded_map` and ``handle(result)`` serially.
+
+    On any exception: cancel pending downloads, wait for running ones, delete every downloaded file
+    still on disk (the one being reduced, finished ones not yet reduced, and any path in
+    ``leftovers``, e.g. a partial transfer), then re-raise. With ``keep_raw`` nothing is deleted."""
+    gen = bounded_map(fetch, jobs, window, None if keep_raw else _drop)
+    try:
+        for res in gen:
+            handle(res)
+    except BaseException:
+        gen.close()
+        if not keep_raw:
+            for f in leftovers:
+                Path(f).unlink(missing_ok=True)
+        raise
 
 
 def cmd_fetch(a) -> None:
@@ -185,11 +233,13 @@ def cmd_fetch(a) -> None:
     names = list(sample["file"])
     out, rows, fails = {}, [], []
     t0 = time.time()
-    for name, info, err in bounded_map(_fetch_one, [(n, raw, a.log) for n in names]):
+
+    def handle(res) -> None:
+        name, info, err = res
         if info is None:
             fails.append((name, err))
             print("FAIL", name, err, flush=True)
-            continue
+            return
         red = lib.reduce_file(info["dest"], P)
         if not a.keep_raw:
             Path(info["dest"]).unlink()
@@ -199,6 +249,9 @@ def cmd_fetch(a) -> None:
             f"{name} {info['size'] / 1e6:.1f} MB, nt={red['n_time']}, crop={red['crop']}",
             flush=True,
         )
+
+    jobs = [(n, raw, a.log) for n in names]
+    fetch_and_reduce(jobs, _fetch_one, handle, [raw / n for n in names], a.keep_raw)
     print(
         f"{len(rows)} files, {sum(r[2] for r in rows) / 1e6:.1f} MB in {time.time() - t0:.0f} s; "
         f"{len(fails)} failed"
