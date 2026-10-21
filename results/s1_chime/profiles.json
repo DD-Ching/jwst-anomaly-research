@@ -1,7 +1,7 @@
 {
  "provenance": "derived",
  "source": "CHIME/FRB Catalog 2 dynamic spectra; scripts/s1_chime_lib.reduce_file",
- "units": "Jy per sub-band (mean over valid channels); err = off-pulse 1.4826 MAD",
+ "units": "Jy per sub-band (channels averaged in S/N units x median fcf*sigma); err = off-pulse 1.4826 MAD",
  "bands_mhz": [
   [
    400.0,

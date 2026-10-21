@@ -148,6 +148,24 @@ def test_chi2_union_subbin_refinement_needed_for_narrow_bright_pulses():
     assert not c0["passed"]
 
 
+def test_select_delta_prefers_a_passing_delta_over_higher_p_with_failed_gains():
+    # /code-review failure case: d = 0.2 (p 0.02, gains detected) must win over d = -0.3 (p 0.05,
+    # gains not detected), so the pair passes
+    good = {"testable": True, "gains_ok": True, "p": 0.02, "delta": 0.2, "passed": True}
+    bad = {"testable": True, "gains_ok": False, "p": 0.05, "delta": -0.3, "passed": False}
+    for order in ([good, bad], [bad, good]):
+        c = lib.select_delta(order)
+        assert c["delta"] == 0.2 and c["passed"]
+    # no delta with detected gains: best p overall is reported, and it fails
+    c = lib.select_delta([bad, dict(bad, p=0.01, delta=0.1)])
+    assert c["delta"] == -0.3 and not c["passed"]
+    # untestable deltas never win over testable ones with detected gains
+    unt = {"testable": False, "gains_ok": False, "p": 0.0, "delta": 0.0, "passed": False}
+    assert lib.select_delta([unt, good])["delta"] == 0.2
+    # ties go to the smaller |delta|
+    assert lib.select_delta([dict(good, delta=-0.4), dict(good, delta=0.1)])["delta"] == 0.1
+
+
 def test_chi2_union_rejects_single_pulse_matching_one_pulse_of_a_double():
     # issue #153 failure: a single pulse slid onto one pulse of a double must not pass
     rng = np.random.default_rng(4)
@@ -362,3 +380,37 @@ def test_select_sample_rules():
     s = lib.select_sample(cat, files, reps=1, per_rep=3, nonrep=2)
     assert list(s.tns_name) == ["R1e3", "R1e2", "R1e1", "N1", "N3"]
     assert list(s.source) == ["R1", "R1", "R1", "N1", "N3"]
+
+
+# ------------------------------------------------------------------------------- fetch window
+
+
+def test_bounded_map_keeps_at_most_window_files_on_disk(tmp_path):
+    import threading
+    import time
+
+    import s1_chime as drv
+
+    lock = threading.Lock()
+    state = {"running": 0, "max_running": 0}
+
+    def fake_download(k):
+        with lock:
+            state["running"] += 1
+            state["max_running"] = max(state["max_running"], state["running"])
+        time.sleep(0.01)
+        f = tmp_path / f"f{k}.h5"
+        f.write_bytes(b"x")
+        with lock:
+            state["running"] -= 1
+        return k, f
+
+    seen, max_on_disk = [], 0
+    for k, f in drv.bounded_map(fake_download, range(12), window=3):
+        time.sleep(0.02)  # slow "reduction": downloads must not run ahead
+        max_on_disk = max(max_on_disk, len(list(tmp_path.iterdir())))
+        f.unlink()
+        seen.append(k)
+    assert seen == list(range(12))  # submission order
+    assert max_on_disk <= 3
+    assert state["max_running"] <= 3

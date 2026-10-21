@@ -5,20 +5,25 @@ Frozen plan: ``results/s1_chime/PLAN.md``; rules and adapter: ``scripts/s1_chime
   python -I scripts/s1_chime.py select --cat <chimefrbcat2.csv> --listing <listing.tsv>
   python -I scripts/s1_chime.py fetch  --raw <empty dir> --log <downloads.log>  (stream, delete)
   python -I scripts/s1_chime.py run    [--plots <dir>]
+  python -I scripts/s1_chime.py posthoc
 
 ``select`` writes ``sample.ecsv``; ``fetch`` writes ``profiles.json`` (reduced sub-band profiles,
-derived) and ``data/manifests/s1_chime_dynspec.ecsv``; ``run`` writes ``pairs.ecsv``, ``null.json``,
-``injections.ecsv.gz``, ``summary.json`` and ``contact_sheet.png``. A match is an anomaly, never
-evidence of new physics.
+derived) and ``data/manifests/s1_chime_dynspec.ecsv``, with at most FETCH_WINDOW files downloading
+or on disk at a time; ``run`` writes ``pairs.ecsv``, ``null.json``, ``injections.ecsv.gz`` and
+``summary.json``, and always writes ``contact_sheet.png`` into ``--plots`` (default
+``results/s1_chime/``); ``posthoc`` writes ``posthoc.json`` and ``posthoc_injections.ecsv.gz``. A
+match is an anomaly, never evidence of new physics.
 """
 
 from __future__ import annotations
 
 import argparse
+import collections
 import concurrent.futures as cf
 import gzip
 import hashlib
 import io
+import itertools
 import json
 import subprocess
 import sys
@@ -156,6 +161,23 @@ def unpack(d: dict) -> dict:
     }
 
 
+FETCH_WINDOW = 4
+
+
+def bounded_map(fn, items, window: int = FETCH_WINDOW):
+    """Yield fn(item) in submission order with at most ``window`` calls submitted and unconsumed.
+
+    The next call is submitted only after the caller has handled (reduced and deleted) the result
+    just yielded, so at most ``window`` downloaded or downloading files exist at any time."""
+    items = iter(items)
+    with cf.ThreadPoolExecutor(window) as ex:
+        pending = collections.deque(ex.submit(fn, x) for x in itertools.islice(items, window))
+        while pending:
+            yield pending.popleft().result()
+            for x in itertools.islice(items, 1):
+                pending.append(ex.submit(fn, x))
+
+
 def cmd_fetch(a) -> None:
     sample = Table.read(OUT / "sample.ecsv", format="ascii.ecsv")
     raw = Path(a.raw)
@@ -163,21 +185,20 @@ def cmd_fetch(a) -> None:
     names = list(sample["file"])
     out, rows, fails = {}, [], []
     t0 = time.time()
-    with cf.ThreadPoolExecutor(4) as ex:
-        for name, info, err in ex.map(_fetch_one, [(n, raw, a.log) for n in names]):
-            if info is None:
-                fails.append((name, err))
-                print("FAIL", name, err, flush=True)
-                continue
-            red = lib.reduce_file(info["dest"], P)
-            if not a.keep_raw:
-                Path(info["dest"]).unlink()
-            out[red["tns_name"]] = _pack(red)
-            rows.append((BASE + name, name, info["size"], info["sha256"], info["when"]))
-            print(
-                f"{name} {info['size'] / 1e6:.1f} MB, nt={red['n_time']}, crop={red['crop']}",
-                flush=True,
-            )
+    for name, info, err in bounded_map(_fetch_one, [(n, raw, a.log) for n in names]):
+        if info is None:
+            fails.append((name, err))
+            print("FAIL", name, err, flush=True)
+            continue
+        red = lib.reduce_file(info["dest"], P)
+        if not a.keep_raw:
+            Path(info["dest"]).unlink()
+        out[red["tns_name"]] = _pack(red)
+        rows.append((BASE + name, name, info["size"], info["sha256"], info["when"]))
+        print(
+            f"{name} {info['size'] / 1e6:.1f} MB, nt={red['n_time']}, crop={red['crop']}",
+            flush=True,
+        )
     print(
         f"{len(rows)} files, {sum(r[2] for r in rows) / 1e6:.1f} MB in {time.time() - t0:.0f} s; "
         f"{len(fails)} failed"
@@ -186,7 +207,8 @@ def cmd_fetch(a) -> None:
         {
             "provenance": "derived",
             "source": "CHIME/FRB Catalog 2 dynamic spectra; scripts/s1_chime_lib.reduce_file",
-            "units": "Jy per sub-band (mean over valid channels); err = off-pulse 1.4826 MAD",
+            "units": "Jy per sub-band (channels averaged in S/N units x median fcf*sigma); "
+            "err = off-pulse 1.4826 MAD",
             "bands_mhz": P.bands_mhz,
             "res_time_s": lib.RES_TIME_S,
             "failed": fails,
@@ -448,8 +470,9 @@ def cmd_run(a) -> None:
             default=float,
         )
     )
-    if a.plots is not None:
-        contact_sheet(reds, meta, elig, pt, OUT / "contact_sheet.png")
+    plots = Path(a.plots) if a.plots else OUT
+    plots.mkdir(parents=True, exist_ok=True)
+    contact_sheet(reds, meta, elig, pt, plots / "contact_sheet.png")
 
 
 def cmd_posthoc(a) -> None:
@@ -697,7 +720,9 @@ def main(argv=None) -> None:
     f.add_argument("--log", required=True)
     f.add_argument("--keep-raw", action="store_true", help="keep raw files (delete by hand)")
     r = sub.add_parser("run")
-    r.add_argument("--plots", default=None)
+    r.add_argument(
+        "--plots", default=None, help="contact-sheet directory (default results/s1_chime)"
+    )
     sub.add_parser("posthoc")
     a = ap.parse_args(argv)
     {"select": cmd_select, "fetch": cmd_fetch, "run": cmd_run, "posthoc": cmd_posthoc}[a.cmd](a)

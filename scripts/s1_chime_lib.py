@@ -296,12 +296,25 @@ def pair_rho(ra: dict, rb: dict, fa=None, fb=None) -> tuple[float, int]:
     return rho, int(lag_c + rb["crop"][0] - ra["crop"][0])
 
 
+def select_delta(results: list[dict]) -> dict:
+    """Pick the sub-bin delta result: the pass rule is "some delta in the frozen grid has every
+    signal band's gain detected and p >= chi2_p_min", so the best p is taken among the testable
+    deltas with ``gains_ok``; only if there is none, the best p overall is kept (for reporting; it
+    then fails). Ties go to the smaller |delta|.
+
+    v1 (until 2026-10-21 01:25 UTC) took the best p over all deltas, so a passing delta could lose
+    to a higher-p delta whose gains failed (fixed after /code-review; no threshold changed)."""
+    ok = [c for c in results if c["testable"] and c["gains_ok"]]
+    pool = ok if ok else results
+    return max(pool, key=lambda c: (c["p"], -abs(c["delta"])))
+
+
 def chi2_union(ra: dict, rb: dict, lag: int, p: Params = DEFAULT) -> dict:
     """:func:`chi2_union_at` at ``lag`` + delta for delta in ``subbin_grid`` (A Fourier-shifted by
-    delta); the delta with the largest p is kept and dof is reduced by 1 for it (if the grid has
-    more than one value). Returns that result with ``delta``."""
+    delta); dof is reduced by 1 for the fitted delta (if the grid has more than one value) and the
+    result is chosen by :func:`select_delta`. Returns that result with ``delta``."""
     grid = p.subbin_grid if p.subbin_grid else (0.0,)
-    best = None
+    res = []
     for d in grid:
         if d == 0:
             rs = ra
@@ -313,9 +326,8 @@ def chi2_union(ra: dict, rb: dict, lag: int, p: Params = DEFAULT) -> dict:
             c["p"] = float(stats.chi2.sf(c["chi2"], c["dof"])) if c["dof"] > 0 else 0.0
             c["passed"] = bool(c["gains_ok"] and c["p"] >= p.chi2_p_min)
         c["delta"] = float(d)
-        if best is None or (c["p"], -abs(d)) > (best["p"], -abs(best["delta"])):
-            best = c
-    return best
+        res.append(c)
+    return select_delta(res)
 
 
 def chi2_union_at(ra: dict, rb: dict, lag: int, p: Params = DEFAULT) -> dict:

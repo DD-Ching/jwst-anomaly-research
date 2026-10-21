@@ -8,6 +8,18 @@ recovery is 6.9 % at flux ratio 1 for the G_cal set, and ≥ 50 % was required. 
 pairs pass) and T3 holds (median injected ρ 0.934 > the 0.95 chance quantile, 0.768). T4: 0 of 3 same-source pairs
 pass. Source: `summary.json` (`verdict`, `verdict_inputs`).
 
+**Re-run after /code-review (2026-10-21, implementation fix, no threshold changed).** `chi2_union` kept the sub-bin
+δ with the highest p even when that δ's gains failed, so a δ that passed could be discarded. It now takes the best
+p among the δ with detected gains (`select_delta`, unit test of the failure case). The v1 outputs are kept as
+`summary_v1.json`, `pairs_v1.ecsv`, `null_v1.json`, `injections_v1.ecsv.gz`, `posthoc_v1.json` and
+`posthoc_injections_v1.ecsv.gz`.
+- Frozen chain: no pass changed among the 4,680 injections or the 136 real pairs, so every verdict input and the
+  verdict are unchanged.
+- Post hoc I3: 3 injections now pass. G0 at ratio 1 goes from 0.695 to 0.697, G_cal at ratio 0.5 from 0.513 to
+  0.515, and G_beam at ratio 0.3 from 0.303 to 0.305.
+- One real pair (FRB20190111A/FRB20200207A, ρ 0.703, not flagged) now reports a different p; it still fails.
+- The numbers below are from the re-run.
+
 New relative to issue #153 (prior work: route, format, 307-burst pilot): every number below. #153 did not run
 D-071 eligibility, pulse-shuffled ρ\*, the union-window χ², injections through the whole chain, or same-repeater
 pairs.
@@ -66,8 +78,8 @@ pairs.
 - **I2** (D-071 template design: both members carry model_A; A in Gaussian noise, the copy in the host's real
   residual): G_cal passes 0.236 / 0.136 / 0.064 at ratio 1 / 0.5 / 0.3, with χ² pass given flag 0.345 at ratio 1.
   P_path passes 0.036 at ratio 1.
-- **I3** (as I2, but the host noise is Gaussian at the host's σ): G_cal passes 0.705 / 0.513 / 0.305, with χ² pass
-  given flag 0.948. G0 passes 0.695 and G_beam 0.700. **P_path passes 0.100** (χ² pass given flag 0.289).
+- **I3** (as I2, but the host noise is Gaussian at the host's σ): G_cal passes 0.705 / 0.515 / 0.305, with χ² pass
+  given flag 0.948. G0 passes 0.697 and G_beam 0.700. **P_path passes 0.100** (χ² pass given flag 0.289).
 - **P_path kernels:** τ = 3.2 / 1.4 / 0.74 / 0.42 bins at 450 / 550 / 650 / 750 MHz. The ΔDM = 300 smearing boxcar is
   0.68 bins or less in every band, so it was not applied: the P_path loss comes from scattering alone
   (`P_path_kernels`).
@@ -79,7 +91,7 @@ pairs.
 - **Chain mechanics:**
   - On exact copies in radiometer-like noise (I3), the chain recovers 70.5 % at ratio 1.
   - Losses come from copy eligibility and ρ\* rather than χ² (0.948 pass given flag).
-  - The per-sub-band beam or calibration imprint at the tested size changes I3 recovery by ≤ 1 pp (G0 0.695,
+  - The per-sub-band beam or calibration imprint at the tested size changes I3 recovery by ≤ 1 pp (G0 0.697,
     G_cal 0.705, G_beam 0.700). The free per-band χ² gain and ρ absorb it.
 - **χ² against real structure:**
   - The D-071 χ² (scaled, shifted copy, 10 % systematic) rejects copies once either member carries non-radiometer
