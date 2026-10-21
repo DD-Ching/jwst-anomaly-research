@@ -18,6 +18,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   against the negative-mass model; no pilot; S2 not started; no real data read.
 - **Implementation bug:** SciPy dispatches the DE callback on the parameter name `intermediate_result`; the first
   launch crashed at generation 1 with no output; fixed and relaunched with the plan unchanged (890b9f3).
+- **Post-run code review (7dada57, 898212e):** ten code fixes (thread limits before the numpy import, round trip
+  enforced at a post hoc 1e-9, feasibility-branch order, accepted-state saving, run IDs, error rows, resume, `ran_all`
+  guard). No fit re-run. Run-record checks and re-scores (`s1g_review_checks.json`): VA1 / VA2 round trips 0.0; all 9
+  best fits re-score with |ΔFF| 0.0 under 1 and 4 threads; all 9 fits finished. Findings list:
+  `docs/plans/2026-10-21-review-findings.md`.
 - **Handoff:** the gap is a reliable optimum on R1 for P and U. Owner's call: more seeds of the validated procedures
   (about 1 h wall for 3 + 3 on 3–4 cores) or specialist advice. 6.8 CPU-h; about 3.1 h used; X4 has about 4.1 h left.
 

@@ -42,4 +42,28 @@ the line C per-stage logs, the line A per-fit state and logs. Their content that
 | 3 | NaN / inf into `allow_nan=False` JSON; reuse refusal bookkeeping; missing reuse column; NO_HAP re-queried | guards and bookkeeping (ed78c98) | six tests | No (committed JSON written without error; `reuse_refused_input_mismatch` is `[]`) | None |
 
 ## Line A (`scripts/x4_s1g.py`, `tests/test_x4_s1g.py`)
-To be filled from line A's evidence report.
+Fixes in 7dada57; run-record checks and small recomputations from stored inputs and best parameters in 898212e
+(`results/x4/s1g_review_checks.json`). No fit was re-run.
+
+| Round | Finding | Fix | Test | Path ran in committed run? (evidence) | Effect on committed numbers (evidence) |
+|---|---|---|---|---|---|
+| 3 | thread limits set after numpy import | set before import | — | **Exercised.** Every launch exported OMP/MKL/OPENBLAS = 1 in the shell before Python started (session record); lalsuite has no OpenMP (`ldd`: no libgomp; non-threaded FFTW; GSL with single-threaded CBLAS); s per generation 2.69–3.08 (validation) and 2.33–2.35 (R1) against the 2.64–2.77 benchmark; load 3.33 with 3 fits | **None (recomputed):** all 9 stored best fits re-scored with 1 thread and with default threads (OpenBLAS 4): max \|ΔFF\| 0.0 between modes and against the stored values, at pad 64 and 32 |
+| 3 | box round trip not enforced for the validation draws | enforced at 1e-9 (post hoc tolerance; the plan named none) | committed truths pass | **Yes** | **None (recomputed):** `round_trip_max_diff` 0.0 for VA1 and VA2; objective and pad-64 FF change 0.0 after `from_cart(to_cart(x))` for VA1, VA2, V5, V9; validation set unchanged |
+| 3 | feasibility outcome unreachable | plan order restored; flag exposed | three tests | Not entered: FF_conservative 0.947638 < 0.98790 | None: outcome 3 and its causes unchanged; `s1g_summary.json` only gains `feasibility_fail_verified: false` |
+| 3 | refinement hook saves a rejected restart | accepted state only | yes | Not used: states are read only for fits stopped at the deadline (none); for all 9 fits the old hook's last state equals the final row | None |
+| 3 | stale state files | run ID, cleared, ignored | yes | No: the crashed first launch (00:43:49, `TypeError` in the DE callback) never wrote state; the directory was empty at the 00:49 relaunch; the 9 state files present are the relaunch's (01:38–03:03) | None (0 rows use a partial state) |
+| 3 | a raising fit kills the round | "error" rows | yes | No traceback or unfinished/error line in the relaunch log; 9 / 9 rows "finished" | None |
+| 3 | `tool_final` without the completeness guard | guard | stored-summary diff | 6 / 6 ran | None ("pass" before and after) |
+| 3 | R1 resume overwrites finished rows | keep finished rows | yes | R1 ran once, 02:31:22–03:03:22, no resume | None |
+| 3 | test mutates the shared module | monkeypatch | itself | Tests ran in a separate process | None |
+| 3 | specs resolved per job | resolved once in the parent | — | Spec sources unchanged during the run (`s1g_injections.json` since 00:42:54, afcdf9c) | None (recomputed: targets rebuilt from today's sources re-score every stored fit with \|ΔFF\| 0.0) |
+
+Caveat: the shell launch lines and the empty state-directory listings come from the session transcript; the state
+files and logs are in scratch, and the values used above are copied into `s1g_review_checks.json`.
+
+## Review process
+- Round 1: B and C first versions (10 findings). Round 2: their fix commits (10). Round 3: the final PR diff (10 in
+  line A) and the B / C fix commits (10). Round 4: a bounded verification of the round-3 fixes only (below).
+- The coordinator extended B's and C's code-fix window from 03:30 to 04:15 UTC (code only: no re-runs, no downloads).
+  This changes the coordinator's allocation, not the owner's 6 h budget. Line A's computation stop (05:15) was not
+  used past 03:03.
