@@ -604,6 +604,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     intermediate (http://repository.emsign.com/certs/EEEMIncommonOVG2C.crt, DER) to PEM, append it to a copy of
     the session CA bundle (`/root/.ccr/ca-bundle.crt`, which holds the emSign root) and point `SSL_CERT_FILE` (and
     `curl --cacert`) at the copy; verification stays on.
+    2026-10-21 (cloud session): the bundle held no emSign root; `curl --cacert` with the intermediate appended still
+    verifies (curl accepts a chain ending at a trusted intermediate), Python urllib does not, so files were fetched
+    with curl and their sha256 checked.
   - z_lens 0.546: Zitrin et al. 2011, arXiv:1002.0521 (as MACS J0018.5+1626); a JWST-era model was not searched for.
 - **MAST stale product sizes** after the 2026-10-01 reprocessing (PR #29): `acquire` checks the Download
   service's Content-Length.
