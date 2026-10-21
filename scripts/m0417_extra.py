@@ -1,5 +1,6 @@
-"""MACS0417 / MACS1423: forced photometry at every image the CANUCS v1 maps predict for the published
-families (D-029 route: ``lens_consistency.predict_counter_images`` + ``forced_check``, unchanged).
+"""MACS0417 / MACS1423: forced photometry at every image the CANUCS v1 maps predict for the
+published families (D-029 route: ``lens_consistency.predict_counter_images`` + ``forced_check``,
+unchanged).
 
 The published image lists of ``m0417_images.py`` take the place of a Lenstool ``arcs.dat``; each
 family's z is the ``z_used`` of that run's CANUCS image-plane table (z_spec, else its fitted z).
@@ -37,7 +38,7 @@ GRID_STEP = 0.1  # arcsec, as ``lens_consistency images``
 
 
 def flag(image_class: str, forced_class: str) -> bool:
-    """Frozen per-image rule: an unmatched, magnified, in-footprint predicted image that is absent."""
+    """Frozen per-image rule: an unmatched, magnified, in-footprint predicted image, absent."""
     return image_class not in NOT_TARGETS and forced_class == "absent"
 
 
@@ -91,7 +92,9 @@ def run_field(field: str, cache: Path) -> dict:
     finally:
         close()
     table["reading"] = [
-        "lensing_residual_input" if flag(str(r["image_class"]), str(r["forced_class"])) else "no_flag"
+        "lensing_residual_input"
+        if flag(str(r["image_class"]), str(r["forced_class"]))
+        else "no_flag"
         for r in table
     ]
     gc = gate_c(control["forced_class"])
@@ -106,7 +109,9 @@ def run_field(field: str, cache: Path) -> dict:
         "unpredicted": unpredicted,
         "image_classes": {c: int((cls == c).sum()) for c in sorted(set(cls))},
         "forced_classes_targets": {
-            c: int(((np.asarray(table["forced_class"], str) == c) & ~np.isin(cls, NOT_TARGETS)).sum())
+            c: int(
+                ((np.asarray(table["forced_class"], str) == c) & ~np.isin(cls, NOT_TARGETS)).sum()
+            )
             for c in sorted(set(np.asarray(table["forced_class"], str)))
         },
         "gate_C": gc,

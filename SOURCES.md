@@ -740,6 +740,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     https://arxiv.org/e-print/2405.04577 (`strong_lensing.tex`, sha256 `86fd419c82d5d97c06c0542b1b621bf327728cd0ac5889918f5e28ab59f0c69d`).
   - Not in VizieR (checked J/ApJ/873/96, J/MNRAS/483/3082, J/MNRAS/533/4500). CANUCS v1 has no image catalogue
     (readme: with v2, Desprez et al. in prep.).
+- MACS0417 / MACS1423 CANUCS extra predicted images (accessed 2026-10-21; `results/lens_consistency/macs0417_extra/`): the
+  F200W catalogues above (sha256 re-checked) and their `_i2d.fits` by S3 byte ranges (o006 / o010); the CANUCS DR1
+  model maps (`lensmodel.MACS0417_CANUCS_MAPS`, `MACS1423_CANUCS_MAPS`, sha256 as pinned) fetched through
+  `https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:HLSP/canucs/dr1/<field>/model/<file>` (archive.stsci.edu
+  failed TLS from the cloud session).
 - MACS1423 (`arcs`, accessed 2026-10-16; `results/arcs/macs1423-canucs/`):
   - JWST 1208 F200W pipeline catalogue `jw01208-o010_t005_nircam_clear-f200w_cat.ecsv` (MAST
     `mast:JWST/product/...`), 4,987,129 B, sha256 `1a968574d0f206c72a74554c1b3cbbf71e9a5219a70a553a1458e80dd4d5bfa3`;

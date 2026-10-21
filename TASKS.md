@@ -340,8 +340,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - ~~MACS0417 / MACS1423 published images vs CANUCS v1 maps~~ done 2026-10-21
        (`results/lens_consistency/macs0417_images/RESULT.md`): gate K fails for every model (CANUCS rms 1.12″ / 1.59″, one
        central image each: MACS0417 1b.4, MACS1423 1.5; RELICS v1 9.3″, maps load correctly); post hoc without them
-       0.38″ / 0.37″, every other image reproduced, no flag. Next, optional: forced photometry at the CANUCS
-       `extra_predicted` positions; re-run when CANUCS v2 (image catalogues) is public;
+       0.38″ / 0.37″, every other image reproduced, no flag. ~~Forced photometry at the CANUCS `extra_predicted`
+       positions~~ done 2026-10-21 (`results/lens_consistency/macs0417_extra/RESULT.md`: MACS1423 0 flags, gate C 11 / 11;
+       MACS0417 gate C fails, no reference; post hoc 0.30″ list-to-JWST offset). Next, optional: a measured MACS0417
+       frame offset plus an arc-aware reference; re-run when CANUCS v2 (image catalogues) is public;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows
