@@ -48,3 +48,8 @@ statement per box and the SMACS arc line closes for this pair.
   n 60, half-box 16″; `hit_lightcurve.py` at h019 + controls; `compare` for the o001 → o057 pairs in F150W and
   F444W. z_cal = (z_h019 − median z_ctrl) / (1.4826 × MAD z_ctrl) per band. **explained** |z_cal| < 2 in both
   bands; **open** |z_cal| ≥ 3 in either (→ counter-image check of system 17); else **undetermined**. ASSUMPTIONs.
+
+## Addendum 2 (2026-10-21T16:23Z, before b2 h032's photometry)
+- b2 passes its known-case gate (Atalanta A = h021, B = h023, both `pass`). b2 h032 is a morph `pass` 0.09″ from
+  image 1.1. It gets the forced photometry of the frozen rule and, if that shows ≥ 3σ, the Addendum 1 control test
+  with the same thresholds (controls picked around h032). Every later rule hit gets the same two steps.
