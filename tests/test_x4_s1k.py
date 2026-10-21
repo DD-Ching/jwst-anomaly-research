@@ -114,3 +114,25 @@ def test_decide(tmp_path, monkeypatch):
         d["validation"]["C1"]["status"] == "fail"
         and d["validation"]["C2"]["status"] == "unfinished"
     )
+    write(
+        "s1k_validate.json",
+        [
+            {"name": "C1", "eps_final": 6e-4, "s1i_stage": st, "stop": "completed"},
+            {"name": "C2", "eps_final": 1e-5, "s1i_stage": {"stop": "deadline"}, "stop": "done"},
+            {"name": "C1", "eps_final": 1e-6, "s1i_stage": st, "stop": "completed"},  # a rerun
+        ],
+    )
+    d = m.decide()
+    assert d["validation"]["C1"]["status"] == "fail"  # the first (frozen) run counts
+    assert d["validation"]["C2"]["status"] == "unfinished"  # a deadline stop
+    write(
+        "s1k_validate.json",
+        [{"name": n, "eps_final": 1e-5, "s1i_stage": st, "stop": "deadline"} for n in ("C1", "C2")],
+    )
+    assert all(x["status"] == "unfinished" for x in m.decide()["validation"].values())
+
+
+def test_deadline_read_at_call_time(monkeypatch):
+    monkeypatch.setattr(m, "DEADLINE_UTC", "2000-01-01T00:00:00+00:00")
+    r = m.graded(lambda z: 1.0, (LO + HI) / 2)
+    assert r["stop"] == "deadline" and r["nfev"] == 1

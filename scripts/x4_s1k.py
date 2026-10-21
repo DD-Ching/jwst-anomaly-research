@@ -106,10 +106,14 @@ def simplex(x, scale):
     return np.array(verts)
 
 
-def graded(fun, x0, scales=SCALES, stage_fev=STAGE_FEV, case_s=CASE_S, deadline=DEADLINE_UTC):
-    """The fixed graded polish. `fun` scores a legal box point (lower is better)."""
+def graded(fun, x0, scales=SCALES, stage_fev=STAGE_FEV, case_s=CASE_S, deadline=None):
+    """The fixed graded polish. `fun` scores a legal box point (lower is better).
+
+    `deadline` defaults to the module's DEADLINE_UTC read at call time, so a patched constant
+    reaches the polish and the S1i stage alike.
+    """
     t0 = time.time()
-    t_dead = datetime.fromisoformat(deadline).timestamp()
+    t_dead = datetime.fromisoformat(deadline or DEADLINE_UTC).timestamp()
     st = {"n": 0, "best_f": None, "best_x": None}
 
     def f(z):
@@ -287,7 +291,10 @@ def _rows(name):
 
 def decide():
     """Frozen S1k decision (X4.md S1k)."""
-    v = {r["name"]: r for r in _rows("s1k_validate.json")}
+    v = {}
+    # frozen: one run each, so a later appended rerun never counts
+    for r in _rows("s1k_validate.json"):
+        v.setdefault(r["name"], r)
     vres = {}
     for n in C_SPECS:
         r = v.get(n)
@@ -361,13 +368,16 @@ def main(argv=None) -> int:
         )
     elif cmd == "dev":
         jobs = [[n, p] for n in ("B2", "B1", "V7", "V10") for p in ("graded", "control")]
-        procs = []
+        procs, codes = [], []
         for jb in jobs:  # at most 4 at a time
             procs.append(subprocess.Popen([sys.executable, __file__, "dev_one", *jb]))
             if len(procs) == 4:
-                [p.wait() for p in procs]
+                codes += [p.wait() for p in procs]
                 procs = []
-        [p.wait() for p in procs]
+        codes += [p.wait() for p in procs]
+        if any(codes):  # a crashed child leaves its row missing from s1k_dev.json
+            print(f"dev: {sum(c != 0 for c in codes)} of {len(jobs)} jobs failed", file=sys.stderr)
+            return 1
     elif cmd == "truth":
         s.save("s1k_truth.json", truth())
     elif cmd == "one_v":
