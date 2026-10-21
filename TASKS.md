@@ -324,7 +324,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        image-position item below);
        MACS1149 image list when CANUCS v2 is out;
      - Abell S1063 image list (D-035 revisit; route noted 2026-10-21, not run): open the rms gate with spectroscopic
-       system redshifts (Caminha+2016 / Karman+2017 MUSE tables; not found on VizieR by keyword search, so transcribe and cite first), then
+       system redshifts (list ready 2026-10-21: Chan+2020 VizieR `J/ApJ/888/35`, 121 images / 42 systems, 12 with MUSE z_spec,
+       `results/lens_consistency/abells1063_images/`), then
        `validate` and `images`. Local session: the pinned CATS v4.1 URLs are on `archive.stsci.edu`, whose chain
        ends at emSign Root CA - G1, absent from the cloud trust store (TLS fails), and the MAST Download API returns
        404 for `mast:HLSP/frontier/...`;
