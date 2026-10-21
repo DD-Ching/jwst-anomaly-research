@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: MACS0717 D-041 cross-model re-reading with the pinned Keeton / Sharon: gate fails at CATS-fitted z
+- **Why:** #420 handoff (replace the scratch Step 6 cross-model readings in `docs/fields/macs0717.md`). Plan frozen first
+  (`results/lens_consistency/macs0717_crossmodel/PLAN.md`; per-model known-case gate, frozen Step 6 record).
+- **Result (`RESULT.md`, `summary.json`):** frozen outcome "tool not validated": at the CATS `z_sys` Keeton reproduces
+  72 / 132 catalogued images, Sharon 63 / 106 (gate 0.8). The pre-declared secondary gate on systems with an
+  `arcs.txt` z passes (29 / 31, 24 / 25). Post hoc on those 10 systems: 34 rows, 14 flagged, 0 to vet; the scratch
+  "CATS-only" verdicts there are reproduced. One disagreement: the near-critical 68 (−251.9) row has no pinned
+  second-model image within 90″ (scratch: 1.3–3.3″); its Step 6 verdict (μ untestable) does not depend on it.
+- CATS `images` re-run reproduces Step 4's forced classes exactly; deviation: one more `observed` row (41 vs 40). Its
+  table is now tracked (`results/lens_consistency/macs0717-cats/`).
+- **Access:** archive.stsci.edu still sends an incomplete chain, and the session bundle lacks the emSign root that the
+  SOURCES.md note assumes; `curl --cacert` with the InCommon intermediate appended works (curl accepts the partial
+  chain), Python urllib does not. Maps fetched with curl into the cache, sha256 verified.
+- **New:** `scripts/m0717_crossmodel.py`, `tests/test_m0717_crossmodel.py`.
+- **Handoff:** the MACS0717 lens-consistency line has no open row. Testing the 41 `z_m_limit` systems needs each
+  second model's own source redshift (low value). Other lines unchanged: #409 and the other needs-human PRs wait on
+  the owner, #374 on a green weekly run (next scheduled Monday).
+
 ## 2026-10-21: MACS0717 Sharon v4cor and Keeton v4 pinned: Keeton passes both gates; Sharon fails G2 as written (6.2 off the map)
 - **Why:** TASKS "second models as pinned `MapLensModel` entries" (MACS0717); D-041's second models were scratch code.
   Plan frozen first (`results/lens_consistency/macs0717_models/PLAN.md`; known cases: Sharon readme Table 7, 26 images
