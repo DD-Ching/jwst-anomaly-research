@@ -1,0 +1,101 @@
+{
+ "provenance": "derived",
+ "source": "smacs0723-iclv2 arcs.dat (Mahler+22 ICLv2) with its JWST frame offset; known_controls.csv",
+ "rule": "PLAN.md (frozen): known <= 0.15\"; vet = pass and <= 1.0\"",
+ "controls_recovered": {
+  "Atalanta_A": false,
+  "Atalanta_B": false
+ },
+ "rows": [
+  {
+   "id": "h000",
+   "verdict": "dipole",
+   "nearest_image": "3.2",
+   "dist_arcsec": 4.397,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 15.952,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h001",
+   "verdict": "dipole",
+   "nearest_image": "3.2",
+   "dist_arcsec": 4.157,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 15.73,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h002",
+   "verdict": "dipole",
+   "nearest_image": "3.3",
+   "dist_arcsec": 2.654,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 23.345,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h003",
+   "verdict": "rosette",
+   "nearest_image": "3.2",
+   "dist_arcsec": 4.386,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 16.004,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h004",
+   "verdict": "rosette",
+   "nearest_image": "3.2",
+   "dist_arcsec": 4.63,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 16.158,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h005",
+   "verdict": "rosette",
+   "nearest_image": "3.3",
+   "dist_arcsec": 3.614,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 21.011,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h006",
+   "verdict": "rosette",
+   "nearest_image": "3.2",
+   "dist_arcsec": 4.108,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 15.585,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h007",
+   "verdict": "rosette",
+   "nearest_image": "3.2",
+   "dist_arcsec": 4.031,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 15.667,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  },
+  {
+   "id": "h008",
+   "verdict": "rosette",
+   "nearest_image": "3.2",
+   "dist_arcsec": 4.413,
+   "nearest_known": "Atalanta_B",
+   "known_dist_arcsec": 15.876,
+   "class": "vetoed",
+   "posthoc_2arcsec": false
+  }
+ ]
+}
