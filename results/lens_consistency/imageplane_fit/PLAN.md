@@ -1,4 +1,4 @@
-# Image-plane source fit: route check on MACS1149, then Abell S1063 z_spec systems (frozen 2026-10-21 21:25Z)
+# Image-plane source fit: route check on MACS1149, then Abell S1063 z_spec systems (frozen 2026-10-21 21:10Z)
 
 **Question.** Abell S1063's CATS v4.1 map gives rms 18.5″ on the Chan+2020 z_spec systems with the mean-source route
 (`../abells1063_d035/RESULT.md`), although CATS fit the same images and redshifts to a quoted 0.48″. Is the failure the
