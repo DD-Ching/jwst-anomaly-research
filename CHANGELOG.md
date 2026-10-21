@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: S3 hybrid copies on SN Refsdal (D-072 revisit): no flag; sensitivity r95 0.21–1.69, not ~10⁻²
+- **Plan** (`results/s3_hybrid/refsdal/PLAN.md`, frozen first): Kelly et al. 2023 HST difference-image fluxes
+  (CDS J/ApJ/948/93, streamed), S1 as template, copy term at 30 ≤ |δ| ≤ 400 d in S2–S4 and SX, F125W and F160W.
+- **Result** (`results/s3_hybrid/refsdal/RESULT.md`, `summary.json`): G1 (SX − S1 fitted 385 / 370 d vs 376.0 d)
+  and G2 (r 0.2 → 0.213 ± 0.057) pass; 0 flagged lags; r95 0.21–1.69 per target–filter, so the slow SN light curve
+  does not give the r ~ 10⁻² reach D-072 anticipated. Post hoc: single-band F125W excesses (S2 9.3σ, S3 6.7σ,
+  S4 5.1σ) have no F160W counterpart and sit where the main-term χ²/dof is 2.1–3.85 (shape mismatch; not candidates).
+- **Handoff:** S3 stays paused (D-072 addendum). Reopen only with a lensed transient with day-scale variability
+  (lensed FRB, fast-rising SN) or a joint microlensing model.
+
 ## 2026-10-21: MACS1149 system 16: DJA NIRSpec v4.6 still has no grade for 16.2; not decided
 - **Why:** the 2026-10-20 spec-z check read DJA v4.4 (2025-09); v4.5 (2026-02) and v4.6 (2026-09) exist. Plan frozen
   first (`results/lens_consistency/macs1149_s16_specz/dja_v46/PLAN.md`; grade 3 = spec-z, ASSUMPTION).
