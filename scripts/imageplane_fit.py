@@ -19,8 +19,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -126,9 +128,31 @@ def fit_source(model, grid, ox, oy, z: float, start_list, p: Params) -> dict:
     }
 
 
-def fit_list(model, grid, bt: Table, p: Params) -> Table:
+_WORKER: dict = {}
+
+
+def _init_worker(name: str, half: float, step: float) -> None:
+    """Pool initializer: each worker loads the model and its cached grid by name."""
+    model, _, _ = lc.load_model(name)
+    grid = lensmodel.DeflectionGrid.cached(model, lc.grid_cache_path(model, half, step), half, step)
+    _WORKER.update(model=model, grid=grid)
+
+
+def _fit_system(job):
+    """One system: ``(sel, mean-source dtheta, fit result)``."""
+    sel, ox, oy, z, st, p = job
+    model, grid = _WORKER["model"], _WORKER["grid"]
+    pm = lensmodel.find_images(model, grid, st[0][0], st[0][1], z)
+    d_mean = match_cost(ox, oy, pm["x"], pm["y"], p.penalty_arcsec)[1]
+    return sel, d_mean, fit_source(model, grid, ox, oy, z, st, p)
+
+
+def fit_list(name: str, bt: Table, half: float, p: Params, workers: int) -> Table:
     """Per-image fitted residuals for every system with >= 2 traced images (provenance
-    ``model_prediction``); ``dtheta_arcsec`` is NaN for an image without a partner."""
+    ``model_prediction``); ``dtheta_arcsec`` is NaN for an image without a partner. Systems
+    are fitted in a process pool of ``workers``."""
+    _init_worker(name, half, p.grid_step)
+    model = _WORKER["model"]
     systems = np.asarray(bt["system"], str)
     n = len(bt)
     cols = {
@@ -139,22 +163,24 @@ def fit_list(model, grid, bt: Table, p: Params) -> Table:
         "beta_fit_y": np.full(n, np.nan),
     }
     ox_all, oy_all = model.to_frame(np.asarray(bt["ra"], float), np.asarray(bt["dec"], float))
+    jobs = []
     for s in dict.fromkeys(systems):
         sel = np.where((systems == s) & np.isfinite(bt["beta_x"]))[0]
         if len(sel) < 2:
             continue
         bx, by = np.asarray(bt["beta_x"][sel], float), np.asarray(bt["beta_y"][sel], float)
-        z = float(bt["z_used"][sel[0]])
-        ox, oy = ox_all[sel], oy_all[sel]
         st = starts(bx, by, p.start_merge_arcsec)
-        pm = lensmodel.find_images(model, grid, st[0][0], st[0][1], z)
-        cols["dtheta_mean_source_arcsec"][sel] = match_cost(
-            ox, oy, pm["x"], pm["y"], p.penalty_arcsec
-        )[1]
-        r = fit_source(model, grid, ox, oy, z, st, p)
-        cols["dtheta_arcsec"][sel] = np.where(r["paired"], r["dtheta"], np.nan)
-        cols["n_predicted"][sel] = r["n_predicted"]
-        cols["beta_fit_x"][sel], cols["beta_fit_y"][sel] = r["beta"]
+        jobs.append((sel, ox_all[sel], oy_all[sel], float(bt["z_used"][sel[0]]), st, p))
+    t0 = time.time()
+    with ProcessPoolExecutor(
+        workers, initializer=_init_worker, initargs=(name, half, p.grid_step)
+    ) as ex:
+        for k, (sel, d_mean, r) in enumerate(ex.map(_fit_system, jobs), 1):
+            cols["dtheta_mean_source_arcsec"][sel] = d_mean
+            cols["dtheta_arcsec"][sel] = np.where(r["paired"], r["dtheta"], np.nan)
+            cols["n_predicted"][sel] = r["n_predicted"]
+            cols["beta_fit_x"][sel], cols["beta_fit_y"][sel] = r["beta"]
+            print(f"  {name}: {k}/{len(jobs)} systems, {time.time() - t0:.0f}s", flush=True)
     out = Table({"image_id": bt["image_id"], "system": systems, "z_used": bt["z_used"], **cols})
     out.meta.update(model._meta())
     out.meta["provenance"] = schema.Provenance.MODEL_PREDICTION.value
@@ -177,15 +203,17 @@ def v1_gate(rms_values, max_rms: float, min_pass: int) -> dict:
 
 
 def grid_for(model, images: Table, step: float):
+    """``(grid, half_width)`` covering ``images``; the grid is cached on disk for the workers."""
     half = lc.grid_half_width(model, images)
-    return lensmodel.DeflectionGrid.cached(model, lc.grid_cache_path(model, half, step), half, step)
+    grid = lensmodel.DeflectionGrid.cached(model, lc.grid_cache_path(model, half, step), half, step)
+    return grid, half
 
 
 def step_v1(p: Params) -> dict:
     """Synthetic sources behind the S1063 map: images from a known source, fit started off it."""
     model, _, _ = lc.load_model(d035.MODEL)
     chan = d035.chan_images()
-    grid = grid_for(model, chan, p.grid_step)
+    grid, _ = grid_for(model, chan, p.grid_step)
     rng = np.random.default_rng(p.v1_seed)
     bt = lensmodel.backtrace_images(model, chan, {})
     bx0, by0 = np.asarray(bt["beta_x"], float), np.asarray(bt["beta_y"], float)
@@ -206,15 +234,15 @@ def step_v1(p: Params) -> dict:
     return {"sources": rows, "gate": v1_gate([r["rms"] for r in rows], p.v1_max_rms, p.v1_min_pass)}
 
 
-def step_v2(p: Params) -> tuple[dict, Table]:
+def step_v2(p: Params, workers: int) -> tuple[dict, Table]:
     """MACS1149 CATS ``arcs.txt`` with its ``params.txt`` redshifts, fitted sources."""
     name = "macs1149-cats"
     model, files, _ = lc.load_model(name)
     images, zml = lc.image_list(name, files, None)
     bt = lensmodel.backtrace_images(model, images, zml)
     bt = bt[np.isfinite(bt["beta_x"])]
-    grid = grid_for(model, bt, p.grid_step)
-    fit = fit_list(model, grid, bt, p)
+    _, half = grid_for(model, bt, p.grid_step)
+    fit = fit_list(name, bt, half, p, workers)
     d = np.asarray(fit["dtheta_arcsec"], float)
     limit = p.factor * p.v2_quoted_rms
     gate = {
@@ -228,14 +256,14 @@ def step_v2(p: Params) -> tuple[dict, Table]:
     return gate, fit
 
 
-def step_r(p: Params) -> tuple[dict, Table]:
+def step_r(p: Params, workers: int) -> tuple[dict, Table]:
     """S1063 Chan+2020 list with fitted sources; D-035 rules of ``s1063_d035``."""
     dp = d035.Params()
     model, _, _ = lc.load_model(d035.MODEL)
     chan = d035.chan_images()
     bt = lensmodel.backtrace_images(model, chan, {})
-    grid = grid_for(model, chan, p.grid_step)
-    fit = fit_list(model, grid, bt, p)
+    _, half = grid_for(model, chan, p.grid_step)
+    fit = fit_list(d035.MODEL, bt, half, p, workers)
     fit["z_spec"] = chan["z_spec"]
     zs = np.asarray(fit["z_spec"], bool)
     gates = {
@@ -267,6 +295,7 @@ def step_r(p: Params) -> tuple[dict, Table]:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--steps", default="v1,v2,r")
+    ap.add_argument("--workers", type=int, default=os.cpu_count() or 1)
     args = ap.parse_args(argv)
     steps = args.steps.split(",")
     p = Params()
@@ -279,7 +308,7 @@ def main(argv: list[str] | None = None) -> int:
         summary["v1"] = step_v1(p)
         print("V1", json.dumps(summary["v1"]["gate"]), f"{time.time() - t0:.0f}s", flush=True)
     if "v2" in steps:
-        summary["v2"], fit = step_v2(p)
+        summary["v2"], fit = step_v2(p, args.workers)
         fit.write(OUT / "macs1149_fit.ecsv", format="ascii.ecsv", overwrite=True)
         print("V2", json.dumps(summary["v2"]), f"{time.time() - t0:.0f}s", flush=True)
     if "r" in steps:
@@ -289,7 +318,7 @@ def main(argv: list[str] | None = None) -> int:
         if not v_ok:
             summary["r"] = {"skipped": "V1 or V2 did not pass (frozen plan)"}
         else:
-            summary["r"], fit = step_r(p)
+            summary["r"], fit = step_r(p, args.workers)
             fit.write(OUT / "abells1063_fit.ecsv", format="ascii.ecsv", overwrite=True)
         print("R", json.dumps({k: summary["r"].get(k) for k in ("gates", "outcome", "skipped")}))
     path.write_text(json.dumps(summary, indent=1) + "\n")
