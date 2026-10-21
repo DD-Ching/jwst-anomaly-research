@@ -71,6 +71,28 @@ def test_reduce_arrays_recovers_band_flux_noise_and_missing_band():
     assert np.isnan(red["cal_shape"][3])
 
 
+def test_reduce_arrays_weights_keep_huge_fcf_channels_from_dominating():
+    # v1 bug: an unweighted mean let a few channels with a near-zero calibration response (huge
+    # flux conversion factor) dominate the band noise
+    rng = np.random.default_rng(11)
+    nf, nt = 1024, 160
+    freqs = np.linspace(400.2, 800.2, nf, endpoint=False)
+    t = np.arange(nt)
+    prof = gauss(t, 80, 1.5, 1.0)
+    data = prof[None, :] + rng.normal(0, 0.5, (nf, nt))
+    fcf = np.full(nf, 3.0)
+    fcf[[3, 10, 300, 600, 900]] = 1e5
+    args = (data, prof[None, :] * np.ones((nf, 1)), np.ones((nf, nt), bool), np.ones(nf, bool))
+    red = lib.reduce_arrays(*args, np.ones(nf, bool), fcf, np.ones(nf), freqs, [[78, 82]], P)
+    red_s = lib.reduce_arrays(
+        *args, np.ones(nf, bool), fcf, np.ones(nf), freqs, [[78, 82]], P, np.full(nf, 0.5)
+    )
+    nch = ((freqs >= 400) & (freqs < 500)).sum()
+    for r in (red, red_s):
+        assert r["err"][0, 0] < 3.0 * 0.5 / np.sqrt(nch) * 1.3
+        np.testing.assert_allclose(r["flux"][:, 80], 3.0, atol=0.5)
+
+
 # ------------------------------------------------------------------------------- eligibility
 
 

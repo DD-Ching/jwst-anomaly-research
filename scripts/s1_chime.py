@@ -86,6 +86,12 @@ def _fetch_one(args):
     name, raw, log = args
     dest = Path(raw) / name
     url = BASE + name
+    if dest.exists():  # left by an interrupted run: reuse if its bytes match the logged sha256
+        h = hashlib.sha256(dest.read_bytes()).hexdigest()
+        for line in Path(log).read_text().splitlines():
+            w = line.split("\t")
+            if len(w) >= 4 and w[1] == url and w[3] == h:
+                return name, {"size": int(w[2]), "sha256": h, "when": w[0], "dest": str(dest)}, None
     for attempt in range(3):
         r = subprocess.run(
             ["curl", "-sSL", "--fail", "--max-time", "600", "-o", str(dest), url],
@@ -120,6 +126,7 @@ def _pack(red: dict) -> dict:
             "res_time",
             "beam_number",
             "cal_source",
+            "has_calibration",
         )
     }
     keep["band_ok"] = red["band_ok"].tolist()
@@ -163,7 +170,8 @@ def cmd_fetch(a) -> None:
                 print("FAIL", name, err, flush=True)
                 continue
             red = lib.reduce_file(info["dest"], P)
-            Path(info["dest"]).unlink()
+            if not a.keep_raw:
+                Path(info["dest"]).unlink()
             out[red["tns_name"]] = _pack(red)
             rows.append((BASE + name, name, info["size"], info["sha256"], info["when"]))
             print(
@@ -294,12 +302,15 @@ def cmd_run(a) -> None:
     # --- injections (i): every ordered (A eligible, host B != A) x set x ratio, one draw each ---
     cal = np.array([r["cal_shape"] for r in reds])
     irng = np.random.default_rng(SEED + 1)
+    # deviation (post hoc, before any outcome): a host with no usable band (no calibration group)
+    # cannot carry a copy in Jy, so it is not used as a host
+    hosts = [i for i in range(n) if reds[i]["band_ok"].any()]
     inj = []
     t0 = time.time()
     for kind in lib.GAIN_SETS:
         for ratio in P.ratios:
             for ia in ei:
-                for ib in range(n):
+                for ib in hosts:
                     if ib == ia:
                         continue
                     g = lib.draw_gains(kind, irng, cal, P)
@@ -513,6 +524,7 @@ def main(argv=None) -> None:
     f = sub.add_parser("fetch")
     f.add_argument("--raw", required=True)
     f.add_argument("--log", required=True)
+    f.add_argument("--keep-raw", action="store_true", help="keep raw files (delete by hand)")
     r = sub.add_parser("run")
     r.add_argument("--plots", default=None)
     a = ap.parse_args(argv)

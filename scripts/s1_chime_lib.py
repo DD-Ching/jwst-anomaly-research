@@ -18,6 +18,7 @@ and gains are derived; injected copies are simulated; every threshold is an ASSU
 from __future__ import annotations
 
 import sys
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -129,14 +130,28 @@ def select_sample(cat, files: set[str], reps: int = 3, per_rep: int = 5, nonrep:
 
 
 def reduce_arrays(
-    data, model, flag, good, cal_good, fcf, cal_spec, freqs, region, p: Params = DEFAULT
+    data,
+    model,
+    flag,
+    good,
+    cal_good,
+    fcf,
+    cal_spec,
+    freqs,
+    region,
+    p: Params = DEFAULT,
+    chan_sigma=None,
 ):
     """Reduce one dynamic spectrum to sub-band light curves (Jy) with errors.
 
     ``data``/``model``/``flag`` are (n_freq, n_time); ``good``, ``cal_good``, ``fcf`` (Jy per data
     unit), ``cal_spec`` and ``freqs`` (MHz) are (n_freq,); ``region`` is the file's
     ``pulse_emission_region`` ([[t0, t1], ...], bins). Per band b and bin t:
-    S_b(t) = mean over valid channels of fcf * data, valid = good & cal_good & finite(fcf) & flag.
+    S_b(t) = inverse-variance weighted mean over valid channels of fcf * data, weight
+    1 / (fcf * sigma_f)^2 with sigma_f the channel noise in data units (``chan_sigma``; if None, the
+    1.4826 MAD of the channel's off-pulse data); valid = good & cal_good & finite positive fcf &
+    finite positive sigma_f & flag. (v1 used the unweighted mean: a few channels with a near-zero
+    calibration response and so a huge fcf dominated the noise; fixed before any outcome.)
     The off-pulse median (outside the crop) is subtracted from the data (not from the model); the
     error sigma_b is 1.4826 * MAD of the data over the off-pulse bins (radiometer noise; ASSUMPTION:
     no self-noise). A band with < min_valid_chan_frac valid channels is missing: flux, model and err
@@ -158,6 +173,16 @@ def reduce_arrays(
     c0, c1 = max(0, r0 - p.pad_bins), min(nt, r1 + p.pad_bins + 1)
     off = np.ones(nt, bool)
     off[c0:c1] = False
+    if chan_sigma is None:
+        dm = np.where(flag[:, off], data[:, off], np.nan)
+        with np.errstate(invalid="ignore"), warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            med = np.nanmedian(dm, axis=1)
+            chan_sigma = 1.4826 * np.nanmedian(np.abs(dm - med[:, None]), axis=1)
+    chan_sigma = np.asarray(chan_sigma, np.float64)
+    ch_ok &= np.isfinite(chan_sigma) & (chan_sigma > 0)
+    with np.errstate(invalid="ignore", divide="ignore", over="ignore"):
+        wch = np.where(ch_ok, 1.0 / (np.asarray(fcf, np.float64) * chan_sigma) ** 2, 0.0)
     nb = len(p.bands_mhz)
     flux = np.zeros((nb, nt))
     mod = np.zeros((nb, nt))
@@ -171,13 +196,14 @@ def reduce_arrays(
         nvalid[b] = int(ch.sum())
         if inb.sum() == 0 or ch.sum() < p.min_valid_chan_frac * inb.sum():
             continue
-        w = flag[ch].astype(np.float64)  # (n_ch, nt)
+        w = flag[ch].astype(np.float64) * wch[ch][:, None]  # (n_ch, nt)
+        cnt = flag[ch].sum(0)
         nw = w.sum(0)
         f = fcf[ch][:, None]
         with np.errstate(invalid="ignore", divide="ignore"):
             s = np.where(nw > 0, (w * f * np.nan_to_num(data[ch])).sum(0) / nw, np.nan)
             m = np.where(nw > 0, (w * f * np.nan_to_num(model[ch])).sum(0) / nw, np.nan)
-        okt = np.isfinite(s) & (nw >= p.min_valid_chan_frac * inb.sum())
+        okt = np.isfinite(s) & (cnt >= p.min_valid_chan_frac * inb.sum())
         if (off & okt).sum() < p.min_off_bins:
             continue
         base = float(np.median(s[off & okt]))
@@ -205,27 +231,43 @@ def reduce_arrays(
 
 
 def reduce_file(path, p: Params = DEFAULT) -> dict:
-    """Open a Catalog 2 dynamic-spectrum HDF5 file and reduce it (see :func:`reduce_arrays`)."""
+    """Open a Catalog 2 dynamic-spectrum HDF5 file and reduce it (see :func:`reduce_arrays`).
+
+    Some files have no ``calibration`` group (e.g. FRB20200314A). There is then no finite flux
+    conversion factor, so under rule 3 of the plan no channel is valid and every band is missing
+    (``has_calibration`` False); the file is ineligible and cannot host an injection.
+    """
     import h5py
 
     with h5py.File(path, "r") as f:
+        nf = f["data"].shape[0]
+        has_cal = "calibration" in f and "flux_conversion_factor" in f["calibration"]
+        nan = np.full(nf, np.nan)
+        chan_sigma = None
+        if "statistics" in f:
+            with np.errstate(invalid="ignore", divide="ignore"):
+                chan_sigma = np.sqrt(f["statistics/central_moment_2"][...]) / np.abs(
+                    f["statistics/mean"][...]
+                )
         red = reduce_arrays(
             f["data"][...],
             f["model"][...],
             f["flag"][...],
             f["good_freq"][...],
-            f["calibration/good_freq"][...],
-            f["calibration/flux_conversion_factor"][...],
-            f["calibration/spectrum"][...],
+            f["calibration/good_freq"][...] if has_cal else np.zeros(nf, bool),
+            f["calibration/flux_conversion_factor"][...] if has_cal else nan,
+            f["calibration/spectrum"][...] if has_cal else nan,
             f["index_map/freqs"][...],
             np.asarray(f.attrs["pulse_emission_region"]),
             p,
+            chan_sigma,
         )
+        red["has_calibration"] = bool(has_cal)
         red["tns_name"] = str(f.attrs["tns_name"])
         red["dm_incoherent"] = float(f.attrs["dm_incoherent"])
         red["res_time"] = float(f.attrs["res_time"])
         red["beam_number"] = int(f.attrs["beam_number"])
-        red["cal_source"] = str(f["calibration"].attrs.get("source_name", ""))
+        red["cal_source"] = str(f["calibration"].attrs.get("source_name", "")) if has_cal else ""
     return red
 
 
