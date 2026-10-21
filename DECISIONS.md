@@ -2238,6 +2238,13 @@ for these images the residuals are not caused by missing redshifts (the other 39
 source, the other seven 0.80–1.83″. Cause not separated (mean-source estimator, map resolution, normalization).
 S1063 stays map only. Revisit if a route with an image-plane source fit reproduces MACS1149 and passes on S1063's
 z_spec systems.
+
+**Addendum 2026-10-21b (image-plane source fit, `results/lens_consistency/imageplane_fit/`).** Fitting each system's
+source in the image plane (one-to-one pairing) passes its frozen checks (synthetic 10 / 10; MACS1149 145 / 145 at
+0.657″ vs quoted 0.63″). On S1063's z_spec systems it pairs all 36 images (the 18.5″ was the mean-source route) but
+the rms is 0.978″ (> 0.72″) and no system reaches 0.5″ (0.633–1.460″): S1063 stays map only; the map, not the route,
+is now the limit (cause not separated). Revisit if a public S1063 model with its own parameter file or image list
+appears.
 ## D-036 Abell 2744 lens-model and exotic screens: null (2026-10-08)
 
 **Decision.** The Abell 2744 screens (Bergamini+2023b) are a null result. Every flag has an ordinary explanation
