@@ -419,14 +419,16 @@ def test_bounded_map_keeps_at_most_window_files_on_disk(tmp_path):
 def _fake_fetch(tmp_path, fail_at=None):
     import time
 
-    def fetch(job):
+    def fetch(job, cancel=None, touched=None):
         k = job
         f = tmp_path / f"f{k}.h5"
+        if touched is not None:
+            touched.add(f)
         f.write_bytes(b"x")  # (partial) transfer on disk
         time.sleep(0.01)
         if k == fail_at:
             raise RuntimeError("download failed")
-        return f"f{k}.h5", {"dest": str(f)}, None
+        return f"f{k}.h5", {"dest": str(f), "downloaded": True}, None
 
     return fetch
 
@@ -443,14 +445,48 @@ def test_fetch_and_reduce_deletes_everything_when_the_reducer_raises(tmp_path):
         Path(res[1]["dest"]).unlink()
 
     with pytest.raises(ValueError):
-        drv.fetch_and_reduce(
-            range(10),
-            _fake_fetch(tmp_path),
-            handle,
-            [],  # no leftovers: bounded_map itself must clean up
-            window=3,
-        )
+        drv.fetch_and_reduce(range(10), _fake_fetch(tmp_path), handle, window=3)
     assert done == ["f0.h5", "f1.h5"]
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_bounded_map_cleanup_alone_deletes_unhandled_results(tmp_path):
+    import s1_chime as drv
+
+    gen = drv.bounded_map(_fake_fetch(tmp_path), range(10), 3, drv._drop)
+    with pytest.raises(ValueError):
+        try:
+            for k, res in enumerate(gen):
+                if k == 2:
+                    raise ValueError("reader bug")
+                Path(res[1]["dest"]).unlink()
+        except BaseException:
+            gen.close()
+            raise
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting(tmp_path):
+    # /code-review round 3, finding 1: an interrupt during the head future's result() wait must
+    # still clean that future's file (v2 had popped it from pending before waiting)
+    import os
+    import signal
+    import time
+
+    import s1_chime as drv
+
+    def fetch(k):
+        f = tmp_path / f"f{k}.h5"
+        f.write_bytes(b"x")
+        if k == 0:
+            os.kill(os.getpid(), signal.SIGINT)  # main thread is blocked in result()
+            time.sleep(0.3)
+        return f"f{k}.h5", {"dest": str(f), "downloaded": True}, None
+
+    gen = drv.bounded_map(fetch, range(4), 2, drv._drop)
+    with pytest.raises(KeyboardInterrupt):
+        for res in gen:
+            Path(res[1]["dest"]).unlink()
     assert list(tmp_path.iterdir()) == []
 
 
@@ -461,13 +497,7 @@ def test_fetch_and_reduce_deletes_everything_when_a_download_raises(tmp_path):
         Path(res[1]["dest"]).unlink()
 
     with pytest.raises(RuntimeError):
-        drv.fetch_and_reduce(
-            range(10),
-            _fake_fetch(tmp_path, fail_at=4),
-            handle,
-            [tmp_path / f"f{k}.h5" for k in range(10)],
-            window=3,
-        )
+        drv.fetch_and_reduce(range(10), _fake_fetch(tmp_path, fail_at=4), handle, window=3)
     assert list(tmp_path.iterdir()) == []
 
 
@@ -478,32 +508,96 @@ def test_fetch_and_reduce_keep_raw_keeps_files(tmp_path):
         raise ValueError("reader bug")
 
     with pytest.raises(ValueError):
-        drv.fetch_and_reduce(
-            range(5),
-            _fake_fetch(tmp_path),
-            handle,
-            [tmp_path / f"f{k}.h5" for k in range(5)],
-            keep_raw=True,
-            window=2,
-        )
+        drv.fetch_and_reduce(range(5), _fake_fetch(tmp_path), handle, keep_raw=True, window=2)
     assert len(list(tmp_path.iterdir())) >= 1
 
 
-def test_fetch_one_deletes_partial_file_after_failed_attempts(tmp_path, monkeypatch):
-    import subprocess
+def _fake_curl(fail_names=()):
+    def curl(dest, url, cancel):
+        if any(url.endswith(n) for n in fail_names):
+            Path(dest).write_bytes(b"partial")
+            return 22, "HTTP 503"
+        Path(dest).write_bytes(b"full file")
+        return 0, ""
 
+    return curl
+
+
+def test_fetch_and_reduce_keeps_files_it_did_not_download(tmp_path, monkeypatch):
+    # finding 2: on an exception only files this run downloaded or started writing are deleted
+    import hashlib
+
+    import s1_chime as drv
+
+    monkeypatch.setattr(drv, "_curl", _fake_curl())
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    reused = raw / "A.h5"  # kept by an earlier --keep-raw run, sha-verified against the log
+    reused.write_bytes(b"earlier run")
+    other = raw / "other_run.h5"  # not ours at all
+    other.write_bytes(b"x")
+    log = tmp_path / "downloads.log"
+    h = hashlib.sha256(b"earlier run").hexdigest()
+    log.write_text(f"2026-10-21T00:00:00Z\t{drv.BASE}A.h5\t11\t{h}\tearlier\n")
+    jobs = [(n, raw, log) for n in ("A.h5", "B.h5")]
+
+    def handle(res):
+        raise ValueError("reader bug")
+
+    with pytest.raises(ValueError):
+        drv.fetch_and_reduce(jobs, drv._fetch_one, handle, window=2)
+    assert sorted(f.name for f in raw.iterdir()) == ["A.h5", "other_run.h5"]
+
+
+def test_fetch_and_reduce_cleanup_is_prompt_while_a_download_backs_off(tmp_path, monkeypatch):
+    # finding 3: the cancel event stops the 10 / 30 s back-off of a retrying download
+    import time
+
+    import s1_chime as drv
+
+    monkeypatch.setattr(drv, "_curl", _fake_curl(fail_names=("B.h5",)))
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    log = tmp_path / "downloads.log"
+    log.write_text("")
+    jobs = [(n, raw, log) for n in ("A.h5", "B.h5")]
+
+    def handle(res):
+        time.sleep(0.2)  # B has failed once and is in its 10 s back-off
+        raise ValueError("reader bug")
+
+    t0 = time.time()
+    with pytest.raises(ValueError):
+        drv.fetch_and_reduce(jobs, drv._fetch_one, handle, window=2)
+    assert time.time() - t0 < 3.0
+    assert list(raw.iterdir()) == []
+
+
+def test_run_cancellable_terminates_a_running_transfer():
+    import threading
+    import time
+
+    import s1_chime as drv
+
+    ev = threading.Event()
+    threading.Timer(0.3, ev.set).start()
+    t0 = time.time()
+    rc, err = drv._run_cancellable(["sleep", "30"], ev, poll_s=0.1)
+    assert rc is None and err == "cancelled" and time.time() - t0 < 3.0
+
+
+def test_fetch_one_deletes_partial_file_after_failed_attempts(tmp_path, monkeypatch):
     import s1_chime as drv
 
     calls = []
 
-    def fake_run(cmd, **kw):
-        out = Path(cmd[cmd.index("-o") + 1])
-        out.write_bytes(b"partial")
-        calls.append(out)
-        return subprocess.CompletedProcess(cmd, 22, "", "HTTP 503")
+    def fake_curl(dest, url, cancel):
+        Path(dest).write_bytes(b"partial")
+        calls.append(dest)
+        return 22, "HTTP 503"
 
-    monkeypatch.setattr(drv.subprocess, "run", fake_run)
-    monkeypatch.setattr(drv.time, "sleep", lambda s: None)
+    monkeypatch.setattr(drv, "_curl", fake_curl)
+    monkeypatch.setattr(drv, "RETRY_SLEEP_S", (0.0, 0.0))
     log = tmp_path / "downloads.log"
     log.write_text("")
     raw = tmp_path / "raw"

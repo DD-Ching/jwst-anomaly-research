@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import collections
 import concurrent.futures as cf
+import functools
 import gzip
 import hashlib
 import io
@@ -27,6 +28,7 @@ import itertools
 import json
 import subprocess
 import sys
+import threading
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -87,8 +89,43 @@ def cmd_select(a) -> None:
 # ------------------------------------------------------------------------------------- fetch
 
 
-def _fetch_one(args):
+#: Back-off (s) between the three download attempts; no sleep after the last one.
+RETRY_SLEEP_S = (10.0, 30.0)
+
+
+def _run_cancellable(cmd, cancel: threading.Event, poll_s: float = 0.5):
+    """Run ``cmd``; return (returncode, stderr), or (None, "cancelled") if ``cancel`` is set before
+    it ends (the process is then terminated, or killed after 5 s)."""
+    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+    while True:
+        try:
+            _, err = proc.communicate(timeout=poll_s)
+            return proc.returncode, err or ""
+        except subprocess.TimeoutExpired:
+            if cancel.is_set():
+                proc.terminate()
+                try:
+                    proc.communicate(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.communicate()
+                return None, "cancelled"
+
+
+def _curl(dest: Path, url: str, cancel: threading.Event):
+    cmd = ["curl", "-sSL", "--fail", "--max-time", "600", "-o", str(dest), url]
+    return _run_cancellable(cmd, cancel)
+
+
+def _fetch_one(args, cancel: threading.Event | None = None, touched: set | None = None):
+    """Download one file (3 attempts with back-off), log URL, bytes and sha256, return
+    (name, info, err). A file already on disk whose sha256 matches the log is reused, not
+    re-downloaded (``info["downloaded"]`` False). Every path this call writes is added to
+    ``touched`` before the transfer starts. ``cancel`` is checked before each attempt, during the
+    transfer and during each back-off, so a cancelled call returns within about a second; a failed
+    or cancelled transfer deletes its partial file."""
     name, raw, log = args
+    cancel = cancel if cancel is not None else threading.Event()
     dest = Path(raw) / name
     url = BASE + name
     if dest.exists():  # left by an interrupted run: reuse if its bytes match the logged sha256
@@ -96,19 +133,27 @@ def _fetch_one(args):
         for line in Path(log).read_text().splitlines():
             w = line.split("\t")
             if len(w) >= 4 and w[1] == url and w[3] == h:
-                return name, {"size": int(w[2]), "sha256": h, "when": w[0], "dest": str(dest)}, None
+                info = {"size": int(w[2]), "sha256": h, "when": w[0], "dest": str(dest)}
+                return name, dict(info, downloaded=False), None
+    ok, started, err = False, False, ""
     for attempt in range(3):
-        r = subprocess.run(
-            ["curl", "-sSL", "--fail", "--max-time", "600", "-o", str(dest), url],
-            capture_output=True,
-            text=True,
-        )
-        if r.returncode == 0:
+        if cancel.is_set():
+            err = "cancelled"
             break
-        time.sleep(10 * 3**attempt)
-    else:
-        dest.unlink(missing_ok=True)  # a partial transfer is not a usable raw file
-        return name, None, f"curl failed: {r.stderr.strip()[:200]}"
+        if touched is not None:
+            touched.add(dest)
+        started = True
+        rc, err = _curl(dest, url, cancel)
+        if rc == 0:
+            ok = True
+            break
+        if attempt < len(RETRY_SLEEP_S) and cancel.wait(RETRY_SLEEP_S[attempt]):
+            err = "cancelled"
+            break
+    if not ok:
+        if started:
+            dest.unlink(missing_ok=True)  # a partial transfer is not a usable raw file
+        return name, None, f"curl failed: {err.strip()[:200]}"
     h = hashlib.sha256(dest.read_bytes()).hexdigest()
     size = dest.stat().st_size
     when = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -117,7 +162,11 @@ def _fetch_one(args):
             f"{when}\t{url}\t{size}\t{h}\t"
             "S1 CHIME frozen sample (results/s1_chime/PLAN.md); reduced then deleted\n"
         )
-    return name, {"size": size, "sha256": h, "when": when, "dest": str(dest)}, None
+    return (
+        name,
+        {"size": size, "sha256": h, "when": when, "dest": str(dest), "downloaded": True},
+        None,
+    )
 
 
 def _pack(red: dict) -> dict:
@@ -165,64 +214,88 @@ def unpack(d: dict) -> dict:
 FETCH_WINDOW = 4
 
 
-def bounded_map(fn, items, window: int = FETCH_WINDOW, cleanup=None):
+def bounded_map(fn, items, window: int = FETCH_WINDOW, cleanup=None, cancel=None):
     """Yield fn(item) in submission order with at most ``window`` calls submitted and unconsumed.
 
     The next call is submitted only after the caller has handled (reduced and deleted) the result
     just yielded, so at most ``window`` downloaded or downloading files exist at any time.
-    On any exception (a call raising, or the caller closing the generator after its own error):
-    pending calls are cancelled, running ones are waited for, ``cleanup`` is applied to the result
-    being handled and to every finished result not yet handled, and the exception is re-raised."""
+
+    Every result is registered by the worker thread itself as soon as ``fn`` returns, and leaves
+    the registry only after the caller has handled it. On any exception (a call raising, an
+    interrupt at any point, e.g. while waiting on the head future or between a submit and its
+    bookkeeping, or the caller closing the generator after its own error): ``cancel`` (a
+    threading.Event, if given) is set, queued calls are cancelled, running ones are waited for,
+    ``cleanup`` (must be idempotent) is applied to every registered result not yet handled, and
+    the exception is re-raised."""
     items = iter(items)
+    lock = threading.Lock()
+    produced: dict = {}
+
+    def run(idx, x):
+        r = fn(x)
+        with lock:
+            produced[idx] = r
+        return r
+
     ex = cf.ThreadPoolExecutor(window)
     pending: collections.deque = collections.deque()
-    current = None
+    n_sub = 0
     try:
-        pending.extend(ex.submit(fn, x) for x in itertools.islice(items, window))
+        for x in itertools.islice(items, window):
+            pending.append((n_sub, ex.submit(run, n_sub, x)))
+            n_sub += 1
         while pending:
-            current = pending.popleft().result()
-            yield current
-            current = None
+            idx, fut = pending[0]
+            res = fut.result()
+            pending.popleft()
+            yield res
+            with lock:
+                produced.pop(idx, None)
             for x in itertools.islice(items, 1):
-                pending.append(ex.submit(fn, x))
+                pending.append((n_sub, ex.submit(run, n_sub, x)))
+                n_sub += 1
     except BaseException:
-        for f in pending:
-            f.cancel()
-        cf.wait(pending)
+        if cancel is not None:
+            cancel.set()
+        ex.shutdown(wait=True, cancel_futures=True)
         if cleanup is not None:
-            if current is not None:
-                cleanup(current)
-            for f in pending:
-                if not f.cancelled() and f.exception() is None:
-                    cleanup(f.result())
+            with lock:
+                left = list(produced.values())
+            for r in left:
+                cleanup(r)
         raise
     finally:
         ex.shutdown(wait=True)
 
 
 def _drop(res) -> None:
-    """Delete the downloaded file of one _fetch_one result, if it is still on disk."""
+    """Delete the file of one _fetch_one result if this run downloaded it (a pre-existing file that
+    was only reused is kept); idempotent."""
     info = res[1]
-    if info is not None:
+    if info is not None and info.get("downloaded", True):
         Path(info["dest"]).unlink(missing_ok=True)
 
 
-def fetch_and_reduce(
-    jobs, fetch, handle, leftovers, keep_raw: bool = False, window: int = FETCH_WINDOW
-):
-    """Run ``fetch(job)`` through :func:`bounded_map` and ``handle(result)`` serially.
+def fetch_and_reduce(jobs, fetch, handle, keep_raw: bool = False, window: int = FETCH_WINDOW):
+    """Run ``fetch(job, cancel=..., touched=...)`` through :func:`bounded_map` and
+    ``handle(result)`` serially.
 
-    On any exception: cancel pending downloads, wait for running ones, delete every downloaded file
-    still on disk (the one being reduced, finished ones not yet reduced, and any path in
-    ``leftovers``, e.g. a partial transfer), then re-raise. With ``keep_raw`` nothing is deleted."""
-    gen = bounded_map(fetch, jobs, window, None if keep_raw else _drop)
+    On any exception: set the cancel event (downloads stop retrying, sleeping or transferring),
+    cancel pending downloads, wait for running ones, delete the files this run downloaded or
+    started writing (``touched``) that are still on disk, keep files that were on disk before and
+    were not re-downloaded, then re-raise. With ``keep_raw`` nothing is deleted."""
+    cancel = threading.Event()
+    touched: set = set()
+    call = functools.partial(fetch, cancel=cancel, touched=touched)
+    gen = bounded_map(call, jobs, window, None if keep_raw else _drop, cancel)
     try:
         for res in gen:
             handle(res)
     except BaseException:
+        cancel.set()
         gen.close()
         if not keep_raw:
-            for f in leftovers:
+            for f in list(touched):
                 Path(f).unlink(missing_ok=True)
         raise
 
@@ -252,7 +325,7 @@ def cmd_fetch(a) -> None:
         )
 
     jobs = [(n, raw, a.log) for n in names]
-    fetch_and_reduce(jobs, _fetch_one, handle, [raw / n for n in names], a.keep_raw)
+    fetch_and_reduce(jobs, _fetch_one, handle, a.keep_raw)
     print(
         f"{len(rows)} files, {sum(r[2] for r in rows) / 1e6:.1f} MB in {time.time() - t0:.0f} s; "
         f"{len(fails)} failed"
