@@ -1,0 +1,34 @@
+{
+ "label": "derived; PyCBC re-computation of the X4 score at fixed points (no search)",
+ "versions": {
+  "pycbc": "2.11.0",
+  "numpy": "2.3.5",
+  "scipy": "1.16.3"
+ },
+ "pad": 64,
+ "rows": {
+  "C1_truth": {
+   "FF_pycbc": 0.9999999999999256,
+   "FF_ours_pad64": 1.0,
+   "diff": -7.438494264988549e-14
+  },
+  "C1_found": {
+   "FF_pycbc": 0.9957652398827417,
+   "FF_ours_pad64": 0.9957621215216348,
+   "diff": 3.118361106890788e-06
+  },
+  "C2_truth": {
+   "FF_pycbc": 0.9999999999999996,
+   "FF_ours_pad64": 1.0,
+   "diff": -4.440892098500626e-16
+  },
+  "C2_found": {
+   "FF_pycbc": 0.9999908078745279,
+   "FF_ours_pad64": 0.9999908235552919,
+   "diff": -1.5680764020586935e-08
+  }
+ },
+ "max_abs_diff": 3.118361106890788e-06,
+ "rule": "agree if max_abs_diff <= 1e-4",
+ "agree": true
+}
