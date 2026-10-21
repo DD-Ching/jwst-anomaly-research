@@ -147,11 +147,14 @@ def reduce_arrays(
     ``data``/``model``/``flag`` are (n_freq, n_time); ``good``, ``cal_good``, ``fcf`` (Jy per data
     unit), ``cal_spec`` and ``freqs`` (MHz) are (n_freq,); ``region`` is the file's
     ``pulse_emission_region`` ([[t0, t1], ...], bins). Per band b and bin t:
-    S_b(t) = inverse-variance weighted mean over valid channels of fcf * data, weight
-    1 / (fcf * sigma_f)^2 with sigma_f the channel noise in data units (``chan_sigma``; if None, the
-    1.4826 MAD of the channel's off-pulse data); valid = good & cal_good & finite positive fcf &
-    finite positive sigma_f & flag. (v1 used the unweighted mean: a few channels with a near-zero
-    calibration response and so a huge fcf dominated the noise; fixed before any outcome.)
+    S_b(t) = K_b * mean over valid channels of data_f(t) / sigma_f (equal weight per channel in S/N
+    units), with sigma_f the channel noise in data units (``chan_sigma``; if None, the 1.4826 MAD of
+    the channel's off-pulse data in this window) and K_b = median over the band's valid channels of
+    fcf * sigma_f (Jy per unit S/N); valid = good & cal_good & finite positive fcf & finite positive
+    sigma_f & flag. Fixes before any outcome: v1 took the unweighted mean of fcf * data (a few
+    channels with a near-zero calibration response, huge fcf, dominated the noise); v2 weighted by
+    1 / (fcf sigma_f)^2 (a few channels with a tiny fcf then carried ~45 % of the weight and the
+    band S/N of a 230-sigma burst fell to ~2).
     The off-pulse median (outside the crop) is subtracted from the data (not from the model); the
     error sigma_b is 1.4826 * MAD of the data over the off-pulse bins (radiometer noise; ASSUMPTION:
     no self-noise). A band with < min_valid_chan_frac valid channels is missing: flux, model and err
@@ -182,7 +185,8 @@ def reduce_arrays(
     chan_sigma = np.asarray(chan_sigma, np.float64)
     ch_ok &= np.isfinite(chan_sigma) & (chan_sigma > 0)
     with np.errstate(invalid="ignore", divide="ignore", over="ignore"):
-        wch = np.where(ch_ok, 1.0 / (np.asarray(fcf, np.float64) * chan_sigma) ** 2, 0.0)
+        inv = np.where(ch_ok, 1.0 / chan_sigma, 0.0)
+        jy = np.asarray(fcf, np.float64) * chan_sigma
     nb = len(p.bands_mhz)
     flux = np.zeros((nb, nt))
     mod = np.zeros((nb, nt))
@@ -196,13 +200,13 @@ def reduce_arrays(
         nvalid[b] = int(ch.sum())
         if inb.sum() == 0 or ch.sum() < p.min_valid_chan_frac * inb.sum():
             continue
-        w = flag[ch].astype(np.float64) * wch[ch][:, None]  # (n_ch, nt)
-        cnt = flag[ch].sum(0)
-        nw = w.sum(0)
-        f = fcf[ch][:, None]
+        w = flag[ch].astype(np.float64)  # (n_ch, nt)
+        cnt = w.sum(0)
+        f = inv[ch][:, None]
+        kb = float(np.median(jy[ch]))
         with np.errstate(invalid="ignore", divide="ignore"):
-            s = np.where(nw > 0, (w * f * np.nan_to_num(data[ch])).sum(0) / nw, np.nan)
-            m = np.where(nw > 0, (w * f * np.nan_to_num(model[ch])).sum(0) / nw, np.nan)
+            s = np.where(cnt > 0, kb * (w * f * np.nan_to_num(data[ch])).sum(0) / cnt, np.nan)
+            m = np.where(cnt > 0, kb * (w * f * np.nan_to_num(model[ch])).sum(0) / cnt, np.nan)
         okt = np.isfinite(s) & (cnt >= p.min_valid_chan_frac * inb.sum())
         if (off & okt).sum() < p.min_off_bins:
             continue
@@ -243,12 +247,7 @@ def reduce_file(path, p: Params = DEFAULT) -> dict:
         nf = f["data"].shape[0]
         has_cal = "calibration" in f and "flux_conversion_factor" in f["calibration"]
         nan = np.full(nf, np.nan)
-        chan_sigma = None
-        if "statistics" in f:
-            with np.errstate(invalid="ignore", divide="ignore"):
-                chan_sigma = np.sqrt(f["statistics/central_moment_2"][...]) / np.abs(
-                    f["statistics/mean"][...]
-                )
+        chan_sigma = None  # per-channel off-pulse MAD of this window (reduce_arrays)
         red = reduce_arrays(
             f["data"][...],
             f["model"][...],

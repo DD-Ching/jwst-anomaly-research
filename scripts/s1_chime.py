@@ -302,14 +302,23 @@ def cmd_run(a) -> None:
     # --- injections (i): every ordered (A eligible, host B != A) x set x ratio, one draw each ---
     cal = np.array([r["cal_shape"] for r in reds])
     irng = np.random.default_rng(SEED + 1)
-    # deviation (post hoc, before any outcome): a host with no usable band (no calibration group)
-    # cannot carry a copy in Jy, so it is not used as a host
-    hosts = [i for i in range(n) if reds[i]["band_ok"].any()]
+    # deviations (post hoc, before any outcome): a file with no usable band (no calibration group)
+    # cannot carry a copy in Jy; a file whose Jy scale is inconsistent (median band sigma more
+    # than 10x from the sample median; the Dec-2018 files) would make the flux ratio meaningless.
+    # Such files are neither template sources nor hosts; they stay in the real-pair tests, which
+    # are scale-free (rho and per-band gains).
+    sig = np.array(
+        [np.median(r["err"][r["band_ok"], 0]) if r["band_ok"].any() else np.nan for r in reds]
+    )
+    med = float(np.nanmedian(sig))
+    scale_ok = [bool(np.isfinite(x) and med / 10 <= x <= 10 * med) for x in sig]
+    hosts = [i for i in range(n) if scale_ok[i]]
+    inj_src = [i for i in ei if scale_ok[i]]
     inj = []
     t0 = time.time()
     for kind in lib.GAIN_SETS:
         for ratio in P.ratios:
-            for ia in ei:
+            for ia in inj_src:
                 for ib in hosts:
                     if ib == ia:
                         continue
@@ -410,6 +419,8 @@ def cmd_run(a) -> None:
         if len(rp)
         else {},
         "injections": eff,
+        "injection_excluded_scale": [meta[i]["tns_name"] for i in range(n) if not scale_ok[i]],
+        "band_sigma_median_jy": med,
         "cal_shape_rms_per_band": float(np.sqrt(np.mean(cal_ok**2))) if len(cal_ok) else None,
         "cal_shape_pair_diff_rms_per_band": float(
             np.sqrt(np.mean([(x - y) ** 2 for k, x in enumerate(cal_ok) for y in cal_ok[k + 1 :]]))

@@ -63,7 +63,8 @@ def test_reduce_arrays_recovers_band_flux_noise_and_missing_band():
     assert red["crop"] == (68, 93)
     np.testing.assert_allclose(red["flux"][0, 80], 6.0, atol=0.6)  # 2 * 3 Jy
     np.testing.assert_allclose(red["flux"][2, 80], 3.0, atol=0.6)
-    np.testing.assert_allclose(red["model"][0, 80], 6.0, rtol=1e-6)
+    # K_b * mean(1 / sigma_f) with estimated sigma_f: a ~1 % scale bias, shared by data and model
+    np.testing.assert_allclose(red["model"][0, 80], 6.0, rtol=0.05)
     nch = (freqs >= 400) & (freqs < 500)
     np.testing.assert_allclose(red["err"][0, 0], 3.0 * 0.5 / np.sqrt(nch.sum()), rtol=0.25)
     assert np.all(red["flux"][3] == 0) and np.all(red["err"][3] == 0)
