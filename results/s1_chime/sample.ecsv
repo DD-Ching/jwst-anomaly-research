@@ -1,0 +1,50 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: tns_name, datatype: string}
+# - {name: group, datatype: string}
+# - {name: source, datatype: string}
+# - {name: repeater_name, datatype: string}
+# - {name: n_comp, datatype: int64}
+# - {name: snr, datatype: float64}
+# - {name: file, datatype: string}
+# - {name: size, datatype: int64}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'CHIME/FRB Catalog 2 table (doi:10.11570/25.0066, sha256 5108ada7...) and the VOSpace listing of data/dynamic_spectra/data'}
+# - {rule: "Per event: n_comp = number of table rows (fitburst sub-bursts), snr = max snr_fitb over rows.\n    Clean = excluded_flag ==\
+#     \ 0 and sidelobe_flag == 0 and n_comp >= 2 and a dynamic-spectrum file\n    in the listing. Repeaters: the ``reps`` repeaters with\
+#     \ the most clean events (ties: name), each\n    with its ``per_rep`` highest-snr clean events. Non-repeaters: the ``nonrep`` highest-snr\
+#     \ clean\n    events without a repeater_name. Ties on snr break by TNS name."}
+# schema: astropy-2.0
+tns_name group source repeater_name n_comp snr file size
+FRB20221116F repeater FRB20220912A FRB20220912A 7 306.3859509543669 FRB20221116F_stokesi_dynamic_spectrum.h5 24987409
+FRB20230314D repeater FRB20220912A FRB20220912A 3 203.744472468164 FRB20230314D_stokesi_dynamic_spectrum.h5 12650804
+FRB20221216B repeater FRB20220912A FRB20220912A 2 117.25545268855886 FRB20221216B_stokesi_dynamic_spectrum.h5 13840020
+FRB20221114B repeater FRB20220912A FRB20220912A 3 79.81181009434934 FRB20221114B_stokesi_dynamic_spectrum.h5 14230926
+FRB20230826A repeater FRB20220912A FRB20220912A 2 78.63220973415827 FRB20230826A_stokesi_dynamic_spectrum.h5 11770773
+FRB20181222A repeater FRB20180916B FRB20180916B 5 230.23911798982925 FRB20181222A_stokesi_dynamic_spectrum.h5 11284839
+FRB20210712A repeater FRB20180916B FRB20180916B 2 149.83479707561887 FRB20210712A_stokesi_dynamic_spectrum.h5 12143166
+FRB20190825A repeater FRB20180916B FRB20180916B 2 121.79818237268476 FRB20190825A_stokesi_dynamic_spectrum.h5 11897072
+FRB20190604F repeater FRB20180916B FRB20180916B 3 95.94070938035446 FRB20190604F_stokesi_dynamic_spectrum.h5 12041247
+FRB20190605B repeater FRB20180916B FRB20180916B 3 85.2707327484107 FRB20190605B_stokesi_dynamic_spectrum.h5 9221891
+FRB20200314A repeater FRB20190208A FRB20190208A 4 66.70533623018345 FRB20200314A_stokesi_dynamic_spectrum.h5 13163260
+FRB20211229A repeater FRB20190208A FRB20190208A 6 45.79529404240353 FRB20211229A_stokesi_dynamic_spectrum.h5 14107426
+FRB20211228A repeater FRB20190208A FRB20190208A 3 31.865468067882254 FRB20211228A_stokesi_dynamic_spectrum.h5 6888915
+FRB20190208A repeater FRB20190208A FRB20190208A 4 31.248169417934243 FRB20190208A_stokesi_dynamic_spectrum.h5 16864719
+FRB20211009B repeater FRB20190208A FRB20190208A 2 29.86724960833777 FRB20211009B_stokesi_dynamic_spectrum.h5 11762470
+FRB20190423A non_repeater FRB20190423A "" 2 436.0519727606351 FRB20190423A_stokesi_dynamic_spectrum.h5 13216786
+FRB20221215H non_repeater FRB20221215H "" 2 326.34408711773403 FRB20221215H_stokesi_dynamic_spectrum.h5 11148363
+FRB20200116B non_repeater FRB20200116B "" 9 241.9644573658356 FRB20200116B_stokesi_dynamic_spectrum.h5 13492963
+FRB20220316B non_repeater FRB20220316B "" 3 224.0816192097056 FRB20220316B_stokesi_dynamic_spectrum.h5 11584721
+FRB20201010B non_repeater FRB20201010B "" 2 219.59534011599024 FRB20201010B_stokesi_dynamic_spectrum.h5 13727382
+FRB20230911B non_repeater FRB20230911B "" 3 208.59936977095936 FRB20230911B_stokesi_dynamic_spectrum.h5 13149166
+FRB20200315A non_repeater FRB20200315A "" 2 182.72771813749932 FRB20200315A_stokesi_dynamic_spectrum.h5 13761642
+FRB20200615C non_repeater FRB20200615C "" 2 175.77263704743427 FRB20200615C_stokesi_dynamic_spectrum.h5 13942396
+FRB20220426A non_repeater FRB20220426A "" 2 165.61897787253153 FRB20220426A_stokesi_dynamic_spectrum.h5 10987108
+FRB20181226B non_repeater FRB20181226B "" 2 160.0824338566147 FRB20181226B_stokesi_dynamic_spectrum.h5 13074620
+FRB20190111A non_repeater FRB20190111A "" 3 145.70856875408188 FRB20190111A_stokesi_dynamic_spectrum.h5 10223191
+FRB20190124C non_repeater FRB20190124C "" 2 142.92999709282574 FRB20190124C_stokesi_dynamic_spectrum.h5 7043340
+FRB20200207A non_repeater FRB20200207A "" 2 134.95812368445334 FRB20200207A_stokesi_dynamic_spectrum.h5 11605136
+FRB20200318B non_repeater FRB20200318B "" 4 128.7483930118903 FRB20200318B_stokesi_dynamic_spectrum.h5 7576290
+FRB20230205A non_repeater FRB20230205A "" 3 117.6009871990715 FRB20230205A_stokesi_dynamic_spectrum.h5 12176446
