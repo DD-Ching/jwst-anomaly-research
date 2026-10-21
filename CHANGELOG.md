@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: W3 ZTF v26: both parent heads fail the fade control, H-sib skips four siblings; v22 inventory exhausted
+- **Plan** (`results/w3_ztf/v26/PLAN.md`, frozen first): head-then-siblings queue on the two untested parents left
+  in `v22/inventory.json` (703: 2812 / 2813; 719: 2876–2879); 463 and 1263 excluded under H-sib.
+- **Result:** 2878 fade 117 / 1,000 and 2813 143 / 1,000, both also below 0.5 in injection cells; calibration fails,
+  so 2876, 2879, 2877 and 2812 were not fetched (saves ≈ 2.5 GB). 0 groups searched; cumulative 41,283, no
+  confirmed target event. Sibling agreement untested (one verdict per parent).
+- **Cost:** ≈ 1.07 GB streamed, caches deleted, queue 3.4 min on 2 workers.
+- **Handoff:** no qualifying v22 partition is left. The next W3 ZTF batch needs a new-area inventory; check the
+  owner's v22 authorization (4 h, ≤ 6 GB, after #395) covers it before starting.
+
 ## 2026-10-21: W3 ZTF v25 complete: sibling prediction 6 / 6, H-sib becomes the queue rule; 2347 searched, 0 survivors
 - **Carry-over of the frozen v25 queue** (`results/w3_ztf/v25/RESULT.md` "Carry-over run"). The objects tables and the
   2347 and 4990 samples were rebuilt and reproduced exactly; the driver was not changed.

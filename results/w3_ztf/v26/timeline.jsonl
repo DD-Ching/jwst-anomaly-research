@@ -1,0 +1,31 @@
+{"area": 2878, "event": "area_start", "position": 1, "projected_mb": 642.5, "utc": "2026-10-21T07:15:30Z"}
+{"area": 2878, "stage": "fetch", "event": "start", "utc": "2026-10-21T07:15:30Z"}
+{"area": 2813, "event": "area_start", "position": 2, "projected_mb": 1112.7, "utc": "2026-10-21T07:15:30Z"}
+{"area": 2813, "stage": "fetch", "event": "start", "utc": "2026-10-21T07:15:30Z"}
+{"area": 2878, "stage": "fetch", "event": "end", "rc": 0, "seconds": 33.1, "utc": "2026-10-21T07:16:03Z"}
+{"area": 2878, "stage": "exposures", "event": "start", "utc": "2026-10-21T07:16:03Z"}
+{"area": 2813, "stage": "fetch", "event": "end", "rc": 0, "seconds": 36.9, "utc": "2026-10-21T07:16:07Z"}
+{"area": 2813, "stage": "exposures", "event": "start", "utc": "2026-10-21T07:16:07Z"}
+{"area": 2878, "stage": "exposures", "event": "end", "rc": 0, "seconds": 35.8, "utc": "2026-10-21T07:16:38Z"}
+{"area": 2878, "stage": "inject", "event": "start", "utc": "2026-10-21T07:16:38Z"}
+{"area": 2878, "stage": "search_dev", "event": "start", "utc": "2026-10-21T07:16:38Z"}
+{"area": 2878, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 29.1, "utc": "2026-10-21T07:17:08Z"}
+{"area": 2813, "stage": "exposures", "event": "end", "rc": 0, "seconds": 65.7, "utc": "2026-10-21T07:17:12Z"}
+{"area": 2813, "stage": "inject", "event": "start", "utc": "2026-10-21T07:17:12Z"}
+{"area": 2813, "stage": "search_dev", "event": "start", "utc": "2026-10-21T07:17:12Z"}
+{"area": 2813, "stage": "search_dev", "event": "end", "rc": 0, "seconds": 33.2, "utc": "2026-10-21T07:17:45Z"}
+{"area": 2878, "stage": "inject", "event": "end", "rc": 0, "seconds": 73.0, "utc": "2026-10-21T07:17:51Z"}
+{"area": 2878, "stage": "decision", "event": "start", "utc": "2026-10-21T07:17:51Z"}
+{"area": 2878, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-21T07:17:51Z"}
+{"area": 2878, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-21T07:17:51Z"}
+{"area": 2878, "event": "cache_deleted", "utc": "2026-10-21T07:17:51Z"}
+{"area": 2876, "event": "skipped_head_gate", "head": 2878, "utc": "2026-10-21T07:17:51Z"}
+{"area": 2813, "stage": "inject", "event": "end", "rc": 0, "seconds": 86.4, "utc": "2026-10-21T07:18:39Z"}
+{"area": 2813, "stage": "decision", "event": "start", "utc": "2026-10-21T07:18:39Z"}
+{"area": 2813, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-21T07:18:39Z"}
+{"area": 2813, "event": "verdict", "passed": false, "conditions": {"all_10_cells_ge_0.5": false, "controls_le_0.10": false, "calibration_survivors_le_5": true}, "utc": "2026-10-21T07:18:39Z"}
+{"area": 2813, "event": "cache_deleted", "utc": "2026-10-21T07:18:39Z"}
+{"area": 2812, "event": "skipped_head_gate", "head": 2813, "utc": "2026-10-21T07:18:39Z"}
+{"area": 2879, "event": "skipped_head_gate", "head": 2878, "utc": "2026-10-21T07:18:39Z"}
+{"area": 2877, "event": "skipped_head_gate", "head": 2878, "utc": "2026-10-21T07:18:39Z"}
+{"event": "queue_done", "utc": "2026-10-21T07:18:51Z"}
