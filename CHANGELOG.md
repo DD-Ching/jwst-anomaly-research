@@ -2,6 +2,31 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: W2 at HST resolution for the D-056 blended / too-close lensed quasars: method validation fails
+- **Why:** owner authorization 2026-10-21 (parallel round line C); the D-060 revisit condition. Plan frozen first
+  (`results/w2_hst_blend/PLAN.md`, 2a44d9b).
+- **Selection (v2):** D-056 class rebuilt (same counts: quasar blended 242, too close 65); HST F814W coverage from one
+  CAOM TAP query per filter (81 of 307). Depth is counted once per visit, an implementation fix after /code-review: v1
+  summed overlapping MVM / SVM / pipeline products, over-counting 1.9–7× (v1 kept as `*_v1`). 7 targets (no catalogued
+  lens z) and 10 same-programme controls.
+- **Result (`RESULT.md`, `verdict.json`):**
+  - [pre-registered] Control gate 9/10 = 0.9 (lower 95 % 0.61), passes (9/10 in v1 too).
+  - [pre-registered] The one no-lens empirical-PSF negative control (SDSSJ0806+2006) gives S/N 13.0 ≥ 5σ through the
+    Moffat chain (Moffat-made stamp −0.3).
+  - [owner decision, after freezing] A negative control at threshold fails the method validation: target residuals are
+    stored measurements, "not interpreted"; no candidate list.
+- **Post hoc:** DESJ0405-3308 (chain output "not detected") has a published deflector, photometric z_d ∼ 0.3 (Gilman et
+  al. 2020a, MNRAS 491, 6077, quoted in Nierenberg et al. 2023, arXiv:2309.10101 §3): the chain missed a known lens.
+  Flux-scaled false-positive diagnostics are stored for controls only.
+- **Failed approaches:** the Moffat N-image residual is not specific to lens light (PSF mismatch alone gives S/N 13);
+  Gaia-star ePSFs need ≥ 3 stars and only 1 of 5 HAP fields (88″) had them; summing CAOM level-3 exposure times counts
+  the same exposures several times.
+- **New:** `scripts/w2_hst_blend.py`, `scripts/w2_hst_blend_chain.py`, `scripts/w2_hst_blend_run.py`,
+  `tests/test_w2_hst_blend.py`. 2.22 GB downloaded (1.98 GB for the 2200-px PSF cutouts), all deleted.
+- **Handoff:** the gap is named and the line stopped. It needs a per-image PSF matched to the HAP-MVM drizzle (STScI
+  ACS/WFC3 empirical PSF grids, photutils) or a lens-light + point-source model (lenstronomy); both are new
+  dependencies. Success = no-lens negative controls < 5σ with controls ≥ 0.9.
+
 ## 2026-10-21: S1 burst twins on CHIME/FRB Catalog 2 (30 events): the S1 criteria do not carry over as frozen
 - **Why:** owner authorization 2026-10-21 (parallel round line B; `docs/plans/2026-10-21-parallel-round.md`): the S1
   second half, a validation, not a search. Prior work issue #153 (route, format, 307-burst pilot) not redone; #167 and

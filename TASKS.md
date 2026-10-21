@@ -159,9 +159,13 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    fade limit stays an owner decision.
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.31 (typical, 3/25 after the 2026-10-08
    pair-match and one-entry-per-lens amendment) for quasar/radio-selected lenses, the only selections sensitive to a
-   dark lens). Next: HSC PDR3 photometry or PSF-subtracted HST
-   image models for the 307 blended or too-close lensed quasars (makes the test decisive; HST *catalogue* photometry
-   is not: D-060, efficiency 0.46); the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar pairs: LS DR10 cannot decide them
+   dark lens). Next: HSC PDR3 photometry, or a *validated* PSF-subtracted HST
+   image model for the 307 blended or too-close lensed quasars (HST *catalogue* photometry is not decisive: D-060,
+   efficiency 0.46). The Moffat N-image chain (2026-10-21, D-060 addendum, `results/w2_hst_blend/RESULT.md`) recovers
+   9/10 known lenses but its no-lens negative control gives S/N 13 (≥ 5σ): method validation fails, no target is
+   interpreted. It needs a per-image PSF matched to the HAP-MVM drizzle (STScI empirical PSF grids, photutils) or
+   lenstronomy lens-light + point-source fits (new dependencies), judged by no-lens negative controls < 5σ and controls
+   ≥ 0.9; the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar pairs: LS DR10 cannot decide them
    (D-064, control efficiency 0/5 at 1.9–2.6″); of the 11 colour-matched ones, J0130+0725 has no lens light in HST to
    F814W ≈ 23 (D-064 addendum: binary vs dark lens needs spectra of both images or two-epoch flux ratios), J0728+2607
    has none either with an empirical PSF (F814W ≈ 23), and 9 have no HST (Euclid DR1 when public); catalogued image separations for the 15

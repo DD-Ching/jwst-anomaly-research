@@ -1023,6 +1023,14 @@ jwst 3.0.0 / photutils 3.0.0 (file headers).
   332,581 bricks / 23.5 MB, recorded in the run's summary.json; not pinned, the service output may change): footprint
   (nexp_r, nexp_z) and per-brick 5σ galaxy depth for D-056. He et al. 2025, lensed-quasar confirmations
   (arXiv:2509.03858; HSC J2212−0103 lens-light fit).
+- D-060 addendum (line C, accessed 2026-10-21):
+  - MAST CAOM TAP, `https://mast.stsci.edu/vo-tap/api/v0.1/caom/sync`, `dbo.ObsPointing` (HST calib_level 3, F814W and
+    F160W): coverage of the D-056 class, `results/w2_hst_blend/hst_coverage.ecsv`.
+  - MAST HAPcut (`astroquery.mast.Hapcut`, `https://mast.stsci.edu/hapcut/api/v0.1/astrocut`): HAP-MVM F814W cutouts
+    (programmes 9744, 14254, 15320, 15652, 17199 among the selected systems).
+  - Gaia DR3 `gaiadr3.gaia_source` via astroquery.gaia: PSF stars.
+  - Gilman et al. 2020a, MNRAS 491, 6077 (DESJ0405-3308 photometric z_d ∼ 0.3), as quoted in Nierenberg et al. 2023,
+    arXiv:2309.10101 §3 (coordinator literature check, post hoc).
 
 ## OGLE-IV microlensing samples (accessed 2026-10-08; D-057)
 

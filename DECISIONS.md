@@ -3617,6 +3617,26 @@ missing from the catalogue, not mis-typed, in the four inspected misses: H1413+1
 **Revisit if.** PSF-subtracted HST image models (or another deeper/sharper survey) reach an efficiency ≥ 0.9 on
 the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
 
+**Addendum (2026-10-21, line C: PSF-subtracted HST models of the D-056 blended / too-close quasars).**
+- **Decision.** The Moffat N-image residual chain (`scripts/w2_hst_blend_chain.py`) does not validate.
+  - [pre-registered] It recovers 9/10 same-programme known lenses (0.9, one-sided 95 % lower bound 0.61).
+  - [pre-registered] Its one negative control (a no-lens stamp with empirical-PSF images, SDSSJ0806+2006) gives S/N 13.0
+    ≥ 5σ; the same stamp with Moffat images gives −0.3.
+  - [owner decision 2026-10-21, after freezing] A negative control at threshold fails the method: target residuals are
+    stored but not interpreted, and no candidate list is made.
+  - A "not detected" from this chain is not a missing lens: [post hoc] DESJ0405-3308, "not detected", has a published
+    deflector (photometric z_d ∼ 0.3, Gilman et al. 2020a, MNRAS 491, 6077, via Nierenberg et al. 2023,
+    arXiv:2309.10101). "No catalogued lens z" ≠ "no lens".
+- **Alternatives rejected.** Reading the "light" targets as deflectors; a post hoc flux-scaled false-positive threshold
+  (stored only; a known control, WISEJ0259-1635, falls below it); a second PSF method or new thresholds inside this
+  unit (owner decision); summing CAOM level-3 exposure times as depth (multiple products of the same exposures,
+  over-counted 1.9–7×; fixed after /code-review, v1 kept as `*_v1`).
+- **Evidence.** `results/w2_hst_blend/` (`PLAN.md` frozen first, `gate.json`, `psf_mismatch.json`, `verdict.json`,
+  `selection_diff.ecsv`, `RESULT.md`).
+- **Revisit if.** A per-image PSF matched to the HAP-MVM drizzle (STScI empirical PSF grids via photutils) or a joint
+  lens-light + point-source model (lenstronomy) keeps no-lens negative controls below 5σ while recovering ≥ 0.9 of
+  controls. More negative controls need a library PSF or star-rich fields (the Gaia ePSF found ≥ 3 stars in 1 of 5).
+
 ## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)
 
 **Decision.** Do not use `gaiadr3.vari_microlensing` (Wyrzykowski et al. 2023) to limit W3: its Sample A selection
