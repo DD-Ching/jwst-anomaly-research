@@ -1,0 +1,257 @@
+{
+ "provenance": "derived",
+ "plan": "PLAN.md (frozen before the run, addenda 1-3 before each step)",
+ "pair": "jw02736-o001 (2022-06-07) -> jw06882-o057 (2026-06-05), F150W + F444W",
+ "gate_assumption": "injection recovery >= 0.50 at 27.5 AB in both bands; b2 also Atalanta A/B recovered as morph pass",
+ "boxes": {
+  "b1": {
+   "centre": [
+    110.812643,
+    -73.457179
+   ],
+   "n_hits": 21,
+   "morph": {
+    "dipole": 6,
+    "edge": 7,
+    "pass": 6,
+    "rosette": 1,
+    "sign_flip": 1
+   },
+   "injection_recovered": {
+    "F150W": {
+     "27.50": 0.84,
+     "28.00": 0.52,
+     "28.50": 0.13
+    },
+    "F444W": {
+     "27.50": 0.92,
+     "28.00": 0.76,
+     "28.50": 0.25
+    }
+   },
+   "gate_pass": true,
+   "rule_hits_2arcsec": [
+    "h019"
+   ],
+   "known": []
+  },
+  "b2": {
+   "centre": [
+    110.830002,
+    -73.450431
+   ],
+   "n_hits": 73,
+   "morph": {
+    "dipole": 12,
+    "edge": 12,
+    "extended": 24,
+    "pass": 3,
+    "rosette": 21,
+    "sign_flip": 1
+   },
+   "injection_recovered": {
+    "F150W": {
+     "27.50": 0.81,
+     "28.00": 0.6,
+     "28.50": 0.42
+    },
+    "F444W": {
+     "27.50": 0.67,
+     "28.00": 0.52,
+     "28.50": 0.42
+    }
+   },
+   "gate_pass": true,
+   "rule_hits_2arcsec": [
+    "h032"
+   ],
+   "known": [
+    "h021",
+    "h023"
+   ]
+  },
+  "b3": {
+   "centre": [
+    110.832266,
+    -73.457832
+   ],
+   "n_hits": 9,
+   "morph": {
+    "dipole": 3,
+    "rosette": 6
+   },
+   "injection_recovered": {
+    "F150W": {
+     "27.50": 0.81,
+     "28.00": 0.47,
+     "28.50": 0.17
+    },
+    "F444W": {
+     "27.50": 0.91,
+     "28.00": 0.7,
+     "28.50": 0.28
+    }
+   },
+   "gate_pass": true,
+   "rule_hits_2arcsec": [],
+   "known": []
+  },
+  "b4": {
+   "centre": [
+    110.802563,
+    -73.449931
+   ],
+   "n_hits": 9,
+   "morph": {
+    "dipole": 4,
+    "edge": 2,
+    "rosette": 3
+   },
+   "injection_recovered": {
+    "F150W": {
+     "27.50": 0.95,
+     "28.00": 0.75,
+     "28.50": 0.29
+    },
+    "F444W": {
+     "27.50": 0.95,
+     "28.00": 0.65,
+     "28.50": 0.33
+    }
+   },
+   "gate_pass": true,
+   "rule_hits_2arcsec": [],
+   "known": []
+  },
+  "b5": {
+   "centre": [
+    110.789807,
+    -73.458128
+   ],
+   "n_hits": 8,
+   "morph": {
+    "dipole": 1,
+    "edge": 2,
+    "pass": 3,
+    "rosette": 1,
+    "sign_flip": 1
+   },
+   "injection_recovered": {
+    "F150W": {
+     "27.50": 0.94,
+     "28.00": 0.52,
+     "28.50": 0.12
+    },
+    "F444W": {
+     "27.50": 0.97,
+     "28.00": 0.71,
+     "28.50": 0.19
+    }
+   },
+   "gate_pass": true,
+   "rule_hits_2arcsec": [],
+   "known": []
+  },
+  "b6": {
+   "centre": [
+    110.813362,
+    -73.464486
+   ],
+   "n_hits": 17,
+   "morph": {
+    "dipole": 2,
+    "edge": 1,
+    "pass": 3,
+    "rosette": 10,
+    "sign_flip": 1
+   },
+   "injection_recovered": {
+    "F150W": {
+     "27.50": 0.65,
+     "28.00": 0.19,
+     "28.50": 0.09
+    },
+    "F444W": {
+     "27.50": 0.95,
+     "28.00": 0.5,
+     "28.50": 0.2
+    }
+   },
+   "gate_pass": true,
+   "rule_hits_2arcsec": [],
+   "known": []
+  },
+  "b7": {
+   "centre": [
+    110.807082,
+    -73.451355
+   ],
+   "n_hits": 18,
+   "morph": {
+    "dipole": 6,
+    "edge": 1,
+    "pass": 4,
+    "rosette": 7
+   },
+   "injection_recovered": {
+    "F150W": {
+     "27.50": 0.98,
+     "28.00": 0.77,
+     "28.50": 0.18
+    },
+    "F444W": {
+     "27.50": 0.98,
+     "28.00": 0.71,
+     "28.50": 0.33
+    }
+   },
+   "gate_pass": true,
+   "rule_hits_2arcsec": [],
+   "known": []
+  }
+ },
+ "followup": {
+  "b1_h019": {
+   "image": "17.1",
+   "dist_arcsec": 1.51,
+   "control_test": {
+    "F150W_z_cal": 2.078,
+    "F444W_z_cal": 1.09,
+    "n_controls": 25
+   },
+   "frozen_outcome": "undetermined",
+   "posthoc": "flux ratio 1.043 (F150W) vs control median 1.042: common zero-point offset"
+  },
+  "b2_h032": {
+   "image": "1.1",
+   "dist_arcsec": 0.094,
+   "control_test": {
+    "F150W_z_cal": 0.441,
+    "F444W_z_cal": 5.646,
+    "n_controls": 34
+   },
+   "registration_offset_arcsec": {
+    "f150w": [
+     0.0094,
+     0.0201
+    ],
+    "f444w": [
+     0.0016,
+     0.0216
+    ]
+   },
+   "corrected_control_test": {
+    "F150W_z_cal": 0.023,
+    "F444W_z_cal": -2.232,
+    "F444W_ratio": 0.943
+   },
+   "frozen_outcome": "undetermined (step R)",
+   "counter_images_ratio_F444W": {
+    "1.1_catalogue": 1.063,
+    "1.2": 0.984,
+    "1.3": 0.931
+   },
+   "posthoc": "F444W S map is an elongated +/- pair across the arc width (registration residual)"
+  }
+ }
+}

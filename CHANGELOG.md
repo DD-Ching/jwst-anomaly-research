@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: SMACS 0723 arc_diff on the remaining arc boxes (ERO → VENUS): no candidate
+- **Plan** (`results/transients/smacs_arcdiff_more/PLAN.md`, frozen first; addenda 1–3 before each follow-up):
+  7 boxes of 24″ cover the 45 Mahler+22 ICLv2 images outside the system 5 box; pair 1 of `smacs_arcdiff`.
+- **Validation:** SN Atalanta A/B recovered as morph passes in b2 (off-centre); injection recovery ≥ 0.50 at
+  27.5 AB in both bands in all 7 boxes (28.0 AB in 5 of 7).
+- **Result** (`RESULT.md`, `summary.json`): 155 hits, 2 rule hits (morph pass ≤ 2″ of an image). b1 h019
+  (17.1): control-calibrated z_cal 2.08 / 1.09, undetermined; post hoc its ratio 1.043 equals the controls'
+  1.042 (common flux scale). b2 h032 (0.09″ from 1.1): F444W z_cal 5.65 → registration step: a measured 0.02″
+  offset moves its ratio 1.153 → 0.943 (z_cal −2.23), undetermined; counter-images 1.2 / 1.3 scatter ±7 %; the S map
+  is a +/− pair across the arc. No candidate.
+- **Failed approach:** aperture forced photometry on arc ridges is registration-dominated (≈ 10 × the controls'
+  sensitivity); use S maps and morphology there, not aperture z.
+- **Handoff:** the SMACS arc line is done for this pair; reopen with a new epoch pair. Other lines unchanged (X4,
+  W3 ZTF inventory and the needs-human backlog wait on the owner; #374 on a green weekly run).
+
 ## 2026-10-21: S3 hybrid copies on SN Refsdal (D-072 revisit): no flag; sensitivity r95 0.21–1.69, not ~10⁻²
 - **Plan** (`results/s3_hybrid/refsdal/PLAN.md`, frozen first): Kelly et al. 2023 HST difference-image fluxes
   (CDS J/ApJ/948/93, streamed), S1 as template, copy term at 30 ≤ |δ| ≤ 400 d in S2–S4 and SX, F125W and F160W.
