@@ -1,4 +1,4 @@
-# MACS0417 and MACS1423: published multiple images against the pinned CANUCS v1 maps (frozen plan, 2026-10-21 03:27Z)
+# MACS0417 and MACS1423: published multiple images against the pinned CANUCS v1 maps (frozen plan, 2026-10-21 03:20Z)
 
 **Question.** Do the published multiple images of MACS J0417.5-1154 and MACS J1423.8+2404 map back to one source per
 system and re-solve to the catalogued positions in the pinned CANUCS DR1 v1 Lenstool maps (`macs0417-canucs-maps`,
@@ -14,7 +14,7 @@ multiple images where none are predicted (or predicted where none are catalogued
 - CANUCS v1 image catalogues are not public (readme: with v2); the CANUCS models used 30 / 5 spectroscopic systems,
   so the spectroscopic images here are probably among their constraints (ASSUMPTION; not verifiable until v2).
 
-**Already seen before freezing (stated, not hidden).** A loading check at 03:22Z ran `image_plane` on the 25 MACS0417
+**Already seen before freezing (stated, not hidden).** A loading check at about 03:19Z ran `image_plane` on the 25 MACS0417
 spectroscopic images: CANUCS reproduced 24 within 0.8″, 1b.4 (a fourth image of knot 1b near the BCG) at 5.3″;
 RELICS v1 missed most by 3–13″. The gates below were written after that look; their thresholds are the ones used in
 the MACS1149 / MACS0717 pins (G2), unchanged.

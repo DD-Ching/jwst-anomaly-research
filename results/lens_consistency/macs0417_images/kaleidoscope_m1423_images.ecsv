@@ -8,6 +8,8 @@
 # - {name: z_spec, datatype: bool}
 # meta: !!omap
 # - {provenance: observed}
+# - {source: 'KALEIDOSCOPE, arXiv:2405.04577 (MNRAS 533, 4500), Table tab:mulimg, from the arXiv LaTeX source strong_lensing.tex (sha256
+#     86fd419c82d5d97c06c0542b1b621bf327728cd0ac5889918f5e28ab59f0c69d), parsed 2026-10-21; system 4 z is model-optimised (z_spec False)'}
 # schema: astropy-2.0
 image_id ra dec z z_spec
 1.1 215.9577155 24.0746537 2.84 True

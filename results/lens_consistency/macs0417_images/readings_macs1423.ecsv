@@ -1,0 +1,31 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: z_spec, datatype: bool}
+# - {name: dtheta_macs1423-canucs-maps, datatype: float64}
+# - {name: reproduced_macs1423-canucs-maps, datatype: bool}
+# - {name: reading, datatype: string}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'm0417_images readings; gate-passing models []'}
+# schema: astropy-2.0
+image_id system z_spec dtheta_macs1423-canucs-maps reproduced_macs1423-canucs-maps reading
+1.1 1 True 1.0135312031339538 True no_flag
+1.2 1 True 1.4889552411921325 True no_flag
+1.3 1 True 4.1556016603039065 False no_flag
+1.4 1 True 2.041536103086478 True no_flag
+1.5 1 True 2.1518519267163305 True no_flag
+2.1 2 True 0.4723169770257352 True no_flag
+2.2 2 True 0.2269050202839575 True no_flag
+2.3 2 True 0.2881216041758704 True no_flag
+2.4 2 True 0.4432606233893812 True no_flag
+3.1 3 True 0.5013967767958866 True no_flag
+3.2 3 True 0.47925842457746776 True no_flag
+3.3 3 True 0.3093981234187017 True no_flag
+4.1 4 False 0.6416714635561132 True no_flag
+4.2 4 False 1.0522739336914282 True no_flag
+4.3 4 False 0.7943608559117314 True no_flag
+4.4 4 False 0.3699168954887144 True no_flag
+4.5 4 False 0.22367252293339346 True no_flag

@@ -8,6 +8,9 @@
 # - {name: z_spec, datatype: bool}
 # meta: !!omap
 # - {provenance: observed}
+# - {source: 'Jauzac et al. 2019, arXiv:1811.02505 (MNRAS 483, 3082), Table 4 (gold + silver set of Mahler et al. 2019), from the arXiv
+#     LaTeX source table4.tex (sha256 7e05be79da64fcfb62e71f081c1b18bebc249b6641e6f598930f01c6be53b4cc), parsed 2026-10-21; z of non-spectroscopic
+#     systems is the Jauzac model z of image x.1 (z_spec False); the commented-out row 1m.4 is excluded'}
 # schema: astropy-2.0
 image_id ra dec z z_spec
 1a.1 64.39615785 -11.90676027 0.8718 True
