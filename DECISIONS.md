@@ -2230,6 +2230,14 @@ them automatically. All thresholds are ASSUMPTIONs.
 **Revisit if.**
 - `params.txt` (or another source of fitted redshifts) becomes available for Abell 370, Abell S1063 and Abell 2744.
 - MACS0416 system 26 is understood.
+
+**Addendum 2026-10-21 (Abell S1063 with Chan+2020 redshifts, `results/lens_consistency/abells1063_d035/`).** The Chan
+list with MUSE z_spec gives rms 18.5″ on the 12 z_spec systems (gate 0.72″), and no system reaches 0.5″. Post hoc:
+the CATS `arcs.txt` z already equal those z_spec within 0.005 for the 33 one-to-one matched images (11 systems), so
+for these images the residuals are not caused by missing redshifts (the other 39 CATS images were not compared). Five systems get a single predicted image from the mean traced
+source, the other seven 0.80–1.83″. Cause not separated (mean-source estimator, map resolution, normalization).
+S1063 stays map only. Revisit if a route with an image-plane source fit reproduces MACS1149 and passes on S1063's
+z_spec systems.
 ## D-036 Abell 2744 lens-model and exotic screens: null (2026-10-08)
 
 **Decision.** The Abell 2744 screens (Bergamini+2023b) are a null result. Every flag has an ordinary explanation

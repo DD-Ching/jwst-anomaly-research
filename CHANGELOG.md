@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: Abell S1063 D-035 revisit: list stays gated off; its redshifts are not the cause
+- **Environment fix:** `archive.stsci.edu` loads from cloud sessions with a CA bundle holding Mozilla's roots
+  (certifi carries emSign Root CA - G1; verification on; sha256 pins match). This unblocks the CATS v4.1 files.
+- **Result** (`results/lens_consistency/abells1063_d035/RESULT.md`, plan frozen first): with the Chan+2020 list, the
+  rms is 18.5″ on the 12 z_spec systems and 11.7″ on all; no system passes the 0.5″ per-system rule. Frozen outcome: map
+  only. Five z_spec systems (14 images) get a single predicted image from the mean traced source; the other seven have 0.80–1.83″.
+- **Post hoc:** for the 33 one-to-one matched z_spec images (11 systems), CATS `arcs.txt` already carries the same z
+  (within 0.005) and positions (median 0.061″), so missing redshifts do not explain their residuals (D-035 addendum).
+- **Handoff:** next is a route check (image-plane source fit) on MACS1149 and S1063 before any S1063 `images` run.
+- Also merged Dependabot #443 (ruff-pre-commit v0.17.0; format and lint clean on main). #442 touches
+  `.github/workflows` (guarded) and waits for the owner.
+
 ## 2026-10-21: Abell S1063 multiple-image list ready for the D-035 revisit (Chan+2020, VizieR)
 - **Correction of the 18:08Z entry:** a published list with MUSE redshifts is on VizieR, `J/ApJ/888/35` (Chan+2020;
   already in SOURCES.md since 2026-10-16). Written as `results/lens_consistency/abells1063_images/chan20_images.ecsv`
