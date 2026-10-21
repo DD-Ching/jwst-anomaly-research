@@ -166,7 +166,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    not fetched). 2346 and 2347 searched (3,926 groups), 0 survivors. v26 (`results/w3_ztf/v26/RESULT.md`): both
    remaining untested parents fail at their heads (2878 fade 11.7 %, 2813 14.3 %), so four siblings were skipped;
    **the v22 inventory is exhausted** (0 searched). Next: a new-area inventory (the v22 round ran under the owner's
-   4 h / ≤ 6 GB authorization after #395; check that it covers another inventory first). The fade limit stays an
+   4 h / ≤ 6 GB authorization after #395; it does not cover another: v22, v25 and v26 streamed ≈ 4.1 + 4.5 + 1.1 GB
+   per their CHANGELOG cost lines, so a new inventory waits for a new owner authorization). The fade limit stays an
    owner decision.
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.31 (typical, 3/25 after the 2026-10-08
    pair-match and one-entry-per-lens amendment) for quasar/radio-selected lenses, the only selections sensitive to a
