@@ -420,6 +420,127 @@ def cmd_sheet(args) -> None:
     print(out, out.stat().st_size)
 
 
+CENTRE_AP_ARCSEC = 0.2  # post hoc diagnostic aperture at the images' centroid
+
+
+def cmd_posthoc(args) -> None:
+    """Post hoc diagnostics (not frozen rules; RESULT.md labels them): (1) the PSF-mismatch
+    false-positive S/N of the one ePSF simulation scaled to each system by image flux and
+    aperture error (ASSUMPTION: the same fractional mismatch); (2) for each "none between
+    images" system, the halo-corrected residual in a 0.2" circle at the images' centroid."""
+    p = ch.Params()
+    meas = Table.read(RES / "measurements.ecsv")
+    pm = json.loads((RES / "psf_mismatch.json").read_text())
+    ref_id = pm["systems_with_epsf"][0]
+    ref = meas[meas["system_id"] == ref_id][0]
+
+    def img_flux(r):
+        return sum(
+            10 ** (-0.4 * (float(x) - float(r["zp_ab"]))) for x in r["image_mags"].split(";")
+        )
+
+    out = {"reference": str(ref["name"]), "fp_snr_ref": pm["epsf_no_lens_max_snr"], "systems": {}}
+    for r in meas[np.isin(meas["status"], ch.DECIDED)]:
+        fp = pm["epsf_no_lens_max_snr"] * img_flux(r) / img_flux(ref)
+        fp *= float(ref["resid_err"]) / float(r["resid_err"])
+        out["systems"][str(r["name"])] = {
+            "role": str(r["role"]),
+            "status": str(r["status"]),
+            "resid_snr": float(r["resid_snr"]),
+            "fp_snr_scaled": float(fp),
+            "snr_over_fp_scaled": float(r["resid_snr"] / fp),
+            "psf_alpha_at_bound": bool(float(r["psf_alpha"]) <= 1.2 + 1e-6),
+        }
+    sel = Table.read(RES / "selection.ecsv")
+    for r in meas[meas["status"] == ch.DECIDED[1]]:
+        s = sel[sel["system_id"] == r["system_id"]][0]
+        c = SkyCoord(float(s["ra"]), float(s["dec"]), unit="deg")
+        cu = load_cutout(Path(args.cut) / str(r["system_id"]), c, p)
+        sig, _corr, nfn = noise_function(cu["data"], cu["valid"])
+        m = ch.measure(cu["img"], cu["valid"], cu["centre"], cu["pix"], p, sig, nfn)
+        y0, _y1, x0, _x1 = m["stamp"]
+        xc = np.mean([q[0] for q in m["pos"]]) - x0
+        yc = np.mean([q[1] for q in m["pos"]]) - y0
+        yy, xx = np.indices(m["_clean"].shape)
+        ap = np.hypot(xx - xc, yy - yc) <= CENTRE_AP_ARCSEC / cu["pix"]
+        npix = int(ap.sum())
+        flux = float(m["_clean"][ap].sum())
+        err = nfn(npix) * np.sqrt(npix)
+        out["systems"][str(r["name"])].update(
+            centre_ap_arcsec=CENTRE_AP_ARCSEC,
+            centre_flux=flux,
+            centre_snr=flux / err,
+            centre_mag=float(cu["zp"] - 2.5 * np.log10(flux)) if flux > 0 else None,
+        )
+    out["provenance"] = "derived (post hoc diagnostics, not frozen rules)"
+    (RES / "posthoc.json").write_text(json.dumps(out, indent=2) + "\n")
+    print(json.dumps(out, indent=1))
+
+
+def fcol(t: Table, name: str) -> np.ndarray:
+    """Float column with masked entries as NaN (a masked value is not 0)."""
+    c = t[name]
+    return np.asarray(c.filled(np.nan) if hasattr(c, "filled") else c, float)
+
+
+def cmd_summary(args) -> None:
+    """Numbers quoted in RESULT.md, from the tracked tables (``derived``)."""
+    meas = Table.read(RES / "measurements.ecsv")
+    inj = Table.read(RES / "injections.ecsv")
+    pm = json.loads((RES / "psf_mismatch.json").read_text())
+    gate = json.loads((RES / "gate.json").read_text())
+    out = {"gate": {k: gate[k] for k in ("n_controls", "n_decided", "n_light", "efficiency",
+                                         "passed")}}  # fmt: skip
+    from scipy.stats import beta
+
+    k, n = gate["n_light"], gate["n_decided"]
+    # one-sided 95 % Clopper-Pearson lower bound on the control efficiency
+    out["gate"]["efficiency_lower95_one_sided"] = float(beta.ppf(0.05, k, n - k + 1)) if k else 0.0
+    out["psf_mismatch"] = pm
+    rec = {}
+    for role in ("control", "target"):
+        for reff in sorted(set(np.asarray(inj["reff_arcsec"], float))):
+            s = inj[(inj["role"] == role) & (np.asarray(inj["reff_arcsec"], float) == reff)]
+            rec[f"{role}_reff{reff}"] = {
+                f"{mag:g}": [int(np.sum(q["recovered"])), len(q)]
+                for mag in sorted(set(np.asarray(s["inject_mag"], float)))
+                for q in [s[np.asarray(s["inject_mag"], float) == mag]]
+            }
+            ff = np.asarray(s["flux_frac"], float)
+            rec[f"{role}_reff{reff}_flux_frac_median"] = float(np.nanmedian(ff)) if len(s) else None
+            rec[f"{role}_reff{reff}_flux_frac_p10_p90"] = (
+                [float(x) for x in np.nanpercentile(ff, [10, 90])] if len(s) else None
+            )
+    out["injections_recovered_of_n"] = rec
+    for role in ("control", "target"):
+        m = meas[meas["role"] == role]
+        st = np.asarray(m["status"], str)
+        out[f"{role}_status_counts"] = {k: int(np.sum(st == k)) for k in sorted(set(st))}
+        lim = fcol(m, "m_lim_reff0.3")
+        ok = np.isfinite(lim)
+        out[f"{role}_m_lim_reff0.3"] = {
+            "n": int(ok.sum()),
+            "min": float(np.min(lim[ok])) if ok.any() else None,
+            "median": float(np.median(lim[ok])) if ok.any() else None,
+            "max": float(np.max(lim[ok])) if ok.any() else None,
+        }
+        dsep = fcol(m, "max_sep_arcsec")
+        out[f"{role}_max_sep_range"] = [float(np.nanmin(dsep)), float(np.nanmax(dsep))]
+    a = fcol(meas, "psf_alpha")
+    out["psf_alpha_at_lower_bound"] = int(np.sum(np.isfinite(a) & (a <= 1.2 + 1e-6)))
+    out["psf_fits"] = int(np.sum(np.isfinite(a)))
+    if args.downloads_log:
+        lines = [x.split("\t") for x in Path(args.downloads_log).read_text().splitlines()]
+        b = [int(x[2]) for x in lines]
+        out["downloads"] = {"files": len(b), "bytes": int(sum(b))}
+        for kind, key in (("hapcut 250 px", "size=250"), ("hapcut 2200 px", "size=2200")):
+            sel = [int(x[2]) for x in lines if key in x[1]]
+            out["downloads"][kind] = {"files": len(sel), "bytes": int(sum(sel))}
+    out["provenance"] = "derived"
+    (RES / "summary.json").write_text(json.dumps(out, indent=2) + "\n")
+    print(json.dumps(out, indent=1))
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -438,8 +559,14 @@ def main(argv=None) -> None:
     a.add_argument("--cut", required=True)
     a.add_argument("--roles", default="control,target")
     a.add_argument("--out", default="contact_sheet.jpg")
+    a = sub.add_parser("posthoc")
+    a.add_argument("--cut", required=True)
+    a = sub.add_parser("summary")
+    a.add_argument("--downloads-log", default="")
     args = ap.parse_args(argv)
     cmds = {"download": cmd_download, "measure": cmd_measure, "psf": cmd_psf, "sheet": cmd_sheet}
+    cmds["posthoc"] = cmd_posthoc
+    cmds["summary"] = cmd_summary
     cmds[args.cmd](args)
 
 

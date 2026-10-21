@@ -185,3 +185,13 @@ def test_predicted_f814w_monotonic():
     b = ch.predicted_f814w(1.0, 0.5, 2.0, P)["m_typ"]
     assert b < a  # a larger Einstein radius needs a more luminous lens
     assert ch.predicted_f814w(1.0, 0.5, 2.0, P)["m_faint"] == pytest.approx(b + 2 * 0.88)
+
+
+def test_run_helpers():
+    import w2_hst_blend_run as run
+
+    t = Table({"a": np.ma.MaskedArray([1.0, 0.0], mask=[False, True])})
+    assert np.isnan(run.fcol(t, "a")[1]) and run.fcol(t, "a")[0] == 1.0  # masked is not 0
+    yy, xx = np.indices((801, 801))
+    num = models.Moffat2D(2.0, 400, 400, gamma=3.0, alpha=3.0)(xx, yy).sum()
+    assert run.moffat_flux(2.0, 3.0, 3.0) == pytest.approx(num, rel=1e-3)
