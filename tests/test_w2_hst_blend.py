@@ -218,6 +218,11 @@ def test_visit_exposure_counts_each_exposure_once():
     assert (
         ch.visit_exposure(["idxo03020", "idxo03030"], ["WFC3/UVIS"] * 2, [700.0, 728.0]) == 1428.0
     )
+    # an association and a separate exposure of the same visit: the association only
+    o = ["jf5626010", "jf5626ryq"]
+    assert ch.visit_exposure(o, ["ACS/WFC"] * 2, [674.0, 5.0]) == 674.0
+    # individual exposures only (no association, no SVM): summed
+    assert ch.visit_exposure(["jf5626ryq", "jf5626rzq"], ["ACS/WFC"] * 2, [300.0, 300.0]) == 600.0
     # multi-visit mosaics alone give no depth
     assert ch.visit_exposure(["hst_skycell-p1_acs_wfc_f814w_all"], ["ACS/WFC"], [674.0]) == 0.0
 
@@ -301,3 +306,94 @@ def test_method_validation_owner_rule():
         ch.method_validation({"passed": False}, {"epsf_no_lens_max_snr": 1.0}, P)["verdict"]
         == "failed (control gate)"
     )
+
+
+def test_no_lens_max_all_nan_and_json_safe():
+    import json
+
+    import w2_hst_blend_run as run
+
+    t = Table({"system_id": ["A", "B"], "psf": ["epsf", "epsf"], "inject_mag": [np.nan, np.nan],
+               "resid_snr": [np.nan, np.nan]})  # fmt: skip
+    assert run.no_lens_max(t) == (None, None)
+    assert run.fp_reference(t) is None
+    assert json.dumps({"x": run.finite_or_none(np.nan)}, allow_nan=False) == '{"x": null}'
+    t["resid_snr"][1] = 13.0
+    assert run.no_lens_max(t) == (13.0, "B")
+
+
+def test_reuse_check_and_label_normalisation():
+    import w2_hst_blend_run as run
+
+    row = {"hst_image": "a.fits", "img_pos_px": "1.00,2.00;3.00,4.00", "img_amps": "1;2",
+           "psf_gamma": 1.5, "psf_alpha": 2.0, "sigma_pix": 0.005, "zp_ab": 25.1}  # fmt: skip
+    assert run.reuse_ok(row, dict(row))
+    assert not run.reuse_ok(row, dict(row, img_pos_px="1.00,2.01;3.00,4.00"))
+    assert not run.reuse_ok(row, dict(row, sigma_pix=0.0051))
+    assert not run.reuse_ok(row, dict(row, hst_image="b.fits"))
+    assert run.normalise_status("none between images") == "not detected between images"
+    assert run.normalise_status("light between images") == "light between images"
+
+
+def test_apply_verdict_idempotent_and_restores():
+    import w2_hst_blend_run as run
+
+    light = "light between images"
+    meas = Table(
+        rows=[
+            {"system_id": "C", "role": "control", "status": light},
+            {"system_id": "T", "role": "target", "status": light},
+        ]
+    )
+    fail = {
+        "validated": False,
+        "target_interpretation": "not interpreted (method validation failed)",
+    }
+    ok = {"validated": True, "target_interpretation": "interpreted under PLAN.md"}
+    a = run.apply_verdict(meas, fail)
+    b = run.apply_verdict(a, fail)
+    assert (
+        list(b["status"])
+        == list(a["status"])
+        == ["light between images", fail["target_interpretation"]]
+    )
+    c = run.apply_verdict(b, ok)
+    assert list(c["status"]) == ["light between images", "light between images"]
+    # a row added later by measure (no stored chain status) is filled from its status
+    from astropy.table import vstack
+
+    d = vstack(
+        [
+            a,
+            Table(
+                rows=[{"system_id": "U", "role": "target", "status": "not detected between images"}]
+            ),
+        ]
+    )
+    e = run.apply_verdict(d, ok)
+    assert list(e[run.RAW])[-1] == "not detected between images"
+
+
+def test_download_status_helpers(tmp_path):
+    import w2_hst_blend_run as run
+
+    st = {"A": {"status": run.NO_HAP}, "B": {"status": run.FAILED}, "C": {"status": "in progress"}}
+    assert run.missing_cutout_status(st, "A") == "no HAP cutout"
+    assert run.missing_cutout_status(st, "B") == run.FAILED
+    assert run.missing_cutout_status(st, "C") == run.NOT_ATTEMPTED  # interrupted attempt
+    assert run.missing_cutout_status(st, "Z") == run.NOT_ATTEMPTED  # never attempted
+    d = tmp_path / "C"
+    d.mkdir()
+    (d / "x.fits").write_bytes(b"")
+    assert not run.cutout_complete(st, "C", d)  # partial set from an interrupted run
+    assert run.cutout_complete({"C": {"status": "ok"}}, "C", d)
+
+
+def test_merge_rows_no_inject_drops_stale_rows(tmp_path):
+    import w2_hst_blend_run as run
+
+    f = tmp_path / "inj.ecsv"
+    Table(rows=[{"system_id": "A", "role": "control", "inject_mag": 20.0},
+                {"system_id": "B", "role": "control", "inject_mag": 20.0}]).write(f)  # fmt: skip
+    t = run.merge_rows(f, [], "control", {"A", "B"}, {"A"})  # A re-measured with --no-inject
+    assert list(t["system_id"]) == ["B"]

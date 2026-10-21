@@ -3,12 +3,14 @@
     "L00058"
   ],
   "wide_cutouts_tried": 5,
-  "rows_reused_from_v1": [
+  "rows_reused": [
     "L00031",
     "L00005",
     "L00023",
-    "L00058"
+    "L00058",
+    "L00033"
   ],
+  "reuse_refused_input_mismatch": [],
   "epsf_no_lens_max_snr": 12.993760937749348,
   "epsf_no_lens_max_snr_system": "L00058",
   "psf_mismatch_not_excluded": true,

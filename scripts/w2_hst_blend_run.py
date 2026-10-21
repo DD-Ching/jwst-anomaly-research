@@ -65,7 +65,22 @@ def hapcut_with_retry(c: SkyCoord, size: int, path: Path, tries: int = 3):
     return None, FAILED, msg[:500]
 
 
+NOT_ATTEMPTED = "not attempted"
+
+
+def write_status(sf: Path, status: dict) -> None:
+    sf.write_text(json.dumps(status, indent=2) + "\n")
+
+
+def cutout_complete(status: dict, sid: str, d: Path) -> bool:
+    """A cutout set counts as complete only when the last attempt for it recorded "ok" (a run
+    that raised half-way leaves a partial set without that record, so it is redone)."""
+    return status.get(sid, {}).get("status") == "ok" and d.exists() and bool(list(d.glob("*.fits")))
+
+
 def cmd_download(args) -> None:
+    import shutil
+
     p = ch.Params()
     sel = Table.read(RES / "selection.ecsv")
     log = Path(args.log)
@@ -74,23 +89,40 @@ def cmd_download(args) -> None:
     for r in sel:
         sid = str(r["system_id"])
         d = Path(args.cut) / sid
-        if d.exists() and list(d.glob("*.fits")):
-            status.setdefault(sid, {"name": str(r["name"]), "status": "ok"})
+        if cutout_complete(status, sid, d):
             continue
+        if d.exists():
+            shutil.rmtree(d)  # partial or failed earlier attempt: redo from scratch
         d.mkdir(parents=True, exist_ok=True)
+        status[sid] = {"name": str(r["name"]), "status": "in progress"}
+        write_status(sf, status)  # an interruption leaves "in progress", never "ok"
         c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
         t, st, msg = hapcut_with_retry(c, p.size_px, d)
-        status[sid] = {"name": str(r["name"]), "status": st, "n_files": len(t) if t else 0}
-        status[sid]["message"] = msg
-        stamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        status[sid]["utc"] = stamp
         for f in t["Local Path"] if t is not None else []:
             log_download(log, f"hapcut ra={c.ra.deg:.6f} dec={c.dec.deg:.6f} size={p.size_px}", f)
+        status[sid] = {  # overwrites any earlier record, including an earlier failure
+            "name": str(r["name"]),
+            "status": st,
+            "n_files": len(t) if t is not None else 0,
+            "message": msg,
+            "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }
+        write_status(sf, status)  # after every system
         print(r["name"], st, len(t) if t is not None else 0, "files", flush=True)
-    sf.write_text(json.dumps(status, indent=2) + "\n")
     bad = [v["name"] for v in status.values() if v["status"] == FAILED]
     if bad:  # fail loudly: a service error is not "no data"
         raise SystemExit(f"hapcut download failed for {bad}; re-run download before measuring")
+
+
+def missing_cutout_status(status: dict, sid: str) -> str:
+    """Status of a system without cutout files: the service's explicit no-data answer, a failed
+    download, or never attempted (no record, or an interrupted attempt)."""
+    st = status.get(sid, {}).get("status")
+    if st == NO_HAP:
+        return "no HAP cutout"
+    if st == FAILED:
+        return FAILED
+    return NOT_ATTEMPTED
 
 
 def load_cutout(d: Path, c: SkyCoord, p: ch.Params):
@@ -148,8 +180,8 @@ def run_system(r, cut: Path, p: ch.Params, do_inject: bool = True):
     d = cut / str(r["system_id"])
     if not (d.exists() and list(d.glob("*.fits"))):
         sf = RES / DOWNLOAD_STATUS
-        st = json.loads(sf.read_text()).get(str(r["system_id"]), {}) if sf.exists() else {}
-        row["status"] = "no HAP cutout" if st.get("status") == NO_HAP else FAILED
+        status = json.loads(sf.read_text()) if sf.exists() else {}
+        row["status"] = missing_cutout_status(status, str(r["system_id"]))
         return row, None, inj
     cu = load_cutout(d, c, p)
     if cu is None:
@@ -264,7 +296,8 @@ def cmd_measure(args) -> None:
     t = merge_rows(RES / "measurements.ecsv", rows, args.role, role_ids)
     t.meta.update(provenance=schema.Provenance.DERIVED.value, source=src, params=asdict(p))
     t.write(RES / "measurements.ecsv", overwrite=True)
-    if inj or not args.no_inject:
+    if inj or (RES / "injections.ecsv").exists():
+        # rows of re-measured systems are replaced, or dropped when run with --no-inject
         ti = merge_rows(
             RES / "injections.ecsv", inj, args.role, role_ids, {r["system_id"] for r in rows}
         )
@@ -277,10 +310,11 @@ def cmd_measure(args) -> None:
     (RES / "params.json").write_text(json.dumps(asdict(p), indent=2) + "\n")
     if args.role == "control":
         full = t[np.asarray(t["role"]) == "control"]
-        g = ch.control_gate([str(x) for x in full["status"]], p)
+        full_chain = chain_status(full)
+        g = ch.control_gate(list(full_chain), p)
         g["provenance"] = "derived; pre-registered control gate (PLAN.md 4.1)"
         g["cpu_s_measure_controls"] = round(cpu, 1)
-        g["statuses"] = {str(x["name"]): str(x["status"]) for x in full}
+        g["statuses"] = dict(zip(np.asarray(full["name"]).astype(str), full_chain, strict=True))
         (RES / "gate.json").write_text(json.dumps(g, indent=2) + "\n")
         print(json.dumps(g, indent=1))
     else:
@@ -401,7 +435,49 @@ def psf_one(sid, r, m, d: Path, log: Path, p: ch.Params, epp) -> tuple[list, boo
     return out, True
 
 
-def write_psf(out, done, tries, p: ch.Params, reused) -> None:
+def finite_or_none(x):
+    """JSON-safe number: NaN or inf become null (json.dumps would write invalid NaN)."""
+    return float(x) if x is not None and np.isfinite(x) else None
+
+
+def no_lens_max(t: Table) -> tuple[float | None, str | None]:
+    """Largest no-lens empirical-PSF S/N and its system, or (None, None) when there is no such
+    row or every value is NaN (not measurable; ``np.nanargmax`` would raise)."""
+    if not len(t) or "psf" not in t.colnames:
+        return None, None
+    nolens = (np.asarray(t["psf"]).astype(str) == "epsf") & ~np.isfinite(fcol(t, "inject_mag"))
+    v = fcol(t, "resid_snr")[nolens]
+    if not np.isfinite(v).any():
+        return None, None
+    i = int(np.nanargmax(v))
+    return float(v[i]), str(np.asarray(t["system_id"]).astype(str)[nolens][i])
+
+
+V1_LABELS = {"none between images": "not detected between images"}  # v1 -> v2 wording
+
+
+def normalise_status(st) -> str:
+    return V1_LABELS.get(str(st), str(st))
+
+
+REUSE_KEYS = ("hst_image", "img_pos_px", "img_amps", "psf_gamma", "psf_alpha", "sigma_pix", "zp_ab")
+
+
+def reuse_ok(old_row, cur_row) -> bool:
+    """Rows of an earlier PSF run may be reused only if the control measurement they were built
+    from has the same inputs as now: cutout identity, image positions and amplitudes, PSF shape,
+    sigma_pix and zero point (string fields compared exactly, numbers to 1e-9 relative)."""
+    for k in REUSE_KEYS:
+        a, b = old_row[k], cur_row[k]
+        if isinstance(a, str | np.str_) or isinstance(b, str | np.str_):
+            if str(a) != str(b):
+                return False
+        elif not np.isclose(float(a), float(b), rtol=1e-9, atol=0.0, equal_nan=True):
+            return False
+    return True
+
+
+def write_psf(out, done, tries, p: ch.Params, reused, refused=()) -> None:
     t = Table(rows=out) if out else Table(names=("system_id", "psf"), dtype=(str, str))
     t.meta.update(
         provenance=schema.Provenance.SIMULATED.value,
@@ -410,20 +486,16 @@ def write_psf(out, done, tries, p: ch.Params, reused) -> None:
         "Moffat, optional Sersic lens convolved with the same PSF, measured by the Moffat chain",
     )
     t.write(RES / "psf_mismatch.ecsv", overwrite=True)
+    fp, fp_sys = no_lens_max(t)
     psfc = np.asarray(t["psf"]).astype(str) if len(t) else np.zeros(0, str)
-    nolens = (psfc == "epsf") & ~np.isfinite(fcol(t, "inject_mag")) if len(t) else psfc == ""
-    fp = t[nolens] if len(t) else t
     summ = {
         "systems_with_epsf": done,
         "wide_cutouts_tried": tries,
-        "rows_reused_from_v1": reused,
-        "epsf_no_lens_max_snr": float(np.nanmax(fcol(fp, "resid_snr"))) if len(fp) else None,
-        "epsf_no_lens_max_snr_system": str(fp["system_id"][np.nanargmax(fcol(fp, "resid_snr"))])
-        if len(fp)
-        else None,
-        "psf_mismatch_not_excluded": bool(
-            len(fp) and np.nanmax(fcol(fp, "resid_snr")) >= p.detect_sigma
-        ),
+        "rows_reused": reused,
+        "reuse_refused_input_mismatch": list(refused),
+        "epsf_no_lens_max_snr": fp,  # null = no negative control or not measurable
+        "epsf_no_lens_max_snr_system": fp_sys,
+        "psf_mismatch_not_excluded": bool(fp is not None and fp >= p.detect_sigma),
         "provenance": "simulated; pre-registered PSF-mismatch test with negative controls "
         "(no-lens empirical-PSF stamps), PLAN.md 4.2",
     }
@@ -432,52 +504,84 @@ def write_psf(out, done, tries, p: ch.Params, reused) -> None:
             for reff in p.inj_reff_arcsec:
                 sel = (np.asarray(t["system_id"]).astype(str) == sid) & (psfc == kind)
                 s = t[sel & (fcol(t, "reff_arcsec") == reff)]
-                summ[f"m_lim_{sid}_{kind}_reff{reff}"] = ch.contiguous_limit(
-                    [(float(x["inject_mag"]), bool(x["recovered"])) for x in s]
+                summ[f"m_lim_{sid}_{kind}_reff{reff}"] = finite_or_none(
+                    ch.contiguous_limit([(float(x["inject_mag"]), bool(x["recovered"])) for x in s])
                 )
-    (RES / "psf_mismatch.json").write_text(json.dumps(summ, indent=2) + "\n")
+    (RES / "psf_mismatch.json").write_text(json.dumps(summ, indent=2, allow_nan=False) + "\n")
     print(json.dumps(summ, indent=1))
+
+
+def chain_status(meas: Table) -> np.ndarray:
+    """The chain's own status per row (``chain_output_uninterpreted`` where ``verdict`` has
+    relabelled targets; ``status`` otherwise)."""
+    st = np.asarray(meas["status"]).astype(str)
+    if "chain_output_uninterpreted" in meas.colnames:
+        c = meas["chain_output_uninterpreted"]
+        raw = np.asarray(c.filled("") if hasattr(c, "filled") else c).astype(str)
+        st = np.where(np.isin(raw, ("", "--", "None")), st, raw)
+    return st
 
 
 def cmd_psf(args) -> None:
     """PSF-mismatch simulation (PLAN.md 4.2): images made with an empirical Gaia-star PSF, fitted
-    by the Moffat chain; the same with Moffat-made images as the no-mismatch reference. With
-    ``--reuse``, a system already processed in an earlier run (same cutout, same code, same
-    control measurement) keeps its rows and counts as a try without a new download. Partial
-    results are written before any error is re-raised."""
+    by the Moffat chain; the same with Moffat-made images as the no-mismatch reference.
+
+    ``--reuse PSF.ecsv=MEAS.ecsv`` (repeatable): rows of a system from an earlier run are reused
+    only if the control measurement they were built from (in MEAS.ecsv) has the same inputs as
+    the current one (``reuse_ok``); their status labels are normalised to the v2 wording. A
+    refused or absent system is recomputed (wide cutout). Partial results are written before an
+    error is re-raised; a failure while writing them never masks the original error."""
     import w12_niq_epsf as ep
 
     p = ch.Params()
     epp = ep.Params()
     meas = Table.read(RES / "measurements.ecsv")
-    ctl = meas[(np.asarray(meas["role"]) == "control") & np.isin(meas["status"], ch.DECIDED)]
+    ctl = meas[(np.asarray(meas["role"]) == "control") & np.isin(chain_status(meas), ch.DECIDED)]
     sel = Table.read(RES / "selection.ecsv")
     sel = sel[np.asarray(sel["role"]) == "control"]
     order = [s for s in sel["system_id"] if s in set(ctl["system_id"])]
-    prev = Table.read(args.reuse) if args.reuse else None
-    out, done, tries, reused = [], [], 0, []
+    sources = []
+    for spec in args.reuse or []:
+        pf, mf = spec.split("=")
+        sources.append((Table.read(pf), Table.read(mf)))
+    out, done, tries, reused, refused = [], [], 0, [], []
     log = Path(args.log)
     try:
         for sid in order:
             if len(done) >= PSF_MAX_SYSTEMS or tries >= PSF_MAX_TRIES:
                 break
             tries += 1
-            if prev is not None and sid in set(np.asarray(prev["system_id"]).astype(str)):
-                rows = [dict(zip(prev.colnames, x, strict=True)) for x in prev
-                        if str(x["system_id"]) == sid]  # fmt: skip
+            m = ctl[ctl["system_id"] == sid][0]
+            rows = None
+            for prev, pmeas in sources:
+                if sid not in set(np.asarray(prev["system_id"]).astype(str)):
+                    continue
+                old = pmeas[np.asarray(pmeas["system_id"]).astype(str) == sid]
+                if len(old) and reuse_ok(old[0], m):
+                    rows = [dict(zip(prev.colnames, x, strict=True)) for x in prev
+                            if str(x["system_id"]) == sid]  # fmt: skip
+                    for x in rows:
+                        x["status"] = normalise_status(x["status"])
+                    reused.append(sid)
+                    break
+                refused.append(sid)
+            if rows is not None:
                 out += rows
-                reused.append(sid)
                 if any(str(x["psf"]) == "epsf" for x in rows):
                     done.append(sid)
                 continue
             r = sel[sel["system_id"] == sid][0]
-            m = ctl[ctl["system_id"] == sid][0]
             rows, ok = psf_one(sid, r, m, Path(args.cut) / f"wide_{sid}", log, p, epp)
             out += rows
             if ok:
                 done.append(sid)
-    finally:
-        write_psf(out, done, tries, p, reused)
+    except BaseException:
+        try:
+            write_psf(out, done, tries, p, reused, refused)
+        except Exception as e2:  # noqa: BLE001 - never mask the original error
+            print("writing partial PSF results failed:", type(e2).__name__, e2, flush=True)
+        raise
+    write_psf(out, done, tries, p, reused, refused)
 
 
 def cmd_sheet(args) -> None:
@@ -490,9 +594,11 @@ def cmd_sheet(args) -> None:
     from scipy import ndimage
 
     meas = Table.read(RES / "measurements.ecsv")
+    tgt_label = verdict_label()  # "" when the verdict passed (targets keep the chain status)
     roles = args.roles.split(",")
     meas = meas[np.isin(np.asarray(meas["role"]), roles)]
     pd = Path(args.cut).parent / "panels"
+    chain = dict(zip(np.asarray(meas["system_id"]).astype(str), chain_status(meas), strict=True))
     items = [(r, pd / f"{r['system_id']}.npz") for r in meas]
     items = [(r, f) for r, f in items if f.exists()]
     fig, axes = plt.subplots(len(items), 3, figsize=(7.5, 2.5 * len(items)), squeeze=False)
@@ -508,8 +614,9 @@ def cmd_sheet(args) -> None:
                                                        "vmax": vmax}),
             (res, f"N={r['n_img']} Moffat resid (raw S/N {r['resid_snr_raw']:.1f})",
              {"cmap": "RdBu_r", "vmin": -rs, "vmax": rs}),
-            (sm, (f"stored S/N {r['resid_snr']:.1f} (not interpreted)" if r["role"] == "target"
-                  else f"{r['status']} S/N {r['resid_snr']:.1f}"),
+            (sm, (f"stored S/N {r['resid_snr']:.1f} ({tgt_label})"
+                  if r["role"] == "target" and tgt_label
+                  else f"{chain[str(r['system_id'])]} S/N {r['resid_snr']:.1f}"),
              {"cmap": "RdBu_r", "vmin": -ss, "vmax": ss}),
         )  # fmt: skip
         for ax, (im, title, kw) in zip(axes[i], panels, strict=True):
@@ -529,11 +636,19 @@ def cmd_sheet(args) -> None:
 CENTRE_AP_ARCSEC = 0.2  # post hoc diagnostic aperture at the images' centroid
 
 
-def fp_reference(pmt: Table) -> str:
-    """system_id of the ePSF simulation with the largest no-lens S/N."""
-    nolens = (np.asarray(pmt["psf"]).astype(str) == "epsf") & ~np.isfinite(fcol(pmt, "inject_mag"))
-    t = pmt[nolens]
-    return str(t["system_id"][np.nanargmax(fcol(t, "resid_snr"))])
+def fp_reference(pmt: Table) -> str | None:
+    """system_id of the ePSF simulation with the largest no-lens S/N (None if not measurable)."""
+    return no_lens_max(pmt)[1]
+
+
+def verdict_label() -> str:
+    """Short target label from ``verdict.json``: "" if the method was validated, else the
+    "not interpreted" wording without the reason in brackets (as on the sheets)."""
+    vf = RES / "verdict.json"
+    if not vf.exists():
+        return "verdict not run"
+    v = json.loads(vf.read_text())
+    return "" if v.get("validated") else str(v["target_interpretation"]).split(" (")[0]
 
 
 def cmd_posthoc(args) -> None:
@@ -548,7 +663,18 @@ def cmd_posthoc(args) -> None:
     ref_id = pm.get("epsf_no_lens_max_snr_system") or fp_reference(
         Table.read(RES / "psf_mismatch.ecsv")
     )
+    if ref_id is None or pm.get("epsf_no_lens_max_snr") is None:
+        raise SystemExit("no measurable negative control: the post hoc scaling is undefined")
     ref = meas[meas["system_id"] == ref_id][0]
+    # controls only, on purpose (owner decision 2026-10-21): when the method is not validated,
+    # no target is interpreted, so the post hoc diagnostics are computed for controls alone.
+    # The filter uses the chain's own status (chain_status), never the verdict relabel.
+    vf = RES / "verdict.json"
+    v = json.loads(vf.read_text()) if vf.exists() else {}
+    chain = chain_status(meas)
+    use = np.asarray(meas["role"]).astype(str) == "control"
+    if v.get("validated"):
+        use |= np.asarray(meas["role"]).astype(str) == "target"
 
     def img_flux(r):
         return sum(
@@ -556,19 +682,21 @@ def cmd_posthoc(args) -> None:
         )
 
     out = {"reference": str(ref["name"]), "fp_snr_ref": pm["epsf_no_lens_max_snr"], "systems": {}}
-    for r in meas[np.isin(meas["status"], ch.DECIDED)]:
+    for r, cs in zip(
+        meas[use & np.isin(chain, ch.DECIDED)], chain[use & np.isin(chain, ch.DECIDED)], strict=True
+    ):
         fp = pm["epsf_no_lens_max_snr"] * img_flux(r) / img_flux(ref)
         fp *= float(ref["resid_err"]) / float(r["resid_err"])
         out["systems"][str(r["name"])] = {
             "role": str(r["role"]),
-            "status": str(r["status"]),
+            "status": str(cs),
             "resid_snr": float(r["resid_snr"]),
             "fp_snr_scaled": float(fp),
-            "snr_over_fp_scaled": float(r["resid_snr"] / fp),
+            "snr_over_fp_scaled": finite_or_none(r["resid_snr"] / fp),
             "psf_alpha_at_bound": bool(float(r["psf_alpha"]) <= 1.2 + 1e-6),
         }
     sel = Table.read(RES / "selection.ecsv")
-    for r in meas[meas["status"] == ch.DECIDED[1]]:
+    for r in meas[use & (chain == ch.DECIDED[1])]:
         s = sel[sel["system_id"] == r["system_id"]][0]
         c = SkyCoord(float(s["ra"]), float(s["dec"]), unit="deg")
         cu = load_cutout(Path(args.cut) / str(r["system_id"]), c, p)
@@ -585,14 +713,20 @@ def cmd_posthoc(args) -> None:
         out["systems"][str(r["name"])].update(
             centre_ap_arcsec=CENTRE_AP_ARCSEC,
             centre_flux=flux,
-            centre_snr=flux / err,
+            centre_snr=finite_or_none(flux / err),
             centre_mag=float(cu["zp"] - 2.5 * np.log10(flux)) if flux > 0 else None,
         )
-    out["provenance"] = (
-        "derived; POST HOC diagnostics, not pre-registered in PLAN.md and not used to interpret "
-        "targets (owner decision 2026-10-21: method validation failed)"
+    scope = (
+        "controls and targets (method validated)"
+        if v.get("validated")
+        else f"controls only, on purpose: targets {v.get('target_interpretation', 'not judged')} "
+        f"(verdict.json: {v.get('verdict', 'verdict not run')})"
     )
-    (RES / "posthoc.json").write_text(json.dumps(out, indent=2) + "\n")
+    out["provenance"] = (
+        "derived; POST HOC diagnostics, not pre-registered in PLAN.md; not used to interpret "
+        f"targets; scope: {scope}"
+    )
+    (RES / "posthoc.json").write_text(json.dumps(out, indent=2, allow_nan=False) + "\n")
     print(json.dumps(out, indent=1))
 
 
@@ -681,28 +815,38 @@ def cmd_summary(args) -> None:
     print(json.dumps(out, indent=1))
 
 
+RAW = "chain_output_uninterpreted"  # the chain's status string, stored, never a reading
+
+
+def apply_verdict(meas: Table, v: dict) -> Table:
+    """Idempotent: ``status`` is always re-derived from the chain's own status (``RAW``, created
+    or filled from ``status`` for rows that lack it, e.g. rows added later by ``measure``); only
+    when the verdict fails do targets get the "not interpreted" status. A passing verdict
+    restores the chain status."""
+    meas = Table(meas, masked=False) if not len(meas) else meas.copy()
+    if "tool_status" in meas.colnames:  # name used before d9dab07's final form
+        meas.rename_column("tool_status", RAW)
+    chain = [str(x) for x in chain_status(meas)]
+    tgt = np.asarray(meas["role"]).astype(str) == "target"
+    st = [
+        v["target_interpretation"] if (t and not v["validated"]) else c
+        for c, t in zip(chain, tgt, strict=True)
+    ]
+    meas[RAW] = np.array(chain, dtype=str)
+    meas["status"] = np.array(st, dtype=str)
+    meas.meta["verdict"] = v
+    return meas
+
+
 def cmd_verdict(args) -> None:
     """Owner decision 2026-10-21 (after the frozen plan): method validation needs the gate AND
-    every negative control (no-lens empirical-PSF stamp) below the detection threshold. When it
-    fails, target rows keep the chain output as ``chain_output_uninterpreted`` (stored) and get
-    ``status`` = "not interpreted (method validation failed)"."""
+    every negative control (no-lens empirical-PSF stamp) below the detection threshold."""
     p = ch.Params()
     gate = json.loads((RES / "gate.json").read_text())
     fp = RES / "psf_mismatch.json"
     v = ch.method_validation(gate, json.loads(fp.read_text()) if fp.exists() else None, p)
-    (RES / "verdict.json").write_text(json.dumps(v, indent=2) + "\n")
-    meas = Table.read(RES / "measurements.ecsv")
-    raw = "chain_output_uninterpreted"  # the chain's status string, stored, never a reading
-    if "tool_status" in meas.colnames:
-        meas.rename_column("tool_status", raw)
-    if raw not in meas.colnames:
-        meas[raw] = np.asarray(meas["status"]).astype(str).astype(object)
-    tgt = np.asarray(meas["role"]).astype(str) == "target"
-    st = np.asarray(meas["status"]).astype(object)
-    if not v["validated"]:
-        st[tgt] = v["target_interpretation"]
-    meas["status"] = st
-    meas.meta["verdict"] = v
+    (RES / "verdict.json").write_text(json.dumps(v, indent=2, allow_nan=False) + "\n")
+    meas = apply_verdict(Table.read(RES / "measurements.ecsv"), v)
     meas.write(RES / "measurements.ecsv", overwrite=True)
     print(json.dumps(v, indent=1))
 
@@ -721,7 +865,12 @@ def main(argv=None) -> None:
     a = sub.add_parser("psf")
     a.add_argument("--cut", required=True)
     a.add_argument("--log", required=True)
-    a.add_argument("--reuse", default="", help="earlier psf_mismatch.ecsv to reuse rows from")
+    a.add_argument(
+        "--reuse",
+        action="append",
+        default=[],
+        help="PSF.ecsv=MEAS.ecsv: earlier PSF rows and the measurement table they were built from",
+    )
     a = sub.add_parser("sheet")
     a.add_argument("--cut", required=True)
     a.add_argument("--roles", default="control,target")

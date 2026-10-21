@@ -35,19 +35,19 @@ L00058 SDSSJ0806+2006 5 epsf 0.6 22.0 "light between images" 2 45.21218000068329
 L00058 SDSSJ0806+2006 5 epsf 0.6 23.0 "light between images" 2 25.77198145762668 True
 L00058 SDSSJ0806+2006 5 epsf 0.6 24.0 "light between images" 2 18.060944809897137 True
 L00058 SDSSJ0806+2006 5 epsf 0.6 25.0 "light between images" 2 15.012051639772833 False
-L00058 SDSSJ0806+2006 5 moffat nan nan "none between images" 2 -0.3301670913743224 False
+L00058 SDSSJ0806+2006 5 moffat nan nan "not detected between images" 2 -0.3301670913743224 False
 L00058 SDSSJ0806+2006 5 moffat 0.3 19.0 "light between images" 2 1282.2180044507372 True
 L00058 SDSSJ0806+2006 5 moffat 0.3 20.0 "light between images" 2 504.7139646260095 True
 L00058 SDSSJ0806+2006 5 moffat 0.3 21.0 "light between images" 2 200.91450146211886 True
 L00058 SDSSJ0806+2006 5 moffat 0.3 22.0 "light between images" 2 79.74145225439908 True
 L00058 SDSSJ0806+2006 5 moffat 0.3 23.0 "light between images" 2 31.58302456147806 True
 L00058 SDSSJ0806+2006 5 moffat 0.3 24.0 "light between images" 2 12.35138661804809 True
-L00058 SDSSJ0806+2006 5 moffat 0.3 25.0 "none between images" 2 4.710794573182017 False
+L00058 SDSSJ0806+2006 5 moffat 0.3 25.0 "not detected between images" 2 4.710794573182017 False
 L00058 SDSSJ0806+2006 5 moffat 0.6 19.0 "light between images" 2 964.0978846232292 True
 L00058 SDSSJ0806+2006 5 moffat 0.6 20.0 "light between images" 2 379.2607022791039 True
 L00058 SDSSJ0806+2006 5 moffat 0.6 21.0 "light between images" 2 150.90326514047743 True
 L00058 SDSSJ0806+2006 5 moffat 0.6 22.0 "light between images" 2 59.860706672202944 True
 L00058 SDSSJ0806+2006 5 moffat 0.6 23.0 "light between images" 2 23.667694549256012 True
 L00058 SDSSJ0806+2006 5 moffat 0.6 24.0 "light between images" 2 9.19128000652345 True
-L00058 SDSSJ0806+2006 5 moffat 0.6 25.0 "none between images" 2 3.455650194716463 False
+L00058 SDSSJ0806+2006 5 moffat 0.6 25.0 "not detected between images" 2 3.455650194716463 False
 L00033 SDSSJ0248+1913 1 "" nan nan "too few PSF stars" 0 nan False

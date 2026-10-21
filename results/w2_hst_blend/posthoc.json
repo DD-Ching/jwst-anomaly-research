@@ -87,5 +87,5 @@
       "psf_alpha_at_bound": false
     }
   },
-  "provenance": "derived; POST HOC diagnostics, not pre-registered in PLAN.md and not used to interpret targets (owner decision 2026-10-21: method validation failed)"
+  "provenance": "derived; POST HOC diagnostics, not pre-registered in PLAN.md; not used to interpret targets; scope: controls only, on purpose: targets not interpreted (method validation failed) (verdict.json: failed (PSF-mismatch false positive on a negative control))"
 }

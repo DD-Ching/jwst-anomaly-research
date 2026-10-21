@@ -69,21 +69,24 @@ DECIDED = ("light between images", "not detected between images")
 
 # ----------------------------------------------------------------------------- selection
 _SVM = re.compile(r"^hst_\d+_[0-9a-z]{2}_.+_([0-9a-z]{6})$")  # HAP single-visit mosaic: one visit
-_CLASSIC = re.compile(r"^([0-9a-z]{6})[0-9a-z]{3}$")  # pipeline association / exposure product
+_ASN = re.compile(r"^([0-9a-z]{6})\d{2}0$")  # pipeline association product, e.g. jf5626010
+_EXP = re.compile(r"^([0-9a-z]{6})[0-9a-z]{2}[a-z]$")  # individual exposure, e.g. jf5626ryq
 
 
 def visit_exposure(obs_ids, instruments, exptimes) -> float:
     """F814W depth of one system with each exposure counted once (fix of the v1 rule, which
-    summed every level-3 CAOM row and so counted the same exposures up to 3-4 times).
+    summed every level-3 CAOM row and so counted the same exposures 1.9-7 times).
 
     HST level-3 products overlap: HAP multi-visit mosaics (``hst_skycell-...``: all visits, and
     the same visits again in every overlapping skycell), HAP single-visit mosaics
-    (``hst_<prop>_<visit>_..._<ipppss>``: one visit) and the pipeline association products
-    (``<ipppss><nnn>``: one association of a visit). The depth is the sum over distinct visits
-    (ipppss, instrument) of the SVM exposure when the visit has one, else of its pipeline products;
-    multi-visit mosaics are never counted (their visits appear as SVM or pipeline rows)."""
+    (``hst_<prop>_<visit>_..._<ipppss>``: one visit), pipeline association products
+    (``<ipppss>nn0``) and individual exposures (``<ipppss>nn<letter>``). Per distinct visit
+    (ipppss, instrument) the depth is, in this order of preference: the SVM exposure; else the sum
+    of the visit's association products; else the sum of its individual exposures. Multi-visit
+    mosaics are never counted (their visits appear as SVM or pipeline rows)."""
     svm: dict[tuple, float] = {}
-    classic: dict[tuple, float] = {}
+    asn: dict[tuple, float] = {}
+    exp: dict[tuple, float] = {}
     for o, ins, t in zip(obs_ids, instruments, exptimes, strict=True):
         o, t = str(o).lower(), float(t) if np.isfinite(float(t)) else 0.0
         if o.startswith("hst_skycell"):
@@ -93,11 +96,14 @@ def visit_exposure(obs_ids, instruments, exptimes) -> float:
             k = (m.group(1), str(ins))
             svm[k] = max(svm.get(k, 0.0), t)
             continue
-        m = _CLASSIC.match(o)
-        if m:
-            k = (m.group(1), str(ins))
-            classic[k] = classic.get(k, 0.0) + t
-    return float(sum(svm.values()) + sum(v for k, v in classic.items() if k not in svm))
+        for rx, acc in ((_ASN, asn), (_EXP, exp)):
+            m = rx.match(o)
+            if m:
+                k = (m.group(1), str(ins))
+                acc[k] = acc.get(k, 0.0) + t
+                break
+    visits = set(svm) | set(asn) | set(exp)
+    return float(sum(svm.get(k, asn.get(k, exp.get(k, 0.0))) for k in visits))
 
 
 def select_systems(classes: Table, coverage: Table, p: Params) -> Table:

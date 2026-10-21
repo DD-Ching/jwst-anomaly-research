@@ -41,8 +41,15 @@ or `posthoc.json`. The v1 versions carry a `_v1` suffix. Anything else is marked
   products of the same exposures: HAP-MVM skycells (every visit, repeated in each overlapping skycell), HAP-SVM
   visits and pipeline association products. In all 23 systems involved, v1 over-counted the depth by factors of 1.9 to
   7.0 (`selection_diff.ecsv`).
-- **The fix.** `visit_exposure` counts each distinct visit (ipppss, instrument) once. It takes the visit's SVM
-  exposure, or else the sum of its pipeline products, and never counts MVM. It has a unit test. This is an
+- **The fix.** `visit_exposure` counts each distinct visit (ipppss, instrument) once, in this order of preference:
+  - the visit's SVM exposure;
+  - else the sum of its association products;
+  - else the sum of its individual exposures.
+
+  MVM products are never counted. The association-or-exposure step was made explicit in review round 2. Recomputed
+  under the explicit rule, no depth changes for any of the 82 systems in F814W coverage (recomputed in session; not
+  stored), and `selection.ecsv` is byte-identical. The reason is that every visit mixing the two kinds also has an
+  SVM product, which takes precedence. The rule has unit tests. This is an
   implementation fix, not a re-tuning: the 1000 s threshold, the order and the caps are as frozen.
 - **What changed** (`selection_v1.ecsv` → `selection.ecsv`, `selection_diff.ecsv`):
 
@@ -61,9 +68,16 @@ or `posthoc.json`. The v1 versions carry a `_v1` suffix. Anything else is marked
   positions, amplitudes, S/N and limits (checked in session; values in `measurements_v1.ecsv` and
   `measurements.ecsv`).
 - **PSF test reuse.** The v2 order tries the same first four controls as v1: SDSSJ0246-0825, HE0047-1756,
-  WG0214-2105 and SDSSJ0806+2006, with star counts 0, 1, 1 and 5. Their rows were reused from
-  `psf_mismatch_v1.ecsv` (same cutouts, code and measurements), marked as `rows_reused_from_v1`. The fifth try is
-  new: SDSSJ0248+1913, with 1 star, downloaded.
+  WG0214-2105 and SDSSJ0806+2006, with star counts 0, 1, 1 and 5. The fifth try is new: SDSSJ0248+1913, with 1 star,
+  downloaded in d9dab07.
+  - Since review round 2, a reused row is accepted only if the control measurement it was built from equals the
+    current one (`reuse_ok`). The compared inputs are the cutout file, image positions and amplitudes, Moffat γ and
+    α, sigma_pix and the zero point.
+  - All 5 reused systems pass (`psf_mismatch.json`: `rows_reused`, with `reuse_refused_input_mismatch` empty). The
+    first four come from `psf_mismatch_v1.ecsv` with `measurements_v1.ecsv`; SDSSJ0248+1913 comes from d9dab07's
+    table with the current `measurements.ecsv`.
+  - The old labels were normalised: 3 rows read "none" and now read "not detected between images".
+  - No number changed and no wide cutout was downloaded again.
 
 ## 2. Class membership and coverage (`derived`)
 - **Class rebuild.** The D-056 chain was rebuilt for the 444 galaxy-scale quasar and radio systems (343 of them
@@ -170,6 +184,39 @@ Whole-chain injections into the 10 controls (Sérsic n = 4, convolved with the f
 6. **Retries:** the COUNT(*) TAP check, the 2200-px Hapcut call and the Gaia query in `cmd_psf` retry with back-off
    and fail loudly. `cmd_psf` writes partial results before any error is re-raised.
 
+**Round 2 (coordinator `/code-review` of d9dab07).**
+1. **All-NaN no-lens S/N:** it now gives null ("not measurable") instead of raising. All JSON is written with
+   `allow_nan=False`. A failure while writing partial PSF results no longer masks the original error.
+2. **`verdict` is idempotent:** `status` is always re-derived from `chain_output_uninterpreted`. The column is
+   created or filled for rows that lack it. A passing verdict restores the chain status.
+3. **`posthoc` scope:** it filters on the chain status, not the verdict relabel. It is restricted to controls on
+   purpose while the method is not validated, and the scope is stated in the provenance field. Its numbers are
+   unchanged; only the provenance text changed.
+4. **Download status, overwrite and partial sets:** a later success overwrites an earlier "download failed". A
+   cutout set counts as complete only after a recorded "ok"; a partial set is deleted and redone.
+5. **Download status, timing and "not attempted":** the status is written after every system, and an attempt in
+   progress is recorded as such. A system with no record, or with an interrupted attempt, is labelled "not
+   attempted".
+6. **Checked PSF reuse:** see §1. Labels were normalised; no number changed.
+7. **`measure --no-inject`:** it now drops the injection rows of re-measured systems. It was used only once, for the
+   first v1 control pass. That pass ran before any injection file existed, and the full run with injections then
+   replaced its output. No committed file is affected.
+8. **Labels from `verdict.json`:** the target-sheet title and the `posthoc` provenance are read from
+   `verdict.json`. With the failed verdict the sheet text is the same as committed, so the sheets were not
+   regenerated.
+9. **Association or individual exposure:** the rule is now explicit; the selection is unchanged (§1).
+
+- **Re-run in round 2:** selection (identical), the 250-px download (needed by `posthoc`; DESJ0407-5006 again gave an
+  explicit "no HAP product"), PSF with checked reuse, verdict, posthoc and summary.
+- **What changed in committed files:** labels and provenance text only.
+  - `psf_mismatch.ecsv`: 3 status labels.
+  - `psf_mismatch.json` and `summary.json`: `rows_reused` (was `rows_reused_from_v1`, now 5 systems) and
+    `reuse_refused_input_mismatch` ([]).
+  - `posthoc.json`: provenance text.
+  - `measurements.ecsv`: string columns are written as plain strings, with identical values.
+  - `download_status.json`: UTC times.
+  - `summary.json`: the download totals.
+
 ## 8. Deviations, gaps and costs
 - **Deviation (noise).** The "MAD × correlation" noise term uses the pixel MAD of the cutout, not the MAD of the fit
   residual. The empirical sky-aperture term is as in D-064.
@@ -181,7 +228,7 @@ Whole-chain injections into the 10 controls (Sérsic n = 4, convolved with the f
   - Two contact sheets instead of one. In the target sheet only the stored S/N appears, marked "not interpreted".
   - Files added: `summary.json`, `cpu_targets.json`, `verdict.json`, `download_status.json`,
     `selection_diff.ecsv`, and the `_v1` copies.
-  - The PSF-test rows for the four systems common to both orders were reused (§1).
+  - PSF-test rows for systems with unchanged inputs were reused after the `reuse_ok` check (§1).
 - **Injection Sérsic.** It is 5 × 5 subsampled and PSF-convolved; D-064 used an unconvolved pixel-centre Sérsic. This
   was fixed in the offline tests, before any data were run.
 - **Gap.**
@@ -193,9 +240,9 @@ Whole-chain injections into the 10 controls (Sérsic n = 4, convolved with the f
     Not built, per the authorization and the owner's decision.
 - **Negative controls are scarce.** Gaia-star ePSFs found ≥ 3 stars in 1 of 5 HAP fields (88″). A library PSF or
   an off-target stellar field would be needed for more than one negative control.
-- **Downloads:** 2,223,437,891 bytes in 269 files (`summary.json`), under the 3.5 GB cap.
+- **Downloads:** 2,278,679,171 bytes in 356 files (`summary.json`), under the 4.5 GB cap.
   - The 2200-px cutouts for the PSF test took 1,978,194,240 bytes (42 files).
-  - The 250-px cutouts took 141,822,720 bytes (217 files, both versions).
+  - The 250-px cutouts took 197,064,000 bytes (304 files: v1, v2 and the round-2 re-download for `posthoc`).
   - Raw files were deleted after use; the log is in the scratchpad (`w2-hst/downloads.log`).
 - **CPU:** v2 controls with injections 37.0 s (`gate.json`); v2 targets 22.1 s (`cpu_targets.json`). v1: 43.8 s and
   27.4 s (`gate_v1.json`, `cpu_targets_v1.json`). The PSF stage is not stored.

@@ -12,12 +12,14 @@
       "L00058"
     ],
     "wide_cutouts_tried": 5,
-    "rows_reused_from_v1": [
+    "rows_reused": [
       "L00031",
       "L00005",
       "L00023",
-      "L00058"
+      "L00058",
+      "L00033"
     ],
+    "reuse_refused_input_mismatch": [],
     "epsf_no_lens_max_snr": 12.993760937749348,
     "epsf_no_lens_max_snr_system": "L00058",
     "psf_mismatch_not_excluded": true,
@@ -199,11 +201,11 @@
   "psf_alpha_at_lower_bound": 4,
   "psf_fits": 16,
   "downloads": {
-    "files": 269,
-    "bytes": 2223437891,
+    "files": 356,
+    "bytes": 2278679171,
     "hapcut 250 px": {
-      "files": 217,
-      "bytes": 141822720
+      "files": 304,
+      "bytes": 197064000
     },
     "hapcut 2200 px": {
       "files": 42,
