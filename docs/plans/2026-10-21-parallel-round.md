@@ -54,12 +54,15 @@ arrangement only; it does not change the permanent collaboration policy in CLAUD
 | Line | Wall clock (UTC) | Compute | Downloads | Outcome |
 |---|---|---|---|---|
 | A | 00:24–03:06 (fits 00:49–03:03) | 6.8 CPU-h on 3 cores | none (PyPI wheel only) | P search passes 6 / 6 frozen checks; R1 seeds disagree, R1 undetermined |
-| B | 00:22–00:52, review fixes to about 02:00 | about 5 CPU-min | 0.90 GB, streamed and deleted | frozen S1 method does not transfer to CHIME (recovery 6.9 %) |
-| C | 00:22–01:16, review fixes to 01:52 | about 2 CPU-min, plus downloads | 2.28 GB, deleted | negative control S/N 13 ≥ 5σ: method validation fails, targets not interpreted |
+| B | 00:22–00:52; review fixes 01:20–03:24 (code only after 01:30) | about 5 CPU-min | 0.90 GB, streamed and deleted | frozen S1 method does not transfer to CHIME (recovery 6.9 %) |
+| C | 00:22–01:16; review fixes and re-runs to 01:52, code-only fixes to 03:21 | about 2 CPU-min, plus downloads | 2.28 GB, deleted | negative control S/N 13 ≥ 5σ: method validation fails, targets not interpreted |
 
 - Round total: about 3.2 GB downloaded of the 8 GB budget. No 4th concurrent process was used.
-- Two /code-review rounds on B and C changed no committed verdict (B: `chi2_union` δ choice; C: depth counted once per
-  visit, which changed the selection but not the gate or the negative control). Both v1 result sets are kept.
+- Four /code-review rounds (findings, fixes and run-record evidence: `docs/plans/2026-10-21-review-findings.md`).
+  Only two fixes changed what ran: B's `chi2_union` δ choice (re-run; no pass changed) and C's per-visit depth
+  (re-run; selection changed, gate and negative control did not). Both v1 result sets are kept.
+- The coordinator extended B's and C's code-fix window from 03:30 to 04:15 UTC (code only; both finished by 03:24).
+  A's computation ended at 03:03 against its 05:15 stop.
 - Owner clarifications during the round (2026-10-21): freed cores may only run planned fits earlier; B's conclusion is
   limited to "the frozen method did not transfer to CHIME"; a negative control at threshold fails C's method
   validation; R1 only after the whole validation set passes and within the frozen budget.
