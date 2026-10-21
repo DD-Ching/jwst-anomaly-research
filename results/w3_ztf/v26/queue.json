@@ -1,0 +1,59 @@
+{
+ "label": "derived; v26 PLAN section 3 (frozen order, from ../v22/inventory.json); head null = parent head, else fetched only if the head fade control <= 100 / 1,000",
+ "queue": [
+  {
+   "npix": 2878,
+   "parent": 719,
+   "head": null,
+   "lc_mb": 441.0,
+   "searchable_per_gb": 2977.32,
+   "position": 1,
+   "seed_offset": 56000
+  },
+  {
+   "npix": 2813,
+   "parent": 703,
+   "head": null,
+   "lc_mb": 440.2,
+   "searchable_per_gb": 2167.2,
+   "position": 2,
+   "seed_offset": 57000
+  },
+  {
+   "npix": 2876,
+   "parent": 719,
+   "head": 2878,
+   "lc_mb": 542.3,
+   "searchable_per_gb": 2437.77,
+   "position": 3,
+   "seed_offset": 58000
+  },
+  {
+   "npix": 2812,
+   "parent": 703,
+   "head": 2813,
+   "lc_mb": 442.6,
+   "searchable_per_gb": 2130.59,
+   "position": 4,
+   "seed_offset": 59000
+  },
+  {
+   "npix": 2879,
+   "parent": 719,
+   "head": 2878,
+   "lc_mb": 726.4,
+   "searchable_per_gb": 2042.95,
+   "position": 5,
+   "seed_offset": 60000
+  },
+  {
+   "npix": 2877,
+   "parent": 719,
+   "head": 2878,
+   "lc_mb": 820.4,
+   "searchable_per_gb": 1856.41,
+   "position": 6,
+   "seed_offset": 61000
+  }
+ ]
+}

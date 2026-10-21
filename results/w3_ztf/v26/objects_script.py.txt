@@ -1,0 +1,20 @@
+# v26 (copied from ../v25; parents changed): DR24 objects tables of the two order-4 parents (703, 719) into the scratch dir, with the v22
+# inventory columns; writes objects.json (MB from parquet metadata). Usage: python objects_script.py.txt <scratch dir>
+import json, sys
+from concurrent.futures import ThreadPoolExecutor
+import pyarrow.parquet as pq
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+SCR = sys.argv[1]
+cols = ['oid', 'ra', 'dec', 'field', 'ccdid', 'qid', 'fid', 'refmag', 'refsharp', 'ngoodobs', 'transient']
+def read(par):
+    pf = pq.ParquetFile(wz.s3().open(wz.OBJ_PART.replace('Npix=959', f'Npix={par}'))); md = pf.metadata
+    mb = sum(md.row_group(i).column(j).total_compressed_size for i in range(md.num_row_groups)
+             for j in range(md.num_columns) if md.row_group(i).column(j).path_in_schema in cols) / 1e6
+    pf.read(columns=cols).to_pandas().to_parquet(f'{SCR}/obj{par}.parquet')
+    return par, round(mb, 1)
+with ThreadPoolExecutor(2) as ex:
+    mbs = dict(ex.map(read, (703, 719)))
+out = {'label': 'observed (DR24 objects tables; MB from parquet metadata)', 'parents_mb': mbs, 'objects_mb': round(sum(mbs.values()), 1)}
+json.dump(out, open('results/w3_ztf/v26/objects.json', 'w'), indent=1); open('results/w3_ztf/v26/objects.json', 'a').write('\n')
+print(out)
