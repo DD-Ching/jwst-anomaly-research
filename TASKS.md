@@ -323,6 +323,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        MACS0417, MACS1423 cluster pointings (published lists now transcribed: Jauzac+19, KALEIDOSCOPE; see the
        image-position item below);
        MACS1149 image list when CANUCS v2 is out;
+     - Abell S1063 image list (D-035 revisit; route noted 2026-10-21, not run): open the rms gate with spectroscopic
+       system redshifts (Caminha+2016 / Karman+2017 MUSE tables; not found on VizieR by keyword search, so transcribe and cite first), then
+       `validate` and `images`. Local session: the pinned CATS v4.1 URLs are on `archive.stsci.edu`, whose chain
+       ends at emSign Root CA - G1, absent from the cloud trust store (TLS fails), and the MAST Download API returns
+       404 for `mast:HLSP/frontier/...`;
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
      - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every
        field and re-run earlier fields' radial screens with it (~~the five W1 shear-only fields~~ done 2026-10-17,
