@@ -78,6 +78,14 @@ def cutout_complete(status: dict, sid: str, d: Path) -> bool:
     return status.get(sid, {}).get("status") == "ok" and d.exists() and bool(list(d.glob("*.fits")))
 
 
+def needs_download(status: dict, key: str, d: Path, force: bool = False) -> bool:
+    """Download unless the set is complete ("ok" with files) or the service's explicit no-data
+    answer (``NO_HAP``) is on record; ``force`` re-queries a recorded no-data system."""
+    if cutout_complete(status, key, d):
+        return False
+    return not (status.get(key, {}).get("status") == NO_HAP and not force)
+
+
 def cmd_download(args) -> None:
     import shutil
 
@@ -89,8 +97,8 @@ def cmd_download(args) -> None:
     for r in sel:
         sid = str(r["system_id"])
         d = Path(args.cut) / sid
-        if cutout_complete(status, sid, d):
-            continue
+        if not needs_download(status, sid, d, args.force):
+            continue  # complete, or a recorded no-data answer (final unless --force)
         if d.exists():
             shutil.rmtree(d)  # partial or failed earlier attempt: redo from scratch
         d.mkdir(parents=True, exist_ok=True)
@@ -178,9 +186,9 @@ def run_system(r, cut: Path, p: ch.Params, do_inject: bool = True):
     row.update(status_ls=str(r["status_ls"]), t814_s=float(r["t814_s"]))
     inj = []
     d = cut / str(r["system_id"])
-    if not (d.exists() and list(d.glob("*.fits"))):
-        sf = RES / DOWNLOAD_STATUS
-        status = json.loads(sf.read_text()) if sf.exists() else {}
+    sf = RES / DOWNLOAD_STATUS
+    status = json.loads(sf.read_text()) if sf.exists() else {}
+    if not cutout_complete(status, str(r["system_id"]), d):  # files without "ok" are partial
         row["status"] = missing_cutout_status(status, str(r["system_id"]))
         return row, None, inj
     cu = load_cutout(d, c, p)
@@ -372,17 +380,29 @@ def gaia_with_retry(c: SkyCoord, radius_deg: float, tries: int = 3):
 
 def psf_one(sid, r, m, d: Path, log: Path, p: ch.Params, epp) -> tuple[list, bool]:
     """One control: wide cutout, Gaia-star ePSF, simulated stamps. Returns (rows, has_epsf)."""
+    import shutil
+
     import w12_niq_epsf as ep
 
     c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
-    if not (d.exists() and list(d.glob("*.fits"))):
+    sf, key = RES / DOWNLOAD_STATUS, f"wide_{sid}"
+    status = json.loads(sf.read_text()) if sf.exists() else {}
+    if needs_download(status, key, d):
+        if d.exists():
+            shutil.rmtree(d)  # partial or failed earlier attempt: redo from scratch
         d.mkdir(parents=True, exist_ok=True)
+        status[key] = {"name": str(r["name"]), "status": "in progress"}
+        write_status(sf, status)
         t, st, msg = hapcut_with_retry(c, WIDE_PX, d)
-        if st == FAILED:
-            raise RuntimeError(f"{r['name']}: wide hapcut download failed: {msg}")
         for f in t["Local Path"] if t is not None else []:
             log_download(log, f"hapcut ra={c.ra.deg:.6f} dec={c.dec.deg:.6f} size={WIDE_PX}", f)
-    cu = load_cutout(d, c, p)
+        status[key] = {"name": str(r["name"]), "status": st, "message": msg,
+                       "n_files": len(t) if t is not None else 0,
+                       "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}  # fmt: skip
+        write_status(sf, status)
+        if st == FAILED:
+            raise RuntimeError(f"{r['name']}: wide hapcut download failed: {msg}")
+    cu = load_cutout(d, c, p) if cutout_complete(status, key, d) else None
     base_row = {"system_id": sid, "name": str(r["name"]), "n_psf_stars": 0, "psf": "",
                 "reff_arcsec": np.nan, "inject_mag": np.nan, "n_img": 0,
                 "resid_snr": np.nan, "recovered": False}  # fmt: skip
@@ -447,10 +467,12 @@ def no_lens_max(t: Table) -> tuple[float | None, str | None]:
         return None, None
     nolens = (np.asarray(t["psf"]).astype(str) == "epsf") & ~np.isfinite(fcol(t, "inject_mag"))
     v = fcol(t, "resid_snr")[nolens]
-    if not np.isfinite(v).any():
+    ids = np.asarray(t["system_id"]).astype(str)[nolens]
+    fin = np.isfinite(v)  # NaN and +-inf are not measurable values
+    if not fin.any():
         return None, None
-    i = int(np.nanargmax(v))
-    return float(v[i]), str(np.asarray(t["system_id"]).astype(str)[nolens][i])
+    i = int(np.argmax(v[fin]))
+    return float(v[fin][i]), str(ids[fin][i])
 
 
 V1_LABELS = {"none between images": "not detected between images"}  # v1 -> v2 wording
@@ -468,7 +490,10 @@ def reuse_ok(old_row, cur_row) -> bool:
     from has the same inputs as now: cutout identity, image positions and amplitudes, PSF shape,
     sigma_pix and zero point (string fields compared exactly, numbers to 1e-9 relative)."""
     for k in REUSE_KEYS:
-        a, b = old_row[k], cur_row[k]
+        try:
+            a, b = old_row[k], cur_row[k]
+        except (KeyError, ValueError):  # a missing input column is a mismatch: recompute
+            return False
         if isinstance(a, str | np.str_) or isinstance(b, str | np.str_):
             if str(a) != str(b):
                 return False
@@ -522,6 +547,25 @@ def chain_status(meas: Table) -> np.ndarray:
     return st
 
 
+def pick_reuse(sid: str, cur_meas_row, sources) -> tuple[list | None, bool]:
+    """First source whose rows for ``sid`` were built from a measurement equal to the current one
+    (``reuse_ok``). Returns (rows with v2 labels, or None; whether some source had rows for
+    ``sid`` but a mismatching measurement). A refusal counts only when no source is accepted."""
+    mismatched = False
+    for prev, pmeas in sources:
+        if sid not in set(np.asarray(prev["system_id"]).astype(str)):
+            continue
+        old = pmeas[np.asarray(pmeas["system_id"]).astype(str) == sid]
+        if len(old) and reuse_ok(old[0], cur_meas_row):
+            rows = [dict(zip(prev.colnames, x, strict=True)) for x in prev
+                    if str(x["system_id"]) == sid]  # fmt: skip
+            for x in rows:
+                x["status"] = normalise_status(x["status"])
+            return rows, False
+        mismatched = True
+    return None, mismatched
+
+
 def cmd_psf(args) -> None:
     """PSF-mismatch simulation (PLAN.md 4.2): images made with an empirical Gaia-star PSF, fitted
     by the Moffat chain; the same with Moffat-made images as the no-mismatch reference.
@@ -552,20 +596,11 @@ def cmd_psf(args) -> None:
                 break
             tries += 1
             m = ctl[ctl["system_id"] == sid][0]
-            rows = None
-            for prev, pmeas in sources:
-                if sid not in set(np.asarray(prev["system_id"]).astype(str)):
-                    continue
-                old = pmeas[np.asarray(pmeas["system_id"]).astype(str) == sid]
-                if len(old) and reuse_ok(old[0], m):
-                    rows = [dict(zip(prev.colnames, x, strict=True)) for x in prev
-                            if str(x["system_id"]) == sid]  # fmt: skip
-                    for x in rows:
-                        x["status"] = normalise_status(x["status"])
-                    reused.append(sid)
-                    break
-                refused.append(sid)
+            rows, mismatched = pick_reuse(sid, m, sources)
+            if rows is None and mismatched and sid not in refused:
+                refused.append(sid)  # no source accepted: recomputed below
             if rows is not None:
+                reused.append(sid)
                 out += rows
                 if any(str(x["psf"]) == "epsf" for x in rows):
                     done.append(sid)
@@ -681,7 +716,8 @@ def cmd_posthoc(args) -> None:
             10 ** (-0.4 * (float(x) - float(r["zp_ab"]))) for x in r["image_mags"].split(";")
         )
 
-    out = {"reference": str(ref["name"]), "fp_snr_ref": pm["epsf_no_lens_max_snr"], "systems": {}}
+    out = {"reference": str(ref["name"]), "fp_snr_ref": finite_or_none(pm["epsf_no_lens_max_snr"]),
+           "systems": {}}  # fmt: skip
     for r, cs in zip(
         meas[use & np.isin(chain, ch.DECIDED)], chain[use & np.isin(chain, ch.DECIDED)], strict=True
     ):
@@ -690,8 +726,8 @@ def cmd_posthoc(args) -> None:
         out["systems"][str(r["name"])] = {
             "role": str(r["role"]),
             "status": str(cs),
-            "resid_snr": float(r["resid_snr"]),
-            "fp_snr_scaled": float(fp),
+            "resid_snr": finite_or_none(float(r["resid_snr"])),
+            "fp_snr_scaled": finite_or_none(float(fp)),
             "snr_over_fp_scaled": finite_or_none(r["resid_snr"] / fp),
             "psf_alpha_at_bound": bool(float(r["psf_alpha"]) <= 1.2 + 1e-6),
         }
@@ -712,9 +748,9 @@ def cmd_posthoc(args) -> None:
         err = nfn(npix) * np.sqrt(npix)
         out["systems"][str(r["name"])].update(
             centre_ap_arcsec=CENTRE_AP_ARCSEC,
-            centre_flux=flux,
+            centre_flux=finite_or_none(flux),
             centre_snr=finite_or_none(flux / err),
-            centre_mag=float(cu["zp"] - 2.5 * np.log10(flux)) if flux > 0 else None,
+            centre_mag=finite_or_none(cu["zp"] - 2.5 * np.log10(flux)) if flux > 0 else None,
         )
     scope = (
         "controls and targets (method validated)"
@@ -857,6 +893,7 @@ def main(argv=None) -> None:
     a = sub.add_parser("download")
     a.add_argument("--cut", required=True)
     a.add_argument("--log", required=True)
+    a.add_argument("--force", action="store_true", help="re-query recorded no-data systems")
     a = sub.add_parser("measure")
     a.add_argument("--role", choices=("control", "target"), required=True)
     a.add_argument("--cut", required=True)

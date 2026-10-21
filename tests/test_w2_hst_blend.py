@@ -397,3 +397,79 @@ def test_merge_rows_no_inject_drops_stale_rows(tmp_path):
                 {"system_id": "B", "role": "control", "inject_mag": 20.0}]).write(f)  # fmt: skip
     t = run.merge_rows(f, [], "control", {"A", "B"}, {"A"})  # A re-measured with --no-inject
     assert list(t["system_id"]) == ["B"]
+
+
+def test_needs_download_no_hap_final(tmp_path):
+    import w2_hst_blend_run as run
+
+    d = tmp_path / "A"
+    assert run.needs_download({}, "A", d)  # never attempted
+    assert not run.needs_download({"A": {"status": run.NO_HAP}}, "A", d)  # final answer
+    assert run.needs_download({"A": {"status": run.NO_HAP}}, "A", d, force=True)
+    assert run.needs_download({"A": {"status": run.FAILED}}, "A", d)
+    d.mkdir()
+    (d / "x.fits").write_bytes(b"")
+    assert run.needs_download({"A": {"status": "in progress"}}, "A", d)  # partial set
+    assert not run.needs_download({"A": {"status": "ok"}}, "A", d)
+
+
+def test_run_system_refuses_partial_cutout(tmp_path, monkeypatch):
+    import json
+
+    import w2_hst_blend_run as run
+
+    monkeypatch.setattr(run, "RES", tmp_path)
+    (tmp_path / run.DOWNLOAD_STATUS).write_text(json.dumps({"S1": {"status": "in progress"}}))
+    d = tmp_path / "cut" / "S1"
+    d.mkdir(parents=True)
+    (d / "partial.fits").write_bytes(b"")  # would fail to load if it were used
+    r = {"ra": 10.0, "dec": 0.0, "system_id": "S1", "name": "N", "role": "target",
+         "status_ls": "blended", "t814_s": 1428.0}  # fmt: skip
+    row, panel, inj = run.run_system(r, tmp_path / "cut", P)
+    assert row["status"] == run.NOT_ATTEMPTED and panel is None and inj == []
+
+
+def test_psf_one_redoes_partial_wide_dir(tmp_path, monkeypatch):
+    import json
+
+    import w2_hst_blend_run as run
+    import w12_niq_epsf as ep
+
+    monkeypatch.setattr(run, "RES", tmp_path)
+    (tmp_path / run.DOWNLOAD_STATUS).write_text(json.dumps({"wide_S1": {"status": run.FAILED}}))
+    d = tmp_path / "wide_S1"
+    d.mkdir()
+    (d / "stale.fits").write_bytes(b"")
+    monkeypatch.setattr(run, "hapcut_with_retry", lambda c, size, path: (None, run.NO_HAP, "none"))
+    r = {"ra": 10.0, "dec": 0.0, "name": "N"}
+    rows, ok = run.psf_one("S1", r, {}, d, tmp_path / "log", P, ep.Params())
+    assert not ok and rows[0]["status"] == "no wide F814W cutout"
+    assert not (d / "stale.fits").exists()  # the partial set was removed, not reused
+    st = json.loads((tmp_path / run.DOWNLOAD_STATUS).read_text())
+    assert st["wide_S1"]["status"] == run.NO_HAP
+
+
+def test_no_lens_max_ignores_inf():
+    import w2_hst_blend_run as run
+
+    t = Table({"system_id": ["A", "B"], "psf": ["epsf", "epsf"], "inject_mag": [np.nan, np.nan],
+               "resid_snr": [np.inf, 13.0]})  # fmt: skip
+    assert run.no_lens_max(t) == (13.0, "B")
+    assert run.finite_or_none(np.inf) is None
+
+
+def test_pick_reuse_refusal_and_missing_column():
+    import w2_hst_blend_run as run
+
+    cur = {"hst_image": "a.fits", "img_pos_px": "1,2;3,4", "img_amps": "1;2", "psf_gamma": 1.5,
+           "psf_alpha": 2.0, "sigma_pix": 0.005, "zp_ab": 25.1}  # fmt: skip
+    psf = Table({"system_id": ["S"], "psf": ["epsf"], "status": ["none between images"]})
+    bad = Table(rows=[dict(cur, system_id="S", sigma_pix=0.006)])
+    good = Table(rows=[dict(cur, system_id="S")])
+    rows, mism = run.pick_reuse("S", cur, [(psf, bad), (psf, good)])
+    assert rows is not None and not mism  # a later source accepted: no refusal
+    assert rows[0]["status"] == "not detected between images"
+    rows, mism = run.pick_reuse("S", cur, [(psf, bad)])
+    assert rows is None and mism
+    nocol = Table(rows=[{k: v for k, v in dict(cur, system_id="S").items() if k != "zp_ab"}])
+    assert not run.reuse_ok(nocol[0], cur)  # missing input column: mismatch, recompute
