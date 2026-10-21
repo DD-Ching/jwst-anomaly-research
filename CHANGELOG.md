@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: Abell S1063 D-035 revisit (in progress)
+- Plan: CATS v4.1 maps via a Mozilla (certifi) trust store, which carries the emSign root the cloud bundle lacks; `validate` / `images` with the Chan+2020 list.
+
 ## 2026-10-21: Abell S1063 multiple-image list ready for the D-035 revisit (Chan+2020, VizieR)
 - **Correction of the 18:08Z entry:** a published list with MUSE redshifts is on VizieR, `J/ApJ/888/35` (Chan+2020;
   already in SOURCES.md since 2026-10-16). Written as `results/lens_consistency/abells1063_images/chan20_images.ecsv`
