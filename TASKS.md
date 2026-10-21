@@ -44,7 +44,11 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   reliability). S1h done (2026-10-21): seeds 24–26 per ordinary model reproduce the common optima (P 0.94588, U
   0.89229); the isolated bests (P 0.9476, U 0.9135) stay, so the seeds still disagree (1.75e-3, 0.0212 > 2e-4):
   tool/optimization undetermined, R1 undetermined. Extra-seed route closed. Open, on the owner's go: a search method
-  with a global-coverage diagnostic (e.g. nested sampling on the same score) or GW data-analysis advice.
+  with a global-coverage diagnostic (e.g. nested sampling on the same score) or GW data-analysis advice. S1i done
+  (2026-10-21): dynesty nested sampling passes U validation (V7, new V10) and, with the S1e polish, both R1 runs beat the old U best
+  (0.9146, 0.9151 vs 0.9135; verified), in a different region, disagreeing by 5.6e-4; U optimum still not
+  established, R1 undetermined. Open, on the owner's go: P with the same method needs a validated interpolated lens
+  factor first (exact factor about 1 s per call; estimated 12.5–20 CPU-h plus that check).
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet
   published; waiting for the DR4 release documentation) (authorized 2026-10-14 by S0-2026-10-14): state file

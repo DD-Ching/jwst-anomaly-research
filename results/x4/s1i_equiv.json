@@ -1,0 +1,81 @@
+{
+ "label": "derived; S1i adapter equivalence (R1 target, pad 32 search score)",
+ "points": {
+  "s1f_seed23_best": {
+   "objective": 0.08648944754139232,
+   "FF": 0.9135105524586077,
+   "loglike": -33.09969410935387,
+   "loglike_from_FF": -33.09969410935387,
+   "inside_box": true
+  },
+  "v7_truth": {
+   "objective": 0.35373213782818325,
+   "FF": 0.6462678621718168,
+   "loglike": -116.46757006477392,
+   "loglike_from_FF": -116.46757006477392,
+   "inside_box": true
+  },
+  "q15_spins099_inc0": {
+   "objective": 0.7470944914412676,
+   "FF": 0.2529055085587324,
+   "loglike": -187.2077607481298,
+   "loglike_from_FF": -187.2077607481298,
+   "inside_box": true
+  },
+  "mc_low_inc_pi": {
+   "objective": 0.9014158172640239,
+   "FF": 0.09858418273597613,
+   "loglike": -198.05623178285595,
+   "loglike_from_FF": -198.05623178285595,
+   "inside_box": true
+  },
+  "mc_high_spins_tilted": {
+   "objective": 0.8005716729039009,
+   "FF": 0.19942832709609914,
+   "loglike": -192.04566847033027,
+   "loglike_from_FF": -192.04566847033027,
+   "inside_box": true
+  },
+  "random0": {
+   "objective": 0.7367356611991084,
+   "FF": 0.2632643388008916,
+   "loglike": -186.13837758314585,
+   "loglike_from_FF": -186.13837758314585,
+   "inside_box": true
+  },
+  "random1": {
+   "objective": 0.8949282723966081,
+   "FF": 0.1050717276033919,
+   "loglike": -197.7919864116877,
+   "loglike_from_FF": -197.7919864116877,
+   "inside_box": true
+  },
+  "random2": {
+   "objective": 0.9051760137634698,
+   "FF": 0.09482398623653021,
+   "loglike": -198.20168232684287,
+   "loglike_from_FF": -198.20168232684287,
+   "inside_box": true
+  },
+  "random3": {
+   "objective": 0.8271017124129809,
+   "FF": 0.17289828758701908,
+   "loglike": -194.02123642989528,
+   "loglike_from_FF": -194.02123642989528,
+   "inside_box": true
+  },
+  "random4": {
+   "objective": 0.8584936959842702,
+   "FF": 0.14150630401572983,
+   "loglike": -195.99519318476158,
+   "loglike_from_FF": -195.99519318476158,
+   "inside_box": true
+  }
+ },
+ "max_abs_diff_loglike": 0.0,
+ "s1f_seed23_pad64_now": 0.9135105524586078,
+ "s1f_seed23_pad64_stored": 0.9135105524586078,
+ "prior_inside_box": true,
+ "loglike_strictly_increasing": true,
+ "rho": 20.0
+}
