@@ -122,6 +122,56 @@
    "explained_model_dependent": 12
   },
   "n_rows": 34,
+  "comparison_cats_only": [
+   {
+    "system": "3",
+    "radec": [
+     109.393233,
+     37.747986
+    ],
+    "pinned_combined": "model-dependent (CATS only)"
+   },
+   {
+    "system": "19",
+    "radec": [
+     109.392674,
+     37.752049
+    ],
+    "pinned_combined": "model-dependent (CATS only)"
+   },
+   {
+    "system": "45",
+    "radec": [
+     109.384136,
+     37.743892
+    ],
+    "pinned_combined": null
+   },
+   {
+    "system": "68",
+    "radec": [
+     109.391572,
+     37.744043
+    ],
+    "pinned_combined": "model-dependent (CATS only)"
+   },
+   {
+    "system": "68",
+    "radec": [
+     109.38418,
+     37.744954
+    ],
+    "pinned_combined": "model-dependent (CATS only)"
+   },
+   {
+    "system": "71",
+    "radec": [
+     109.398568,
+     37.743334
+    ],
+    "pinned_combined": null
+   }
+  ],
   "rows": [
    {
     "system": "1",
@@ -132,7 +182,9 @@
     "forced_class": "confused",
     "combined": "both models",
     "outcome": "second_model_supported",
-    "final": "explained_step6"
+    "final": "explained_step6",
+    "step6": "",
+    "copy_sep_arcsec": 2.39
    },
    {
     "system": "1",
@@ -143,7 +195,9 @@
     "forced_class": "recovered",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 7.96
    },
    {
     "system": "1",
@@ -154,7 +208,9 @@
     "forced_class": "recovered",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 15.64
    },
    {
     "system": "1",
@@ -165,7 +221,9 @@
     "forced_class": "confused",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "",
+    "copy_sep_arcsec": 2.89
    },
    {
     "system": "1",
@@ -176,7 +234,9 @@
     "forced_class": "confused",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "",
+    "copy_sep_arcsec": 2.47
    },
    {
     "system": "1",
@@ -187,7 +247,9 @@
     "forced_class": "undetectable",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 17.65
    },
    {
     "system": "3",
@@ -198,7 +260,9 @@
     "forced_class": "recovered",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 4.68
    },
    {
     "system": "3",
@@ -209,7 +273,9 @@
     "forced_class": "confused",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "CATS-only extra image",
+    "copy_sep_arcsec": 27.84
    },
    {
     "system": "3",
@@ -220,7 +286,9 @@
     "forced_class": "confused",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "",
+    "copy_sep_arcsec": 4.79
    },
    {
     "system": "3",
@@ -231,7 +299,9 @@
     "forced_class": "confused",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "",
+    "copy_sep_arcsec": 5.56
    },
    {
     "system": "3",
@@ -242,7 +312,9 @@
     "forced_class": "undetectable",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 19.05
    },
    {
     "system": "4",
@@ -253,7 +325,9 @@
     "forced_class": "no_reference",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 3.06
    },
    {
     "system": "6",
@@ -264,7 +338,9 @@
     "forced_class": "recovered",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 3.93
    },
    {
     "system": "6",
@@ -275,7 +351,9 @@
     "forced_class": "absent",
     "combined": "both models",
     "outcome": "lensing_residual_input",
-    "final": "explained_step6"
+    "final": "explained_step6",
+    "step6": "copy of 6.3 (3.2 arcsec)",
+    "copy_sep_arcsec": 3.17
    },
    {
     "system": "12",
@@ -286,7 +364,9 @@
     "forced_class": "confused",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "",
+    "copy_sep_arcsec": 2.16
    },
    {
     "system": "12",
@@ -297,7 +377,9 @@
     "forced_class": "recovered",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 2.78
    },
    {
     "system": "13",
@@ -308,7 +390,9 @@
     "forced_class": "no_reference",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 1.56
    },
    {
     "system": "13",
@@ -319,7 +403,9 @@
     "forced_class": "no_reference",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 2.25
    },
    {
     "system": "13",
@@ -330,7 +416,9 @@
     "forced_class": "no_reference",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 1.79
    },
    {
     "system": "14",
@@ -341,7 +429,9 @@
     "forced_class": "recovered",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 3.66
    },
    {
     "system": "14",
@@ -352,7 +442,9 @@
     "forced_class": "recovered",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 2.32
    },
    {
     "system": "14",
@@ -363,7 +455,9 @@
     "forced_class": "recovered",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 1.84
    },
    {
     "system": "15",
@@ -374,7 +468,9 @@
     "forced_class": "recovered",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 4.88
    },
    {
     "system": "15",
@@ -385,7 +481,9 @@
     "forced_class": "recovered",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 1.59
    },
    {
     "system": "15",
@@ -396,7 +494,9 @@
     "forced_class": "recovered",
     "combined": "both models",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 2.48
    },
    {
     "system": "19",
@@ -407,7 +507,9 @@
     "forced_class": "inconsistent_reference",
     "combined": "catalogued image misplaced by CATS",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "copy of 19.1 (2.3 arcsec)",
+    "copy_sep_arcsec": 2.26
    },
    {
     "system": "19",
@@ -418,7 +520,9 @@
     "forced_class": "inconsistent_reference",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "CATS-only extra image",
+    "copy_sep_arcsec": 47.59
    },
    {
     "system": "19",
@@ -429,7 +533,9 @@
     "forced_class": "inconsistent_reference",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "central image below sensitivity",
+    "copy_sep_arcsec": 40.89
    },
    {
     "system": "68",
@@ -440,7 +546,9 @@
     "forced_class": "absent",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "on a critical curve, mu spread > 2x (D-036)",
+    "copy_sep_arcsec": 9.97
    },
    {
     "system": "68",
@@ -451,7 +559,9 @@
     "forced_class": "confused",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "CATS-only extra image",
+    "copy_sep_arcsec": 21.56
    },
    {
     "system": "68",
@@ -462,7 +572,9 @@
     "forced_class": "confused",
     "combined": "model-dependent (CATS only)",
     "outcome": "explained_model_dependent",
-    "final": "explained_model_dependent"
+    "final": "explained_model_dependent",
+    "step6": "CATS-only extra image",
+    "copy_sep_arcsec": 33.91
    },
    {
     "system": "68",
@@ -473,7 +585,9 @@
     "forced_class": "",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 102.71
    },
    {
     "system": "68",
@@ -484,7 +598,9 @@
     "forced_class": "undetectable",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 30.22
    },
    {
     "system": "68",
@@ -495,7 +611,9 @@
     "forced_class": "",
     "combined": "model-dependent (CATS only)",
     "outcome": "no_flag",
-    "final": "no_flag"
+    "final": "no_flag",
+    "step6": "",
+    "copy_sep_arcsec": 26.59
    }
   ]
  },

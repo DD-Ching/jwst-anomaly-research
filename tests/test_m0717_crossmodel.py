@@ -48,6 +48,11 @@ def test_final():
     # a confused copy-system row without its own record
     assert mx.final("second_model_supported", "confused", "12", 109.0, 37.0) == "explained_step6"
     assert mx.final("lensing_residual_input", "absent", "99", 109.0, 37.0) == "to_vet_candidate"
+    # system 65: only its inconsistent_reference copies are covered
+    assert mx.final("lensing_residual_input", "absent", "65", 109.0, 37.0) == "to_vet_candidate"
+    assert mx.final("second_model_supported", "inconsistent_reference", "65", 109.0, 37.0) == (
+        "explained_step6"
+    )
     assert mx.final("explained_model_dependent", "absent", "3", 109.0, 37.0) == (
         "explained_model_dependent"
     )
@@ -77,8 +82,12 @@ def test_tracked_post_hoc_consistent():
     s = json.loads(SUMMARY.read_text())
     p = s["post_hoc_arcs_z"]
     assert p["models_used"] == [n for n, g in s["gates"].items() if g["secondary_arcs_z"]["passes"]]
+    frozen = {(r["system"], *r["radec"]): r for r in s["rows"]}
     counts: dict[str, int] = {}
     for r in p["rows"]:
+        models = frozen[(r["system"], *r["radec"])]["models"]
+        comb = mx.combine([models[n]["d041"] for n in p["models_used"] if n in models])
+        assert r["combined"] == comb
         assert r["outcome"] == mx.outcome(r["forced_class"], r["combined"])
         assert r["final"] == mx.final(r["outcome"], r["forced_class"], r["system"], *r["radec"])
         counts[r["final"]] = counts.get(r["final"], 0) + 1

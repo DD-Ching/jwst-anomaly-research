@@ -12,7 +12,8 @@ in `summary.json` (this directory) or in `results/lens_consistency/macs0717-cats
 | `macs0717-keeton` | 72 / 132 (0.55) | fails | 29 / 31, passes |
 | `macs0717-sharon` | 63 / 106 (0.59) | fails | 24 / 25, passes |
 
-So, as frozen, no pinned D-041 reading is used: all 159 non-`observed` rows are `untestable` under the frozen rule, and
+So, as frozen, no pinned D-041 reading is used: of the 159 non-`observed` rows, the 49 flagged ones are `untestable`
+and 110 are `no_flag`, and
 the Step 6 verdicts in `docs/fields/macs0717.md` keep their scratch-code basis. The gap between the two gates is
 consistent with the redshift source: 41 of 51 systems take z from CATS `params.txt` `z_m_limit` (D-035), a CATS-fitted
 value that need not suit another model; with catalogue redshifts the models reproduce 0.94 (Keeton) and 0.96 (Sharon) of the images. This
@@ -32,9 +33,11 @@ Both models pass the secondary gate there, so they are used (`summary.json` `pos
 are flagged.
 - `explained_model_dependent` 12, `explained_step6` 2, `no_flag` 20; **`to_vet_candidate` 0.**
 - The two second-model-supported flags: 6 (`absent`; Keeton has an extra image 2.12″ away; Sharon does not cover it) is
-  Step 6's copy of 6.3; one confused row of system 1 (both models within 3″) is a Step 6 copy-system row.
+  Step 6's copy of 6.3; one confused row of system 1 (both models within 3″) is explained by the Step 6 copy-system
+  list, and it lies 2.39″ from an unpredicted catalogued image of its system (`copy_sep_arcsec`; copy rule 5.6″).
+  The copy-system rule works per system, not per row (a limit of the frozen record).
 - **Comparison with the scratch readings:** the four Step 6 "CATS-only extra image" rows in these systems (3, the 19
-  extra, 68 ×2) read `model-dependent (CATS only)` again (`summary.json` rows). The other two (45, 71) are in systems
+  extra, 68 ×2) read `model-dependent (CATS only)` again (`post_hoc_arcs_z.comparison_cats_only`). The other two (45, 71) are in systems
   without an `arcs.txt` z and are not read post hoc.
 - **One disagreement:** Step 6 says Sharon and Keeton put a high-|μ| image 3.3″ / 1.3″ from the near-critical 68
   (−251.9) row (scratch, each model's own back-traced source). The pinned reading finds their nearest extra image
@@ -53,3 +56,9 @@ the 68 near-critical reading above.
 - 41 of 51 systems lack a redshift in `arcs.txt`; testing them needs each second model's own source redshift, which
   this run does not read.
 - Sharon v4cor's gate tests 106 of 132 catalogued images: systems with an image off its maps are skipped.
+
+## Deviations (after /code-review)
+
+- `final`'s system-65 branch now covers only `inconsistent_reference` rows (the 65 pair's copies, as PLAN.md says);
+  the first version covered every system-65 row. The system-level "has an `arcs.txt` z" flag now uses any image of
+  the system, not the last one. Neither change moves any row (same counts in `summary.json`).

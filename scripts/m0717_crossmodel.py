@@ -106,12 +106,29 @@ def final(out: str, forced_class: str, system: str, ra: float, dec: float) -> st
         return "explained_step6" if rec[4] else "to_vet_candidate"
     if forced_class == "confused" and system in COPY_SYSTEMS:
         return "explained_step6"
-    if system == "65":  # the 65 pair's copies (inconsistent_reference) and flux-ratio flags
+    if forced_class == "inconsistent_reference" and system == "65":  # the 65 pair's copies
         return "explained_step6"
     return "to_vet_candidate"
 
 
-def post_hoc_arcs_z(rows: list[dict], gates: dict, zcat: dict[str, bool]) -> dict:
+def copy_seps(pred: Table, arcs: Table) -> dict[tuple, float | None]:
+    """Per CATS row: arcsec to the nearest catalogued image of its system that no ``observed``
+    row matched (the D-041 copy rule's distance; Step 6 used 5.6 arcsec)."""
+    psys = np.asarray(pred["system"]).astype(str)
+    pclass = np.asarray(pred["image_class"]).astype(str)
+    asys = np.asarray(arcs["system"]).astype(str)
+    out = {}
+    for k in np.flatnonzero(pclass != "observed"):
+        s = psys[k]
+        matched = {str(m) for m in pred["matched_image"][(psys == s) & (pclass == "observed")]}
+        cat = arcs[(asys == s) & ~np.isin(np.asarray(arcs["image_id"]).astype(str), list(matched))]
+        d = au._sep_arcsec(cat["ra"], cat["dec"], float(pred["ra"][k]), float(pred["dec"][k]))
+        key = (s, round(float(pred["ra"][k]), 6), round(float(pred["dec"][k]), 6))
+        out[key] = _r(float(np.min(d))) if len(d) else None
+    return out
+
+
+def post_hoc_arcs_z(rows: list[dict], gates: dict, zcat: dict[str, bool], seps: dict) -> dict:
     """Post hoc (deviation from PLAN.md): the frozen rules on the systems with an ``arcs.txt``
     redshift only, with the models whose secondary gate passes there."""
     used = [n for n, g in gates.items() if g["secondary_arcs_z"]["passes"]]
@@ -125,9 +142,27 @@ def post_hoc_arcs_z(rows: list[dict], gates: dict, zcat: dict[str, bool]) -> dic
         counts[f] = counts.get(f, 0) + 1
         out_rows.append(
             {"system": r["system"], "radec": r["radec"], "forced_class": r["forced_class"]}
-            | {"combined": comb, "outcome": o, "final": f}
+            | {"combined": comb, "outcome": o, "final": f, "step6": r["step6"]}
+            | {"copy_sep_arcsec": seps.get((r["system"], *r["radec"]))}
         )
-    return {"models_used": used, "outcome": counts, "n_rows": len(out_rows), "rows": out_rows}
+    comparison = [
+        {"system": rec[0], "radec": [rec[1], rec[2]]}
+        | {
+            "pinned_combined": next(
+                (r["combined"] for r in out_rows if step6_record(r["system"], *r["radec"]) is rec),
+                None,
+            )
+        }
+        for rec in STEP6
+        if not rec[4]
+    ]
+    return {
+        "models_used": used,
+        "outcome": counts,
+        "n_rows": len(out_rows),
+        "comparison_cats_only": comparison,
+        "rows": out_rows,
+    }
 
 
 def read_row(sh: Table, ids: np.ndarray, ra: float, dec: float, cats_ids: set[str]) -> dict:
@@ -161,9 +196,10 @@ def main(argv=None) -> dict:
     _, files, par = lc.load_model("macs0717-cats")
     arcs, _ = lc.image_list("macs0717-cats", files, par)
     asys = np.asarray(arcs["system"]).astype(str)
+    zarr = np.ma.filled(np.ma.asarray(arcs["z"], float), np.nan)
     zcat = {
-        str(s): bool(np.isfinite(z) and z > 0)
-        for s, z in zip(asys, np.ma.filled(np.ma.asarray(arcs["z"], float), np.nan), strict=True)
+        str(sy): bool(np.any(np.isfinite(zarr[asys == sy]) & (zarr[asys == sy] > 0)))
+        for sy in set(asys)
     }
     systems = list(dict.fromkeys(psys[tgt]))
     rows = [
@@ -229,7 +265,7 @@ def main(argv=None) -> dict:
         row["step6"] = rec[3] if rec else ""
         row["final"] = final(row["outcome"], row["forced_class"], row["system"], *row["radec"])
         counts[row["final"]] = counts.get(row["final"], 0) + 1
-    post_hoc = post_hoc_arcs_z(rows, gates, zcat)
+    post_hoc = post_hoc_arcs_z(rows, gates, zcat, copy_seps(pred, arcs))
     comparison = [
         {
             "system": rec[0],
