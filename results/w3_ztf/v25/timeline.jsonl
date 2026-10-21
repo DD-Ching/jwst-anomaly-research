@@ -81,3 +81,7 @@
 {"area": 2347, "stage": "decision", "event": "end", "rc": 0, "seconds": 0.0, "utc": "2026-10-21T06:21:48Z"}
 {"area": 2347, "event": "verdict", "passed": true, "conditions": {"all_10_cells_ge_0.5": true, "controls_le_0.10": true, "calibration_survivors_le_5": true}, "utc": "2026-10-21T06:21:48Z"}
 {"area": 2347, "stage": "search_holdout", "event": "start", "utc": "2026-10-21T06:21:48Z"}
+{"area": 2347, "stage": "search_holdout", "event": "end", "rc": 0, "seconds": 83.4, "utc": "2026-10-21T06:23:12Z"}
+{"area": 2347, "event": "searched", "groups": 1917, "series_searched": 3826, "flagged_runs": 8, "flagged_groups": 4, "passed_groups": [], "utc": "2026-10-21T06:23:12Z"}
+{"area": 2347, "event": "cache_deleted", "utc": "2026-10-21T06:23:12Z"}
+{"event": "queue_done", "utc": "2026-10-21T06:23:12Z"}
