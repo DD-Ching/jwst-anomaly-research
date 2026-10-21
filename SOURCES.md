@@ -693,6 +693,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.4.csv.gz, 133,004,545 B,
     Last-Modified 2025-09-04, sha256 `728afcdd5ec4d164b9d816ea903e648b1d4937ae52c8a271056c9119cabf1ccf`. Per-spectrum
     files under `extractions/macs1149-v4/` returned 403 from the cloud session.
+  - DJA NIRSpec emission-line table v4.6 (accessed 2026-10-21, streamed): same path with `_v4.6`, 171,878,708 B,
+    Last-Modified 2026-09-15, sha256 `ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3`, 99,478 rows.
+    v4.5 (2026-02-23, 151,445,355 B) exists, not read.
   - CATS v4.1 `arcs.txt` (already pinned in `lensmodel.MODELS["macs1149-cats"]`).
 ### MACS0416 field run (accessed 2026-10-08; D-038)
 

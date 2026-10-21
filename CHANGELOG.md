@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: MACS1149 system 16: DJA NIRSpec v4.6 still has no grade for 16.2; not decided
+- **Why:** the 2026-10-20 spec-z check read DJA v4.4 (2025-09); v4.5 (2026-02) and v4.6 (2026-09) exist. Plan frozen
+  first (`results/lens_consistency/macs1149_s16_specz/dja_v46/PLAN.md`; grade 3 = spec-z, ASSUMPTION).
+- **Result:** v4.6 (99,478 rows, streamed) carries the 16.2 PRISM row `1208_5114276` unchanged: no grade, `z_best` −1,
+  automated `zline` 0.441 at S/N 1.3, EAZY 2.79; no row for 16.1 or CANUCS 5106117. Frozen outcome "not decided";
+  D-037 unchanged.
+- **CI fix:** `tests/test_x4_s1j.py` failed on every PR (and `main`) once `scripts/x4_s1j.py`'s frozen
+  `DEADLINE_UTC` (2026-10-21 14:05Z) passed; an autouse fixture now sets a far-future deadline in the tests. The
+  script is unchanged.
+- **Handoff:** recheck only when a DJA table newer than v4.6 appears. Other lines unchanged (X4 next step and the
+  needs-human backlog are the owner's).
+
 ## 2026-10-21: X4 S1j: the S1i U method fails a near-cap anti-aligned, q 9.35 injection (ε 6.9e-4); R1 not refined
 - **Change:** an extended Nelder–Mead polish (≤ 10,000 evaluations / 20 min, unchanged convergence rule) and two
   new spin-bound U injections. The plan was frozen first (`docs/state/units/X4.md` § S1j).

@@ -1,0 +1,68 @@
+{
+ "plan": "PLAN.md",
+ "outcome": "not decided",
+ "table": "dja_msaexp_emission_lines_v4.6.csv.gz",
+ "table_url": "https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.6.csv.gz",
+ "table_last_modified": "2026-09-15T13:01:52Z",
+ "table_bytes": 171878708,
+ "table_sha256": "ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3",
+ "accessed": "2026-10-21",
+ "n_rows": 99478,
+ "match_radius_arcsec": 0.5,
+ "spec_z_rule": "grade 3",
+ "targets": {
+  "16.1": [
+   177.40971,
+   22.387662
+  ],
+  "16.2": [
+   177.40989,
+   22.387828
+  ]
+ },
+ "rows": [
+  {
+   "match": {},
+   "file": "macs1149-v4_prism-clear_1208_5106431.spec.fits",
+   "srcid": "5106431",
+   "ra": "177.40921840",
+   "dec": "22.38769980",
+   "grating": "PRISM",
+   "filter": "CLEAR",
+   "effexptm": "948.278",
+   "nfiles": "3",
+   "root": "macs1149-v4",
+   "sn50": "1.6833178",
+   "version": "0.9.5.dev2+g80b81b4",
+   "zline": "3.1890652",
+   "z_best": "-1.0",
+   "id_phot": "14192",
+   "z_phot": "3.3916032",
+   "grade": "2",
+   "comment": ""
+  },
+  {
+   "match": {
+    "16.2": 0.045
+   },
+   "file": "macs1149-v4_prism-clear_1208_5114276.spec.fits",
+   "srcid": "5114276",
+   "ra": "177.40987750",
+   "dec": "22.38783240",
+   "grating": "PRISM",
+   "filter": "CLEAR",
+   "effexptm": "948.278",
+   "nfiles": "3",
+   "root": "macs1149-v4",
+   "sn50": "1.340891",
+   "version": "0.9.5.dev2+g80b81b4",
+   "zline": "0.44134632",
+   "z_best": "-1.0",
+   "id_phot": "14171",
+   "z_phot": "2.7885904",
+   "grade": "",
+   "comment": ""
+  }
+ ],
+ "changed_vs_v4_4": false
+}
