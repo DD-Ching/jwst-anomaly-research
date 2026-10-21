@@ -114,7 +114,6 @@ def needs_download(status: dict, key: str, d: Path, force: bool = False) -> bool
 
 
 def cmd_download(args) -> None:
-
     p = ch.Params()
     sel = Table.read(RES / "selection.ecsv")
     log = Path(args.log)
@@ -391,7 +390,6 @@ def gaia_with_retry(c: SkyCoord, radius_deg: float, tries: int = 3):
 
 def psf_one(sid, r, m, d: Path, log: Path, p: ch.Params, epp) -> tuple[list, bool]:
     """One control: wide cutout, Gaia-star ePSF, simulated stamps. Returns (rows, has_epsf)."""
-
     import w12_niq_epsf as ep
 
     c = SkyCoord(float(r["ra"]), float(r["dec"]), unit="deg")
