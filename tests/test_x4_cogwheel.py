@@ -76,15 +76,20 @@ def test_box_diff_wraps_angles():
     assert X.box_diff(a, b) == 0.5
 
 
-def test_gate_blocks_search_unless_all_checks_pass(tmp_path, capsys):
+def test_gate_blocks_search_unless_all_checks_pass(tmp_path, capsys, monkeypatch):
     p = tmp_path / "checks.json"
     assert X.gate(p) == ["no checks file"]
     p.write_text('{"F1_pass": true, "F2_pass": false, "F3_pass": false}')
     assert X.gate(p) == ["F2", "F3"]
     p.write_text('{"F1_pass": true, "F2_pass": true, "F3_pass": true}')
     assert X.gate(p) == []
-    # the committed checks fail F2 and F3, so both search commands refuse before any import
-    assert X.gate() == ["F2", "F3"]
+    # a failed gate refuses both search commands before any import or subprocess
+    monkeypatch.setattr(X, "gate", lambda path=None: ["F2", "F3"])
     assert X.main(["runs"]) == 2
     assert X.main(["one", "C1", "71"]) == 2
     assert "F2" in capsys.readouterr().err
+
+
+def test_committed_checks_fail_gate():
+    # this round's committed checks fail F2 and F3 (update when a consistent waveform/score passes)
+    assert X.gate() == ["F2", "F3"]

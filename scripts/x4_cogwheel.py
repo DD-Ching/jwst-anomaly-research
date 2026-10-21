@@ -7,7 +7,8 @@ and for scoring, never as a start.
 
   python scripts/x4_cogwheel.py checks      # -> results/x4/handoff/cogwheel_checks.json (F1-F3)
   python scripts/x4_cogwheel.py one C1 71   # one run (30-min cap applied by `runs`)
-  python scripts/x4_cogwheel.py runs        # C1 and C2 -> results/x4/handoff/cogwheel_runs.json
+  python scripts/x4_cogwheel.py runs        # gated: C1, C2 -> results/x4/handoff/<RUNS_FILE>
+(results/x4/handoff/cogwheel_runs.json is this round's exploratory record, written by hand.)
 """
 
 from __future__ import annotations
@@ -32,6 +33,9 @@ F_REF = 20.0
 Q_MAX = 15.0
 CAP_S = 30 * 60
 SEEDS = {"C1": 71, "C2": 72}
+# frozen plan; this round's exploratory attempt 2 used None (cogwheel's default 0.05)
+Q_MIN_PLAN = 1 / 15
+RUNS_FILE = "cogwheel_runs_gated.json"  # cogwheel_runs.json holds this round's exploratory record
 EPS_PASS = 5e-4
 REL_PASS = 0.1
 FF_CASE = 0.915149
@@ -284,7 +288,7 @@ def gate(path=None):
     return [f for f in ("F1", "F2", "F3") if out.get(f"{f}_pass") is not True]
 
 
-def run_one(name, seed):
+def run_one(name, seed, q_min=Q_MIN_PLAN):
     """Published workflow: Posterior.from_event (RWF aligned-spin start) then one DE refinement."""
     import cogwheel.posterior as cp
     from cogwheel.posterior import Posterior
@@ -306,8 +310,7 @@ def run_one(name, seed):
         mchirp_guess=e.MC0,
         approximant=APPROX,
         prior_class="IASPrior",
-        # deviation: the frozen q_min = 1/15 failed (C2's aligned-spin start had q 17.9, outside
-        # the prior cube); cogwheel's default q_min 0.05 (q <= 20) contains our box instead
+        prior_kwargs={} if q_min is None else {"q_min": q_min},  # None: cogwheel's default
         ref_wf_finder_kwargs={"mchirp_range": (0.4 * e.MC0, 1.6 * e.MC0), "f_ref": F_REF},
     )
     t_rwf = time.time() - t0
@@ -327,6 +330,7 @@ def run_one(name, seed):
     out = {
         "name": name,
         "seed": seed,
+        "q_min": q_min,
         "start": "cogwheel ReferenceWaveformFinder (aligned-spin XAS, (2,2)); "
         "no truth, no saved solution",
         "rwf_s": round(t_rwf, 1),
@@ -388,7 +392,7 @@ def main(argv=None) -> int:
         (OUT_DIR / f".cogwheel_{argv[1]}.json").write_text(json.dumps(r, default=float) + "\n")
         print(r["name"], r["final"]["eps"], r["de"], r["wall_s"], flush=True)
     elif cmd == "pycbc":  # PyCBC environment: the #447 check at cogwheel's start and final points
-        p = OUT_DIR / "cogwheel_runs.json"
+        p = OUT_DIR / RUNS_FILE
         runs = json.loads(p.read_text())
         for r in runs["rows"]:
             if "final" not in r:
@@ -401,6 +405,9 @@ def main(argv=None) -> int:
                 r[lab]["FF_pycbc"] = ff
                 r[lab]["pycbc_minus_ours"] = ff - r[lab]["FF_pad64"]
         p.write_text(json.dumps(runs, indent=1, default=float) + "\n")
+    elif cmd == "runs" and (OUT_DIR / RUNS_FILE).exists():
+        print(f"refused: {RUNS_FILE} exists; record a new attempt elsewhere", file=sys.stderr)
+        return 2
     elif cmd == "runs":
         procs = {
             n: subprocess.Popen([sys.executable, __file__, "one", n, str(sd)])
@@ -425,7 +432,7 @@ def main(argv=None) -> int:
             "versions": _versions(),
             "rows": rows,
         }
-        (OUT_DIR / "cogwheel_runs.json").write_text(json.dumps(out, indent=1, default=float) + "\n")
+        (OUT_DIR / RUNS_FILE).write_text(json.dumps(out, indent=1, default=float) + "\n")
     else:
         print(__doc__)
     return 0
