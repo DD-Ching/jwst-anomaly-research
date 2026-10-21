@@ -1,0 +1,160 @@
+{
+ "images": 26,
+ "macs0717-sharon": {
+  "model_sha256": "2312844fb3d9ed048cc7cd130be3f5c7da9c92b5e78f66201f39708a277e630f",
+  "rms_arcsec": 0.6392582851853762,
+  "n_solved": 25,
+  "images_outside_maps": [
+   "6.2"
+  ],
+  "maps": {
+   "kappa": {
+    "map": "4dcb81cb70a5_hlsp_frontier_model_macs0717_sharon_v4cor_kappa.fits",
+    "quantity": "kappa",
+    "z_s": null,
+    "n_points": 11571,
+    "median_rel_diff": 0.00025100623623716293,
+    "p95_rel_diff": 0.0003865605019699144,
+    "median_ratio": 1.0002508580939564,
+    "parity_agree": null
+   },
+   "mu_z2": {
+    "map": "133be386832d_hlsp_frontier_model_macs0717_sharon_v4cor_z02-magnif.fits",
+    "quantity": "mu",
+    "z_s": 2.0,
+    "n_points": 9933,
+    "median_rel_diff": 0.02373299012620626,
+    "p95_rel_diff": 0.11913378520463641,
+    "median_ratio": 1.0202191923800954,
+    "parity_agree": null
+   }
+  },
+  "gates": {
+   "G1": {
+    "median_rel_diff": {
+     "kappa": 0.00025100623623716293,
+     "mu_z2": 0.02373299012620626
+    },
+    "max": 0.05,
+    "passes": true
+   },
+   "G2": {
+    "rms_dtheta_arcsec": 0.6392582851853762,
+    "max_rms": 1.0,
+    "systems_reproduced": {
+     "1": true,
+     "3": true,
+     "4": true,
+     "6": false,
+     "12": true,
+     "13": true,
+     "14": true,
+     "19": true
+    },
+    "max_match_arcsec": 3.0,
+    "passes": false
+   },
+   "pinned_for_use": false
+  },
+  "post_hoc": {
+   "systems_outside_maps": [
+    "6"
+   ],
+   "G2_inside_footprint": {
+    "rms_dtheta_arcsec": 0.6617267819821763,
+    "max_rms": 1.0,
+    "systems_reproduced": {
+     "1": true,
+     "3": true,
+     "4": true,
+     "12": true,
+     "13": true,
+     "14": true,
+     "19": true
+    },
+    "max_match_arcsec": 3.0,
+    "passes": true
+   }
+  }
+ },
+ "macs0717-keeton": {
+  "model_sha256": "312aef50011e97250fcc6879617fb80563d856c1d8ee7fe79d58d41e8e9d54b3",
+  "rms_arcsec": 0.8534137509242753,
+  "n_solved": 26,
+  "images_outside_maps": [],
+  "maps": {
+   "kappa": {
+    "map": "2bd093da64ea_hlsp_frontier_model_macs0717_keeton_v4_kappa.fits",
+    "quantity": "kappa",
+    "z_s": null,
+    "n_points": 11578,
+    "median_rel_diff": 1.8293043706022087e-05,
+    "p95_rel_diff": 0.00011025700632884367,
+    "median_ratio": 1.0000019171134915,
+    "parity_agree": null
+   },
+   "mu_z2": {
+    "map": "26750c9f5008_hlsp_frontier_model_macs0717_keeton_v4_z02-magnif.fits",
+    "quantity": "mu",
+    "z_s": 2.0,
+    "n_points": 10308,
+    "median_rel_diff": 1.8219644088710348e-05,
+    "p95_rel_diff": 0.00014804335067160261,
+    "median_ratio": 1.0000023695703,
+    "parity_agree": null
+   }
+  },
+  "gates": {
+   "G1": {
+    "median_rel_diff": {
+     "kappa": 1.8293043706022087e-05,
+     "mu_z2": 1.8219644088710348e-05
+    },
+    "max": 0.05,
+    "passes": true
+   },
+   "G2": {
+    "rms_dtheta_arcsec": 0.8534137509242753,
+    "max_rms": 1.0,
+    "systems_reproduced": {
+     "1": true,
+     "3": true,
+     "4": true,
+     "6": true,
+     "12": true,
+     "13": true,
+     "14": true,
+     "19": true
+    },
+    "max_match_arcsec": 3.0,
+    "passes": true
+   },
+   "pinned_for_use": true
+  },
+  "post_hoc": {
+   "systems_outside_maps": [],
+   "G2_inside_footprint": {
+    "rms_dtheta_arcsec": 0.8534137509242753,
+    "max_rms": 1.0,
+    "systems_reproduced": {
+     "1": true,
+     "3": true,
+     "4": true,
+     "6": true,
+     "12": true,
+     "13": true,
+     "14": true,
+     "19": true
+    },
+    "max_match_arcsec": 3.0,
+    "passes": true
+   }
+  }
+ },
+ "macs0717-cats": {
+  "model_sha256": "1c9b912a0a0dd57f73961dd4ed61b11f4220d93362de34ec591daeaa4d2ba498",
+  "rms_arcsec": 2.76769698761482,
+  "n_solved": 26,
+  "images_outside_maps": []
+ }
+}

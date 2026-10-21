@@ -2352,6 +2352,15 @@ CATS-fitted z = 4.419.
   fitted z 1.301, not the spec-z 1.24. `results/lens_consistency/macs1149_sharon/RESULT.md`.
 - **Revisit if** a wider Sharon map release appears, or a D-037 row lies outside the footprint.
 
+**Addendum 2026-10-21 (D-041 rule with the pinned Sharon, `scripts/m1149_crossmodel.py`).**
+- **Decision.** All 16 non-`observed` CATS rows are read with the D-041 cross-model rule against `macs1149-sharon`;
+  D-037's tally (0 surviving) stands. The one frozen flag (system 16's `absent` image at the CATS-fitted z 4.419,
+  Sharon extra image 0.90″ away) is D-037's fitted-redshift case: at 4.419 Sharon reproduces only 16.2, and at the
+  adopted z 2.7 Sharon's nearest extra image is 20.2″ away (model-dependent).
+- **Evidence.** Known-case gate 38 / 39 catalogued images (rule ≥ 0.8, ASSUMPTION); all rows inside the footprint;
+  the 11 `no_reference` readings equal the scratch-Sharon ones. `results/lens_consistency/macs1149_crossmodel/RESULT.md`.
+- **Revisit if** a spectroscopic z for system 16 is published (as above), or a JWST-era MACS1149 model appears.
+
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
 **Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″
@@ -2510,6 +2519,16 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
 - **Evidence.** Abell 2744: 4 `absent` rows. Two are Bergamini-only (700.1). Two are UNCOVER fold-pair merges (3.1,
   34.1) that Bergamini places ≤ 2.7″ away on observed images. No row is unmet in both models. CHANGELOG 2026-10-14.
 - **Revisit if** a third Abell 2744 model is added, or a both-model `no_reference` row gets a reference flux.
+
+**Addendum 2026-10-21 (Sharon v4cor and Keeton v4 pinned, `scripts/m0717_models.py`).**
+- **Decision.** The scratch second models of this record are now `MODELS` entries `macs0717-keeton` (pinned for use:
+  both frozen gates pass) and `macs0717-sharon` (G2 failed as written because image 6.2 lies off the 200″ maps; used
+  only inside the map footprint, a post hoc condition as for `macs1149-sharon`). Deflection and κ sha256 are the
+  2026-10-08 SOURCES.md values; the z = 2 magnification maps are new pins.
+- **Evidence.** G1: κ / |μ(z = 2)| median relative differences 0.00002 / 0.00002 (Keeton) and 0.00025 / 0.024
+  (Sharon). G2 on the 26 Table 7 spectroscopic images: Keeton rms 0.853″, 8 / 8 systems; Sharon 0.639″, 7 / 8 (0.662″
+  on the 7 inside the maps). CATS on the same images: 2.77″. `results/lens_consistency/macs0717_models/RESULT.md`.
+- **Revisit if** a forced row lies outside Sharon's footprint, or a JWST-era MACS0717 model is released.
 
 ## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
 

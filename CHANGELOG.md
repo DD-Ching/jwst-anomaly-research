@@ -75,6 +75,51 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `data/manifests/s1_chime_dynspec.ecsv`. 0.90 GB streamed and deleted.
 - **Handoff:** S1-CHIME parked. Reopen only with real same-signal pairs to calibrate the χ² systematic, or an
   owner-approved scattering re-convolution in the twin model.
+## 2026-10-21: MACS0717 D-041 cross-model re-reading with the pinned Keeton / Sharon: gate fails at CATS-fitted z
+- **Why:** #420 handoff (replace the scratch Step 6 cross-model readings in `docs/fields/macs0717.md`). Plan frozen first
+  (`results/lens_consistency/macs0717_crossmodel/PLAN.md`; per-model known-case gate, frozen Step 6 record).
+- **Result (`RESULT.md`, `summary.json`):** frozen outcome "tool not validated": at the CATS `z_sys` Keeton reproduces
+  72 / 132 catalogued images, Sharon 63 / 106 (gate 0.8). The pre-declared secondary gate on systems with an
+  `arcs.txt` z passes (29 / 31, 24 / 25). Post hoc on those 10 systems: 34 rows, 14 flagged, 0 to vet; the scratch
+  "CATS-only" verdicts there are reproduced. One disagreement: the near-critical 68 (−251.9) row has no pinned
+  second-model image within 90″ (scratch: 1.3–3.3″); its Step 6 verdict (μ untestable) does not depend on it.
+- CATS `images` re-run reproduces Step 4's forced classes exactly; deviation: one more `observed` row (41 vs 40). Its
+  table is now tracked (`results/lens_consistency/macs0717-cats/`).
+- **Access:** archive.stsci.edu still sends an incomplete chain, and the session bundle lacks the emSign root that the
+  SOURCES.md note assumes; `curl --cacert` with the InCommon intermediate appended works (curl accepts the partial
+  chain), Python urllib does not. Maps fetched with curl into the cache, sha256 verified.
+- **New:** `scripts/m0717_crossmodel.py`, `tests/test_m0717_crossmodel.py`.
+- **Handoff:** the MACS0717 lens-consistency line has no open row. Testing the 41 `z_m_limit` systems needs each
+  second model's own source redshift (low value). Other lines unchanged: #409 and the other needs-human PRs wait on
+  the owner, #374 on a green weekly run (next scheduled Monday).
+
+## 2026-10-21: MACS0717 Sharon v4cor and Keeton v4 pinned: Keeton passes both gates; Sharon fails G2 as written (6.2 off the map)
+- **Why:** TASKS "second models as pinned `MapLensModel` entries" (MACS0717); D-041's second models were scratch code.
+  Plan frozen first (`results/lens_consistency/macs0717_models/PLAN.md`; known cases: Sharon readme Table 7, 26 images
+  of 8 spectroscopic systems).
+- **Result (`RESULT.md`, `summary.json`):** Keeton: G1 κ / μ 0.00002 / 0.00002, G2 rms 0.853″, 8 / 8 systems → pinned
+  for use. Sharon: G1 0.00025 / 0.024; G2 fails as written, 6.2 is ~101″ west of the map centre (off the 200″ maps);
+  post hoc on the 7 in-footprint systems rms 0.662″. CATS v4.1 on the same images: 2.77″. No lensing residual.
+- **Access:** archive.stsci.edu again sent an incomplete TLS chain; maps fetched with curl and the SOURCES.md AIA
+  bundle into the cache (8 × 64 MB, sha256 verified; 4 already pinned in SOURCES.md on 2026-10-08).
+- **New:** `scripts/m0717_models.py`, `tests/test_m0717_models.py`; `MODELS` `macs0717-sharon`, `macs0717-keeton`.
+- **Handoff:** next on this line, re-run the D-041 cross-model readings of the MACS0717 forced rows with the pinned
+  models (replaces the scratch readings in `docs/fields/macs0717.md` Step 6). Other lines unchanged: #409 and the other
+  needs-human PRs wait on the owner, #374 on a green weekly run.
+
+## 2026-10-21: MACS1149 D-041 cross-model rule with the pinned Sharon v4cor: gate passes; D-037 tally unchanged
+- **Why:** #417 handoff (use `macs1149-sharon` as the second model for the D-037 rows). Plan frozen first
+  (`results/lens_consistency/macs1149_crossmodel/PLAN.md`).
+- **Result (`RESULT.md`, `summary.json`):** gate 38 / 39 catalogued images reproduced (rule ≥ 0.8); 16 CATS extra rows:
+  `no_flag` 15, `lensing_residual_input` 1. The flag is system 16's `absent` image at the CATS-fitted z 4.419, where
+  Sharon reproduces only 16.2; at the adopted z 2.7 (pre-declared secondary) it is CATS-only. D-037's fitted-redshift
+  rule explains it (post hoc reading: the frozen function omitted that rule). Not a candidate.
+- The 11 `no_reference` readings equal the 2026-10-14 scratch-Sharon ones (0 / 11 differ).
+- **Access:** archive.stsci.edu still sends an incomplete TLS chain to urllib; the maps were fetched with curl and the
+  SOURCES.md AIA bundle into the cache.
+- **New:** `scripts/m1149_crossmodel.py`, `tests/test_m1149_crossmodel.py`.
+- **Handoff:** the MACS1149 lens-consistency line has no open row; it reopens only on a system 16 spec-z or a JWST-era
+  model (D-037). Other lines unchanged: #409 and the other needs-human PRs wait on the owner, #374 on a green weekly run.
 
 ## 2026-10-20: Abell 2744 system 700.1 vetting: colour test not validated; two modelled cluster members at 2.1″ and 4.4″
 - **Why:** the #413 handoff (`/vet-candidate` for 700.1: one image or two, perturber). Plan frozen first

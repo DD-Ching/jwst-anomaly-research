@@ -457,6 +457,50 @@ MACS1149_SHARON_V4COR: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: HFF Sharon & Johnson v4cor (Lenstool) and Keeton v4 (parametric) maps of MACS J0717.5+3745
+#: (readmes ``..._sharon_v4cor_readme.pdf`` and ``..._keeton_v4_readme.txt``, accessed 2026-10-21):
+#: best fit, 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second models
+#: for the D-041 MACS0717 rows (gates: ``results/lens_consistency/macs0717_models/``).
+_HFF_MACS0717 = "https://archive.stsci.edu/pub/hlsp/frontier/macs0717/models"
+_HFF_SHARON_MACS0717 = f"{_HFF_MACS0717}/sharon/v4cor/hlsp_frontier_model_macs0717_sharon_v4cor"
+_HFF_KEETON_MACS0717 = f"{_HFF_MACS0717}/keeton/v4/hlsp_frontier_model_macs0717_keeton_v4"
+MACS0717_SHARON_V4COR: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_HFF_SHARON_MACS0717}_x-arcsec-deflect.fits",
+        "ded45fa9802561f764fa3c8fd427b8eebb620155ef43760b608bf7a8e719f758",
+    ),
+    "alpha_y": (
+        f"{_HFF_SHARON_MACS0717}_y-arcsec-deflect.fits",
+        "913acb9272a63776b70c71eb6b3424f94c94f2392572c1e844ef733c3c8c68f8",
+    ),
+    "kappa_map": (
+        f"{_HFF_SHARON_MACS0717}_kappa.fits",
+        "4dcb81cb70a5b429687566b850490ee9f727cb909b6c769adbcf03927930511c",
+    ),
+    "mag_z2": (
+        f"{_HFF_SHARON_MACS0717}_z02-magnif.fits",
+        "133be386832dda060afd180c716bb644e6ee000523add666bf5ad97edfffd436",
+    ),
+}
+MACS0717_KEETON_V4: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_HFF_KEETON_MACS0717}_x-arcsec-deflect.fits",
+        "794590824dc56f12da9a261774c9488ab79a57cb792dcfebff586bd6cb078d6c",
+    ),
+    "alpha_y": (
+        f"{_HFF_KEETON_MACS0717}_y-arcsec-deflect.fits",
+        "9820902025c448a0f760facd51f107fffc2aa61ea7e6efb519d4a6c240e207c8",
+    ),
+    "kappa_map": (
+        f"{_HFF_KEETON_MACS0717}_kappa.fits",
+        "2bd093da64ea551bf49ba5026a24690ee3884d544a2b476e8ae0dce6c5b49684",
+    ),
+    "mag_z2": (
+        f"{_HFF_KEETON_MACS0717}_z02-magnif.fits",
+        "26750c9f50083de610f7ab42ba8c02ee2d45310195a54cd9f484b3fcf97f8415",
+    ),
+}
+
 #: CANUCS DR1 Lenstool maps of MACS J0417.5-1154 (Desprez, preliminary v1: 30 spectroscopic
 #: multiple-image systems; readme ``macs0417-lenstool-readme``; accessed 2026-10-16): best fit,
 #: 100 mas, 500 arcsec, D_LS/D_S = 1, deflection in arcsec (``dpl1`` x, ``dpl2`` y); 85-89 MB
