@@ -2,13 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-21: X4 S1j: the S1i U method fails a near-cap anti-aligned spin injection (ε 6.9e-4); R1 not refined
+## 2026-10-21: X4 S1j: the S1i U method fails a near-cap anti-aligned, q 9.35 injection (ε 6.9e-4); R1 not refined
 - **Change:** an extended Nelder–Mead polish (≤ 10,000 evaluations / 20 min, unchanged convergence rule) and two
   new spin-bound U injections. The plan was frozen first (`docs/state/units/X4.md` § S1j).
 - **Validation:**
-  - B1 (|χ1| = 0.99) passes, ε 6.5e-5;
-  - B2 (|χ1| 0.975, anti-aligned like R1's U fits, q 9.35) fails, ε 6.9e-4 > 5e-4. Both polishes converged at
-    once, so this is a local stall, not an unfinished polish.
+  - B1 (truth |χ1| = 0.99) passes, ε 6.5e-5, via an interior solution;
+  - B2 (|χ1| 0.975, anti-aligned like R1's U fits, q 9.35) fails, ε 6.9e-4 > 5e-4. The polish met its convergence
+    rule, but the extended polish was by construction a replay. A post-hoc review check (not stored) points to the
+    polish step scale; the cause is not isolated.
 - **As frozen:** R1 seeds 31 and 32 were not refined; the 5.6e-4 seed gap stays unattributed;
   tool/optimization stays undetermined. 3.6 CPU-h.
 

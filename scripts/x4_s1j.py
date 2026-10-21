@@ -72,10 +72,13 @@ def b_spec(name):
     return ((mc, q, s1, s2, inc, phi, psi), None), x
 
 
+_S1I_TARGET = s.target  # saved before validate_one patches s.target (review fix: no recursion)
+
+
 def target(name):
     if name in B_SEEDS:
         return e.injection_target(b_spec(name)[0])
-    return s.target(name)
+    return _S1I_TARGET(name)
 
 
 def extend(t, x0, f0):
