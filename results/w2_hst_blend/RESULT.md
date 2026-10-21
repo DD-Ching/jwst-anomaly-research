@@ -1,150 +1,201 @@
-# Line C (2026-10-21): W2 at HST resolution for blended or too-close lensed quasars — result
+# Line C (2026-10-21): W2 at HST resolution for blended or too-close lensed quasars — result (v2)
 
-Plan: `PLAN.md` (frozen, commit 2a44d9b, before any target residual). Code: `scripts/w2_hst_blend.py` (classes,
+Plan: `PLAN.md` (frozen in commit 2a44d9b, before any target residual). Code: `scripts/w2_hst_blend.py` (classes,
 coverage, select), `scripts/w2_hst_blend_chain.py` (rules), `scripts/w2_hst_blend_run.py` (download, measure,
-psf, posthoc, summary, sheet); tests `tests/test_w2_hst_blend.py`. Labels: HST pixels and catalogue values
-`observed`; fits, residuals, limits `derived`; injections and PSF-mismatch stamps `simulated`; lens predictions
-`model_prediction`; thresholds ASSUMPTIONs (`params.json`). Numbers below are in `summary.json`,
-`measurements.ecsv`, `gate.json`, `injections.ecsv`, `psf_mismatch.{ecsv,json}`, `posthoc.json`,
-`classes_summary.json` or `selection.ecsv` unless marked "not stored".
+psf, verdict, posthoc, summary, sheet). Tests: `tests/test_w2_hst_blend.py`.
 
-**Bottom line.** The control gate passes as frozen (9 of 10 known lenses show light between the images,
-efficiency 0.9, one-sided 95 % lower bound 0.61). The PSF-mismatch simulation shows the Moffat statistic can
-report "light between images" with no lens (S/N 13.0 in the one control with an empirical PSF). So, by the frozen
-rule, a target's "light" is "PSF mismatch not excluded", not "deflector seen". Of the 10 targets, 6 are "light
-between images (PSF mismatch not excluded)", 1 is "none between images" (DESJ0405-3308), and 3 are undecided.
-No system is a dark-lens candidate. The one "none" has a compact residual at the images' centroid in a post hoc
-check (S/N 30.7), which an ordinary faint lens explains.
+**Labels.**
+- Data: HST pixels and catalogue values are `observed`. Fits, residuals and limits are `derived`. Injections and
+  PSF-mismatch stamps are `simulated`. Lens magnitudes are `model_prediction`. Thresholds are ASSUMPTIONs
+  (`params.json`).
+- **[pre-registered]** marks tests frozen in `PLAN.md`.
+- **[owner decision, after freezing]** marks the owner's rules of 2026-10-21, applied after the plan was frozen.
+- **[post hoc]** marks diagnostics that are not in the plan. They are never used as rules.
 
-## 1. Class membership and selection (`derived`)
-- The D-056 chain was rebuilt for the 444 galaxy-scale quasar and radio systems, 343 of them covered. It
-  gives the same class counts as D-056: quasar blended 242, too close 65 (the 307), radio 1 and 1
-  (`classes_summary.json`). Cost: about 1 min and 28 MB of Data Lab and catalogue downloads (`downloads.log`;
-  not stored in the repo). The Faber–Jackson calibration did not need rebuilding.
-- HST coverage comes from one MAST CAOM TAP query per filter (the TAP rejects OR-ed geometry, and the position
-  services take about 6 s per object; not stored). 89 of the 307 lie in F814W or F160W imaging; 81 lie in F814W
-  ACS/WFC or WFC3/UVIS imaging (`hst_coverage.ecsv`).
-- Selection, frozen in `PLAN.md` §2:
-  - 10 targets with no catalogued lens z, the deepest F814W first;
-  - 10 same-programme controls with a catalogued lens z.
-  None of the 20 has a catalogued θ_E, so the pair check is "unchecked" for all 20.
+**Sources of numbers.** Every number comes from `summary.json`, `gate.json`, `measurements.ecsv`, `injections.ecsv`,
+`psf_mismatch.{ecsv,json}`, `verdict.json`, `selection_diff.ecsv`, `classes_summary.json`, `download_status.json`
+or `posthoc.json`. The v1 versions carry a `_v1` suffix. Anything else is marked "not stored".
 
-## 2. Controls and gate (PLAN §4.1)
+## Verdict
+
+**Method validation FAILED** (`verdict.json`).
+
+- (a) **Recovery on known ordinary lenses [pre-registered gate].** After the fix, 9 of 10 controls show light
+  between the images. The efficiency is 0.9 (one-sided 95 % lower bound 0.61), so the gate passes as frozen.
+- (b) **False positive on negative controls [pre-registered PSF-mismatch test].** Only one negative control could
+  be built: a stamp with no lens light, whose images were made with an empirical PSF, for SDSSJ0806+2006. Through
+  the Moffat chain it gives **S/N 13.0**, which is ≥ the frozen 5σ threshold. The same stamp made with Moffat images
+  gives −0.3. Only 1 of the 5 controls tried had the ≥ 3 Gaia stars that an empirical PSF needs.
+- **[owner decision, after freezing].** A negative control that reaches the detection threshold through PSF
+  mismatch alone fails the validation. This is stricter than the frozen wording "PSF mismatch not excluded". As a
+  result:
+  - the target residuals are **not interpreted**;
+  - they are reported only as stored measurements, with the status "not interpreted (method validation failed)";
+  - no dark-lens candidate list is made;
+  - no second PSF method was added and no threshold was changed.
+- **Gap (named; the line stops here).** A per-image PSF matched to the drizzled HAP-MVM products, or a joint
+  lens-light plus point-source model, is needed before this test can decide anything. See §6.
+
+## 1. Implementation fix v1 → v2: F814W depth counted each exposure once (coordinator review)
+- **The error.** v1 summed `t_exptime` over every contained level-3 CAOM row. HST level 3 holds overlapping
+  products of the same exposures: HAP-MVM skycells (every visit, repeated in each overlapping skycell), HAP-SVM
+  visits and pipeline association products. In all 23 systems involved, v1 over-counted the depth by factors of 1.9 to
+  7.0 (`selection_diff.ecsv`).
+- **The fix.** `visit_exposure` counts each distinct visit (ipppss, instrument) once. It takes the visit's SVM
+  exposure, or else the sum of its pipeline products, and never counts MVM. It has a unit test. This is an
+  implementation fix, not a re-tuning: the 1000 s threshold, the order and the caps are as frozen.
+- **What changed** (`selection_v1.ecsv` → `selection.ecsv`, `selection_diff.ecsv`):
+
+| | v1 | v2 |
+|---|---|---|
+| targets ≥ 1000 s | 10 | 7. J0203+1612, J2257+2349 and J0146-1133 drop out: each has one 674 s visit (17308), counted as 4044–4718 s in v1 |
+| controls | 10 | 10. SDSSJ1620+1203, WGD2038-4008 and J1042+1641 drop out: they still pass 1000 s but fall behind the cap of 10 in the new order. SDSSJ0248+1913, 2M1310-1714 and SDSSJ1330+1810 come in |
+| example depths | SDSSJ0246-0825 67232 s; HS2209+1914 28476 s | 21648 s; 14238 s |
+| gate (pre-registered) | 9/10 = 0.9, passed | 9/10 = 0.9, passed |
+| negative control (pre-registered) | S/N 13.0 (SDSSJ0806+2006) | S/N 13.0 (the same stamp; see below) |
+| target interpretation | frozen wording: 6 "light (PSF mismatch not excluded)", 1 "none", 3 undecided | not interpreted (owner decision) |
+
+- **Re-run.** The download, the controls with injections, the PSF test in the v2 order, the targets, the verdict,
+  the summary and the sheets were all re-run.
+- **Unchanged inputs.** The 7 controls and 6 targets that are in both versions give identical measurements:
+  positions, amplitudes, S/N and limits (checked in session; values in `measurements_v1.ecsv` and
+  `measurements.ecsv`).
+- **PSF test reuse.** The v2 order tries the same first four controls as v1: SDSSJ0246-0825, HE0047-1756,
+  WG0214-2105 and SDSSJ0806+2006, with star counts 0, 1, 1 and 5. Their rows were reused from
+  `psf_mismatch_v1.ecsv` (same cutouts, code and measurements), marked as `rows_reused_from_v1`. The fifth try is
+  new: SDSSJ0248+1913, with 1 star, downloaded.
+
+## 2. Class membership and coverage (`derived`)
+- **Class rebuild.** The D-056 chain was rebuilt for the 444 galaxy-scale quasar and radio systems (343 of them
+  covered). It gives the same class counts as D-056: quasar blended 242, too close 65 (the 307), radio 1 and 1
+  (`classes_summary.json`).
+- **Coverage.** One MAST CAOM TAP query was made per filter. 81 of the 307 lie in F814W ACS/WFC or WFC3/UVIS
+  imaging (`hst_coverage.ecsv`). None of the selected systems has a catalogued θ_E, so the pair check is
+  "unchecked" for all of them.
+- **Lens redshift is not lens presence.** "No catalogued lens z", the target criterion, does not mean "no lens".
+  DESJ0405-3308, a target, has a published deflector (see §5).
+
+## 3. Controls [pre-registered] (`gate.json`, `measurements.ecsv`, `contact_sheet_controls.jpg`)
 | control | N img | max sep (″) | S/N | status | m_lim r_eff 0.3″ |
 |---|---|---|---|---|---|
-| SDSSJ0246-0825 | 3 | 2.24 | −3.5 | none between images | 21 |
-| HE0047-1756 | 2 | 1.43 | 134.3 | light | 22 |
-| SDSSJ0806+2006 | 2 | 1.49 | 95.4 | light | 24 |
-| WG0214-2105 | 4 | 1.85 | 42.5 | light | 23 |
-| SDSSJ1620+1203 | 2 | 2.82 | 27.2 | light | 21 |
-| WGD2038-4008 | 4 | 2.87 | 57.7 | light | 20 |
-| J1042+1641 | 4 | 1.68 | 35.4 | light | 23 |
-| WISEJ0259-1635 | 4 | 1.58 | 28.6 | light | 23 |
-| DESJ0408-5354 | 4 | 4.19 | 92.7 | light | 23 |
-| SDSSJ1251+2935 | 3 | 1.88 | 52.9 | light | 21 |
+| SDSSJ0246-0825 | 3 | 2.24 | −3.5 | not detected between images | 21 |
+| HE0047-1756 | 2 | 1.43 | 134.3 | light between images | 22 |
+| WG0214-2105 | 4 | 1.85 | 42.5 | light between images | 23 |
+| SDSSJ0806+2006 | 2 | 1.49 | 95.4 | light between images | 24 |
+| SDSSJ0248+1913 | 4 | 1.68 | 8.2 | light between images | 21 |
+| WISEJ0259-1635 | 4 | 1.58 | 28.6 | light between images | 23 |
+| DESJ0408-5354 | 4 | 4.19 | 92.7 | light between images | 23 |
+| SDSSJ1251+2935 | 3 | 1.88 | 52.9 | light between images | 21 |
+| 2M1310-1714 | 2 | 5.02 | 208.5 | light between images | 22 |
+| SDSSJ1330+1810 | 4 | 1.72 | 112.3 | light between images | 22 |
 
-- **Gate: passed**, n_light = 9 of n_decided = 10. The efficiency is 0.9, exactly at the threshold; the one-sided
-  95 % Clopper–Pearson lower bound is 0.61.
-- The miss, SDSSJ0246-0825: the image set holds three point sources (F814W 16.94, 18.09 and 20.55). The largest
-  separation is 2.24″, against the LS pair's 1.10″. On the contact sheet the third source lies away from the bright
-  pair, so it is probably an unrelated point source taken as an image. That enlarges the aperture, and the residual
-  is dominated by over-subtracted wings (raw S/N −25.3). The fitted Moffat α sits on its lower bound (1.2). This is
-  an eye reading of `contact_sheet_controls.jpg`; the rule was not changed.
-- In the other nine the contact sheet shows an extended residual between the images.
+- **SDSSJ0246-0825.** On the sheet, the third "image" lies away from the bright pair. It is probably an
+  unrelated point source (eye reading); the residual is dominated by over-subtracted wings (raw S/N −25.3).
+- **SDSSJ0248+1913.** It passes at S/N 8.2 on a noisy residual.
+- **2M1310-1714.** Its two point sources are 5.02″ apart, and a bright galaxy sits at the edge of the fit stamp
+  (eye reading).
+- **Fit bounds.** The fitted Moffat α is at its lower bound in 4 of 16 fits.
+- **Gate caveat.** Since (b) shows that PSF mismatch alone can reach the threshold, the gate's 9/10 does not show
+  that lens light is what the chain measures.
 
-## 3. Injections through the whole chain (PLAN §4.2, `simulated`)
-- **Grid.** Sérsic n = 4 lens, convolved with the fitted Moffat. Recovered over the 10 controls (`summary.json`):
+## 4. Injections and losses [pre-registered] (`injections.ecsv`, `summary.json`; `simulated`)
 
-  | r_eff | F814W 19 | 20 | 21 | 22 | 23 | 24 | 25 |
-  |---|---|---|---|---|---|---|---|
-  | 0.3″ | 10 | 10 | 9 | 6 | 5 | 1 | 0 |
-  | 0.6″ | 10 | 10 | 9 | 6 | 4 | 0 | 0 |
+Whole-chain injections into the 10 controls (Sérsic n = 4, convolved with the fitted Moffat). Recovered of 10:
 
-  Per-control m_lim(0.3″) runs from 20 to 24, median 22.5.
-- **Blending loss.** The recovered fraction of the injected flux has a median of 0.78 (p10–p90 0.58–0.98) at
-  0.3″ and 0.58 (0.43–0.85) at 0.6″. The rest falls outside the aperture or goes into the point-source fits and the
-  halo correction. In the 7 decided targets the medians are 0.75 and 0.54.
-- **PSF mismatch** (`psf_mismatch.{ecsv,json}`):
-  - Of the 5 controls tried (2200-px cutouts), only SDSSJ0806+2006 has ≥ 3 usable Gaia stars (5). The others had
-    0, 1, 1 and 2.
-  - Its images were rebuilt with the empirical PSF, with no lens, and measured by the Moffat chain. The result is
-    "light between images" at S/N 13.0. The same stamp made with Moffat images gives −0.3.
-  - With the empirical PSF, the injected lens is still recovered to F814W 24 at both r_eff, as in the Moffat
-    reference. Its S/N is lower, though: at F814W 19 and r_eff 0.3″ it is 688, against 1282 for the reference.
-  - **Frozen rule triggered:** `psf_mismatch_not_excluded` = true. A false positive from PSF mismatch alone
-    means the control gate cannot by itself show that lens light is what the chain measures.
-- **Dimming or extinction** (`measurements.ecsv`, Δ = m_lim(0.3″) − predicted lens F814W):
-  - controls: Δ_typ from 0.31 to 3.96 mag, Δ_faint from −1.45 to 2.20 mag;
-  - Δ_faint < 0 means a 2-rms under-luminous ordinary lens (F814W − z = 0.6) is fainter than the injection limit.
-    That holds for 3 of 10 controls (SDSSJ0246-0825, HE0047-1756, SDSSJ1251+2935).
-  - No second band: F160W is outside this unit.
-
-## 4. Targets (PLAN §4.3; the gate passed)
-| target | N img | max sep (″) | S/N | frozen outcome | m_lim 0.3″ | Δ_typ / Δ_faint | post hoc S/N ÷ scaled FP |
+| r_eff | F814W 19 | 20 | 21 | 22 | 23 | 24 | 25 |
 |---|---|---|---|---|---|---|---|
-| HS2209+1914 | 2 | 1.04 | 32.8 | light between images (PSF mismatch not excluded) | 22 | 0.25 / −1.51 | 0.15 |
-| J1817+2729 | 4 | 1.80 | 83.9 | light between images (PSF mismatch not excluded) | 23 | 2.44 / 0.68 | 4.1 |
-| J0203+1612 | 3 | 2.88 | 50.3 | light between images (PSF mismatch not excluded) | 22 | 2.46 / 0.70 | 32.9 |
-| DESJ0405-3308 | 4 | 1.41 | 0.5 | none between images | 23 | 1.91 / 0.15 | — |
-| J0530-3730 | 3 | 1.04 | −59.0 | undecided: fit inconclusive (over-subtraction) | — | — | — |
-| J1537-3010 | 4 | 3.29 | 299.9 | light between images (PSF mismatch not excluded) | 24 | 4.75 / 2.99 | 13.9 |
-| PSJ1606-2333 | 4 | 1.73 | 41.3 | light between images (PSF mismatch not excluded) | 23 | 2.35 / 0.59 | 0.76 |
-| J2257+2349 | 2 | 1.69 | 171.5 | light between images (PSF mismatch not excluded) | 21 | 0.30 / −1.46 | 30.0 |
-| J0146-1133 | 1 | — | — | undecided: unresolved (< 2 point sources within 3″) | — | — | — |
-| DESJ0407-5006 | — | — | — | undecided: no HAP cutout ("Missing HAP files") | — | — | — |
+| 0.3″ | 10 | 10 | 10 | 7 | 4 | 1 | 0 |
+| 0.6″ | 10 | 10 | 10 | 6 | 3 | 0 | 0 |
 
-- **Post hoc diagnostic 1** (`posthoc.json`; not a frozen rule).
-  - The S/N 13.0 false positive is scaled to each system by total image flux and aperture error. This assumes the
-    same fractional mismatch, which is untested across instruments and visits.
-  - Four "light" targets exceed the scaled false positive: J0203+1612 ×32.9, J2257+2349 ×30.0, J1537-3010 ×13.9 and
-    J1817+2729 ×4.1. On the contact sheet these four show an extended residual galaxy between the images.
-  - HS2209+1914 (×0.15) and PSJ1606-2333 (×0.76) do not. HS2209+1914's "light" is the halo correction turning a
-    raw S/N of −81.1 positive, with α on its bound.
-  - Among controls, 8 of 9 detections exceed the scaled level. The exception is WISEJ0259-1635 (×0.56), a known
-    lens. So this scaling cannot decide a system either.
-- **Post hoc diagnostic 2** (`posthoc.json`). DESJ0405-3308, the only "none", has a residual of S/N 30.7 in a 0.2″
-  circle at the images' centroid, with F814W 24.0 inside the circle. The contact sheet shows a compact source
-  there. In the frozen aperture, the negative halo residuals of the four bright images cancel it: α is at its bound
-  and the raw S/N is −3.4.
-  - The ordinary reading is a faint, compact lens galaxy that the frozen statistic misses: model limits (PSF wings),
-    depth (Δ_faint only 0.15 mag) and blending.
-  - It is not a dark-lens candidate. The frozen route is still `/vet-candidate` (literature lens light, lens z),
-    which was not run in this unit.
-- **Undecided.** J0530-3730: the halos are over-subtracted; the brightest pair is 16.7 and 17.3 mag. J0146-1133: one
-  point source within 3″. DESJ0407-5006: has CAOM F814W, but Hapcut has no HAP product.
+- **Limits.** Per-control m_lim(0.3″) runs from 21 to 24, median 22.0. In v1 it ran from 20 to 24, median 22.5.
+- **Blending loss.** The recovered fraction of the injected flux has a median of 0.81 (p10–p90 0.62–0.93) at 0.3″
+  and 0.63 (0.47–0.71) at 0.6″.
+- **PSF mismatch** (`psf_mismatch.{ecsv,json}`).
+  - The no-lens stamp gives S/N 13.0 with the empirical PSF and −0.3 with Moffat images. These are the negative
+    controls of the verdict.
+  - Injected lenses are recovered to F814W 24 with both PSFs. At F814W 19 and r_eff 0.3″ the S/N is 688 with the
+    empirical PSF, against 1282 with Moffat images.
+- **Dimming / extinction.** Δ = m_lim(0.3″) minus the predicted ordinary lens magnitude (`measurements.ecsv`).
+  - Δ_typ runs from 0.29 to 4.74 mag; Δ_faint from −1.47 to 2.98 mag.
+  - Δ_faint < 0 means a 2-rms under-luminous lens would be fainter than the limit. That holds for 4 of 10
+    controls: SDSSJ0246-0825, HE0047-1756, SDSSJ0248+1913, SDSSJ1251+2935.
+- **Second band.** None; F160W is outside this unit.
 
-## 5. What this answers, and what it does not
-- **Answered: can PSF-subtracted HST models of the D-056 blended or too-close quasars reach the D-060 efficiency on
-  known lenses?** Yes, but only just: 0.9 exactly, with a 95 % lower bound of 0.61, on 10 same-programme
-  controls. The run also shows that the Moffat N-image statistic is not specific: PSF mismatch alone gave S/N 13 in
-  the one simulated control with an empirical PSF.
-  - So "light between images" does not decide a deflector, and none of the 6 "light" targets is counted as
-    "deflector seen".
-  - None of the 10 targets is a dark-lens candidate. The one "none" has a post hoc compact central residual.
-- **Not answered.** Whether any of the 307 lacks a lens galaxy. This needs a statistic that separates lens light
-  from PSF mismatch, which in turn needs the following.
-  - **PSF:** a PSF per image matched to the drizzled HAP-MVM product. Reuse candidates are STScI's empirical PSF
-    libraries for ACS/WFC and WFC3/UVIS (via photutils) and the `w12_niq_epsf` star stack, which here had stars
-    in 1 of 5 fields.
-  - **Joint model:** a joint lens-light plus point-source model, e.g. lenstronomy with PSF iteration.
-  - **Cost:** both need new packages (photutils and lenstronomy are not installed). The lenstronomy cost is about
-    minutes of CPU per system (not measured). Per the authorization, they were not built here.
+## 5. Targets: stored measurements, not interpreted [owner decision, after freezing]
+| target | status | N img | max sep (″) | stored S/N | stored m_lim 0.3″ |
+|---|---|---|---|---|---|
+| HS2209+1914 | not interpreted (method validation failed) | 2 | 1.04 | 32.8 | 22 |
+| DESJ0405-3308 | not interpreted (method validation failed) | 4 | 1.41 | 0.5 | 23 |
+| DESJ0407-5006 | not interpreted (method validation failed); no HAP cutout | — | — | — | — |
+| J0530-3730 | not interpreted (method validation failed) | 3 | 1.04 | −59.0 | — |
+| J1537-3010 | not interpreted (method validation failed) | 4 | 3.29 | 299.9 | 24 |
+| PSJ1606-2333 | not interpreted (method validation failed) | 4 | 1.73 | 41.3 | 23 |
+| J1817+2729 | not interpreted (method validation failed) | 4 | 1.80 | 83.9 | 23 |
 
-## 6. Deviations and implementation notes
-- **Deviation (noise).** The "MAD × correlation" term of the per-pixel noise uses the pixel MAD of the 250-px
-  cutout, not the MAD of the fit residual (`noise_function`). The other term of the max, the empirical
-  sky-aperture scatter, is as in D-064.
-- **Deviation (outputs).** There are two contact sheets, `contact_sheet_controls.jpg` and
-  `contact_sheet_targets.jpg`, not one `contact_sheet.jpg`. `summary.json`, `cpu_targets.json` and `posthoc.json`
-  were added.
-- **Post hoc.** Everything in `posthoc.json` (scaled false positive, 0.2″ centre aperture) is post hoc.
-- **Order of runs.** Controls first ran without injections (gate only), then again with injections; the statuses
-  were identical. The injection Sérsic is 5 × 5 subsampled and PSF-convolved, whereas D-064 used an unconvolved
-  pixel-centre Sérsic. This was found during the offline tests, before any data were run: an unconvolved n = 4 cusp
-  is taken as a point source.
-- **Fit bounds.** The fitted Moffat α hits its lower bound (1.2) in 5 of 18 fits.
-- **Downloads:** 1,935,377,411 bytes in 176 files (`summary.json`). The 2200-px wide cutouts for the PSF test took
-  1,745,375,040 bytes in 36 files, because Hapcut returns every filter and the combined-skycell products. Raw
-  files were deleted after use; the log is in the scratchpad (`w2-hst/downloads.log`).
-- **CPU:** controls with injections 43.8 s (`gate.json`); targets with injections 27.4 s (`cpu_targets.json`). The
-  PSF stage was not stored (about 6 min wall clock, mostly download).
+- **What is stored.** The chain's own status strings are kept, uninterpreted, in the column
+  `chain_output_uninterpreted`. No target is read as having, or lacking, lens light. No dark-lens candidate list is
+  made.
+- **DESJ0405-3308 [post hoc literature check by the coordinator].** It has a published deflector: a photometric
+  z_d ∼ 0.3 from Gilman et al. 2020a (MNRAS 491, 6077), as quoted in Nierenberg et al. 2023 (arXiv:2309.10101, §3),
+  accessed 2026-10-21.
+  - The chain output for it is "**not detected** between images" (v1: "none between images"). The chain did not
+    detect the light of a known lens.
+  - This is evidence about the tool. It says nothing about whether the lens galaxy exists.
+  - It also shows that "no catalogued lens z" ≠ "no lens".
+- **DESJ0407-5006.** Both requests to Hapcut, in v1 and v2, got an explicit no-data answer: astroquery
+  `NoResultsWarning: Missing HAP files for input target. Cutout not performed.`.
+  - v2: recorded in `download_status.json`, status "no HAP product".
+  - v1: the same warning, followed by "0 files", is in the session's stdout log (scratchpad `w2-hst/download.log`;
+    not stored in the repo).
+  - Neither was a failed request.
+
+## 6. Post hoc diagnostics [post hoc] (not used to interpret targets)
+- `posthoc.json` (v2, controls only) and `posthoc_v1.json` (v1, controls and targets) hold two diagnostics: the
+  flux-scaled PSF-mismatch false positive and a 0.2″ centre-aperture residual.
+- The scaling uses one reference system for all three quantities (the system with the largest no-lens S/N). With
+  one ePSF system, its numbers are unchanged from v1. For example, SDSSJ0806+2006 has a reference S/N of 13.0, and
+  HE0047-1756 a scaled value of 57.2 in both versions.
+- These diagnostics are stored only. **They are not used to interpret any target.** The v1 RESULT's readings of
+  targets as "light" or "extended lens" are withdrawn.
+
+## 7. Review fixes (coordinator `/code-review`, 2026-10-21)
+1. **Depth double counting:** fixed (§1).
+2. **Download errors:** `hapcut_with_retry` now separates "download failed" (retried, then fails loudly; status
+   "download failed") from an explicit no-data answer ("no HAP product"). The status is in `download_status.json`.
+3. **`measure --only`:** it now replaces only the systems it re-measures and recomputes the gate on the full
+   control set. `--only` was not used in any committed run, so no result is affected.
+4. **Post hoc reference:** the false-positive scaling uses one reference system for all three quantities. With one
+   ePSF system the numbers are unchanged.
+5. **`cmd_summary`:** an empty role (the gate-failed path) no longer crashes it. Tested.
+6. **Retries:** the COUNT(*) TAP check, the 2200-px Hapcut call and the Gaia query in `cmd_psf` retry with back-off
+   and fail loudly. `cmd_psf` writes partial results before any error is re-raised.
+
+## 8. Deviations, gaps and costs
+- **Deviation (noise).** The "MAD × correlation" noise term uses the pixel MAD of the cutout, not the MAD of the fit
+  residual. The empirical sky-aperture term is as in D-064.
+- **Deviation (label) [owner decision].** A sub-threshold residual reads "not detected between images" in v2. The v1
+  files say "none between images".
+- **Deviation (rule) [owner decision, after freezing].** The method-validation rule (`method_validation`,
+  `verdict.json`).
+- **Deviation (outputs).**
+  - Two contact sheets instead of one. In the target sheet only the stored S/N appears, marked "not interpreted".
+  - Files added: `summary.json`, `cpu_targets.json`, `verdict.json`, `download_status.json`,
+    `selection_diff.ecsv`, and the `_v1` copies.
+  - The PSF-test rows for the four systems common to both orders were reused (§1).
+- **Injection Sérsic.** It is 5 × 5 subsampled and PSF-convolved; D-064 used an unconvolved pixel-centre Sérsic. This
+  was fixed in the offline tests, before any data were run.
+- **Gap.**
+  - **PSF:** a per-image PSF matched to the HAP-MVM drizzle, such as STScI's empirical PSF grids for ACS/WFC and
+    WFC3/UVIS (via photutils).
+  - **Joint model:** a joint lens-light plus point-source model (lenstronomy).
+  - **Success test:** either must keep no-lens negative controls below 5σ and controls at ≥ 0.9.
+  - **Cost:** both are new dependencies (neither is installed), with minutes of CPU per system (not measured).
+    Not built, per the authorization and the owner's decision.
+- **Negative controls are scarce.** Gaia-star ePSFs found ≥ 3 stars in 1 of 5 HAP fields (88″). A library PSF or
+  an off-target stellar field would be needed for more than one negative control.
+- **Downloads:** 2,223,437,891 bytes in 269 files (`summary.json`), under the 3.5 GB cap.
+  - The 2200-px cutouts for the PSF test took 1,978,194,240 bytes (42 files).
+  - The 250-px cutouts took 141,822,720 bytes (217 files, both versions).
+  - Raw files were deleted after use; the log is in the scratchpad (`w2-hst/downloads.log`).
+- **CPU:** v2 controls with injections 37.0 s (`gate.json`); v2 targets 22.1 s (`cpu_targets.json`). v1: 43.8 s and
+  27.4 s (`gate_v1.json`, `cpu_targets_v1.json`). The PSF stage is not stored.

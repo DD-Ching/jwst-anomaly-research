@@ -1,0 +1,9 @@
+{
+  "verdict": "failed (PSF-mismatch false positive on a negative control)",
+  "validated": false,
+  "gate_efficiency": 0.9,
+  "negative_control_max_snr": 12.993760937749348,
+  "detect_sigma": 5.0,
+  "target_interpretation": "not interpreted (method validation failed)",
+  "rule": "owner decision 2026-10-21, applied after the frozen plan"
+}

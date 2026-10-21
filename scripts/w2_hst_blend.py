@@ -221,10 +221,21 @@ def cmd_coverage(args) -> None:
         t = parse_single_table(str(fn)).to_table()
         # this service flags OVERFLOW even on complete results: compare with a COUNT instead
         cq = q.replace(q[q.index("SELECT ") + 7 : q.index(" FROM")], "COUNT(*)")
-        rc = requests.post(
-            MAST_TAP, data={"REQUEST": "doQuery", "LANG": "ADQL", "QUERY": cq}, timeout=300
-        )
-        n_all = int(parse_single_table(io.BytesIO(rc.content)).to_table()[0][0])
+        n_all, err = None, ""
+        for attempt in range(4):  # same retry / status handling as the main query
+            try:
+                rc = requests.post(
+                    MAST_TAP, data={"REQUEST": "doQuery", "LANG": "ADQL", "QUERY": cq}, timeout=300
+                )
+                if rc.status_code == 200 and b'QUERY_STATUS" value="ERROR' not in rc.content:
+                    n_all = int(parse_single_table(io.BytesIO(rc.content)).to_table()[0][0])
+                    break
+                err = f"{rc.status_code} {rc.text[:300]}"
+            except (requests.RequestException, ValueError, IndexError) as e:
+                err = str(e)[:300]
+            time.sleep(10 * (attempt + 1))
+        if n_all is None:
+            raise RuntimeError(f"MAST TAP COUNT failed: {err}")
         if n_all != len(t):
             raise RuntimeError(f"{fn.name}: {len(t)} rows of {n_all} (truncated)")
         ok = np.isin(np.asarray(t["instrument_name"]).astype(str), COVERAGE_INSTRUMENTS)

@@ -61,6 +61,7 @@ def _coverage():
     return Table(
         {
             "system_id": [r[0] for r in rows],
+            "obs_id": [f"j{i:03d}aa{i:02d}0" for i in range(len(rows))],  # one visit per row
             "instrument": [r[1] for r in rows],
             "filters": [r[2] for r in rows],
             "t_exptime": [r[3] for r in rows],
@@ -94,7 +95,7 @@ def test_classify_cases():
     assert c(2, 0.5, 10, np.nan, 1.0, P) == "too compact for the core mask"
     assert c(2, 1.5, 10, 2.2, 1.0, P) == "pair mismatch"
     assert c(4, 1.5, 10, 2.2, 1.0, P) == "light between images"  # quads are not pair-checked
-    assert c(2, 1.5, 3.0, np.nan, 1.0, P) == "none between images"
+    assert c(2, 1.5, 3.0, np.nan, 1.0, P) == "not detected between images"
     assert c(2, 1.5, -6.0, np.nan, 1.0, P).startswith("fit inconclusive")
     assert c(2, 1.5, 6.0, np.nan, np.nan, P) == "noise not estimable"
     assert c(2, 1.5, 5.0, 1.6, 1.0, P) == "light between images"
@@ -148,7 +149,7 @@ def test_measure_detects_lens_and_not_empty(quad):
     img, sigma, zp, _ = _scene(lens_mag=None, quad=quad)
     base = ch.measure(img, valid, (60, 60), PIX, P, sigma, _noise_fn(sigma))
     assert base["n_img"] == (4 if quad else 2)
-    assert base["status"] == "none between images"
+    assert base["status"] == "not detected between images"
     img2, _, _, _ = _scene(lens_mag=21.0, quad=quad)
     m = ch.measure(img2, valid, (60, 60), PIX, P, sigma, _noise_fn(sigma))
     assert m["status"] == "light between images"
@@ -195,3 +196,108 @@ def test_run_helpers():
     yy, xx = np.indices((801, 801))
     num = models.Moffat2D(2.0, 400, 400, gamma=3.0, alpha=3.0)(xx, yy).sum()
     assert run.moffat_flux(2.0, 3.0, 3.0) == pytest.approx(num, rel=1e-3)
+
+
+def test_visit_exposure_counts_each_exposure_once():
+    # SDSSJ0246-0825 rows in hst_coverage.ecsv: HAP-MVM skycells, HAP-SVM visits and pipeline
+    # association products of the same exposures (v1 summed them: 67232 s)
+    rows = [
+        ("hst_skycell-p1064x06y18_wfc3_uvis_f814w_all", "WFC3/UVIS", 19360.0),
+        ("hst_skycell-p1064x06y18_acs_wfc_f814w_all", "ACS/WFC", 2288.0),
+        ("hst_skycell-p1153x06y01_acs_wfc_f814w_all", "ACS/WFC", 2288.0),
+        ("hst_skycell-p1153x06y01_wfc3_uvis_f814w_all", "WFC3/UVIS", 19360.0),
+        ("j8oi08040", "ACS/WFC", 1144.0),
+        ("hst_14254_53_wfc3_uvis_f814w_icud53", "WFC3/UVIS", 9680.0),
+        ("hst_9744_08_acs_wfc_f814w_j8oi08", "ACS/WFC", 2288.0),
+        ("j8oi08030", "ACS/WFC", 1144.0),
+        ("hst_14254_02_wfc3_uvis_f814w_icud02", "WFC3/UVIS", 9680.0),
+    ]
+    o, i, t = zip(*rows, strict=True)
+    assert ch.visit_exposure(o, i, t) == 2288.0 + 2 * 9680.0
+    # a visit with pipeline products only is summed over its associations
+    assert (
+        ch.visit_exposure(["idxo03020", "idxo03030"], ["WFC3/UVIS"] * 2, [700.0, 728.0]) == 1428.0
+    )
+    # multi-visit mosaics alone give no depth
+    assert ch.visit_exposure(["hst_skycell-p1_acs_wfc_f814w_all"], ["ACS/WFC"], [674.0]) == 0.0
+
+
+def test_merge_rows_keeps_other_systems(tmp_path):
+    import w2_hst_blend_run as run
+
+    f = tmp_path / "m.ecsv"
+    prev = [
+        {"system_id": "A", "role": "control", "status": "old"},
+        {"system_id": "B", "role": "control", "status": "keep"},
+        {"system_id": "C", "role": "control", "status": "deselected"},
+        {"system_id": "T", "role": "target", "status": "other role"},
+    ]
+    Table(rows=prev).write(f)
+    t = run.merge_rows(f, [{"system_id": "A", "role": "control", "status": "new"}], "control",
+                       {"A", "B"})  # fmt: skip
+    got = {(str(r["system_id"]), str(r["status"])) for r in t}
+    assert got == {("A", "new"), ("B", "keep"), ("T", "other role")}
+
+
+def test_role_summary_empty_role():
+    import w2_hst_blend_run as run
+
+    meas = Table(
+        rows=[{"system_id": "A", "role": "control", "status": "light between images",
+               "m_lim_reff0.3": 22.0, "max_sep_arcsec": 1.5}]
+    )  # fmt: skip
+    s = run.role_summary(meas, "target")  # the gate-failed path: no target rows
+    assert s["target_status_counts"] == {} and s["target_max_sep_range"] is None
+    assert s["target_m_lim_reff0.3"]["n"] == 0
+    assert run.role_summary(meas, "control")["control_m_lim_reff0.3"]["median"] == 22.0
+
+
+def test_hapcut_failure_is_not_no_data(monkeypatch, tmp_path):
+    import warnings
+
+    import w2_hst_blend_run as run
+    from astroquery.mast import Hapcut
+
+    monkeypatch.setattr(run.time, "sleep", lambda s: None)
+    c = run.SkyCoord(10.0, 0.0, unit="deg")
+
+    def boom(*a, **k):
+        raise ConnectionError("proxy reset")
+
+    monkeypatch.setattr(Hapcut, "download_cutouts", boom)
+    t, st, msg = run.hapcut_with_retry(c, 250, tmp_path)
+    assert t is None and st == run.FAILED and "proxy reset" in msg
+
+    def empty(*a, **k):
+        from astroquery.exceptions import NoResultsWarning
+
+        warnings.warn("Missing HAP files for input target.", NoResultsWarning, stacklevel=1)
+        return Table(names=("Local Path",), dtype=(str,))
+
+    monkeypatch.setattr(Hapcut, "download_cutouts", empty)
+    t, st, msg = run.hapcut_with_retry(c, 250, tmp_path)
+    assert st == run.NO_HAP and "Missing HAP files" in msg
+
+
+def test_fp_reference_uses_max_system():
+    import w2_hst_blend_run as run
+
+    t = Table(
+        {"system_id": ["A", "A", "B", "B"], "psf": ["epsf", "moffat", "epsf", "epsf"],
+         "inject_mag": [np.nan, np.nan, np.nan, 20.0], "resid_snr": [3.0, 50.0, 9.0, 99.0]}
+    )  # fmt: skip
+    assert run.fp_reference(t) == "B"
+
+
+def test_method_validation_owner_rule():
+    ok_gate = {"passed": True, "efficiency": 0.9}
+    v = ch.method_validation(ok_gate, {"epsf_no_lens_max_snr": 13.0}, P)
+    assert not v["validated"] and v["target_interpretation"].startswith("not interpreted")
+    assert ch.method_validation(ok_gate, {"epsf_no_lens_max_snr": 4.9}, P)["validated"]
+    assert ch.method_validation(ok_gate, {"epsf_no_lens_max_snr": None}, P)["verdict"].startswith(
+        "incomplete"
+    )
+    assert (
+        ch.method_validation({"passed": False}, {"epsf_no_lens_max_snr": 1.0}, P)["verdict"]
+        == "failed (control gate)"
+    )

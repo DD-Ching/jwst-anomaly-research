@@ -4,7 +4,7 @@
   "systems": {
     "SDSSJ0246-0825": {
       "role": "control",
-      "status": "none between images",
+      "status": "not detected between images",
       "resid_snr": -3.459564116097089,
       "fp_snr_scaled": 35.56414202318213,
       "snr_over_fp_scaled": -0.09727674897490869,
@@ -22,14 +22,6 @@
       "snr_over_fp_scaled": 2.346272735182671,
       "psf_alpha_at_bound": true
     },
-    "SDSSJ0806+2006": {
-      "role": "control",
-      "status": "light between images",
-      "resid_snr": 95.35616419811865,
-      "fp_snr_scaled": 12.993760937749347,
-      "snr_over_fp_scaled": 7.338611557881665,
-      "psf_alpha_at_bound": false
-    },
     "WG0214-2105": {
       "role": "control",
       "status": "light between images",
@@ -38,28 +30,20 @@
       "snr_over_fp_scaled": 3.9249557476749883,
       "psf_alpha_at_bound": false
     },
-    "SDSSJ1620+1203": {
+    "SDSSJ0806+2006": {
       "role": "control",
       "status": "light between images",
-      "resid_snr": 27.22195440588248,
-      "fp_snr_scaled": 2.241927703794629,
-      "snr_over_fp_scaled": 12.142208849913985,
+      "resid_snr": 95.35616419811865,
+      "fp_snr_scaled": 12.993760937749347,
+      "snr_over_fp_scaled": 7.338611557881665,
       "psf_alpha_at_bound": false
     },
-    "WGD2038-4008": {
+    "SDSSJ0248+1913": {
       "role": "control",
       "status": "light between images",
-      "resid_snr": 57.695885527365235,
-      "fp_snr_scaled": 2.3447727093588164,
-      "snr_over_fp_scaled": 24.606174106803856,
-      "psf_alpha_at_bound": true
-    },
-    "J1042+1641": {
-      "role": "control",
-      "status": "light between images",
-      "resid_snr": 35.42994372261308,
-      "fp_snr_scaled": 7.97501874993415,
-      "snr_over_fp_scaled": 4.442615727129874,
+      "resid_snr": 8.21891515902166,
+      "fp_snr_scaled": 3.1297552681625707,
+      "snr_over_fp_scaled": 2.6260568174861976,
       "psf_alpha_at_bound": false
     },
     "WISEJ0259-1635": {
@@ -86,66 +70,22 @@
       "snr_over_fp_scaled": 11.36302284497997,
       "psf_alpha_at_bound": false
     },
-    "HS2209+1914": {
-      "role": "target",
+    "2M1310-1714": {
+      "role": "control",
       "status": "light between images",
-      "resid_snr": 32.82047467614259,
-      "fp_snr_scaled": 212.29801335797933,
-      "snr_over_fp_scaled": 0.15459624024272112,
-      "psf_alpha_at_bound": true
-    },
-    "J1817+2729": {
-      "role": "target",
-      "status": "light between images",
-      "resid_snr": 83.94233762412712,
-      "fp_snr_scaled": 20.667755255220534,
-      "snr_over_fp_scaled": 4.061512079446744,
+      "resid_snr": 208.5306126863783,
+      "fp_snr_scaled": 2.147308339019332,
+      "snr_over_fp_scaled": 97.11256129225181,
       "psf_alpha_at_bound": false
     },
-    "J0203+1612": {
-      "role": "target",
+    "SDSSJ1330+1810": {
+      "role": "control",
       "status": "light between images",
-      "resid_snr": 50.30762922382512,
-      "fp_snr_scaled": 1.5298802534736469,
-      "snr_over_fp_scaled": 32.8833770549034,
-      "psf_alpha_at_bound": false
-    },
-    "DESJ0405-3308": {
-      "role": "target",
-      "status": "none between images",
-      "resid_snr": 0.4687279343903877,
-      "fp_snr_scaled": 58.85327136588636,
-      "snr_over_fp_scaled": 0.007964348004996041,
-      "psf_alpha_at_bound": true,
-      "centre_ap_arcsec": 0.2,
-      "centre_flux": 2.7928906934367834,
-      "centre_snr": 30.68212568140254,
-      "centre_mag": 24.00353657972587
-    },
-    "J1537-3010": {
-      "role": "target",
-      "status": "light between images",
-      "resid_snr": 299.85250898350745,
-      "fp_snr_scaled": 21.526070635961702,
-      "snr_over_fp_scaled": 13.929737296437668,
-      "psf_alpha_at_bound": false
-    },
-    "PSJ1606-2333": {
-      "role": "target",
-      "status": "light between images",
-      "resid_snr": 41.253869428949486,
-      "fp_snr_scaled": 54.12535750873848,
-      "snr_over_fp_scaled": 0.7621911674632189,
-      "psf_alpha_at_bound": false
-    },
-    "J2257+2349": {
-      "role": "target",
-      "status": "light between images",
-      "resid_snr": 171.47508933317167,
-      "fp_snr_scaled": 5.725005391683351,
-      "snr_over_fp_scaled": 29.951952461437248,
+      "resid_snr": 112.34887672862996,
+      "fp_snr_scaled": 6.073564936170309,
+      "snr_over_fp_scaled": 18.498011943455342,
       "psf_alpha_at_bound": false
     }
   },
-  "provenance": "derived (post hoc diagnostics, not frozen rules)"
+  "provenance": "derived; POST HOC diagnostics, not pre-registered in PLAN.md and not used to interpret targets (owner decision 2026-10-21: method validation failed)"
 }

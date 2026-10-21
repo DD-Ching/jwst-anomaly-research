@@ -11,6 +11,7 @@ Thresholds are ASSUMPTIONs (``Params``); fits and residuals are ``derived``; inj
 
 from __future__ import annotations
 
+import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -63,15 +64,48 @@ class Params:
     z_s_default: float = 2.0
 
 
-DECIDED = ("light between images", "none between images")
+DECIDED = ("light between images", "not detected between images")
 
 
 # ----------------------------------------------------------------------------- selection
+_SVM = re.compile(r"^hst_\d+_[0-9a-z]{2}_.+_([0-9a-z]{6})$")  # HAP single-visit mosaic: one visit
+_CLASSIC = re.compile(r"^([0-9a-z]{6})[0-9a-z]{3}$")  # pipeline association / exposure product
+
+
+def visit_exposure(obs_ids, instruments, exptimes) -> float:
+    """F814W depth of one system with each exposure counted once (fix of the v1 rule, which
+    summed every level-3 CAOM row and so counted the same exposures up to 3-4 times).
+
+    HST level-3 products overlap: HAP multi-visit mosaics (``hst_skycell-...``: all visits, and
+    the same visits again in every overlapping skycell), HAP single-visit mosaics
+    (``hst_<prop>_<visit>_..._<ipppss>``: one visit) and the pipeline association products
+    (``<ipppss><nnn>``: one association of a visit). The depth is the sum over distinct visits
+    (ipppss, instrument) of the SVM exposure when the visit has one, else of its pipeline products;
+    multi-visit mosaics are never counted (their visits appear as SVM or pipeline rows)."""
+    svm: dict[tuple, float] = {}
+    classic: dict[tuple, float] = {}
+    for o, ins, t in zip(obs_ids, instruments, exptimes, strict=True):
+        o, t = str(o).lower(), float(t) if np.isfinite(float(t)) else 0.0
+        if o.startswith("hst_skycell"):
+            continue
+        m = _SVM.match(o)
+        if m:
+            k = (m.group(1), str(ins))
+            svm[k] = max(svm.get(k, 0.0), t)
+            continue
+        m = _CLASSIC.match(o)
+        if m:
+            k = (m.group(1), str(ins))
+            classic[k] = classic.get(k, 0.0) + t
+    return float(sum(svm.values()) + sum(v for k, v in classic.items() if k not in svm))
+
+
 def select_systems(classes: Table, coverage: Table, p: Params) -> Table:
     """Frozen selection rule (only imaging coverage, depth and catalogued model information).
 
     Pool: D-056 quasar "blended"/"too close" systems whose position lies inside (``contains``) a
-    calibrated F814W image from ``p.instruments``, with summed F814W exposure >= ``min_t814_s``.
+    calibrated F814W image from ``p.instruments``, with F814W exposure >= ``min_t814_s``, each
+    exposure counted once (``visit_exposure``; v1 summed overlapping products, see RESULT.md).
     Targets: no catalogued lens redshift (``lens_z_known`` False); ordered by summed F814W
     exposure (deepest first), ties by ``system_id``; the first ``max_targets``.
     Controls: a catalogued lens redshift (a published deflector), F814W from a programme that
@@ -90,7 +124,11 @@ def select_systems(classes: Table, coverage: Table, p: Params) -> Table:
         if str(r["status"]) not in ("blended", "too close") or str(r["selection"]) != "quasar":
             continue
         m = sid_cov == str(r["system_id"])
-        texp = float(np.nansum(np.asarray(cov["t_exptime"], float)[m]))
+        texp = visit_exposure(
+            np.asarray(cov["obs_id"], str)[m],
+            np.asarray(cov["instrument"], str)[m],
+            np.asarray(cov["t_exptime"], float)[m],
+        )
         if texp < p.min_t814_s:
             continue
         progs = sorted({x for x in np.asarray(cov["proposal_id"], str)[m] if x not in ("", "0")})
@@ -263,7 +301,35 @@ def classify(
         return "noise not estimable"
     if not np.isfinite(snr) or snr <= -p.detect_sigma:
         return "fit inconclusive (over-subtraction)"
-    return "light between images" if snr >= p.detect_sigma else "none between images"
+    # owner decision 2026-10-21: a sub-threshold residual reads "not detected" (v1: "none")
+    return "light between images" if snr >= p.detect_sigma else "not detected between images"
+
+
+def method_validation(gate: dict, psf_summary: dict | None, p: Params) -> dict:
+    """Owner decision 2026-10-21, applied after the plan was frozen (stricter than PLAN.md's
+    "PSF mismatch not excluded" wording): the method is validated only if the control gate passed
+    AND at least one negative control (no-lens empirical-PSF stamp) exists AND every negative
+    control stays below ``detect_sigma``. Otherwise target residuals are not interpreted."""
+    fp = (psf_summary or {}).get("epsf_no_lens_max_snr")
+    if not gate.get("passed"):
+        verdict = "failed (control gate)"
+    elif fp is None or not np.isfinite(fp):
+        verdict = "incomplete (no negative control with an empirical PSF)"
+    elif fp >= p.detect_sigma:
+        verdict = "failed (PSF-mismatch false positive on a negative control)"
+    else:
+        verdict = "passed"
+    return {
+        "verdict": verdict,
+        "validated": verdict == "passed",
+        "gate_efficiency": gate.get("efficiency"),
+        "negative_control_max_snr": fp,
+        "detect_sigma": p.detect_sigma,
+        "target_interpretation": "interpreted under PLAN.md"
+        if verdict == "passed"
+        else "not interpreted (method validation failed)",
+        "rule": "owner decision 2026-10-21, applied after the frozen plan",
+    }
 
 
 def control_gate(statuses, p: Params) -> dict:

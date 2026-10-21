@@ -3,8 +3,16 @@
     "L00058"
   ],
   "wide_cutouts_tried": 5,
+  "rows_reused_from_v1": [
+    "L00031",
+    "L00005",
+    "L00023",
+    "L00058"
+  ],
   "epsf_no_lens_max_snr": 12.993760937749348,
+  "epsf_no_lens_max_snr_system": "L00058",
   "psf_mismatch_not_excluded": true,
+  "provenance": "simulated; pre-registered PSF-mismatch test with negative controls (no-lens empirical-PSF stamps), PLAN.md 4.2",
   "m_lim_L00058_epsf_reff0.3": 24.0,
   "m_lim_L00058_epsf_reff0.6": 24.0,
   "m_lim_L00058_moffat_reff0.3": 24.0,

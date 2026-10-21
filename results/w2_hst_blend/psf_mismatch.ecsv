@@ -19,6 +19,7 @@
 system_id name n_psf_stars psf reff_arcsec inject_mag status n_img resid_snr recovered
 L00031 SDSSJ0246-0825 0 "" nan nan "too few PSF stars" 0 nan False
 L00005 HE0047-1756 1 "" nan nan "too few PSF stars" 0 nan False
+L00023 WG0214-2105 1 "" nan nan "too few PSF stars" 0 nan False
 L00058 SDSSJ0806+2006 5 epsf nan nan "light between images" 2 12.993760937749348 False
 L00058 SDSSJ0806+2006 5 epsf 0.3 19.0 "light between images" 2 687.6025179630705 True
 L00058 SDSSJ0806+2006 5 epsf 0.3 20.0 "light between images" 2 281.45057435886235 True
@@ -49,5 +50,4 @@ L00058 SDSSJ0806+2006 5 moffat 0.6 22.0 "light between images" 2 59.860706672202
 L00058 SDSSJ0806+2006 5 moffat 0.6 23.0 "light between images" 2 23.667694549256012 True
 L00058 SDSSJ0806+2006 5 moffat 0.6 24.0 "light between images" 2 9.19128000652345 True
 L00058 SDSSJ0806+2006 5 moffat 0.6 25.0 "none between images" 2 3.455650194716463 False
-L00023 WG0214-2105 1 "" nan nan "too few PSF stars" 0 nan False
-L00165 SDSSJ1620+1203 2 "" nan nan "too few PSF stars" 0 nan False
+L00033 SDSSJ0248+1913 1 "" nan nan "too few PSF stars" 0 nan False
