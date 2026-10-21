@@ -32,3 +32,7 @@ on its own 132 images, D-035), per-image offsets in all three models.
 → check the transcription and the footprint first (as for MACS1149 system 9). Both models passing → next unit: the
 D-041 cross-model rule on the MACS0717 forced rows with pinned models (replacing the scratch readings in
 `docs/fields/macs0717.md`).
+
+**Note after the run (01:20Z, wording only).** The gate function is `m1149_sharon.gates` (imported by
+`scripts/m0717_models.py`, which defines no `gates` of its own); its thresholds (0.05, 1.0″, 3″) are those written
+above, and `m1149_sharon` is unchanged in this PR.

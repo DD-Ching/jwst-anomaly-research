@@ -248,8 +248,10 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
-    # z_lens 0.545 as macs0717-cats; both readmes give flat H0 70, Om 0.3 (known-case gates:
-    # results/lens_consistency/macs0717_models/RESULT.md)
+    # z_lens 0.545 as macs0717-cats; both readmes give flat H0 70, Om 0.3. Keeton passes both
+    # known-case gates; Sharon's G2 failed as written (image 6.2 off the 200" maps), so use it only
+    # inside its map footprint (post hoc; results/lens_consistency/macs0717_models/RESULT.md). No
+    # frame offset measured for either (CATS v4.1 on the same HST frame: 0.065", below 0.1").
     "macs0717-sharon": {
         "files": lensmodel.MACS0717_SHARON_V4COR,
         "kind": "maps",
