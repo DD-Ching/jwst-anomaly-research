@@ -55,7 +55,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   parametrisation or GW data-analysis advice). S1k done (2026-10-21): graded Nelder–Mead polish works where the
   search found the right region (B2 dev 7.5e-5, C2 9.2e-6), but the R1-like validation C1 fails (4.2e-3; ended at q
   4.99, polish at its cap, cause not isolated); R1 not polished; tool/optimization undetermined; no P acceleration;
-  the owner decides (spin/precession parametrisation or GW data-analysis advice).
+  the owner decides. Handoff round (2026-10-21): decision C, i.e. PyCBC's no-phase statistic reproduces our score
+  (3.1e-6), but no equivalent full-precession XPHM maximiser was found in a bounded survey; reproduction package and 3 specialist
+  questions in `results/x4/handoff/`; reopen only with a specialist recipe or such a tool; the owner decides (spin/precession parametrisation or GW data-analysis advice).
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet
   published; waiting for the DR4 release documentation) (authorized 2026-10-14 by S0-2026-10-14): state file
