@@ -97,6 +97,10 @@ fresh clone of the repository in a fresh session. Routines are a research previe
      `drive.usercontent.google.com` only if that file is needed. A blocked request fails with `403` and
      `x-deny-reason: host_not_allowed`. Add the host when a run reports one, for example a docs site such as
      `*.readthedocs.io`.
+     `archive.stsci.edu` (HFF CATS HLSPs) is reachable but its chain ends at emSign Root CA - G1, absent from the
+     cloud CA bundle (TLS error, not a 403). Keep verification on and pass a bundle holding Mozilla's roots too:
+     `cat /root/.ccr/ca-bundle.crt $(.venv/bin/python -c 'import certifi;print(certifi.where())') > <scratch>/ca.pem`,
+     then `SSL_CERT_FILE=<scratch>/ca.pem` (2026-10-21, `scripts/s1063_d035.py`).
    - **Environment variables:** none. Never put secrets here, because anyone using the environment can read them.
      A MAST token isn't needed for public data.
    - **Setup script:** optional. uv, Python 3 and `gh` are preinstalled, and the cycle creates `.venv` itself. To warm

@@ -13,6 +13,28 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   q 4.99 against 2.73, with the polish still gaining at its cap; cause not isolated. R1 not polished; tool/optimization undetermined (`docs/state/units/X4.md` § S1k).
 - **Cost:** 2.3 CPU-h.
 
+## 2026-10-21: Image-plane source fit: route validated on MACS1149; Abell S1063 stays map only
+- **Plan** (`results/lens_consistency/imageplane_fit/PLAN.md`, frozen first): fit each system's source position in
+  the image plane (Nelder–Mead, one-to-one pairing, `scripts/imageplane_fit.py`); gates V1 synthetic, V2 MACS1149,
+  then the D-035 rules on S1063.
+- **Result** (`RESULT.md`, `summary.json`): V1 10 / 10; V2 145 / 145 images at 0.657″ (quoted 0.63″). S1063 z_spec:
+  all 36 images paired (the 18.5″ of the previous entry was the mean-source route), rms 0.978″ > 0.72″, systems
+  0.633–1.460″, none ≤ 0.5″: frozen outcome map only (D-035 addendum b). The map now limits; cause not separated.
+- **Handoff:** S1063 counter-image tests stay off until another public S1063 model with its own list or parameter
+  file appears. Next lensing step from TASKS Supporting as before.
+
+## 2026-10-21: Abell S1063 D-035 revisit: list stays gated off; its redshifts are not the cause
+- **Environment fix:** `archive.stsci.edu` loads from cloud sessions with a CA bundle holding Mozilla's roots
+  (certifi carries emSign Root CA - G1; verification on; sha256 pins match). This unblocks the CATS v4.1 files.
+- **Result** (`results/lens_consistency/abells1063_d035/RESULT.md`, plan frozen first): with the Chan+2020 list, the
+  rms is 18.5″ on the 12 z_spec systems and 11.7″ on all; no system passes the 0.5″ per-system rule. Frozen outcome: map
+  only. Five z_spec systems (14 images) get a single predicted image from the mean traced source; the other seven have 0.80–1.83″.
+- **Post hoc:** for the 33 one-to-one matched z_spec images (11 systems), CATS `arcs.txt` already carries the same z
+  (within 0.005) and positions (median 0.061″), so missing redshifts do not explain their residuals (D-035 addendum).
+- **Handoff:** next is a route check (image-plane source fit) on MACS1149 and S1063 before any S1063 `images` run.
+- Also merged Dependabot #443 (ruff-pre-commit v0.17.0; format and lint clean on main). #442 touches
+  `.github/workflows` (guarded) and waits for the owner.
+
 ## 2026-10-21: Abell S1063 multiple-image list ready for the D-035 revisit (Chan+2020, VizieR)
 - **Correction of the 18:08Z entry:** a published list with MUSE redshifts is on VizieR, `J/ApJ/888/35` (Chan+2020;
   already in SOURCES.md since 2026-10-16). Written as `results/lens_consistency/abells1063_images/chan20_images.ecsv`
