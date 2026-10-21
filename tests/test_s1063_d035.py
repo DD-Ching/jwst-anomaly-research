@@ -31,3 +31,13 @@ def test_chan_images_drops_dup_rows():
     assert not any(i in ("26.1", "27.1", "27.2", "27.3") for i in t["image_id"])
     assert len(t) == 117 and set(t["system"]) >= {"1", "2"}
     assert np.all(t["a"] == 1)
+
+
+def test_match_cats_one_to_one():
+    from astropy.table import Table
+
+    arc = 1 / 3600.0
+    chan = Table({"ra": [10.0, 10.0 + 0.2 * arc, 10.0 + 5 * arc], "dec": [-44.0] * 3})
+    cats = Table({"ra": [10.0 + 0.05 * arc], "dec": [-44.0]})
+    idx, sep, m = d.match_cats(chan, cats, 1.0)
+    assert list(m) == [True, False, False]  # the closer of two Chan images keeps the CATS image

@@ -1,8 +1,13 @@
 {
- "provenance": "derived (post hoc)",
- "n_matched": 49,
+ "provenance": "derived",
+ "post_hoc": true,
+ "match_arcsec": 1.0,
+ "n_matched": 48,
  "n_matched_zspec": 33,
- "n_cats_z_zero": 0,
+ "n_systems_matched_zspec": 11,
+ "median_sep_arcsec_all": 0.0535,
+ "median_sep_arcsec_zspec": 0.061,
+ "max_abs_dz_zspec": 0.004999999999999893,
  "n_cats_images": 72,
  "n_cats_z_positive": 72,
  "rows": [
@@ -373,14 +378,6 @@
    "chan_z": 1.035,
    "chan_z_spec": true,
    "cats_z": 1.035
-  },
-  {
-   "chan_id": "32.2",
-   "cats_id": "13.2",
-   "sep_arcsec": 0.812,
-   "chan_z": 4.5,
-   "chan_z_spec": false,
-   "cats_z": 4.113
   },
   {
    "chan_id": "43.1",

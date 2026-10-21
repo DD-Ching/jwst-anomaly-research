@@ -2233,8 +2233,8 @@ them automatically. All thresholds are ASSUMPTIONs.
 
 **Addendum 2026-10-21 (Abell S1063 with Chan+2020 redshifts, `results/lens_consistency/abells1063_d035/`).** The Chan
 list with MUSE z_spec gives rms 18.5″ on the 12 z_spec systems (gate 0.72″), and no system reaches 0.5″. Post hoc:
-the CATS `arcs.txt` z already equal those z_spec within 0.005 for the 33 matched images, so for these systems the
-11.8″ above is not caused by missing redshifts. Five systems get a single predicted image from the mean traced
+the CATS `arcs.txt` z already equal those z_spec within 0.005 for the 33 one-to-one matched images (11 systems), so
+for these images the residuals are not caused by missing redshifts (the other 39 CATS images were not compared). Five systems get a single predicted image from the mean traced
 source, the other seven 0.80–1.83″. Cause not separated (mean-source estimator, map resolution, normalization).
 S1063 stays map only. Revisit if a route with an image-plane source fit reproduces MACS1149 and passes on S1063's
 z_spec systems.

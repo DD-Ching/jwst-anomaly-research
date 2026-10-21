@@ -24,10 +24,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
 
 from jwst_anomaly import lensmodel, schema  # noqa: E402
+from jwst_anomaly.paths import repo_root  # noqa: E402
 
 MODEL = "abells1063-cats"
-LIST = Path("results/lens_consistency/abells1063_images/chan20_images.ecsv")
-OUT = Path("results/lens_consistency/abells1063_d035")
+LIST = repo_root() / "results/lens_consistency/abells1063_images/chan20_images.ecsv"
+OUT = repo_root() / "results/lens_consistency/abells1063_d035"
 
 
 @dataclass(frozen=True)
@@ -37,6 +38,7 @@ class Params:
     system_max_rms: float = lc.GATE_MAX_RMS_ARCSEC  # ASSUMPTION: per-system opening, 0.5"
     grid_step: float = 0.25  # solver grid step, arcsec (validate's default)
     frame_warn_arcsec: float = 0.1  # report a median Chan - CATS offset above this
+    match_arcsec: float = 1.0  # ASSUMPTION: Chan - CATS arcs.txt nearest-match radius
 
 
 def chan_images(path: Path = LIST) -> Table:
@@ -56,12 +58,15 @@ def chan_images(path: Path = LIST) -> Table:
             "z_spec": np.asarray(t["z_spec"], bool),
         }
     )
-    out.meta.update(provenance=schema.Provenance.OBSERVED.value, source=str(path))
+    src = path.relative_to(repo_root()) if path.is_relative_to(repo_root()) else path
+    out.meta.update(provenance=schema.Provenance.OBSERVED.value, source=str(src))
     return out
 
 
-def whole_list_gate(dtheta, quoted: float, factor: float) -> dict:
-    """R1: passes when every image is solved AND rms(dtheta) <= factor x quoted."""
+def whole_list_gate(dtheta, quoted: float, factor: float, shared=None) -> dict:
+    """R1: passes when every image is solved (finite dtheta) AND rms(dtheta) <= factor x quoted.
+    ``n_shared_match`` (images whose nearest prediction is shared, i.e. a predicted image is
+    missing or merged) is reported only; the frozen rule does not use it."""
     d = np.asarray(dtheta, float)
     ok = np.isfinite(d)
     rms = float(np.sqrt(np.mean(d[ok] ** 2))) if ok.any() else float("nan")
@@ -69,6 +74,7 @@ def whole_list_gate(dtheta, quoted: float, factor: float) -> dict:
     return {
         "n_images": int(len(d)),
         "n_solved": int(ok.sum()),
+        "n_shared_match": None if shared is None else int(np.sum(shared)),
         "rms_arcsec": rms,
         "limit_arcsec": limit,
         "passes": bool(ok.all() and len(d) > 0 and rms <= limit),
@@ -84,17 +90,31 @@ def outcome(gate_s: dict, opened_s: list[str]) -> str:
     return "map only"
 
 
-def frame_check(chan: Table, cats: Table, max_sep: float = 1.0) -> dict:
-    """Nearest CATS ``arcs.txt`` image to each Chan image (within ``max_sep`` arcsec)."""
+def match_cats(chan: Table, cats: Table, max_sep: float):
+    """Nearest CATS ``arcs.txt`` image to each Chan image: ``(idx, sep_arcsec, matched)``, where
+    ``matched`` keeps sep <= ``max_sep`` and, for a CATS image nearest to several Chan images,
+    only the closest one (one-to-one)."""
     a = SkyCoord(chan["ra"], chan["dec"], unit="deg")
     b = SkyCoord(cats["ra"], cats["dec"], unit="deg")
     idx, sep, _ = a.match_to_catalog_sky(b)
-    m = sep.arcsec <= max_sep
-    dra, ddec = a[m].spherical_offsets_to(b[idx[m]])
+    sep = sep.arcsec
+    m = sep <= max_sep
+    for k in np.unique(idx[m]):
+        both = np.where(m & (idx == k))[0]
+        m[both[both != both[np.argmin(sep[both])]]] = False
+    return idx, sep, m
+
+
+def frame_check(chan: Table, cats: Table, max_sep: float) -> dict:
+    """Median Chan - CATS offset over one-to-one matches within ``max_sep`` arcsec."""
+    idx, sep, m = match_cats(chan, cats, max_sep)
+    a = SkyCoord(chan["ra"][m], chan["dec"][m], unit="deg")
+    b = SkyCoord(cats["ra"][idx[m]], cats["dec"][idx[m]], unit="deg")
+    dra, ddec = a.spherical_offsets_to(b)
     return {
         "n_chan": len(chan),
         "n_matched": int(m.sum()),
-        "median_sep_arcsec": float(np.median(sep.arcsec[m])) if m.any() else None,
+        "median_sep_arcsec": float(np.median(sep[m])) if m.any() else None,
         "median_dra_arcsec": float(np.median(dra.arcsec)) if m.any() else None,
         "median_ddec_arcsec": float(np.median(ddec.arcsec)) if m.any() else None,
     }
@@ -107,7 +127,7 @@ def main() -> int:
     cats = lensmodel.load_lenstool_images(files["arcs.dat"])
     chan = chan_images()
     summary: dict = {"model": MODEL, "model_sha256": model.sha256, "params": asdict(p)}
-    summary["frame_check"] = frame_check(chan, cats)
+    summary["frame_check"] = frame_check(chan, cats, p.match_arcsec)
     fc = summary["frame_check"]
     summary["frame_offset_flag"] = bool(
         fc["median_sep_arcsec"] is not None and fc["median_sep_arcsec"] > p.frame_warn_arcsec
@@ -121,17 +141,21 @@ def main() -> int:
     ip["z_spec"] = chan["z_spec"]
     ip.meta["provenance"] = schema.Provenance.MODEL_PREDICTION.value
     zs = np.asarray(ip["z_spec"], bool)
+    sh = np.asarray(ip["shared_match"], bool)
     gates = {
-        "S": whole_list_gate(ip["dtheta_arcsec"][zs], p.quoted_rms_arcsec, p.factor),
-        "A": whole_list_gate(ip["dtheta_arcsec"], p.quoted_rms_arcsec, p.factor),
+        "S": whole_list_gate(ip["dtheta_arcsec"][zs], p.quoted_rms_arcsec, p.factor, sh[zs]),
+        "A": whole_list_gate(ip["dtheta_arcsec"], p.quoted_rms_arcsec, p.factor, sh),
     }
     opened = lc.systems_passing_rms(ip[zs], p.system_max_rms)
     per_system = {}
-    for s in dict.fromkeys(np.asarray(ip["system"], str)):
-        d = np.asarray(ip["dtheta_arcsec"][np.asarray(ip["system"], str) == s], float)
+    systems = np.asarray(ip["system"], str)
+    for s in dict.fromkeys(systems):
+        sel = systems == s
+        d = np.asarray(ip["dtheta_arcsec"][sel], float)
         per_system[s] = {
-            "z_spec": bool(zs[np.asarray(ip["system"], str) == s][0]),
+            "z_spec": bool(zs[sel][0]),
             "n": int(len(d)),
+            "n_predicted": int(ip["n_predicted"][sel][0]),
             "rms_arcsec": float(np.sqrt(np.mean(d**2))) if np.isfinite(d).all() else None,
         }
     summary.update(
