@@ -1,0 +1,423 @@
+{
+ "label": "derived (timeline.jsonl and per-area outputs)",
+ "areas": {
+  "2346": {
+   "position": 1,
+   "lc_mb": 725.5,
+   "parent": 586,
+   "prediction_fade_le_10pct": true,
+   "started": true,
+   "stage_seconds": {
+    "fetch": 44.1,
+    "exposures": 71.6,
+    "search_dev": 60.8,
+    "inject": 161.2,
+    "decision": 0.0,
+    "search_holdout": 100.5
+   },
+   "calibration_groups": 500,
+   "search_groups": 2009,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.744749879837036,
+     16.369999885559082,
+     17.400499629974366
+    ],
+    "search": [
+     14.808399772644043,
+     16.464000701904297,
+     17.414600372314453
+    ]
+   },
+   "passed": true,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 120,
+    "rho0.01_blend1_tE30": 161,
+    "rho0.01_blend1_tE100": 162,
+    "rho0.1_blend1_tE10": 127,
+    "rho0.1_blend1_tE30": 159,
+    "rho0.01_blend0.7_tE10": 130,
+    "rho0.01_blend0.7_tE30": 151,
+    "rho0.01_blend0.7_tE100": 135,
+    "rho0.1_blend0.7_tE10": 125,
+    "rho0.1_blend0.7_tE30": 140
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     72,
+     1000,
+     [
+      0.0576,
+      0.0897
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "search": {
+    "groups": 2009,
+    "series_searched": 3998,
+    "flagged_runs": 7,
+    "flagged_groups": 1,
+    "passed_groups": []
+   },
+   "fetch_read_s": 41.4,
+   "tap_mb": 8.41,
+   "fade_le_10pct": true,
+   "as_predicted": true
+  },
+  "1149": {
+   "position": 2,
+   "lc_mb": 270.2,
+   "parent": 287,
+   "prediction_fade_le_10pct": false,
+   "started": true,
+   "stage_seconds": {
+    "fetch": 19.1,
+    "exposures": 58.0,
+    "search_dev": 30.6,
+    "inject": 85.6,
+    "decision": 0.1
+   },
+   "calibration_groups": 500,
+   "search_groups": 997,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.870949363708496,
+     16.372499465942383,
+     17.418049240112303
+    ],
+    "search": [
+     14.692399597167968,
+     16.35099983215332,
+     17.39119873046875
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 109,
+    "rho0.01_blend1_tE30": 161,
+    "rho0.01_blend1_tE100": 166,
+    "rho0.1_blend1_tE10": 115,
+    "rho0.1_blend1_tE30": 153,
+    "rho0.01_blend0.7_tE10": 126,
+    "rho0.01_blend0.7_tE30": 155,
+    "rho0.01_blend0.7_tE100": 128,
+    "rho0.1_blend0.7_tE10": 112,
+    "rho0.1_blend0.7_tE30": 149
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     121,
+     1000,
+     [
+      0.1022,
+      0.1427
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 16.2,
+   "tap_mb": 5.02,
+   "fade_le_10pct": false,
+   "as_predicted": true
+  },
+  "2345": {
+   "position": 3,
+   "lc_mb": 880.6,
+   "parent": 586,
+   "prediction_fade_le_10pct": true,
+   "started": true,
+   "stage_seconds": {
+    "fetch": 52.1,
+    "exposures": 134.6,
+    "search_dev": 62.7,
+    "inject": 155.0,
+    "decision": 0.0
+   },
+   "calibration_groups": 500,
+   "search_groups": 2262,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.789599800109864,
+     16.450000762939453,
+     17.388999938964844
+    ],
+    "search": [
+     14.838299369812011,
+     16.44200038909912,
+     17.41299819946289
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": false,
+    "controls_le_0.10": true,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 128,
+    "rho0.01_blend1_tE30": 153,
+    "rho0.01_blend1_tE100": 143,
+    "rho0.1_blend1_tE10": 110,
+    "rho0.1_blend1_tE30": 139,
+    "rho0.01_blend0.7_tE10": 130,
+    "rho0.01_blend0.7_tE30": 138,
+    "rho0.01_blend0.7_tE100": 115,
+    "rho0.1_blend0.7_tE10": 95,
+    "rho0.1_blend0.7_tE30": 141
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     67,
+     1000,
+     [
+      0.0531,
+      0.0842
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 49.0,
+   "tap_mb": 8.87,
+   "fade_le_10pct": true,
+   "as_predicted": true
+  },
+  "4988": {
+   "position": 4,
+   "lc_mb": 531.8,
+   "parent": 1247,
+   "prediction_fade_le_10pct": false,
+   "started": true,
+   "stage_seconds": {
+    "fetch": 43.0,
+    "exposures": 105.3,
+    "search_dev": 56.5,
+    "inject": 141.4,
+    "decision": 0.1
+   },
+   "calibration_groups": 500,
+   "search_groups": 1868,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.896649360656738,
+     16.388999938964844,
+     17.42114953994751
+    ],
+    "search": [
+     14.832699728012084,
+     16.476999282836914,
+     17.42064971923828
+    ]
+   },
+   "passed": false,
+   "conditions": {
+    "all_10_cells_ge_0.5": true,
+    "controls_le_0.10": false,
+    "calibration_survivors_le_5": true
+   },
+   "cells": {
+    "rho0.01_blend1_tE10": 121,
+    "rho0.01_blend1_tE30": 170,
+    "rho0.01_blend1_tE100": 169,
+    "rho0.1_blend1_tE10": 123,
+    "rho0.1_blend1_tE30": 156,
+    "rho0.01_blend0.7_tE10": 121,
+    "rho0.01_blend0.7_tE30": 155,
+    "rho0.01_blend0.7_tE100": 135,
+    "rho0.1_blend0.7_tE10": 114,
+    "rho0.1_blend0.7_tE30": 146
+   },
+   "controls": {
+    "eclipse": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "fade": [
+     132,
+     1000,
+     [
+      0.1124,
+      0.1544
+     ]
+    ],
+    "pspl": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ],
+    "common": [
+     0,
+     200,
+     [
+      0.0,
+      0.0188
+     ]
+    ]
+   },
+   "calibration_survivors": 0,
+   "fetch_read_s": 37.9,
+   "tap_mb": 7.83,
+   "fade_le_10pct": false,
+   "as_predicted": true
+  },
+  "2347": {
+   "position": 5,
+   "lc_mb": 947.8,
+   "parent": 586,
+   "prediction_fade_le_10pct": true,
+   "started": false,
+   "stage_seconds": {},
+   "calibration_groups": 500,
+   "search_groups": 1917,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.678399896621704,
+     16.38099956512451,
+     17.39174880981445
+    ],
+    "search": [
+     14.841799926757812,
+     16.488998413085938,
+     17.42099952697754
+    ]
+   }
+  },
+  "4990": {
+   "position": 6,
+   "lc_mb": 536.3,
+   "parent": 1247,
+   "prediction_fade_le_10pct": false,
+   "started": false,
+   "stage_seconds": {},
+   "calibration_groups": 500,
+   "search_groups": 2135,
+   "refmag_r_p5_p50_p95": {
+    "calibration": [
+     14.748549604415894,
+     16.3489990234375,
+     17.383149433135987
+    ],
+    "search": [
+     14.792399311065674,
+     16.371999740600586,
+     17.395999908447266
+    ]
+   }
+  }
+ },
+ "searched_groups": 2009,
+ "searched_series": 3998,
+ "final_survivors": 0,
+ "started": 4,
+ "passed": 1,
+ "downloaded_mb": 2704.2,
+ "downloaded_note": "objects and light curves from parquet metadata of the read columns (an estimate of bytes read); TAP measured",
+ "not_started": [
+  5,
+  6
+ ],
+ "stage_seconds_of_searched_areas": 438.2,
+ "per_1000_searched": {
+  "stage_seconds": 218.1,
+  "lc_mb": 361.1,
+  "wall_clock_min_queue": 9.71
+ },
+ "wall_clock_min": 19.5,
+ "events": 57,
+ "sibling_tally": {
+  "decided": 4,
+  "as_predicted": 4,
+  "of": 6,
+  "complete": false,
+  "frozen_outcome": null
+ }
+}

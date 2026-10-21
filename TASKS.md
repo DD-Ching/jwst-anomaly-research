@@ -157,9 +157,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    6 arXiv name queries that errored.
    **W3 in ZTF DR24 light curves** (v13 rule; v22 handoff: 17 qualifying partitions left). Fade-control diagnostic
    2026-10-20 (`results/w3_ztf/fade_diag/RESULT.md`): per-area rates are heterogeneous (χ² 234 / 24) and no inventory
-   metric predicts them; post hoc they cluster by HEALPix order-4 parent (between 208 / 11, within 26 / 13 dof). Next
-   round: freeze the sibling prediction (2345–2347 ≤ 10 %; 1149, 4988/4990 > 10 %) and order the queue by it; the
-   fade limit stays an owner decision.
+   metric predicts them; post hoc they cluster by HEALPix order-4 parent (between 208 / 11, within 26 / 13 dof).
+   v25 (2026-10-21, `results/w3_ztf/v25/RESULT.md`): the frozen sibling prediction holds in 4 / 4 decided areas
+   (2346 passes and is searched, 0 survivors); next: finish 2347 and 4990 (RESULT "Carry-over"), then decide the
+   queue rule by the frozen ≥ 5 / 6 outcome. The fade limit stays an owner decision.
 2. **W1/W2 in wide imaging** (D-056: published lens catalogues null; f_dark < 0.31 (typical, 3/25 after the 2026-10-08
    pair-match and one-entry-per-lens amendment) for quasar/radio-selected lenses, the only selections sensitive to a
    dark lens). Next: HSC PDR3 photometry, or a *validated* PSF-subtracted HST
