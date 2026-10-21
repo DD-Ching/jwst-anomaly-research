@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-21: Abell S1063 image-list route queued; HFF CATS files unreachable from cloud sessions
+- **Why:** D-035's revisit condition for Abell S1063 (fitted or spectroscopic system redshifts) may be met by the
+  published MUSE redshifts; opening its image list would add the cluster with the `arcs` anti excess to the
+  image-position and counter-image tests.
+- **Failed approach / environment:** the CATS v4.1 files (`lensmodel.HFF_CATS`) come only from `archive.stsci.edu`,
+  whose TLS chain ends at emSign Root CA - G1, which the cloud trust store lacks; `mast.stsci.edu` Download returns
+  404 for `mast:HLSP/frontier/...`, and MAST `query_criteria(provenance_name="frontier")` returns nothing. The
+  multiple-image tables (Caminha+2016, Karman+2017) are not on VizieR (`find_catalogs`, not stored).
+- **Handoff:** route queued in TASKS (Supporting 1) for a local session. Other lines unchanged.
+
 ## 2026-10-21: MACS0417 / MACS1423 CANUCS extra predicted images: no flag; MACS0417 not testable by forced photometry
 - **Plan** (`results/lens_consistency/macs0417_extra/PLAN.md`, frozen first): the D-029 route
   (`predict_counter_images` + `forced_check`, unchanged) on the published lists of `macs0417_images`, F200W 1208
