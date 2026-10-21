@@ -53,3 +53,15 @@ statement per box and the SMACS arc line closes for this pair.
 - b2 passes its known-case gate (Atalanta A = h021, B = h023, both `pass`). b2 h032 is a morph `pass` 0.09″ from
   image 1.1. It gets the forced photometry of the frozen rule and, if that shows ≥ 3σ, the Addendum 1 control test
   with the same thresholds (controls picked around h032). Every later rule hit gets the same two steps.
+
+## Addendum 3 (2026-10-21T16:28Z, after the b2 h032 control test, before these steps)
+- b2 h032 control test (Addendum 1 thresholds): F150W z_cal 0.44, **F444W z_cal 5.65** (ratio 1.153, control tail
+  fraction 0.029) → **open**. On the stamps the aperture sits on the steep side of the elongated image 1.1, where a
+  small WCS disagreement between the two mosaics changes the aperture flux. Other epochs: F444W 2024 ratio 1.045,
+  2026-07 1.104; F300M changes 1,111 → 1,368 nJy in one month (2026-06 → 2026-07).
+- **Step R (frozen):** `reg_offsets.py --pair 6882:<o057 cat> --ref 2736:<o001 cat> --bands f150w f444w
+  --offsets-at <h032>` (its own frozen model choice), then `hit_lightcurve.py --offsets` at h032 + the same
+  controls and `compare`. **explained by registration** if the corrected F444W |z_cal| < 2; **survives** if ≥ 3;
+  else undetermined.
+- **Step C:** forced photometry at the ICLv2 counter-images 1.2 and 1.3 (shifted catalogue positions), same pair and
+  aperture, reported only (time delays not computed; a real change in 1.1 need not be simultaneous in them).
