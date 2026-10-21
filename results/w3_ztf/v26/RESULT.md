@@ -32,3 +32,5 @@
 - Queue wall clock 3.4 min (07:15:30–07:18:51), 2 workers.
 - **Plan wording slip:** the PLAN section 3 column "searchable / GB" is in thousands of groups per GB
   (`queue.json` stores the per-GB values, e.g. 2,977 for 2878); the order is unaffected.
+- **Driver fix after the run (review):** a crash in an area job now also marks its head as undecided, so a waiting
+  sibling carries over instead of waiting forever. No stage crashed in this run, so the result is unaffected.

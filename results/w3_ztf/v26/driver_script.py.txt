@@ -98,10 +98,12 @@ def worker():
         if stop:
             log(event='stop_new_areas', reason=stop[0], remaining=stop[1]); return
         log(area=a['npix'], event='area_start', position=a['position'], projected_mb=round(state['mb'], 1))
-        area_job(a)
-        if not os.path.exists(f"{H}/{a['npix']}/decision.json"):  # v26: a head without a verdict releases no sibling
-            with lock:
-                stopped_heads.add(a['npix'])
+        try:  # v26 after the run (review): also on a crash, or a waiting sibling would sleep forever
+            area_job(a)
+        finally:
+            if not os.path.exists(f"{H}/{a['npix']}/decision.json"):  # v26: a head without a verdict releases no sibling
+                with lock:
+                    stopped_heads.add(a['npix'])
 if len(sys.argv) > 3:  # v20 resume after the deadlock: '<npix>' runs that area from the validation stage only
     area_job(next(x for x in q if x['npix'] == int(sys.argv[3])), resume=True)
     log(event='queue_done')
