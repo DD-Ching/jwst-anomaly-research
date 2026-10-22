@@ -2211,6 +2211,12 @@ reference and search catalogue for the extra-image test on CANUCS fields (gate C
 does not apply there), the other has a photo-z-matched source of the predicted flux 1.49″ away. A local-noise
 `undetectable` rule would be a new frozen rule for the next field, not a re-reading of this one.
 
+**Addendum 2026-10-22c (MACS0417 family 10, `results/lens_consistency/macs0417_f10_zscan/`).** A frozen z scan in the
+CANUCS v1 maps puts the third family-10 image within 1.0″ of CANUCS 1115938 (with 10.1 / 10.2 reproduced) only at
+z 1.975–2.100 (closest 0.464″ at 2.025), above 1115938's z160–z840 interval 1.72–1.88 (offset there 1.96–3.95″). Frozen
+outcome A′: the `candidate` flag of addendum b is explained by source redshift only at a z its photometry disfavours;
+undetermined, not a candidate. A frozen colour test of 1115938 against 10.1 / 10.2, or a family-10 z_spec, decides it.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
