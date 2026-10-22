@@ -125,7 +125,28 @@ Owner brief 2026-10-22 after #461:
   - per event with a bounds hit, [t_start − span, t_end + span] (`edge_bounds_alt` uses nothing farther away), and
     ± 60 d for the baseline.
 - **Unchanged:** stars, order and method. The two submitted tasks keep the full range.
+- **Note (added at review):**
+  - For hull-range stars the baselines and k come from the hull, not the full range.
+  - A normal point beyond one span can change the recorded U but not the class.
 - **Restart:**
   - The scheduler was stopped by mistake (`pkill -f` also matched the calling shell) and restarted from its saved
     state, so nothing was resubmitted.
   - The acquisition deadline stays 11:49 UTC.
+
+## Review fixes (10:00–10:10 UTC, after the code review, before any A / B outcome was read)
+A smoke run at 09:48 checked only the calibration and the A = v24 check; no outcome was read.
+- **Scheduler:**
+  - a task past 45 min keeps its slot, so there are never more than 2 in flight;
+  - a POST that raises stops the scheduler;
+  - result GET / DELETE errors no longer crash it, and a failed download is retried up to 3 times.
+  Restarted at 10:04 from its saved state; nothing was resubmitted.
+- **k fallback:** a filter with < 20 usable rows uses the star's pooled k, not 1.0. A star with < 20 usable rows in
+  all has no usable ATLAS (B = A).
+- **Completion:** complete only if every target ends with data or "finished without result".
+- **When incomplete:** success is also reported at both bounds.
+  - best case: every missing-star A-insufficient W3 restored, with the observed fade passes;
+  - worst case: none restored, and every missing-star A-insufficient fade passes.
+- **Checks in `result_script`:**
+  - the fixed denominators (154 W3, 63, 79);
+  - every star with data has `atlas` true in the trial events;
+  - `calib.json` is written from the trial calibration.

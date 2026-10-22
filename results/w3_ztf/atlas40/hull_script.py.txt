@@ -1,7 +1,8 @@
 # Deviation (PLAN section 1, written 09:16 before any ATLAS flux was read; server timing only): per star, the time hull
-# that can affect B. edge_bounds_alt only uses points within one run span of a flagged run (intermediates within the
-# span; a normal point decides 'fast' only within 0.25 x span), so for every event on the star with a bounds hit the
-# window is [t_start - span, t_end + span]; the hull adds 60 d each side for the baseline. Replays the v23 events like
+# that can affect B's class. edge_bounds_alt takes intermediates only within one run span, and a normal point decides
+# 'fast' only within 0.25 x span; a normal point farther away can change the recorded U (edge_*_max_d) but not the class.
+# So for every event on the star with a bounds hit the window is [t_start - span, t_end + span]; the hull adds 60 d each
+# side for the baseline (review note: baselines and k of hull-range stars come from the hull only). Replays the v23 events like
 # trial_script.py.txt; reads no ATLAS data. Usage: python hull_script.py.txt <npix> <seed offset>
 import json, sys
 import numpy as np

@@ -1,0 +1,46 @@
+{
+ "label": "observed (ATLAS forced photometry, reduced mode), compact copies",
+ "columns": [
+  "MJD",
+  "F",
+  "uJy",
+  "duJy",
+  "err",
+  "chi/N",
+  "x",
+  "y",
+  "maj",
+  "min",
+  "apfit",
+  "mag5sig",
+  "Sky",
+  "Obs"
+ ],
+ "stars": {
+  "601209200002983": {
+   "rows": 3885,
+   "bytes": 124917,
+   "source_sha256": "bf0c338bf944cba20fe475f16888845ebeee112f9f10b4a1b572c117cc00419e"
+  },
+  "601213300003718": {
+   "rows": 4034,
+   "bytes": 129338,
+   "source_sha256": "3f77a662eb31f3d4683e73848df88d9909b7a9b485869d12f67c05a5b3ddd6f6"
+  },
+  "601213400002567": {
+   "rows": 3462,
+   "bytes": 111342,
+   "source_sha256": "56ea9113f0c77789a2786a7401c04b5b68806a2406ad34bc305fc277a48b618f"
+  },
+  "601213200006434": {
+   "rows": 2170,
+   "bytes": 70142,
+   "source_sha256": "c693ddd8c0fe15e7393bcc9eb68feb334bbf36b01df29fa185afb0309b9d35a8"
+  },
+  "601213300002366": {
+   "rows": 2608,
+   "bytes": 84122,
+   "source_sha256": "e75abe9f80fefa808eeaa3d160ef7563f8e323d46405c0eeb2f8cbfb47b85b57"
+  }
+ }
+}

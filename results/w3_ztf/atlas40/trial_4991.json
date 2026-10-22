@@ -11,19 +11,252 @@
  },
  "calibration": {
   "601213400002563": null,
-  "601213300003718": null,
-  "601213400002567": null,
+  "601213300003718": {
+   "rows": 4034,
+   "quality_pass": 3771,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 129,
+     "baseline_uJy": 4795.0,
+     "k": 4.649979685313012,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 749,
+     "baseline_uJy": 4858.0,
+     "k": 2.253555372128509,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 4852.5,
+     "k": 2.5198957792164762,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1482,
+     "baseline_uJy": 5741.0,
+     "k": 2.1964477311194095,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1321,
+     "baseline_uJy": 5753.0,
+     "k": 2.1098570032579667,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 4,
+     "baseline_uJy": 5746.0,
+     "k": 2.1802973801553,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 84,
+     "baseline_uJy": 5662.0,
+     "k": 2.621993494667707,
+     "from": "unit"
+    }
+   },
+   "n_used": 3771
+  },
+  "601213400002567": {
+   "rows": 3462,
+   "quality_pass": 3299,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 103,
+     "baseline_uJy": 3937.0,
+     "k": 1.7791226622067213,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 661,
+     "baseline_uJy": 3954.0,
+     "k": 1.8532527731320005,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3951.0,
+     "k": 1.9019668460257546,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1327,
+     "baseline_uJy": 4863.0,
+     "k": 1.9768029580074729,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1138,
+     "baseline_uJy": 4856.0,
+     "k": 1.7571581848955575,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 5,
+     "baseline_uJy": 4859.0,
+     "k": 1.906202852364331,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 63,
+     "baseline_uJy": 4829.0,
+     "k": 2.654892344765843,
+     "from": "unit"
+    }
+   },
+   "n_used": 3299
+  },
   "601213200002823": null,
   "601213300005265": null,
   "601213100007066": null,
-  "601213200006434": null,
+  "601213200006434": {
+   "rows": 2170,
+   "quality_pass": 2105,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 79,
+     "baseline_uJy": 3597.0,
+     "k": 2.4462936605342285,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 398,
+     "baseline_uJy": 3642.0,
+     "k": 1.4826022185056131,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3636.0,
+     "k": 1.7297025882565482,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 853,
+     "baseline_uJy": 5434.0,
+     "k": 2.2768534069907367,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 716,
+     "baseline_uJy": 5415.5,
+     "k": 1.7947947568787348,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 57,
+     "baseline_uJy": 5396.0,
+     "k": 3.567511588279125,
+     "from": "unit"
+    }
+   },
+   "n_used": 2105
+  },
   "601213300005924": null,
   "601209200000036": null,
-  "601209200002983": null,
+  "601209200002983": {
+   "rows": 3885,
+   "quality_pass": 3445,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 116,
+     "baseline_uJy": 3785.5,
+     "k": 2.969268587829485,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 714,
+     "baseline_uJy": 3830.0,
+     "k": 1.9655711230187884,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3825.5,
+     "k": 2.14219553567863,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1423,
+     "baseline_uJy": 4937.0,
+     "k": 1.8779628101071089,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1117,
+     "baseline_uJy": 4929.0,
+     "k": 1.8532527731320037,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 4,
+     "baseline_uJy": 4932.0,
+     "k": 1.8669805714514913,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 69,
+     "baseline_uJy": 4887.0,
+     "k": 2.3298034862230828,
+     "from": "unit"
+    }
+   },
+   "n_used": 3445
+  },
   "601214400007338": null,
   "601214400005162": null,
   "601213300007095": null,
-  "601213300002366": null,
+  "601213300002366": {
+   "rows": 2608,
+   "quality_pass": 2452,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 72,
+     "baseline_uJy": 4002.5,
+     "k": 2.1918925980406647,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 550,
+     "baseline_uJy": 4046.0,
+     "k": 1.8317342477818712,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 4042.0,
+     "k": 1.9543392880301034,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1012,
+     "baseline_uJy": 5285.0,
+     "k": 2.102345887800274,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 752,
+     "baseline_uJy": 5277.0,
+     "k": 1.72970258825651,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 64,
+     "baseline_uJy": 5223.5,
+     "k": 2.7320770048354683,
+     "from": "unit"
+    }
+   },
+   "n_used": 2452
+  },
   "601213400002132": null,
   "601213400012516": null,
   "601213400004073": null,
@@ -117,7 +350,7 @@
    "i": 36,
    "carrier": 601213400002567,
    "a": "not_flagged",
-   "atlas": false,
+   "atlas": true,
    "b": "not_flagged",
    "b_quoted": "not_flagged",
    "b_keep9999": "not_flagged"
@@ -147,10 +380,11 @@
    "i": 59,
    "carrier": 601213200006434,
    "a": "edge_insufficient",
-   "atlas": false,
-   "b": "edge_insufficient",
-   "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "atlas": true,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 247
   },
   {
    "kind": "rho0.01_blend1_tE30",
@@ -167,20 +401,22 @@
    "i": 150,
    "carrier": 601213400002567,
    "a": "recovered",
-   "atlas": false,
+   "atlas": true,
    "b": "recovered",
    "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 514
   },
   {
    "kind": "rho0.01_blend1_tE30",
    "i": 180,
    "carrier": 601213300002366,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 279
   },
   {
    "kind": "rho0.01_blend1_tE100",
@@ -197,30 +433,33 @@
    "i": 14,
    "carrier": 601213400002567,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 310
   },
   {
    "kind": "rho0.01_blend1_tE100",
    "i": 20,
    "carrier": 601209200002983,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 1067
   },
   {
    "kind": "rho0.01_blend1_tE100",
    "i": 35,
    "carrier": 601213200006434,
    "a": "recovered",
-   "atlas": false,
-   "b": "recovered",
-   "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "atlas": true,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 1849
   },
   {
    "kind": "rho0.01_blend1_tE100",
@@ -237,20 +476,22 @@
    "i": 88,
    "carrier": 601209200002983,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 677
   },
   {
    "kind": "rho0.01_blend1_tE100",
    "i": 105,
    "carrier": 601213300003718,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 1113
   },
   {
    "kind": "rho0.01_blend1_tE100",
@@ -297,10 +538,11 @@
    "i": 0,
    "carrier": 601209200002983,
    "a": "recovered",
-   "atlas": false,
+   "atlas": true,
    "b": "recovered",
    "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 77
   },
   {
    "kind": "rho0.1_blend1_tE10",
@@ -327,10 +569,11 @@
    "i": 22,
    "carrier": 601213200006434,
    "a": "edge_insufficient",
-   "atlas": false,
-   "b": "edge_insufficient",
-   "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "atlas": true,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 212
   },
   {
    "kind": "rho0.1_blend1_tE10",
@@ -347,10 +590,11 @@
    "i": 104,
    "carrier": 601213300003718,
    "a": "edge_insufficient",
-   "atlas": false,
-   "b": "edge_insufficient",
-   "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "atlas": true,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 93
   },
   {
    "kind": "rho0.1_blend1_tE10",
@@ -377,10 +621,11 @@
    "i": 169,
    "carrier": 601213300002366,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 146
   },
   {
    "kind": "rho0.1_blend1_tE30",
@@ -427,20 +672,22 @@
    "i": 95,
    "carrier": 601209200002983,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 249
   },
   {
    "kind": "rho0.1_blend1_tE30",
    "i": 148,
    "carrier": 601213300003718,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 54
   },
   {
    "kind": "rho0.01_blend0.7_tE10",
@@ -457,7 +704,7 @@
    "i": 79,
    "carrier": 601213300003718,
    "a": "not_flagged",
-   "atlas": false,
+   "atlas": true,
    "b": "not_flagged",
    "b_quoted": "not_flagged",
    "b_keep9999": "not_flagged"
@@ -467,10 +714,11 @@
    "i": 161,
    "carrier": 601213200006434,
    "a": "edge_insufficient",
-   "atlas": false,
-   "b": "edge_insufficient",
-   "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "atlas": true,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 204
   },
   {
    "kind": "rho0.01_blend0.7_tE10",
@@ -487,20 +735,22 @@
    "i": 22,
    "carrier": 601213300002366,
    "a": "recovered",
-   "atlas": false,
+   "atlas": true,
    "b": "recovered",
    "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 269
   },
   {
    "kind": "rho0.01_blend0.7_tE30",
    "i": 27,
    "carrier": 601213400002567,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 63
   },
   {
    "kind": "rho0.01_blend0.7_tE30",
@@ -517,10 +767,11 @@
    "i": 68,
    "carrier": 601213400002567,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 263
   },
   {
    "kind": "rho0.01_blend0.7_tE30",
@@ -587,10 +838,11 @@
    "i": 11,
    "carrier": 601209200002983,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 956
   },
   {
    "kind": "rho0.01_blend0.7_tE100",
@@ -627,20 +879,22 @@
    "i": 132,
    "carrier": 601213400002567,
    "a": "recovered",
-   "atlas": false,
-   "b": "recovered",
-   "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "atlas": true,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 1315
   },
   {
    "kind": "rho0.01_blend0.7_tE100",
    "i": 134,
    "carrier": 601209200002983,
    "a": "edge_insufficient",
-   "atlas": false,
-   "b": "edge_insufficient",
-   "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "atlas": true,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 487
   },
   {
    "kind": "rho0.01_blend0.7_tE100",
@@ -667,20 +921,22 @@
    "i": 197,
    "carrier": 601213300003718,
    "a": "recovered",
-   "atlas": false,
+   "atlas": true,
    "b": "recovered",
    "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 1078
   },
   {
    "kind": "rho0.1_blend0.7_tE10",
    "i": 4,
    "carrier": 601213300002366,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 70
   },
   {
    "kind": "rho0.1_blend0.7_tE10",
@@ -697,7 +953,7 @@
    "i": 80,
    "carrier": 601213200006434,
    "a": "not_flagged",
-   "atlas": false,
+   "atlas": true,
    "b": "not_flagged",
    "b_quoted": "not_flagged",
    "b_keep9999": "not_flagged"
@@ -787,7 +1043,7 @@
    "i": 61,
    "carrier": 601209200002983,
    "a": "not_flagged",
-   "atlas": false,
+   "atlas": true,
    "b": "not_flagged",
    "b_quoted": "not_flagged",
    "b_keep9999": "not_flagged"
@@ -797,10 +1053,11 @@
    "i": 96,
    "carrier": 601209200002983,
    "a": "recovered",
-   "atlas": false,
+   "atlas": true,
    "b": "recovered",
    "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 314
   },
   {
    "kind": "rho0.1_blend0.7_tE30",
@@ -827,10 +1084,11 @@
    "i": 131,
    "carrier": 601209200002983,
    "a": "recovered",
-   "atlas": false,
+   "atlas": true,
    "b": "recovered",
    "b_quoted": "recovered",
-   "b_keep9999": "recovered"
+   "b_keep9999": "recovered",
+   "atlas_points_within_one_span": 313
   },
   {
    "kind": "rho0.1_blend0.7_tE30",
@@ -857,10 +1115,11 @@
    "i": 187,
    "carrier": 601213300003718,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 332
   },
   {
    "kind": "fade",
@@ -887,10 +1146,11 @@
    "i": 59,
    "carrier": 601213200006434,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 534
   },
   {
    "kind": "fade",
@@ -937,10 +1197,11 @@
    "i": 333,
    "carrier": 601213400002567,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 568
   },
   {
    "kind": "fade",
@@ -977,10 +1238,11 @@
    "i": 459,
    "carrier": 601213300003718,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 484
   },
   {
    "kind": "fade",
@@ -1007,10 +1269,11 @@
    "i": 532,
    "carrier": 601213300003718,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 374
   },
   {
    "kind": "fade",
@@ -1047,10 +1310,11 @@
    "i": 618,
    "carrier": 601209200002983,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 792
   },
   {
    "kind": "fade",
@@ -1067,20 +1331,22 @@
    "i": 693,
    "carrier": 601213200006434,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 581
   },
   {
    "kind": "fade",
    "i": 711,
    "carrier": 601209200002983,
    "a": "edge_insufficient",
-   "atlas": false,
-   "b": "edge_insufficient",
-   "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "atlas": true,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 241
   },
   {
    "kind": "fade",
@@ -1097,10 +1363,11 @@
    "i": 770,
    "carrier": 601213300002366,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 319
   },
   {
    "kind": "fade",
@@ -1137,30 +1404,33 @@
    "i": 949,
    "carrier": 601209200002983,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 147
   },
   {
    "kind": "fade",
    "i": 950,
    "carrier": 601213300003718,
    "a": "edge_slow",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_slow",
    "b_quoted": "edge_slow",
-   "b_keep9999": "edge_slow"
+   "b_keep9999": "edge_slow",
+   "atlas_points_within_one_span": 465
   },
   {
    "kind": "fade",
    "i": 979,
    "carrier": 601213400002567,
    "a": "edge_insufficient",
-   "atlas": false,
+   "atlas": true,
    "b": "edge_insufficient",
    "b_quoted": "edge_insufficient",
-   "b_keep9999": "edge_insufficient"
+   "b_keep9999": "edge_insufficient",
+   "atlas_points_within_one_span": 75
   },
   {
    "kind": "fade",
@@ -1193,5 +1463,5 @@
    "b_keep9999": "edge_insufficient"
   }
  ],
- "seconds": 95.1
+ "seconds": 98.4
 }

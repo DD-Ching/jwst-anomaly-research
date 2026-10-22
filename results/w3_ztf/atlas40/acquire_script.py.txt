@@ -2,8 +2,9 @@
 # the documented shared Astro Data Lab token (env ATLAS_FP_TOKEN; never printed or written). At most 2 of our tasks are
 # queued or running at any time. Only tasks submitted here are polled (>= 30 s) by their saved URL; nothing is ever
 # resubmitted. A result is saved only if it is HTTP 200 and an ATLAS table ('###MJD'); our own task is then deleted.
-# 429 waits for Retry-After (floor 10 s / 30 s). A task not finished 45 min after submission is recorded as 'timeout' and
-# left alone. At the deadline every unfinished task is recorded for continuation.
+# 429 waits for Retry-After (floor 10 s / 30 s). A task not finished 45 min after submission is flagged 'over_45_min' but
+# keeps its slot and is still polled (review fix: it stays in flight on the server). A POST that raises stops the scheduler
+# (the server may have created a task we cannot see). At the deadline every unfinished task is recorded for continuation.
 # Usage: python acquire_script.py.txt <data dir> <deadline minutes from start>
 import hashlib, json, os, re, sys, time
 from datetime import datetime, timezone
@@ -55,8 +56,9 @@ def submit(t):
                                     'use_reduced': True, 'send_email': False})
         except requests.RequestException as exc:
             rec['attempts'].append({'utc': now(), 'http': None, 'detail': type(exc).__name__})
+            rec['status'] = 'submit_unknown'
             save()
-            return False
+            raise SystemExit('stop: a POST raised; the server may hold a task we cannot poll (check by hand)')
         rec['attempts'].append({'utc': now(), 'http': r.status_code, 'detail': None if r.status_code == 201 else detail(r)})
         if r.status_code == 201:
             url = r.json()['url']
@@ -90,7 +92,11 @@ def poll(key):
         if r.status_code in (401, 403, 404):
             rec['status'] = f'poll_error_{r.status_code}'
         return
-    j = r.json()
+    try:
+        j = r.json()
+    except ValueError:
+        rec.setdefault('poll_errors', []).append({'utc': now(), 'http': 200, 'detail': 'non-JSON body'})
+        return
     rec['starttimestamp'], rec['finishtimestamp'] = j.get('starttimestamp'), j.get('finishtimestamp')
     if j.get('starttimestamp'):
         rec['status'] = 'running'
@@ -98,21 +104,30 @@ def poll(key):
         rec['error_msg'] = str(j['error_msg'])[:200]
     if not j.get('finishtimestamp'):
         if time.time() - rec['submitted_epoch'] > TASK_TIMEOUT_S:
-            rec['status'] = 'timeout'
+            rec['over_45_min'] = True  # flagged only; the task keeps its slot
         return
     if not j.get('result_url'):
         rec['status'] = 'finished_without_result'
         return
-    g = requests.get(j['result_url'], headers=HDR, timeout=300)
+    try:
+        g = requests.get(j['result_url'], headers=HDR, timeout=300)
+    except requests.RequestException as exc:
+        rec.setdefault('poll_errors', []).append({'utc': now(), 'detail': f'result GET {type(exc).__name__}'})
+        return  # retried at the next poll
     if g.status_code != 200 or not g.text.startswith('###MJD'):
         rec.setdefault('poll_errors', []).append({'utc': now(), 'http': g.status_code, 'detail': g.text[:120]})
-        rec['status'] = 'download_failed'
+        if sum('result' in str(e.get('detail', '')) or e.get('http') == g.status_code for e in rec['poll_errors']) >= 3:
+            rec['status'] = 'download_failed'  # after 3 tries; the task is finished on the server
         return
     path = os.path.join(D, f'atlas_fp_{key}.txt')
     open(path, 'w').write(g.text)
     rec.update({'status': 'done', 'result_bytes': len(g.text.encode()), 'result_rows': max(len(g.text.strip().splitlines()) - 1, 0),
                 'result_sha256': hashlib.sha256(g.text.encode()).hexdigest(), 'downloaded_utc': now()})
-    rec['deleted_own_task_http'] = requests.delete(rec['task_url'], headers=HDR, timeout=120).status_code
+    save()
+    try:
+        rec['deleted_own_task_http'] = requests.delete(rec['task_url'], headers=HDR, timeout=120).status_code
+    except requests.RequestException as exc:
+        rec['deleted_own_task_http'] = f'error {type(exc).__name__}'
 
 
 queue = [t for t in targets if not st.get(t['key'], {}).get('task_id')]

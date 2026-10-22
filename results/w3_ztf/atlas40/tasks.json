@@ -11,9 +11,14 @@
   "task_url": "https://fallingstar-data.com/forcedphot/queue/5235600/",
   "submitted_utc": "2026-10-22T08:59:09Z",
   "submitted_epoch": 1792659549.8041112,
-  "status": "running",
+  "status": "done",
   "starttimestamp": "2026-10-22T09:01:05Z",
-  "finishtimestamp": null
+  "finishtimestamp": "2026-10-22T09:19:54Z",
+  "result_bytes": 540437,
+  "result_rows": 3885,
+  "result_sha256": "bf0c338bf944cba20fe475f16888845ebeee112f9f10b4a1b572c117cc00419e",
+  "downloaded_utc": "2026-10-22T09:20:13Z",
+  "deleted_own_task_http": 204
  },
  "601213300003718": {
   "attempts": [
@@ -27,6 +32,127 @@
   "task_url": "https://fallingstar-data.com/forcedphot/queue/5235601/",
   "submitted_utc": "2026-10-22T08:59:10Z",
   "submitted_epoch": 1792659550.776464,
+  "status": "done",
+  "starttimestamp": "2026-10-22T09:20:48Z",
+  "finishtimestamp": "2026-10-22T09:27:22Z",
+  "result_bytes": 561202,
+  "result_rows": 4034,
+  "result_sha256": "3f77a662eb31f3d4683e73848df88d9909b7a9b485869d12f67c05a5b3ddd6f6",
+  "downloaded_utc": "2026-10-22T09:27:35Z",
+  "deleted_own_task_http": 204
+ },
+ "601213400002567": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T09:20:46Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235641,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235641/",
+  "submitted_utc": "2026-10-22T09:20:46Z",
+  "submitted_epoch": 1792660846.2098043,
+  "status": "done",
+  "starttimestamp": "2026-10-22T09:28:41Z",
+  "finishtimestamp": "2026-10-22T09:33:54Z",
+  "result_bytes": 481592,
+  "result_rows": 3462,
+  "result_sha256": "56ea9113f0c77789a2786a7401c04b5b68806a2406ad34bc305fc277a48b618f",
+  "downloaded_utc": "2026-10-22T09:34:25Z",
+  "deleted_own_task_http": 204
+ },
+ "601213200006434": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T09:28:07Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235651,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235651/",
+  "submitted_utc": "2026-10-22T09:28:07Z",
+  "submitted_epoch": 1792661287.2744887,
+  "status": "done",
+  "starttimestamp": "2026-10-22T09:34:48Z",
+  "finishtimestamp": "2026-10-22T09:37:52Z",
+  "result_bytes": 301882,
+  "result_rows": 2170,
+  "result_sha256": "c693ddd8c0fe15e7393bcc9eb68feb334bbf36b01df29fa185afb0309b9d35a8",
+  "downloaded_utc": "2026-10-22T09:38:07Z",
+  "deleted_own_task_http": 204
+ },
+ "601213300002366": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T09:34:57Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235663,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235663/",
+  "submitted_utc": "2026-10-22T09:34:57Z",
+  "submitted_epoch": 1792661697.2306092,
+  "status": "done",
+  "starttimestamp": "2026-10-22T09:40:30Z",
+  "finishtimestamp": "2026-10-22T09:45:30Z",
+  "result_bytes": 362857,
+  "result_rows": 2608,
+  "result_sha256": "e75abe9f80fefa808eeaa3d160ef7563f8e323d46405c0eeb2f8cbfb47b85b57",
+  "downloaded_utc": "2026-10-22T09:46:00Z",
+  "deleted_own_task_http": 204
+ },
+ "632211200002174": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T09:38:39Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235669,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235669/",
+  "submitted_utc": "2026-10-22T09:38:39Z",
+  "submitted_epoch": 1792661919.5678842,
+  "status": "done",
+  "starttimestamp": "2026-10-22T09:47:03Z",
+  "finishtimestamp": "2026-10-22T09:59:47Z",
+  "result_bytes": 436047,
+  "result_rows": 3134,
+  "result_sha256": "534f431dd255dc19c329145befd934b36a67e9fdb0aa5e5a2f56e70eaf0ed507",
+  "downloaded_utc": "2026-10-22T10:00:10Z",
+  "deleted_own_task_http": 204
+ },
+ "601213400002132": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T09:46:32Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235681,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235681/",
+  "submitted_utc": "2026-10-22T09:46:32Z",
+  "submitted_epoch": 1792662392.3852475,
+  "status": "queued",
+  "starttimestamp": null,
+  "finishtimestamp": null
+ },
+ "601213400005483": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T10:00:42Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235715,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235715/",
+  "submitted_utc": "2026-10-22T10:00:42Z",
+  "submitted_epoch": 1792663242.5804827,
   "status": "queued",
   "starttimestamp": null,
   "finishtimestamp": null
