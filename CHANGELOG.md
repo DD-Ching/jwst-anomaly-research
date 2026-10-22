@@ -21,6 +21,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0.70; D72b 7.128 → 10.121 (f 1.00 → 0.70); D74 1.016 / 0.107 / 0.046 at f 1.00 / 0.85 / 0.80 (2 observed, 3 predicted
   images). Partial sums only; no Δχ², no verdict. Setup took 18 min of the 34-min run; model files via the MAST download
   API again (sha256 verified).
+- **16:16Z run:** 68 / 555 (added D74 f 0.75 / 0.70, D7, D72a, C1, C2, C3, D10 f 1.00–0.80). Fitted χ² at
+  f 1.00 → 0.70: D7 1.118 → 2.125, D72a 5.178 → 5.796, C1 1.439 → 1.498, C2 0.318 → 0.331, C3 0.312 → 0.385; D74 0.088 /
+  0.218 at f 0.75 / 0.70; D10 1.114 / 1.124 / 1.127 at f 1.00 / 0.85 / 0.80; all matched one-to-one. Partial sums only;
+  no Δχ², no verdict. Setup took ≈ 10 min with the three model files pre-fetched through the MAST download API (sha256
+  verified) before the script started; then 30 tasks in ≈ 21 min (≈ 1.4 per minute on 4 workers; not stored).
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
