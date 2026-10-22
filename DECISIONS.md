@@ -5719,6 +5719,22 @@ confining radiation at a throat is found.
     ratio (template changes).
   - **Revisit if:** the owner authorizes ATLAS for the 40 stars and a paired injection with a ZTF replay and a frozen
     ATLAS noise rule.
+- **Addendum 2026-10-22 (ATLAS paired injections on the 40 stars, `results/w3_ztf/atlas40/RESULT.md`):**
+  - **Run:** the shared queue ran one task at a time (2–19 min each plus 2–22 min wait). By the frozen deadline 17 / 40
+    stars had data, so the trial is **not completed**.
+  - **Result:** with ATLAS points added as edge points, 6 / 63 insufficient W3 events are restored, 4 recovered W3 are
+    lost, and fade passes are 0 / 79. Even if every insufficient event on the 23 missing stars were restored, the
+    best case is 27 / 63 < 0.50. Verdict: **fails regardless of the missing stars.**
+  - **Mechanism (post hoc diagnostic):** the restorations come from added baseline epochs. 7 of the 8 W3 → "slow"
+    moves come from single observed ATLAS dips (32–79 % below baseline) that pass the FAQ cuts. Quoted σ and the 9999
+    rule change nothing.
+  - **Decision:** ATLAS as added edge points does not rescue the bounds rule. No independent validation; no seed,
+    threshold or second-method retry.
+  - **Rejected:**
+    - finishing the remaining 23 stars, which cannot change the verdict;
+    - a post hoc two-epoch intermediate rule, which would be a new method.
+  - **Revisit if:** a new pre-registered method that is robust to single-epoch survey dips is proposed with an ideal
+    bound that can reach the success condition.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

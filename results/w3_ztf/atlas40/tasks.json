@@ -370,7 +370,11 @@
   "submitted_epoch": 1792668900.9850743,
   "status": "unfinished_at_deadline",
   "starttimestamp": "2026-10-22T11:45:24Z",
-  "finishtimestamp": null
+  "finishtimestamp": null,
+  "deleted_own_task_after_deadline": {
+   "utc": "2026-10-22T11:57:17Z",
+   "http": 204
+  }
  },
  "632211200001819": {
   "attempts": [
@@ -386,6 +390,10 @@
   "submitted_epoch": 1792669373.7053661,
   "status": "unfinished_at_deadline",
   "starttimestamp": null,
-  "finishtimestamp": null
+  "finishtimestamp": null,
+  "deleted_own_task_after_deadline": {
+   "utc": "2026-10-22T11:57:17Z",
+   "http": 204
+  }
  }
 }

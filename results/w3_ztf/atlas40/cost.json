@@ -1,0 +1,31 @@
+{
+ "label": "derived; result bytes and times from tasks.json; stages from the session's date -u prints and git commit times",
+ "atlas_results_mb": 6.956,
+ "budget_download_mb": 2000,
+ "tasks_submitted": 19,
+ "tasks_done": 17,
+ "tasks_unfinished_at_deadline": 2,
+ "targets_not_submitted": 21,
+ "resubmissions": 0,
+ "http_429": 0,
+ "max_tasks_in_flight": 2,
+ "queue_wait_min_range": [1.9, 21.6],
+ "run_min_range": [2.0, 18.8],
+ "cores_max": 2,
+ "trial_seconds": {"4991": 111.6, "2344": 82.6},
+ "stages_utc": {
+  "start": "08:56",
+  "acquisition_plan_commit": "08:58 (29064b4)",
+  "first_submit": "08:59:09",
+  "method_commit_before_any_flux_read": "09:02 (8ab4a41)",
+  "deviation_time_hull": "09:17 (f9efa92)",
+  "review_fixes_before_any_outcome_read": "10:05 (b768fac)",
+  "acquisition_deadline": "11:48:38",
+  "prep_trial_result": "11:49-11:53",
+  "post_hoc_diagnostic": "11:53-11:56",
+  "unfinished_tasks_deleted": "11:57"
+ },
+ "raw_results_kept_in_repo": false,
+ "raw_results_deleted": true,
+ "compact_tables_kept": "phot/ (17 tables, 1.6 MB in all, each < 1 MB, source sha256 in phot/index.json)"
+}
