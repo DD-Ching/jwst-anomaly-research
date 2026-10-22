@@ -17,5 +17,8 @@
   "analysis": "08:03-08:10"
  },
  "raw_results_kept_in_repo": false,
- "raw_results_deleted": false
+ "raw_results_deleted": true,
+ "estimate_40_stars_mb": 7.7,
+ "estimate_note": "36 more tasks at the 4-star mean result size",
+ "raw_results_note": "raw ATLAS text files deleted from the session after the final analysis and plot (cloud-disk rule); sha256 in tasks.json"
 }

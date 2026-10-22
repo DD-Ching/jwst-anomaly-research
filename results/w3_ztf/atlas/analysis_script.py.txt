@@ -54,7 +54,7 @@ for key, req in sel['requests'].items():
     df['t'] = hmjd(df['MJD'], req['ra'], req['dec'])
     df['rel'] = np.nan
     df['sig'] = np.nan
-    st = {'status': 'result', 'rows': int(len(df)), 'rows_by_filter': df['F'].value_counts().to_dict(),
+    st = {'status': 'result', 'header_ok': open(os.path.join(D, f'atlas_fp_{key}.txt')).read(6) == '###MJD', 'rows': int(len(df)), 'rows_by_filter': df['F'].value_counts().to_dict(),
           'quality_pass': int(q.sum()), 'quality_pass_by_filter': df.loc[q, 'F'].value_counts().to_dict(),
           'mjd_range': [float(df['MJD'].min()), float(df['MJD'].max())] if len(df) else None,
           'negative_flux_rows': int((df['uJy'] < 0).sum()), 'baseline_uJy': {}, 'median_sigma_rel': {}}
@@ -72,7 +72,9 @@ for key, req in sel['requests'].items():
         st.setdefault('median_chi_n', {})[f] = float(np.median(df.loc[m, 'chi/N']))
         r = df.loc[m, 'rel'].to_numpy()  # robust scatter of the passing rows vs the quoted sigma (a check of the errors)
         st.setdefault('robust_scatter_rel', {})[f] = float(1.4826 * np.median(np.abs(r - np.median(r))))
+        st.setdefault('scatter_over_median_sigma', {})[f] = st['robust_scatter_rel'][f] / st['median_sigma_rel'][f]
     good = q & np.isfinite(df['sig'].to_numpy()) & (df['sig'].to_numpy() <= PRECISE)
+    not9999 = (df['uJy'] != 9999).to_numpy()  # review: a suspicious round value passing the cuts (post hoc check only)
     st['quality_pass_precise'] = int(good.sum())
     out['stars'][key] = st
     t = df['t'].to_numpy()
@@ -93,10 +95,15 @@ for key, req in sel['requests'].items():
                     'atlas_in_gap_quality_precise': int((ing & good).sum()), 'visits_in_gap_quality_precise': visits(t[ing & good]),
                     'atlas_in_decisive': int(ind.sum()), 'atlas_in_decisive_quality_precise': int((ind & good).sum()),
                     'visits_in_decisive_quality_precise': visits(t[ind & good]),
+                    'visits_in_decisive_excl_uJy_9999_posthoc': visits(t[ind & good & not9999]),
                     'baseline_visits_before': visits(t[before & good]), 'baseline_visits_after': visits(t[after & good])})
         rec['class'] = ('decisive' if rec['visits_in_decisive_quality_precise'] else
                         'gap only' if rec['visits_in_gap_quality_precise'] else
                         'low quality only' if rec['atlas_in_gap'] else 'none')
+        rec['outliers_in_gap'] = [{'hmjd': float(t[k]), 'mjd_start': float(df['MJD'].iloc[k]), **{c: (df[c].iloc[k].item() if hasattr(df[c].iloc[k], 'item') else df[c].iloc[k])
+                                   for c in ('uJy', 'duJy', 'F', 'chi/N', 'x', 'y', 'mag5sig', 'Sky', 'Obs')},
+                                   'rel': float(df['rel'].iloc[k])}
+                                  for k in np.flatnonzero(ing & good) if not 0.759 <= df['rel'].iloc[k] <= 1.3]
         rec['in_gap_epochs'] = [{'t': float(t[k]), 'F': str(df['F'].iloc[k]), 'rel': None if not np.isfinite(df['rel'].iloc[k]) else float(df['rel'].iloc[k]),
                                  'sig': None if not np.isfinite(df['sig'].iloc[k]) else float(df['sig'].iloc[k]), 'quality': bool(q[k])}
                                 for k in np.flatnonzero(ing)]
@@ -109,7 +116,16 @@ for g in out['gaps']:
     by_rc.setdefault(g['ztf_r_side_class_v24'], {}).setdefault(g['class'], 0)
     by_rc[g['ztf_r_side_class_v24']][g['class']] += 1
 q_in_gap = [e['rel'] for g in out['gaps'] for e in g['in_gap_epochs'] if e['quality'] and e['rel'] is not None and e['sig'] is not None and e['sig'] <= PRECISE]
+ivals = {}
+for g in out['gaps']:
+    ivals.setdefault((g['carrier'], round(g['common_gap'][0], 3), round(g['common_gap'][1], 3)), []).append(g)
+uniq = {(g['carrier'], e['t'], e['F']) for g in out['gaps'] for e in g['in_gap_epochs']
+        if e['quality'] and e['rel'] is not None and e['sig'] is not None and e['sig'] <= PRECISE}
 out['summary'] = {'by_ztf_r_side_class': by_rc,
+                  'gap_sides': len(out['gaps']), 'distinct_common_gap_intervals': len(ivals),
+                  'distinct_intervals_without_atlas': sum(all(g['atlas_in_gap'] == 0 for g in v) for v in ivals.values()),
+                  'unique_in_gap_quality_precise_exposures': len(uniq),
+                  'decisive_sides_excl_uJy_9999_posthoc': sum(g['visits_in_decisive_excl_uJy_9999_posthoc'] > 0 for g in out['gaps']),
                   'in_gap_quality_precise_rel_flux': {'n': len(q_in_gap), 'min': min(q_in_gap) if q_in_gap else None,
                                                       'median': float(np.median(q_in_gap)) if q_in_gap else None,
                                                       'max': max(q_in_gap) if q_in_gap else None,

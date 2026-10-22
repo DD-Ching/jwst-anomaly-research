@@ -37,7 +37,8 @@
   - the extension is 1.97 d;
   - the transition bracket (last dim to first normal) shrinks to 0.97 of B's;
   - the span grows to 1.06 of the r-only span.
-- **The extension is real:** all 64 extending epochs fall where the injected model is ≥ 1 mag below baseline
+- **The extension is not noise:** all 64 extending epochs (simulated-injection measurements) fall where the injected
+  model is ≥ 1 mag below baseline
   (evaluation). This includes the 16 on newly fast sides that condition 3 tests.
   - The g band sees the event continuing; the run is not lengthened by noise or by bad epochs.
   - The extending detections have S/N ≥ 42 (W3) and ≥ 33 (fades), so no near-limit point extends a run here.

@@ -5710,10 +5710,10 @@ confining radiation at a throat is found.
     token, which NOIRLab's ANTARES devkit notebook documents for use (shared queue). It worked on 2026-10-22, with 4 / 4
     tasks. The earlier "needs an account" (#459) is narrowed to: shared access exists; bulk use needs a personal
     account.
-  - **Measured on 4 stars and 19 ZTF r / g common gaps:**
+  - **Measured on 4 stars and 19 ZTF r / g common-gap sides (17 distinct gaps):**
     - reduced-mode photometry passes the FAQ cuts at 91–94 %;
     - 11 gaps have a passing precise visit in the decisive window;
-    - 6 seasonal gaps have none.
+    - 6 sides (5 distinct seasonal gaps) have none.
   - **Not measured:** the effect on decisions (no paired injection; no ZTF replay this round).
   - **Decision:** no rule change and no 40-star run without the owner. Rejected: difference-mode flux as a brightness
     ratio (template changes).
