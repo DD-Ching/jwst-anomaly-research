@@ -172,11 +172,27 @@ def is_arc(k: int, cat: dict) -> bool:
     return bool(k >= 0 and cat["ext"][k] and cat["ell"][k] >= ARC_MIN_ELL)
 
 
-def run(cache: Path) -> dict:
-    _, _, obs, tile = mx.FIELDS["macs0417"]
-    cat_path = cache / Path(mx.S3.format(obs, tile, "cat.ecsv")).name
-    cat = load_cat(cat_path)
-    depth = lc.depth_mag(lc.load_shapes(cat_path))
+def run(
+    cache: Path,
+    cat: dict | None = None,
+    depth: float | None = None,
+    cat_inputs: dict | None = None,
+    out: Path = OUT,
+) -> dict:
+    """Frozen run. ``cat``, ``depth`` and ``cat_inputs`` replace the pipeline catalogue (all three
+    or none; used by ``m0417_canucsref``); ``out`` is the output directory."""
+    given = (cat is not None, depth is not None, cat_inputs is not None)
+    if any(given) and not all(given):
+        raise ValueError("cat, depth and cat_inputs: pass all three or none")
+    if cat is None:
+        _, _, obs, tile = mx.FIELDS["macs0417"]
+        cat_path = cache / Path(mx.S3.format(obs, tile, "cat.ecsv")).name
+        cat = load_cat(cat_path)
+        depth = lc.depth_mag(lc.load_shapes(cat_path))
+        cat_inputs = {
+            "jwst_cat": cat_path.name,
+            "jwst_cat_sha256": hashlib.sha256(cat_path.read_bytes()).hexdigest(),
+        }
     pred = Table.read(FRAME / "predicted_macs0417.ecsv")
     ctrl = Table.read(FRAME / "control_macs0417.ecsv")
     mu = dict(
@@ -292,9 +308,9 @@ def run(cache: Path) -> dict:
                 ),
             }
         )
-    OUT.mkdir(parents=True, exist_ok=True)
-    Table(rows=controls).write(OUT / "control_macs0417.ecsv", overwrite=True)
-    Table(rows=targets).write(OUT / "predicted_macs0417.ecsv", overwrite=True)
+    out.mkdir(parents=True, exist_ok=True)
+    Table(rows=controls).write(out / "control_macs0417.ecsv", overwrite=True)
+    Table(rows=targets).write(out / "predicted_macs0417.ecsv", overwrite=True)
     absent = [c for c in controls if c["class"] == "absent"]
     posthoc = {  # not a frozen rule: why the absent controls fail
         "absent_own_segment_centroid_outside_radius": sum(
@@ -308,8 +324,7 @@ def run(cache: Path) -> dict:
     return {
         "posthoc_absent_controls": posthoc,
         "inputs": {
-            "jwst_cat": cat_path.name,
-            "jwst_cat_sha256": hashlib.sha256(cat_path.read_bytes()).hexdigest(),
+            **cat_inputs,
             "frame_offset_arcsec": [dra, ddec],
             "pixel_scale_arcsec": cat["scale"],
             "depth_mag": depth,

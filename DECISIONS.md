@@ -2202,6 +2202,15 @@ reference and **rejected for this field**: frozen gate C2 failed, 10 / 27 testab
 segment totals as references in cluster cores; an arc-aware reference needs a deblended arc catalogue
 (e.g. CANUCS v2) or an arc-aperture sum on member-subtracted images.
 
+**Addendum 2026-10-22b (MACS0417, `results/lens_consistency/macs0417_canucsref/`).** The CANUCS DR1 photometry
+catalogue (detection on BCG-subtracted images, deblended; F200W Kron totals) **passes** the same frozen gate C2:
+37 / 40 testable controls recovered or confused (arc-referenced 10 / 10). The pass is unchanged under four readings of the
+catalogue's PA convention (post hoc, `pa_sensitivity.json`); the CANUCS-to-pipeline frame is assumed, not tested. Use it, not pipeline segments, as the
+reference and search catalogue for the extra-image test on CANUCS fields (gate C2 per field first). Its two flags
+(family 10) have post hoc ordinary readings: one lies on the BCG below the local aperture noise (field-median depth
+does not apply there), the other has a photo-z-matched source of the predicted flux 1.49″ away. A local-noise
+`undetectable` rule would be a new frozen rule for the next field, not a re-reading of this one.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

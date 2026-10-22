@@ -1,0 +1,173 @@
+{
+ "label": "post hoc (not frozen rules); observed pixels, derived sums",
+ "image": "40mas_f200w_v1_bgsub-sci.fits.gz",
+ "image_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/hlsp_canucs_jwst_nircam_macs0417-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+ "image_sha256": "591228193a679d52ac523e8f5e0b7806327d7b2c382a57cbe8b0787d1eaea1cd",
+ "aperture_radius_arcsec": 0.3,
+ "random_apertures": {
+  "n": 200,
+  "annulus_arcsec": [
+   1.5,
+   4.0
+  ],
+  "source_exclusion_arcsec": 0.5,
+  "seed": 20261022
+ },
+ "separation_between_missing_arcsec": 2.310230625350656,
+ "note": "target apertures as they lie; random apertures avoid catalogue sources",
+ "family10": [
+  {
+   "image_class": "missing",
+   "class": "confused",
+   "ra": 64.39479649706004,
+   "dec": -11.907537311141732,
+   "f_pred_njy": 164.37355361515267,
+   "ap03_njy": 1242.3272162675858,
+   "local_median_njy": 115.06630244106054,
+   "local_std_njy": 174.21410303703746,
+   "pred_over_local_std": 0.9435146222358777,
+   "ap_minus_median_over_std": 6.4705491356625275,
+   "n_random_used": 200,
+   "nearest_sources": [
+    {
+     "source": 1199075,
+     "sep_arcsec": 0.6831418471755814,
+     "flux_f200w_njy": 33485.405957987,
+     "flux_over_pred": 203.715288874184,
+     "z_ml": 0.4508149027824402,
+     "z160": 0.4403323233127594,
+     "z840": 0.532558798789978,
+     "flag_high_bcgcontami": false
+    },
+    {
+     "source": 1120674,
+     "sep_arcsec": 1.1654579470755664,
+     "flux_f200w_njy": 36306.30794836225,
+     "flux_over_pred": 220.87682081368214,
+     "z_ml": 1.2249386310577393,
+     "z160": 1.2119446992874146,
+     "z840": 1.2972463369369507,
+     "flag_high_bcgcontami": true
+    },
+    {
+     "source": 1101314,
+     "sep_arcsec": 1.635214427884795,
+     "flux_f200w_njy": 57512.92912029674,
+     "flux_over_pred": 349.89162097785874,
+     "z_ml": 0.8804982304573059,
+     "z160": 0.8479804992675781,
+     "z840": 0.8996137976646423,
+     "flag_high_bcgcontami": false
+    }
+   ]
+  },
+  {
+   "image_class": "missing",
+   "class": "absent",
+   "ra": 64.39462863940717,
+   "dec": -11.906916955092163,
+   "f_pred_njy": 130.56227005143677,
+   "ap03_njy": 332.1279252767563,
+   "local_median_njy": 85.348015579395,
+   "local_std_njy": 179.25897496875373,
+   "pred_over_local_std": 0.728344397117047,
+   "ap_minus_median_over_std": 1.3766669687828852,
+   "n_random_used": 200,
+   "nearest_sources": [
+    {
+     "source": 1119039,
+     "sep_arcsec": 1.427075924069364,
+     "flux_f200w_njy": 53.85254142541565,
+     "flux_over_pred": 0.41246633812509326,
+     "z_ml": 9.07194709777832,
+     "z160": 2.5419631004333496,
+     "z840": 10.095574378967285,
+     "flag_high_bcgcontami": true
+    },
+    {
+     "source": 1119038,
+     "sep_arcsec": 1.44435164154466,
+     "flux_f200w_njy": 73.39673840502562,
+     "flux_over_pred": 0.5621588715952165,
+     "z_ml": 0.07015524804592133,
+     "z160": 0.08981592953205109,
+     "z840": 2.9751806259155273,
+     "flag_high_bcgcontami": true
+    },
+    {
+     "source": 1101314,
+     "sep_arcsec": 1.4693254169815277,
+     "flux_f200w_njy": 57512.92912029674,
+     "flux_over_pred": 440.50190838163854,
+     "z_ml": 0.8804982304573059,
+     "z160": 0.8479804992675781,
+     "z840": 0.8996137976646423,
+     "flag_high_bcgcontami": false
+    }
+   ]
+  },
+  {
+   "image_class": "candidate",
+   "class": "absent",
+   "ra": 64.38471416304424,
+   "dec": -11.915405023989534,
+   "f_pred_njy": 76.68643099916103,
+   "ap03_njy": -2.5161653218819993,
+   "local_median_njy": 0.670022721926216,
+   "local_std_njy": 13.364373380660036,
+   "pred_over_local_std": 5.738123952009314,
+   "ap_minus_median_over_std": -0.23840908608697198,
+   "n_random_used": 200,
+   "nearest_sources": [
+    {
+     "source": 1104897,
+     "sep_arcsec": 0.7080033159757815,
+     "flux_f200w_njy": 21.378974030060917,
+     "flux_over_pred": 0.27878431361989986,
+     "z_ml": 6.450602054595947,
+     "z160": 0.3637900650501251,
+     "z840": 6.711143493652344,
+     "flag_high_bcgcontami": false
+    },
+    {
+     "source": 1115938,
+     "sep_arcsec": 1.4859516112106503,
+     "flux_f200w_njy": 82.16659627666805,
+     "flux_over_pred": 1.0714619940725496,
+     "z_ml": 1.8057838678359985,
+     "z160": 1.7181670665740967,
+     "z840": 1.8805242776870728,
+     "flag_high_bcgcontami": false
+    },
+    {
+     "source": 1118700,
+     "sep_arcsec": 1.700464912382184,
+     "flux_f200w_njy": 8.485532051310901,
+     "flux_over_pred": 0.11065232715555293,
+     "z_ml": 6.259366512298584,
+     "z160": 1.4067962169647217,
+     "z840": 6.603784084320068,
+     "flag_high_bcgcontami": true
+    }
+   ]
+  }
+ ],
+ "family10_catalogued": [
+  {
+   "images": "10.1",
+   "counterpart": 1120781,
+   "flux_f200w_njy": 306.0157050514574,
+   "z_ml": 1.8043452501296997,
+   "z160": 1.7072490453720093,
+   "z840": 1.891479730606079
+  },
+  {
+   "images": "10.2",
+   "counterpart": 1116189,
+   "flux_f200w_njy": 228.22110430249916,
+   "z_ml": 1.9157310724258423,
+   "z160": 1.8669042587280273,
+   "z840": 2.0031399726867676
+  }
+ ]
+}
