@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Plan:** `results/w3_ztf/atlas40/PLAN.md`. Method, denominators and bounds were committed before any ATLAS flux;
   review fixes came before any outcome. 4 #461 stars are development data. Feasibility trial, not validation.
 - **Acquisition:**
-  - Shared Data Lab token; ≤ 2 tasks in flight; 19 submitted, none resubmitted, 0 HTTP 429.
+  - Shared Data Lab token; ≤ 2 tasks in flight; 19 submitted, none resubmitted, 0 HTTP 429 on submission.
   - The queue ran one task at a time: 17 done, 2 unfinished at 11:49 (deleted unused), 21 not submitted.
   - 6.96 MB downloaded. Compact tables were kept in `phot/` and the raw files deleted.
 - **Measurements:** 88.7–97.0 % of rows pass the FAQ cuts. Error scale k is 1.48–8.68 (median 2.19) over 108

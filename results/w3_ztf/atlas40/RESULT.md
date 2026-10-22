@@ -10,7 +10,8 @@
 
 ## 1. Access and acquisition (`tasks.json`, `cost.json`)
 - **Access:** the shared Astro Data Lab token documented by NOIRLab. The token is in no file.
-- **Limits:** at most 2 of our tasks in flight. 19 tasks were submitted, none twice. 0 HTTP 429, 0 poll errors, none over 45 min.
+- **Limits:** at most 2 of our tasks in flight. 19 tasks were submitted, none twice. 0 HTTP 429 on submission (a 429
+  while polling was honoured but not recorded), 0 poll errors, none over 45 min.
 - **Queue speed:** the shared queue ran our tasks one at a time:
   - queue wait 1.9–21.6 min;
   - run time 2.0–18.8 min.
@@ -42,7 +43,8 @@
 | fade passes, of 79 | 0 | **0** (Wilson 95 % 0–4.6 %) |
 | fade insufficient → slow, of 12 | — | 3 |
 
-- **Conditional on the 17 stars with data:** 6 of their 42 A-insufficient W3 events are restored (14.3 %, Wilson 6.7–27.8 %).
+- **Conditional on the 17 stars with data:** 6 of their 42 A-insufficient W3 events are restored (14.3 %, Wilson 6.7–27.8 %;
+  not stored, recomputable from `trial_<npix>.json` and `tasks.json`).
 - **Per area:** 4991 restores 3 / 39; 2344 restores 3 / 24. Neither area has a fade pass.
 - **Without the 4 development stars:** 5 / 50 restored, 0 / 72 fade passes, 4 lost. The development stars alone restore 1 / 13.
 - **Secondaries (not gating):** with the quoted σ, and with the 9999 rows kept, the outcome is the same for every event (6 / 63, 0 / 79, 4 lost).
@@ -57,7 +59,8 @@
 
 ## 5. Why the change happens (`diag_<npix>.json`, **post hoc**; uses injection truth for evaluation only, changes no outcome)
 - **The 6 restorations:** each one is decided by an ATLAS epoch closer to the ZTF run edge than any ZTF normal point.
-  - Every such decisive point is where the injected model is at or above baseline (model dm −1.83 to +0.29).
+  - The 6 decisive points (the U points of the sides that went from insufficient to fast) are where the injected model
+    is brighter than baseline (model dm −0.93 to −0.20).
   - So the gain is added sampling, not noise.
 - **The 8 W3 events that became "slow"** (4 lost, 4 from insufficient):
   - **7 of the 8:** a single ATLAS epoch was read as a significant intermediate point beyond 0.25 span.
@@ -84,6 +87,15 @@
 - **Scheduler restart** after a mistaken `pkill -f` (PLAN). Nothing was resubmitted.
 - **Diagnostic:** `diag_script.py.txt` was written after `result.json` was read (post hoc). Its first run matched points with `np.isclose` (0.59 d tolerance at MJD ≈ 59,000) and was fixed to exact time matching before its numbers were used.
 - **Unfinished tasks:** the 2 unfinished tasks were deleted after the deadline to free the shared queue. PLAN said "recorded for continuation". Their ids stay in `tasks.json`.
+- **Smoke-run files:**
+  - The smoke-run `trial_<npix>.json` committed with the review fixes (b768fac) already held B outcomes for the 41
+    events on the first 5 stars. They were not read before the fixes; the repository cannot show that.
+  - Their B outcomes equal the final ones for all 41 events. The fixes did not touch the B rule.
+- **Re-check notes** (no effect on this run):
+  - The scheduler's 3-try download cap covers only non-200 or non-table answers; a result GET that raises is retried at
+    every poll. tasks.json records no poll error.
+  - `atlas` in the trial events is true for a star whose table exists even if it had < 20 usable rows. No star had so
+    few (`calib.json`).
 
 ## 8. Limitations
 - **Assumptions:**
