@@ -42,9 +42,9 @@ Plan: `PLAN.md` (frozen and committed before the run). Numbers: `summary.json`, 
   Counting both as recovered gives 12 / 27, still a failure (computed in the session, not stored).
 - Rule 6 excludes only the reference's segment from the search, so a catalogued sibling's segment could mask a
   missing image (it can hide an `absent`, never create one).
-- Deviation: the script was meant to be committed before the run, but that commit was stopped by a lint error, so it
-  lands with the result. After the run, the code-review fixes above, a positive-flux guard on references (no segment
-  with S/N > 5 has flux ≤ 0, so no change) and the post hoc diagnostic columns and counts were added.
+- The script and its tests were committed before the run (c4932e9, with two over-long lines that failed lint). After
+  the run: lint fixes, the code-review fixes above, a positive-flux guard on references (no segment with S/N > 5 has
+  flux ≤ 0, so no change), a single reference function, and the post hoc diagnostic columns and counts.
 - One model (CANUCS v1 maps via the committed `../macs0417_frame` tables); no injections; no limit.
 
 ## Next
