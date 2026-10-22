@@ -1,0 +1,60 @@
+{
+ "label": "simulated; exploratory only. cogwheel 1.6.0 runs on C1, C2 started by hand although fixed-point checks F2 and F3 had failed (see cogwheel_checks.json); the plan's search gate was not met, so no result here is evidence for the frozen plan",
+ "versions": {
+  "cogwheel": "1.6.0",
+  "scipy": "1.18.1",
+  "lalsuite": "7.26.16",
+  "numpy": "2.5.4"
+ },
+ "gate": {
+  "F1_pass": true,
+  "F2_pass": false,
+  "F3_pass": false,
+  "bypassed_where": "manual: `python scripts/x4_cogwheel.py runs` was launched from the session shell; the script had no gate then (gate() added afterwards)"
+ },
+ "attempts": [
+  {
+   "attempt": 1,
+   "started_utc": "2026-10-21T23:42:05",
+   "settings": "frozen plan: IASPrior prior_kwargs q_min = 1/15; seeds C1 71, C2 72; 30-min cap",
+   "start_source": "cogwheel ReferenceWaveformFinder (aligned-spin IMRPhenomXAS, (2,2)); no truth, no saved solution",
+   "C2": {
+    "status": "crashed at DE start: SciPy ValueError 'Some entries in x0 lay outside the specified bounds' (aligned-spin start had q about 17.9, session, not stored)"
+   },
+   "C1": {
+    "status": "killed by hand after about 1 min (to keep both cases on one setting); DE not finished; no point saved"
+   },
+   "log_note": "attempt 1 printed the same two RWF blocks as attempt 2 (deterministic); the scratchpad log is not committed"
+  },
+  {
+   "attempt": 2,
+   "started_utc": "2026-10-21T23:43:25",
+   "stopped_utc": "2026-10-21T23:51:05",
+   "settings": "deviation: prior_kwargs removed, cogwheel default q_min 0.05 (q <= 20, wider than our q <= 15); everything else as attempt 1",
+   "start_source": "cogwheel ReferenceWaveformFinder; no truth, no saved solution",
+   "C1": {
+    "status": "not finished: stopped by hand at 7.7 min on owner instruction; DE in progress; no point saved (the script stored points only at the end)"
+   },
+   "C2": {
+    "status": "not finished: stopped by hand at 7.7 min on owner instruction; DE in progress; no point saved"
+   },
+   "log_lines": {
+    "note": "cogwheel stdout of both subprocesses interleaved; the assignment of the 3556 block to C1 and the 5646 block to C2 is inferred from print order (identical blocks in attempt 1), not verified. lnL values carry cogwheel's default asd_drift for the reference-finder likelihoods, which was not recorded, so they are not converted to FF",
+    "lines": [
+     "Set intrinsic parameters, lnL = 3555.006387823118",
+     "Set time, lnL(H) = 3556.319287231129",
+     "Set sky location, lnL = 3556.3192872311283",
+     "Set phase and distance, lnL = 3556.319287231131",
+     "Old lnl = 1085.3517165593105",
+     "Set intrinsic parameters, lnL = 5646.130184240434",
+     "Set time, lnL(H) = 5646.181305262082",
+     "Set sky location, lnL = 5646.181305262085",
+     "Set phase and distance, lnL = 5646.181305262086",
+     "Old lnl = -6492.911402105747"
+    ]
+   }
+  }
+ ],
+ "rescored_points": [],
+ "rescored_note": "none: no solution was saved, and only re-scoring of saved points was allowed after the stop"
+}
