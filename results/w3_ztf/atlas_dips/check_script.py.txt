@@ -170,6 +170,8 @@ if STAGE == 'post_review':
     for i_, n_ in enumerate(porder):
         plan[n_]['rank'], plan[n_]['would_be_checked'] = i_ + 1, i_ < 3
     assert plan['G2']['would_be_checked'] and not sel['G2']['checked'], plan
+    saved_g2 = json.load(open(O + 'selection.json'))['groups']['G2']  # same group as #470's record
+    assert (saved_g2['unit'], saved_g2['night'], saved_g2['rows']) == (sel['G2']['unit'], sel['G2']['night'], sel['G2']['rows'])
     json.dump({'label': 'POST REVIEW (after #470); derived counts only, with PLAN section 2 wording for count (b)',
                'groups': plan}, open(O + 'selection_plan_wording.json', 'w'), indent=1)
     open(O + 'selection_plan_wording.json', 'a').write('\n')
@@ -189,16 +191,33 @@ if STAGE == 'post_review':
                 table_[ob][s_] = 'unknown: no row in this exposure'
                 continue
             q_ = d_.loc[m_].iloc[0]
+            faq = bool(quality(d_.loc[m_]).all())
             table_[ob][s_] = {'target_row': s_ in {x['star'] for x in groups[g2] if x['Obs'] == ob},
-                              'passes_quality': bool(q_['ok']), 'F': q_['F'], 'unit': q_['unit'], 'mjd': float(q_['MJD']),
+                              'passes_faq_cuts': faq, 'below_9999_guard': bool(abs(q_['uJy']) < 9999),
+                              'used_by_rule': bool(q_['ok']), 'F': q_['F'], 'unit': q_['unit'], 'mjd': float(q_['MJD']),
                               'uJy': int(q_['uJy']), 'duJy': int(q_['duJy']), 'baseline_uJy': float(q_['baseline']),
                               'baseline_group': f"{q_['F']}/{q_['unit']}", 'k': float(q_['k']), 'rel': float(q_['rel']),
                               'sigma_rel_cal': float(q_['sig']), 'dev_sigma': float(q_['dev']),
                               'quality': {c_: float(q_[c_]) for c_ in ['err', 'chi/N', 'x', 'y', 'maj', 'min', 'apfit',
                                                                          'mag5sig', 'Sky']}}
+    # every exposure of the area's stars on G2's night and unit (row counts and medians of the quality fields)
+    night_ = {}
+    for s_, d_ in T.items():
+        if targets[s_]['area'] != area:
+            continue
+        m_ = (d_['unit'] == groups[g2][0]['unit']) & (d_['MJD'].astype(int) == groups[g2][0]['mjd_published'] // 1)
+        for _, q_ in d_.loc[m_].iterrows():
+            e_ = night_.setdefault(q_['Obs'], {'mjd': float(q_['MJD']), 'rows': 0, 'used_by_rule': 0, 'mag5sig': [], 'Sky': []})
+            e_['rows'] += 1
+            e_['used_by_rule'] += int(q_['ok'])
+            e_['mag5sig'].append(float(q_['mag5sig']))
+            e_['Sky'].append(float(q_['Sky']))
+    for e_ in night_.values():
+        e_['mag5sig_median'], e_['Sky_median'] = float(np.median(e_.pop('mag5sig'))), float(np.median(e_.pop('Sky')))
     json.dump({'label': 'POST-REVIEW SUPPLEMENTARY CHECK of G2 (not blind, not a validation); observed ATLAS and ZTF '
                         'measurements (stored tables, local cache) and derived checks; PLAN section 3',
-               'selection_plan_wording': plan, 'G2': rows2, 'per_star_per_exposure': table_},
+               'selection_plan_wording': plan, 'G2': rows2, 'per_star_per_exposure': table_,
+               'night_exposures_same_unit': dict(sorted(night_.items(), key=lambda kv: kv[1]['mjd']))},
               open(O + 'check_g2.json', 'w'), indent=1)
     open(O + 'check_g2.json', 'a').write('\n')
     for r_ in rows2:

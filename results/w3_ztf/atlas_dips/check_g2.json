@@ -598,7 +598,9 @@
    "601213300003718": "unknown: no row in this exposure",
    "601213400002567": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -624,7 +626,9 @@
    },
    "601213200006434": {
     "target_row": true,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -651,7 +655,9 @@
    "601213300005924": "unknown: no row in this exposure",
    "601209200002983": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -677,7 +683,9 @@
    },
    "601213300007095": {
     "target_row": false,
-    "passes_quality": false,
+    "passes_faq_cuts": true,
+    "below_9999_guard": false,
+    "used_by_rule": false,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -703,7 +711,9 @@
    },
    "601213300002366": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -729,7 +739,9 @@
    },
    "601213400002132": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -755,7 +767,9 @@
    },
    "601213400004073": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -781,7 +795,9 @@
    },
    "601213400005483": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.574921,
@@ -810,7 +826,9 @@
    "601213300003718": "unknown: no row in this exposure",
    "601213400002567": {
     "target_row": true,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -836,7 +854,9 @@
    },
    "601213200006434": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -863,7 +883,9 @@
    "601213300005924": "unknown: no row in this exposure",
    "601209200002983": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -889,7 +911,9 @@
    },
    "601213300007095": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -915,7 +939,9 @@
    },
    "601213300002366": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -941,7 +967,9 @@
    },
    "601213400002132": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -967,7 +995,9 @@
    },
    "601213400004073": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -993,7 +1023,9 @@
    },
    "601213400005483": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.589057,
@@ -1022,7 +1054,9 @@
    "601213300003718": "unknown: no row in this exposure",
    "601213400002567": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1048,7 +1082,9 @@
    },
    "601213200006434": {
     "target_row": true,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1075,7 +1111,9 @@
    "601213300005924": "unknown: no row in this exposure",
    "601209200002983": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1101,7 +1139,9 @@
    },
    "601213300007095": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1127,7 +1167,9 @@
    },
    "601213300002366": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1153,7 +1195,9 @@
    },
    "601213400002132": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1179,7 +1223,9 @@
    },
    "601213400004073": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1205,7 +1251,9 @@
    },
    "601213400005483": {
     "target_row": false,
-    "passes_quality": true,
+    "passes_faq_cuts": true,
+    "below_9999_guard": true,
+    "used_by_rule": true,
     "F": "o",
     "unit": "01a",
     "mjd": 60480.601836,
@@ -1229,6 +1277,64 @@
      "Sky": 20.34
     }
    }
+  }
+ },
+ "night_exposures_same_unit": {
+  "01a60480o0683o": {
+   "mjd": 60480.569828,
+   "rows": 1,
+   "used_by_rule": 1,
+   "mag5sig_median": 17.41,
+   "Sky_median": 18.62
+  },
+  "01a60480o0690o": {
+   "mjd": 60480.573073,
+   "rows": 1,
+   "used_by_rule": 1,
+   "mag5sig_median": 17.83,
+   "Sky_median": 19.15
+  },
+  "01a60480o0694o": {
+   "mjd": 60480.574921,
+   "rows": 8,
+   "used_by_rule": 7,
+   "mag5sig_median": 18.46,
+   "Sky_median": 19.75
+  },
+  "01a60480o0701o": {
+   "mjd": 60480.578253,
+   "rows": 9,
+   "used_by_rule": 0,
+   "mag5sig_median": -2.79,
+   "Sky_median": -1.36
+  },
+  "01a60480o0702o": {
+   "mjd": 60480.578715,
+   "rows": 1,
+   "used_by_rule": 1,
+   "mag5sig_median": 18.63,
+   "Sky_median": 19.96
+  },
+  "01a60480o0722o": {
+   "mjd": 60480.589057,
+   "rows": 8,
+   "used_by_rule": 8,
+   "mag5sig_median": 18.28,
+   "Sky_median": 19.67
+  },
+  "01a60480o0748o": {
+   "mjd": 60480.601373,
+   "rows": 1,
+   "used_by_rule": 1,
+   "mag5sig_median": 19.04,
+   "Sky_median": 20.43
+  },
+  "01a60480o0749o": {
+   "mjd": 60480.601836,
+   "rows": 8,
+   "used_by_rule": 8,
+   "mag5sig_median": 19.03,
+   "Sky_median": 20.34
   }
  }
 }

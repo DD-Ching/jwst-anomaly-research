@@ -5766,12 +5766,13 @@ confining radiation at a throat is found.
     as is, with no new rule, gap filling or photometry request.
   - **Note:** a common-mode test across stars in the same exposure would flag G1. Adding it would be a new
     pre-registered method. Check the cleaning guide the ATLAS FAQ cites (Rest et al.) first.
-  - **Revisit if:** the owner asks for the unchecked G2 group, opens a new method round, or ATLAS exposure images
-    become reachable without an account.
+  - **Revisit if:** the owner asks for the unchecked G2 group (done: post-review G2 check below), opens a new method
+    round, or ATLAS exposure images become reachable without an account.
   - **Post-review G2 check (2026-10-22, PLAN §3):** G2 is the group the selection deviation left out.
     - One exposure shows common mode.
     - Two rows are undetermined: their comparison stars scatter > 5 σ in both directions on that night.
-    - No individual variability is supported. All 4 groups are now checked.
+    - No individual variability is supported, and no source is worth follow-up from these rows. All 4 groups are
+      now checked.
     - The line is closed with no further check of this kind. Revisit only on the owner's request for a new method
       round, or if exposure images become reachable without an account.
 
