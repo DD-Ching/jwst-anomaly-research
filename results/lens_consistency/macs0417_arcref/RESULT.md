@@ -33,6 +33,9 @@ Plan: `PLAN.md` (frozen and committed before the run). Numbers: `summary.json`, 
 ## Limitations and deviations
 - Deviation (plan defect, noticed after the run): rule 6 has no footprint check, so the off-footprint control 15.1
   (`off_image` in `../macs0417_frame`) is classed `absent`. Without it the all-control fraction is 12 / 29, still far below 0.8; the gate outcome does not depend on it.
+- Deviation: the script was meant to be committed before the run, but that commit was stopped by a lint error, so it
+  lands with the result. After the run only lint fixes and the post hoc diagnostic columns and counts were added;
+  the frozen-rule functions and their tests are unchanged.
 - One model (CANUCS v1 maps via the committed `../macs0417_frame` tables); no injections; no limit.
 
 ## Next
