@@ -482,7 +482,9 @@ def test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting(tmp_path)
         f = tmp_path / f"f{k}.h5"
         f.write_bytes(b"x")
         if k == 0:
-            os.kill(os.getpid(), signal.SIGINT)  # main thread is blocked in result()
+            # usually lands while the main thread waits in result(); sometimes still inside the
+            # submit() that started this worker (the next test pins that case down)
+            os.kill(os.getpid(), signal.SIGINT)
             time.sleep(0.3)
         return f"f{k}.h5", {"dest": str(f), "downloaded": True}, None
 
@@ -490,6 +492,41 @@ def test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting(tmp_path)
     with pytest.raises(KeyboardInterrupt):
         for res in gen:
             Path(res[1]["dest"]).unlink()
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_bounded_map_waits_for_a_worker_the_executor_lost_to_an_interrupt(tmp_path, monkeypatch):
+    # an interrupt inside submit() after Thread.start() but before ThreadPoolExecutor records the
+    # thread (where the test above failed on CI, #462) leaves a running worker that shutdown()
+    # does not join; its file must still be cleaned
+    import threading
+    import time
+
+    import s1_chime as drv
+
+    fetching = threading.Event()
+    orig_start = threading.Thread.start
+    interrupted = []
+
+    def start(self):
+        orig_start(self)
+        if not interrupted and self.name.startswith("ThreadPoolExecutor"):
+            interrupted.append(self)
+            fetching.wait(30)
+            raise KeyboardInterrupt  # what a SIGINT handled in Thread.start()'s wait raises
+
+    def fetch(k):
+        f = tmp_path / f"f{k}.h5"
+        f.write_bytes(b"x")
+        fetching.set()
+        time.sleep(0.3)  # still downloading when the interrupt is handled
+        return f"f{k}.h5", {"dest": str(f), "downloaded": True}, None
+
+    monkeypatch.setattr(threading.Thread, "start", start)
+    gen = drv.bounded_map(fetch, range(4), 2, drv._drop)
+    with pytest.raises(KeyboardInterrupt):
+        next(gen)
+    assert fetching.is_set()  # the lost worker did run fetch(0)
     assert list(tmp_path.iterdir()) == []
 
 
