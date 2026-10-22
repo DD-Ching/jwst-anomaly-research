@@ -1,0 +1,104 @@
+# POST HOC diagnostic (written after result.json was read; not part of the frozen method, changes no outcome).
+# It replays the same events as trial_script.py.txt (its definitions are executed unchanged, up to `ev = []`) and,
+# for the W3 events A-insufficient on a star with ATLAS data and for every event whose B outcome differs from A,
+# records per run side: A's and B's edge class, L (farthest significant intermediate) and U (nearest normal beyond it),
+# the ATLAS points that set them, and the injected model's dm at those times (injection truth, evaluation only), and
+# how many usable ATLAS epochs fall in the decisive window (t_edge, t_edge + EDGE_FRAC * span] of each side.
+# Usage: python diag_script.py.txt <npix> <seed offset>
+import json, sys
+
+src = open('results/w3_ztf/atlas40/trial_script.py.txt').read()
+exec(src.split('\nev = []\n')[0])  # noqa: S102 - the trial's own calibration, replay set-up and helpers
+
+D = []
+
+
+def screen_both(si, oi):  # as trial_script.py.txt
+    out = {}
+    for rule in ('time', 'bounds'):
+        wz.EDGE_RULE = rule
+        out[rule] = wz.screen(si, oi, cov)
+    return out
+
+
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+
+
+def sides(si, h, alt, atl, model):
+    tt = np.array([x[0] for x in si])
+    i = int(np.flatnonzero(tt == h['t_start'])[0]); j = int(np.flatnonzero(tt == h['t_end'])[0])
+    span = max(tt[j] - tt[i], 1.0)
+    ea, eb = wz.edge_bounds_alt(si, (i, j), span, ()), wz.edge_bounds_alt(si, (i, j), span, alt)
+    a = np.asarray(alt, float).reshape(-1, 3) if len(alt) else np.zeros((0, 3))
+    thr = wz.EDGE_FRAC * span
+    out = {'span_d': float(span), 'thr_d': float(thr), 'a': ea['edge_class'], 'b': eb['edge_class']}
+    for side, edge, sgn in (('pre', tt[i], -1), ('post', tt[j], 1)):
+        rec = {'a_class': ea[f'edge_{side}_class'], 'b_class': eb[f'edge_{side}_class'],
+               'a_L_d': ea[f'edge_{side}_d'], 'b_L_d': eb[f'edge_{side}_d'],
+               'a_U_d': ea[f'edge_{side}_max_d'], 'b_U_d': eb[f'edge_{side}_max_d']}
+        dist = sgn * (a[:, 0] - edge)
+        rec['atlas_in_decisive_window'] = int(((dist > 0) & (dist <= thr)).sum())
+        if rec['b_L_d'] > rec['a_L_d']:  # L moved out: an ATLAS intermediate point
+            m = int(np.argmin(np.abs(dist - rec['b_L_d'])))
+            k = int(np.flatnonzero(atl['t'] == a[m, 0])[0])  # exact: alt times are the ATLAS times unchanged
+            rec['b_L_point'] = {'dt_d': float(dist[m]), 'dm': float(a[m, 1]), 'sigma_dm': float(a[m, 2]),
+                                'model_dm_truth': float(model(np.array([a[m, 0]]))[0]),
+                                'observed_rel_before_injection': float(atl['rel'][k]),
+                                'observed_sigma_rel': float(atl['sig_cal'][k])}
+        if (rec['b_U_d'] or np.inf) < (rec['a_U_d'] or np.inf):  # U moved in: an ATLAS normal point
+            m = int(np.argmin(np.abs(dist - rec['b_U_d'])))
+            rec['b_U_point'] = {'dt_d': float(dist[m]), 'dm': float(a[m, 1]), 'sigma_dm': float(a[m, 2]),
+                                'model_dm_truth': float(model(np.array([a[m, 0]]))[0])}
+        out[side] = rec
+    return out
+
+
+def handle(kind, k, g, si, hits_b, hits_t, model):
+    if g['key'] not in keys or not hits_b or ATL[g['key']] is None:
+        return
+    a = outcome(hits_b)
+    alt = atlas_points(ATL[g['key']], model, 'sig_cal')
+    b = outcome(with_alt(si, hits_b, alt))
+    if not ((kind != 'fade' and a == 'edge_insufficient') or a != b):
+        return
+    D.append({'kind': kind, 'i': k, 'carrier': g['key'], 'a': a, 'b': b,
+              'hits': [sides(si, h, alt, ATL[g['key']], model) for h in hits_b if all(h[x] for x in OTHERS)]})
+
+
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    kind = f'rho{rho}_blend{blend:g}_tE{te:g}'
+    rng = np.random.default_rng(1100 + c + OFF)
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        sc = screen_both(si, oi)
+        hits = {r: [x for x in v if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
+                    and (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+        model = lambda x, t0=t0, te=te, u0=u0, rho=rho, blend=blend: wz.w3_dmag(np.asarray(x, float), t0, te, u0, rho, blend)
+        handle(kind, k, g, si, hits['bounds'], hits['time'], model)
+rng = np.random.default_rng(1201 + OFF)
+for k in range(1000):
+    g, s, o, base = carriers[rng.integers(len(carriers))]
+    t = np.array([x[0] for x in s])
+    model = wz.control_model('fade', t, rng)
+    si = wz.apply_dmag(s, model(t), cov, rng)
+    oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+    sc = screen_both(si, oi)
+    hits = {r: [x for x in v if (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+    handle('fade', k, g, si, hits['bounds'], hits['time'], model)
+
+trial = {(e['kind'], e['i']): e for e in json.load(open(f'results/w3_ztf/atlas40/trial_{P}.json'))['events']}
+for d in D:  # the diagnostic must see the same outcomes as the committed trial
+    assert (trial[(d['kind'], d['i'])]['a'], trial[(d['kind'], d['i'])]['b']) == (d['a'], d['b']), d
+json.dump({'label': 'POST HOC diagnostic; derived; simulated events; ATLAS observed; model_dm_truth is injection truth '
+                    '(evaluation only)', 'npix': P, 'events': D}, open(f'results/w3_ztf/atlas40/diag_{P}.json', 'w'),
+          indent=1, default=float)
+open(f'results/w3_ztf/atlas40/diag_{P}.json', 'a').write('\n')
+print(P, len(D), 'events diagnosed')

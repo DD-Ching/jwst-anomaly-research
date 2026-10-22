@@ -1,0 +1,305 @@
+{
+ "label": "derived (trial_<npix>.json, tasks.json); simulated events; ATLAS observed",
+ "tasks_status": {
+  "done": 17,
+  "unfinished_at_deadline": 2,
+  "not_submitted": 21
+ },
+ "stars_with_atlas": 17,
+ "stars_without_atlas": [
+  "601209200000036",
+  "601209200009972",
+  "601213100007066",
+  "601213200002823",
+  "601213300005265",
+  "601213400002563",
+  "601213400012516",
+  "601214400005162",
+  "601214400007338",
+  "601214400015866",
+  "632211200001819",
+  "632215200004848",
+  "632215200014409",
+  "632215300003316",
+  "632215300005716",
+  "632215300012244",
+  "632215300015222",
+  "632215400005617",
+  "632216100005645",
+  "632216400002826",
+  "632216400003415",
+  "632216400006470",
+  "678201400015809"
+ ],
+ "complete": false,
+ "primary_b": {
+  "w3_injections": 154,
+  "fade_injections": 79,
+  "w3_a_insufficient": 63,
+  "w3_restored": 6,
+  "w3_recovered_a": 48,
+  "w3_recovered_b": 50,
+  "w3_lost_in_b": 4,
+  "fade_pass_a": 0,
+  "fade_pass_b": 0,
+  "fade_insufficient_a": 12,
+  "fade_insufficient_to_slow": 3,
+  "transitions": {
+   "w3: not_flagged -> not_flagged": 41,
+   "w3: edge_insufficient -> edge_insufficient": 53,
+   "w3: recovered -> recovered": 44,
+   "w3: edge_insufficient -> recovered": 6,
+   "w3: recovered -> edge_slow": 4,
+   "w3: edge_insufficient -> edge_slow": 4,
+   "fade: other:achromatic_ok -> other:achromatic_ok": 3,
+   "fade: edge_slow -> edge_slow": 56,
+   "fade: edge_insufficient -> edge_insufficient": 9,
+   "fade: other:oneoff_ok -> other:oneoff_ok": 2,
+   "fade: edge_insufficient -> edge_slow": 3,
+   "fade: not_flagged -> not_flagged": 6,
+   "w3: edge_slow -> edge_slow": 2
+  },
+  "restored_fraction": 0.09523809523809523,
+  "restored_wilson95": [
+   0.0443828799438878,
+   0.19261922652872804
+  ],
+  "fade_pass_fraction_b": 0.0,
+  "fade_pass_wilson95": [
+   0.0,
+   0.04637283683559951
+  ]
+ },
+ "success": false,
+ "bounds_if_incomplete": {
+  "restored_lower": 6,
+  "restored_upper": 27,
+  "fade_pass_best": 0,
+  "fade_pass_worst": 4,
+  "success_best_case": false,
+  "success_worst_case": false
+ },
+ "secondary_quoted_sigma": {
+  "w3_injections": 154,
+  "fade_injections": 79,
+  "w3_a_insufficient": 63,
+  "w3_restored": 6,
+  "w3_recovered_a": 48,
+  "w3_recovered_b": 50,
+  "w3_lost_in_b": 4,
+  "fade_pass_a": 0,
+  "fade_pass_b": 0,
+  "fade_insufficient_a": 12,
+  "fade_insufficient_to_slow": 3,
+  "transitions": {
+   "w3: not_flagged -> not_flagged": 41,
+   "w3: edge_insufficient -> edge_insufficient": 53,
+   "w3: recovered -> recovered": 44,
+   "w3: edge_insufficient -> recovered": 6,
+   "w3: recovered -> edge_slow": 4,
+   "w3: edge_insufficient -> edge_slow": 4,
+   "fade: other:achromatic_ok -> other:achromatic_ok": 3,
+   "fade: edge_slow -> edge_slow": 56,
+   "fade: edge_insufficient -> edge_insufficient": 9,
+   "fade: other:oneoff_ok -> other:oneoff_ok": 2,
+   "fade: edge_insufficient -> edge_slow": 3,
+   "fade: not_flagged -> not_flagged": 6,
+   "w3: edge_slow -> edge_slow": 2
+  },
+  "restored_fraction": 0.09523809523809523,
+  "restored_wilson95": [
+   0.0443828799438878,
+   0.19261922652872804
+  ],
+  "fade_pass_fraction_b": 0.0,
+  "fade_pass_wilson95": [
+   0.0,
+   0.04637283683559951
+  ]
+ },
+ "secondary_keep_9999": {
+  "w3_injections": 154,
+  "fade_injections": 79,
+  "w3_a_insufficient": 63,
+  "w3_restored": 6,
+  "w3_recovered_a": 48,
+  "w3_recovered_b": 50,
+  "w3_lost_in_b": 4,
+  "fade_pass_a": 0,
+  "fade_pass_b": 0,
+  "fade_insufficient_a": 12,
+  "fade_insufficient_to_slow": 3,
+  "transitions": {
+   "w3: not_flagged -> not_flagged": 41,
+   "w3: edge_insufficient -> edge_insufficient": 53,
+   "w3: recovered -> recovered": 44,
+   "w3: edge_insufficient -> recovered": 6,
+   "w3: recovered -> edge_slow": 4,
+   "w3: edge_insufficient -> edge_slow": 4,
+   "fade: other:achromatic_ok -> other:achromatic_ok": 3,
+   "fade: edge_slow -> edge_slow": 56,
+   "fade: edge_insufficient -> edge_insufficient": 9,
+   "fade: other:oneoff_ok -> other:oneoff_ok": 2,
+   "fade: edge_insufficient -> edge_slow": 3,
+   "fade: not_flagged -> not_flagged": 6,
+   "w3: edge_slow -> edge_slow": 2
+  },
+  "restored_fraction": 0.09523809523809523,
+  "restored_wilson95": [
+   0.0443828799438878,
+   0.19261922652872804
+  ],
+  "fade_pass_fraction_b": 0.0,
+  "fade_pass_wilson95": [
+   0.0,
+   0.04637283683559951
+  ]
+ },
+ "without_dev_stars": {
+  "w3_injections": 132,
+  "fade_injections": 72,
+  "w3_a_insufficient": 50,
+  "w3_restored": 5,
+  "w3_recovered_a": 42,
+  "w3_recovered_b": 43,
+  "w3_lost_in_b": 4,
+  "fade_pass_a": 0,
+  "fade_pass_b": 0,
+  "fade_insufficient_a": 11,
+  "fade_insufficient_to_slow": 2,
+  "transitions": {
+   "w3: not_flagged -> not_flagged": 38,
+   "w3: edge_insufficient -> edge_insufficient": 42,
+   "w3: recovered -> recovered": 38,
+   "w3: edge_insufficient -> recovered": 5,
+   "w3: recovered -> edge_slow": 4,
+   "w3: edge_insufficient -> edge_slow": 3,
+   "fade: other:achromatic_ok -> other:achromatic_ok": 3,
+   "fade: edge_slow -> edge_slow": 50,
+   "fade: edge_insufficient -> edge_insufficient": 9,
+   "fade: other:oneoff_ok -> other:oneoff_ok": 2,
+   "fade: edge_insufficient -> edge_slow": 2,
+   "fade: not_flagged -> not_flagged": 6,
+   "w3: edge_slow -> edge_slow": 2
+  },
+  "restored_fraction": 0.1,
+  "restored_wilson95": [
+   0.04347512399157111,
+   0.2136049033478839
+  ],
+  "fade_pass_fraction_b": 0.0,
+  "fade_pass_wilson95": [
+   0.0,
+   0.05065293981139638
+  ]
+ },
+ "dev_stars_only": {
+  "w3_injections": 22,
+  "fade_injections": 7,
+  "w3_a_insufficient": 13,
+  "w3_restored": 1,
+  "w3_recovered_a": 6,
+  "w3_recovered_b": 7,
+  "w3_lost_in_b": 0,
+  "fade_pass_a": 0,
+  "fade_pass_b": 0,
+  "fade_insufficient_a": 1,
+  "fade_insufficient_to_slow": 1,
+  "transitions": {
+   "w3: edge_insufficient -> edge_insufficient": 11,
+   "w3: recovered -> recovered": 6,
+   "w3: edge_insufficient -> recovered": 1,
+   "w3: not_flagged -> not_flagged": 3,
+   "w3: edge_insufficient -> edge_slow": 1,
+   "fade: edge_slow -> edge_slow": 6,
+   "fade: edge_insufficient -> edge_slow": 1
+  },
+  "restored_fraction": 0.07692307692307693,
+  "restored_wilson95": [
+   0.013710066379696323,
+   0.3331453392824736
+  ],
+  "fade_pass_fraction_b": 0.0,
+  "fade_pass_wilson95": [
+   0.0,
+   0.35433884297520657
+  ]
+ },
+ "per_area": {
+  "4991": {
+   "w3_injections": 83,
+   "fade_injections": 33,
+   "w3_a_insufficient": 39,
+   "w3_restored": 3,
+   "w3_recovered_a": 27,
+   "w3_recovered_b": 27,
+   "w3_lost_in_b": 3,
+   "fade_pass_a": 0,
+   "fade_pass_b": 0,
+   "fade_insufficient_a": 7,
+   "fade_insufficient_to_slow": 3,
+   "transitions": {
+    "w3: not_flagged -> not_flagged": 17,
+    "w3: edge_insufficient -> edge_insufficient": 33,
+    "w3: recovered -> recovered": 24,
+    "w3: edge_insufficient -> recovered": 3,
+    "w3: recovered -> edge_slow": 3,
+    "w3: edge_insufficient -> edge_slow": 3,
+    "fade: other:achromatic_ok -> other:achromatic_ok": 2,
+    "fade: edge_slow -> edge_slow": 22,
+    "fade: edge_insufficient -> edge_insufficient": 4,
+    "fade: other:oneoff_ok -> other:oneoff_ok": 1,
+    "fade: edge_insufficient -> edge_slow": 3,
+    "fade: not_flagged -> not_flagged": 1
+   },
+   "restored_fraction": 0.07692307692307693,
+   "restored_wilson95": [
+    0.026506914073495688,
+    0.2032137312805527
+   ],
+   "fade_pass_fraction_b": 0.0,
+   "fade_pass_wilson95": [
+    0.0,
+    0.10427343003561192
+   ]
+  },
+  "2344": {
+   "w3_injections": 71,
+   "fade_injections": 46,
+   "w3_a_insufficient": 24,
+   "w3_restored": 3,
+   "w3_recovered_a": 21,
+   "w3_recovered_b": 23,
+   "w3_lost_in_b": 1,
+   "fade_pass_a": 0,
+   "fade_pass_b": 0,
+   "fade_insufficient_a": 5,
+   "fade_insufficient_to_slow": 0,
+   "transitions": {
+    "w3: edge_insufficient -> edge_insufficient": 20,
+    "w3: recovered -> recovered": 20,
+    "w3: not_flagged -> not_flagged": 24,
+    "w3: edge_insufficient -> edge_slow": 1,
+    "w3: edge_slow -> edge_slow": 2,
+    "w3: edge_insufficient -> recovered": 3,
+    "w3: recovered -> edge_slow": 1,
+    "fade: edge_slow -> edge_slow": 34,
+    "fade: other:achromatic_ok -> other:achromatic_ok": 1,
+    "fade: not_flagged -> not_flagged": 5,
+    "fade: other:oneoff_ok -> other:oneoff_ok": 1,
+    "fade: edge_insufficient -> edge_insufficient": 5
+   },
+   "restored_fraction": 0.125,
+   "restored_wilson95": [
+    0.04344255039315584,
+    0.3100428814785757
+   ],
+   "fade_pass_fraction_b": 0.0,
+   "fade_pass_wilson95": [
+    0.0,
+    0.07707617732978073
+   ]
+  }
+ },
+ "verdict": "fail regardless of the missing stars"
+}

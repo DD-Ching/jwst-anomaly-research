@@ -1,0 +1,631 @@
+{
+ "label": "POST HOC diagnostic; derived; simulated events; ATLAS observed; model_dm_truth is injection truth (evaluation only)",
+ "npix": 2344,
+ "events": [
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 196,
+   "carrier": 632215200005622,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 41.89266908822901,
+     "thr_d": 10.473167272057253,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 84.42611745619797,
+      "b_U_d": 84.42611745619797,
+      "atlas_in_decisive_window": 12
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 13.993386372429086,
+      "b_U_d": 13.202743150264723,
+      "atlas_in_decisive_window": 11,
+      "b_U_point": {
+       "dt_d": 13.202743150264723,
+       "dm": -0.7104610161561964,
+       "sigma_dm": 0.009904750504816632,
+       "model_dm_truth": -0.6998372747139157
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 5,
+   "carrier": 632211200001311,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 244.66014195454045,
+     "thr_d": 61.16503548863511,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 84.4261320563528,
+      "b_U_d": 14.882181583569036,
+      "atlas_in_decisive_window": 47,
+      "b_U_point": {
+       "dt_d": 14.882181583569036,
+       "dm": -1.1176778030478358,
+       "sigma_dm": 0.008240151181411736,
+       "model_dm_truth": -1.1255464198706058
+      }
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 101.31438926994451,
+      "b_U_d": 98.45115527348389,
+      "atlas_in_decisive_window": 113,
+      "b_U_point": {
+       "dt_d": 98.45115527348389,
+       "dm": -1.5649207145877886,
+       "sigma_dm": 0.005366666932997171,
+       "model_dm_truth": -1.556489939019999
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 185,
+   "carrier": 632216400001580,
+   "a": "edge_insufficient",
+   "b": "edge_slow",
+   "hits": [
+    {
+     "span_d": 26.009193195022817,
+     "thr_d": 6.502298298755704,
+     "a": "insufficient",
+     "b": "slow",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 7.887588696008606,
+      "b_U_d": 4.7948752659140155,
+      "atlas_in_decisive_window": 4,
+      "b_U_point": {
+       "dt_d": 4.7948752659140155,
+       "dm": -0.880458382937862,
+       "sigma_dm": 0.02506104031460108,
+       "model_dm_truth": -0.8424690643337682
+      }
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "slow",
+      "a_L_d": 0.0,
+      "b_L_d": 7.172955308938981,
+      "a_U_d": 8.080234156630468,
+      "b_U_d": 8.080234156630468,
+      "atlas_in_decisive_window": 8,
+      "b_L_point": {
+       "dt_d": 7.172955308938981,
+       "dm": 0.5460942123301281,
+       "sigma_dm": 0.0440115121458906,
+       "model_dm_truth": 0.6099995124800407,
+       "observed_rel_before_injection": 1.0457779567727212,
+       "observed_sigma_rel": 0.032465243907901224
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend1_tE30",
+   "i": 194,
+   "carrier": 632216400001580,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 58.98608040052204,
+     "thr_d": 14.74652010013051,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 59.43114695332042,
+      "b_U_d": 59.43114695332042,
+      "atlas_in_decisive_window": 0
+     },
+     "post": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 3.9772003594771377,
+      "b_U_d": 3.075923564247205,
+      "atlas_in_decisive_window": 4,
+      "b_U_point": {
+       "dt_d": 3.075923564247205,
+       "dm": -0.18466931130697034,
+       "sigma_dm": 0.033035729779240394,
+       "model_dm_truth": -0.19563345048662664
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE10",
+   "i": 73,
+   "carrier": 632211200002174,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 24.990078372240532,
+     "thr_d": 6.247519593060133,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 13.993417390192917,
+      "b_U_d": 7.772903503886482,
+      "atlas_in_decisive_window": 4,
+      "b_U_point": {
+       "dt_d": 7.772903503886482,
+       "dm": -0.5970819587212233,
+       "sigma_dm": 0.011317399839124545,
+       "model_dm_truth": -0.08003250813202731
+      }
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 13.011717002540536,
+      "b_U_d": 13.011717002540536,
+      "atlas_in_decisive_window": 6
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 95,
+   "carrier": 632215200005702,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 68.84314205505507,
+     "thr_d": 17.210785513763767,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 4.037226598629786,
+      "b_U_d": 3.9837442027419456,
+      "atlas_in_decisive_window": 32,
+      "b_U_point": {
+       "dt_d": 3.9837442027419456,
+       "dm": -1.7846682193918881,
+       "sigma_dm": 0.004166552219416986,
+       "model_dm_truth": -1.785899348128778
+      }
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 88.41746550714015,
+      "b_U_d": 77.53754176193615,
+      "atlas_in_decisive_window": 0,
+      "b_U_point": {
+       "dt_d": 77.53754176193615,
+       "dm": -0.007184333465950189,
+       "sigma_dm": 0.010491522883294383,
+       "model_dm_truth": -0.015279137356665471
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 117,
+   "carrier": 632211200002174,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 25.967474402721564,
+     "thr_d": 6.491868600680391,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 30.98830085123336,
+      "b_U_d": 22.836440877610585,
+      "atlas_in_decisive_window": 4,
+      "b_U_point": {
+       "dt_d": 22.836440877610585,
+       "dm": -1.1864296069395057,
+       "sigma_dm": 0.008864734713544221,
+       "model_dm_truth": -1.201767469575277
+      }
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 59.43578105472261,
+      "b_U_d": 59.43578105472261,
+      "atlas_in_decisive_window": 0
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 159,
+   "carrier": 632216400003278,
+   "a": "edge_insufficient",
+   "b": "recovered",
+   "hits": [
+    {
+     "span_d": 102.39572938266065,
+     "thr_d": 25.598932345665162,
+     "a": "insufficient",
+     "b": "fast",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 30.988355567547842,
+      "b_U_d": 8.860190761013655,
+      "atlas_in_decisive_window": 22,
+      "b_U_point": {
+       "dt_d": 8.860190761013655,
+       "dm": -0.8162959170046523,
+       "sigma_dm": 0.010044311307662153,
+       "model_dm_truth": -0.8207726753713261
+      }
+     },
+     "post": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 16.02133680330735,
+      "b_U_d": 10.121353594819084,
+      "atlas_in_decisive_window": 20,
+      "b_U_point": {
+       "dt_d": 10.121353594819084,
+       "dm": -1.7227364656375532,
+       "sigma_dm": 0.006412244662194303,
+       "model_dm_truth": -1.7303055691207576
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 111,
+   "carrier": 632211200001311,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 143.89548865982943,
+     "thr_d": 35.973872164957356,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 88.41748536982777,
+      "b_U_d": 88.41748536982777,
+      "atlas_in_decisive_window": 12
+     },
+     "post": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 2.83229722375836,
+      "b_U_d": 2.83229722375836,
+      "atlas_in_decisive_window": 124
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 12,
+   "carrier": 632212100000414,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 4.971268667562981,
+     "thr_d": 1.2428171668907453,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 16.02134652491077,
+      "b_U_d": 16.02134652491077,
+      "atlas_in_decisive_window": 0
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 2.9456658189810696,
+      "b_U_d": 2.9456658189810696,
+      "atlas_in_decisive_window": 4
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 16,
+   "carrier": 632212100000414,
+   "a": "recovered",
+   "b": "edge_slow",
+   "hits": [
+    {
+     "span_d": 32.02876124626346,
+     "thr_d": 8.007190311565864,
+     "a": "fast",
+     "b": "slow",
+     "pre": {
+      "a_class": "fast",
+      "b_class": "slow",
+      "a_L_d": 0.0,
+      "b_L_d": 28.855815022550814,
+      "a_U_d": 0.9005147191564902,
+      "b_U_d": 31.809166793165787,
+      "atlas_in_decisive_window": 8,
+      "b_L_point": {
+       "dt_d": 28.855815022550814,
+       "dm": 0.8366884620614787,
+       "sigma_dm": 0.21731837754409541,
+       "model_dm_truth": -0.0040345419286504465,
+       "observed_rel_before_injection": 0.46000812017864395,
+       "observed_sigma_rel": 0.09244944812240585
+      }
+     },
+     "post": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 1.969281702527951,
+      "b_L_d": 1.969281702527951,
+      "a_U_d": 2.9650029984914,
+      "b_U_d": 2.9650029984914,
+      "atlas_in_decisive_window": 21
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 59,
+   "carrier": 632215200005702,
+   "a": "edge_insufficient",
+   "b": "recovered",
+   "hits": [
+    {
+     "span_d": 27.91711678851425,
+     "thr_d": 6.979279197128562,
+     "a": "insufficient",
+     "b": "fast",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 14.029613772800076,
+      "b_U_d": 4.909829824355256,
+      "atlas_in_decisive_window": 16,
+      "b_U_point": {
+       "dt_d": 4.909829824355256,
+       "dm": -0.7191647681173952,
+       "sigma_dm": 0.009760204733184728,
+       "model_dm_truth": -0.7189709254847342
+      }
+     },
+     "post": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 0.01171269097540062,
+      "b_L_d": 0.01171269097540062,
+      "a_U_d": 0.9981812314945273,
+      "b_U_d": 0.9981812314945273,
+      "atlas_in_decisive_window": 3
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 78,
+   "carrier": 632216400003278,
+   "a": "edge_insufficient",
+   "b": "recovered",
+   "hits": [
+    {
+     "span_d": 97.92132226770627,
+     "thr_d": 24.48033056692657,
+     "a": "insufficient",
+     "b": "fast",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 68.44063336001273,
+      "b_U_d": 8.881944191620278,
+      "atlas_in_decisive_window": 19,
+      "b_U_point": {
+       "dt_d": 8.881944191620278,
+       "dm": -0.37828895878485413,
+       "sigma_dm": 0.019127651538912122,
+       "model_dm_truth": -0.3786559475411638
+      }
+     },
+     "post": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 11.95211352379556,
+      "b_U_d": 4.049403793418605,
+      "atlas_in_decisive_window": 48,
+      "b_U_point": {
+       "dt_d": 4.049403793418605,
+       "dm": 0.2829225519290968,
+       "sigma_dm": 0.006794476816727487,
+       "model_dm_truth": 0.29237724188224173
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 128,
+   "carrier": 632215200005622,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 24.935776330225053,
+     "thr_d": 6.233944082556263,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 5.944864604418399,
+      "a_U_d": 9.990890703353216,
+      "b_U_d": 6.937125056472723,
+      "atlas_in_decisive_window": 22,
+      "b_L_point": {
+       "dt_d": 5.944864604418399,
+       "dm": 0.3919547282979742,
+       "sigma_dm": 0.016874354534419777,
+       "model_dm_truth": 0.3480760685529613,
+       "observed_rel_before_injection": 0.966258246936852,
+       "observed_sigma_rel": 0.012716003947597481
+      },
+      "b_U_point": {
+       "dt_d": 6.937125056472723,
+       "dm": 0.15641975814595827,
+       "sigma_dm": 0.010659719996678639,
+       "model_dm_truth": 0.15488011211419941
+      }
+     },
+     "post": {
+      "a_class": "fast",
+      "b_class": "fast",
+      "a_L_d": 1.9910371413643588,
+      "b_L_d": 3.104753924468241,
+      "a_U_d": 4.000640659993223,
+      "b_U_d": 4.000640659993223,
+      "atlas_in_decisive_window": 25,
+      "b_L_point": {
+       "dt_d": 3.104753924468241,
+       "dm": 0.36063400768217446,
+       "sigma_dm": 0.019173318164898756,
+       "model_dm_truth": 0.37696673594570007,
+       "observed_rel_before_injection": 1.012741240397227,
+       "observed_sigma_rel": 0.015070483483966461
+      }
+     }
+    }
+   ]
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 169,
+   "carrier": 632212100000414,
+   "a": "edge_insufficient",
+   "b": "edge_insufficient",
+   "hits": [
+    {
+     "span_d": 35.923914416416665,
+     "thr_d": 8.980978604104166,
+     "a": "insufficient",
+     "b": "insufficient",
+     "pre": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 7.893439307743392,
+      "a_U_d": 14.029590544982057,
+      "b_U_d": 14.029590544982057,
+      "atlas_in_decisive_window": 19,
+      "b_L_point": {
+       "dt_d": 7.893439307743392,
+       "dm": 0.4660462220550422,
+       "sigma_dm": 0.026766446228779956,
+       "model_dm_truth": 0.48712306678373557,
+       "observed_rel_before_injection": 1.0156631407648495,
+       "observed_sigma_rel": 0.02008570133288699
+      }
+     },
+     "post": {
+      "a_class": "insufficient",
+      "b_class": "insufficient",
+      "a_L_d": 0.0,
+      "b_L_d": 0.0,
+      "a_U_d": 73.42789449454722,
+      "b_U_d": 73.42789449454722,
+      "atlas_in_decisive_window": 0
+     }
+    }
+   ]
+  }
+ ]
+}
