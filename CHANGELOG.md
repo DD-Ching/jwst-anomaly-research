@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-22: MACS0416 CANUCS DR1 reference extra-image test: gates K and C2 pass; one unvetted flag (D115b)
+## 2026-10-22: MACS0416 CANUCS DR1 reference extra-image test: gates K and C2 pass; flag D115b vetted inconclusive (Δχ² +12.6 to remove it)
 - **Plan** (`results/lens_consistency/macs0416_canucsref/PLAN.md`, frozen and pushed first): the MACS1149 rules
   (CANUCS DR1 reference, local-noise and containing-source rules) on MACS0416 with the pinned `macs0416-canucs`
   Lenstool model (deviation: a parameter-file model, not DR1 maps) and its 303 images as fixed-z constraints.
