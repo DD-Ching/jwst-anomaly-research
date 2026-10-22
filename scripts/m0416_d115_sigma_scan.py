@@ -54,6 +54,17 @@ def setup(f: float, step: float = refit.GRID_STEP):
     return model, grid, sigma, bt
 
 
+def families() -> list[str]:
+    """Family ids in task order; back-traces analytically, so no deflection grid is built."""
+    files = lc.model_files(MODEL)
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    model, _ = lc.apply_planes(MODEL, lensmodel.LensModel.from_par(par), plane_spec(1.0))
+    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
+    fams = sorted(set(np.asarray(bt["system"]).astype(str)))
+    return [f for f in PRIORITY if f in fams] + [f for f in fams if f not in PRIORITY]
+
+
 def build(f: float) -> float:
     """Build (and cache) both deflection grids of one model; returns f."""
     setup(f)
@@ -166,10 +177,7 @@ def verdict(scan: dict) -> tuple[str, str | None]:
 
 
 def main() -> None:
-    lc.model_files(MODEL)
-    bt = setup(1.0)[3]
-    fams = sorted(set(np.asarray(bt["system"]).astype(str)))
-    fams = [f for f in PRIORITY if f in fams] + [f for f in fams if f not in PRIORITY]
+    fams = families()  # the grids are built in parallel by build(), not here
     OUT.mkdir(parents=True, exist_ok=True)
     fits = [json.loads(line) for line in FITS.read_text().splitlines()] if FITS.exists() else []
     done = {(r["f"], r["family"]) for r in fits}

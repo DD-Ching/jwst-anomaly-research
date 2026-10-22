@@ -185,3 +185,7 @@
 {"family": "D22a", "f": 0.7, "n_images": 3, "chi2_validate_source": 1.8779008451093295, "chi2_fit": 1.8671381261314302, "shared": false, "n_predicted": 3, "beta_fit": [16.84719159042865, -34.05716607225216]}
 {"family": "D22b", "f": 1.0, "n_images": 3, "chi2_validate_source": 1.956908165375419, "chi2_fit": 1.949262834543424, "shared": false, "n_predicted": 3, "beta_fit": [16.856961188894616, -33.84217269920129]}
 {"family": "D22b", "f": 0.85, "n_images": 3, "chi2_validate_source": 1.9586592217808683, "chi2_fit": 1.9503327060291726, "shared": false, "n_predicted": 3, "beta_fit": [16.862969341357246, -33.846456548435356]}
+{"family": "D22b", "f": 0.8, "n_images": 3, "chi2_validate_source": 1.9592699027939124, "chi2_fit": 1.9507025664063984, "shared": false, "n_predicted": 3, "beta_fit": [16.864769432463106, -33.847716049770796]}
+{"family": "D22b", "f": 0.75, "n_images": 3, "chi2_validate_source": 1.9598925801589249, "chi2_fit": 1.9510784938578918, "shared": false, "n_predicted": 3, "beta_fit": [16.866475184940917, -33.84897801478652]}
+{"family": "D22b", "f": 0.7, "n_images": 3, "chi2_validate_source": 1.960499528281566, "chi2_fit": 1.9514439445676828, "shared": false, "n_predicted": 3, "beta_fit": [16.868038649570906, -33.8500820425415]}
+{"family": "D23", "f": 1.0, "n_images": 3, "chi2_validate_source": 1.012739204639799, "chi2_fit": 0.84013505845878, "shared": false, "n_predicted": 3, "beta_fit": [14.454271689058029, -31.836734437177427]}
