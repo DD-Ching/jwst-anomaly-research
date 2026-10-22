@@ -96,3 +96,4 @@
 {"family": "D12b", "f": 1.0, "n_images": 2, "chi2_validate_source": 2.4132461468801396, "chi2_fit": 2.1495528650711178, "shared": false, "n_predicted": 3, "beta_fit": [-2.7393842785271976, -14.308971396332481]}
 {"family": "D12b", "f": 0.85, "n_images": 2, "chi2_validate_source": 2.422026198006653, "chi2_fit": 2.1561316923557587, "shared": false, "n_predicted": 3, "beta_fit": [-2.7234702413196183, -14.310857114343065]}
 {"family": "D12b", "f": 0.8, "n_images": 2, "chi2_validate_source": 2.4246166413350236, "chi2_fit": 2.158070433521255, "shared": false, "n_predicted": 3, "beta_fit": [-2.718763967921591, -14.311398951307435]}
+{"family": "D12b", "f": 0.75, "n_images": 2, "chi2_validate_source": 2.427087690823573, "chi2_fit": 2.159918696854435, "shared": false, "n_predicted": 3, "beta_fit": [-2.714292540978783, -14.311907900289967]}
