@@ -711,6 +711,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - CANUCS DR1 cluster photometry and EAzY photo-z
     https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/hlsp_canucs_jwst-hst_multi_macs0417-clu_multi_v1_photometry-cat.fits.gz,
     Last-Modified 2025-04-29, 27,820,129 B, sha256 `ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd`;
+  - CANUCS DR1 F200W BCG-subtracted 40 mas mosaic (accessed 2026-10-22, streamed, deleted after use;
+    `results/lens_consistency/macs0417_canucsref/`):
+    https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/hlsp_canucs_jwst_nircam_macs0417-clu-40mas_f200w_v1_bgsub-sci.fits.gz,
+    104,841,074 B, sha256 `591228193a679d52ac523e8f5e0b7806327d7b2c382a57cbe8b0787d1eaea1cd`;
   - CANUCS DR1 Lenstool maps (Desprez, preliminary v1; readme
     `hlsp_canucs_jwst-hst_multi_macs0417-lenstool-readme_multi_v1_model.txt`): `dpl1`, `dpl2`, `kappa`
     `-dlsds1-best-100mas` under https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/model/ (sha256 in

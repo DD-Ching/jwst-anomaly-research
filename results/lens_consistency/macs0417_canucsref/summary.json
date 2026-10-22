@@ -1,0 +1,69 @@
+{
+ "posthoc_absent_controls": {
+  "absent_own_segment_centroid_outside_radius": 2,
+  "absent_no_containing_segment": 0,
+  "absent_sources_too_faint": 1
+ },
+ "inputs": {
+  "canucs_cat": "canucs_m0417_phot.fits.gz",
+  "canucs_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/hlsp_canucs_jwst-hst_multi_macs0417-clu_multi_v1_photometry-cat.fits.gz",
+  "canucs_cat_sha256": "ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd",
+  "n_rows_finite_flux": 14036,
+  "flux_column": "FLUX_KRON_TOTAL_F200W",
+  "frame_offset_arcsec": [
+   0.10084636860364347,
+   -0.2917131053097502
+  ],
+  "pixel_scale_arcsec": 0.03999947790882629,
+  "depth_mag": 27.57993034218375
+ },
+ "gate_C2": {
+  "all": {
+   "n_testable": 40,
+   "n_ok": 37,
+   "fraction": 0.925
+  },
+  "arc_referenced": {
+   "n_testable": 10,
+   "n_ok": 10,
+   "fraction": 1.0
+  },
+  "passes": true
+ },
+ "control_classes": {
+  "absent": 3,
+  "confused": 4,
+  "inconsistent_reference": 6,
+  "no_reference": 8,
+  "recovered": 33
+ },
+ "target_classes": {
+  "absent": 2,
+  "confused": 1,
+  "inconsistent_reference": 1,
+  "no_reference": 2
+ },
+ "flags": [
+  "10@64.394629,-11.906917",
+  "10@64.384714,-11.915405"
+ ],
+ "flags_if_gate_ignored": 2,
+ "rules": {
+  "ELLIPSE_NSIGMA": 3.0,
+  "MIN_REF_SNR": 5.0,
+  "MAX_REF_MU": 50.0,
+  "MAX_REF_SPREAD": 3.0,
+  "FLUX_RANGE": [
+   0.3333333333333333,
+   3.0
+  ],
+  "TEN_SIGMA_DMAG": 0.752574989159953,
+  "BASE_SEARCH": 1.0,
+  "C2": [
+   8,
+   0.8,
+   3
+  ],
+  "ARC_MIN_ELL": 0.5
+ }
+}

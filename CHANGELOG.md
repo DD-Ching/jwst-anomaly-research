@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: MACS0417 extra-image test with CANUCS DR1 reference fluxes: gate C2 passes; two family-10 flags, both with post hoc ordinary readings
+- **Plan** (`results/lens_consistency/macs0417_canucsref/PLAN.md`, frozen first): the `../macs0417_arcref` rules
+  unchanged, the JWST pipeline catalogue replaced by the CANUCS DR1 photometry catalogue (BCG-subtracted detection,
+  deblended; F200W Kron totals).
+- **Result** (`RESULT.md`, `summary.json`): gate C2 passes, 37 / 40 (arc-referenced 10 / 10). Two family-10 predictions
+  are frozen flags (`absent`). Post hoc (`posthoc.json`, contact sheet looked at): the |μ| 4.85 image lies on the BCG
+  where the predicted total is 0.94× the local 0.3″ aperture noise (untestable there); the |μ| 2.85 image has CANUCS
+  1115938 1.49″ away at 1.07× the predicted flux with photo-z 1.81, matching 10.1 / 10.2 (outside the 1.0″ radius;
+  family 10 has no z_spec, map-fitted z 2.15). No candidate; `/vet-candidate` not run. D-034 addendum b.
+- **Handoff:** next for MACS0417, a family-10 z-scan in the CANUCS maps (does the third image land on 1115938?);
+  then the CANUCS DR1 reference on the other CANUCS fields, gate C2 per field, with a local-noise `undetectable`
+  rule frozen beforehand.
+
 ## 2026-10-22: MACS0417 arc-aware reference from pipeline segment totals fails its control gate; extra-image test stays untested
 - **Plan** (`results/lens_consistency/macs0417_arcref/PLAN.md`, frozen first): reference = isophotal segment total of
   the catalogued sibling over Σ|μ|; leave-one-out gate C2 on the catalogued images, overall and arc-referenced.
