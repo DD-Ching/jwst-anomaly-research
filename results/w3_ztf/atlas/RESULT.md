@@ -95,8 +95,8 @@
 - **Review fixes (after the 4 tasks ran):**
   - `fp_script.py.txt` now validates a result before deleting the task. It also refuses to resubmit after an attempt
     without a task id, uses a relative deadline and floors `Retry-After`.
-  - The run used the earlier version. All 4 saved results start with `###MJD` and match the recorded sha256
-    (`header_ok`).
+  - The run used the earlier version. All 4 saved results start with `###MJD` (`header_ok`). Their sha256 matched
+    `tasks.json` when checked in the session before deletion (not stored).
   - `analysis_script.py.txt` adds outlier rows, scatter / σ, distinct intervals, unique exposures and the post hoc
     9999 check.
   - The contact sheet now uses heliocentric time.
