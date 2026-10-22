@@ -34,6 +34,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0.041 → 0.042, D11 0.394 → 0.267, D12a 2.084 → 2.097; D106 0.129 at f 0.70; D12b 2.150 / 2.156 / 2.158 at f 1.00 /
   0.85 / 0.80. Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256
   verified); first task finished ≈ 17 min after start, then 19 tasks in ≈ 15 min (not stored).
+- **19:11Z run:** 109 / 555 (added D12b f 0.75 / 0.70, D13, D14a f 1.00–0.75). Fitted χ² D12b 2.160 / 2.162 at f
+  0.75 / 0.70; D13 0.767 → 0.699 (f 1.00 → 0.70); D14a 0.761 / 0.812 / 0.827 / 0.842 at f 1.00 / 0.85 / 0.80 / 0.75; all
+  matched one-to-one. Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256
+  verified); first task finished ≈ 18 min after start, then 11 tasks in ≈ 13 min (not stored).
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
