@@ -1,0 +1,125 @@
+{
+ "inputs_sha256": {
+  "cat0417": "ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd",
+  "cat1423": "c257d8dff95319f4eea981cc838269c04aff0a79bac603c7ed64100deac622b0",
+  "image1423": "b7c6739f6cbf25afaf80d10763eab1c6f33bf441ea69a63909fb386182736403"
+ },
+ "macs0417": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 40,
+    "n_ok": 38,
+    "fraction": 0.95
+   },
+   "arc_referenced": {
+    "n_testable": 10,
+    "n_ok": 10,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "control_classes": {
+   "absent": 2,
+   "confused": 4,
+   "inconsistent_reference": 6,
+   "no_reference": 8,
+   "recovered": 34
+  },
+  "target_classes": {
+   "absent": 1,
+   "confused": 2,
+   "inconsistent_reference": 1,
+   "no_reference": 2
+  },
+  "flags": [
+   "10@64.384714,-11.915405"
+  ]
+ },
+ "macs1423": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 11,
+    "n_ok": 10,
+    "fraction": 0.9090909090909091
+   },
+   "arc_referenced": {
+    "n_testable": 4,
+    "n_ok": 3,
+    "fraction": 0.75
+   },
+   "passes": false
+  },
+  "control_classes": {
+   "absent": 1,
+   "inconsistent_reference": 3,
+   "recovered": 10
+  },
+  "target_classes": {
+   "absent": 1,
+   "recovered": 1
+  },
+  "flags": [],
+  "controls": {
+   "1.1": "recovered",
+   "1.2": "recovered",
+   "2.1": "recovered",
+   "2.2": "recovered",
+   "2.3": "recovered",
+   "2.4": "recovered",
+   "3.1": "recovered",
+   "3.2": "recovered",
+   "3.3": "recovered",
+   "4.1": "inconsistent_reference",
+   "4.2": "inconsistent_reference",
+   "4.3": "absent",
+   "4.4": "inconsistent_reference",
+   "4.5": "recovered"
+  },
+  "targets": [
+   {
+    "system": "1",
+    "image_class": "missing",
+    "class": "absent"
+   },
+   {
+    "system": "1",
+    "image_class": "candidate",
+    "class": "recovered"
+   }
+  ],
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 11,
+     "n_ok": 10,
+     "fraction": 0.9090909090909091
+    },
+    "arc_referenced": {
+     "n_testable": 4,
+     "n_ok": 3,
+     "fraction": 0.75
+    },
+    "passes": false
+   },
+   "control_classes": {
+    "absent": 1,
+    "inconsistent_reference": 3,
+    "recovered": 10
+   },
+   "target_classes": {
+    "absent": 1,
+    "recovered": 1
+   },
+   "flags": []
+  }
+ },
+ "macs1149_gate_K_grid_step": {
+  "grid_step_arcsec": 0.1,
+  "gate_K": {
+   "n_images": 23,
+   "rms_arcsec": 0.9898603627139378,
+   "matched_fraction": 0.9565217391304348,
+   "passes": true
+  }
+ }
+}

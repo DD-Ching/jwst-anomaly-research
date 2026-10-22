@@ -1,0 +1,49 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: z_used, datatype: float64}
+# - {name: dtheta_arcsec, datatype: float64}
+# - {name: magnification, datatype: float64}
+# - {name: n_predicted, datatype: int64}
+# - {name: shared_match, datatype: bool}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'results/lens_consistency/macs1149_sharon/sharon_gold_images.ecsv (z_spec column added: gold = spectroscopic, PLAN.md) traced
+#     with macs1149-canucs-maps, image-plane solve'}
+# - {model_sha256: efd01157fa7120f569f0afc0b515a33ab749e1320a284bc3606df947295ea49f}
+# - {z_lens: 0.543}
+# - reference_radec: [177.398734, 22.398520000000005, 177.398734, 22.398520000000005]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.10002000400080012
+#     shape: [5000, 5000, 5000, 5000]
+# - {model: macs1149-canucs-maps}
+# schema: astropy-2.0
+image_id system z_used dtheta_arcsec magnification n_predicted shared_match
+1.1 1 1.488 0.20736487974000947 7.932685577505487 5 False
+1.2 1 1.488 0.24696629291277966 -2.5216574849756554 5 False
+1.3 1 1.488 0.28642681191426117 3.362562547550353 5 False
+2.1 2 1.894 0.16543618014693603 4.34167084955897 3 False
+2.2 2 1.894 0.8821095613955164 -38.30091481166701 3 False
+2.3 2 1.894 0.6259133496323727 36.2756797219093 3 False
+3.1 3 3.129 0.38601435189993666 8.137874120832874 3 False
+3.2 3 3.129 3.7810271559078665 -17.841858858785034 3 False
+3.3 3 3.129 0.32653217400709816 3.6893392487198904 3 False
+4.1 4 2.949 1.8051830824565707 6.869472451499466 4 False
+4.2 4 2.949 0.9533686873259303 -5.004133887055592 4 False
+4.3 4 2.949 0.5700402764828977 2.8920126558974255 4 False
+5.1 5 2.79 0.10125865426899919 8.904148241694235 5 False
+5.2 5 2.79 0.09283740210733184 -16.470301370822074 5 False
+13.1 13 1.24 0.2729221345074121 6.76469805796887 5 False
+13.2 13 1.24 0.8307523078585127 -3.1956189663502617 5 False
+13.3 13 1.24 0.4011945041775162 4.4274347686607305 5 False
+110.1 110 3.214 0.42027524157539 3.629415853007925 3 False
+110.2 110 3.214 0.4390825412990372 -3.93633136276279 3 False
+9.1 9 0.981 0.38423233996178596 1.951032124726692 5 False
+9.2 9 0.981 0.559478910441637 -2.084425135012368 5 False
+9.3 9 0.981 0.5566537887160752 3.7070977350785075 5 False
+9.4 9 0.981 0.15431429521063145 -1.2086311285198896 5 False

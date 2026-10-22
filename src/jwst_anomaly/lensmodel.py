@@ -542,6 +542,24 @@ MACS1423_CANUCS_MAPS: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: CANUCS DR1 Lenstool maps of MACS J1149.5+2223 (Rihtarsic, preliminary v1: gold catalogue of 30
+#: spectroscopic multiple-image systems; readme ``macs1149-lenstool-readme``; accessed 2026-10-22):
+#: best fit, 100 mas, 500 arcsec, D_LS/D_S = 1, deflection in arcsec; 87-89 MB each (gzip).
+MACS1149_CANUCS_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CANUCS_MAP.format("macs1149", "dpl1"),
+        "0ff9b4cf21a7b02190c8028fa3bf2b601d6eaaeb9f04a8c686cd0bcba6ada7fb",
+    ),
+    "alpha_y": (
+        _CANUCS_MAP.format("macs1149", "dpl2"),
+        "38533c11a4f2842dd7c9dce8ef349cddc26ecaad8ffb671ee47bd4124e23c7b1",
+    ),
+    "kappa_map": (
+        _CANUCS_MAP.format("macs1149", "kappa"),
+        "c20a77a4b2fa5d936891004504ff29d4ee7c09a87dc13a9011694a36b4ff0acc",
+    ),
+}
+
 #: JWST-updated maps of RX J2129.7+0005 (Dhanasingham et al. 2026, arXiv:2604.11882; Zenodo record
 #: 21460864, one 4.30 GB zip; accessed 2026-10-16). Members are read by HTTP range requests
 #: (``<zip url>#<member>``, staged by ``scripts/arcs_rxj2129.py``). Lenstool: arcsec deflections at

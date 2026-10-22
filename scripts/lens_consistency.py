@@ -238,6 +238,13 @@ MODELS = {
         "z_lens": 0.545,
         "cosmology": (70.0, 0.3),
     },
+    # z_lens 0.543 as macs1149-cats; readme cosmology (flat, H0 70, Om 0.3)
+    "macs1149-canucs-maps": {
+        "files": lensmodel.MACS1149_CANUCS_MAPS,
+        "kind": "maps",
+        "z_lens": 0.543,
+        "cosmology": (70.0, 0.3),
+    },
     # z_lens 0.543 as macs1149-cats (m1149_refs used 0.542: D_LS/D_S < 0.1 %); readme cosmology
     # (flat, H0 70, Om 0.3). Gate G2 failed as written (system 9 off the maps); use only inside the
     # map footprint (post hoc; results/lens_consistency/macs1149_sharon/RESULT.md)

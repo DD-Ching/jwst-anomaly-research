@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: MACS1149 third-field gate: the CANUCS DR1 reference passes C2 with a containing-source rule; no flag
+- **Plan** (`results/lens_consistency/macs1149_canucsref/PLAN.md`, frozen with the rule function and tests): CANUCS v1
+  MACS1149 maps (new `macs1149-canucs-maps`), Sharon gold list, the MACS1423 rules plus a containing-source rule
+  (`m0417_arcref.compared_sources`).
+- **Result** (`RESULT.md`, `summary.json`): gate K passes (rms 0.990″, 22 / 23); gate C2 passes (15 / 15, arc 5 / 5);
+  targets 3 recovered, 1 confused, 2 inconsistent_reference, 0 flags. The rule changed no MACS1149 class. Post hoc
+  (`posthoc_contain.json`): MACS1423 3.2 is recovered, but C2 still fails (arc 3 / 4); on MACS0417, C2 goes to 38 / 40
+  and one family-10 `missing` flag becomes `confused`. D-034 addendum f.
+- **Handoff:** next are Abell 370 and MACS0416 with this reference + rule. Each needs a gold image list and a check for
+  CANUCS v1 maps. In the cloud, archive.stsci.edu needs the certifi (Mozilla) CA bundle (`curl --cacert`, `SSL_CERT_FILE`).
+
 ## 2026-10-22: MACS1423 extra-image test with CANUCS DR1 reference: gate C2 fails on arc controls; no flag read
 - **Plan** (`results/lens_consistency/macs1423_canucsref/PLAN.md`, frozen first): the MACS0417 CANUCS-reference rules
   on MACS1423 plus a local-noise rule (F_pred ≥ 5 σ_loc; absent ≥ 10 σ_loc). `m0417_arcref.run` now takes `field`,

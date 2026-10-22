@@ -1,0 +1,29 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: string}
+# - {name: image_class, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: abs_mu, datatype: float64}
+# - {name: ref_counterpart, datatype: int64}
+# - {name: arc_ref, datatype: bool}
+# - {name: L_ref, datatype: float64}
+# - {name: search_arcsec, datatype: float64}
+# - {name: f_pred, datatype: float64}
+# - {name: m_pred, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: n_sources, datatype: int64}
+# - {name: max_ratio, datatype: float64}
+# - {name: reading, datatype: string}
+# - {name: sigma_loc_njy, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: class_local, datatype: string}
+# schema: astropy-2.0
+system image_class ra dec abs_mu ref_counterpart arc_ref L_ref search_arcsec f_pred m_pred class n_sources max_ratio reading sigma_loc_njy pred_over_sigma class_local
+1 candidate 177.39992815938027 22.396973016464255 1.997363492692568 5114791 False 2.672323251815704e-06 1.0 5.337600903850176e-06 22.081700376873478 recovered 2 0.671064533315698 no_flag 69.66572181623168 76.61732003480869 recovered
+3 missing 177.39184098046894 22.40164697293177 17.84175767643125 -1 False nan 2.25 nan "" inconsistent_reference 0 nan no_flag nan nan inconsistent_reference
+4 candidate 177.39340885768155 22.396486215842383 6.869472572732912 -1 False nan 2.25 nan "" inconsistent_reference 0 nan no_flag nan nan inconsistent_reference
+5 candidate 177.40798310563014 22.40364569792759 5.2260489519305 5114640 False 1.0480394142220425e-07 1.0 5.47710528227696e-07 24.553687899468912 recovered 1 0.5706108697696721 no_flag 23.60935324729884 23.198878956599962 recovered
+5 candidate 177.40729339749774 22.40292286535665 1.4768601379377992 5114640 False 1.0480394142220425e-07 1.0 1.5478076338522159e-07 25.925773161563292 confused 2 1154.0440438158168 no_flag 8.163207601537042 18.960777544856025 confused
+110 candidate 177.4091002892381 22.400079931156842 3.5872939155687322 5114452 False 1.668275817561233e-08 1.0 5.984595689827863e-08 26.957478583633296 recovered 2 0.7885681071393307 no_flag 4.549950480858773 13.153100709567084 recovered

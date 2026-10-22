@@ -685,7 +685,12 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - CANUCS DR1 (DOI 10.17909/18nv-np70) MACS1149 cluster-field photometry and EAzY photo-z:
   https://archive.stsci.edu/hlsps/canucs/dr1/macs1149/clu/hlsp_canucs_jwst-hst_multi_macs1149-clu_multi_v1_photometry-cat.fits.gz,
   29,779,449 B, sha256 `08ab67347f2c3dfe4f743cc1b2a9d4b77a1e40eb66ddeb611648bb296adc0739`. The same directory tree has
-  CANUCS lens models (`model/`: deflection, κ, γ, best and samples), not yet used.
+  CANUCS lens models (`model/`: deflection, κ, γ, best and samples). Used from 2026-10-22 (D-034 addendum f): the
+  best-fit 100 mas `dpl1` / `dpl2` / `kappa` maps (Rihtarsic, preliminary v1; readme
+  `hlsp_canucs_jwst-hst_multi_macs1149-lenstool-readme_multi_v1_model.txt`, accessed 2026-10-22; sha256 in
+  `lensmodel.MACS1149_CANUCS_MAPS`) and the F200W 40 mas BCG-subtracted mosaic
+  `.../macs1149/clu/hlsp_canucs_jwst_nircam_macs1149-clu-40mas_f200w_v1_bgsub-sci.fits.gz`, 104,672,989 B, sha256
+  `34d8f2609fc49f0c88fc93d4ddcccc613fee27348204bdbeb86297d4e8339c26`.
 - System 16 spec-z check (accessed 2026-10-20; D-037 addendum):
   - Treu et al. 2016, ApJ 817, 60, doi:10.3847/0004-637X/817/1/60; VizieR J/ApJ/817/60 (table3: multiple images with
     `z` and new `zspec` from HST-GO-13459/14041 grism and VLT-MUSE 294.A-5032), doi:10.26093/cds/vizier.18170060.

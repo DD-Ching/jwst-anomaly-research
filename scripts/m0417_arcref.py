@@ -72,6 +72,40 @@ def counterpart(ra: float, dec: float, cat: dict) -> int:
     return best
 
 
+def containing(ra: float, dec: float, cat: dict) -> np.ndarray:
+    """Every catalogue index whose 3-sigma ellipse contains (ra, dec) (rule 1's ellipse)."""
+    dx = (cat["ra"] - ra) * np.cos(np.radians(dec)) * 3600.0
+    dy = (cat["dec"] - dec) * 3600.0
+    near = np.flatnonzero(np.hypot(dx, dy) <= ELLIPSE_NSIGMA * np.nanmax(cat["a"]))
+    return np.array(
+        [
+            k
+            for k in near
+            if ellipse_radius(
+                -dx[k],
+                -dy[k],
+                ELLIPSE_NSIGMA * cat["a"][k],
+                ELLIPSE_NSIGMA * cat["b"][k],
+                cat["pa"][k],
+            )
+            <= 1.0
+        ],
+        int,
+    )
+
+
+def compared_sources(
+    ra: float, dec: float, radius: float, cat: dict, rcp: int, contain: bool = False
+) -> list[int]:
+    """Sources whose F / F_pred enters the class: centroid within ``radius``, plus (``contain``;
+    m1149_canucsref rule 4) every source whose 3-sigma ellipse contains the position; the
+    reference's own counterpart ``rcp`` excluded."""
+    idx = set(in_radius(ra, dec, radius, cat).tolist())
+    if contain:
+        idx |= set(containing(ra, dec, cat).tolist())
+    return sorted(int(k) for k in idx if k != rcp)
+
+
 def units(images: list[dict]) -> list[dict]:
     """Merge one family's catalogued images that share a counterpart (rule 2)."""
     out: dict[int, dict] = {}
@@ -181,12 +215,14 @@ def run(
     field: str = "macs0417",
     frame: Path = FRAME,
     offset: tuple[float, float] | None = None,
+    contain: bool = False,
 ) -> dict:
     """Frozen run. ``cat``, ``depth`` and ``cat_inputs`` replace the pipeline catalogue (all three
     or none; used by ``m0417_canucsref``); ``out`` is the output directory. ``field``, ``frame``
     (directory of ``predicted_<field>.ecsv``, ``control_<field>.ecsv`` and ``summary.json``) and
     ``offset`` (dRA cos dec, dDec in arcsec; default: the frame's measured offset) select another
-    field (used by ``m1423_canucsref``)."""
+    field (used by ``m1423_canucsref``). ``contain`` adds the containing-source rule
+    (``compared_sources``; ``m1149_canucsref``)."""
     given = (cat is not None, depth is not None, cat_inputs is not None)
     if any(given) and not all(given):
         raise ValueError("cat, depth and cat_inputs: pass all three or none")
@@ -247,7 +283,7 @@ def run(
         if state:
             return {**row, "class": state}
         f_pred = lref * mu_t
-        idx = [k for k in in_radius(ra, dec, rad, cat) if k != rcp]
+        idx = compared_sources(ra, dec, rad, cat, rcp, contain)
         ratios = [float(cat["flux"][k] / f_pred) for k in idx]
         return {
             **row,
@@ -356,6 +392,7 @@ def run(
             "BASE_SEARCH": BASE_SEARCH,
             "C2": [C2_MIN_TESTABLE, C2_MIN_FRAC, C2_MIN_ARC],
             "ARC_MIN_ELL": ARC_MIN_ELL,
+            "contain": contain,
         },
     }
 
