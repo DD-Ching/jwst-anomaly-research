@@ -8,10 +8,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   whose post hoc +10.6 of the #458 Δχ² +12.6 sat in unrefitted families); rule as a tested function (`verdict`).
 - **Amendment before any run (cost):** one 0.1″ image solve takes 1.5 s, so the plan as written is ≈ 90 CPU-h (not
   stored); the search now runs on the 0.25″ grid, final χ² on 0.1″; gate G3 added (f = 1 reproduces #458).
-- **Progress:** 4 / 555 (f, family) tasks in `sigma_scan/fits.jsonl`: D115a fitted χ² 0.919 / 1.744 / 2.069 / 2.415
-  at f 1.00 / 0.85 / 0.80 / 0.75 (6 predicted images at f = 1, 3 below; G3 reference 0.919 for f = 1). D115b and
-  the other families not yet run; no Δχ², no verdict. Cost: the 88″ grids take ≈ 3–6 min each (10 per container,
-  ≈ 20 min of every run); the first 4 tasks took ≈ 12 min on 4 workers, per-worker setup included (rate not
+- **Progress:** 6 / 555 (f, family) tasks in `sigma_scan/fits.jsonl`: D115a fitted χ² 0.919 / 1.744 / 2.069 / 2.415
+  / 2.765 at f 1.00 / 0.85 / 0.80 / 0.75 / 0.70 (6 predicted images at f = 1, 3 below; G3 reference 0.919, G1 2.765);
+  D115b at f = 1: 0.386 with the flag image (G3 reference 0.386). The rest not yet run; no Δχ², no verdict. Cost: the 88″ grids take ≈ 3–6 min each (10 per container,
+  ≈ 20 min of every run); the first 6 tasks took ≈ 16 min on 4 workers, per-worker setup included (rate not
   stored).
 - **Handoff:** re-run `python scripts/m0416_d115_sigma_scan.py` (skips finished tasks). If the per-task rate stays
   at minutes, cut the family set by a rule frozen before reading more results, or run it on the owner machine.
