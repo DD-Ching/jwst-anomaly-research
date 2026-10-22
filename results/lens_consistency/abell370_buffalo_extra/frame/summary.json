@@ -1,0 +1,52 @@
+{
+ "abell370": {
+  "model": "abell370-buffalo-a-maps",
+  "model_sha256": "a9afca8ce0573816d45fa6e8c30d1b282b3709177fa644e7cb13f5079a489338",
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o002/jw01208-o002_t001_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 27.272772820661746,
+  "unpredicted": [
+   "10.2",
+   "12.2",
+   "13.2",
+   "14.4",
+   "23.1",
+   "24.2",
+   "26.2",
+   "28.1",
+   "28.2"
+  ],
+  "image_classes": {
+   "candidate": 21,
+   "demagnified": 8,
+   "faint": 5,
+   "missing": 6,
+   "no_flux_ref": 8,
+   "observed": 95,
+   "outside": 1
+  },
+  "forced_classes_targets": {
+   "confused": 6,
+   "inconsistent_reference": 3,
+   "no_reference": 23,
+   "recovered": 3,
+   "undetectable": 5
+  },
+  "gate_C": {
+   "n_targets": 95,
+   "n_testable": 27,
+   "n_recovered": 26,
+   "fraction": 0.9629629629629629,
+   "passes": true,
+   "classes": {
+    "absent": 1,
+    "confused": 5,
+    "inconsistent_reference": 4,
+    "no_reference": 60,
+    "recovered": 21,
+    "undetectable": 4
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}
