@@ -51,8 +51,7 @@ def setup(f: float, step: float = refit.GRID_STEP):
     half = lc.grid_half_width(model, images)
     grid = lensmodel.DeflectionGrid.cached(model, lc.grid_cache_path(model, half, step), half, step)
     bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
-    ip = lensmodel.imageplane_residuals(model, grid, bt)
-    return model, grid, sigma, bt, np.asarray(ip["dtheta_arcsec"], float)
+    return model, grid, sigma, bt
 
 
 def build(f: float) -> float:
@@ -64,15 +63,18 @@ def build(f: float) -> float:
 
 def fit_family(task: tuple[float, str]) -> dict:
     f, fam = task
-    model, grid, sigma, bt, d = setup(f)
+    model, grid, sigma, bt = setup(f)
     coarse = setup(f, SEARCH_STEP)[1]
     sel = np.where(np.asarray(bt["system"]).astype(str) == fam)[0]
     obs = bt[sel]
+    # validate's residuals are per family (mean back-traced source), so solving only this family
+    # gives the same numbers as solving all of them in setup() for every worker, f and grid
+    d = np.asarray(lensmodel.imageplane_residuals(model, grid, obs)["dtheta_arcsec"], float)
     ox, oy = model.to_frame(np.asarray(obs["ra"], float), np.asarray(obs["dec"], float))
     sig = sigma[sel]
     z = float(obs["z_used"][0])
-    m = np.isfinite(d[sel])
-    term_validate = float(np.sum((d[sel][m] / sig[m]) ** 2))
+    m = np.isfinite(d)
+    term_validate = float(np.sum((d[m] / sig[m]) ** 2))
 
     def cost(b):
         pred = lensmodel.find_images(model, coarse, float(b[0]), float(b[1]), z)
@@ -165,7 +167,7 @@ def verdict(scan: dict) -> tuple[str, str | None]:
 
 def main() -> None:
     lc.model_files(MODEL)
-    _, _, _, bt, _ = setup(1.0)
+    bt = setup(1.0)[3]
     fams = sorted(set(np.asarray(bt["system"]).astype(str)))
     fams = [f for f in PRIORITY if f in fams] + [f for f in fams if f not in PRIORITY]
     OUT.mkdir(parents=True, exist_ok=True)

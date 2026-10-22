@@ -38,6 +38,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   0.75 / 0.70; D13 0.767 → 0.699 (f 1.00 → 0.70); D14a 0.761 / 0.812 / 0.827 / 0.842 at f 1.00 / 0.85 / 0.80 / 0.75; all
   matched one-to-one. Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256
   verified); first task finished ≈ 18 min after start, then 11 tasks in ≈ 13 min (not stored).
+- **21:10Z run:** 169 / 555 (added D14a f 0.70, D14b, D16, D17, D18, D19, D1a–D1f, D2 f 1.00–0.75). Fitted χ² at f
+  1.00 → 0.70: D14b 0.188 → 0.182, D16 6.369 → 6.291, D17 1.189 → 1.155, D18 0.756 → 0.783, D19 0.047 → 0.065, D1a–D1f
+  each ≤ 0.145 and within 0.005; D2 11.659 → 11.877 (f 0.75); all matched one-to-one. Partial sums only; no Δχ², no
+  verdict. **Setup speed-up (no output change):** every worker re-ran `validate`'s image-plane solve for all families
+  (≈ 1.75 min, measured) for each (f, grid) it touched, though a task uses only its own family's residuals; the solve now
+  runs per family inside the task. `chi2_validate_source` is bit-identical to the stored rows for 6 families at f = 1
+  (not stored). First task 5.6 min after start (was 17–20 min), then ≈ 2.4 tasks per minute on 4 workers (was 1.3–1.4);
+  ≈ 386 tasks (≈ 2.7 h of 4-core fitting) remain.
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
