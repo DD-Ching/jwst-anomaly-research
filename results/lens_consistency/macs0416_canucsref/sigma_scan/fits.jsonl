@@ -66,3 +66,14 @@
 {"family": "D10", "f": 1.0, "n_images": 3, "chi2_validate_source": 1.173859323028201, "chi2_fit": 1.1139270672130093, "shared": false, "n_predicted": 3, "beta_fit": [5.5660584773277835, -16.806073641446357]}
 {"family": "D10", "f": 0.85, "n_images": 3, "chi2_validate_source": 1.1833479007167933, "chi2_fit": 1.1237086673404517, "shared": false, "n_predicted": 3, "beta_fit": [5.574845171442581, -16.812886522425664]}
 {"family": "D10", "f": 0.8, "n_images": 3, "chi2_validate_source": 1.186613735242001, "chi2_fit": 1.1270424358840334, "shared": false, "n_predicted": 3, "beta_fit": [5.577461668625137, -16.814915269943302]}
+{"family": "D10", "f": 0.75, "n_images": 3, "chi2_validate_source": 1.1899281201638976, "chi2_fit": 1.130413776621581, "shared": false, "n_predicted": 3, "beta_fit": [5.579978665784916, -16.8168418779374]}
+{"family": "D10", "f": 0.7, "n_images": 3, "chi2_validate_source": 1.1931461913097343, "chi2_fit": 1.1336773671945726, "shared": false, "n_predicted": 3, "beta_fit": [5.582253920536243, -16.818642852150735]}
+{"family": "D100", "f": 1.0, "n_images": 3, "chi2_validate_source": 6.010946299998407, "chi2_fit": 5.968222717533237, "shared": false, "n_predicted": 3, "beta_fit": [10.763966322948297, -20.593681853991725]}
+{"family": "D100", "f": 0.85, "n_images": 3, "chi2_validate_source": 5.878329205841073, "chi2_fit": 5.837351293504776, "shared": false, "n_predicted": 3, "beta_fit": [10.772319939229716, -20.601065983907617]}
+{"family": "D100", "f": 0.8, "n_images": 3, "chi2_validate_source": 5.8394589283505525, "chi2_fit": 5.798989198301582, "shared": false, "n_predicted": 3, "beta_fit": [10.774837092494858, -20.603234108577233]}
+{"family": "D100", "f": 0.75, "n_images": 3, "chi2_validate_source": 5.8024894622338845, "chi2_fit": 5.762501581719329, "shared": false, "n_predicted": 3, "beta_fit": [10.777186382810246, -20.605342838896167]}
+{"family": "D100", "f": 0.7, "n_images": 3, "chi2_validate_source": 5.768605996409118, "chi2_fit": 5.7290584757806595, "shared": false, "n_predicted": 3, "beta_fit": [10.779412490672527, -20.607239922626945]}
+{"family": "D106", "f": 1.0, "n_images": 3, "chi2_validate_source": 0.11636964116625804, "chi2_fit": 0.11422364516801611, "shared": false, "n_predicted": 3, "beta_fit": [-0.4322787673727517, -16.66850186433583]}
+{"family": "D106", "f": 0.85, "n_images": 3, "chi2_validate_source": 0.12313406544111502, "chi2_fit": 0.12052332011037831, "shared": false, "n_predicted": 3, "beta_fit": [-0.4205755680449368, -16.673409578370123]}
+{"family": "D106", "f": 0.8, "n_images": 3, "chi2_validate_source": 0.126024638953807, "chi2_fit": 0.1231845143693991, "shared": false, "n_predicted": 3, "beta_fit": [-0.41710847526064254, -16.67482226248796]}
+{"family": "D106", "f": 0.75, "n_images": 3, "chi2_validate_source": 0.1291646316650692, "chi2_fit": 0.12606586281385349, "shared": false, "n_predicted": 3, "beta_fit": [-0.41377056618196867, -16.676240003673733]}
