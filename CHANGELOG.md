@@ -46,6 +46,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   runs per family inside the task. `chi2_validate_source` is bit-identical to the stored rows for 6 families at f = 1
   (not stored). First task 5.6 min after start (was 17–20 min), then ≈ 2.4 tasks per minute on 4 workers (was 1.3–1.4);
   ≈ 386 tasks (≈ 2.7 h of 4-core fitting) remain.
+- **22:27Z run:** 187 / 555 (added D2 f 0.70, D20, D21, D22a, D22b f 1.00 / 0.85). Fitted χ² at f 1.00 → 0.70: D20
+  3.613 → 3.677 (3 observed, 4 predicted), D21 0.164 → 0.211, D22a 1.871 → 1.867; D2 11.913 at f 0.70; D22b 1.949 /
+  1.950 at f 1.00 / 0.85; all matched one-to-one. Partial sums only; no Δχ², no verdict. Model files pre-fetched via
+  the MAST download API (sha256 verified). Setup (single-process `setup(1.0)` plus the workers' first grids) took
+  ≈ 14 min before the first new row, then 18 tasks in ≈ 11 min (not stored); ≈ 10 min of the run were also lost to a
+  wait loop whose `pgrep -f` matched itself. ≈ 368 tasks remain.
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
