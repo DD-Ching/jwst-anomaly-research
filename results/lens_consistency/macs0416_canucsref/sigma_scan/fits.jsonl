@@ -19,3 +19,10 @@
 {"family": "D70", "f": 0.75, "n_images": 3, "chi2_validate_source": 9.819200600461041, "chi2_fit": 7.171240048957684, "shared": false, "n_predicted": 3, "beta_fit": [-12.094590466908574, 1.9073708149659874]}
 {"family": "D70", "f": 0.7, "n_images": 3, "chi2_validate_source": 11.295258079969013, "chi2_fit": 7.917088207001397, "shared": false, "n_predicted": 3, "beta_fit": [-12.079937016051653, 1.9067567457773364]}
 {"family": "D69", "f": 1.0, "n_images": 3, "chi2_validate_source": 6.0251548686074266, "chi2_fit": 4.766308739027144, "shared": false, "n_predicted": 3, "beta_fit": [-12.26557313813532, 1.817827736855857]}
+{"family": "D69", "f": 0.85, "n_images": 3, "chi2_validate_source": 7.4351407401552, "chi2_fit": 6.216693189572483, "shared": false, "n_predicted": 3, "beta_fit": [-12.216805676807907, 1.8186998898639029]}
+{"family": "D69", "f": 0.8, "n_images": 3, "chi2_validate_source": 8.355495626053882, "chi2_fit": 6.8203551870769, "shared": false, "n_predicted": 3, "beta_fit": [-12.202111225968856, 1.8183862430104711]}
+{"family": "D69", "f": 0.75, "n_images": 3, "chi2_validate_source": 9.43234684221705, "chi2_fit": 7.474690730687674, "shared": false, "n_predicted": 3, "beta_fit": [-12.187970664373294, 1.8177850714793065]}
+{"family": "D69", "f": 0.7, "n_images": 3, "chi2_validate_source": 10.587372357822487, "chi2_fit": 8.145514639598424, "shared": false, "n_predicted": 3, "beta_fit": [-12.174811078610967, 1.8169789478390512]}
+{"family": "D15", "f": 1.0, "n_images": 3, "chi2_validate_source": 5.257721920653087, "chi2_fit": 2.696344057476251, "shared": false, "n_predicted": 3, "beta_fit": [-10.244481122213664, 0.71665435431978]}
+{"family": "D15", "f": 0.85, "n_images": 3, "chi2_validate_source": 6.885557004804495, "chi2_fit": 3.6283553793464822, "shared": false, "n_predicted": 3, "beta_fit": [-10.219519825939209, 0.6863048284721237]}
+{"family": "D15", "f": 0.8, "n_images": 3, "chi2_validate_source": 7.593071475907238, "chi2_fit": 4.005861945486366, "shared": false, "n_predicted": 3, "beta_fit": [-10.212636952920501, 0.6779405841129715]}

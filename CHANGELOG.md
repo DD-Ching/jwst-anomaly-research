@@ -13,6 +13,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   flag image present at f ≥ 0.80, absent at 0.75 and 0.70 (nearest predicted image 0.90″ / 7.08″); D115a / D115b
   matched one-to-one at every f. Gates G1 and G3 reproduce `../d115_refit` for both families (G2 needs all f = 1
   tasks). D34 (f 1.00–0.75): 0.678 / 0.596 / 0.578 / 0.564. No Δχ², no verdict yet (needs every family).
+- **14:19Z run:** 28 / 555 (added D34 f 0.70, D70, D69, D15 f 1.00–0.80). Fitted χ² at f 1.00 → 0.75: D70 4.366 →
+  7.171, D69 4.766 → 7.475; D15 2.696 / 3.628 / 4.006 at f 1.00 / 0.85 / 0.80; all matched one-to-one. Partial sums
+  only; no Δχ², no verdict (needs every family). archive.stsci.edu reset every connection again; the three pinned
+  CANUCS model files were fetched through `mast.stsci.edu/api/v0.1/Download/file?uri=mast:HLSP/...` (sha256 verified).
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
