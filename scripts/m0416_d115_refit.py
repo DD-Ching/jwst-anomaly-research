@@ -82,7 +82,8 @@ def run_model(name: str) -> dict:
         ox, oy = model.to_frame(np.asarray(obs["ra"], float), np.asarray(obs["dec"], float))
         sig = sigma[sel]
         z = float(obs["z_used"][0])
-        term_validate = float(np.sum((d[sel] / sig) ** 2))
+        m = ok[sel]  # the same finite terms that chi2_validate summed
+        term_validate = float(np.sum((d[sel][m] / sig[m]) ** 2))
 
         def cost(b, ox=ox, oy=oy, sig=sig, z=z):
             pred = lensmodel.find_images(model, grid, float(b[0]), float(b[1]), z)
