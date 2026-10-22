@@ -773,6 +773,36 @@ def edge_bounds_alt(s, run, span, alt, edges=None) -> dict:
     return out
 
 
+INJ_FLOOR = (
+    0.09  # w3_microlensing.inject_w3: noise rescaled by sqrt(F), floored at sqrt(0.09) = 0.3
+)
+
+
+def inject_rel_flux(rel, sig, flux_factor):
+    """ATLAS trial (``results/w3_ztf/atlas40/PLAN.md``): an event of flux factor F (the model, blend
+    included) on a real relative-flux series (baseline 1), with the W3 rule of
+    ``w3_microlensing.inject_w3``. The real residual (rel - 1) and the error are rescaled by
+    sqrt(max(F, 0.09)) (sky-limited when the source vanishes; ASSUMPTION); no random number."""
+    f = np.asarray(flux_factor, float)
+    scale = np.sqrt(np.clip(f, INJ_FLOOR, None))
+    return f + (np.asarray(rel, float) - 1.0) * scale, np.asarray(sig, float) * scale
+
+
+def flux_alt_points(t, rel, sig) -> list:
+    """ATLAS trial thin interface: relative-flux measurements -> (t, dm, sigma_dm) for
+    edge_bounds_alt. rel <= 0 (or a non-positive error) gets sigma nan, so the point is neither
+    normal nor intermediate (bounds does not use dim points); low S/N is kept with its error."""
+    out = []
+    for tt, r, s in zip(
+        np.asarray(t, float), np.asarray(rel, float), np.asarray(sig, float), strict=True
+    ):
+        if r > 0 and s > 0:
+            out.append((float(tt), float(-2.5 * np.log10(r)), float(1.0857 * s / r)))
+        else:
+            out.append((float(tt), float("inf"), float("nan")))
+    return out
+
+
 def alt_detections(series) -> list:
     """(t, dm, sigma) of a series' detections, sigma from the epoch's maglimit (SNR 5 at the limit,
     as in apply_dmag); non-detections are not measurements and are left out."""

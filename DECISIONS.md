@@ -2240,6 +2240,23 @@ still fails (arc 3 / 4, BCG-adjacent 4.3). Decision: by the frozen plan, use the
 rule on Abell 370 and MACS0416. The rule is validated only post hoc (MACS1423), and C2 passes on 2 of 3 fields.
 Revisit if: a fourth field fails C2, or the rule turns a control `confused` on an unrelated bright source.
 
+**Addendum 2026-10-22g (Abell 370, `results/lens_consistency/abell370_canucsref/`).** Gate K of the frozen plan on the
+pinned `abell370-canucs` Lenstool model (115 images, z fixed): rms 2.34″ > 1.0″ (95.7 % within 3″), so it fails and no
+prediction or flux was read. It reproduces D-044's 2.32″ (source-plane fit). Post hoc, five images (7.1, 5.3, 3a.2,
+14a.3, 5.2) carry the rms (0.60″ without them); not used, because they were picked after the residuals were seen.
+Decision: the CANUCS-reference extra-image route has no usable Abell 370 model; the line stops. Revisit if: an
+image-plane-fitted Abell 370 model with public parameters or maps is pinned, or a family-restricted rule is frozen and
+validated on MACS0416 / MACS1149 first.
+
+**Addendum 2026-10-22h (Abell 370, BUFFALO model A, `results/lens_consistency/abell370_buffalo/`).** The pinned
+BUFFALO Niemiec+2023 model A `main` deflection maps (`abell370-buffalo-a-maps`) pass gate L (κ from the maps vs the
+published κ, median relative difference 3.4e-5). Gate K on Lagattuta+2019's 102 gold z_spec images (K1, frozen)
+fails: rms 7.70″, 92.2 % within 3″. The added gate K2 on the model's own released gold list (104 images; a deviation,
+frozen after K1) passes: rms 0.910″ (published 0.90″), 99.0 % within 3″ (28.1 at 3.36″). Decision: this model is
+validated on its own constraints only and may serve the extra-image test on the BUFFALO gold systems; the K1 list is
+not used with it. Revisit if: the extra-image stages need images outside the BUFFALO gold list, or K1's failure is
+traced to the model rather than to list differences.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
@@ -5719,6 +5736,22 @@ confining radiation at a throat is found.
     ratio (template changes).
   - **Revisit if:** the owner authorizes ATLAS for the 40 stars and a paired injection with a ZTF replay and a frozen
     ATLAS noise rule.
+- **Addendum 2026-10-22 (ATLAS paired injections on the 40 stars, `results/w3_ztf/atlas40/RESULT.md`):**
+  - **Run:** the shared queue ran one task at a time (2–19 min each plus 2–22 min wait). By the frozen deadline 17 / 40
+    stars had data, so the trial is **not completed**.
+  - **Result:** with ATLAS points added as edge points, 6 / 63 insufficient W3 events are restored, 4 recovered W3 are
+    lost, and fade passes are 0 / 79. Even if every insufficient event on the 23 missing stars were restored, the
+    best case is 27 / 63 < 0.50. Verdict: **fails regardless of the missing stars.**
+  - **Mechanism (post hoc diagnostic):** the restorations come from added baseline epochs. 7 of the 8 W3 → "slow"
+    moves come from single observed ATLAS dips (32–79 % below baseline) that pass the FAQ cuts. Quoted σ and the 9999
+    rule change nothing.
+  - **Decision:** ATLAS as added edge points does not rescue the bounds rule. No independent validation; no seed,
+    threshold or second-method retry.
+  - **Rejected:**
+    - finishing the remaining 23 stars, which cannot change the verdict;
+    - a post hoc two-epoch intermediate rule, which would be a new method.
+  - **Revisit if:** a new pre-registered method that is robust to single-epoch survey dips is proposed with an ideal
+    bound that can reach the success condition.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

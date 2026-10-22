@@ -21,6 +21,74 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   "$(python -c 'import certifi; print(certifi.where())')" > ca.pem; export SSL_CERT_FILE=ca.pem`.
 - **Handoff:** resume with `python scripts/m0416_d115_sigma_scan.py` (skips finished tasks); better on the owner
   machine (setup paid once). Alternatively freeze a reduced family set before reading more results.
+## 2026-10-22: Abell 370 BUFFALO model A extra-image test: gate K passes (rms 0.910″); gate C2 fails on arc-referenced controls (19 / 25 = 0.76); no flag read
+- **Plan** (`results/lens_consistency/abell370_buffalo_extra/PLAN.md`, frozen and pushed first): stages of
+  `../macs0416_canucsref/PLAN.md` with `abell370-buffalo-a-maps`, the BUFFALO gold list and CANUCS DR1 `a370` files
+  (sha256 pinned before the run). `m0416_canucsref.stage3` now takes `field` / `frame`.
+- **Result** (`RESULT.md`, `summary.json`): gate K 104 images, rms 0.910″, 99.0 % within 3″. Gate C2 all 35 / 42, arc
+  referenced 19 / 25 → fails; no flag read. Pipeline gate C (reported) 26 / 27.
+- **Environment:** archive.stsci.edu reset every connection from the cloud session; the MAST download API
+  (`mast.stsci.edu/api/v0.1/Download/file?uri=mast:HLSP/...`) served the same bytes (sha256 verified). CANUCS DR1 names
+  Abell 370 `a370`, not `abell370`.
+- **Handoff:** the CANUCS-reference route now passes C2 on MACS1149 and MACS0416 and fails on MACS1423 and Abell 370.
+  Next: the owner's call whether to diagnose the arc-referenced control failures (7 absent controls, all "sources too
+  faint", post hoc) or move the extra-image route to another cluster.
+## 2026-10-22: S1 CHIME `bounded_map`: an interrupt inside `submit()` lost a running worker and left its file; fixed
+- **Cause:** `test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting` failed once on #462's CI (py3.11,
+  leftover `f0.h5`). The SIGINT can be handled while the main thread is still in `ex.submit()`, inside
+  `Thread.start()` after the worker started but before `ThreadPoolExecutor` records the thread. `shutdown(wait=True)`
+  then does not join that worker, the cleanup ran before it registered its result, and its file stayed. A real Ctrl-C
+  there does the same, so this was a gap in `bounded_map`, not only a test race.
+- **Fix** (`scripts/s1_chime.py`): workers count their own running calls; on any exception no new call starts and the
+  cleanup waits for that count to reach zero, so it does not depend on the executor's thread list.
+- **Tests:** a new deterministic test raises the interrupt at that point (fails on the old code, passes now); the
+  signal test is kept, only its comment changed.
+- **Repeats (all not stored):** the signal scenario left a file in 6 / 600 runs idle and 163 / 600 with 8 CPU-bound
+  processes on 4 cores before the fix, 0 / 600 in both after; `tests/test_s1_chime.py` passed 50 / 50 runs idle and
+  50 / 50 loaded on py3.11, 20 / 20 on py3.12.
+
+## 2026-10-22: Abell 370 BUFFALO model A maps: gate L passes; K1 (Lagattuta+2019) fails, rms 7.70″; K2 (model's own gold list, deviation) passes, rms 0.910″
+- **Plan** (`results/lens_consistency/abell370_buffalo/PLAN.md`): pinned `main` deflection + κ maps; gate L (κ loading)
+  and gate K1 on Lagattuta+2019 gold z_spec images were frozen first. After K1 failed, the model's own released gold list
+  was found on MAST (issue #465 had missed it) and gate K2 was frozen on it before any K2 evaluation (labelled deviation).
+- **Result** (`summary.json`): gate L 3.4e-5. K1: 102 images, rms 7.70″, 92.2 % within 3″ → fails. K2: 104 images,
+  rms 0.910″ (published 0.90″), 99.0 % within 3″ → passes; 28.1 at 3.36″ is the only image outside 3″ (not vetted).
+- **Post hoc:** K1's rms is carried by 21.1 / 21.2 (≈ 53″; cause not decided) and three single-image families (no prediction); 0.91″
+  without the 8 dropped images.
+- **Failed approach:** selecting K1 images by per-image class left single-image families; select by family next time.
+- **Handoff:** Abell 370 has a map model validated on its own constraints (D-034 addendum h). Next: pin the CANUCS
+  DR1 Abell 370 catalogue and mosaic and run the extra-image stages on the BUFFALO gold systems.
+## 2026-10-22: W3 ZTF × ATLAS paired injections on the 40 calibration stars: not completed (17 / 40 stars by the deadline); fails regardless of the missing stars (6 / 63 restored, best case 27 / 63; 0 / 79 fade passes; 4 recovered W3 lost)
+- **Plan:** `results/w3_ztf/atlas40/PLAN.md`. Method, denominators and bounds were committed before any ATLAS flux;
+  review fixes came before any outcome. 4 #461 stars are development data. Feasibility trial, not validation.
+- **Acquisition:**
+  - Shared Data Lab token; ≤ 2 tasks in flight; 19 submitted, none resubmitted, 0 HTTP 429 on submission.
+  - The queue ran one task at a time: 17 done, 2 unfinished at 11:49 (deleted unused), 21 not submitted.
+  - 6.96 MB downloaded. Compact tables were kept in `phot/` and the raw files deleted.
+- **Measurements:** 88.7–97.0 % of rows pass the FAQ cuts. Error scale k is 1.48–8.68 (median 2.19) over 108
+  (filter, unit) groups. 2 rows reach 9999 (excluded by rule).
+- **Result** (`result.json`; simulated injections):
+  - A = v24 for every event.
+  - B restores 6 / 63 (6 / 42 on the 17 stars with data) and loses 4 recovered W3 to "slow". It moves 4 insufficient
+    W3 to "slow" and 3 fades from insufficient to slow.
+  - Fade passes 0 / 79.
+  - Quoted σ and keeping 9999 rows: identical for every event. Without the development stars: 5 / 50.
+- **Post hoc diagnostic** (`diag_<npix>.json`):
+  - The restorations come from added ATLAS baseline epochs.
+  - 7 of the 8 W3 → "slow" moves come from single observed ATLAS dips (rel 0.21–0.68, 5.7–43 σ) where the injected
+    model is at baseline. These are not vetted.
+- **Failed approach:** ATLAS as added edge points for the bounds rule (D-104 addendum). No validation, no retry.
+- **Handoff:** the W3 ZTF edge-information line has now failed with ZTF g, g + r jointly and ATLAS. The next step
+  is the owner's call.
+## 2026-10-22: Abell 370 CANUCS DR1 reference route: gate K fails (rms 2.34″); no prediction read; line stopped
+- **Plan** (`results/lens_consistency/abell370_canucsref/PLAN.md`, frozen and pushed first): gate K of
+  `m0417_images` on the 115 images of the pinned `abell370-canucs` model (z fixed, ASSUMPTION); stop on a fail.
+- **Result** (`RESULT.md`, `summary.json`): rms 2.34″ > 1.0″, 95.7 % within 3″ → fails, as expected from D-044
+  (2.32″, source-plane fit). No counter-image prediction, CANUCS flux or pixel was read; no flag.
+- **Post hoc, not used:** five images (7.1 at 18.1″, 5.3, 3a.2, 14a.3, 5.2) carry the rms; 0.60″ without them.
+- **Handoff:** the CANUCS-reference route now covers MACS1149, MACS0416 (D115b inconclusive, #463 in flight),
+  MACS0417 and MACS1423 (C2 fails). Abell 370 reopens only with an image-plane-fitted model (D-034 addendum g): BUFFALO Niemiec+2023 model A
+  (Lenstool image-plane, rms 0.90″) has maps and an input.par on MAST (`RESULT.md`); pin it and run gate K next.
 
 ## 2026-10-22: W3 ZTF × ATLAS forced photometry (4 stars): shared Data Lab token works; ATLAS has good visits in 11 / 19 decisive windows of the ZTF r / g common-gap sides
 - **Plan** (`results/w3_ztf/atlas/PLAN.md`): the selection was fixed before any query (`selection.json`): 2 stars per
