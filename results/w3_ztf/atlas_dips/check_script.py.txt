@@ -127,12 +127,16 @@ for gkey in groups:
             for _, q in d2.loc[m].iterrows():
                 c3.append({'star': s, 'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'x': float(q['x']), 'y': float(q['y'])})
         c3_clue = sum(q['dev_sigma'] < -SIG for q in c3) >= 2
+        def common_mode(ob):
+            return sum(((d2['Obs'] == ob) & d2['ok'] & (d2['dev'] < -SIG)).sum() for s, d2 in T.items() if s != x['star']) >= 2
+
         night = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() < NIGHT) & (df['Obs'] != x['Obs'])]
         c4 = [{'Obs': q['Obs'], 'F': q['F'], 'unit': q['unit'], 'dt_h': float((q['MJD'] - x['mjd_published']) * 24),
-               'rel': float(q['rel']), 'dev_sigma': float(q['dev'])} for _, q in night.iterrows()]
+               'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))}
+              for _, q in night.iterrows()]
         near = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= NEAR) & (df['F'] != r['F'])]
         c5_atlas = [{'Obs': q['Obs'], 'F': q['F'], 'dt_d': float(q['MJD'] - x['mjd_published']), 'rel': float(q['rel']),
-                     'dev_sigma': float(q['dev'])} for _, q in near.iterrows()]
+                     'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))} for _, q in near.iterrows()]
         c5_ztf = ztf_rows(x['star'], x['hmjd_used'], NEAR)
         win = df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= MONTH) & ((df['MJD'] - x['mjd_published']).abs() >= NIGHT)
         c6 = {'same_filter_unit_rows': int((win & same).sum()),
@@ -140,9 +144,8 @@ for gkey in groups:
               'units_in_window': sorted(df.loc[win, 'unit'].unique().tolist()),
               'units_all_seasons': sorted(df['unit'].unique().tolist())}
         # independent support: another exposure of this star (not one of this case's exposures) low by > 5 sigma within 2 d,
-        # whose exposure shows no common mode (fewer than 2 other stars > 5 sigma low in it)
-        def common_mode(ob):
-            return sum(((d2['Obs'] == ob) & d2['ok'] & (d2['dev'] < -SIG)).sum() for s, d2 in T.items() if s != x['star']) >= 2
+        # whose exposure shows no common mode (fewer than 2 other stars > 5 sigma low in it); common_mode is recorded per
+        # comparison exposure (added after the first run, for traceability; classes unchanged)
         support = [q for q in c4 + c5_atlas if q['dev_sigma'] < -SIG and q['Obs'] not in obs and not common_mode(q['Obs'])]
         support += [q for q in c5_ztf if q['catflags'] == 0 and q['dev_sigma'] > SIG]  # ZTF: magnitude larger = dimmer
         c1_ok = all(x['checks'][k] for k in ('low_flux_in_uninjected_row', 'uJy_not_9999_code', 'Obs_published_once',
