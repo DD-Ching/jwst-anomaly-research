@@ -34,3 +34,6 @@ predicted image in both σ 84.4 runs. So the 0.25″ grid and the plane redshift
 - `ordinary` if Δχ²_fit ≤ 6 **and** the σ 84.4 model has no predicted D115b image within 0.7″ of the flag
   **and** every D115a and D115b catalogued image is matched one-to-one (no shared match).
 - `inconclusive` otherwise (then the next step is a σ × 0.75–0.85 scan or a full re-fit, outside this plan).
+
+## Follow-up (claimed 2026-10-22 09:15Z)
+σ × 0.75–0.85 scan of member 8515 with every family's source fitted; plan in `sigma_scan/PLAN.md` (frozen before the run).
