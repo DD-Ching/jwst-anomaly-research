@@ -1,4 +1,9 @@
 {
+ "inputs_sha256": {
+  "cat0417": "ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd",
+  "cat1423": "c257d8dff95319f4eea981cc838269c04aff0a79bac603c7ed64100deac622b0",
+  "image1423": "b7c6739f6cbf25afaf80d10763eab1c6f33bf441ea69a63909fb386182736403"
+ },
  "macs0417": {
   "gate_C2": {
    "all": {
@@ -70,10 +75,18 @@
    "4.4": "inconsistent_reference",
    "4.5": "recovered"
   },
-  "targets": {
-   "1:missing": "absent",
-   "1:candidate": "recovered"
-  },
+  "targets": [
+   {
+    "system": "1",
+    "image_class": "missing",
+    "class": "absent"
+   },
+   {
+    "system": "1",
+    "image_class": "candidate",
+    "class": "recovered"
+   }
+  ],
   "without_local_noise_rule": {
    "gate_C2": {
     "all": {
@@ -98,6 +111,15 @@
     "recovered": 1
    },
    "flags": []
+  }
+ },
+ "macs1149_gate_K_grid_step": {
+  "grid_step_arcsec": 0.1,
+  "gate_K": {
+   "n_images": 23,
+   "rms_arcsec": 0.9898603627139378,
+   "matched_fraction": 0.9565217391304348,
+   "passes": true
   }
  }
 }

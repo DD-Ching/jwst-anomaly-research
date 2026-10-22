@@ -46,7 +46,16 @@ stage-2 `frame/`, comparison `without_contain/`; post hoc `posthoc_contain.json`
   BCG-adjacent reference. A position inside a bright extended source becomes `confused`, which can hide an `absent`
   there. That is a cost of the rule, stated rather than measured.
 
+## Deviations
+- Gate K used a 0.25″ deflection grid (the `m0417_images` default, as on MACS0417 / MACS1423); PLAN.md does not state
+  it (deviation). Post hoc, gate K at the 0.1″ grid of stage 2 is in `posthoc_contain.json`
+  "macs1149_gate_K_grid_step": rms 0.990″, 22 / 23, passes (unchanged).
+
 ## Limitations
+- With rule 4, a control that has a rule-1 counterpart always has that source in its comparison, because its own
+  ellipse contains its position by definition. Gate C2 then tests the flux scale (reference × μ) and no longer tests
+  detection at the position. Position agreement rests on gate K and the frame check. The `posthoc_absent_controls`
+  key "own_segment_centroid_outside_radius" can no longer occur under rule 4 (from /code-review).
 - One model per field (CANUCS v1 maps); no injections; no limit. 23 gold images only (the CANUCS model used 30
   gold systems from Schuldt et al. 2024, not transcribed here). MACS1149's controls never needed rule 4, so its
   validation rests on MACS1423 post hoc only. Of the three CANUCS fields, C2 passes on two.

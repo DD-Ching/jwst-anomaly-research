@@ -42,7 +42,9 @@ BASE = "https://archive.stsci.edu/hlsps/canucs/dr1/macs1149/clu/"
 CAT_NAME = "hlsp_canucs_jwst-hst_multi_macs1149-clu_multi_v1_photometry-cat.fits.gz"
 IMAGE_NAME = "hlsp_canucs_jwst_nircam_macs1149-clu-40mas_f200w_v1_bgsub-sci.fits.gz"
 FRAME = OUT / "frame"  # stage-2 predicted / control tables and their summary.json
-GRID_STEP_K = 0.25  # m0417_images default
+GRID_STEP_K = 0.25  # m0417_images default (not stated in PLAN.md; deviation, see RESULT.md)
+CAT_SHA = "08ab67347f2c3dfe4f743cc1b2a9d4b77a1e40eb66ddeb611648bb296adc0739"
+IMAGE_SHA = "34d8f2609fc49f0c88fc93d4ddcccc613fee27348204bdbeb86297d4e8339c26"
 
 
 def write_images(out: Path = OUT) -> Path:
@@ -129,7 +131,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--image", type=Path, required=True)
     ap.add_argument("--cache", type=Path, default=Path("data/cache/m1149x"))
     args = ap.parse_args(argv)
-    if not (args.cat.name.endswith(CAT_NAME) and args.image.name.endswith(IMAGE_NAME)):
+    # cached names carry a sha256 prefix, so the files are checked by content
+    if file_sha256(args.cat) != CAT_SHA or file_sha256(args.image) != IMAGE_SHA:
         raise ValueError("--cat / --image are not the CANUCS DR1 MACS1149 files named in the plan")
     write_images()
     register()
@@ -156,12 +159,12 @@ def main(argv: list[str] | None = None) -> int:
         inputs = {
             "canucs_cat": CAT_NAME,
             "canucs_url": BASE + CAT_NAME,
-            "canucs_cat_sha256": file_sha256(args.cat),
+            "canucs_cat_sha256": CAT_SHA,
             "n_rows_finite_flux": int(len(cat["flux"])),
             "flux_column": f"FLUX_KRON_TOTAL_{cr.BAND}",
             "image": IMAGE_NAME,
             "image_url": BASE + IMAGE_NAME,
-            "image_sha256": file_sha256(args.image),
+            "image_sha256": IMAGE_SHA,
         }
         depth = cr.depth_mag(cat["flux"], cat["snr"])
         src_x, src_y = (
