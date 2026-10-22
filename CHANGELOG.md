@@ -8,7 +8,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   was found on MAST (issue #465 had missed it) and gate K2 was frozen on it before any K2 evaluation (labelled deviation).
 - **Result** (`summary.json`): gate L 3.4e-5. K1: 102 images, rms 7.70″, 92.2 % within 3″ → fails. K2: 104 images,
   rms 0.910″ (published 0.90″), 99.0 % within 3″ → passes; 28.1 at 3.36″ is the only image outside 3″ (not vetted).
-- **Post hoc:** K1's rms is carried by 21.1 / 21.2 (≈ 53″) and three single-image families (no prediction); 0.91″
+- **Post hoc:** K1's rms is carried by 21.1 / 21.2 (≈ 53″; cause not decided) and three single-image families (no prediction); 0.91″
   without the 8 dropped images.
 - **Failed approach:** selecting K1 images by per-image class left single-image families; select by family next time.
 - **Handoff:** Abell 370 has a map model validated on its own constraints (D-034 addendum h). Next: pin the CANUCS

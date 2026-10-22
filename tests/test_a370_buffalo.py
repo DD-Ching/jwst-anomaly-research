@@ -71,3 +71,9 @@ def test_k1_overlap_splits_by_distance_to_gold(tmp_path):
     assert out["shared"]["n"] == 1 and out["shared"]["within_3arcsec"] == 1
     assert np.isclose(out["shared"]["rms_arcsec"], 0.4)
     assert out["not_shared"]["image_ids"] == ["2.1"] and out["not_shared"]["n_finite"] == 0
+    assert out["nearest_gold_arcsec"]["1.1"] == pytest.approx(0.3, abs=1e-3)
+
+
+def test_k2_decision():
+    assert m.k2_decision({"passing_models": [m.MODEL]}).startswith("passes")
+    assert m.k2_decision({"passing_models": []}).startswith("fails")

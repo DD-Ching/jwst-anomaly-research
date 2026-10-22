@@ -98,6 +98,11 @@ def write_images(out: Path = OUT) -> Path:
 def write_buffalo_images(out: Path = OUT) -> Path:
     """All rows of the BUFFALO gold list as released (z fixed: PLAN.md addendum K2 ASSUMPTION)."""
     src = lensmodel.load_lenstool_images(fetch_catalog(*BUFFALO_GOLD))
+    z = np.asarray(src["z"], float)
+    if not np.all(
+        np.isfinite(z) & (z > 0)
+    ):  # free / fitted rows would not be fixed spectroscopic z
+        raise SystemExit(f"error: {BUFFALO_GOLD[0]}: rows without a fixed z")
     t = Table({k: src[k] for k in ("image_id", "ra", "dec", "z")})
     t["ra"].unit = t["dec"].unit = "deg"
     t["z_spec"] = np.ones(len(t), bool)
@@ -118,8 +123,9 @@ def k1_overlap(out: Path = OUT, radius: float = 0.5) -> dict:
     cos = np.cos(np.deg2rad(float(np.mean(gold["dec"]))))
     dx = (np.asarray(lag["ra"])[:, None] - np.asarray(gold["ra"])[None, :]) * cos
     dy = np.asarray(lag["dec"])[:, None] - np.asarray(gold["dec"])[None, :]
-    near = np.hypot(dx, dy).min(axis=1) * 3600.0 <= radius
-    shared = dict(zip(np.asarray(lag["image_id"], str), near, strict=True))
+    sep = np.hypot(dx, dy).min(axis=1) * 3600.0
+    lag_ids = np.asarray(lag["image_id"], str)
+    shared = dict(zip(lag_ids, sep <= radius, strict=True))
     ids = np.asarray(k1["image_id"], str)
     d = np.asarray(k1["dtheta_arcsec"], float)
     m = np.array([shared[i] for i in ids])
@@ -132,7 +138,15 @@ def k1_overlap(out: Path = OUT, radius: float = 0.5) -> dict:
             "within_3arcsec": int(np.sum(np.isfinite(d[sel]) & (d[sel] <= mi.MATCH_ARCSEC))),
             "image_ids": sorted(ids[sel].tolist()) if name == "not_shared" else None,
         }
-    return {"radius_arcsec": radius, **out_d}
+    nearest = {i: round(float(v), 3) for i, v in zip(lag_ids, sep, strict=True)}
+    return {"radius_arcsec": radius, **out_d, "nearest_gold_arcsec": nearest}
+
+
+def k2_decision(k2: dict) -> str:
+    """PLAN.md addendum K2 decision from ``run_field``'s summary."""
+    if MODEL in k2["passing_models"]:
+        return "passes: validated on its own constraints only; extra-image stages may follow"
+    return "fails: the Abell 370 line stays stopped"
 
 
 def gate_l(check: dict) -> dict:
@@ -155,16 +169,13 @@ def main(argv: list[str] | None = None) -> int:
         k = mi.run_field(FIELD, OUT, GRID_STEP_K)
         summary["stage1_gate_K"] = k
         if MODEL not in k["passing_models"]:
-            summary["stopped"] = "gate K failed: model not used (PLAN.md rule 2)"
+            # PLAN.md rule 2 as frozen; addendum K2 (a deviation) decides the model's further use
+            summary["K1_stopped"] = "gate K1 failed: original route stopped (PLAN.md rule 2)"
         mi.FIELDS[FIELD_K2] = {"images": IMAGES_K2, "models": (MODEL,)}
         k2 = mi.run_field(FIELD_K2, OUT, GRID_STEP_K)
         summary["addendum_gate_K2"] = k2  # deviation (PLAN.md addendum K2)
         summary["post_hoc_k1_overlap"] = k1_overlap()
-        summary["K2_decision"] = (
-            "passes: validated on its own constraints only; extra-image stages may follow"
-            if MODEL in k2["passing_models"]
-            else "fails: the Abell 370 line stays stopped"
-        )
+        summary["K2_decision"] = k2_decision(k2)
     summary["rules"] = {
         "L_MAX_MEDIAN_REL": L_MAX_MEDIAN_REL,
         "K_MAX_RMS_ARCSEC": mi.K_MAX_RMS_ARCSEC,

@@ -19,9 +19,10 @@ No JWST pixel, catalogue flux or counter-image prediction was read.
   family has a single selected image, so the solver predicts none (10.2, 29.1, 31.1; NaN). The selection rule (class
   per image) created those singletons: a plan defect, recorded as a failed approach.
 - Without the 8 images `run_field` drops (outside 3″ or NaN), K1 gives rms 0.91″ (94 images, 97.9 % within 3″).
-- Lagattuta images with a BUFFALO gold image within 0.5″: 85 of 102 (`post_hoc_k1_overlap`). Their K1 rms is
-  5.87″, because 21.2 is among them while 21.1 is not; the 17 others have rms 14.07″ (15 finite). So the K1 failure
-  sits in list differences (family 21's grouping, singletons), not across the shared images; not decided further.
+- Lagattuta images with a BUFFALO gold image within 0.5″: 85 of 102 (`post_hoc_k1_overlap`; the split depends on
+  this arbitrary radius). K1 rms is 5.87″ on those 85 (21.2 is among them) and 14.07″ on the other 17 (15 finite).
+  Nearest-gold separations (`nearest_gold_arcsec`): 21.1 0.585″, 21.2 0.123″, 21.3 1.442″, so family 21's positions
+  differ between the two lists. The cause of the 53″ residuals is not decided.
 
 ## Reading
 - observed vs model_prediction: the BUFFALO model A maps reproduce their own constraints at the published accuracy
