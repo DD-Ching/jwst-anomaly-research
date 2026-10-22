@@ -39,3 +39,16 @@ map FITS headers and pixel percentiles (loading facts only), and the CDS `table1
    ≤ 1.0″ and ≥ 80 % reproduced within 3.0″. Fails → stop (no prediction read).
 3. Reported, not rules: per-family rms; `run_field`'s `post_hoc` drop-unreproduced check; `extra_predicted` counts
    (written by `run_field`, not read for any conclusion in this cycle).
+
+## Addendum K2 (deviation, frozen 2026-10-22 after the K1 run, before any K2 evaluation)
+Gate K on the Lagattuta+2019 list (call it K1) failed as frozen (`RESULT.md`). After that run the model's own
+constraint list was found on MAST (issue #465 had missed it):
+`https://archive.stsci.edu/hlsps/buffalo/abell370/catalogs/niemiec-lensing-dr1/hlsp_buffalo_hst_multi_abell370_multi_v1.0_sl-gold.dat`
+(Lenstool format, `#REFERENCE 0`, 104 images in 33 systems, every system ≥ 2 images, z 0.7251–6.1735; sha256 pinned in
+the script). Read before freezing: its header, row and family counts, and the HLSP catalogue readme only.
+- This is a **deviation** from the plan above (an added gate on a new input, after K1 failed). K1's failure stands.
+- **Gate K2** (frozen): `m0417_images.gate_k` via `run_field`, 0.25″ grid, on all 104 rows as released (no exclusion;
+  z fixed, ASSUMPTION; the readme's "use 202.4 / 202.5 with caution" is not applied): rms ≤ 1.0″ and ≥ 80 % within 3.0″.
+- Expected: pass near the published 0.90″ (Niemiec+2023 Table A1, model A, 98 gold images).
+- Decision: K2 passes → the model is validated on its own constraints only (not on the independent K1 list); the next
+  cycle may run the extra-image stages on the BUFFALO gold systems. K2 fails → the Abell 370 line stays stopped.
