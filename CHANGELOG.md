@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: Abell 370 CANUCS DR1 reference route: gate K fails (rms 2.34″); no prediction read; line stopped
+- **Plan** (`results/lens_consistency/abell370_canucsref/PLAN.md`, frozen and pushed first): gate K of
+  `m0417_images` on the 115 images of the pinned `abell370-canucs` model (z fixed, ASSUMPTION); stop on a fail.
+- **Result** (`RESULT.md`, `summary.json`): rms 2.34″ > 1.0″, 95.7 % within 3″ → fails, as expected from D-044
+  (2.32″, source-plane fit). No counter-image prediction, CANUCS flux or pixel was read; no flag.
+- **Post hoc, not used:** five images (7.1 at 18.1″, 5.3, 3a.2, 14a.3, 5.2) carry the rms; 0.60″ without them.
+- **Handoff:** the CANUCS-reference route now covers MACS1149, MACS0416 (D115b inconclusive, #463 in flight),
+  MACS0417 and MACS1423 (C2 fails). Abell 370 reopens only with an image-plane-fitted model (D-034 addendum g): BUFFALO Niemiec+2023 model A
+  (Lenstool image-plane, rms 0.90″) has maps and an input.par on MAST (`RESULT.md`); pin it and run gate K next.
+
 ## 2026-10-22: W3 ZTF × ATLAS forced photometry (4 stars): shared Data Lab token works; ATLAS has good visits in 11 / 19 decisive windows of the ZTF r / g common-gap sides
 - **Plan** (`results/w3_ztf/atlas/PLAN.md`): the selection was fixed before any query (`selection.json`): 2 stars per
   area with the most #460 joint-insufficient W3 sides, 19 gaps in all. Reduced mode (total flux). The FAQ quality cuts,
