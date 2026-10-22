@@ -1,0 +1,520 @@
+{
+ "stage1_gate_K": {
+  "images": 303,
+  "spectroscopic": 303,
+  "macs0416-canucs": {
+   "model_sha256": "f3d9a8415044ff8d5ab4774573fcf3670c9dee9169abfca46086bdbf3dd45bed",
+   "gate_K": {
+    "n_images": 303,
+    "rms_arcsec": 0.5119933365555663,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "extra_predicted": {
+    "D1a": [
+     2,
+     3
+    ],
+    "D1b": [
+     2,
+     3
+    ],
+    "D1c": [
+     2,
+     3
+    ],
+    "D1d": [
+     2,
+     3
+    ],
+    "D1e": [
+     2,
+     3
+    ],
+    "D1f": [
+     2,
+     3
+    ],
+    "D3": [
+     2,
+     4
+    ],
+    "D8b": [
+     2,
+     3
+    ],
+    "D8c": [
+     2,
+     3
+    ],
+    "D12a": [
+     2,
+     3
+    ],
+    "D12b": [
+     2,
+     3
+    ],
+    "D14a": [
+     4,
+     6
+    ],
+    "D14b": [
+     3,
+     6
+    ],
+    "D16": [
+     3,
+     4
+    ],
+    "D17": [
+     2,
+     3
+    ],
+    "D19": [
+     2,
+     3
+    ],
+    "D20": [
+     3,
+     4
+    ],
+    "D25": [
+     2,
+     4
+    ],
+    "D28": [
+     2,
+     3
+    ],
+    "D31b": [
+     2,
+     3
+    ],
+    "D31c": [
+     2,
+     3
+    ],
+    "D33": [
+     6,
+     7
+    ],
+    "D36": [
+     2,
+     3
+    ],
+    "D37": [
+     2,
+     3
+    ],
+    "D40": [
+     2,
+     3
+    ],
+    "D45": [
+     2,
+     3
+    ],
+    "D47": [
+     2,
+     3
+    ],
+    "D52a": [
+     3,
+     4
+    ],
+    "D52b": [
+     3,
+     4
+    ],
+    "D52c": [
+     3,
+     4
+    ],
+    "D57": [
+     2,
+     3
+    ],
+    "D62a": [
+     2,
+     3
+    ],
+    "D66": [
+     2,
+     3
+    ],
+    "D67": [
+     2,
+     3
+    ],
+    "D72a": [
+     2,
+     3
+    ],
+    "D73": [
+     2,
+     4
+    ],
+    "D74": [
+     2,
+     3
+    ],
+    "D77": [
+     3,
+     7
+    ],
+    "D82": [
+     2,
+     3
+    ],
+    "D99": [
+     2,
+     3
+    ],
+    "D109": [
+     2,
+     3
+    ],
+    "D115a": [
+     3,
+     6
+    ],
+    "D115b": [
+     2,
+     6
+    ],
+    "C1": [
+     2,
+     3
+    ]
+   },
+   "fewer_predicted": {},
+   "post_hoc": {
+    "dropped": [],
+    "leave_one_out_rms": {
+     "D16": {
+      "D16.1": 0.25133358105222325,
+      "D16.2": 1.2278737028797893,
+      "D16.3": 0.9190228682294855
+     },
+     "D34": {
+      "D34.1": 0.9053268251976626,
+      "D34.2": 1.139292899691229,
+      "D34.3": 0.9211307029089788
+     }
+    },
+    "held_out_offset": {
+     "D16.1": {
+      "n_predicted": 4,
+      "nearest_predicted_arcsec": 1.9275937646886159,
+      "nearest_predicted_magnification": 4.764117403265833
+     },
+     "D34.1": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 0.4777624579913339,
+      "nearest_predicted_magnification": 70.56866395320456
+     }
+    },
+    "gate_K_without_dropped": {
+     "n_images": 303,
+     "rms_arcsec": 0.5119933365555663,
+     "matched_fraction": 1.0,
+     "passes": true
+    },
+    "families_refit": {}
+   }
+  },
+  "passing_models": [
+   "macs0416-canucs"
+  ],
+  "flags": []
+ },
+ "stage2_pipeline_forced": {
+  "model": "macs0416-canucs",
+  "model_sha256": "f3d9a8415044ff8d5ab4774573fcf3670c9dee9169abfca46086bdbf3dd45bed",
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 27.422915133060336,
+  "unpredicted": [
+   "D8a.3",
+   "D28.2"
+  ],
+  "image_classes": {
+   "candidate": 34,
+   "demagnified": 1,
+   "faint": 1,
+   "missing": 3,
+   "no_flux_ref": 11,
+   "observed": 309,
+   "outside": 2
+  },
+  "forced_classes_targets": {
+   "confused": 9,
+   "inconsistent_reference": 1,
+   "no_reference": 33,
+   "recovered": 1,
+   "undetectable": 5
+  },
+  "gate_C": {
+   "n_targets": 309,
+   "n_testable": 191,
+   "n_recovered": 188,
+   "fraction": 0.9842931937172775,
+   "passes": true,
+   "classes": {
+    "absent": 3,
+    "confused": 50,
+    "inconsistent_reference": 5,
+    "no_reference": 104,
+    "recovered": 138,
+    "undetectable": 9
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ },
+ "comparison_without_contain": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 172,
+    "n_ok": 158,
+    "fraction": 0.9186046511627907
+   },
+   "arc_referenced": {
+    "n_testable": 59,
+    "n_ok": 56,
+    "fraction": 0.9491525423728814
+   },
+   "passes": true
+  },
+  "control_classes": {
+   "absent": 12,
+   "ambiguous": 2,
+   "confused": 7,
+   "inconsistent_reference": 30,
+   "no_reference": 41,
+   "recovered": 151,
+   "undetectable": 10,
+   "undetectable_local": 38
+  },
+  "target_classes": {
+   "absent": 2,
+   "ambiguous": 1,
+   "confused": 6,
+   "inconsistent_reference": 6,
+   "no_reference": 8,
+   "recovered": 15,
+   "undetectable": 6,
+   "undetectable_local": 5
+  },
+  "flags": [
+   "D1f@64.040935,-24.071016",
+   "D115b@64.048551,-24.064825"
+  ],
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 210,
+     "n_ok": 194,
+     "fraction": 0.9238095238095239
+    },
+    "arc_referenced": {
+     "n_testable": 69,
+     "n_ok": 66,
+     "fraction": 0.9565217391304348
+    },
+    "passes": true
+   },
+   "control_classes": {
+    "absent": 14,
+    "ambiguous": 2,
+    "confused": 13,
+    "inconsistent_reference": 30,
+    "no_reference": 41,
+    "recovered": 181,
+    "undetectable": 10
+   },
+   "target_classes": {
+    "absent": 3,
+    "confused": 10,
+    "inconsistent_reference": 6,
+    "no_reference": 8,
+    "recovered": 16,
+    "undetectable": 6
+   },
+   "flags": [
+    "D1f@64.040935,-24.071016",
+    "D115b@64.048551,-24.064825",
+    "C1@64.029094,-24.079117"
+   ]
+  },
+  "posthoc_absent_controls": {
+   "absent_own_segment_centroid_outside_radius": 3,
+   "absent_no_containing_segment": 3,
+   "absent_sources_too_faint": 8
+  },
+  "inputs": {
+   "canucs_cat": "hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz",
+   "canucs_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz",
+   "canucs_cat_sha256": "339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff",
+   "n_rows_finite_flux": 13921,
+   "flux_column": "FLUX_KRON_TOTAL_F200W",
+   "image": "hlsp_canucs_jwst_nircam_macs0416-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst_nircam_macs0416-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_sha256": "c49bef71ecf218fdf6127c3bfaab481d521d21bbb53253aca4514f93cf21e371",
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "pixel_scale_arcsec": 0.04000078871470929,
+   "depth_mag": 27.910098802027644
+  },
+  "rules": {
+   "ELLIPSE_NSIGMA": 3.0,
+   "MIN_REF_SNR": 5.0,
+   "MAX_REF_MU": 50.0,
+   "MAX_REF_SPREAD": 3.0,
+   "FLUX_RANGE": [
+    0.3333333333333333,
+    3.0
+   ],
+   "TEN_SIGMA_DMAG": 0.752574989159953,
+   "BASE_SEARCH": 1.0,
+   "C2": [
+    8,
+    0.8,
+    3
+   ],
+   "ARC_MIN_ELL": 0.5,
+   "contain": false
+  }
+ },
+ "frozen": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 172,
+    "n_ok": 160,
+    "fraction": 0.9302325581395349
+   },
+   "arc_referenced": {
+    "n_testable": 59,
+    "n_ok": 58,
+    "fraction": 0.9830508474576272
+   },
+   "passes": true
+  },
+  "control_classes": {
+   "absent": 10,
+   "ambiguous": 2,
+   "confused": 7,
+   "inconsistent_reference": 30,
+   "no_reference": 41,
+   "recovered": 153,
+   "undetectable": 10,
+   "undetectable_local": 38
+  },
+  "target_classes": {
+   "absent": 1,
+   "confused": 8,
+   "inconsistent_reference": 6,
+   "no_reference": 8,
+   "recovered": 15,
+   "undetectable": 6,
+   "undetectable_local": 5
+  },
+  "flags": [
+   "D115b@64.048551,-24.064825"
+  ],
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 210,
+     "n_ok": 197,
+     "fraction": 0.9380952380952381
+    },
+    "arc_referenced": {
+     "n_testable": 69,
+     "n_ok": 68,
+     "fraction": 0.9855072463768116
+    },
+    "passes": true
+   },
+   "control_classes": {
+    "absent": 11,
+    "ambiguous": 2,
+    "confused": 14,
+    "inconsistent_reference": 30,
+    "no_reference": 41,
+    "recovered": 183,
+    "undetectable": 10
+   },
+   "target_classes": {
+    "absent": 1,
+    "confused": 12,
+    "inconsistent_reference": 6,
+    "no_reference": 8,
+    "recovered": 16,
+    "undetectable": 6
+   },
+   "flags": [
+    "D115b@64.048551,-24.064825"
+   ]
+  },
+  "posthoc_absent_controls": {
+   "absent_own_segment_centroid_outside_radius": 0,
+   "absent_no_containing_segment": 3,
+   "absent_sources_too_faint": 8
+  },
+  "inputs": {
+   "canucs_cat": "hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz",
+   "canucs_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst-hst_multi_macs0416-clu_multi_v1_photometry-cat.fits.gz",
+   "canucs_cat_sha256": "339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff",
+   "n_rows_finite_flux": 13921,
+   "flux_column": "FLUX_KRON_TOTAL_F200W",
+   "image": "hlsp_canucs_jwst_nircam_macs0416-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs0416/clu/hlsp_canucs_jwst_nircam_macs0416-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_sha256": "c49bef71ecf218fdf6127c3bfaab481d521d21bbb53253aca4514f93cf21e371",
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "pixel_scale_arcsec": 0.04000078871470929,
+   "depth_mag": 27.910098802027644
+  },
+  "rules": {
+   "ELLIPSE_NSIGMA": 3.0,
+   "MIN_REF_SNR": 5.0,
+   "MAX_REF_MU": 50.0,
+   "MAX_REF_SPREAD": 3.0,
+   "FLUX_RANGE": [
+    0.3333333333333333,
+    3.0
+   ],
+   "TEN_SIGMA_DMAG": 0.752574989159953,
+   "BASE_SEARCH": 1.0,
+   "C2": [
+    8,
+    0.8,
+    3
+   ],
+   "ARC_MIN_ELL": 0.5,
+   "contain": true
+  }
+ },
+ "frame_check_counterpart_offsets": {
+  "n": 283,
+  "median_dra_arcsec": -0.01144317491173152,
+  "median_ddec_arcsec": 0.014077452573246774
+ },
+ "rules_local_noise": {
+  "aperture_radius_arcsec": 0.3,
+  "n_random": 200,
+  "annulus_arcsec": [
+   1.5,
+   4.0
+  ],
+  "source_exclusion_arcsec": 0.5,
+  "seed": 20261022,
+  "min_pred_over_sigma": 5.0,
+  "absent_pred_over_sigma": 10.0
+ }
+}

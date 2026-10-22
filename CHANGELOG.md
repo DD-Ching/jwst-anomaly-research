@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: MACS0416 CANUCS DR1 reference extra-image test: gates K and C2 pass; one unvetted flag (D115b)
+- **Plan** (`results/lens_consistency/macs0416_canucsref/PLAN.md`, frozen and pushed first): the MACS1149 rules
+  (CANUCS DR1 reference, local-noise and containing-source rules) on MACS0416 with the pinned `macs0416-canucs`
+  Lenstool model (deviation: a parameter-file model, not DR1 maps) and its 303 images as fixed-z constraints.
+  Abell 370 was skipped: its CANUCS model is a source-plane fit (image-plane rms 2.32″, D-044).
+- **Result** (`RESULT.md`, `summary.json`): gate K rms 0.512″ (303 / 303); gate C2 160 / 172, arc 58 / 59, passes;
+  one flag, D115b (|μ| 26.6, F / F_pred ≤ 0.049), next to BCG-subtraction residuals by a cluster galaxy (cutout looked
+  at). Not vetted.
+- **Handoff:** next, `/vet-candidate` on the D115b flag (model position error near a galaxy-scale critical curve
+  first), on PR #458's branch; then Abell 370 (gate K first; expected to fail).
+
 ## 2026-10-22: MACS1149 third-field gate: the CANUCS DR1 reference passes C2 with a containing-source rule; no flag
 - **Plan** (`results/lens_consistency/macs1149_canucsref/PLAN.md`, frozen with the rule function and tests): CANUCS v1
   MACS1149 maps (new `macs1149-canucs-maps`), Sharon gold list, the MACS1423 rules plus a containing-source rule
