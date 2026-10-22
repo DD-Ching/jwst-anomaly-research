@@ -1,0 +1,181 @@
+{
+ "plan": "results/lens_consistency/macs0416_canucsref/d115_refit/PLAN.md",
+ "provenance": "model_prediction",
+ "grid_step_arcsec": 0.1,
+ "dchi2_max_assumption": 6.0,
+ "runs": {
+  "fiducial": {
+   "model": "fiducial",
+   "planes": null,
+   "chi2_validate": 330.81034790966385,
+   "families": {
+    "D115a": {
+     "z": 2.2999,
+     "chi2_validate_source": 4.557606031927675,
+     "shared_validate_source": false,
+     "beta_mean": [
+      -12.356435606534745,
+      1.4136039259340933
+     ],
+     "beta_fit": [
+      -12.31773388891341,
+      1.406917692817149
+     ],
+     "chi2_fit_source": 0.8915461113436582,
+     "dtheta_fit_arcsec": {
+      "D115a.1": 0.24188632814982414,
+      "D115a.2": 0.3190213903639327,
+      "D115a.3": 0.23189777506063142
+     },
+     "shared_fit_source": false,
+     "n_predicted": 6,
+     "flag_image": true,
+     "nearest_to_flag_arcsec": 0.4629062656519468,
+     "nearest_to_flag_abs_mu": 22.072727288044966
+    },
+    "D115b": {
+     "z": 2.2999,
+     "chi2_validate_source": 0.4956209743663648,
+     "shared_validate_source": false,
+     "beta_mean": [
+      -12.282309427153864,
+      1.445688217640102
+     ],
+     "beta_fit": [
+      -12.318971911633863,
+      1.4860031498982036
+     ],
+     "chi2_fit_source": 0.3759060409996656,
+     "dtheta_fit_arcsec": {
+      "D115b.1": 0.16688345034880633,
+      "D115b.2": 0.24980983656312894
+     },
+     "shared_fit_source": false,
+     "n_predicted": 6,
+     "flag_image": true,
+     "nearest_to_flag_arcsec": 0.15223333304275308,
+     "nearest_to_flag_abs_mu": 15.38747450085923
+    }
+   },
+   "chi2_fit": 327.0245730557131
+  },
+  "p3907": {
+   "model": "p3907",
+   "planes": [
+    "8515=0.3907"
+   ],
+   "chi2_validate": 330.73376595481534,
+   "families": {
+    "D115a": {
+     "z": 2.2999,
+     "chi2_validate_source": 4.908430221007198,
+     "shared_validate_source": false,
+     "beta_mean": [
+      -12.355770919307231,
+      1.413633935698111
+     ],
+     "beta_fit": [
+      -12.315905993661147,
+      1.4065038385744542
+     ],
+     "chi2_fit_source": 0.9192106260521042,
+     "dtheta_fit_arcsec": {
+      "D115a.1": 0.24487804895587065,
+      "D115a.2": 0.3232588758094833,
+      "D115a.3": 0.2371516638462937
+     },
+     "shared_fit_source": false,
+     "n_predicted": 6,
+     "flag_image": true,
+     "nearest_to_flag_arcsec": 0.5092010772904915,
+     "nearest_to_flag_abs_mu": 22.479272229011773
+    },
+    "D115b": {
+     "z": 2.2999,
+     "chi2_validate_source": 0.5087867835622124,
+     "shared_validate_source": false,
+     "beta_mean": [
+      -12.281134413534238,
+      1.4465032215363518
+     ],
+     "beta_fit": [
+      -12.318303817791541,
+      1.48737875536687
+     ],
+     "chi2_fit_source": 0.3858980821010485,
+     "dtheta_fit_arcsec": {
+      "D115b.1": 0.16929784332477535,
+      "D115b.2": 0.25296713177415275
+     },
+     "shared_fit_source": false,
+     "n_predicted": 6,
+     "flag_image": true,
+     "nearest_to_flag_arcsec": 0.15295525630535234,
+     "nearest_to_flag_abs_mu": 15.521399424751246
+    }
+   },
+   "chi2_fit": 326.6216576583991
+  },
+  "p3907s84": {
+   "model": "p3907s84",
+   "planes": [
+    "8515=0.3907:84.4"
+   ],
+   "chi2_validate": 5261.435718159879,
+   "families": {
+    "D115a": {
+     "z": 2.2999,
+     "chi2_validate_source": 4924.818191455239,
+     "shared_validate_source": true,
+     "beta_mean": [
+      -12.348725189835571,
+      1.4080571900082555
+     ],
+     "beta_fit": [
+      -12.218722640977804,
+      1.3559921977029123
+     ],
+     "chi2_fit_source": 2.7645100832775427,
+     "dtheta_fit_arcsec": {
+      "D115a.1": 0.3483038096156166,
+      "D115a.2": 0.4584870217839572,
+      "D115a.3": 0.5763965458413708
+     },
+     "shared_fit_source": false,
+     "n_predicted": 3,
+     "flag_image": false,
+     "nearest_to_flag_arcsec": 7.544941200517946,
+     "nearest_to_flag_abs_mu": 4.839682313498564
+    },
+    "D115b": {
+     "z": 2.2999,
+     "chi2_validate_source": 0.7080738727576805,
+     "shared_validate_source": false,
+     "beta_mean": [
+      -12.243239064439045,
+      1.4921319713368622
+     ],
+     "beta_fit": [
+      -12.286565862431315,
+      1.5394946165991634
+     ],
+     "chi2_fit_source": 0.5378713226414629,
+     "dtheta_fit_arcsec": {
+      "D115b.1": 0.20383843171068733,
+      "D115b.2": 0.29596080538467034
+     },
+     "shared_fit_source": false,
+     "n_predicted": 3,
+     "flag_image": false,
+     "nearest_to_flag_arcsec": 7.080811155102096,
+     "nearest_to_flag_abs_mu": 5.237603806841739
+    }
+   },
+   "chi2_fit": 339.2118342378017
+  }
+ },
+ "dchi2_fit": 12.590176579402623,
+ "low_sigma_flag_image": false,
+ "low_sigma_all_matched": true,
+ "verdict": "inconclusive"
+}

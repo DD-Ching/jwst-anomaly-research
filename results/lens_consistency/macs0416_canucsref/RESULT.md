@@ -34,3 +34,11 @@ Plan: `PLAN.md` (frozen and pushed before the run, ec5834f). Numbers: `summary.j
 Verdict `inconclusive`: the extra D115a / D115b images are made by cluster member 8515 (z_spec 0.3907); they vanish
 at σ × 0.7–0.8, but the χ² cost of that is unresolved (0.25″ `validate`: 330.8 → 5261 from a D115a match failure; a
 0.1″ solve keeps D115a matched). Next: the fine-grid `validate` in the record's "Open questions".
+
+## Vetting follow-up, 2026-10-22 07:20Z (`d115_refit/`, frozen `d115_refit/PLAN.md`)
+- Fine-grid `validate` (0.1″, `validate_runs.json`): the D115a break at σ 84.4 remains (χ² 5262.01 at z 0.396,
+  5261.44 at z 0.3907), so grid step and plane z are not the cause.
+- With the D115a / D115b sources fitted to the image plane (`result.json`), σ 84.4 keeps every D115 image matched
+  (≤ 0.58″) and removes the flagged image (nearest prediction 7.08″). Δχ²_fit +12.6 (339.21 vs 326.62) exceeds the
+  frozen 6 (ASSUMPTION), so the verdict stays `inconclusive`. Post hoc (`posthoc_families.json`): +10.6 of it is in
+  other families whose sources were not refitted.

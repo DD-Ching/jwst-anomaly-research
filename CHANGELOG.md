@@ -13,8 +13,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Vetting** (`docs/candidates/macs0416-canucsref-D115b.md`, 06:20Z run): `inconclusive`. Member 8515 (z_spec
   0.3907, σ 120.6 km/s) makes the extra D115a / D115b images; at σ × 0.7 they vanish and a 0.1″ solve keeps the
   catalogued images matched (≤ 0.59″), but 0.25″ `validate` then loses D115a's match (χ² 330.8 → 5261); not isolated.
-- **Handoff:** next, `validate --plane 8515=0.396:84.4 --grid-step 0.1` (and at z 0.3907), per the record; then
-  Abell 370 (gate K first; expected to fail).
+- **Vetting follow-up** (07:20Z run, frozen `d115_refit/PLAN.md`): on the 0.1″ grid the break remains (χ² 5262 / 5261
+  at z 0.396 / 0.3907), so grid and plane z are ruled out. With the D115 sources fitted to the image plane, σ 84.4
+  keeps every D115 image matched (≤ 0.58″) and removes the flagged image, but costs Δχ² +12.6 > 6 (ASSUMPTION):
+  still `inconclusive` (post hoc, +10.6 from other families not refitted).
+- **Failed approach:** `validate`'s mean back-traced source is not a fitted source; near a galaxy-scale caustic it can
+  drop images that a fitted source keeps (D115a: family χ² 4924.8 → 2.77).
+- **Handoff:** next, a Lenstool re-fit with 8515's σ free (owner machine) or a σ × 0.75–0.85 scan with every source
+  fitted; then Abell 370 (gate K first; expected to fail).
 
 ## 2026-10-22: MACS1149 third-field gate: the CANUCS DR1 reference passes C2 with a containing-source rule; no flag
 - **Plan** (`results/lens_consistency/macs1149_canucsref/PLAN.md`, frozen with the rule function and tests): CANUCS v1

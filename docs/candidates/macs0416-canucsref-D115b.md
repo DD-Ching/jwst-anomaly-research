@@ -37,6 +37,26 @@ so the cost of the lower mass is not established. Not a candidate for anything u
 - Rule for later fields (extends D-042's rule): before reading a high-|μ| extra prediction next to a cluster member
   as a flag, run the ±30 % σ test on the nearest potentials.
 
+## 2026-10-22: follow-up (07:20Z run): fine-grid validate and a fitted source
+
+Frozen plan `results/lens_consistency/macs0416_canucsref/d115_refit/PLAN.md` (committed before the refit);
+`scripts/m0416_d115_refit.py`, `d115_refit/result.json`; post hoc `d115_refit/posthoc_families.json`.
+
+| Test | Tier | Outcome | Evidence | Label |
+|---|---|---|---|---|
+| Grid step / plane z as cause of the D115a break | C | ruled out | `validate --grid-step 0.1`: χ²_pos 330.81 (fiducial), 330.73 (8515 at z 0.3907), 5262.01 (σ 84.4, z 0.396), 5261.44 (σ 84.4, z 0.3907); D115a.1–3 share one predicted image in both σ 84.4 runs (`validate_runs.json`) | model_prediction |
+| Source definition as cause | C | **confirmed** | With the source fitted to the image plane (Nelder–Mead, one-to-one assignment), σ 84.4 at z 0.3907 gives 3 D115a images at 0.35 / 0.46 / 0.58″ (family χ² 2.77, against 4924.8 with the mean back-traced source) and 3 D115b images at 0.20 / 0.30″; no predicted image within 0.7″ of the flag (nearest 7.08″) | model_prediction |
+| χ² cost of σ × 0.7 | C | **above the frozen bound** | χ²_fit 339.21 (σ 84.4) vs 326.62 (σ as fitted), Δχ² +12.6 > 6 (ASSUMPTION, system-51 precedent). Post hoc: +10.6 of it is in other families with `validate`'s source (D70 +5.6, D69 +4.6, D15 +4.0, D72b +2.7; D34 −8.3); nothing else in the model was refitted | model_prediction |
+
+**Verdict (frozen rule):** still `inconclusive`. The flag's dependence on member 8515's mass is established: the
+extra image disappears at σ × 0.7 with every catalogued D115 image matched. But that σ costs Δχ² +12.6 in a model
+where only the two D115 sources were refitted, above the 6 accepted for system 51. Whether a re-fit (8515 σ free,
+other parameters free, all sources fitted) absorbs the cost is not tested. Not a candidate for anything unusual.
+
+### Open questions (updated)
+- **Next:** a Lenstool re-fit with 8515's σ free (owner machine; Lenstool not in the cloud environment), or a
+  σ × 0.75–0.85 scan here with every source fitted, to find the smallest σ change that removes the image and its cost.
+
 ### Regeneration
 Scratch scripts (not committed): `pert.py` (nearest potentials, ±30 % and removal for the three nearest, images of
 D115a / D115b at z 2.2999 by `a2744_s700.solve` on a 0.1″ grid, half-width 58″) and `pert_scan.py` (8515 σ × 0.8–0.95).

@@ -1,0 +1,21 @@
+{
+ "provenance": "model_prediction",
+ "post_hoc": true,
+ "note": "validate per-family chi2_pos (mean back-traced source, 0.1 arcsec grid), 8515 at z 0.3907: sigma 84.4 km/s minus sigma as fitted",
+ "runs": {
+  "sigma_fitted": "planes_78eb4d39a5",
+  "sigma_84.4": "planes_cde357c3b8"
+ },
+ "sum_other_families": 10.5929038816365,
+ "n_other_families_increase_gt_1": 6,
+ "top8_other": {
+  "D34": -8.317421418110747,
+  "D70": 5.593455591600688,
+  "D69": 4.562217650915795,
+  "D15": 4.037778838860581,
+  "D72b": 2.748755065801726,
+  "D74": -1.8191834897133679,
+  "D7": 1.6251917524329136,
+  "D72a": 1.2288505868614443
+ }
+}
