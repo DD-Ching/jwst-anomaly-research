@@ -1,6 +1,6 @@
 # D115b vetting follow-up: χ² cost of a lower 8515 σ with a fitted source (frozen before the run)
 
-Vetting record: `docs/candidates/macs0416-canucsref-D115b.md` (PR #458). Written 2026-10-22 07:30Z, before the
+Vetting record: `docs/candidates/macs0416-canucsref-D115b.md` (PR #458). Written 2026-10-22 07:24Z, before the
 refit was run.
 
 ## What is already measured (stored in `validate.json` runs, summarised in `validate_runs.json`)
