@@ -10,7 +10,6 @@ and the three nearest CANUCS DR1 sources with their photo-z. Output ``posthoc.js
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
@@ -20,6 +19,9 @@ from astropy.io import fits
 from astropy.stats import sigma_clipped_stats
 from astropy.table import Table
 from astropy.wcs import WCS
+from astropy.wcs.utils import proj_plane_pixel_scales
+
+from jwst_anomaly.provenance import file_sha256
 
 OUT = Path("results/lens_consistency/macs0417_canucsref")
 AP_ARCSEC, PIX = 0.3, 0.04
@@ -44,14 +46,6 @@ def aperture_sum(d: np.ndarray, x: float, y: float, r: float) -> float:
     return float(v.sum()) if np.isfinite(v).all() else float("nan")
 
 
-def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1 << 20), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
 def _clean(v):
     """JSON-safe: NaN / inf -> None (``allow_nan=False`` below)."""
     if isinstance(v, float) and not np.isfinite(v):
@@ -72,6 +66,10 @@ def main(argv: list[str] | None = None) -> int:
         if hl[0].header.get("BUNIT") != "nJy":
             raise ValueError(f"unexpected BUNIT {hl[0].header.get('BUNIT')!r}")
         w, d = WCS(hl[0].header), np.asarray(hl[0].data, float)
+    if args.image.name not in URL:
+        raise ValueError("--image is not the F200W 40 mas BCG-subtracted mosaic named in URL")
+    if abs(proj_plane_pixel_scales(w.celestial).mean() * 3600.0 - PIX) > 1e-4:
+        raise ValueError("image pixel scale is not 0.04 arcsec")
     cat = Table.read(args.cat)
     cs = SkyCoord(cat["RA"], cat["DEC"], unit="deg")
     pred = Table.read(OUT / "predicted_macs0417.ecsv")
@@ -92,6 +90,8 @@ def main(argv: list[str] | None = None) -> int:
             v = aperture_sum(d, rx, ry, r)
             if np.isfinite(v):
                 rand.append(v)
+        if len(rand) < N_RAND:
+            raise RuntimeError(f"only {len(rand)} of {N_RAND} random apertures accepted")
         _, med, std = sigma_clipped_stats(rand)
         sep = cs.separation(SkyCoord(p["ra"], p["dec"], unit="deg")).arcsec
         near = [
@@ -138,12 +138,13 @@ def main(argv: list[str] | None = None) -> int:
         }
         for c in ctrl[(ctrl["system"] == "10") & (ctrl["counterpart"] >= 0)]
     ]
-    m, m2 = (q for q in pairs if q["image_class"] == "missing")
+    miss = [q for q in pairs if q["image_class"] == "missing"]
+    m, m2 = (miss[0], miss[1]) if len(miss) == 2 else (None, None)
     res = {
         "label": "post hoc (not frozen rules); observed pixels, derived sums",
         "image": args.image.name,
         "image_url": URL,
-        "image_sha256": sha256(args.image),
+        "image_sha256": file_sha256(args.image),
         "aperture_radius_arcsec": AP_ARCSEC,
         "random_apertures": {
             "n": N_RAND,
@@ -151,11 +152,16 @@ def main(argv: list[str] | None = None) -> int:
             "source_exclusion_arcsec": SRC_EXCL,
             "seed": 20261022,
         },
-        "separation_between_missing_arcsec": float(
-            SkyCoord(m["ra"], m["dec"], unit="deg")
-            .separation(SkyCoord(m2["ra"], m2["dec"], unit="deg"))
-            .arcsec
+        "separation_between_missing_arcsec": (
+            float(
+                SkyCoord(m["ra"], m["dec"], unit="deg")
+                .separation(SkyCoord(m2["ra"], m2["dec"], unit="deg"))
+                .arcsec
+            )
+            if m is not None
+            else None
         ),
+        "note": "target apertures are measured as they lie; random apertures avoid catalogue sources",
         "family10": rows,
         "family10_catalogued": catalogued,
     }

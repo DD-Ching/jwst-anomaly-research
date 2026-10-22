@@ -87,3 +87,25 @@ def test_posthoc_aperture_edges_and_nan():
     assert np.isnan(ph.aperture_sum(d, 1, 25, 2.0))  # leaves the image
     d[25, 25] = np.nan
     assert np.isnan(ph.aperture_sum(d, 25, 25, 2.0))
+
+
+def test_to_cat_pa_conventions():
+    x, y, ra, dec = _grid()
+    n = len(x)
+    t = Table(
+        {
+            "SOURCE": np.arange(n),
+            "X": x,
+            "Y": y,
+            "RA": ra,
+            "DEC": dec,
+            "A": np.full(n, 4.0),
+            "B": np.full(n, 1.0),
+            "PA": np.full(n, 30.0),
+            "FLUX_KRON_TOTAL_F200W": np.full(n, 100.0),
+            "FLUXERR_KRON_TOTAL_F200W": np.full(n, 10.0),
+            "FLAG_POINTSRC": np.zeros(n, bool),
+        }
+    )
+    assert np.allclose(mc.to_cat(t)["pa"], 120.0)
+    assert np.allclose(mc.to_cat(t, 0.0, -1.0)["pa"], 150.0)

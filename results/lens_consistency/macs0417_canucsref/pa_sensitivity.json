@@ -1,0 +1,103 @@
+{
+ "label": "post hoc sensitivity; frozen convention is ccw_from_x_plus90",
+ "ccw_from_x_plus90": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 40,
+    "n_ok": 37,
+    "fraction": 0.925
+   },
+   "arc_referenced": {
+    "n_testable": 10,
+    "n_ok": 10,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "flags": [
+   "10@64.394629,-11.906917",
+   "10@64.384714,-11.915405"
+  ],
+  "target_classes": {
+   "absent": 2,
+   "confused": 1,
+   "inconsistent_reference": 1,
+   "no_reference": 2
+  }
+ },
+ "as_east_of_north": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 40,
+    "n_ok": 37,
+    "fraction": 0.925
+   },
+   "arc_referenced": {
+    "n_testable": 10,
+    "n_ok": 10,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "flags": [
+   "10@64.394629,-11.906917",
+   "10@64.384714,-11.915405"
+  ],
+  "target_classes": {
+   "absent": 2,
+   "confused": 1,
+   "inconsistent_reference": 1,
+   "no_reference": 2
+  }
+ },
+ "cw_from_x_plus90": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 40,
+    "n_ok": 37,
+    "fraction": 0.925
+   },
+   "arc_referenced": {
+    "n_testable": 10,
+    "n_ok": 10,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "flags": [
+   "10@64.394629,-11.906917",
+   "10@64.384714,-11.915405"
+  ],
+  "target_classes": {
+   "absent": 2,
+   "confused": 1,
+   "inconsistent_reference": 1,
+   "no_reference": 2
+  }
+ },
+ "cw_from_x": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 40,
+    "n_ok": 37,
+    "fraction": 0.925
+   },
+   "arc_referenced": {
+    "n_testable": 10,
+    "n_ok": 10,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "flags": [
+   "10@64.394629,-11.906917",
+   "10@64.384714,-11.915405"
+  ],
+  "target_classes": {
+   "absent": 2,
+   "confused": 1,
+   "inconsistent_reference": 1,
+   "no_reference": 2
+  }
+ }
+}

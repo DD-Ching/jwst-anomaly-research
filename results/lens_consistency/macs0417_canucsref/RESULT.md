@@ -36,6 +36,8 @@ images (not stored).
   and the CANUCS map fit puts it at z 2.15 (`../macs0417_images`), so the predicted position of a further image moves
   with z. Reading: 1115938 is a plausible counter-image ≈ 1.5″ from the model position, outside the frozen 1.0″
   search radius (known-model explanation: source redshift and model position error). Not tested further.
+- The target apertures are measured where they lie; the random apertures avoid catalogue sources (`posthoc.json`
+  "note"), so the local median and scatter describe source-free sky near the position.
 - Neither flag is a candidate; `/vet-candidate` was not run (each has an ordinary reading above). Both readings are
   post hoc.
 
@@ -43,8 +45,10 @@ images (not stored).
 - One model (CANUCS v1 maps via `../macs0417_frame`); no injections; no limit. The 1.0″ search radius is smaller than
   the 1.49″ offset found post hoc.
 - CANUCS positions are assumed to be on the JWST pipeline frame (plan ASSUMPTION; not tested). The PA convention is an
-  ASSUMPTION (plan); counterpart assignment (rule 1) uses each source's 3σ ellipse orientation, so elongated
-  counterparts, the arc-referenced controls among them, depend on it. No sensitivity run was made.
+  ASSUMPTION (plan). Counterpart assignment (rule 1) uses the ellipse orientation, so a post hoc sensitivity run
+  (`pa_sensitivity.json`, `--pa-sensitivity`) repeated the run with the PA read as East of North, clockwise from +x,
+  and clockwise from +x plus 90°: gate C2 (37 / 40, arc 10 / 10), the target classes and both flags are unchanged in
+  all four conventions.
 - The 3 `absent` controls (1a.1, 8.1, 15.2) were not inspected.
 
 ## Next

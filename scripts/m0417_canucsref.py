@@ -10,7 +10,6 @@ MACS0417 cluster-field photometry catalogue (column mapping in the plan).
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
@@ -18,6 +17,8 @@ import lens_consistency as lc
 import m0417_arcref as ar
 import numpy as np
 from astropy.table import Table
+
+from jwst_anomaly.provenance import file_sha256
 
 OUT = Path("results/lens_consistency/macs0417_canucsref")
 URL = (
@@ -52,7 +53,7 @@ def depth_mag(flux_jy, snr) -> float:
     return lc.depth_mag(Table({"snr": s, "mag": mag}))
 
 
-def to_cat(t: Table) -> dict:
+def to_cat(t: Table, pa_offset: float = PA_OFFSET_DEG, pa_sign: float = 1.0) -> dict:
     """The CANUCS table in ``m0417_arcref``'s catalogue form (plan's column mapping)."""
     flux = np.asarray(t[f"FLUX_KRON_TOTAL_{BAND}"], float) * 1e-9
     keep = np.isfinite(flux)
@@ -71,7 +72,7 @@ def to_cat(t: Table) -> dict:
         "dec": np.asarray(t["DEC"], float),
         "a": a * scale,
         "b": b * scale,
-        "pa": sky_pa(t["PA"]),
+        "pa": np.mod(pa_sign * np.asarray(t["PA"], float) + pa_offset, 180.0),
         "flux": flux,
         "snr": snr,
         "ext": ~np.asarray(t["FLAG_POINTSRC"], bool),
@@ -80,15 +81,50 @@ def to_cat(t: Table) -> dict:
     }
 
 
+def pa_sensitivity(path: Path) -> int:
+    """Post hoc (not a frozen rule): gate C2 with the PA read in other conventions."""
+    t = Table.read(path)
+    res = {"label": "post hoc sensitivity; frozen convention is ccw_from_x_plus90"}
+    conv = {
+        "ccw_from_x_plus90": (PA_OFFSET_DEG, 1.0),
+        "as_east_of_north": (0.0, 1.0),
+        "cw_from_x_plus90": (PA_OFFSET_DEG, -1.0),
+        "cw_from_x": (0.0, -1.0),
+    }
+    for name, (off, sign) in conv.items():
+        cat = to_cat(t, off, sign)
+        depth = depth_mag(cat["flux"], cat["snr"])
+        tmp = OUT / "_pa_tmp"
+        s = ar.run(Path("."), cat=cat, depth=depth, cat_inputs={}, out=tmp)
+        res[name] = {
+            "gate_C2": s["gate_C2"],
+            "flags": s["flags"],
+            "target_classes": s["target_classes"],
+        }
+        for f in tmp.iterdir():
+            f.unlink()
+        tmp.rmdir()
+    (OUT / "pa_sensitivity.json").write_text(json.dumps(res, indent=1, allow_nan=False) + "\n")
+    print(json.dumps(res, indent=1))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--cat", type=Path, required=True)
+    ap.add_argument(
+        "--pa-sensitivity",
+        action="store_true",
+        help="post hoc: gate C2 under other PA conventions, to pa_sensitivity.json",
+    )
     args = ap.parse_args(argv)
+    if args.pa_sensitivity:
+        return pa_sensitivity(args.cat)
     cat = to_cat(Table.read(args.cat))
     inputs = {
         "canucs_cat": args.cat.name,
         "canucs_url": URL,
-        "canucs_cat_sha256": hashlib.sha256(args.cat.read_bytes()).hexdigest(),  # 28 MB
+        "canucs_cat_sha256": file_sha256(args.cat),
         "n_rows_finite_flux": int(len(cat["flux"])),
         "flux_column": f"FLUX_KRON_TOTAL_{BAND}",
     }
