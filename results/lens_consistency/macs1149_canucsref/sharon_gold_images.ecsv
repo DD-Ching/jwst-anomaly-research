@@ -1,0 +1,36 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: ra, unit: deg, datatype: float64}
+# - {name: dec, unit: deg, datatype: float64}
+# - {name: z, datatype: float64}
+# - {name: z_spec, datatype: bool}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'results/lens_consistency/macs1149_sharon/sharon_gold_images.ecsv (z_spec column added: gold = spectroscopic, PLAN.md)'}
+# schema: astropy-2.0
+image_id ra dec z z_spec
+1.1 177.39701 22.396004 1.488 True
+1.2 177.39941 22.397439 1.488 True
+1.3 177.40342 22.402433 1.488 True
+2.1 177.40243 22.389748 1.894 True
+2.2 177.40607 22.392481 1.894 True
+2.3 177.40657 22.392875 1.894 True
+3.1 177.39094 22.399863 3.129 True
+3.2 177.39241 22.402556 3.129 True
+3.3 177.40164 22.407168 3.129 True
+4.1 177.39301 22.396826 2.949 True
+4.2 177.39439 22.400735 2.949 True
+4.3 177.40419 22.406122 2.949 True
+5.1 177.39975 22.39305 2.79 True
+5.2 177.40111 22.393826 2.79 True
+13.1 177.40371 22.397784 1.24 True
+13.2 177.40284 22.39665 1.24 True
+13.3 177.40003 22.393857 1.24 True
+110.1 177.40014 22.390162 3.214 True
+110.2 177.40402 22.392894 3.214 True
+9.1 177.40515 22.42623 0.981 True
+9.2 177.40387 22.427226 0.981 True
+9.3 177.40322 22.427223 0.981 True
+9.4 177.40364 22.426422 0.981 True

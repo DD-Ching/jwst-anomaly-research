@@ -1,0 +1,40 @@
+{
+ "macs1149": {
+  "model": "macs1149-canucs-maps",
+  "model_sha256": "efd01157fa7120f569f0afc0b515a33ab749e1320a284bc3606df947295ea49f",
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o008/jw01208-o008_t004_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 26.933725775749252,
+  "unpredicted": [
+   "3.2",
+   "4.1"
+  ],
+  "image_classes": {
+   "candidate": 5,
+   "demagnified": 2,
+   "missing": 1,
+   "observed": 23
+  },
+  "forced_classes_targets": {
+   "inconsistent_reference": 1,
+   "no_reference": 4,
+   "recovered": 1
+  },
+  "gate_C": {
+   "n_targets": 23,
+   "n_testable": 8,
+   "n_recovered": 7,
+   "fraction": 0.875,
+   "passes": true,
+   "classes": {
+    "absent": 1,
+    "confused": 1,
+    "inconsistent_reference": 2,
+    "no_reference": 12,
+    "recovered": 6,
+    "undetectable": 1
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}

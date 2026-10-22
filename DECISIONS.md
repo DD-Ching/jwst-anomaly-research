@@ -2231,6 +2231,15 @@ fails gate C2 on MACS1423: all 9 / 11, arc-referenced 2 / 4. The local-noise rul
 reference is the central image beside the BCG. Decision: the CANUCS DR1 reference is not validated beyond MACS0417;
 use it on another field only with a new, frozen counterpart rule gated on a third field.
 
+**Addendum 2026-10-22f (MACS1149, `results/lens_consistency/macs1149_canucsref/`).** Third-field gate. The CANUCS v1
+MACS1149 maps (`macs1149-canucs-maps`) pass gate K on the 23 Sharon gold images (rms 0.990″, 22 / 23). With the
+CANUCS DR1 reference, the local-noise rule and a new containing-source rule (a source whose 3σ ellipse contains the
+position also enters the comparison), gate C2 passes: all 15 / 15, arc-referenced 5 / 5. There are 0 flags among 6
+targets. The containing-source rule changed no class on MACS1149. Post hoc it recovers MACS1423 3.2, but MACS1423
+still fails (arc 3 / 4, BCG-adjacent 4.3). Decision: by the frozen plan, use the CANUCS DR1 reference + containing-source
+rule on Abell 370 and MACS0416. The rule is validated only post hoc (MACS1423), and C2 passes on 2 of 3 fields.
+Revisit if: a fourth field fails C2, or the rule turns a control `confused` on an unrelated bright source.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

@@ -1,0 +1,26 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: string}
+# - {name: image_class, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: abs_mu, datatype: float64}
+# - {name: ref_counterpart, datatype: int64}
+# - {name: arc_ref, datatype: bool}
+# - {name: L_ref, datatype: float64}
+# - {name: search_arcsec, datatype: float64}
+# - {name: f_pred, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: n_sources, datatype: int64}
+# - {name: max_ratio, datatype: float64}
+# - {name: reading, datatype: string}
+# - {name: m_pred, datatype: float64}
+# schema: astropy-2.0
+system image_class ra dec abs_mu ref_counterpart arc_ref L_ref search_arcsec f_pred class n_sources max_ratio reading m_pred
+8 faint 64.37964806183633 -11.901771700072985 4.090009209554476 -1 False nan 1.0 nan inconsistent_reference 0 nan no_flag ""
+9 faint 64.39597279927044 -11.89113582776816 3.3819465175647774 -1 False nan 1.0 nan no_reference 0 nan no_flag ""
+10 missing 64.39479649706004 -11.907537311141732 6.108375984835372 1116189 False 2.6909534387409316e-08 1.0 1.6437355361515268e-07 confused 3 349.89162097785874 no_flag 25.86048576145767
+10 missing 64.39462863940717 -11.906916955092163 4.851896289685542 1116189 False 2.6909534387409316e-08 1.0 1.3056227005143677e-07 confused 1 440.50190838163854 no_flag 26.110521391187262
+10 candidate 64.38471416304424 -11.915405023989534 2.84978661819737 1116189 False 2.6909534387409316e-08 1.0 7.668643099916103e-08 absent 1 0.27878431361989986 lensing_residual_input 26.688269307048344
+17 faint 64.38008866450667 -11.902207706487063 4.140015727321617 -1 False nan 1.0 nan no_reference 0 nan no_flag ""

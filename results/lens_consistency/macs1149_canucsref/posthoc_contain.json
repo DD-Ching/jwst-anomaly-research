@@ -1,0 +1,103 @@
+{
+ "macs0417": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 40,
+    "n_ok": 38,
+    "fraction": 0.95
+   },
+   "arc_referenced": {
+    "n_testable": 10,
+    "n_ok": 10,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "control_classes": {
+   "absent": 2,
+   "confused": 4,
+   "inconsistent_reference": 6,
+   "no_reference": 8,
+   "recovered": 34
+  },
+  "target_classes": {
+   "absent": 1,
+   "confused": 2,
+   "inconsistent_reference": 1,
+   "no_reference": 2
+  },
+  "flags": [
+   "10@64.384714,-11.915405"
+  ]
+ },
+ "macs1423": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 11,
+    "n_ok": 10,
+    "fraction": 0.9090909090909091
+   },
+   "arc_referenced": {
+    "n_testable": 4,
+    "n_ok": 3,
+    "fraction": 0.75
+   },
+   "passes": false
+  },
+  "control_classes": {
+   "absent": 1,
+   "inconsistent_reference": 3,
+   "recovered": 10
+  },
+  "target_classes": {
+   "absent": 1,
+   "recovered": 1
+  },
+  "flags": [],
+  "controls": {
+   "1.1": "recovered",
+   "1.2": "recovered",
+   "2.1": "recovered",
+   "2.2": "recovered",
+   "2.3": "recovered",
+   "2.4": "recovered",
+   "3.1": "recovered",
+   "3.2": "recovered",
+   "3.3": "recovered",
+   "4.1": "inconsistent_reference",
+   "4.2": "inconsistent_reference",
+   "4.3": "absent",
+   "4.4": "inconsistent_reference",
+   "4.5": "recovered"
+  },
+  "targets": {
+   "1:missing": "absent",
+   "1:candidate": "recovered"
+  },
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 11,
+     "n_ok": 10,
+     "fraction": 0.9090909090909091
+    },
+    "arc_referenced": {
+     "n_testable": 4,
+     "n_ok": 3,
+     "fraction": 0.75
+    },
+    "passes": false
+   },
+   "control_classes": {
+    "absent": 1,
+    "inconsistent_reference": 3,
+    "recovered": 10
+   },
+   "target_classes": {
+    "absent": 1,
+    "recovered": 1
+   },
+   "flags": []
+  }
+ }
+}
