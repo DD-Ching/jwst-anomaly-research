@@ -8,14 +8,18 @@ W = {p: json.load(open(f'results/w3_ztf/joint/worth_{p}.json')) for p in ('4991'
 
 def pooled(grp, key):
     v = [W[p]['summary'][grp][key] for p in W]
+    if v[0] is None:
+        return None
+    if key.startswith('min_'):
+        return min(v)
     if isinstance(v[0], dict):
         return {k: sum(x[k] for x in v) for k in v[0]}
     return sum(v)
 
 
 def stop_conditions(ideal_events, events, new_fast_num, ext_dim_new, ext_true_new):
-    """1: ideal joint restoration < 0.50 of the A0-insufficient W3 events; 2: no B-undecided side becomes fast under num
-    (the gain comes only from the span); 3: < 90 % of the extending epochs on newly fast sides are truly dim."""
+    """1: ideal joint restoration < 0.50 of the A0-insufficient W3 events; 2: no side insufficient under B becomes fast
+    under num (the gain comes only from the span); 3: < 90 % of the extending epochs on newly fast sides are truly dim."""
     return {'1_ideal_below_0.50': ideal_events / events < 0.50,
             '2_only_span': new_fast_num == 0,
             '3_extension_not_real': ext_dim_new > 0 and ext_true_new / ext_dim_new < 0.90}
@@ -23,7 +27,7 @@ def stop_conditions(ideal_events, events, new_fast_num, ext_dim_new, ext_true_ne
 
 w3 = {k: pooled('w3', k) for k in W['4991']['summary']['w3']}
 fade = {k: pooled('fade', k) for k in W['4991']['summary']['fade']}
-stops = stop_conditions(w3['ideal_joint_events_fast'], w3['events_a0_insufficient'], w3['sides_fast_num_not_B'],
+stops = stop_conditions(w3['ideal_joint_events_fast'], w3['events_a0_insufficient'], w3['sides_fast_num_of_B_insufficient'],
                         w3['ext_dim_epochs_on_new_fast_sides'], w3['ext_true_dim_epochs_on_new_fast_sides'])
 ext = [sd for p in W for e in W[p]['events'] if e['grp'] == 'w3' for sd in e['sides'] if sd['n_ext_dim'] > 0]
 fin = [sd for sd in ext if sd['U_J'] is not None and sd['U_B'] is not None]
@@ -39,9 +43,14 @@ out = {'label': 'derived (worth_<npix>.json); simulated events; the ideal uses i
        'w3_pooled': w3, 'fade_pooled': fade,
        'ideal_fraction': w3['ideal_joint_events_fast'] / w3['events_a0_insufficient'],
        'stop_conditions': stops, 'stop': any(stops.values()), 'extended_side_evidence': evidence,
+       'posthoc_bounds': {'observed_joint_fraction': w3['observed_joint_events_fast_posthoc'] / w3['events_a0_insufficient'],
+                          'oracle_fraction': w3['oracle_events_fast_posthoc'] / w3['events_a0_insufficient'],
+                          'all_below_0.50': max(w3['ideal_joint_events_fast'], w3['observed_joint_events_fast_posthoc'],
+                                                w3['oracle_events_fast_posthoc']) / w3['events_a0_insufficient'] < 0.50},
        'checks': {p: W[p]['checks'] for p in W}}
 json.dump(out, open('results/w3_ztf/joint/decision.json', 'w'), indent=1)
 open('results/w3_ztf/joint/decision.json', 'a').write('\n')
-print(json.dumps({k: out[k] for k in ('ideal_fraction', 'stop_conditions', 'stop', 'extended_side_evidence')}, indent=1))
+print(json.dumps({k: out[k] for k in ('ideal_fraction', 'stop_conditions', 'stop', 'extended_side_evidence', 'posthoc_bounds')},
+                 indent=1))
 print(json.dumps(w3, indent=1))
 print(json.dumps(fade, indent=1))

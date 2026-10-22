@@ -404,6 +404,10 @@ def test_joint_extent_and_edge_bounds_joint():
     gap_pre = [x for i, x in enumerate(base) if not 30 <= i < 40]
     v = wz.edge_bounds_joint(gap_pre, (30, 49), [g(36, 0.0), g(37, 1.2)])
     assert v["joint_lo"] == 37.0 and v["edge_pre_max_d"] == 1.0 and v["edge_pre_class"] == "fast"
+    # pre side: a stop first at equal times, a shallow non-detection unknown, a deep one dim
+    assert wz.joint_extent(gap_pre, (30, 49), [g(38, 0.0), g(38, 2.0)])[0] == 40.0
+    assert wz.joint_extent(gap_pre, (30, 49), [g(38, 0.0, True, 0.5), g(37, 1.5)])[0] == 37.0
+    assert wz.joint_extent(gap_pre, (30, 49), [g(38, 0.0, True, 3.0), g(36, 0.0)])[0] == 38.0
     # no other band: identical to bounds
     v = wz.edge_bounds_joint(gap, run, [])
     w = wz.edge_bounds(gap, run, 19.0)

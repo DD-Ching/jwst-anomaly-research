@@ -779,6 +779,15 @@ def alt_detections(series) -> list:
     return [(x[0], x[1], 0.2171 * 10 ** (0.4 * (x[1] - x[3]))) for x in series or [] if not x[2]]
 
 
+def joint_state(x) -> str:
+    """Joint trial: "dim" (a detection with dm >= DIM_MAG, or a non-detection whose limit is >=
+    DIM_MAG below the band's baseline), "unknown" (a shallower non-detection) or "stop" (any other
+    detection)."""
+    if x[2]:
+        return "dim" if x[3] >= DIM_MAG else "unknown"
+    return "dim" if x[1] >= DIM_MAG else "stop"
+
+
 def joint_extent(s, run, other) -> tuple[float, float]:
     """Joint g + r trial (``results/w3_ztf/joint/PLAN.md``): the run's edge times after extending
     each edge outward, in time order over both bands, through contiguous dim epochs. Dim: a
@@ -789,13 +798,7 @@ def joint_extent(s, run, other) -> tuple[float, float]:
     stops. Missing and quality-excluded exposures are not in the series and are unknown."""
     i, j = run
     ti, tj = s[i][0], s[j][0]
-
-    def state(x):
-        if x[2]:
-            return "dim" if x[3] >= DIM_MAG else "unknown"
-        return "dim" if x[1] >= DIM_MAG else "stop"
-
-    pts = [(x[0], state(x)) for x in list(s) + list(other or []) if x[0] < ti or x[0] > tj]
+    pts = [(x[0], joint_state(x)) for x in list(s) + list(other or []) if x[0] < ti or x[0] > tj]
     lo, hi = ti, tj
     for tt, st in sorted((p for p in pts if p[0] > tj), key=lambda p: (p[0], p[1] != "stop")):
         if st == "stop":

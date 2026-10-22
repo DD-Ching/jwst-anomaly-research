@@ -6,6 +6,9 @@
 # joint, from observed series only. It also records the ideal joint call: the noise-free model at the observed epoch
 # times and limits, which is injection truth used for evaluation only, never by the rule.
 #
+# Review fixes (after the first run, before this rerun): num / den computed exactly as PLAN §1 from U and L, explicit
+# reproduction checks, the shared dim predicate, the observed joint event count, the extension S/N, and a POST HOC
+# "oracle" bound (sampled epochs with true states, true dm >= 1 span; no intermediates), all evaluation only.
 # Usage: python worth_script.py.txt <npix> <seed offset>   (after the v23 dev setup, fetch and exposures stages)
 import gzip, json, sys, time
 import numpy as np
@@ -57,21 +60,52 @@ def with_b(si, hits, alt):
 
 def ideal(series, model):
     """Noise-free model at the observed epochs (evaluation only): dm = model(t), a non-detection exactly where the model
-    passes the epoch's limit; the star's own scatter and the data's own non-detections are left out."""
-    out = []
-    for x in series:
-        d = float(model(np.array([x[0]]))[0])
-        nd = (not np.isfinite(d)) or d > x[3]
-        out.append((x[0], 0.0 if nd else d, bool(nd), *x[3:]))
-    return out
+    passes the epoch's limit; the star's own scatter and the data's own non-detections are left out. This is a noise-free
+    replay of the same rule, not a strict ceiling (see oracle)."""
+    if not series:
+        return []
+    d = np.asarray(model(np.array([x[0] for x in series])), float)
+    return [(x[0], 0.0 if (not np.isfinite(dd) or dd > x[3]) else float(dd), bool(not np.isfinite(dd) or dd > x[3]), *x[3:])
+            for x, dd in zip(series, d)]
 
 
-def side_rows(kind, k, si, oi, hits_bounds, model):
-    """Per A0-insufficient side of runs passing the other tests: U, spans, classes under B / num / den / joint, and the
-    ideal joint class; the event's ideal joint outcome."""
+def classify(U, L, thr):
+    U = np.inf if U is None else U
+    return 'fast' if U <= thr else ('slow' if L > thr else 'insufficient')
+
+
+def true_span(model, par):
+    """POST HOC oracle: the model's dm >= 1 duration on a 0.01-d grid over t0 +- 3 tE (W3 only)."""
+    t0, te = par
+    grid = np.arange(t0 - 3 * te, t0 + 3 * te, 0.01)
+    return float((np.asarray(model(grid)) >= wz.DIM_MAG).sum() * 0.01)
+
+
+def oracle_U(times, dm_true, t_edge, side):
+    """POST HOC oracle: from the r edge outward over the sampled epochs of both bands, the gap between the first epoch
+    whose true dm < 0.3 and the last epoch before it whose true dm >= 1 (the r edge itself at least); inf if none."""
+    order = np.argsort(times) if side == 'post' else np.argsort(-times)
+    last_dim = t_edge
+    for k in order:
+        tk = times[k]
+        if (side == 'post' and tk <= t_edge) or (side == 'pre' and tk >= t_edge):
+            continue
+        if dm_true[k] < wz.INTER[0]:
+            return abs(tk - last_dim)
+        if dm_true[k] >= wz.DIM_MAG:
+            last_dim = tk
+    return np.inf
+
+
+def side_rows(kind, k, si, oi, hits_bounds, model, par):
+    """Per A0-insufficient side of runs passing the other tests: U, L, spans, classes under B / num / den / joint, the
+    ideal joint class and (W3) the oracle class; per event the observed / ideal / oracle joint outcomes."""
     tt = np.array([x[0] for x in si])
     alt = wz.alt_detections(oi)
-    rows_, ideal_fast_run = [], False
+    rows_, ideal_fast_run, joint_fast_run, oracle_run = [], False, False, False
+    times = np.array([x[0] for x in si] + [x[0] for x in (oi or [])])
+    dm_true = np.asarray(model(times), float)
+    span_true = true_span(model, par) if par else None
     for ri, h in enumerate(hits_bounds):
         if not all(h[x] for x in OTHERS):
             continue
@@ -80,25 +114,35 @@ def side_rows(kind, k, si, oi, hits_bounds, model):
         lo, hi = wz.joint_extent(si, (i, j), oi)
         span_j = max(hi - lo, 1.0)
         b = wz.edge_bounds_alt(si, (i, j), span_r, alt)
-        num = wz.edge_bounds_alt(si, (i, j), span_r, alt, edges=(lo, hi))
-        den = wz.edge_bounds_alt(si, (i, j), span_j, alt)
         jo = wz.edge_bounds_joint(si, (i, j), oi)
-        si_id, oi_id = ideal(si, model), ideal(oi or [], model)
-        jid = wz.edge_bounds_joint(si_id, (i, j), oi_id)
+        jid = wz.edge_bounds_joint(ideal(si, model), (i, j), ideal(oi or [], model))
         ideal_fast_run |= jid['edge_class'] == 'fast'
+        joint_fast_run |= jo['edge_class'] == 'fast'
+        run_oracle = h['edge_class'] == 'insufficient' and span_true is not None
         for sd in ('pre', 'post'):
             if h[f'edge_{sd}_class'] != 'insufficient':
                 continue
             t_edge, t_new = (tt[i], lo) if sd == 'pre' else (tt[j], hi)
             ext = [x for x in (oi or []) if (t_new <= x[0] < t_edge if sd == 'pre' else t_edge < x[0] <= t_new)]
-            ext_dim = [x for x in ext if (x[2] and x[3] >= wz.DIM_MAG) or (not x[2] and x[1] >= wz.DIM_MAG)]
-            true_dim = sum(float(model(np.array([x[0]]))[0]) >= wz.DIM_MAG for x in ext_dim)
-            rows_.append({'kind': kind, 'i': k, 'run': ri, 'side': sd, 'span_r': float(span_r), 'span_j': float(span_j),
-                          'ext_days': float(abs(t_new - t_edge)), 'n_ext_dim': len(ext_dim), 'n_ext_true_dim': int(true_dim),
-                          'U_r': h[f'edge_{sd}_max_d'], 'U_B': b[f'edge_{sd}_max_d'], 'U_J': jo[f'edge_{sd}_max_d'],
-                          'L_J': jo[f'edge_{sd}_d'], 'B': b[f'edge_{sd}_class'], 'num': num[f'edge_{sd}_class'],
-                          'den': den[f'edge_{sd}_class'], 'joint': jo[f'edge_{sd}_class'], 'ideal': jid[f'edge_{sd}_class']})
-    return rows_, ideal_fast_run
+            ext_dim = [x for x in ext if wz.joint_state(x) == 'dim']
+            ext_true = np.asarray(model(np.array([x[0] for x in ext_dim])), float) if ext_dim else np.array([])
+            snr = [1.0857 / a[2] for a in wz.alt_detections(ext_dim)]
+            U_B, L_B, U_J, L_J = b[f'edge_{sd}_max_d'], b[f'edge_{sd}_d'], jo[f'edge_{sd}_max_d'], jo[f'edge_{sd}_d']
+            row = {'kind': kind, 'i': k, 'run': ri, 'side': sd, 'span_r': float(span_r), 'span_j': float(span_j),
+                   'ext_days': float(abs(t_new - t_edge)), 'n_ext_dim': len(ext_dim),
+                   'n_ext_true_dim': int((ext_true >= wz.DIM_MAG).sum()), 'min_snr_ext_detection': min(snr) if snr else None,
+                   'U_r': h[f'edge_{sd}_max_d'], 'U_B': U_B, 'L_B': L_B, 'U_J': U_J, 'L_J': L_J,
+                   'B': b[f'edge_{sd}_class'], 'num': classify(U_J, L_J, 0.25 * span_r),
+                   'den': classify(U_B, L_B, 0.25 * span_j), 'joint': jo[f'edge_{sd}_class'],
+                   'ideal': jid[f'edge_{sd}_class']}
+            if span_true is not None:
+                uo = oracle_U(times, dm_true, t_edge, sd)
+                row.update({'span_true': span_true, 'U_oracle': None if not np.isfinite(uo) else float(uo),
+                            'oracle': 'fast' if uo <= 0.25 * span_true else 'not_fast'})
+                run_oracle &= row['oracle'] == 'fast'
+            rows_.append(row)
+        oracle_run |= run_oracle
+    return rows_, ideal_fast_run, joint_fast_run, oracle_run
 
 
 def screen_rules(si, oi):
@@ -109,20 +153,23 @@ def screen_rules(si, oi):
     return out
 
 
-def handle(kind, k, g, si, oi, hits, model, rec):
+MISMATCH = {'a0_vs_v24': 0, 'b_vs_459': 0}
+
+
+def handle(kind, k, g, si, oi, hits, model, rec, par=None):
     a_b = outcome(hits['bounds'], 'bounds') if hits['bounds'] else 'not_flagged'
     a_t = outcome(hits['time'], 'time') if hits['bounds'] else 'not_flagged'
     st = stored[(kind, k)]
-    assert (a_t, a_b) == (st['time'], st['bounds']), (kind, k, a_t, a_b, st['time'], st['bounds'])
+    MISMATCH['a0_vs_v24'] += (a_t, a_b) != (st['time'], st['bounds'])
     if g['key'] not in keys:
         return
     b = outcome(with_b(si, hits['bounds'], wz.alt_detections(oi)), 'bounds') if hits['bounds'] else 'not_flagged'
-    assert b == stored_b[(kind, k)]['b'], (kind, k, b, stored_b[(kind, k)]['b'])
+    MISMATCH['b_vs_459'] += b != stored_b[(kind, k)]['b']
     if a_b != 'edge_insufficient':
         return
-    sides, ideal_fast = side_rows(kind, k, si, oi, hits['bounds'], model)
+    sides, ideal_fast, joint_fast, oracle = side_rows(kind, k, si, oi, hits['bounds'], model, par)
     rec.append({'kind': kind, 'i': k, 'grp': 'fade' if kind == 'fade' else 'w3', 'b': b, 'ideal_joint_fast_run': ideal_fast,
-                'sides': sides})
+                'joint_fast_run': joint_fast, 'oracle_fast_run': oracle, 'sides': sides})
 
 
 rec = []
@@ -144,7 +191,7 @@ for c, (rho, blend, te) in enumerate(cells):
         hits = {r: [x for x in v if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
                     and (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
         model = lambda x, t0=t0, te=te, u0=u0, rho=rho, blend=blend: wz.w3_dmag(x, t0, te, u0, rho, blend)
-        handle(kind, k, g, si, oi, hits, model, rec)
+        handle(kind, k, g, si, oi, hits, model, rec, (t0, te))
 rng = np.random.default_rng(1201 + OFF)
 for k in range(1000):
     g, s, o, base = carriers[rng.integers(len(carriers))]
@@ -156,27 +203,38 @@ for k in range(1000):
     hits = {r: [x for x in v if (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
     handle('fade', k, g, si, oi, hits, model, rec)
 
+if any(MISMATCH.values()):
+    raise SystemExit(f'reproduction failed: {MISMATCH}')
 summ = {}
 for grp in ('w3', 'fade'):
     es = [e for e in rec if e['grp'] == grp]
     sides = [sd for e in es for sd in e['sides']]
     d = {'events_a0_insufficient': len(es), 'sides': len(sides),
-         'ideal_joint_events_fast': sum(e['ideal_joint_fast_run'] for e in es)}
+         'ideal_joint_events_fast': sum(e['ideal_joint_fast_run'] for e in es),
+         'observed_joint_events_fast_posthoc': sum(e['joint_fast_run'] for e in es),
+         'oracle_events_fast_posthoc': sum(e['oracle_fast_run'] for e in es) if grp == 'w3' else None}
     for rule in ('B', 'num', 'den', 'joint', 'ideal'):
         d[f'sides_{rule}'] = {c: sum(sd[rule] == c for sd in sides) for c in ('fast', 'slow', 'insufficient')}
     newj = [sd for sd in sides if sd['B'] != 'fast' and sd['joint'] == 'fast']
     d['sides_fast_joint_not_B'] = len(newj)
-    d['of_those_fast_under_num'] = sum(sd['num'] == 'fast' for sd in newj)
-    d['of_those_fast_under_den'] = sum(sd['den'] == 'fast' for sd in newj)
-    d['sides_fast_num_not_B'] = sum(sd['B'] != 'fast' and sd['num'] == 'fast' for sd in sides)
+    d['new_fast_by_cause'] = {
+        'bracket_only (num fast, den not)': sum(sd['num'] == 'fast' and sd['den'] != 'fast' for sd in newj),
+        'span_only (den fast, num not)': sum(sd['den'] == 'fast' and sd['num'] != 'fast' for sd in newj),
+        'either_alone (num and den fast)': sum(sd['num'] == 'fast' and sd['den'] == 'fast' for sd in newj),
+        'needs_both (neither alone)': sum(sd['num'] != 'fast' and sd['den'] != 'fast' for sd in newj)}
+    d['sides_fast_num_of_B_insufficient'] = sum(sd['B'] == 'insufficient' and sd['num'] == 'fast' for sd in sides)
     d['sides_extended'] = sum(sd['n_ext_dim'] > 0 for sd in sides)
     d['ext_dim_epochs_on_new_fast_sides'] = sum(sd['n_ext_dim'] for sd in newj)
     d['ext_true_dim_epochs_on_new_fast_sides'] = sum(sd['n_ext_true_dim'] for sd in newj)
     d['ext_dim_epochs_all'] = sum(sd['n_ext_dim'] for sd in sides)
     d['ext_true_dim_epochs_all'] = sum(sd['n_ext_true_dim'] for sd in sides)
+    snrs = [sd['min_snr_ext_detection'] for sd in sides if sd['min_snr_ext_detection'] is not None]
+    d['min_snr_of_extending_detections'] = min(snrs) if snrs else None
+    if grp == 'w3':
+        d['sides_oracle_fast_posthoc'] = sum(sd['oracle'] == 'fast' for sd in sides)
     summ[grp] = d
 res = {'label': 'derived; simulated events replayed (v23 seeds); ideal = injection truth for evaluation only',
-       'npix': P, 'seed_offset': OFF, 'carriers': len(carriers), 'checks': {'a0_equals_v24': True, 'b_equals_459': True},
+       'npix': P, 'seed_offset': OFF, 'carriers': len(carriers), 'checks': {'a0_equals_v24': MISMATCH['a0_vs_v24'] == 0, 'b_equals_459': MISMATCH['b_vs_459'] == 0, 'mismatches': MISMATCH},
        'summary': summ, 'events': rec, 'seconds': round(time.time() - T0, 1)}
 json.dump(res, open(f'results/w3_ztf/joint/worth_{P}.json', 'w'), indent=1, default=float)
 open(f'results/w3_ztf/joint/worth_{P}.json', 'a').write('\n')

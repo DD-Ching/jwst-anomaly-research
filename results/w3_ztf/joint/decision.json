@@ -4,6 +4,8 @@
   "events_a0_insufficient": 63,
   "sides": 88,
   "ideal_joint_events_fast": 7,
+  "observed_joint_events_fast_posthoc": 7,
+  "oracle_events_fast_posthoc": 16,
   "sides_B": {
    "fast": 5,
    "slow": 0,
@@ -30,19 +32,27 @@
    "insufficient": 74
   },
   "sides_fast_joint_not_B": 9,
-  "of_those_fast_under_num": 3,
-  "of_those_fast_under_den": 4,
-  "sides_fast_num_not_B": 3,
+  "new_fast_by_cause": {
+   "bracket_only (num fast, den not)": 2,
+   "span_only (den fast, num not)": 3,
+   "either_alone (num and den fast)": 1,
+   "needs_both (neither alone)": 3
+  },
+  "sides_fast_num_of_B_insufficient": 3,
   "sides_extended": 34,
   "ext_dim_epochs_on_new_fast_sides": 16,
   "ext_true_dim_epochs_on_new_fast_sides": 16,
   "ext_dim_epochs_all": 64,
-  "ext_true_dim_epochs_all": 64
+  "ext_true_dim_epochs_all": 64,
+  "min_snr_of_extending_detections": 42.47257712586672,
+  "sides_oracle_fast_posthoc": 33
  },
  "fade_pooled": {
   "events_a0_insufficient": 12,
   "sides": 18,
   "ideal_joint_events_fast": 0,
+  "observed_joint_events_fast_posthoc": 0,
+  "oracle_events_fast_posthoc": null,
   "sides_B": {
    "fast": 0,
    "slow": 2,
@@ -69,14 +79,19 @@
    "insufficient": 15
   },
   "sides_fast_joint_not_B": 1,
-  "of_those_fast_under_num": 0,
-  "of_those_fast_under_den": 0,
-  "sides_fast_num_not_B": 0,
+  "new_fast_by_cause": {
+   "bracket_only (num fast, den not)": 0,
+   "span_only (den fast, num not)": 0,
+   "either_alone (num and den fast)": 0,
+   "needs_both (neither alone)": 1
+  },
+  "sides_fast_num_of_B_insufficient": 0,
   "sides_extended": 7,
   "ext_dim_epochs_on_new_fast_sides": 4,
   "ext_true_dim_epochs_on_new_fast_sides": 4,
   "ext_dim_epochs_all": 13,
-  "ext_true_dim_epochs_all": 13
+  "ext_true_dim_epochs_all": 13,
+  "min_snr_of_extending_detections": 33.239585659113715
  },
  "ideal_fraction": 0.1111111111111111,
  "stop_conditions": {
@@ -96,14 +111,27 @@
   "median_U_J_over_U_B": 0.972715720062155,
   "median_span_J_over_span_r": 1.0557395776884624
  },
+ "posthoc_bounds": {
+  "observed_joint_fraction": 0.1111111111111111,
+  "oracle_fraction": 0.25396825396825395,
+  "all_below_0.50": true
+ },
  "checks": {
   "4991": {
    "a0_equals_v24": true,
-   "b_equals_459": true
+   "b_equals_459": true,
+   "mismatches": {
+    "a0_vs_v24": 0,
+    "b_vs_459": 0
+   }
   },
   "2344": {
    "a0_equals_v24": true,
-   "b_equals_459": true
+   "b_equals_459": true,
+   "mismatches": {
+    "a0_vs_v24": 0,
+    "b_vs_459": 0
+   }
   }
  }
 }
