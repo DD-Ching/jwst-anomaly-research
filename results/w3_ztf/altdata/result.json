@@ -459,5 +459,17 @@
    "fade_events": 4
   }
  },
- "stars_used": 40
+ "stars_used": 40,
+ "diag_consistency_checks": {
+  "4991": {
+   "w3_sides_equal": true,
+   "fade_sides_equal": true,
+   "every_side_matched_inventory": true
+  },
+  "2344": {
+   "w3_sides_equal": true,
+   "fade_sides_equal": true,
+   "every_side_matched_inventory": true
+  }
+ }
 }

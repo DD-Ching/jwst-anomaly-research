@@ -3,6 +3,8 @@
 - **Pre-registration:**
   - PLAN sections 0–3 (gap windows, inventory, selection rule) were committed at 05:32:14 (780b528), before the
     inventory output was read.
+  - **Deviation:** the inventory queries had already started at 05:30:34 (`cost.json`). The rule text was written
+    while they ran, so it is pre-registered against the output, not against the start of the queries.
   - Sections 3b–6 (selection outcome, trial, criteria, stop) and `edge_bounds_alt` with its unit test were committed at
     05:45:24 (7b7554d). That was after the inventory (coverage only) and before the data re-read and any flux.
 - **Labels:**
@@ -47,6 +49,8 @@ the stop rule (≥ 1) did not trigger. All 40 stars are used: every one has a g 
 ## 3. Paired comparison on the same events (`trial_<npix>.json`, `trial_events_<npix>.json.gz`, `result.json`)
 - **Check:** A (bounds on ZTF r alone, replayed) equals the stored v24 outcome for all 3,000 events of each area,
   under both rules (asserted per event; the runs completed). Fetched rows were identical to v23 (13,497 and 9,404).
+- **The post hoc diagnostic** (section 4) saw the same A-insufficient sides as the trial and matched each to an
+  inventory side (`result.json`: `diag_consistency_checks`).
 - **New observations:**
   - The 40 stars carry 40,584 g detections.
   - In the 88 W3 windows, 22 sides hold at least one g detection (40 detections in total) and 5 sides a normal one
@@ -91,21 +95,40 @@ the stop rule (≥ 1) did not trigger. All 40 stars are used: every one has a g 
 
 ## 5. Deviations from PLAN (labelled)
 - **Inventory rerun:** the first run stopped at 05:42, because 4 of 40 NEOWISE responses were IRSA server errors
-  (ORA-24459 pool timeouts). Retry-on-error was added and the inventory rerun; the valid cached responses were reused.
-  This is not a method change.
+  (ORA-24459 pool timeouts; count hand-logged in `cost.json`).
+  - The four error files were deleted by hand. Retry-on-error was added, and the inventory rerun reusing the valid
+    cached responses.
+  - After review, the script also refetches a cached error response itself.
+  - This is not a method change.
+- **Review refactor (06:02):** `edge_bounds` now calls `edge_bounds_alt` without alt points, so there is one
+  implementation. The trial was rerun once with it:
+  - both areas passed the A = v24 assert;
+  - the event records were identical (decompressed contents equal; only the run time differed; check not stored);
+  - the committed trial files are those of the first run.
+- **PLAN §2 erratum:** PLAN gives Pan-STARRS1 3π as 2009–2014. The survey ran 2010–2014 (SOURCES.md). The exclusion
+  is unchanged.
 - **Timing of §3b–§4:** these sections were written after the inventory output had been read (coverage only), as
   PLAN §3b states.
 - **Post hoc diagnostic:** section 4 was not in the plan.
 - **v23 files:** `fetch_info.json` was restored after the re-read (only `read_s` differed). `source_usage.jsonl` keeps
   the appended usage lines.
 
-## 6. Cost (`cost.json`)
+## 6. Limits of the rule as applied
+- **σ is small:** σ for g (and r) points comes from the maglimit model (S/N 5 at the limit). For stars several
+  magnitudes above the limit, as here, σ is of order 10⁻³ mag (typical value not stored).
+  - So the S/N ≥ 3 condition and the 2σ margin do not bind, and "significant intermediate" is in effect
+    0.3 ≤ dm < 1.0.
+  - This is the same as for r epochs in bounds (v23–v24). It is kept, not changed post hoc.
+- **Dim alt points:** dim alt detections (dm ≥ 1) outside the run are not used. A normal g point followed by a dim one
+  still bounds the edge, as for r epochs in bounds.
+
+## 7. Cost (`cost.json`)
 - About 1,246 MB downloaded, under the 2 GB budget:
   - the two calibration re-reads, the same files as v24 (1,038.6 MB light curves, 168.4 MB objects, 14.3 MB TAP);
   - 25 MB of inventory responses (MAST queries not measured).
 - About 31 min from the start (05:22) to the end of the diagnostic (05:53).
 
-## 7. Answers
+## 8. Answers
 - **New information that changes a decision:** yes, but little. ZTF g decides 5 of 88 undecided W3 sides (3 events
   restored) and 2 fades (rejected as slow). NEOWISE reaches 3 sides; TESS reaches none.
 - **Where it applies, and its cost:**

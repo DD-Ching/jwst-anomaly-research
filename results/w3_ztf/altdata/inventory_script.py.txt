@@ -47,7 +47,9 @@ def get(url, tries=4):
 def cached(path, url):
     import os
     if os.path.exists(path):
-        return open(path, 'rb').read()
+        raw = open(path, 'rb').read()
+        if b'name="Error"' not in raw[:4000]:  # review fix: a cached server error is fetched again
+            return raw
     for k in range(4):  # a server-side error (e.g. IRSA SCS "ORA-24459" pool timeouts) is retried, never kept
         raw = get(url)
         if b'name="Error"' not in raw[:4000]:

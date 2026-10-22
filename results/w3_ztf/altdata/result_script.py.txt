@@ -45,8 +45,18 @@ for p in A:
                     'w3_a_insufficient': sum(e['kind'] != 'fade' and e['a'] == 'edge_insufficient' for e in es),
                     'w3_restored': sum(e['kind'] != 'fade' and e['a'] == 'edge_insufficient' and e['b'] == 'recovered' for e in es),
                     'fade_events': sum(e['kind'] == 'fade' for e in es)}
+# review fix: the post hoc diagnostic replays the same events; check it saw the same A-insufficient sides as the trial
+# and matched every side to an inventory side (no assert of A against v24 inside the diagnostic itself)
+checks = {}
+for p in A:
+    dg = json.load(open(f'results/w3_ztf/altdata/diag_posthoc_{p}.json'))
+    s = tr[p]['summary']
+    checks[p] = {'w3_sides_equal': dg['summary']['w3']['sides'] == s['w3']['a_insufficient_sides'],
+                 'fade_sides_equal': dg['summary']['fade']['sides'] == s['fade']['a_insufficient_sides'],
+                 'every_side_matched_inventory': all(x['side_class'] is not None for x in dg['sides'])}
 out = {'label': 'derived (trial outputs; inventory.json); simulated events', 'pooled': tot, 'per_area': per_area,
-       'decision': dec, 'stars': stars, 'stars_used': sum(s['used'] for s in stars.values())}
+       'decision': dec, 'stars': stars, 'stars_used': sum(s['used'] for s in stars.values()),
+       'diag_consistency_checks': checks}
 json.dump(out, open('results/w3_ztf/altdata/result.json', 'w'), indent=1)
 open('results/w3_ztf/altdata/result.json', 'a').write('\n')
-print(json.dumps({k: out[k] for k in ('pooled', 'per_area', 'decision', 'stars_used')}, indent=1))
+print(json.dumps({k: out[k] for k in ('pooled', 'per_area', 'decision', 'stars_used', 'diag_consistency_checks')}, indent=1))

@@ -354,6 +354,17 @@ def test_altdata_edge_bounds_alt():
     v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(61.0, 0.0, 0.05), (63.0, 0.7, 0.05)])
     assert v["edge_post_d"] == 4.0 and v["edge_post_max_d"] == 11.0
     assert v["edge_post_class"] == "insufficient"
+    # an alt point without a finite positive sigma is not used
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(67.0, 0.6, 0.0), (62.0, 0.05, np.nan)])
+    assert v == wz.edge_bounds(gap, (40, 59), 19.0)
+    # pre side: a 10-d r gap before the run (days 30-39); an alt normal point 2 d before decides it,
+    # a significant alt intermediate 7 d before makes it slow
+    gap_pre = [x for i, x in enumerate(base) if not 30 <= i < 40]
+    assert wz.edge_bounds_alt(gap_pre, (30, 49), 19.0, [])["edge_pre_class"] == "insufficient"
+    v = wz.edge_bounds_alt(gap_pre, (30, 49), 19.0, [(38.0, 0.0, 0.05)])
+    assert v["edge_pre_class"] == "fast" and v["edge_pre_max_d"] == 2.0
+    v = wz.edge_bounds_alt(gap_pre, (30, 49), 19.0, [(33.0, 0.6, 0.05)])
+    assert v["edge_pre_class"] == "slow" and v["edge_pre_d"] == 7.0
 
 
 def test_v15_configure_twice_does_not_stack():

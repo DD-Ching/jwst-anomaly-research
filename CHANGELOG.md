@@ -3,8 +3,10 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-22: W3 ZTF alternative data for the 40 ASAS-SN-plan stars: ZTF g restores 3 / 63 insufficient W3 events; not continued
-- **Plan** (`results/w3_ztf/altdata/PLAN.md`): selection rule frozen before the inventory; trial, criteria and
-  `edge_bounds_alt` (tested) frozen before any flux. Owner brief: 2 h, ≤ 2 GB, ≤ 3 sources compared, ≤ 1 tested.
+- **Plan** (`results/w3_ztf/altdata/PLAN.md`): selection rule committed before the inventory output was read (the
+  queries had started 1.7 min earlier; labelled deviation); trial, criteria and `edge_bounds_alt` (tested) frozen
+  before any flux. Owner brief: 2 h, ≤ 2 GB, ≤ 3 sources compared, ≤ 1 tested. After review, `edge_bounds` calls
+  `edge_bounds_alt` (one implementation; the trial rerun gave identical events).
 - **Inventory** (`inventory.json`): W3 sides covered in the window, out of 88 bounds-insufficient sides:
   - ZTF g 36 (19 / 63 events fully);
   - NEOWISE-R 3;

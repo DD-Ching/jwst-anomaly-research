@@ -711,37 +711,7 @@ def edge_bounds(s, run, span) -> dict:
     intermediate, searched without a window (inf if none). The data bound the edge to [L, U]. A
     side is fast if U <= EDGE_FRAC * span, slow if L > EDGE_FRAC * span, else insufficient; the run
     is fast if both sides are fast, slow if either is slow, else insufficient."""
-    i, j = run
-    t = np.array([x[0] for x in s])
-    dm = np.array([x[1] for x in s])
-    nd = np.array([x[2] for x in s], bool)
-    lim = np.array([x[3] for x in s], float)
-    with np.errstate(over="ignore", invalid="ignore"):
-        sig = 0.2171 * 10 ** (0.4 * (dm - lim))
-    inter = ~nd & (dm >= INTER[0] + EDGE_NSIG * sig) & (dm < INTER[1])
-    normal = ~nd & (dm < INTER[0])
-    thr = EDGE_FRAC * span
-    pre = inter & (t >= t[i] - span) & (t < t[i])
-    post = inter & (t > t[j]) & (t <= t[j] + span)
-    a_pre = t[pre].min() if pre.any() else t[i]
-    a_post = t[post].max() if post.any() else t[j]
-    n_pre, n_post = normal & (t < a_pre), normal & (t > a_post)
-    lo = {"pre": float(t[i] - a_pre), "post": float(a_post - t[j])}
-    hi = {
-        "pre": float(t[i] - t[n_pre].max()) if n_pre.any() else np.inf,
-        "post": float(t[n_post].min() - t[j]) if n_post.any() else np.inf,
-    }
-    cls = {k: "fast" if hi[k] <= thr else ("slow" if lo[k] > thr else "insufficient") for k in lo}
-    run_cls = (
-        "fast"
-        if all(c == "fast" for c in cls.values())
-        else ("slow" if "slow" in cls.values() else "insufficient")
-    )
-    out = {"edge_pre_d": lo["pre"], "edge_post_d": lo["post"], "edge_class": run_cls}
-    for k in lo:
-        out[f"edge_{k}_max_d"] = hi[k] if np.isfinite(hi[k]) else None
-        out[f"edge_{k}_class"] = cls[k]
-    return out
+    return edge_bounds_alt(s, run, span, ())  # one implementation; no alt point = the v23 rule
 
 
 ALT_MIN_SNR = 3.0  # alt-data trial: a normal point of another band or survey needs S/N >= 3
@@ -754,8 +724,8 @@ def edge_bounds_alt(s, run, span, alt) -> dict:
     run, its span and EDGE_FRAC * span come from ``s`` alone; alt points inside the run are never
     used. An alt point is normal if dm < INTER[0] and 1.0857 / sigma >= ALT_MIN_SNR, and a
     significant intermediate if INTER[0] + EDGE_NSIG * sigma <= dm < INTER[1]. Epochs of ``s`` keep
-    edge_bounds' definitions; L, U and the classes follow edge_bounds on the union. With no alt
-    point the result equals edge_bounds."""
+    edge_bounds' definitions; L, U and the classes follow edge_bounds on the union. edge_bounds is
+    this rule without alt points. An alt point without a finite positive sigma is not used."""
     i, j = run
     t = np.array([x[0] for x in s])
     dm = np.array([x[1] for x in s])
@@ -772,8 +742,9 @@ def edge_bounds_alt(s, run, span, alt) -> dict:
         out_run = (at < ti) | (at > tj)
         with np.errstate(divide="ignore", invalid="ignore"):
             snr = np.where(asig > 0, 1.0857 / asig, 0.0)
-        a_inter = out_run & (adm >= INTER[0] + EDGE_NSIG * asig) & (adm < INTER[1])
-        a_norm = out_run & (adm < INTER[0]) & (snr >= ALT_MIN_SNR)
+        valid = np.isfinite(asig) & (asig > 0)
+        a_inter = out_run & valid & (adm >= INTER[0] + EDGE_NSIG * asig) & (adm < INTER[1])
+        a_norm = out_run & valid & (adm < INTER[0]) & (snr >= ALT_MIN_SNR)
         t = np.concatenate([t, at])
         inter = np.concatenate([inter, a_inter])
         normal = np.concatenate([normal, a_norm])
