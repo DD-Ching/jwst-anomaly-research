@@ -52,6 +52,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   the MAST download API (sha256 verified). Setup (single-process `setup(1.0)` plus the workers' first grids) took
   ≈ 14 min before the first new row, then 18 tasks in ≈ 11 min (not stored); ≈ 10 min of the run were also lost to a
   wait loop whose `pgrep -f` matched itself. ≈ 368 tasks remain.
+- **23:10Z run:** 257 / 555 (added D22b f 0.80–0.70, D23–D26, D28, D29, D3, D30, D31a–D31e, D31f f 1.00 / 0.85).
+  Fitted χ² at f 1.00 → 0.70: D23 0.840 → 0.868, D26 2.249 → 2.292, D28 13.067 → 13.116, D31a 1.139 → 1.108; the
+  rest ≤ 0.95 and within 0.03. **Fit-reliability clue (post hoc, not a rule):** D24's fit stays at the validate source
+  (χ² 10.454–10.517) at f 1.00 / 0.85 / 0.75 / 0.70 but finds a source 0.06″ away at f 0.80 with χ² 2.276 and 4
+  predicted images for 3 observed (`fits.jsonl`). A gap of ≈ 8 in one family exceeds the Δχ² 6 threshold, so the
+  frozen per-family fit may be start-point-limited; the verdict should be read with that in mind (owner's call
+  whether to amend, e.g. multi-start for every family, before reading Δχ²). **Setup:** `main()` now takes the family
+  list from an analytic back-trace (1.3 s, same order as the stored rows, not stored) instead of a single-process
+  0.1″ grid build; first new row ≈ 7 min after start (was ≈ 14), then 70 tasks in ≈ 30 min. ≈ 298 tasks remain.
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
