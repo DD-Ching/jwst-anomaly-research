@@ -1,0 +1,138 @@
+# PLAN section 1: ATLAS forced photometry (reduced mode) for the 40 targets of targets.json, in priority order, through
+# the documented shared Astro Data Lab token (env ATLAS_FP_TOKEN; never printed or written). At most 2 of our tasks are
+# queued or running at any time. Only tasks submitted here are polled (>= 30 s) by their saved URL; nothing is ever
+# resubmitted. A result is saved only if it is HTTP 200 and an ATLAS table ('###MJD'); our own task is then deleted.
+# 429 waits for Retry-After (floor 10 s / 30 s). A task not finished 45 min after submission is recorded as 'timeout' and
+# left alone. At the deadline every unfinished task is recorded for continuation.
+# Usage: python acquire_script.py.txt <data dir> <deadline minutes from start>
+import hashlib, json, os, re, sys, time
+from datetime import datetime, timezone
+
+import requests
+
+BASEURL = 'https://fallingstar-data.com/forcedphot'
+STATE = 'results/w3_ztf/atlas40/tasks.json'
+MAX_ACTIVE, POLL_S, TASK_TIMEOUT_S = 2, 30, 45 * 60
+D, DEADLINE = sys.argv[1], time.time() + 60 * float(sys.argv[2])
+tok = os.environ.get('ATLAS_FP_TOKEN', '')
+if not tok:
+    raise SystemExit('ATLAS_FP_TOKEN not set')
+HDR = {'Authorization': f'Token {tok}', 'Accept': 'application/json'}
+now = lambda: datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+targets = json.load(open('results/w3_ztf/atlas40/targets.json'))['targets']
+st = json.load(open(STATE)) if os.path.exists(STATE) else {}
+os.makedirs(D, exist_ok=True)
+
+
+def save():
+    json.dump(st, open(STATE, 'w'), indent=1)
+    open(STATE, 'a').write('\n')
+
+
+def retry_after(r, floor):
+    try:
+        return max(int(float(r.headers.get('Retry-After', 60))), floor)
+    except (TypeError, ValueError):
+        return max(60, floor)
+
+
+def detail(r):
+    try:
+        j = r.json()
+        return str(j.get('detail', j))[:200] if isinstance(j, dict) else str(j)[:200]
+    except ValueError:
+        return r.text[:200]
+
+
+def submit(t):
+    rec = st.setdefault(t['key'], {'attempts': []})
+    if rec.get('task_id') or any(a.get('http') != 429 for a in rec['attempts']):
+        return False  # never resubmit (an earlier attempt without a task id is checked by hand)
+    while True:
+        try:
+            r = requests.post(f'{BASEURL}/queue/', headers=HDR, timeout=120,
+                              data={'ra': t['ra'], 'dec': t['dec'], 'mjd_min': t['mjd_min'], 'mjd_max': t['mjd_max'],
+                                    'use_reduced': True, 'send_email': False})
+        except requests.RequestException as exc:
+            rec['attempts'].append({'utc': now(), 'http': None, 'detail': type(exc).__name__})
+            save()
+            return False
+        rec['attempts'].append({'utc': now(), 'http': r.status_code, 'detail': None if r.status_code == 201 else detail(r)})
+        if r.status_code == 201:
+            url = r.json()['url']
+            rec.update({'task_id': int(re.findall(r'/queue/(\d+)/', url)[0]), 'task_url': url, 'submitted_utc': now(),
+                        'submitted_epoch': time.time(), 'status': 'queued'})
+            save()
+            return True
+        if r.status_code == 429:
+            save()
+            time.sleep(retry_after(r, 10))
+            continue
+        rec['status'] = f'submit_error_{r.status_code}'
+        save()
+        if r.status_code in (401, 403):
+            raise SystemExit(f'stop: authentication refused (HTTP {r.status_code})')
+        return False
+
+
+def poll(key):
+    rec = st[key]
+    try:
+        r = requests.get(rec['task_url'], headers=HDR, timeout=120)
+    except requests.RequestException as exc:
+        rec.setdefault('poll_errors', []).append({'utc': now(), 'detail': type(exc).__name__})
+        return
+    if r.status_code == 429:
+        time.sleep(retry_after(r, POLL_S))
+        return
+    if r.status_code != 200:
+        rec.setdefault('poll_errors', []).append({'utc': now(), 'http': r.status_code, 'detail': detail(r)})
+        if r.status_code in (401, 403, 404):
+            rec['status'] = f'poll_error_{r.status_code}'
+        return
+    j = r.json()
+    rec['starttimestamp'], rec['finishtimestamp'] = j.get('starttimestamp'), j.get('finishtimestamp')
+    if j.get('starttimestamp'):
+        rec['status'] = 'running'
+    if j.get('error_msg'):
+        rec['error_msg'] = str(j['error_msg'])[:200]
+    if not j.get('finishtimestamp'):
+        if time.time() - rec['submitted_epoch'] > TASK_TIMEOUT_S:
+            rec['status'] = 'timeout'
+        return
+    if not j.get('result_url'):
+        rec['status'] = 'finished_without_result'
+        return
+    g = requests.get(j['result_url'], headers=HDR, timeout=300)
+    if g.status_code != 200 or not g.text.startswith('###MJD'):
+        rec.setdefault('poll_errors', []).append({'utc': now(), 'http': g.status_code, 'detail': g.text[:120]})
+        rec['status'] = 'download_failed'
+        return
+    path = os.path.join(D, f'atlas_fp_{key}.txt')
+    open(path, 'w').write(g.text)
+    rec.update({'status': 'done', 'result_bytes': len(g.text.encode()), 'result_rows': max(len(g.text.strip().splitlines()) - 1, 0),
+                'result_sha256': hashlib.sha256(g.text.encode()).hexdigest(), 'downloaded_utc': now()})
+    rec['deleted_own_task_http'] = requests.delete(rec['task_url'], headers=HDR, timeout=120).status_code
+
+
+queue = [t for t in targets if not st.get(t['key'], {}).get('task_id')]
+while time.time() < DEADLINE:
+    active = [k for k, v in st.items() if v.get('status') in ('queued', 'running')]
+    while len(active) < MAX_ACTIVE and queue:
+        t = queue.pop(0)
+        if submit(t):
+            active.append(t['key'])
+            print(now(), 'submitted', t['priority'], t['key'], st[t['key']]['task_id'], flush=True)
+    if not active and not queue:
+        break
+    for k in active:
+        poll(k)
+        if st[k]['status'] not in ('queued', 'running'):
+            print(now(), k, st[k]['status'], st[k].get('result_rows'), flush=True)
+    save()
+    time.sleep(POLL_S)
+for k, v in st.items():
+    if v.get('status') in ('queued', 'running'):
+        v['status'] = 'unfinished_at_deadline'
+save()
+print(now(), 'end', {s: sum(v.get('status') == s for v in st.values()) for s in {v.get('status') for v in st.values()}}, flush=True)

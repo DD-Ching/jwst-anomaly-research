@@ -1,0 +1,27 @@
+# PLAN section 1: the 40 targets of ../asassn/selection.json, one ATLAS request each (reduced mode, the full ZTF-era range
+# of both areas, ../v23/dev*/carrier_range.json +- ~30 d), in a fixed priority order from committed counts only
+# (../altdata/result.json): most A0-insufficient W3 events, then most W3 events, then most fade events, then key.
+# The 4 stars of #461 are marked as development data. Usage: python targets_script.py.txt
+import json
+
+sel = json.load(open('results/w3_ztf/asassn/selection.json'))
+res = json.load(open('results/w3_ztf/altdata/result.json'))['stars']
+dev = set(json.load(open('results/w3_ztf/atlas/selection.json'))['chosen'])
+MJD_MIN, MJD_MAX = 58150.0, 61000.0  # covers 58198.4-60969.3 (both areas' carrier ranges)
+t = []
+for p in ('4991', '2344'):
+    for r in sel['areas'][p]['selected']:
+        k = str(r['key'])
+        s = res[k]
+        t.append({'key': k, 'area': p, 'ra': r['ra'], 'dec': r['dec'], 'refmag_r': r['refmag_r'],
+                  'w3_a_insufficient': s['w3_a_insufficient'], 'w3_events': s['w3_events'], 'fade_events': s['fade_events'],
+                  'dev_461': k in dev, 'mjd_min': MJD_MIN, 'mjd_max': MJD_MAX})
+t.sort(key=lambda x: (-x['w3_a_insufficient'], -x['w3_events'], -x['fade_events'], x['key']))
+for i, x in enumerate(t):
+    x['priority'] = i + 1
+out = {'label': 'derived (committed counts); no ATLAS data', 'order_rule': 'most A0-insufficient W3, most W3, most fades, key',
+       'n': len(t), 'targets': t}
+json.dump(out, open('results/w3_ztf/atlas40/targets.json', 'w'), indent=1)
+open('results/w3_ztf/atlas40/targets.json', 'a').write('\n')
+print(len(t), [(x['key'], x['w3_a_insufficient'], x['w3_events'], x['fade_events'], x['dev_461']) for x in t[:8]])
+print(sum(x['w3_a_insufficient'] for x in t), sum(x['w3_events'] for x in t), sum(x['fade_events'] for x in t))
