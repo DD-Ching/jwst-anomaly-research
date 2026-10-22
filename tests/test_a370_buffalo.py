@@ -58,3 +58,16 @@ def test_written_images_are_the_102_selected_gold_spectroscopic_images(tmp_path)
     tab = Table.read(m.write_images(tmp_path), format="ascii.ecsv")
     assert len(tab) == 102 and bool(np.all(tab["z_spec"]))
     assert np.all(np.isfinite(np.asarray(tab["z"], float)))
+
+
+def test_k1_overlap_splits_by_distance_to_gold(tmp_path):
+    lag = Table({"image_id": ["1.1", "2.1"], "ra": [10.0, 10.01], "dec": [0.0, 0.0]})
+    gold = Table({"image_id": ["1.1"], "ra": [10.0 + 0.3 / 3600.0], "dec": [0.0]})
+    k1 = Table({"image_id": ["1.1", "2.1"], "dtheta_arcsec": [0.4, np.nan]})
+    lag.write(tmp_path / m.IMAGES, format="ascii.ecsv")
+    gold.write(tmp_path / m.IMAGES_K2, format="ascii.ecsv")
+    k1.write(tmp_path / f"imageplane_{m.FIELD}_{m.MODEL}.ecsv", format="ascii.ecsv")
+    out = m.k1_overlap(tmp_path)
+    assert out["shared"]["n"] == 1 and out["shared"]["within_3arcsec"] == 1
+    assert np.isclose(out["shared"]["rms_arcsec"], 0.4)
+    assert out["not_shared"]["image_ids"] == ["2.1"] and out["not_shared"]["n_finite"] == 0

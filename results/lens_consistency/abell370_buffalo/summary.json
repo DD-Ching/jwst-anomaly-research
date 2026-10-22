@@ -1,0 +1,461 @@
+{
+ "gate_L": {
+  "map": "6ef0cc1a8cd8_hlsp_buffalo_model_abell370_main_niemiec-a-sl_v1.0_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 6199,
+  "median_rel_diff": 3.354765571328309e-05,
+  "p95_rel_diff": 0.00032650107583803635,
+  "median_ratio": 1.000002242993968,
+  "parity_agree": null,
+  "passes": true
+ },
+ "stage1_gate_K": {
+  "images": 102,
+  "spectroscopic": 102,
+  "abell370-buffalo-a-maps": {
+   "model_sha256": "a9afca8ce0573816d45fa6e8c30d1b282b3709177fa644e7cb13f5079a489338",
+   "gate_K": {
+    "n_images": 102,
+    "rms_arcsec": 7.696634476648308,
+    "matched_fraction": 0.9215686274509803,
+    "passes": false
+   },
+   "extra_predicted": {
+    "3": [
+     2,
+     3
+    ],
+    "4": [
+     3,
+     4
+    ],
+    "5": [
+     4,
+     5
+    ],
+    "7": [
+     5,
+     8
+    ],
+    "9": [
+     3,
+     4
+    ],
+    "14": [
+     5,
+     7
+    ],
+    "15": [
+     4,
+     7
+    ],
+    "16": [
+     2,
+     3
+    ],
+    "17": [
+     3,
+     5
+    ],
+    "19": [
+     3,
+     6
+    ],
+    "20": [
+     2,
+     3
+    ],
+    "22": [
+     2,
+     3
+    ],
+    "24": [
+     2,
+     3
+    ],
+    "25": [
+     2,
+     4
+    ],
+    "28": [
+     3,
+     5
+    ],
+    "30": [
+     2,
+     3
+    ],
+    "32": [
+     3,
+     7
+    ],
+    "33": [
+     2,
+     3
+    ],
+    "35": [
+     2,
+     3
+    ],
+    "36": [
+     2,
+     4
+    ],
+    "37": [
+     2,
+     8
+    ],
+    "38": [
+     2,
+     6
+    ]
+   },
+   "fewer_predicted": {
+    "10": [
+     1,
+     0
+    ],
+    "21": [
+     3,
+     1
+    ],
+    "29": [
+     1,
+     0
+    ],
+    "31": [
+     1,
+     0
+    ]
+   },
+   "post_hoc": {
+    "dropped": [
+     "10.2",
+     "14.2",
+     "21.1",
+     "21.2",
+     "28.1",
+     "29.1",
+     "31.1",
+     "36.1"
+    ],
+    "leave_one_out_rms": {
+     "4": {
+      "4.1": 0.7312800796068852,
+      "4.2": 0.8337415348481905,
+      "4.3": 1.1806152557572578
+     },
+     "12": {
+      "12.1": 1.3905996323316134,
+      "12.2": 0.4355796166385099,
+      "12.3": 1.1495945600776085
+     },
+     "13": {
+      "13.1": 2.207437988700114,
+      "13.2": 1.5143080087101768,
+      "13.3": 1.5025163861027306
+     },
+     "14": {
+      "14.1": 1.0445895364237094,
+      "14.2": 1.0742612965303988,
+      "14.3": 1.1649801496779266,
+      "14.4": 0.4844734586182593,
+      "14.5": 1.2046816599070442
+     },
+     "23": {
+      "23.1": 0.40628915198118,
+      "23.2": 1.416356244384353,
+      "23.3": 0.46909450604588443
+     },
+     "26": {
+      "26.1": 1.8653943081102127,
+      "26.2": 1.080574455183008,
+      "26.3": 1.099836593452381
+     },
+     "32": {
+      "32.1": 0.08163321011068068,
+      "32.2": 2.1660723779238036,
+      "32.3": 1.9343773933900472
+     }
+    },
+    "held_out_offset": {
+     "4.1": {
+      "n_predicted": 4,
+      "nearest_predicted_arcsec": 1.9645617591692703,
+      "nearest_predicted_magnification": 5.674478985658003
+     },
+     "12.2": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.535285743350015,
+      "nearest_predicted_magnification": 3.633029564901522
+     },
+     "13.3": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.1446068592683054,
+      "nearest_predicted_magnification": 2.7007106440894306
+     },
+     "14.4": {
+      "n_predicted": 8,
+      "nearest_predicted_arcsec": 2.213960303971667,
+      "nearest_predicted_magnification": 10.09968415633249
+     },
+     "23.1": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.2780544422889757,
+      "nearest_predicted_magnification": 10.937375832520445
+     },
+     "26.2": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.9848454881352824,
+      "nearest_predicted_magnification": -8.638442208613835
+     },
+     "32.1": {
+      "n_predicted": 8,
+      "nearest_predicted_arcsec": 2.814935870362972,
+      "nearest_predicted_magnification": -2.2736556908176255
+     }
+    },
+    "gate_K_without_dropped": {
+     "n_images": 94,
+     "rms_arcsec": 0.9077559668058065,
+     "matched_fraction": 0.9787234042553191,
+     "passes": true
+    },
+    "families_refit": {
+     "14.1": 1.1143203531721917,
+     "14.3": 0.13150829398071853,
+     "14.4": 1.7471088279241473,
+     "14.5": 0.5520469141320214,
+     "21.3": null,
+     "28.2": 0.8970503730404384,
+     "28.3": 0.4103980761293898,
+     "36.2": null
+    }
+   }
+  },
+  "passing_models": [],
+  "flags": []
+ },
+ "stopped": "gate K failed: model not used (PLAN.md rule 2)",
+ "addendum_gate_K2": {
+  "images": 104,
+  "spectroscopic": 104,
+  "abell370-buffalo-a-maps": {
+   "model_sha256": "a9afca8ce0573816d45fa6e8c30d1b282b3709177fa644e7cb13f5079a489338",
+   "gate_K": {
+    "n_images": 104,
+    "rms_arcsec": 0.9099799550813212,
+    "matched_fraction": 0.9903846153846154,
+    "passes": true
+   },
+   "extra_predicted": {
+    "4": [
+     3,
+     4
+    ],
+    "5": [
+     4,
+     5
+    ],
+    "7": [
+     5,
+     8
+    ],
+    "10": [
+     3,
+     10
+    ],
+    "9": [
+     3,
+     4
+    ],
+    "14": [
+     5,
+     8
+    ],
+    "15": [
+     5,
+     7
+    ],
+    "17": [
+     3,
+     5
+    ],
+    "19": [
+     3,
+     6
+    ],
+    "20": [
+     2,
+     3
+    ],
+    "24": [
+     2,
+     3
+    ],
+    "25": [
+     2,
+     4
+    ],
+    "27": [
+     3,
+     4
+    ],
+    "28": [
+     3,
+     5
+    ],
+    "29": [
+     2,
+     3
+    ],
+    "30": [
+     2,
+     3
+    ],
+    "35": [
+     2,
+     3
+    ],
+    "37": [
+     2,
+     8
+    ],
+    "38": [
+     2,
+     6
+    ]
+   },
+   "fewer_predicted": {},
+   "post_hoc": {
+    "dropped": [
+     "28.1"
+    ],
+    "leave_one_out_rms": {
+     "4": {
+      "4.1": 0.706406617886635,
+      "4.2": 0.8308927544791863,
+      "4.3": 1.1083708627594757
+     },
+     "10": {
+      "10.1": 1.3850412293704193,
+      "10.2": 0.6596380178244755,
+      "10.3": 2.012051562797707
+     },
+     "12": {
+      "12.1": 1.358077172186563,
+      "12.2": 0.5632858954104304,
+      "12.3": 1.1187018566910818
+     },
+     "13": {
+      "13.1": 2.0697835345584763,
+      "13.2": 1.477637400055106,
+      "13.3": 1.4238053481229302
+     },
+     "23": {
+      "23.1": 0.3533972744401512,
+      "23.2": 1.3914287227388848,
+      "23.3": 0.6193824616910987
+     },
+     "26": {
+      "26.1": 1.708643326491677,
+      "26.2": 1.0002331302921,
+      "26.3": 1.0447938582397263
+     }
+    },
+    "held_out_offset": {
+     "4.1": {
+      "n_predicted": 4,
+      "nearest_predicted_arcsec": 1.8813400780403655,
+      "nearest_predicted_magnification": 5.7353077331771125
+     },
+     "10.2": {
+      "n_predicted": 10,
+      "nearest_predicted_arcsec": 3.416489545121147,
+      "nearest_predicted_magnification": -2.7882737388746346
+     },
+     "12.2": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.487055201230791,
+      "nearest_predicted_magnification": 3.6003713256283394
+     },
+     "13.3": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.091861331427221,
+      "nearest_predicted_magnification": 2.6951353802601217
+     },
+     "23.1": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.4145257387717614,
+      "nearest_predicted_magnification": 10.902602954895668
+     },
+     "26.2": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 2.7258792439244175,
+      "nearest_predicted_magnification": -8.699919763517679
+     }
+    },
+    "gate_K_without_dropped": {
+     "n_images": 103,
+     "rms_arcsec": 0.8414839257610389,
+     "matched_fraction": 1.0,
+     "passes": true
+    },
+    "families_refit": {
+     "28.2": 0.9713191225611456,
+     "28.3": 0.41901654402260036
+    }
+   }
+  },
+  "passing_models": [
+   "abell370-buffalo-a-maps"
+  ],
+  "flags": [
+   "28.1"
+  ]
+ },
+ "post_hoc_k1_overlap": {
+  "radius_arcsec": 0.5,
+  "shared": {
+   "n": 85,
+   "n_finite": 84,
+   "rms_arcsec": 5.872531384792247,
+   "within_3arcsec": 81,
+   "image_ids": null
+  },
+  "not_shared": {
+   "n": 17,
+   "n_finite": 15,
+   "rms_arcsec": 14.06580618795081,
+   "within_3arcsec": 13,
+   "image_ids": [
+    "10.2",
+    "16.1",
+    "16.3",
+    "21.1",
+    "21.3",
+    "31.1",
+    "32.1",
+    "32.2",
+    "32.3",
+    "33.1",
+    "33.2",
+    "34.1",
+    "34.2",
+    "34.3",
+    "34.4",
+    "36.1",
+    "36.2"
+   ]
+  }
+ },
+ "K2_decision": "passes: validated on its own constraints only; extra-image stages may follow",
+ "rules": {
+  "L_MAX_MEDIAN_REL": 0.05,
+  "K_MAX_RMS_ARCSEC": 1.0,
+  "K_MIN_MATCHED": 0.8,
+  "MATCH_ARCSEC": 3.0,
+  "GRID_STEP_K": 0.25
+ }
+}
