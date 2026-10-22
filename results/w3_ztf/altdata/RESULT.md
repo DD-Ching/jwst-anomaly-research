@@ -100,7 +100,7 @@ the stop rule (≥ 1) did not trigger. All 40 stars are used: every one has a g 
     cached responses.
   - After review, the script also refetches a cached error response itself.
   - This is not a method change.
-- **Review refactor (06:02):** `edge_bounds` now calls `edge_bounds_alt` without alt points, so there is one
+- **Review refactor (rerun 06:02–06:04, `cost.json`):** `edge_bounds` now calls `edge_bounds_alt` without alt points, so there is one
   implementation. The trial was rerun once with it:
   - both areas passed the A = v24 assert;
   - the event records were identical (decompressed contents equal; only the run time differed; check not stored);

@@ -15,9 +15,10 @@
   "plan_sections_3b_6_commit": "05:45:24 (7b7554d)",
   "re_read": "05:46:28-05:49:04 (a 05:45:34 attempt stopped at once: v22 sample not unpacked)",
   "trial": "05:49:09-05:50:40",
-  "diag_posthoc": "05:51:47-05:53:08"
+  "diag_posthoc": "05:51:47-05:53:08",
+  "review_refactor_rerun": "06:02:25-06:03:55 (trial rerun after the review refactor; A = v24 assert passed; event records identical, check not stored)"
  },
- "caches_deleted": false,
+ "caches_deleted": true,
  "inventory_first_run_server_error_responses": 4,
  "inventory_first_run_note": "hand-logged: 4 of 40 NEOWISE SCS responses were IRSA error VOTables (ORA-24459); they were deleted and refetched in the rerun (the script now refetches a cached error itself)"
 }
