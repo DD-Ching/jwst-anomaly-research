@@ -1,0 +1,125 @@
+# POST HOC diagnostic (written after trial_<npix>.json was read; not part of the frozen plan): why so few A-insufficient
+# sides receive a normal g point. Replays the same v23 events as trial_script.py.txt (same seeds, same draws) and, for
+# every A-insufficient side (run passing the other tests) of an event on the 40 stars, records the g series epochs in the
+# window by observed state, and the injected model's dm at those epochs (injection truth, used for diagnosis only).
+# Usage: python diag_posthoc_script.py.txt <npix> <seed offset>   (after the v23 dev setup, fetch and exposures stages)
+import gzip, json, sys, time
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+
+P, OFF = int(sys.argv[1]), int(sys.argv[2])
+wz.configure(P, f'v23/dev{P}')
+T0 = time.time()
+sel = json.load(open('results/w3_ztf/asassn/selection.json'))
+keys = {r['key'] for r in sel['areas'][str(P)]['selected']}
+inv = {(s['kind'], s['i'], s['run'], s['side']): s for s in json.load(open('results/w3_ztf/altdata/inventory.json'))['sides']
+       if s['area'] == str(P)}
+groups = [g for g in json.loads(wz.SAMPLE.read_text())['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+wz.EDGE_RULE = 'time'
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        base = {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}
+        carriers.append((g, s, o, base))
+OTHERS = ('common_mode_ok', 'oneoff_ok', 'achromatic_ok')
+
+
+def state(x):
+    t, dm, nd, lim = x[0], x[1], x[2], x[3]
+    if nd:
+        return 'nondetection'
+    sig = 0.2171 * 10 ** (0.4 * (dm - lim))
+    if dm < wz.INTER[0]:
+        return 'normal' if 1.0857 / sig >= wz.ALT_MIN_SNR else 'normal_low_snr'
+    if dm >= wz.INTER[1]:
+        return 'dim_detection'
+    return 'significant_intermediate' if dm >= wz.INTER[0] + wz.EDGE_NSIG * sig else 'ambiguous'
+
+
+def record(kind, k, g, si, oi, hits, model):
+    if g['key'] not in keys or not hits:
+        return []
+    if any(h['pass'] for h in hits) or not any(all(h[x] for x in OTHERS) and h['edge_class'] == 'insufficient' for h in hits):
+        return []  # only A-insufficient events (bounds)
+    tt = np.array([x[0] for x in si])
+    out = []
+    for ri, h in enumerate(hits):
+        if not all(h[x] for x in OTHERS):
+            continue
+        i = int(np.flatnonzero(tt == h['t_start'])[0]); j = int(np.flatnonzero(tt == h['t_end'])[0])
+        thr = wz.EDGE_FRAC * max(tt[j] - tt[i], 1.0)
+        for sd in ('pre', 'post'):
+            if h[f'edge_{sd}_class'] != 'insufficient':
+                continue
+            lo, hi = (tt[i] - thr, tt[i]) if sd == 'pre' else (tt[j], tt[j] + thr)
+            inw = [x for x in (oi or []) if (lo <= x[0] < hi if sd == 'pre' else lo < x[0] <= hi)]
+            states = [state(x) for x in inw]
+            true_dm = [float(model(np.array([x[0]]))[0]) for x in inw]
+            iv = inv.get((kind, k, ri, sd), {})
+            out.append({'kind': kind, 'i': k, 'grp': 'fade' if kind == 'fade' else 'w3', 'side': sd,
+                        'side_class': iv.get('side_class'), 'inventory_ztf_g': iv.get('ztf_g'),
+                        'g_epochs_in_window': len(inw), 'states': states,
+                        'true_dm_ge_0.3': int(sum(d >= wz.INTER[0] for d in true_dm)),
+                        'true_dm_lt_0.3': int(sum(d < wz.INTER[0] for d in true_dm))})
+    return out
+
+
+rec = []
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    kind = f'rho{rho}_blend{blend:g}_tE{te:g}'
+    rng = np.random.default_rng(1100 + c + OFF)
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        wz.EDGE_RULE = 'bounds'
+        hits = [x for x in wz.screen(si, oi, cov) if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
+                and (x['t_start'], x['t_end']) not in base]
+        model = lambda x, t0=t0, te=te, u0=u0, rho=rho, blend=blend: wz.w3_dmag(x, t0, te, u0, rho, blend)
+        rec += record(kind, k, g, si, oi, hits, model)
+rng = np.random.default_rng(1201 + OFF)
+for k in range(1000):
+    g, s, o, base = carriers[rng.integers(len(carriers))]
+    t = np.array([x[0] for x in s])
+    model = wz.control_model('fade', t, rng)
+    si = wz.apply_dmag(s, model(t), cov, rng)
+    oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+    wz.EDGE_RULE = 'bounds'
+    hits = [x for x in wz.screen(si, oi, cov) if (x['t_start'], x['t_end']) not in base]
+    rec += record('fade', k, g, si, oi, hits, model)
+
+summ = {}
+for grp in ('w3', 'fade'):
+    rs = [r for r in rec if r['grp'] == grp]
+    st = {}
+    for r in rs:
+        for s_ in r['states']:
+            st[s_] = st.get(s_, 0) + 1
+    by_class = {}
+    for r in rs:
+        b = by_class.setdefault(r['side_class'], {'sides': 0, 'with_g_epoch': 0, 'with_g_normal': 0})
+        b['sides'] += 1
+        b['with_g_epoch'] += r['g_epochs_in_window'] > 0
+        b['with_g_normal'] += 'normal' in r['states']
+    summ[grp] = {'sides': len(rs), 'sides_with_g_epoch': sum(r['g_epochs_in_window'] > 0 for r in rs),
+                 'g_epoch_states': st, 'g_epochs_true_dm_ge_0.3': sum(r['true_dm_ge_0.3'] for r in rs),
+                 'g_epochs_true_dm_lt_0.3': sum(r['true_dm_lt_0.3'] for r in rs),
+                 'inventory_observed_sides_with_g_epoch': sum(r['inventory_ztf_g'] == 'observed' and r['g_epochs_in_window'] > 0 for r in rs),
+                 'inventory_observed_sides': sum(r['inventory_ztf_g'] == 'observed' for r in rs),
+                 'by_side_class': by_class}
+res = {'label': 'POST HOC diagnostic; derived; simulated events replayed (v23 seeds); injection truth used after classification',
+       'npix': P, 'summary': summ, 'sides': rec, 'seconds': round(time.time() - T0, 1)}
+json.dump(res, open(f'results/w3_ztf/altdata/diag_posthoc_{P}.json', 'w'), indent=1, default=float)
+open(f'results/w3_ztf/altdata/diag_posthoc_{P}.json', 'a').write('\n')
+print(json.dumps(summ, indent=1, default=float))

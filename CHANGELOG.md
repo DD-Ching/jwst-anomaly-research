@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: W3 ZTF alternative data for the 40 ASAS-SN-plan stars: ZTF g restores 3 / 63 insufficient W3 events; not continued
+- **Plan** (`results/w3_ztf/altdata/PLAN.md`): selection rule committed before the inventory output was read (the
+  queries had started at 05:30:34, the commit was at 05:32:14, `cost.json`; labelled deviation); trial, criteria and `edge_bounds_alt` (tested) frozen
+  before any flux. Owner brief: 2 h, ≤ 2 GB, ≤ 3 sources compared, ≤ 1 tested. After review, `edge_bounds` calls
+  `edge_bounds_alt` (one implementation; the trial rerun gave identical events).
+- **Inventory** (`inventory.json`): W3 sides covered in the window, out of 88 bounds-insufficient sides:
+  - ZTF g 36 (19 / 63 events fully);
+  - NEOWISE-R 3;
+  - TESS 0 (no sector overlaps; 21″ pixels).
+  - Gaia DR3 and PS1 end before the windows; ATLAS needs an account; ASAS-SN excluded by the brief.
+- **Trial** (`RESULT.md`, `result.json`): A (ZTF r only) is the stored v24 outcome, replayed exactly; B adds the g
+  detections as edge points.
+  - W3: 3 of 63 insufficient events restored (0.048 < 0.50); no W3 recovery lost.
+  - Fades: 0 / 79 pass in both A and B; 2 of 12 insufficient fades become slow.
+  - Success false. The coverage ceiling (19 / 63 = 0.30) is also below 0.50.
+  - Post hoc: 59 of the 66 g epochs in the W3 windows fall inside the injected event.
+- **Failed approach:** another band of the same survey sees the same gap mostly while the event is still in progress.
+  Under bounds (run from r alone) those epochs cannot bound the edge.
+- **Handoff:** the route is stopped. Reopen with a nightly-cadence source reachable without an account, or an owner
+  rule letting other-band dim points extend the run (new plan and validation). The ASAS-SN plan stays paused.
+  D-104 addendum.
+
 ## 2026-10-22: MACS1149 third-field gate: the CANUCS DR1 reference passes C2 with a containing-source rule; no flag
 - **Plan** (`results/lens_consistency/macs1149_canucsref/PLAN.md`, frozen with the rule function and tests): CANUCS v1
   MACS1149 maps (new `macs1149-canucs-maps`), Sharon gold list, the MACS1423 rules plus a containing-source rule

@@ -1,0 +1,212 @@
+{
+ "label": "derived; simulated events replayed (v23 seeds); ZTF DR24 g-band epochs observed, injected events simulated",
+ "npix": 4991,
+ "seed_offset": 45000,
+ "carriers": 500,
+ "check_a_equals_stored_v24": true,
+ "summary": {
+  "injections_on_selected": {
+   "rho0.01_blend1_tE10": 5,
+   "rho0.01_blend1_tE30": 10,
+   "rho0.01_blend1_tE100": 11,
+   "rho0.1_blend1_tE10": 9,
+   "rho0.1_blend1_tE30": 6,
+   "rho0.01_blend0.7_tE10": 4,
+   "rho0.01_blend0.7_tE30": 8,
+   "rho0.01_blend0.7_tE100": 11,
+   "rho0.1_blend0.7_tE10": 10,
+   "rho0.1_blend0.7_tE30": 9,
+   "fade": 33
+  },
+  "w3": {
+   "events": 83,
+   "a": {
+    "not_flagged": 17,
+    "edge_insufficient": 39,
+    "recovered": 27
+   },
+   "b": {
+    "not_flagged": 17,
+    "edge_insufficient": 36,
+    "recovered": 30
+   },
+   "transitions": {
+    "not_flagged -> not_flagged": 17,
+    "edge_insufficient -> edge_insufficient": 36,
+    "recovered -> recovered": 27,
+    "edge_insufficient -> recovered": 3
+   },
+   "a_insufficient": 39,
+   "b_recovered_of_a_insufficient": 3,
+   "a_insufficient_sides": 51,
+   "sides_with_alt_in_window": 10,
+   "sides_with_alt_normal_in_window": 4.0,
+   "sides_b_class": {
+    "fast": 4,
+    "slow": 0,
+    "insufficient": 47
+   },
+   "alt_points_in_a_insufficient_windows": 20
+  },
+  "fade": {
+   "events": 33,
+   "a": {
+    "other:achromatic_ok": 2,
+    "edge_slow": 22,
+    "edge_insufficient": 7,
+    "other:oneoff_ok": 1,
+    "not_flagged": 1
+   },
+   "b": {
+    "other:achromatic_ok": 2,
+    "edge_slow": 24,
+    "edge_insufficient": 5,
+    "other:oneoff_ok": 1,
+    "not_flagged": 1
+   },
+   "transitions": {
+    "other:achromatic_ok -> other:achromatic_ok": 2,
+    "edge_slow -> edge_slow": 22,
+    "edge_insufficient -> edge_insufficient": 5,
+    "other:oneoff_ok -> other:oneoff_ok": 1,
+    "edge_insufficient -> edge_slow": 2,
+    "not_flagged -> not_flagged": 1
+   },
+   "a_insufficient": 7,
+   "b_recovered_of_a_insufficient": 0,
+   "a_insufficient_sides": 11,
+   "sides_with_alt_in_window": 6,
+   "sides_with_alt_normal_in_window": 0.0,
+   "sides_b_class": {
+    "fast": 0,
+    "slow": 2,
+    "insufficient": 9
+   },
+   "alt_points_in_a_insufficient_windows": 15
+  },
+  "selected_carriers": 20
+ },
+ "stars": {
+  "601213200006434": {
+   "r_epochs": 1380,
+   "g_epochs": 971,
+   "g_detections": 971,
+   "g_normal": 971
+  },
+  "601213200002823": {
+   "r_epochs": 1380,
+   "g_epochs": 971,
+   "g_detections": 971,
+   "g_normal": 971
+  },
+  "601213300002366": {
+   "r_epochs": 1392,
+   "g_epochs": 943,
+   "g_detections": 942,
+   "g_normal": 942
+  },
+  "601213300005265": {
+   "r_epochs": 1393,
+   "g_epochs": 942,
+   "g_detections": 942,
+   "g_normal": 942
+  },
+  "601213300003718": {
+   "r_epochs": 1391,
+   "g_epochs": 940,
+   "g_detections": 939,
+   "g_normal": 939
+  },
+  "601213300007095": {
+   "r_epochs": 1391,
+   "g_epochs": 941,
+   "g_detections": 941,
+   "g_normal": 941
+  },
+  "601213300005924": {
+   "r_epochs": 1393,
+   "g_epochs": 943,
+   "g_detections": 942,
+   "g_normal": 942
+  },
+  "601214400015866": {
+   "r_epochs": 1402,
+   "g_epochs": 1116,
+   "g_detections": 1116,
+   "g_normal": 1116
+  },
+  "601214400007338": {
+   "r_epochs": 1400,
+   "g_epochs": 1115,
+   "g_detections": 1115,
+   "g_normal": 1115
+  },
+  "601214400005162": {
+   "r_epochs": 1401,
+   "g_epochs": 1117,
+   "g_detections": 1117,
+   "g_normal": 1117
+  },
+  "601213400002567": {
+   "r_epochs": 2244,
+   "g_epochs": 1716,
+   "g_detections": 1715,
+   "g_normal": 1715
+  },
+  "601213400002132": {
+   "r_epochs": 2228,
+   "g_epochs": 1704,
+   "g_detections": 1703,
+   "g_normal": 1703
+  },
+  "601213400002563": {
+   "r_epochs": 2239,
+   "g_epochs": 1715,
+   "g_detections": 1714,
+   "g_normal": 1714
+  },
+  "601213400012516": {
+   "r_epochs": 1493,
+   "g_epochs": 1198,
+   "g_detections": 1196,
+   "g_normal": 1196
+  },
+  "601213400005483": {
+   "r_epochs": 1547,
+   "g_epochs": 1196,
+   "g_detections": 1195,
+   "g_normal": 1195
+  },
+  "601213400004073": {
+   "r_epochs": 2241,
+   "g_epochs": 1717,
+   "g_detections": 1715,
+   "g_normal": 1715
+  },
+  "601213100007066": {
+   "r_epochs": 2219,
+   "g_epochs": 1590,
+   "g_detections": 1590,
+   "g_normal": 1590
+  },
+  "601209200009972": {
+   "r_epochs": 1284,
+   "g_epochs": 1008,
+   "g_detections": 1008,
+   "g_normal": 1008
+  },
+  "601209200002983": {
+   "r_epochs": 1388,
+   "g_epochs": 1096,
+   "g_detections": 1096,
+   "g_normal": 1096
+  },
+  "601209200000036": {
+   "r_epochs": 1308,
+   "g_epochs": 1038,
+   "g_detections": 1038,
+   "g_normal": 1038
+  }
+ },
+ "seconds": 89.0
+}

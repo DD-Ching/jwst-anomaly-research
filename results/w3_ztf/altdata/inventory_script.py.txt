@@ -1,0 +1,170 @@
+# Coverage inventory (metadata and observation times only; no target flux is read) of three directly accessible
+# public sources for the 106 bounds-insufficient edge sides of the 40 ASAS-SN-plan stars (../asassn/selection.json,
+# ../v24/step12_events_*.json.gz). Sources: ZTF DR24-era g-band exposures (IRSA IBE, official metadata), TESS
+# (MAST CAOM: FFI footprints and timeseries products), NEOWISE-R single exposures (IRSA SCS, epoch times and flags).
+# Usage: python inventory_script.py.txt <scratch dir>   (writes inventory.json here; raw responses in <scratch dir>)
+import gzip, io, json, sys, time, urllib.parse, urllib.request
+from concurrent.futures import ThreadPoolExecutor
+import numpy as np
+from astropy.table import Table
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+
+SCR = sys.argv[1]
+T0 = time.time()
+sel = json.load(open('results/w3_ztf/asassn/selection.json'))
+stars = {r['key']: dict(area=p, ra=r['ra'], dec=r['dec'], gaia_id=r['match']['gaia_id'], G=r['match']['gaia_mag'])
+         for p in ('4991', '2344') for r in sel['areas'][p]['selected']}
+assert len(stars) == 40
+sides = []
+for p in ('4991', '2344'):
+    ev = json.loads(gzip.open(f'results/w3_ztf/v24/step12_events_{p}.json.gz').read())
+    for e in ev:
+        if e.get('carrier') not in stars or e['bounds'] != 'edge_insufficient':
+            continue
+        for ri, r in enumerate(e['runs']):
+            if not r['others_ok']:
+                continue
+            for sd in ('pre', 'post'):
+                x = r[sd]
+                if x['class'] != 'insufficient':
+                    continue
+                lo, hi = (x['edge_t'] - x['thr'], x['edge_t']) if sd == 'pre' else (x['edge_t'], x['edge_t'] + x['thr'])
+                sides.append(dict(area=p, grp='fade' if e['kind'] == 'fade' else 'w3', kind=e['kind'], i=e['i'],
+                                  carrier=e['carrier'], run=ri, side=sd, lo=lo, hi=hi, thr=x['thr'], side_class=x['side_class']))
+
+
+def get(url, tries=4):
+    for k in range(tries):
+        try:
+            return urllib.request.urlopen(url, timeout=600).read()
+        except OSError:
+            if k == tries - 1:
+                raise
+            time.sleep(10 * (k + 1))
+
+
+def cached(path, url):
+    import os
+    if os.path.exists(path):
+        raw = open(path, 'rb').read()
+        if b'name="Error"' not in raw[:4000]:  # review fix: a cached server error is fetched again
+            return raw
+    for k in range(4):  # a server-side error (e.g. IRSA SCS "ORA-24459" pool timeouts) is retried, never kept
+        raw = get(url)
+        if b'name="Error"' not in raw[:4000]:
+            open(path, 'wb').write(raw)
+            return raw
+        time.sleep(20 * (k + 1))
+    raise RuntimeError(f'service error for {url}: {raw[:400]!r}')
+
+
+def ztf_g(key):
+    s = stars[key]
+    cols = 'field,ccdid,qid,filtercode,obsjd,infobits,maglimit,seeing,expid,ra1,dec1,ra2,dec2,ra3,dec3,ra4,dec4'
+    u = 'https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci?' + urllib.parse.urlencode(
+        {'POS': f"{s['ra']},{s['dec']}", 'WHERE': "filtercode='zg'", 'ct': 'csv', 'COLUMNS': cols})
+    raw = cached(f'{SCR}/ibe_zg_{key}.csv', u)
+    t = Table.read(io.BytesIO(raw), format='csv')
+    inside = wz.in_quad(t, s['ra'], s['dec'])  # the repo's 10" footprint rule
+    return dict(t=(np.asarray(t['obsjd'], float) - 2400000.5)[inside].tolist(),
+                infobits=np.asarray(t['infobits'], int)[inside].tolist(), maglimit=np.asarray(t['maglimit'], float)[inside].tolist(),
+                n_rows=len(t), n_inside=int(inside.sum()), bytes=len(raw))
+
+
+def neowise(key):
+    s = stars[key]
+    u = 'https://irsa.ipac.caltech.edu/SCS?' + urllib.parse.urlencode(
+        {'table': 'neowiser_p1bs_psd', 'RA': s['ra'], 'DEC': s['dec'], 'SR': 4.0 / 3600, 'format': 'csv'})
+    raw = cached(f'{SCR}/neowise_{key}.csv', u)
+    t = Table.read(io.BytesIO(raw), format='csv')
+    if len(t) == 0:
+        return dict(t=[], ok=[], n_rows=0, bytes=len(raw))
+    # quality (fixed here, from the Explanatory Supplement's recommended single-exposure cuts): qual_frame > 0,
+    # qi_fact > 0, saa_sep > 0, moon_masked W1 digit 0, cc_flags W1 char '0', nb == 1, na == 0, W1 S/N >= 3
+    cc = [str(c)[0] if len(str(c)) else '?' for c in t['cc_flags']]
+    mm = [str(m).zfill(2)[0] for m in t['moon_masked']]
+    ok = ((np.asarray(t['qual_frame']) > 0) & (np.asarray(t['qi_fact']) > 0) & (np.asarray(t['saa_sep']) > 0)
+          & (np.array(mm) == '0') & (np.array(cc) == '0') & (np.asarray(t['nb']) == 1) & (np.asarray(t['na']) == 0)
+          & (np.nan_to_num(np.asarray(t['w1snr'], float)) >= 3))
+    return dict(t=np.asarray(t['mjd'], float).tolist(), ok=ok.tolist(), n_rows=len(t), bytes=len(raw))
+
+
+def tess(key):
+    from astroquery.mast import Observations
+    s = stars[key]
+    obs = Observations.query_region(f"{s['ra']} {s['dec']}", radius='0.0006 deg')
+    obs = obs[[str(c).startswith(('TESS', 'HLSP')) for c in obs['obs_collection']]]
+    out = []
+    for o in obs:
+        if o['obs_collection'] == 'HLSP' and 'TESS' not in str(o['instrument_name']).upper() + str(o['provenance_name']).upper() + str(o['obs_id']).upper():
+            continue
+        out.append(dict(collection=str(o['obs_collection']), product=str(o['dataproduct_type']), prov=str(o['provenance_name']),
+                        target=str(o['target_name']), seq=int(o['sequence_number']) if str(o['sequence_number']).isdigit() else None,
+                        t_min=float(o['t_min']), t_max=float(o['t_max']), obs_id=str(o['obs_id'])))
+    return out
+
+
+with ThreadPoolExecutor(8) as ex:
+    fz = {k: ex.submit(ztf_g, k) for k in stars}
+    fn = {k: ex.submit(neowise, k) for k in stars}
+    ft = {k: ex.submit(tess, k) for k in stars}
+    Z = {k: f.result() for k, f in fz.items()}
+    N = {k: f.result() for k, f in fn.items()}
+    TS = {k: f.result() for k, f in ft.items()}
+print('queries done', round(time.time() - T0, 1), flush=True)
+
+
+def classify(sd):
+    k, lo, hi = sd['carrier'], sd['lo'], sd['hi']
+    inw = lambda t: (t >= lo) & (t < hi) if sd['side'] == 'pre' else (t > lo) & (t <= hi)
+    z = Z[k]; tz = np.asarray(z['t']); ib = np.asarray(z['infobits'])
+    m = inw(tz) if len(tz) else np.zeros(0, bool)
+    zc = 'observed' if (m & (ib == 0)).any() else ('possible' if m.any() else 'none')
+    n = N[k]; tn = np.asarray(n['t']); okn = np.asarray(n['ok'], bool)
+    m2 = inw(tn) if len(tn) else np.zeros(0, bool)
+    nc = 'observed' if (m2 & okn).any() else ('possible' if m2.any() else 'none')
+    ts = TS[k]
+    ffi = [x for x in ts if x['collection'] == 'TESS' and x['product'] == 'image' and x['t_min'] < hi and x['t_max'] > lo]
+    lc = [x for x in ts if x['product'] == 'timeseries' and x['t_min'] < hi and x['t_max'] > lo]
+    # TESS epochs are not read here: 'possible' = a timeseries product's time range overlaps the window; 'ffi_only' =
+    # the star is on an FFI of a sector overlapping the window but no photometry product exists (own FFI photometry
+    # would be needed, outside this brief); 'none' = no TESS sector overlaps
+    tc = 'possible' if lc else ('ffi_only' if ffi else 'none')
+    return dict(ztf_g=zc, ztf_g_n_ok=int((m & (ib == 0)).sum()), ztf_g_n_flagged=int((m & (ib != 0)).sum()),
+                neowise=nc, neowise_n_ok=int((m2 & okn).sum()), neowise_n_flagged=int((m2 & ~okn).sum()),
+                tess=tc, tess_products=sorted({f"{x['prov']}:{x['seq']}" for x in ffi + lc}))
+
+
+for sd in sides:
+    sd.update(classify(sd))
+summ = {}
+for src in ('ztf_g', 'neowise', 'tess'):
+    d = {}
+    for grp in ('w3', 'fade'):
+        ss = [s for s in sides if s['grp'] == grp]
+        d[grp] = {c: sum(s[src] == c for s in ss) for c in ('observed', 'possible', 'ffi_only', 'none')}
+        evs = {}
+        for s in ss:
+            evs.setdefault((s['area'], s['kind'], s['i']), []).append(s[src])
+        d[grp]['events_all_sides_observed'] = sum(all(c == 'observed' for c in v) for v in evs.values())
+        d[grp]['events_any_side_observed'] = sum(any(c == 'observed' for c in v) for v in evs.values())
+        d[grp]['events'] = len(evs)
+    summ[src] = d
+star_cov = {}
+for k, s in stars.items():
+    tn = np.asarray(N[k]['t'])
+    star_cov[str(k)] = dict(area=s['area'], G=s['G'], ztf_g_exposures_inside=Z[k]['n_inside'],
+                            ztf_g_infobits0=int((np.asarray(Z[k]['infobits']) == 0).sum()),
+                            neowise_epochs=len(tn), neowise_ok=int(np.sum(N[k]['ok'])),
+                            neowise_mjd_range=[float(tn.min()), float(tn.max())] if len(tn) else None,
+                            tess=sorted({f"{x['collection']}/{x['prov']}/{x['product']}:{x['seq']}" for x in TS[k]}))
+out = {'label': 'observed (IRSA IBE ZTF metadata, IRSA SCS NEOWISE-R single-exposure epochs and flags, MAST CAOM TESS '
+                'product time ranges); derived (window classification)',
+       'windows': 'pre [edge_t - 0.25 span, edge_t), post (edge_t, edge_t + 0.25 span]; edge_t and span from ../v24 events',
+       'sides': sides, 'summary': summ, 'stars': star_cov,
+       'bytes': {'ztf_ibe': sum(z['bytes'] for z in Z.values()), 'neowise_scs': sum(n['bytes'] for n in N.values())},
+       'seconds': round(time.time() - T0, 1)}
+json.dump(out, open('results/w3_ztf/altdata/inventory.json', 'w'), indent=1, default=float)
+open('results/w3_ztf/altdata/inventory.json', 'a').write('\n')
+print(json.dumps(summ, indent=1))
