@@ -16,6 +16,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   processes on 4 cores before the fix, 0 / 600 in both after; `tests/test_s1_chime.py` passed 50 / 50 runs idle and
   50 / 50 loaded on py3.11, 20 / 20 on py3.12.
 
+## 2026-10-22: Abell 370 BUFFALO model A maps: gate L passes; K1 (Lagattuta+2019) fails, rms 7.70″; K2 (model's own gold list, deviation) passes, rms 0.910″
+- **Plan** (`results/lens_consistency/abell370_buffalo/PLAN.md`): pinned `main` deflection + κ maps; gate L (κ loading)
+  and gate K1 on Lagattuta+2019 gold z_spec images were frozen first. After K1 failed, the model's own released gold list
+  was found on MAST (issue #465 had missed it) and gate K2 was frozen on it before any K2 evaluation (labelled deviation).
+- **Result** (`summary.json`): gate L 3.4e-5. K1: 102 images, rms 7.70″, 92.2 % within 3″ → fails. K2: 104 images,
+  rms 0.910″ (published 0.90″), 99.0 % within 3″ → passes; 28.1 at 3.36″ is the only image outside 3″ (not vetted).
+- **Post hoc:** K1's rms is carried by 21.1 / 21.2 (≈ 53″; cause not decided) and three single-image families (no prediction); 0.91″
+  without the 8 dropped images.
+- **Failed approach:** selecting K1 images by per-image class left single-image families; select by family next time.
+- **Handoff:** Abell 370 has a map model validated on its own constraints (D-034 addendum h). Next: pin the CANUCS
+  DR1 Abell 370 catalogue and mosaic and run the extra-image stages on the BUFFALO gold systems.
 ## 2026-10-22: W3 ZTF × ATLAS paired injections on the 40 calibration stars: not completed (17 / 40 stars by the deadline); fails regardless of the missing stars (6 / 63 restored, best case 27 / 63; 0 / 79 fade passes; 4 recovered W3 lost)
 - **Plan:** `results/w3_ztf/atlas40/PLAN.md`. Method, denominators and bounds were committed before any ATLAS flux;
   review fixes came before any outcome. 4 #461 stars are development data. Feasibility trial, not validation.

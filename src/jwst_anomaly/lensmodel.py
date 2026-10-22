@@ -560,6 +560,29 @@ MACS1149_CANUCS_MAPS: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: BUFFALO Lenstool maps of Abell 370, model A (Niemiec et al. 2023; image-plane fit; readme
+#: ``hlsp_buffalo_model_abell370_par_niemiec_v1.0_readme.txt``; accessed 2026-10-22): ``main``
+#: field, 3000 x 3000 pixels of 0.12", D_LS/D_S = 1, deflection in arcsec; 36.0 MB each. The HLSP
+#: ``input.par`` names ``gold_immul.dat`` and a member catalogue that are not released (issue #465).
+_BUFFALO_A370_A = (
+    "https://archive.stsci.edu/hlsps/buffalo/abell370/lens-models/lenstool_niemiec/a/sl/"
+    "hlsp_buffalo_model_abell370_main_niemiec-a-sl_v1.0_{0}.fits"
+)
+ABELL370_BUFFALO_A_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _BUFFALO_A370_A.format("x-arcsec-deflect"),
+        "450ed057dd1656ba270ec288da3017e04b31bc04517ff3e0927f2d1b98e90b49",
+    ),
+    "alpha_y": (
+        _BUFFALO_A370_A.format("y-arcsec-deflect"),
+        "75920091c5e6375118a5da095c295c0c6fbc15a8e814e313a610db92687d3902",
+    ),
+    "kappa_map": (
+        _BUFFALO_A370_A.format("kappa"),
+        "6ef0cc1a8cd842d6104cb717e7c8f8fe49a34713238d5238c122fdcf90daf793",
+    ),
+}
+
 #: JWST-updated maps of RX J2129.7+0005 (Dhanasingham et al. 2026, arXiv:2604.11882; Zenodo record
 #: 21460864, one 4.30 GB zip; accessed 2026-10-16). Members are read by HTTP range requests
 #: (``<zip url>#<member>``, staged by ``scripts/arcs_rxj2129.py``). Lenstool: arcsec deflections at
