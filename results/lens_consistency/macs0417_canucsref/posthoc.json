@@ -1,6 +1,7 @@
 {
  "label": "post hoc (not frozen rules); observed pixels, derived sums",
  "image": "40mas_f200w_v1_bgsub-sci.fits.gz",
+ "image_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/hlsp_canucs_jwst_nircam_macs0417-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
  "image_sha256": "591228193a679d52ac523e8f5e0b7806327d7b2c382a57cbe8b0787d1eaea1cd",
  "aperture_radius_arcsec": 0.3,
  "random_apertures": {
@@ -9,8 +10,10 @@
    1.5,
    4.0
   ],
+  "source_exclusion_arcsec": 0.5,
   "seed": 20261022
  },
+ "separation_between_missing_arcsec": 2.310230625350656,
  "family10": [
   {
    "image_class": "missing",
@@ -18,11 +21,12 @@
    "ra": 64.39479649706004,
    "dec": -11.907537311141732,
    "f_pred_njy": 164.37355361515267,
-   "ap03_njy": 1242.3272705078125,
-   "local_median_njy": 107.33038711547852,
-   "local_std_njy": 146.28524203047817,
-   "pred_over_local_std": 1.1236509666566765,
-   "ap_minus_median_over_std": 7.758792805332066,
+   "ap03_njy": 1242.3272162675858,
+   "local_median_njy": 115.06630244106054,
+   "local_std_njy": 174.21410303703746,
+   "pred_over_local_std": 0.9435146222358777,
+   "ap_minus_median_over_std": 6.4705491356625275,
+   "n_random_used": 200,
    "nearest_sources": [
     {
      "source": 1199075,
@@ -62,11 +66,12 @@
    "ra": 64.39462863940717,
    "dec": -11.906916955092163,
    "f_pred_njy": 130.56227005143677,
-   "ap03_njy": 332.1279296875,
-   "local_median_njy": 48.83850860595703,
-   "local_std_njy": 138.55334414406406,
-   "pred_over_local_std": 0.9423249280485184,
-   "ap_minus_median_over_std": 2.0446234829740826,
+   "ap03_njy": 332.1279252767563,
+   "local_median_njy": 85.348015579395,
+   "local_std_njy": 179.25897496875373,
+   "pred_over_local_std": 0.728344397117047,
+   "ap_minus_median_over_std": 1.3766669687828852,
+   "n_random_used": 200,
    "nearest_sources": [
     {
      "source": 1119039,
@@ -106,11 +111,12 @@
    "ra": 64.38471416304424,
    "dec": -11.915405023989534,
    "f_pred_njy": 76.68643099916103,
-   "ap03_njy": -2.516165256500244,
-   "local_median_njy": 1.5002384185791016,
-   "local_std_njy": 15.478793358167048,
-   "pred_over_local_std": 4.954289990485538,
-   "ap_minus_median_over_std": -0.25947782764088506,
+   "ap03_njy": -2.5161653218819993,
+   "local_median_njy": 0.670022721926216,
+   "local_std_njy": 13.364373380660036,
+   "pred_over_local_std": 5.738123952009314,
+   "ap_minus_median_over_std": -0.23840908608697198,
+   "n_random_used": 200,
    "nearest_sources": [
     {
      "source": 1104897,

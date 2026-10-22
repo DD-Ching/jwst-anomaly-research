@@ -66,3 +66,24 @@ def test_to_cat_mapping():
     assert np.allclose(c["a"], 0.16) and np.allclose(c["b"], 0.04)
     assert np.allclose(c["pa"], 0.0) and np.allclose(c["ell"], 0.75)
     assert c["ext"].all()
+
+
+def test_run_requires_all_overrides():
+    import m0417_arcref as ar
+    import pytest
+
+    with pytest.raises(ValueError):
+        ar.run(Path("."), cat={}, depth=None, cat_inputs=None)
+
+
+def test_posthoc_aperture_edges_and_nan():
+    spec = importlib.util.spec_from_file_location(
+        "m0417_canucsref_posthoc", _SCRIPTS / "m0417_canucsref_posthoc.py"
+    )
+    ph = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ph)
+    d = np.ones((50, 50))
+    assert ph.aperture_sum(d, 25, 25, 2.0) == 13.0  # pixels within r = 2
+    assert np.isnan(ph.aperture_sum(d, 1, 25, 2.0))  # leaves the image
+    d[25, 25] = np.nan
+    assert np.isnan(ph.aperture_sum(d, 25, 25, 2.0))

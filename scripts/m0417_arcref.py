@@ -181,6 +181,9 @@ def run(
 ) -> dict:
     """Frozen run. ``cat``, ``depth`` and ``cat_inputs`` replace the pipeline catalogue (all three
     or none; used by ``m0417_canucsref``); ``out`` is the output directory."""
+    given = (cat is not None, depth is not None, cat_inputs is not None)
+    if any(given) and not all(given):
+        raise ValueError("cat, depth and cat_inputs: pass all three or none")
     if cat is None:
         _, _, obs, tile = mx.FIELDS["macs0417"]
         cat_path = cache / Path(mx.S3.format(obs, tile, "cat.ecsv")).name

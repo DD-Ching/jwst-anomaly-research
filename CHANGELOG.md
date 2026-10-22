@@ -8,7 +8,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   deblended; F200W Kron totals).
 - **Result** (`RESULT.md`, `summary.json`): gate C2 passes, 37 / 40 (arc-referenced 10 / 10). Two family-10 predictions
   are frozen flags (`absent`). Post hoc (`posthoc.json`, contact sheet looked at): the |μ| 4.85 image lies on the BCG
-  where the predicted total is 0.94× the local 0.3″ aperture noise (untestable there); the |μ| 2.85 image has CANUCS
+  where the predicted total is 0.73× the local 0.3″ aperture scatter (untestable there); the |μ| 2.85 image has CANUCS
   1115938 1.49″ away at 1.07× the predicted flux with photo-z 1.81, matching 10.1 / 10.2 (outside the 1.0″ radius;
   family 10 has no z_spec, map-fitted z 2.15). No candidate; `/vet-candidate` not run. D-034 addendum b.
 - **Handoff:** next for MACS0417, a family-10 z-scan in the CANUCS maps (does the third image land on 1115938?);

@@ -24,14 +24,43 @@ from astropy.wcs import WCS
 OUT = Path("results/lens_consistency/macs0417_canucsref")
 AP_ARCSEC, PIX = 0.3, 0.04
 N_RAND, R_RAND = 200, (1.5, 4.0)
+SRC_EXCL = 0.5  # random apertures centred within this of a CANUCS source are redrawn (arcsec)
+URL = (
+    "https://archive.stsci.edu/hlsps/canucs/dr1/macs0417/clu/"
+    "hlsp_canucs_jwst_nircam_macs0417-clu-40mas_f200w_v1_bgsub-sci.fits.gz"
+)
 
 
 def aperture_sum(d: np.ndarray, x: float, y: float, r: float) -> float:
+    """Sum inside radius ``r`` (pixels) at (x, y); NaN if the aperture leaves the image or holds
+    any NaN pixel (no partial coverage)."""
     h = int(np.ceil(r)) + 1
     y0, x0 = int(round(y)), int(round(x))
+    if y0 - h < 0 or x0 - h < 0 or y0 + h + 1 > d.shape[0] or x0 + h + 1 > d.shape[1]:
+        return float("nan")
     yy, xx = np.mgrid[y0 - h : y0 + h + 1, x0 - h : x0 + h + 1]
     m = (xx - x) ** 2 + (yy - y) ** 2 <= r * r
-    return float(np.nansum(d[y0 - h : y0 + h + 1, x0 - h : x0 + h + 1][m]))
+    v = d[y0 - h : y0 + h + 1, x0 - h : x0 + h + 1][m]
+    return float(v.sum()) if np.isfinite(v).all() else float("nan")
+
+
+def sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _clean(v):
+    """JSON-safe: NaN / inf -> None (``allow_nan=False`` below)."""
+    if isinstance(v, float) and not np.isfinite(v):
+        return None
+    if isinstance(v, dict):
+        return {k: _clean(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_clean(x) for x in v]
+    return v
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -39,21 +68,30 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--cat", type=Path, required=True)
     ap.add_argument("--image", type=Path, required=True)
     args = ap.parse_args(argv)
-    hdu = fits.open(args.image)[0]
-    assert hdu.header.get("BUNIT") == "nJy"
-    w, d = WCS(hdu.header), hdu.data
+    with fits.open(args.image) as hl:
+        if hl[0].header.get("BUNIT") != "nJy":
+            raise ValueError(f"unexpected BUNIT {hl[0].header.get('BUNIT')!r}")
+        w, d = WCS(hl[0].header), np.asarray(hl[0].data, float)
     cat = Table.read(args.cat)
     cs = SkyCoord(cat["RA"], cat["DEC"], unit="deg")
     pred = Table.read(OUT / "predicted_macs0417.ecsv")
     rng = np.random.default_rng(20261022)
+    cpx, cpy = (np.asarray(v, float) for v in w.world_to_pixel(cs))
+    pairs = pred[pred["system"] == "10"]
     r = AP_ARCSEC / PIX
     rows = []
-    for p in pred[pred["system"] == "10"]:
+    for p in pairs:
         x, y = (float(v) for v in w.world_to_pixel_values(p["ra"], p["dec"]))
-        rand = []
-        for _ in range(N_RAND):
+        rand, tries = [], 0
+        while len(rand) < N_RAND and tries < 50 * N_RAND:
+            tries += 1
             a, s = rng.uniform(0, 2 * np.pi), rng.uniform(*R_RAND) / PIX
-            rand.append(aperture_sum(d, x + s * np.cos(a), y + s * np.sin(a), r))
+            rx, ry = x + s * np.cos(a), y + s * np.sin(a)
+            if np.hypot(cpx - rx, cpy - ry).min() * PIX < SRC_EXCL:
+                continue
+            v = aperture_sum(d, rx, ry, r)
+            if np.isfinite(v):
+                rand.append(v)
         _, med, std = sigma_clipped_stats(rand)
         sep = cs.separation(SkyCoord(p["ra"], p["dec"], unit="deg")).arcsec
         near = [
@@ -82,6 +120,7 @@ def main(argv: list[str] | None = None) -> int:
                 "local_std_njy": float(std),
                 "pred_over_local_std": float(p["f_pred"] * 1e9 / std),
                 "ap_minus_median_over_std": float((ap_sum - med) / std),
+                "n_random_used": len(rand),
                 "nearest_sources": near,
             }
         )
@@ -99,16 +138,29 @@ def main(argv: list[str] | None = None) -> int:
         }
         for c in ctrl[(ctrl["system"] == "10") & (ctrl["counterpart"] >= 0)]
     ]
+    m, m2 = (q for q in pairs if q["image_class"] == "missing")
     res = {
         "label": "post hoc (not frozen rules); observed pixels, derived sums",
         "image": args.image.name,
-        "image_sha256": hashlib.sha256(args.image.read_bytes()).hexdigest(),
+        "image_url": URL,
+        "image_sha256": sha256(args.image),
         "aperture_radius_arcsec": AP_ARCSEC,
-        "random_apertures": {"n": N_RAND, "annulus_arcsec": list(R_RAND), "seed": 20261022},
+        "random_apertures": {
+            "n": N_RAND,
+            "annulus_arcsec": list(R_RAND),
+            "source_exclusion_arcsec": SRC_EXCL,
+            "seed": 20261022,
+        },
+        "separation_between_missing_arcsec": float(
+            SkyCoord(m["ra"], m["dec"], unit="deg")
+            .separation(SkyCoord(m2["ra"], m2["dec"], unit="deg"))
+            .arcsec
+        ),
         "family10": rows,
         "family10_catalogued": catalogued,
     }
-    (OUT / "posthoc.json").write_text(json.dumps(res, indent=1) + "\n")
+    res = _clean(res)
+    (OUT / "posthoc.json").write_text(json.dumps(res, indent=1, allow_nan=False) + "\n")
     print(json.dumps(res, indent=1))
     return 0
 

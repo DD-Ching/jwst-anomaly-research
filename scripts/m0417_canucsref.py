@@ -14,6 +14,7 @@ import hashlib
 import json
 from pathlib import Path
 
+import lens_consistency as lc
 import m0417_arcref as ar
 import numpy as np
 from astropy.table import Table
@@ -44,10 +45,11 @@ def sky_pa(pa_image) -> np.ndarray:
 
 
 def depth_mag(flux_jy, snr) -> float:
-    """Median AB magnitude of rows with S/N 4-6 (``lens_consistency.depth_mag`` definition)."""
+    """``lens_consistency.depth_mag`` (median AB of rows with S/N 4-6) on this catalogue."""
     f, s = np.asarray(flux_jy, float), np.asarray(snr, float)
-    m = (s >= 4.0) & (s <= 6.0) & (f > 0)
-    return float(np.median(-2.5 * np.log10(f[m] / 3631.0))) if m.any() else float("nan")
+    with np.errstate(divide="ignore", invalid="ignore"):
+        mag = np.where(f > 0, -2.5 * np.log10(f / 3631.0), np.nan)
+    return lc.depth_mag(Table({"snr": s, "mag": mag}))
 
 
 def to_cat(t: Table) -> dict:
@@ -86,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
     inputs = {
         "canucs_cat": args.cat.name,
         "canucs_url": URL,
-        "canucs_cat_sha256": hashlib.sha256(args.cat.read_bytes()).hexdigest(),
+        "canucs_cat_sha256": hashlib.sha256(args.cat.read_bytes()).hexdigest(),  # 28 MB
         "n_rows_finite_flux": int(len(cat["flux"])),
         "flux_column": f"FLUX_KRON_TOTAL_{BAND}",
     }
