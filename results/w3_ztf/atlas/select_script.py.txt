@@ -1,0 +1,54 @@
+# PLAN section 2: fix the <= 4 ATLAS test stars (2 per area) and their gap intervals from committed files only, before any
+# ATLAS query. Gaps are the W3 sides of the 40 stars that stay insufficient under #460's joint rule (the ZTF r / g common
+# gaps), joined to #459's inventory sides for the star and the absolute r-edge time. Rank per area: most such sides,
+# then brighter ZTF refmag_r, then key. Usage: python select_script.py.txt
+import json
+
+inv = {(s['area'], s['kind'], s['i'], s['run'], s['side']): s for s in json.load(open('results/w3_ztf/altdata/inventory.json'))['sides']}
+sel = json.load(open('results/w3_ztf/asassn/selection.json'))
+stars = {r['key']: dict(area=p, ra=r['ra'], dec=r['dec'], refmag_r=r['refmag_r'], gaia_G=r['match']['gaia_mag'],
+                        rp_00_1=r['match']['rp_00_1'], rp_01=r['match']['rp_01'])
+         for p in ('4991', '2344') for r in sel['areas'][p]['selected']}
+gaps = []
+for p in ('4991', '2344'):
+    w = json.load(open(f'results/w3_ztf/joint/worth_{p}.json'))
+    for e in w['events']:
+        if e['grp'] != 'w3':
+            continue
+        for sd in e['sides']:
+            if sd['joint'] != 'insufficient':
+                continue
+            iv = inv[(p, e['kind'], e['i'], sd['run'], sd['side'])]
+            t_r = iv['lo'] if sd['side'] == 'post' else iv['hi']          # the r run edge (edge_t)
+            sgn = 1 if sd['side'] == 'post' else -1
+            t_j = t_r + sgn * sd['ext_days']                              # the joint (r + g) edge
+            u = sd['U_J']                                                 # to the next r / g normal (None: none)
+            far = None if u is None else t_j + sgn * u
+            dec_w = t_j + sgn * 0.25 * sd['span_j']                       # a normal point must lie within this
+            lo, hi = sorted([t_j, far if far is not None else t_j + sgn * 365.0])
+            gaps.append(dict(area=p, carrier=iv['carrier'], kind=e['kind'], i=e['i'], run=sd['run'], side=sd['side'],
+                             t_r_edge=t_r, t_joint_edge=t_j, U_J=u, span_j=sd['span_j'],
+                             common_gap=[lo, hi], decisive=sorted([t_j, dec_w]), U_J_missing=u is None))
+count = {}
+for g in gaps:
+    count[g['carrier']] = count.get(g['carrier'], 0) + 1
+chosen = []
+for p in ('4991', '2344'):
+    cand = sorted((k for k, s in stars.items() if s['area'] == p),
+                  key=lambda k: (-count.get(k, 0), stars[k]['refmag_r'], k))
+    chosen += cand[:2]
+req = {}
+for k in chosen:
+    gs = [g for g in gaps if g['carrier'] == k]
+    lo = min(g['common_gap'][0] for g in gs) - 60.0
+    hi = max(g['common_gap'][1] for g in gs) + 60.0
+    req[str(k)] = {**stars[k], 'joint_insufficient_w3_sides': len(gs), 'mjd_min': round(lo, 3), 'mjd_max': round(hi, 3)}
+out = {'label': 'derived (../asassn/selection.json, ../altdata/inventory.json, ../joint/worth_*.json); no ATLAS data',
+       'rule': 'per area: most W3 sides insufficient under #460 joint, then brighter refmag_r, then key; 2 per area',
+       'counts_all_40': {str(k): count.get(k, 0) for k in stars}, 'chosen': [str(k) for k in chosen],
+       'test_star': str(chosen[0]), 'requests': req, 'gaps': [g for g in gaps if g['carrier'] in chosen],
+       'gaps_all_40': len(gaps)}
+json.dump(out, open('results/w3_ztf/atlas/selection.json', 'w'), indent=1)
+open('results/w3_ztf/atlas/selection.json', 'a').write('\n')
+print(json.dumps({k: out[k] for k in ('chosen', 'test_star', 'requests', 'gaps_all_40')}, indent=1))
+print(sorted(out['counts_all_40'].items(), key=lambda x: -x[1])[:12])
