@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: X4 cogwheel exact score: definitions map, but one exactly aligned point fails the waveform check (decision B); no search
+- **Definition check (read in source):** cogwheel's exact `lnlike_fft` has no internal maximisation. With one
+  detector, its maximum over time, ψ, distance and sky is ½ρ² FF² with continuous time. This matches our FF when:
+  multibanding is off on both sides, ASD drift is 1, relative binning is not used, the window is ±2 s, and the spin
+  cap 0.99 is a likelihood constraint.
+- **Frozen fixed points** (`results/x4/cog_exact/checks.json`): 36 points (2 truths, 2 S1k solutions, 24 seeded
+  box points, 8 near-boundary points). All pass: F1 1.8e-15, F2 7.3e-13, F3 |ΔFF| 1.1e-12. All optima lie inside
+  IASPrior's cube.
+- **Review re-check (post hoc,** `review_recheck.json`**):**
+  - the cap constraint needed a tolerance (it rejected |χ| = 0.99 by rounding);
+  - prior-transform path 4.1e-12;
+  - our pad-64 grid loss up to 3.2e-6;
+  - q = 15, |χ| = 0.99 passes;
+  - **one exactly aligned point (cos tilts +1 / −1, |χ| 0.99, inclination π/2, φ_ref π) fails: F2 = 2, F3 up
+    to 0.75**; the fold/unfold path is ill-conditioned at θ_jn = π/2.
+- **Outcome:** decision B. No further trial; the integration line stays paused, and specialist question 4 is added
+  to the X4 handoff.
+
 ## 2026-10-21: X4 cogwheel: interface consistency failed (F2, F3); C1/C2 runs were exploratory and stopped unfinished
 - **Reading:** cogwheel 1.6.0 `refine_reference_waveform` runs SciPy DE on the relative-binning lnL over all 15
   IASPrior parameters (all 6 spin components, inclination, φ_ref); start from an aligned-spin (2,2) finder.
