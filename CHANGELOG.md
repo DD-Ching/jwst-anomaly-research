@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: MACS1423 extra-image test with CANUCS DR1 reference (in progress)
+- Claim: apply the frozen MACS0417 CANUCS-reference rules to MACS1423 after freezing a local-noise `undetectable` rule.
+
 ## 2026-10-22: MACS0417 family 10 colour test: CANUCS 1115938 matches 10.1 / 10.2; family 10 closed as ordinary
 - **Plan** (`results/lens_consistency/macs0417_f10_colour/PLAN.md`; plan, script and tested rules pushed first): pair χ²
   on CANUCS DR1 0.3″ colour fluxes (8 JWST bands, 5 % floor, flux ratio free), gate on other Jauzac+19 families.
