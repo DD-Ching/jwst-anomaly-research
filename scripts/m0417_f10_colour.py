@@ -5,7 +5,7 @@ ratio. Pair chi^2 (flux ratio free) on CANUCS DR1 0.3" colour fluxes with a 5 % 
 test is validated first on the first two images of every other Jauzac+19 family.
 Frozen plan: ``results/lens_consistency/macs0417_f10_colour/PLAN.md``.
 
-    python scripts/m0417_f10_colour.py --cat <CANUCS DR1 photometry-cat.fits.gz>
+    python scripts/m0417_f10_colour.py --cat <CANUCS DR1 photometry-cat.fits.gz> [--posthoc]
 """
 
 from __future__ import annotations
@@ -121,10 +121,32 @@ def test_pair(cat: Table, ka: int, kb: int, label: str) -> dict:
     }
 
 
+def specificity(cat: Table, refs: dict[str, int], flux_lo: float, flux_hi: float) -> dict:
+    """Post hoc (not a frozen rule): of the catalogue sources with F200W S/N >= SNR_KNOWN and
+    F200W flux in [flux_lo, flux_hi], the fraction "consistent" with every reference image."""
+    f = np.asarray(cat["FLUX_COLOR03_TOTAL_F200W"], float)
+    e = np.asarray(cat["FLUXERR_COLOR03_TOTAL_F200W"], float)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        sel = np.flatnonzero((f / e >= SNR_KNOWN) & (f >= flux_lo) & (f <= flux_hi))
+    sel = [k for k in sel if k not in refs.values()]
+    both = 0
+    for k in sel:
+        if all(test_pair(cat, r, k, "")["class"] == "consistent" for r in refs.values()):
+            both += 1
+    return {
+        "label": "post hoc",
+        "flux_range_njy": [flux_lo, flux_hi],  # catalogue fluxes are in nJy
+        "n_sources": len(sel),
+        "n_consistent_with_all_refs": both,
+        "fraction": both / len(sel) if sel else None,
+    }
+
+
 def main(argv: list[str] | None = None) -> dict:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--cat", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--posthoc", action="store_true", help="also write posthoc.json (specificity)")
     args = ap.parse_args(argv)
     cat = Table.read(args.cat)
     off = json.loads((FRAME / "summary.json").read_text())["measurement"]["offset"]
@@ -172,6 +194,12 @@ def main(argv: list[str] | None = None) -> dict:
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "summary.json").write_text(json.dumps(out, indent=1, allow_nan=False) + "\n")
     print(json.dumps({k: v for k, v in out.items() if k != "known_pairs"}, indent=1))
+    if args.posthoc:
+        f3 = float(cat["FLUX_COLOR03_TOTAL_F200W"][k3])
+        refs = {i: cp[i] for i in ("10.1", "10.2") if i in cp}
+        ph = specificity(cat, refs, f3 / 2, f3 * 2)
+        (args.out / "posthoc.json").write_text(json.dumps(ph, indent=1, allow_nan=False) + "\n")
+        print(json.dumps(ph, indent=1))
     return out
 
 

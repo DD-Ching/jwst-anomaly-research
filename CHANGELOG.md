@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: MACS0417 family 10 colour test: CANUCS 1115938 matches 10.1 / 10.2; family 10 closed as ordinary
+- **Plan** (`results/lens_consistency/macs0417_f10_colour/PLAN.md`; plan, script and tested rules pushed first): pair χ²
+  on CANUCS DR1 0.3″ colour fluxes (8 JWST bands, 5 % floor, flux ratio free), gate on other Jauzac+19 families.
+- **Result** (`RESULT.md`, `summary.json`): gate passes 8 / 9; 1115938 consistent with 10.1 (χ² 2.80 / 7) and 10.2
+  (3.98 / 7): "H1 not excluded". Post hoc (`posthoc.json`): 7.6 % of 2,034 similar-flux sources also pass; fitted
+  flux ratios 4.69 / 2.78 vs CANUCS-map |μ| ratios 4.35 / 2.78 at z 2.025. The #453 `candidate` flag reads as a source
+  redshift effect (z ≈ 2.0 vs photo-z 1.72–1.88). No candidate. D-034 addendum d.
+- **Handoff:** MACS0417 extra-image work is done unless a family-10 z_spec appears. Next: the CANUCS DR1 reference on
+  MACS1423 and the other CANUCS fields, with a local-noise `undetectable` rule frozen first.
 ## 2026-10-22: MACS0417 family 10 z-scan in the CANUCS maps: the third image lands on CANUCS 1115938 only above its photo-z (outcome A′)
 - **Plan** (`results/lens_consistency/macs0417_f10_zscan/PLAN.md`, frozen and pushed first; rules as tested functions):
   z 1.00–4.00 (step 0.025), source from 10.1 / 10.2, one-to-one assignment of 10.1, 10.2 and 1115938 within 1.0″.
