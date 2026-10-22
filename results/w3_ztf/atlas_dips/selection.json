@@ -1,0 +1,65 @@
+{
+ "label": "POST HOC; derived counts only (no comparison flux read)",
+ "groups": {
+  "G1": {
+   "unit": "02a",
+   "night": 59790,
+   "rows": [
+    "601213200006434/02a59790o0824c",
+    "601213400002132/02a59790o0824c",
+    "601213400005483/02a59790o0824c"
+   ],
+   "a_other_stars_same_exposure": 7,
+   "b_same_star_same_night_other_exposures": 12,
+   "c_other_atlas_filter_within_2d": 24,
+   "d_ztf_epochs_within_2d": 23,
+   "total": 66,
+   "rank": 1,
+   "checked": true
+  },
+  "G2": {
+   "unit": "01a",
+   "night": 60480,
+   "rows": [
+    "601213200006434/01a60480o0749o",
+    "601213200006434/01a60480o0694o",
+    "601213400002567/01a60480o0722o"
+   ],
+   "a_other_stars_same_exposure": 6,
+   "b_same_star_same_night_other_exposures": 0,
+   "c_other_atlas_filter_within_2d": 0,
+   "d_ztf_epochs_within_2d": 0,
+   "total": 6,
+   "rank": 4,
+   "checked": false
+  },
+  "G3": {
+   "unit": "01a",
+   "night": 59632,
+   "rows": [
+    "601209200002983/01a59632o0033o"
+   ],
+   "a_other_stars_same_exposure": 9,
+   "b_same_star_same_night_other_exposures": 3,
+   "c_other_atlas_filter_within_2d": 0,
+   "d_ztf_epochs_within_2d": 5,
+   "total": 17,
+   "rank": 2,
+   "checked": true
+  },
+  "G4": {
+   "unit": "01a",
+   "night": 60416,
+   "rows": [
+    "632212100000414/01a60416o0482o"
+   ],
+   "a_other_stars_same_exposure": 4,
+   "b_same_star_same_night_other_exposures": 1,
+   "c_other_atlas_filter_within_2d": 0,
+   "d_ztf_epochs_within_2d": 3,
+   "total": 8,
+   "rank": 3,
+   "checked": true
+  }
+ }
+}

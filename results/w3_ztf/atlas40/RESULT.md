@@ -6,6 +6,10 @@
   - simulated: the injected W3 and fade events. Every "dim", "restored", "slow", "lost" or "pass" below is a simulated injection;
   - derived: all counts.
   - Nothing here is a real event, an astronomical anomaly or a wormhole clue.
+- **Scope note (#470):** 27 / 63 is the best-case upper bound under this fixed method, the data acquired and the
+  existing A decisions, not a general ceiling for ATLAS or other methods. 0 / 79 holds with ATLAS on 17 stars; for all
+  40 it lies in 0–4 / 79 under this method and was not measured. The dips behind the W3 → "slow" moves are checked in
+  `../atlas_dips/RESULT.md`.
 - **Scope:** the already-used calibration events on the 40 stars (#459). The 4 #461 stars are development data. This is a feasibility trial, not a validation. No search group was read (`../v23/dev*/source_usage.jsonl`: `search_member_rows` 0).
 
 ## 1. Access and acquisition (`tasks.json`, `cost.json`)

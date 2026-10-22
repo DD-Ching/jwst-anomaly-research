@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: W3 ZTF × ATLAS dip check (post hoc, #462): 7 of the 8 simulated mis-decisions trace to 8 low rows in 6 exposures (the 8th to a normal row); the largest is one exposure with all 10 stored area-4991 stars 32–34 % low (clue, not proven); no reliable evidence of real variability in the 3 checked groups
+- **Plan** (`results/w3_ztf/atlas_dips/PLAN.md`): stored tables only. Selection and check rules were committed before
+  any comparison flux was read. 0 MB downloaded. #462's verdict is unchanged; its wording was narrowed (27 / 63 is a
+  best-case bound under the fixed method; 0 / 79 is with ATLAS on 17 stars).
+- **De-duplication** (`dedupe.json`): 9 trigger rows on 7 stars from 7 exposures, none reused; one row is normal (the
+  model itself was intermediate). Reading checks all pass.
+- **Checks** (`check.json`, 3 of 4 groups):
+  - G1: in one exposure, all 10 stored stars are low (3 mis-decisions; exposure-level clue).
+  - G4: one night with several stars low (night-level clue).
+  - G3: a single exposure of a development star (rel 0.21). 8 of 9 other stars are normal in it (one is high, rel
+    1.84), and its exposures 5–30 min later are normal. Undetermined; the exposure image needs an ATLAS account.
+  - G2: not checked. A selection-count deviation found at review would have checked it instead of G4; checking it is
+    the owner's call.
+- **Result:** no confirmed reading error. In the 3 checked groups, no variability is supported by independent
+  observations and no source is worth follow-up. Archived; no further gap filling, threshold change or same-kind
+  photometry attempt.
+
 ## 2026-10-22: Abell 370 gate C2 failure, post hoc diagnosis: 3 of the 6 absent arc-referenced controls are one CANUCS segment pair counted three times
 - **Plan** (`results/lens_consistency/abell370_buffalo_extra/posthoc_c2/PLAN.md`, committed first); everything is post
   hoc and the frozen outcome of #468 stands (C2 fails, no flag read). Table diagnosis only; no image looked at.
@@ -68,8 +85,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - 7 of the 8 W3 → "slow" moves come from single observed ATLAS dips (rel 0.21–0.68, 5.7–43 σ) where the injected
     model is at baseline. These are not vetted.
 - **Failed approach:** ATLAS as added edge points for the bounds rule (D-104 addendum). No validation, no retry.
-- **Handoff:** the W3 ZTF edge-information line has now failed with ZTF g, g + r jointly and ATLAS. The next step
-  is the owner's call.
+- **Handoff:** the tested options (ZTF g edge points, the g + r joint worth check, ATLAS edge points) did not meet the
+  requirement on this sample under this criterion (scope narrowed in #470). The next step is the owner's call.
+
 ## 2026-10-22: Abell 370 CANUCS DR1 reference route: gate K fails (rms 2.34″); no prediction read; line stopped
 - **Plan** (`results/lens_consistency/abell370_canucsref/PLAN.md`, frozen and pushed first): gate K of
   `m0417_images` on the 115 images of the pinned `abell370-canucs` model (z fixed, ASSUMPTION); stop on a fail.

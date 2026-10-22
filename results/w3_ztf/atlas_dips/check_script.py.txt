@@ -1,0 +1,170 @@
+# PLAN section 2: case selection (stage "select": counts only, no comparison flux) and the frozen checks C1-C6 with the
+# classification (stage "check"). Inputs: dedupe.json, the stored ATLAS tables (../atlas40/phot, calib.json) and the
+# local ZTF cache #462 already used (data/cache/w3_ztf/<npix>/lc_rows.parquet; nothing is downloaded).
+# Usage: python check_script.py.txt select|check
+import json, sys
+
+import numpy as np
+import pandas as pd
+import pyarrow.parquet as pq
+import pyarrow.compute as pc
+from astropy import units as u
+from astropy.coordinates import EarthLocation, SkyCoord
+from astropy.time import Time
+
+STAGE = sys.argv[1]
+A, O = 'results/w3_ztf/atlas40/', 'results/w3_ztf/atlas_dips/'
+cal = json.load(open(A + 'calib.json'))['stars']
+targets = {t['key']: t for t in json.load(open(A + 'targets.json'))['targets']}
+dd = json.load(open(O + 'dedupe.json'))
+SIG, NIGHT, NEAR, MONTH = 5.0, 0.5, 2.0, 30.0
+QF = ['chi/N', 'mag5sig', 'Sky', 'maj', 'min', 'apfit']
+
+
+def quality(df):  # #462 PLAN section 2 (FAQ filters), as trial_script.py.txt
+    return ((df['duJy'] < 10000) & (df['err'] == 0) & (df['x'] > 100) & (df['x'] < 10460) & (df['y'] > 100)
+            & (df['y'] < 10460) & (df['maj'] > 1.6) & (df['maj'] < 5) & (df['min'] > 1.6) & (df['min'] < 5)
+            & (df['apfit'] > -1) & (df['apfit'] < -0.1) & (df['mag5sig'] > 17) & (df['Sky'] > 17)
+            & df['F'].isin(['c', 'o'])).to_numpy()
+
+
+def table(key):
+    df = pd.read_csv(A + f'phot/{key}.csv.gz', dtype={'Obs': str, 'F': str})
+    df['unit'] = df['Obs'].str[:3]
+    df['ok'] = quality(df) & (df['uJy'].abs() < 9999).to_numpy()
+    df['baseline'], df['k'] = np.nan, np.nan
+    for g, rec in cal[key]['groups'].items():
+        f, un = g.split('/')
+        m = (df['F'] == f) & (df['unit'] == un)
+        df.loc[m, 'baseline'], df.loc[m, 'k'] = rec['baseline_uJy'], rec['k']
+    df['rel'] = df['uJy'] / df['baseline']
+    df['sig'] = df['duJy'] / df['baseline'] * np.maximum(df['k'], 1.0)
+    df['dev'] = (df['rel'] - 1) / df['sig']
+    return df
+
+
+T = {k: table(k) for k, v in cal.items() if v}
+low = [x for x in dd['exposures'] if x['rel'] < 0.8]
+groups = {}
+for x in low:
+    groups.setdefault((x['unit'], int(x['mjd_published'])), []).append(x)
+names = {g: f'G{i + 1}' for i, g in enumerate(sorted(groups, key=lambda g: (-len({x['star'] for x in groups[g]}), g[1])))}
+
+
+def ztf_rows(key, t0, half):
+    """ZTF epochs (hmjd, mag, magerr, catflags, band) of the star's group members within t0 +- half (local cache)."""
+    area = targets[key]['area']
+    members = next(g['members'] for g in json.load(open(f'results/w3_ztf/v23/dev{area}/sample.json'))['groups']
+                   if str(g['key']) == key)
+    t = pq.read_table(f'data/cache/w3_ztf/{area}/lc_rows.parquet', columns=['objectid', 'filterid', 'lightcurve'],
+                      filters=[('objectid', 'in', members)])
+    out = []
+    for oid, fid, lc in zip(t['objectid'].to_pylist(), t['filterid'].to_pylist(), t['lightcurve'].to_pylist()):
+        h, m, e, c = (np.asarray(lc[k]) for k in ('hmjd', 'mag', 'magerr', 'catflags'))
+        good = c == 0
+        med = float(np.median(m[good])) if good.any() else np.nan
+        for i in np.flatnonzero(np.abs(h - t0) <= half):
+            out.append({'band': 'zg' if fid == 1 else 'zr' if fid == 2 else f'z{fid}', 'oid': oid, 'hmjd': float(h[i]),
+                        'mag': float(m[i]), 'magerr': float(e[i]), 'catflags': int(c[i]),
+                        'dmag_vs_band_median': float(m[i] - med), 'dev_sigma': float((m[i] - med) / e[i])})
+    return out
+
+
+def counts(gkey):
+    rows = groups[gkey]
+    obs = {x['Obs'] for x in rows}
+    a = {s for s, df in T.items() if s not in {x['star'] for x in rows} and df.loc[df['ok'], 'Obs'].isin(obs).any()}
+    b = c = d = 0
+    for x in rows:
+        df = T[x['star']]
+        near = df['ok'] & ((df['MJD'] - x['mjd_published']).abs() < NIGHT) & ~df['Obs'].isin(obs)
+        b += int(near.sum())
+        c += int((df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= NEAR) & (df['F'] != x['filter'])).sum())
+        d += len(ztf_rows(x['star'], x['hmjd_used'], NEAR))
+    return {'a_other_stars_same_exposure': len(a), 'b_same_star_same_night_other_exposures': b,
+            'c_other_atlas_filter_within_2d': c, 'd_ztf_epochs_within_2d': d, 'total': len(a) + b + c + d}
+
+
+sel = {names[g]: {'unit': g[0], 'night': g[1], 'rows': [f"{x['star']}/{x['Obs']}" for x in groups[g]], **counts(g)}
+       for g in groups}
+order = sorted(sel, key=lambda n: (-sel[n]['total'], sel[n]['night']))
+for i, n in enumerate(order):
+    sel[n]['rank'], sel[n]['checked'] = i + 1, i < 3
+if STAGE == 'select':
+    json.dump({'label': 'POST HOC; derived counts only (no comparison flux read)', 'groups': sel},
+              open(O + 'selection.json', 'w'), indent=1)
+    open(O + 'selection.json', 'a').write('\n')
+    print(json.dumps(sel, indent=1))
+    sys.exit()
+
+sel_saved = json.load(open(O + 'selection.json'))['groups']
+assert {n: (v['rank'], v['checked']) for n, v in sel.items()} == {n: (v['rank'], v['checked']) for n, v in sel_saved.items()}
+res = {}
+for gkey in groups:
+    n = names[gkey]
+    if not sel[n]['checked']:
+        res[n] = {'checked': False}
+        continue
+    obs = {x['Obs'] for x in groups[gkey]}
+    rows_out = []
+    for x in groups[gkey]:
+        df = T[x['star']]
+        r = df.loc[df['Obs'] == x['Obs']].iloc[0]
+        same = df['ok'] & (df['F'] == r['F']) & (df['unit'] == r['unit'])
+        c2 = {}
+        for q in QF:
+            v = df.loc[same, q].to_numpy()
+            lo, hi = np.percentile(v, [0.5, 99.5])
+            c2[q] = {'value': float(r[q]), 'p0.5': float(lo), 'p99.5': float(hi),
+                     'percentile': float((v < r[q]).mean() * 100)}
+        c2_clue = c2['chi/N']['value'] > c2['chi/N']['p99.5'] or c2['mag5sig']['value'] < c2['mag5sig']['p0.5'] \
+            or c2['Sky']['value'] < c2['Sky']['p0.5']
+        c3 = []
+        for s, d2 in T.items():
+            if s == x['star']:
+                continue
+            m = d2['ok'] & (d2['Obs'] == x['Obs'])
+            for _, q in d2.loc[m].iterrows():
+                c3.append({'star': s, 'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'x': float(q['x']), 'y': float(q['y'])})
+        c3_clue = sum(q['dev_sigma'] < -SIG for q in c3) >= 2
+        def common_mode(ob):
+            return sum(((d2['Obs'] == ob) & d2['ok'] & (d2['dev'] < -SIG)).sum() for s, d2 in T.items() if s != x['star']) >= 2
+
+        night = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() < NIGHT) & (df['Obs'] != x['Obs'])]
+        c4 = [{'Obs': q['Obs'], 'F': q['F'], 'unit': q['unit'], 'dt_h': float((q['MJD'] - x['mjd_published']) * 24),
+               'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))}
+              for _, q in night.iterrows()]
+        near = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= NEAR) & (df['F'] != r['F'])]
+        c5_atlas = [{'Obs': q['Obs'], 'F': q['F'], 'dt_d': float(q['MJD'] - x['mjd_published']), 'rel': float(q['rel']),
+                     'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))} for _, q in near.iterrows()]
+        c5_ztf = ztf_rows(x['star'], x['hmjd_used'], NEAR)
+        win = df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= MONTH) & ((df['MJD'] - x['mjd_published']).abs() >= NIGHT)
+        c6 = {'same_filter_unit_rows': int((win & same).sum()),
+              'same_filter_unit_median_rel': float(df.loc[win & same, 'rel'].median()) if (win & same).any() else None,
+              'units_in_window': sorted(df.loc[win, 'unit'].unique().tolist()),
+              'units_all_seasons': sorted(df['unit'].unique().tolist())}
+        # independent support: another exposure of this star (not one of this case's exposures) low by > 5 sigma within 2 d,
+        # whose exposure shows no common mode (fewer than 2 other stars > 5 sigma low in it); common_mode is recorded per
+        # comparison exposure (added after the first run, for traceability; classes unchanged)
+        support = [q for q in c4 + c5_atlas if q['dev_sigma'] < -SIG and q['Obs'] not in obs and not common_mode(q['Obs'])]
+        support += [q for q in c5_ztf if q['catflags'] == 0 and q['dev_sigma'] > SIG]  # ZTF: magnitude larger = dimmer
+        c1_ok = all(x['checks'][k] for k in ('low_flux_in_uninjected_row', 'uJy_not_9999_code', 'Obs_published_once',
+                                             'Obs_filter_letter_matches_F', 'Obs_night_matches_MJD'))
+        cls = ('1 confirmed reading or processing error' if not c1_ok else
+               '2 data-quality clue, not proven' if (c3_clue or c2_clue) else
+               '3 variability supported by independent observations' if support else '4 flux anomaly undetermined')
+        rows_out.append({'star': x['star'], 'Obs': x['Obs'], 'filter': x['filter'], 'rel': x['rel'],
+                         'dev_sigma': x['dev_sigma_cal'], 'C1_ok': c1_ok, 'C2': c2, 'C2_clue': bool(c2_clue),
+                         'C3_other_stars_same_exposure': c3, 'C3_common_mode': bool(c3_clue), 'C4_same_night': c4,
+                         'C5_atlas_other_filter_2d': c5_atlas, 'C5_ztf_2d': c5_ztf, 'C6': c6,
+                         'independent_support': support, 'class': cls})
+    res[n] = {'checked': True, 'rows': rows_out}
+json.dump({'label': 'POST HOC; observed ATLAS and ZTF measurements (stored tables, local cache) and derived checks',
+           'selection': sel, 'cases': res}, open(O + 'check.json', 'w'), indent=1)
+open(O + 'check.json', 'a').write('\n')
+for n, v in res.items():
+    print(n, 'checked' if v['checked'] else 'not checked')
+    for r in v.get('rows', []):
+        print('  ', r['star'], r['Obs'], round(r['rel'], 3), round(r['dev_sigma'], 1), '|', r['class'], '| C2 clue', r['C2_clue'],
+              'C3 common', r['C3_common_mode'], 'n C3', len(r['C3_other_stars_same_exposure']), 'n C4', len(r['C4_same_night']),
+              'support', len(r['independent_support']))
