@@ -54,6 +54,9 @@ epoch times and limits, for the 63 A-insufficient W3 events.
 
 Otherwise a single rule is frozen (section 2) before any validation flux is read.
 
+**Outcome (added 06:28, after the run; `RESULT.md`):** stop condition 1 holds, with the ideal restoring 7 / 63.
+Sections 2–5 are not written, and no rule is frozen.
+
 **The only candidate:** section 2 can freeze only the joint definition written here. No threshold, window or extension
 choice is made after the step-1 numbers. Why a longer span is not a loosening by itself:
 - The extension adds only observed dim epochs. Under the injection model's assumption of one source fraction in both

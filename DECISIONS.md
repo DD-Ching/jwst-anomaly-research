@@ -5694,6 +5694,15 @@ confining radiation at a throat is found.
   - **Revisit if:** a nightly-cadence source without an account becomes reachable, or the owner wants a rule in which
     other-band dim points extend the run. That would be a method change with a new validation; the post hoc
     diagnostic puts 59 / 66 window g epochs inside the event.
+- **Addendum 2026-10-22 (g + r jointly, `results/w3_ztf/joint/RESULT.md`):**
+  - **Tested (worth check only):** one candidate in which both bands bound the event (`joint_extent`,
+    `edge_bounds_joint`). The g dims inside the event are real (64 / 64) and decide 14 / 88 sides, against 5 for #459.
+    3 come from the bracket alone and 4 from the span alone.
+  - **Ideal ceiling:** 7 / 63 insufficient W3 events, below 0.50.
+  - **Decision:** stop. No rule is frozen; bounds and v13 are unchanged.
+  - **Rejected:** a second window or threshold, and using non-adjacent g epochs (a different method).
+  - **Revisit if:** a source with epochs inside the shared r / g gaps exists, or the owner wants a model-fitting edge
+    test (new plan and validation).
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

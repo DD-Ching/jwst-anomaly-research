@@ -367,6 +367,49 @@ def test_altdata_edge_bounds_alt():
     assert v["edge_pre_class"] == "slow" and v["edge_pre_d"] == 7.0
 
 
+def test_joint_extent_and_edge_bounds_joint():
+    # r: run on days 40-59 (NDs, limit 6), baseline elsewhere, no r epochs on days 60-69
+    wz.EDGE_FRAC = 0.25
+    base = [(*x, 0.0) for x in mk(n=120, nd_at=set(range(40, 60)))]
+    base = [(x[0], x[1], x[2], 6.0, *x[4:]) for x in base]
+    gap = [x for i, x in enumerate(base) if not 60 <= i < 70]
+    run = (40, 59)
+
+    def g(t, dm, nd=False, lim=6.0):
+        return (float(t), dm, nd, lim, (1, 1, 1), 10_000 + int(t * 10), 16.0, 0.0)
+
+    # g dim at 61 and 63, g normal at 64: the edge moves to 63, span 23 d, U 1 d -> fast;
+    # with the g points only as edge points (#459) U is 5 d > 4.75 d -> insufficient
+    other = [g(61, 1.5), g(63, 2.0), g(64, 0.0)]
+    assert wz.joint_extent(gap, run, other) == (40.0, 63.0)
+    v = wz.edge_bounds_joint(gap, run, other)
+    assert v["joint_span"] == 23.0 and v["edge_post_max_d"] == 1.0 and v["edge_class"] == "fast"
+    b = wz.edge_bounds_alt(gap, run, 19.0, wz.alt_detections(other))
+    assert b["edge_post_class"] == "insufficient"
+    # an intermediate or ambiguous g detection stops the extension, and a significant one counts
+    # towards a slow edge
+    other = [g(61, 0.6), g(62, 2.0), g(68, 0.0)]
+    assert wz.joint_extent(gap, run, other) == (40.0, 59.0)
+    v = wz.edge_bounds_joint(gap, run, other)
+    assert v["edge_post_d"] == 2.0 and v["edge_post_class"] == "insufficient"
+    assert wz.joint_extent(gap, run, [g(61, 0.35, lim=0.5), g(62, 2.0)])[1] == 59.0
+    # a non-detection extends only when its limit implies dm >= 1; a shallow one is unknown
+    assert wz.joint_extent(gap, run, [g(61, 0.0, True, 3.0)])[1] == 61.0
+    assert wz.joint_extent(gap, run, [g(61, 0.0, True, 0.5), g(62, 1.5)])[1] == 62.0
+    assert wz.joint_extent(gap, run, [g(61, 0.0, True, 0.5)])[1] == 59.0
+    # at equal times a stop comes first; the extension never passes an r detection (day 70)
+    assert wz.joint_extent(gap, run, [g(61, 0.0), g(61, 2.0)])[1] == 59.0
+    assert wz.joint_extent(gap, run, [g(71, 2.0)])[1] == 59.0
+    # pre side: a 10-d r gap before the run; g dim at 37 extends it, g normal at 36 bounds it
+    gap_pre = [x for i, x in enumerate(base) if not 30 <= i < 40]
+    v = wz.edge_bounds_joint(gap_pre, (30, 49), [g(36, 0.0), g(37, 1.2)])
+    assert v["joint_lo"] == 37.0 and v["edge_pre_max_d"] == 1.0 and v["edge_pre_class"] == "fast"
+    # no other band: identical to bounds
+    v = wz.edge_bounds_joint(gap, run, [])
+    w = wz.edge_bounds(gap, run, 19.0)
+    assert {k: v[k] for k in w} == w
+
+
 def test_v15_configure_twice_does_not_stack():
     saved = (wz.LC_PIX, wz.LC_PART, wz.OBJ_PART, wz.CACHE, wz.SAMPLE, wz.VDIR, wz.VERSION, wz.N_MAX)
     try:

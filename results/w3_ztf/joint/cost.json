@@ -1,0 +1,16 @@
+{
+ "label": "derived; lc and objects sizes as ../v24/cost.json (same files; fetched rows 13,497 / 9,404 identical to ../v23 fetch_info.json); TAP from ../v23/dev*/exposures_summary.json; times from the session date -u prints",
+ "lc_mb": 1038.6,
+ "objects_mb": 168.4,
+ "tap_mb": 14.3,
+ "total_mb": 1221.3,
+ "budget_mb": 3000,
+ "stages_utc": {
+  "start": "06:19:32",
+  "plan_section_1_commit": "06:22:10 (be7b5c8)",
+  "re_read": "06:20:26-06:23:51",
+  "worth_check": "06:24:39-06:26:43",
+  "decision": "06:28"
+ },
+ "caches_deleted": false
+}
