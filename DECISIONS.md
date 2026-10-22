@@ -5764,8 +5764,8 @@ confining radiation at a throat is found.
     - One group is unchecked (cap of 3).
   - **Decision:** no real-variability evidence and no source to follow up. The line is archived as is, with no new
     rule, gap filling or photometry request.
-  - **Note:** a common-mode test across stars in the same exposure (as in Rest et al.'s ATLAS cleaning) would flag G1.
-    Adding it would be a new pre-registered method.
+  - **Note:** a common-mode test across stars in the same exposure would flag G1. Adding it would be a new
+    pre-registered method. Check the cleaning guide the ATLAS FAQ cites (Rest et al.) first.
   - **Revisit if:** the owner opens a new method round, or ATLAS exposure images become reachable without an account.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
