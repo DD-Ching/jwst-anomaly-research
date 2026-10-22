@@ -5,7 +5,8 @@ script ran). `simulated`/`derived`; no data. Both sides use lal IMRPhenomXPHM wi
 Needs cogwheel 1.6.0, lalsuite 7.26.16 and mpmath (cogwheel environment). Every point is
 scored only; nothing is optimised.
 
-  python scripts/x4_cog_exact.py checks   # -> results/x4/cog_exact/checks.json
+  python scripts/x4_cog_exact.py checks   # -> results/x4/cog_exact/checks.json (frozen)
+  python scripts/x4_cog_exact.py recheck  # -> results/x4/cog_exact/review_recheck.json (post hoc)
 """
 
 from __future__ import annotations
@@ -28,6 +29,7 @@ PAD = 64
 DT0 = 2.0  # half-width of cogwheel's t_refdet window: covers the 4 s cyclic period
 Q_MIN = 1 / 15
 CHI_MAX = 0.99
+CHI_TOL = 1e-12  # post hoc (review): rounding of |chi| = 0.99 through the spin rotation
 BOX_SEEDS = range(1001, 1013)
 TOL_F1, TOL_F2, TOL_F3 = 1e-8, 1e-6, 1e-6
 RA, DEC = 1.0, 0.3
@@ -121,6 +123,16 @@ def event(name, t):
     )
 
 
+def over_cap(par_dic):
+    """True if a spin exceeds |chi| 0.99. Tolerance added after review: without it, 730 of 2000
+    points at |chi| = 0.99 exactly were rejected by rounding in the N-frame rotation."""
+    return any(
+        np.hypot(np.hypot(par_dic[f"s{i}x_n"], par_dic[f"s{i}y_n"]), par_dic[f"s{i}z"])
+        > CHI_MAX + CHI_TOL
+        for i in (1, 2)
+    )
+
+
 def exact_likelihood_class():
     """The thin interface: cogwheel's exact FFT-grid lnL as `lnlike`, ASD drift 1, our spin cap."""
     from cogwheel.likelihood import CBCLikelihood
@@ -132,12 +144,8 @@ def exact_likelihood_class():
             self.par_dic_0 = par_dic_0
 
         def lnlike(self, par_dic):
-            for i in (1, 2):
-                if (
-                    np.hypot(np.hypot(par_dic[f"s{i}x_n"], par_dic[f"s{i}y_n"]), par_dic[f"s{i}z"])
-                    > CHI_MAX
-                ):
-                    return -np.inf
+            if over_cap(par_dic):
+                return -np.inf
             return self.lnlike_fft(par_dic)
 
     return ExactLikelihood
@@ -286,6 +294,82 @@ def checks():
     return out
 
 
+def recheck():
+    """Post hoc, after the independent review (the frozen checks.json is not rewritten): the
+    spin-cap edge, exact-boundary points, the prior-transform and unfold path a search would call,
+    and our grid loss (pad 64 vs 512) at every frozen point. Scores only; nothing is optimised."""
+    from cogwheel.waveform import WaveformGenerator
+
+    lo = np.array([bd[0] for bd in e.BOUNDS])
+    hi = np.array([bd[1] for bd in e.BOUNDS])
+    rng = np.random.default_rng(2001)
+    n_rej = 0
+    for _ in range(2000):
+        x = lo + rng.random(lo.size) * (hi - lo)
+        x[2] = x[5] = CHI_MAX
+        n_rej += over_cap(C.to_par(x))
+    mid = 0.5 * (lo + hi)
+    edge = {lab: mid.copy() for lab in ("q15_chi099", "tilts_pm1_chi099")}
+    edge["q15_chi099"][[1, 2, 5]] = 15.0, CHI_MAX, CHI_MAX
+    edge["tilts_pm1_chi099"][[2, 3, 5, 6]] = CHI_MAX, 1.0, CHI_MAX, -1.0
+    out = {
+        "label": "derived; post hoc review re-check of the X4 cogwheel exact-score round (not part "
+        "of the frozen checks; checks.json unchanged)",
+        "versions": C._versions(),
+        "chi_tol": CHI_TOL,
+        "cap_edge_rejected_of_2000": int(n_rej),
+        "cases": {},
+    }
+    pts = H.points()
+    for name in ("C1", "C2"):
+        t = target(name)
+        ev = event(name, t)
+        gen = WaveformGenerator.from_event_data(ev, C.APPROX)
+        x_mid = np.array([0.5 * (bd[0] + bd[1]) for bd in e.BOUNDS])
+        lk = exact_likelihood_class()(ev, gen, C.to_par(x_mid) | extrinsic([1.0, 0.0], 0, 1))
+        pri = prior(f_avg=float(lk.get_average_frequency(lk.par_dic_0)))
+        unfold_max = pri.unfold_apply(lambda *v, lk=lk, pri=pri: lk.lnlike(pri.transform(*v)))
+        frozen = {"truth": pts[name]["x_truth"], "found_s1k": pts[name]["x_found"]} | points()
+        rows = {}
+        for lab, x in (frozen | edge).items():
+            hp, hc = hpc(*e.to_cart(x))
+            ff, i, n, ac, _ = stat_argmax(t, hp, hc)
+            ext = extrinsic(ac, i, n)
+            par = C.to_par(x) | {
+                key: ext[key] for key in ("ra", "dec", "psi", "d_luminosity", "t_geocenter")
+            }
+            lnl = float(lk.lnlike(par))
+            sampled = pri.inverse_transform(**(par | {"f_ref": C.F_REF, "l1": 0.0, "l2": 0.0}))
+            vals = [sampled[p_] for p_ in pri.sampled_params]
+            lnl_path = float(lk.lnlike(pri.transform(*vals)))
+            folded = pri.fold(*vals)
+            r = {
+                "post_hoc_edge_point": lab in edge,
+                "FF_ours": ff,
+                "lnL": lnl,
+                "lnL_via_prior_transform_rel": (lnl_path - lnl) / abs(lnl),
+                "max_over_unfolds_minus_lnL": float(max(unfold_max(*folded))) - lnl,
+                "grid_loss_pad64_vs_512": e.stat(t, hp, hc, pad=512) - ff,
+            }
+            if lab in edge:
+                r |= check_point(lk, pri, gen, t, x)
+            rows[lab] = r
+        out["cases"][name] = rows
+    allr = [r for c in out["cases"].values() for r in c.values()]
+    edge_r = [r for r in allr if r["post_hoc_edge_point"]]
+    out["worst"] = {
+        "lnL_via_prior_transform_rel": max(abs(r["lnL_via_prior_transform_rel"]) for r in allr),
+        "max_over_unfolds_minus_lnL": max(r["max_over_unfolds_minus_lnL"] for r in allr),
+        "grid_loss_pad64_vs_512": max(r["grid_loss_pad64_vs_512"] for r in allr),
+        "edge_F1": max(r["F1"] for r in edge_r),
+        "edge_F2": max(r["F2"] for r in edge_r),
+        "edge_F3": max(r["F3"] for r in edge_r),
+        "edge_lnL_finite": all(np.isfinite(r["lnL"]) for r in edge_r),
+        "edge_in_cube": all(r["F1b_in_cube"] for r in edge_r),
+    }
+    return out
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     if argv[:1] == ["checks"]:
@@ -293,6 +377,12 @@ def main(argv=None) -> int:
         out = checks()
         (OUT_DIR / "checks.json").write_text(json.dumps(out, indent=1, default=float) + "\n")
         print(json.dumps({"worst": out["worst"], "pass": out["pass"]}))
+    elif argv[:1] == ["recheck"]:
+        out = recheck()
+        (OUT_DIR / "review_recheck.json").write_text(
+            json.dumps(out, indent=1, default=float) + "\n"
+        )
+        print(json.dumps(out["worst"] | {"cap_edge_rejected": out["cap_edge_rejected_of_2000"]}))
     else:
         print(__doc__)
     return 0
