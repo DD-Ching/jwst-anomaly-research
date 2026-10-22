@@ -1,0 +1,95 @@
+# PLAN section 5: pooled A / B outcomes on the 40 stars, the success condition, Wilson intervals, the development-star
+# breakdown and the completion status from tasks.json. Usage: python result_script.py.txt
+import json
+from math import sqrt
+
+T = {p: json.load(open(f'results/w3_ztf/atlas40/trial_{p}.json')) for p in ('4991', '2344')}
+tasks = json.load(open('results/w3_ztf/atlas40/tasks.json'))
+targets = json.load(open('results/w3_ztf/atlas40/targets.json'))['targets']
+dev = {t['key'] for t in targets if t['dev_461']}
+ev = [e for p in T for e in T[p]['events']]
+
+
+def wilson(k, n, z=1.96):
+    if n == 0:
+        return None
+    p = k / n
+    d = 1 + z * z / n
+    c = (p + z * z / (2 * n)) / d
+    h = z * sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return [max(0.0, c - h), min(1.0, c + h)]
+
+
+def success(restored, a_insufficient, fade_pass, fade_n):
+    """#459 / ASAS-SN plan section 3: restored / A-insufficient >= 0.50 and fade passes / fade injections <= 0.10."""
+    return restored / a_insufficient >= 0.50 and fade_pass / fade_n <= 0.10
+
+
+def tally(es, b='b'):
+    w3 = [e for e in es if e['kind'] != 'fade']
+    fd = [e for e in es if e['kind'] == 'fade']
+    ins = [e for e in w3 if e['a'] == 'edge_insufficient']
+    trans = {}
+    for e in es:
+        key = f"{'fade' if e['kind'] == 'fade' else 'w3'}: {e['a']} -> {e[b]}"
+        trans[key] = trans.get(key, 0) + 1
+    d = {'w3_injections': len(w3), 'fade_injections': len(fd), 'w3_a_insufficient': len(ins),
+         'w3_restored': sum(e[b] == 'recovered' for e in ins), 'w3_recovered_a': sum(e['a'] == 'recovered' for e in w3),
+         'w3_recovered_b': sum(e[b] == 'recovered' for e in w3),
+         'w3_lost_in_b': sum(e['a'] == 'recovered' and e[b] != 'recovered' for e in w3),
+         'fade_pass_a': sum(e['a'] == 'recovered' for e in fd), 'fade_pass_b': sum(e[b] == 'recovered' for e in fd),
+         'fade_insufficient_a': sum(e['a'] == 'edge_insufficient' for e in fd),
+         'fade_insufficient_to_slow': sum(e['a'] == 'edge_insufficient' and e[b] == 'edge_slow' for e in fd),
+         'transitions': trans}
+    d['restored_fraction'] = d['w3_restored'] / d['w3_a_insufficient'] if d['w3_a_insufficient'] else None
+    d['restored_wilson95'] = wilson(d['w3_restored'], d['w3_a_insufficient'])
+    d['fade_pass_fraction_b'] = d['fade_pass_b'] / d['fade_injections'] if d['fade_injections'] else None
+    d['fade_pass_wilson95'] = wilson(d['fade_pass_b'], d['fade_injections'])
+    return d
+
+
+status = {}
+for t in targets:
+    s_ = tasks.get(t['key'], {}).get('status', 'not_submitted')
+    status[s_] = status.get(s_, 0) + 1
+missing = {int(t['key']) for t in targets if tasks.get(t['key'], {}).get('status') != 'done'}
+# review fix: complete only if every target ended with data or a definitive "finished without result"
+ended = all(tasks.get(t['key'], {}).get('status') in ('done', 'finished_without_result') for t in targets)
+# review fix: every star with data must have its ATLAS points in the trial events (no stale trial file)
+for e in ev:
+    if e['carrier'] not in missing and not e['atlas']:
+        raise SystemExit(f'star {e["carrier"]} has data but its trial events have no ATLAS points; rerun prep and trial')
+prim = tally(ev)
+# review fix: the fixed denominators of PLAN section 5
+assert (prim['w3_injections'], prim['w3_a_insufficient'], prim['fade_injections']) == (154, 63, 79), prim
+miss_ins = sum(e['a'] == 'edge_insufficient' and e['kind'] != 'fade' and e['carrier'] in missing for e in ev)
+miss_fade_ins = sum(e['a'] == 'edge_insufficient' and e['kind'] == 'fade' and e['carrier'] in missing for e in ev)
+out = {'label': 'derived (trial_<npix>.json, tasks.json); simulated events; ATLAS observed',
+       'tasks_status': status, 'stars_with_atlas': sum(tasks.get(t['key'], {}).get('status') == 'done' for t in targets),
+       'stars_without_atlas': sorted(str(k) for k in missing), 'complete': ended,
+       'primary_b': prim,
+       'success': success(prim['w3_restored'], prim['w3_a_insufficient'], prim['fade_pass_b'], prim['fade_injections']),
+       'bounds_if_incomplete': None if ended else {
+           'restored_lower': prim['w3_restored'], 'restored_upper': prim['w3_restored'] + miss_ins,
+           'fade_pass_best': prim['fade_pass_b'], 'fade_pass_worst': prim['fade_pass_b'] + miss_fade_ins,
+           'success_best_case': success(prim['w3_restored'] + miss_ins, 63, prim['fade_pass_b'], 79),
+           'success_worst_case': success(prim['w3_restored'], 63, prim['fade_pass_b'] + miss_fade_ins, 79)},
+       'secondary_quoted_sigma': tally(ev, 'b_quoted'), 'secondary_keep_9999': tally(ev, 'b_keep9999'),
+       'without_dev_stars': tally([e for e in ev if str(e['carrier']) not in dev]),
+       'dev_stars_only': tally([e for e in ev if str(e['carrier']) in dev]),
+       'per_area': {p: tally(T[p]['events']) for p in T}}
+b = out['bounds_if_incomplete']
+out['verdict'] = ('pass' if out['success'] else 'fail') if ended else (
+    'pass regardless of the missing stars' if b['success_worst_case'] else
+    'fail regardless of the missing stars' if not b['success_best_case'] else 'undetermined (incomplete)')
+json.dump({'label': 'derived (trial_<npix>.json calibration)', 'stars': {k: v for p in T for k, v in T[p]['calibration'].items()}},
+          open('results/w3_ztf/atlas40/calib.json', 'w'), indent=1)
+open('results/w3_ztf/atlas40/calib.json', 'a').write('\n')
+json.dump(out, open('results/w3_ztf/atlas40/result.json', 'w'), indent=1)
+open('results/w3_ztf/atlas40/result.json', 'a').write('\n')
+print(json.dumps({k: out[k] for k in ('tasks_status', 'stars_with_atlas', 'complete', 'success', 'verdict', 'bounds_if_incomplete')}, indent=1))
+print(json.dumps({k: v for k, v in prim.items() if k != 'transitions'}, indent=1))
+print(json.dumps(prim['transitions'], indent=1))
+for name in ('secondary_quoted_sigma', 'secondary_keep_9999', 'without_dev_stars'):
+    d = out[name]
+    print(name, d['w3_restored'], '/', d['w3_a_insufficient'], 'fade', d['fade_pass_b'], '/', d['fade_injections'], 'lost', d['w3_lost_in_b'])

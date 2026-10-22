@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: W3 ZTF × ATLAS paired injections on the 40 calibration stars: not completed (17 / 40 stars by the deadline); fails regardless of the missing stars (6 / 63 restored, best case 27 / 63; 0 / 79 fade passes; 4 recovered W3 lost)
+- **Plan:** `results/w3_ztf/atlas40/PLAN.md`. Method, denominators and bounds were committed before any ATLAS flux;
+  review fixes came before any outcome. 4 #461 stars are development data. Feasibility trial, not validation.
+- **Acquisition:**
+  - Shared Data Lab token; ≤ 2 tasks in flight; 19 submitted, none resubmitted, 0 HTTP 429 on submission.
+  - The queue ran one task at a time: 17 done, 2 unfinished at 11:49 (deleted unused), 21 not submitted.
+  - 6.96 MB downloaded. Compact tables were kept in `phot/` and the raw files deleted.
+- **Measurements:** 88.7–97.0 % of rows pass the FAQ cuts. Error scale k is 1.48–8.68 (median 2.19) over 108
+  (filter, unit) groups. 2 rows reach 9999 (excluded by rule).
+- **Result** (`result.json`; simulated injections):
+  - A = v24 for every event.
+  - B restores 6 / 63 (6 / 42 on the 17 stars with data) and loses 4 recovered W3 to "slow". It moves 4 insufficient
+    W3 to "slow" and 3 fades from insufficient to slow.
+  - Fade passes 0 / 79.
+  - Quoted σ and keeping 9999 rows: identical for every event. Without the development stars: 5 / 50.
+- **Post hoc diagnostic** (`diag_<npix>.json`):
+  - The restorations come from added ATLAS baseline epochs.
+  - 7 of the 8 W3 → "slow" moves come from single observed ATLAS dips (rel 0.21–0.68, 5.7–43 σ) where the injected
+    model is at baseline. These are not vetted.
+- **Failed approach:** ATLAS as added edge points for the bounds rule (D-104 addendum). No validation, no retry.
+- **Handoff:** the W3 ZTF edge-information line has now failed with ZTF g, g + r jointly and ATLAS. The next step
+  is the owner's call.
 ## 2026-10-22: Abell 370 CANUCS DR1 reference route: gate K fails (rms 2.34″); no prediction read; line stopped
 - **Plan** (`results/lens_consistency/abell370_canucsref/PLAN.md`, frozen and pushed first): gate K of
   `m0417_images` on the 115 images of the pinned `abell370-canucs` model (z fixed, ASSUMPTION); stop on a fail.
