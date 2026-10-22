@@ -1,0 +1,62 @@
+# PLAN section 5 decision, computed from the committed trial outputs (trial_<npix>.json, trial_events_<npix>.json.gz),
+# with the inventory's coverage ceiling (inventory.json) and the per-star fate of all 40 stars.
+# Usage: python result_script.py.txt
+import gzip, json
+
+A = ('4991', '2344')
+tr = {p: json.load(open(f'results/w3_ztf/altdata/trial_{p}.json')) for p in A}
+ev = {p: json.loads(gzip.open(f'results/w3_ztf/altdata/trial_events_{p}.json.gz').read()) for p in A}
+inv = json.load(open('results/w3_ztf/altdata/inventory.json'))
+
+
+def success(restored, a_insufficient, fade_pass_b, fade_n):
+    """PLAN section 5: restored / A-insufficient >= 0.50 and B fade passes / fade injections <= 0.10 (pooled)."""
+    return restored / a_insufficient >= 0.50 and fade_pass_b / fade_n <= 0.10
+
+
+tot = {'w3_a_insufficient': 0, 'w3_restored': 0, 'w3_a_recovered_lost_in_b': 0, 'fade_n': 0, 'fade_pass_a': 0,
+       'fade_pass_b': 0, 'fade_a_insufficient': 0, 'fade_insufficient_to_slow': 0, 'w3_sides': 0, 'w3_sides_alt_in_window': 0,
+       'w3_sides_alt_normal_in_window': 0, 'w3_sides_fast_in_b': 0, 'w3_sides_slow_in_b': 0, 'g_detections_uninjected': 0}
+per_area = {}
+for p in A:
+    s = tr[p]['summary']
+    d = {'w3_a_insufficient': s['w3']['a_insufficient'], 'w3_restored': s['w3']['b_recovered_of_a_insufficient'],
+         'w3_a_recovered_lost_in_b': sum(e['a'] == 'recovered' and e['b'] != 'recovered' for e in ev[p] if e['kind'] != 'fade'),
+         'fade_n': s['injections_on_selected']['fade'], 'fade_pass_a': s['fade']['a'].get('recovered', 0),
+         'fade_pass_b': s['fade']['b'].get('recovered', 0), 'fade_a_insufficient': s['fade']['a_insufficient'],
+         'fade_insufficient_to_slow': s['fade']['transitions'].get('edge_insufficient -> edge_slow', 0),
+         'w3_sides': s['w3']['a_insufficient_sides'], 'w3_sides_alt_in_window': s['w3']['sides_with_alt_in_window'],
+         'w3_sides_alt_normal_in_window': int(s['w3']['sides_with_alt_normal_in_window']),
+         'w3_sides_fast_in_b': s['w3']['sides_b_class']['fast'], 'w3_sides_slow_in_b': s['w3']['sides_b_class']['slow'],
+         'g_detections_uninjected': sum(x['g_detections'] for x in tr[p]['stars'].values())}
+    per_area[p] = d
+    for k in tot:
+        tot[k] += d[k]
+ceiling = inv['summary']['ztf_g']['w3']['events_all_sides_observed']
+dec = {'restored_fraction': tot['w3_restored'] / tot['w3_a_insufficient'], 'fade_pass_fraction_b': tot['fade_pass_b'] / tot['fade_n'],
+       'success': success(tot['w3_restored'], tot['w3_a_insufficient'], tot['fade_pass_b'], tot['fade_n']),
+       'coverage_ceiling_events': ceiling, 'coverage_ceiling_fraction': ceiling / tot['w3_a_insufficient']}
+stars = {}
+for p in A:
+    for k, x in tr[p]['stars'].items():
+        es = [e for e in ev[p] if str(e['carrier']) == k]
+        stars[k] = {'area': p, 'used': True, 'g_detections': x['g_detections'], 'r_epochs': x['r_epochs'],
+                    'w3_events': sum(e['kind'] != 'fade' for e in es),
+                    'w3_a_insufficient': sum(e['kind'] != 'fade' and e['a'] == 'edge_insufficient' for e in es),
+                    'w3_restored': sum(e['kind'] != 'fade' and e['a'] == 'edge_insufficient' and e['b'] == 'recovered' for e in es),
+                    'fade_events': sum(e['kind'] == 'fade' for e in es)}
+# review fix: the post hoc diagnostic replays the same events; check it saw the same A-insufficient sides as the trial
+# and matched every side to an inventory side (no assert of A against v24 inside the diagnostic itself)
+checks = {}
+for p in A:
+    dg = json.load(open(f'results/w3_ztf/altdata/diag_posthoc_{p}.json'))
+    s = tr[p]['summary']
+    checks[p] = {'w3_sides_equal': dg['summary']['w3']['sides'] == s['w3']['a_insufficient_sides'],
+                 'fade_sides_equal': dg['summary']['fade']['sides'] == s['fade']['a_insufficient_sides'],
+                 'every_side_matched_inventory': all(x['side_class'] is not None for x in dg['sides'])}
+out = {'label': 'derived (trial outputs; inventory.json); simulated events', 'pooled': tot, 'per_area': per_area,
+       'decision': dec, 'stars': stars, 'stars_used': sum(s['used'] for s in stars.values()),
+       'diag_consistency_checks': checks}
+json.dump(out, open('results/w3_ztf/altdata/result.json', 'w'), indent=1)
+open('results/w3_ztf/altdata/result.json', 'a').write('\n')
+print(json.dumps({k: out[k] for k in ('pooled', 'per_area', 'decision', 'stars_used', 'diag_consistency_checks')}, indent=1))

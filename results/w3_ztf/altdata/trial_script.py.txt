@@ -1,0 +1,170 @@
+# Paired trial (PLAN sections 4-6): replay the v23 events exactly as ../v24/step12_script.py.txt (same samples,
+# carriers, seeds and noise), check that bounds on ZTF r alone (A) gives the stored v24 outcome for every event, and for
+# each event whose carrier is one of the 40 stars also record B = bounds with the selected source's points as added edge
+# information (wz.edge_bounds_alt). The other tests (common mode, one-off, achromatic) and run finding are unchanged.
+# Usage: python trial_script.py.txt <npix> <seed offset>   (after the v23 dev setup, fetch and exposures stages)
+import gzip, json, sys, time
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+
+P, OFF = int(sys.argv[1]), int(sys.argv[2])
+wz.configure(P, f'v23/dev{P}')
+T0 = time.time()
+sel = json.load(open('results/w3_ztf/asassn/selection.json'))
+keys = {r['key'] for r in sel['areas'][str(P)]['selected']}
+assert len(keys) == 20
+stored = {(e['kind'], e['i']): e for e in json.loads(gzip.open(f'results/w3_ztf/v24/step12_events_{P}.json.gz').read())}
+groups = [g for g in json.loads(wz.SAMPLE.read_text())['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+wz.EDGE_RULE = 'time'
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        base = {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}
+        carriers.append((g, s, o, base))
+OTHERS = ('common_mode_ok', 'oneoff_ok', 'achromatic_ok')
+
+
+def alt_points(oi):
+    """ZTF g (PLAN section 4): detections of the injected g series with sigma from the epoch's maglimit (SNR 5 at the
+    limit, as in apply_dmag); non-detections are not measurements and are left out."""
+    return [(x[0], x[1], 0.2171 * 10 ** (0.4 * (x[1] - x[3]))) for x in oi if not x[2]]
+
+
+def outcome(hits, rule):
+    """As ../v24/step12_script.py.txt: recovered / edge_slow / edge_insufficient / other:<first failing test>."""
+    if any(h['pass'] for h in hits):
+        return 'recovered'
+    edge_only = [h for h in hits if all(h[k] for k in OTHERS)]
+    if edge_only:
+        if rule == 'bounds' and any(h.get('edge_class') == 'insufficient' for h in edge_only):
+            return 'edge_insufficient'
+        return 'edge_slow'
+    first = min((next(k for k in OTHERS if not h[k]) for h in hits), key=OTHERS.index)
+    return 'other:' + first
+
+
+def outcome_b(si, hits, alt):
+    """B: the bounds hits with the edge class recomputed by edge_bounds_alt; the other tests as in A."""
+    tt = np.array([x[0] for x in si])
+    out = []
+    for h in hits:
+        i = int(np.flatnonzero(tt == h['t_start'])[0]); j = int(np.flatnonzero(tt == h['t_end'])[0])
+        span = max(tt[j] - tt[i], 1.0)
+        eb = wz.edge_bounds_alt(si, (i, j), span, alt)
+        ok = all(h[k] for k in OTHERS)
+        thr = wz.EDGE_FRAC * span
+        sides = {}
+        for sd in ('pre', 'post'):
+            if h[f'edge_{sd}_class'] != 'insufficient':
+                continue
+            lo, hi = (tt[i] - thr, tt[i]) if sd == 'pre' else (tt[j], tt[j] + thr)
+            inw = [a for a in alt if (lo <= a[0] < hi if sd == 'pre' else lo < a[0] <= hi)]
+            sides[sd] = {'alt_in_window': len(inw),
+                         'alt_normal_in_window': sum(a[1] < wz.INTER[0] and 1.0857 / a[2] >= wz.ALT_MIN_SNR for a in inw),
+                         'a': h[f'edge_{sd}_class'], 'b': eb[f'edge_{sd}_class']}
+        out.append({**h, 'pass': ok and eb['edge_class'] == 'fast', 'edge_class': eb['edge_class'],
+                    'insufficient': ok and eb['edge_class'] == 'insufficient', 'a_edge_class': h['edge_class'], 'sides': sides})
+    return out
+
+
+def run(kind, k, g, si, oi, hits_bounds, hits_time):
+    a_b = outcome(hits_bounds, 'bounds') if hits_bounds else 'not_flagged'
+    a_t = outcome(hits_time, 'time') if hits_bounds else 'not_flagged'  # as step12: both rules share the hits
+    st = stored[(kind, k)]
+    assert (a_t, a_b) == (st['time'], st['bounds']), (kind, k, a_t, a_b, st['time'], st['bounds'])
+    if g['key'] not in keys:
+        return None
+    rec = {'kind': kind, 'i': k, 'carrier': g['key'], 'time': a_t, 'a': a_b, 'b': a_b, 'n_alt': 0, 'runs': []}
+    alt = alt_points(oi) if oi else []
+    rec['n_alt'] = len(alt)
+    rec['n_alt_normal'] = sum(a[1] < wz.INTER[0] and 1.0857 / a[2] >= wz.ALT_MIN_SNR for a in alt)
+    if hits_bounds:
+        hb = outcome_b(si, hits_bounds, alt)
+        rec['b'] = outcome(hb, 'bounds')
+        rec['runs'] = [{'others_ok': all(h[x] for x in OTHERS), 'a': h['a_edge_class'], 'b': h['edge_class'], 'sides': h['sides']}
+                       for h in hb]
+    return rec
+
+
+def screen_both(si, oi):
+    out = {}
+    for rule in ('time', 'bounds'):
+        wz.EDGE_RULE = rule
+        out[rule] = wz.screen(si, oi, cov)
+    return out
+
+
+ev = []
+n_sel = {}
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    kind = f'rho{rho}_blend{blend:g}_tE{te:g}'
+    rng = np.random.default_rng(1100 + c + OFF)
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        sc = screen_both(si, oi)
+        hits = {r: [x for x in v if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
+                    and (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+        n_sel[kind] = n_sel.get(kind, 0) + (g['key'] in keys)
+        r_ = run(kind, k, g, si, oi, hits['bounds'], hits['time'])
+        if r_:
+            ev.append(r_)
+rng = np.random.default_rng(1201 + OFF)
+for k in range(1000):
+    g, s, o, base = carriers[rng.integers(len(carriers))]
+    t = np.array([x[0] for x in s])
+    model = wz.control_model('fade', t, rng)
+    si = wz.apply_dmag(s, model(t), cov, rng)
+    oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+    sc = screen_both(si, oi)
+    hits = {r: [x for x in v if (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+    n_sel['fade'] = n_sel.get('fade', 0) + (g['key'] in keys)
+    r_ = run('fade', k, g, si, oi, hits['bounds'], hits['time'])
+    if r_:
+        ev.append(r_)
+
+summ = {'injections_on_selected': n_sel}
+for grp, f in (('w3', lambda e: e['kind'] != 'fade'), ('fade', lambda e: e['kind'] == 'fade')):
+    es = [e for e in ev if f(e)]
+    trans = {}
+    for e in es:
+        trans[f"{e['a']} -> {e['b']}"] = trans.get(f"{e['a']} -> {e['b']}", 0) + 1
+    ins = [e for e in es if e['a'] == 'edge_insufficient']
+    sides = [sd for e in ins for r in e['runs'] if r['others_ok'] for sd in r['sides'].values()]
+    summ[grp] = {
+        'events': len(es), 'a': {}, 'b': {}, 'transitions': trans,
+        'a_insufficient': len(ins), 'b_recovered_of_a_insufficient': sum(e['b'] == 'recovered' for e in ins),
+        'a_insufficient_sides': len(sides), 'sides_with_alt_in_window': sum(sd['alt_in_window'] > 0 for sd in sides),
+        'sides_with_alt_normal_in_window': sum(sd['alt_normal_in_window'] > 0 for sd in sides),
+        'sides_b_class': {c: sum(sd['b'] == c for sd in sides) for c in ('fast', 'slow', 'insufficient')},
+        'alt_points_in_a_insufficient_windows': sum(sd['alt_in_window'] for sd in sides),
+    }
+    for e in es:
+        summ[grp]['a'][e['a']] = summ[grp]['a'].get(e['a'], 0) + 1
+        summ[grp]['b'][e['b']] = summ[grp]['b'].get(e['b'], 0) + 1
+stars = {}  # the uninjected g series of each selected star: the observations B can add
+for g, s, o, base in carriers:
+    if g['key'] in keys:
+        a = alt_points(o) if o else []
+        stars[str(g['key'])] = {'r_epochs': len(s), 'g_epochs': len(o), 'g_detections': len(a),
+                                'g_normal': sum(x[1] < wz.INTER[0] and 1.0857 / x[2] >= wz.ALT_MIN_SNR for x in a)}
+summ['selected_carriers'] = len(stars)
+res = {'label': 'derived; simulated events replayed (v23 seeds); ZTF DR24 g-band epochs observed, injected events simulated',
+       'npix': P, 'seed_offset': OFF, 'carriers': len(carriers), 'check_a_equals_stored_v24': True,
+       'summary': summ, 'stars': stars, 'seconds': round(time.time() - T0, 1)}
+json.dump(res, open(f'results/w3_ztf/altdata/trial_{P}.json', 'w'), indent=1, default=float)
+open(f'results/w3_ztf/altdata/trial_{P}.json', 'a').write('\n')
+gzip.open(f'results/w3_ztf/altdata/trial_events_{P}.json.gz', 'wt').write(json.dumps(ev, default=float) + '\n')
+print(json.dumps(summ, indent=1, default=float))

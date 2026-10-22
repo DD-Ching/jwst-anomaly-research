@@ -21,6 +21,45 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   drop images that a fitted source keeps (D115a: family χ² 4924.8 → 2.77).
 - **Handoff:** next, a Lenstool re-fit with 8515's σ free (owner machine) or a σ × 0.75–0.85 scan with every source
   fitted; then Abell 370 (gate K first; expected to fail).
+## 2026-10-22: W3 ZTF g + r jointly bounding the event: real but small gain; 7 / 63 restored (oracle 16 / 63); stopped at the worth check
+- **Plan** (`results/w3_ztf/joint/PLAN.md`): one candidate, defined in §1 before the run.
+  - It extends A's r run through contiguous dim epochs of either band (a deep non-detection counts as an upper limit;
+    shallow, missing and flagged epochs are unknown) and stops at the first other detection.
+  - Bounds then uses both bands.
+  - Stop if the ideal (noise-free) restoration is < 0.50, if the gain comes only from the span, or if extensions are
+    not real.
+- **Result** (`RESULT.md`, `decision.json`). The v24 and #459 outcomes were reproduced for every event.
+  - On the 88 undecided W3 sides, joint decides 14 fast, against #459's 5. Of the 9 new: 2 from the bracket only,
+    3 from the span only, 1 from either, 3 need both.
+  - 64 / 64 extending g epochs are truly dim (evaluation). Joint makes no W3 side slow and 1 of 18 fade sides fast.
+  - **7 / 63 events restored** (noise-free replay and observed alike); a generous post hoc oracle gives 16 / 63. Stop.
+    No rule frozen, no development comparison, no validation, no second method.
+- **Failed approach:** the g dims sit next to the r edge (median 1.97 d), and both bands share the gap after it. The
+  bracket shrinks to 0.97 and the span grows to 1.06 (medians).
+- **Handoff:** W3 ZTF edge information is exhausted for these stars. `joint_extent`, `edge_bounds_joint` and the
+  `edges` argument are tested but not adopted.
+
+## 2026-10-22: W3 ZTF alternative data for the 40 ASAS-SN-plan stars: ZTF g restores 3 / 63 insufficient W3 events; not continued
+- **Plan** (`results/w3_ztf/altdata/PLAN.md`): selection rule committed before the inventory output was read (the
+  queries had started at 05:30:34, the commit was at 05:32:14, `cost.json`; labelled deviation); trial, criteria and `edge_bounds_alt` (tested) frozen
+  before any flux. Owner brief: 2 h, ≤ 2 GB, ≤ 3 sources compared, ≤ 1 tested. After review, `edge_bounds` calls
+  `edge_bounds_alt` (one implementation; the trial rerun gave identical events).
+- **Inventory** (`inventory.json`): W3 sides covered in the window, out of 88 bounds-insufficient sides:
+  - ZTF g 36 (19 / 63 events fully);
+  - NEOWISE-R 3;
+  - TESS 0 (no sector overlaps; 21″ pixels).
+  - Gaia DR3 and PS1 end before the windows; ATLAS needs an account; ASAS-SN excluded by the brief.
+- **Trial** (`RESULT.md`, `result.json`): A (ZTF r only) is the stored v24 outcome, replayed exactly; B adds the g
+  detections as edge points.
+  - W3: 3 of 63 insufficient events restored (0.048 < 0.50); no W3 recovery lost.
+  - Fades: 0 / 79 pass in both A and B; 2 of 12 insufficient fades become slow.
+  - Success false. The coverage ceiling (19 / 63 = 0.30) is also below 0.50.
+  - Post hoc: 59 of the 66 g epochs in the W3 windows fall inside the injected event.
+- **Failed approach:** another band of the same survey sees the same gap mostly while the event is still in progress.
+  Under bounds (run from r alone) those epochs cannot bound the edge.
+- **Handoff:** the route is stopped. Reopen with a nightly-cadence source reachable without an account, or an owner
+  rule letting other-band dim points extend the run (new plan and validation). The ASAS-SN plan stays paused.
+  D-104 addendum.
 
 ## 2026-10-22: MACS1149 third-field gate: the CANUCS DR1 reference passes C2 with a containing-source rule; no flag
 - **Plan** (`results/lens_consistency/macs1149_canucsref/PLAN.md`, frozen with the rule function and tests): CANUCS v1

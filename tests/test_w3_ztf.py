@@ -321,6 +321,100 @@ def test_v23_edge_bounds_gap_is_insufficient_not_fast():
         wz.EDGE_RULE = "count"
 
 
+def test_altdata_edge_bounds_alt():
+    # run on days 40-59 (span 19 d, threshold 4.75 d); a 10-d r gap after the run (days 60-69)
+    wz.EDGE_FRAC = 0.25
+    dim = set(range(40, 60))
+    base = [(*x, 0.0) for x in mk(n=120, nd_at=dim)]
+    base = [(x[0], x[1], x[2], 6.0, *x[4:]) for x in base]
+    gap = [x for i, x in enumerate(base) if not 60 <= i < 70]
+    slow = [(x[0], 0.6, *x[2:]) if i == 67 else x for i, x in enumerate(base)]
+    # no alt point: identical to edge_bounds
+    for s in (base, gap, slow):
+        assert wz.edge_bounds_alt(s, (40, 59), 19.0, []) == wz.edge_bounds(s, (40, 59), 19.0)
+    # a normal alt point (S/N 10) 3 d after the run fills the gap: fast
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(62.0, 0.05, 0.1)])
+    assert (
+        v["edge_post_class"] == "fast" and v["edge_post_max_d"] == 3.0 and v["edge_class"] == "fast"
+    )
+    # the same point at S/N < 3, or 6 d after the run (> 4.75 d), does not decide the side
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(62.0, 0.05, 0.5)])
+    assert v["edge_post_class"] == "insufficient"
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(65.0, 0.05, 0.1)])
+    assert v["edge_post_class"] == "insufficient" and v["edge_post_max_d"] == 6.0
+    # a significant alt intermediate 8 d after the run: slow; an ambiguous one does not decide
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(67.0, 0.6, 0.05)])
+    assert v["edge_post_class"] == "slow" and v["edge_post_d"] == 8.0
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(67.0, 0.35, 0.05)])
+    assert v["edge_post_class"] == "insufficient"
+    # alt points inside the run are never used, and an alt normal point nearer than a significant
+    # intermediate does not bound the edge (as for r epochs in edge_bounds)
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(50.0, 0.0, 0.01)])
+    assert v == wz.edge_bounds(gap, (40, 59), 19.0)
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(61.0, 0.0, 0.05), (63.0, 0.7, 0.05)])
+    assert v["edge_post_d"] == 4.0 and v["edge_post_max_d"] == 11.0
+    assert v["edge_post_class"] == "insufficient"
+    # an alt point without a finite positive sigma is not used
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(67.0, 0.6, 0.0), (62.0, 0.05, np.nan)])
+    assert v == wz.edge_bounds(gap, (40, 59), 19.0)
+    # pre side: a 10-d r gap before the run (days 30-39); an alt normal point 2 d before decides it,
+    # a significant alt intermediate 7 d before makes it slow
+    gap_pre = [x for i, x in enumerate(base) if not 30 <= i < 40]
+    assert wz.edge_bounds_alt(gap_pre, (30, 49), 19.0, [])["edge_pre_class"] == "insufficient"
+    v = wz.edge_bounds_alt(gap_pre, (30, 49), 19.0, [(38.0, 0.0, 0.05)])
+    assert v["edge_pre_class"] == "fast" and v["edge_pre_max_d"] == 2.0
+    v = wz.edge_bounds_alt(gap_pre, (30, 49), 19.0, [(33.0, 0.6, 0.05)])
+    assert v["edge_pre_class"] == "slow" and v["edge_pre_d"] == 7.0
+
+
+def test_joint_extent_and_edge_bounds_joint():
+    # r: run on days 40-59 (NDs, limit 6), baseline elsewhere, no r epochs on days 60-69
+    wz.EDGE_FRAC = 0.25
+    base = [(*x, 0.0) for x in mk(n=120, nd_at=set(range(40, 60)))]
+    base = [(x[0], x[1], x[2], 6.0, *x[4:]) for x in base]
+    gap = [x for i, x in enumerate(base) if not 60 <= i < 70]
+    run = (40, 59)
+
+    def g(t, dm, nd=False, lim=6.0):
+        return (float(t), dm, nd, lim, (1, 1, 1), 10_000 + int(t * 10), 16.0, 0.0)
+
+    # g dim at 61 and 63, g normal at 64: the edge moves to 63, span 23 d, U 1 d -> fast;
+    # with the g points only as edge points (#459) U is 5 d > 4.75 d -> insufficient
+    other = [g(61, 1.5), g(63, 2.0), g(64, 0.0)]
+    assert wz.joint_extent(gap, run, other) == (40.0, 63.0)
+    v = wz.edge_bounds_joint(gap, run, other)
+    assert v["joint_span"] == 23.0 and v["edge_post_max_d"] == 1.0 and v["edge_class"] == "fast"
+    b = wz.edge_bounds_alt(gap, run, 19.0, wz.alt_detections(other))
+    assert b["edge_post_class"] == "insufficient"
+    # an intermediate or ambiguous g detection stops the extension, and a significant one counts
+    # towards a slow edge
+    other = [g(61, 0.6), g(62, 2.0), g(68, 0.0)]
+    assert wz.joint_extent(gap, run, other) == (40.0, 59.0)
+    v = wz.edge_bounds_joint(gap, run, other)
+    assert v["edge_post_d"] == 2.0 and v["edge_post_class"] == "insufficient"
+    assert wz.joint_extent(gap, run, [g(61, 0.35, lim=0.5), g(62, 2.0)])[1] == 59.0
+    # a non-detection extends only when its limit implies dm >= 1; a shallow one is unknown
+    assert wz.joint_extent(gap, run, [g(61, 0.0, True, 3.0)])[1] == 61.0
+    assert wz.joint_extent(gap, run, [g(61, 0.0, True, 0.5), g(62, 1.5)])[1] == 62.0
+    assert wz.joint_extent(gap, run, [g(61, 0.0, True, 0.5)])[1] == 59.0
+    # at equal times a stop comes first; the extension never passes an r detection (day 70)
+    assert wz.joint_extent(gap, run, [g(61, 0.0), g(61, 2.0)])[1] == 59.0
+    assert wz.joint_extent(gap, run, [g(71, 2.0)])[1] == 59.0
+    # pre side: a 10-d r gap before the run; g dim at 37 extends it, g normal at 36 bounds it
+    gap_pre = [x for i, x in enumerate(base) if not 30 <= i < 40]
+    v = wz.edge_bounds_joint(gap_pre, (30, 49), [g(36, 0.0), g(37, 1.2)])
+    assert v["joint_lo"] == 37.0 and v["edge_pre_max_d"] == 1.0 and v["edge_pre_class"] == "fast"
+    # pre side: a stop first at equal times, a shallow non-detection unknown, a deep one dim
+    assert wz.joint_extent(gap_pre, (30, 49), [g(38, 0.0), g(38, 2.0)])[0] == 40.0
+    assert wz.joint_extent(gap_pre, (30, 49), [g(38, 0.0, True, 0.5), g(37, 1.5)])[0] == 37.0
+    assert wz.joint_extent(gap_pre, (30, 49), [g(38, 0.0, True, 0.5)])[0] == 40.0
+    assert wz.joint_extent(gap_pre, (30, 49), [g(38, 0.0, True, 3.0), g(36, 0.0)])[0] == 38.0
+    # no other band: identical to bounds
+    v = wz.edge_bounds_joint(gap, run, [])
+    w = wz.edge_bounds(gap, run, 19.0)
+    assert {k: v[k] for k in w} == w
+
+
 def test_v15_configure_twice_does_not_stack():
     saved = (wz.LC_PIX, wz.LC_PART, wz.OBJ_PART, wz.CACHE, wz.SAMPLE, wz.VDIR, wz.VERSION, wz.N_MAX)
     try:

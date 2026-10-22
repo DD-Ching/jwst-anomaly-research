@@ -1684,6 +1684,21 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   http://asassn-lb01.ifa.hawaii.edu:9006 (deployment 0.6.20). Probed 2026-10-20: catalogue cones work, light-curve
   service down for maintenance (`results/w3_ztf/asassn/probe.json`). Installed in the session venv only; not a
   project dependency.
+- W3 ZTF alternative-data inventory (`results/w3_ztf/altdata/`, queried 2026-10-22). The bibliographic details below
+  are from memory and were not re-checked this round:
+  - **ZTF science-exposure metadata:** IRSA IBE search https://irsa.ipac.caltech.edu/ibe/search/ztf/products/sci
+    (`POS`, `WHERE filtercode='zg'`).
+  - **NEOWISE-R single-exposure source table** `neowiser_p1bs_psd`: IRSA Simple Cone Search
+    https://irsa.ipac.caltech.edu/SCS?table=neowiser_p1bs_psd. Epochs to MJD 60512.6 for these stars. Mainzer et al.
+    2014, ApJ 792, 30; Explanatory Supplement https://wise2.ipac.caltech.edu/docs/release/neowise/expsup/.
+  - **TESS:** MAST CAOM via `astroquery.mast.Observations.query_region` (astroquery 0.4.11): SPOC FFIs and the HLSPs
+    QLP, TESS-SPOC and TARS. Ricker et al. 2015, JATIS 1, 014003.
+  - **Not queried:**
+    - Gaia DR3 epoch photometry spans 2014-07-25 to 2017-05-28 (Gaia Collaboration, Vallenari et al. 2023, A&A 674,
+      A1).
+    - The Pan-STARRS1 3π survey ran 2010–2014 (Chambers et al. 2016, arXiv:1612.05560).
+    - ATLAS forced photometry needs a registered account: https://fallingstar-data.com/forcedphot/ (Shingles et al.
+      2021, TNS AstroNote 2021-7).
 - PyCBC 2.11.0 (PyPI, GPLv3; https://github.com/gwastro/pycbc): `pycbc.filter.matchedfilter.compute_max_snr_over_sky_loc_stat_no_phase`
   (Harry et al., arXiv:1709.09181), `pycbc.waveform.get_fd_waveform`, `pycbc.filter.matched_filter`; `bin/pycbc_optimize_snr`
   with `pycbc/live/snr_optimizer.py` (aligned-spin, 4-D); `bin/pycbc_banksim` (finite bank). Checked 2026-10-21 in a separate

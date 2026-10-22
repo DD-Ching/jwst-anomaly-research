@@ -1,0 +1,137 @@
+{
+ "label": "derived (worth_<npix>.json); simulated events; the ideal uses injection truth for evaluation only",
+ "w3_pooled": {
+  "events_a0_insufficient": 63,
+  "sides": 88,
+  "ideal_joint_events_fast": 7,
+  "observed_joint_events_fast_posthoc": 7,
+  "oracle_events_fast_posthoc": 16,
+  "sides_B": {
+   "fast": 5,
+   "slow": 0,
+   "insufficient": 83
+  },
+  "sides_num": {
+   "fast": 8,
+   "slow": 0,
+   "insufficient": 80
+  },
+  "sides_den": {
+   "fast": 9,
+   "slow": 0,
+   "insufficient": 79
+  },
+  "sides_joint": {
+   "fast": 14,
+   "slow": 0,
+   "insufficient": 74
+  },
+  "sides_ideal": {
+   "fast": 14,
+   "slow": 0,
+   "insufficient": 74
+  },
+  "sides_fast_joint_not_B": 9,
+  "new_fast_by_cause": {
+   "bracket_only (num fast, den not)": 2,
+   "span_only (den fast, num not)": 3,
+   "either_alone (num and den fast)": 1,
+   "needs_both (neither alone)": 3
+  },
+  "sides_fast_num_of_B_insufficient": 3,
+  "sides_extended": 34,
+  "ext_dim_epochs_on_new_fast_sides": 16,
+  "ext_true_dim_epochs_on_new_fast_sides": 16,
+  "ext_dim_epochs_all": 64,
+  "ext_true_dim_epochs_all": 64,
+  "min_snr_of_extending_detections": 42.47257712586672,
+  "sides_oracle_fast_posthoc": 33
+ },
+ "fade_pooled": {
+  "events_a0_insufficient": 12,
+  "sides": 18,
+  "ideal_joint_events_fast": 0,
+  "observed_joint_events_fast_posthoc": 0,
+  "oracle_events_fast_posthoc": null,
+  "sides_B": {
+   "fast": 0,
+   "slow": 2,
+   "insufficient": 16
+  },
+  "sides_num": {
+   "fast": 0,
+   "slow": 2,
+   "insufficient": 16
+  },
+  "sides_den": {
+   "fast": 0,
+   "slow": 2,
+   "insufficient": 16
+  },
+  "sides_joint": {
+   "fast": 1,
+   "slow": 2,
+   "insufficient": 15
+  },
+  "sides_ideal": {
+   "fast": 1,
+   "slow": 2,
+   "insufficient": 15
+  },
+  "sides_fast_joint_not_B": 1,
+  "new_fast_by_cause": {
+   "bracket_only (num fast, den not)": 0,
+   "span_only (den fast, num not)": 0,
+   "either_alone (num and den fast)": 0,
+   "needs_both (neither alone)": 1
+  },
+  "sides_fast_num_of_B_insufficient": 0,
+  "sides_extended": 7,
+  "ext_dim_epochs_on_new_fast_sides": 4,
+  "ext_true_dim_epochs_on_new_fast_sides": 4,
+  "ext_dim_epochs_all": 13,
+  "ext_true_dim_epochs_all": 13,
+  "min_snr_of_extending_detections": 33.239585659113715
+ },
+ "ideal_fraction": 0.1111111111111111,
+ "stop_conditions": {
+  "1_ideal_below_0.50": true,
+  "2_only_span": false,
+  "3_extension_not_real": false
+ },
+ "stop": true,
+ "extended_side_evidence": {
+  "w3_sides_extended": 34,
+  "with_a_normal_point_after_the_extension": 34,
+  "median_ext_days": 1.9722750966830063,
+  "median_U_B_days": 30.92814813588484,
+  "median_U_J_days": 19.45010313728926,
+  "median_span_r_days": 33.455549589420116,
+  "median_span_J_days": 39.988881951085204,
+  "median_U_J_over_U_B": 0.972715720062155,
+  "median_span_J_over_span_r": 1.0557395776884624
+ },
+ "posthoc_bounds": {
+  "observed_joint_fraction": 0.1111111111111111,
+  "oracle_fraction": 0.25396825396825395,
+  "all_below_0.50": true
+ },
+ "checks": {
+  "4991": {
+   "a0_equals_v24": true,
+   "b_equals_459": true,
+   "mismatches": {
+    "a0_vs_v24": 0,
+    "b_vs_459": 0
+   }
+  },
+  "2344": {
+   "a0_equals_v24": true,
+   "b_equals_459": true,
+   "mismatches": {
+    "a0_vs_v24": 0,
+    "b_vs_459": 0
+   }
+  }
+ }
+}

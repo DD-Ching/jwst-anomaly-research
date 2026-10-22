@@ -711,6 +711,22 @@ def edge_bounds(s, run, span) -> dict:
     intermediate, searched without a window (inf if none). The data bound the edge to [L, U]. A
     side is fast if U <= EDGE_FRAC * span, slow if L > EDGE_FRAC * span, else insufficient; the run
     is fast if both sides are fast, slow if either is slow, else insufficient."""
+    return edge_bounds_alt(s, run, span, ())  # one implementation; no alt point = the v23 rule
+
+
+ALT_MIN_SNR = 3.0  # alt-data trial: a normal point of another band or survey needs S/N >= 3
+
+
+def edge_bounds_alt(s, run, span, alt, edges=None) -> dict:
+    """Alt-data trial (``results/w3_ztf/altdata/PLAN.md``): edge_bounds with added edge information.
+    ``alt`` holds (t, dm, sigma) measurements of the same star from another band or survey;
+    non-detections and upper limits are not measurements and must be left out by the caller. The
+    run, its span and EDGE_FRAC * span come from ``s`` alone; alt points inside the run are never
+    used. An alt point is normal if dm < INTER[0] and 1.0857 / sigma >= ALT_MIN_SNR, and a
+    significant intermediate if INTER[0] + EDGE_NSIG * sigma <= dm < INTER[1]. Epochs of ``s`` keep
+    edge_bounds' definitions; L, U and the classes follow edge_bounds on the union. edge_bounds is
+    this rule without alt points. An alt point without a finite positive sigma is not used.
+    ``edges`` (joint trial) replaces the run's first and last epoch times t[i], t[j]."""
     i, j = run
     t = np.array([x[0] for x in s])
     dm = np.array([x[1] for x in s])
@@ -720,16 +736,29 @@ def edge_bounds(s, run, span) -> dict:
         sig = 0.2171 * 10 ** (0.4 * (dm - lim))
     inter = ~nd & (dm >= INTER[0] + EDGE_NSIG * sig) & (dm < INTER[1])
     normal = ~nd & (dm < INTER[0])
+    ti, tj = (t[i], t[j]) if edges is None else (float(edges[0]), float(edges[1]))
+    if len(alt):
+        a = np.asarray(alt, float).reshape(-1, 3)
+        at, adm, asig = a[:, 0], a[:, 1], a[:, 2]
+        out_run = (at < ti) | (at > tj)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            snr = np.where(asig > 0, 1.0857 / asig, 0.0)
+        valid = np.isfinite(asig) & (asig > 0)
+        a_inter = out_run & valid & (adm >= INTER[0] + EDGE_NSIG * asig) & (adm < INTER[1])
+        a_norm = out_run & valid & (adm < INTER[0]) & (snr >= ALT_MIN_SNR)
+        t = np.concatenate([t, at])
+        inter = np.concatenate([inter, a_inter])
+        normal = np.concatenate([normal, a_norm])
     thr = EDGE_FRAC * span
-    pre = inter & (t >= t[i] - span) & (t < t[i])
-    post = inter & (t > t[j]) & (t <= t[j] + span)
-    a_pre = t[pre].min() if pre.any() else t[i]
-    a_post = t[post].max() if post.any() else t[j]
+    pre = inter & (t >= ti - span) & (t < ti)
+    post = inter & (t > tj) & (t <= tj + span)
+    a_pre = t[pre].min() if pre.any() else ti
+    a_post = t[post].max() if post.any() else tj
     n_pre, n_post = normal & (t < a_pre), normal & (t > a_post)
-    lo = {"pre": float(t[i] - a_pre), "post": float(a_post - t[j])}
+    lo = {"pre": float(ti - a_pre), "post": float(a_post - tj)}
     hi = {
-        "pre": float(t[i] - t[n_pre].max()) if n_pre.any() else np.inf,
-        "post": float(t[n_post].min() - t[j]) if n_post.any() else np.inf,
+        "pre": float(ti - t[n_pre].max()) if n_pre.any() else np.inf,
+        "post": float(t[n_post].min() - tj) if n_post.any() else np.inf,
     }
     cls = {k: "fast" if hi[k] <= thr else ("slow" if lo[k] > thr else "insufficient") for k in lo}
     run_cls = (
@@ -741,6 +770,59 @@ def edge_bounds(s, run, span) -> dict:
     for k in lo:
         out[f"edge_{k}_max_d"] = hi[k] if np.isfinite(hi[k]) else None
         out[f"edge_{k}_class"] = cls[k]
+    return out
+
+
+def alt_detections(series) -> list:
+    """(t, dm, sigma) of a series' detections, sigma from the epoch's maglimit (SNR 5 at the limit,
+    as in apply_dmag); non-detections are not measurements and are left out."""
+    return [(x[0], x[1], 0.2171 * 10 ** (0.4 * (x[1] - x[3]))) for x in series or [] if not x[2]]
+
+
+def joint_state(x) -> str:
+    """Joint trial: "dim" (a detection with dm >= DIM_MAG, or a non-detection whose limit is >=
+    DIM_MAG below the band's baseline), "unknown" (a shallower non-detection) or "stop" (any other
+    detection)."""
+    if x[2]:
+        return "dim" if x[3] >= DIM_MAG else "unknown"
+    return "dim" if x[1] >= DIM_MAG else "stop"
+
+
+def joint_extent(s, run, other) -> tuple[float, float]:
+    """Joint g + r trial (``results/w3_ztf/joint/PLAN.md``): the run's edge times after extending
+    each edge outward, in time order over both bands, through contiguous dim epochs. Dim: a
+    detection with dm >= DIM_MAG against its own band's baseline, or a non-detection whose limit is
+    >= DIM_MAG below that baseline (an upper limit implying dm >= DIM_MAG). The extension stops at
+    the first other detection (normal, intermediate or ambiguous) of either band; at equal times a
+    stop comes first. A non-detection with a shallower limit is unknown: it neither extends nor
+    stops. Missing and quality-excluded exposures are not in the series and are unknown."""
+    i, j = run
+    ti, tj = s[i][0], s[j][0]
+    pts = [(x[0], joint_state(x)) for x in list(s) + list(other or []) if x[0] < ti or x[0] > tj]
+    lo, hi = ti, tj
+    for tt, st in sorted((p for p in pts if p[0] > tj), key=lambda p: (p[0], p[1] != "stop")):
+        if st == "stop":
+            break
+        if st == "dim":
+            hi = tt
+    for tt, st in sorted((p for p in pts if p[0] < ti), key=lambda p: (-p[0], p[1] != "stop")):
+        if st == "stop":
+            break
+        if st == "dim":
+            lo = tt
+    return float(lo), float(hi)
+
+
+def edge_bounds_joint(s, run, other) -> dict:
+    """Joint g + r trial: bounds with both bands. The run's edges are extended by joint_extent,
+    the span is the extended one (max(hi - lo, 1 d)), and L, U and the classes follow
+    edge_bounds_alt with the other band's detections as added points (a normal needs S/N >=
+    ALT_MIN_SNR; intermediates of both bands count towards a slow edge). Run finding stays on
+    ``s`` alone."""
+    lo, hi = joint_extent(s, run, other)
+    span = max(hi - lo, 1.0)
+    out = edge_bounds_alt(s, run, span, alt_detections(other), edges=(lo, hi))
+    out.update({"joint_lo": lo, "joint_hi": hi, "joint_span": span})
     return out
 
 

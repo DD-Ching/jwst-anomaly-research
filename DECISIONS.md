@@ -5683,6 +5683,27 @@ confining radiation at a throat is found.
   - **Kept for the re-run:** 40 stars selected by catalogue (bright, clean 16″ apertures) and their ZTF-only
     baseline.
   - **Revisit if:** `get_block_servers` is non-empty. Re-run the committed plan unchanged.
+- **Addendum 2026-10-22 (alternative data, `results/w3_ztf/altdata/RESULT.md`):**
+  - **Compared:** ZTF g (IRSA metadata + DR24), NEOWISE-R single exposures and TESS, on the same 40 stars and gap
+    windows. W3 sides covered: 36, 3 and 0 of 88. Not queried: Gaia DR3 / PS1 (time), ATLAS (account), ASAS-SN
+    (brief).
+  - **Tested:** ZTF g as added edge points (`edge_bounds_alt`) on the replayed v23 events. 3 of 63 insufficient W3
+    events restored (0.048; required ≥ 0.50); fade passes 0 / 79; success false; coverage ceiling 0.30.
+  - **Decision:** ZTF g edge information is not adopted, and this route stops. Rejected: lowering the 0.50 target;
+    own TESS FFI photometry (21″ pixels; no window covered); NEOWISE (3 sides).
+  - **Revisit if:** a nightly-cadence source without an account becomes reachable, or the owner wants a rule in which
+    other-band dim points extend the run. That would be a method change with a new validation; the post hoc
+    diagnostic puts 59 / 66 window g epochs inside the event.
+- **Addendum 2026-10-22 (g + r jointly, `results/w3_ztf/joint/RESULT.md`):**
+  - **Tested (worth check only):** one candidate in which both bands bound the event (`joint_extent`,
+    `edge_bounds_joint`). The g dims inside the event are real (64 / 64) and decide 14 / 88 sides, against 5 for #459.
+    Of the 9 new: 2 from the bracket only, 3 from the span only, 1 from either, 3 need both.
+  - **Ceiling:** 7 / 63 insufficient W3 events restored (noise-free replay). A generous post hoc oracle gives 16 / 63.
+    Both are below 0.50.
+  - **Decision:** stop. No rule is frozen; bounds and v13 are unchanged.
+  - **Rejected:** a second window or threshold, and using non-adjacent g epochs (a different method).
+  - **Revisit if:** a source with epochs inside the shared r / g gaps exists, or the owner wants a model-fitting edge
+    test (new plan and validation).
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

@@ -1,0 +1,213 @@
+{
+ "label": "derived; simulated events replayed (v23 seeds); ZTF DR24 g-band epochs observed, injected events simulated",
+ "npix": 2344,
+ "seed_offset": 46000,
+ "carriers": 500,
+ "check_a_equals_stored_v24": true,
+ "summary": {
+  "injections_on_selected": {
+   "rho0.01_blend1_tE10": 9,
+   "rho0.01_blend1_tE30": 5,
+   "rho0.01_blend1_tE100": 7,
+   "rho0.1_blend1_tE10": 5,
+   "rho0.1_blend1_tE30": 5,
+   "rho0.01_blend0.7_tE10": 8,
+   "rho0.01_blend0.7_tE30": 11,
+   "rho0.01_blend0.7_tE100": 3,
+   "rho0.1_blend0.7_tE10": 10,
+   "rho0.1_blend0.7_tE30": 8,
+   "fade": 46
+  },
+  "w3": {
+   "events": 71,
+   "a": {
+    "edge_insufficient": 24,
+    "recovered": 21,
+    "not_flagged": 24,
+    "edge_slow": 2
+   },
+   "b": {
+    "edge_insufficient": 24,
+    "recovered": 21,
+    "not_flagged": 24,
+    "edge_slow": 2
+   },
+   "transitions": {
+    "edge_insufficient -> edge_insufficient": 24,
+    "recovered -> recovered": 21,
+    "not_flagged -> not_flagged": 24,
+    "edge_slow -> edge_slow": 2
+   },
+   "a_insufficient": 24,
+   "b_recovered_of_a_insufficient": 0,
+   "a_insufficient_sides": 37,
+   "sides_with_alt_in_window": 12,
+   "sides_with_alt_normal_in_window": 1.0,
+   "sides_b_class": {
+    "fast": 1,
+    "slow": 0,
+    "insufficient": 36
+   },
+   "alt_points_in_a_insufficient_windows": 20
+  },
+  "fade": {
+   "events": 46,
+   "a": {
+    "edge_slow": 34,
+    "other:achromatic_ok": 1,
+    "not_flagged": 5,
+    "other:oneoff_ok": 1,
+    "edge_insufficient": 5
+   },
+   "b": {
+    "edge_slow": 34,
+    "other:achromatic_ok": 1,
+    "not_flagged": 5,
+    "other:oneoff_ok": 1,
+    "edge_insufficient": 5
+   },
+   "transitions": {
+    "edge_slow -> edge_slow": 34,
+    "other:achromatic_ok -> other:achromatic_ok": 1,
+    "not_flagged -> not_flagged": 5,
+    "other:oneoff_ok -> other:oneoff_ok": 1,
+    "edge_insufficient -> edge_insufficient": 5
+   },
+   "a_insufficient": 5,
+   "b_recovered_of_a_insufficient": 0,
+   "a_insufficient_sides": 7,
+   "sides_with_alt_in_window": 2,
+   "sides_with_alt_normal_in_window": 0.0,
+   "sides_b_class": {
+    "fast": 0,
+    "slow": 0,
+    "insufficient": 7
+   },
+   "alt_points_in_a_insufficient_windows": 6
+  },
+  "selected_carriers": 20
+ },
+ "stars": {
+  "678201400015809": {
+   "r_epochs": 2310,
+   "g_epochs": 2002,
+   "g_detections": 2002,
+   "g_normal": 2002
+  },
+  "632211200001819": {
+   "r_epochs": 997,
+   "g_epochs": 794,
+   "g_detections": 793,
+   "g_normal": 793
+  },
+  "632211200002174": {
+   "r_epochs": 997,
+   "g_epochs": 794,
+   "g_detections": 794,
+   "g_normal": 794
+  },
+  "632211200001311": {
+   "r_epochs": 997,
+   "g_epochs": 794,
+   "g_detections": 794,
+   "g_normal": 794
+  },
+  "632215300005716": {
+   "r_epochs": 1056,
+   "g_epochs": 825,
+   "g_detections": 825,
+   "g_normal": 825
+  },
+  "632215200005622": {
+   "r_epochs": 1058,
+   "g_epochs": 832,
+   "g_detections": 832,
+   "g_normal": 832
+  },
+  "632215200014409": {
+   "r_epochs": 1055,
+   "g_epochs": 833,
+   "g_detections": 833,
+   "g_normal": 833
+  },
+  "632215300003316": {
+   "r_epochs": 1059,
+   "g_epochs": 821,
+   "g_detections": 821,
+   "g_normal": 821
+  },
+  "632215200004848": {
+   "r_epochs": 1058,
+   "g_epochs": 832,
+   "g_detections": 832,
+   "g_normal": 832
+  },
+  "632215200005702": {
+   "r_epochs": 1056,
+   "g_epochs": 833,
+   "g_detections": 833,
+   "g_normal": 833
+  },
+  "632215300012244": {
+   "r_epochs": 1059,
+   "g_epochs": 824,
+   "g_detections": 824,
+   "g_normal": 824
+  },
+  "632215400005617": {
+   "r_epochs": 1056,
+   "g_epochs": 830,
+   "g_detections": 830,
+   "g_normal": 830
+  },
+  "632216100005645": {
+   "r_epochs": 1020,
+   "g_epochs": 793,
+   "g_detections": 793,
+   "g_normal": 793
+  },
+  "632216400002826": {
+   "r_epochs": 989,
+   "g_epochs": 793,
+   "g_detections": 793,
+   "g_normal": 793
+  },
+  "632216400001580": {
+   "r_epochs": 1019,
+   "g_epochs": 811,
+   "g_detections": 811,
+   "g_normal": 811
+  },
+  "632215300015222": {
+   "r_epochs": 1045,
+   "g_epochs": 33,
+   "g_detections": 33,
+   "g_normal": 33
+  },
+  "632216400003415": {
+   "r_epochs": 1049,
+   "g_epochs": 827,
+   "g_detections": 827,
+   "g_normal": 827
+  },
+  "632212100000414": {
+   "r_epochs": 985,
+   "g_epochs": 791,
+   "g_detections": 791,
+   "g_normal": 791
+  },
+  "632216400006470": {
+   "r_epochs": 1047,
+   "g_epochs": 828,
+   "g_detections": 828,
+   "g_normal": 828
+  },
+  "632216400003278": {
+   "r_epochs": 925,
+   "g_epochs": 729,
+   "g_detections": 729,
+   "g_normal": 729
+  }
+ },
+ "seconds": 68.5
+}
