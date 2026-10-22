@@ -1,0 +1,10 @@
+{
+ "label": "post hoc",
+ "flux_range_njy": [
+  40.49129872791862,
+  161.96519491167447
+ ],
+ "n_sources": 2033,
+ "n_consistent_with_all_refs": 153,
+ "fraction": 0.07525823905558288
+}

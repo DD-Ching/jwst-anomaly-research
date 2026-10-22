@@ -1,0 +1,181 @@
+{
+ "catalogue_sha256": "ca6b48aa6404444d2e0b8965a35376ff032917071ea64cbf6306d06ee57d90dd",
+ "rules": {
+  "bands": [
+   "F090W",
+   "F115W",
+   "F150W",
+   "F200W",
+   "F277W",
+   "F356W",
+   "F410M",
+   "F444W"
+  ],
+  "match_arcsec": 0.3,
+  "err_floor": 0.05,
+  "p_differ": 0.01,
+  "min_bands": 5,
+  "snr_known": 10.0,
+  "gate": [
+   8,
+   0.8
+  ]
+ },
+ "n_counterparts": 30,
+ "known_pairs": [
+  {
+   "pair": "13.1-13.2",
+   "sources": [
+    1119366,
+    1119228
+   ],
+   "chi2": 9.362,
+   "dof": 7,
+   "p": 0.22768805960044342,
+   "ratio": 0.7663,
+   "class": "consistent"
+  },
+  {
+   "pair": "17.1-17.2",
+   "sources": [
+    1116845,
+    1116841
+   ],
+   "chi2": 24.71,
+   "dof": 7,
+   "p": 0.0008540141428139311,
+   "ratio": 2.026,
+   "class": "differ"
+  },
+  {
+   "pair": "2a.1-2a.2",
+   "sources": [
+    1120782,
+    1120670
+   ],
+   "chi2": 0.247,
+   "dof": 7,
+   "p": 0.9999480441799209,
+   "ratio": 0.9367,
+   "class": "consistent"
+  },
+  {
+   "pair": "2b.1-2b.2",
+   "sources": [
+    1100429,
+    1101303
+   ],
+   "chi2": 0.933,
+   "dof": 7,
+   "p": 0.9958365024476814,
+   "ratio": 1.0772,
+   "class": "consistent"
+  },
+  {
+   "pair": "3.1-3.2",
+   "sources": [
+    1100521,
+    1100484
+   ],
+   "chi2": 2.27,
+   "dof": 7,
+   "p": 0.9434130259825191,
+   "ratio": 0.5558,
+   "class": "consistent"
+  },
+  {
+   "pair": "4.1-4.2",
+   "sources": [
+    1120755,
+    1120714
+   ],
+   "chi2": 3.25,
+   "dof": 7,
+   "p": 0.8609068611480364,
+   "ratio": 4.2521,
+   "class": "consistent"
+  },
+  {
+   "pair": "5.1-5.2",
+   "sources": [
+    1100572,
+    1100599
+   ],
+   "chi2": 10.341,
+   "dof": 7,
+   "p": 0.17003481550217428,
+   "ratio": 1.4011,
+   "class": "consistent"
+  },
+  {
+   "pair": "6.1-6.3",
+   "sources": [
+    1100580,
+    1100668
+   ],
+   "chi2": 17.537,
+   "dof": 7,
+   "p": 0.014242009118001275,
+   "ratio": 1.2982,
+   "class": "consistent"
+  },
+  {
+   "pair": "9.1-9.2",
+   "sources": [
+    1120903,
+    1100553
+   ],
+   "chi2": 3.101,
+   "dof": 7,
+   "p": 0.8754972654131637,
+   "ratio": 0.8108,
+   "class": "consistent"
+  }
+ ],
+ "gate": {
+  "n_testable": 9,
+  "n_consistent": 8,
+  "fraction": 0.8888888888888888,
+  "passes": true
+ },
+ "targets": [
+  {
+   "pair": "10.1-1115938",
+   "sources": [
+    1120781,
+    1115938
+   ],
+   "chi2": 2.797,
+   "dof": 7,
+   "p": 0.903162635832617,
+   "ratio": 4.6868,
+   "class": "consistent"
+  },
+  {
+   "pair": "10.2-1115938",
+   "sources": [
+    1116189,
+    1115938
+   ],
+   "chi2": 3.979,
+   "dof": 7,
+   "p": 0.7821679983874292,
+   "ratio": 2.7776,
+   "class": "consistent"
+  }
+ ],
+ "reference_10_1_10_2": {
+  "pair": "10.1-10.2",
+  "sources": [
+   1120781,
+   1116189
+  ],
+  "chi2": 5.004,
+  "dof": 7,
+  "p": 0.6594781544585486,
+  "ratio": 1.6909,
+  "class": "consistent"
+ },
+ "decision": "H1 not excluded",
+ "provenance": "observed fluxes (CANUCS DR1); derived chi2"
+}
