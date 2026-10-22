@@ -90,6 +90,8 @@ def main(argv: list[str] | None = None) -> int:
         fig, axs = plt.subplots(1, len(rows), figsize=(3.2 * len(rows), 3.4))
         for a, q in zip(np.atleast_1d(axs), rows, strict=True):
             x, y = (int(round(float(v))) for v in w.world_to_pixel_values(q["ra"], q["dec"]))
+            if y - h < 0 or x - h < 0 or y + h + 1 > d.shape[0] or x + h + 1 > d.shape[1]:
+                raise ValueError(f"{q['item']}: stamp leaves the image")
             s = d[y - h : y + h + 1, x - h : x + h + 1]
             v = np.nanpercentile(s, [5, 99.5])
             a.imshow(s, origin="lower", cmap="gray_r", vmin=v[0], vmax=v[1])
