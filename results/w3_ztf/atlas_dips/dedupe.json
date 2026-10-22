@@ -2,7 +2,8 @@
  "label": "POST HOC; observed (ATLAS rows from ../atlas40/phot) and derived; the mis-decisions are simulated",
  "n_mis_decisions": 8,
  "n_trigger_points": 9,
- "n_unique_exposures": 9,
+ "n_unique_star_filter_exposure_keys": 9,
+ "n_distinct_exposures": 7,
  "n_stars": 7,
  "exposures": [
   {

@@ -5748,22 +5748,22 @@ confining radiation at a throat is found.
     moves come from single observed ATLAS dips (32–79 % below baseline) that pass the FAQ cuts. Quoted σ and the 9999
     rule change nothing.
   - **Decision:** ATLAS as added edge points does not rescue the bounds rule on this sample under this criterion. No
-    independent validation; no seed,
-    threshold or second-method retry.
+    independent validation; no seed, threshold or second-method retry.
   - **Rejected:**
     - finishing the remaining 23 stars, which cannot change the verdict;
     - a post hoc two-epoch intermediate rule, which would be a new method.
   - **Revisit if:** a new pre-registered method that is robust to single-epoch survey dips is proposed with an ideal
     bound that can reach the success condition.
 - **Addendum 2026-10-22 (ATLAS dip check, post hoc, `results/w3_ztf/atlas_dips/RESULT.md`):**
-  - **Found:** the 8 simulated W3 mis-decisions of #462 trace to 8 low ATLAS rows from 6 exposures (4 unit-nights).
+  - **Found:** 7 of the 8 simulated W3 mis-decisions of #462 trace to 8 low ATLAS rows from 6 exposures (4
+    unit-nights). The 8th traces to a normal row where the model itself was intermediate.
     - One exposure holds 3 of them; there all 10 stored area-4991 stars are 32–34 % low (exposure-level photometric
       clue).
     - One night shows several stars low.
     - One single-exposure dip is undetermined.
-    - One group is unchecked (cap of 3).
-  - **Decision:** no real-variability evidence and no source to follow up. The line is archived as is, with no new
-    rule, gap filling or photometry request.
+    - One group is unchecked: cap of 3, and a selection-count deviation that would have chosen it over G4.
+  - **Decision:** no real-variability evidence and no source to follow up in the 3 checked groups. The line is archived
+    as is, with no new rule, gap filling or photometry request.
   - **Note:** a common-mode test across stars in the same exposure would flag G1. Adding it would be a new
     pre-registered method. Check the cleaning guide the ATLAS FAQ cites (Rest et al.) first.
   - **Revisit if:** the owner opens a new method round, or ATLAS exposure images become reachable without an account.

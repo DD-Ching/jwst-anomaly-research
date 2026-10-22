@@ -1,4 +1,4 @@
-# W3 ZTF × ATLAS dip check: #462's 8 W3 simulated mis-decisions trace to 7 ATLAS exposures; the main one is an exposure-level photometric problem (10 / 10 stars 32–34 % low); no reliable new evidence of real variability
+# W3 ZTF × ATLAS dip check: #462's 8 W3 simulated mis-decisions trace to 7 ATLAS exposures; the largest shows exposure-level common mode (10 / 10 stars 32–34 % low; a clue, not proven); in the 3 checked groups no reliable evidence of real variability
 
 - **Plan:** `PLAN.md`, committed in three steps:
   - the scope and de-duplication rule (b2893a8);
@@ -29,6 +29,8 @@
   - 8 W3 mis-decisions (4 lost, 4 insufficient → slow) have 9 triggering ATLAS rows; event 35 has one on each side.
   - The 9 rows are 9 distinct (star, filter, exposure) keys on 7 stars, from 7 distinct exposures.
   - No row is reused by two mis-decisions. Each row is the "L" point of exactly one of the 49 diagnosed events.
+  - Each row was available to every flagged injection on its star: 3–11 injections (6–11 for the low rows), yet each
+    decided only one. Reuse beyond the 49 diagnosed events is not counted; that needs a replay, which the brief excludes.
 - **8 of the 9 rows are low in the un-injected data** (rel 0.21–0.68):
   - With the injected model at or above baseline (model dm −0.37 to −0.003), the injection rule keeps them low.
   - Each then becomes a significant intermediate point (dm ≥ 0.3 + 2σ) more than 0.25 span from the ZTF run edge, so
@@ -54,24 +56,38 @@
 
 ## 2. Selection (`selection.json`; counts only, before any comparison flux)
 Cases were ranked by the comparison measurements available (other stars in the same exposure, same-star same-night
-exposures, other ATLAS filter ±2 d, ZTF ±2 d):
+exposures, other ATLAS filter ±2 d, ZTF g / r / i ±2 d; PLAN named g / r, and i was also counted, which changes no
+rank):
 
 | case | total | checked |
 |---|---|---|
 | G1 | 66 | yes |
 | G3 | 17 | yes |
 | G4 | 8 | yes |
-| G2 | 6 | **not checked** (only 6 other-star rows; no same-night, other-filter or ZTF data within ±2 d) |
+| G2 | 6 | **not checked** |
+
+- **G2's count:** 6 other stars (17 rows) share its 3 exposures. There are no other-filter or ZTF data within ±2 d.
+- **Deviation found at review:**
+  - PLAN count (b) says "other exposures of the same star in the same night".
+  - The script excluded all of the case's own exposures, not just the row's own (`check_script.py.txt`, stage `select`).
+  - Under PLAN's wording, G2's 3 rows add 6 same-night rows (total 12), so G2 would have ranked above G4 (8), and G2
+    rather than G4 would have been checked.
+  - The selection was committed before any comparison flux was read. Re-selecting now would be post hoc, so G2 stays
+    unchecked. Checking it is the owner's call.
 
 ## 3. Checks and classes (`check.json`; frozen rules C1–C6, first matching class)
 | case | C3: other stored stars in the same exposure | C4: same star, other exposures that night | C5: other bands ±2 d | class |
 |---|---|---|---|---|
-| G1 | **all 9 other stars also low**, rel 0.658–0.683 (−20 to −43 σ); 10 / 10 stars of area 4991 with data | 4 c exposures 2.3–2.6 h earlier: rel 0.98–1.01 | ATLAS o 0.9–1.9 d later: rel 0.98–1.02; ZTF g / r / i 0.2–1.2 d earlier: no unflagged epoch dimmer than its band median (−0.10 to −0.01 mag) | **2 data-quality clue** (exposure-level) |
+| G1 | **all 9 other stars also low**, rel 0.658–0.683 (−20 to −43 σ); 10 / 10 stars of area 4991 with data | 4 c exposures 2.2–2.6 h earlier: rel 0.98–1.01 | ATLAS o 0.9–1.9 d later: rel 0.98–1.02; ZTF g / r / i 0.2–1.2 d earlier: no unflagged epoch dimmer than its band median (−0.10 to −0.01 mag) | **2 data-quality clue** (exposure-level) |
 | G3 | 8 of 9 other stars **normal** (rel 0.988–1.020); 601213300007095 **high**, rel 1.84 (+19.7 σ) | 3 o exposures 5–30 min later: rel 0.997–1.004 | no ATLAS c; ZTF r 1.1 d earlier, all flagged (catflags 32768) | **4 undetermined** |
 | G4 | 2 of 4 other stars > 5 σ low (rel 0.678, 0.468); 2 at 0.849, 0.902 | 1 o exposure 16 min later also low (0.432, −5.8 σ); that exposure is common-mode too (`common_mode` true) | ZTF i 1 h earlier: +0.014 mag; ZTF g 2 d earlier: normal | **2 data-quality clue** (night-level) |
 
-- **No case reaches class 3:** no low point has an independent exposure within ±2 d that is also low and free of common
-  mode. So no known-variable lookup was made.
+- **No checked case reaches class 3:** no low point has an independent exposure within ±2 d that is also low and free
+  of common mode. So no known-variable lookup was made.
+- **Script gap:** the support test reads same-night exposures (C4) and the other filter (C5). Same-band exposures on
+  other nights within ±2 d were not tested by the script.
+  - The reviewer's separate count found none below −2.4 σ for G1 and G4, and none at all for G3 (not stored).
+  - No class changes.
 - **Quality fields (C2):** none is outside its star's 0.5–99.5 % range in the documented failure direction.
   - G3 is near it: mag5sig 17.62 at the 1.3rd percentile and Sky 17.80 at the 0.6th, close to the FAQ cuts (17).
   - The FAQ says such points come from obscured or moonlit observations and "a failed astro/photometric fit because of
@@ -80,8 +96,10 @@ exposures, other ATLAS filter ±2 d, ZTF ±2 d):
   - The high star in the same exposure (601213300007095, chi/N 299) sits at detector x = 3005.6.
   - The low star (601209200002983) sits at x = 3009.5, 1,131 px away along y.
   - A shared column artefact (e.g. a trail raising the local sky estimate) would fit both, but it is not shown.
-  - Deciding it needs the exposure image or difference-image photometry for `01a59632o0033o`. Neither can be had
-    without an ATLAS account, which the brief excludes.
+  - Deciding it needs the exposure image or difference-image photometry for `01a59632o0033o`.
+    - The image needs an ATLAS account.
+    - Difference-mode forced photometry is reachable through the shared Data Lab token (#461), but this round's brief
+      excludes new forced-photometry tasks.
 
 ## 4. What is settled and what is missing
 - **Confirmed reading or processing errors:** none. All 9 rows are read correctly.
@@ -94,18 +112,21 @@ exposures, other ATLAS filter ±2 d, ZTF ±2 d):
 - **Flux anomaly undetermined:** G3, 1 row (development star 601209200002983), 1 mis-decision.
   - It is a single exposure: the star is normal 5 min later, and 8 of 9 other stars are normal in the same exposure.
   - Missing: an image or difference flux for that exposure, or an independent same-time measurement.
-- **Not checked** (cap of 3): G2, 3 rows on 2 stars, 3 mis-decisions. The first check would be C3: the 6 other stored
-  stars in those exposures.
-- **Variability supported by independent observations:** none.
+- **Not checked** (cap of 3; see the selection deviation in §2): G2, 3 rows on 2 stars, 3 mis-decisions. The first
+  check would be C3, on the 6 other stored stars in those exposures.
+- **Variability supported by independent observations:** none in the 3 checked groups. G2 is unchecked.
 
 ## 5. Answer
 - **Counts:** the 8 simulated mis-decisions come from 9 rows. 8 of the rows are low, and they come from 6 exposures on 4
   nights; the 9th row is not an observed anomaly.
-- **Exposure-level problem:** the single biggest source is one exposure (G1). There, all 10 stored stars of area 4991
-  are 32–34 % low, which points to an exposure-level photometric problem rather than 3 stellar dimmings.
-- **New evidence:** there is no reliable new evidence of real variability, and no specific source worth follow-up.
-  G3 stays undetermined, and the data that could decide it (the exposure image) need an ATLAS account.
+- **Exposure-level clue:** the single biggest source is one exposure (G1). There, all 10 stored stars of area 4991 are
+  32–34 % low. That points to an exposure-level photometric problem rather than 3 stellar dimmings; it is a clue, not
+  proven.
+- **New evidence:** in the 3 checked groups there is no reliable new evidence of real variability, and no specific
+  source worth follow-up. G2 is unchecked.
+- **G3:** stays undetermined. Deciding it needs the exposure image (an ATLAS account) or a new difference-mode task
+  (excluded this round).
 
 ## 6. Cost
-- About 0.4 h of the 1.5 h budget, 0 MB downloaded.
+- About 0.7 h of the 1.5 h budget, 0 MB downloaded.
 - One local ZTF cache read (filtered to the group members of 4 stars).

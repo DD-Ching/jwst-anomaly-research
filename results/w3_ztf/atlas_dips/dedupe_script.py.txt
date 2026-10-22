@@ -103,8 +103,10 @@ for rec in exposures.values():
     rec['flagged_injections_on_star'] = sum(str(e['carrier']) == rec['star'] and e['a'] != 'not_flagged' for e in trial)
 out = {'label': 'POST HOC; observed (ATLAS rows from ../atlas40/phot) and derived; the mis-decisions are simulated',
        'n_mis_decisions': len({(c['area'], c['kind'], c['i']) for c in cases}), 'n_trigger_points': len(cases),
-       'n_unique_exposures': len(exposures), 'n_stars': len({k[0] for k in exposures}),
+       'n_unique_star_filter_exposure_keys': len(exposures), 'n_distinct_exposures': len({k[2] for k in exposures}),
+       'n_stars': len({k[0] for k in exposures}),
        'exposures': list(exposures.values()), 'cases': cases}
 json.dump(out, open('results/w3_ztf/atlas_dips/dedupe.json', 'w'), indent=1)
 open('results/w3_ztf/atlas_dips/dedupe.json', 'a').write('\n')
-print({k: out[k] for k in ('n_mis_decisions', 'n_trigger_points', 'n_unique_exposures', 'n_stars')})
+print({k: out[k] for k in ('n_mis_decisions', 'n_trigger_points', 'n_unique_star_filter_exposure_keys', 'n_distinct_exposures',
+                            'n_stars')})
