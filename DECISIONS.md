@@ -2194,6 +2194,14 @@ them automatically. All thresholds are ASSUMPTIONs.
 - `bayes.dat` posteriors give model position errors for far images (system 6 needs about 3″).
 - A field's image list carries its own frame solution.
 
+**Addendum 2026-10-22 (MACS0417, `results/lens_consistency/macs0417_arcref/`).** Pipeline isophotal segment totals
+(F = `isophotal_flux` of the segment whose 3σ ellipse contains the image, L = F / Σ|μ|) were tested as an arc-aware
+reference and **rejected for this field**: frozen gate C2 failed, 10 / 27 testable controls recovered or confused
+(0.37; arc-referenced 6 / 12) against ≥ 0.8. Post hoc (looked at): single segments of 3σ semi-major 9.2–65.1″ (three of them
+16.2–17.6 mag) hold several lensed knots, or an image together with other light. Do not reuse pipeline
+segment totals as references in cluster cores; an arc-aware reference needs a deblended arc catalogue
+(e.g. CANUCS v2) or an arc-aperture sum on member-subtracted images.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
