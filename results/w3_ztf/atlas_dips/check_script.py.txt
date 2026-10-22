@@ -1,7 +1,9 @@
 # PLAN section 2: case selection (stage "select": counts only, no comparison flux) and the frozen checks C1-C6 with the
 # classification (stage "check"). Inputs: dedupe.json, the stored ATLAS tables (../atlas40/phot, calib.json) and the
 # local ZTF cache #462 already used (data/cache/w3_ztf/<npix>/lc_rows.parquet; nothing is downloaded).
-# Usage: python check_script.py.txt select|check
+# Usage: python check_script.py.txt select|check|post_review. Stage post_review (PLAN section 3, after #470) recomputes the
+# counts with section 2's wording (b excludes only the row's own exposure), and checks G2 with section 2's support text
+# (any other exposure of the star, and same-band exposures on other nights within 2 d); select and check are unchanged.
 import json, sys
 
 import numpy as np
@@ -70,14 +72,15 @@ def ztf_rows(key, t0, half):
     return out
 
 
-def counts(gkey):
+def counts(gkey, plan_wording=False):
     rows = groups[gkey]
     obs = {x['Obs'] for x in rows}
     a = {s for s, df in T.items() if s not in {x['star'] for x in rows} and df.loc[df['ok'], 'Obs'].isin(obs).any()}
     b = c = d = 0
     for x in rows:
         df = T[x['star']]
-        near = df['ok'] & ((df['MJD'] - x['mjd_published']).abs() < NIGHT) & ~df['Obs'].isin(obs)
+        own = (df['Obs'] == x['Obs']) if plan_wording else df['Obs'].isin(obs)
+        near = df['ok'] & ((df['MJD'] - x['mjd_published']).abs() < NIGHT) & ~own
         b += int(near.sum())
         c += int((df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= NEAR) & (df['F'] != x['filter'])).sum())
         d += len(ztf_rows(x['star'], x['hmjd_used'], NEAR))
@@ -97,6 +100,131 @@ if STAGE == 'select':
     print(json.dumps(sel, indent=1))
     sys.exit()
 
+def check_row(x, obs, plan_text=False):
+    df = T[x['star']]
+    r = df.loc[df['Obs'] == x['Obs']].iloc[0]
+    same = df['ok'] & (df['F'] == r['F']) & (df['unit'] == r['unit'])
+    c2 = {}
+    for q in QF:
+        v = df.loc[same, q].to_numpy()
+        lo, hi = np.percentile(v, [0.5, 99.5])
+        c2[q] = {'value': float(r[q]), 'p0.5': float(lo), 'p99.5': float(hi),
+                 'percentile': float((v < r[q]).mean() * 100)}
+    c2_clue = c2['chi/N']['value'] > c2['chi/N']['p99.5'] or c2['mag5sig']['value'] < c2['mag5sig']['p0.5'] \
+        or c2['Sky']['value'] < c2['Sky']['p0.5']
+    c3 = []
+    for s, d2 in T.items():
+        if s == x['star']:
+            continue
+        m = d2['ok'] & (d2['Obs'] == x['Obs'])
+        for _, q in d2.loc[m].iterrows():
+            c3.append({'star': s, 'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'x': float(q['x']), 'y': float(q['y'])})
+    c3_clue = sum(q['dev_sigma'] < -SIG for q in c3) >= 2
+    def common_mode(ob):
+        return sum(((d2['Obs'] == ob) & d2['ok'] & (d2['dev'] < -SIG)).sum() for s, d2 in T.items() if s != x['star']) >= 2
+
+    night = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() < NIGHT) & (df['Obs'] != x['Obs'])]
+    c4 = [{'Obs': q['Obs'], 'F': q['F'], 'unit': q['unit'], 'dt_h': float((q['MJD'] - x['mjd_published']) * 24),
+           'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))}
+          for _, q in night.iterrows()]
+    near = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= NEAR) & (df['F'] != r['F'])]
+    c5_atlas = [{'Obs': q['Obs'], 'F': q['F'], 'dt_d': float(q['MJD'] - x['mjd_published']), 'rel': float(q['rel']),
+                 'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))} for _, q in near.iterrows()]
+    c5_ztf = ztf_rows(x['star'], x['hmjd_used'], NEAR)
+    win = df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= MONTH) & ((df['MJD'] - x['mjd_published']).abs() >= NIGHT)
+    c6 = {'same_filter_unit_rows': int((win & same).sum()),
+          'same_filter_unit_median_rel': float(df.loc[win & same, 'rel'].median()) if (win & same).any() else None,
+          'units_in_window': sorted(df.loc[win, 'unit'].unique().tolist()),
+          'units_all_seasons': sorted(df['unit'].unique().tolist())}
+    # independent support: another exposure of this star (not one of this case's exposures) low by > 5 sigma within 2 d,
+    # whose exposure shows no common mode (fewer than 2 other stars > 5 sigma low in it); common_mode is recorded per
+    # comparison exposure (added after the first run, for traceability; classes unchanged)
+    c4b = []
+    if plan_text:  # PLAN section 2 text: another night counts too (same band, within 2 d)
+        other = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= NEAR) & ((df['MJD'] - x['mjd_published']).abs() >= NIGHT)
+                       & (df['F'] == r['F'])]
+        c4b = [{'Obs': q['Obs'], 'F': q['F'], 'unit': q['unit'], 'dt_d': float(q['MJD'] - x['mjd_published']),
+                'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))}
+               for _, q in other.iterrows()]
+    excl = {x['Obs']} if plan_text else obs
+    support = [q for q in c4 + c4b + c5_atlas if q['dev_sigma'] < -SIG and q['Obs'] not in excl and not common_mode(q['Obs'])]
+    support += [q for q in c5_ztf if q['catflags'] == 0 and q['dev_sigma'] > SIG]  # ZTF: magnitude larger = dimmer
+    c1_ok = all(x['checks'][k] for k in ('low_flux_in_uninjected_row', 'uJy_not_9999_code', 'Obs_published_once',
+                                         'Obs_filter_letter_matches_F', 'Obs_night_matches_MJD'))
+    cls = ('1 confirmed reading or processing error' if not c1_ok else
+           '2 data-quality clue, not proven' if (c3_clue or c2_clue) else
+           '3 variability supported by independent observations' if support else '4 flux anomaly undetermined')
+    out = {'star': x['star'], 'Obs': x['Obs'], 'filter': x['filter'], 'rel': x['rel'],
+                     'dev_sigma': x['dev_sigma_cal'], 'C1_ok': c1_ok, 'C2': c2, 'C2_clue': bool(c2_clue),
+                     'C3_other_stars_same_exposure': c3, 'C3_common_mode': bool(c3_clue), 'C4_same_night': c4,
+                     'C5_atlas_other_filter_2d': c5_atlas, 'C5_ztf_2d': c5_ztf, 'C6': c6,
+                     'independent_support': support, 'class': cls}
+    if plan_text:
+        out['C4b_same_band_other_nights_2d'] = c4b
+    return out
+
+
+if STAGE == 'post_review':
+    plan = {names[g]: counts(g, plan_wording=True) for g in groups}
+    porder = sorted(plan, key=lambda n: (-plan[n]['total'], sel[n]['night']))
+    for i_, n_ in enumerate(porder):
+        plan[n_]['rank'], plan[n_]['would_be_checked'] = i_ + 1, i_ < 3
+    assert plan['G2']['would_be_checked'] and not sel['G2']['checked'], plan
+    saved_g2 = json.load(open(O + 'selection.json'))['groups']['G2']  # same group as #470's record
+    assert (saved_g2['unit'], saved_g2['night'], saved_g2['rows']) == (sel['G2']['unit'], sel['G2']['night'], sel['G2']['rows'])
+    json.dump({'label': 'POST REVIEW (after #470); derived counts only, with PLAN section 2 wording for count (b)',
+               'groups': plan}, open(O + 'selection_plan_wording.json', 'w'), indent=1)
+    open(O + 'selection_plan_wording.json', 'a').write('\n')
+    g2 = next(g for g in groups if names[g] == 'G2')
+    obs2 = {x['Obs'] for x in groups[g2]}
+    rows2 = [check_row(x, obs2, plan_text=True) for x in groups[g2]]
+    # per star and exposure: every stored star of the area, with its row in each G2 exposure (or unknown if none)
+    area = targets[groups[g2][0]['star']]['area']
+    table_ = {}
+    for ob in sorted(obs2):
+        table_[ob] = {}
+        for s_, d_ in T.items():
+            if targets[s_]['area'] != area:
+                continue
+            m_ = d_['Obs'] == ob
+            if not m_.any():
+                table_[ob][s_] = 'unknown: no row in this exposure'
+                continue
+            q_ = d_.loc[m_].iloc[0]
+            faq = bool(quality(d_.loc[m_]).all())
+            table_[ob][s_] = {'target_row': s_ in {x['star'] for x in groups[g2] if x['Obs'] == ob},
+                              'passes_faq_cuts': faq, 'below_9999_guard': bool(abs(q_['uJy']) < 9999),
+                              'used_by_rule': bool(q_['ok']), 'F': q_['F'], 'unit': q_['unit'], 'mjd': float(q_['MJD']),
+                              'uJy': int(q_['uJy']), 'duJy': int(q_['duJy']), 'baseline_uJy': float(q_['baseline']),
+                              'baseline_group': f"{q_['F']}/{q_['unit']}", 'k': float(q_['k']), 'rel': float(q_['rel']),
+                              'sigma_rel_cal': float(q_['sig']), 'dev_sigma': float(q_['dev']),
+                              'quality': {c_: float(q_[c_]) for c_ in ['err', 'chi/N', 'x', 'y', 'maj', 'min', 'apfit',
+                                                                         'mag5sig', 'Sky']}}
+    # every exposure of the area's stars on G2's night and unit (row counts and medians of the quality fields)
+    night_ = {}
+    for s_, d_ in T.items():
+        if targets[s_]['area'] != area:
+            continue
+        m_ = (d_['unit'] == groups[g2][0]['unit']) & (d_['MJD'].astype(int) == groups[g2][0]['mjd_published'] // 1)
+        for _, q_ in d_.loc[m_].iterrows():
+            e_ = night_.setdefault(q_['Obs'], {'mjd': float(q_['MJD']), 'rows': 0, 'used_by_rule': 0, 'mag5sig': [], 'Sky': []})
+            e_['rows'] += 1
+            e_['used_by_rule'] += int(q_['ok'])
+            e_['mag5sig'].append(float(q_['mag5sig']))
+            e_['Sky'].append(float(q_['Sky']))
+    for e_ in night_.values():
+        e_['mag5sig_median'], e_['Sky_median'] = float(np.median(e_.pop('mag5sig'))), float(np.median(e_.pop('Sky')))
+    json.dump({'label': 'POST-REVIEW SUPPLEMENTARY CHECK of G2 (not blind, not a validation); observed ATLAS and ZTF '
+                        'measurements (stored tables, local cache) and derived checks; PLAN section 3',
+               'selection_plan_wording': plan, 'G2': rows2, 'per_star_per_exposure': table_,
+               'night_exposures_same_unit': dict(sorted(night_.items(), key=lambda kv: kv[1]['mjd']))},
+              open(O + 'check_g2.json', 'w'), indent=1)
+    open(O + 'check_g2.json', 'a').write('\n')
+    for r_ in rows2:
+        print(r_['star'], r_['Obs'], round(r_['rel'], 3), round(r_['dev_sigma'], 1), '|', r_['class'], '| C3 common',
+              r_['C3_common_mode'], 'n C3', len(r_['C3_other_stars_same_exposure']), 'support', len(r_['independent_support']))
+    sys.exit()
+
 sel_saved = json.load(open(O + 'selection.json'))['groups']
 assert {n: (v['rank'], v['checked']) for n, v in sel.items()} == {n: (v['rank'], v['checked']) for n, v in sel_saved.items()}
 res = {}
@@ -106,58 +234,7 @@ for gkey in groups:
         res[n] = {'checked': False}
         continue
     obs = {x['Obs'] for x in groups[gkey]}
-    rows_out = []
-    for x in groups[gkey]:
-        df = T[x['star']]
-        r = df.loc[df['Obs'] == x['Obs']].iloc[0]
-        same = df['ok'] & (df['F'] == r['F']) & (df['unit'] == r['unit'])
-        c2 = {}
-        for q in QF:
-            v = df.loc[same, q].to_numpy()
-            lo, hi = np.percentile(v, [0.5, 99.5])
-            c2[q] = {'value': float(r[q]), 'p0.5': float(lo), 'p99.5': float(hi),
-                     'percentile': float((v < r[q]).mean() * 100)}
-        c2_clue = c2['chi/N']['value'] > c2['chi/N']['p99.5'] or c2['mag5sig']['value'] < c2['mag5sig']['p0.5'] \
-            or c2['Sky']['value'] < c2['Sky']['p0.5']
-        c3 = []
-        for s, d2 in T.items():
-            if s == x['star']:
-                continue
-            m = d2['ok'] & (d2['Obs'] == x['Obs'])
-            for _, q in d2.loc[m].iterrows():
-                c3.append({'star': s, 'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'x': float(q['x']), 'y': float(q['y'])})
-        c3_clue = sum(q['dev_sigma'] < -SIG for q in c3) >= 2
-        def common_mode(ob):
-            return sum(((d2['Obs'] == ob) & d2['ok'] & (d2['dev'] < -SIG)).sum() for s, d2 in T.items() if s != x['star']) >= 2
-
-        night = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() < NIGHT) & (df['Obs'] != x['Obs'])]
-        c4 = [{'Obs': q['Obs'], 'F': q['F'], 'unit': q['unit'], 'dt_h': float((q['MJD'] - x['mjd_published']) * 24),
-               'rel': float(q['rel']), 'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))}
-              for _, q in night.iterrows()]
-        near = df.loc[df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= NEAR) & (df['F'] != r['F'])]
-        c5_atlas = [{'Obs': q['Obs'], 'F': q['F'], 'dt_d': float(q['MJD'] - x['mjd_published']), 'rel': float(q['rel']),
-                     'dev_sigma': float(q['dev']), 'common_mode': bool(common_mode(q['Obs']))} for _, q in near.iterrows()]
-        c5_ztf = ztf_rows(x['star'], x['hmjd_used'], NEAR)
-        win = df['ok'] & ((df['MJD'] - x['mjd_published']).abs() <= MONTH) & ((df['MJD'] - x['mjd_published']).abs() >= NIGHT)
-        c6 = {'same_filter_unit_rows': int((win & same).sum()),
-              'same_filter_unit_median_rel': float(df.loc[win & same, 'rel'].median()) if (win & same).any() else None,
-              'units_in_window': sorted(df.loc[win, 'unit'].unique().tolist()),
-              'units_all_seasons': sorted(df['unit'].unique().tolist())}
-        # independent support: another exposure of this star (not one of this case's exposures) low by > 5 sigma within 2 d,
-        # whose exposure shows no common mode (fewer than 2 other stars > 5 sigma low in it); common_mode is recorded per
-        # comparison exposure (added after the first run, for traceability; classes unchanged)
-        support = [q for q in c4 + c5_atlas if q['dev_sigma'] < -SIG and q['Obs'] not in obs and not common_mode(q['Obs'])]
-        support += [q for q in c5_ztf if q['catflags'] == 0 and q['dev_sigma'] > SIG]  # ZTF: magnitude larger = dimmer
-        c1_ok = all(x['checks'][k] for k in ('low_flux_in_uninjected_row', 'uJy_not_9999_code', 'Obs_published_once',
-                                             'Obs_filter_letter_matches_F', 'Obs_night_matches_MJD'))
-        cls = ('1 confirmed reading or processing error' if not c1_ok else
-               '2 data-quality clue, not proven' if (c3_clue or c2_clue) else
-               '3 variability supported by independent observations' if support else '4 flux anomaly undetermined')
-        rows_out.append({'star': x['star'], 'Obs': x['Obs'], 'filter': x['filter'], 'rel': x['rel'],
-                         'dev_sigma': x['dev_sigma_cal'], 'C1_ok': c1_ok, 'C2': c2, 'C2_clue': bool(c2_clue),
-                         'C3_other_stars_same_exposure': c3, 'C3_common_mode': bool(c3_clue), 'C4_same_night': c4,
-                         'C5_atlas_other_filter_2d': c5_atlas, 'C5_ztf_2d': c5_ztf, 'C6': c6,
-                         'independent_support': support, 'class': cls})
+    rows_out = [check_row(x, obs) for x in groups[gkey]]
     res[n] = {'checked': True, 'rows': rows_out}
 json.dump({'label': 'POST HOC; observed ATLAS and ZTF measurements (stored tables, local cache) and derived checks',
            'selection': sel, 'cases': res}, open(O + 'check.json', 'w'), indent=1)

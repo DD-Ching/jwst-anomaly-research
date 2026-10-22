@@ -1,0 +1,41 @@
+{
+ "label": "POST REVIEW (after #470); derived counts only, with PLAN section 2 wording for count (b)",
+ "groups": {
+  "G1": {
+   "a_other_stars_same_exposure": 7,
+   "b_same_star_same_night_other_exposures": 12,
+   "c_other_atlas_filter_within_2d": 24,
+   "d_ztf_epochs_within_2d": 23,
+   "total": 66,
+   "rank": 1,
+   "would_be_checked": true
+  },
+  "G2": {
+   "a_other_stars_same_exposure": 6,
+   "b_same_star_same_night_other_exposures": 6,
+   "c_other_atlas_filter_within_2d": 0,
+   "d_ztf_epochs_within_2d": 0,
+   "total": 12,
+   "rank": 3,
+   "would_be_checked": true
+  },
+  "G3": {
+   "a_other_stars_same_exposure": 9,
+   "b_same_star_same_night_other_exposures": 3,
+   "c_other_atlas_filter_within_2d": 0,
+   "d_ztf_epochs_within_2d": 5,
+   "total": 17,
+   "rank": 2,
+   "would_be_checked": true
+  },
+  "G4": {
+   "a_other_stars_same_exposure": 4,
+   "b_same_star_same_night_other_exposures": 1,
+   "c_other_atlas_filter_within_2d": 0,
+   "d_ztf_epochs_within_2d": 3,
+   "total": 8,
+   "rank": 4,
+   "would_be_checked": false
+  }
+ }
+}

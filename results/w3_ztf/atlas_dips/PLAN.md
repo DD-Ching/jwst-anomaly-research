@@ -87,3 +87,36 @@ The step-1 table (`dedupe.json`, committed with this section) gives:
 
   A single low point is never counted as real dimming. Normal neighbours alone never make a point an artefact. Only
   class 3 leads to a known-variable lookup (VSX / Gaia DR3 variability, small queries). Nothing changes #462.
+
+## 3. Post-review check of G2 (owner brief 2026-10-22 after #470; written before G2's comparison flux is read)
+- **Why:** #470's review found that the selection counts deviated from §2's wording.
+  - Count (b) excluded all of a case's own exposures, not only the row's own.
+  - Under §2's wording G2 totals 12, above G4's 8 (RESULT §2), so G2 should have been checked.
+  - The `post_review` stage recomputes the counts with §2's wording and asserts this before checking anything.
+- **Labels:**
+  - This is a **post-review supplementary check**, not a blind test and not an independent validation.
+  - The original selection (`selection.json`), the completed checks (`check.json`) and the deviation record stay as
+    they are.
+  - Output goes to `selection_plan_wording.json` and `check_g2.json`.
+- **Inputs:**
+  - the stored tables only, with the same baselines, quality cut and windows: night ±0.5 d, other bands ±2 d, baseline
+    ±30 d;
+  - the same C1–C6 code, moved into one function so that the `check` stage output stays byte-identical;
+  - no download, no ATLAS task, no injection rerun, no new photometry.
+  - Analysis time cap: 30 min.
+- **What is checked for G2** (3 rows, 3 exposures `01a60480o0694o`, `…0722o`, `…0749o`, 2 stars):
+  - C3: every other stored star with a passing row in each exposure. All stars are included, with none picked.
+  - C4: the target's other exposures that night.
+  - C5: the target's other ATLAS filter and ZTF within ±2 d.
+  - C6: baseline stability.
+  - The support test follows §2's text, which the original script had narrowed in two ways:
+    - any other exposure of the same star counts, including the case's other exposures;
+    - same-band exposures on other nights within ±2 d are also tested.
+  - Classes and their order are §2's, unchanged.
+- **Interpretation limits** (owner brief):
+  - several stars low together supports a common photometric problem but does not prove a cause;
+  - a single low point of the target stays undetermined, and normal neighbours do not make it an artefact;
+  - only several independent exposures of the target low, with normal comparison stars, would be a variability lead
+    worth follow-up. It would still need ordinary explanations checked, and it would not be a wormhole candidate.
+- **No further round:** if nothing new is found, this check line is closed and no further check of this kind is
+  proposed. #462's injection results and verdict stay as they are.

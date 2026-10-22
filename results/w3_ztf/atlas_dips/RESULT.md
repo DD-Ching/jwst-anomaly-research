@@ -1,4 +1,8 @@
-# W3 ZTF × ATLAS dip check: #462's 8 W3 simulated mis-decisions trace to 7 ATLAS exposures; the largest shows exposure-level common mode (10 / 10 stars 32–34 % low; a clue, not proven); in the 3 checked groups no reliable evidence of real variability
+# W3 ZTF × ATLAS dip check: #462's 8 W3 simulated mis-decisions trace to 7 ATLAS exposures (8 low rows in 6); all 4 groups now checked (G2 after review, §7): exposure- or night-level photometric clues in G1, G2, G4, one undetermined single exposure (G3); no reliable evidence of real variability among these rows
+
+> **Post-review update (§7):** G2, left unchecked in #470 because of a selection-count deviation, was checked after the review with the same code and rules. Sections 2–5 are kept as #470's record, with pointers to §7; §8 gives the status of
+> all four groups.
+
 
 - **Plan:** `PLAN.md`, committed in three steps:
   - the scope and de-duplication rule (b2893a8);
@@ -114,7 +118,8 @@ rank):
   - Missing: an image or difference flux for that exposure, or an independent same-time measurement.
 - **Not checked** (cap of 3; see the selection deviation in §2): G2, 3 rows on 2 stars, 3 mis-decisions. The first
   check would be C3, on the 6 other stored stars in those exposures.
-- **Variability supported by independent observations:** none in the 3 checked groups. G2 is unchecked.
+- **Variability supported by independent observations:** none in the 3 checked groups. G2 is unchecked (checked after
+  review: §7).
 
 ## 5. Answer
 - **Counts:** the 8 simulated mis-decisions come from 9 rows. 8 of the rows are low, and they come from 6 exposures on 4
@@ -123,10 +128,76 @@ rank):
   32–34 % low. That points to an exposure-level photometric problem rather than 3 stellar dimmings; it is a clue, not
   proven.
 - **New evidence:** in the 3 checked groups there is no reliable new evidence of real variability, and no specific
-  source worth follow-up. G2 is unchecked.
+  source worth follow-up. G2 is unchecked (see §7 for the post-review check).
 - **G3:** stays undetermined. Deciding it needs the exposure image (an ATLAS account) or a new difference-mode task
   (excluded this round).
 
 ## 6. Cost
 - About 0.65 h of the 1.5 h wall-clock budget (20:56 to the merge, ≈ 21:35 UTC), 0 MB downloaded.
 - One local ZTF cache read (filtered to the group members of 4 stars).
+
+## 7. Post-review check of G2 (PLAN §3; `selection_plan_wording.json`, `check_g2.json`)
+- **Label:** a post-review supplementary check, not a blind test or validation.
+  - #470's selection, checks and deviation record are unchanged.
+  - Same code (`check_script.py.txt`, stage `post_review`), baselines, quality cut and windows.
+  - The `select` and `check` outputs regenerate byte-identical.
+  - 0 MB downloaded; about 0.15 h of analysis.
+- **Support test, widened per PLAN §3:** support now excludes only the row's own exposure and also tests same-band
+  exposures on other nights within ±2 d. #470's `check` stage had excluded all of the case's exposures, so it would
+  not have counted `…0749o` as support for the `…0694o` row.
+- **Identity:**
+  - With PLAN §2's wording, G2 totals 12: 6 other stars + 6 same-night rows.
+  - It ranks 3rd, above G4 (8), so it is the group that should have been checked.
+  - The script also asserts that G2's unit, night and rows equal #470's `selection.json` record.
+- **What it covers:** G2's 3 simulated mis-decisions (#35 post, #161, #132) are **3 raw rows of 2 stars in 3 exposures
+  on 1 night** (unit 01a, MJD 60480). They are not 3 astronomical events.
+- **Per star and exposure:** `check_g2.json` → `per_star_per_exposure` covers all 10 stored area-4991 stars in each
+  exposure:
+  - uJy, duJy, baseline and its (filter, unit) group, k, rel, calibrated σ, deviation and quality fields;
+  - 2 stars have no row in these exposures (unknown);
+  - 601213300007095 is excluded in `…0694o` by the |uJy| < 9999 guard (uJy 10103, rel 1.90, +4.6 σ). Its FAQ
+    quality fields pass, so it is a second high comparison in that exposure besides 1.71. The class does not change.
+
+| row (mis-decision) | target rel | other stars in the same exposure (passing rows) | target's other exposures | class (frozen rule) |
+|---|---|---|---|---|
+| 601213200006434 `…0694o` (#161) | 0.417 (−5.7 σ) | 5 of 6 low (rel 0.28–0.77; 2 beyond −5 σ), 1 high (1.71); plus 1 high excluded by the 9999 guard (1.90) | same night: 1.327 (+12.4 σ), 0.677 (−16.7 σ); next nights in o: 0.997–1.12 | **2 common-mode clue** |
+| 601213200006434 `…0749o` (#35 post) | 0.677 (−16.7 σ) | 1 of 7 beyond −5 σ (0.832); **5 of 7 beyond +5 σ** (1.12–1.18; chi/N 5–37); 1 normal | same night: 0.417 (common mode), 1.327 (+12.4 σ); next nights: 0.986–1.12 | **4 undetermined** |
+| 601213400002567 `…0722o` (#132) | 0.492 (−13.0 σ) | 1 of 7 beyond −5 σ (0.695), 1 at −4.8 σ (0.81); **4 of 7 beyond +5 σ** (1.20–1.33); 1 normal | same night: 0.338 (common mode), 1.122 (+9.3 σ); next night 02a: 0.69 (common mode), 0.999–1.007 | **4 undetermined** |
+
+- **Other bands:** no ATLAS c and no ZTF epoch within ±2 d of this night (unknown).
+- **Common photometric shift?** Partly.
+  - `…0694o` has a common low shift under the frozen rule.
+  - `…0749o` and `…0722o` do not meet the rule's "≥ 2 other stars > 5 σ low". Their comparison stars are still not
+    normal: most deviate by > 5 σ, mostly **high**. Within 39 min, 601213200006434 reads 0.42 → 1.33 → 0.68 and 601213400002567 reads
+    0.34 → 0.49 → 1.12.
+  - This is a night-level photometric instability clue (observed; not used for the class, and not proven). The
+    quality fields of the target rows are inside their stars' 0.5–99.5 % ranges.
+  - **The class-2 call for `…0694o` is marginal.** It rests on 2 stars just beyond −5 σ: 601213400002567 at −6.0 σ
+    (itself the other G2 target star) and 601213400004073 at −5.1 σ.
+  - **Failed exposure on the same night:** `…0701o` (MJD 60480.578, between `…0694o` and `…0722o`) has rows for 9
+    area-4991 stars, all failing the quality cut. Median mag5sig is −2.79 and median Sky −1.36. In the FAQ, mag5sig
+    < 10 means a failed photometric solution. The cut excludes it, as it should (`check_g2.json` →
+    `night_exposures_same_unit`).
+- **Individual variability supported by independent exposures?** No.
+  - 601213200006434 has two low exposures that night. The frozen rule's class-3 test is formally met for the `…0694o`
+    row, by `…0749o`, but class 2 matches first.
+  - The owner's condition, comparison stars normal, fails in both exposures: common mode in one, two-sided > 5 σ
+    scatter in the other. Its exposure between them is 33 % high.
+  - 601213400002567's next exposure is 12 % high, and its other low points are in common-mode exposures.
+
+## 8. Status of the four groups (after §7)
+| group | rows / exposures / stars | status | missing to decide |
+|---|---|---|---|
+| G1 | 3 / 1 / 3 | exposure-level common mode: all 10 stored stars 32–34 % low (clue, not proven) | exposure zero point or image |
+| G2 | 3 / 3 / 2 | one exposure common mode (clue); two undetermined under the rule, with comparison stars scattering > 5 σ both ways (night-level clue, not proven) | the night's exposure images or zero points; no other band within ±2 d |
+| G3 | 1 / 1 / 1 | undetermined single exposure (development star); 8 of 9 other stars and its own exposures 5–30 min later normal | the exposure image (ATLAS account) or a difference-mode task (excluded) |
+| G4 | 1 / 1 / 1 | night-level common mode (clue, not proven) | exposure zero point or image |
+
+- **Overall** (unchanged by §7):
+  - no confirmed reading error;
+  - no variability supported by independent observations among these 8 low rows;
+  - no source worth follow-up from **these rows**.
+- **Scope:** this covers only the ATLAS rows behind #462's mis-decisions. It says nothing about the stars' other
+  epochs or other data.
+- **Closure:** the check line is closed as the owner's brief requires, with no further check of this kind proposed.
+  #462's injection results and verdict are unchanged.

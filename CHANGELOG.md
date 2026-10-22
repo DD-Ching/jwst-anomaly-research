@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: W3 ZTF × ATLAS dip check, post-review G2 check: one common-mode exposure, two undetermined rows in exposures whose comparison stars scatter > 5 σ both ways; no variability supported by independent exposures; check line closed
+- **Plan:** `results/w3_ztf/atlas_dips/PLAN.md` §3. A post-review supplementary check, not blind. #470's selection,
+  checks and deviation record are kept.
+- **Selection:** with PLAN §2's wording G2 totals 12 (rank 3, above G4), so it is the group that should have been
+  checked.
+- **Coverage:** G2's 3 simulated mis-decisions are 3 raw rows of 2 stars in 3 exposures on one night.
+- **Result** (`check_g2.json`, with a per-star per-exposure table):
+  - `…0694o`: common low shift (class 2).
+  - `…0749o`, `…0722o`: undetermined under the rule. Their comparison stars are mostly > 5 σ high, so the night
+    looks photometrically unstable (clue, not proven).
+  - No individual variability is supported by independent exposures.
+- **Status:** all 4 groups are now checked (RESULT §8). No reliable evidence of real variability among these 8 low
+  rows, and no source worth follow-up from them. Line closed; #462 unchanged.
+
 ## 2026-10-22: W3 ZTF × ATLAS dip check (post hoc, #462): 7 of the 8 simulated mis-decisions trace to 8 low rows in 6 exposures (the 8th to a normal row); the largest is one exposure with all 10 stored area-4991 stars 32–34 % low (clue, not proven); no reliable evidence of real variability in the 3 checked groups
 - **Plan** (`results/w3_ztf/atlas_dips/PLAN.md`): stored tables only. Selection and check rules were committed before
   any comparison flux was read. 0 MB downloaded. #462's verdict is unchanged; its wording was narrowed (27 / 63 is a
