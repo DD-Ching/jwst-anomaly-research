@@ -2,6 +2,27 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: W3 ZTF × ATLAS forced photometry (4 stars): shared Data Lab token works; ATLAS has good visits in 11 / 19 decisive windows of the ZTF r / g common-gap sides
+- **Plan** (`results/w3_ztf/atlas/PLAN.md`): the selection was fixed before any query (`selection.json`): 2 stars per
+  area with the most #460 joint-insufficient W3 sides, 19 gaps in all. Reduced mode (total flux). The FAQ quality cuts,
+  per-gap counts in the common gap and the decisive window, and the token kept in memory only.
+- **Access:**
+  - Documentation: NOIRLab's ANTARES notebook allows the Astro Data Lab token (shared queue).
+  - Queries: 4 / 4 accepted (HTTP 201, no 429); 2.5–10 min each; our tasks deleted after download.
+- **Data** (`analysis.json`): 91–94 % of 970–2,105 rows per star pass. Baselines are c 14.68–15.36 and o 14.45–14.67
+  AB. Quoted errors are 0.5–0.8 %, robust scatter 1.0–2.3 %.
+- **Coverage:**
+  - 11 / 19 gap sides decisive, 2 gap only, 6 none (17 distinct gaps; the 6 empty sides are 5 gaps).
+  - The empty ones are solar-conjunction seasons (RA ≈ 11°, February–May) that ATLAS also misses.
+  - All 6 gaps of the two 2344 stars are decisive.
+  - Outliers are recorded, not vetted.
+- **Not measured:** whether ATLAS changes the simulated-event decisions. That needs a paired injection with a ZTF
+  replay, which the brief excluded.
+- **Also:** #460's "64 / 64 truly dim" reworded as injected-model dims (simulated-injection measurements), not real
+  events.
+- **Handoff:** a 40-star ATLAS run plus a paired injection (ZTF replay, about 1.25 GB) is the owner's decision. Search
+  scale needs a personal ATLAS account, not the shared queue. D-104 addendum.
+
 ## 2026-10-22: MACS0416 CANUCS DR1 reference extra-image test: gates K and C2 pass; flag D115b vetted inconclusive (Δχ² +12.6 to remove it)
 - **Plan** (`results/lens_consistency/macs0416_canucsref/PLAN.md`, frozen and pushed first): the MACS1149 rules
   (CANUCS DR1 reference, local-noise and containing-source rules) on MACS0416 with the pinned `macs0416-canucs`
@@ -31,7 +52,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`RESULT.md`, `decision.json`). The v24 and #459 outcomes were reproduced for every event.
   - On the 88 undecided W3 sides, joint decides 14 fast, against #459's 5. Of the 9 new: 2 from the bracket only,
     3 from the span only, 1 from either, 3 need both.
-  - 64 / 64 extending g epochs are truly dim (evaluation). Joint makes no W3 side slow and 1 of 18 fade sides fast.
+  - 64 / 64 extending g epochs are dim in the injected model (simulated-injection measurements, not real dimmings). Joint makes no W3 side slow and 1 of 18 fade sides fast.
   - **7 / 63 events restored** (noise-free replay and observed alike); a generous post hoc oracle gives 16 / 63. Stop.
     No rule frozen, no development comparison, no validation, no second method.
 - **Failed approach:** the g dims sit next to the r edge (median 1.97 d), and both bands share the gap after it. The

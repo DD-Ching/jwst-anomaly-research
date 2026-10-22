@@ -1,0 +1,45 @@
+# Contact sheet: ATLAS reduced-mode relative flux (quality-passing rows) of the 4 stars, with the ZTF r / g common gaps
+# (grey) and decisive windows (orange), on the heliocentric mid-exposure MJD of the gaps. The quality cuts and the
+# per-filter median mirror analysis_script.py.txt (keep them identical). Usage: python plot_script.py.txt <data dir>
+import io, json, os, sys
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from astropy import units as u
+from astropy.coordinates import EarthLocation, SkyCoord
+from astropy.time import Time
+
+D = sys.argv[1]
+an = json.load(open('results/w3_ztf/atlas/analysis.json'))
+sel = json.load(open('results/w3_ztf/atlas/selection.json'))
+fig, axs = plt.subplots(4, 1, figsize=(11, 10))
+for ax, key in zip(axs, sel['chosen']):
+    df = pd.read_csv(io.StringIO(open(os.path.join(D, f'atlas_fp_{key}.txt')).read().replace('###', '')), sep=r'\s+')
+    q = ((df['duJy'] < 10000) & (df['err'] == 0) & df['x'].between(100, 10460, inclusive='neither')
+         & df['y'].between(100, 10460, inclusive='neither') & df['maj'].between(1.6, 5, inclusive='neither')
+         & df['min'].between(1.6, 5, inclusive='neither') & df['apfit'].between(-1, -0.1, inclusive='neither')
+         & (df['mag5sig'] > 17) & (df['Sky'] > 17))
+    rq = sel['requests'][key]
+    tt = Time(df['MJD'].to_numpy() + 15.0 / 86400.0, format='mjd', scale='utc')
+    geo = EarthLocation.from_geocentric(0 * u.m, 0 * u.m, 0 * u.m)
+    df['t'] = (tt + tt.light_travel_time(SkyCoord(rq['ra'] * u.deg, rq['dec'] * u.deg), kind='heliocentric', location=geo)).mjd
+    for f, c in (('c', 'tab:cyan'), ('o', 'tab:orange')):
+        m = q & (df['F'] == f)
+        med = np.median(df.loc[m, 'uJy'])
+        ax.errorbar(df.loc[m, 't'], df.loc[m, 'uJy'] / med, df.loc[m, 'duJy'] / med, fmt='.', ms=2, lw=0.5, color=c, label=f)
+    for g in an['gaps']:
+        if str(g['carrier']) != key:
+            continue
+        ax.axvspan(*g['common_gap'], color='0.8', alpha=0.6, lw=0)
+        ax.axvspan(*g['decisive'], color='orange', alpha=0.25, lw=0)
+    ax.set_ylim(0.5, 1.6)
+    ax.set_xlim(sel['requests'][key]['mjd_min'], sel['requests'][key]['mjd_max'])
+    ax.set_ylabel('f / median')
+    ax.set_title(f"{key} (area {sel['requests'][key]['area']}): grey = ZTF r/g common gap, orange = decisive window", fontsize=9)
+    ax.legend(fontsize=7, loc='upper right')
+axs[-1].set_xlabel('heliocentric MJD (mid-exposure)')
+fig.tight_layout()
+fig.savefig('results/w3_ztf/atlas/lightcurves.png', dpi=80)
+print(os.path.getsize('results/w3_ztf/atlas/lightcurves.png'))

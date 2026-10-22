@@ -1,0 +1,24 @@
+{
+ "label": "derived; result bytes from tasks.json; documentation pages (5 HTML pages and the API schema) measured on disk; times from the session date -u prints and tasks.json",
+ "atlas_results_mb": 0.853,
+ "documentation_mb": 1.226,
+ "total_mb": 2.079,
+ "budget_mb": 500,
+ "tasks": 4,
+ "http_429": 0,
+ "stages_utc": {
+  "start": "07:31:40",
+  "docs_checked": "07:32-07:35",
+  "plan_and_selection_commit": "07:35:16 (e84e4dc)",
+  "test_submit": "07:36:22",
+  "test_finished": "07:46:15",
+  "other_three_submitted": "07:47:04-07:47:20",
+  "last_finished": "08:02:53",
+  "analysis": "08:03-08:10"
+ },
+ "raw_results_kept_in_repo": false,
+ "raw_results_deleted": true,
+ "estimate_40_stars_mb": 7.7,
+ "estimate_note": "36 more tasks at the 4-star mean result size",
+ "raw_results_note": "raw ATLAS text files deleted from the session after the final analysis and plot (cloud-disk rule); sha256 in tasks.json"
+}

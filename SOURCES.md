@@ -1699,6 +1699,17 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
     - The Pan-STARRS1 3π survey ran 2010–2014 (Chambers et al. 2016, arXiv:1612.05560).
     - ATLAS forced photometry needs a registered account: https://fallingstar-data.com/forcedphot/ (Shingles et al.
       2021, TNS AstroNote 2021-7).
+- **ATLAS forced photometry (used 2026-10-22, `results/w3_ztf/atlas/`):**
+  - **Server and documentation:** https://fallingstar-data.com/forcedphot/ — API guide `apiguide/`, FAQ `faq/`, output
+    description `resultdesc/`, OpenAPI schema `api/schema/`. The banner on 2026-10-22 read "2026-09-09 07:45 UTC: Normal
+    operations have resumed".
+  - **Shared access** was documented by NOIRLab's ANTARES devkit notebook "Lightcurves and Photometry Search", Chapter
+    3: https://nsf-noirlab.gitlab.io/csdc/antares/devkit/notebooks/LightcurvesPhotometrySearch/ (read 2026-10-22). The
+    token is not recorded.
+  - **Required citations (server home page):** Tonry et al. 2018 (survey), Smith et al. 2020 (transients), Heinze et
+    al. 2018 (variables), Shingles et al. 2021 (the service), plus the ATLAS acknowledgement text. Bibliographic details
+    were not re-checked this round.
+  - **Quality cuts:** the FAQ's common-sense filters, attributed there to Rest et al. (not re-checked).
 - PyCBC 2.11.0 (PyPI, GPLv3; https://github.com/gwastro/pycbc): `pycbc.filter.matchedfilter.compute_max_snr_over_sky_loc_stat_no_phase`
   (Harry et al., arXiv:1709.09181), `pycbc.waveform.get_fd_waveform`, `pycbc.filter.matched_filter`; `bin/pycbc_optimize_snr`
   with `pycbc/live/snr_optimizer.py` (aligned-spin, 4-D); `bin/pycbc_banksim` (finite bank). Checked 2026-10-21 in a separate

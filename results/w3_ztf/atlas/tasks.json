@@ -1,0 +1,94 @@
+{
+ "601209200002983": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T07:36:22Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235165,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235165/",
+  "submitted_utc": "2026-10-22T07:36:22Z",
+  "mode": "reduced",
+  "mjd_min": 58846.124,
+  "mjd_max": 60498.489,
+  "last_poll_utc": "2026-10-22T07:46:43Z",
+  "starttimestamp": "2026-10-22T07:36:23Z",
+  "finishtimestamp": "2026-10-22T07:46:15Z",
+  "result_bytes": 292825,
+  "result_rows": 2105,
+  "result_sha256": "53c2e6c8445fad7a31d21cf4ea390853f413991dbb1c59db996f2998d0f5ff23",
+  "downloaded_utc": "2026-10-22T07:46:44Z",
+  "deleted_own_task_http": 204
+ },
+ "601213300003718": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T07:47:05Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235204,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235204/",
+  "submitted_utc": "2026-10-22T07:47:05Z",
+  "mode": "reduced",
+  "mjd_min": 58846.124,
+  "mjd_max": 60137.476,
+  "last_poll_utc": "2026-10-22T07:50:02Z",
+  "starttimestamp": "2026-10-22T07:47:06Z",
+  "finishtimestamp": "2026-10-22T07:49:34Z",
+  "result_bytes": 213133,
+  "result_rows": 1532,
+  "result_sha256": "7104dcb6a70ad8e25e2106f9e00ede6714ae4500a38f71b9d335c261252e9803",
+  "downloaded_utc": "2026-10-22T07:50:03Z",
+  "deleted_own_task_http": 204
+ },
+ "632215200005622": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T07:47:10Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235205,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235205/",
+  "submitted_utc": "2026-10-22T07:47:10Z",
+  "mode": "reduced",
+  "mjd_min": 60183.107,
+  "mjd_max": 60600.223,
+  "last_poll_utc": "2026-10-22T07:54:41Z",
+  "starttimestamp": "2026-10-22T07:49:34Z",
+  "finishtimestamp": "2026-10-22T07:54:25Z",
+  "result_bytes": 135009,
+  "result_rows": 970,
+  "result_sha256": "61665b19f6cc7a86f140b890f77f47f875f41ee3d111920fa32029482fb0ad5b",
+  "downloaded_utc": "2026-10-22T07:54:42Z",
+  "deleted_own_task_http": 204
+ },
+ "632211200001819": {
+  "attempts": [
+   {
+    "utc": "2026-10-22T07:47:16Z",
+    "http": 201,
+    "detail": null
+   }
+  ],
+  "task_id": 5235207,
+  "task_url": "https://fallingstar-data.com/forcedphot/queue/5235207/",
+  "submitted_utc": "2026-10-22T07:47:16Z",
+  "mode": "reduced",
+  "mjd_min": 59452.107,
+  "mjd_max": 60281.132,
+  "last_poll_utc": "2026-10-22T08:02:55Z",
+  "starttimestamp": "2026-10-22T07:58:16Z",
+  "finishtimestamp": "2026-10-22T08:02:53Z",
+  "result_bytes": 211538,
+  "result_rows": 1520,
+  "result_sha256": "fd1579b6516e586c395b6c79d1e662176d05ef7a526f05e194ac5271740576d4",
+  "downloaded_utc": "2026-10-22T08:02:56Z",
+  "deleted_own_task_http": 204
+ }
+}
