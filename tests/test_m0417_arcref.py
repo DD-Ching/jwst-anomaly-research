@@ -39,6 +39,11 @@ def test_counterpart_uses_the_elongated_ellipse():
     # 1.2" North of source 0: inside its 3-sigma major axis (1.5"), outside along the minor axis
     assert ma.counterpart(10.0, 1.2 / 3600, cat) == 0
     assert ma.counterpart(10.0 + 1.2 / 3600, 0.0, cat) == -1
+    # a large segment far away still counts when its ellipse contains the position (no distance cut)
+    big = _cat(dec=np.array([0.0, 30 / 3600]), a=np.array([0.5, 12.0]), b=np.array([0.5, 1.0]))
+    assert ma.counterpart(10.0, 1 / 3600, big) == 0  # both contain it; the smaller radius wins
+    assert ma.counterpart(10.0, 3 / 3600, big) == 1  # only the far segment contains it
+    assert ma.counterpart(10.0, 50 / 3600, big) == 1
 
 
 def test_units_merge_shared_counterparts():
@@ -57,14 +62,16 @@ def test_reference_rules():
     cat = _cat()
     assert ma.reference([{"cp": 1, "mus": [5.0]}], cat)[1] == "no_reference"  # S/N 3
     assert ma.reference([{"cp": 0, "mus": [60.0]}], cat)[1] == "no_reference"  # |mu| > 50
-    lref, state = ma.reference([{"cp": 0, "mus": [5.0]}], cat)
-    assert state == "" and lref == 2.0
+    lref, state, k = ma.reference([{"cp": 0, "mus": [5.0]}], cat)
+    assert state == "" and lref == 2.0 and k == 0
+    neg = _cat(flux=np.array([-10.0, 1.0]), snr=np.array([50.0, 3.0]))
+    assert ma.reference([{"cp": 0, "mus": [5.0]}], neg)[1] == "no_reference"  # flux <= 0
     cat2 = _cat(snr=np.array([50.0, 50.0]))
     assert ma.reference([{"cp": 0, "mus": [1.0]}, {"cp": 1, "mus": [1.0]}], cat2)[1] == (
         "inconsistent_reference"
     )
-    lref, state = ma.reference([{"cp": 0, "mus": [4.0]}, {"cp": 1, "mus": [0.5]}], cat2)
-    assert state == "" and lref == 2.0  # smallest sum |mu| wins (L 2.5 vs 2.0 within 3x)
+    lref, state, k = ma.reference([{"cp": 0, "mus": [4.0]}, {"cp": 1, "mus": [0.5]}], cat2)
+    assert state == "" and lref == 2.0 and k == 1  # smallest sum |mu| wins (L 2.5 vs 2.0 within 3x)
 
 
 def test_classify():

@@ -356,7 +356,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        done 2026-10-21 (`results/lens_consistency/macs0417_frame/RESULT.md`: (+0.101″, −0.292″) from RELICS, residual
        0.300″ → 0.038″; gate C passes 12 / 12; the 6 extra predictions stay `no_reference`, arc references).
        ~~Arc-aware reference from pipeline segment totals~~ failed 2026-10-22 (D-034 addendum,
-       `results/lens_consistency/macs0417_arcref/RESULT.md`: gate C2 12 / 30; segments blended with cluster galaxies).
+       `results/lens_consistency/macs0417_arcref/RESULT.md`: gate C2 10 / 27; pipeline segments hold several knots or other light).
        Next: re-run when CANUCS v2 (deblended image catalogues) is public, or an arc-aperture sum on member-subtracted
        images, frozen and checked on the same controls;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done

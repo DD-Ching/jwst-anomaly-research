@@ -5,9 +5,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-22: MACS0417 arc-aware reference from pipeline segment totals fails its control gate; extra-image test stays untested
 - **Plan** (`results/lens_consistency/macs0417_arcref/PLAN.md`, frozen first): reference = isophotal segment total of
   the catalogued sibling over Σ|μ|; leave-one-out gate C2 on the catalogued images, overall and arc-referenced.
-- **Result** (`RESULT.md`, `summary.json`): C2 fails, 12 / 30 (arc-referenced 7 / 14) against ≥ 0.8, so no prediction
-  is read; 0 flags. Post hoc (looked at): segments blend lensed knots with each other and with cluster members
-  (3σ semi-major up to 65.1″). Rejected as a reference route in cluster cores (D-034 addendum).
+- **Result** (`RESULT.md`, `summary.json`): C2 fails, 10 / 27 (arc-referenced 6 / 12) against ≥ 0.8, so no prediction
+  is read; 0 flags. Post hoc (looked at): single segments (3σ semi-major 9.2–65.1″) hold several lensed knots or an
+  image with other light. Rejected as a reference route in cluster cores (D-034 addendum).
 - **Handoff:** MACS0417 extra images wait for CANUCS v2 deblended catalogues or an arc-aperture sum on
   member-subtracted images. Next lensing step otherwise from TASKS Supporting as before.
 ## 2026-10-21: MACS0417 published image list put on the JWST frame; extra-image test still untestable (arc references)

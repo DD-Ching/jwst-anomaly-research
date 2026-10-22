@@ -18,7 +18,7 @@
 # - {name: m_pred, datatype: float64}
 # schema: astropy-2.0
 system image_class ra dec abs_mu ref_counterpart arc_ref L_ref search_arcsec f_pred class n_sources max_ratio reading m_pred
-8 faint 64.37964806183633 -11.901771700072985 4.090009209554476 2656 False nan 1.0 nan inconsistent_reference 0 nan no_flag ""
+8 faint 64.37964806183633 -11.901771700072985 4.090009209554476 -1 False nan 1.0 nan inconsistent_reference 0 nan no_flag ""
 9 faint 64.39597279927044 -11.89113582776816 3.3819465175647774 -1 False nan 1.0 nan no_reference 0 nan no_flag ""
 10 missing 64.39479649706004 -11.907537311141732 6.108375984835372 3973 False 1.2254587130437929e-08 1.0 7.485562573163966e-08 ambiguous 0 nan no_flag 26.71450450963613
 10 missing 64.39462863940717 -11.906916955092163 4.851896289685542 3973 False 1.2254587130437929e-08 1.0 5.945798582979998e-08 ambiguous 0 nan no_flag 26.964540139365717

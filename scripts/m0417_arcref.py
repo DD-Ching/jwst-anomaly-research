@@ -61,7 +61,7 @@ def counterpart(ra: float, dec: float, cat: dict) -> int:
     """Catalogue index whose 3-sigma ellipse contains (ra, dec), -1 if none (rule 1)."""
     dx = (cat["ra"] - ra) * np.cos(np.radians(dec)) * 3600.0  # source minus position, East
     dy = (cat["dec"] - dec) * 3600.0
-    near = np.flatnonzero(np.hypot(dx, dy) < 10.0)
+    near = np.flatnonzero(np.hypot(dx, dy) <= ELLIPSE_NSIGMA * np.nanmax(cat["a"]))  # no cut
     best, best_r = -1, np.inf
     for k in near:
         r = ellipse_radius(
@@ -86,21 +86,23 @@ def units(images: list[dict]) -> list[dict]:
     return list(out.values()) + solo
 
 
-def reference(cands: list[dict], cat: dict) -> tuple[float, str]:
-    """(L_ref, state) from candidate units (rule 3): state '' or 'no_reference' /
-    'inconsistent_reference'."""
+def reference(cands: list[dict], cat: dict) -> tuple[float, str, int]:
+    """(L_ref, state, counterpart index) from candidate units (rule 3): state '' or 'no_reference' /
+    'inconsistent_reference'; the index is -1 unless a reference is used."""
     usable = []
     for u in cands:
         k = u["cp"]
-        if k < 0 or not (cat["snr"][k] > MIN_REF_SNR) or max(u["mus"]) > MAX_REF_MU:
+        ok = k >= 0 and cat["flux"][k] > 0 and cat["snr"][k] > MIN_REF_SNR
+        if not ok or max(u["mus"]) > MAX_REF_MU:
             continue
-        usable.append((cat["flux"][k] / sum(u["mus"]), sum(u["mus"])))
+        usable.append((cat["flux"][k] / sum(u["mus"]), sum(u["mus"]), k))
     if not usable:
-        return float("nan"), "no_reference"
+        return float("nan"), "no_reference", -1
     lum = [v[0] for v in usable]
     if max(lum) > MAX_REF_SPREAD * min(lum):
-        return float("nan"), "inconsistent_reference"
-    return min(usable, key=lambda v: v[1])[0], ""
+        return float("nan"), "inconsistent_reference", -1
+    best = min(usable, key=lambda v: v[1])
+    return best[0], "", best[2]
 
 
 def classify(f_pred: float, depth: float, ratios) -> str:
@@ -210,14 +212,20 @@ def run(cache: Path) -> dict:
         has_unpred = any(lensmodel.image_family(u) == sys_id for u in unpredicted)
         return lc.system_search_radius(pred, sys_id, BASE_SEARCH, has_unpred)
 
-    def test(ra, dec, mu_t, sys_id, cands, exclude) -> dict:
-        lref, state = reference(cands, cat)
+    def test(ra, dec, mu_t, sys_id, cands) -> dict:
+        lref, state, rcp = reference(cands, cat)
         rad = radius(sys_id)
-        row = {"L_ref": lref, "search_arcsec": rad, "f_pred": float("nan"), "ratios": []}
+        row = {
+            "L_ref": lref,
+            "rcp": rcp,
+            "search_arcsec": rad,
+            "f_pred": float("nan"),
+            "ratios": [],
+        }
         if state:
             return {**row, "class": state}
         f_pred = lref * mu_t
-        idx = [k for k in in_radius(ra, dec, rad, cat) if k not in exclude]
+        idx = [k for k in in_radius(ra, dec, rad, cat) if k != rcp]
         ratios = [float(cat["flux"][k] / f_pred) for k in idx]
         return {
             **row,
@@ -227,21 +235,12 @@ def run(cache: Path) -> dict:
             "class": classify(f_pred, depth, ratios),
         }
 
-    def ref_cp(cands):
-        usable = [
-            u
-            for u in cands
-            if u["cp"] >= 0 and cat["snr"][u["cp"]] > MIN_REF_SNR and max(u["mus"]) <= MAX_REF_MU
-        ]
-        return min(usable, key=lambda u: sum(u["mus"]))["cp"] if usable else -1
-
     controls = []
     for s, us in fam_units.items():
         for u in us:
             first = next(im for im in fams[s] if im["id"] == u["ids"][0])
-            cands = [v for v in us if v is not u]
-            rcp = ref_cp(cands)
-            res = test(first["ra"], first["dec"], sum(u["mus"]), s, cands, {rcp})
+            res = test(first["ra"], first["dec"], sum(u["mus"]), s, [v for v in us if v is not u])
+            rcp = res["rcp"]
             controls.append(
                 {
                     "system": s,
@@ -256,7 +255,7 @@ def run(cache: Path) -> dict:
                     "own_a3_arcsec": (
                         ELLIPSE_NSIGMA * cat["a"][u["cp"]] if u["cp"] >= 0 else float("nan")
                     ),
-                    **{k: v for k, v in res.items() if k != "ratios"},
+                    **{k: v for k, v in res.items() if k not in ("ratios", "rcp")},
                     "n_sources": len(res["ratios"]),
                     "best_ratio": (
                         min(res["ratios"], key=lambda q: abs(np.log(q)) if q > 0 else np.inf)
@@ -272,8 +271,8 @@ def run(cache: Path) -> dict:
     for r in pred[~np.isin(cls, mx.NOT_TARGETS)]:
         s = str(r["system"])
         us = fam_units.get(s, [])
-        rcp = ref_cp(us)
-        res = test(float(r["ra"]), float(r["dec"]), abs(float(r["magnification"])), s, us, {rcp})
+        res = test(float(r["ra"]), float(r["dec"]), abs(float(r["magnification"])), s, us)
+        rcp = res["rcp"]
         targets.append(
             {
                 "system": s,
@@ -283,7 +282,7 @@ def run(cache: Path) -> dict:
                 "abs_mu": abs(float(r["magnification"])),
                 "ref_counterpart": int(cat["label"][rcp]) if rcp >= 0 else -1,
                 "arc_ref": is_arc(rcp, cat),
-                **{k: v for k, v in res.items() if k != "ratios"},
+                **{k: v for k, v in res.items() if k not in ("ratios", "rcp")},
                 "n_sources": len(res["ratios"]),
                 "max_ratio": max(res["ratios"]) if res["ratios"] else float("nan"),
                 "reading": (

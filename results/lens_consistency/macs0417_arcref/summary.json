@@ -1,8 +1,8 @@
 {
  "posthoc_absent_controls": {
-  "absent_own_segment_centroid_outside_radius": 8,
-  "absent_no_containing_segment": 6,
-  "absent_sources_too_faint": 4
+  "absent_own_segment_centroid_outside_radius": 10,
+  "absent_no_containing_segment": 1,
+  "absent_sources_too_faint": 6
  },
  "inputs": {
   "jwst_cat": "jw01208-o006_t003_nircam_clear-f200w_cat.ecsv",
@@ -16,23 +16,23 @@
  },
  "gate_C2": {
   "all": {
-   "n_testable": 30,
-   "n_ok": 12,
-   "fraction": 0.4
+   "n_testable": 27,
+   "n_ok": 10,
+   "fraction": 0.37037037037037035
   },
   "arc_referenced": {
-   "n_testable": 14,
-   "n_ok": 7,
+   "n_testable": 12,
+   "n_ok": 6,
    "fraction": 0.5
   },
   "passes": false
  },
  "control_classes": {
-  "absent": 18,
+  "absent": 17,
   "confused": 1,
-  "inconsistent_reference": 10,
-  "no_reference": 8,
-  "recovered": 11,
+  "inconsistent_reference": 15,
+  "no_reference": 6,
+  "recovered": 9,
   "undetectable": 2
  },
  "target_classes": {
