@@ -617,6 +617,12 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   (x/y-arcsec-deflect, kappa, z02-magnif, arcs.txt, params.txt where present) are pinned by sha256 in
   `lensmodel.HFF_CATS`. The release readmes quote rms 0.72″, 0.63″, n/a, 2.41″, 0.48″ and n/a.
 
+- BUFFALO Abell 370 lens models, Niemiec et al. 2023, MNRAS 524, 2883 (arXiv:2307.03778), MAST HLSP
+  https://archive.stsci.edu/hlsp/buffalo (DOI 10.17909/t9-w6tj-wp63); model A (Lenstool image-plane, quoted rms
+  0.90″): maps and `input.par` listed in `download_scripts/hlsp_buffalo_hst_model_abell370_multi_niemiec-a_v1.0_lens-models-download.sh`
+  (accessed 2026-10-22; not pinned yet). Lagattuta et al. 2019, MNRAS 485, 3738, CDS `J/MNRAS/485/3738` (accessed
+  2026-10-22; image list and parameter tables).
+
 ### Abell 370 and Abell S1063 field runs (accessed 2026-10-08; D-043)
 
 - JWST programs 1208 (CANUCS, PI Willott; Abell 370 `o002_t001`) and 3293 (GLIMPSE, PI Atek; S1063 `o001_t001`).

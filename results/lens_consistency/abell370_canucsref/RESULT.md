@@ -22,6 +22,12 @@ Plan: `PLAN.md` (frozen, commit 99c9738, before any run). Script: `scripts/a370_
   listed). A route that keeps only fully reproduced families would need its own frozen plan and a known-case check.
 
 ## What would reopen it
-An Abell 370 model fitted in the image plane with a public parameter file or maps (CANUCS image-plane refit, or a
-published Lenstool model such as the MUSE-based models of Lagattuta et al.; availability not checked here), or a
-frozen family-restricted rule validated first on MACS0416 / MACS1149.
+An Abell 370 model fitted in the image plane with a public parameter file or maps, or a frozen family-restricted rule
+validated first on MACS0416 / MACS1149. Checked after the run (2026-10-22, not yet pinned or validated):
+- BUFFALO Niemiec et al. 2023 (MNRAS 524, 2883) model A: Lenstool image-plane fit, quoted rms 0.90″ on 98 gold
+  images (paper, read by a research subagent). The MAST HLSP (DOI 10.17909/t9-w6tj-wp63) download script
+  `hlsp_buffalo_hst_model_abell370_multi_niemiec-a_v1.0_lens-models-download.sh` lists x/y deflection maps (`main`,
+  `par`, `full` variants), κ, γ, μ(z 1, 2, 4, 9) and `..._multi_niemiec-a-sl_v1.0_input.par` (listing read here;
+  whether the image list with z is included is unverified). Best next model for gate K.
+- Fallback: Lagattuta et al. 2019 (CDS `J/MNRAS/485/3738`): 138-image list (123 z_spec) and Gold_Shear dPIE
+  parameters (image-plane rms 0.66″), but no member catalogue, so only an approximate rebuild.

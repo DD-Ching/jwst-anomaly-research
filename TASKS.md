@@ -380,7 +380,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        gates K and C2 pass, one flag D115b, vetted `inconclusive` (member 8515 makes the extra images; removing them costs
        Δχ² +12.6 > 6 with only D115a / D115b sources refitted, `d115_refit/result.json`). Next: a re-fit with 8515's σ free
        (Lenstool, owner machine) or a σ × 0.75–0.85 scan with fitted sources; ~~then Abell 370 (gate K first)~~ done 2026-10-22 (D-034 addendum g,
-       `results/lens_consistency/abell370_canucsref/RESULT.md`: gate K fails, rms 2.34″; no prediction read; line stopped);
+       `results/lens_consistency/abell370_canucsref/RESULT.md`: gate K fails, rms 2.34″; no prediction read; line stopped; next: pin BUFFALO Niemiec+2023 model A maps (image-plane, rms 0.90″; RESULT.md) and run gate K);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows
