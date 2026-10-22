@@ -7,7 +7,7 @@
     #459, not new flux.
   - **Deviation:** the code implementing §1 (`joint_extent`, `edge_bounds_joint`, the `edges` argument and the tests)
     was written before the run but committed with the results.
-  - **Review rerun (06:34):** after the independent review, `worth_script.py.txt` was fixed and rerun once:
+  - **Review rerun (06:34–06:36, `cost.json`):** after the independent review, `worth_script.py.txt` was fixed and rerun once:
     - num / den are now computed exactly as §1 states, from U and L. In the first run they also moved the
       intermediate-search window. The totals did not change.
     - The reproduction checks are explicit.
@@ -75,8 +75,8 @@ Sides decided fast, of the 88:
   - The observed joint rule restores 7 / 63 events (0.11), the same as the replay.
   - **The generous oracle restores 16 / 63 (0.25).** The oracle knows every sampled epoch's true state in both bands and
     uses the true dm ≥ 1 duration as the span. It ignores intermediates, so slow evidence cannot hold it back. Even
-    this oracle stays below 0.50: with these sampled epochs, no bracket-type rule at 0.25 × span can reach the #459
-    condition.
+    this oracle stays below 0.50: with these sampled epochs, no rule that brackets the edge from the last dim to
+    the first normal epoch at 0.25 × span can reach the #459 condition.
 - **Stop:** true. No rule is frozen, no development comparison or validation is run, and no second method is tried.
 
 ## 5. Reading

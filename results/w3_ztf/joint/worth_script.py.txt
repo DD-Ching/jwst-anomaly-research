@@ -1,5 +1,5 @@
 # PLAN section 1 (worth check). Replays the v23 events exactly as ../altdata/trial_script.py.txt (same samples, carriers,
-# seeds and noise) and asserts that bounds on r (A0) gives the stored v24 outcome for every event, and that #459's method
+# seeds and noise) and checks that bounds on r (A0) gives the stored v24 outcome for every event, and that #459's method
 # (B: bounds with the g detections as edge points) gives the stored #459 outcome for every event on the 40 stars.
 #
 # For each A0-insufficient side of those events (run passing the other tests), it records the decomposition num / den /

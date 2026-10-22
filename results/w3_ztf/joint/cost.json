@@ -10,7 +10,8 @@
   "plan_section_1_commit": "06:22:10 (be7b5c8)",
   "re_read": "06:20:26-06:23:51",
   "worth_check": "06:24:39-06:26:43",
-  "decision": "06:28"
+  "decision": "06:28",
+  "review_rerun": "06:34:26-06:36:10 (worth script rerun after the review fixes)"
  },
- "caches_deleted": false
+ "caches_deleted": true
 }
