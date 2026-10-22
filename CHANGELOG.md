@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: X4 cogwheel exact score: definitions map and fixed-point checks pass (decision A); no search
+- **Definition check (read in source):** cogwheel's exact `lnlike_fft` has no internal maximisation; with one
+  detector, its maximum over time, ψ, distance and sky equals ½ρ² FF² with continuous time. It matches our FF once
+  multibanding is off on both sides, ASD drift is 1, relative binning is not used, the time window is ±2 s and the
+  spin cap 0.99 is a likelihood constraint.
+- **Fixed points** (`results/x4/cog_exact/checks.json`, 36 points incl. truths, S1k solutions, 24 seeded box points,
+  8 near-boundary points): F1 1.8e-15, F2 7.3e-13, F3 |ΔFF| 1.1e-12, all optima inside IASPrior's cube.
+- **Interface:** `scripts/x4_cog_exact.py` (exact-likelihood subclass, prior settings, Posterior constructs). No
+  search entry; a search round needs the owner's go and pre-fixed settings (start rule, consistent targets, gate).
+
 ## 2026-10-21: X4 cogwheel: interface consistency failed (F2, F3); C1/C2 runs were exploratory and stopped unfinished
 - **Reading:** cogwheel 1.6.0 `refine_reference_waveform` runs SciPy DE on the relative-binning lnL over all 15
   IASPrior parameters (all 6 spin components, inclination, φ_ref); start from an aligned-spin (2,2) finder.

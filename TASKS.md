@@ -60,7 +60,10 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   questions in `results/x4/handoff/`; reopen only with a specialist recipe or such a tool; the owner decides (spin/precession parametrisation or GW data-analysis advice). cogwheel round
   (2026-10-21): interface consistency failed (F2 waveform multibanding, F3 asd_drift; F1 passes); the C1/C2 runs were
   exploratory (gate bypassed by hand) and stopped unfinished with no point; no measured gain. Reopen cogwheel only with
-  one waveform definition, asd_drift = 1, the RB error closed and q_min fixed in advance (`X4.md` § cogwheel round).
+  one waveform definition, asd_drift = 1, the RB error closed and q_min fixed in advance (`X4.md` § cogwheel round). Exact-score round
+  (2026-10-22): decision A. With multibanding off on both sides, asd_drift 1, exact lnL and dt0 2 s, F1–F3 pass at 36
+  fixed points (F3 1.1e-12) and a thin interface constructs; no search ran. A search round needs the owner's go and
+  the settings in `X4.md` § cogwheel exact-score round (start rule, waveform-consistent targets, gate).
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet
   published; waiting for the DR4 release documentation) (authorized 2026-10-14 by S0-2026-10-14): state file
