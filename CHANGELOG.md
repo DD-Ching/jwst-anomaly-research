@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: MACS1423 extra-image test with CANUCS DR1 reference: gate C2 fails on arc controls; no flag read
+- **Plan** (`results/lens_consistency/macs1423_canucsref/PLAN.md`, frozen first): the MACS0417 CANUCS-reference rules
+  on MACS1423 plus a local-noise rule (F_pred ≥ 5 σ_loc; absent ≥ 10 σ_loc). `m0417_arcref.run` now takes `field`,
+  `frame` and `offset`.
+- **Result** (`RESULT.md`, `summary.json`): C2 all 9 / 11 passes, arc-referenced 2 / 4 fails (3.2, 4.3 `absent`).
+  The local-noise rule changed no class. Targets: system 1 `missing` |μ| 17.3 `absent` (not read), `candidate`
+  `recovered`. Post hoc (`posthoc.json`, sheet looked at): 3.2's arc centroid 1.02″ away holds 1.31× F_pred; 4.3's
+  reference is the central image by the BCG; the system-1 prediction is a model copy of the unreproduced 1.3–1.5
+  (rms 1.59″) on empty sky. D-034 addendum e.
+- **Handoff:** the CANUCS DR1 reference is not validated beyond MACS0417. Further CANUCS fields need a frozen
+  counterpart rule (accept the containing source) gated on a third field (Abell 370 or MACS1149). MACS1423
+  extra-image work is done.
+
 ## 2026-10-22: MACS0417 family 10 colour test: CANUCS 1115938 matches 10.1 / 10.2; family 10 closed as ordinary
 - **Plan** (`results/lens_consistency/macs0417_f10_colour/PLAN.md`; plan, script and tested rules pushed first): pair χ²
   on CANUCS DR1 0.3″ colour fluxes (8 JWST bands, 5 % floor, flux ratio free), gate on other Jauzac+19 families.

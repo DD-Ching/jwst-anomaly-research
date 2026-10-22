@@ -2224,6 +2224,13 @@ excluded". Post hoc: 7.5 % of similar-flux field sources pass against both; the 
 the CANUCS-map |μ| ratios at z 2.025 (4.35, 2.78). Family 10 is closed as ordinary (third image ≈ 1115938 at z ≈ 2.0;
 photo-z 0.1–0.2 low) unless a z_spec contradicts it. The colour test is reusable for other CANUCS counter-image checks.
 
+**Addendum 2026-10-22e (MACS1423, `results/lens_consistency/macs1423_canucsref/`).** The same CANUCS DR1 reference
+with a frozen local-noise rule (F_pred ≥ 5 σ_loc of 0.3″ apertures on the BCG-subtracted F200W, absent needs ≥ 10 σ_loc)
+fails gate C2 on MACS1423: all 9 / 11, arc-referenced 2 / 4. The local-noise rule changed no class there. Post hoc:
+3.2's own arc source has its centroid 1.02″ away (outside the 1.0″ radius) and 1.31× the predicted flux; 4.3's
+reference is the central image beside the BCG. Decision: the CANUCS DR1 reference is not validated beyond MACS0417;
+use it on another field only with a new, frozen counterpart rule gated on a third field.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

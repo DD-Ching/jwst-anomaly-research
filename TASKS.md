@@ -370,8 +370,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        addendum c, `results/lens_consistency/macs0417_f10_zscan/RESULT.md`: third image on CANUCS 1115938 only at z
        1.975–2.100, above its photo-z 1.72–1.88; outcome A′, undetermined). ~~Colour test of 1115938~~ done 2026-10-22
        (D-034 addendum d, `results/lens_consistency/macs0417_f10_colour/RESULT.md`: gate 8 / 9, consistent with 10.1
-       and 10.2; family 10 closed as ordinary). Next: the
-       same reference on MACS1423 and other CANUCS fields with a local-noise `undetectable` rule frozen first;
+       and 10.2; family 10 closed as ordinary). ~~The
+       same reference on MACS1423 with a local-noise rule~~ done 2026-10-22 (D-034 addendum e,
+       `results/lens_consistency/macs1423_canucsref/RESULT.md`): gate C2 fails on arc controls (2 / 4), no flag read.
+       Next (optional): a frozen counterpart rule accepting the containing source, gated on Abell 370 or MACS1149;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows

@@ -1,0 +1,70 @@
+{
+ "label": "post hoc (not frozen rules); observed pixels and catalogue, derived sums",
+ "aperture_radius_arcsec": 0.3,
+ "items": [
+  {
+   "item": "1 missing",
+   "ra": 215.94384878538233,
+   "dec": 24.07964746931003,
+   "f_pred_njy": 1290.678387173676,
+   "sigma_loc_njy": 8.071161928185061,
+   "ap03_njy": 0.5380700966488803,
+   "containing_source": null,
+   "containing_sep_arcsec": null,
+   "containing_flux_njy": null,
+   "containing_flux_over_pred": null,
+   "containing_ell": null,
+   "search_arcsec": 2.25,
+   "nearest_catalogued_image": "2.3",
+   "nearest_catalogued_sep_arcsec": 3.1500591889788265
+  },
+  {
+   "item": "1 candidate",
+   "ra": 215.94568167675982,
+   "dec": 24.07587221666178,
+   "f_pred_njy": 656.6015694750542,
+   "sigma_loc_njy": 7.1961672139377155,
+   "ap03_njy": 25.00461139017716,
+   "containing_source": null,
+   "containing_sep_arcsec": null,
+   "containing_flux_njy": null,
+   "containing_flux_over_pred": null,
+   "containing_ell": null,
+   "search_arcsec": 2.25,
+   "nearest_catalogued_image": "2.4",
+   "nearest_catalogued_sep_arcsec": 1.7701742025718605
+  },
+  {
+   "item": "3 3.2",
+   "ra": 215.95230199999997,
+   "dec": 24.0831945,
+   "f_pred_njy": 8119.935196551039,
+   "sigma_loc_njy": 9.328430371475473,
+   "ap03_njy": 1243.4175857305527,
+   "containing_source": 4101312,
+   "containing_sep_arcsec": 1.0165116299607997,
+   "containing_flux_njy": 10655.835072006072,
+   "containing_flux_over_pred": 1.3123054327492865,
+   "containing_ell": 0.8429590099328835,
+   "search_arcsec": 1.0,
+   "nearest_catalogued_image": "3.2",
+   "nearest_catalogued_sep_arcsec": 9.341175829327368e-11
+  },
+  {
+   "item": "4 4.3",
+   "ra": 215.95024629999998,
+   "dec": 24.082135600000004,
+   "f_pred_njy": 17792.21087304314,
+   "sigma_loc_njy": 7.852375604990273,
+   "ap03_njy": 2912.716315984726,
+   "containing_source": 4100458,
+   "containing_sep_arcsec": 0.07149020377802959,
+   "containing_flux_njy": 5764.9334117833705,
+   "containing_flux_over_pred": 0.32401444952059233,
+   "containing_ell": 0.3828626571515721,
+   "search_arcsec": 1.5784156939799927,
+   "nearest_catalogued_image": "4.3",
+   "nearest_catalogued_sep_arcsec": 9.411165269272948e-11
+  }
+ ]
+}

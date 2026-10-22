@@ -1,0 +1,103 @@
+{
+ "frozen": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 11,
+    "n_ok": 9,
+    "fraction": 0.8181818181818182
+   },
+   "arc_referenced": {
+    "n_testable": 4,
+    "n_ok": 2,
+    "fraction": 0.5
+   },
+   "passes": false
+  },
+  "control_classes": {
+   "absent": 2,
+   "inconsistent_reference": 3,
+   "recovered": 9
+  },
+  "target_classes": {
+   "absent": 1,
+   "recovered": 1
+  },
+  "flags": []
+ },
+ "without_local_noise_rule": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 11,
+    "n_ok": 9,
+    "fraction": 0.8181818181818182
+   },
+   "arc_referenced": {
+    "n_testable": 4,
+    "n_ok": 2,
+    "fraction": 0.5
+   },
+   "passes": false
+  },
+  "control_classes": {
+   "absent": 2,
+   "inconsistent_reference": 3,
+   "recovered": 9
+  },
+  "target_classes": {
+   "absent": 1,
+   "recovered": 1
+  },
+  "flags": []
+ },
+ "inputs": {
+  "canucs_cat": "hlsp_canucs_jwst-hst_multi_macs1423-clu_multi_v1_photometry-cat.fits.gz",
+  "canucs_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs1423/clu/hlsp_canucs_jwst-hst_multi_macs1423-clu_multi_v1_photometry-cat.fits.gz",
+  "canucs_cat_sha256": "c257d8dff95319f4eea981cc838269c04aff0a79bac603c7ed64100deac622b0",
+  "n_rows_finite_flux": 12118,
+  "flux_column": "FLUX_KRON_TOTAL_F200W",
+  "image": "hlsp_canucs_jwst_nircam_macs1423-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+  "image_url": "https://archive.stsci.edu/hlsps/canucs/dr1/macs1423/clu/hlsp_canucs_jwst_nircam_macs1423-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+  "image_sha256": "b7c6739f6cbf25afaf80d10763eab1c6f33bf441ea69a63909fb386182736403",
+  "frame_offset_arcsec": [
+   0.0,
+   0.0
+  ],
+  "pixel_scale_arcsec": 0.04000108403457398,
+  "depth_mag": 27.917383156868667
+ },
+ "rules": {
+  "ELLIPSE_NSIGMA": 3.0,
+  "MIN_REF_SNR": 5.0,
+  "MAX_REF_MU": 50.0,
+  "MAX_REF_SPREAD": 3.0,
+  "FLUX_RANGE": [
+   0.3333333333333333,
+   3.0
+  ],
+  "TEN_SIGMA_DMAG": 0.752574989159953,
+  "BASE_SEARCH": 1.0,
+  "C2": [
+   8,
+   0.8,
+   3
+  ],
+  "ARC_MIN_ELL": 0.5,
+  "local_noise": {
+   "aperture_radius_arcsec": 0.3,
+   "n_random": 200,
+   "annulus_arcsec": [
+    1.5,
+    4.0
+   ],
+   "source_exclusion_arcsec": 0.5,
+   "seed": 20261022,
+   "min_pred_over_sigma": 5.0,
+   "absent_pred_over_sigma": 10.0
+  }
+ },
+ "posthoc_absent_controls": {
+  "absent_own_segment_centroid_outside_radius": 1,
+  "absent_no_containing_segment": 0,
+  "absent_sources_too_faint": 1
+ }
+}
