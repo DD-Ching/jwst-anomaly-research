@@ -222,20 +222,35 @@ def bounded_map(fn, items, window: int = FETCH_WINDOW, cleanup=None, cancel=None
 
     Every result is registered by the worker thread itself as soon as ``fn`` returns, and leaves
     the registry only after the caller has handled it. On any exception (a call raising, an
-    interrupt at any point, e.g. while waiting on the head future or between a submit and its
-    bookkeeping, or the caller closing the generator after its own error): ``cancel`` (a
-    threading.Event, if given) is set, queued calls are cancelled, running ones are waited for,
-    ``cleanup`` (must be idempotent) is applied to every registered result not yet handled, and
-    the exception is re-raised."""
+    interrupt at any point, e.g. while waiting on the head future, inside ``submit()`` or between a
+    submit and its bookkeeping, or the caller closing the generator after its own error):
+    ``cancel`` (a threading.Event, if given) is set, no further call starts, queued calls are
+    cancelled, running ones are waited for, ``cleanup`` (must be idempotent) is applied to every
+    registered result not yet handled, and the exception is re-raised.
+
+    Running calls are counted by the worker threads themselves, not taken from the executor: an
+    interrupt inside ``submit()`` between ``Thread.start()`` and the executor's own bookkeeping
+    leaves a running worker that ``shutdown(wait=True)`` does not join."""
     items = iter(items)
-    lock = threading.Lock()
+    cond = threading.Condition()
     produced: dict = {}
+    running: set = set()
+    closing = False
 
     def run(idx, x):
-        r = fn(x)
-        with lock:
-            produced[idx] = r
-        return r
+        with cond:
+            if closing:  # cleanup has begun: start no new call
+                raise cf.CancelledError
+            running.add(idx)
+        try:
+            r = fn(x)
+            with cond:
+                produced[idx] = r
+            return r
+        finally:
+            with cond:
+                running.discard(idx)
+                cond.notify_all()
 
     ex = cf.ThreadPoolExecutor(window)
     pending: collections.deque = collections.deque()
@@ -249,7 +264,7 @@ def bounded_map(fn, items, window: int = FETCH_WINDOW, cleanup=None, cancel=None
             res = fut.result()
             pending.popleft()
             yield res
-            with lock:
+            with cond:
                 produced.pop(idx, None)
             for x in itertools.islice(items, 1):
                 pending.append((n_sub, ex.submit(run, n_sub, x)))
@@ -257,10 +272,13 @@ def bounded_map(fn, items, window: int = FETCH_WINDOW, cleanup=None, cancel=None
     except BaseException:
         if cancel is not None:
             cancel.set()
+        with cond:
+            closing = True
         ex.shutdown(wait=True, cancel_futures=True)
+        with cond:
+            cond.wait_for(lambda: not running)  # includes a worker the executor lost track of
+            left = list(produced.values())
         if cleanup is not None:
-            with lock:
-                left = list(produced.values())
             for r in left:
                 cleanup(r)
         raise

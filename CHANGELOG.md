@@ -14,6 +14,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** the CANUCS-reference route now passes C2 on MACS1149 and MACS0416 and fails on MACS1423 and Abell 370.
   Next: the owner's call whether to diagnose the arc-referenced control failures (7 absent controls, all "sources too
   faint", post hoc) or move the extra-image route to another cluster.
+## 2026-10-22: S1 CHIME `bounded_map`: an interrupt inside `submit()` lost a running worker and left its file; fixed
+- **Cause:** `test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting` failed once on #462's CI (py3.11,
+  leftover `f0.h5`). The SIGINT can be handled while the main thread is still in `ex.submit()`, inside
+  `Thread.start()` after the worker started but before `ThreadPoolExecutor` records the thread. `shutdown(wait=True)`
+  then does not join that worker, the cleanup ran before it registered its result, and its file stayed. A real Ctrl-C
+  there does the same, so this was a gap in `bounded_map`, not only a test race.
+- **Fix** (`scripts/s1_chime.py`): workers count their own running calls; on any exception no new call starts and the
+  cleanup waits for that count to reach zero, so it does not depend on the executor's thread list.
+- **Tests:** a new deterministic test raises the interrupt at that point (fails on the old code, passes now); the
+  signal test is kept, only its comment changed.
+- **Repeats (all not stored):** the signal scenario left a file in 6 / 600 runs idle and 163 / 600 with 8 CPU-bound
+  processes on 4 cores before the fix, 0 / 600 in both after; `tests/test_s1_chime.py` passed 50 / 50 runs idle and
+  50 / 50 loaded on py3.11, 20 / 20 on py3.12.
+
 ## 2026-10-22: Abell 370 BUFFALO model A maps: gate L passes; K1 (Lagattuta+2019) fails, rms 7.70″; K2 (model's own gold list, deviation) passes, rms 0.910″
 - **Plan** (`results/lens_consistency/abell370_buffalo/PLAN.md`): pinned `main` deflection + κ maps; gate L (κ loading)
   and gate K1 on Lagattuta+2019 gold z_spec images were frozen first. After K1 failed, the model's own released gold list
