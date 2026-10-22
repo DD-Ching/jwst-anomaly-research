@@ -1,0 +1,64 @@
+{
+ "posthoc_absent_controls": {
+  "absent_own_segment_centroid_outside_radius": 8,
+  "absent_no_containing_segment": 6,
+  "absent_sources_too_faint": 4
+ },
+ "inputs": {
+  "jwst_cat": "jw01208-o006_t003_nircam_clear-f200w_cat.ecsv",
+  "jwst_cat_sha256": "e55dffb990a8e8124e37658933a47952a77b357b36dc5c8f523a5b487d423c24",
+  "frame_offset_arcsec": [
+   0.10084636860364347,
+   -0.2917131053097502
+  ],
+  "pixel_scale_arcsec": 0.031229907625902206,
+  "depth_mag": 27.150849180457826
+ },
+ "gate_C2": {
+  "all": {
+   "n_testable": 30,
+   "n_ok": 12,
+   "fraction": 0.4
+  },
+  "arc_referenced": {
+   "n_testable": 14,
+   "n_ok": 7,
+   "fraction": 0.5
+  },
+  "passes": false
+ },
+ "control_classes": {
+  "absent": 18,
+  "confused": 1,
+  "inconsistent_reference": 10,
+  "no_reference": 8,
+  "recovered": 11,
+  "undetectable": 2
+ },
+ "target_classes": {
+  "ambiguous": 2,
+  "inconsistent_reference": 1,
+  "no_reference": 2,
+  "undetectable": 1
+ },
+ "flags": [],
+ "flags_if_gate_ignored": 0,
+ "rules": {
+  "ELLIPSE_NSIGMA": 3.0,
+  "MIN_REF_SNR": 5.0,
+  "MAX_REF_MU": 50.0,
+  "MAX_REF_SPREAD": 3.0,
+  "FLUX_RANGE": [
+   0.3333333333333333,
+   3.0
+  ],
+  "TEN_SIGMA_DMAG": 0.752574989159953,
+  "BASE_SEARCH": 1.0,
+  "C2": [
+   8,
+   0.8,
+   3
+  ],
+  "ARC_MIN_ELL": 0.5
+ }
+}

@@ -354,8 +354,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        positions~~ done 2026-10-21 (`results/lens_consistency/macs0417_extra/RESULT.md`: MACS1423 0 flags on 2 tested predictions, gate C 11 / 11, no injections;
        MACS0417 gate C fails, no reference; post hoc 0.30″ list-to-JWST offset). ~~A measured MACS0417 frame offset~~
        done 2026-10-21 (`results/lens_consistency/macs0417_frame/RESULT.md`: (+0.101″, −0.292″) from RELICS, residual
-       0.300″ → 0.038″; gate C passes 12 / 12; the 6 extra predictions stay `no_reference`, arc references). Next,
-       optional: an arc-aware reference; re-run when CANUCS v2 (image catalogues) is public;
+       0.300″ → 0.038″; gate C passes 12 / 12; the 6 extra predictions stay `no_reference`, arc references).
+       ~~Arc-aware reference from pipeline segment totals~~ failed 2026-10-22 (D-034 addendum,
+       `results/lens_consistency/macs0417_arcref/RESULT.md`: gate C2 12 / 30; segments blended with cluster galaxies).
+       Next: re-run when CANUCS v2 (deblended image catalogues) is public, or an arc-aperture sum on member-subtracted
+       images, frozen and checked on the same controls;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows

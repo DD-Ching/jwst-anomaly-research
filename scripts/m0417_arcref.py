@@ -1,8 +1,9 @@
 """MACS0417: extra-image test with an arc-aware reference flux (isophotal segment totals of the
 JWST pipeline catalogue) in place of the D-034 compact 0.2" aperture.
 
-Frozen plan: ``results/lens_consistency/macs0417_arcref/PLAN.md``. Reads the committed predicted and
-control tables of ``../macs0417_frame`` (the lens model is not re-run) and the shifted Jauzac+19 list.
+Frozen plan: ``results/lens_consistency/macs0417_arcref/PLAN.md``. Reads the committed predicted
+and control tables of ``../macs0417_frame`` (the lens model is not re-run) and the shifted
+Jauzac+19 list.
 
     python scripts/m0417_arcref.py [--cache data/cache/m0417x]
 """
@@ -57,7 +58,7 @@ def ellipse_radius(dx, dy, a: float, b: float, pa_deg: float) -> float:
 
 
 def counterpart(ra: float, dec: float, cat: dict) -> int:
-    """Index of the catalogue source whose 3-sigma ellipse contains (ra, dec), -1 if none (rule 1)."""
+    """Catalogue index whose 3-sigma ellipse contains (ra, dec), -1 if none (rule 1)."""
     dx = (cat["ra"] - ra) * np.cos(np.radians(dec)) * 3600.0  # source minus position, East
     dy = (cat["dec"] - dec) * 3600.0
     near = np.flatnonzero(np.hypot(dx, dy) < 10.0)
@@ -249,6 +250,12 @@ def run(cache: Path) -> dict:
                     "counterpart": int(cat["label"][u["cp"]]) if u["cp"] >= 0 else -1,
                     "ref_counterpart": int(cat["label"][rcp]) if rcp >= 0 else -1,
                     "arc_ref": is_arc(rcp, cat),
+                    # post hoc diagnostics of the reference segment (not frozen rules)
+                    "ref_mag": _mag(cat["flux"][rcp]) if rcp >= 0 else float("nan"),
+                    "ref_a3_arcsec": ELLIPSE_NSIGMA * cat["a"][rcp] if rcp >= 0 else float("nan"),
+                    "own_a3_arcsec": (
+                        ELLIPSE_NSIGMA * cat["a"][u["cp"]] if u["cp"] >= 0 else float("nan")
+                    ),
                     **{k: v for k, v in res.items() if k != "ratios"},
                     "n_sources": len(res["ratios"]),
                     "best_ratio": (
@@ -289,7 +296,18 @@ def run(cache: Path) -> dict:
     OUT.mkdir(parents=True, exist_ok=True)
     Table(rows=controls).write(OUT / "control_macs0417.ecsv", overwrite=True)
     Table(rows=targets).write(OUT / "predicted_macs0417.ecsv", overwrite=True)
+    absent = [c for c in controls if c["class"] == "absent"]
+    posthoc = {  # not a frozen rule: why the absent controls fail
+        "absent_own_segment_centroid_outside_radius": sum(
+            c["counterpart"] >= 0 and c["n_sources"] == 0 for c in absent
+        ),
+        "absent_no_containing_segment": sum(c["counterpart"] < 0 for c in absent),
+        "absent_sources_too_faint": sum(
+            c["counterpart"] >= 0 and c["n_sources"] > 0 for c in absent
+        ),
+    }
     return {
+        "posthoc_absent_controls": posthoc,
         "inputs": {
             "jwst_cat": cat_path.name,
             "jwst_cat_sha256": hashlib.sha256(cat_path.read_bytes()).hexdigest(),
@@ -318,6 +336,10 @@ def run(cache: Path) -> dict:
             "ARC_MIN_ELL": ARC_MIN_ELL,
         },
     }
+
+
+def _mag(flux_jy: float) -> float:
+    return float(-2.5 * np.log10(flux_jy / 3631.0)) if flux_jy > 0 else float("nan")
 
 
 def _count(v) -> dict:

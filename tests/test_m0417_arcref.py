@@ -1,4 +1,4 @@
-"""Frozen rules of scripts/m0417_arcref.py (counterpart, merged units, reference, class, gate C2)."""
+"""Frozen rules of scripts/m0417_arcref.py (counterpart, units, reference, class, gate C2)."""
 
 import importlib.util
 import sys
