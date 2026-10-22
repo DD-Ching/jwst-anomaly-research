@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: S1 CHIME `bounded_map`: an interrupt inside `submit()` lost a running worker and left its file; fixed
+- **Cause:** `test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting` failed once on #462's CI (py3.11,
+  leftover `f0.h5`). The SIGINT can be handled while the main thread is still in `ex.submit()`, inside
+  `Thread.start()` after the worker started but before `ThreadPoolExecutor` records the thread. `shutdown(wait=True)`
+  then does not join that worker, the cleanup ran before it registered its result, and its file stayed. A real Ctrl-C
+  there does the same, so this was a gap in `bounded_map`, not only a test race.
+- **Fix** (`scripts/s1_chime.py`): workers count their own running calls; on any exception no new call starts and the
+  cleanup waits for that count to reach zero, so it does not depend on the executor's thread list.
+- **Tests:** a new deterministic test raises the interrupt at that point (fails on the old code, passes now); the
+  signal test is kept, only its comment changed.
+- **Repeats (all not stored):** the signal scenario left a file in 6 / 600 runs idle and 163 / 600 with 8 CPU-bound
+  processes on 4 cores before the fix, 0 / 600 in both after; `tests/test_s1_chime.py` passed 50 / 50 runs idle and
+  50 / 50 loaded on py3.11, 20 / 20 on py3.12.
+
 ## 2026-10-22: Abell 370 CANUCS DR1 reference route: gate K fails (rms 2.34″); no prediction read; line stopped
 - **Plan** (`results/lens_consistency/abell370_canucsref/PLAN.md`, frozen and pushed first): gate K of
   `m0417_images` on the 115 images of the pinned `abell370-canucs` model (z fixed, ASSUMPTION); stop on a fail.
