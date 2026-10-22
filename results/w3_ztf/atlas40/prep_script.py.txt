@@ -1,0 +1,29 @@
+# PLAN section 2 (kept data): raw ATLAS results -> compact per-star tables results/w3_ztf/atlas40/phot/<key>.csv.gz with
+# the columns the quality cuts, time and flux need (plus Obs). Each raw file must match the sha256 recorded in
+# tasks.json. No flux is interpreted here. Usage: python prep_script.py.txt <raw dir>
+import hashlib, io, json, os, sys
+
+import pandas as pd
+
+D = sys.argv[1]
+tasks = json.load(open('results/w3_ztf/atlas40/tasks.json'))
+COLS = ['MJD', 'F', 'uJy', 'duJy', 'err', 'chi/N', 'x', 'y', 'maj', 'min', 'apfit', 'mag5sig', 'Sky', 'Obs']
+os.makedirs('results/w3_ztf/atlas40/phot', exist_ok=True)
+out = {}
+for key, rec in tasks.items():
+    path = os.path.join(D, f'atlas_fp_{key}.txt')
+    if rec.get('status') != 'done' or not os.path.exists(path):
+        continue
+    txt = open(path).read()
+    if hashlib.sha256(txt.encode()).hexdigest() != rec['result_sha256']:
+        raise SystemExit(f'sha256 mismatch for {key}')
+    df = pd.read_csv(io.StringIO(txt.replace('###', '')), sep=r'\s+', dtype={'Obs': str, 'F': str})
+    dst = f'results/w3_ztf/atlas40/phot/{key}.csv.gz'
+    df[COLS].to_csv(dst, index=False, compression={'method': 'gzip', 'mtime': 0})
+    out[key] = {'rows': int(len(df)), 'bytes': os.path.getsize(dst), 'source_sha256': rec['result_sha256']}
+    if out[key]['bytes'] >= 1_000_000:
+        raise SystemExit(f'{dst} is over 1 MB')
+json.dump({'label': 'observed (ATLAS forced photometry, reduced mode), compact copies', 'columns': COLS, 'stars': out},
+          open('results/w3_ztf/atlas40/phot/index.json', 'w'), indent=1)
+open('results/w3_ztf/atlas40/phot/index.json', 'a').write('\n')
+print(len(out), 'tables;', sum(v['bytes'] for v in out.values()), 'bytes')

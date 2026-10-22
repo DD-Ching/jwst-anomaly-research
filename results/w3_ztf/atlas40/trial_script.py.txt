@@ -1,0 +1,201 @@
+# PLAN sections 2-5: ATLAS calibration from the compact tables (phot/), then the paired replay. The v23 events are
+# replayed exactly as ../altdata/trial_script.py.txt (same samples, carriers, seeds and ZTF noise). A (ZTF-only bounds)
+# must equal the stored v24 outcome for every event. For events on the 40 stars, B adds the carrier's ATLAS points,
+# injected with the same event, as edge points (wz.edge_bounds_alt). Secondary runs: quoted sigma, and 9999 rows kept.
+# No new random number is drawn for ATLAS. Usage: python trial_script.py.txt <npix> <seed offset>
+import gzip, json, os, sys, time
+
+import numpy as np
+import pandas as pd
+from astropy import units as u
+from astropy.coordinates import EarthLocation, SkyCoord
+from astropy.time import Time
+
+sys.path.insert(0, 'scripts')
+sys.path.insert(0, 'src')
+import w3_ztf as wz
+from jwst_anomaly.rank import robust_location_scale
+
+P, OFF = int(sys.argv[1]), int(sys.argv[2])
+wz.configure(P, f'v23/dev{P}')
+T0 = time.time()
+targets = {t['key']: t for t in json.load(open('results/w3_ztf/atlas40/targets.json'))['targets']}
+keys = {int(k) for k, t in targets.items() if t['area'] == str(P)}
+assert len(keys) == 20
+MIN_ROWS = 20
+CLIP = 9999
+
+
+def quality(df):
+    """FAQ (Rest et al.) filters, c and o only (PLAN section 2)."""
+    return ((df['duJy'] < 10000) & (df['err'] == 0) & (df['x'] > 100) & (df['x'] < 10460) & (df['y'] > 100)
+            & (df['y'] < 10460) & (df['maj'] > 1.6) & (df['maj'] < 5) & (df['min'] > 1.6) & (df['min'] < 5)
+            & (df['apfit'] > -1) & (df['apfit'] < -0.1) & (df['mag5sig'] > 17) & (df['Sky'] > 17)
+            & df['F'].isin(['c', 'o'])).to_numpy()
+
+
+def load(key, keep9999=False):
+    """t (HMJD mid-exposure), rel, sigma_cal, sigma_quoted of the usable rows, and a calibration record."""
+    path = f'results/w3_ztf/atlas40/phot/{key}.csv.gz'
+    if not os.path.exists(path):
+        return None
+    df = pd.read_csv(path, dtype={'Obs': str, 'F': str})
+    q = quality(df)
+    clipped = (df['uJy'].abs() >= CLIP).to_numpy()
+    use = q & (keep9999 | ~clipped)
+    tg = targets[key]
+    tt = Time(df['MJD'].to_numpy() + 15.0 / 86400.0, format='mjd', scale='utc')
+    geo = EarthLocation.from_geocentric(0 * u.m, 0 * u.m, 0 * u.m)
+    t = (tt + tt.light_travel_time(SkyCoord(tg['ra'] * u.deg, tg['dec'] * u.deg), kind='heliocentric', location=geo)).mjd
+    unit = df['Obs'].str[:3].to_numpy()
+    filt = df['F'].to_numpy()
+    rel = np.full(len(df), np.nan)
+    sq = np.full(len(df), np.nan)
+    sc = np.full(len(df), np.nan)
+    cal = {'rows': int(len(df)), 'quality_pass': int(q.sum()), 'clipped_9999_passing_quality': int((q & clipped).sum()),
+           'groups': {}}
+    for f in ('c', 'o'):
+        mf = use & (filt == f)
+        if mf.sum() == 0:
+            continue
+        base_f = float(np.median(df.loc[mf, 'uJy']))
+        rq_f = (df.loc[mf, 'uJy'].to_numpy() / base_f - 1) / (df.loc[mf, 'duJy'].to_numpy() / base_f)
+        k_f = float(robust_location_scale(rq_f[:, None])[1][0]) if mf.sum() >= MIN_ROWS else 1.0
+        for un in sorted(set(unit[filt == f])):
+            m = use & (filt == f) & (unit == un)
+            sel = (filt == f) & (unit == un)
+            if m.sum() >= MIN_ROWS:
+                base = float(np.median(df.loc[m, 'uJy']))
+                r = (df.loc[m, 'uJy'].to_numpy() / base - 1) / (df.loc[m, 'duJy'].to_numpy() / base)
+                k = float(robust_location_scale(r[:, None])[1][0])
+                src = 'unit'
+            else:
+                base, k, src = base_f, k_f, 'filter'
+            rel[sel] = df.loc[sel, 'uJy'].to_numpy() / base
+            sq[sel] = df.loc[sel, 'duJy'].to_numpy() / base
+            sc[sel] = sq[sel] * max(k, 1.0)
+            cal['groups'][f'{f}/{un}'] = {'n_used': int(m.sum()), 'baseline_uJy': base, 'k': k, 'from': src}
+    ok = use & np.isfinite(rel)
+    cal['n_used'] = int(ok.sum())
+    return {'t': t[ok], 'rel': rel[ok], 'sig_cal': sc[ok], 'sig_q': sq[ok], 'cal': cal}
+
+
+ATL = {k: load(str(k)) for k in keys}
+ATL_K = {k: load(str(k), keep9999=True) for k in keys}
+stored = {(e['kind'], e['i']): e for e in json.loads(gzip.open(f'results/w3_ztf/v24/step12_events_{P}.json.gz').read())}
+groups = [g for g in json.loads(wz.SAMPLE.read_text())['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+wz.EDGE_RULE = 'time'
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        base = {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}
+        carriers.append((g, s, o, base))
+OTHERS = ('common_mode_ok', 'oneoff_ok', 'achromatic_ok')
+MISMATCH = {'a_vs_v24': 0}
+
+
+def outcome(hits):
+    if any(h['pass'] for h in hits):
+        return 'recovered'
+    edge_only = [h for h in hits if all(h[k] for k in OTHERS)]
+    if edge_only:
+        return 'edge_insufficient' if any(h.get('edge_class') == 'insufficient' for h in edge_only) else 'edge_slow'
+    first = min((next(k for k in OTHERS if not h[k]) for h in hits), key=OTHERS.index)
+    return 'other:' + first
+
+
+def atlas_points(atl, model, which):
+    """The carrier's ATLAS points with the event injected (PLAN section 3), through the thin interface."""
+    if atl is None or len(atl['t']) == 0:
+        return []
+    f = 10 ** (-0.4 * np.asarray(model(atl['t']), float))
+    f = np.where(np.isfinite(f), f, 0.0)
+    rel, sig = wz.inject_rel_flux(atl['rel'], atl[which], f)
+    return wz.flux_alt_points(atl['t'], rel, sig)
+
+
+def with_alt(si, hits, alt):
+    tt = np.array([x[0] for x in si])
+    out = []
+    for h in hits:
+        i = int(np.flatnonzero(tt == h['t_start'])[0]); j = int(np.flatnonzero(tt == h['t_end'])[0])
+        eb = wz.edge_bounds_alt(si, (i, j), max(tt[j] - tt[i], 1.0), alt)
+        ok = all(h[k] for k in OTHERS)
+        out.append({**h, 'pass': ok and eb['edge_class'] == 'fast', 'edge_class': eb['edge_class']})
+    return out
+
+
+ev = []
+
+
+def handle(kind, k, g, si, hits_b, hits_t, model):
+    a = outcome(hits_b) if hits_b else 'not_flagged'
+    at = outcome([dict(h) for h in hits_t]) if hits_b else 'not_flagged'
+    st = stored[(kind, k)]
+    MISMATCH['a_vs_v24'] += (at, a) != (st['time'], st['bounds'])
+    if g['key'] not in keys:
+        return
+    rec = {'kind': kind, 'i': k, 'carrier': g['key'], 'a': a, 'atlas': ATL[g['key']] is not None}
+    for name, atl, which in (('b', ATL[g['key']], 'sig_cal'), ('b_quoted', ATL[g['key']], 'sig_q'),
+                             ('b_keep9999', ATL_K[g['key']], 'sig_cal')):
+        rec[name] = outcome(with_alt(si, hits_b, atlas_points(atl, model, which))) if hits_b else 'not_flagged'
+    if hits_b and ATL[g['key']] is not None:
+        tt = np.array([x[0] for x in si])
+        n_win = 0
+        for h in hits_b:
+            span = max(h['t_end'] - h['t_start'], 1.0)
+            n_win += int(((ATL[g['key']]['t'] >= h['t_start'] - span) & (ATL[g['key']]['t'] <= h['t_end'] + span)).sum())
+        rec['atlas_points_within_one_span'] = n_win
+    ev.append(rec)
+
+
+def screen_both(si, oi):
+    out = {}
+    for rule in ('time', 'bounds'):
+        wz.EDGE_RULE = rule
+        out[rule] = wz.screen(si, oi, cov)
+    return out
+
+
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    kind = f'rho{rho}_blend{blend:g}_tE{te:g}'
+    rng = np.random.default_rng(1100 + c + OFF)
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        sc = screen_both(si, oi)
+        hits = {r: [x for x in v if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half
+                    and (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+        model = lambda x, t0=t0, te=te, u0=u0, rho=rho, blend=blend: wz.w3_dmag(np.asarray(x, float), t0, te, u0, rho, blend)
+        handle(kind, k, g, si, hits['bounds'], hits['time'], model)
+rng = np.random.default_rng(1201 + OFF)
+for k in range(1000):
+    g, s, o, base = carriers[rng.integers(len(carriers))]
+    t = np.array([x[0] for x in s])
+    model = wz.control_model('fade', t, rng)
+    si = wz.apply_dmag(s, model(t), cov, rng)
+    oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+    sc = screen_both(si, oi)
+    hits = {r: [x for x in v if (x['t_start'], x['t_end']) not in base] for r, v in sc.items()}
+    handle('fade', k, g, si, hits['bounds'], hits['time'], model)
+
+if MISMATCH['a_vs_v24']:
+    raise SystemExit(f'A differs from the stored v24 outcomes: {MISMATCH}')
+calib = {str(k): (v['cal'] if v else None) for k, v in ATL.items()}
+res = {'label': 'derived; simulated events replayed (v23 seeds); ATLAS observed (compact tables), injected without new noise',
+       'npix': P, 'seed_offset': OFF, 'carriers': len(carriers), 'checks': {'a_equals_v24': True, 'mismatches': MISMATCH},
+       'calibration': calib, 'events': ev, 'seconds': round(time.time() - T0, 1)}
+json.dump(res, open(f'results/w3_ztf/atlas40/trial_{P}.json', 'w'), indent=1, default=float)
+open(f'results/w3_ztf/atlas40/trial_{P}.json', 'a').write('\n')
+print(P, len(ev), 'events on the 20 stars;', sum(e['atlas'] for e in ev), 'with ATLAS data;', round(time.time() - T0, 1), 's')

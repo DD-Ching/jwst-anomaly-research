@@ -31,3 +31,88 @@ Owner brief 2026-10-22 after #461:
   time and flux), task ids, time stamps and source sha256. The token is in no product.
 - The method (quality, time, baselines, errors, injection, rules, denominators, success and stop) is fixed in §2–§5,
   committed before any ATLAS flux of this round is read.
+
+## 2. ATLAS measurements (fixed before any flux of this round is read; `prep_script.py.txt`)
+- **Product:** the official reduced-mode total flux (uJy, duJy). Difference flux is not used.
+- **Quality:** the FAQ filters, as #461:
+  - duJy < 10000, err == 0;
+  - 100 < x, y < 10460;
+  - 1.6 < maj, min < 5;
+  - −1 < apfit < −0.1;
+  - mag5sig > 17, Sky > 17;
+  - filter c or o only.
+  A failing row is unknown: neither dim nor normal, and never zero flux. Low-S/N and negative fluxes are kept with
+  their errors.
+- **The value 9999:** no official page defines it. In #461 the one row with uJy = 9999 had m = 13.900 =
+  −2.5 log10(9999) + 23.9 exactly (seen in the session, not stored). That looks like a 4-digit output limit. Rule,
+  fixed now: rows with |uJy| ≥ 9999 are **unknown (possibly clipped)** and are excluded like failing rows. They are
+  counted. A sensitivity run keeps them (secondary, not gating).
+- **Time:** MJD (exposure start, UTC) + 15 s, converted to heliocentric MJD at the star, as #461 and as the ZTF
+  series.
+- **Baselines:** per star, filter (c, o) and ATLAS unit (`Obs` prefix, e.g. 01a): the median uJy of the passing rows.
+  A (filter, unit) with fewer than 20 passing rows uses the star's per-filter median. Relative flux = uJy / baseline;
+  σ = duJy / baseline. ATLAS c and o, and ZTF g and r, each keep their own baseline. Similar magnitudes are not taken
+  as proof of a common calibration.
+- **Errors (fixed now):** #461 found the scatter 1.7–4.4× the quoted errors.
+  - Per star, filter and unit: k = the normal-consistent MAD of (rel − 1) / σ over the passing rows, using
+    `jwst_anomaly.rank.robust_location_scale`, the repository's robust scale.
+  - σ_cal = max(k, 1) × σ. The fallback for < 20 rows is as for the baselines.
+  - Errors are never shrunk. A sensitivity run uses the quoted σ (secondary, not gating).
+- **Kept:** `phot/<key>.csv.gz` per star (MJD, filter, uJy, duJy and every column the cuts use, plus Obs) and
+  `calib.json` (baselines, k, counts). Each table must be < 1 MB.
+
+## 3. Injection (fixed now)
+- **Events and ZTF:** the replayed v23 events are unchanged: same samples, carriers, seeds (offsets 45000 / 46000) and
+  ZTF noise.
+  - A is ZTF-only bounds and must equal the stored v24 outcome for every event of both areas. If any differs, stop
+    and find out why.
+- **The same physical event on the ATLAS epochs:**
+  - W3: `w3_dmag` with the same t0, t_E, u0, ρ and the cell's blend.
+  - Fades: the same `control_model` closure.
+  - ASSUMPTION: lensing is achromatic, with the same source fraction in ATLAS c / o as in ZTF. ATLAS's PSF (FWHM
+    ≈ 3.7″) is wider than ZTF's; the 40 stars pass the 16″ clean cut, but extra blend light and chromatic blends are not
+    modelled.
+- **Flux injection,** reusing the W3 rule of `w3_microlensing.inject_w3` (OGLE):
+  - F = 10^(−0.4 dm(t));
+  - rel_inj = F + (rel − 1) × √max(F, 0.09);
+  - σ_inj = σ_cal × √max(F, 0.09).
+  The real residual is the noise, so nothing is added twice and **no new random number is drawn**. The rule is
+  sky-limited when the source vanishes, an ASSUMPTION carried over from OGLE.
+- **Thin interface** for `edge_bounds_alt`:
+  - rel_inj > 0 → dm = −2.5 log10 rel_inj, σ_dm = 1.0857 σ_inj / rel_inj;
+  - rel_inj ≤ 0 → σ_dm undefined, so the point is neither normal nor intermediate (bounds does not use dim points).
+  - Unknown rows are absent.
+
+## 4. Rules (no other change)
+- **A:** bounds on ZTF r (v23 / v24; `vet` with EDGE_RULE 'bounds').
+- **B:** A with the ATLAS points of the carrier as added edge points (`edge_bounds_alt`).
+  - Run finding, span, EDGE_FRAC and the other three tests are A's.
+  - No ZTF g, no #460 joint extension, no model fitting, no interpolation across gaps.
+- **Secondary (reported, not gating):** B with the quoted σ, and B keeping the 9999 rows.
+
+## 5. Denominators, success and stop (fixed now)
+- **Primary:**
+  - restored = W3 events on the 40 stars with A "edge_insufficient" and B "recovered".
+  - **Success** if restored / 63 ≥ 0.50 **and** B fade passes / 79 fade injections on the 40 stars ≤ 0.10. Both areas
+    are pooled. These are #459 / ASAS-SN plan §3, unchanged.
+- **Also reported:**
+  - all 154 W3 and 79 fade injections on the 40 stars (A and B outcome tables);
+  - A-recovered W3 events lost in B;
+  - fade insufficient → slow or → pass;
+  - Wilson 95 % intervals;
+  - per-star ATLAS status;
+  - the breakdown without the 4 development stars.
+- **Missing data:** a star without ATLAS data (failed, timed out or unfinished) keeps B = A and stays in every
+  denominator.
+- **Completion:**
+  - **Complete** if every task has ended: data, or a definitive server error / no result.
+  - **Incomplete** if any task is unfinished at the acquisition deadline. Then the primary numbers are reported as
+    incomplete, with bounds:
+    - lower bound: missing stars B = A;
+    - upper bound: every A-insufficient event of a missing star is restored and no missing-star fade passes.
+- **No second try:** no seed, threshold or rule change, and no second method after B is seen. A pass means only that an
+  independent validation is worth doing. No search group is read.
+- **Labels:**
+  - simulated: every "dimming", "restored" or "pass" here is a simulated injection;
+  - observed: ATLAS and ZTF epochs and their noise;
+  - nothing is a real event.

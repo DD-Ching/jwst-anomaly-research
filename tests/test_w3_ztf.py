@@ -415,6 +415,44 @@ def test_joint_extent_and_edge_bounds_joint():
     assert {k: v[k] for k in w} == w
 
 
+def test_atlas_inject_rel_flux_matches_ogle_inject_w3_and_alt_points():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "w3_microlensing", Path(__file__).resolve().parents[1] / "scripts" / "w3_microlensing.py"
+    )
+    w3 = importlib.util.module_from_spec(spec)
+    sys.modules["w3_microlensing"] = w3
+    spec.loader.exec_module(w3)
+    rng = np.random.default_rng(3)
+    t = np.linspace(0.0, 200.0, 400)
+    rel = 1.0 + rng.normal(0, 0.01, t.size)
+    sig = np.full(t.size, 0.006)
+    t0, te, u0, rho, blend = 100.0, 30.0, 0.3, 0.01, 0.7
+    ref = w3.inject_w3(w3.LightCurve(t, rel, sig), 1.0, blend, t0, te, u0, rho)
+    f = 10 ** (-0.4 * wz.w3_dmag(t, t0, te, u0, rho, blend))
+    ri, si = wz.inject_rel_flux(rel, sig, f)
+    assert np.allclose(ri, ref.f) and np.allclose(si, ref.sf)
+    # no event: unchanged; deep umbra: residual and error scaled by 0.3
+    r0, s0 = wz.inject_rel_flux(rel, sig, np.ones(t.size))
+    assert np.allclose(r0, rel) and np.allclose(s0, sig)
+    r1, s1 = wz.inject_rel_flux([1.02], [0.01], [0.0])
+    assert np.allclose(r1, [0.006]) and np.allclose(s1, [0.003])
+    # thin interface: flux > 0 -> (t, dm, sigma_dm); flux <= 0 -> sigma nan (unused by bounds)
+    pts = wz.flux_alt_points([1.0, 2.0, 3.0], [1.0, 0.5, -0.1], [0.01, 0.05, 0.05])
+    assert np.allclose(pts[0], (1.0, 0.0, 0.010857))
+    assert np.isclose(pts[1][1], 0.7526, atol=1e-4) and np.isclose(pts[1][2], 0.10857)
+    assert np.isnan(pts[2][2])
+    base = [(*x, 0.0) for x in mk(n=120, nd_at=set(range(40, 60)))]
+    base = [(x[0], x[1], x[2], 6.0, *x[4:]) for x in base]
+    gap = [x for i, x in enumerate(base) if not 60 <= i < 70]
+    wz.EDGE_FRAC = 0.25
+    v = wz.edge_bounds_alt(
+        gap, (40, 59), 19.0, wz.flux_alt_points([62.0, 61.0], [1.0, -0.2], [0.01, 0.05])
+    )
+    assert v["edge_post_class"] == "fast" and v["edge_post_max_d"] == 3.0
+
+
 def test_v15_configure_twice_does_not_stack():
     saved = (wz.LC_PIX, wz.LC_PART, wz.OBJ_PART, wz.CACHE, wz.SAMPLE, wz.VDIR, wz.VERSION, wz.N_MAX)
     try:
