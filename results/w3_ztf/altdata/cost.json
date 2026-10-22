@@ -1,0 +1,21 @@
+{
+ "label": "derived; lc and objects sizes as ../v24/cost.json (same files; fetched rows 13,497 / 9,404 identical to ../v23 fetch_info.json); TAP from ../v23/dev*/exposures_summary.json; inventory bytes from inventory.json; times from the session date -u prints",
+ "lc_mb": 1038.6,
+ "objects_mb": 168.4,
+ "tap_mb": 14.3,
+ "inventory_ztf_ibe_mb": 11.8,
+ "inventory_neowise_scs_mb": 13.2,
+ "inventory_mast_caom_mb": "not measured (40 small CAOM queries)",
+ "total_mb": 1246.2,
+ "budget_mb": 2000,
+ "stages_utc": {
+  "start": "05:22:22",
+  "plan_sections_0_3_commit": "05:32:14 (780b528)",
+  "inventory": "05:30:34-05:44:49 (first run stopped at 05:42 on IRSA SCS server errors; rerun with retry, valid responses reused)",
+  "plan_sections_3b_6_commit": "05:45:24 (7b7554d)",
+  "re_read": "05:46:28-05:49:04 (a 05:45:34 attempt stopped at once: v22 sample not unpacked)",
+  "trial": "05:49:09-05:50:40",
+  "diag_posthoc": "05:51:47-05:53:08"
+ },
+ "caches_deleted": false
+}
