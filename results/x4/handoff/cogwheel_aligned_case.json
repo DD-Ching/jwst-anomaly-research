@@ -85,18 +85,33 @@
   "environment: cogwheel-pe 1.6.0, lalsuite 7.26.16, numpy 2.5.4, scipy 1.18.1, mpmath",
   "python scripts/x4_cog_exact.py recheck   # writes results/x4/cog_exact/review_recheck.json; row tilts_pm1_chi099"
  ],
- "passing_reference": "36 frozen fixed points (results/x4/cog_exact/checks.json): F2 <= 7.3e-13, F3 <= 1.1e-12; review re-check q = 15, |chi| = 0.99 point passes (F2 2.2e-16)",
+ "passing_reference": "36 frozen fixed points (results/x4/cog_exact/checks.json): F2 <= 7.3e-13, F3 <= 1.1e-12; the near-aligned frozen point tilts_pm0999 (cos tilts +0.999 / -0.999, inclination pi/2) has F2 = 0.0; review re-check q = 15, |chi| = 0.99 point passes (F2 2.2e-16): 37 parameter sets in all",
  "scope": {
   "confirmed": [
-   "waveform agreement at 38 points away from this one (F2 <= 7.3e-13)",
+   "waveform agreement at 37 parameter sets away from this one (36 frozen + q = 15, |chi| = 0.99; F2 <= 7.3e-13)",
    "exact lnL (lnlike_fft, asd_drift 1) equals our normalised FF at our lag at those points (|dFF| <= 1.1e-12)",
    "prior transform round trip at the frozen points (<= 9.3e-16 relative in lnL)"
   ],
   "not_confirmed": [
-   "cause of this failure (aligned spin, inclination pi/2 and phi_ref pi are not separated)",
-   "fold/unfold path: at inclination pi/2 the original point is not always among its unfolds (max over unfolds minus lnL from -16.2 to 3326)",
+   "whether this point shows a real waveform difference at all: our own extrinsic solve is ill-conditioned there (d_L 0.0093 / 0.057 Mpc, dh_rel_diff -1.46 / -0.71), h-cross may be near zero; aligned spin, inclination pi/2 and phi_ref pi are not separated",
+   "fold/unfold path: the original point is not always among its unfolds; max over unfolds minus lnL is negative at 6 of 40 rows: -16.2 and -0.48 at the near-aligned edge-on point, -3.3e-5 to -1.8e-12 elsewhere (C2 found, box_1008, truths)",
    "time: our score uses a pad-64 lag grid (loss up to 3.2e-6 vs pad 512); cogwheel's time is continuous",
    "amplitude: common (d|h) difference of 9.5e-8 relative at the C1 truth, unresolved (normalised checks cannot see it)"
   ]
+ },
+ "stored_outputs_our_side": {
+  "note": "from the same review_recheck.json rows; they show our comparison is ill-conditioned at this point",
+  "C1": {
+   "d_luminosity_from_our_extrinsic_solve_mpc": 0.009299076365353844,
+   "dh_rel_diff": -1.4556495914886,
+   "F1b_round_trip": 3.141592653589793
+  },
+  "C2": {
+   "d_luminosity_from_our_extrinsic_solve_mpc": 0.057105644009708675,
+   "dh_rel_diff": -0.7147149841574854,
+   "F1b_round_trip": 3.141592653589793
+  },
+  "F1_reading": "F1 = pi because the spin azimuths are undefined at zero in-plane spin (box -> par -> box returns another azimuth); not a waveform difference",
+  "hx_note": "at inclination pi/2 with aligned spins h-cross is expected to be small; which polarisation gave F2 = 2.0 and the per-polarisation norms are not stored, so F2 = 2.0 may come from a near-zero h-cross"
  }
 }

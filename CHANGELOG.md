@@ -5,7 +5,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-22: X4 handoff gets the cogwheel minimal failing case and an inquiry draft (not posted); ASAS-SN entry blocked by the environment
 - **X4:** `results/x4/handoff/cogwheel_aligned_case.json` holds the parameters, both call sequences and the stored
   outputs of the one failing point from #451, plus the confirmed and unconfirmed scope (folding, time grid,
-  amplitude). `EXPERT_QUERY_DRAFT.md` is addressed to the cogwheel issue tracker, with the LALSuite service desk as
+  amplitude). The handoff review found our own comparison ill-conditioned at that point (d_L 0.0093 Mpc, h×
+  near zero edge-on), so whether the waveforms differ there is open. `EXPERT_QUERY_DRAFT.md` is addressed to the cogwheel issue tracker, with the LALSuite service desk as
   backup. It is for the owner's review only; nothing was posted. No new computation. The X4 search, P, R1 and S2
   stay paused.
 - **ASAS-SN:** one entry check (`results/w3_ztf/asassn/entry_check_2026-10-22.json`). The official client is plain
