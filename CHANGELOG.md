@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: Abell 370 gate C2 failure, post hoc diagnosis: 3 of the 6 absent arc-referenced controls are one CANUCS segment pair counted three times
+- **Plan** (`results/lens_consistency/abell370_buffalo_extra/posthoc_c2/PLAN.md`, committed first); everything is post
+  hoc and the frozen outcome of #468 stands (C2 fails, no flag read). Table diagnosis only; no image looked at.
+- **Result** (`posthoc_c2/posthoc.json`, `RESULT.md`): `gate_c2` reproduces the frozen counts on all five
+  CANUCS-reference fields. BUFFALO systems 2, 102 and 202 share reference 2101809 and counterpart 2101806 (ratios
+  0.135–0.173); 3.1, 15.3, 42.2 are three unrelated pairs. Counting a shared pair once: Abell 370 19 / 23 = 0.826
+  (would pass at 0.80, by one control); MACS0416 49 / 50; the other three fields unchanged (MACS1423 still 2 / 4).
+- **Handoff:** proposal, not applied: freeze "one control per shared (reference, counterpart) pair" before the next
+  field on this route. Reading Abell 370's flags under a post hoc pass is the owner's call.
 ## 2026-10-22: Abell 370 BUFFALO model A extra-image test: gate K passes (rms 0.910″); gate C2 fails on arc-referenced controls (19 / 25 = 0.76); no flag read
 - **Plan** (`results/lens_consistency/abell370_buffalo_extra/PLAN.md`, frozen and pushed first): stages of
   `../macs0416_canucsref/PLAN.md` with `abell370-buffalo-a-maps`, the BUFFALO gold list and CANUCS DR1 `a370` files

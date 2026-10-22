@@ -383,7 +383,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        `results/lens_consistency/abell370_canucsref/RESULT.md`: gate K fails, rms 2.34″; no prediction read; line stopped; ~~next: pin BUFFALO Niemiec+2023 model A maps and run gate K~~ done 2026-10-22 (D-034 addendum h,
       `results/lens_consistency/abell370_buffalo/RESULT.md`: gate L passes; K1 on Lagattuta+2019 fails, rms 7.70″; K2 on
       the model's own gold list passes, rms 0.910″); next: pin the CANUCS DR1 Abell 370 catalogue and mosaic and run the
-      extra-image stages on the BUFFALO gold systems (frozen plan first);
+      extra-image stages on the BUFFALO gold systems (frozen plan first); done 2026-10-22 (#468: gate K passes, C2 fails 19 / 25,
+      no flag read); post hoc C2 diagnosis done 2026-10-22 (`abell370_buffalo_extra/posthoc_c2/RESULT.md`: 3 of 6 absent
+      arc controls are one segment pair counted three times; counted once 19 / 23, other fields unchanged). Next: freeze the
+      shared-pair rule before any new field; reading Abell 370's flags under it is the owner's call;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows
