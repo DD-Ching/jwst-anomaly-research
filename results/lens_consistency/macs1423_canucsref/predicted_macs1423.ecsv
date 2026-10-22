@@ -1,0 +1,25 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: string}
+# - {name: image_class, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: abs_mu, datatype: float64}
+# - {name: ref_counterpart, datatype: int64}
+# - {name: arc_ref, datatype: bool}
+# - {name: L_ref, datatype: float64}
+# - {name: search_arcsec, datatype: float64}
+# - {name: f_pred, datatype: float64}
+# - {name: m_pred, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: n_sources, datatype: int64}
+# - {name: max_ratio, datatype: float64}
+# - {name: reading, datatype: string}
+# - {name: sigma_loc_njy, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: class_local, datatype: string}
+# schema: astropy-2.0
+system image_class ra dec abs_mu ref_counterpart arc_ref L_ref search_arcsec f_pred m_pred class n_sources max_ratio reading sigma_loc_njy pred_over_sigma class_local
+1 missing 215.94384878538233 24.07964746931003 17.32983233428177 4100311 False 7.447725761434308e-08 2.25 1.2906783871736759e-06 23.623020527995905 absent 7 0.016946837823685768 no_flag 8.071161928185061 159.91233959345269 absent
+1 candidate 215.94568167675982 24.07587221666178 8.816135160011635 4100311 False 7.447725761434308e-08 2.25 6.566015694750543e-07 24.35681083106004 recovered 15 4.230712081047618 no_flag 7.1961672139377155 91.24323406539692 recovered
