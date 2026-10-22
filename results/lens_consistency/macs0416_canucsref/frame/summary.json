@@ -1,0 +1,45 @@
+{
+ "macs0416": {
+  "model": "macs0416-canucs",
+  "model_sha256": "f3d9a8415044ff8d5ab4774573fcf3670c9dee9169abfca46086bdbf3dd45bed",
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o004/jw01208-o004_t002_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 27.422915133060336,
+  "unpredicted": [
+   "D8a.3",
+   "D28.2"
+  ],
+  "image_classes": {
+   "candidate": 34,
+   "demagnified": 1,
+   "faint": 1,
+   "missing": 3,
+   "no_flux_ref": 11,
+   "observed": 309,
+   "outside": 2
+  },
+  "forced_classes_targets": {
+   "confused": 9,
+   "inconsistent_reference": 1,
+   "no_reference": 33,
+   "recovered": 1,
+   "undetectable": 5
+  },
+  "gate_C": {
+   "n_targets": 309,
+   "n_testable": 191,
+   "n_recovered": 188,
+   "fraction": 0.9842931937172775,
+   "passes": true,
+   "classes": {
+    "absent": 3,
+    "confused": 50,
+    "inconsistent_reference": 5,
+    "no_reference": 104,
+    "recovered": 138,
+    "undetectable": 9
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}
