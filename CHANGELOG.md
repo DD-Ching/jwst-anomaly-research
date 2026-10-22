@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: Abell 370 BUFFALO model A extra-image test: gate K passes (rms 0.910″); gate C2 fails on arc-referenced controls (19 / 25 = 0.76); no flag read
+- **Plan** (`results/lens_consistency/abell370_buffalo_extra/PLAN.md`, frozen and pushed first): stages of
+  `../macs0416_canucsref/PLAN.md` with `abell370-buffalo-a-maps`, the BUFFALO gold list and CANUCS DR1 `a370` files
+  (sha256 pinned before the run). `m0416_canucsref.stage3` now takes `field` / `frame`.
+- **Result** (`RESULT.md`, `summary.json`): gate K 104 images, rms 0.910″, 99.0 % within 3″. Gate C2 all 35 / 42, arc
+  referenced 19 / 25 → fails; no flag read. Pipeline gate C (reported) 26 / 27.
+- **Environment:** archive.stsci.edu reset every connection from the cloud session; the MAST download API
+  (`mast.stsci.edu/api/v0.1/Download/file?uri=mast:HLSP/...`) served the same bytes (sha256 verified). CANUCS DR1 names
+  Abell 370 `a370`, not `abell370`.
+- **Handoff:** the CANUCS-reference route now passes C2 on MACS1149 and MACS0416 and fails on MACS1423 and Abell 370.
+  Next: the owner's call whether to diagnose the arc-referenced control failures (7 absent controls, all "sources too
+  faint", post hoc) or move the extra-image route to another cluster.
 ## 2026-10-22: S1 CHIME `bounded_map`: an interrupt inside `submit()` lost a running worker and left its file; fixed
 - **Cause:** `test_bounded_map_cleans_the_head_future_on_interrupt_while_waiting` failed once on #462's CI (py3.11,
   leftover `f0.h5`). The SIGINT can be handled while the main thread is still in `ex.submit()`, inside

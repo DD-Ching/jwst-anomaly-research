@@ -93,21 +93,24 @@ def counterpart_offsets(cat: dict) -> dict:
     }
 
 
-def stage3(cat, depth, inputs, d, w, src_x, src_y, contain: bool, out: Path) -> dict:
+def stage3(
+    cat, depth, inputs, d, w, src_x, src_y, contain: bool, out: Path, field=FIELD, frame=FRAME
+) -> dict:
+    """Stage 3 (PLAN.md rules 3-5); ``field`` / ``frame`` let other fields reuse it."""
     s = ar.run(
         Path("."),
         cat=cat,
         depth=depth,
         cat_inputs=inputs,
         out=out,
-        field=FIELD,
-        frame=FRAME,
+        field=field,
+        frame=frame,
         offset=(0.0, 0.0),
         contain=contain,
     )
     rng = np.random.default_rng(m14.SEED)
-    ctrl = Table.read(out / f"control_{FIELD}.ecsv")
-    pred = Table.read(out / f"predicted_{FIELD}.ecsv")
+    ctrl = Table.read(out / f"control_{field}.ecsv")
+    pred = Table.read(out / f"predicted_{field}.ecsv")
     m14.apply_local(ctrl, d, w, src_x, src_y, rng)
     if len(pred):
         m14.apply_local(pred, d, w, src_x, src_y, rng)
@@ -117,8 +120,8 @@ def stage3(cat, depth, inputs, d, w, src_x, src_y, contain: bool, out: Path) -> 
         for r in pred
         if c2["passes"] and str(r["class_local"]) == "absent"
     ]
-    ctrl.write(out / f"control_{FIELD}.ecsv", overwrite=True)
-    pred.write(out / f"predicted_{FIELD}.ecsv", overwrite=True)
+    ctrl.write(out / f"control_{field}.ecsv", overwrite=True)
+    pred.write(out / f"predicted_{field}.ecsv", overwrite=True)
     return {
         "gate_C2": c2,
         "control_classes": m14._count(ctrl["class_local"]),
