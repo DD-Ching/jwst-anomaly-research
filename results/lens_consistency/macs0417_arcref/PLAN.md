@@ -1,6 +1,6 @@
 # MACS0417: extra-image test with an arc-aware (catalogue-segment) reference flux (plan, frozen)
 
-Frozen 2026-10-22 00:25Z, before any segment flux at a predicted or catalogued image was looked at. Follows the
+Frozen 2026-10-22 00:12Z (commit time of this file), before any segment flux at a predicted or catalogued image was looked at. Follows the
 "Next (optional)" of `../macs0417_frame/RESULT.md`: there the 6 predicted extra images (families 8, 9, 10, 17)
 were all `no_reference`, because their catalogued siblings are thin arcs that fail the D-034 compact rule.
 Script: `scripts/m0417_arcref.py`; frozen rules as functions, unit-tested in `tests/test_m0417_arcref.py`.
