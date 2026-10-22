@@ -25,8 +25,9 @@ included), any inclination ι and any φ_ref. Our own score calls `SimInspiralCh
 switched off.
 
 **What agrees.**
-- We compared h+ and h× at identical parameters, mapped with `inplane_spins_xy_to_xy_n`, at 37 parameter sets.
-  The noise-weighted 1 − overlap is ≤ 7.3e-13, including a nearly aligned, edge-on set (cos tilts ±0.999, ι = π/2).
+- We compared h+ and h× at identical parameters, mapped with `inplane_spins_xy_to_xy_n`, at 21 distinct parameter sets
+  (38 comparisons over our two targets).
+  The noise-weighted 1 − overlap is ≤ 7.3e-13, including a nearly aligned, edge-on set (cos tilts ±0.999, |χ| 0.98, ι = π/2).
 - At those sets, `lnlike_fft` with the ASD drift set to 1 reproduces our normalised overlap to ≤ 1.1e-12.
 
 **Where our comparison breaks down.** The set is m1 36.343, m2 4.543 M☉; χ1 = (0, 0, +0.99), χ2 = (0, 0, −0.99);
@@ -35,7 +36,7 @@ switched off.
   polarisation. Which polarisation it was is not recorded.
 - At this ι, h× is expected to be small, so that number may be ill-defined.
 - Our own mapping from the fitted (a h+ + c h×) to distance and ψ is also ill-conditioned here: it returns
-  d ≈ 0.01 Mpc.
+  d ≈ 0.01–0.06 Mpc.
 - We therefore do not know whether the waveforms differ at all, and we assume no cause.
 
 **Questions.**

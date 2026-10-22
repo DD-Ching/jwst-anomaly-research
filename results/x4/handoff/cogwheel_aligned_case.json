@@ -85,10 +85,10 @@
   "environment: cogwheel-pe 1.6.0, lalsuite 7.26.16, numpy 2.5.4, scipy 1.18.1, mpmath",
   "python scripts/x4_cog_exact.py recheck   # writes results/x4/cog_exact/review_recheck.json; row tilts_pm1_chi099"
  ],
- "passing_reference": "36 frozen fixed points (results/x4/cog_exact/checks.json): F2 <= 7.3e-13, F3 <= 1.1e-12; the near-aligned frozen point tilts_pm0999 (cos tilts +0.999 / -0.999, inclination pi/2) has F2 = 0.0; review re-check q = 15, |chi| = 0.99 point passes (F2 2.2e-16): 37 parameter sets in all",
+ "passing_reference": "36 frozen fixed points (results/x4/cog_exact/checks.json): F2 <= 7.3e-13, F3 <= 1.1e-12; the near-aligned frozen point tilts_pm0999 (cos tilts +0.999 / -0.999, |chi| 0.98, inclination pi/2) has F2 = 0.0; review re-check q = 15, |chi| = 0.99 point passes (F2 2.2e-16): 21 distinct parameter sets, 38 comparisons (18 points x 2 targets + the q = 15 set x 2)",
  "scope": {
   "confirmed": [
-   "waveform agreement at 37 parameter sets away from this one (36 frozen + q = 15, |chi| = 0.99; F2 <= 7.3e-13)",
+   "waveform agreement at 21 distinct parameter sets away from this one (38 comparisons: 36 frozen + q = 15, |chi| = 0.99 for both targets; F2 <= 7.3e-13)",
    "exact lnL (lnlike_fft, asd_drift 1) equals our normalised FF at our lag at those points (|dFF| <= 1.1e-12)",
    "prior transform round trip at the frozen points (<= 9.3e-16 relative in lnL)"
   ],
