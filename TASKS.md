@@ -366,7 +366,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        `results/lens_consistency/macs0417_arcref/RESULT.md`: gate C2 10 / 27; pipeline segments hold several knots or other light).
        ~~CANUCS DR1 photometry as the reference~~ done 2026-10-22 (D-034 addendum b,
        `results/lens_consistency/macs0417_canucsref/RESULT.md`): gate C2 passes 37 / 40; 2 family-10 flags, post hoc
-       ordinary (BCG local noise; a photo-z-matched source 1.49″ away). Next: family-10 z-scan in the CANUCS maps; the
+       ordinary (BCG local noise; a photo-z-matched source 1.49″ away). ~~Family-10 z-scan~~ done 2026-10-22 (D-034
+       addendum c, `results/lens_consistency/macs0417_f10_zscan/RESULT.md`: third image on CANUCS 1115938 only at z
+       1.975–2.100, above its photo-z 1.72–1.88; outcome A′, undetermined). Next: a frozen colour test of 1115938 vs
+       10.1 / 10.2; the
        same reference on MACS1423 and other CANUCS fields with a local-noise `undetectable` rule frozen first;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as

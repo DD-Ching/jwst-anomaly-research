@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: MACS0417 family 10 z-scan in the CANUCS maps: the third image lands on CANUCS 1115938 only above its photo-z (outcome A′)
+- **Plan** (`results/lens_consistency/macs0417_f10_zscan/PLAN.md`, frozen and pushed first; rules as tested functions):
+  z 1.00–4.00 (step 0.025), source from 10.1 / 10.2, one-to-one assignment of 10.1, 10.2 and 1115938 within 1.0″.
+- **Result** (`RESULT.md`, `summary.json`): known case passes at z 2.15 (0.159″ / 0.285″); all three land at z
+  1.975–2.100 (closest 0.464″ at 2.025); inside 1115938's z160–z840 1.72–1.88 the offset is 1.96–3.95″. Frozen outcome
+  A′: the `candidate` flag of #453 is explained by redshift only at a z the photometry disfavours; undetermined, no
+  candidate, `/vet-candidate` not run. D-034 addendum c.
+- **Handoff:** next for MACS0417, a frozen colour test of 1115938 against 10.1 / 10.2 (separates wrong z from an
+  unrelated z ≈ 1.8 galaxy); otherwise the CANUCS DR1 reference on MACS1423 with a local-noise rule frozen first.
 ## 2026-10-22: MACS0417 extra-image test with CANUCS DR1 reference fluxes: gate C2 passes; two family-10 flags, both with post hoc ordinary readings
 - **Plan** (`results/lens_consistency/macs0417_canucsref/PLAN.md`, frozen first): the `../macs0417_arcref` rules
   unchanged, the JWST pipeline catalogue replaced by the CANUCS DR1 photometry catalogue (BCG-subtracted detection,
