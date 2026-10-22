@@ -1,0 +1,12 @@
+{
+ "label": "observed (environment response); one entry check under the 2026-10-22 owner brief (<= 5 min, no shim, no workaround)",
+ "utc_start": "2026-10-22T00:46:06Z",
+ "utc_end": "2026-10-22T00:47:14Z",
+ "client": "skypatrol (pyasassn) 0.6.21, latest on PyPI at check time; hard-coded base http://asassn-lb01.ifa.hawaii.edu:9006 (plain HTTP)",
+ "environment": "cloud session; outbound only through the agent proxy, which supports HTTPS / CONNECT only (plain-HTTP proxying not supported, /root/.ccr/README.md); the CONNECT shim used in #416 was not started (owner brief: no bypass)",
+ "request": {"path": "/get_block_servers", "timeout_s": [60, 120], "route": "direct (no proxy for plain HTTP)", "result": "ConnectTimeout after 60.2 s"},
+ "block_servers": "not obtained",
+ "first_star_download": "not attempted (no block-server list)",
+ "classification": "environment blocked (official entry unreachable from this session); upstream service status not observed; not a service-down result and not a download failure",
+ "stop": "ASAS-SN work stops for this round; no polling, no other survey"
+}
