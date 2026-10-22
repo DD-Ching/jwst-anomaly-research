@@ -48,9 +48,13 @@ def cached(path, url):
     import os
     if os.path.exists(path):
         return open(path, 'rb').read()
-    raw = get(url)
-    open(path, 'wb').write(raw)
-    return raw
+    for k in range(4):  # a server-side error (e.g. IRSA SCS "ORA-24459" pool timeouts) is retried, never kept
+        raw = get(url)
+        if b'name="Error"' not in raw[:4000]:
+            open(path, 'wb').write(raw)
+            return raw
+        time.sleep(20 * (k + 1))
+    raise RuntimeError(f'service error for {url}: {raw[:400]!r}')
 
 
 def ztf_g(key):

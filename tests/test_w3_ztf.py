@@ -321,6 +321,41 @@ def test_v23_edge_bounds_gap_is_insufficient_not_fast():
         wz.EDGE_RULE = "count"
 
 
+def test_altdata_edge_bounds_alt():
+    # run on days 40-59 (span 19 d, threshold 4.75 d); a 10-d r gap after the run (days 60-69)
+    wz.EDGE_FRAC = 0.25
+    dim = set(range(40, 60))
+    base = [(*x, 0.0) for x in mk(n=120, nd_at=dim)]
+    base = [(x[0], x[1], x[2], 6.0, *x[4:]) for x in base]
+    gap = [x for i, x in enumerate(base) if not 60 <= i < 70]
+    slow = [(x[0], 0.6, *x[2:]) if i == 67 else x for i, x in enumerate(base)]
+    # no alt point: identical to edge_bounds
+    for s in (base, gap, slow):
+        assert wz.edge_bounds_alt(s, (40, 59), 19.0, []) == wz.edge_bounds(s, (40, 59), 19.0)
+    # a normal alt point (S/N 10) 3 d after the run fills the gap: fast
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(62.0, 0.05, 0.1)])
+    assert (
+        v["edge_post_class"] == "fast" and v["edge_post_max_d"] == 3.0 and v["edge_class"] == "fast"
+    )
+    # the same point at S/N < 3, or 6 d after the run (> 4.75 d), does not decide the side
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(62.0, 0.05, 0.5)])
+    assert v["edge_post_class"] == "insufficient"
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(65.0, 0.05, 0.1)])
+    assert v["edge_post_class"] == "insufficient" and v["edge_post_max_d"] == 6.0
+    # a significant alt intermediate 8 d after the run: slow; an ambiguous one does not decide
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(67.0, 0.6, 0.05)])
+    assert v["edge_post_class"] == "slow" and v["edge_post_d"] == 8.0
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(67.0, 0.35, 0.05)])
+    assert v["edge_post_class"] == "insufficient"
+    # alt points inside the run are never used, and an alt normal point nearer than a significant
+    # intermediate does not bound the edge (as for r epochs in edge_bounds)
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(50.0, 0.0, 0.01)])
+    assert v == wz.edge_bounds(gap, (40, 59), 19.0)
+    v = wz.edge_bounds_alt(gap, (40, 59), 19.0, [(61.0, 0.0, 0.05), (63.0, 0.7, 0.05)])
+    assert v["edge_post_d"] == 4.0 and v["edge_post_max_d"] == 11.0
+    assert v["edge_post_class"] == "insufficient"
+
+
 def test_v15_configure_twice_does_not_stack():
     saved = (wz.LC_PIX, wz.LC_PART, wz.OBJ_PART, wz.CACHE, wz.SAMPLE, wz.VDIR, wz.VERSION, wz.N_MAX)
     try:

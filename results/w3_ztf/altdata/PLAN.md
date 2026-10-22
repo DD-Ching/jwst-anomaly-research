@@ -40,3 +40,49 @@ window), Pan-STARRS1 3π (2009–2014), ASAS-SN (brief), ATLAS forced photometry
   insufficient sides are all "observed"; otherwise stop and deliver the exclusion table.
 - **Tie:** the repository's existing interface first.
 - Light-curve shapes of the targets are not looked at for the choice.
+
+## 3b. Inventory outcome (05:44 UTC; coverage only, `inventory.json`)
+- W3 sides "observed": ZTF g 36 / 88 (19 of 63 events with every insufficient side observed), NEOWISE 3 / 88 (1 event),
+  TESS 0 / 88 (no sector overlaps any window; its 21″ pixels also fail the resolution condition).
+- **Selected: ZTF g.** "Observed" here means an infobits-0 exposure exists; whether DR24 holds a usable g detection
+  there is measured in the trial.
+
+## 4. Trial with the selected source (fixed before any flux is read; written for ZTF g, the source the rule selects)
+- **Sample:** the same 40 stars. Every event of the v23 replay whose carrier is one of them: the 10 calibrated W3 cells
+  × 200 and the 1,000 fades per area, with carriers drawn by the v23 seeds (offsets 45000 for 4991, 46000 for 2344). No
+  re-selection. A star without g detections adds nothing (B = A for its events) and stays in every denominator.
+- **Data:** the ZTF DR24 g-band series of the same groups, as built by `series(g, rows, cov, 1)`: good exposures, star in
+  the footprint, flagged epochs unknown, non-detections inferred from coverage. These are the files of v23 / v24 (two
+  calibration re-reads, about 1.22 GB). No psfcat, no other product, no new photometry.
+- **Injection:** the same physical event (same dm(t), same blend) on the g times, as in every version since v2. The g
+  noise is the draw the v23 replay already makes: same generator, after the r draw, one independent normal draw per g
+  epoch with σ from that epoch's maglimit (SNR 5 at the limit; `apply_dmag`). The r series and its noise stay
+  identical. No new random number is drawn.
+- **Measurements:** only g detections enter the edges. A g non-detection is neither a measurement nor zero flux: it is
+  left out of the edges and keeps its existing role in the achromatic test. DR24 has no upper limits; none is used. A
+  missing epoch is never zero.
+- **Cross-band handling (fixed now):** W3 lensing is achromatic and the model applies the same dm(t) with the cell's
+  blend in both bands. A g point's dm is relative to the g median of its quadrant (the series' own baseline). Normal:
+  dm < 0.3 and S/N = 1.0857 / σ ≥ 3 (the ASAS-SN plan's condition). Significant intermediate: 0.3 + 2σ ≤ dm < 1.0. A
+  colour change of an ordinary fade is not modelled (the fade control applies the same dm in both bands).
+- **Rules:**
+  - **A** is bounds on ZTF r alone, replayed. It must equal the stored v24 outcome for every event of both areas under
+    both rules (v13 and bounds), else stop.
+  - **B** is bounds with the g detections as added edge points: `edge_bounds_alt` in `scripts/w3_ztf.py` (unit test
+    `test_altdata_edge_bounds_alt`, written before the run). Run finding, span, EDGE_FRAC and the other three tests are
+    taken from A unchanged.
+- **Script:** `trial_script.py.txt` → `trial_<npix>.json`, `trial_events_<npix>.json.gz`.
+
+## 5. Criteria (from `../asassn/PLAN.md` §3, unchanged)
+- **Success (development):** restored = W3 events on the 40 stars that are bounds "insufficient" in A and "recovered" in
+  B. Success if restored / A-insufficient ≥ 0.50 **and** B fade passes / fade injections on the 40 stars ≤ 0.10. Both
+  areas combined, the 10 calibrated cells pooled. Per-area numbers are reported, not gated.
+- **Reported:** g detections per star; g points inside the A-insufficient windows; sides with a normal g point there;
+  sides turning fast or slow; A-recovered W3 events that B loses; fade passes in A and B; the A → B transition table.
+- **Scope:** a feasibility trial on the already-used calibration sample (development data), not an independent
+  validation. It applies to these 40 bright stars (ZTF r 14.5–14.8, clean 16″ apertures) and these simulated events
+  only. No search group is read.
+
+## 6. Stop and cost
+- Stop computing at 07:00 UTC or at 2 GB downloaded in total. If A differs from the stored outcomes, stop and report.
+- One run per area. A crash without a verdict may be rerun once with the same inputs. No threshold or rule change.

@@ -744,6 +744,63 @@ def edge_bounds(s, run, span) -> dict:
     return out
 
 
+ALT_MIN_SNR = 3.0  # alt-data trial: a normal point of another band or survey needs S/N >= 3
+
+
+def edge_bounds_alt(s, run, span, alt) -> dict:
+    """Alt-data trial (``results/w3_ztf/altdata/PLAN.md``): edge_bounds with added edge information.
+    ``alt`` holds (t, dm, sigma) measurements of the same star from another band or survey;
+    non-detections and upper limits are not measurements and must be left out by the caller. The
+    run, its span and EDGE_FRAC * span come from ``s`` alone; alt points inside the run are never
+    used. An alt point is normal if dm < INTER[0] and 1.0857 / sigma >= ALT_MIN_SNR, and a
+    significant intermediate if INTER[0] + EDGE_NSIG * sigma <= dm < INTER[1]. Epochs of ``s`` keep
+    edge_bounds' definitions; L, U and the classes follow edge_bounds on the union. With no alt
+    point the result equals edge_bounds."""
+    i, j = run
+    t = np.array([x[0] for x in s])
+    dm = np.array([x[1] for x in s])
+    nd = np.array([x[2] for x in s], bool)
+    lim = np.array([x[3] for x in s], float)
+    with np.errstate(over="ignore", invalid="ignore"):
+        sig = 0.2171 * 10 ** (0.4 * (dm - lim))
+    inter = ~nd & (dm >= INTER[0] + EDGE_NSIG * sig) & (dm < INTER[1])
+    normal = ~nd & (dm < INTER[0])
+    ti, tj = t[i], t[j]
+    if len(alt):
+        a = np.asarray(alt, float).reshape(-1, 3)
+        at, adm, asig = a[:, 0], a[:, 1], a[:, 2]
+        out_run = (at < ti) | (at > tj)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            snr = np.where(asig > 0, 1.0857 / asig, 0.0)
+        a_inter = out_run & (adm >= INTER[0] + EDGE_NSIG * asig) & (adm < INTER[1])
+        a_norm = out_run & (adm < INTER[0]) & (snr >= ALT_MIN_SNR)
+        t = np.concatenate([t, at])
+        inter = np.concatenate([inter, a_inter])
+        normal = np.concatenate([normal, a_norm])
+    thr = EDGE_FRAC * span
+    pre = inter & (t >= ti - span) & (t < ti)
+    post = inter & (t > tj) & (t <= tj + span)
+    a_pre = t[pre].min() if pre.any() else ti
+    a_post = t[post].max() if post.any() else tj
+    n_pre, n_post = normal & (t < a_pre), normal & (t > a_post)
+    lo = {"pre": float(ti - a_pre), "post": float(a_post - tj)}
+    hi = {
+        "pre": float(ti - t[n_pre].max()) if n_pre.any() else np.inf,
+        "post": float(t[n_post].min() - tj) if n_post.any() else np.inf,
+    }
+    cls = {k: "fast" if hi[k] <= thr else ("slow" if lo[k] > thr else "insufficient") for k in lo}
+    run_cls = (
+        "fast"
+        if all(c == "fast" for c in cls.values())
+        else ("slow" if "slow" in cls.values() else "insufficient")
+    )
+    out = {"edge_pre_d": lo["pre"], "edge_post_d": lo["post"], "edge_class": run_cls}
+    for k in lo:
+        out[f"edge_{k}_max_d"] = hi[k] if np.isfinite(hi[k]) else None
+        out[f"edge_{k}_class"] = cls[k]
+    return out
+
+
 def vet(s, run, other, cov, dimfrac_override=None) -> dict:
     """Plan section 6; returns each test's outcome."""
     i, j = run
