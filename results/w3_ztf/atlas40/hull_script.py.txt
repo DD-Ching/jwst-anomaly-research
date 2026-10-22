@@ -1,0 +1,69 @@
+# Deviation (PLAN section 1, written 09:16 before any ATLAS flux was read; server timing only): per star, the time hull
+# that can affect B's class. edge_bounds_alt takes intermediates only within one run span, and a normal point decides
+# 'fast' only within 0.25 x span; a normal point farther away can change the recorded U (edge_*_max_d) but not the class.
+# So for every event on the star with a bounds hit the window is [t_start - span, t_end + span]; the hull adds 60 d each
+# side for the baseline (review note: baselines and k of hull-range stars come from the hull only). Replays the v23 events like
+# trial_script.py.txt; reads no ATLAS data. Usage: python hull_script.py.txt <npix> <seed offset>
+import json, sys
+import numpy as np
+sys.path.insert(0, 'scripts')
+import w3_ztf as wz
+
+P, OFF = int(sys.argv[1]), int(sys.argv[2])
+wz.configure(P, f'v23/dev{P}')
+targets = {t['key']: t for t in json.load(open('results/w3_ztf/atlas40/targets.json'))['targets']}
+keys = {int(k) for k, t in targets.items() if t['area'] == str(P)}
+groups = [g for g in json.loads(wz.SAMPLE.read_text())['groups'] if not g['holdout']]
+rows, cov = wz.context(groups)
+carriers = []
+wz.EDGE_RULE = 'time'
+for g in groups:
+    s = wz.series(g, rows, cov, 2)
+    if len(s) >= 2 * wz.MIN_BRACKET + wz.MIN_RUN:
+        o = wz.series(g, rows, cov, 1)
+        base = {(x['t_start'], x['t_end']) for x in wz.screen(s, o, cov)}
+        carriers.append((g, s, o, base))
+win = {k: [] for k in keys}
+wz.EDGE_RULE = 'bounds'
+cells = [(r, b, te) for r, b in ((0.01, 1.0), (0.1, 1.0), (0.01, 0.7), (0.1, 0.7)) for te in (3.0, 10.0, 30.0, 100.0)]
+for c, (rho, blend, te) in enumerate(cells):
+    if te == 3.0 or (rho == 0.1 and te == 100.0):
+        continue
+    rng = np.random.default_rng(1100 + c + OFF)
+    for k in range(200):
+        g, s, o, base = carriers[rng.integers(len(carriers))]
+        t = np.array([x[0] for x in s])
+        t0, u0 = rng.uniform(t.min(), t.max()), rng.uniform(0, 2)
+        half = te * np.sqrt(4 - u0**2)
+        si = wz.apply_dmag(s, wz.w3_dmag(t, t0, te, u0, rho, blend), cov, rng)
+        to = np.array([x[0] for x in o]) if o else np.array([])
+        oi = wz.apply_dmag(o, wz.w3_dmag(to, t0, te, u0, rho, blend), cov, rng) if o else o
+        if g['key'] in keys:
+            for x in wz.screen(si, oi, cov):
+                if x['t_start'] <= t0 + half and x['t_end'] >= t0 - half and (x['t_start'], x['t_end']) not in base:
+                    sp = max(x['t_end'] - x['t_start'], 1.0)
+                    win[g['key']].append([x['t_start'] - sp, x['t_end'] + sp])
+rng = np.random.default_rng(1201 + OFF)
+for k in range(1000):
+    g, s, o, base = carriers[rng.integers(len(carriers))]
+    t = np.array([x[0] for x in s])
+    model = wz.control_model('fade', t, rng)
+    si = wz.apply_dmag(s, model(t), cov, rng)
+    oi = wz.apply_dmag(o, model(np.array([x[0] for x in o])), cov, rng) if o else o
+    if g['key'] in keys:
+        for x in wz.screen(si, oi, cov):
+            if (x['t_start'], x['t_end']) not in base:
+                sp = max(x['t_end'] - x['t_start'], 1.0)
+                win[g['key']].append([x['t_start'] - sp, x['t_end'] + sp])
+out = {}
+for k, w in win.items():
+    if w:
+        lo, hi = min(a for a, _ in w) - 60.0, max(b for _, b in w) + 60.0
+        out[str(k)] = {'windows': len(w), 'hull': [round(max(lo, 58150.0), 3), round(min(hi, 61000.0), 3)],
+                       'union_days': float(sum(b - a for a, b in w))}
+    else:
+        out[str(k)] = {'windows': 0, 'hull': None, 'union_days': 0.0}
+json.dump({'label': 'derived (replayed v23 events; no ATLAS data)', 'npix': P, 'stars': out},
+          open(f'results/w3_ztf/atlas40/hull_{P}.json', 'w'), indent=1)
+open(f'results/w3_ztf/atlas40/hull_{P}.json', 'a').write('\n')
+print(P, {k: (v['windows'], v['hull'] and round(v['hull'][1] - v['hull'][0])) for k, v in out.items()})

@@ -1,0 +1,829 @@
+{
+ "label": "derived (trial_<npix>.json calibration)",
+ "stars": {
+  "601213400002563": null,
+  "601213300003718": {
+   "rows": 4034,
+   "quality_pass": 3771,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 129,
+     "baseline_uJy": 4795.0,
+     "k": 4.649979685313012,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 749,
+     "baseline_uJy": 4858.0,
+     "k": 2.253555372128509,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 4852.5,
+     "k": 2.5198957792164762,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1482,
+     "baseline_uJy": 5741.0,
+     "k": 2.1964477311194095,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1321,
+     "baseline_uJy": 5753.0,
+     "k": 2.1098570032579667,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 4,
+     "baseline_uJy": 5746.0,
+     "k": 2.1802973801553,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 84,
+     "baseline_uJy": 5662.0,
+     "k": 2.621993494667707,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.2809264900086212,
+   "n_used": 3771
+  },
+  "601213400002567": {
+   "rows": 3462,
+   "quality_pass": 3299,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 103,
+     "baseline_uJy": 3937.0,
+     "k": 1.7791226622067213,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 661,
+     "baseline_uJy": 3954.0,
+     "k": 1.8532527731320005,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3951.0,
+     "k": 1.9019668460257546,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1327,
+     "baseline_uJy": 4863.0,
+     "k": 1.9768029580074729,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1138,
+     "baseline_uJy": 4856.0,
+     "k": 1.7571581848955575,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 5,
+     "baseline_uJy": 4859.0,
+     "k": 1.906202852364331,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 63,
+     "baseline_uJy": 4829.0,
+     "k": 2.654892344765843,
+     "from": "unit"
+    }
+   },
+   "k_star": 1.906202852364331,
+   "n_used": 3299
+  },
+  "601213200002823": null,
+  "601213300005265": null,
+  "601213100007066": null,
+  "601213200006434": {
+   "rows": 2170,
+   "quality_pass": 2105,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 79,
+     "baseline_uJy": 3597.0,
+     "k": 2.4462936605342285,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 398,
+     "baseline_uJy": 3642.0,
+     "k": 1.4826022185056131,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3636.0,
+     "k": 1.7297025882565482,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 853,
+     "baseline_uJy": 5434.0,
+     "k": 2.2768534069907367,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 716,
+     "baseline_uJy": 5415.5,
+     "k": 1.7947947568787348,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 57,
+     "baseline_uJy": 5396.0,
+     "k": 3.567511588279125,
+     "from": "unit"
+    }
+   },
+   "k_star": 1.9768029580074724,
+   "n_used": 2105
+  },
+  "601213300005924": {
+   "rows": 1914,
+   "quality_pass": 1838,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 72,
+     "baseline_uJy": 3615.5,
+     "k": 3.3570592567764006,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 455,
+     "baseline_uJy": 3684.0,
+     "k": 1.5470631845275853,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3679.0,
+     "k": 1.7404460825935573,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 725,
+     "baseline_uJy": 5320.0,
+     "k": 1.866980571451509,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 523,
+     "baseline_uJy": 5306.0,
+     "k": 1.6428835394251344,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 61,
+     "baseline_uJy": 5249.0,
+     "k": 2.5608583774187776,
+     "from": "unit"
+    }
+   },
+   "k_star": 1.8221492300864213,
+   "n_used": 1838
+  },
+  "601209200000036": null,
+  "601209200002983": {
+   "rows": 3885,
+   "quality_pass": 3445,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 116,
+     "baseline_uJy": 3785.5,
+     "k": 2.969268587829485,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 714,
+     "baseline_uJy": 3830.0,
+     "k": 1.9655711230187884,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3825.5,
+     "k": 2.14219553567863,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1423,
+     "baseline_uJy": 4937.0,
+     "k": 1.8779628101071089,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1117,
+     "baseline_uJy": 4929.0,
+     "k": 1.8532527731320037,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 4,
+     "baseline_uJy": 4932.0,
+     "k": 1.8669805714514913,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 69,
+     "baseline_uJy": 4887.0,
+     "k": 2.3298034862230828,
+     "from": "unit"
+    }
+   },
+   "k_star": 1.9165345751413938,
+   "n_used": 3445
+  },
+  "601214400007338": null,
+  "601214400005162": null,
+  "601213300007095": {
+   "rows": 2492,
+   "quality_pass": 2407,
+   "clipped_9999_passing_quality": 1,
+   "groups": {
+    "c/01a": {
+     "n_used": 87,
+     "baseline_uJy": 4463.0,
+     "k": 2.8978134270791243,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 501,
+     "baseline_uJy": 4505.0,
+     "k": 1.97680295800748,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 4500.0,
+     "k": 2.1916728447474063,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 962,
+     "baseline_uJy": 5317.0,
+     "k": 1.9958106787575425,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 793,
+     "baseline_uJy": 5311.0,
+     "k": 1.5814423664059662,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 61,
+     "baseline_uJy": 5268.0,
+     "k": 2.4555599243999255,
+     "from": "unit"
+    }
+   },
+   "k_star": 1.8960835038888297,
+   "n_used": 2406
+  },
+  "601213300002366": {
+   "rows": 2608,
+   "quality_pass": 2452,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 72,
+     "baseline_uJy": 4002.5,
+     "k": 2.1918925980406647,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 550,
+     "baseline_uJy": 4046.0,
+     "k": 1.8317342477818712,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 4042.0,
+     "k": 1.9543392880301034,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1012,
+     "baseline_uJy": 5285.0,
+     "k": 2.102345887800274,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 752,
+     "baseline_uJy": 5277.0,
+     "k": 1.72970258825651,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 64,
+     "baseline_uJy": 5223.5,
+     "k": 2.7320770048354683,
+     "from": "unit"
+    }
+   },
+   "k_star": 1.9688319783380872,
+   "n_used": 2452
+  },
+  "601213400002132": {
+   "rows": 3765,
+   "quality_pass": 3468,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 102,
+     "baseline_uJy": 4436.5,
+     "k": 3.6096309694866604,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 705,
+     "baseline_uJy": 4472.0,
+     "k": 3.7065055462639833,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 4465.0,
+     "k": 3.706505546264012,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1451,
+     "baseline_uJy": 5461.0,
+     "k": 3.212304806762126,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1142,
+     "baseline_uJy": 5397.0,
+     "k": 3.881507664893962,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 66,
+     "baseline_uJy": 5343.0,
+     "k": 3.961669797545274,
+     "from": "unit"
+    }
+   },
+   "k_star": 3.7065055462639918,
+   "n_used": 3468
+  },
+  "601213400012516": null,
+  "601213400004073": {
+   "rows": 3022,
+   "quality_pass": 2830,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 88,
+     "baseline_uJy": 3888.5,
+     "k": 3.7418055990855588,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 644,
+     "baseline_uJy": 3970.0,
+     "k": 2.1272118787254217,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 3961.0,
+     "k": 2.2376311260779134,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1169,
+     "baseline_uJy": 5502.0,
+     "k": 2.283207416498634,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 859,
+     "baseline_uJy": 5514.0,
+     "k": 1.9186616945366348,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 68,
+     "baseline_uJy": 5470.0,
+     "k": 4.148260493002412,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.191672844747405,
+   "n_used": 2830
+  },
+  "601213400005483": {
+   "rows": 3543,
+   "quality_pass": 3311,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 91,
+     "baseline_uJy": 5040.0,
+     "k": 3.9086785760602094,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 665,
+     "baseline_uJy": 5086.0,
+     "k": 2.372163549608953,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 2,
+     "baseline_uJy": 5083.5,
+     "k": 2.4988024891063345,
+     "from": "filter"
+    },
+    "o/01a": {
+     "n_used": 1347,
+     "baseline_uJy": 5609.0,
+     "k": 2.0449685772491097,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1132,
+     "baseline_uJy": 5623.0,
+     "k": 1.7920382532209473,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 4,
+     "baseline_uJy": 5615.0,
+     "k": 1.9273828840572922,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 70,
+     "baseline_uJy": 5575.5,
+     "k": 3.470586523780792,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.0494795373459773,
+   "n_used": 3311
+  },
+  "601209200009972": null,
+  "601214400015866": null,
+  "632216400002826": null,
+  "632216100005645": null,
+  "632211200001819": null,
+  "632212100000414": {
+   "rows": 3408,
+   "quality_pass": 3242,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 94,
+     "baseline_uJy": 3767.5,
+     "k": 3.144259310204771,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 557,
+     "baseline_uJy": 3809.0,
+     "k": 1.8869482780980362,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 24,
+     "baseline_uJy": 3787.5,
+     "k": 3.5838378627090735,
+     "from": "unit"
+    },
+    "o/01a": {
+     "n_used": 1262,
+     "baseline_uJy": 4926.0,
+     "k": 2.347453512633872,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1215,
+     "baseline_uJy": 4916.0,
+     "k": 1.8285427361568969,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 12,
+     "baseline_uJy": 4920.0,
+     "k": 2.1349471946480687,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 78,
+     "baseline_uJy": 4860.0,
+     "k": 4.6749893211791385,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.1415365378414264,
+   "n_used": 3242
+  },
+  "632211200001311": {
+   "rows": 3625,
+   "quality_pass": 3462,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 94,
+     "baseline_uJy": 3099.5,
+     "k": 3.307568501942413,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 623,
+     "baseline_uJy": 3144.0,
+     "k": 1.819557268165978,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 24,
+     "baseline_uJy": 3090.0,
+     "k": 2.8511581125107783,
+     "from": "unit"
+    },
+    "o/01a": {
+     "n_used": 1383,
+     "baseline_uJy": 5278.0,
+     "k": 2.3850557428133787,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1247,
+     "baseline_uJy": 5262.0,
+     "k": 1.789347505092957,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 12,
+     "baseline_uJy": 5269.0,
+     "k": 2.1486988673994265,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 79,
+     "baseline_uJy": 5182.0,
+     "k": 4.971078026754068,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.125063179858023,
+   "n_used": 3462
+  },
+  "632216400001580": {
+   "rows": 1356,
+   "quality_pass": 1257,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 52,
+     "baseline_uJy": 2287.5,
+     "k": 2.109589124840536,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 259,
+     "baseline_uJy": 2378.0,
+     "k": 2.5291449609801466,
+     "from": "unit"
+    },
+    "o/01a": {
+     "n_used": 641,
+     "baseline_uJy": 7640.0,
+     "k": 8.683812994104219,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 305,
+     "baseline_uJy": 7449.0,
+     "k": 7.328290965756248,
+     "from": "unit"
+    }
+   },
+   "k_star": 6.8897397212907485,
+   "n_used": 1257
+  },
+  "678201400015809": null,
+  "632215200005702": {
+   "rows": 1178,
+   "quality_pass": 1137,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 72,
+     "baseline_uJy": 3995.5,
+     "k": 2.097264388261044,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 242,
+     "baseline_uJy": 4022.0,
+     "k": 2.098222967281644,
+     "from": "unit"
+    },
+    "o/01a": {
+     "n_used": 537,
+     "baseline_uJy": 5080.0,
+     "k": 1.8173833646197777,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 282,
+     "baseline_uJy": 5040.0,
+     "k": 1.6912647529619402,
+     "from": "unit"
+    },
+    "o/04a": {
+     "n_used": 4,
+     "baseline_uJy": 5065.0,
+     "k": 1.9427201483866785,
+     "from": "filter"
+    }
+   },
+   "k_star": 2.016339017167614,
+   "n_used": 1137
+  },
+  "632216400006470": null,
+  "632215200014409": null,
+  "632216400003278": {
+   "rows": 2999,
+   "quality_pass": 2884,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 71,
+     "baseline_uJy": 3509.0,
+     "k": 2.7311093498787185,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 569,
+     "baseline_uJy": 3542.0,
+     "k": 1.8693680146374982,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 24,
+     "baseline_uJy": 3484.5,
+     "k": 4.856800370966627,
+     "from": "unit"
+    },
+    "o/01a": {
+     "n_used": 1161,
+     "baseline_uJy": 4996.0,
+     "k": 2.166880165508174,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 969,
+     "baseline_uJy": 4971.0,
+     "k": 1.8285427361568987,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 12,
+     "baseline_uJy": 4984.0,
+     "k": 2.0650530900613697,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 78,
+     "baseline_uJy": 4945.0,
+     "k": 3.829980624644109,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.043586841723945,
+   "n_used": 2884
+  },
+  "632215300005716": null,
+  "632215300012244": null,
+  "632216400003415": null,
+  "632215200004848": null,
+  "632215400005617": null,
+  "632215300003316": null,
+  "632215200005622": {
+   "rows": 3410,
+   "quality_pass": 3136,
+   "clipped_9999_passing_quality": 1,
+   "groups": {
+    "c/01a": {
+     "n_used": 72,
+     "baseline_uJy": 3440.0,
+     "k": 2.1555481816148867,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 617,
+     "baseline_uJy": 3460.0,
+     "k": 1.886948278098025,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 24,
+     "baseline_uJy": 3372.0,
+     "k": 3.346037699182301,
+     "from": "unit"
+    },
+    "o/01a": {
+     "n_used": 1313,
+     "baseline_uJy": 5337.0,
+     "k": 2.594553882384807,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 1027,
+     "baseline_uJy": 5305.0,
+     "k": 1.7297025882565291,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 12,
+     "baseline_uJy": 5322.0,
+     "k": 2.322743475658794,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 70,
+     "baseline_uJy": 5334.0,
+     "k": 5.6574342444004335,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.2239033277584195,
+   "n_used": 3135
+  },
+  "632215300015222": null,
+  "632211200002174": {
+   "rows": 3134,
+   "quality_pass": 2862,
+   "clipped_9999_passing_quality": 0,
+   "groups": {
+    "c/01a": {
+     "n_used": 78,
+     "baseline_uJy": 3796.5,
+     "k": 2.862223858014088,
+     "from": "unit"
+    },
+    "c/02a": {
+     "n_used": 619,
+     "baseline_uJy": 3812.0,
+     "k": 2.2239033277584226,
+     "from": "unit"
+    },
+    "c/04a": {
+     "n_used": 24,
+     "baseline_uJy": 3777.5,
+     "k": 2.3734382737386226,
+     "from": "unit"
+    },
+    "o/01a": {
+     "n_used": 1131,
+     "baseline_uJy": 4982.0,
+     "k": 2.344580252520483,
+     "from": "unit"
+    },
+    "o/02a": {
+     "n_used": 920,
+     "baseline_uJy": 4972.0,
+     "k": 1.7442379041242402,
+     "from": "unit"
+    },
+    "o/03a": {
+     "n_used": 12,
+     "baseline_uJy": 4975.0,
+     "k": 2.075643105907854,
+     "from": "filter"
+    },
+    "o/04a": {
+     "n_used": 78,
+     "baseline_uJy": 4870.5,
+     "k": 5.007385100227738,
+     "from": "unit"
+    }
+   },
+   "k_star": 2.16688016550818,
+   "n_used": 2862
+  }
+ }
+}
