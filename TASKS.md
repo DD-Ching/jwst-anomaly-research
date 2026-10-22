@@ -61,8 +61,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   (2026-10-21): interface consistency failed (F2 waveform multibanding, F3 asd_drift; F1 passes); the C1/C2 runs were
   exploratory (gate bypassed by hand) and stopped unfinished with no point; no measured gain. Reopen cogwheel only with
   one waveform definition, asd_drift = 1, the RB error closed and q_min fixed in advance (`X4.md` § cogwheel round). Exact-score round
-  (2026-10-22): decision B. Definitions map and 36 frozen fixed points pass (F3 1.1e-12), but exactly aligned spins
-  (cos tilt ±1, |χ| 0.99) fail the waveform check (F2 = 2) in the post-hoc review re-check. Integration line paused;
+  (2026-10-22): decision B. Definitions map and 36 frozen fixed points pass (F3 1.1e-12), but one exactly aligned
+  point (cos tilts +1 / −1, |χ| 0.99, inclination π/2, φ_ref π) fails the waveform check (F2 = 2) in the post-hoc
+  review re-check. Integration line paused;
   reopen only with an answer to handoff question 4 (`X4.md` § Handoff results), not another settings round.
 - **X3 W3 in unselected Gaia epoch photometry** (paused 2026-10-15; reopen when the DR4 epoch-astrometry fields and
   precision are confirmed. 2026-10-16 check: fields confirmed in the draft data model, precision not yet

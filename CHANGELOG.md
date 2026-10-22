@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-22: X4 cogwheel exact score: definitions map, but exactly aligned spins fail the waveform check (decision B); no search
+## 2026-10-22: X4 cogwheel exact score: definitions map, but one exactly aligned point fails the waveform check (decision B); no search
 - **Definition check (read in source):** cogwheel's exact `lnlike_fft` has no internal maximisation. With one
   detector, its maximum over time, ψ, distance and sky is ½ρ² FF² with continuous time. This matches our FF when:
   multibanding is off on both sides, ASD drift is 1, relative binning is not used, the window is ±2 s, and the spin
@@ -15,7 +15,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - prior-transform path 4.1e-12;
   - our pad-64 grid loss up to 3.2e-6;
   - q = 15, |χ| = 0.99 passes;
-  - **exactly aligned spins (cos tilt ±1, |χ| 0.99) fail: F2 = 2, F3 up to 0.75.**
+  - **one exactly aligned point (cos tilts +1 / −1, |χ| 0.99, inclination π/2, φ_ref π) fails: F2 = 2, F3 up
+    to 0.75**; the fold/unfold path is ill-conditioned at θ_jn = π/2.
 - **Outcome:** decision B. No further trial; the integration line stays paused, and specialist question 4 is added
   to the X4 handoff.
 
