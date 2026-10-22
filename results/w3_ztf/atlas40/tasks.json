@@ -137,9 +137,14 @@
   "task_url": "https://fallingstar-data.com/forcedphot/queue/5235681/",
   "submitted_utc": "2026-10-22T09:46:32Z",
   "submitted_epoch": 1792662392.3852475,
-  "status": "queued",
-  "starttimestamp": null,
-  "finishtimestamp": null
+  "status": "done",
+  "starttimestamp": "2026-10-22T10:05:36Z",
+  "finishtimestamp": "2026-10-22T10:19:16Z",
+  "result_bytes": 523739,
+  "result_rows": 3765,
+  "result_sha256": "c7b82070ebc45e2922ec226b169b8fc462d73df44fa23b5d0decc9a48f0748b7",
+  "downloaded_utc": "2026-10-22T10:19:25Z",
+  "deleted_own_task_http": 204
  },
  "601213400005483": {
   "attempts": [
