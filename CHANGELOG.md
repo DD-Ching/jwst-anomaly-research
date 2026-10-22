@@ -17,6 +17,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   7.171, D69 4.766 → 7.475; D15 2.696 / 3.628 / 4.006 at f 1.00 / 0.85 / 0.80; all matched one-to-one. Partial sums
   only; no Δχ², no verdict (needs every family). archive.stsci.edu reset every connection again; the three pinned
   CANUCS model files were fetched through `mast.stsci.edu/api/v0.1/Download/file?uri=mast:HLSP/...` (sha256 verified).
+- **15:15Z run:** 38 / 555 (added D15 f 0.75 / 0.70, D72b, D74 f 1.00–0.80). Fitted χ² D15 4.415 / 4.837 at f 0.75 /
+  0.70; D72b 7.128 → 10.121 (f 1.00 → 0.70); D74 1.016 / 0.107 / 0.046 at f 1.00 / 0.85 / 0.80 (2 observed, 3 predicted
+  images). Partial sums only; no Δχ², no verdict. Setup took 18 min of the 34-min run; model files via the MAST download
+  API again (sha256 verified).
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
