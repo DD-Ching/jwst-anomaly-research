@@ -33,3 +33,14 @@ in families that kept `validate`'s mean back-traced source. Written 2026-10-22 0
   matched one-to-one at f = 1.00 loses that match at f*.
 - `inconclusive` otherwise. Reported for every f: Δχ², flag outcome, families losing their match, top-5 family
   changes. The other Lenstool parameters stay fixed (a limit of this test, not of the rule).
+
+## Amendment (2026-10-22 09:20Z, before any scan run; reason: cost)
+- Measured: one `find_images` call on the 0.1″ multi-plane grid takes 1.5 s (setup 190 s per model; not stored), so
+  the plan as written needs ≈ 90 CPU-h. Change: the Nelder–Mead search runs on the 0.25″ grid; the reported χ²_fam,
+  matches and flag outcome are evaluated once on the 0.1″ grid at the search's best point (all starts' end points
+  evaluated on 0.1″, the lowest kept). Gate G1 (reproduction of `../d115_refit`, which searched on 0.1″) now also
+  tests this change.
+- Added gate G3: at f = 1.00, D115a / D115b reproduce `../d115_refit`'s `p3907` run (0.919 / 0.386) within 0.05.
+- Order and resumption: tasks (f, family) run D115a / D115b and the post hoc top-8 families (`../d115_refit/
+  posthoc_families.json`) first, then the rest; each finished task is appended to `fits.jsonl`, and a later run skips
+  finished tasks. The verdict is computed only when every task is done.
