@@ -14,6 +14,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** next for MACS0417, a family-10 z-scan in the CANUCS maps (does the third image land on 1115938?);
   then the CANUCS DR1 reference on the other CANUCS fields, gate C2 per field, with a local-noise `undetectable`
   rule frozen beforehand.
+## 2026-10-22: X4 handoff gets the cogwheel minimal failing case and an inquiry draft (not posted); ASAS-SN entry blocked by the environment
+- **X4:** `results/x4/handoff/cogwheel_aligned_case.json` holds the parameters, both call sequences and the stored
+  outputs of the one failing point from #451, plus the confirmed and unconfirmed scope (folding, time grid,
+  amplitude). The handoff review found our own comparison ill-conditioned at that point (d_L 0.0093 Mpc, h×
+  near zero edge-on), so whether the waveforms differ there is open. `EXPERT_QUERY_DRAFT.md` is addressed to the cogwheel issue tracker, with the LALSuite service desk as
+  backup. It is for the owner's review only; nothing was posted. No new computation. The X4 search, P, R1 and S2
+  stay paused.
+- **ASAS-SN:** one entry check (`results/w3_ztf/asassn/entry_check_2026-10-22.json`). The official client is plain
+  HTTP on port 9006, this session's proxy is HTTPS only, and a direct connect timed out after 60 s. Blocked by the
+  environment; upstream status not observed. No shim, so the trial was not run and the work stopped.
 
 ## 2026-10-22: MACS0417 arc-aware reference from pipeline segment totals fails its control gate; extra-image test stays untested
 - **Plan** (`results/lens_consistency/macs0417_arcref/PLAN.md`, frozen first): reference = isophotal segment total of

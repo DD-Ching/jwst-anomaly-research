@@ -1,0 +1,117 @@
+{
+ "label": "derived (parameter conversion of the stored review re-check point; no new waveform evaluation)",
+ "point": "tilts_pm1_chi099 of results/x4/cog_exact/review_recheck.json (post hoc review re-check of #451)",
+ "x_box": [
+  2.321784016963858,
+  8.0,
+  0.99,
+  1.0,
+  3.141592653589793,
+  0.99,
+  -1.0,
+  3.141592653589793,
+  1.5707963267948966,
+  3.141592653589793
+ ],
+ "lal_args": {
+  "m1_msun": 36.34314304205912,
+  "m2_msun": 4.54289288025739,
+  "chi1": [
+   -0.0,
+   0.0,
+   0.99
+  ],
+  "chi2": [
+   -0.0,
+   0.0,
+   -0.99
+  ],
+  "distance_mpc": 100.0,
+  "inclination": 1.5707963267948966,
+  "phi_ref": 3.141592653589793,
+  "f_ref_hz": 20.0,
+  "f_min_hz": 20.0,
+  "f_max_hz": 1024.0,
+  "df_hz": 0.25,
+  "mc_msun": 10.193844084431369,
+  "q": 8.0
+ },
+ "cogwheel_par_dic": {
+  "m1": 36.34314304205912,
+  "m2": 4.54289288025739,
+  "iota": 1.5707963267948966,
+  "phi_ref": 3.141592653589793,
+  "f_ref": 20.0,
+  "l1": 0.0,
+  "l2": 0.0,
+  "s1z": 0.99,
+  "s2z": -0.99,
+  "s1x_n": 0.0,
+  "s2x_n": 0.0,
+  "s1y_n": 0.0,
+  "s2y_n": 0.0
+ },
+ "stored_outputs": {
+  "C1": {
+   "FF_ours": 0.5099053375492267,
+   "FF_cog": -0.23870379300296637,
+   "F2": 2.0,
+   "F3": 0.7486091305521931,
+   "F1": 3.141592653589793,
+   "max_over_unfolds_minus_lnL": 3325.9725859943906
+  },
+  "C2": {
+   "FF_ours": 0.13795301332506477,
+   "FF_cog": 0.04052360952731709,
+   "F2": 2.0,
+   "F3": 0.09742940379774767,
+   "F1": 3.141592653589793,
+   "max_over_unfolds_minus_lnL": 88.19649254925994
+  }
+ },
+ "versions": {
+  "cogwheel": "1.6.0 (PyPI cogwheel-pe)",
+  "lalsuite": "7.26.16 (lal 7.7.1, lalsimulation 6.2.1)",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "python": "3.12"
+ },
+ "calls": {
+  "ours": "lalsimulation.SimInspiralChooseFDWaveform(m1*MSUN_SI, m2*MSUN_SI, *chi1, *chi2, 100 Mpc, inclination, phi_ref, 0, 0, 0, df, f_min, f_max, f_ref, laldict, IMRPhenomXPHM); laldict = lal.CreateDict() with SimInspiralWaveformParamsInsertPhenomXHMThresholdMband(0) and ...PhenomXPHMThresholdMband(0); bins below 20 Hz zeroed (scripts/x4_cog_exact.py: hpc)",
+  "cogwheel": "cogwheel.waveform.WaveformGenerator.from_event_data(event, 'IMRPhenomXPHM').get_hplus_hcross(f, cogwheel_par_dic | {'d_luminosity': 100}), f = 20-1024 Hz on the 0.25 Hz grid; parameters mapped by scripts/x4_cogwheel.py: to_par (cogwheel.waveform.inplane_spins_xy_to_xy_n); cogwheel's default harmonic modes for XPHM",
+  "comparison": "F2 = max over (h+, hx) of 1 - Re<a,b>/(|a||b|), weight 1/PSD (aLIGO design, SimNoisePSDaLIGODesignSensitivityP1200087) over (20, 1024] Hz, no maximisation; which polarisation gave 2.0 is not stored, nor are per-polarisation norms"
+ },
+ "reproduce": [
+  "environment: cogwheel-pe 1.6.0, lalsuite 7.26.16, numpy 2.5.4, scipy 1.18.1, mpmath",
+  "python scripts/x4_cog_exact.py recheck   # writes results/x4/cog_exact/review_recheck.json; row tilts_pm1_chi099"
+ ],
+ "passing_reference": "36 frozen fixed points (results/x4/cog_exact/checks.json): F2 <= 7.3e-13, F3 <= 1.1e-12; the near-aligned frozen point tilts_pm0999 (cos tilts +0.999 / -0.999, |chi| 0.98, inclination pi/2) has F2 = 0.0; review re-check q = 15, |chi| = 0.99 point passes (F2 2.2e-16): 21 distinct parameter sets, 38 comparisons (18 points x 2 targets + the q = 15 set x 2)",
+ "scope": {
+  "confirmed": [
+   "waveform agreement at 21 distinct parameter sets away from this one (38 comparisons: 36 frozen + q = 15, |chi| = 0.99 for both targets; F2 <= 7.3e-13)",
+   "exact lnL (lnlike_fft, asd_drift 1) equals our normalised FF at our lag at those points (|dFF| <= 1.1e-12)",
+   "prior transform round trip at the frozen points (<= 9.3e-16 relative in lnL)"
+  ],
+  "not_confirmed": [
+   "whether this point shows a real waveform difference at all: our own extrinsic solve is ill-conditioned there (d_L 0.0093 / 0.057 Mpc, dh_rel_diff -1.46 / -0.71), h-cross may be near zero; aligned spin, inclination pi/2 and phi_ref pi are not separated",
+   "fold/unfold path: the original point is not always among its unfolds; max over unfolds minus lnL is negative at 6 of 40 rows: -16.2 and -0.48 at the near-aligned edge-on point, -3.3e-5 to -1.8e-12 elsewhere (C2 found, box_1008, truths)",
+   "time: our score uses a pad-64 lag grid (loss up to 3.2e-6 vs pad 512); cogwheel's time is continuous",
+   "amplitude: common (d|h) difference of 9.5e-8 relative at the C1 truth, unresolved (normalised checks cannot see it)"
+  ]
+ },
+ "stored_outputs_our_side": {
+  "note": "from the same review_recheck.json rows; they show our comparison is ill-conditioned at this point",
+  "C1": {
+   "d_luminosity_from_our_extrinsic_solve_mpc": 0.009299076365353844,
+   "dh_rel_diff": -1.4556495914886,
+   "F1b_round_trip": 3.141592653589793
+  },
+  "C2": {
+   "d_luminosity_from_our_extrinsic_solve_mpc": 0.057105644009708675,
+   "dh_rel_diff": -0.7147149841574854,
+   "F1b_round_trip": 3.141592653589793
+  },
+  "F1_reading": "F1 = pi because the spin azimuths are undefined at zero in-plane spin (box -> par -> box returns another azimuth); not a waveform difference",
+  "hx_note": "at inclination pi/2 with aligned spins h-cross is expected to be small; which polarisation gave F2 = 2.0 and the per-polarisation norms are not stored, so F2 = 2.0 may come from a near-zero h-cross"
+ }
+}
