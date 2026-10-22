@@ -39,3 +39,4 @@
 {"family": "D74", "f": 0.75, "n_images": 2, "chi2_validate_source": 0.8625441423670442, "chi2_fit": 0.08781891860126598, "shared": false, "n_predicted": 3, "beta_fit": [-11.904448056631928, 2.1636715581207184]}
 {"family": "D74", "f": 0.7, "n_images": 2, "chi2_validate_source": 2.1227761313507236, "chi2_fit": 0.2180301812191291, "shared": false, "n_predicted": 3, "beta_fit": [-11.875183235622526, 2.1530685849208826]}
 {"family": "D7", "f": 1.0, "n_images": 3, "chi2_validate_source": 1.674190137210331, "chi2_fit": 1.118420542489261, "shared": false, "n_predicted": 3, "beta_fit": [-8.182566081148249, -2.175107166186735]}
+{"family": "D7", "f": 0.85, "n_images": 3, "chi2_validate_source": 2.4762236274874074, "chi2_fit": 1.6082520233227784, "shared": false, "n_predicted": 3, "beta_fit": [-8.154433852961123, -2.1725556664391856]}
