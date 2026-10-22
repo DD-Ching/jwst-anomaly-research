@@ -54,6 +54,46 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   "$(python -c 'import certifi; print(certifi.where())')" > ca.pem; export SSL_CERT_FILE=ca.pem`.
 - **Handoff:** resume with `python scripts/m0416_d115_sigma_scan.py` (skips finished tasks); better on the owner
   machine (setup paid once). Alternatively freeze a reduced family set before reading more results.
+## 2026-10-22: W3 ZTF × ATLAS dip check, post-review G2 check: one common-mode exposure, two undetermined rows in exposures whose comparison stars scatter > 5 σ both ways; no variability supported by independent exposures; check line closed
+- **Plan:** `results/w3_ztf/atlas_dips/PLAN.md` §3. A post-review supplementary check, not blind. #470's selection,
+  checks and deviation record are kept.
+- **Selection:** with PLAN §2's wording G2 totals 12 (rank 3, above G4), so it is the group that should have been
+  checked.
+- **Coverage:** G2's 3 simulated mis-decisions are 3 raw rows of 2 stars in 3 exposures on one night.
+- **Result** (`check_g2.json`, with a per-star per-exposure table):
+  - `…0694o`: common low shift (class 2).
+  - `…0749o`, `…0722o`: undetermined under the rule. Their comparison stars are mostly > 5 σ high, so the night
+    looks photometrically unstable (clue, not proven).
+  - No individual variability is supported by independent exposures.
+- **Status:** all 4 groups are now checked (RESULT §8). No reliable evidence of real variability among these 8 low
+  rows, and no source worth follow-up from them. Line closed; #462 unchanged.
+
+## 2026-10-22: W3 ZTF × ATLAS dip check (post hoc, #462): 7 of the 8 simulated mis-decisions trace to 8 low rows in 6 exposures (the 8th to a normal row); the largest is one exposure with all 10 stored area-4991 stars 32–34 % low (clue, not proven); no reliable evidence of real variability in the 3 checked groups
+- **Plan** (`results/w3_ztf/atlas_dips/PLAN.md`): stored tables only. Selection and check rules were committed before
+  any comparison flux was read. 0 MB downloaded. #462's verdict is unchanged; its wording was narrowed (27 / 63 is a
+  best-case bound under the fixed method; 0 / 79 is with ATLAS on 17 stars).
+- **De-duplication** (`dedupe.json`): 9 trigger rows on 7 stars from 7 exposures, none reused; one row is normal (the
+  model itself was intermediate). Reading checks all pass.
+- **Checks** (`check.json`, 3 of 4 groups):
+  - G1: in one exposure, all 10 stored stars are low (3 mis-decisions; exposure-level clue).
+  - G4: one night with several stars low (night-level clue).
+  - G3: a single exposure of a development star (rel 0.21). 8 of 9 other stars are normal in it (one is high, rel
+    1.84), and its exposures 5–30 min later are normal. Undetermined; the exposure image needs an ATLAS account.
+  - G2: not checked. A selection-count deviation found at review would have checked it instead of G4; checking it is
+    the owner's call.
+- **Result:** no confirmed reading error. In the 3 checked groups, no variability is supported by independent
+  observations and no source is worth follow-up. Archived; no further gap filling, threshold change or same-kind
+  photometry attempt.
+
+## 2026-10-22: Abell 370 gate C2 failure, post hoc diagnosis: 3 of the 6 absent arc-referenced controls are one CANUCS segment pair counted three times
+- **Plan** (`results/lens_consistency/abell370_buffalo_extra/posthoc_c2/PLAN.md`, committed first); everything is post
+  hoc and the frozen outcome of #468 stands (C2 fails, no flag read). Table diagnosis only; no image looked at.
+- **Result** (`posthoc_c2/posthoc.json`, `RESULT.md`): `gate_c2` reproduces the frozen counts on all five
+  CANUCS-reference fields. BUFFALO systems 2, 102 and 202 share reference 2101809 and counterpart 2101806 (ratios
+  0.135–0.173); 3.1, 15.3, 42.2 are three unrelated pairs. Counting a shared pair once: Abell 370 19 / 23 = 0.826
+  (would pass at 0.80, by one control); MACS0416 49 / 50; the other three fields unchanged (MACS1423 still 2 / 4).
+- **Handoff:** proposal, not applied: freeze "one control per shared (reference, counterpart) pair" before the next
+  field on this route. Reading Abell 370's flags under a post hoc pass is the owner's call.
 ## 2026-10-22: Abell 370 BUFFALO model A extra-image test: gate K passes (rms 0.910″); gate C2 fails on arc-referenced controls (19 / 25 = 0.76); no flag read
 - **Plan** (`results/lens_consistency/abell370_buffalo_extra/PLAN.md`, frozen and pushed first): stages of
   `../macs0416_canucsref/PLAN.md` with `abell370-buffalo-a-maps`, the BUFFALO gold list and CANUCS DR1 `a370` files
@@ -111,8 +151,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - 7 of the 8 W3 → "slow" moves come from single observed ATLAS dips (rel 0.21–0.68, 5.7–43 σ) where the injected
     model is at baseline. These are not vetted.
 - **Failed approach:** ATLAS as added edge points for the bounds rule (D-104 addendum). No validation, no retry.
-- **Handoff:** the W3 ZTF edge-information line has now failed with ZTF g, g + r jointly and ATLAS. The next step
-  is the owner's call.
+- **Handoff:** the tested options (ZTF g edge points, the g + r joint worth check, ATLAS edge points) did not meet the
+  requirement on this sample under this criterion (scope narrowed in #470). The next step is the owner's call.
+
 ## 2026-10-22: Abell 370 CANUCS DR1 reference route: gate K fails (rms 2.34″); no prediction read; line stopped
 - **Plan** (`results/lens_consistency/abell370_canucsref/PLAN.md`, frozen and pushed first): gate K of
   `m0417_images` on the 115 images of the pinned `abell370-canucs` model (z fixed, ASSUMPTION); stop on a fail.

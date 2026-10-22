@@ -1,0 +1,287 @@
+{
+ "label": "post hoc (not a rule; no flag read)",
+ "fields": {
+  "abell370": {
+   "table": "results/lens_consistency/abell370_buffalo_extra/control_abell370.ecsv",
+   "class_column": "class_local",
+   "gate_C2_as_stored": {
+    "all": {
+     "n_testable": 42,
+     "n_ok": 35,
+     "fraction": 0.8333333333333334
+    },
+    "arc_referenced": {
+     "n_testable": 25,
+     "n_ok": 19,
+     "fraction": 0.76
+    },
+    "passes": false
+   },
+   "gate_C2_shared_pairs_once": {
+    "all": {
+     "n_testable": 40,
+     "n_ok": 35,
+     "fraction": 0.875
+    },
+    "arc_referenced": {
+     "n_testable": 23,
+     "n_ok": 19,
+     "fraction": 0.8260869565217391
+    },
+    "passes": true
+   },
+   "merged_groups": [
+    [
+     "202:202.4+202.5",
+     "102:102.3+102.4",
+     "2:2.4+2.5"
+    ]
+   ],
+   "absent_arc_controls": [
+    {
+     "system": "202",
+     "images": "202.4+202.5",
+     "ref_counterpart": "2101809",
+     "counterpart": "2101806",
+     "ref_a3_arcsec": 3.630297266137344,
+     "own_a3_arcsec": 3.5463852795090727,
+     "best_ratio": 0.1561765083081356
+    },
+    {
+     "system": "102",
+     "images": "102.3+102.4",
+     "ref_counterpart": "2101809",
+     "counterpart": "2101806",
+     "ref_a3_arcsec": 3.630297266137344,
+     "own_a3_arcsec": 3.5463852795090727,
+     "best_ratio": 0.17274235725396456
+    },
+    {
+     "system": "2",
+     "images": "2.4+2.5",
+     "ref_counterpart": "2101809",
+     "counterpart": "2101806",
+     "ref_a3_arcsec": 3.630297266137344,
+     "own_a3_arcsec": 3.5463852795090727,
+     "best_ratio": 0.13491786682073842
+    },
+    {
+     "system": "3",
+     "images": "3.1",
+     "ref_counterpart": "2101319",
+     "counterpart": "2101899",
+     "ref_a3_arcsec": 0.7769513724750696,
+     "own_a3_arcsec": 2.3188814614621265,
+     "best_ratio": 0.28144650801453336
+    },
+    {
+     "system": "15",
+     "images": "15.3",
+     "ref_counterpart": "2125202",
+     "counterpart": "2111980",
+     "ref_a3_arcsec": 1.858879797330594,
+     "own_a3_arcsec": 0.17302109056060244,
+     "best_ratio": 0.017689942273936835
+    },
+    {
+     "system": "42",
+     "images": "42.2",
+     "ref_counterpart": "2101364",
+     "counterpart": "2101352",
+     "ref_a3_arcsec": 2.361839897233131,
+     "own_a3_arcsec": 1.4572693519319404,
+     "best_ratio": 0.30149506601067344
+    }
+   ]
+  },
+  "macs0416": {
+   "table": "results/lens_consistency/macs0416_canucsref/control_macs0416.ecsv",
+   "class_column": "class_local",
+   "gate_C2_as_stored": {
+    "all": {
+     "n_testable": 172,
+     "n_ok": 160,
+     "fraction": 0.9302325581395349
+    },
+    "arc_referenced": {
+     "n_testable": 59,
+     "n_ok": 58,
+     "fraction": 0.9830508474576272
+    },
+    "passes": true
+   },
+   "gate_C2_shared_pairs_once": {
+    "all": {
+     "n_testable": 163,
+     "n_ok": 151,
+     "fraction": 0.9263803680981595
+    },
+    "arc_referenced": {
+     "n_testable": 50,
+     "n_ok": 49,
+     "fraction": 0.98
+    },
+    "passes": true
+   },
+   "merged_groups": [
+    [
+     "D6a:D6a.3",
+     "D6b:D6b.3"
+    ],
+    [
+     "D6c:D6c.1",
+     "D6d:D6d.1",
+     "D6e:D6e.3"
+    ],
+    [
+     "D6c:D6c.2",
+     "D6d:D6d.2",
+     "D6e:D6e.2"
+    ],
+    [
+     "D6c:D6c.3",
+     "D6d:D6d.3",
+     "D6e:D6e.1"
+    ],
+    [
+     "D31e:D31e.2",
+     "D31f:D31f.2"
+    ],
+    [
+     "D62a:D62a.1",
+     "D62b:D62b.1"
+    ],
+    [
+     "D62a:D62a.2",
+     "D62b:D62b.2"
+    ]
+   ],
+   "absent_arc_controls": [
+    {
+     "system": "D109",
+     "images": "D109.3",
+     "ref_counterpart": "3121042",
+     "counterpart": "3117316",
+     "ref_a3_arcsec": 0.9804367136347452,
+     "own_a3_arcsec": 1.033492729306991,
+     "best_ratio": 0.05864163569405876
+    }
+   ]
+  },
+  "macs0417": {
+   "table": "results/lens_consistency/macs0417_canucsref/control_macs0417.ecsv",
+   "class_column": "class",
+   "gate_C2_as_stored": {
+    "all": {
+     "n_testable": 40,
+     "n_ok": 37,
+     "fraction": 0.925
+    },
+    "arc_referenced": {
+     "n_testable": 10,
+     "n_ok": 10,
+     "fraction": 1.0
+    },
+    "passes": true
+   },
+   "gate_C2_shared_pairs_once": {
+    "all": {
+     "n_testable": 40,
+     "n_ok": 37,
+     "fraction": 0.925
+    },
+    "arc_referenced": {
+     "n_testable": 10,
+     "n_ok": 10,
+     "fraction": 1.0
+    },
+    "passes": true
+   },
+   "merged_groups": [],
+   "absent_arc_controls": []
+  },
+  "macs1149": {
+   "table": "results/lens_consistency/macs1149_canucsref/control_macs1149.ecsv",
+   "class_column": "class_local",
+   "gate_C2_as_stored": {
+    "all": {
+     "n_testable": 15,
+     "n_ok": 15,
+     "fraction": 1.0
+    },
+    "arc_referenced": {
+     "n_testable": 5,
+     "n_ok": 5,
+     "fraction": 1.0
+    },
+    "passes": true
+   },
+   "gate_C2_shared_pairs_once": {
+    "all": {
+     "n_testable": 15,
+     "n_ok": 15,
+     "fraction": 1.0
+    },
+    "arc_referenced": {
+     "n_testable": 5,
+     "n_ok": 5,
+     "fraction": 1.0
+    },
+    "passes": true
+   },
+   "merged_groups": [],
+   "absent_arc_controls": []
+  },
+  "macs1423": {
+   "table": "results/lens_consistency/macs1423_canucsref/control_macs1423.ecsv",
+   "class_column": "class_local",
+   "gate_C2_as_stored": {
+    "all": {
+     "n_testable": 11,
+     "n_ok": 9,
+     "fraction": 0.8181818181818182
+    },
+    "arc_referenced": {
+     "n_testable": 4,
+     "n_ok": 2,
+     "fraction": 0.5
+    },
+    "passes": false
+   },
+   "gate_C2_shared_pairs_once": {
+    "all": {
+     "n_testable": 11,
+     "n_ok": 9,
+     "fraction": 0.8181818181818182
+    },
+    "arc_referenced": {
+     "n_testable": 4,
+     "n_ok": 2,
+     "fraction": 0.5
+    },
+    "passes": false
+   },
+   "merged_groups": [],
+   "absent_arc_controls": [
+    {
+     "system": "3",
+     "images": "3.2",
+     "ref_counterpart": "4101314",
+     "counterpart": "4101312",
+     "ref_a3_arcsec": 2.0064414095488705,
+     "own_a3_arcsec": 4.237816578948516,
+     "best_ratio": null
+    },
+    {
+     "system": "4",
+     "images": "4.3",
+     "ref_counterpart": "4101295",
+     "counterpart": "4100458",
+     "ref_a3_arcsec": 1.432674816379259,
+     "own_a3_arcsec": 1.3456353934512166,
+     "best_ratio": 0.32401444952059233
+    }
+   ]
+  }
+ }
+}

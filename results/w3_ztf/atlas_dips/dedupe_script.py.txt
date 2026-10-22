@@ -1,0 +1,112 @@
+# PLAN section 1: map the ATLAS points behind #462's 8 W3 simulated mis-decisions (diag_<npix>.json) back to their
+# stored rows (../atlas40/phot/<star>.csv.gz) and de-duplicate by (star, filter, exposure Obs). No new data, no replay.
+# Each row is rebuilt as #462 did (per (filter, unit) baseline and k from calib.json; HMJD = MJD + 15 s + heliocentric
+# light travel time) and matched by its exact relative flux and calibrated sigma. Usage: python dedupe_script.py.txt
+import json
+
+import numpy as np
+import pandas as pd
+from astropy import units as u
+from astropy.coordinates import EarthLocation, SkyCoord
+from astropy.time import Time
+
+A = 'results/w3_ztf/atlas40/'
+cal = json.load(open(A + 'calib.json'))['stars']
+targets = {t['key']: t for t in json.load(open(A + 'targets.json'))['targets']}
+diag = {p: json.load(open(A + f'diag_{p}.json'))['events'] for p in ('4991', '2344')}
+QCOLS = ['err', 'chi/N', 'x', 'y', 'maj', 'min', 'apfit', 'mag5sig', 'Sky']
+
+
+def table(key):
+    df = pd.read_csv(A + f'phot/{key}.csv.gz', dtype={'Obs': str, 'F': str})
+    df['unit'] = df['Obs'].str[:3]
+    base = np.full(len(df), np.nan)
+    kk = np.full(len(df), np.nan)
+    for g, rec in cal[key]['groups'].items():
+        f, un = g.split('/')
+        m = ((df['F'] == f) & (df['unit'] == un)).to_numpy()
+        base[m], kk[m] = rec['baseline_uJy'], rec['k']
+    df['baseline_uJy'], df['k'] = base, kk
+    df['rel'] = df['uJy'] / df['baseline_uJy']
+    df['sig_cal'] = df['duJy'] / df['baseline_uJy'] * np.maximum(df['k'], 1.0)
+    tg = targets[key]
+    tt = Time(df['MJD'].to_numpy() + 15.0 / 86400.0, format='mjd', scale='utc')
+    geo = EarthLocation.from_geocentric(0 * u.m, 0 * u.m, 0 * u.m)
+    df['hmjd'] = (tt + tt.light_travel_time(SkyCoord(tg['ra'] * u.deg, tg['dec'] * u.deg), kind='heliocentric',
+                                              location=geo)).mjd
+    return df
+
+
+cases, exposures, T = [], {}, {}
+for p, evs in diag.items():
+    for e in evs:
+        if e['kind'] == 'fade' or e['b'] != 'edge_slow' or e['a'] == 'edge_slow':
+            continue  # the 8 W3 simulated mis-decisions: A recovered or insufficient -> B slow
+        key = str(e['carrier'])
+        T.setdefault(key, table(key))
+        df = T[key]
+        for hi, h in enumerate(e['hits']):
+            for side in ('pre', 'post'):
+                r = h[side]
+                if r['b_class'] != 'slow' or r['a_class'] == 'slow':
+                    continue
+                L = r['b_L_point']
+                m = np.flatnonzero(np.isclose(df['rel'], L['observed_rel_before_injection'], rtol=1e-12, atol=0)
+                                   & np.isclose(df['sig_cal'], L['observed_sigma_rel'], rtol=1e-12, atol=0))
+                assert len(m) == 1, (key, L, m)
+                row = df.iloc[m[0]]
+                ex = (key, row['F'], row['Obs'])
+                rel_inj = 10 ** (-0.4 * L['dm'])
+                f_model = 10 ** (-0.4 * L['model_dm_truth'])
+                cases.append({
+                    'area': p, 'kind': e['kind'], 'i': e['i'], 'carrier': key, 'a': e['a'], 'b': e['b'], 'side': side,
+                    'exposure': '/'.join(ex), 'span_d': h['span_d'], 'thr_d': h['thr_d'], 'L_dt_d': L['dt_d'],
+                    'model_dm_truth': L['model_dm_truth'], 'model_flux_factor': f_model,
+                    'injected_rel': rel_inj, 'injected_dm': L['dm'], 'injected_sigma_dm': L['sigma_dm'],
+                    'intermediate_threshold_dm': 0.3 + 2 * L['sigma_dm'],
+                    'single_point_trigger': bool(L['model_dm_truth'] < 0.3 and L['observed_rel_before_injection'] < 0.8),
+                })
+                if ex not in exposures:
+                    exposures[ex] = {
+                        'star': key, 'area': targets[key]['area'], 'dev_461': targets[key]['dev_461'], 'filter': row['F'],
+                        'unit': row['unit'], 'Obs': row['Obs'], 'mjd_published': float(row['MJD']),
+                        'hmjd_used': float(row['hmjd']), 'uJy': int(row['uJy']), 'duJy': int(row['duJy']),
+                        'baseline_uJy': float(row['baseline_uJy']), 'k': float(row['k']), 'rel': float(row['rel']),
+                        'sigma_rel_cal': float(row['sig_cal']), 'dev_sigma_cal': float((row['rel'] - 1) / row['sig_cal']),
+                        'quality': {c: (float(row[c]) if c != 'err' else int(row[c])) for c in QCOLS},
+                        'checks': {
+                            'low_flux_in_uninjected_row': bool(row['rel'] < 0.8),
+                            'uJy_not_9999_code': bool(abs(row['uJy']) < 9999),
+                            'Obs_published_once': bool((df['Obs'] == row['Obs']).sum() == 1),
+                            'Obs_filter_letter_matches_F': row['Obs'][-1] == row['F'],
+                            'Obs_night_matches_MJD': int(row['Obs'][3:8]) == int(np.floor(row['MJD'])),
+                            'hmjd_minus_mjd_s': float((row['hmjd'] - row['MJD']) * 86400),
+                        },
+                        'used_by_mis_decisions': [],
+                    }
+                exposures[ex]['used_by_mis_decisions'].append(f"{p}/{e['kind']}/{e['i']}/{side}")
+# reuse over all 49 diagnosed events: how often each exposure is any event's B "L" point
+for p, evs in diag.items():
+    for e in evs:
+        key = str(e['carrier'])
+        for h in e['hits']:
+            for side in ('pre', 'post'):
+                L = h[side].get('b_L_point')
+                if not L:
+                    continue
+                for ex, rec in exposures.items():
+                    if ex[0] == key and np.isclose(rec['rel'], L['observed_rel_before_injection'], rtol=1e-12, atol=0) \
+                            and np.isclose(rec['sigma_rel_cal'], L['observed_sigma_rel'], rtol=1e-12, atol=0):
+                        rec.setdefault('L_point_in_diagnosed_events', []).append(f"{p}/{e['kind']}/{e['i']}/{side}/{e['a']}->{e['b']}")
+trial = [e for p in ('4991', '2344') for e in json.load(open(A + f'trial_{p}.json'))['events']]
+for rec in exposures.values():
+    rec['flagged_injections_on_star'] = sum(str(e['carrier']) == rec['star'] and e['a'] != 'not_flagged' for e in trial)
+out = {'label': 'POST HOC; observed (ATLAS rows from ../atlas40/phot) and derived; the mis-decisions are simulated',
+       'n_mis_decisions': len({(c['area'], c['kind'], c['i']) for c in cases}), 'n_trigger_points': len(cases),
+       'n_unique_star_filter_exposure_keys': len(exposures), 'n_distinct_exposures': len({k[2] for k in exposures}),
+       'n_stars': len({k[0] for k in exposures}),
+       'exposures': list(exposures.values()), 'cases': cases}
+json.dump(out, open('results/w3_ztf/atlas_dips/dedupe.json', 'w'), indent=1)
+open('results/w3_ztf/atlas_dips/dedupe.json', 'a').write('\n')
+print({k: out[k] for k in ('n_mis_decisions', 'n_trigger_points', 'n_unique_star_filter_exposure_keys', 'n_distinct_exposures',
+                            'n_stars')})
