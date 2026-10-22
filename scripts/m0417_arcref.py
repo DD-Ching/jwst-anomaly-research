@@ -178,9 +178,15 @@ def run(
     depth: float | None = None,
     cat_inputs: dict | None = None,
     out: Path = OUT,
+    field: str = "macs0417",
+    frame: Path = FRAME,
+    offset: tuple[float, float] | None = None,
 ) -> dict:
     """Frozen run. ``cat``, ``depth`` and ``cat_inputs`` replace the pipeline catalogue (all three
-    or none; used by ``m0417_canucsref``); ``out`` is the output directory."""
+    or none; used by ``m0417_canucsref``); ``out`` is the output directory. ``field``, ``frame``
+    (directory of ``predicted_<field>.ecsv``, ``control_<field>.ecsv`` and ``summary.json``) and
+    ``offset`` (dRA cos dec, dDec in arcsec; default: the frame's measured offset) select another
+    field (used by ``m1423_canucsref``)."""
     given = (cat is not None, depth is not None, cat_inputs is not None)
     if any(given) and not all(given):
         raise ValueError("cat, depth and cat_inputs: pass all three or none")
@@ -193,8 +199,8 @@ def run(
             "jwst_cat": cat_path.name,
             "jwst_cat_sha256": hashlib.sha256(cat_path.read_bytes()).hexdigest(),
         }
-    pred = Table.read(FRAME / "predicted_macs0417.ecsv")
-    ctrl = Table.read(FRAME / "control_macs0417.ecsv")
+    pred = Table.read(frame / f"predicted_{field}.ecsv")
+    ctrl = Table.read(frame / f"control_{field}.ecsv")
     mu = dict(
         zip(
             np.asarray(ctrl["matched_image"], str),
@@ -202,12 +208,12 @@ def run(
             strict=True,
         )
     )
-    unpredicted = json.loads((FRAME / "summary.json").read_text())["macs0417"]["unpredicted"]
-    dra, ddec = (
-        json.loads((FRAME / "summary.json").read_text())["measurement"]["offset"][k]
-        for k in ("dra", "ddec")
-    )
-    lst = mf.shifted_loader(dra, ddec)("macs0417")
+    frame_summary = json.loads((frame / "summary.json").read_text())
+    unpredicted = frame_summary[field]["unpredicted"]
+    if offset is None:
+        offset = tuple(frame_summary["measurement"]["offset"][k] for k in ("dra", "ddec"))
+    dra, ddec = offset
+    lst = mf.shifted_loader(dra, ddec)(field)
     fams: dict[str, list[dict]] = {}
     for r in lst:
         iid = str(r["image_id"])
@@ -261,6 +267,8 @@ def run(
                 {
                     "system": s,
                     "images": "+".join(u["ids"]),
+                    "ra": first["ra"],
+                    "dec": first["dec"],
                     "sum_abs_mu": sum(u["mus"]),
                     "counterpart": int(cat["label"][u["cp"]]) if u["cp"] >= 0 else -1,
                     "ref_counterpart": int(cat["label"][rcp]) if rcp >= 0 else -1,
@@ -309,8 +317,8 @@ def run(
             }
         )
     out.mkdir(parents=True, exist_ok=True)
-    Table(rows=controls).write(out / "control_macs0417.ecsv", overwrite=True)
-    Table(rows=targets).write(out / "predicted_macs0417.ecsv", overwrite=True)
+    Table(rows=controls).write(out / f"control_{field}.ecsv", overwrite=True)
+    Table(rows=targets).write(out / f"predicted_{field}.ecsv", overwrite=True)
     absent = [c for c in controls if c["class"] == "absent"]
     posthoc = {  # not a frozen rule: why the absent controls fail
         "absent_own_segment_centroid_outside_radius": sum(
