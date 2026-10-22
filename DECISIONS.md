@@ -2240,6 +2240,14 @@ still fails (arc 3 / 4, BCG-adjacent 4.3). Decision: by the frozen plan, use the
 rule on Abell 370 and MACS0416. The rule is validated only post hoc (MACS1423), and C2 passes on 2 of 3 fields.
 Revisit if: a fourth field fails C2, or the rule turns a control `confused` on an unrelated bright source.
 
+**Addendum 2026-10-22g (Abell 370, `results/lens_consistency/abell370_canucsref/`).** Gate K of the frozen plan on the
+pinned `abell370-canucs` Lenstool model (115 images, z fixed): rms 2.34″ > 1.0″ (95.7 % within 3″), so it fails and no
+prediction or flux was read. It reproduces D-044's 2.32″ (source-plane fit). Post hoc, five images (7.1, 5.3, 3a.2,
+14a.3, 5.2) carry the rms (0.60″ without them); not used, because they were picked after the residuals were seen.
+Decision: the CANUCS-reference extra-image route has no usable Abell 370 model; the line stops. Revisit if: an
+image-plane-fitted Abell 370 model with public parameters or maps is pinned, or a family-restricted rule is frozen and
+validated on MACS0416 / MACS1149 first.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
