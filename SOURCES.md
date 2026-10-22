@@ -620,8 +620,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - BUFFALO Abell 370 lens models, Niemiec et al. 2023, MNRAS 524, 2883 (arXiv:2307.03778), MAST HLSP
   https://archive.stsci.edu/hlsp/buffalo (DOI 10.17909/t9-w6tj-wp63); model A (Lenstool image-plane, quoted rms
   0.90″): maps and `input.par` listed in `download_scripts/hlsp_buffalo_hst_model_abell370_multi_niemiec-a_v1.0_lens-models-download.sh`
-  (accessed 2026-10-22; not pinned yet). Lagattuta et al. 2019, MNRAS 485, 3738, CDS `J/MNRAS/485/3738` (accessed
-  2026-10-22; image list and parameter tables).
+  (accessed 2026-10-22). Pinned 2026-10-22: the `main` x / y deflection and κ maps of `a/sl/`
+  (`lensmodel.ABELL370_BUFFALO_A_MAPS`) and the gold strong-lensing list
+  `catalogs/niemiec-lensing-dr1/hlsp_buffalo_hst_multi_abell370_multi_v1.0_sl-gold.dat` (104 images, sha256 in
+  `scripts/a370_buffalo.py`). Lagattuta et al. 2019, MNRAS 485, 3738, CDS `J/MNRAS/485/3738` (accessed
+  2026-10-22; `table1.dat` pinned by sha256 in `scripts/a370_buffalo.py`).
 
 ### Abell 370 and Abell S1063 field runs (accessed 2026-10-08; D-043)
 

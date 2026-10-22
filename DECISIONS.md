@@ -2248,6 +2248,15 @@ Decision: the CANUCS-reference extra-image route has no usable Abell 370 model; 
 image-plane-fitted Abell 370 model with public parameters or maps is pinned, or a family-restricted rule is frozen and
 validated on MACS0416 / MACS1149 first.
 
+**Addendum 2026-10-22h (Abell 370, BUFFALO model A, `results/lens_consistency/abell370_buffalo/`).** The pinned
+BUFFALO Niemiec+2023 model A `main` deflection maps (`abell370-buffalo-a-maps`) pass gate L (κ from the maps vs the
+published κ, median relative difference 3.4e-5). Gate K on Lagattuta+2019's 102 gold z_spec images (K1, frozen)
+fails: rms 7.70″, 92.2 % within 3″. The added gate K2 on the model's own released gold list (104 images; a deviation,
+frozen after K1) passes: rms 0.910″ (published 0.90″), 99.0 % within 3″ (28.1 at 3.36″). Decision: this model is
+validated on its own constraints only and may serve the extra-image test on the BUFFALO gold systems; the K1 list is
+not used with it. Revisit if: the extra-image stages need images outside the BUFFALO gold list, or K1's failure is
+traced to the model rather than to list differences.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

@@ -245,6 +245,13 @@ MODELS = {
         "z_lens": 0.543,
         "cosmology": (70.0, 0.3),
     },
+    # z_lens 0.375 and flat H0 70, Om 0.3 from the HLSP input.par (issue #465)
+    "abell370-buffalo-a-maps": {
+        "files": lensmodel.ABELL370_BUFFALO_A_MAPS,
+        "kind": "maps",
+        "z_lens": 0.375,
+        "cosmology": (70.0, 0.3),
+    },
     # z_lens 0.543 as macs1149-cats (m1149_refs used 0.542: D_LS/D_S < 0.1 %); readme cosmology
     # (flat, H0 70, Om 0.3). Gate G2 failed as written (system 9 off the maps); use only inside the
     # map footprint (post hoc; results/lens_consistency/macs1149_sharon/RESULT.md)
