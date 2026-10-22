@@ -71,3 +71,15 @@
   same ZTF baseline, so nothing has to be re-selected. Do not switch to another survey in its place without a new
   decision. Until then this route is **paused, not closed**: no evidence for or against ASAS-SN's value was
   obtained.
+
+## 6. Entry check, 2026-10-22 (`entry_check_2026-10-22.json`; owner brief: one check of at most 5 min, no workaround)
+- **Client:** `skypatrol` 0.6.21, the latest on PyPI at the check. It still uses plain HTTP on port 9006.
+- **Environment:** this cloud session reaches the internet only through the agent proxy, which supports HTTPS and
+  CONNECT only. The CONNECT shim of section 1 was **not** started, because the owner brief forbids bypasses.
+- **Result:** `/get_block_servers` timed out on a direct connection after 60.2 s (00:46–00:47 UTC). The block-server
+  list was not obtained, and the first star's download was not attempted.
+- **Classification:** blocked by this environment. The upstream service status was not observed, so this is not a
+  service-down result and not a download failure.
+- **As briefed:** the ASAS-SN work stops here, with no polling and no other survey. The 40-star trial stays not run
+  and the plan unchanged. It can resume from a session or machine whose permitted egress reaches plain HTTP on port
+  9006.

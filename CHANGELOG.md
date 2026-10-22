@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: X4 handoff gets the cogwheel minimal failing case and an inquiry draft (not posted); ASAS-SN entry blocked by the environment
+- **X4:** `results/x4/handoff/cogwheel_aligned_case.json` holds the parameters, both call sequences and the stored
+  outputs of the one failing point from #451, plus the confirmed and unconfirmed scope (folding, time grid,
+  amplitude). `EXPERT_QUERY_DRAFT.md` is addressed to the cogwheel issue tracker, with the LALSuite service desk as
+  backup. It is for the owner's review only; nothing was posted. No new computation. The X4 search, P, R1 and S2
+  stay paused.
+- **ASAS-SN:** one entry check (`results/w3_ztf/asassn/entry_check_2026-10-22.json`). The official client is plain
+  HTTP on port 9006, this session's proxy is HTTPS only, and a direct connect timed out after 60 s. Blocked by the
+  environment; upstream status not observed. No shim, so the trial was not run and the work stopped.
+
 ## 2026-10-22: X4 cogwheel exact score: definitions map, but one exactly aligned point fails the waveform check (decision B); no search
 - **Definition check (read in source):** cogwheel's exact `lnlike_fft` has no internal maximisation. With one
   detector, its maximum over time, ψ, distance and sky is ½ρ² FF² with continuous time. This matches our FF when:
