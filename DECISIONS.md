@@ -5768,6 +5768,12 @@ confining radiation at a throat is found.
     pre-registered method. Check the cleaning guide the ATLAS FAQ cites (Rest et al.) first.
   - **Revisit if:** the owner asks for the unchecked G2 group, opens a new method round, or ATLAS exposure images
     become reachable without an account.
+  - **Post-review G2 check (2026-10-22, PLAN §3):** G2 is the group the selection deviation left out.
+    - One exposure shows common mode.
+    - Two rows are undetermined: their comparison stars scatter > 5 σ in both directions on that night.
+    - No individual variability is supported. All 4 groups are now checked.
+    - The line is closed with no further check of this kind. Revisit only on the owner's request for a new method
+      round, or if exposure images become reachable without an account.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
