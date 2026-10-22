@@ -121,14 +121,17 @@ def test_pair(cat: Table, ka: int, kb: int, label: str) -> dict:
     }
 
 
-def specificity(cat: Table, refs: dict[str, int], flux_lo: float, flux_hi: float) -> dict:
+def specificity(
+    cat: Table, refs: dict[str, int], flux_lo: float, flux_hi: float, exclude: int
+) -> dict:
     """Post hoc (not a frozen rule): of the catalogue sources with F200W S/N >= SNR_KNOWN and
-    F200W flux in [flux_lo, flux_hi], the fraction "consistent" with every reference image."""
+    F200W flux in [flux_lo, flux_hi], other than the references and ``exclude`` (the target),
+    the fraction "consistent" with every reference image."""
     f = np.asarray(cat["FLUX_COLOR03_TOTAL_F200W"], float)
     e = np.asarray(cat["FLUXERR_COLOR03_TOTAL_F200W"], float)
     with np.errstate(divide="ignore", invalid="ignore"):
         sel = np.flatnonzero((f / e >= SNR_KNOWN) & (f >= flux_lo) & (f <= flux_hi))
-    sel = [k for k in sel if k not in refs.values()]
+    sel = [k for k in sel if k not in refs.values() and k != exclude]
     both = 0
     for k in sel:
         if all(test_pair(cat, r, k, "")["class"] == "consistent" for r in refs.values()):
@@ -159,6 +162,8 @@ def main(argv: list[str] | None = None) -> dict:
         if len(ids) < 2:
             continue
         ka, kb = cp[ids[0]], cp[ids[1]]
+        if ka == kb:
+            continue  # both images matched one source: no pair to test
         snr = [
             float(cat["FLUX_COLOR03_TOTAL_F200W"][k] / cat["FLUXERR_COLOR03_TOTAL_F200W"][k])
             for k in (ka, kb)
@@ -197,7 +202,7 @@ def main(argv: list[str] | None = None) -> dict:
     if args.posthoc:
         f3 = float(cat["FLUX_COLOR03_TOTAL_F200W"][k3])
         refs = {i: cp[i] for i in ("10.1", "10.2") if i in cp}
-        ph = specificity(cat, refs, f3 / 2, f3 * 2)
+        ph = specificity(cat, refs, f3 / 2, f3 * 2, k3)
         (args.out / "posthoc.json").write_text(json.dumps(ph, indent=1, allow_nan=False) + "\n")
         print(json.dumps(ph, indent=1))
     return out

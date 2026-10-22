@@ -2220,7 +2220,7 @@ undetermined, not a candidate. A frozen colour test of 1115938 against 10.1 / 10
 **Addendum 2026-10-22d (MACS0417 family 10, `results/lens_consistency/macs0417_f10_colour/`).** The frozen catalogue
 colour test (CANUCS DR1 0.3″ colour fluxes, 8 JWST bands, 5 % floor, flux ratio free) passes its known-case gate
 (8 / 9 other-family pairs consistent) and finds 1115938 consistent with 10.1 (p 0.90) and 10.2 (p 0.78): "H1 not
-excluded". Post hoc: 7.6 % of similar-flux field sources pass against both; the fitted flux ratios (4.69, 2.78) match
+excluded". Post hoc: 7.5 % of similar-flux field sources pass against both; the fitted flux ratios (4.69, 2.78) match
 the CANUCS-map |μ| ratios at z 2.025 (4.35, 2.78). Family 10 is closed as ordinary (third image ≈ 1115938 at z ≈ 2.0;
 photo-z 0.1–0.2 low) unless a z_spec contradicts it. The colour test is reusable for other CANUCS counter-image checks.
 

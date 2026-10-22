@@ -16,8 +16,8 @@ Reading (frozen): 1115938's colours match both catalogued family-10 images, as a
 are necessary, not sufficient, so this does not prove the identification.
 
 ## Post hoc (not frozen rules)
-- **Specificity** (`posthoc.json`): of 2,034 CANUCS sources with F200W S/N ≥ 10 and 0.5–2× 1115938's F200W flux, 154
-  (7.6 %) are consistent with both 10.1 and 10.2. A random galaxy of that flux passes this test with about that rate.
+- **Specificity** (`posthoc.json`): of 2,033 CANUCS sources with F200W S/N ≥ 10 and 0.5–2× 1115938's F200W flux, 153
+  (7.5 %) are consistent with both 10.1 and 10.2. A random galaxy of that flux passes this test with about that rate.
 - **Flux ratios against the model** (from `../macs0417_f10_zscan/summary.json`, z 2.025 row, μ +13.10 / −8.38 /
   +3.01): predicted |μ| ratios 4.35 (10.1 / third) and 2.78 (10.2 / third) against the fitted colour-flux ratios 4.69
   and 2.78. Not stored as a separate number; computed from the two committed files.
@@ -26,6 +26,8 @@ are necessary, not sufficient, so this does not prove the identification.
   The #453 `candidate` flag has an ordinary reading: source redshift. No candidate; `/vet-candidate` not run.
 
 ## Limitations
+- Deviation (after /code-review, before merge): a known pair whose two images match one CANUCS source is skipped (none
+  did; `summary.json` unchanged), and the specificity sample excludes 1115938 itself.
 - Catalogue photometry only; 0.3″ colour apertures on lensed images can mix components (17.1–17.2 differs).
 - One model for the position and magnifications (CANUCS v1); no z_spec for family 10.
 - No new contact sheet; the 1115938 neighbourhood was looked at in `../macs0417_canucsref` (post hoc there).

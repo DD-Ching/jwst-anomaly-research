@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Plan** (`results/lens_consistency/macs0417_f10_colour/PLAN.md`; plan, script and tested rules pushed first): pair χ²
   on CANUCS DR1 0.3″ colour fluxes (8 JWST bands, 5 % floor, flux ratio free), gate on other Jauzac+19 families.
 - **Result** (`RESULT.md`, `summary.json`): gate passes 8 / 9; 1115938 consistent with 10.1 (χ² 2.80 / 7) and 10.2
-  (3.98 / 7): "H1 not excluded". Post hoc (`posthoc.json`): 7.6 % of 2,034 similar-flux sources also pass; fitted
+  (3.98 / 7): "H1 not excluded". Post hoc (`posthoc.json`): 7.5 % of 2,033 similar-flux sources also pass; fitted
   flux ratios 4.69 / 2.78 vs CANUCS-map |μ| ratios 4.35 / 2.78 at z 2.025. The #453 `candidate` flag reads as a source
   redshift effect (z ≈ 2.0 vs photo-z 1.72–1.88). No candidate. D-034 addendum d.
 - **Handoff:** MACS0417 extra-image work is done unless a family-10 z_spec appears. Next: the CANUCS DR1 reference on
