@@ -13,6 +13,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   HTTP on port 9006, this session's proxy is HTTPS only, and a direct connect timed out after 60 s. Blocked by the
   environment; upstream status not observed. No shim, so the trial was not run and the work stopped.
 
+## 2026-10-22: MACS0417 arc-aware reference from pipeline segment totals fails its control gate; extra-image test stays untested
+- **Plan** (`results/lens_consistency/macs0417_arcref/PLAN.md`, frozen first): reference = isophotal segment total of
+  the catalogued sibling over Σ|μ|; leave-one-out gate C2 on the catalogued images, overall and arc-referenced.
+- **Result** (`RESULT.md`, `summary.json`): C2 fails, 10 / 27 (arc-referenced 6 / 12) against ≥ 0.8, so no prediction
+  is read; 0 flags. Post hoc (looked at): single segments (3σ semi-major 9.2–65.1″) hold several lensed knots or an
+  image with other light. Rejected as a reference route in cluster cores (D-034 addendum).
+- **Handoff:** MACS0417 extra images wait for CANUCS v2 deblended catalogues or an arc-aperture sum on
+  member-subtracted images. Next lensing step otherwise from TASKS Supporting as before.
 ## 2026-10-22: X4 cogwheel exact score: definitions map, but one exactly aligned point fails the waveform check (decision B); no search
 - **Definition check (read in source):** cogwheel's exact `lnlike_fft` has no internal maximisation. With one
   detector, its maximum over time, ψ, distance and sky is ½ρ² FF² with continuous time. This matches our FF when:
