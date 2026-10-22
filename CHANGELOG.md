@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-22: W3 ZTF g + r jointly bounding the event: real but small gain; 7 / 63 restored (oracle 16 / 63); stopped at the worth check
+- **Plan** (`results/w3_ztf/joint/PLAN.md`): one candidate, defined in §1 before the run.
+  - It extends A's r run through contiguous dim epochs of either band (a deep non-detection counts as an upper limit;
+    shallow, missing and flagged epochs are unknown) and stops at the first other detection.
+  - Bounds then uses both bands.
+  - Stop if the ideal (noise-free) restoration is < 0.50, if the gain comes only from the span, or if extensions are
+    not real.
+- **Result** (`RESULT.md`, `decision.json`). The v24 and #459 outcomes were reproduced for every event.
+  - On the 88 undecided W3 sides, joint decides 14 fast, against #459's 5. Of the 9 new: 2 from the bracket only,
+    3 from the span only, 1 from either, 3 need both.
+  - 64 / 64 extending g epochs are truly dim (evaluation). Joint makes no W3 side slow and 1 of 18 fade sides fast.
+  - **7 / 63 events restored** (noise-free replay and observed alike); a generous post hoc oracle gives 16 / 63. Stop.
+    No rule frozen, no development comparison, no validation, no second method.
+- **Failed approach:** the g dims sit next to the r edge (median 1.97 d), and both bands share the gap after it. The
+  bracket shrinks to 0.97 and the span grows to 1.06 (medians).
+- **Handoff:** W3 ZTF edge information is exhausted for these stars. `joint_extent`, `edge_bounds_joint` and the
+  `edges` argument are tested but not adopted.
+
 ## 2026-10-22: W3 ZTF alternative data for the 40 ASAS-SN-plan stars: ZTF g restores 3 / 63 insufficient W3 events; not continued
 - **Plan** (`results/w3_ztf/altdata/PLAN.md`): selection rule committed before the inventory output was read (the
   queries had started at 05:30:34, the commit was at 05:32:14, `cost.json`; labelled deviation); trial, criteria and `edge_bounds_alt` (tested) frozen
