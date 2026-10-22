@@ -1,0 +1,1197 @@
+{
+ "label": "derived; simulated events replayed (v23 seeds); ATLAS observed (compact tables), injected without new noise",
+ "npix": 4991,
+ "seed_offset": 45000,
+ "carriers": 500,
+ "checks": {
+  "a_equals_v24": true,
+  "mismatches": {
+   "a_vs_v24": 0
+  }
+ },
+ "calibration": {
+  "601213400002563": null,
+  "601213300003718": null,
+  "601213400002567": null,
+  "601213200002823": null,
+  "601213300005265": null,
+  "601213100007066": null,
+  "601213200006434": null,
+  "601213300005924": null,
+  "601209200000036": null,
+  "601209200002983": null,
+  "601214400007338": null,
+  "601214400005162": null,
+  "601213300007095": null,
+  "601213300002366": null,
+  "601213400002132": null,
+  "601213400012516": null,
+  "601213400004073": null,
+  "601213400005483": null,
+  "601209200009972": null,
+  "601214400015866": null
+ },
+ "events": [
+  {
+   "kind": "rho0.01_blend1_tE10",
+   "i": 49,
+   "carrier": 601213300005265,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend1_tE10",
+   "i": 113,
+   "carrier": 601213300005265,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE10",
+   "i": 120,
+   "carrier": 601213400005483,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend1_tE10",
+   "i": 167,
+   "carrier": 601213400002563,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE10",
+   "i": 198,
+   "carrier": 601213300007095,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 18,
+   "carrier": 601213400002132,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 25,
+   "carrier": 601213300007095,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 35,
+   "carrier": 601214400007338,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 36,
+   "carrier": 601213400002567,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 48,
+   "carrier": 601213100007066,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 50,
+   "carrier": 601213100007066,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 59,
+   "carrier": 601213200006434,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 62,
+   "carrier": 601213400005483,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 150,
+   "carrier": 601213400002567,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend1_tE30",
+   "i": 180,
+   "carrier": 601213300002366,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 2,
+   "carrier": 601213300005924,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 14,
+   "carrier": 601213400002567,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 20,
+   "carrier": 601209200002983,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 35,
+   "carrier": 601213200006434,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 87,
+   "carrier": 601214400007338,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 88,
+   "carrier": 601209200002983,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 105,
+   "carrier": 601213300003718,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 115,
+   "carrier": 601209200009972,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 183,
+   "carrier": 601213300005924,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 186,
+   "carrier": 601213400002132,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend1_tE100",
+   "i": 195,
+   "carrier": 601213400002563,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 0,
+   "carrier": 601209200002983,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 3,
+   "carrier": 601213200002823,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 18,
+   "carrier": 601213300007095,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 22,
+   "carrier": 601213200006434,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 71,
+   "carrier": 601209200009972,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 104,
+   "carrier": 601213300003718,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 118,
+   "carrier": 601213400002563,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 125,
+   "carrier": 601213400002132,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend1_tE10",
+   "i": 169,
+   "carrier": 601213300002366,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE30",
+   "i": 0,
+   "carrier": 601213400004073,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE30",
+   "i": 62,
+   "carrier": 601213400005483,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend1_tE30",
+   "i": 72,
+   "carrier": 601213400004073,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE30",
+   "i": 77,
+   "carrier": 601213400002563,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend1_tE30",
+   "i": 95,
+   "carrier": 601209200002983,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend1_tE30",
+   "i": 148,
+   "carrier": 601213300003718,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE10",
+   "i": 11,
+   "carrier": 601213400005483,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE10",
+   "i": 79,
+   "carrier": 601213300003718,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE10",
+   "i": 161,
+   "carrier": 601213200006434,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE10",
+   "i": 171,
+   "carrier": 601213400012516,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 22,
+   "carrier": 601213300002366,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 27,
+   "carrier": 601213400002567,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 50,
+   "carrier": 601213100007066,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 68,
+   "carrier": 601213400002567,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 159,
+   "carrier": 601214400007338,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 167,
+   "carrier": 601213200002823,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 195,
+   "carrier": 601213400002132,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE30",
+   "i": 198,
+   "carrier": 601213400012516,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 8,
+   "carrier": 601213400012516,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 10,
+   "carrier": 601213400002132,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 11,
+   "carrier": 601209200002983,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 66,
+   "carrier": 601213300005924,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 71,
+   "carrier": 601213400005483,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 91,
+   "carrier": 601213300007095,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 132,
+   "carrier": 601213400002567,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 134,
+   "carrier": 601209200002983,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 183,
+   "carrier": 601213400002132,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 188,
+   "carrier": 601213400005483,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.01_blend0.7_tE100",
+   "i": 197,
+   "carrier": 601213300003718,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 4,
+   "carrier": 601213300002366,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 71,
+   "carrier": 601213100007066,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 80,
+   "carrier": 601213200006434,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 86,
+   "carrier": 601213300007095,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 98,
+   "carrier": 601213300007095,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 145,
+   "carrier": 601213400002132,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 146,
+   "carrier": 601214400005162,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 166,
+   "carrier": 601214400005162,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 169,
+   "carrier": 601213300005265,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE10",
+   "i": 170,
+   "carrier": 601213200002823,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 24,
+   "carrier": 601214400015866,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 61,
+   "carrier": 601209200002983,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 96,
+   "carrier": 601209200002983,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 111,
+   "carrier": 601213200002823,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 129,
+   "carrier": 601209200000036,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 131,
+   "carrier": 601209200002983,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 149,
+   "carrier": 601213400004073,
+   "a": "recovered",
+   "atlas": false,
+   "b": "recovered",
+   "b_quoted": "recovered",
+   "b_keep9999": "recovered"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 161,
+   "carrier": 601213300005924,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "rho0.1_blend0.7_tE30",
+   "i": 187,
+   "carrier": 601213300003718,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "fade",
+   "i": 2,
+   "carrier": 601213400002132,
+   "a": "other:achromatic_ok",
+   "atlas": false,
+   "b": "other:achromatic_ok",
+   "b_quoted": "other:achromatic_ok",
+   "b_keep9999": "other:achromatic_ok"
+  },
+  {
+   "kind": "fade",
+   "i": 44,
+   "carrier": 601213300005924,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 59,
+   "carrier": 601213200006434,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 65,
+   "carrier": 601209200009972,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 92,
+   "carrier": 601213300007095,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 229,
+   "carrier": 601213400004073,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 246,
+   "carrier": 601213300005265,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 333,
+   "carrier": 601213400002567,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 374,
+   "carrier": 601213300005924,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 376,
+   "carrier": 601213100007066,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "fade",
+   "i": 381,
+   "carrier": 601213400002132,
+   "a": "other:oneoff_ok",
+   "atlas": false,
+   "b": "other:oneoff_ok",
+   "b_quoted": "other:oneoff_ok",
+   "b_keep9999": "other:oneoff_ok"
+  },
+  {
+   "kind": "fade",
+   "i": 459,
+   "carrier": 601213300003718,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 468,
+   "carrier": 601214400015866,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 492,
+   "carrier": 601213300005265,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 532,
+   "carrier": 601213300003718,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 538,
+   "carrier": 601209200000036,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "fade",
+   "i": 544,
+   "carrier": 601213400002132,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "fade",
+   "i": 592,
+   "carrier": 601213400002132,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "fade",
+   "i": 618,
+   "carrier": 601209200002983,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 650,
+   "carrier": 601213400004073,
+   "a": "other:achromatic_ok",
+   "atlas": false,
+   "b": "other:achromatic_ok",
+   "b_quoted": "other:achromatic_ok",
+   "b_keep9999": "other:achromatic_ok"
+  },
+  {
+   "kind": "fade",
+   "i": 693,
+   "carrier": 601213200006434,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 711,
+   "carrier": 601209200002983,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "fade",
+   "i": 725,
+   "carrier": 601213400004073,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 770,
+   "carrier": 601213300002366,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 772,
+   "carrier": 601213400012516,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 823,
+   "carrier": 601214400007338,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 905,
+   "carrier": 601213400005483,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 949,
+   "carrier": 601209200002983,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 950,
+   "carrier": 601213300003718,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 979,
+   "carrier": 601213400002567,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  },
+  {
+   "kind": "fade",
+   "i": 980,
+   "carrier": 601213300005924,
+   "a": "edge_slow",
+   "atlas": false,
+   "b": "edge_slow",
+   "b_quoted": "edge_slow",
+   "b_keep9999": "edge_slow"
+  },
+  {
+   "kind": "fade",
+   "i": 984,
+   "carrier": 601213400012516,
+   "a": "not_flagged",
+   "atlas": false,
+   "b": "not_flagged",
+   "b_quoted": "not_flagged",
+   "b_keep9999": "not_flagged"
+  },
+  {
+   "kind": "fade",
+   "i": 993,
+   "carrier": 601213400005483,
+   "a": "edge_insufficient",
+   "atlas": false,
+   "b": "edge_insufficient",
+   "b_quoted": "edge_insufficient",
+   "b_keep9999": "edge_insufficient"
+  }
+ ],
+ "seconds": 95.1
+}

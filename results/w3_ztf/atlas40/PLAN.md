@@ -116,3 +116,16 @@ Owner brief 2026-10-22 after #461:
   - simulated: every "dimming", "restored" or "pass" here is a simulated injection;
   - observed: ATLAS and ZTF epochs and their noise;
   - nothing is a real event.
+
+## Deviation (09:17 UTC, before any ATLAS flux was read)
+- **Why:** the shared queue runs our tasks one at a time. The first full-range task (MJD 58150–61000) had been running
+  for 16 min by 09:17, so 40 full-range tasks cannot finish in the budget.
+- **Change:** the 38 stars not yet submitted request only the hull of the windows that can affect B, from the ZTF
+  replay alone (`hull_script.py.txt` → `hull_<npix>.json`):
+  - per event with a bounds hit, [t_start − span, t_end + span] (`edge_bounds_alt` uses nothing farther away), and
+    ± 60 d for the baseline.
+- **Unchanged:** stars, order and method. The two submitted tasks keep the full range.
+- **Restart:**
+  - The scheduler was stopped by mistake (`pkill -f` also matched the calling shell) and restarted from its saved
+    state, so nothing was resubmitted.
+  - The acquisition deadline stays 11:49 UTC.
