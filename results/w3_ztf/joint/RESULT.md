@@ -1,4 +1,4 @@
-# W3 ZTF — g and r together: the g epochs inside the event are real dims and tighten some edges, but the sampling allows 7 / 63 insufficient W3 events restored (noise-free replay; a generous post hoc oracle 16 / 63; needs ≥ 0.50); stopped at the worth check, no rule frozen
+# W3 ZTF — g and r together: the g epochs inside the simulated events are dim in the injected model and tighten some edges, but the sampling allows 7 / 63 insufficient W3 events restored (noise-free replay; a generous post hoc oracle 16 / 63; needs ≥ 0.50); stopped at the worth check, no rule frozen
 
 - **Pre-registration:**
   - PLAN §1 (question, evidence, stop conditions, the only candidate) was committed at 06:22:10 (be7b5c8). That was
@@ -70,7 +70,8 @@ Sides decided fast, of the 88:
   0.11** of the A0-insufficient W3 events (`ideal_joint_events_fast`). This is below 0.50, so condition 1 holds. The
   replay decides the same 14 sides as the noisy data, so noise is not what limits it.
 - **Condition 2 does not hold:** 3 B-insufficient sides become fast under num.
-- **Condition 3 does not hold:** 16 / 16 extending epochs on the newly fast sides are truly dim.
+- **Condition 3 does not hold:** 16 / 16 extending epochs on the newly fast sides are dim in the injected model (simulated-injection measurements, not
+  real astronomical dimmings).
 - **Post hoc, the replay is not a strict ceiling, so two more numbers** (`posthoc_bounds`):
   - The observed joint rule restores 7 / 63 events (0.11), the same as the replay.
   - **The generous oracle restores 16 / 63 (0.25).** The oracle knows every sampled epoch's true state in both bands and
@@ -80,7 +81,8 @@ Sides decided fast, of the 88:
 - **Stop:** true. No rule is frozen, no development comparison or validation is run, and no second method is tried.
 
 ## 5. Reading
-- **Does joint use add decidable information?** Yes, a little. The g epochs that fall inside the event are genuine dims
+- **Does joint use add decidable information?** Yes, a little. The g epochs that fall inside the simulated event are dim in the injected model (real g epoch times and noise, an
+  injected event; no real dimming)
   next to the r edge (median 1.97 d). They tighten the bracket on 3 sides and lengthen the measured event on others.
 - **Why it cannot be enough:**
   - Both bands share the long sampling gap after the edge. The bracket shrinks only to 0.97 of B's (median), and the

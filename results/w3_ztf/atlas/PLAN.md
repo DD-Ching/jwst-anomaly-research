@@ -19,7 +19,7 @@ Session start 07:31 UTC.
 - #460 left 74 W3 sides insufficient under the joint r + g rule (`../joint/worth_*.json`). These are the ZTF r / g
   common gaps of simulated injected events. The gap structure is real sampling; the events are simulations.
 
-## 1. Official access (checked 07:33–07:43; texts saved in the session, token masked)
+## 1. Official access (checked 07:32–07:35; texts saved in the session, token masked)
 - **Shared access, documented:** NOIRLab's ANTARES devkit notebook, "Lightcurves and Photometry Search", Chapter 3
   (https://nsf-noirlab.gitlab.io/csdc/antares/devkit/notebooks/LightcurvesPhotometrySearch/), states as fetched
   2026-10-22: "You may use the API token for the Astro DataLab account on the ATLAS Forced Photometry server which is

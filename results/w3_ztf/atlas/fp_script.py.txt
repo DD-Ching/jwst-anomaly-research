@@ -1,0 +1,101 @@
+# ATLAS forced photometry requests for the stars of selection.json (PLAN section 2), following the official API guide
+# (https://fallingstar-data.com/forcedphot/apiguide/). The token comes from the environment variable ATLAS_FP_TOKEN and
+# is never printed or written. Only tasks submitted here are polled (by their saved task URL); the queue list and
+# queuepositions.json are never requested (a shared account would show other users' tasks).
+#
+# Usage: python fp_script.py.txt submit <key>      -> one POST /queue/ (reduced mode), task saved in tasks.json
+#        python fp_script.py.txt poll <key> <out>  -> poll the saved task (>= 30 s), save the result text to <out>/,
+#                                                     record rows / bytes / sha256, then delete our own finished task
+import hashlib, json, os, re, sys, time
+from datetime import datetime, timezone
+
+import requests
+
+BASEURL = 'https://fallingstar-data.com/forcedphot'
+TASKS = 'results/w3_ztf/atlas/tasks.json'
+STOP_AT = '09:05'  # UTC; unfinished tasks are left for continuation (PLAN section 2)
+now = lambda: datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+tok = os.environ.get('ATLAS_FP_TOKEN', '')
+if not tok:
+    raise SystemExit('ATLAS_FP_TOKEN not set')
+HDR = {'Authorization': f'Token {tok}', 'Accept': 'application/json'}
+tasks = json.load(open(TASKS)) if os.path.exists(TASKS) else {}
+
+
+def save():
+    json.dump(tasks, open(TASKS, 'w'), indent=1)
+    open(TASKS, 'a').write('\n')
+
+
+def detail(resp):
+    try:
+        d = resp.json()
+        return str(d.get('detail', d))[:300] if isinstance(d, dict) else str(d)[:300]
+    except ValueError:
+        return resp.text[:300]
+
+
+cmd, key = sys.argv[1], sys.argv[2]
+sel = json.load(open('results/w3_ztf/atlas/selection.json'))
+req = sel['requests'][key]
+if cmd == 'submit':
+    if key in tasks and tasks[key].get('task_id'):
+        raise SystemExit(f'already submitted: task {tasks[key]["task_id"]}')  # never resubmit
+    rec = tasks.setdefault(key, {'attempts': []})
+    while True:
+        r = requests.post(f'{BASEURL}/queue/', headers=HDR, timeout=120,
+                          data={'ra': req['ra'], 'dec': req['dec'], 'mjd_min': req['mjd_min'], 'mjd_max': req['mjd_max'],
+                                'use_reduced': True, 'send_email': False})
+        rec['attempts'].append({'utc': now(), 'http': r.status_code, 'detail': None if r.status_code == 201 else detail(r)})
+        if r.status_code == 201:
+            url = r.json()['url']
+            rec.update({'task_id': int(re.findall(r'/queue/(\d+)/', url)[0]), 'task_url': url, 'submitted_utc': now(),
+                        'mode': 'reduced', 'mjd_min': req['mjd_min'], 'mjd_max': req['mjd_max']})
+            save()
+            print('queued task', rec['task_id'])
+            break
+        if r.status_code == 429:
+            wait = int(r.headers.get('Retry-After', 60))
+            save()
+            print('throttled; Retry-After', wait)
+            time.sleep(wait)
+            continue
+        save()
+        raise SystemExit(f'stop: HTTP {r.status_code} {detail(r)}')
+elif cmd == 'poll':
+    out = sys.argv[3]
+    rec = tasks[key]
+    while True:
+        r = requests.get(rec['task_url'], headers=HDR, timeout=120)
+        if r.status_code == 429:
+            time.sleep(int(r.headers.get('Retry-After', 60)))
+            continue
+        if r.status_code != 200:
+            rec.setdefault('poll_errors', []).append({'utc': now(), 'http': r.status_code, 'detail': detail(r)})
+            save()
+            raise SystemExit(f'stop: HTTP {r.status_code} {detail(r)}')
+        j = r.json()
+        rec['last_poll_utc'] = now()
+        rec['starttimestamp'], rec['finishtimestamp'] = j.get('starttimestamp'), j.get('finishtimestamp')
+        if j.get('error_msg'):
+            rec['error_msg'] = str(j['error_msg'])[:300]
+        if j.get('finishtimestamp'):
+            if not j.get('result_url'):
+                save()
+                raise SystemExit(f'finished without result: {rec.get("error_msg")}')
+            txt = requests.get(j['result_url'], headers=HDR, timeout=300).text
+            os.makedirs(out, exist_ok=True)
+            path = os.path.join(out, f'atlas_fp_{key}.txt')
+            open(path, 'w').write(txt)
+            rec.update({'result_bytes': len(txt.encode()), 'result_rows': max(len(txt.strip().splitlines()) - 1, 0),
+                        'result_sha256': hashlib.sha256(txt.encode()).hexdigest(), 'downloaded_utc': now()})
+            d = requests.delete(rec['task_url'], headers=HDR, timeout=120)
+            rec['deleted_own_task_http'] = d.status_code
+            save()
+            print('done', rec['result_rows'], 'rows')
+            break
+        save()
+        if datetime.now(timezone.utc).strftime('%H:%M') >= STOP_AT:
+            print('stop time reached; task left queued for continuation')
+            break
+        time.sleep(30)

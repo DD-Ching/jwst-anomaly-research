@@ -5696,7 +5696,8 @@ confining radiation at a throat is found.
     diagnostic puts 59 / 66 window g epochs inside the event.
 - **Addendum 2026-10-22 (g + r jointly, `results/w3_ztf/joint/RESULT.md`):**
   - **Tested (worth check only):** one candidate in which both bands bound the event (`joint_extent`,
-    `edge_bounds_joint`). The g dims inside the event are real (64 / 64) and decide 14 / 88 sides, against 5 for #459.
+    `edge_bounds_joint`). The g dims inside the simulated events are dim in the injected model (64 / 64; simulated-injection measurements, not
+    real events) and decide 14 / 88 sides, against 5 for #459.
     Of the 9 new: 2 from the bracket only, 3 from the span only, 1 from either, 3 need both.
   - **Ceiling:** 7 / 63 insufficient W3 events restored (noise-free replay). A generous post hoc oracle gives 16 / 63.
     Both are below 0.50.
@@ -5704,6 +5705,20 @@ confining radiation at a throat is found.
   - **Rejected:** a second window or threshold, and using non-adjacent g epochs (a different method).
   - **Revisit if:** a source with epochs inside the shared r / g gaps exists, or the owner wants a model-fitting edge
     test (new plan and validation).
+- **Addendum 2026-10-22 (ATLAS forced photometry, `results/w3_ztf/atlas/RESULT.md`):**
+  - **Access correction:** ATLAS forced photometry is reachable without our own account through the Astro Data Lab
+    token, which NOIRLab's ANTARES devkit notebook documents for use (shared queue). It worked on 2026-10-22, with 4 / 4
+    tasks. The earlier "needs an account" (#459) is narrowed to: shared access exists; bulk use needs a personal
+    account.
+  - **Measured on 4 stars and 19 ZTF r / g common gaps:**
+    - reduced-mode photometry passes the FAQ cuts at 91–94 %;
+    - 11 gaps have a passing precise visit in the decisive window;
+    - 6 seasonal gaps have none.
+  - **Not measured:** the effect on decisions (no paired injection; no ZTF replay this round).
+  - **Decision:** no rule change and no 40-star run without the owner. Rejected: difference-mode flux as a brightness
+    ratio (template changes).
+  - **Revisit if:** the owner authorizes ATLAS for the 40 stars and a paired injection with a ZTF replay and a frozen
+    ATLAS noise rule.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles
