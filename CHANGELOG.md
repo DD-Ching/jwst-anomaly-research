@@ -10,8 +10,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`RESULT.md`, `summary.json`): gate K rms 0.512″ (303 / 303); gate C2 160 / 172, arc 58 / 59, passes;
   one flag, D115b (|μ| 26.6, F / F_pred ≤ 0.049), next to BCG-subtraction residuals by a cluster galaxy (cutout looked
   at). Not vetted.
-- **Handoff:** next, `/vet-candidate` on the D115b flag (model position error near a galaxy-scale critical curve
-  first), on PR #458's branch; then Abell 370 (gate K first; expected to fail).
+- **Vetting** (`docs/candidates/macs0416-canucsref-D115b.md`, 06:20Z run): `inconclusive`. Member 8515 (z_spec
+  0.3907, σ 120.6 km/s) makes the extra D115a / D115b images; at σ × 0.7 they vanish and a 0.1″ solve keeps the
+  catalogued images matched (≤ 0.59″), but 0.25″ `validate` then loses D115a's match (χ² 330.8 → 5261); not isolated.
+- **Handoff:** next, `validate --plane 8515=0.396:84.4 --grid-step 0.1` (and at z 0.3907), per the record; then
+  Abell 370 (gate K first; expected to fail).
 
 ## 2026-10-22: MACS1149 third-field gate: the CANUCS DR1 reference passes C2 with a containing-source rule; no flag
 - **Plan** (`results/lens_consistency/macs1149_canucsref/PLAN.md`, frozen with the rule function and tests): CANUCS v1

@@ -29,3 +29,8 @@ Plan: `PLAN.md` (frozen and pushed before the run, ec5834f). Numbers: `summary.j
 - Not yet done: `/vet-candidate` (cheapest first: model position error near the critical curve, e.g. the D115a /
   D115b relative geometry; the CANUCS posterior or an independent model; deblending and BCG-model residuals). Until
   then this is an unvetted screen hit, not a candidate.
+
+## Vetting, 2026-10-22 (`docs/candidates/macs0416-canucsref-D115b.md`)
+Verdict `inconclusive`: the extra D115a / D115b images are made by cluster member 8515 (z_spec 0.3907); they vanish
+at σ × 0.7–0.8, but the χ² cost of that is unresolved (0.25″ `validate`: 330.8 → 5261 from a D115a match failure; a
+0.1″ solve keeps D115a matched). Next: the fine-grid `validate` in the record's "Open questions".
