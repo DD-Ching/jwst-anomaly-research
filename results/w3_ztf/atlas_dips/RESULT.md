@@ -128,5 +128,5 @@ rank):
   (excluded this round).
 
 ## 6. Cost
-- About 0.7 h of the 1.5 h budget, 0 MB downloaded.
+- About 0.65 h of the 1.5 h wall-clock budget (20:56 to the merge, ≈ 21:35 UTC), 0 MB downloaded.
 - One local ZTF cache read (filtered to the group members of 4 stars).

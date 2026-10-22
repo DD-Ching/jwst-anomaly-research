@@ -5766,7 +5766,8 @@ confining radiation at a throat is found.
     as is, with no new rule, gap filling or photometry request.
   - **Note:** a common-mode test across stars in the same exposure would flag G1. Adding it would be a new
     pre-registered method. Check the cleaning guide the ATLAS FAQ cites (Rest et al.) first.
-  - **Revisit if:** the owner opens a new method round, or ATLAS exposure images become reachable without an account.
+  - **Revisit if:** the owner asks for the unchecked G2 group, opens a new method round, or ATLAS exposure images
+    become reachable without an account.
 
 ## D-105 W1 blank-field R from real-image metacalibration: borrowed R = 0.414 kept (2026-10-18)
 - **Decision:** keep R = 0.414 for the blank-field W1 screens. GalSim metacalibration of six GOODS-N F200W i2d tiles

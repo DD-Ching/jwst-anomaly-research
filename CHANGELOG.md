@@ -13,8 +13,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - G4: one night with several stars low (night-level clue).
   - G3: a single exposure of a development star (rel 0.21). 8 of 9 other stars are normal in it (one is high, rel
     1.84), and its exposures 5–30 min later are normal. Undetermined; the exposure image needs an ATLAS account.
-  - G2: not checked. A selection-count deviation found at review would have checked it instead of G4; re-checking it
-    is the owner's call.
+  - G2: not checked. A selection-count deviation found at review would have checked it instead of G4; checking it is
+    the owner's call.
 - **Result:** no confirmed reading error. In the 3 checked groups, no variability is supported by independent
   observations and no source is worth follow-up. Archived; no further gap filling, threshold change or same-kind
   photometry attempt.
