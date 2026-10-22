@@ -1,0 +1,46 @@
+{
+ "provenance": "model_prediction",
+ "note": "lens_consistency.py --model macs0416-canucs validate --grid-step 0.1; 2026-10-22 07:19Z run",
+ "runs": {
+  "fiducial": {
+   "chi2_pos": 330.81034790966385,
+   "n_solved": 303,
+   "rms_dtheta_arcsec": 0.5119933365552052,
+   "max_dtheta_arcsec": 1.5283256019316271,
+   "shared_match_images": [],
+   "grid_step_arcsec": 0.09999999999999432
+  },
+  "8515=0.396:84.4": {
+   "chi2_pos": 5262.010326297772,
+   "n_solved": 303,
+   "rms_dtheta_arcsec": 2.041975907888326,
+   "max_dtheta_arcsec": 25.422961886628904,
+   "shared_match_images": [
+    "D115a.1",
+    "D115a.2",
+    "D115a.3"
+   ],
+   "grid_step_arcsec": 0.09999999999999432
+  },
+  "8515=0.3907:120.600977": {
+   "chi2_pos": 330.73376595481534,
+   "n_solved": 303,
+   "rms_dtheta_arcsec": 0.5119340703920982,
+   "max_dtheta_arcsec": 1.5280728035352296,
+   "shared_match_images": [],
+   "grid_step_arcsec": 0.09999999999999432
+  },
+  "8515=0.3907:84.4": {
+   "chi2_pos": 5261.435718159879,
+   "n_solved": 303,
+   "rms_dtheta_arcsec": 2.0418644136176076,
+   "max_dtheta_arcsec": 25.420262953020618,
+   "shared_match_images": [
+    "D115a.1",
+    "D115a.2",
+    "D115a.3"
+   ],
+   "grid_step_arcsec": 0.09999999999999432
+  }
+ }
+}

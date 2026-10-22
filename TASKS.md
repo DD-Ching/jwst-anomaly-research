@@ -376,7 +376,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        ~~A frozen containing-source rule gated on MACS1149~~ done 2026-10-22 (D-034 addendum f,
        `results/lens_consistency/macs1149_canucsref/RESULT.md`): gate K passes (0.990″), C2 passes 15 / 15 (arc 5 / 5),
        0 flags among 6 targets; the rule changed no MACS1149 class (post hoc it recovers MACS1423 3.2; MACS1423 still fails).
-       Next: Abell 370 and MACS0416 with this reference + rule (gold image list per field; check for CANUCS v1 maps);
+       ~~MACS0416 with this reference + rule~~ done 2026-10-22 (#458, `results/lens_consistency/macs0416_canucsref/RESULT.md`):
+       gates K and C2 pass, one flag D115b, vetted `inconclusive` (member 8515 makes the extra images; removing them costs
+       Δχ² +12.6 > 6 with only D115a / D115b sources refitted, `d115_refit/result.json`). Next: a re-fit with 8515's σ free
+       (Lenstool, owner machine) or a σ × 0.75–0.85 scan with fitted sources; then Abell 370 (gate K first; expected to fail);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows

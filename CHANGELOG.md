@@ -23,6 +23,25 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** a 40-star ATLAS run plus a paired injection (ZTF replay, about 1.25 GB) is the owner's decision. Search
   scale needs a personal ATLAS account, not the shared queue. D-104 addendum.
 
+## 2026-10-22: MACS0416 CANUCS DR1 reference extra-image test: gates K and C2 pass; flag D115b vetted inconclusive (Δχ² +12.6 to remove it)
+- **Plan** (`results/lens_consistency/macs0416_canucsref/PLAN.md`, frozen and pushed first): the MACS1149 rules
+  (CANUCS DR1 reference, local-noise and containing-source rules) on MACS0416 with the pinned `macs0416-canucs`
+  Lenstool model (deviation: a parameter-file model, not DR1 maps) and its 303 images as fixed-z constraints.
+  Abell 370 was skipped: its CANUCS model is a source-plane fit (image-plane rms 2.32″, D-044).
+- **Result** (`RESULT.md`, `summary.json`): gate K rms 0.512″ (303 / 303); gate C2 160 / 172, arc 58 / 59, passes;
+  one flag, D115b (|μ| 26.6, F / F_pred ≤ 0.049), next to BCG-subtraction residuals by a cluster galaxy (cutout looked
+  at). Not vetted.
+- **Vetting** (`docs/candidates/macs0416-canucsref-D115b.md`, 06:20Z run): `inconclusive`. Member 8515 (z_spec
+  0.3907, σ 120.6 km/s) makes the extra D115a / D115b images; at σ × 0.7 they vanish and a 0.1″ solve keeps the
+  catalogued images matched (≤ 0.59″), but 0.25″ `validate` then loses D115a's match (χ² 330.8 → 5261); not isolated.
+- **Vetting follow-up** (07:20Z run, frozen `d115_refit/PLAN.md`): on the 0.1″ grid the break remains (χ² 5262 / 5261
+  at z 0.396 / 0.3907), so grid and plane z are ruled out. With the D115 sources fitted to the image plane, σ 84.4
+  keeps every D115 image matched (≤ 0.58″) and removes the flagged image, but costs Δχ² +12.6 > 6 (ASSUMPTION):
+  still `inconclusive` (post hoc, +10.6 from other families not refitted).
+- **Failed approach:** `validate`'s mean back-traced source is not a fitted source; near a galaxy-scale caustic it can
+  drop images that a fitted source keeps (D115a: family χ² 4924.8 → 2.77).
+- **Handoff:** next, a Lenstool re-fit with 8515's σ free (owner machine) or a σ × 0.75–0.85 scan with every source
+  fitted; then Abell 370 (gate K first; expected to fail).
 ## 2026-10-22: W3 ZTF g + r jointly bounding the event: real but small gain; 7 / 63 restored (oracle 16 / 63); stopped at the worth check
 - **Plan** (`results/w3_ztf/joint/PLAN.md`): one candidate, defined in §1 before the run.
   - It extends A's r run through contiguous dim epochs of either band (a deep non-detection counts as an upper limit;
