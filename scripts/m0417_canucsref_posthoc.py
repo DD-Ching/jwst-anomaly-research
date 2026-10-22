@@ -161,7 +161,7 @@ def main(argv: list[str] | None = None) -> int:
             if m is not None
             else None
         ),
-        "note": "target apertures are measured as they lie; random apertures avoid catalogue sources",
+        "note": "target apertures as they lie; random apertures avoid catalogue sources",
         "family10": rows,
         "family10_catalogued": catalogued,
     }
