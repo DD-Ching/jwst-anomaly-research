@@ -1,0 +1,163 @@
+{
+ "stage1_gate_K": {
+  "images": 56,
+  "spectroscopic": 56,
+  "elgordo-caminha23": {
+   "model_sha256": "7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472",
+   "gate_K": {
+    "n_images": 56,
+    "rms_arcsec": 0.7538706629150792,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "extra_predicted": {
+    "3": [
+     2,
+     3
+    ],
+    "4": [
+     2,
+     3
+    ],
+    "6": [
+     2,
+     5
+    ],
+    "7": [
+     2,
+     3
+    ],
+    "12": [
+     3,
+     5
+    ],
+    "13": [
+     2,
+     3
+    ],
+    "14": [
+     2,
+     3
+    ],
+    "15": [
+     2,
+     3
+    ],
+    "16": [
+     2,
+     3
+    ],
+    "17": [
+     3,
+     5
+    ],
+    "18": [
+     2,
+     3
+    ],
+    "19": [
+     2,
+     3
+    ],
+    "20": [
+     2,
+     3
+    ],
+    "21": [
+     2,
+     3
+    ],
+    "22": [
+     2,
+     3
+    ]
+   },
+   "fewer_predicted": {},
+   "post_hoc": {
+    "dropped": [],
+    "leave_one_out_rms": {
+     "23": {
+      "23a": 1.121491611277766,
+      "23b": 0.8301398754146552,
+      "23c": 0.839717378887251
+     },
+     "17": {
+      "17a": 0.2924672277943575,
+      "17b": 1.415715728915158,
+      "17c": 1.1416783453526413
+     }
+    },
+    "held_out_offset": {
+     "23b": {
+      "n_predicted": 3,
+      "nearest_predicted_arcsec": 1.3219259749399335,
+      "nearest_predicted_magnification": -18.957978001326975
+     },
+     "17a": {
+      "n_predicted": 5,
+      "nearest_predicted_arcsec": 2.0104326094058673,
+      "nearest_predicted_magnification": -1.0932281317907664
+     }
+    },
+    "gate_K_without_dropped": {
+     "n_images": 56,
+     "rms_arcsec": 0.7538706629150792,
+     "matched_fraction": 1.0,
+     "passes": true
+    },
+    "families_refit": {}
+   }
+  },
+  "passing_models": [
+   "elgordo-caminha23"
+  ],
+  "flags": []
+ },
+ "stage1_reference_inputs": {
+  "reachable": true,
+  "bytes": 17170560,
+  "rows": 6775,
+  "n_columns": 359,
+  "shape_columns_present": true,
+  "total_flux_columns": [],
+  "passes": false,
+  "post_hoc_tot_corr_columns": [
+   "f090w_tot_corr",
+   "f105w_tot_corr",
+   "f115w_tot_corr",
+   "f125w_tot_corr",
+   "f140w_tot_corr",
+   "f150w_tot_corr",
+   "f160w_tot_corr",
+   "f200w_tot_corr",
+   "f277w_tot_corr",
+   "f356w_tot_corr",
+   "f410m_tot_corr",
+   "f435w_tot_corr",
+   "f444w_tot_corr",
+   "f606w_tot_corr",
+   "f625w_tot_corr",
+   "f775w_tot_corr",
+   "f814w_tot_corr",
+   "f850lp_tot_corr"
+  ],
+  "post_hoc_aperture_flux_columns_f200w": [
+   "f200w_flux_aper_0",
+   "f200w_flux_aper_1",
+   "f200w_flux_aper_2"
+  ],
+  "post_hoc_detection_aperture_pix": {
+   "APER_0": 9.00000000000006,
+   "APER_1": 12.50002500000008,
+   "APER_2": 17.50000500000012,
+   "APER_3": 25.00000500000017
+  },
+  "url": "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix_phot.fits"
+ },
+ "rules": {
+  "K_MAX_RMS_ARCSEC": 1.0,
+  "K_MIN_MATCHED": 0.8,
+  "MATCH_ARCSEC": 3.0,
+  "grid_step_arcsec": 0.25
+ }
+}

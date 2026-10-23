@@ -2314,6 +2314,14 @@ detected images are mispredicted by more than the search radius is not a flag. A
 perturbation of the northern group first (needs a re-fit; position test is cheaper and decisive). Revisit if: a
 model with a fold critical curve through the 78 arc predicts knot 3's c image ≥ 1″ from the 78.1c / 78.2c images.
 
+**Addendum 2026-10-23o (El Gordo, Caminha+2023, gate K; reference inputs).** Frozen plan
+`results/lens_consistency/elgordo_djaref/PLAN_1.md`: gate K passes on the 56 spectroscopic images (rms 0.754″, 56 /
+56 within 3″; own constraints only); 15 families have more predicted than catalogued images (stage-2 inputs, not
+read). Rule 2 fails as written: the DJA v7.0 photometry has segment shapes but no total-flux column; post hoc it has
+aperture fluxes with a per-band `tot_corr`. Decision: the route continues only with a stage-2 plan that freezes the
+reference flux from those columns and gates it with C2. Revisit if: a JWST-era El Gordo catalogue with segment
+totals (e.g. a PEARLS release) is public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
