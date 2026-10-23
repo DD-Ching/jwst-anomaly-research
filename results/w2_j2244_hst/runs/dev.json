@@ -1,5 +1,5 @@
 {
- "label": "derived (development controls, iteration 4 = frozen settings); thresholds by rules.threshold",
+ "label": "derived (development controls, iteration 4 = frozen settings); thresholds by rules.threshold; sersic_flux in e-/s after the unit fix (before: runs/dev_raw_units_v1.json)",
  "T": {
   "F160W": 7774.294946169393,
   "F814W": 9184.502362879357
@@ -34,7 +34,7 @@
     "center_x": -0.048544685879766965,
     "center_y": -0.6364739479010594
    },
-   "sersic_flux": 16939.157843858862,
+   "sersic_flux": 278.6163269131558,
    "pos_ok": true,
    "sep": 0.9684773840033908,
    "ps_x": [
@@ -78,7 +78,7 @@
     "center_x": -0.2635963247932603,
     "center_y": -0.2624398543630228
    },
-   "sersic_flux": 9506.374686704556,
+   "sersic_flux": 156.36144499533444,
    "pos_ok": true,
    "sep": 1.139617596543869,
    "ps_x": [
@@ -122,7 +122,7 @@
     "center_x": -0.43611534791592377,
     "center_y": -0.5147052955461447
    },
-   "sersic_flux": 71106.71050956013,
+   "sersic_flux": 177.76677627390035,
    "pos_ok": true,
    "sep": 1.0704714046664534,
    "ps_x": [
@@ -166,7 +166,7 @@
     "center_x": 0.06059037491628615,
     "center_y": -0.1450389980118682
    },
-   "sersic_flux": 22596.799279837334,
+   "sersic_flux": 56.49199819959335,
    "pos_ok": true,
    "sep": 1.1483392484441126,
    "ps_x": [
@@ -225,7 +225,7 @@
     "center_x": 0.3812337193462181,
     "center_y": -0.004129030858399942
    },
-   "sersic_flux": 16980.16354520429,
+   "sersic_flux": 279.2907912517417,
    "pos_ok": true,
    "ps_x": [
     -0.47121168472033137,
@@ -283,7 +283,7 @@
     "center_x": -0.25644250765206705,
     "center_y": -0.256539411072714
    },
-   "sersic_flux": 85.20312853444331,
+   "sersic_flux": 1.4014263833300569,
    "pos_ok": true,
    "ps_x": [
     0.3337474913140898,
@@ -341,7 +341,7 @@
     "center_x": 0.1083082584278115,
     "center_y": -0.6117107958700068
    },
-   "sersic_flux": 15559.248298132385,
+   "sersic_flux": 255.91948846070008,
    "pos_ok": true,
    "ps_x": [
     0.1054893889617813,
@@ -399,7 +399,7 @@
     "center_x": -0.031305516906488653,
     "center_y": -0.034178279066306876
    },
-   "sersic_flux": 15962.004401303277,
+   "sersic_flux": 39.9050110032582,
    "pos_ok": true,
    "ps_x": [
     0.49513036718862546,
@@ -457,7 +457,7 @@
     "center_x": 0.02836536916053329,
     "center_y": 0.04132652590212012
    },
-   "sersic_flux": 159247.88095327505,
+   "sersic_flux": 398.1197023831877,
    "pos_ok": true,
    "ps_x": [
     -0.38570127532941106,
@@ -515,7 +515,7 @@
     "center_x": -0.14819543882872244,
     "center_y": 0.0743659471982723
    },
-   "sersic_flux": 68205.08485768228,
+   "sersic_flux": 170.51271214420572,
    "pos_ok": true,
    "ps_x": [
     -0.15257153613196042,

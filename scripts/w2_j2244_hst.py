@@ -24,6 +24,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import w2_j2244_hst_rules as rules  # noqa: E402
 
 S3 = "https://stpubdata.s3.amazonaws.com/hst/public"
+# fsspec's default 5 MB read-ahead block made each ACS star cutout cost ~12 MB of traffic in this
+# round (RESULT "Cost"); small blocks keep a byte-range cutout close to its own size.
+FSSPEC = {"block_size": 2**16}
 GAIA_TAP = "https://gea.esac.esa.int/tap-server/tap/sync"
 BAND = {
     # stamp and star-stamp half-sizes (px), core mask radius (arcsec), pixel (arcsec), PSF size (px)
@@ -43,7 +46,7 @@ def cutout(obs_id: str, ra: float, dec: float, half: int) -> dict:
     from astropy.io import fits
     from astropy.wcs import WCS
 
-    with fits.open(url_of(obs_id), use_fsspec=True) as h:
+    with fits.open(url_of(obs_id), use_fsspec=True, fsspec_kwargs=FSSPEC) as h:
         hdr = h["SCI"].header
         w = WCS(hdr)
         x, y = (float(v) for v in w.all_world2pix(ra, dec, 0))
@@ -321,7 +324,9 @@ def fit(
         f = 5
         g = (np.arange(3 * n * f) - (3 * n * f - 1) / 2) * pix / f
         gx, gy = np.meshgrid(g, g)
-        out["sersic_flux"] = float(lm.surface_brightness(gx, gy, [sl]).sum() / f**2)
+        # lenstronomy amplitudes are surface brightness per arcsec^2: times the sub-pixel area.
+        # (Fixed after the validation and injection runs; earlier outputs are stored as *_units_v1.)
+        out["sersic_flux"] = float(lm.surface_brightness(gx, gy, [sl]).sum() * (pix / f) ** 2)
         out["sersic"] = {k: float(v) for k, v in sl.items()}
     return out
 
@@ -450,7 +455,7 @@ def star_stamps(band: str, fields: list[dict], exclude: list[tuple[float, float]
         if not cand:
             continue
         try:
-            h = fits.open(url_of(f["obs_id"]), use_fsspec=True)
+            h = fits.open(url_of(f["obs_id"]), use_fsspec=True, fsspec_kwargs=FSSPEC)
         except (FileNotFoundError, OSError):
             continue
         with h:
@@ -756,21 +761,118 @@ def run_job(job: dict) -> dict:
 
 
 def run_jobs(jobs_json: str, out_json: str, procs: int) -> None:
+    """Run jobs in a process pool; each result is appended to <out_json>.jsonl as it finishes
+    (a restart loses only running jobs), then all are written to out_json in job order."""
     import multiprocessing as mp
 
     jobs = json.load(open(jobs_json))
-    with mp.get_context("fork").Pool(procs) as pool:
-        res = pool.map(run_job, jobs, chunksize=1)
+    part = Path(out_json + "l")
+    done = {}
+    if part.exists():
+        for ln in part.read_text().splitlines():
+            r = json.loads(ln)
+            done[r["_k"]] = r
+    todo = [dict(j, _k=k) for k, j in enumerate(jobs) if k not in done]
+    with mp.get_context("fork").Pool(procs) as pool, part.open("a") as fh:
+        for r in pool.imap_unordered(_run_keyed, todo, chunksize=1):
+            fh.write(json.dumps(_jsonable(r)) + "\n")
+            fh.flush()
+            done[r["_k"]] = r
+            print(
+                r.get("name"),
+                r.get("band"),
+                r.get("status"),
+                round(r.get("dchi2", float("nan")), 1),
+                round(r.get("redchi_m1", float("nan")), 2),
+                r.get("sersic_offset"),
+                flush=True,
+            )
+    res = [done[k] for k in range(len(jobs))]
     Path(out_json).write_text(json.dumps(_jsonable(res), indent=1) + "\n")
-    for r in res:
-        print(
-            r.get("name"),
-            r.get("band"),
-            r.get("status"),
-            round(r.get("dchi2", float("nan")), 1),
-            round(r.get("redchi_m1", float("nan")), 2),
-            r.get("sersic_offset"),
+
+
+def _run_keyed(job: dict) -> dict:
+    k = job.pop("_k")
+    r = run_job(job)
+    r["_k"] = k
+    return r
+
+
+def gate_report(val_json: str, inj_json: str | None) -> dict:
+    """Per-band gate on validation controls (PLAN section 4); positives must meet the pool geometry
+    rule (fitted separation within rules.P.sep_range); injection limits and absorption (sec. 5)."""
+    val = json.load(open(val_json))
+    inj = json.load(open(inj_json)) if inj_json and Path(inj_json).exists() else []
+    lo, hi = rules.P.sep_range
+    out = {"label": "derived (validation controls and injections; frozen v2 rules)", "bands": {}}
+    for band in ("F160W", "F814W"):
+        pos = [r for r in val if r["band"] == band and r["kind"] == "positive"]
+        neg = [r for r in val if r["band"] == band and r["kind"] == "negative"]
+        elig = [r for r in pos if r.get("sep") is not None and lo <= r["sep"] <= hi]
+        excl = [
+            {"name": r["name"], "sep": r.get("sep"), "status": r.get("status")}
+            for r in pos
+            if r not in elig
+        ]
+        base = {r["name"]: r for r in neg}
+        rows = []
+        for r in (x for x in inj if x["band"] == band):
+            b = base.get(r["name"].split("_")[0], {})
+            rows.append(
+                {
+                    "pair": r["name"].split("_")[0],
+                    "r_eff": r["inject"]["r_eff"],
+                    "mag": r["inject"]["mag"],
+                    "status": r.get("status"),
+                    "dchi2": r.get("dchi2"),
+                    "recovered": rules.detected(r.get("status", "")),
+                    "flux_ratio_raw": (r.get("sersic_flux") or 0) / r["inj_flux"],
+                    "flux_ratio_minus_baseline": (
+                        (r.get("sersic_flux") or 0) - (b.get("sersic_flux") or 0)
+                    )
+                    / r["inj_flux"],
+                }
+            )
+        limits = {}
+        absorb_ok = bool(rows)
+        for pair in sorted({x["pair"] for x in rows}):
+            for reff in rules.P.inj_reff:
+                sel = sorted(
+                    (x for x in rows if x["pair"] == pair and x["r_eff"] == reff),
+                    key=lambda x: x["mag"],
+                )
+                limits[f"{pair}_r{reff}"] = rules.contiguous_limit(
+                    [x["mag"] for x in sel], [x["recovered"] for x in sel]
+                )
+                if sel and sel[0]["flux_ratio_raw"] < rules.P.absorb_min:
+                    absorb_ok = False
+        g = rules.gate(
+            [r.get("status", "fit unreliable") for r in neg],
+            [r.get("status", "fit unreliable") for r in elig],
+            absorb_ok,
         )
+        out["bands"][band] = {
+            "T": next((r["T"] for r in val if r["band"] == band), None),
+            "gate": g,
+            "positives_eligible": [
+                {"name": r["name"], "sep": r["sep"], "dchi2": r["dchi2"], "status": r["status"]}
+                for r in elig
+            ],
+            "positives_excluded_geometry": excl,
+            "negatives": [
+                {
+                    "name": r["name"],
+                    "g": r.get("g"),
+                    "dchi2": r.get("dchi2"),
+                    "redchi": r.get("redchi_m1"),
+                    "status": r.get("status"),
+                }
+                for r in neg
+            ],
+            "injections": rows,
+            "injection_limits": limits,
+        }
+    return out
 
 
 def main(argv=None):
@@ -784,11 +886,21 @@ def main(argv=None):
     p.add_argument("fields_json")
     p.add_argument("out_pkl")
     p.add_argument("--max-fields", type=int, default=80)
+    p = sub.add_parser("gate")
+    p.add_argument("val_json")
+    p.add_argument("out_json")
+    p.add_argument("--inj", default=None)
     p = sub.add_parser("run")
     p.add_argument("jobs_json")
     p.add_argument("out_json")
     p.add_argument("--procs", type=int, default=4)
     a = ap.parse_args(argv)
+    if a.cmd == "gate":
+        rep = gate_report(a.val_json, a.inj)
+        Path(a.out_json).write_text(json.dumps(_jsonable(rep), indent=1) + "\n")
+        for b, v in rep["bands"].items():
+            print(b, v["gate"], v["injection_limits"])
+        return
     if a.cmd == "library":
         build_library(a.band, a.prog, a.fields_json, a.out_pkl, a.max_fields)
     else:

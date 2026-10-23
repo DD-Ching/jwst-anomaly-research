@@ -59,3 +59,34 @@ print(
         if j["kind"] == "negative"
     ]
 )
+
+
+def injection_jobs(val: list[dict], zp: dict) -> list[dict]:
+    """PLAN section 5: Sersic injections into validation negative pairs 3 and 4 of each band."""
+    import w2_j2244_hst_rules as rules
+
+    out = []
+    k = 0
+    for band in ("F160W", "F814W"):
+        base = [
+            j
+            for j in val
+            if j["kind"] == "negative" and j["band"] == band and j["name"] in ("pair3", "pair4")
+        ]
+        for b in base:
+            for r_eff in rules.P.inj_reff:
+                for mag in rules.P.inj_mags[band]:
+                    j = dict(b)
+                    j["kind"] = "injection"
+                    j["name"] = f"{b['name']}_r{r_eff}_m{mag}"
+                    j["png"] = None
+                    j["zp_ab"] = zp[band]
+                    j["inject"] = {
+                        "mag": mag,
+                        "r_eff": r_eff,
+                        "frac": rules.P.inj_frac,
+                        "seed": 1000 + k,
+                    }
+                    out.append(j)
+                    k += 1
+    return out

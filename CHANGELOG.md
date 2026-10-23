@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: W2 J2244−0550 HST test: the frozen lenstronomy two-point-source + Sérsic chain fails validation in both bands; target not measured
+- **Plan:** `results/w2_j2244_hst/PLAN.md`. v1 was frozen before any control run, v2 (development settings and T)
+  before validation.
+- **Data:**
+  - target: GO 17455 F160W `if8a5k030` and GO 17308 F814W `jf56c1010` (S3 byte-range cutouts);
+  - star libraries from programme fields.
+- **Tool:** lenstronomy 1.14.2 PSO → PSF iteration → PSO, with a photutils ePSF, in an isolated environment.
+- **Validation** (`gate.json`):
+  - F814W: 2 / 6 close known lenses detected (≥ 80 % needed); 0 / 6 star-pair false detections.
+  - F160W: only 2 positives fall in the 0.7–1.8″ geometry, and the injection absorption check fails; 0 / 5 false
+    detections.
+  - Injections: F814W recovers r_eff 0.2–0.5″ Sérsic light only to 20–21 mag; F160W recovers none at 19–23 mag.
+- **Failed approach:** real-star pairs at the target's brightness give PSF-mismatch Δχ² up to 4592 (F814W) and 11780
+  (F160W), as large as a faint lens galaxy (SDSSJ2146−0047, 3825). The D-060 failure mode is confirmed with real
+  stars.
+- **Deviations:**
+  - traffic ≈ 28 GB estimated against a 3 GB budget (fsspec 5 MB read-ahead; fixed to 64 kB);
+  - Sérsic flux-unit fix after the runs (before / after kept);
+  - a worker restart (validation rerun identically).
+
 ## 2026-10-23: W2 DESI pairs evidence audit: J2351+1343 is misidentified; of the other 12 rejected pairs 2 have stronger ordinary explanations, 3 are disputed, 7 stay open; J2244−0550 (likely lens in its source paper) has public HST imaging with no published use found; the DESI classifier line stops
 - **Plan:** `results/w2_desi_pairs/evidence/PLAN.md`. Metadata and literature only: no spectrum read, and #472's
   statistic, T and verdict unchanged.

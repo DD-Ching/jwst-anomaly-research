@@ -1,0 +1,30 @@
+{
+ "label": "measured (session clock, stored per-job fit seconds) and estimated (traffic: traffic.json)",
+ "start_utc": "2026-10-23T06:23Z",
+ "end_utc": "(updated at merge)",
+ "budget": {
+  "wall_h": 4,
+  "cpu_h": 8,
+  "cores": 4,
+  "download_gb": 3
+ },
+ "cpu_fit_h_stored_runs": 0.8,
+ "cpu_note": "stored runs (development iteration 4, validation, injections: 75 jobs); development iterations 1-3 (30 jobs) and library builds not stored, estimated < 0.6 CPU-h together (not stored)",
+ "cores_used": 4,
+ "traffic_estimate_gb": 28.4,
+ "traffic_note": "budget exceeded about 9x; see traffic.json",
+ "worker_restart": "about 07:19 UTC; the validation run was killed and rerun identically (same seeds); the runner now appends results as they finish",
+ "isolated_env": [
+  "astropy==8.0.2",
+  "astroquery==0.4.11",
+  "emcee==3.1.6",
+  "fsspec==2026.9.0",
+  "lenstronomy==1.14.2",
+  "matplotlib==3.11.2",
+  "numpy==2.3.5",
+  "photutils==3.1.1",
+  "s3fs==2026.9.0",
+  "scipy==1.17.1",
+  "tqdm==4.70.1"
+ ]
+}

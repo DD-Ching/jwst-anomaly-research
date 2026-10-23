@@ -3734,6 +3734,24 @@ the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
   lens-light + point-source model (lenstronomy) keeps no-lens negative controls below 5σ while recovering ≥ 0.9 of
   controls. More negative controls need a library PSF or star-rich fields (the Gaia ePSF found ≥ 3 stars in 1 of 5).
 
+**Addendum (2026-10-23, J2244−0550 HST test, `results/w2_j2244_hst/RESULT.md`).**
+- **Decision:** the revisit route named above was tried on J2244−0550 (GO 17455 F160W, GO 17308 F814W) and does not
+  validate.
+  - The route: lenstronomy 1.14.2 with two point sources, with or without a Sérsic, and PSF iteration from a
+    programme-star ePSF.
+  - F814W detects 2 of 6 held-out close known lenses (≥ 80 % needed).
+  - F160W has 2 eligible positives and fails the injection absorption check.
+  - Neither band has a false detection among real-star negative pairs (0 / 5, 0 / 6). The thresholds that achieve
+    this (Δχ² 7774, 9185), set from development star pairs, miss faint lens galaxies.
+  - The target was not measured.
+- **Rejected:**
+  - raising or lowering T, or relaxing the 0.6″ centre rule, after validation;
+  - a second PSF method inside the unit.
+- **Revisit if:** an oversampled, per-exposure PSF route (STScI empirical PSF grids or forward modelling of the FLT /
+  FLC exposures) keeps real-star pairs at the target's brightness below a threshold that still recovers ≥ 80 % of
+  held-out ~1″ lenses. Or deeper / better-sampled imaging (JWST, AO) of J2244−0550 becomes public. Budget the
+  traffic: use small fsspec blocks.
+
 ## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)
 
 **Decision.** Do not use `gaiadr3.vari_microlensing` (Wyrzykowski et al. 2023) to limit W3: its Sample A selection

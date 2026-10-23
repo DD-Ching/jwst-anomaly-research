@@ -1775,3 +1775,15 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - CADC ObsCore TAP (HTTP 503, not checked).
 - **Identity:** ESA Gaia TAP (https://gea.esac.esa.int/tap-server/tap/sync, `gaiadr3.gaia_source`); NOIRLab Data
   Lab TAP (`desi_dr1.zpix`, `ls_dr10.tractor`).
+
+## W2 J2244−0550 HST test (accessed 2026-10-23; `results/w2_j2244_hst/`)
+- **HST products:** pipeline drizzled products (calwf3 / calacs) read as byte-range cutouts from the public AWS copy
+  `https://stpubdata.s3.amazonaws.com/hst/public/<ipppss>/<obs_id>/<obs_id>_{drz,drc}.fits`. ETags are in
+  `products.json`.
+  - Target: `if8a5k030` (GO 17455, PI Shen, WFC3/IR F160W, 2024-07-05) and `jf56c1010` (GO 17308, PI Lemon, ACS/WFC
+    F814W, 2024-08-31).
+  - Controls are listed in `runs/*.json`.
+- **Programme field lists:** MAST CAOM (`astroquery.mast.Observations`), proposals 17455, 17199, 17308 and 9744.
+  Star libraries: Gaia DR3 via ESA Gaia TAP (`library_*.json` lists fields and Gaia source ids).
+- **Software** (isolated uv environment): lenstronomy 1.14.2 (Birrer & Amara 2018; Birrer et al. 2021, JOSS 6,
+  3283), photutils 3.1.1 `EPSFBuilder`, astropy 8.0.2, fsspec 2026.9.0.

@@ -1,0 +1,157 @@
+{
+ "label": "observed (S3 object metadata by HEAD request; no download)",
+ "products": [
+  {
+   "role": "target",
+   "obs_id": "if8a5k030",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a5k030/if8a5k030_drz.fits",
+   "etag": "9294b5d74849430f758062c532784da3",
+   "bytes": 3366720,
+   "last_modified": "Fri, 17 Jul 2026 02:43:04 GMT"
+  },
+  {
+   "role": "target",
+   "obs_id": "jf56c1010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf56c1010/jf56c1010_drc.fits",
+   "etag": "270d7753586382f66c489858b1ad3753",
+   "bytes": 214859520,
+   "last_modified": "Sun, 24 May 2026 01:43:26 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "iexj02030",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/iexj/iexj02030/iexj02030_drz.fits",
+   "etag": "9a0a7713bb1a70f3cce56d3bf389a9c4",
+   "bytes": 13345920,
+   "last_modified": "Wed, 15 Jul 2026 15:48:30 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "iexj04030",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/iexj/iexj04030/iexj04030_drz.fits",
+   "etag": "0bead73fd464bca86bb40c89f49a169a",
+   "bytes": 13345920,
+   "last_modified": "Wed, 15 Jul 2026 16:08:48 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "iexj07030",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/iexj/iexj07030/iexj07030_drz.fits",
+   "etag": "8503dc552bbef97de90fb37c0491fa8f",
+   "bytes": 13345920,
+   "last_modified": "Wed, 15 Jul 2026 13:58:18 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "if8a61030",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a61030/if8a61030_drz.fits",
+   "etag": "2614de328d18bb4ec3a06ef8533b29c9",
+   "bytes": 3366720,
+   "last_modified": "Fri, 17 Jul 2026 02:44:01 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "if8a70030",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a70030/if8a70030_drz.fits",
+   "etag": "41c9c53ec764acce857f579a3c31ede8",
+   "bytes": 3366720,
+   "last_modified": "Fri, 17 Jul 2026 03:30:29 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf5608010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf5608010/jf5608010_drc.fits",
+   "etag": "015e63a21d64450c255dc6ff9016663b",
+   "bytes": 215015040,
+   "last_modified": "Thu, 23 Jul 2026 20:49:12 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf560v010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf560v010/jf560v010_drc.fits",
+   "etag": "8252cc6ad82b585b1b45e2221ba7752f",
+   "bytes": 214963200,
+   "last_modified": "Sun, 24 May 2026 02:55:34 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf5614010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf5614010/jf5614010_drc.fits",
+   "etag": "066380672494762387e97f93d1b06e58",
+   "bytes": 214911360,
+   "last_modified": "Sun, 24 May 2026 02:56:14 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf561b010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf561b010/jf561b010_drc.fits",
+   "etag": "eda4f5b2e3bf3faf15e9b855b8b6590b",
+   "bytes": 214963200,
+   "last_modified": "Sun, 24 May 2026 02:57:32 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf561d010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf561d010/jf561d010_drc.fits",
+   "etag": "ec2215289816dd396775076164e3d3aa",
+   "bytes": 214963200,
+   "last_modified": "Sun, 24 May 2026 02:57:29 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf5626010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf5626010/jf5626010_drc.fits",
+   "etag": "f2753eb743aa67bfbeca7d9c03e5b564",
+   "bytes": 214963200,
+   "last_modified": "Sun, 24 May 2026 03:21:30 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf562i010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf562i010/jf562i010_drc.fits",
+   "etag": "841e954ac7a7862c974645854397ef87",
+   "bytes": 214911360,
+   "last_modified": "Sun, 24 May 2026 03:23:21 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf564o010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf564o010/jf564o010_drc.fits",
+   "etag": "ca5977da5d1d52bea3530ad1ea017675",
+   "bytes": 214911360,
+   "last_modified": "Sun, 24 May 2026 00:23:48 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf566w010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf566w010/jf566w010_drc.fits",
+   "etag": "bf5741c514a1a9951b4cab8234e0a378",
+   "bytes": 214963200,
+   "last_modified": "Sun, 24 May 2026 00:22:32 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf568l010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf568l010/jf568l010_drc.fits",
+   "etag": "b2a3be2fbe54e904c47e689cefda104f",
+   "bytes": 214911360,
+   "last_modified": "Sun, 31 May 2026 16:21:54 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf569p010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf569p010/jf569p010_drc.fits",
+   "etag": "4cf0a4d5b4a449ffd8113367a3b635d4",
+   "bytes": 214963200,
+   "last_modified": "Sun, 31 May 2026 16:23:37 GMT"
+  },
+  {
+   "role": "positive_controls",
+   "obs_id": "jf56a4010",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/jf56/jf56a4010/jf56a4010_drc.fits",
+   "etag": "a79ad044b5f8384449dbd3810adfed49",
+   "bytes": 214911360,
+   "last_modified": "Sun, 31 May 2026 16:23:19 GMT"
+  }
+ ]
+}
