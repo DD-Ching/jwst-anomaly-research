@@ -1,0 +1,48 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: paper_id, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: a, datatype: float64}
+# - {name: z, datatype: float64}
+# - {name: z_spec, datatype: bool}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'Dhanasingham et al. 2026, arXiv:2604.11882, Appendix B table Systems_RA_and_dec (S3-1 / S3-2 at system 3''s z and ''--''
+#     rows at their family z, as the paper states; SN 2022riv row left out)'}
+# schema: astropy-2.0
+image_id system paper_id ra dec a z z_spec
+1.1 1 1a 322.414923 0.0904156 1.0 0.6786 True
+1.2 1 1b 322.4151893 0.0889741 1.0 0.6786 True
+1.3 1 1c 322.416653 0.086753 1.0 0.6786 True
+2.1 2 2a 322.4146395 0.0923864 1.0 0.916 True
+2.2 2 2b 322.4162941 0.0881023 1.0 0.916 True
+2.3 2 2c 322.4165862 0.0877771 1.0 0.916 True
+3.1 3 3a 322.4159519 0.0915111 1.0 1.5194 True
+3.2 3 3b 322.4173436 0.0906621 1.0 1.5194 True
+3.3 3 3c 322.4169561 0.0903403 1.0 1.5194 True
+3.4 3 3d 322.4185684 0.0849278 1.0 1.5194 True
+4.1 4 4a 322.4155685 0.0921535 1.0 1.5202 True
+4.2 4 4b 322.4174895 0.0901781 1.0 1.5202 True
+4.3 4 4c 322.4184261 0.0853785 1.0 1.5202 True
+5.1 5 5a 322.4179753 0.093272 1.0 1.521 True
+5.2 5 5b 322.4201821 0.0897722 1.0 1.521 True
+5.3 5 5c 322.4204071 0.0883142 1.0 1.521 True
+6.1 6 6a 322.4137586 0.0941984 1.0 3.0815 True
+6.2 6 6b 322.4167395 0.0877614 1.0 3.0815 True
+6.3 6 6c 322.4169923 0.0873924 1.0 3.0815 True
+7.1 7 7a 322.4137266 0.0920863 1.0 3.427 True
+7.2 7 7b 322.4144323 0.0886347 1.0 3.427 True
+7.3 7 7c 322.4175405 0.0838683 1.0 3.427 True
+G.1 G G1 322.4202364 0.0936441 1.0 9.51 True
+G.2 G G2 322.4215532 0.091694 1.0 9.51 True
+G.3 G G3 322.4224106 0.0889363 1.0 9.51 True
+S3-1.1 S3-1 S3-1a 322.4163448 0.0912444 1.0 1.5194 True
+S3-1.2 S3-1 S3-1b 322.4161198 0.0911278 1.0 1.5194 True
+S3-1.3 S3-1 S3-1c 322.4163198 0.0907945 1.0 1.5194 True
+S3-2.1 S3-2 S3-2a 322.4169115 0.0905028 1.0 1.5194 True
+S3-2.2 S3-2 S3-2b 322.4167364 0.0904193 1.0 1.5194 True
+S3-2.3 S3-2 S3-2c 322.4165032 0.0905862 1.0 1.5194 True

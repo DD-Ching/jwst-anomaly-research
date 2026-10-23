@@ -1,0 +1,91 @@
+{
+ "images": {
+  "n": 31,
+  "families": 10,
+  "source": "Dhanasingham et al. 2026, arXiv:2604.11882, Appendix B table Systems_RA_and_dec"
+ },
+ "stage1_gate_K": {
+  "images": 31,
+  "spectroscopic": 31,
+  "rxj2129-lenstool-maps": {
+   "model_sha256": "f5861958e876f2017a026c8dccdfbca382cf61205134170804d77a967643655b",
+   "gate_K": {
+    "n_images": 31,
+    "rms_arcsec": 0.4494622453782549,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "extra_predicted": {
+    "2": [
+     3,
+     5
+    ],
+    "3": [
+     4,
+     7
+    ],
+    "4": [
+     3,
+     5
+    ],
+    "5": [
+     3,
+     4
+    ],
+    "S3-1": [
+     3,
+     5
+    ],
+    "S3-2": [
+     3,
+     5
+    ]
+   },
+   "fewer_predicted": {},
+   "post_hoc": {
+    "dropped": [],
+    "leave_one_out_rms": {},
+    "held_out_offset": {},
+    "gate_K_without_dropped": {
+     "n_images": 31,
+     "rms_arcsec": 0.4494622453782549,
+     "matched_fraction": 1.0,
+     "passes": true
+    },
+    "families_refit": {}
+   }
+  },
+  "passing_models": [
+   "rxj2129-lenstool-maps"
+  ],
+  "flags": []
+ },
+ "stage1_reference_inputs": {
+  "reachable": true,
+  "bytes": 9152640,
+  "rows": 3295,
+  "n_columns": 391,
+  "missing": [],
+  "aper_1_pix": 12.50002500000008,
+  "passes": true,
+  "url": "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/rxj2129-grizli-v7.0-fix_phot.fits"
+ },
+ "rules": {
+  "K_MAX_RMS_ARCSEC": 1.0,
+  "K_MIN_MATCHED": 0.8,
+  "MATCH_ARCSEC": 3.0,
+  "grid_step_arcsec": 0.25
+ },
+ "per_family_rms_arcsec": {
+  "1": 0.48800169538048954,
+  "2": 0.43765334977026643,
+  "3": 0.19834089236902186,
+  "4": 0.26063019812226845,
+  "5": 0.19408639406337927,
+  "6": 0.3436748934904211,
+  "7": 0.4571072402684561,
+  "G": 0.346127108145961,
+  "S3-1": 0.7838516842687984,
+  "S3-2": 0.6621775342443803
+ }
+}

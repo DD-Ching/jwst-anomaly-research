@@ -798,6 +798,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     (https://stpubdata.s3.amazonaws.com/jwst/public/jw02767/L3/t/o002/, sha256 `2ed1a2c7666734483974e568e1c3b332eea223ea487b4cd279dd89b4e9261f53`)
     and DJA v7.0 https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/rxj2129-grizli-v7.0-fix.photoz.tar.gz (member
     `…eazypy.zout.fits`, sha256 `651c0b24f09bafa27c36a2285f081d42884be3c6dcbbb1708014339afa726217`);
+    image list: the paper's Appendix B table `Systems_RA_and_dec` read from the arXiv source
+    (https://arxiv.org/e-print/2604.11882, accessed 2026-10-23), transcribed in `scripts/rxj2129_djaref.py`;
+    DJA v7.0 photometry https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/rxj2129-grizli-v7.0-fix_phot.fits
+    (9,152,640 B, headers read 2026-10-23; v7.1–v7.5 return 403);
   - MRG0138 (Ertl et al. 2025, arXiv:2503.09694; Suyu et al. 2025, arXiv:2509.12319), RXCJ0600 (Furtak et al.
     2024, arXiv:2404.03286): JWST-era models without public maps; rj0018p1626: no JWST-era model found (RELICS
     HST-era maps only).

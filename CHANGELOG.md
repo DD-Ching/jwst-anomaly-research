@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: RXJ2129 reference-catalogue route, stage 1: gate K passes (rms 0.449″, 31 / 31); DJA v7.0 reference has the stage-2b columns
+- **Why RXJ2129, not WHL0137:** WHL0137's only JWST-era image list covers systems 1–2, already tested with four
+  RELICS models (D-033 addendum 4, 0 flags), and its JWST-era model has an undocumented deflection unit. RXJ2129
+  has a JWST-era Lenstool model with public maps and the image list it was fitted to (Dhanasingham+2026, Appendix B;
+  the Zenodo zip has no image list).
+- **Plan:** `results/lens_consistency/rxj2129_djaref/PLAN_1.md`, frozen and pushed before the run. Script
+  `scripts/rxj2129_djaref.py` (transcription unit-tested, `tests/test_rxj2129_djaref.py`).
+- **Result** (`RESULT.md`, `summary.json`): gate K passes on 31 spec-z images in 10 families; DJA v7.0 header check
+  passes (3,295 rows; headers only); 6 families with more predicted than catalogued images (stage-2 inputs, not
+  read). D-034 addendum t.
+- **Data:** Lenstool members range-read from the Zenodo zip (≈ 300 MB cache, deleted at session end).
+- **Handoff:** next is RXJ2129 stage 2 under a frozen plan with El Gordo stage 2b's rules (F200W tile footprint
+  check first; program 2767 `o002_t001`).
+
 ## 2026-10-23: SMACS 0723 reference-catalogue route, stage 2: gate C2 fails (16 / 23, arc 7 / 12); no flag read
 - **Plan:** `results/lens_consistency/smacs_djaref/PLAN_2.md`, frozen before any read (El Gordo stage 2b's rules;
   deviations D1–D3: all 60 images, z-edge family 8 not flaggable, fixed / fitted z labels; D2 / D3 unit-tested).
