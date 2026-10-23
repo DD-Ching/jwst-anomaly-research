@@ -75,6 +75,25 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   "$(python -c 'import certifi; print(certifi.where())')" > ca.pem; export SSL_CERT_FILE=ca.pem`.
 - **Handoff:** resume with `python scripts/m0416_d115_sigma_scan.py` (skips finished tasks); better on the owner
   machine (setup paid once). Alternatively freeze a reduced family set before reading more results.
+## 2026-10-23: W2 DESI pairs: spectra of both components exist for 13 rejected lensed-quasar pairs, but the frozen spectral test flags only 1 of 7 catalogued binaries (gate needs ≥ 70 %); no pair classified
+- **Route choice** (`results/w2_desi_pairs/PLAN.md` §0; 23:47–00:08 UTC) between three options:
+  - W2 HST lens-light refit: rejected, most targets are STRIDES quads with modelled lens galaxies;
+  - Sunrise n0153 new epoch: rejected, no public epoch after VENUS 2025-07, and its open question (AGN flare vs SN)
+    is ordinary-transient vetting;
+  - DESI DR1 spectra of both images: chosen.
+- **Data:** DESI DR1 (Data Lab TAP, SPARCL; anonymous) has QSO spectra of both components for 13 rejected pairs
+  (incl. J0130+0725, J0728+2607), 9 lenses and 7 Hennawi binaries (θ ≤ 10″).
+- **Result** (`gate.json`, `controls_sheet.png`): the frozen per-pixel profile χ²_ν test (free scale, T = 3).
+  - 9 / 9 lenses "one source" (8 of them at ≤ 2″, where fibre crosstalk may help); 1 / 7 binaries "two spectra",
+    against ≥ 70 % required.
+  - The gate fails, so 11 of the 13 rejected pairs were not retrieved or read.
+  - The other 2 share their DESI TARGETIDs with Hennawi controls and were read only in that role, as "one source".
+- **Failed approach:** a mean per-pixel χ² of broad-line profiles flagged 1 of 7 catalogued binaries (catalogued
+  |dV| 10–350 km/s).
+  - Post hoc (not used): profile Δv is 0–86 km/s for the 9 lenses and 170–579 km/s for 6 of 7 binaries.
+  - DESI pipeline Δz does not separate them: one lens has −0.0054.
+- **Next:** only a new pre-registered statistic with fresh controls; D-064 addendum.
+
 ## 2026-10-22: W3 ZTF × ATLAS dip check, post-review G2 check: one common-mode exposure, two undetermined rows in exposures whose comparison stars scatter > 5 σ both ways; no variability supported by independent exposures; check line closed
 - **Plan:** `results/w3_ztf/atlas_dips/PLAN.md` §3. A post-review supplementary check, not blind. #470's selection,
   checks and deviation record are kept.

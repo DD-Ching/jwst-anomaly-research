@@ -1,0 +1,181 @@
+{
+ "label": "SPARCL DESI-DR1 retrievals (observed spectra; line windows kept)",
+ "entries": [
+  {
+   "name": "J0440-0905",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "5ff0a3b7-89ba-11ef-8cfe-525400f334e1",
+    "b": "5409b35a-89ba-11ef-a315-525400f334e1"
+   },
+   "bytes": 43671,
+   "utc": "2026-10-23T00:40:06Z"
+  },
+  {
+   "name": "J1037+0018",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "2a7909e0-879c-11ef-923f-525400f334e1",
+    "b": "2cbc8d9b-879c-11ef-b118-525400f334e1"
+   },
+   "bytes": 40354,
+   "utc": "2026-10-23T00:40:12Z"
+  },
+  {
+   "name": "J1550+0221",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "dff4ba38-894a-11ef-bae6-525400f334e1",
+    "b": "e2bac882-894a-11ef-9143-525400f334e1"
+   },
+   "bytes": 43950,
+   "utc": "2026-10-23T00:40:17Z"
+  },
+  {
+   "name": "J074653.03+440351.3",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "a9bdb895-8b38-11ef-9c7e-525400f334e1",
+    "b": "b15df902-8b38-11ef-9c7a-525400f334e1"
+   },
+   "bytes": 42242,
+   "utc": "2026-10-23T00:40:22Z"
+  },
+  {
+   "name": "J121645.93+352941.6",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "e0f8faf6-88e5-11ef-ac71-525400f334e1",
+    "b": "f561c529-88e5-11ef-b315-525400f334e1"
+   },
+   "bytes": 42467,
+   "utc": "2026-10-23T00:40:27Z"
+  },
+  {
+   "name": "J092455.79+021924.9",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "fb289b16-8837-11ef-87ff-525400f334e1",
+    "b": "a8bb0e55-8b8a-11ef-a809-525400f334e1"
+   },
+   "bytes": 35467,
+   "utc": "2026-10-23T00:40:36Z"
+  },
+  {
+   "name": "J122608.02-000602.2",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "880db32d-86a6-11ef-9437-525400f334e1",
+    "b": "61fa7c08-866a-11ef-b55c-525400f334e1"
+   },
+   "bytes": 23060,
+   "utc": "2026-10-23T00:40:41Z"
+  },
+  {
+   "name": "J133534.79+011805.5",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "cb527f76-86df-11ef-acec-525400f334e1",
+    "b": "9a81885e-86df-11ef-a071-525400f334e1"
+   },
+   "bytes": 36028,
+   "utc": "2026-10-23T00:41:00Z"
+  },
+  {
+   "name": "J163348.98+313411.8",
+   "role": "control",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "333a45f7-882d-11ef-9a40-525400f334e1",
+    "b": "368bf946-86dc-11ef-b8e0-525400f334e1"
+   },
+   "bytes": 35560,
+   "utc": "2026-10-23T00:41:03Z"
+  },
+  {
+   "name": "SDSSJ0248+0009A+SDSSJ0248+0009B",
+   "role": "binary",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "1cdf8368-86c0-11ef-9160-525400f334e1",
+    "b": "a850ed22-877f-11ef-b3d7-525400f334e1"
+   },
+   "bytes": 37176,
+   "utc": "2026-10-23T00:41:33Z"
+  },
+  {
+   "name": "2QZJ1056-0059A+SDSSJ1056-0059B",
+   "role": "binary",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "c5db707f-8788-11ef-9430-525400f334e1",
+    "b": "ca12ffed-8788-11ef-a0b0-525400f334e1"
+   },
+   "bytes": 44137,
+   "utc": "2026-10-23T00:41:36Z"
+  },
+  {
+   "name": "SDSSJ1432-0106A+SDSSJ1432-0106B",
+   "role": "binary",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "77280148-85d3-11ef-a349-525400f334e1",
+    "b": "8b3bc7f7-85d3-11ef-af8e-525400f334e1"
+   },
+   "bytes": 43738,
+   "utc": "2026-10-23T00:41:41Z"
+  },
+  {
+   "name": "SDSSJ2348+0057A+SDSSJ2348+0057B",
+   "role": "binary",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "14d762b8-8841-11ef-9243-525400f334e1",
+    "b": "2741f66c-8841-11ef-92a3-525400f334e1"
+   },
+   "bytes": 44684,
+   "utc": "2026-10-23T00:41:45Z"
+  },
+  {
+   "name": "SDSSJ0740+2926A+SDSSJ0740+2926B",
+   "role": "binary",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "680d2c56-8b6b-11ef-95c8-525400f334e1",
+    "b": "40192709-8b6b-11ef-8c80-525400f334e1"
+   },
+   "bytes": 36986,
+   "utc": "2026-10-23T00:41:49Z"
+  },
+  {
+   "name": "SDSSJ1035+0752A+SDSSJ1035+0752B",
+   "role": "binary",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "1967ccb0-886d-11ef-8f38-525400f334e1",
+    "b": "0e25de7f-886d-11ef-aff5-525400f334e1"
+   },
+   "bytes": 23986,
+   "utc": "2026-10-23T00:41:54Z"
+  },
+  {
+   "name": "SDSSJ1508+3328A+SDSSJ1508+3328B",
+   "role": "binary",
+   "status": "ok",
+   "sparcl_ids": {
+    "a": "2575f1f4-868f-11ef-a4cf-525400f334e1",
+    "b": "c1e9abe0-882b-11ef-aaa9-525400f334e1"
+   },
+   "bytes": 36770,
+   "utc": "2026-10-23T00:42:01Z"
+  }
+ ]
+}
