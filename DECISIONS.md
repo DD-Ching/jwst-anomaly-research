@@ -3742,7 +3742,7 @@ the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
   - v3 (after two implementation fixes from the review): F814W detects 2 of 6 held-out close known lenses (≥ 80 %
     needed); F160W has 2 eligible positives (3 needed). The v2 run failed the same way.
   - Neither band has a false detection among 6 real-star negative pairs. The thresholds that achieve this (Δχ² 27203,
-    10931), set from development star pairs, miss faint lens galaxies: real-star pairs reach Δχ² 13601.5 (F160W) and
+    10931), set from development star pairs, miss known lenses: real-star pairs reach Δχ² 13601.5 (F160W) and
     6468.4 (F814W), and 4 of 8 fitted F814W lenses at 0.93–1.60″ fall below the latter.
   - The target was not measured.
 - **Rejected:**
@@ -3750,9 +3750,9 @@ the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
   - a second PSF method inside the unit.
 - **Untested reasons** (RESULT §7): PSF halo beyond the 41 px / 21 px kernel; two-field PSFs in the star pairs;
   non-nested M0 / M1 fits; brightness matched in Gaia G only.
-- **Revisit if:** an oversampled, per-exposure PSF route (STScI empirical PSF grids or forward modelling of the FLT /
-  FLC exposures) keeps real-star pairs at the target's brightness below a threshold that still recovers ≥ 80 % of
-  held-out ~1″ lenses. Or deeper / better-sampled imaging (JWST, AO) of J2244−0550 becomes public. Budget the
+- **Revisit if:** a different PSF route or kernel size (e.g. a larger kernel; STScI empirical PSF grids or forward
+  modelling of the FLT / FLC exposures) keeps real-star pairs at the target's brightness below a threshold that still
+  recovers ≥ 80 % of held-out ~1″ lenses. Or deeper / better-sampled imaging (JWST, AO) of J2244−0550 becomes public. Budget the
   traffic: use small fsspec blocks.
 
 ## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)

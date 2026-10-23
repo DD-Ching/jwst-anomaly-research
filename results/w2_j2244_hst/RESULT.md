@@ -42,7 +42,7 @@
 
 | band | development negatives Δχ² (reduced χ²) | T | development positives Δχ² → status |
 |---|---|---|---|
-| F160W | 13601.5 (7.8), 649.3 (9.6), 1750.7 (2.3) | **27203.0** | J0743 2742.9 → none; J0818 957.6 → none |
+| F160W | 13601.5 (7.8), 649.3 (9.6), 1750.7 (2.3) | **27202.9** | J0743 2742.9 → none; J0818 957.6 → none |
 | F814W | 64.9 (7.9), 5465.4 (2.6), 805.3 (1.0) | **10930.8** | J0743 2249.0 → none; J0818 3119.8 → none |
 
 - **Stated before validation (PLAN v3):** all four development positives are below T, so both bands were expected to
@@ -53,10 +53,13 @@
   - Excluded: F160W SDSSJ1620+1203 (2.27″); F814W ULASJ0820+0812 (2.23″), SDSSJ0946+1835 (3.06″), SDSSJ1640+1932
     (2.46″) and WGD2021−4115 (2.74″).
   - Deviation: the plan's "third peak" exclusion was not implemented. Only the separation was applied.
+    VDESJ2325−5229 shows three compact sources (`png/val_F160W_VDESJ2325-5229.png`; one point source sits on the
+    central galaxy), so that rule would have excluded it and left F160W with 1 eligible positive. The F160W gate
+    fails either way.
 
 | band | T | eligible positives: Δχ² → status | negatives (pairs 3–8): Δχ² → status | gate |
 |---|---|---|---|---|
-| F160W | 27203.0 | SDSSJ0806+2006 35254.2 → extended light; VDESJ2325−5229 18190.8 → none | 1947.7, 2033.2, 2549.7, 436.4, 7613.2, 1338.3 → none | **fail**: 2 eligible positives < 3 (1 detected) |
+| F160W | 27202.9 | SDSSJ0806+2006 35254.2 → extended light; VDESJ2325−5229 18190.8 → none | 1947.7, 2033.2, 2549.7, 436.4, 7613.2, 1338.3 → none | **fail**: 2 eligible positives < 3 (1 detected) |
 | F814W | 10930.8 | J0140−1152 184500.3 and DESI-011.9124+03.3756 19529.6 → extended light; SDSSJ0114+0722 24738.4 and 022418+024703 40135.9 → offset (0.65″, 0.85″ > 0.6″); SDSSJ2146−0047 1130.0 and 144320−012537 828.8 → none | 962.3, 4104.7, 2469.1, 6468.4, 2174.0, 1478.5 → none | **fail**: 2 / 6 detected (Wilson 0.10–0.70) < 80 % |
 
 - **Fit quality:** reduced χ²(M1) 0.7–4.5 for the eligible positives and 1.0–9.6 for all negative pairs in both bands
@@ -90,13 +93,13 @@
   - No second method was tried and no threshold was changed.
 
 ## 7. What the failure shows (descriptive; numbers in `runs/*.json`)
-- **Real-star mismatch and faint lens light give overlapping Δχ².**
+- **Real-star mismatch and lens light give overlapping Δχ².**
   - Real-star pairs matched to the target's Gaia brightness (G 17.58–18.42) reach Δχ² 13601.5 in F160W (development
     pair 0) and 6468.4 in F814W (validation pair 6).
   - Of the 8 fitted F814W lenses at 0.93–1.60″ (6 validation, 2 development), 4 fall below 6468.4: SDSSJ2146−0047
     1130.0, 144320−012537 828.8, ULASJ0743+2457 2249.0 and SDSSJ0818+0601 3119.8.
-  - In F160W, 2 of the 4 fitted lenses fall below 13601.5 (the two development positives).
-  - So in this implementation Δχ² does not separate faint lens light from star-to-star PSF mismatch. This is
+  - In F160W, 2 of the 4 lenses within the geometry rule fall below 13601.5 (the two development positives).
+  - So in this implementation Δχ² does not separate the lens light of these lenses from star-to-star PSF mismatch. This is
     consistent with the D-060 failure mode, now measured with real stars instead of a PSF model.
 - **Scope:** this is a failure of this implementation and settings, not of lenstronomy or of the data in general.
 - **Possible reasons, none tested:**
@@ -106,7 +109,7 @@
     target's images share one PSF. But F814W pair 6, both stars from one field (`library_17308_F814W.json`), has the
     largest validation Δχ² (6468.4).
   - **Non-nested fits.** M0 and M1 run separate PSF iterations, so Δχ² is not a likelihood ratio and can be negative
-    (SDSSJ1620+1203: −10387.8).
+    (v2 F160W pair 8: −2666.6, `runs/val_v2run.json`).
   - **Brightness matched in Gaia G only.** The pairs' F160W brightness relative to the target's images was not
     checked.
 - **The point-source position rule (0.15″) matches the fit's bound** (a ±0.15″ box per image), so it can fire only
@@ -117,6 +120,10 @@
   1. The PSF error term was zero (`keep_psf_variance_map: True` restored the absent initial variance map).
   2. The F814W saturation cut used 674 s instead of 337 s per exposure, so every star at the target's brightness was
      flagged saturated and the F814W PSFs came from G 19–21 stars only.
+  - **Caveat on fix 1 (from the re-check):** lenstronomy keeps the estimated variance map only when a PSF-iteration
+    step is accepted. SDSSJ1620+1203's M1 fit is identical in v2 and v3 (χ²(M1) 49944.0), so it kept the zero map.
+    The outputs do not record which fits accepted a step. SDSSJ1620+1203 is excluded by geometry, so no gate
+    changes.
 - **v2 thresholds:** F160W 7774.3, F814W 9184.5 (`runs/dev_v2run.json`; iteration 3 in `runs/dev_v2_iter3.json`).
 - **v2 gate:**
   - F160W failed: 2 eligible positives (SDSSJ0806+2006 extended light, VDESJ2325−5229 offset), and the absorption
@@ -134,8 +141,8 @@
 
 ## 9. Deviations and corrections
 - **Traffic budget exceeded (estimate ≈ 28.5 GB against 3 GB; `traffic.json`).**
-  - Cause: fsspec's 5 MB read-ahead block made each ACS star cutout cost about 21 MB, and the F814W star library was
-    built four times (the first build crashed at field 3).
+  - Cause: fsspec's 5 MB read-ahead block made each ACS star candidate cost ≈ 12.5 MB (21 MB for one full cutout),
+    and the F814W star library was built four times (the first build crashed at field 3).
   - No image data was kept on disk. The code now uses 64 kB blocks (one cutout 21 → 4.1 MB).
   - A worker restart reset the network counter, so the figure is estimated from Gaia candidate counts
     (`traffic_candidates.json`) times the measured traffic per candidate.

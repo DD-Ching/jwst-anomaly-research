@@ -213,3 +213,6 @@ review then found two implementation errors that make the v2 run differ from the
 - **File names:** the v2-run outputs were renamed after the review, so the references above to `runs/dev.json`,
   `runs/val.json`, `runs/inj.json`, `gate.json` and `runs/dev_iter3.json` now point to `runs/*_v2run*.json`,
   `gate_v2run.json` and `runs/dev_v2_iter3.json`. The v3 outputs carry the original names.
+- **Errata (after the v3 runs, from the re-check):** the stored F160W T is 27202.92 (`runs/dev_v3.json`), shown as
+  27203.0 above. Fix 1 keeps the estimated variance map only when a PSF-iteration step is accepted, and the outputs
+  do not record which fits that was (RESULT §8).

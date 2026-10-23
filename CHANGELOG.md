@@ -9,7 +9,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - target: GO 17455 F160W `if8a5k030` and GO 17308 F814W `jf56c1010` (S3 byte-range cutouts);
   - star libraries from programme fields.
 - **Tool:** lenstronomy 1.14.2 PSO → PSF iteration → PSO, with a photutils ePSF, in an isolated environment.
-- **v3 validation** (`gate.json`; T F160W 27203.0, F814W 10930.8 from development star pairs):
+- **v3 validation** (`gate.json`; T F160W 27202.9, F814W 10930.8 from development star pairs):
   - F814W: 2 / 6 close known lenses detected (≥ 80 % needed); 0 / 6 star-pair false detections.
   - F160W: only 2 positives fall in the 0.7–1.8″ geometry (3 needed), 1 detected; 0 / 6 false detections.
   - Injections: F814W recovers r_eff 0.2–0.5″ Sérsic light only at 20 mag; F160W recovers none at 19–23 mag. The
