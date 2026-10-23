@@ -58,3 +58,52 @@ def test_best_pair_matches_catalogued_separation():
     best = wd.best_pair(rows, 2.05)
     assert best is not None and abs(best[3] - 2.0) < 0.01
     assert wd.best_pair(rows, 5.0) is None
+
+
+def test_gate_counts_and_wilson():
+    g = wd.gate_counts([1.0] * 9, [1.2] * 6 + [3.6])
+    assert (g["G1"], g["G2"], g["G3"], g["passed"]) == (True, True, False, False)
+    assert g["positive_consistent"] == 9 and g["negative_different"] == 1
+    lo, hi = wd.wilson(1, 7)
+    assert abs(lo - 0.0257) < 1e-3 and abs(hi - 0.5131) < 1e-3
+    assert wd.gate_counts([1.0] * 5, [5.0] * 9)["G1"] is False  # fewer than 6 usable lenses
+    assert wd.gate_counts([1.0] * 8 + [4.0, 4.0], [5.0] * 7)["G2"] is True  # 8 / 10 = 0.8 passes
+    assert wd.gate_counts([1.0] * 7 + [4.0] * 3, [5.0] * 7)["G2"] is False
+
+
+def test_ra_wrap_boxes_and_local_filter():
+    cl = wd._clauses((359.9995, 1.0, 3.0))
+    assert len(cl) == 2  # split at RA 0 / 360
+    wd.ZPIX[:] = [
+        {
+            "targetid": "1",
+            "mean_fiber_ra": "0.0002",
+            "mean_fiber_dec": "1.0",
+            "spectype": "QSO",
+            "zwarn": "0",
+        },
+        {
+            "targetid": "2",
+            "mean_fiber_ra": "359.9996",
+            "mean_fiber_dec": "1.0",
+            "spectype": "QSO",
+            "zwarn": "0",
+        },
+        {
+            "targetid": "3",
+            "mean_fiber_ra": "0.01",
+            "mean_fiber_dec": "1.0",
+            "spectype": "QSO",
+            "zwarn": "0",
+        },
+        {
+            "targetid": "4",
+            "mean_fiber_ra": "0.0001",
+            "mean_fiber_dec": "1.0",
+            "spectype": "STAR",
+            "zwarn": "0",
+        },
+    ]
+    got = {r["targetid"] for r in wd.zpix_near(359.9999, 1.0, 3.0)}
+    wd.ZPIX[:] = []
+    assert got == {"1", "2"}

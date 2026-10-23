@@ -1744,9 +1744,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   anonymous public access, data release `DESI-DR1`; SPARCL ids per spectrum in `fetch_log.json`).
 - Hennawi et al. 2006, AJ 131, 1, binary quasars (VizieR J/AJ/131/1/binqso; pinned in
   `data/manifests/w12_niq_inputs.json`, as D-064).
-- Route-choice literature (titles from search results 2026-10-23, not re-checked against arXiv):
+- Route-choice literature (checked by the independent reviewer 2026-10-23):
   - Schmidt et al. 2023, "STRIDES: automated uniform models for 30 quadruply imaged quasars", MNRAS 518, 1260
     (arXiv:2206.04696);
-  - "A Quasar Pair Sample Compiled from DESI DR1" (arXiv:2505.03103);
+  - Jing et al., "A Quasar Pair Sample Compiled from DESI DR1" (arXiv:2505.03103);
   - Lemon et al. 2023, "Gravitationally lensed quasars in Gaia – IV" (arXiv:2206.07714);
-  - "Search for Quasar Pairs with Gaia Astrometric Data. III" (arXiv:2607.00093).
+  - Chen et al., "Search for Quasar Pairs with Gaia Astrometric Data. III" (arXiv:2607.00093).

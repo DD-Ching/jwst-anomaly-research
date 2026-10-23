@@ -1,5 +1,5 @@
 {
- "label": "derived (control spectra only; no target retrieved)",
+ "label": "derived (control spectra only; no rejected-role spectrum retrieved; see overlap_rejected_with_controls)",
  "T": 3.0,
  "rules": {
   "min_controls": 6,
@@ -23,5 +23,65 @@
  "G1": true,
  "G2": true,
  "G3": false,
- "passed": false
+ "passed": false,
+ "close_pairs_le_2arcsec": [
+  {
+   "role": "control",
+   "name": "J0440-0905",
+   "sep_desi": 1.5515608718122929,
+   "D": 1.0876092814848068
+  },
+  {
+   "role": "control",
+   "name": "J1037+0018",
+   "sep_desi": 1.325253492399318,
+   "D": 1.300912430577517
+  },
+  {
+   "role": "control",
+   "name": "J074653.03+440351.3",
+   "sep_desi": 1.1250413220620643,
+   "D": 1.097167740028171
+  },
+  {
+   "role": "control",
+   "name": "J121645.93+352941.6",
+   "sep_desi": 1.4783145688212127,
+   "D": 1.0520784734891595
+  },
+  {
+   "role": "control",
+   "name": "J092455.79+021924.9",
+   "sep_desi": 1.7132749087517243,
+   "D": 1.024455687712621
+  },
+  {
+   "role": "control",
+   "name": "J122608.02-000602.2",
+   "sep_desi": 1.2024201281788718,
+   "D": 1.2355076834008096
+  },
+  {
+   "role": "control",
+   "name": "J133534.79+011805.5",
+   "sep_desi": 1.5527598744164304,
+   "D": 1.2677933515451718
+  },
+  {
+   "role": "control",
+   "name": "J163348.98+313411.8",
+   "sep_desi": 0.5992939302171578,
+   "D": 1.2734295675814113
+  }
+ ],
+ "overlap_rejected_with_controls": [
+  {
+   "rejected": "J074013.42+292645.8",
+   "control": "SDSSJ0740+2926A+SDSSJ0740+2926B"
+  },
+  {
+   "rejected": "J103519.22+075256.3",
+   "control": "SDSSJ1035+0752A+SDSSJ1035+0752B"
+  }
+ ]
 }

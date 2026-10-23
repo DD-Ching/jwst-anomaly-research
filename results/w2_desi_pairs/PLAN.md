@@ -113,3 +113,13 @@ Three options were compared:
   - SPARCL refuses or changes the data;
   - the work turns into tool development (e.g. needing a deblended or PSF-corrected spectrum).
 - **Out of scope:** no expansion beyond this list if the gate passes, and no new search.
+
+## Errata (added at review, 2026-10-23; the frozen text above is unchanged)
+- **§0, Sunrise n0153:** "the only newer NIRCam epoch of the field is VENUS 6882" means no public NIRCam epoch of
+  WHL0137-08 after VENUS 6882 (2025-07-08) turned up in a MAST query of 2026-10-23 (not stored). VENUS is the epoch
+  that showed the brightening.
+- **§0, J0130+0725:** the cited paper (Chen et al., arXiv:2607.00093) used the same DESI DR1 spectra, so it is not
+  independent of this route.
+- **§2:** two rejected pairs share their DESI TARGETIDs with two Hennawi controls; the overlap was not foreseen
+  (RESULT §1).
+- **§4:** the close-pair list was missing from the first RESULT and was added at review.

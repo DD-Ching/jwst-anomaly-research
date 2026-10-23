@@ -3955,9 +3955,10 @@ spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ t
   through Data Lab TAP and SPARCL.
 - **Test:** a frozen spectral test, the mean per-pixel χ²_ν of continuum-normalised broad-line profiles with a free
   scale, T = 3.
-  - It passes on the lenses: 9 / 9 "one source".
+  - It passes on the lenses: 9 / 9 "one source" (8 of them at ≤ 2″, where fibre crosstalk may help).
   - It fails on the binaries: 1 / 7 "two spectra", with ≥ 70 % required.
-  - So it is not validated, and the rejected pairs' spectra were not retrieved or read.
+  - So it is not validated. 11 of the 13 rejected pairs' spectra were not retrieved or read. The other 2 share their
+    DESI TARGETIDs with two Hennawi controls and were read only in that role.
 - **Rejected:** changing T, the lines or the statistic after the gate; a Δv rule seen post hoc on the same controls.
 - **Revisit if:** a pre-registered statistic with power on broad, moderate differences (binned profiles, velocity
   offsets, narrow absorbers) is validated on fresh controls.

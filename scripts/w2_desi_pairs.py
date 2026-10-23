@@ -542,32 +542,60 @@ def wilson(k, n, zz=1.96):
     return [max(0.0, c - h), min(1.0, c + h)]
 
 
+def gate_counts(pos_d, neg_d):
+    """PLAN section 4: G1-G3 from the usable positive (lens) and negative (binary) D values."""
+    kp, kn = sum(d <= T_D for d in pos_d), sum(d > T_D for d in neg_d)
+    g1 = len(pos_d) >= GATE["min_controls"] and len(neg_d) >= GATE["min_controls"]
+    g2 = bool(pos_d) and kp / len(pos_d) >= GATE["pos_frac"]
+    g3 = bool(neg_d) and kn / len(neg_d) >= GATE["neg_frac"]
+    return {
+        "T": T_D,
+        "rules": GATE,
+        "usable_positive": len(pos_d),
+        "usable_negative": len(neg_d),
+        "positive_consistent": kp,
+        "negative_different": kn,
+        "positive_frac": kp / len(pos_d) if pos_d else None,
+        "positive_wilson95": wilson(kp, len(pos_d)),
+        "negative_frac": kn / len(neg_d) if neg_d else None,
+        "negative_wilson95": wilson(kn, len(neg_d)),
+        "G1": bool(g1),
+        "G2": bool(g2),
+        "G3": bool(g3),
+        "passed": bool(g1 and g2 and g3),
+    }
+
+
 def cmd_validate(args):
     out = Path(args.out)
     res = analyse(out, {"control", "binary"})
     pos = [r for r in res if r["role"] == "control" and r.get("D") is not None]
     neg = [r for r in res if r["role"] == "binary" and r.get("D") is not None]
-    kp, kn = sum(r["D"] <= T_D for r in pos), sum(r["D"] > T_D for r in neg)
-    g1 = len(pos) >= GATE["min_controls"] and len(neg) >= GATE["min_controls"]
-    g2 = bool(pos) and kp / len(pos) >= GATE["pos_frac"]
-    g3 = bool(neg) and kn / len(neg) >= GATE["neg_frac"]
     gate = {
-        "label": "derived (control spectra only; no target retrieved)",
-        "T": T_D,
-        "rules": GATE,
-        "usable_positive": len(pos),
-        "usable_negative": len(neg),
-        "positive_consistent": kp,
-        "negative_different": kn,
-        "positive_frac": kp / len(pos) if pos else None,
-        "positive_wilson95": wilson(kp, len(pos)),
-        "negative_frac": kn / len(neg) if neg else None,
-        "negative_wilson95": wilson(kn, len(neg)),
-        "G1": g1,
-        "G2": g2,
-        "G3": g3,
-        "passed": bool(g1 and g2 and g3),
+        "label": "derived (control spectra only; no rejected-role spectrum retrieved; see "
+        "overlap_rejected_with_controls)",
+        **gate_counts([r["D"] for r in pos], [r["D"] for r in neg]),
     }
+    # review additions (reported, not gating): PLAN section 4's close-pair list, and rejected
+    # pairs whose DESI TARGETIDs are also a control pair (their spectra were read as controls)
+    gate["close_pairs_le_2arcsec"] = [
+        {"role": r["role"], "name": r["name"], "sep_desi": r["sep_desi"], "D": r["D"]}
+        for r in pos + neg
+        if r["sep_desi"] <= 2.0
+    ]
+    P = json.load(open(out / "pairs.json"))["systems"]
+    ctl = {
+        frozenset((r["targetid_a"], r["targetid_b"])): r["name"]
+        for r in P
+        if r["role"] in ("control", "binary") and r["status"] == "pair"
+    }
+    gate["overlap_rejected_with_controls"] = [
+        {"rejected": r["name"], "control": ctl[frozenset((r["targetid_a"], r["targetid_b"]))]}
+        for r in P
+        if r["role"] == "rejected"
+        and r["status"] == "pair"
+        and frozenset((r["targetid_a"], r["targetid_b"])) in ctl
+    ]
     json.dump(gate, open(out / "gate.json", "w"), indent=1)
     (out / "gate.json").open("a").write("\n")
     json.dump(
