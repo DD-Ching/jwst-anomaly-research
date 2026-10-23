@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Abell 2744 UNCOVER-reference stage 2c: C2 passes in F277W and F356W; frozen flags 4.2 (the vetted 4.2c) and 78.3c (unvetted)
+- **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2c.md`, frozen with `outcome_2c` (unit-tested)
+  before any long-wavelength flux or pixel was read. Stage-2b rules per band on the committed stage-2b frame;
+  `to_cat_super` takes a band; the stage-2b loop moved unchanged into `_reference_run`.
+- **Result** (`RESULT.md` § Stage 2c, `summary.json` `stage2c`): gate C2 passes in both bands (arc-referenced 11 / 13
+  and 14 / 16). Flags: 4.2 (15.8 σ / 12.5 σ) and 78.3c (F356W 13.2 σ; F277W 9.4 σ, ambiguous). 4.2 is D-036's
+  vetted 4.2c; its sibling control 4.1c is also `absent` in all three bands. 78.3c is unvetted: the controls 78.1c and
+  78.2c, which use the same arc reference, are recovered. Contact sheet looked at (`sheet_2c.png`).
+- **Data:** DR3 SUPER re-streamed (sha256 matches); F277W / F356W SCI read by range stream into memory; nothing kept.
+- **Handoff:** PR #480 stays a draft (trial T2: unvetted hits stay on the claim PR). Next: `/vet-candidate` on 78.3c
+  (μ under ±30 % changes of member 20036 / group O4 / O9 in Bergamini+23, then the single-image identity of 78.3a).
+
 ## 2026-10-23: Abell 2744 UNCOVER-reference stage 2b: gate C2 passes (arc-referenced 11 / 13), no flag; 4.2 and 78.3 ambiguous just under 10 σ
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2b.md`, frozen with `to_cat_super` and
   `to_njy_per_pixel` (unit-tested) before the run. One GO 2561 tile (`o001_t003`) covers all images (footprint check),

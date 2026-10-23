@@ -112,7 +112,46 @@ flux against an aperture σ (lenient for extended images); no bCG-subtracted re-
 **Next.** A frozen follow-up of 78.3 and 4.2 on a bCG-subtracted image or a second band (F277W / F356W, same
 rules), or `/vet-candidate` only if a frozen rule flags them; not a re-read of this stage's thresholds.
 
-## Stage 2c (in progress)
+## Stage 2c: per-band re-test in F277W and F356W
 
-Second-band (F277W / F356W) frozen re-test of the stage-2b `ambiguous` targets 4.2 and 78.3 under unchanged rules;
-plan `PLAN_2c.md` to be frozen before any F277W / F356W pixel of these positions is read.
+Plan: `PLAN_2c.md` (frozen and pushed with `outcome_2c` and its unit test before the run). Numbers: `summary.json`
+`stage2c`; tables `f277w/`, `f356w/` (`predicted_` / `control_abell2744.ecsv`). Frame: the committed stage-2b tables.
+
+- **Gate C2 (shared pairs) passes in both bands:** F277W all 28 / 32, arc-referenced 11 / 13; F356W all 36 / 42,
+  arc-referenced 14 / 16.
+- **Frozen flags (rule 5):** F277W `4.2@3.579980,-30.408545`; F356W the same 4.2 position and
+  `78.3@3.575198,-30.355756` (78.3c below). **Outcome (rule 6):** `flag` for 4.2 and 78.3c; `present` for 26.1,
+  26.2 (×2) and 67.2; every other target `undetermined` (mostly `undetectable_local` / `no_reference`).
+- 4.2: `absent` in F277W (F_pred / σ_loc 15.8) and F356W (12.5); stage 2b F200W 9.7 (`ambiguous`).
+- 78.3c: F277W 9.4 σ (`ambiguous`), F356W 13.2 σ (`absent`); stage 2b F200W 8.7 σ. Brightest catalogue source in the
+  1″ circle: 9.6 % of F_pred in F356W (`max_ratio`).
+- 3.2 (both positions) stays `undetectable_local` in both bands.
+- **Reported, not rules:** without the local-noise rule both bands flag 3.2, 4.2 and 78.3c.
+
+**Contact sheet** (`sheet_2c.png`: F200W / F277W / F356W, 6″ stamps, 1″ circles; made by a session script, not
+stored; looked at):
+- 4.2 lies on the smooth halo of a bright member with no source in the circle; its reference 26191 is a compact knot
+  with extended structure.
+- 78.3c lies in a clean field; a compact source sits inside the circle near its edge (catalogue 51679, 0.73″,
+  F356W 9.6 % of F_pred).
+- The reference 54653 of system 78 is a long thin arc (`a_image` 115.9 px = 4.6″, `b_image` 10.2 px) next to a
+  bright member.
+
+**Ordinary explanations already on record; vetting not finished:**
+- **4.2 = 4.2c, vetted in D-036** (`docs/candidates/abell2744-family4-c.md`: μ systematics of the family 4 c images
+  next to member 34423). In this run the sibling control 4.1c (same reference 26191) is also `absent` in all three
+  bands (F_pred / σ_loc 11.2 / 11.6 / 16.5; `control_abell2744.ecsv`), so the deficit is shared by the catalogued c
+  image. Not a new flag.
+- **78.3c is not yet vetted.** Its reference 54653 is the arc that is also the counterpart of 78.1a and 78.2a, so
+  F_pred scales a shared arc. Yet the same reference predicts the controls 78.1c and 78.2c, about 1.5″ away (separation not stored), which are
+  `recovered` at 10.7 / 10.9 σ in F356W. Known ordinary routes from `../a2744_s700_vet` (system 78 = 700.1): a
+  member at 2.1″ and a group halo at 4.4″ make μ there depend on the local mass; 78.3 has a single catalogued image
+  (78.3a), so its source rests on one image. Exotic readings are not considered.
+
+**Outcome.** Exploratory, as stage 2b. A second band turns the stage-2b `ambiguous` 4.2 and 78.3c into frozen
+flags. 4.2 repeats the vetted 4.2c. 78.3c is an unvetted flag, not a candidate.
+
+**Next.** `/vet-candidate` on 78.3c, cheapest test first:
+1. μ(78.3c) under ±30 % of the nearby member and group components (D-036 rule: untestable if μ moves > 2×);
+2. 78.3a's knot identity (a single-image system);
+3. the flux of the 51679 source.
