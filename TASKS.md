@@ -206,9 +206,12 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    DESI DR1 has spectra of both components for 13 rejected pairs (2026-10-23, `results/w2_desi_pairs/RESULT.md`), but
    the frozen profile test flags only 1 / 7 catalogued binaries, so none is classified; the DESI classifier line is
    stopped (evidence audit, `results/w2_desi_pairs/evidence/RESULT.md`: J2351 misidentified; of 12, 2 ordinary, 3 disputed, 7 open; D-064
-   addendum). Only follow-up with value: J2244−0550 (likely lens in Lemon et al. §4.2) has public HST F814W / F160W
-   (GO 17308, 17455) no paper is known to use. It needs a pre-registered ~1″ PSF test with same-programme controls,
-   so ask the owner before starting. D-064 sample fix (UQP includes 13 §4.2 likely lenses) is open; catalogued image separations for the 15
+   addendum). J2244−0550 HST test (2026-10-23, `results/w2_j2244_hst/RESULT.md`, D-060 addendum): this
+   lenstronomy two-point-source + Sérsic implementation fails validation in both bands, before and after the review
+   fixes (v3: F814W 2 / 6 close known lenses; F160W 2 eligible positives, 3 needed). The target was not measured. Do
+   not rerun with new thresholds; any retry needs a different PSF route or kernel size (larger kernel,
+   oversampled per-exposure PSF / forward modelling) and owner approval. D-064
+   sample fix (UQP includes 13 §4.2 likely lenses) is open; catalogued image separations for the 15
    pair-decided systems the pair check cannot test yet (incl. the 3 CHITAH pairs; HSC lens models); HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.

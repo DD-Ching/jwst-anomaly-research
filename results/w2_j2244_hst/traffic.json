@@ -1,0 +1,26 @@
+{
+ "label": "estimated (not measured directly: candidate counts from Gaia replays x traffic per candidate measured on two fields; eth0 counter reset by a worker restart at ~07:21 UTC)",
+ "budget_gb": 3.0,
+ "estimate_gb": {
+  "F814W build 0 (crashed at field 3)": 0.1,
+  "F814W build 1 (40 fields, 448 candidates)": 5.6,
+  "F814W build 2 (80 fields, 774 candidates)": 9.7,
+  "F814W build 3 (80 fields, 774 candidates)": 9.7,
+  "F160W 17455 builds (15+40+40+80+144 field reads x ~3.4 MB)": 1.1,
+  "F160W 17199 builds (3 x 8 full-frame fields, <= 30 MB each)": 0.7,
+  "development / validation cutouts (~40 x ~21 MB)": 0.8,
+  "traffic measurements this round": 0.7,
+  "v3 reruns (17 positive cutouts at <= 4.1 MB with 64 kB blocks; 2 zero-point header reads)": 0.1
+ },
+ "total_estimate_gb": 28.5,
+ "measured": {
+  "eth0_after_restart_gb_at_07_28": 0.26,
+  "one_acs_cutout_5MB_blocks_mb": 21,
+  "one_acs_cutout_64kB_blocks_mb": 4.1,
+  "library_two_fields_mb": 574,
+  "candidates_two_fields": 46
+ },
+ "cause": "fsspec HTTP default 5 MB read-ahead block per byte-range read; each ACS star stamp read SCI and WHT blocks; the F814W library was rebuilt three times",
+ "stored_on_disk": "no image data kept; star stamps only in scratch pickles (61 MB), deleted at the end",
+ "fix": "FSSPEC block_size 64 kB in scripts/w2_j2244_hst.py (one cutout 21 -> 4.1 MB)"
+}

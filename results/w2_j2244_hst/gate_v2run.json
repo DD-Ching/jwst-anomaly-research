@@ -1,0 +1,668 @@
+{
+ "label": "derived (validation controls and injections; frozen v2 rules)",
+ "bands": {
+  "F160W": {
+   "T": 7774.294946169393,
+   "gate": {
+    "n_neg": 5,
+    "neg_false_detections": 0,
+    "n_pos": 2,
+    "pos_detected": 1,
+    "pos_wilson": [
+     0.09452865480086614,
+     0.9054713451991339
+    ],
+    "neg_false_wilson": [
+     0.0,
+     0.43449149475208104
+    ],
+    "unreliable": 1,
+    "enough_controls": false,
+    "absorb_ok": false,
+    "passed": false
+   },
+   "positives_eligible": [
+    {
+     "name": "SDSSJ0806+2006",
+     "sep": 1.487207893505802,
+     "dchi2": 152134.33650464282,
+     "status": "extended light"
+    },
+    {
+     "name": "VDESJ2325-5229",
+     "sep": 1.734937154370695,
+     "dchi2": 25040.273840529044,
+     "status": "extended light offset"
+    }
+   ],
+   "positives_excluded_geometry": [
+    {
+     "name": "SDSSJ1620+1203",
+     "sep": 2.265748527017577,
+     "status": "fit unreliable"
+    }
+   ],
+   "negatives": [
+    {
+     "name": "pair3",
+     "g": [
+      18.293266,
+      17.695143
+     ],
+     "dchi2": 914.9280823007794,
+     "redchi": 12.771266011807674,
+     "status": "fit unreliable"
+    },
+    {
+     "name": "pair4",
+     "g": [
+      17.694977,
+      18.33777
+     ],
+     "dchi2": -39.91887928351389,
+     "redchi": 7.510948120971157,
+     "status": "none"
+    },
+    {
+     "name": "pair5",
+     "g": [
+      18.33864,
+      18.345018
+     ],
+     "dchi2": 4516.965022835286,
+     "redchi": 7.346026089527887,
+     "status": "none"
+    },
+    {
+     "name": "pair6",
+     "g": [
+      18.389284,
+      18.394241
+     ],
+     "dchi2": -226.27894023369026,
+     "redchi": 2.4127123856072745,
+     "status": "none"
+    },
+    {
+     "name": "pair7",
+     "g": [
+      17.595812,
+      17.584204
+     ],
+     "dchi2": 11780.018077330966,
+     "redchi": 8.971941180573838,
+     "status": "unresolved"
+    },
+    {
+     "name": "pair8",
+     "g": [
+      18.418413,
+      17.576113
+     ],
+     "dchi2": -2666.5786491078234,
+     "redchi": 6.897891509194946,
+     "status": "none"
+    }
+   ],
+   "injections": [
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 19.0,
+     "status": "fit unreliable",
+     "dchi2": 76154.69072622852,
+     "recovered": false,
+     "flux_ratio_raw": 0.6908673435196714,
+     "flux_ratio_minus_baseline": 0.3420826144265804
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 20.0,
+     "status": "unresolved",
+     "dchi2": 14597.279576286908,
+     "recovered": false,
+     "flux_ratio_raw": 0.9590127222724117,
+     "flux_ratio_minus_baseline": 0.08290509374573199
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 21.0,
+     "status": "fit unreliable",
+     "dchi2": -1826.0591032839984,
+     "recovered": false,
+     "flux_ratio_raw": 2.5122831397041656,
+     "flux_ratio_minus_baseline": 0.3116002750659625
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 22.0,
+     "status": "fit unreliable",
+     "dchi2": 1441.8057859684668,
+     "recovered": false,
+     "flux_ratio_raw": 3.523715161206048,
+     "flux_ratio_minus_baseline": -2.004150266534289
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 23.0,
+     "status": "fit unreliable",
+     "dchi2": 736.7134109380895,
+     "recovered": false,
+     "flux_ratio_raw": 21.81643957821205,
+     "flux_ratio_minus_baseline": 7.931069415060198
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 19.0,
+     "status": "fit unreliable",
+     "dchi2": 22231.189425366643,
+     "recovered": false,
+     "flux_ratio_raw": 0.6562828425789536,
+     "flux_ratio_minus_baseline": 0.30749811348586265
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 20.0,
+     "status": "fit unreliable",
+     "dchi2": 795.8045466882722,
+     "recovered": false,
+     "flux_ratio_raw": 0.623560765311193,
+     "flux_ratio_minus_baseline": -0.25254686321548675
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 21.0,
+     "status": "fit unreliable",
+     "dchi2": 1441.0206290544666,
+     "recovered": false,
+     "flux_ratio_raw": 0.9435407361247504,
+     "flux_ratio_minus_baseline": -1.2571421285134525
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 22.0,
+     "status": "fit unreliable",
+     "dchi2": -452.4767625653294,
+     "recovered": false,
+     "flux_ratio_raw": 6.734729012339599,
+     "flux_ratio_minus_baseline": 1.2068635845992621
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 23.0,
+     "status": "fit unreliable",
+     "dchi2": 1970.3062898327225,
+     "recovered": false,
+     "flux_ratio_raw": 6.215194483578044,
+     "flux_ratio_minus_baseline": -7.670175679573808
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 19.0,
+     "status": "unresolved",
+     "dchi2": 94972.06224586401,
+     "recovered": false,
+     "flux_ratio_raw": 0.6185848427768599,
+     "flux_ratio_minus_baseline": 0.6185847414093338
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 20.0,
+     "status": "unresolved",
+     "dchi2": 26916.231982668112,
+     "recovered": false,
+     "flux_ratio_raw": 0.6057420307993849,
+     "flux_ratio_minus_baseline": 0.6057417761756717
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 21.0,
+     "status": "none",
+     "dchi2": 4050.834608676025,
+     "recovered": false,
+     "flux_ratio_raw": 0.34167024259694473,
+     "flux_ratio_minus_baseline": 0.34166960301109434
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 22.0,
+     "status": "none",
+     "dchi2": 3501.41830263028,
+     "recovered": false,
+     "flux_ratio_raw": -4.853823541287886,
+     "flux_ratio_minus_baseline": -4.853825147854906
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 23.0,
+     "status": "none",
+     "dchi2": 909.3838879160012,
+     "recovered": false,
+     "flux_ratio_raw": -12.3732735993545,
+     "flux_ratio_minus_baseline": -12.373277634868398
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 19.0,
+     "status": "unresolved",
+     "dchi2": 38847.42704323015,
+     "recovered": false,
+     "flux_ratio_raw": 0.3872874339001499,
+     "flux_ratio_minus_baseline": 0.3872873325326239
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 20.0,
+     "status": "none",
+     "dchi2": 6555.770236394579,
+     "recovered": false,
+     "flux_ratio_raw": 0.3247008149382627,
+     "flux_ratio_minus_baseline": 0.32470056031454947
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 21.0,
+     "status": "none",
+     "dchi2": 478.98671694819495,
+     "recovered": false,
+     "flux_ratio_raw": 0.005382800409210478,
+     "flux_ratio_minus_baseline": 0.005382160823360064
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 22.0,
+     "status": "none",
+     "dchi2": 746.133390059289,
+     "recovered": false,
+     "flux_ratio_raw": -5.189541842666121,
+     "flux_ratio_minus_baseline": -5.18954344923314
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 23.0,
+     "status": "none",
+     "dchi2": -106.28080728736131,
+     "recovered": false,
+     "flux_ratio_raw": 9.879013454905657e-07,
+     "flux_ratio_minus_baseline": -3.0476125519569056e-06
+    }
+   ],
+   "injection_limits": {
+    "pair3_r0.2": null,
+    "pair3_r0.5": null,
+    "pair4_r0.2": null,
+    "pair4_r0.5": null
+   }
+  },
+  "F814W": {
+   "T": 9184.502362879357,
+   "gate": {
+    "n_neg": 6,
+    "neg_false_detections": 0,
+    "n_pos": 6,
+    "pos_detected": 2,
+    "pos_wilson": [
+     0.09676933255921683,
+     0.7000116786584712
+    ],
+    "neg_false_wilson": [
+     0.0,
+     0.3903430336530645
+    ],
+    "unreliable": 0,
+    "enough_controls": true,
+    "absorb_ok": true,
+    "passed": false
+   },
+   "positives_eligible": [
+    {
+     "name": "SDSSJ0114+0722",
+     "sep": 1.25920728593574,
+     "dchi2": 45255.323036956324,
+     "status": "extended light offset"
+    },
+    {
+     "name": "J0140-1152",
+     "sep": 1.466169295512227,
+     "dchi2": 366033.1189509219,
+     "status": "extended light"
+    },
+    {
+     "name": "SDSSJ2146-0047",
+     "sep": 1.3941158259712387,
+     "dchi2": 3825.1744355004703,
+     "status": "none"
+    },
+    {
+     "name": "144320-012537",
+     "sep": 1.1383638341470323,
+     "dchi2": 717.6009205333212,
+     "status": "none"
+    },
+    {
+     "name": "DESI-011.9124+03.3756",
+     "sep": 1.5794898027320556,
+     "dchi2": 33923.59272562919,
+     "status": "extended light"
+    },
+    {
+     "name": "022418+024703",
+     "sep": 0.9409634400485721,
+     "dchi2": 48883.66401034769,
+     "status": "extended light offset"
+    }
+   ],
+   "positives_excluded_geometry": [
+    {
+     "name": "ULASJ0820+0812",
+     "sep": 2.2402362177380435,
+     "status": "extended light offset"
+    },
+    {
+     "name": "SDSSJ0946+1835",
+     "sep": 3.053340561683394,
+     "status": "extended light offset"
+    },
+    {
+     "name": "SDSSJ1640+1932",
+     "sep": 2.3629752675756817,
+     "status": "extended light offset"
+    },
+    {
+     "name": "WGD2021-4115",
+     "sep": 2.749792862467997,
+     "status": "extended light"
+    }
+   ],
+   "negatives": [
+    {
+     "name": "pair3",
+     "g": [
+      18.036669,
+      17.95562
+     ],
+     "dchi2": -353.2275950020994,
+     "redchi": 2.871784910404477,
+     "status": "none"
+    },
+    {
+     "name": "pair4",
+     "g": [
+      17.953213,
+      17.947216
+     ],
+     "dchi2": 7374.6573038631705,
+     "redchi": 2.281698325829206,
+     "status": "none"
+    },
+    {
+     "name": "pair5",
+     "g": [
+      18.054995,
+      17.938583
+     ],
+     "dchi2": 1556.3067656418152,
+     "redchi": 1.882356114107567,
+     "status": "none"
+    },
+    {
+     "name": "pair6",
+     "g": [
+      18.063433,
+      17.934294
+     ],
+     "dchi2": 4141.423823699035,
+     "redchi": 2.9843820035467457,
+     "status": "none"
+    },
+    {
+     "name": "pair7",
+     "g": [
+      18.07567,
+      17.902565
+     ],
+     "dchi2": 2276.9506889619643,
+     "redchi": 1.91559308270778,
+     "status": "none"
+    },
+    {
+     "name": "pair8",
+     "g": [
+      18.10906,
+      18.11075
+     ],
+     "dchi2": 2059.9937864698986,
+     "redchi": 2.1444324136933166,
+     "status": "none"
+    }
+   ],
+   "injections": [
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 20.0,
+     "status": "extended light",
+     "dchi2": 84881.36320960187,
+     "recovered": true,
+     "flux_ratio_raw": 1.0813803136999338,
+     "flux_ratio_minus_baseline": 0.9058387786618064
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 21.0,
+     "status": "extended light",
+     "dchi2": 14870.41977320478,
+     "recovered": true,
+     "flux_ratio_raw": 1.1246761188178196,
+     "flux_ratio_minus_baseline": 0.6837357187891842
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 22.0,
+     "status": "none",
+     "dchi2": 4626.289812141356,
+     "recovered": false,
+     "flux_ratio_raw": 3.4708096547432428,
+     "flux_ratio_minus_baseline": 2.3632174468069067
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 23.0,
+     "status": "none",
+     "dchi2": 759.2752772376443,
+     "recovered": false,
+     "flux_ratio_raw": 6.265202441044072,
+     "flux_ratio_minus_baseline": 3.483056602283052
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.2,
+     "mag": 24.0,
+     "status": "none",
+     "dchi2": 820.1727759658097,
+     "recovered": false,
+     "flux_ratio_raw": 28.397295242880304,
+     "flux_ratio_minus_baseline": 21.408860860015658
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 20.0,
+     "status": "extended light",
+     "dchi2": 22244.796975246143,
+     "recovered": true,
+     "flux_ratio_raw": 1.6344465928980294,
+     "flux_ratio_minus_baseline": 1.4589050578599019
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 21.0,
+     "status": "none",
+     "dchi2": 5958.098967532111,
+     "recovered": false,
+     "flux_ratio_raw": 2.2130127110112183,
+     "flux_ratio_minus_baseline": 1.7720723109825827
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 22.0,
+     "status": "none",
+     "dchi2": 2825.2073365998694,
+     "recovered": false,
+     "flux_ratio_raw": 2.943930516623783,
+     "flux_ratio_minus_baseline": 1.836338308687447
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 23.0,
+     "status": "none",
+     "dchi2": 595.8426527549127,
+     "recovered": false,
+     "flux_ratio_raw": 10.404454075783645,
+     "flux_ratio_minus_baseline": 7.622308237022626
+    },
+    {
+     "pair": "pair3",
+     "r_eff": 0.5,
+     "mag": 24.0,
+     "status": "none",
+     "dchi2": 995.1606027435155,
+     "recovered": false,
+     "flux_ratio_raw": 81.27023446276452,
+     "flux_ratio_minus_baseline": 74.28180007989987
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 20.0,
+     "status": "extended light",
+     "dchi2": 102075.30306955377,
+     "recovered": true,
+     "flux_ratio_raw": 1.9829716394031847,
+     "flux_ratio_minus_baseline": 0.3782498561488485
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 21.0,
+     "status": "extended light",
+     "dchi2": 23302.405805193324,
+     "recovered": true,
+     "flux_ratio_raw": 5.004785483434454,
+     "flux_ratio_minus_baseline": 0.9739066097300297
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 22.0,
+     "status": "none",
+     "dchi2": 9128.510418738302,
+     "recovered": false,
+     "flux_ratio_raw": 10.882622206606769,
+     "flux_ratio_minus_baseline": 0.757512256690006
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 23.0,
+     "status": "none",
+     "dchi2": 7385.889160320039,
+     "recovered": false,
+     "flux_ratio_raw": 40.831174700547656,
+     "flux_ratio_minus_baseline": 15.398048399809099
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.2,
+     "mag": 24.0,
+     "status": "none",
+     "dchi2": 7585.794241410174,
+     "recovered": false,
+     "flux_ratio_raw": 77.5402395288964,
+     "flux_ratio_minus_baseline": 13.65511466320175
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 20.0,
+     "status": "extended light",
+     "dchi2": 37853.9288455764,
+     "recovered": true,
+     "flux_ratio_raw": 2.709949896871172,
+     "flux_ratio_minus_baseline": 1.1052281136168354
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 21.0,
+     "status": "extended light",
+     "dchi2": 12273.91484024594,
+     "recovered": true,
+     "flux_ratio_raw": 5.286673944188204,
+     "flux_ratio_minus_baseline": 1.2557950704837793
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 22.0,
+     "status": "none",
+     "dchi2": 7522.2190196980755,
+     "recovered": false,
+     "flux_ratio_raw": 15.742822986472833,
+     "flux_ratio_minus_baseline": 5.61771303655607
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 23.0,
+     "status": "none",
+     "dchi2": 7674.1462108259075,
+     "recovered": false,
+     "flux_ratio_raw": 45.70232017382958,
+     "flux_ratio_minus_baseline": 20.26919387309102
+    },
+    {
+     "pair": "pair4",
+     "r_eff": 0.5,
+     "mag": 24.0,
+     "status": "none",
+     "dchi2": 7439.862639304889,
+     "recovered": false,
+     "flux_ratio_raw": 115.14518498421108,
+     "flux_ratio_minus_baseline": 51.26006011851644
+    }
+   ],
+   "injection_limits": {
+    "pair3_r0.2": 21.0,
+    "pair3_r0.5": 20.0,
+    "pair4_r0.2": 21.0,
+    "pair4_r0.5": 21.0
+   }
+  }
+ }
+}
