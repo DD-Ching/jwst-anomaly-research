@@ -2371,6 +2371,18 @@ Appendix B table (31 images, 10 families, all spectroscopic, JWST/Gaia frame) ag
 plan. Revisit if: a published erratum or data release changes the table (the text says 11 systems, the table has 10
 families).
 
+**Addendum 2026-10-23u (RXJ2129 stage 2: gate C2 fails).** Frozen plan
+`results/lens_consistency/rxj2129_djaref/PLAN_2.md` (El Gordo stage 2b's rules on GO 2767 o002_t001 F200W and DJA
+v7.0; deviation D1 before any read: overlapping targets of the one-galaxy group 3 / S3-1 / S3-2 are joined for flags,
+`merge_knot_targets`, unit-tested). Rules 2a / 2b pass (µJy; rotation −2 × 10⁻⁵°). Gate C2 fails: 4 / 7 (0.57),
+arc-referenced 2 / 5 (0.40), against 0.8 and minimum counts 8 / 3; it also fails without the containing-source or
+local-noise rule. No flag is read. Post hoc: all 3 `absent` controls (1, 2, 7) take the same reference row, DJA
+1506 (16.38 mag, 3a = 8.7″), so their predicted fluxes are 16.7–18.1 mag; the contact sheet (`sheet_2.png`) shows
+faint sources in the circles of the system 1 and 2 controls. Without that row C2 would be 4 / 4 (arc 2 / 2; computed in the session, not stored), still
+below the minimum counts, so the route cannot validate itself on this field. Decision: the reference route is
+closed for RXJ2129 (Lenstool maps, DJA v7.0). Revisit if: a reference catalogue with arcs deblended from the bright
+cluster light (e.g. a bCG-subtracted RXJ2129 catalogue) is public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
