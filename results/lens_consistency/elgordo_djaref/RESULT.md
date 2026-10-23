@@ -8,8 +8,19 @@
   inconsistent_reference 1; so 1 of 16 predicted extra images was testable at all (low testability, not a null).
 - Reported, not rules: without the local-noise rule C2 passes, no flag; without the containing-source rule C2 fails
   (`without_contain`), no flag; plain `gate_c2` passes.
-- **Not done yet:** the contact sheet of the controls and the testable target (scripts/CLAUDE.md); no conclusion
-  beyond the frozen outcome is drawn before it.
+- **Contact sheet looked at** (`sheet_2b.png`: F200W, 6″ stamps, red circle = `search_arcsec`; 15 controls whose
+  `class_local` is recovered / confused / absent and the 4 targets that are recovered or `undetectable_local`; made
+  by a session script, not committed, by S3 range reads). Controls: each recovered control has its arc or knot in
+  the circle; 10b (`confused`) sits on a diffraction spike; 12a (`absent`) shows only faint knots. No control
+  stamp contradicts its class.
+- **Target 23 (`missing`, the only testable target), post hoc:** it is the model's image of catalogued 23c, not an
+  additional image: `frame/summary.json` lists 23c as `unpredicted`, and `readings_elgordo.ecsv` puts the model's
+  23c 1.538″ from the catalogued one. `sheet_2b_t23.png` (10″ stamp, median / MAD stretch) shows no compact
+  m ≈ 23 source (`m_pred` 22.99) at the predicted position; the frozen `recovered` comes from 3 sources up to
+  2.25″ away (`max_ratio` 0.58). Reading: a model position error of about 1.5″ for 23c, as for Abell 2744 78.3c
+  (D-034 addendum n); not a candidate, nothing to vet.
+- **Outcome:** El Gordo by this route gives no flag and tests 1 of 16 predicted extra images; it is not a null over
+  the other 15 (low testability: 7 undetectable, 4 no_reference, 3 undetectable_local, 1 inconsistent_reference).
 
 ## Stage 2 (2026-10-23; `PLAN_2.md`, `scripts/elgordo_djaref.py --stage 2`, `summary.json` `stage2`)
 - **Rule 2b, grid: passes** (`rule_2b`): rotation 0.0002°, determinant negative (east left), pixel scale

@@ -9,8 +9,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (7 undetectable, 4 no_reference, 3 undetectable_local, 1 inconsistent_reference, 1 recovered).
 - **Data:** DJA table and the F200W SCI extension (≈ 185 MB) read into memory; pipeline `_cat.ecsv` in the session
   scratchpad, deleted.
-- **Handoff:** PR #484 is still a draft: next run looks at the contact sheet, runs `/code-review`, adds the D-034
-  addendum q and TASKS line, then marks it ready and merges if CI is green.
+- **Contact sheet** (`sheet_2b.png`, `sheet_2b_t23.png`) looked at: controls agree with their classes. Post hoc,
+  the one testable target (23, `missing`) is the model's 23c, 1.538″ from the catalogued 23c: a model position
+  error (as Abell 2744 78.3c), not a candidate. D-034 addendum q.
+- **Handoff:** El Gordo's reference route is closed (no flag, 1 / 16 testable). Next: the next field (SMACS 0723 or
+  WHL0137) with a reference catalogue, gate K first.
 
 ## 2026-10-23: El Gordo reference-catalogue route, stage 2: grizli total-flux rule frozen; the unit check fails as written (stopped before any flux was read)
 - **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_2.md`, frozen with `flux_unit_jy`, `grid_rotation_deg`
