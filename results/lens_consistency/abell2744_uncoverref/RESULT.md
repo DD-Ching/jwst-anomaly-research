@@ -158,3 +158,36 @@ flags. 4.2 repeats the vetted 4.2c. 78.3c is an unvetted flag, not a candidate.
    then μ(78.3c) under ±30 % of the nearby member and group components;
 2. 78.3a's knot identity (a single-image system);
 3. the flux of the 51679 source.
+
+## Vetting 78.3c: tests 1 and 1b (model position of the c image)
+
+Plan: `PLAN_vet78.md` (test 1 frozen and pushed before the run; test 1b added after test 1 and frozen before the
+UNCOVER maps were read). Script: `scripts/a2744_vet78_cats.py` (`decide`, `decide_1b`, unit-tested). Numbers:
+`vet78_cats.json`, `vet78_uncover2.json`. All positions computed are `model_prediction`; catalogued positions
+`observed`; z 2.3151 is the UNCOVER catalogue spec-z. Each knot's source comes from its a and b images only.
+
+- **Test 1 (CATS v4.1): "tool not validated".** CATS gives two images per knot, not three: one at the a/b midpoint
+  (0.003–0.026″, μ −1.41 to −1.43) and one 38.5″ away (μ 3.45). Post hoc: CATS gives a and b the same (negative)
+  parity (μ −1.26 to −1.69), so it has no critical curve between them, as Bergamini+23 (`../a2744_s700_zscan`). Two
+  of the three models on record do not make the 78 arc a fold pair, so no independent model can place a c image
+  here (D-036's rule: model-dependent).
+- **Test 1b (UNCOVER v2.0 maps, the model that made the flag): "explained: this model's c positions for system 78
+  miss by more than the search radius".** Predicted from a and b alone, the c images of 78.1 and 78.2 lie 1.455″
+  and 1.293″ from their catalogued c (both > 1.0″, the stage-2c search radius), and 0.066″ / 0.174″ from the
+  predicted 78.3c. The predicted 78.3c lies 1.46″ from the catalogued 78.2c. So the model puts the c images of all
+  three knots at one spot about 1.3–1.5″ from where the c images of 78.1 and 78.2 are seen. The missing
+  78.3c sits on that same spot, so its non-detection in the 1″ circle tells nothing about knot 3.
+  - |μ| of the c images: 6.64 / 6.59 / 6.70 (78.1 / 78.2 / 78.3).
+- **Sheet** (`sheet_2c.png`, row "78.3 pred", looked at): besides 51679 at the circle edge, a compact source lies
+  just outside the circle towards the lower right, at roughly the catalogued c distance (by eye; not stored). Not
+  measured here.
+- **Post hoc, not a rule:** in the UNCOVER maps a and b of every knot also both have negative parity (μ −19.5 to
+  −26.2 at the observed positions), consistent with the shared-image finding of `../a2744_s700_uncover`.
+
+**Outcome.** 78.3c is explained by an ordinary, model-side cause (the model's c position for this system is offset
+by more than the search radius, and the c images of the other two knots are detected) and is closed, not a
+candidate. 4.2 is the vetted 4.2c (D-036). Stage 2c has no open flag.
+
+**Limits.** One position statistic per knot (no position errors in the map models); the knot sources rest on two
+images each; the 1.0″ radius is an ASSUMPTION. Not tested: knot 3's flux at the catalogued c position (it is
+blended with 78.1c / 78.2c, about 0.13″ apart by the catalogue positions (not stored), in a 1″ aperture).

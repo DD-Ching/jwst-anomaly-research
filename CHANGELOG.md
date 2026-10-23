@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Abell 2744 78.3c vetted: a model c-position error, closed (no open flag left in stage 2c)
+- **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_vet78.md` (tests 1 and 1b, each frozen with its
+  unit-tested rule before its run). Script `scripts/a2744_vet78_cats.py`.
+- **Test 1, CATS v4.1:** "tool not validated": no critical curve between the 78 a/b images (both μ < 0), as in
+  Bergamini+23 (`vet78_cats.json`).
+- **Test 1b, UNCOVER v2.0 maps:** "explained": predicted from a+b, the 78.1 / 78.2 c images miss their catalogued c
+  by 1.455″ / 1.293″ and sit 0.07″ / 0.17″ from the predicted 78.3c (`vet78_uncover2.json`). D-034 addendum n.
+- **Data:** CATS deflection maps and UNCOVER maps cached in the session and deleted after use. Cloud TLS:
+  `archive.stsci.edu` still needs the certifi bundle (`SSL_CERT_FILE`).
+- **Handoff:** stage 2c closed with no open flag. Next on Abell 2744: none required by this line; TASKS "Now" next item.
+
 ## 2026-10-23: Abell 2744 UNCOVER-reference stage 2c: C2 passes in F277W and F356W; frozen flags 4.2 (the vetted 4.2c) and 78.3c (unvetted)
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2c.md`, frozen with `outcome_2c` (unit-tested)
   before any long-wavelength flux or pixel was read. Stage-2b rules per band on the committed stage-2b frame;
