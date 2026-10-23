@@ -1,0 +1,37 @@
+{
+ "smacs0723": {
+  "model": "smacs0723-iclv2",
+  "model_sha256": "73cc7881b224e4baa492eae56269d90c154521ffc7e2dd66ed174773098a7715",
+  "image": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 27.435150695360697,
+  "unpredicted": [],
+  "image_classes": {
+   "candidate": 1,
+   "demagnified": 4,
+   "missing": 3,
+   "no_flux_ref": 7,
+   "observed": 60
+  },
+  "forced_classes_targets": {
+   "confused": 1,
+   "no_reference": 7,
+   "recovered": 2,
+   "undetectable": 1
+  },
+  "gate_C": {
+   "n_targets": 60,
+   "n_testable": 39,
+   "n_recovered": 37,
+   "fraction": 0.9487179487179487,
+   "passes": true,
+   "classes": {
+    "absent": 2,
+    "confused": 9,
+    "no_reference": 21,
+    "recovered": 28
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}

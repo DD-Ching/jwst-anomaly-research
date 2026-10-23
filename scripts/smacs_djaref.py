@@ -172,11 +172,52 @@ def stage_2(cache: Path) -> dict:
     return res
 
 
+def sheet(path: Path, classes=("absent", "ambiguous", "confused"), half: float = 3.0) -> int:
+    """Post hoc contact sheet: F200W stamps of the stage-2 controls in ``classes`` (red circle =
+    ``search_arcsec``, title = system, class and arc reference)."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    c = Table.read(OUT / f"control_{FIELD}.ecsv")
+    c = c[np.isin(np.asarray(c["class_local"], str), classes)]
+    stamp, close = lc.image_stamper(S3_2736.format(OBS, TILE, "i2d.fits"), half)
+    n = max(len(c), 1)
+    fig, axes = plt.subplots(1, n, figsize=(2.6 * n, 2.9), squeeze=False)
+    try:
+        for ax, r in zip(axes[0], c, strict=False):
+            sci, _, xx, yy = stamp(float(r["ra"]), float(r["dec"]))
+            med = np.nanmedian(sci)
+            mad = np.nanmedian(np.abs(sci - med)) or 1.0
+            ext = (xx.max(), xx.min(), yy.min(), yy.max())
+            ax.imshow(
+                sci,
+                origin="lower",
+                cmap="gray_r",
+                vmin=med - 3 * mad,
+                vmax=med + 30 * mad,
+                extent=ext,
+            )
+            ax.add_patch(plt.Circle((0, 0), float(r["search_arcsec"]), fill=False, color="red"))
+            ax.set_title(f"{r['system']} {r['class_local']} arc={bool(r['arc_ref'])}", fontsize=8)
+            ax.set_xticks([])
+            ax.set_yticks([])
+    finally:
+        close()
+    fig.tight_layout()
+    fig.savefig(path, dpi=80)
+    return len(c)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--stage", choices=("1", "2"), default="1")
+    ap.add_argument("--stage", choices=("1", "2", "sheet"), default="1")
     ap.add_argument("--cache", type=Path, default=Path("data/cache/smacsx"))
     args = ap.parse_args(argv)
+    if args.stage == "sheet":
+        print(sheet(OUT / "sheet_2.png"), "controls")
+        return 0
     if args.stage == "2":
         summary = json.loads((OUT / "summary.json").read_text())
         summary["stage2"] = _clean(stage_2(args.cache))

@@ -2350,6 +2350,16 @@ constraints only). The DJA v7.4 SMACS `fix_phot` header carries every column El 
 with El Gordo stage 2b's rules under a new frozen plan. Revisit if: a cross-checked spec-z list (Mahler+22 /
 Noirot+23) differs from the rule-0 set.
 
+**Addendum 2026-10-23s (SMACS 0723 stage 2: gate C2 fails).** Frozen plan
+`results/lens_consistency/smacs_djaref/PLAN_2.md` (El Gordo stage 2b's rules on GO 2736 o001_t001 F200W and DJA
+v7.4; deviations before any read: all 60 images with fitted z for free systems, z-edge family 8 not flaggable,
+fixed / fitted z labels). Rules 2a / 2b pass (µJy; 0.028°). Gate C2 fails: 16 / 23 (0.70), arc-referenced 7 / 12
+(0.58), against 0.8; it also fails without the containing-source or local-noise rule. No flag is read; the 11
+targets would be untestable anyway. Post hoc contact sheet (`sheet_2.png`): sources sit inside the search circle
+at 5 of 6 `absent` controls, all 6 `absent_sources_too_faint`, i.e. flux-ratio misses of the route, cause not
+isolated. Decision: the reference route is closed for SMACS 0723 (model ICLv2, DJA v7.4); next field WHL0137.
+Revisit if: a SMACS model with spectroscopic z for systems 12–25 or a total-flux reference built for arcs is public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

@@ -107,5 +107,282 @@
   "K_MIN_MATCHED": 0.8,
   "MATCH_ARCSEC": 3.0,
   "grid_step_arcsec": 0.25
+ },
+ "stage2": {
+  "dja": {
+   "sha256": "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166",
+   "bytes": 38626560,
+   "rows": 13554
+  },
+  "rule_2a": {
+   "zero_point_mag": 23.9,
+   "n_rows": 13433,
+   "unit_jy": 1e-06,
+   "passes": true
+  },
+  "rule_2b": {
+   "rotation_deg": 0.028388297768453443,
+   "determinant": -0.0016004163241908518,
+   "pixel_scale_arcsec": 0.04000520371390267,
+   "n_rows": 13554,
+   "passes": true
+  },
+  "frame": {
+   "model": "smacs0723-iclv2",
+   "model_sha256": "73cc7881b224e4baa492eae56269d90c154521ffc7e2dd66ed174773098a7715",
+   "image": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits",
+   "depth_mag": 27.435150695360697,
+   "unpredicted": [],
+   "image_classes": {
+    "candidate": 1,
+    "demagnified": 4,
+    "missing": 3,
+    "no_flux_ref": 7,
+    "observed": 60
+   },
+   "forced_classes_targets": {
+    "confused": 1,
+    "no_reference": 7,
+    "recovered": 2,
+    "undetectable": 1
+   },
+   "gate_C": {
+    "n_targets": 60,
+    "n_testable": 39,
+    "n_recovered": 37,
+    "fraction": 0.9487179487179487,
+    "passes": true,
+    "classes": {
+     "absent": 2,
+     "confused": 9,
+     "no_reference": 21,
+     "recovered": 28
+    }
+   },
+   "flags": [],
+   "flags_if_gate_ignored": 0
+  },
+  "without_contain": {
+   "gate_C2_shared": {
+    "all": {
+     "n_testable": 23,
+     "n_ok": 14,
+     "fraction": 0.6086956521739131
+    },
+    "arc_referenced": {
+     "n_testable": 12,
+     "n_ok": 7,
+     "fraction": 0.5833333333333334
+    },
+    "passes": false,
+    "merged_groups": []
+   },
+   "flags": [],
+   "control_classes": {
+    "absent": 7,
+    "ambiguous": 2,
+    "inconsistent_reference": 19,
+    "no_reference": 10,
+    "recovered": 14,
+    "undetectable_local": 8
+   },
+   "target_classes": {
+    "inconsistent_reference": 4,
+    "no_reference": 6,
+    "undetectable_local": 1
+   },
+   "gate_C2_plain": {
+    "all": {
+     "n_testable": 23,
+     "n_ok": 14,
+     "fraction": 0.6086956521739131
+    },
+    "arc_referenced": {
+     "n_testable": 12,
+     "n_ok": 7,
+     "fraction": 0.5833333333333334
+    },
+    "passes": false
+   },
+   "without_local_noise_rule": {
+    "gate_C2": {
+     "all": {
+      "n_testable": 31,
+      "n_ok": 16,
+      "fraction": 0.5161290322580645
+     },
+     "arc_referenced": {
+      "n_testable": 17,
+      "n_ok": 9,
+      "fraction": 0.5294117647058824
+     },
+     "passes": false
+    },
+    "control_classes": {
+     "absent": 14,
+     "ambiguous": 1,
+     "confused": 1,
+     "inconsistent_reference": 19,
+     "no_reference": 10,
+     "recovered": 15
+    },
+    "target_classes": {
+     "inconsistent_reference": 4,
+     "no_reference": 6,
+     "recovered": 1
+    },
+    "flags": []
+   },
+   "posthoc_absent_controls": {
+    "absent_own_segment_centroid_outside_radius": 6,
+    "absent_no_containing_segment": 2,
+    "absent_sources_too_faint": 6
+   },
+   "inputs": {
+    "reference": "smacs0723-grizli-v7.4-fix_phot.fits",
+    "reference_sha256": "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166",
+    "n_rows_kept": 8592,
+    "flux": "f200w_flux_aper_1 x flux_auto / flux_aper_1 x f200w_tot_corr",
+    "noise_image": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits",
+    "noise_pixel_scale_arcsec": 0.031228055546194514,
+    "frame_offset_arcsec": [
+     0.0,
+     0.0
+    ],
+    "pixel_scale_arcsec": 0.04000520371390267,
+    "depth_mag": 28.765093445621538
+   },
+   "rules": {
+    "ELLIPSE_NSIGMA": 3.0,
+    "MIN_REF_SNR": 5.0,
+    "MAX_REF_MU": 50.0,
+    "MAX_REF_SPREAD": 3.0,
+    "FLUX_RANGE": [
+     0.3333333333333333,
+     3.0
+    ],
+    "TEN_SIGMA_DMAG": 0.752574989159953,
+    "BASE_SEARCH": 1.0,
+    "C2": [
+     8,
+     0.8,
+     3
+    ],
+    "ARC_MIN_ELL": 0.5,
+    "contain": false
+   },
+   "flags_z_edge": []
+  },
+  "frozen": {
+   "gate_C2_shared": {
+    "all": {
+     "n_testable": 23,
+     "n_ok": 16,
+     "fraction": 0.6956521739130435
+    },
+    "arc_referenced": {
+     "n_testable": 12,
+     "n_ok": 7,
+     "fraction": 0.5833333333333334
+    },
+    "passes": false,
+    "merged_groups": []
+   },
+   "flags": [],
+   "control_classes": {
+    "absent": 6,
+    "ambiguous": 1,
+    "confused": 2,
+    "inconsistent_reference": 19,
+    "no_reference": 10,
+    "recovered": 14,
+    "undetectable_local": 8
+   },
+   "target_classes": {
+    "inconsistent_reference": 4,
+    "no_reference": 6,
+    "undetectable_local": 1
+   },
+   "gate_C2_plain": {
+    "all": {
+     "n_testable": 23,
+     "n_ok": 16,
+     "fraction": 0.6956521739130435
+    },
+    "arc_referenced": {
+     "n_testable": 12,
+     "n_ok": 7,
+     "fraction": 0.5833333333333334
+    },
+    "passes": false
+   },
+   "without_local_noise_rule": {
+    "gate_C2": {
+     "all": {
+      "n_testable": 31,
+      "n_ok": 23,
+      "fraction": 0.7419354838709677
+     },
+     "arc_referenced": {
+      "n_testable": 17,
+      "n_ok": 11,
+      "fraction": 0.6470588235294118
+     },
+     "passes": false
+    },
+    "control_classes": {
+     "absent": 8,
+     "confused": 8,
+     "inconsistent_reference": 19,
+     "no_reference": 10,
+     "recovered": 15
+    },
+    "target_classes": {
+     "inconsistent_reference": 4,
+     "no_reference": 6,
+     "recovered": 1
+    },
+    "flags": []
+   },
+   "posthoc_absent_controls": {
+    "absent_own_segment_centroid_outside_radius": 0,
+    "absent_no_containing_segment": 2,
+    "absent_sources_too_faint": 6
+   },
+   "inputs": {
+    "reference": "smacs0723-grizli-v7.4-fix_phot.fits",
+    "reference_sha256": "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166",
+    "n_rows_kept": 8592,
+    "flux": "f200w_flux_aper_1 x flux_auto / flux_aper_1 x f200w_tot_corr",
+    "noise_image": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits",
+    "noise_pixel_scale_arcsec": 0.031228055546194514,
+    "frame_offset_arcsec": [
+     0.0,
+     0.0
+    ],
+    "pixel_scale_arcsec": 0.04000520371390267,
+    "depth_mag": 28.765093445621538
+   },
+   "rules": {
+    "ELLIPSE_NSIGMA": 3.0,
+    "MIN_REF_SNR": 5.0,
+    "MAX_REF_MU": 50.0,
+    "MAX_REF_SPREAD": 3.0,
+    "FLUX_RANGE": [
+     0.3333333333333333,
+     3.0
+    ],
+    "TEN_SIGMA_DMAG": 0.752574989159953,
+    "BASE_SEARCH": 1.0,
+    "C2": [
+     8,
+     0.8,
+     3
+    ],
+    "ARC_MIN_ELL": 0.5,
+    "contain": true
+   },
+   "flags_z_edge": []
+  }
  }
 }
