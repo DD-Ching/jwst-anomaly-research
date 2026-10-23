@@ -255,3 +255,11 @@
 {"family": "D31e", "f": 0.7, "n_images": 3, "chi2_validate_source": 0.8427245909899842, "chi2_fit": 0.8245176133982509, "shared": false, "n_predicted": 3, "beta_fit": [10.90244095092303, -28.036419126014984]}
 {"family": "D31f", "f": 1.0, "n_images": 3, "chi2_validate_source": 0.5478234601675174, "chi2_fit": 0.539553186089263, "shared": false, "n_predicted": 3, "beta_fit": [10.773143822488809, -28.078868775799563]}
 {"family": "D31f", "f": 0.85, "n_images": 3, "chi2_validate_source": 0.5464850318984807, "chi2_fit": 0.5366934907446542, "shared": false, "n_predicted": 3, "beta_fit": [10.781603215541153, -28.084039511136996]}
+{"family": "D31f", "f": 0.8, "n_images": 3, "chi2_validate_source": 0.546301977938249, "chi2_fit": 0.5359959367907051, "shared": false, "n_predicted": 3, "beta_fit": [10.78413737927276, -28.085597773517698]}
+{"family": "D31f", "f": 0.75, "n_images": 3, "chi2_validate_source": 0.546217693786763, "chi2_fit": 0.5353928652464137, "shared": false, "n_predicted": 3, "beta_fit": [10.786480304824188, -28.087046993789304]}
+{"family": "D31f", "f": 0.7, "n_images": 3, "chi2_validate_source": 0.546218192865806, "chi2_fit": 0.5348924905213992, "shared": false, "n_predicted": 3, "beta_fit": [10.788701675310946, -28.088359429229982]}
+{"family": "D32", "f": 1.0, "n_images": 3, "chi2_validate_source": 5.73914441470598, "chi2_fit": 5.684305877797763, "shared": false, "n_predicted": 3, "beta_fit": [12.397616605680968, -21.8682011407424]}
+{"family": "D32", "f": 0.85, "n_images": 3, "chi2_validate_source": 5.686047684976017, "chi2_fit": 5.630981686664614, "shared": false, "n_predicted": 3, "beta_fit": [12.405435926944879, -21.87497560177807]}
+{"family": "D32", "f": 0.8, "n_images": 3, "chi2_validate_source": 5.6705908965780285, "chi2_fit": 5.615449668614229, "shared": false, "n_predicted": 3, "beta_fit": [12.407725184114337, -21.876968624601055]}
+{"family": "D32", "f": 0.75, "n_images": 3, "chi2_validate_source": 5.655935490814584, "chi2_fit": 5.600719092126626, "shared": false, "n_predicted": 3, "beta_fit": [12.409881019344056, -21.878859600225944]}
+{"family": "D32", "f": 0.7, "n_images": 3, "chi2_validate_source": 5.642542861771633, "chi2_fit": 5.587254386603623, "shared": false, "n_predicted": 3, "beta_fit": [12.411942320578278, -21.8806474801745]}
