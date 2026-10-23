@@ -133,3 +133,12 @@ def test_to_cat_dja_total_flux_and_drops():
     np.testing.assert_allclose(rc["a"], [0.16])
     np.testing.assert_allclose(rc["ell"], [0.5])
     assert rc["ext"].all()
+
+
+def test_flux_unit_with_tot_corr():
+    t = _unit_table(23.9)
+    t["tot_corr"] = np.full(len(t), 1.2)
+    t["mag_auto"] = t["mag_auto"] - 2.5 * np.log10(1.2)  # mag_auto is a total magnitude
+    assert not flux_unit_jy(t)["passes"]  # PLAN_2.md form: 23.70 mag
+    r = flux_unit_jy(t, with_tot_corr=True)
+    assert r["unit_jy"] == 1e-6 and abs(r["zero_point_mag"] - 23.9) < 1e-9

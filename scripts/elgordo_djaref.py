@@ -5,9 +5,10 @@ of ``m0417_images`` on the 56 spectroscopic Caminha+2023 images (``elgordo-camin
 and images in the JWST frame, D-034 rule 1); rule 2 reads only the FITS headers of the DJA v7.0
 photometry (HTTP range) to check the stage-2 reference inputs. ``PLAN_2.md`` (``--stage 2``):
 predicted / control tables on GO 1176 F200W, the DJA reference with grizli total fluxes, local
-noise and gate C2 shared, as Abell 2744 stage 2b. Writes ``summary.json``.
+noise and gate C2 shared, as Abell 2744 stage 2b; ``PLAN_2b.md`` (``--stage 2b``): the same with
+rule 2a on ``flux_auto x tot_corr``. Writes ``summary.json``.
 
-    python scripts/elgordo_djaref.py [--stage 2] [--cache data/cache/elgordox]
+    python scripts/elgordo_djaref.py [--stage 2|2b] [--cache data/cache/elgordox]
 """
 
 from __future__ import annotations
@@ -129,10 +130,13 @@ def fetch_head(url: str = DJA_PHOT) -> tuple[bytes, int]:
     return blob, int(total) if total.isdigit() else -1
 
 
-def flux_unit_jy(t) -> dict:
-    """PLAN_2.md rule 2a: the flux unit from ``mag_auto + 2.5 log10(flux_auto)``."""
+def flux_unit_jy(t, with_tot_corr: bool = False) -> dict:
+    """PLAN_2.md rule 2a: the flux unit from ``mag_auto + 2.5 log10(flux_auto)``; PLAN_2b.md
+    (``with_tot_corr``): from ``mag_auto + 2.5 log10(flux_auto x tot_corr)``."""
     f = np.ma.filled(np.ma.asarray(t["flux_auto"], float), np.nan)
     m = np.ma.filled(np.ma.asarray(t["mag_auto"], float), np.nan)
+    if with_tot_corr:
+        f = f * np.ma.filled(np.ma.asarray(t["tot_corr"], float), np.nan)
     ok = np.isfinite(f) & (f > 0) & np.isfinite(m)
     u = float(np.median(m[ok] + 2.5 * np.log10(f[ok]))) if ok.any() else float("nan")
     zp = next((z for z in UNITS_JY if abs(u - z) <= UNIT_TOL_MAG), None)
@@ -225,12 +229,13 @@ def fetch_table(url: str = DJA_PHOT) -> tuple[Table, str, int]:
     return t, hashlib.sha256(blob).hexdigest(), len(blob)
 
 
-def stage_2(cache: Path) -> dict:
-    """PLAN_2.md: rules 2a / 2b, frame tables, DJA reference, local noise, gate C2 shared."""
+def stage_2(cache: Path, with_tot_corr: bool = False) -> dict:
+    """PLAN_2.md: rules 2a / 2b, frame tables, DJA reference, local noise, gate C2 shared;
+    ``with_tot_corr``: PLAN_2b.md's rule 2a."""
     import s3fs
 
     t, sha, nbytes = fetch_table()
-    unit, grid = flux_unit_jy(t), grid_rotation_deg(t)
+    unit, grid = flux_unit_jy(t, with_tot_corr), grid_rotation_deg(t)
     res: dict = {"dja": {"sha256": sha, "bytes": nbytes, "rows": len(t)}, "rule_2a": unit}
     res["rule_2b"] = grid
     if not (unit["passes"] and grid["passes"]):
@@ -272,14 +277,15 @@ def stage_2(cache: Path) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--stage", choices=("1", "2"), default="1")
+    ap.add_argument("--stage", choices=("1", "2", "2b"), default="1")
     ap.add_argument("--cache", type=Path, default=Path("data/cache/elgordox"))
     args = ap.parse_args(argv)
-    if args.stage == "2":
+    if args.stage in ("2", "2b"):
+        key = "stage" + args.stage
         summary = json.loads((OUT / "summary.json").read_text())
-        summary["stage2"] = _clean(stage_2(args.cache))
+        summary[key] = _clean(stage_2(args.cache, with_tot_corr=args.stage == "2b"))
         (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")
-        s2 = summary["stage2"]
+        s2 = summary[key]
         print(json.dumps({k: s2.get(k) for k in ("rule_2a", "rule_2b", "outcome")}, indent=1))
         if "frozen" in s2:
             print(json.dumps({k: s2["frozen"][k] for k in ("gate_C2_shared", "flags")}, indent=1))
