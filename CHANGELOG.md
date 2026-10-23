@@ -61,6 +61,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   whether to amend, e.g. multi-start for every family, before reading Δχ²). **Setup:** `main()` now takes the family
   list from an analytic back-trace (1.3 s, same order as the stored rows, not stored) instead of a single-process
   0.1″ grid build; first new row ≈ 7 min after start (was ≈ 14), then 70 tasks in ≈ 30 min. ≈ 298 tasks remain.
+- **00:10Z run (2026-10-23):** 283 / 555 (added D31f f 0.80–0.70, D32, D33, D35, D36, D37 f 1.00–0.80). Fitted χ² at
+  f 1.00 → 0.70: D32 5.684 → 5.587, D33 1.729 → 1.762 (6 observed, 7 predicted), D35 3.274 → 3.328, D36 1.112 → 1.110
+  (2 observed, 3 predicted); D31f 0.536 / 0.535 / 0.535 at f 0.80 / 0.75 / 0.70; D37 1.261 / 1.259 / 1.259 at f 1.00 /
+  0.85 / 0.80. D35's fit moves χ² from the validate source's 5.474 to 3.274 at f 1.00 (a smaller start-point gap than
+  D24's, same direction at every f). Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST
+  download API (sha256 verified); 26 tasks in ≈ 22 min including setup (not stored). ≈ 272 tasks remain.
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
