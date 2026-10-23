@@ -1,0 +1,70 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: z_spec, datatype: bool}
+# - {name: dtheta_elgordo-caminha23, datatype: float64}
+# - {name: reproduced_elgordo-caminha23, datatype: bool}
+# - {name: reading, datatype: string}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'm0417_images readings; gate-passing models [''elgordo-caminha23'']'}
+# schema: astropy-2.0
+image_id system z_spec dtheta_elgordo-caminha23 reproduced_elgordo-caminha23 reading
+23a 23 True 1.027370006129172 True no_flag
+23b 23 True 0.7456281475547256 True no_flag
+23c 23 True 1.5379963562182368 True no_flag
+1a 1 True 1.0023649421517193 True no_flag
+1b 1 True 0.9864600965505405 True no_flag
+1c 1 True 0.4444523595804416 True no_flag
+2a 2 True 0.33831190231141856 True no_flag
+2b 2 True 0.20490424498262297 True no_flag
+2c 2 True 0.12301667447064642 True no_flag
+3a 3 True 1.4926290333719527 True no_flag
+3b 3 True 0.4298259280213041 True no_flag
+4b 4 True 0.2053031262757576 True no_flag
+4c 4 True 0.30788037577201693 True no_flag
+5a 5 True 0.41956934157584785 True no_flag
+5b 5 True 0.981407270826275 True no_flag
+5c 5 True 0.8942166250801605 True no_flag
+6a 6 True 0.8550776342165703 True no_flag
+6b 6 True 0.6899296860700354 True no_flag
+7b 7 True 0.8570820761234874 True no_flag
+7c 7 True 1.1596010255403448 True no_flag
+8a 8 True 0.2769855080060619 True no_flag
+8b 8 True 0.5866338812399877 True no_flag
+8c 8 True 0.41526492050124264 True no_flag
+9a 9 True 0.8369290213769564 True no_flag
+9b 9 True 0.2940275828250208 True no_flag
+9c 9 True 0.3027615636947537 True no_flag
+10a 10 True 0.13758192643035733 True no_flag
+10b 10 True 0.1714148858892607 True no_flag
+10c 10 True 0.15923975093795797 True no_flag
+11a 11 True 0.320576137519257 True no_flag
+11b 11 True 0.9522446674158677 True no_flag
+11c 11 True 0.8620371031294929 True no_flag
+12a 12 True 0.4041824899564984 True no_flag
+12b 12 True 0.2783670692032113 True no_flag
+12c 12 True 0.0731984463281344 True no_flag
+13b 13 True 1.2908129595662547 True no_flag
+13c 13 True 0.8118998566214786 True no_flag
+14a 14 True 0.2099627876904857 True no_flag
+14b 14 True 0.4017062252824153 True no_flag
+15b 15 True 0.5831438582090264 True no_flag
+15c 15 True 0.2942358814631148 True no_flag
+16a 16 True 0.7582684887652131 True no_flag
+16b 16 True 0.40089323127189097 True no_flag
+17a 17 True 1.4436943500994153 True no_flag
+17b 17 True 0.852275487607496 True no_flag
+17c 17 True 1.1667920002999457 True no_flag
+18b 18 True 0.6895243476085127 True no_flag
+18c 18 True 0.5626889394993612 True no_flag
+19b 19 True 1.1960450640031066 True no_flag
+19c 19 True 0.9372137977947881 True no_flag
+20b 20 True 0.7905676316612897 True no_flag
+20c 20 True 1.2267410117154547 True no_flag
+21a 21 True 0.29921682952354905 True no_flag
+21b 21 True 0.8654779227747595 True no_flag
+22a 22 True 0.43457541389096205 True no_flag
+22b 22 True 0.24371845025847286 True no_flag
