@@ -1,0 +1,74 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: z_spec, datatype: bool}
+# - {name: dtheta_smacs0723-iclv2, datatype: float64}
+# - {name: reproduced_smacs0723-iclv2, datatype: bool}
+# - {name: reading, datatype: string}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'm0417_images readings; gate-passing models [''smacs0723-iclv2'']'}
+# schema: astropy-2.0
+image_id system z_spec dtheta_smacs0723-iclv2 reproduced_smacs0723-iclv2 reading
+1.1 1 True 0.43659206277827795 True no_flag
+1.2 1 True 0.7858971404209083 True no_flag
+1.3 1 True 0.32957682119071074 True no_flag
+2.1 2 True 0.15410712862986978 True no_flag
+2.2 2 True 0.0912690828039537 True no_flag
+2.3 2 True 0.1667263339612725 True no_flag
+3.1 3 True 0.4104730418945306 True no_flag
+3.2 3 True 0.43560052786476683 True no_flag
+3.3 3 True 0.20375221869330024 True no_flag
+3.4 3 True 0.1511791275584079 True no_flag
+4.1 4 False 0.8159013714733919 True no_flag
+4.2 4 False 0.302431283473552 True no_flag
+4.3 4 False 0.6581878493864831 True no_flag
+5.1 5 True 0.13353568842972421 True no_flag
+5.2 5 True 0.24335038165978187 True no_flag
+5.3 5 True 0.06715771412923688 True no_flag
+6.1 6 False 0.09711914459936714 True no_flag
+6.2 6 False 0.3710757273776824 True no_flag
+6.3 6 False 0.06579327284281217 True no_flag
+7.1 7 True 0.3232790480391691 True no_flag
+7.2 7 True 0.08966388169929843 True no_flag
+7.3 7 True 0.23704287477057648 True no_flag
+8.1 8 False 0.33852887617416866 True no_flag
+8.2 8 False 0.608103874747756 True no_flag
+9.1 9 False 0.02839702291368355 True no_flag
+9.2 9 False 0.03382991277021393 True no_flag
+10.1 10 False 0.47509145361784083 True no_flag
+10.2 10 False 0.1735216428819153 True no_flag
+10.3 10 False 0.1768017185064403 True no_flag
+11.1 11 False 0.08224405838887279 True no_flag
+11.2 11 False 0.06307479942823349 True no_flag
+12.1 12 False 0.5176209968555093 True no_flag
+12.2 12 False 0.35253081236141587 True no_flag
+12.3 12 False 0.26025438389218103 True no_flag
+13.1 13 False 0.45911408944474696 True no_flag
+13.2 13 False 0.28821349662480417 True no_flag
+13.3 13 False 0.31893508216256206 True no_flag
+13.4 13 False 0.4623695989940213 True no_flag
+15.1 15 False 0.18272675132540434 True no_flag
+15.2 15 False 0.3314565219651143 True no_flag
+15.3 15 False 0.4575037115851202 True no_flag
+16.1 16 False 0.08105736749617985 True no_flag
+16.2 16 False 0.04731161711608387 True no_flag
+17.1 17 False 0.3052652769530662 True no_flag
+17.2 17 False 0.28454486440313975 True no_flag
+17.3 17 False 0.29087876392037854 True no_flag
+18.1 18 False 0.45507029105747365 True no_flag
+18.2 18 False 0.15493587026095906 True no_flag
+18.3 18 False 0.3311160046665153 True no_flag
+19.1 19 False 0.5007322742793859 True no_flag
+19.2 19 False 0.15107854180985955 True no_flag
+19.3 19 False 0.3081788544994343 True no_flag
+21.1 21 False 0.22785048195699018 True no_flag
+21.2 21 False 0.5868280791256524 True no_flag
+21.3 21 False 0.1709330278734421 True no_flag
+25.1 25 False 0.05739572854219538 True no_flag
+25.2 25 False 0.07985582933124322 True no_flag
+25.3 25 False 0.048398036857795736 True no_flag
+26.1 26 False 0.18481058557244234 True no_flag
+26.2 26 False 0.20265707501123562 True no_flag

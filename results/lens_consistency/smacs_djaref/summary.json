@@ -1,0 +1,111 @@
+{
+ "stage1_fixed_z_systems": [
+  "1",
+  "2",
+  "3",
+  "5",
+  "7"
+ ],
+ "stage1_gate_K": {
+  "images": 60,
+  "spectroscopic": 16,
+  "smacs0723-iclv2": {
+   "model_sha256": "73cc7881b224e4baa492eae56269d90c154521ffc7e2dd66ed174773098a7715",
+   "gate_K": {
+    "n_images": 16,
+    "rms_arcsec": 0.3210967735622033,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "z_fit": {
+    "4": 2.2603541052139193,
+    "6": 1.6950338681537234,
+    "8": 10.0,
+    "9": 2.873039285126658,
+    "10": 1.3990921284447675,
+    "11": 1.6950338681537234,
+    "12": 1.7783260769899907,
+    "13": 3.1623329845118797,
+    "15": 1.9573902938243815,
+    "16": 1.1007310803142025,
+    "17": 2.053574425711307,
+    "18": 1.333562260075045,
+    "19": 1.333562260075045,
+    "21": 2.4879549613536494,
+    "25": 3.3177267523323892,
+    "26": 4.424240379798978
+   },
+   "extra_predicted": {
+    "3": [
+     4,
+     5
+    ],
+    "8": [
+     2,
+     3
+    ],
+    "9": [
+     2,
+     3
+    ],
+    "11": [
+     2,
+     3
+    ],
+    "13": [
+     4,
+     5
+    ],
+    "16": [
+     2,
+     3
+    ],
+    "17": [
+     3,
+     5
+    ],
+    "25": [
+     3,
+     5
+    ],
+    "26": [
+     2,
+     7
+    ]
+   },
+   "fewer_predicted": {},
+   "post_hoc": {
+    "dropped": [],
+    "leave_one_out_rms": {},
+    "held_out_offset": {},
+    "gate_K_without_dropped": {
+     "n_images": 16,
+     "rms_arcsec": 0.3210967735622033,
+     "matched_fraction": 1.0,
+     "passes": true
+    },
+    "families_refit": {}
+   }
+  },
+  "passing_models": [
+   "smacs0723-iclv2"
+  ],
+  "flags": []
+ },
+ "stage1_reference_inputs": {
+  "reachable": true,
+  "bytes": 38626560,
+  "rows": 13554,
+  "n_columns": 407,
+  "missing": [],
+  "aper_1_pix": 12.500025000000127,
+  "passes": true,
+  "url": "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix_phot.fits"
+ },
+ "rules": {
+  "K_MAX_RMS_ARCSEC": 1.0,
+  "K_MIN_MATCHED": 0.8,
+  "MATCH_ARCSEC": 3.0,
+  "grid_step_arcsec": 0.25
+ }
+}

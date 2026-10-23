@@ -2342,6 +2342,14 @@ Contact sheet looked at (`sheet_2b.png`, `sheet_2b_t23.png`). Decision: El Gordo
 with no flag and low testability (1 / 16); the route moves to the next field. Revisit if: a deeper El Gordo
 reference catalogue or a model with a better-fitting 23c is public.
 
+**Addendum 2026-10-23r (SMACS 0723, Mahler+22 ICLv2, gate K; reference inputs).** Frozen plan
+`results/lens_consistency/smacs_djaref/PLAN_1.md`. Rule 0 (ASSUMPTION): systems without `z_m_limit` in `input.par`
+(1, 2, 3, 5, 7; 16 images) stand in for the spectroscopic set. Gate K passes (rms 0.321″, 16 / 16 within 3″; own
+constraints only). The DJA v7.4 SMACS `fix_phot` header carries every column El Gordo stage 2b read (headers only).
+9 families have more predicted than catalogued images (stage-2 inputs, not read). Decision: SMACS goes to stage 2
+with El Gordo stage 2b's rules under a new frozen plan. Revisit if: a cross-checked spec-z list (Mahler+22 /
+Noirot+23) differs from the rule-0 set.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

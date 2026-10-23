@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: SMACS 0723 reference-catalogue route, stage 1: gate K passes (rms 0.321″, 16 / 16); DJA v7.4 reference has the stage-2b columns
+- **Plan:** `results/lens_consistency/smacs_djaref/PLAN_1.md`, frozen before the run. Script `scripts/smacs_djaref.py`
+  (rules 0 and 2 as unit-tested functions, `tests/test_smacs_djaref.py`).
+- **Result** (`RESULT.md`, `summary.json`): gate K passes on the fixed-z systems 1, 2, 3, 5, 7 (rule 0 ASSUMPTION);
+  9 families with more predicted than catalogued images (stage-2 inputs, not read). DJA v7.4 header check passes
+  (13,554 rows; headers only). D-034 addendum r.
+- **Handoff:** next is SMACS stage 2 under a frozen plan with El Gordo stage 2b's rules (F200W tile footprint check
+  first; DJA table ≈ 38.6 MB in memory), then WHL0137.
+
 ## 2026-10-23: El Gordo reference-catalogue route, stage 2b: gate C2 passes (14 / 15, arc 7 / 8), no flag; 1 of 16 targets testable
 - **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_2b.md` (only rule 2a changed, to `flux_auto × tot_corr`;
   its outcome was known and disclosed). Run `scripts/elgordo_djaref.py --stage 2b`.
