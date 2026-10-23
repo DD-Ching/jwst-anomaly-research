@@ -1,0 +1,2 @@
+{"bytes": 13288, "ev": "reserve", "id": "77586551db6b", "pid": 457, "t": 1792771135.001, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a5k030/if8a5k030_drz.fits?x=1 range=None attempt=0"}
+{"counted": 8738, "ev": "done", "id": "77586551db6b", "pid": 457, "status": "cut: budget", "t": 1792771135.217}

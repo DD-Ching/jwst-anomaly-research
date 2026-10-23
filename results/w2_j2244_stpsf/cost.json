@@ -1,0 +1,28 @@
+{
+ "label": "measured (session clock; ledger totals from net_ledger.jsonl) and estimated where stated",
+ "start_utc": "2026-10-23T15:55Z",
+ "end_utc": "2026-10-23T16:31Z (last commit before the merge; last ledger record 16:26:11Z)",
+ "limits": {
+  "wall_h": 2,
+  "cores": 2,
+  "download_bytes": 1000000000
+ },
+ "download_bytes_total_ledger": 105290057,
+ "download_bytes_first_fetch": 52816656,
+ "download_bytes_refetch_for_recompute_check": 52093414,
+ "download_note": "includes the 2880 B live test, the stop-test ledger's 8738 B (charged as external), a 20 kB estimated TLS diagnosis, 0 B for dependencies (uv --offline); TCP-buffered bytes after a cut-off are not counted; error/redirect responses counted at the TLS allowance only before the post-review fix (two GitHub 403s)",
+ "run_seconds_wall": {
+  "first_run": 11,
+  "recompute_run": "not stored (seconds)"
+ },
+ "cores_used": 2,
+ "isolated_env": [
+  "photutils==3.1.1",
+  "astropy==8.0.2",
+  "numpy==2.5.4",
+  "scipy==1.18.1",
+  "matplotlib (from the uv cache)"
+ ],
+ "scratch_deleted": "FLTs, model file, Gaia response, refetch copies and the isolated env deleted after the recompute check",
+ "download_bytes_posthoc_model_refetch": 379987
+}

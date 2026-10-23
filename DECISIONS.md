@@ -3831,6 +3831,20 @@ the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
   recovers ≥ 80 % of held-out ~1″ lenses. Or deeper / better-sampled imaging (JWST, AO) of J2244−0550 becomes public. Budget the
   traffic: use small fsspec blocks.
 
+**Addendum 2 (2026-10-23, STScI PSF capability check, `results/w2_j2244_stpsf/RESULT.md`).**
+- **Decision:** the self-built image-modelling line for J2244−0550 is paused (owner rule for a failed check). That
+  covers the #474 lenstronomy chain and the official-PSF hook-up. No larger PSF, star library or budget is proposed.
+- **Evidence:** the STScI default STDPSF model (hst_notebooks WFC3 PSF notebook §2.2.1, photutils
+  `GriddedPSFModel`) was fitted on single F160W FLT exposures.
+  - It hooks up: FLT positions agree across dithers to 1.3 mas (sub-pixel consistency).
+  - It does not model a real G 18 star to the noise (χ²/ν 31–39; wings at 3–12 px 3.0–3.1 % above the model).
+  - A no-galaxy ~1″ star pair leaves a residual of z 19 at the lens position. Its wing, core-shape and two-visit
+    contributions are not separated.
+- **Rejected inside the unit:** focus or spatial perturbation (hst1pass needs at least 10 bright isolated stars per
+  exposure); stacked or drizzled PSFs (other methods; drizzled empirical models are not officially supported).
+- **Revisit if:** the owner reopens the line, or an official PSF route models a real G ≈ 18 F160W star to the
+  noise within 1.5″ (core and wings), on exposure-level or drizzled data.
+
 ## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)
 
 **Decision.** Do not use `gaiadr3.vari_microlensing` (Wyrzykowski et al. 2023) to limit W3: its Sample A selection

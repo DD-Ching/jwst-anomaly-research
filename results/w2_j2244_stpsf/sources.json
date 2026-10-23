@@ -1,0 +1,127 @@
+{
+ "label": "observed inputs (accessed 2026-10-23); sha256 of the bytes received",
+ "official_entry": {
+  "url": "https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/point_spread_function/hst_point_spread_function.html",
+  "bytes": 269319,
+  "sha256": "e0d932b4ebe2251a9c0b8c600ab9b3bad0474c7104a8a0f6b892fb289a7842e5",
+  "page_updated": "20 May 2026",
+  "version_history_last": "20 May 2026: photutils v2.3.0 -> v3.0.0; hst1pass 2026.03.24_v2b.F",
+  "github_commit": "not recorded (GitHub API commit lookup refused, HTTP 403)"
+ },
+ "psf_model": {
+  "url": "https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/WFC3IR/STDPSF_WFC3IR_F160W.fits",
+  "bytes": 371520,
+  "sha256": "35d89436ea0900fd2725220a30808b54f53202cbc8ca38e43e1db7764c147a61"
+ },
+ "flt": {
+  "if8a06cuq": {
+   "asn": "if8a06030",
+   "bytes": 4299840,
+   "sha256": "4653ecb33c49db053f21e8cf215adafaf03d7d86e1086c6fe5ce7ed12f20dc8c",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cuq/if8a06cuq_flt.fits"
+  },
+  "if8a06cvq": {
+   "asn": "if8a06030",
+   "bytes": 4299840,
+   "sha256": "10eb824eecacfaeced2096ae9439ba195e08a7c868c740351bd0b2f928bcc041",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cvq/if8a06cvq_flt.fits"
+  },
+  "if8a06cwq": {
+   "asn": "if8a06030",
+   "bytes": 4299840,
+   "sha256": "ee4b6831425349e9269dfdcd0cf86482260e4d3dbe5be17bc1f53896a36212af",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cwq/if8a06cwq_flt.fits"
+  },
+  "if8a06cxq": {
+   "asn": "if8a06030",
+   "bytes": 4299840,
+   "sha256": "250bc3d8b08b82ed8020a562b32f8a4fca57ba96b4a7c05b114a9fa04cbf2446",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cxq/if8a06cxq_flt.fits"
+  },
+  "if8a4jf4q": {
+   "asn": "if8a4j030",
+   "bytes": 4299840,
+   "sha256": "2bb6f54b2b03145a85cf305ce21190419284402a3980e4dd6644b891f1bc8fda",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf4q/if8a4jf4q_flt.fits"
+  },
+  "if8a4jf5q": {
+   "asn": "if8a4j030",
+   "bytes": 4299840,
+   "sha256": "688f34c4ca9c815cad10d319afa235e0064f17bd67d836f3075659c295505931",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf5q/if8a4jf5q_flt.fits"
+  },
+  "if8a4jf6q": {
+   "asn": "if8a4j030",
+   "bytes": 4299840,
+   "sha256": "70635c2ad91fe95b3d11af9a297c71c6de7ce62b46974c69b6f5c2c2ad725ed5",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf6q/if8a4jf6q_flt.fits"
+  },
+  "if8a4jf7q": {
+   "asn": "if8a4j030",
+   "bytes": 4299840,
+   "sha256": "3e72fe714a742518da130cb1452634db124df007f76664948b9193a2dfa64bfa",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf7q/if8a4jf7q_flt.fits"
+  },
+  "if8a38guq": {
+   "asn": "if8a38030",
+   "bytes": 4299840,
+   "sha256": "54b52498f6deebdc2f2fe6dbc95f55e19f7dacb3717bab377bac969be2b00582",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38guq/if8a38guq_flt.fits"
+  },
+  "if8a38gvq": {
+   "asn": "if8a38030",
+   "bytes": 4299840,
+   "sha256": "09f7897acaa5a585e42c8fbdbfd5d055b0e6569eea6ee0d524f5f04097dd9766",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38gvq/if8a38gvq_flt.fits"
+  },
+  "if8a38gwq": {
+   "asn": "if8a38030",
+   "bytes": 4299840,
+   "sha256": "b5f06bebfbd7188daafc4c42fcba0cf3b2a5e73a876caf2eda02d716c1570ad3",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38gwq/if8a38gwq_flt.fits"
+  },
+  "if8a38gxq": {
+   "asn": "if8a38030",
+   "bytes": 4299840,
+   "sha256": "2e507df4549b6a588f01b8d1d5e0d71d5054dc7d16cfc08cfa0cbfa21c63e9f4",
+   "url": "https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38gxq/if8a38gxq_flt.fits"
+  }
+ },
+ "gaia_dr3_tap": {
+  "url": "https://gea.esac.esa.int/tap-server/tap/sync",
+  "query": "SELECT source_id, ra, dec, pmra, pmdec, phot_g_mean_mag FROM gaiadr3.gaia_source WHERE source_id IN (2755194341830999040, 2834388281729993472, 299642795747798272)",
+  "bytes": 1600,
+  "sha256": "1361ab21a2ffab1d63047ffb3fb267c687ba2a8b26b1731e5029dd5b82d5c99f",
+  "rows": [
+   {
+    "source_id": 2834388281729993472,
+    "ra": 338.444809849145,
+    "dec": 19.941357770871665,
+    "pmra": -4.4381955573496175,
+    "pmdec": -4.669125625637639,
+    "phot_g_mean_mag": 18.293266
+   },
+   {
+    "source_id": 299642795747798272,
+    "ra": 31.911737722648716,
+    "dec": 28.317874650125663,
+    "pmra": 6.411825367718095,
+    "pmdec": -8.45612541945993,
+    "phot_g_mean_mag": 17.695143
+   },
+   {
+    "source_id": 2755194341830999040,
+    "ra": 4.552092935843469,
+    "dec": 11.72205547515635,
+    "pmra": 6.22307970265837,
+    "pmdec": -9.362556870900116,
+    "phot_g_mean_mag": 18.026035
+   }
+  ]
+ },
+ "drz_headers_read": [
+  "if8a06030_drz.fits",
+  "if8a4j030_drz.fits",
+  "if8a38030_drz.fits (first 115200 B each, for the D0nnDATA member list)"
+ ]
+}
