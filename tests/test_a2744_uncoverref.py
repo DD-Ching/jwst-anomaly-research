@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 
 from jwst_anomaly import lensmodel
@@ -34,3 +35,19 @@ def test_image_list_flags_spec_and_drops_none():
     assert list(t["image_id"]) == ["1.1a", "1.1b", "83a", "83b"]
     assert list(t["z_spec"]) == [True, True, False, False]
     assert np.all(np.isfinite(t["ra"]))
+
+
+def test_ambiguous_ids_fail_loudly():
+    with pytest.raises(ValueError):
+        lenstool_id("34.1" + "0")
+    raw = Table(
+        {
+            "ID": [1.11, 1.11],
+            "RA": [3.5, 3.6],
+            "Dec": [-30.4] * 2,
+            "z": [2.6, 2.6],
+            "Redshift_type": ["spec", "spec"],
+        }
+    )
+    with pytest.raises(ValueError):
+        image_list(raw)

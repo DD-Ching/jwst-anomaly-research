@@ -41,6 +41,8 @@ def lenstool_id(image_id: str) -> str:
     """UNCOVER id -> an id whose ``lensmodel.image_family`` is ``au.uncover_system(image_id)``:
     "S.KI" -> "S.K" + letter I, "S.I" -> "S" + letter I (PLAN.md Inputs)."""
     idx = int(image_id.split(".")[1][-1])
+    if idx == 0:  # "S.K0" / "S.10" cannot be told apart once stored as floats
+        raise ValueError(f"UNCOVER id {image_id!r}: image number 0 is ambiguous")
     return f"{au.uncover_system(image_id)}{chr(ord('a') + idx - 1)}"
 
 
@@ -49,6 +51,8 @@ def image_list(raw: Table) -> Table:
     kind = np.asarray(raw["Redshift_type"], str)
     keep = kind != "None"
     ids = [repr(float(i)) for i in raw["ID"][keep]]
+    if len(set(ids)) != len(ids):
+        raise ValueError("duplicate UNCOVER image ids")
     t = Table(
         {
             "image_id": [lenstool_id(i) for i in ids],
