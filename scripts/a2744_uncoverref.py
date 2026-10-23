@@ -2,10 +2,9 @@
 
 Frozen plans: ``results/lens_consistency/abell2744_uncoverref/PLAN.md`` (stage 1) and ``PLAN_1b.md``
 (``--stage 1b``: gate K with the WLS source of ``a2744_uncover``; a deviation after stage 1 failed).
-Runs gate K of
-``m0417_images`` on the spectroscopic images of the UNCOVER v2.0 multiple-image table with the
-v2.0 deflection maps (``abell2744-uncover2-maps``). The extra-image stages follow in a later cycle
-only if the gate passes. Writes ``summary.json`` to the plan's directory.
+Runs gate K of ``m0417_images`` on the spectroscopic images of the UNCOVER v2.0 multiple-image
+table with the v2.0 deflection maps (``abell2744-uncover2-maps``). The extra-image stages follow
+in a later cycle only if the gate passes. Writes ``summary.json`` to the plan's directory.
 
     python scripts/a2744_uncoverref.py [--stage 1b]
 """
@@ -74,6 +73,15 @@ def image_list(raw: Table) -> Table:
     return t
 
 
+def read_summary() -> dict:
+    p = OUT / "summary.json"
+    return json.loads(p.read_text()) if p.exists() else {}
+
+
+def write_summary(summary: dict) -> None:
+    (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")
+
+
 def gate_k_wls(model, grid, sp: Table) -> tuple[Table, dict]:
     """PLAN_1b.md rule 1: ``a2744_uncover.imageplane`` (WLS family source) on the spectroscopic
     images ``sp``, decided by the unchanged ``m0417_images.gate_k``; rule 2's reported counts."""
@@ -103,6 +111,7 @@ def stage_1b() -> dict:
     sp = images[images["z_spec"]]
     solver = mi.Solver(MODEL, images, GRID_STEP_K)
     ip, k = gate_k_wls(solver.model, solver.grid, sp)
+    ip.meta.update(solver.model._meta())
     ip.meta["provenance"] = "model_prediction"
     ip.meta["source"] = f"{MODEL}, WLS family source (PLAN_1b.md)"
     lc._write(ip, OUT / f"imageplane_wls_{FIELD}_{MODEL}.ecsv")
@@ -120,22 +129,30 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     OUT.mkdir(parents=True, exist_ok=True)
     if args.stage == "1b":
-        summary = json.loads((OUT / "summary.json").read_text())
+        summary = read_summary()
         summary["stage1b_gate_K_wls"] = _clean(stage_1b())
-        (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")
+        summary["status"] = (
+            "stage 1 stopped (mean source); stage 1b passed (WLS source, deviation): stage 2 next"
+            if summary["stage1b_gate_K_wls"]["gate_K"]["passes"]
+            else "stage 1 and stage 1b failed: Abell 2744 extra-image route stopped with this model"
+        )
+        write_summary(summary)
         print(json.dumps(summary["stage1b_gate_K_wls"]["gate_K"]))
         return 0
     raw = Table.read(fetch_catalog(*au.UNCOVER_V2["images"]))
     image_list(raw).write(OUT / IMAGES, format="ascii.ecsv", overwrite=True)
     mi.FIELDS[FIELD] = {"images": IMAGES, "models": (MODEL,)}
     k = mi.run_field(FIELD, OUT, GRID_STEP_K)
-    summary: dict = {"stage1_gate_K": k}
+    # a stage-1 rerun keeps the later stages' keys (stage 1b adds to the same file)
+    summary: dict = {
+        x: v for x, v in read_summary().items() if x.startswith("stage1b") or x == "status"
+    }
+    summary["stage1_gate_K"] = k
     if MODEL not in k["passing_models"]:
         summary["stopped"] = "gate K failed: model not used (PLAN.md rule 1)"
     else:
         summary["next"] = "gate K passed: pin an UNCOVER reference, run the extra-image stages"
-    summary = _clean(summary)
-    (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")
+    write_summary(_clean(summary))
     print(json.dumps({"gate_K": k[MODEL]["gate_K"], **{x: summary.get(x) for x in ("stopped",)}}))
     return 0
 

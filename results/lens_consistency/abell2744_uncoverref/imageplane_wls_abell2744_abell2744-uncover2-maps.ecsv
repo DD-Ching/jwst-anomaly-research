@@ -11,6 +11,15 @@
 # meta: !!omap
 # - {provenance: model_prediction}
 # - {source: 'abell2744-uncover2-maps, WLS family source (PLAN_1b.md)'}
+# - {model_sha256: 156d073a1d046415c60b7c279b5394402ef2d57e26ea4a6794521262a38ae53e}
+# - {z_lens: 0.308}
+# - reference_radec: [3.575250294, -30.377747240000005]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.100000000008
+#     shape: [4561, 4561]
 # schema: astropy-2.0
 image_id system z_used dtheta_arcsec magnification n_predicted shared_match
 1.1a 1.1 1.6881 0.7481167224801079 6.52808220949976 3 False

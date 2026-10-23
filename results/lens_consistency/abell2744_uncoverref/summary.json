@@ -429,5 +429,6 @@
   "fewer_predicted": {},
   "model_sha256": "156d073a1d046415c60b7c279b5394402ef2d57e26ea4a6794521262a38ae53e",
   "next": "gate K-WLS passed (deviation): freeze stage 2 with the WLS source"
- }
+ },
+ "status": "stage 1 stopped (mean source); stage 1b passed (WLS source, deviation): stage 2 next"
 }
