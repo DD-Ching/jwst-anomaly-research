@@ -176,8 +176,8 @@ def zero_points() -> dict:
     return zp
 
 
+def injection_jobs(base_jobs: list[dict], zp: dict, names=("pair3", "pair4")) -> list[dict]:
     """PLAN section 5: Sersic injections into base stamps (negative pairs or the target)."""
-    """PLAN section 5: Sersic injections into the given base stamps (negative pairs or the target)."""
     out = []
     k = 0
     for band in ("F160W", "F814W"):

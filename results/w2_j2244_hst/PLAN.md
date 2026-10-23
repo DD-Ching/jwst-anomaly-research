@@ -201,3 +201,12 @@ review then found two implementation errors that make the v2 run differ from the
   gate, pools and split. Development is rerun first, T recomputed with the same formula and committed, then
   validation and injections. The target is run only in a band whose gate passes.
 - The F160W library and pairs are unaffected by fix 2, but all runs change through fix 1.
+- **v3 development rerun** (`runs/dev_v3.json`, `png/dev_*`), with thresholds by the unchanged formula, committed
+  before validation:
+
+| band | development negatives Δχ² (reduced χ²) | T | development positives Δχ² |
+|---|---|---|---|
+| F160W | 13601.5 (7.8), 649.3 (9.6), 1750.7 (2.3) | **27203.0** | J0743 2742.9, J0818 957.6 |
+| F814W | 64.9 (7.9), 5465.4 (2.6), 805.3 (1.0) | **10930.8** | J0743 2249.0, J0818 3119.8 |
+
+  Both bands' development positives are below T, so both are expected to fail validation. Nothing else changes.
