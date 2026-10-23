@@ -125,6 +125,31 @@ def signed_offsets(solver: mi.Solver, ip: Table, images: Table) -> tuple[np.ndar
     return -dx, dy
 
 
+def at_zphot(solver: mi.Solver, images: Table) -> dict:
+    """Post hoc (not in PLAN.md): every family at the median of its photometric z instead of the
+    fitted z (families without one left out), the same statistics for both sets."""
+    zp = np.asarray(images["z_phot"], float)
+    fam = np.asarray(images["system"], str)
+    zf = {
+        f: np.nanmedian(zp[fam == f]) for f in dict.fromkeys(fam) if np.isfinite(zp[fam == f]).any()
+    }
+    t = images[np.isin(fam, list(zf))]
+    t["z"] = [zf[f] for f in np.asarray(t["system"], str)]
+    ip = solver.image_plane(t)
+    d = np.asarray(ip["dtheta_arcsec"], float)
+    held = np.asarray(t["held_out"], bool)
+    out = {"pre_jwst": gate_k0(d[~held]), "held_out": gate_k0(d[held])}
+    for v in out.values():
+        v.pop("passes")
+    out["held_out_unmatched"] = [
+        str(i)
+        for i, x in zip(t["image_id"][held], d[held], strict=True)
+        if not (np.isfinite(x) and x <= MATCH_ARCSEC)
+    ]
+    out["families_left_out"] = sorted(set(fam) - set(zf))
+    return out
+
+
 def run_model(name: str, images: Table, grid_step: float) -> tuple[dict, Table]:
     mi.Z_STEPS, mi.Z_MIN_OFFSET, mi.Z_MAX, mi.MATCH_ARCSEC = (
         Z_STEPS,
@@ -161,6 +186,7 @@ def run_model(name: str, images: Table, grid_step: float) -> tuple[dict, Table]:
         "fewer_predicted": {f: c for f, c in counts.items() if c[1] < c[0]},
     }
     entry["held_out"].pop("passes")
+    entry["post_hoc_zphot"] = at_zphot(solver, images)
     entry["usable"] = entry["gate_K0"]["passes"] and entry["frame_F"]["passes"]
     return entry, ip
 

@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: MACS0647 CLASH held-out test: LTM-Gauss reproduces the JWST-first systems at fitted z; no flag
+- **Plan:** `results/lens_consistency/macs0647_clash_heldout/PLAN.md`, frozen and pushed (031af83) before any model
+  read; rule functions tested (`tests/test_macs0647_clash_heldout.py`).
+- **Result** (`RESULT.md`, `summary.json`): at fitted family z, CLASH LTM-Gauss passes gate K0 on the pre-JWST
+  families (rms 1.66″, 37 / 38 within 3″) and frame check F (+0.13″, +0.10″), and reproduces 31 / 31 certain images
+  of Meena+2023 systems 13–23 (rms 1.41″); PIEMD + eNFW fails K0 (2.34″). No flag. Post hoc (not in the plan): at
+  the family photo-z both models do worse on the pre-JWST systems than on the held-out ones (LTM-Gauss 20 / 35 vs
+  25 / 31), so photo-z are no redshift constraint; the fitted-z test only finds images off by > 3″ at every z.
+  D-034 addendum w.
+- **Hosts:** `archive.stsci.edu` failed TLS here because the session trust store lacks its root (emSign Root CA -
+  G1); verification works with the proxy bundle plus certifi's Mozilla bundle (`REQUESTS_CA_BUNDLE` pointed at the
+  concatenation in the scratchpad). The four CLASH deflection maps (≈ 70 MB each, sha256-verified) were fetched to
+  the session cache and are deleted at the end of the run.
+- **Handoff:** the CLASH maps add no lensing-residual input on MACS0647. Next: an input check of another field with
+  public JWST-era maps, or MACS0647 again with spectroscopic z for systems 13–23 or JWST-era maps.
+
 ## 2026-10-23: MACS0647 reference-route input check: image lists and reference pass, no JWST-era model maps
 - **Result** (`results/lens_consistency/macs0647_inputs/RESULT.md`, `summary.json`): Meena+2023 (72 images, 23
   systems, photometric z only) and Nishida+2025 (86 images, 28 sources) parsed from their arXiv TeX and unit-tested;
