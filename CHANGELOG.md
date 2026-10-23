@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: MACS0647 reference-route input check (in progress)
+- **Plan:** input check only (public JWST-era image list, model maps, deblended reference catalogue) before any
+  stage; no residual read.
+
 ## 2026-10-23: RXJ2129 reference-catalogue route, stage 2: gate C2 fails (4 / 7, arc 2 / 5); no flag read
 - **Plan:** `results/lens_consistency/rxj2129_djaref/PLAN_2.md`, frozen and pushed before any read (El Gordo stage
   2b's rules; deviation D1: overlapping targets of the one-galaxy group 3 / S3-1 / S3-2 joined for flags,
