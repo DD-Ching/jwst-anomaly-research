@@ -137,15 +137,15 @@ def stage_1b() -> dict:
     return k
 
 
-def y_axis_pa_deg(x, y, ra, dec) -> float:
-    """Sky position angle (east of north) of the pixel grid's +y axis, from a linear fit of the
-    catalogue's pixel to sky positions (0 for a north-up grid)."""
+def y_axis_pa_deg(x, y, ra, dec, axis: int = 1) -> float:
+    """Sky position angle (east of north) of the pixel grid's +y axis (``axis=0``: +x axis), from
+    a linear fit of the catalogue's pixel to sky positions (0 for a north-up grid)."""
     x, y, ra, dec = (np.asarray(v, float) for v in (x, y, ra, dec))
     d0 = np.median(dec)
     a = np.c_[x - np.median(x), y - np.median(y), np.ones_like(x)]
     e = np.linalg.lstsq(a, (ra - np.median(ra)) * np.cos(np.radians(d0)), rcond=None)[0]
     n = np.linalg.lstsq(a, dec - d0, rcond=None)[0]
-    return float(np.degrees(np.arctan2(e[1], n[1])))
+    return float(np.degrees(np.arctan2(e[axis], n[axis])))
 
 
 def theta_sample(t: Table) -> np.ndarray:
@@ -235,6 +235,7 @@ def stage_2a(cat: Path, segmap: Path) -> dict:
         "theta_range_rad": [float(np.min(t["theta_J2000"])), float(np.max(t["theta_J2000"]))],
         "pixel_scale_arcsec": float(cr.pixel_scale(t["x"], t["y"], t["ra"], t["dec"])),
         "y_axis_pa_deg": y_axis_pa_deg(t["x"], t["y"], t["ra"], t["dec"]),
+        "x_axis_pa_deg": y_axis_pa_deg(t["x"], t["y"], t["ra"], t["dec"], axis=0),
     }
     res["ids"] = used
     return res

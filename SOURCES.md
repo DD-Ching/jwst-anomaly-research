@@ -317,7 +317,11 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - UNCOVER DR3 photometry (Weaver et al. 2024, ApJS 270, 7): https://jwst-uncover.github.io/DR3.html; LW SUPER catalogue
   `UNCOVER_DR3_LW_SUPER_catalog.fits` (Drive id 19Jd3Xg5BTrHX5icb81txSn_P0LqxmLsz, 83,684,160 bytes), segmentation map
   (1s7DnoX8G73sOLiMiDttlsyZLjwSB2WlX), bCG-subtracted F200W mosaic v5.2.0 (1CPjv4mJUj-4Qn8nwWS0FEPEdBfhDxzV_,
-  1.84 GB gzip); headers read 2026-10-23, not pinned (no sha256).
+  1.84 GB gzip); headers read 2026-10-23. Pinned 2026-10-23 (stage 2a): SUPER catalogue sha256
+  b8f265311d041b815e1511d74eadec2d88bf8c80ef2fee2394d7f78dbe4adb4c; `UNCOVER_DR3_SEGMAP.fits.gz` sha256
+  5a64d01fcd75ecbea38efcc4ec673d2cb5fb3fb19b76ced21417fed6bc00087a; `README_DR3.txt` (Drive id
+  1Xbfkl2ZxIm-XnGj1ResBSKWCDjkgULqc) sha256 93cfa19494b077a60541a34fc17db6125c5667f3a17a9dcd2c10d2915828c397. The
+  mosaic is not pinned.
 - Mahler+2022 SMACS 0723 lens model, release v2 (2022-12-27): https://github.com/guillaumemahler/SMACS0723-mahler2022
 - Noirot+2023 SMACS 0723 redshifts: https://niriss.github.io/smacs0723
 - Caminha+2022 SMACS 0723 model and MUSE redshifts, CDS catalogue J/A+A/666/L9: https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/666/L9.
