@@ -91,6 +91,18 @@ def main(argv=None) -> dict:
                 "mu": [s700._r(float(m), 2) for m in pred["magnification"]],
                 "c_ra": None,
             }
+            # post hoc (after the frozen outcome): where the predicted images lie, and the model's
+            # signed magnification at the observed a and b
+            mid = float(np.mean(ab["ra"])), float(np.mean(ab["dec"]))
+            row["post_hoc_pred_to_ab_mid_arcsec"] = [
+                s700._r(sep_arcsec(float(r["ra"]), float(r["dec"]), *mid)) for r in pred
+            ]
+            ox, oy = model.to_frame(np.asarray(ab["ra"], float), np.asarray(ab["dec"], float))
+            m = model.lens_map(ox, oy, np.full(len(ab), Z))
+            det = np.asarray(m["a11"]) * np.asarray(m["a22"]) - np.asarray(m["a12"]) * np.asarray(
+                m["a21"]
+            )
+            row["post_hoc_mu_at_ab"] = [s700._r(float(1.0 / d), 2) for d in det]
             if i is not None:
                 cra, cdec = float(pred["ra"][i]), float(pred["dec"][i])
                 d_cat = {

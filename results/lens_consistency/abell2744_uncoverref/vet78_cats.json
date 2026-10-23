@@ -1,0 +1,65 @@
+{
+ "model": "abell2744-cats",
+ "z": 2.3151,
+ "grid_step_arcsec": 0.25,
+ "grid_half_width_arcsec": 179.0,
+ "thresholds_arcsec": {
+  "tool": 1.5,
+  "search": 1.0
+ },
+ "knots": {
+  "78.1": {
+   "n_predicted": 2,
+   "source_spread_arcsec": 0.918,
+   "mu": [
+    3.45,
+    -1.41
+   ],
+   "c_ra": null,
+   "post_hoc_pred_to_ab_mid_arcsec": [
+    38.519,
+    0.013
+   ],
+   "post_hoc_mu_at_ab": [
+    -1.59,
+    -1.26
+   ]
+  },
+  "78.2": {
+   "n_predicted": 2,
+   "source_spread_arcsec": 1.318,
+   "mu": [
+    3.45,
+    -1.43
+   ],
+   "c_ra": null,
+   "post_hoc_pred_to_ab_mid_arcsec": [
+    38.548,
+    0.026
+   ],
+   "post_hoc_mu_at_ab": [
+    -1.69,
+    -1.21
+   ]
+  },
+  "78.3": {
+   "n_predicted": 2,
+   "source_spread_arcsec": 0.374,
+   "mu": [
+    3.45,
+    -1.43
+   ],
+   "c_ra": null,
+   "post_hoc_pred_to_ab_mid_arcsec": [
+    38.539,
+    0.003
+   ],
+   "post_hoc_mu_at_ab": [
+    -1.5,
+    -1.37
+   ]
+  }
+ },
+ "outcome": "tool not validated",
+ "provenance": "model_prediction (positions observed)"
+}
