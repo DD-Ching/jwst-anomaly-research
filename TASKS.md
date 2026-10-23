@@ -202,7 +202,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    ≥ 0.9; the CHITAH lens models of the 3 open SuGOHI IX pairs; rejected lensed-quasar pairs: LS DR10 cannot decide them
    (D-064, control efficiency 0/5 at 1.9–2.6″); of the 11 colour-matched ones, J0130+0725 has no lens light in HST to
    F814W ≈ 23 (D-064 addendum: binary vs dark lens needs spectra of both images or two-epoch flux ratios), J0728+2607
-   has none either with an empirical PSF (F814W ≈ 23), and 9 have no HST (Euclid DR1 when public); catalogued image separations for the 15
+   has none either with an empirical PSF (F814W ≈ 23), and 9 have no HST (Euclid DR1 when public);
+   DESI DR1 has spectra of both components for 13 rejected pairs (2026-10-23, `results/w2_desi_pairs/RESULT.md`), but
+   the frozen profile test flags only 1 / 7 catalogued binaries, so none is classified; next only with a more
+   powerful pre-registered statistic and fresh, non-overlapping controls; catalogued image separations for the 15
    pair-decided systems the pair check cannot test yet (incl. the 3 CHITAH pairs; HSC lens models); HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.

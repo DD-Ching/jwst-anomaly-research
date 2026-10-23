@@ -1,0 +1,2591 @@
+{
+ "label": "derived availability count (desi_dr1.zpix positions, redshifts, spectype only; no spectrum read); NOIRLab Data Lab TAP 2026-10-23",
+ "query": "desi_dr1.zpix box of half-width (catalogued separation + 1.5 arcsec) around the system position; QSO rows counted",
+ "counts": {
+  "hennawi/binary: 0 QSO": 20,
+  "hennawi/binary: 1 QSO": 20,
+  "hennawi/binary: >=2 QSO": 17,
+  "niq/control: 0 QSO": 75,
+  "niq/control: 1 QSO": 19,
+  "niq/control: >=2 QSO": 12,
+  "niq/rejected: 0 QSO": 66,
+  "niq/rejected: 1 QSO": 37,
+  "niq/rejected: >=2 QSO": 20
+ },
+ "systems": [
+  {
+   "kind": "niq",
+   "name": "J0030-3358",
+   "group": "control",
+   "ra": 7.674,
+   "dec": -33.9767,
+   "sep": 2.03,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0041-5350",
+   "group": "rejected",
+   "ra": 10.4496,
+   "dec": -53.846,
+   "sep": 1.06,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0045-3937",
+   "group": "control",
+   "ra": 11.3665,
+   "dec": -39.6262,
+   "sep": 1.14,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0116+4052",
+   "group": "control",
+   "ra": 19.1635,
+   "dec": 40.8811,
+   "sep": 1.28,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0124-6334",
+   "group": "rejected",
+   "ra": 21.0089,
+   "dec": -63.5788,
+   "sep": 0.87,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0125-1012",
+   "group": "rejected",
+   "ra": 21.3174,
+   "dec": -10.2082,
+   "sep": 1.12,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J0130+0725",
+   "group": "rejected",
+   "ra": 22.5859,
+   "dec": 7.4212,
+   "sep": 2.06,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J0133+0816",
+   "group": "rejected",
+   "ra": 23.2695,
+   "dec": 8.2788,
+   "sep": 1.55,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J0138+4841",
+   "group": "rejected",
+   "ra": 24.5914,
+   "dec": 48.6963,
+   "sep": 0.69,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0146-6510",
+   "group": "rejected",
+   "ra": 26.6467,
+   "dec": -65.1799,
+   "sep": 1.0,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0152-2448",
+   "group": "control",
+   "ra": 28.0797,
+   "dec": -24.8105,
+   "sep": 1.91,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0156-2751",
+   "group": "control",
+   "ra": 29.1039,
+   "dec": -27.8562,
+   "sep": 1.5,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0200-1509",
+   "group": "control",
+   "ra": 30.0872,
+   "dec": -15.1609,
+   "sep": 0.78,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0209-3841",
+   "group": "control",
+   "ra": 32.3047,
+   "dec": -38.6961,
+   "sep": 1.23,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0221+0555",
+   "group": "rejected",
+   "ra": 35.4474,
+   "dec": 5.9192,
+   "sep": 0.86,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J0232-2429",
+   "group": "control",
+   "ra": 38.0655,
+   "dec": -24.4942,
+   "sep": 1.44,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0247+7706",
+   "group": "control",
+   "ra": 41.8664,
+   "dec": 77.1014,
+   "sep": 1.94,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0247-2646",
+   "group": "control",
+   "ra": 41.8764,
+   "dec": -26.7729,
+   "sep": 1.22,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0247-0800",
+   "group": "control",
+   "ra": 41.9561,
+   "dec": -8.015,
+   "sep": 1.68,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0247-6349",
+   "group": "control",
+   "ra": 41.978,
+   "dec": -63.8232,
+   "sep": 1.49,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0311+0550",
+   "group": "rejected",
+   "ra": 47.7708,
+   "dec": 5.8367,
+   "sep": 1.36,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0315-3522",
+   "group": "rejected",
+   "ra": 48.9099,
+   "dec": -35.3827,
+   "sep": 1.3,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0325-2232",
+   "group": "control",
+   "ra": 51.4511,
+   "dec": -22.5409,
+   "sep": 1.01,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0326-3122",
+   "group": "rejected",
+   "ra": 51.5284,
+   "dec": -31.3816,
+   "sep": 1.43,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0329-0208",
+   "group": "control",
+   "ra": 52.428,
+   "dec": -2.1379,
+   "sep": 1.32,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0332-6608",
+   "group": "rejected",
+   "ra": 53.0841,
+   "dec": -66.14,
+   "sep": 0.94,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0339-6121",
+   "group": "control",
+   "ra": 54.787,
+   "dec": -61.3625,
+   "sep": 1.26,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0346+2154",
+   "group": "rejected",
+   "ra": 56.5458,
+   "dec": 21.9124,
+   "sep": 0.99,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0346-6414",
+   "group": "control",
+   "ra": 56.5579,
+   "dec": -64.2417,
+   "sep": 1.91,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0347-2154",
+   "group": "control",
+   "ra": 56.769,
+   "dec": -21.9095,
+   "sep": 1.87,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0350-4611",
+   "group": "control",
+   "ra": 57.7146,
+   "dec": -46.1858,
+   "sep": 1.3,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0355-5624",
+   "group": "control",
+   "ra": 58.804,
+   "dec": -56.4147,
+   "sep": 1.29,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0401-2514",
+   "group": "control",
+   "ra": 60.4504,
+   "dec": -25.2439,
+   "sep": 1.45,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0405-3730",
+   "group": "control",
+   "ra": 61.2721,
+   "dec": -37.5128,
+   "sep": 1.7,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0416-5606",
+   "group": "control",
+   "ra": 64.1783,
+   "dec": -56.1073,
+   "sep": 1.04,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0416+7428",
+   "group": "control",
+   "ra": 64.1972,
+   "dec": 74.4827,
+   "sep": 2.64,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0440-0905",
+   "group": "control",
+   "ra": 70.0482,
+   "dec": -9.0911,
+   "sep": 1.69,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J0504-2446",
+   "group": "control",
+   "ra": 76.1616,
+   "dec": -24.7752,
+   "sep": 2.05,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0526-3933",
+   "group": "control",
+   "ra": 81.547,
+   "dec": -39.563,
+   "sep": 1.41,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0527-2431",
+   "group": "rejected",
+   "ra": 81.7608,
+   "dec": -24.5328,
+   "sep": 1.46,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0544+4350",
+   "group": "control",
+   "ra": 86.1448,
+   "dec": 43.8386,
+   "sep": 2.04,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0607-2152",
+   "group": "control",
+   "ra": 91.7954,
+   "dec": -21.8716,
+   "sep": 1.57,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0608+4229",
+   "group": "control",
+   "ra": 92.1725,
+   "dec": 42.4935,
+   "sep": 1.27,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0628-7448",
+   "group": "control",
+   "ra": 97.2299,
+   "dec": -74.801,
+   "sep": 2.61,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0643+2725",
+   "group": "control",
+   "ra": 100.9259,
+   "dec": 27.4276,
+   "sep": 2.44,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0707+4109",
+   "group": "rejected",
+   "ra": 106.9469,
+   "dec": 41.164,
+   "sep": 2.96,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0723+4739",
+   "group": "rejected",
+   "ra": 110.9364,
+   "dec": 47.6529,
+   "sep": 1.58,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0728+2607",
+   "group": "rejected",
+   "ra": 112.116,
+   "dec": 26.1173,
+   "sep": 2.15,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J0734+1915",
+   "group": "control",
+   "ra": 113.6936,
+   "dec": 19.2501,
+   "sep": 1.2,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0740+0635",
+   "group": "control",
+   "ra": 115.0907,
+   "dec": 6.5938,
+   "sep": 1.61,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0803+3908",
+   "group": "control",
+   "ra": 120.9906,
+   "dec": 39.1398,
+   "sep": 0.91,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J0805+3550",
+   "group": "rejected",
+   "ra": 121.2733,
+   "dec": 35.8472,
+   "sep": 1.13,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0816+2339",
+   "group": "rejected",
+   "ra": 124.1428,
+   "dec": 23.663,
+   "sep": 1.99,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0833+0331",
+   "group": "control",
+   "ra": 128.3369,
+   "dec": 3.5247,
+   "sep": 1.55,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J0833-0721",
+   "group": "rejected",
+   "ra": 128.4731,
+   "dec": -7.35185,
+   "sep": 1.22,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0833+2612",
+   "group": "control",
+   "ra": 128.4767,
+   "dec": 26.2029,
+   "sep": 1.79,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0834-2933",
+   "group": "control",
+   "ra": 128.6411,
+   "dec": -29.5505,
+   "sep": 1.8,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0904+3343",
+   "group": "control",
+   "ra": 136.1714,
+   "dec": 33.7291,
+   "sep": 1.5,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J0907+6224",
+   "group": "control",
+   "ra": 136.966,
+   "dec": 62.4116,
+   "sep": 2.49,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0909-0749",
+   "group": "rejected",
+   "ra": 137.4946,
+   "dec": -7.8179,
+   "sep": 0.81,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J0911-0948",
+   "group": "control",
+   "ra": 137.7845,
+   "dec": -9.8054,
+   "sep": 2.52,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0916-2848",
+   "group": "rejected",
+   "ra": 139.1646,
+   "dec": -28.8143,
+   "sep": 1.01,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0918-0220",
+   "group": "control",
+   "ra": 139.6806,
+   "dec": -2.3354,
+   "sep": 2.26,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J0921+3020",
+   "group": "control",
+   "ra": 140.2685,
+   "dec": 30.3421,
+   "sep": 2.93,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0936-1211",
+   "group": "control",
+   "ra": 144.2494,
+   "dec": -12.1836,
+   "sep": 2.11,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0937+5835",
+   "group": "control",
+   "ra": 144.3832,
+   "dec": 58.5906,
+   "sep": 1.44,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0939-0109",
+   "group": "rejected",
+   "ra": 144.8548,
+   "dec": -1.1636,
+   "sep": 1.9,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0941-2443",
+   "group": "rejected",
+   "ra": 145.49455,
+   "dec": -24.7308,
+   "sep": 2.25,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J0954-1421",
+   "group": "control",
+   "ra": 148.7079,
+   "dec": -14.3528,
+   "sep": 1.4,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1003+0651",
+   "group": "control",
+   "ra": 150.7886,
+   "dec": 6.8501,
+   "sep": 2.62,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J1008+0046",
+   "group": "control",
+   "ra": 152.1932,
+   "dec": 0.7724,
+   "sep": 1.31,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J1008+0929",
+   "group": "control",
+   "ra": 152.2041,
+   "dec": 9.4878,
+   "sep": 1.76,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1008-2911",
+   "group": "rejected",
+   "ra": 152.2474,
+   "dec": -29.1887,
+   "sep": 1.14,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1019-1322",
+   "group": "rejected",
+   "ra": 154.8066,
+   "dec": -13.3692,
+   "sep": 1.14,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1033-8249",
+   "group": "rejected",
+   "ra": 158.4076,
+   "dec": -82.8297,
+   "sep": 2.33,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1036-8544",
+   "group": "rejected",
+   "ra": 159.1077,
+   "dec": -85.7471,
+   "sep": 1.22,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1037+0018",
+   "group": "control",
+   "ra": 159.3665,
+   "dec": 0.3057,
+   "sep": 1.25,
+   "n_qso": 3
+  },
+  {
+   "kind": "niq",
+   "name": "J1041+1710",
+   "group": "control",
+   "ra": 160.3081,
+   "dec": 17.1798,
+   "sep": 1.62,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1045+3433",
+   "group": "rejected",
+   "ra": 161.4977,
+   "dec": 34.5659,
+   "sep": 1.42,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1102+3421",
+   "group": "rejected",
+   "ra": 165.5267,
+   "dec": 34.3624,
+   "sep": 1.25,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1103-1005",
+   "group": "rejected",
+   "ra": 165.8665,
+   "dec": -10.094,
+   "sep": 0.72,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1137-1245",
+   "group": "control",
+   "ra": 174.3128,
+   "dec": -12.7506,
+   "sep": 2.37,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1202+0703",
+   "group": "rejected",
+   "ra": 180.6182,
+   "dec": 7.0572,
+   "sep": 1.21,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J1206-2543",
+   "group": "control",
+   "ra": 181.7448,
+   "dec": -25.7254,
+   "sep": 2.08,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1209-1929",
+   "group": "control",
+   "ra": 182.3615,
+   "dec": -19.4879,
+   "sep": 1.46,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1233-3542",
+   "group": "control",
+   "ra": 188.3261,
+   "dec": -35.716,
+   "sep": 2.03,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1233-0227",
+   "group": "control",
+   "ra": 188.4219,
+   "dec": -2.4604,
+   "sep": 1.76,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J1237+3340",
+   "group": "control",
+   "ra": 189.2537,
+   "dec": 33.682,
+   "sep": 1.57,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1247-3253",
+   "group": "control",
+   "ra": 191.9855,
+   "dec": -32.8919,
+   "sep": 1.85,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1255+0737",
+   "group": "control",
+   "ra": 193.9324,
+   "dec": 7.6296,
+   "sep": 1.7,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1303+1816",
+   "group": "control",
+   "ra": 195.7765,
+   "dec": 18.2781,
+   "sep": 2.26,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1326+3020",
+   "group": "control",
+   "ra": 201.741,
+   "dec": 30.34,
+   "sep": 2.11,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1329-2807",
+   "group": "control",
+   "ra": 202.4535,
+   "dec": -28.1279,
+   "sep": 1.9,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1408+0422",
+   "group": "control",
+   "ra": 212.1406,
+   "dec": 4.3747,
+   "sep": 2.59,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J1428+0500",
+   "group": "rejected",
+   "ra": 217.2309,
+   "dec": 5.0058,
+   "sep": 2.23,
+   "n_qso": 3
+  },
+  {
+   "kind": "niq",
+   "name": "J1449-2025",
+   "group": "rejected",
+   "ra": 222.296,
+   "dec": -20.4276,
+   "sep": 1.17,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1526-1400",
+   "group": "control",
+   "ra": 231.6891,
+   "dec": -14.003,
+   "sep": 2.65,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1548-2914",
+   "group": "control",
+   "ra": 237.1733,
+   "dec": -29.2351,
+   "sep": 1.99,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1550+0221",
+   "group": "control",
+   "ra": 237.7387,
+   "dec": 2.3629,
+   "sep": 2.03,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J1821+6005",
+   "group": "rejected",
+   "ra": 275.376,
+   "dec": 60.0908,
+   "sep": 1.51,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J1945-2857",
+   "group": "control",
+   "ra": 296.3899,
+   "dec": -28.9548,
+   "sep": 2.69,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2015+0707",
+   "group": "control",
+   "ra": 303.8037,
+   "dec": 7.1171,
+   "sep": 2.93,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2017+6204",
+   "group": "control",
+   "ra": 304.4544,
+   "dec": 62.0787,
+   "sep": 0.92,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2057+0217",
+   "group": "rejected",
+   "ra": 314.4672,
+   "dec": 2.2967,
+   "sep": 1.16,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2106-4944",
+   "group": "control",
+   "ra": 316.507,
+   "dec": -49.7482,
+   "sep": 2.09,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2110-3755",
+   "group": "control",
+   "ra": 317.5016,
+   "dec": -37.9183,
+   "sep": 1.52,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2121+1713",
+   "group": "rejected",
+   "ra": 320.3801,
+   "dec": 17.2322,
+   "sep": 2.89,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J2132+3635",
+   "group": "rejected",
+   "ra": 323.0301,
+   "dec": 36.5982,
+   "sep": 1.33,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2147-1340",
+   "group": "control",
+   "ra": 326.9957,
+   "dec": -13.6772,
+   "sep": 1.33,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2205+1019",
+   "group": "control",
+   "ra": 331.4161,
+   "dec": 10.3307,
+   "sep": 1.34,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J2205-3727",
+   "group": "control",
+   "ra": 331.4343,
+   "dec": -37.4504,
+   "sep": 0.76,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2213-5926",
+   "group": "control",
+   "ra": 333.3363,
+   "dec": -59.4376,
+   "sep": 2.59,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2244-0550",
+   "group": "rejected",
+   "ra": 341.0473,
+   "dec": -5.8471,
+   "sep": 1.02,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J2255+8009",
+   "group": "rejected",
+   "ra": 343.9088,
+   "dec": 80.1662,
+   "sep": 0.74,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2256+2223",
+   "group": "rejected",
+   "ra": 344.0512,
+   "dec": 22.3943,
+   "sep": 1.63,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2308+3201",
+   "group": "control",
+   "ra": 347.0777,
+   "dec": 32.0294,
+   "sep": 2.63,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J2316+0610",
+   "group": "control",
+   "ra": 349.1335,
+   "dec": 6.1804,
+   "sep": 2.32,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J2341-1557",
+   "group": "rejected",
+   "ra": 355.4664,
+   "dec": -15.9501,
+   "sep": 1.02,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J2355-4553",
+   "group": "rejected",
+   "ra": 358.7761,
+   "dec": -45.8931,
+   "sep": 2.2,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J090404.15+151254.5",
+   "group": "control",
+   "ra": 136.01729166666667,
+   "dec": 15.215138888888887,
+   "sep": 1.04,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J092718.37+211357.4",
+   "group": "rejected",
+   "ra": 141.82654166666666,
+   "dec": 21.232611111111108,
+   "sep": 2.36,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J095122.57+263513.9",
+   "group": "control",
+   "ra": 147.84404166666667,
+   "dec": 26.587194444444442,
+   "sep": 1.08,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J095511.67+194112.2",
+   "group": "rejected",
+   "ra": 148.798625,
+   "dec": 19.686722222222222,
+   "sep": 0.97,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J095636.42+690028.3",
+   "group": "rejected",
+   "ra": 149.15175,
+   "dec": 69.00786111111111,
+   "sep": 0.77,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J105440.83+273306.4",
+   "group": "control",
+   "ra": 163.670125,
+   "dec": 27.55177777777778,
+   "sep": 1.2,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J112818.49+240217.4",
+   "group": "control",
+   "ra": 172.07704166666667,
+   "dec": 24.03816666666667,
+   "sep": 0.77,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J124257.32+254303.0",
+   "group": "rejected",
+   "ra": 190.73883333333333,
+   "dec": 25.717499999999998,
+   "sep": 2.77,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J125107.57+293540.5",
+   "group": "control",
+   "ra": 192.78154166666664,
+   "dec": 29.594583333333333,
+   "sep": 1.23,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J132559.51+144110.3",
+   "group": "rejected",
+   "ra": 201.49795833333332,
+   "dec": 14.686194444444444,
+   "sep": 0.62,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J132752.04+103627.2",
+   "group": "rejected",
+   "ra": 201.9668333333333,
+   "dec": 10.607555555555555,
+   "sep": 0.54,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J133018.64+181032.1",
+   "group": "control",
+   "ra": 202.57766666666666,
+   "dec": 18.175583333333336,
+   "sep": 1.11,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J133243.66+343300.5",
+   "group": "rejected",
+   "ra": 203.18191666666667,
+   "dec": 34.55013888888889,
+   "sep": 1.16,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J140515.42+095931.3",
+   "group": "control",
+   "ra": 211.31425000000002,
+   "dec": 9.992027777777777,
+   "sep": 1.84,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J140901.87+294633.6",
+   "group": "rejected",
+   "ra": 212.25779166666666,
+   "dec": 29.776,
+   "sep": 0.95,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J141737.89+293510.0",
+   "group": "rejected",
+   "ra": 214.407875,
+   "dec": 29.58611111111111,
+   "sep": 0.63,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J142341.94+204001.5",
+   "group": "rejected",
+   "ra": 215.92475,
+   "dec": 20.667083333333334,
+   "sep": 1.06,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J145501.91+144734.8",
+   "group": "control",
+   "ra": 223.7579583333333,
+   "dec": 14.793,
+   "sep": 1.72,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J151538.59+151135.8",
+   "group": "control",
+   "ra": 228.91079166666665,
+   "dec": 15.193277777777778,
+   "sep": 2.03,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J155259.18+230104.9",
+   "group": "rejected",
+   "ra": 238.24658333333335,
+   "dec": 23.018027777777778,
+   "sep": 0.83,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J161320.01+170839.2",
+   "group": "rejected",
+   "ra": 243.33337499999996,
+   "dec": 17.144222222222222,
+   "sep": 0.78,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J161848.15+171459.4",
+   "group": "rejected",
+   "ra": 244.700625,
+   "dec": 17.249833333333335,
+   "sep": 1.15,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J083805.69+145152.7",
+   "group": "rejected",
+   "ra": 129.52371,
+   "dec": 14.86464,
+   "sep": 2.64,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J090437.41+113426.2",
+   "group": "rejected",
+   "ra": 136.15587,
+   "dec": 11.57394,
+   "sep": 2.06,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J091146.17+235114.2",
+   "group": "rejected",
+   "ra": 137.94237,
+   "dec": 23.85394,
+   "sep": 2.61,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J094235.04+231028.9",
+   "group": "rejected",
+   "ra": 145.646,
+   "dec": 23.17469,
+   "sep": 2.45,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J111427.30+232730.2",
+   "group": "rejected",
+   "ra": 168.61375,
+   "dec": 23.45839,
+   "sep": 1.71,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J133353.20+132612.0",
+   "group": "rejected",
+   "ra": 203.47167,
+   "dec": 13.43667,
+   "sep": 2.35,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J133818.01+095212.3",
+   "group": "rejected",
+   "ra": 204.57504,
+   "dec": 9.87008,
+   "sep": 1.5,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J141024.13+315952.5",
+   "group": "rejected",
+   "ra": 212.60054,
+   "dec": 31.99792,
+   "sep": 2.61,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J152806.65+132346.9",
+   "group": "rejected",
+   "ra": 232.02771,
+   "dec": 13.39636,
+   "sep": 1.13,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J153043.62+254907.1",
+   "group": "rejected",
+   "ra": 232.68175,
+   "dec": 25.81864,
+   "sep": 2.52,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J153531.01+131309.8",
+   "group": "rejected",
+   "ra": 233.87921,
+   "dec": 13.21939,
+   "sep": 2.35,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J153926.96+042519.1",
+   "group": "rejected",
+   "ra": 234.86233,
+   "dec": 4.42197,
+   "sep": 1.89,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J154632.28+223640.2",
+   "group": "rejected",
+   "ra": 236.6345,
+   "dec": 22.61117,
+   "sep": 2.47,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J154936.35+115833.3",
+   "group": "rejected",
+   "ra": 237.40146,
+   "dec": 11.97592,
+   "sep": 1.96,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J155520.96+075418.0",
+   "group": "rejected",
+   "ra": 238.83733,
+   "dec": 7.905,
+   "sep": 1.63,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J162026.28+120340.3",
+   "group": "control",
+   "ra": 245.1095,
+   "dec": 12.06119,
+   "sep": 2.57,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J170924.32+352514.1",
+   "group": "rejected",
+   "ra": 257.35133,
+   "dec": 35.42058,
+   "sep": 1.12,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J074653.03+440351.3",
+   "group": "control",
+   "ra": 116.72096,
+   "dec": 44.06425,
+   "sep": 1.07,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J074942.51+171512.1",
+   "group": "rejected",
+   "ra": 117.42712,
+   "dec": 17.25336,
+   "sep": 1.01,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J080009.98+165509.4",
+   "group": "rejected",
+   "ra": 120.04158,
+   "dec": 16.91928,
+   "sep": 0.79,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J080623.70+200631.8",
+   "group": "control",
+   "ra": 121.59875,
+   "dec": 20.10883,
+   "sep": 1.42,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J083240.71+060759.3",
+   "group": "rejected",
+   "ra": 128.16962,
+   "dec": 6.13314,
+   "sep": 1.58,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J105545.44+462839.5",
+   "group": "control",
+   "ra": 163.93933,
+   "dec": 46.47764,
+   "sep": 1.12,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J111816.95+074558.1",
+   "group": "control",
+   "ra": 169.57062,
+   "dec": 7.76614,
+   "sep": 2.26,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J132236.41+105239.4",
+   "group": "control",
+   "ra": 200.65171,
+   "dec": 10.87761,
+   "sep": 1.88,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J135143.59+245248.8",
+   "group": "rejected",
+   "ra": 207.93162,
+   "dec": 24.88022,
+   "sep": 1.47,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J135306.34+113804.7",
+   "group": "control",
+   "ra": 208.27642,
+   "dec": 11.63464,
+   "sep": 1.33,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J135404.14+110725.7",
+   "group": "rejected",
+   "ra": 208.51725,
+   "dec": 11.12381,
+   "sep": 1.34,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J142326.96+093216.5",
+   "group": "rejected",
+   "ra": 215.86233,
+   "dec": 9.53792,
+   "sep": 1.58,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J151109.85+335701.7",
+   "group": "rejected",
+   "ra": 227.79104,
+   "dec": 33.95047,
+   "sep": 1.1,
+   "n_qso": 3
+  },
+  {
+   "kind": "niq",
+   "name": "J155225.62+300902.0",
+   "group": "rejected",
+   "ra": 238.10675,
+   "dec": 30.15056,
+   "sep": 1.25,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J221227.74+005140.5",
+   "group": "rejected",
+   "ra": 333.11558,
+   "dec": 0.86125,
+   "sep": 1.76,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J090505.51+085829.3",
+   "group": "rejected",
+   "ra": 136.27296,
+   "dec": 8.97481,
+   "sep": 2.88,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J102336.00+384908.2",
+   "group": "rejected",
+   "ra": 155.9,
+   "dec": 38.81894,
+   "sep": 1.71,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J103419.16+124609.9",
+   "group": "rejected",
+   "ra": 158.57983,
+   "dec": 12.76942,
+   "sep": 1.95,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J111727.08+420000.3",
+   "group": "rejected",
+   "ra": 169.36283,
+   "dec": 42.00008,
+   "sep": 2.78,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J121645.93+352941.6",
+   "group": "control",
+   "ra": 184.19137,
+   "dec": 35.49489,
+   "sep": 1.45,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J131340.02+515129.4",
+   "group": "control",
+   "ra": 198.41675,
+   "dec": 51.85817,
+   "sep": 1.05,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J131403.33+415203.7",
+   "group": "rejected",
+   "ra": 198.51387,
+   "dec": 41.86769,
+   "sep": 1.8,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J132405.19+282331.9",
+   "group": "rejected",
+   "ra": 201.02162,
+   "dec": 28.39219,
+   "sep": 2.03,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J134930.01+122708.8",
+   "group": "control",
+   "ra": 207.37504,
+   "dec": 12.45244,
+   "sep": 2.99,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J141348.27+475112.8",
+   "group": "rejected",
+   "ra": 213.45112,
+   "dec": 47.85356,
+   "sep": 2.98,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J142815.71+095444.8",
+   "group": "rejected",
+   "ra": 217.06546,
+   "dec": 9.91244,
+   "sep": 1.63,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J143308.03+342317.1",
+   "group": "rejected",
+   "ra": 218.28346,
+   "dec": 34.38808,
+   "sep": 2.1,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J143715.87+101008.5",
+   "group": "rejected",
+   "ra": 219.31612,
+   "dec": 10.16903,
+   "sep": 1.76,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J160127.56+091258.9",
+   "group": "rejected",
+   "ra": 240.36483,
+   "dec": 9.21636,
+   "sep": 2.97,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J170555.06+214801.7",
+   "group": "rejected",
+   "ra": 256.47942,
+   "dec": 21.80047,
+   "sep": 2.18,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J234348.49+000203.4",
+   "group": "rejected",
+   "ra": 355.95204,
+   "dec": 0.03428,
+   "sep": 2.38,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J024634.09-082536.1",
+   "group": "control",
+   "ra": 41.642041666666664,
+   "dec": -8.426694444444443,
+   "sep": 1.03,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J034801.20-070416.9",
+   "group": "rejected",
+   "ra": 57.004999999999995,
+   "dec": -7.071361111111111,
+   "sep": 1.54,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J072843.03+370834.9",
+   "group": "rejected",
+   "ra": 112.17929166666667,
+   "dec": 37.143027777777775,
+   "sep": 1.34,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J074352.62+245743.6",
+   "group": "rejected",
+   "ra": 115.96925,
+   "dec": 24.96211111111111,
+   "sep": 1.02,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J083530.89+054240.7",
+   "group": "rejected",
+   "ra": 128.87870833333335,
+   "dec": 5.711305555555556,
+   "sep": 0.99,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J084710.40-001302.6",
+   "group": "rejected",
+   "ra": 131.79333333333332,
+   "dec": -0.2173888888888889,
+   "sep": 0.95,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J085122.37+472249.0",
+   "group": "rejected",
+   "ra": 132.84320833333334,
+   "dec": 47.38027777777778,
+   "sep": 1.47,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J091301.03+525928.9",
+   "group": "control",
+   "ra": 138.25429166666666,
+   "dec": 52.99136111111111,
+   "sep": 1.12,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J092455.79+021924.9",
+   "group": "control",
+   "ra": 141.23245833333334,
+   "dec": 2.323583333333333,
+   "sep": 1.34,
+   "n_qso": 3
+  },
+  {
+   "kind": "niq",
+   "name": "J093207.15+072251.3",
+   "group": "rejected",
+   "ra": 143.02979166666668,
+   "dec": 7.380916666666666,
+   "sep": 1.42,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J095324.39+570319.5",
+   "group": "rejected",
+   "ra": 148.35162499999998,
+   "dec": 57.055416666666666,
+   "sep": 2.57,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J100859.55+035104.4",
+   "group": "rejected",
+   "ra": 152.248125,
+   "dec": 3.8512222222222223,
+   "sep": 0.98,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J102111.02+491330.3",
+   "group": "control",
+   "ra": 155.29591666666664,
+   "dec": 49.22508333333334,
+   "sep": 1.03,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J112012.11+671116.0",
+   "group": "rejected",
+   "ra": 170.05045833333332,
+   "dec": 67.18777777777778,
+   "sep": 1.71,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J112241.58+641601.2",
+   "group": "rejected",
+   "ra": 170.67325,
+   "dec": 64.267,
+   "sep": 1.4,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J121244.33+091208.1",
+   "group": "rejected",
+   "ra": 183.1847083333333,
+   "dec": 9.20225,
+   "sep": 2.04,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J122608.02-000602.2",
+   "group": "control",
+   "ra": 186.53341666666668,
+   "dec": -0.10061111111111112,
+   "sep": 1.21,
+   "n_qso": 3
+  },
+  {
+   "kind": "niq",
+   "name": "J125617.97+584550.0",
+   "group": "rejected",
+   "ra": 194.07487500000002,
+   "dec": 58.763888888888886,
+   "sep": 1.19,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J133222.62+034739.9",
+   "group": "control",
+   "ra": 203.09425000000002,
+   "dec": 3.7944166666666663,
+   "sep": 0.99,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J133534.79+011805.5",
+   "group": "control",
+   "ra": 203.89495833333336,
+   "dec": 1.3015277777777778,
+   "sep": 1.59,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J140622.44-011230.7",
+   "group": "rejected",
+   "ra": 211.5935,
+   "dec": -1.2085277777777776,
+   "sep": 1.15,
+   "n_qso": 3
+  },
+  {
+   "kind": "niq",
+   "name": "J152445.63+440949.6",
+   "group": "control",
+   "ra": 231.190125,
+   "dec": 44.163777777777774,
+   "sep": 1.13,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J163348.98+313411.8",
+   "group": "control",
+   "ra": 248.45408333333336,
+   "dec": 31.569944444444445,
+   "sep": 0.71,
+   "n_qso": 3
+  },
+  {
+   "kind": "niq",
+   "name": "J171101.70+292950.9",
+   "group": "rejected",
+   "ra": 257.7570833333333,
+   "dec": 29.497472222222225,
+   "sep": 2.18,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J171925.07+271338.0",
+   "group": "rejected",
+   "ra": 259.85445833333335,
+   "dec": 27.22722222222222,
+   "sep": 1.53,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J074013.42+292645.8",
+   "group": "rejected",
+   "ra": 115.05592,
+   "dec": 29.44606,
+   "sep": 2.64,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J080658.17+273450.1",
+   "group": "rejected",
+   "ra": 121.74237,
+   "dec": 27.58058,
+   "sep": 2.26,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J081904.40+035455.8",
+   "group": "rejected",
+   "ra": 124.76833,
+   "dec": 3.9155,
+   "sep": 2.41,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J083217.11+040403.8",
+   "group": "control",
+   "ra": 128.07129,
+   "dec": 4.06772,
+   "sep": 2.23,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J100128.35+502758.4",
+   "group": "control",
+   "ra": 150.36812,
+   "dec": 50.46622,
+   "sep": 2.93,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J100304.61+444338.8",
+   "group": "rejected",
+   "ra": 150.76921,
+   "dec": 44.72744,
+   "sep": 2.95,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J101930.17+522413.2",
+   "group": "rejected",
+   "ra": 154.87571,
+   "dec": 52.40367,
+   "sep": 2.7,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J103519.22+075256.3",
+   "group": "rejected",
+   "ra": 158.83008,
+   "dec": 7.88231,
+   "sep": 2.66,
+   "n_qso": 2
+  },
+  {
+   "kind": "niq",
+   "name": "J131008.54+660349.6",
+   "group": "rejected",
+   "ra": 197.53558,
+   "dec": 66.06378,
+   "sep": 2.74,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J150319.46+475209.7",
+   "group": "rejected",
+   "ra": 225.83108,
+   "dec": 47.86936,
+   "sep": 2.84,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J154148.93+523053.6",
+   "group": "rejected",
+   "ra": 235.45387,
+   "dec": 52.51489,
+   "sep": 1.94,
+   "n_qso": 0
+  },
+  {
+   "kind": "niq",
+   "name": "J160914.85+380730.0",
+   "group": "rejected",
+   "ra": 242.31187,
+   "dec": 38.125,
+   "sep": 1.93,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J172633.44+530302.0",
+   "group": "rejected",
+   "ra": 261.63933,
+   "dec": 53.05056,
+   "sep": 1.7,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J212956.56-005152.4",
+   "group": "rejected",
+   "ra": 322.48567,
+   "dec": -0.86456,
+   "sep": 2.68,
+   "n_qso": 1
+  },
+  {
+   "kind": "niq",
+   "name": "J235108.70+134320.8",
+   "group": "rejected",
+   "ra": 357.78625,
+   "dec": 13.72244,
+   "sep": 1.86,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H0",
+   "group": "binary",
+   "ra": 12.003208333333331,
+   "dec": -10.8635,
+   "sep": 3.6,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H4",
+   "group": "binary",
+   "ra": 42.08666666666666,
+   "dec": 0.16575,
+   "sep": 6.9,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H9",
+   "group": "binary",
+   "ra": 149.78108333333333,
+   "dec": 54.81852777777778,
+   "sep": 3.9,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H12",
+   "group": "binary",
+   "ra": 157.1819583333333,
+   "dec": 39.49358333333333,
+   "sep": 7.5,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H13",
+   "group": "binary",
+   "ra": 164.18704166666666,
+   "dec": -0.9926111111111111,
+   "sep": 7.2,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H15",
+   "group": "binary",
+   "ra": 171.23016666666666,
+   "dec": 57.1825,
+   "sep": 2.2,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H16",
+   "group": "binary",
+   "ra": 186.44054166666663,
+   "dec": 56.74463888888889,
+   "sep": 6.0,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H18",
+   "group": "binary",
+   "ra": 194.98174999999995,
+   "dec": 12.698277777777777,
+   "sep": 3.6,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H19",
+   "group": "binary",
+   "ra": 195.85904166666666,
+   "dec": 51.013194444444444,
+   "sep": 3.8,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H21",
+   "group": "binary",
+   "ra": 204.3047083333333,
+   "dec": 60.201861111111114,
+   "sep": 3.1,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H22",
+   "group": "binary",
+   "ra": 207.37433333333328,
+   "dec": 12.451944444444443,
+   "sep": 3.0,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H24",
+   "group": "binary",
+   "ra": 211.2580833333333,
+   "dec": 44.79997222222222,
+   "sep": 7.4,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H25",
+   "group": "binary",
+   "ra": 212.47391666666667,
+   "dec": 39.333333333333336,
+   "sep": 6.8,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H26",
+   "group": "binary",
+   "ra": 218.1218333333333,
+   "dec": -1.1044722222222223,
+   "sep": 5.1,
+   "n_qso": 4
+  },
+  {
+   "kind": "hennawi",
+   "name": "H27",
+   "group": "binary",
+   "ra": 232.66066666666663,
+   "dec": 53.06783333333334,
+   "sep": 4.1,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H29",
+   "group": "binary",
+   "ra": 247.26079166666668,
+   "dec": 37.40855555555555,
+   "sep": 4.4,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H31",
+   "group": "binary",
+   "ra": 260.8225833333333,
+   "dec": 59.07966666666667,
+   "sep": 3.7,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H32",
+   "group": "binary",
+   "ra": 322.23908333333327,
+   "dec": -6.297472222222222,
+   "sep": 8.3,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H33",
+   "group": "binary",
+   "ra": 333.612625,
+   "dec": 13.449166666666667,
+   "sep": 5.8,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H35",
+   "group": "binary",
+   "ra": 357.081625,
+   "dec": 0.9559722222222222,
+   "sep": 7.1,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H36",
+   "group": "binary",
+   "ra": 115.05604166666666,
+   "dec": 29.44677777777778,
+   "sep": 2.6,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H37",
+   "group": "binary",
+   "ra": 158.83070833333332,
+   "dec": 7.882777777777778,
+   "sep": 2.7,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H38",
+   "group": "binary",
+   "ra": 171.23016666666666,
+   "dec": 57.1825,
+   "sep": 2.2,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H39",
+   "group": "binary",
+   "ra": 174.53837499999997,
+   "dec": 68.12744444444444,
+   "sep": 2.6,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H40",
+   "group": "binary",
+   "ra": 227.17587499999996,
+   "dec": 33.46738888888889,
+   "sep": 2.9,
+   "n_qso": 3
+  },
+  {
+   "kind": "hennawi",
+   "name": "H41",
+   "group": "binary",
+   "ra": 240.06458333333327,
+   "dec": 0.012638888888888889,
+   "sep": 1.9,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H65",
+   "group": "binary",
+   "ra": 41.30033333333333,
+   "dec": -1.2205555555555556,
+   "sep": 4.5,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H79",
+   "group": "binary",
+   "ra": 116.99591666666666,
+   "dec": 43.3015,
+   "sep": 9.2,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H233",
+   "group": "binary",
+   "ra": 10.075916666666664,
+   "dec": 0.9252777777777778,
+   "sep": 8.5,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H293",
+   "group": "binary",
+   "ra": 41.299583333333324,
+   "dec": -1.2215555555555557,
+   "sep": 4.5,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H328",
+   "group": "binary",
+   "ra": 116.99591666666666,
+   "dec": 43.3015,
+   "sep": 9.2,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H526",
+   "group": "binary",
+   "ra": 184.6687083333333,
+   "dec": 50.262166666666666,
+   "sep": 9.1,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H728",
+   "group": "binary",
+   "ra": 0.5502916666666666,
+   "dec": -0.8858611111111111,
+   "sep": 7.3,
+   "n_qso": 3
+  },
+  {
+   "kind": "hennawi",
+   "name": "H729",
+   "group": "binary",
+   "ra": 9.206791666666666,
+   "dec": -11.158277777777778,
+   "sep": 4.7,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H730",
+   "group": "binary",
+   "ra": 10.077833333333333,
+   "dec": 0.923861111111111,
+   "sep": 8.5,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H733",
+   "group": "binary",
+   "ra": 20.552916666666665,
+   "dec": 14.181861111111111,
+   "sep": 7.3,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H742",
+   "group": "binary",
+   "ra": 39.94349999999999,
+   "dec": -1.1122500000000002,
+   "sep": 3.7,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H743",
+   "group": "binary",
+   "ra": 40.27858333333333,
+   "dec": 0.1741111111111111,
+   "sep": 8.1,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H747",
+   "group": "binary",
+   "ra": 113.84395833333332,
+   "dec": 29.95138888888889,
+   "sep": 5.4,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H752",
+   "group": "binary",
+   "ra": 129.2064583333333,
+   "dec": 48.69844444444444,
+   "sep": 4.1,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H753",
+   "group": "binary",
+   "ra": 135.648875,
+   "dec": 56.63236111111111,
+   "sep": 5.4,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H759",
+   "group": "binary",
+   "ra": 148.72916666666666,
+   "dec": 37.57222222222222,
+   "sep": 3.1,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H761",
+   "group": "binary",
+   "ra": 155.92941666666664,
+   "dec": 5.550777777777777,
+   "sep": 9.7,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H768",
+   "group": "binary",
+   "ra": 176.82779166666666,
+   "dec": 12.57675,
+   "sep": 4.8,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H770",
+   "group": "binary",
+   "ra": 181.21058333333332,
+   "dec": 44.47663888888889,
+   "sep": 3.1,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H772",
+   "group": "binary",
+   "ra": 192.45074999999997,
+   "dec": 6.120555555555555,
+   "sep": 5.0,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H773",
+   "group": "binary",
+   "ra": 193.87687499999998,
+   "dec": 63.150166666666664,
+   "sep": 3.0,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H778",
+   "group": "binary",
+   "ra": 216.99537499999997,
+   "dec": -1.3584444444444446,
+   "sep": 6.2,
+   "n_qso": 4
+  },
+  {
+   "kind": "hennawi",
+   "name": "H795",
+   "group": "binary",
+   "ra": 348.2210416666666,
+   "dec": 14.748166666666666,
+   "sep": 6.4,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H818",
+   "group": "binary",
+   "ra": 42.282374999999995,
+   "dec": 0.65475,
+   "sep": 4.9,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H829",
+   "group": "binary",
+   "ra": 115.25270833333333,
+   "dec": 24.261833333333332,
+   "sep": 9.0,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H832",
+   "group": "binary",
+   "ra": 120.270875,
+   "dec": 34.83519444444445,
+   "sep": 2.3,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H833",
+   "group": "binary",
+   "ra": 123.94966666666666,
+   "dec": 46.32519444444445,
+   "sep": 6.1,
+   "n_qso": 1
+  },
+  {
+   "kind": "hennawi",
+   "name": "H847",
+   "group": "binary",
+   "ra": 167.56775,
+   "dec": 0.4817222222222222,
+   "sep": 6.3,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H857",
+   "group": "binary",
+   "ra": 217.92770833333333,
+   "dec": 63.037,
+   "sep": 2.4,
+   "n_qso": 0
+  },
+  {
+   "kind": "hennawi",
+   "name": "H858",
+   "group": "binary",
+   "ra": 220.66479166666662,
+   "dec": 2.0719444444444446,
+   "sep": 8.7,
+   "n_qso": 2
+  },
+  {
+   "kind": "hennawi",
+   "name": "H873",
+   "group": "binary",
+   "ra": 320.74295833333326,
+   "dec": -1.2204722222222224,
+   "sep": 5.0,
+   "n_qso": 1
+  }
+ ]
+}

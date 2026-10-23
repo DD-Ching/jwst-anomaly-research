@@ -1,0 +1,1768 @@
+{
+ "label": "derived; observed DESI spectra",
+ "systems": [
+  {
+   "role": "control",
+   "name": "J0030-3358",
+   "sep_cat": 2.03,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0045-3937",
+   "sep_cat": 1.14,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0116+4052",
+   "sep_cat": 1.28,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0152-2448",
+   "sep_cat": 1.91,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0156-2751",
+   "sep_cat": 1.5,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0200-1509",
+   "sep_cat": 0.78,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0209-3841",
+   "sep_cat": 1.23,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0232-2429",
+   "sep_cat": 1.44,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0247+7706",
+   "sep_cat": 1.94,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0247-2646",
+   "sep_cat": 1.22,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0247-0800",
+   "sep_cat": 1.68,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0247-6349",
+   "sep_cat": 1.49,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0325-2232",
+   "sep_cat": 1.01,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0329-0208",
+   "sep_cat": 1.32,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0339-6121",
+   "sep_cat": 1.26,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0346-6414",
+   "sep_cat": 1.91,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0347-2154",
+   "sep_cat": 1.87,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0350-4611",
+   "sep_cat": 1.3,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0355-5624",
+   "sep_cat": 1.29,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0401-2514",
+   "sep_cat": 1.45,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0405-3730",
+   "sep_cat": 1.7,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0416-5606",
+   "sep_cat": 1.04,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0416+7428",
+   "sep_cat": 2.64,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0440-0905",
+   "sep_cat": 1.69,
+   "sep_desi": 1.5515608718122929,
+   "z_a": 2.102635007563933,
+   "z_b": 2.10174991706827,
+   "comment": "lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.1761946785142157,
+     "s": 1.1225,
+     "n_pix": 241,
+     "snr_a": 75.34008763080745,
+     "snr_b": 51.66978790401214,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.0741190978371968,
+     "s": 1.1373000000000002,
+     "n_pix": 285,
+     "snr_a": 43.085305869245595,
+     "snr_b": 37.09092501861082,
+     "dv_kms": 0.0
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.012514068103008,
+     "s": 1.2637,
+     "n_pix": 428,
+     "snr_a": 58.19521500961432,
+     "snr_b": 39.23685535983244,
+     "dv_kms": 193.31690933341713
+    }
+   },
+   "D": 1.0876092814848068,
+   "dv_kms": 0.0
+  },
+  {
+   "role": "control",
+   "name": "J0504-2446",
+   "sep_cat": 2.05,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0526-3933",
+   "sep_cat": 1.41,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0544+4350",
+   "sep_cat": 2.04,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0607-2152",
+   "sep_cat": 1.57,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "quad",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0608+4229",
+   "sep_cat": 1.27,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "quad",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0628-7448",
+   "sep_cat": 2.61,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0643+2725",
+   "sep_cat": 2.44,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0734+1915",
+   "sep_cat": 1.2,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0740+0635",
+   "sep_cat": 1.61,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0803+3908",
+   "sep_cat": 0.91,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "quad",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0833+0331",
+   "sep_cat": 1.55,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0833+2612",
+   "sep_cat": 1.79,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "quad",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0834-2933",
+   "sep_cat": 1.8,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0904+3343",
+   "sep_cat": 1.5,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0907+6224",
+   "sep_cat": 2.49,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0911-0948",
+   "sep_cat": 2.52,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0918-0220",
+   "sep_cat": 2.26,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0921+3020",
+   "sep_cat": 2.93,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0936-1211",
+   "sep_cat": 2.11,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0937+5835",
+   "sep_cat": 1.44,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J0954-1421",
+   "sep_cat": 1.4,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1003+0651",
+   "sep_cat": 2.62,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1008+0046",
+   "sep_cat": 1.31,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1008+0929",
+   "sep_cat": 1.76,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1037+0018",
+   "sep_cat": 1.25,
+   "sep_desi": 1.325253492399318,
+   "z_a": 2.469428688279095,
+   "z_b": 2.469374206243503,
+   "comment": "lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.4818202222138,
+     "s": 0.977,
+     "n_pix": 269,
+     "snr_a": 195.86017198279004,
+     "snr_b": 132.44713482801316,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.1200046389412341,
+     "s": 0.9895,
+     "n_pix": 331,
+     "snr_a": 157.79757249751634,
+     "snr_b": 102.79877206909717,
+     "dv_kms": 0.0
+    }
+   },
+   "D": 1.300912430577517,
+   "dv_kms": 0.0
+  },
+  {
+   "role": "control",
+   "name": "J1041+1710",
+   "sep_cat": 1.62,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1137-1245",
+   "sep_cat": 2.37,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1206-2543",
+   "sep_cat": 2.08,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1209-1929",
+   "sep_cat": 1.46,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1233-3542",
+   "sep_cat": 2.03,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1233-0227",
+   "sep_cat": 1.76,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1237+3340",
+   "sep_cat": 1.57,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1247-3253",
+   "sep_cat": 1.85,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1255+0737",
+   "sep_cat": 1.7,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1303+1816",
+   "sep_cat": 2.26,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1326+3020",
+   "sep_cat": 2.11,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1329-2807",
+   "sep_cat": 1.9,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1408+0422",
+   "sep_cat": 2.59,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1526-1400",
+   "sep_cat": 2.65,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1548-2914",
+   "sep_cat": 1.99,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J1550+0221",
+   "sep_cat": 2.03,
+   "sep_desi": 2.052947801182745,
+   "z_a": 2.397449481096055,
+   "z_b": 2.39816016884355,
+   "comment": "lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.1264600510420797,
+     "s": 1.0215,
+     "n_pix": 263,
+     "snr_a": 82.19098291759302,
+     "snr_b": 232.20874126302746,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.2978361441903488,
+     "s": 0.8309,
+     "n_pix": 325,
+     "snr_a": 48.753432394075475,
+     "snr_b": 169.6097767885918,
+     "dv_kms": 36.97104445642617
+    }
+   },
+   "D": 1.2121480976162142,
+   "dv_kms": 18.485522228213085
+  },
+  {
+   "role": "control",
+   "name": "J1945-2857",
+   "sep_cat": 2.69,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2015+0707",
+   "sep_cat": 2.93,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2017+6204",
+   "sep_cat": 0.92,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "quad",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2106-4944",
+   "sep_cat": 2.09,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2110-3755",
+   "sep_cat": 1.52,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2147-1340",
+   "sep_cat": 1.33,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2205+1019",
+   "sep_cat": 1.34,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2205-3727",
+   "sep_cat": 0.76,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "quad",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2213-5926",
+   "sep_cat": 2.59,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2308+3201",
+   "sep_cat": 2.63,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J2316+0610",
+   "sep_cat": 2.32,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J090404.15+151254.5",
+   "sep_cat": 1.04,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J095122.57+263513.9",
+   "sep_cat": 1.08,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "known lens (FBQ0951+2635)",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J105440.83+273306.4",
+   "sep_cat": 1.2,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J112818.49+240217.4",
+   "sep_cat": 0.77,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J125107.57+293540.5",
+   "sep_cat": 1.23,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J133018.64+181032.1",
+   "sep_cat": 1.11,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J140515.42+095931.3",
+   "sep_cat": 1.84,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J145501.91+144734.8",
+   "sep_cat": 1.72,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J151538.59+151135.8",
+   "sep_cat": 2.03,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J162026.28+120340.3",
+   "sep_cat": 2.57,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J074653.03+440351.3",
+   "sep_cat": 1.07,
+   "sep_desi": 1.1250413220620643,
+   "z_a": 2.004647645999517,
+   "z_b": 2.005641719736291,
+   "comment": "SDSS lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.1099533227060148,
+     "s": 1.0073,
+     "n_pix": 233,
+     "snr_a": 117.21258384957731,
+     "snr_b": 142.6242009847518,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.07124101596333,
+     "s": 0.9054,
+     "n_pix": 284,
+     "snr_a": 30.58409165863002,
+     "snr_b": 50.85172729363905,
+     "dv_kms": -167.20711512404887
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.1103088814151683,
+     "s": 0.8953,
+     "n_pix": 411,
+     "snr_a": 60.95001155396702,
+     "snr_b": 73.88368545610884,
+     "dv_kms": -85.52565525255466
+    }
+   },
+   "D": 1.097167740028171,
+   "dv_kms": -85.52565525255466
+  },
+  {
+   "role": "control",
+   "name": "J080623.70+200631.8",
+   "sep_cat": 1.42,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J105545.44+462839.5",
+   "sep_cat": 1.12,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J111816.95+074558.1",
+   "sep_cat": 2.26,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Known lens (PG1115)",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J132236.41+105239.4",
+   "sep_cat": 1.88,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J135306.34+113804.7",
+   "sep_cat": 1.33,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J121645.93+352941.6",
+   "sep_cat": 1.45,
+   "sep_desi": 1.4783145688212127,
+   "z_a": 2.009393558356636,
+   "z_b": 2.014834789517293,
+   "comment": "SDSS lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.0733160472153436,
+     "s": 0.9835,
+     "n_pix": 234,
+     "snr_a": 60.25599386733995,
+     "snr_b": 27.15792904940766,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.0946495981864457,
+     "s": 1.3093000000000001,
+     "n_pix": 283,
+     "snr_a": 30.769743550861612,
+     "snr_b": 10.117672451629256,
+     "dv_kms": -834.1011394931138
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 0.9882697750656887,
+     "s": 1.2493,
+     "n_pix": 422,
+     "snr_a": 54.459194462773276,
+     "snr_b": 26.004802364532697,
+     "dv_kms": 56.885176167363625
+    }
+   },
+   "D": 1.0520784734891595,
+   "dv_kms": 0.0
+  },
+  {
+   "role": "control",
+   "name": "J131340.02+515129.4",
+   "sep_cat": 1.05,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J134930.01+122708.8",
+   "sep_cat": 2.99,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J024634.09-082536.1",
+   "sep_cat": 1.03,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS Lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J091301.03+525928.9",
+   "sep_cat": 1.12,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Known lens (SBS 0909)",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J092455.79+021924.9",
+   "sep_cat": 1.34,
+   "sep_desi": 1.7132749087517243,
+   "z_a": 1.52425109278229,
+   "z_b": 1.52463856118962,
+   "comment": "SDSS lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.1754586418882713,
+     "s": 0.7906000000000001,
+     "n_pix": 187,
+     "snr_a": 61.992415935982216,
+     "snr_b": 20.642494964169536,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 0.901507890919168,
+     "s": 0.7914,
+     "n_pix": 241,
+     "snr_a": 63.435166354693756,
+     "snr_b": 23.880189165863218,
+     "dv_kms": 0.0
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 0.9964005303304231,
+     "s": 1.0203,
+     "n_pix": 354,
+     "snr_a": 89.20106700198127,
+     "snr_b": 27.415735471458635,
+     "dv_kms": -67.87418904511287
+    }
+   },
+   "D": 1.024455687712621,
+   "dv_kms": 0.0
+  },
+  {
+   "role": "control",
+   "name": "J102111.02+491330.3",
+   "sep_cat": 1.03,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS Lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J122608.02-000602.2",
+   "sep_cat": 1.21,
+   "sep_desi": 1.2024201281788718,
+   "z_a": 1.126262208134677,
+   "z_b": 1.126077750549651,
+   "comment": "SDSS Lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.4731208000726093,
+     "s": 1.4626,
+     "n_pix": 203,
+     "snr_a": 51.65460463536043,
+     "snr_b": 24.409110874154727,
+     "dv_kms": 0.0
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 0.9978945667290101,
+     "s": 1.9795,
+     "n_pix": 298,
+     "snr_a": 79.52621349480461,
+     "snr_b": 27.927510611930863,
+     "dv_kms": -80.58840407190473
+    }
+   },
+   "D": 1.2355076834008096,
+   "dv_kms": -40.29420203595237
+  },
+  {
+   "role": "control",
+   "name": "J133222.62+034739.9",
+   "sep_cat": 0.99,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS Lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J133534.79+011805.5",
+   "sep_cat": 1.59,
+   "sep_desi": 1.5527598744164304,
+   "z_a": 1.553235967689822,
+   "z_b": 1.554038513138369,
+   "comment": "SDSS Lens",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.5349615377818422,
+     "s": 1.0350000000000001,
+     "n_pix": 198,
+     "snr_a": 28.547646980564362,
+     "snr_b": 14.94866824478132,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.1236681239830941,
+     "s": 1.2928,
+     "n_pix": 241,
+     "snr_a": 78.82438516287276,
+     "snr_b": 38.0107619707303,
+     "dv_kms": 0.0
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.144750392870579,
+     "s": 1.5146,
+     "n_pix": 358,
+     "snr_a": 133.7513286260652,
+     "snr_b": 54.93229221925823,
+     "dv_kms": -33.54913585786471
+    }
+   },
+   "D": 1.2677933515451718,
+   "dv_kms": 0.0
+  },
+  {
+   "role": "control",
+   "name": "J152445.63+440949.6",
+   "sep_cat": 1.13,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS Lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J163348.98+313411.8",
+   "sep_cat": 0.71,
+   "sep_desi": 0.5992939302171578,
+   "z_a": 1.521975121080515,
+   "z_b": 1.521279001880914,
+   "comment": "Known lens (FBQ 1633)",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.3992300458518352,
+     "s": 0.9941,
+     "n_pix": 196,
+     "snr_a": 174.6232292312548,
+     "snr_b": 158.24112896593203,
+     "dv_kms": 0.0
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.1739366698456812,
+     "s": 1.001,
+     "n_pix": 241,
+     "snr_a": 158.43347626675745,
+     "snr_b": 135.98137474209264,
+     "dv_kms": 0.0
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.2471219870467174,
+     "s": 0.9758,
+     "n_pix": 353,
+     "snr_a": 178.47399306294164,
+     "snr_b": 166.60305293397943,
+     "dv_kms": 67.95003434015143
+    }
+   },
+   "D": 1.2734295675814113,
+   "dv_kms": 0.0
+  },
+  {
+   "role": "control",
+   "name": "J083217.11+040403.8",
+   "sep_cat": 2.23,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "control",
+   "name": "J100128.35+502758.4",
+   "sep_cat": 2.93,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "SDSS Lens",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ0048-1051A+SDSSJ0048-1051B",
+   "sep_cat": 3.6,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=560",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ0248+0009A+SDSSJ0248+0009B",
+   "sep_cat": 6.9,
+   "sep_desi": 6.918311043397478,
+   "z_a": 1.641243568552387,
+   "z_b": 1.642224840901598,
+   "comment": "Hennawi2006 dV=-150",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.2975149045887189,
+     "s": 0.5574,
+     "n_pix": 205,
+     "snr_a": 31.89943328039389,
+     "snr_b": 21.327532847227054,
+     "dv_kms": -293.05547642107285
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.0889676344014996,
+     "s": 0.4722,
+     "n_pix": 253,
+     "snr_a": 20.361994669656564,
+     "snr_b": 19.008146047879773,
+     "dv_kms": -1141.2538900860345
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.1478805724251646,
+     "s": 0.4136,
+     "n_pix": 359,
+     "snr_a": 37.58194774139303,
+     "snr_b": 19.247269521511043,
+     "dv_kms": 0.0
+    }
+   },
+   "D": 1.1781210371384612,
+   "dv_kms": -293.05547642107285
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ0959+5449A+SDSSJ0959+5449B",
+   "sep_cat": 3.9,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=200",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1028+3929A+SDSSJ1028+3929B",
+   "sep_cat": 7.5,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-1030",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "2QZJ1056-0059A+SDSSJ1056-0059B",
+   "sep_cat": 7.2,
+   "sep_desi": 7.279556515060801,
+   "z_a": 2.130498214635997,
+   "z_b": 2.127972430967765,
+   "comment": "Hennawi2006 dV=-350",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 2.40923134441874,
+     "s": 2.3132,
+     "n_pix": 243,
+     "snr_a": 76.62163247076043,
+     "snr_b": 39.087568813878335,
+     "dv_kms": 840.905331162739
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.026936201573642,
+     "s": 1.3433000000000002,
+     "n_pix": 299,
+     "snr_a": 28.764462365618158,
+     "snr_b": 26.839466435604592,
+     "dv_kms": -120.43235514074286
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.090694356457454,
+     "s": 1.1539,
+     "n_pix": 438,
+     "snr_a": 37.16248950571114,
+     "snr_b": 30.703456397492204,
+     "dv_kms": 0.0
+    }
+   },
+   "D": 1.5089539674832786,
+   "dv_kms": 0.0
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1124+5710A+SDSSJ1124+5710B",
+   "sep_cat": 2.2,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=0",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1225+5644A+SDSSJ1225+5644B",
+   "sep_cat": 6.0,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=970",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1259+1241A+SDSSJ1259+1241B",
+   "sep_cat": 3.6,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-840",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1303+5100A+SDSSJ1303+5100B",
+   "sep_cat": 3.8,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=220",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1337+6012A+SDSSJ1337+6012B",
+   "sep_cat": 3.1,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-610",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1349+1227A+SDSSJ1349+1227B",
+   "sep_cat": 3.0,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=30",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1405+4447A+SDSSJ1405+4447B",
+   "sep_cat": 7.4,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=1870",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1409+3919A+SDSSJ1409+3919B",
+   "sep_cat": 6.8,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=480",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1432-0106A+SDSSJ1432-0106B",
+   "sep_cat": 5.1,
+   "sep_desi": 5.22569312603666,
+   "z_a": 2.084900021246306,
+   "z_b": 2.089896227636424,
+   "comment": "Hennawi2006 dV=-40",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.7879753691593747,
+     "s": 0.5179,
+     "n_pix": 239,
+     "snr_a": 152.7431573658496,
+     "snr_b": 23.627888766548846,
+     "dv_kms": -852.3004029108738
+    },
+    "CIII]": {
+     "used": false,
+     "chi2_nu": 1.1744415206986505,
+     "s": 0.8456,
+     "n_pix": 295,
+     "snr_a": 79.83619562284753,
+     "snr_b": 8.507650252069787,
+     "dv_kms": -40.688109590999375
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.2468680969288093,
+     "s": 0.3285,
+     "n_pix": 433,
+     "snr_a": 112.33252892835824,
+     "snr_b": 13.447731674160435,
+     "dv_kms": -305.2393995946077
+    }
+   },
+   "D": 1.517421733044092,
+   "dv_kms": -578.7699012527407
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1530+5304A+SDSSJ1530+5304B",
+   "sep_cat": 4.1,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=230",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1723+5904A+SDSSJ1723+5904B",
+   "sep_cat": 3.7,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-830",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ2128-0617A+SDSSJ2128-0617B",
+   "sep_cat": 8.3,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-290",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ2214+1326A+SDSSJ2214+1326B",
+   "sep_cat": 5.8,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-690",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ2348+0057A+SDSSJ2348+0057B",
+   "sep_cat": 7.1,
+   "sep_desi": 7.168852509744602,
+   "z_a": 2.159424658210957,
+   "z_b": 2.153933927977973,
+   "comment": "Hennawi2006 dV=-10",
+   "status": "consistent with one source",
+   "lines": {
+    "CIV": {
+     "used": true,
+     "chi2_nu": 1.914715323327141,
+     "s": 0.8539,
+     "n_pix": 244,
+     "snr_a": 94.31456517339221,
+     "snr_b": 60.84007864349236,
+     "dv_kms": 294.209842360081
+    },
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.799122738143159,
+     "s": 0.7825,
+     "n_pix": 302,
+     "snr_a": 64.38420598228495,
+     "snr_b": 38.08771032190336,
+     "dv_kms": 238.77064771152027
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.1010628474866537,
+     "s": 1.0583,
+     "n_pix": 442,
+     "snr_a": 63.08007594076386,
+     "snr_b": 28.397938623986576,
+     "dv_kms": 27.140014792705188
+    }
+   },
+   "D": 1.6049669696523179,
+   "dv_kms": 238.77064771152027
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ0740+2926A+SDSSJ0740+2926B",
+   "sep_cat": 2.6,
+   "sep_desi": 2.67664268534335,
+   "z_a": 0.9800119786653981,
+   "z_b": 0.9778516954162176,
+   "comment": "Hennawi2006 dV=230",
+   "status": "consistent with one source",
+   "lines": {
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.044759784672667,
+     "s": 0.8375,
+     "n_pix": 277,
+     "snr_a": 68.56714281346396,
+     "snr_b": 38.03776717697035,
+     "dv_kms": 259.753229818456
+    }
+   },
+   "D": 1.044759784672667,
+   "dv_kms": 259.753229818456
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1035+0752A+SDSSJ1035+0752B",
+   "sep_cat": 2.7,
+   "sep_desi": 2.6692684474898316,
+   "z_a": 1.220159789756833,
+   "z_b": 1.220157773717791,
+   "comment": "Hennawi2006 dV=270",
+   "status": "consistent with one source",
+   "lines": {
+    "CIII]": {
+     "used": true,
+     "chi2_nu": 1.0389588817087287,
+     "s": 0.8543,
+     "n_pix": 212,
+     "snr_a": 37.07230206530567,
+     "snr_b": 22.859587311730383,
+     "dv_kms": -339.4902948516283
+    },
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.667636185899345,
+     "s": 1.2867,
+     "n_pix": 293,
+     "snr_a": 53.125363273576895,
+     "snr_b": 25.899274812209015,
+     "dv_kms": 0.0
+    }
+   },
+   "D": 1.353297533804037,
+   "dv_kms": -169.74514742581414
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1124+5710A+SDSSJ1124+5710B",
+   "sep_cat": 2.2,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-540",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1138+6807A+SDSSJ1138+6807B",
+   "sep_cat": 2.6,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=840",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1508+3328A+SDSSJ1508+3328B",
+   "sep_cat": 2.9,
+   "sep_desi": 2.9654155734886136,
+   "z_a": 0.8786078419783326,
+   "z_b": 0.8787665201663144,
+   "comment": "Hennawi2006 dV=200",
+   "status": "two different spectra",
+   "lines": {
+    "MgII": {
+     "used": true,
+     "chi2_nu": 1.8831675198978195,
+     "s": 1.9115,
+     "n_pix": 264,
+     "snr_a": 133.54807234566596,
+     "snr_b": 21.552908347719075,
+     "dv_kms": 410.42005937001113
+    },
+    "Hbeta": {
+     "used": true,
+     "chi2_nu": 5.421937328120859,
+     "s": 1.0411000000000001,
+     "n_pix": 457,
+     "snr_a": 116.80895598744429,
+     "snr_b": 31.63856286073225,
+     "dv_kms": 0.0
+    }
+   },
+   "D": 3.652552424009339,
+   "dv_kms": 205.21002968500557
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ1600+0000A+SDSSJ1600+0000B",
+   "sep_cat": 1.9,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-660",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ0245-0113A+SDSSJ0245-0113B",
+   "sep_cat": 4.5,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=-190",
+   "status": "unknown (no DESI pair)"
+  },
+  {
+   "role": "binary",
+   "name": "SDSSJ0747+4318A+SDSSJ0747+4318B",
+   "sep_cat": 9.2,
+   "sep_desi": null,
+   "z_a": null,
+   "z_b": null,
+   "comment": "Hennawi2006 dV=150",
+   "status": "unknown (no DESI pair)"
+  }
+ ]
+}
