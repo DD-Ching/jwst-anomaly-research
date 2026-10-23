@@ -6,9 +6,9 @@ allowance) while streaming, and cuts the transfer off when the cap would be exce
 repeated requests are separate reservations. Downloads made by other tools (e.g. dependency
 installs) enter as `external` records measured by the caller.
 
-The ledger is an append-only JSONL file guarded by `fcntl.flock`, so concurrent processes share one
-total and a restart does not reset it: a reservation that was never closed (crashed or killed
-process) keeps counting at its reserved size.
+The ledger is an append-only JSONL file under a file lock (fcntl; msvcrt on Windows), so
+processes share one total and a restart does not reset it: a reservation that was never closed
+(crashed or killed process) keeps counting at its reserved size.
 
 Limit: bytes the operating system has buffered but `fetch` has not read when it cuts a transfer off
 (up to the TCP receive window) are not counted.
@@ -18,7 +18,6 @@ Limit: bytes the operating system has buffered but `fetch` has not read when it 
 
 from __future__ import annotations
 
-import fcntl
 import json
 import os
 import ssl
@@ -28,6 +27,32 @@ import urllib.request
 import uuid
 from contextlib import contextmanager
 from pathlib import Path
+
+try:  # POSIX
+    import fcntl
+
+    def _lock(fh) -> None:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+
+    def _unlock(fh) -> None:
+        fcntl.flock(fh, fcntl.LOCK_UN)
+
+except ImportError:  # Windows (the owner's machine): lock byte 0 of the ledger file
+    import msvcrt
+
+    def _lock(fh) -> None:
+        fh.seek(0)
+        while True:
+            try:
+                msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
+                return
+            except OSError:  # LK_LOCK gives up after ~10 s; keep waiting
+                time.sleep(0.05)
+
+    def _unlock(fh) -> None:
+        fh.seek(0)
+        msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1)
+
 
 TLS_ALLOWANCE = (
     8192  # ASSUMPTION: bytes per request for TLS handshake / framing, not visible to urllib
@@ -49,15 +74,15 @@ class Ledger:
 
     @contextmanager
     def _locked(self):
-        with open(self.path, "a+") as fh:
-            fcntl.flock(fh, fcntl.LOCK_EX)
+        with open(self.path, "a+", encoding="utf-8") as fh:
+            _lock(fh)
             try:
                 fh.seek(0)
                 yield fh
             finally:
                 fh.flush()
                 os.fsync(fh.fileno())
-                fcntl.flock(fh, fcntl.LOCK_UN)
+                _unlock(fh)
 
     @staticmethod
     def _used(lines: list[str]) -> int:

@@ -37,6 +37,21 @@ def test_reserve_refuses_over_cap_and_persists(tmp_path):
     assert nl.Ledger(p, 1000).used() == 600
 
 
+def test_concurrent_reservations_are_all_recorded(tmp_path):
+    lg = nl.Ledger(tmp_path / "l.jsonl", 10**6)
+
+    def work():
+        for _ in range(20):
+            nl.Ledger(lg.path, lg.cap).reserve(100, "t")
+
+    ts = [threading.Thread(target=work) for _ in range(8)]
+    for t in ts:
+        t.start()
+    for t in ts:
+        t.join()
+    assert lg.used() == 8 * 20 * 100
+
+
 def test_done_replaces_reservation_by_actual(tmp_path):
     lg = nl.Ledger(tmp_path / "l.jsonl", 1000)
     rid = lg.reserve(600, "a")
