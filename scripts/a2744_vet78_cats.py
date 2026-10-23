@@ -1,11 +1,12 @@
-"""Vet 78.3c, test 1: knot c-image positions of Abell 2744 system 78 in the CATS v4.1 maps.
+"""Vet 78.3c, test 1: knot c-image positions of Abell 2744 system 78 in the CATS v4.1 maps (test 1)
+or the UNCOVER v2.0 maps (test 1b, ``decide_1b``).
 
 Plan (frozen first): ``results/lens_consistency/abell2744_uncoverref/PLAN_vet78.md``. For each knot
 (78.1, 78.2, 78.3) the a and b images are back-traced, the ``wls_source`` is solved for its images,
 and the image farthest from the a/b midpoint is the c-type image (ASSUMPTION). ``decide`` is the
 plan's frozen rule. Everything computed is ``model_prediction``; image positions are ``observed``.
 
-Usage: python scripts/a2744_vet78_cats.py [--out FILE]
+Usage: python scripts/a2744_vet78_cats.py [--model cats|uncover2] [--out FILE]
 """
 
 from __future__ import annotations
@@ -67,15 +68,35 @@ def decide(knots: dict[str, dict]) -> str:
     return "flag survives test 1"
 
 
+def decide_1b(knots: dict[str, dict]) -> str:
+    """Frozen rule 1b of the plan (UNCOVER v2.0 maps, a+b only)."""
+    if any(knots[k]["c_ra"] is None for k in KNOTS):
+        return "tool not validated"
+    if all(knots[k]["c_to_own_catalogued_arcsec"] > SEARCH_ARCSEC for k in ("78.1", "78.2")):
+        return (
+            "explained: this model's c positions for system 78 miss by more than the search radius"
+        )
+    if knots["78.3"]["c_to_catalogued_arcsec"] <= SEARCH_ARCSEC:
+        return "explained: model position error of the shared c image"
+    return "flag survives test 1b"
+
+
 def main(argv=None) -> dict:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--out", type=Path, default=HERE / "vet78_cats.json")
+    ap.add_argument("--model", choices=("cats", "uncover2"), default="cats")
+    ap.add_argument("--out", type=Path)
     args = ap.parse_args(argv)
+    out_path = args.out or HERE / f"vet78_{args.model}.json"
     imgs = Table.read(IMAGES)
     ids = np.asarray(imgs["image_id"]).astype(str)
     cat_c = {k: imgs[ids == f"{k}c"] for k in ("78.1", "78.2")}
-    model, files, _ = lc.load_model(MODEL)
+    maps: list[Path] = []
     try:
+        if args.model == "cats":
+            model, files, _ = lc.load_model(MODEL)
+            maps += list(files.values())
+        else:
+            model, _ = s700.load_uncover2(maps)
         sys78 = imgs[np.char.startswith(ids, "78.")]
         grid = lensmodel.DeflectionGrid.compute(
             model, lc.grid_half_width(model, sys78), s700.GRID_STEP
@@ -122,19 +143,19 @@ def main(argv=None) -> dict:
             knots[k] = row
             print(k, row, flush=True)
         out = {
-            "model": MODEL,
+            "model": MODEL if args.model == "cats" else "abell2744-uncover2",
             "z": Z,
             "grid_step_arcsec": s700.GRID_STEP,
             "grid_half_width_arcsec": float(grid.x[-1]),
             "thresholds_arcsec": {"tool": TOOL_ARCSEC, "search": SEARCH_ARCSEC},
             "knots": knots,
-            "outcome": decide(knots),
+            "outcome": decide(knots) if args.model == "cats" else decide_1b(knots),
             "provenance": "model_prediction (positions observed)",
         }
-        args.out.write_text(json.dumps(out, indent=1) + "\n")
+        out_path.write_text(json.dumps(out, indent=1) + "\n")
     finally:
         if os.environ.get("CLAUDE_CODE_REMOTE") == "true":  # cloud-disk rule
-            for p in files.values():
+            for p in maps:
                 Path(p).unlink(missing_ok=True)
     print(json.dumps(out, indent=1))
     return out

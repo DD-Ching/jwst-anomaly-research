@@ -34,3 +34,18 @@ def test_c_type_is_farthest_from_ab_midpoint():
     pred = Table({"ra": [10.0, 10.0002, 10.002], "dec": [0.0, 0.0, 0.001]})
     assert v.c_type(pred, ab) == 2
     assert v.c_type(pred[:2], ab) is None
+
+
+def _knots_1b(own=(1.2, 1.1), t_cat=1.5):
+    k = {f"78.{i + 1}": {"c_ra": 1.0, "c_to_own_catalogued_arcsec": d} for i, d in enumerate(own)}
+    k["78.3"] = {"c_ra": 1.0, "c_to_catalogued_arcsec": t_cat}
+    return k
+
+
+def test_decide_1b_branches():
+    k = _knots_1b()
+    k["78.3"]["c_ra"] = None
+    assert v.decide_1b(k) == "tool not validated"
+    assert v.decide_1b(_knots_1b(own=(1.2, 1.1))).startswith("explained: this model's c positions")
+    assert v.decide_1b(_knots_1b(own=(0.8, 1.1), t_cat=0.9)).startswith("explained: model position")
+    assert v.decide_1b(_knots_1b(own=(0.8, 1.1), t_cat=1.5)) == "flag survives test 1b"
