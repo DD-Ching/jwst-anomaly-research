@@ -93,3 +93,32 @@ def test_gate_c2():
     arc_bad = ["absent"] * 2 + ["recovered"] * 8
     assert not ma.gate_c2(arc_bad, [True] * 3 + [False] * 7)["passes"]  # arc fraction 1/3
     assert not ma.gate_c2(["recovered"] * 7, [True] * 7)["passes"]  # fewer than 8 testable
+
+
+def test_merge_shared_pairs_precedence():
+    systems = ["1", "2", "3", "4", "5", "6"]
+    pairs = [("r", "c")] * 2 + [("s", "d")] * 2 + [("t", "e")] * 2
+    classes = ["recovered", "absent", "undetectable", "confused", "undetectable", "ambiguous"]
+    merged, groups = ma.merge_shared_pairs(systems, pairs, classes)
+    assert groups == [[0, 1], [2, 3], [4, 5]]
+    # absent wins; an untestable member never hides a testable one
+    assert merged == ["absent", "confused", "ambiguous"]
+
+
+def test_gate_c2_shared_counts_shared_arc_pairs_once():
+    # 3 arc controls of 3 systems share one pair (2 absent), 3 more arc controls each own a pair,
+    # plus 6 non-arc controls: as stored arc 4 / 6 fails, counted once arc 3 / 4 = 0.75 still fails
+    classes = ["absent", "recovered", "absent"] + ["recovered"] * 3 + ["recovered"] * 6
+    arc = [True] * 6 + [False] * 6
+    systems = ["2", "102", "202", "7", "8", "9"] + [str(i) for i in range(20, 26)]
+    pairs = [("r", "c")] * 3 + [("a", "b"), ("e", "f"), ("g", "h")] + [("r", "c")] * 6
+    stored = ma.gate_c2(classes, arc)
+    shared = ma.gate_c2_shared(classes, arc, systems, pairs)
+    assert stored["arc_referenced"]["n_testable"] == 6
+    assert shared["arc_referenced"] == {"n_testable": 4, "n_ok": 3, "fraction": 0.75}
+    # non-arc controls are never merged, even when they repeat an arc pair
+    assert shared["all"]["n_testable"] == 10
+    assert shared["merged_groups"] == [[0, 1, 2]]
+    # the same pair within one system is not merged
+    one = ma.gate_c2_shared(["absent", "recovered"], [True, True], ["4", "4"], [("r", "c")] * 2)
+    assert one["merged_groups"] == [] and one["arc_referenced"]["n_testable"] == 2

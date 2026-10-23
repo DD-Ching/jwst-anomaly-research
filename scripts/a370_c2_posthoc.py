@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import json
 import math
-from collections import defaultdict
 from pathlib import Path
 
 import m0417_arcref as ar
@@ -29,29 +28,8 @@ FIELDS = {
 }
 
 
-def merge_shared_pairs(systems, pairs, classes) -> tuple[list[str], list[list[int]]]:
-    """Count controls of different systems that share one (reference, counterpart) source pair once.
-
-    Returns the merged class list and the row groups merged (only groups spanning >= 2 systems).
-    A merged control is ``absent`` if any member is absent, else the first member's class.
-    """
-    groups: dict[tuple, list[int]] = defaultdict(list)
-    for i, p in enumerate(pairs):
-        groups[p].append(i)
-    merged, multi, seen = [], [], set()
-    for i, p in enumerate(pairs):
-        if i in seen:
-            continue
-        g = groups[p]
-        if len({systems[j] for j in g}) < 2:
-            merged.append(classes[i])
-            seen.add(i)
-            continue
-        seen.update(g)
-        multi.append(g)
-        cls = [classes[j] for j in g]
-        merged.append("absent" if "absent" in cls else cls[0])
-    return merged, multi
+# Frozen since 2026-10-23 (D-034 addendum i); kept under this name for the post hoc tests.
+merge_shared_pairs = ar.merge_shared_pairs
 
 
 def _finite(x) -> float | None:
@@ -67,13 +45,9 @@ def field_report(path: Path, col: str) -> dict:
     arc = [bool(a) for a in t["arc_ref"]]
     pairs = [(str(r), str(c)) for r, c in zip(t["ref_counterpart"], t["counterpart"], strict=True)]
     as_stored = ar.gate_c2(classes, arc)
-    # merge only among arc-referenced controls; others keep their rows
+    shared = ar.gate_c2_shared(classes, arc, systems, pairs)
+    merged = {k: shared[k] for k in ("all", "arc_referenced", "passes")}
     ia = [i for i, a in enumerate(arc) if a]
-    m_cls, m_groups = merge_shared_pairs(
-        [systems[i] for i in ia], [pairs[i] for i in ia], [classes[i] for i in ia]
-    )
-    rest = [classes[i] for i, a in enumerate(arc) if not a]
-    merged = ar.gate_c2(rest + m_cls, [False] * len(rest) + [True] * len(m_cls))
     absent = [
         {
             "system": systems[i],
@@ -92,7 +66,9 @@ def field_report(path: Path, col: str) -> dict:
         "class_column": col,
         "gate_C2_as_stored": as_stored,
         "gate_C2_shared_pairs_once": merged,
-        "merged_groups": [[f"{systems[ia[j]]}:{t['images'][ia[j]]}" for j in g] for g in m_groups],
+        "merged_groups": [
+            [f"{systems[j]}:{t['images'][j]}" for j in g] for g in shared["merged_groups"]
+        ],
         "absent_arc_controls": absent,
     }
 

@@ -2257,6 +2257,18 @@ validated on its own constraints only and may serve the extra-image test on the 
 not used with it. Revisit if: the extra-image stages need images outside the BUFFALO gold list, or K1's failure is
 traced to the model rather than to list differences.
 
+**Addendum 2026-10-23i (gate C2 shared-pair counting, frozen before the next field).** On Abell 370 (#468) three
+BUFFALO systems used one CANUCS (reference, counterpart) segment pair, so one measurement counted as three gate C2
+controls (#469, post hoc). Decision: every field this route runs on after Abell 370 uses
+`m0417_arcref.gate_c2_shared`: arc-referenced controls of different systems that share one (reference, counterpart)
+pair count once; the merged class is the first present in the order absent, recovered / confused, ambiguous, other
+(an untestable member never hides a testable one). Non-arc controls and pairs within one system are not merged.
+On the stored tables it gives the #469 numbers unchanged (`posthoc_c2/posthoc.json` byte-identical). It was found on
+Abell 370, so it is not validated there, and Abell 370's flags stay unread (owner's call). Alternatives rejected:
+dropping shared controls (loses a real absence); weighting by 1 / n (no frozen threshold for weights). Revisit if: a
+field's controls share pairs whose members disagree between absent and recovered, which would mean the per-system
+predicted flux, not the pair, drives the class.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
