@@ -5,7 +5,8 @@ Frozen plans: ``results/lens_consistency/abell2744_uncoverref/PLAN.md`` (stage 1
 ``PLAN_2a.md`` (``--stage 2a``: the position-angle convention of the UNCOVER DR3 SUPER
 catalogue, measured on the release's segmentation map; needs ``--cat`` and ``--segmap``) and
 ``PLAN_2b.md`` (``--stage 2b``: predicted / control tables with the WLS source on GO 2561 F200W,
-the DR3 SUPER reference, the local-noise rule and gate C2 with shared pairs; needs ``--cat``).
+the DR3 SUPER reference, the local-noise rule and gate C2 with shared pairs; needs ``--cat``) and
+``PLAN_2c.md`` (``--stage 2c``: the stage-2b rules per band in F277W and F356W; needs ``--cat``).
 Runs gate K of ``m0417_images`` on the spectroscopic images of the UNCOVER v2.0 multiple-image
 table with the v2.0 deflection maps (``abell2744-uncover2-maps``). The extra-image stages follow
 in a later cycle only if the gate passes. Writes ``summary.json`` to the plan's directory.
@@ -13,6 +14,7 @@ in a later cycle only if the gate passes. Writes ``summary.json`` to the plan's 
     python scripts/a2744_uncoverref.py [--stage 1b]
     python scripts/a2744_uncoverref.py --stage 2a --cat <SUPER.fits> --segmap <SEGMAP.fits.gz>
     python scripts/a2744_uncoverref.py --stage 2b --cat <SUPER.fits> [--cache data/cache/a2744x]
+    python scripts/a2744_uncoverref.py --stage 2c --cat <SUPER.fits>
 """
 
 from __future__ import annotations
@@ -60,6 +62,8 @@ S3_2561 = "s3://stpubdata/jwst/public/jw02561/L3/t/{0}/jw02561-{0}_{1}_nircam_cl
 FRAME = OUT / "frame"
 SUPER_PIX = 0.04  # arcsec per catalogue pixel (PLAN_2a.md rule 4)
 SUPER_FLUX_JY = 1e-8  # f_f200w unit, 10 nJy (PHOT_ZP 28.9)
+BANDS_2C = ("f277w", "f356w")  # PLAN_2c.md
+PRESENT = ("recovered", "confused")
 
 lc.MODELS[MODEL] = {
     "files": {k: au.UNCOVER_V2[k] for k in ("alpha_x", "alpha_y")},
@@ -279,13 +283,14 @@ def stage_2a(cat: Path, segmap: Path) -> dict:
     return res
 
 
-def to_cat_super(t: Table) -> dict:
-    """PLAN_2b.md rule 2: the DR3 SUPER table in ``m0417_arcref``'s catalogue form."""
-    flux = np.ma.filled(np.ma.asarray(t["f_f200w"], float), np.nan) * SUPER_FLUX_JY
+def to_cat_super(t: Table, band: str = "f200w") -> dict:
+    """PLAN_2b.md rule 2 (PLAN_2c.md rule 1 for ``band``): the DR3 SUPER table in
+    ``m0417_arcref``'s catalogue form."""
+    flux = np.ma.filled(np.ma.asarray(t[f"f_{band}"], float), np.nan) * SUPER_FLUX_JY
     keep = np.isfinite(flux)
     t, flux = t[keep], flux[keep]
     with np.errstate(divide="ignore", invalid="ignore"):
-        snr = flux / (np.ma.filled(np.ma.asarray(t["e_f200w"], float), np.nan) * SUPER_FLUX_JY)
+        snr = flux / (np.ma.filled(np.ma.asarray(t[f"e_{band}"], float), np.nan) * SUPER_FLUX_JY)
         ell = 1.0 - np.asarray(t["b_image"], float) / np.asarray(t["a_image"], float)
     return {
         "label": np.asarray(t["id"]),
@@ -307,6 +312,63 @@ def to_njy_per_pixel(sci, pixar_sr: float) -> np.ndarray:
     d = np.asarray(sci, float) * pixar_sr * 1e15
     d[np.asarray(sci) == 0] = np.nan
     return d
+
+
+def _reference_run(rc, depth, inputs, out, contain, d, w, src_x, src_y, pix) -> dict:
+    """PLAN_2b.md rules 3-7 (PLAN_2c.md rules 2-5) for one reference catalogue and noise image."""
+    s = ar.run(
+        Path("."),
+        cat=rc,
+        depth=depth,
+        cat_inputs=inputs,
+        out=out,
+        field=FIELD,
+        frame=FRAME,
+        offset=(0.0, 0.0),
+        contain=contain,
+    )
+    rng = np.random.default_rng(m14.SEED)
+    ctrl = Table.read(out / f"control_{FIELD}.ecsv")
+    pred = Table.read(out / f"predicted_{FIELD}.ecsv")
+    m14.apply_local(ctrl, d, w, src_x, src_y, rng, pix)
+    if len(pred):
+        m14.apply_local(pred, d, w, src_x, src_y, rng, pix)
+    cl = [str(c) for c in ctrl["class_local"]]
+    pairs = [
+        (int(a), int(b)) for a, b in zip(ctrl["ref_counterpart"], ctrl["counterpart"], strict=True)
+    ]
+    c2 = ar.gate_c2_shared(cl, list(ctrl["arc_ref"]), [str(x) for x in ctrl["system"]], pairs)
+    flags = [
+        f"{r['system']}@{r['ra']:.6f},{r['dec']:.6f}"
+        for r in pred
+        if c2["passes"] and str(r["class_local"]) == "absent"
+    ]
+    ctrl.write(out / f"control_{FIELD}.ecsv", overwrite=True)
+    pred.write(out / f"predicted_{FIELD}.ecsv", overwrite=True)
+    return {
+        "gate_C2_shared": c2,
+        "flags": flags,
+        "control_classes": m14._count(ctrl["class_local"]),
+        "target_classes": m14._count(pred["class_local"]) if len(pred) else {},
+        "gate_C2_plain": ar.gate_c2(cl, list(ctrl["arc_ref"])),
+        "without_local_noise_rule": {
+            k: s[k] for k in ("gate_C2", "control_classes", "target_classes", "flags")
+        },
+        "posthoc_absent_controls": s["posthoc_absent_controls"],
+        "inputs": s["inputs"],
+        "rules": s["rules"],
+    }
+
+
+def _read_sci(fs, path: str) -> tuple:
+    """One sequential range stream of an i2d SCI extension -> (WCS, nJy per pixel, pixel scale)."""
+    with fs.open(path, block_size=32 * 2**20) as fh, fits.open(fh) as hl:
+        h = hl["SCI"].header
+        if h.get("BUNIT") != "MJy/sr":
+            raise ValueError(f"unexpected BUNIT {h.get('BUNIT')!r}")
+        w = WCS(h)
+        d = to_njy_per_pixel(hl["SCI"].data, float(h["PIXAR_SR"]))
+    return w, d, float(proj_plane_pixel_scales(w.celestial).mean() * 3600.0)
 
 
 def register_2b() -> None:
@@ -339,14 +401,7 @@ def stage_2b(cat: Path, cache: Path) -> dict:
         json.dumps(_clean({FIELD: frame}), indent=1, allow_nan=False) + "\n"
     )
     # one sequential range stream of the SCI extension (PLAN_2b.md "Data volume")
-    i2d = S3_2561.format(OBS, TILE, "i2d.fits")[5:]
-    with fs.open(i2d, block_size=32 * 2**20) as fh, fits.open(fh) as hl:
-        h = hl["SCI"].header
-        if h.get("BUNIT") != "MJy/sr":
-            raise ValueError(f"unexpected BUNIT {h.get('BUNIT')!r}")
-        w = WCS(h)
-        d = to_njy_per_pixel(hl["SCI"].data, float(h["PIXAR_SR"]))
-    pix = float(proj_plane_pixel_scales(w.celestial).mean() * 3600.0)
+    w, d, pix = _read_sci(fs, S3_2561.format(OBS, TILE, "i2d.fits")[5:])
     t = Table.read(cat)
     rc = to_cat_super(t)
     inputs = {
@@ -363,60 +418,83 @@ def stage_2b(cat: Path, cache: Path) -> dict:
     )
     res: dict = {"frame": frame}
     for contain, out in ((False, OUT / "without_contain"), (True, OUT)):  # rule 3 / rule 7
-        s = ar.run(
-            Path("."),
-            cat=rc,
-            depth=depth,
-            cat_inputs=inputs,
-            out=out,
-            field=FIELD,
-            frame=FRAME,
-            offset=(0.0, 0.0),
-            contain=contain,
+        res["frozen" if contain else "without_contain"] = _reference_run(
+            rc, depth, inputs, out, contain, d, w, src_x, src_y, pix
         )
-        rng = np.random.default_rng(m14.SEED)
-        ctrl = Table.read(out / f"control_{FIELD}.ecsv")
-        pred = Table.read(out / f"predicted_{FIELD}.ecsv")
-        m14.apply_local(ctrl, d, w, src_x, src_y, rng, pix)  # rule 4
-        if len(pred):
-            m14.apply_local(pred, d, w, src_x, src_y, rng, pix)
-        cl = [str(c) for c in ctrl["class_local"]]
-        pairs = [
-            (int(a), int(b))
-            for a, b in zip(ctrl["ref_counterpart"], ctrl["counterpart"], strict=True)
-        ]
-        c2 = ar.gate_c2_shared(cl, list(ctrl["arc_ref"]), [str(x) for x in ctrl["system"]], pairs)
-        flags = [
-            f"{r['system']}@{r['ra']:.6f},{r['dec']:.6f}"
-            for r in pred
-            if c2["passes"] and str(r["class_local"]) == "absent"
-        ]
-        ctrl.write(out / f"control_{FIELD}.ecsv", overwrite=True)
-        pred.write(out / f"predicted_{FIELD}.ecsv", overwrite=True)
-        res["frozen" if contain else "without_contain"] = {
-            "gate_C2_shared": c2,
-            "flags": flags,
-            "control_classes": m14._count(ctrl["class_local"]),
-            "target_classes": m14._count(pred["class_local"]) if len(pred) else {},
-            "gate_C2_plain": ar.gate_c2(cl, list(ctrl["arc_ref"])),
-            "without_local_noise_rule": {
-                k: s[k] for k in ("gate_C2", "control_classes", "target_classes", "flags")
-            },
-            "posthoc_absent_controls": s["posthoc_absent_controls"],
-            "inputs": s["inputs"],
-            "rules": s["rules"],
+    return res
+
+
+def outcome_2c(by_band: dict[str, tuple[str, bool]]) -> str:
+    """PLAN_2c.md rule 6 for one target: ``by_band`` maps band -> (class_local, gate C2 passes)."""
+    read = [cls for cls, c2 in by_band.values() if c2]
+    if "absent" in read:
+        return "flag"
+    if any(cls in PRESENT for cls in read):
+        return "present"
+    return "undetermined"
+
+
+def stage_2c(cat: Path) -> dict:
+    """PLAN_2c.md: stage-2b rules per long-wavelength band on the committed stage-2b frame."""
+    import s3fs
+
+    if file_sha256(cat) != SUPER_SHA:
+        raise SystemExit("error: --cat is not the pinned UNCOVER DR3 SUPER catalogue")
+    register_2b()
+    fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
+    t = Table.read(cat)
+    res: dict = {}
+    targets: dict[str, dict] = {}
+    for band in BANDS_2C:
+        i2d = S3_2561.format(OBS, TILE, "i2d.fits").replace("f200w", band)
+        w, d, pix = _read_sci(fs, i2d[5:])
+        rc = to_cat_super(t, band)
+        src_x, src_y = (  # every SUPER row, as stage 2b
+            np.asarray(v, float) for v in w.world_to_pixel(SkyCoord(t["ra"], t["dec"], unit="deg"))
+        )
+        inputs = {
+            "reference": SUPER_CAT,
+            "reference_sha256": SUPER_SHA,
+            "n_rows_finite_flux": int(len(rc["flux"])),
+            "flux_column": f"f_{band}",
+            "noise_image": i2d,
+            "noise_pixel_scale_arcsec": pix,
         }
+        depth = cr.depth_mag(rc["flux"], rc["snr"])
+        out = OUT / band
+        out.mkdir(parents=True, exist_ok=True)
+        r = _reference_run(rc, depth, inputs, out, True, d, w, src_x, src_y, pix)
+        del d
+        res[band] = r
+        for row in Table.read(out / f"predicted_{FIELD}.ecsv"):
+            key = f"{row['system']}@{row['ra']:.6f},{row['dec']:.6f}"
+            targets.setdefault(key, {})[band] = (
+                str(row["class_local"]),
+                bool(r["gate_C2_shared"]["passes"]),
+            )
+    res["outcome"] = {k: outcome_2c(v) for k, v in targets.items()}
+    res["per_band"] = {k: {b: c for b, (c, _) in v.items()} for k, v in targets.items()}
     return res
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--stage", choices=("1", "1b", "2a", "2b"), default="1")
+    ap.add_argument("--stage", choices=("1", "1b", "2a", "2b", "2c"), default="1")
     ap.add_argument("--cat", type=Path, help="stages 2a, 2b: the DR3 SUPER catalogue")
     ap.add_argument("--cache", type=Path, default=Path("data/cache/a2744x"))
     ap.add_argument("--segmap", type=Path, help="stage 2a: the DR3 segmentation map")
     args = ap.parse_args(argv)
     OUT.mkdir(parents=True, exist_ok=True)
+    if args.stage == "2c":
+        if args.cat is None:
+            ap.error("--stage 2c needs --cat")
+        summary = read_summary()
+        summary["stage2c"] = _clean(stage_2c(args.cat))
+        write_summary(summary)
+        r = summary["stage2c"]
+        print(json.dumps({b: r[b]["gate_C2_shared"]["passes"] for b in BANDS_2C}))
+        print(json.dumps(r["outcome"]))
+        return 0
     if args.stage == "2b":
         if args.cat is None:
             ap.error("--stage 2b needs --cat")
