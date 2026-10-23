@@ -9,9 +9,10 @@
   "F160W 17455 builds (15+40+40+80+144 field reads x ~3.4 MB)": 1.1,
   "F160W 17199 builds (3 x 8 full-frame fields, <= 30 MB each)": 0.7,
   "development / validation cutouts (~40 x ~21 MB)": 0.8,
-  "traffic measurements this round": 0.7
+  "traffic measurements this round": 0.7,
+  "v3 reruns (17 positive cutouts at <= 4.1 MB with 64 kB blocks; 2 zero-point header reads)": 0.1
  },
- "total_estimate_gb": 28.4,
+ "total_estimate_gb": 28.5,
  "measured": {
   "eth0_after_restart_gb_at_07_28": 0.26,
   "one_acs_cutout_5MB_blocks_mb": 21,

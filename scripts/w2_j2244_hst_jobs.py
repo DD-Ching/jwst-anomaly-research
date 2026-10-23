@@ -170,9 +170,10 @@ def zero_points() -> dict:
     zp = {}
     for band, (oid, _) in TARGET_OBS.items():
         with fits.open(m.url_of(oid), use_fsspec=True, fsspec_kwargs=m.FSSPEC) as h:
-            zp[band] = float(
-                m.zp_ab(float(h["SCI"].header["PHOTFLAM"]), float(h["SCI"].header["PHOTPLAM"]))
-            )
+            hs, h0 = h["SCI"].header, h[0].header
+            flam = float(hs.get("PHOTFLAM", h0.get("PHOTFLAM")))
+            plam = float(hs.get("PHOTPLAM", h0.get("PHOTPLAM")))
+            zp[band] = float(m.zp_ab(flam, plam))
     return zp
 
 

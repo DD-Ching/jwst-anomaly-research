@@ -2,25 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-23: W2 J2244−0550 HST test: the frozen lenstronomy two-point-source + Sérsic chain fails validation in both bands; target not measured
-- **Plan:** `results/w2_j2244_hst/PLAN.md`. v1 was frozen before any control run, v2 (development settings and T)
-  before validation.
+## 2026-10-23: W2 J2244−0550 HST test: this lenstronomy two-point-source + Sérsic implementation fails validation in both bands (v2 and, after review fixes, v3); target not measured
+- **Plan:** `results/w2_j2244_hst/PLAN.md`, frozen before the runs it governs: v1 before any control run, v2
+  (development settings and T) before validation, v3 (implementation fixes from the review) before any rerun.
 - **Data:**
   - target: GO 17455 F160W `if8a5k030` and GO 17308 F814W `jf56c1010` (S3 byte-range cutouts);
   - star libraries from programme fields.
 - **Tool:** lenstronomy 1.14.2 PSO → PSF iteration → PSO, with a photutils ePSF, in an isolated environment.
-- **Validation** (`gate.json`):
+- **v3 validation** (`gate.json`; T F160W 27203.0, F814W 10930.8 from development star pairs):
   - F814W: 2 / 6 close known lenses detected (≥ 80 % needed); 0 / 6 star-pair false detections.
-  - F160W: only 2 positives fall in the 0.7–1.8″ geometry, and the injection absorption check fails; 0 / 5 false
-    detections.
-  - Injections: F814W recovers r_eff 0.2–0.5″ Sérsic light only to 20–21 mag; F160W recovers none at 19–23 mag.
-- **Failed approach:** real-star pairs at the target's brightness give PSF-mismatch Δχ² up to 4592 (F814W) and 11780
-  (F160W), as large as a faint lens galaxy (SDSSJ2146−0047, 3825). The D-060 failure mode is confirmed with real
-  stars.
+  - F160W: only 2 positives fall in the 0.7–1.8″ geometry (3 needed), 1 detected; 0 / 6 false detections.
+  - Injections: F814W recovers r_eff 0.2–0.5″ Sérsic light only at 20 mag; F160W recovers none at 19–23 mag. The
+    fitted Sérsic flux is 2.0–3.9 × the injected flux at the brightest injection, so it is not a galaxy measurement.
+- **Failed approach:** real-star pairs at the target's Gaia brightness give Δχ² up to 13601.5 (F160W) and 6468.4
+  (F814W). 4 of 8 fitted F814W lenses at 0.93–1.60″ fall below 6468.4. Consistent with the D-060 failure mode.
+- **Before / after:** the v2 run (`*_v2run*`) had two implementation errors (PSF error term zero; F814W saturation cut
+  at 674 s instead of 337 s). It also failed both bands, with the same two F814W lenses detected.
 - **Deviations:**
-  - traffic ≈ 28 GB estimated against a 3 GB budget (fsspec 5 MB read-ahead; fixed to 64 kB);
-  - Sérsic flux-unit fix after the runs (before / after kept);
-  - a worker restart (validation rerun identically).
+  - traffic ≈ 28.5 GB estimated against a 3 GB budget (fsspec 5 MB read-ahead; four F814W library builds; fixed to
+    64 kB);
+  - Sérsic flux-unit fix after the v2 runs (before / after kept);
+  - a worker restart (v2 validation rerun identically);
+  - F814W star G range and pair separations differ from the plan text (RESULT §9).
 
 ## 2026-10-23: W2 DESI pairs evidence audit: J2351+1343 is misidentified; of the other 12 rejected pairs 2 have stronger ordinary explanations, 3 are disputed, 7 stay open; J2244−0550 (likely lens in its source paper) has public HST imaging with no published use found; the DESI classifier line stops
 - **Plan:** `results/w2_desi_pairs/evidence/PLAN.md`. Metadata and literature only: no spectrum read, and #472's

@@ -2,9 +2,9 @@
  "label": "derived (validation controls and injections; frozen v2 rules)",
  "bands": {
   "F160W": {
-   "T": 7774.294946169393,
+   "T": 27202.919929135962,
    "gate": {
-    "n_neg": 5,
+    "n_neg": 6,
     "neg_false_detections": 0,
     "n_pos": 2,
     "pos_detected": 1,
@@ -14,25 +14,25 @@
     ],
     "neg_false_wilson": [
      0.0,
-     0.43449149475208104
+     0.3903430336530645
     ],
-    "unreliable": 1,
+    "unreliable": 0,
     "enough_controls": false,
-    "absorb_ok": false,
+    "absorb_ok": true,
     "passed": false
    },
    "positives_eligible": [
     {
      "name": "SDSSJ0806+2006",
-     "sep": 1.487207893505802,
-     "dchi2": 152134.33650464282,
+     "sep": 1.5014144339138904,
+     "dchi2": 35254.21094834985,
      "status": "extended light"
     },
     {
      "name": "VDESJ2325-5229",
-     "sep": 1.734937154370695,
-     "dchi2": 25040.273840529044,
-     "status": "extended light offset"
+     "sep": 1.7481409651978765,
+     "dchi2": 18190.793824019718,
+     "status": "none"
     }
    ],
    "positives_excluded_geometry": [
@@ -49,9 +49,9 @@
       18.293266,
       17.695143
      ],
-     "dchi2": 914.9280823007794,
-     "redchi": 12.771266011807674,
-     "status": "fit unreliable"
+     "dchi2": 1947.6816317223775,
+     "redchi": 3.015723473315596,
+     "status": "none"
     },
     {
      "name": "pair4",
@@ -59,8 +59,8 @@
       17.694977,
       18.33777
      ],
-     "dchi2": -39.91887928351389,
-     "redchi": 7.510948120971157,
+     "dchi2": 2033.177358919067,
+     "redchi": 1.7621126249466654,
      "status": "none"
     },
     {
@@ -69,8 +69,8 @@
       18.33864,
       18.345018
      ],
-     "dchi2": 4516.965022835286,
-     "redchi": 7.346026089527887,
+     "dchi2": 2549.7140389260594,
+     "redchi": 2.12648590733338,
      "status": "none"
     },
     {
@@ -79,8 +79,8 @@
       18.389284,
       18.394241
      ],
-     "dchi2": -226.27894023369026,
-     "redchi": 2.4127123856072745,
+     "dchi2": 436.360830186607,
+     "redchi": 1.5957011409569526,
      "status": "none"
     },
     {
@@ -89,9 +89,9 @@
       17.595812,
       17.584204
      ],
-     "dchi2": 11780.018077330966,
-     "redchi": 8.971941180573838,
-     "status": "unresolved"
+     "dchi2": 7613.178359913638,
+     "redchi": 3.480937511236528,
+     "status": "none"
     },
     {
      "name": "pair8",
@@ -99,8 +99,8 @@
       18.418413,
       17.576113
      ],
-     "dchi2": -2666.5786491078234,
-     "redchi": 6.897891509194946,
+     "dchi2": 1338.26398699743,
+     "redchi": 2.655689163075184,
      "status": "none"
     }
    ],
@@ -109,201 +109,201 @@
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 19.0,
-     "status": "fit unreliable",
-     "dchi2": 76154.69072622852,
+     "status": "none",
+     "dchi2": 4533.293563696306,
      "recovered": false,
-     "flux_ratio_raw": 0.6908673435196714,
-     "flux_ratio_minus_baseline": 0.3420826144265804
+     "flux_ratio_raw": 3.92161684816008,
+     "flux_ratio_minus_baseline": -4.868076091440519
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 20.0,
-     "status": "unresolved",
-     "dchi2": 14597.279576286908,
+     "status": "none",
+     "dchi2": 1539.8852414314802,
      "recovered": false,
-     "flux_ratio_raw": 0.9590127222724117,
-     "flux_ratio_minus_baseline": 0.08290509374573199
+     "flux_ratio_raw": 3.7191653640115123,
+     "flux_ratio_minus_baseline": -18.359545068106783
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 21.0,
-     "status": "fit unreliable",
-     "dchi2": -1826.0591032839984,
+     "status": "none",
+     "dchi2": 129.0319473402942,
      "recovered": false,
-     "flux_ratio_raw": 2.5122831397041656,
-     "flux_ratio_minus_baseline": 0.3116002750659625
+     "flux_ratio_raw": 73.54746916889582,
+     "flux_ratio_minus_baseline": 18.08825600922884
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 22.0,
-     "status": "fit unreliable",
-     "dchi2": 1441.8057859684668,
+     "status": "none",
+     "dchi2": 2001.9142781492574,
      "recovered": false,
-     "flux_ratio_raw": 3.523715161206048,
-     "flux_ratio_minus_baseline": -2.004150266534289
+     "flux_ratio_raw": 134.36696381721686,
+     "flux_ratio_minus_baseline": -4.94028122074822
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 23.0,
-     "status": "fit unreliable",
-     "dchi2": 736.7134109380895,
+     "status": "none",
+     "dchi2": 1966.3065314742917,
      "recovered": false,
-     "flux_ratio_raw": 21.81643957821205,
-     "flux_ratio_minus_baseline": 7.931069415060198
+     "flux_ratio_raw": 334.99645673862375,
+     "flux_ratio_minus_baseline": -14.92752188322093
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 19.0,
-     "status": "fit unreliable",
-     "dchi2": 22231.189425366643,
+     "status": "none",
+     "dchi2": 1978.2053459119725,
      "recovered": false,
-     "flux_ratio_raw": 0.6562828425789536,
-     "flux_ratio_minus_baseline": 0.30749811348586265
+     "flux_ratio_raw": 2.857640055355106,
+     "flux_ratio_minus_baseline": -5.9320528842454925
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 20.0,
-     "status": "fit unreliable",
-     "dchi2": 795.8045466882722,
+     "status": "none",
+     "dchi2": 413.30675254352536,
      "recovered": false,
-     "flux_ratio_raw": 0.623560765311193,
-     "flux_ratio_minus_baseline": -0.25254686321548675
+     "flux_ratio_raw": 22.17587167171256,
+     "flux_ratio_minus_baseline": 0.09716123959426619
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 21.0,
-     "status": "fit unreliable",
-     "dchi2": 1441.0206290544666,
+     "status": "none",
+     "dchi2": 1949.806465482572,
      "recovered": false,
-     "flux_ratio_raw": 0.9435407361247504,
-     "flux_ratio_minus_baseline": -1.2571421285134525
+     "flux_ratio_raw": 52.854644037130846,
+     "flux_ratio_minus_baseline": -2.604569122536136
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 22.0,
-     "status": "fit unreliable",
-     "dchi2": -452.4767625653294,
+     "status": "none",
+     "dchi2": 1644.2605372373964,
      "recovered": false,
-     "flux_ratio_raw": 6.734729012339599,
-     "flux_ratio_minus_baseline": 1.2068635845992621
+     "flux_ratio_raw": 139.81878587697682,
+     "flux_ratio_minus_baseline": 0.5115408390117495
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 23.0,
-     "status": "fit unreliable",
-     "dchi2": 1970.3062898327225,
+     "status": "none",
+     "dchi2": 1945.7522429313249,
      "recovered": false,
-     "flux_ratio_raw": 6.215194483578044,
-     "flux_ratio_minus_baseline": -7.670175679573808
+     "flux_ratio_raw": 322.22034677490757,
+     "flux_ratio_minus_baseline": -27.70363184693711
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 19.0,
-     "status": "unresolved",
-     "dchi2": 94972.06224586401,
+     "status": "none",
+     "dchi2": 2796.756838280016,
      "recovered": false,
-     "flux_ratio_raw": 0.6185848427768599,
-     "flux_ratio_minus_baseline": 0.6185847414093338
+     "flux_ratio_raw": 3.1523881999473273,
+     "flux_ratio_minus_baseline": 0.3307881635332738
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 20.0,
-     "status": "unresolved",
-     "dchi2": 26916.231982668112,
+     "status": "none",
+     "dchi2": 1226.43615452638,
      "recovered": false,
-     "flux_ratio_raw": 0.6057420307993849,
-     "flux_ratio_minus_baseline": 0.6057417761756717
+     "flux_ratio_raw": 5.953509588478211,
+     "flux_ratio_minus_baseline": -1.1340292581371854
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 21.0,
      "status": "none",
-     "dchi2": 4050.834608676025,
+     "dchi2": 1204.008314410873,
      "recovered": false,
-     "flux_ratio_raw": 0.34167024259694473,
-     "flux_ratio_minus_baseline": 0.34166960301109434
+     "flux_ratio_raw": 12.285560226788306,
+     "flux_ratio_minus_baseline": -5.517532434821974
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 22.0,
      "status": "none",
-     "dchi2": 3501.41830263028,
+     "dchi2": 2342.3760345184446,
      "recovered": false,
-     "flux_ratio_raw": -4.853823541287886,
-     "flux_ratio_minus_baseline": -4.853825147854906
+     "flux_ratio_raw": 44.61807549940599,
+     "flux_ratio_minus_baseline": -0.10127139620065699
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 23.0,
      "status": "none",
-     "dchi2": 909.3838879160012,
+     "dchi2": 1958.9611552110991,
      "recovered": false,
-     "flux_ratio_raw": -12.3732735993545,
-     "flux_ratio_minus_baseline": -12.373277634868398
+     "flux_ratio_raw": 114.78704971793748,
+     "flux_ratio_minus_baseline": 2.4571290248930886
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 19.0,
-     "status": "unresolved",
-     "dchi2": 38847.42704323015,
+     "status": "none",
+     "dchi2": 1457.6901218212074,
      "recovered": false,
-     "flux_ratio_raw": 0.3872874339001499,
-     "flux_ratio_minus_baseline": 0.3872873325326239
+     "flux_ratio_raw": 2.009456477040963,
+     "flux_ratio_minus_baseline": -0.8121435593730908
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 20.0,
      "status": "none",
-     "dchi2": 6555.770236394579,
+     "dchi2": 1616.6805321061752,
      "recovered": false,
-     "flux_ratio_raw": 0.3247008149382627,
-     "flux_ratio_minus_baseline": 0.32470056031454947
+     "flux_ratio_raw": 6.457494821187573,
+     "flux_ratio_minus_baseline": -0.6300440254278245
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 21.0,
      "status": "none",
-     "dchi2": 478.98671694819495,
+     "dchi2": 2198.539213438682,
      "recovered": false,
-     "flux_ratio_raw": 0.005382800409210478,
-     "flux_ratio_minus_baseline": 0.005382160823360064
+     "flux_ratio_raw": 17.53430165210259,
+     "flux_ratio_minus_baseline": -0.26879100950768825
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 22.0,
      "status": "none",
-     "dchi2": 746.133390059289,
+     "dchi2": 2449.123454566439,
      "recovered": false,
-     "flux_ratio_raw": -5.189541842666121,
-     "flux_ratio_minus_baseline": -5.18954344923314
+     "flux_ratio_raw": 42.47706082208653,
+     "flux_ratio_minus_baseline": -2.242286073520118
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 23.0,
      "status": "none",
-     "dchi2": -106.28080728736131,
+     "dchi2": 1964.4546408529632,
      "recovered": false,
-     "flux_ratio_raw": 9.879013454905657e-07,
-     "flux_ratio_minus_baseline": -3.0476125519569056e-06
+     "flux_ratio_raw": 114.48069398430322,
+     "flux_ratio_minus_baseline": 2.150773291258821
     }
    ],
    "injection_limits": {
@@ -314,7 +314,7 @@
    }
   },
   "F814W": {
-   "T": 9184.502362879357,
+   "T": 10930.821122746303,
    "gate": {
     "n_neg": 6,
     "neg_false_detections": 0,
@@ -336,60 +336,60 @@
    "positives_eligible": [
     {
      "name": "SDSSJ0114+0722",
-     "sep": 1.25920728593574,
-     "dchi2": 45255.323036956324,
+     "sep": 1.2541673999387088,
+     "dchi2": 24738.41209400053,
      "status": "extended light offset"
     },
     {
      "name": "J0140-1152",
-     "sep": 1.466169295512227,
-     "dchi2": 366033.1189509219,
+     "sep": 1.4732453929085487,
+     "dchi2": 184500.28924215178,
      "status": "extended light"
     },
     {
      "name": "SDSSJ2146-0047",
-     "sep": 1.3941158259712387,
-     "dchi2": 3825.1744355004703,
+     "sep": 1.3976559926335748,
+     "dchi2": 1130.0057005426806,
      "status": "none"
     },
     {
      "name": "144320-012537",
-     "sep": 1.1383638341470323,
-     "dchi2": 717.6009205333212,
+     "sep": 1.1366898409530493,
+     "dchi2": 828.7822178381848,
      "status": "none"
     },
     {
      "name": "DESI-011.9124+03.3756",
-     "sep": 1.5794898027320556,
-     "dchi2": 33923.59272562919,
+     "sep": 1.5991541169898582,
+     "dchi2": 19529.578513780536,
      "status": "extended light"
     },
     {
      "name": "022418+024703",
-     "sep": 0.9409634400485721,
-     "dchi2": 48883.66401034769,
+     "sep": 0.9298119019993377,
+     "dchi2": 40135.91388125405,
      "status": "extended light offset"
     }
    ],
    "positives_excluded_geometry": [
     {
      "name": "ULASJ0820+0812",
-     "sep": 2.2402362177380435,
-     "status": "extended light offset"
+     "sep": 2.2291447594590426,
+     "status": "none"
     },
     {
      "name": "SDSSJ0946+1835",
-     "sep": 3.053340561683394,
+     "sep": 3.0550344886047265,
      "status": "extended light offset"
     },
     {
      "name": "SDSSJ1640+1932",
-     "sep": 2.3629752675756817,
-     "status": "extended light offset"
+     "sep": 2.4620106178112406,
+     "status": "fit unreliable"
     },
     {
      "name": "WGD2021-4115",
-     "sep": 2.749792862467997,
+     "sep": 2.7407389791669328,
      "status": "extended light"
     }
    ],
@@ -400,8 +400,8 @@
       18.036669,
       17.95562
      ],
-     "dchi2": -353.2275950020994,
-     "redchi": 2.871784910404477,
+     "dchi2": 962.3309015163359,
+     "redchi": 1.5169608802082795,
      "status": "none"
     },
     {
@@ -410,8 +410,8 @@
       17.953213,
       17.947216
      ],
-     "dchi2": 7374.6573038631705,
-     "redchi": 2.281698325829206,
+     "dchi2": 4104.700599620044,
+     "redchi": 1.283470220675909,
      "status": "none"
     },
     {
@@ -420,8 +420,8 @@
       18.054995,
       17.938583
      ],
-     "dchi2": 1556.3067656418152,
-     "redchi": 1.882356114107567,
+     "dchi2": 2469.064893579376,
+     "redchi": 1.2182636719170368,
      "status": "none"
     },
     {
@@ -430,8 +430,8 @@
       18.063433,
       17.934294
      ],
-     "dchi2": 4141.423823699035,
-     "redchi": 2.9843820035467457,
+     "dchi2": 6468.435595135043,
+     "redchi": 1.6285923003214386,
      "status": "none"
     },
     {
@@ -440,8 +440,8 @@
       18.07567,
       17.902565
      ],
-     "dchi2": 2276.9506889619643,
-     "redchi": 1.91559308270778,
+     "dchi2": 2173.9587215775664,
+     "redchi": 1.0436056538010066,
      "status": "none"
     },
     {
@@ -450,8 +450,8 @@
       18.10906,
       18.11075
      ],
-     "dchi2": 2059.9937864698986,
-     "redchi": 2.1444324136933166,
+     "dchi2": 1478.5249848544045,
+     "redchi": 1.3595452218012372,
      "status": "none"
     }
    ],
@@ -461,207 +461,207 @@
      "r_eff": 0.2,
      "mag": 20.0,
      "status": "extended light",
-     "dchi2": 84881.36320960187,
+     "dchi2": 37786.95209016575,
      "recovered": true,
-     "flux_ratio_raw": 1.0813803136999338,
-     "flux_ratio_minus_baseline": 0.9058387786618064
+     "flux_ratio_raw": 1.9980909484460867,
+     "flux_ratio_minus_baseline": 1.324338308086809
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 21.0,
-     "status": "extended light",
-     "dchi2": 14870.41977320478,
-     "recovered": true,
-     "flux_ratio_raw": 1.1246761188178196,
-     "flux_ratio_minus_baseline": 0.6837357187891842
+     "status": "none",
+     "dchi2": 7437.792334957023,
+     "recovered": false,
+     "flux_ratio_raw": 3.3865733998814402,
+     "flux_ratio_minus_baseline": 1.6941832843692168
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 22.0,
      "status": "none",
-     "dchi2": 4626.289812141356,
+     "dchi2": 1884.8303026105204,
      "recovered": false,
-     "flux_ratio_raw": 3.4708096547432428,
-     "flux_ratio_minus_baseline": 2.3632174468069067
+     "flux_ratio_raw": 9.919355030307985,
+     "flux_ratio_minus_baseline": 5.668263262331899
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 23.0,
      "status": "none",
-     "dchi2": 759.2752772376443,
+     "dchi2": 1057.278112261065,
      "recovered": false,
-     "flux_ratio_raw": 6.265202441044072,
-     "flux_ratio_minus_baseline": 3.483056602283052
+     "flux_ratio_raw": 10.733646288316626,
+     "flux_ratio_minus_baseline": 0.05538655723542664
     },
     {
      "pair": "pair3",
      "r_eff": 0.2,
      "mag": 24.0,
      "status": "none",
-     "dchi2": 820.1727759658097,
+     "dchi2": 927.9414182849869,
      "recovered": false,
-     "flux_ratio_raw": 28.397295242880304,
-     "flux_ratio_minus_baseline": 21.408860860015658
+     "flux_ratio_raw": 57.239911829169706,
+     "flux_ratio_minus_baseline": 30.417336098531695
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 20.0,
      "status": "extended light",
-     "dchi2": 22244.796975246143,
+     "dchi2": 11951.264106673294,
      "recovered": true,
-     "flux_ratio_raw": 1.6344465928980294,
-     "flux_ratio_minus_baseline": 1.4589050578599019
+     "flux_ratio_raw": 2.658782275092745,
+     "flux_ratio_minus_baseline": 1.9850296347334675
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 21.0,
      "status": "none",
-     "dchi2": 5958.098967532111,
+     "dchi2": 2828.996044806634,
      "recovered": false,
-     "flux_ratio_raw": 2.2130127110112183,
-     "flux_ratio_minus_baseline": 1.7720723109825827
+     "flux_ratio_raw": 5.319502048806299,
+     "flux_ratio_minus_baseline": 3.6271119332940764
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 22.0,
      "status": "none",
-     "dchi2": 2825.2073365998694,
+     "dchi2": 1189.5924507366053,
      "recovered": false,
-     "flux_ratio_raw": 2.943930516623783,
-     "flux_ratio_minus_baseline": 1.836338308687447
+     "flux_ratio_raw": 7.951586209765344,
+     "flux_ratio_minus_baseline": 3.700494441789258
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 23.0,
      "status": "none",
-     "dchi2": 595.8426527549127,
+     "dchi2": 990.6470209747004,
      "recovered": false,
-     "flux_ratio_raw": 10.404454075783645,
-     "flux_ratio_minus_baseline": 7.622308237022626
+     "flux_ratio_raw": 16.33581831782414,
+     "flux_ratio_minus_baseline": 5.6575585867429385
     },
     {
      "pair": "pair3",
      "r_eff": 0.5,
      "mag": 24.0,
      "status": "none",
-     "dchi2": 995.1606027435155,
+     "dchi2": 961.9235933659766,
      "recovered": false,
-     "flux_ratio_raw": 81.27023446276452,
-     "flux_ratio_minus_baseline": 74.28180007989987
+     "flux_ratio_raw": 26.496367106461705,
+     "flux_ratio_minus_baseline": -0.3262086241763093
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 20.0,
      "status": "extended light",
-     "dchi2": 102075.30306955377,
+     "dchi2": 18907.105942679715,
      "recovered": true,
-     "flux_ratio_raw": 1.9829716394031847,
-     "flux_ratio_minus_baseline": 0.3782498561488485
+     "flux_ratio_raw": 3.5612713951305155,
+     "flux_ratio_minus_baseline": 2.2439013614860577
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 21.0,
-     "status": "extended light",
-     "dchi2": 23302.405805193324,
-     "recovered": true,
-     "flux_ratio_raw": 5.004785483434454,
-     "flux_ratio_minus_baseline": 0.9739066097300297
+     "status": "none",
+     "dchi2": 7071.064456301727,
+     "recovered": false,
+     "flux_ratio_raw": 6.968805085623329,
+     "flux_ratio_minus_baseline": 3.6597211728344963
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 22.0,
      "status": "none",
-     "dchi2": 9128.510418738302,
+     "dchi2": 5378.816743262498,
      "recovered": false,
-     "flux_ratio_raw": 10.882622206606769,
-     "flux_ratio_minus_baseline": 0.757512256690006
+     "flux_ratio_raw": 8.841047858287816,
+     "flux_ratio_minus_baseline": 0.5290048770269155
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 23.0,
      "status": "none",
-     "dchi2": 7385.889160320039,
+     "dchi2": 4768.850435823148,
      "recovered": false,
-     "flux_ratio_raw": 40.831174700547656,
-     "flux_ratio_minus_baseline": 15.398048399809099
+     "flux_ratio_raw": 18.89397615510314,
+     "flux_ratio_minus_baseline": -1.9849318276505488
     },
     {
      "pair": "pair4",
      "r_eff": 0.2,
      "mag": 24.0,
      "status": "none",
-     "dchi2": 7585.794241410174,
+     "dchi2": 4238.305979821129,
      "recovered": false,
-     "flux_ratio_raw": 77.5402395288964,
-     "flux_ratio_minus_baseline": 13.65511466320175
+     "flux_ratio_raw": 46.43807511091265,
+     "flux_ratio_minus_baseline": -6.007370555703417
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 20.0,
      "status": "extended light",
-     "dchi2": 37853.9288455764,
+     "dchi2": 14286.562209066782,
      "recovered": true,
-     "flux_ratio_raw": 2.709949896871172,
-     "flux_ratio_minus_baseline": 1.1052281136168354
+     "flux_ratio_raw": 2.6754731795812603,
+     "flux_ratio_minus_baseline": 1.3581031459368027
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 21.0,
-     "status": "extended light",
-     "dchi2": 12273.91484024594,
-     "recovered": true,
-     "flux_ratio_raw": 5.286673944188204,
-     "flux_ratio_minus_baseline": 1.2557950704837793
+     "status": "none",
+     "dchi2": 7329.384429098498,
+     "recovered": false,
+     "flux_ratio_raw": 4.913997342663587,
+     "flux_ratio_minus_baseline": 1.6049134298747543
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 22.0,
      "status": "none",
-     "dchi2": 7522.2190196980755,
+     "dchi2": 5498.171561409497,
      "recovered": false,
-     "flux_ratio_raw": 15.742822986472833,
-     "flux_ratio_minus_baseline": 5.61771303655607
+     "flux_ratio_raw": 9.839662015302324,
+     "flux_ratio_minus_baseline": 1.5276190340414237
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 23.0,
      "status": "none",
-     "dchi2": 7674.1462108259075,
+     "dchi2": 4205.4950338743365,
      "recovered": false,
-     "flux_ratio_raw": 45.70232017382958,
-     "flux_ratio_minus_baseline": 20.26919387309102
+     "flux_ratio_raw": 20.870245522878204,
+     "flux_ratio_minus_baseline": -0.008662459875484443
     },
     {
      "pair": "pair4",
      "r_eff": 0.5,
      "mag": 24.0,
      "status": "none",
-     "dchi2": 7439.862639304889,
+     "dchi2": 4232.706816782227,
      "recovered": false,
-     "flux_ratio_raw": 115.14518498421108,
-     "flux_ratio_minus_baseline": 51.26006011851644
+     "flux_ratio_raw": 82.99588659885018,
+     "flux_ratio_minus_baseline": 30.550440932234114
     }
    ],
    "injection_limits": {
-    "pair3_r0.2": 21.0,
+    "pair3_r0.2": 20.0,
     "pair3_r0.5": 20.0,
-    "pair4_r0.2": 21.0,
-    "pair4_r0.5": 21.0
+    "pair4_r0.2": 20.0,
+    "pair4_r0.5": 20.0
    }
   }
  }

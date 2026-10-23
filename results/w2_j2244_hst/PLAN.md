@@ -210,3 +210,6 @@ review then found two implementation errors that make the v2 run differ from the
 | F814W | 64.9 (7.9), 5465.4 (2.6), 805.3 (1.0) | **10930.8** | J0743 2249.0, J0818 3119.8 |
 
   Both bands' development positives are below T, so both are expected to fail validation. Nothing else changes.
+- **File names:** the v2-run outputs were renamed after the review, so the references above to `runs/dev.json`,
+  `runs/val.json`, `runs/inj.json`, `gate.json` and `runs/dev_iter3.json` now point to `runs/*_v2run*.json`,
+  `gate_v2run.json` and `runs/dev_v2_iter3.json`. The v3 outputs carry the original names.

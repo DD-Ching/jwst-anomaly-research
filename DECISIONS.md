@@ -3735,18 +3735,21 @@ the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
   controls. More negative controls need a library PSF or star-rich fields (the Gaia ePSF found ≥ 3 stars in 1 of 5).
 
 **Addendum (2026-10-23, J2244−0550 HST test, `results/w2_j2244_hst/RESULT.md`).**
-- **Decision:** the revisit route named above was tried on J2244−0550 (GO 17455 F160W, GO 17308 F814W) and does not
-  validate.
-  - The route: lenstronomy 1.14.2 with two point sources, with or without a Sérsic, and PSF iteration from a
-    programme-star ePSF.
-  - F814W detects 2 of 6 held-out close known lenses (≥ 80 % needed).
-  - F160W has 2 eligible positives and fails the injection absorption check.
-  - Neither band has a false detection among real-star negative pairs (0 / 5, 0 / 6). The thresholds that achieve
-    this (Δχ² 7774, 9185), set from development star pairs, miss faint lens galaxies.
+- **Decision:** the revisit route named above, as implemented here, was tried on J2244−0550 (GO 17455 F160W, GO 17308
+  F814W) and does not validate.
+  - The implementation: lenstronomy 1.14.2 with two point sources, with or without a Sérsic, and PSF iteration from a
+    programme-star ePSF, fitted separately for each model.
+  - v3 (after two implementation fixes from the review): F814W detects 2 of 6 held-out close known lenses (≥ 80 %
+    needed); F160W has 2 eligible positives (3 needed). The v2 run failed the same way.
+  - Neither band has a false detection among 6 real-star negative pairs. The thresholds that achieve this (Δχ² 27203,
+    10931), set from development star pairs, miss faint lens galaxies: real-star pairs reach Δχ² 13601.5 (F160W) and
+    6468.4 (F814W), and 4 of 8 fitted F814W lenses at 0.93–1.60″ fall below the latter.
   - The target was not measured.
 - **Rejected:**
   - raising or lowering T, or relaxing the 0.6″ centre rule, after validation;
   - a second PSF method inside the unit.
+- **Untested reasons** (RESULT §7): PSF halo beyond the 41 px / 21 px kernel; two-field PSFs in the star pairs;
+  non-nested M0 / M1 fits; brightness matched in Gaia G only.
 - **Revisit if:** an oversampled, per-exposure PSF route (STScI empirical PSF grids or forward modelling of the FLT /
   FLC exposures) keeps real-star pairs at the target's brightness below a threshold that still recovers ≥ 80 % of
   held-out ~1″ lenses. Or deeper / better-sampled imaging (JWST, AO) of J2244−0550 becomes public. Budget the
