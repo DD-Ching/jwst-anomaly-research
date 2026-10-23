@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: RXJ2129 reference-catalogue route, stage 2 (in progress)
+- Claimed by the 21:09Z cloud routine; plan `results/lens_consistency/rxj2129_djaref/PLAN_2.md` to be frozen before any read.
+
 ## 2026-10-23: RXJ2129 reference-catalogue route, stage 1: gate K passes (rms 0.449″, 31 / 31); DJA v7.0 reference has the stage-2b columns
 - **Why RXJ2129, not WHL0137:** WHL0137's only JWST-era image list covers systems 1–2, already tested with four
   RELICS models (D-033 addendum 4, 0 flags), and its JWST-era model has an undocumented deflection unit. RXJ2129
