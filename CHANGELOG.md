@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Abell 2744 UNCOVER-reference stage 2b (in progress)
+- Claimed by cloud routine 01QwombrrcwbPbyZfXidDUe8 at 12:16Z: frozen stage 2b plan (predicted / control tables with
+  the WLS source, gate C2 with the shared-pair rule) before any run.
+
 ## 2026-10-23: Abell 2744 UNCOVER-reference stage 2a: DR3 SUPER reference pinned; its `theta_J2000` is SEP's convention (radians, ccw from +x), not the README's
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2a.md`, frozen with its rule functions
   (`a2744_uncoverref.theta_sample`, `segment_angle`, `theta_check`, unit-tested) before the run.
