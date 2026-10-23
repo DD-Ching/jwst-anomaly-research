@@ -111,3 +111,8 @@ flux against an aperture σ (lenient for extended images); no bCG-subtracted re-
 
 **Next.** A frozen follow-up of 78.3 and 4.2 on a bCG-subtracted image or a second band (F277W / F356W, same
 rules), or `/vet-candidate` only if a frozen rule flags them; not a re-read of this stage's thresholds.
+
+## Stage 2c (in progress)
+
+Second-band (F277W / F356W) frozen re-test of the stage-2b `ambiguous` targets 4.2 and 78.3 under unchanged rules;
+plan `PLAN_2c.md` to be frozen before any F277W / F356W pixel of these positions is read.
