@@ -629,7 +629,8 @@
       "ref": "Jing2025",
       "class": "QP (dv 215.2 km/s)",
       "basis": "visual",
-      "same_desi_dr1": true
+      "same_desi_dr1": true,
+      "limits": "same sources, but for one component Jing2025 lists TARGETID 39627909081598681 (dark programme) where #472 used 2781075411566612 (bright programme), 0.06\" apart: possibly a different DESI coadd of that component"
      },
      {
       "ref": "Dawes2023",
@@ -933,7 +934,8 @@
       "ref": "Jing2025",
       "class": "QPC (dv 12.6 km/s); SLED: quasar pair",
       "basis": "visual",
-      "same_desi_dr1": true
+      "same_desi_dr1": true,
+      "limits": "same sources, but for one component Jing2025 lists TARGETID 39632961548586205 (dark programme) where #472 used 2305843018827050187 (backup programme), 0.06\" apart: possibly a different DESI coadd of that component"
      },
      {
       "ref": "KayoOguri2012",

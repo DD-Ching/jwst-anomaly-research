@@ -3964,6 +3964,28 @@ spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ t
 - **Revisit if:** a pre-registered statistic that flags binaries with small catalogued velocity differences (binned
   profiles, velocity offsets, narrow absorbers) is validated on fresh, non-overlapping controls.
 
+**Addendum (2026-10-23, evidence audit, `results/w2_desi_pairs/evidence/RESULT.md`).**
+- **Decision:** stop the DESI spectral-classifier line for the rejected pairs. Do not tune a statistic on the same
+  DESI DR1 pairs as a default next step.
+  - Jing et al. (arXiv:2505.03103) have already classified all 13 pairs by eye from these spectra, and Chen et al.
+    (arXiv:2607.00093) analysed J0130+0725.
+  - A new statistic on them adds no observation.
+- **Sample caveats** (recorded; the D-064 sample is not re-run):
+  - VizieR "UQP" covers 13 of the 17 systems Lemon et al. 2023 discuss in §4.2 as likely lenses, J2244−0550 among
+    them. D-064 counts them as rejected.
+  - The "binary" labels of J0740+2926 and J1035+0752 (Hennawi et al. 2006, low-S/N spectra) and of J1511+3357 and
+    J1552+3009 (SQLS IV, similar Subaru spectra) rest on not seeing a lens galaxy. They are not evidence against a
+    dark deflector. SQLS IV §4.1: its process "would reject 'dark lenses'".
+  - J2351+1343's DESI pair is not the catalogued pair (SLED: QUASAR+STAR).
+- **Rejected:**
+  - re-running #472's statistic or a variant on the 11 unread pairs;
+  - classifying from catalogue strings without their basis.
+- **Revisit if:**
+  - a pre-registered PSF test, with a known lens and a no-lens pair at ~1″ from the same HST programmes as controls,
+    is affordable for J2244−0550 (HST GO 17308 F814W and GO 17455 F160W, public);
+  - or the proposers publish those data;
+  - or independent resolved spectra or a time delay appear for an open pair.
+
 ## D-065 W5 in Euclid Q1: no count screen; next is a radial-shear screen on Euclid Q1 shapes (2026-10-09)
 
 **Decision.** Do not port the D-063 count screen to Euclid Q1. Its S/N at θ_E ≤ 4′ is limited by galaxy clustering,

@@ -2,6 +2,36 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: W2 DESI pairs evidence audit: of the 13 rejected pairs, 3 have stronger ordinary explanations, 2 are disputed, 8 stay open; J2244−0550 is a likely lens in its source paper with public HST / Keck AO imaging not used in any paper found; the DESI classifier line stops
+- **Plan:** `results/w2_desi_pairs/evidence/PLAN.md`. Metadata and literature only: no spectrum read, and #472's
+  statistic, T and verdict unchanged.
+- **Outputs** (`EVIDENCE.md`, `evidence.json` from `scripts/w2_desi_evidence.py`):
+  - identity: DESI zpix, Gaia DR3 and LS DR10 matches;
+  - literature, with the quoted basis of each class;
+  - archives: MAST, ESO and KOA metadata for 3 open pairs.
+- **Identity:**
+  - J2351+1343's DESI pair is not the SQLS pair: SLED calls the SQLS system QUASAR+STAR, and DESI's second fibre
+    sits on a faint third source.
+  - 6 pairs are closer than the 1.5″ fibres (0.82–1.31″).
+- **Labels:**
+  - J2244−0550 is in Lemon et al. §4.2 "Likely Lensed Quasars" but has table class NIQ / UQP. 13 of the 17 §4.2
+    systems are UQP in VizieR and therefore "rejected" in D-064.
+  - The "binary" labels of J0740 and J1035 (Hennawi, low-S/N spectra) and of J1511 and J1552 (SQLS, similar Subaru
+    spectra) rest on not seeing a lens galaxy.
+  - J1035 is a lensed-quasar candidate in Jing et al. (same DESI data), and J0740 one in Ji et al.
+  - J0130's DESI-based analysis (Chen et al.) keeps lensing open.
+  - J0728 was already settled (different NOT spectra; no lens in HST).
+- **Public data not yet used** (RESULT §4):
+  - J2244−0550: HST F814W (GO 17308), F160W / F475W / F625W (GO 17455), Keck OSIRIS Kp and LRIS; MAST lists the HST
+    data as PUBLIC. No published result was found.
+  - J1511+3357: none found.
+  - J1202+0703: Keck LRIS spectra only.
+- **Corrections:**
+  - #472 wording: D ≤ T is "no difference above threshold", and 9 / 9 is a pass count, not a same-source accuracy;
+  - D-064 addendum (UQP mapping, non-detection-based binaries).
+- **Failed approach / stop:** the DESI spectral-classifier line stops. The same DESI pairs are already classified by
+  Jing et al. (all 13) and Chen et al. (J0130), so a new statistic on them adds no observation.
+
 ## 2026-10-23: W2 DESI pairs: spectra of both components exist for 13 rejected lensed-quasar pairs, but the frozen spectral test flags only 1 of 7 catalogued binaries (gate needs ≥ 70 %); no pair classified
 - **Route choice** (`results/w2_desi_pairs/PLAN.md` §0; 23:47–00:08 UTC) between three options:
   - W2 HST lens-light refit: rejected, most targets are STRIDES quads with modelled lens galaxies;

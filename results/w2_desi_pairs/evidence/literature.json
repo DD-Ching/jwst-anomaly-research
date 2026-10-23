@@ -220,7 +220,8 @@
      "ref": "Jing2025",
      "class": "QP (dv 215.2 km/s)",
      "basis": "visual",
-     "same_desi_dr1": true
+     "same_desi_dr1": true,
+     "limits": "same sources, but for one component Jing2025 lists TARGETID 39627909081598681 (dark programme) where #472 used 2781075411566612 (bright programme), 0.06\" apart: possibly a different DESI coadd of that component"
     },
     {
      "ref": "Dawes2023",
@@ -326,7 +327,8 @@
      "ref": "Jing2025",
      "class": "QPC (dv 12.6 km/s); SLED: quasar pair",
      "basis": "visual",
-     "same_desi_dr1": true
+     "same_desi_dr1": true,
+     "limits": "same sources, but for one component Jing2025 lists TARGETID 39632961548586205 (dark programme) where #472 used 2305843018827050187 (backup programme), 0.06\" apart: possibly a different DESI coadd of that component"
     },
     {
      "ref": "KayoOguri2012",
@@ -486,5 +488,6 @@
    "reading": "identity mismatch: the SQLS system is a quasar plus (per SLED, red colours and a 3.2-sigma parallax) a star; the DESI pair is the same quasar plus a different faint source (g 23.45, 2.05\" away) whose spectrum may be fibre crosstalk from the quasar 3.9 mag brighter. The rejected SQLS system has an ordinary explanation; the DESI pair is not that system",
    "missing": "nothing for the SQLS system; for the DESI pair, a deblended spectrum of the faint source"
   }
- }
+ },
+ "jing_targetid_check": "Jing2025 DR1QP rows match all 13 pairs; 11 have the same TARGETID pair as #472 pairs.json, 2 (J1428+0500, J1511+3357) differ in one component's TARGETID (same position within 0.06\")"
 }
