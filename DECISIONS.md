@@ -2269,6 +2269,15 @@ dropping shared controls (loses a real absence); weighting by 1 / n (no frozen t
 field's controls share pairs whose members disagree between absent and recovered, which would mean the per-system
 predicted flux, not the pair, drives the class.
 
+**Addendum 2026-10-23j (Abell 2744, UNCOVER v2.0 maps, gate K).** The next field after the five CANUCS-reference
+fields (`results/lens_consistency/abell2744_uncoverref/`, frozen plan first). Gate K (`m0417_images`, mean back-traced
+source, 0.25″ grid) on the 172 spectroscopic images of the UNCOVER v2.0 table fails: rms 4.90″, 94.2 % within 3″.
+Decision: the UNCOVER v2.0 maps are not used for the extra-image stages under this estimator. Post hoc: three families
+(34.1, 80.1, 74) get one predicted image for three catalogued ones, consistent with a mean source outside the caustic;
+D-041's WLS source reproduced all 181 own-list images (rms 0.84″). The UNCOVER DR3 SUPER catalogue (83.7 MB),
+segmentation map and bCG-subtracted F200W mosaic (1.84 GB gzip) are reachable from cloud sessions. Revisit if: a frozen
+gate K with the WLS estimator (a deviation, chosen after this failure) or with Bergamini+23 passes.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

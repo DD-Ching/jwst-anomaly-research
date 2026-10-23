@@ -314,6 +314,10 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   - GLASS-JWST, DOI 10.17909/kw3c-n857: https://archive.stsci.edu/hlsp/glass-jwst
 - COSMOS2025 catalog v1.1: https://cosmos2025.iap.fr/
 - UNCOVER DR4: https://jwst-uncover.github.io/
+- UNCOVER DR3 photometry (Weaver et al. 2024, ApJS 270, 7): https://jwst-uncover.github.io/DR3.html; LW SUPER catalogue
+  `UNCOVER_DR3_LW_SUPER_catalog.fits` (Drive id 19Jd3Xg5BTrHX5icb81txSn_P0LqxmLsz, 83,684,160 bytes), segmentation map
+  (1s7DnoX8G73sOLiMiDttlsyZLjwSB2WlX), bCG-subtracted F200W mosaic v5.2.0 (1CPjv4mJUj-4Qn8nwWS0FEPEdBfhDxzV_,
+  1.84 GB gzip); headers read 2026-10-23, not pinned (no sha256).
 - Mahler+2022 SMACS 0723 lens model, release v2 (2022-12-27): https://github.com/guillaumemahler/SMACS0723-mahler2022
 - Noirot+2023 SMACS 0723 redshifts: https://niriss.github.io/smacs0723
 - Caminha+2022 SMACS 0723 model and MUSE redshifts, CDS catalogue J/A+A/666/L9: https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/666/L9.

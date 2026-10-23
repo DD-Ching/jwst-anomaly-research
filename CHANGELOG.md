@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Abell 2744 UNCOVER-reference extra-image test, stage 1: the UNCOVER v2.0 maps fail gate K (rms 4.90″); route stopped with this estimator
+- **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN.md`, frozen before the run (the prior own-list rms
+  0.84″ of D-041 was disclosed there). Script `scripts/a2744_uncoverref.py`, tests `tests/test_a2744_uncoverref.py`.
+- **Result** (`RESULT.md`, `summary.json`): gate K on the 172 spectroscopic images: rms 4.90″ (≤ 1.0″), 94.2 % within
+  3″ (≥ 80 %) → fails; no extra-image stage with this model.
+- **Post hoc:** families 34.1, 80.1 and 74 get one predicted image (offsets 19–32″); median offset 0.66″; rms 0.93″
+  over the images within 3″. Consistent with the mean back-traced source (vs D-041's WLS source) falling outside the
+  caustic; not tested.
+- **Reference:** UNCOVER DR3 SUPER catalogue (83.7 MB; F200W flux, error, ellipse columns), segmentation map and the
+  bCG-subtracted F200W mosaic (1.84 GB gzip, no byte ranges) are reachable; not pinned.
+- **Handoff:** next is a new frozen gate K, either with the WLS source (a deviation chosen after this failure, like
+  BUFFALO K2) or with Bergamini+23 on its spectroscopic list.
+
 ## 2026-10-23: W2 J2244−0550 HST test: this lenstronomy two-point-source + Sérsic implementation fails validation in both bands (v2 and, after review fixes, v3); target not measured
 - **Plan:** `results/w2_j2244_hst/PLAN.md`, frozen before the runs it governs: v1 before any control run, v2
   (development settings and T) before validation, v3 (implementation fixes from the review) before any rerun.
