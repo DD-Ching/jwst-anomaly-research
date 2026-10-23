@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from collections import defaultdict
 from pathlib import Path
 
 import lens_consistency as lc
@@ -172,6 +173,54 @@ def gate_c2(classes, arc_ref) -> dict:
         and arcp["fraction"] >= C2_MIN_FRAC
     )
     return {"all": allp, "arc_referenced": arcp, "passes": bool(passes)}
+
+
+def merge_shared_pairs(systems, pairs, classes) -> tuple[list[str], list[list[int]]]:
+    """Count controls of different systems that share one (reference, counterpart) source pair once.
+
+    Returns the merged class list and the row groups merged (only groups spanning >= 2 systems).
+    A merged control takes the first member class in the order absent, recovered / confused,
+    ambiguous, any other (so an untestable member never hides a testable one).
+    """
+    groups: dict[tuple, list[int]] = defaultdict(list)
+    for i, p in enumerate(pairs):
+        groups[p].append(i)
+    merged, multi, seen = [], [], set()
+    for i, p in enumerate(pairs):
+        if i in seen:
+            continue
+        g = groups[p]
+        if len({systems[j] for j in g}) < 2:
+            merged.append(classes[i])
+            seen.add(i)
+            continue
+        seen.update(g)
+        multi.append(g)
+        cls = [classes[j] for j in g]
+        for want in (("absent",), ("recovered", "confused"), ("ambiguous",)):
+            hit = [c for c in cls if c in want]
+            if hit:
+                merged.append(hit[0])
+                break
+        else:
+            merged.append(cls[0])
+    return merged, multi
+
+
+def gate_c2_shared(classes, arc_ref, systems, pairs) -> dict:
+    """Gate C2 with the shared-pair counting rule (D-034 addendum i; frozen 2026-10-23 for every
+    field this route runs on after Abell 370): arc-referenced controls of different systems that
+    share one (reference, counterpart) source pair count as one control (``merge_shared_pairs``).
+    Controls without an arc reference are counted as in ``gate_c2``."""
+    arc = [bool(a) for a in arc_ref]
+    ia = [i for i, a in enumerate(arc) if a]
+    m_cls, m_groups = merge_shared_pairs(
+        [systems[i] for i in ia], [tuple(pairs[i]) for i in ia], [classes[i] for i in ia]
+    )
+    rest = [classes[i] for i, a in enumerate(arc) if not a]
+    out = gate_c2(rest + m_cls, [False] * len(rest) + [True] * len(m_cls))
+    out["merged_groups"] = [[ia[j] for j in g] for g in m_groups]
+    return out
 
 
 def load_cat(path: Path) -> dict:
