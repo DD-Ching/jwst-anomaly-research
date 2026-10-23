@@ -67,7 +67,7 @@ def cutout(obs_id: str, ra: float, dec: float, half: int) -> dict:
             "dx": x - xi,
             "dy": y - yi,
             "exptime": float(p0["EXPTIME"]),
-            "ncombine": int(p0.get("NCOMBINE", 1)),
+            "ncombine": int(hdr.get("NCOMBINE", p0.get("NCOMBINE", 1))),
             "photflam": float(hdr.get("PHOTFLAM", p0.get("PHOTFLAM", np.nan))),
             "photplam": float(hdr.get("PHOTPLAM", p0.get("PHOTPLAM", np.nan))),
             "obs_id": obs_id,
@@ -277,7 +277,9 @@ def fit(
                 "stacking_method": "median",
                 "psf_symmetry": 1,
                 "block_center_neighbour": 0.2,
-                "keep_psf_variance_map": True,
+                # v3 (review): False keeps the variance map the iteration estimates; True put back
+                # the (absent, i.e. zero) initial map, so v2 ran without a PSF error term
+                "keep_psf_variance_map": False,
                 "error_map_radius": 0.6,
             },
         ],
@@ -355,7 +357,8 @@ def measure(img, wht, psf, pix, core, seed, t_band=None, band=None):
     cores = list(zip(r1["ps_x"], r1["ps_y"], strict=True))
     good = r0["good"] & r1["good"]
 
-    # one noise model for both: M1's model and PSF error map (M0 is M1 with the Sersic set to zero)
+    # one noise model for both: M1's model and PSF error map. M0 and M1 are fitted separately
+    # (own PSF iteration), so they are not nested and delta chi^2 can be negative.
     def _chi(model):
         n = img.shape[0]
         c_ = (n - 1) / 2
@@ -462,7 +465,9 @@ def star_stamps(band: str, fields: list[dict], exclude: list[tuple[float, float]
             hdr = h["SCI"].header
             w = WCS(hdr)
             ny, nx = hdr["NAXIS2"], hdr["NAXIS1"]
-            per_exp = float(h[0].header["EXPTIME"]) / max(int(h[0].header.get("NCOMBINE", 1)), 1)
+            # v3 (review): NCOMBINE is in the SCI header of these products, not the primary
+            ncomb = int(hdr.get("NCOMBINE", h[0].header.get("NCOMBINE", 1)))
+            per_exp = float(h[0].header["EXPTIME"]) / max(ncomb, 1)
             for s in cand:
                 if any(
                     np.hypot((s["ra"] - a) * np.cos(np.radians(s["dec"])), s["dec"] - b) * 3600
@@ -699,7 +704,7 @@ def run_job(job: dict) -> dict:
     pix = BAND[band]["pix"]
     lib = pickle.load(open(job["library"], "rb"))
     out = {k: v for k, v in job.items() if k not in ("library",)}
-    if job["kind"] in ("positive", "target"):
+    if job["kind"] in ("positive", "target", "target_injection"):
         c = cutout(job["obs_id"], job["ra"], job["dec"], BAND[band]["half"])
         if not c["ok"]:
             return {**out, "status": "no data", "why": c["why"]}
@@ -803,12 +808,11 @@ def gate_report(val_json: str, inj_json: str | None) -> dict:
     rule (fitted separation within rules.P.sep_range); injection limits and absorption (sec. 5)."""
     val = json.load(open(val_json))
     inj = json.load(open(inj_json)) if inj_json and Path(inj_json).exists() else []
-    lo, hi = rules.P.sep_range
     out = {"label": "derived (validation controls and injections; frozen v2 rules)", "bands": {}}
     for band in ("F160W", "F814W"):
         pos = [r for r in val if r["band"] == band and r["kind"] == "positive"]
         neg = [r for r in val if r["band"] == band and r["kind"] == "negative"]
-        elig = [r for r in pos if r.get("sep") is not None and lo <= r["sep"] <= hi]
+        elig = [r for r in pos if rules.geometry_ok(r.get("sep"))]
         excl = [
             {"name": r["name"], "sep": r.get("sep"), "status": r.get("status")}
             for r in pos

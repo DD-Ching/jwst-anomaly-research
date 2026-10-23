@@ -41,3 +41,9 @@ def test_gate():
 def test_contiguous_limit():
     assert r.contiguous_limit([19, 20, 21, 22], [True, True, False, True]) == 20
     assert r.contiguous_limit([19, 20], [False, True]) is None
+
+
+def test_geometry_rule():
+    assert r.geometry_ok(1.02) and r.geometry_ok(0.7) and r.geometry_ok(1.8)
+    assert not r.geometry_ok(2.27) and not r.geometry_ok(0.6)
+    assert not r.geometry_ok(None) and not r.geometry_ok(float("nan"))

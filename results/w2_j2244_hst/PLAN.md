@@ -181,3 +181,23 @@ Owner brief 2026-10-23 after #473 (start 06:23 UTC).
   F160W is expected to fail its gate. The rule (§3, factor 2) is not changed; validation and the gate decide.
 - **Validation:** 3 F160W and 10 F814W positives as listed in §3, plus 6 negative pairs per band (pairs 3–8). Then
   the injections of §5 into validation pairs 3 and 4 of each band. Then the target, only in a band whose gate passes.
+
+## v3 (2026-10-23 ~07:55 UTC): implementation fixes after the independent review, before any rerun
+The first validation (v2 settings) failed both gates; that result is kept (`runs/*_v2run*`, RESULT "Before"). The
+review then found two implementation errors that make the v2 run differ from the plan:
+1. **PSF error term zero.** `keep_psf_variance_map: True` made lenstronomy put back the absent initial variance map,
+   so the noise had no PSF error term, contrary to §2. Fix: `keep_psf_variance_map: False`, which keeps the variance
+   map the iteration estimates.
+2. **F814W per-exposure time.** NCOMBINE sits in the SCI header, so the saturation cut used 674 s instead of 337 s
+   (an effective 25 000 e⁻ per exposure instead of 50 000). Every star at the target's brightness was flagged
+   saturated, and the F814W PSFs came from G 19–21 stars only.
+   - Fix: read NCOMBINE from the SCI header.
+   - The stored library's flags are re-derived from the stored stamps without re-download
+     (`scripts/w2_j2244_hst_reflag.py`, `library_17308_F814W_v3flags.json`): 40 stars become unsaturated and 11 are
+     dropped by the corrected rule. Stars the wrong cut had rejected (G > 19, peak 74–148 e⁻/s) are missing.
+- **Negative pairs regenerated** with the same rule (|G − 18.0| order) on the corrected library.
+  `scripts/w2_j2244_hst_jobs.py` now holds every job-building step.
+- **Unchanged:** models, statistic, the threshold formula T = max(25, 2 × max development-negative Δχ²), status rules,
+  gate, pools and split. Development is rerun first, T recomputed with the same formula and committed, then
+  validation and injections. The target is run only in a band whose gate passes.
+- The F160W library and pairs are unaffected by fix 2, but all runs change through fix 1.

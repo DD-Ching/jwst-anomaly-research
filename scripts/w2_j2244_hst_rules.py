@@ -74,6 +74,11 @@ def status(
     return "extended light"
 
 
+def geometry_ok(sep: float | None, p: Params = P) -> bool:
+    """Positive-pool geometry: fitted image separation within p.sep_range (arcsec)."""
+    return sep is not None and math.isfinite(sep) and p.sep_range[0] <= sep <= p.sep_range[1]
+
+
 def detected(st: str) -> bool:
     return st == "extended light"
 
