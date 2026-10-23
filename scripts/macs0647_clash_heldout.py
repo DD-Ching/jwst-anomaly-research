@@ -209,14 +209,13 @@ def main(argv: list[str] | None = None) -> int:
             "grid_step": args.grid_step,
         },
     }
-    d_by_model, tables = {}, []
+    d_by_model = {}
     for name in MODELS:
         entry, ip = run_model(name, images, args.grid_step)
         summary[name] = entry
         d_by_model[name] = np.asarray(ip["dtheta_arcsec"], float)
         ip.meta["model"] = name
         lc._write(ip, OUT / f"imageplane_{name}.ecsv")
-        tables.append(ip)
     usable = [n for n in MODELS if summary[n]["usable"]]
     held = np.asarray(images["held_out"], bool)
     r = readings({n: d[held] for n, d in d_by_model.items()}, usable)
