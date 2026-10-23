@@ -314,22 +314,25 @@ def to_njy_per_pixel(sci, pixar_sr: float) -> np.ndarray:
     return d
 
 
-def _reference_run(rc, depth, inputs, out, contain, d, w, src_x, src_y, pix) -> dict:
-    """PLAN_2b.md rules 3-7 (PLAN_2c.md rules 2-5) for one reference catalogue and noise image."""
+def _reference_run(
+    rc, depth, inputs, out, contain, d, w, src_x, src_y, pix, field=FIELD, frame=FRAME
+) -> dict:
+    """PLAN_2b.md rules 3-7 (PLAN_2c.md rules 2-5) for one reference catalogue and noise image;
+    ``field`` and ``frame`` select another field's frame tables (``elgordo_djaref``)."""
     s = ar.run(
         Path("."),
         cat=rc,
         depth=depth,
         cat_inputs=inputs,
         out=out,
-        field=FIELD,
-        frame=FRAME,
+        field=field,
+        frame=frame,
         offset=(0.0, 0.0),
         contain=contain,
     )
     rng = np.random.default_rng(m14.SEED)
-    ctrl = Table.read(out / f"control_{FIELD}.ecsv")
-    pred = Table.read(out / f"predicted_{FIELD}.ecsv")
+    ctrl = Table.read(out / f"control_{field}.ecsv")
+    pred = Table.read(out / f"predicted_{field}.ecsv")
     m14.apply_local(ctrl, d, w, src_x, src_y, rng, pix)
     if len(pred):
         m14.apply_local(pred, d, w, src_x, src_y, rng, pix)
@@ -343,8 +346,8 @@ def _reference_run(rc, depth, inputs, out, contain, d, w, src_x, src_y, pix) -> 
         for r in pred
         if c2["passes"] and str(r["class_local"]) == "absent"
     ]
-    ctrl.write(out / f"control_{FIELD}.ecsv", overwrite=True)
-    pred.write(out / f"predicted_{FIELD}.ecsv", overwrite=True)
+    ctrl.write(out / f"control_{field}.ecsv", overwrite=True)
+    pred.write(out / f"predicted_{field}.ecsv", overwrite=True)
     return {
         "gate_C2_shared": c2,
         "flags": flags,
