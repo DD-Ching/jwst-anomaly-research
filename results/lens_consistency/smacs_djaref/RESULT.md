@@ -45,5 +45,4 @@ any read). Run `scripts/smacs_djaref.py --stage 2`; numbers from `summary.json` 
   not missing images. Not diagnosed further (cause not isolated: μ ratios of the fitted-z systems 12, 13, 18, 19,
   21, 25, the 0.5″ aperture total on extended arcs, or the ICLv2 μ).
 
-**Next:** the reference route is closed for SMACS 0723 with this model and reference. Next field: WHL0137 (gate K
-first).
+**Next:** the reference route is closed for SMACS 0723 with this model and reference. Next: WHL0137 first checks its inputs: four RELICS models already gave 0 counter-image flags on systems 1–2 (D-033 addendum 4), and the RELICS HLSP has no image list for gate K, so the route needs a public JWST-era image list (Welch+2022 / Scofield+2025 tables) or moves to another field.

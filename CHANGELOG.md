@@ -12,7 +12,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   6 `absent_sources_too_faint`: flux-ratio misses of the route, cause not isolated. D-034 addendum s.
 - **Data:** DJA table (38.6 MB) and the F200W SCI extension (≈ 196 MB) read into memory; pipeline `_cat.ecsv` in
   the session scratchpad, deleted.
-- **Handoff:** SMACS's reference route is closed. Next: WHL0137 with the reference route, gate K first.
+- **Handoff:** SMACS's reference route is closed. Next: WHL0137 first checks its inputs: four RELICS models already gave 0 counter-image flags on systems 1–2 (D-033 addendum 4), and the RELICS HLSP has no image list for gate K, so the route needs a public JWST-era image list (Welch+2022 / Scofield+2025 tables) or moves to another field.
 
 ## 2026-10-23: SMACS 0723 reference-catalogue route, stage 1: gate K passes (rms 0.321″, 16 / 16); DJA v7.4 reference has the stage-2b columns
 - **Plan:** `results/lens_consistency/smacs_djaref/PLAN_1.md`, frozen before the run. Script `scripts/smacs_djaref.py`
