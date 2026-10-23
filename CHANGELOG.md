@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: W2 J2244 follow-up: the STScI default F160W PSF hooks up to our FLT exposures, but a no-galaxy ~1″ star pair still shows false extended light (z 19); image-modelling line paused
+- **Plan:** `results/w2_j2244_stpsf/PLAN.md`, frozen before any fit. Development test on #474 controls; J2244 not
+  measured.
+- **Download control first:** `scripts/net_ledger.py`, a persistent shared ledger that reserves before each request,
+  counts received bytes and cuts off at the cap. Unit-tested and live-tested. Total 104.9 MB of 1 GB.
+- **Route:** the hst_notebooks WFC3 PSF notebook §2.2.1, the default STDPSF grid via photutils, fitted on single FLT
+  exposures. Positions agree across dithers to 1.3 mas.
+- **Result** (`RESULT.md`, `result.json`):
+  - S fails: a real G 18 star is not modelled to the noise (χ²/ν 31–39), and its wings at 3–12 px are 3.0–3.1 %
+    brighter than the tapered model.
+  - P fails: the no-galaxy pair gives z_P = 19.0 at the lens position.
+  - I passes: injected Sérsic light is mostly not absorbed (R ≈ 0.9 at 20–22 mag).
+  - Not worth a formal validation. Recomputation verified (sha256 re-fetch, byte-identical rerun); scratch deleted.
+- **Failed approach:** the official default model on FLTs; focus perturbation needs at least 10 bright stars per
+  exposure (not available).
+
 ## 2026-10-23: El Gordo reference-catalogue route, stage 1: gate K passes (rms 0.754″, 56 / 56); the DJA reference lacks total-flux columns (rule 2 fails as written)
 - **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_1.md`, frozen before the run. Script `scripts/elgordo_djaref.py`
   (rule 2 as a unit-tested function, `tests/test_elgordo_djaref.py`).

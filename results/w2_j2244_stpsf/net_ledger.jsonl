@@ -81,3 +81,59 @@
 {"bytes": 54018, "ev": "extend", "id": "4bb12476f4f3", "pid": 599, "t": 1792771387.212}
 {"bytes": 1600, "ev": "extend", "id": "4bb12476f4f3", "pid": 599, "t": 1792771387.25}
 {"counted": 10370, "ev": "done", "id": "4bb12476f4f3", "pid": 599, "status": "ok", "t": 1792771387.251}
+{"bytes": 4312128, "ev": "reserve", "id": "dbcaf5d74581", "pid": 1063, "t": 1792771831.91, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cuq/if8a06cuq_flt.fits range=None attempt=0"}
+{"bytes": 21986, "ev": "extend", "id": "dbcaf5d74581", "pid": 1063, "t": 1792771832.657}
+{"bytes": 40000, "ev": "extend", "id": "dbcaf5d74581", "pid": 1063, "t": 1792771832.66}
+{"counted": 4308578, "ev": "done", "id": "dbcaf5d74581", "pid": 1063, "status": "ok", "t": 1792771832.661}
+{"bytes": 4312128, "ev": "reserve", "id": "ba9ae0c07361", "pid": 1063, "t": 1792771832.689, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cvq/if8a06cvq_flt.fits range=None attempt=0"}
+{"bytes": 21986, "ev": "extend", "id": "ba9ae0c07361", "pid": 1063, "t": 1792771833.099}
+{"bytes": 40000, "ev": "extend", "id": "ba9ae0c07361", "pid": 1063, "t": 1792771833.1}
+{"counted": 4308578, "ev": "done", "id": "ba9ae0c07361", "pid": 1063, "status": "ok", "t": 1792771833.101}
+{"bytes": 4312128, "ev": "reserve", "id": "c8b5004cf5c1", "pid": 1063, "t": 1792771833.129, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cwq/if8a06cwq_flt.fits range=None attempt=0"}
+{"bytes": 22006, "ev": "extend", "id": "c8b5004cf5c1", "pid": 1063, "t": 1792771833.694}
+{"bytes": 40000, "ev": "extend", "id": "c8b5004cf5c1", "pid": 1063, "t": 1792771833.695}
+{"counted": 4308598, "ev": "done", "id": "c8b5004cf5c1", "pid": 1063, "status": "ok", "t": 1792771833.695}
+{"bytes": 4312128, "ev": "reserve", "id": "3d0a29ade6fd", "pid": 1063, "t": 1792771833.719, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a06cxq/if8a06cxq_flt.fits range=None attempt=0"}
+{"bytes": 21986, "ev": "extend", "id": "3d0a29ade6fd", "pid": 1063, "t": 1792771834.133}
+{"bytes": 40000, "ev": "extend", "id": "3d0a29ade6fd", "pid": 1063, "t": 1792771834.134}
+{"counted": 4308578, "ev": "done", "id": "3d0a29ade6fd", "pid": 1063, "status": "ok", "t": 1792771834.135}
+{"bytes": 4312128, "ev": "reserve", "id": "3c163c06498d", "pid": 1063, "t": 1792771834.163, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf4q/if8a4jf4q_flt.fits range=None attempt=0"}
+{"bytes": 21986, "ev": "extend", "id": "3c163c06498d", "pid": 1063, "t": 1792771834.58}
+{"bytes": 40000, "ev": "extend", "id": "3c163c06498d", "pid": 1063, "t": 1792771834.581}
+{"counted": 4308578, "ev": "done", "id": "3c163c06498d", "pid": 1063, "status": "ok", "t": 1792771834.581}
+{"bytes": 4312128, "ev": "reserve", "id": "4346b54f4de8", "pid": 1063, "t": 1792771834.605, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf5q/if8a4jf5q_flt.fits range=None attempt=0"}
+{"bytes": 22006, "ev": "extend", "id": "4346b54f4de8", "pid": 1063, "t": 1792771835.068}
+{"bytes": 40000, "ev": "extend", "id": "4346b54f4de8", "pid": 1063, "t": 1792771835.069}
+{"counted": 4308598, "ev": "done", "id": "4346b54f4de8", "pid": 1063, "status": "ok", "t": 1792771835.069}
+{"bytes": 4312128, "ev": "reserve", "id": "0ca8479fd22c", "pid": 1063, "t": 1792771835.094, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf6q/if8a4jf6q_flt.fits range=None attempt=0"}
+{"bytes": 22006, "ev": "extend", "id": "0ca8479fd22c", "pid": 1063, "t": 1792771835.524}
+{"bytes": 40000, "ev": "extend", "id": "0ca8479fd22c", "pid": 1063, "t": 1792771835.525}
+{"counted": 4308598, "ev": "done", "id": "0ca8479fd22c", "pid": 1063, "status": "ok", "t": 1792771835.525}
+{"bytes": 4312128, "ev": "reserve", "id": "b5a412a8fb32", "pid": 1063, "t": 1792771835.549, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a4jf7q/if8a4jf7q_flt.fits range=None attempt=0"}
+{"bytes": 22006, "ev": "extend", "id": "b5a412a8fb32", "pid": 1063, "t": 1792771836.009}
+{"bytes": 40000, "ev": "extend", "id": "b5a412a8fb32", "pid": 1063, "t": 1792771836.01}
+{"counted": 4308598, "ev": "done", "id": "b5a412a8fb32", "pid": 1063, "status": "ok", "t": 1792771836.011}
+{"bytes": 4312128, "ev": "reserve", "id": "a8dffc5fbe39", "pid": 1063, "t": 1792771836.039, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38guq/if8a38guq_flt.fits range=None attempt=0"}
+{"bytes": 21986, "ev": "extend", "id": "a8dffc5fbe39", "pid": 1063, "t": 1792771836.487}
+{"bytes": 40000, "ev": "extend", "id": "a8dffc5fbe39", "pid": 1063, "t": 1792771836.488}
+{"counted": 4308578, "ev": "done", "id": "a8dffc5fbe39", "pid": 1063, "status": "ok", "t": 1792771836.488}
+{"bytes": 4312128, "ev": "reserve", "id": "d19ed3d6deab", "pid": 1063, "t": 1792771836.515, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38gvq/if8a38gvq_flt.fits range=None attempt=0"}
+{"bytes": 21986, "ev": "extend", "id": "d19ed3d6deab", "pid": 1063, "t": 1792771836.968}
+{"bytes": 40000, "ev": "extend", "id": "d19ed3d6deab", "pid": 1063, "t": 1792771836.97}
+{"counted": 4308578, "ev": "done", "id": "d19ed3d6deab", "pid": 1063, "status": "ok", "t": 1792771836.97}
+{"bytes": 4312128, "ev": "reserve", "id": "d18efb7b7421", "pid": 1063, "t": 1792771836.991, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38gwq/if8a38gwq_flt.fits range=None attempt=0"}
+{"bytes": 22006, "ev": "extend", "id": "d18efb7b7421", "pid": 1063, "t": 1792771837.555}
+{"bytes": 40000, "ev": "extend", "id": "d18efb7b7421", "pid": 1063, "t": 1792771837.556}
+{"counted": 4308598, "ev": "done", "id": "d18efb7b7421", "pid": 1063, "status": "ok", "t": 1792771837.557}
+{"bytes": 4312128, "ev": "reserve", "id": "402d326b9915", "pid": 1063, "t": 1792771837.578, "what": "GET https://stpubdata.s3.amazonaws.com/hst/public/if8a/if8a38gxq/if8a38gxq_flt.fits range=None attempt=0"}
+{"bytes": 22006, "ev": "extend", "id": "402d326b9915", "pid": 1063, "t": 1792771838.046}
+{"bytes": 40000, "ev": "extend", "id": "402d326b9915", "pid": 1063, "t": 1792771838.05}
+{"counted": 4308598, "ev": "done", "id": "402d326b9915", "pid": 1063, "status": "ok", "t": 1792771838.05}
+{"bytes": 383808, "ev": "reserve", "id": "0410f61e8de7", "pid": 1063, "t": 1792771838.074, "what": "GET https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/WFC3IR/STDPSF_WFC3IR_F160W.fits range=None attempt=0"}
+{"bytes": 17876, "ev": "extend", "id": "0410f61e8de7", "pid": 1063, "t": 1792771838.377}
+{"bytes": 43840, "ev": "extend", "id": "0410f61e8de7", "pid": 1063, "t": 1792771838.378}
+{"counted": 379988, "ev": "done", "id": "0410f61e8de7", "pid": 1063, "status": "ok", "t": 1792771838.379}
+{"bytes": 13888, "ev": "reserve", "id": "83ea9578f140", "pid": 1063, "t": 1792771838.381, "what": "GET https://gea.esac.esa.int/tap-server/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=json&QUERY=SELECT+source_id%2C+ra%2C+dec%2C+pmra%2C+pmdec%2C+phot_g_mean_mag+FROM+gaiadr3.gaia_source+WHERE+source_id+IN+%282755194341830999040%2C+2834388281729993472%2C+299642795747798272%29 range=None attempt=0"}
+{"bytes": 60418, "ev": "extend", "id": "83ea9578f140", "pid": 1063, "t": 1792771839.316}
+{"bytes": 1600, "ev": "extend", "id": "83ea9578f140", "pid": 1063, "t": 1792771839.371}
+{"counted": 10370, "ev": "done", "id": "83ea9578f140", "pid": 1063, "status": "ok", "t": 1792771839.371}

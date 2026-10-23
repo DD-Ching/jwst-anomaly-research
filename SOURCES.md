@@ -1795,3 +1795,15 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   Star libraries: Gaia DR3 via ESA Gaia TAP (`library_*.json` lists fields and Gaia source ids).
 - **Software** (isolated uv environment): lenstronomy 1.14.2 (Birrer & Amara 2018; Birrer et al. 2021, JOSS 6,
   3283), photutils 3.1.1 `EPSFBuilder`, astropy 8.0.2, fsspec 2026.9.0.
+
+## W2 J2244 STScI PSF capability check (accessed 2026-10-23; `results/w2_j2244_stpsf/`)
+- **Official entry:** "HST WFC3 Point Spread Function Modeling", hst_notebooks (M. Revalski; page updated 20 May
+  2026), https://spacetelescope.github.io/hst_notebooks/notebooks/WFC3/point_spread_function/hst_point_spread_function.html
+  (sha256 of the page in `sources.json`).
+- **PSF model:** WFC3-team STDPSF grid `STDPSF_WFC3IR_F160W.fits` (hosted by J. Anderson; WFC3 ISR 2016-12),
+  https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/WFC3IR/ (sha256 in `sources.json`).
+- **Data:** 12 GO 17455 WFC3/IR F160W FLT exposures from the public AWS copy
+  `https://stpubdata.s3.amazonaws.com/hst/public/<ipppss>/<rootname>/<rootname>_flt.fits` (sha256 in `sources.json`);
+  Gaia DR3 positions via ESA Gaia TAP.
+- **Software** (isolated uv environment, offline from cache): photutils 3.1.1 (`GriddedPSFModel`, `PSFPhotometry`),
+  astropy 8.0.2, numpy 2.5.4, scipy 1.18.1.
