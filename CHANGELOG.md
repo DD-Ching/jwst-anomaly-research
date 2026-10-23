@@ -11,10 +11,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Data:** DESI DR1 (Data Lab TAP, SPARCL; anonymous) has QSO spectra of both components for 13 rejected pairs
   (incl. J0130+0725, J0728+2607), 9 lenses and 7 Hennawi binaries (θ ≤ 10″).
 - **Result** (`gate.json`, `controls_sheet.png`): the frozen per-pixel profile χ²_ν test (free scale, T = 3).
-  - 9 / 9 lenses "one source" (8 of them at ≤ 2″, where fibre crosstalk may help); 1 / 7 binaries "two spectra",
-    against ≥ 70 % required.
+  - 9 / 9 lenses with D ≤ T, i.e. no difference above threshold (8 of them at ≤ 2″, where fibre crosstalk may help;
+    not an accuracy for "one source", wording corrected by the 2026-10-23 evidence audit); 1 / 7 binaries "two
+    spectra", against ≥ 70 % required.
   - The gate fails, so 11 of the 13 rejected pairs were not retrieved or read.
-  - The other 2 share their DESI TARGETIDs with Hennawi controls and were read only in that role, as "one source".
+  - The other 2 share their DESI TARGETIDs with Hennawi controls and were read only in that role, with D ≤ T.
 - **Failed approach:** a mean per-pixel χ² of broad-line profiles flagged 1 of 7 catalogued binaries (catalogued
   |dV| 10–350 km/s).
   - Post hoc (not used): profile Δv is 0–86 km/s for the 9 lenses and 170–579 km/s for 6 of 7 binaries.
