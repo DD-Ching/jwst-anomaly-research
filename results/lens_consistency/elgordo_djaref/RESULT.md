@@ -1,5 +1,17 @@
 # El Gordo reference-catalogue extra-image test
 
+## Stage 2 (2026-10-23; `PLAN_2.md`, `scripts/elgordo_djaref.py --stage 2`, `summary.json` `stage2`)
+- **Rule 2b, grid: passes** (`rule_2b`): rotation 0.0002°, determinant negative (east left), pixel scale
+  0.0400″ on 6,775 rows.
+- **Rule 2a, flux unit: fails as written** (`rule_2a`): median `mag_auto + 2.5 log10(flux_auto)` = 23.69 mag over
+  6,751 rows, outside 23.9 ± 0.05 and 28.9 ± 0.05. The run stopped there: no F200W flux row, mosaic pixel, frame
+  table or prediction was read; gate C2 not run.
+- **Post hoc** (`posthoc_rule_2a`, read after the failure): `mag_auto + 2.5 log10(flux_auto × tot_corr)` = 23.9 mag
+  (5–95 %: 23.9–23.9; median `tot_corr` 1.21), so the flux columns are µJy (their `TUNIT`) and `mag_auto` includes
+  the Kron-to-total factor. The header `ZP` = 28.9 does not apply to these columns.
+- **Data:** DJA table (sha256 `ac1cf706…`, 17,170,560 bytes) read into memory twice (run and post hoc check); nothing kept.
+- **Next:** stage 2b, a frozen plan with rule 2a in that form (disclosed as seen), otherwise PLAN_2.md unchanged.
+
 ## Stage 1 (2026-10-23; `PLAN_1.md`, `scripts/elgordo_djaref.py`, `summary.json`)
 - **Rule 1, gate K: passes** (`stage1_gate_K.elgordo-caminha23.gate_K`). The 56 spectroscopic Caminha+2023 images,
   model and list in the JWST frame (D-034 rule 1): image-plane rms 0.754″ (≤ 1.0″), matched fraction 1.0 within 3″

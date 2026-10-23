@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: El Gordo reference-catalogue route, stage 2: grizli total-flux rule frozen; the unit check fails as written (stopped before any flux was read)
+- **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_2.md`, frozen with `flux_unit_jy`, `grid_rotation_deg`
+  and `to_cat_dja` (unit-tested) before the run. The grizli 1.14.3 source shows the total flux needs the detection
+  `flux_auto / flux_aper_k` factor too, so the handoff's `flux_aper_k × tot_corr` is not used. Footprint: GO 1176
+  `o241_t012` F200W contains all 56 images. `a2744_uncoverref._reference_run` takes `field` / `frame`.
+- **Result** (`RESULT.md` § Stage 2, `summary.json` `stage2`): grid check passes (0.0400″, north-up); unit check
+  fails (23.69 mag); stopped. Post hoc: with `tot_corr` the zero point is 23.9 mag in every row (µJy). D-034 addendum p.
+- **Handoff:** next is stage 2b: rule 2a as `mag_auto + 2.5 log10(flux_auto × tot_corr)`, the rest of PLAN_2.md
+  unchanged (the full run then reads the ≈ 185 MB F200W SCI extension by range stream). Alternative not inspected:
+  the DJA photo-z tar's `elgordo-grizli-v7.0-fix_phot_apcorr.fits` (SOURCES.md) may already carry total columns.
+
 ## 2026-10-23: El Gordo reference-catalogue route, stage 1: gate K passes (rms 0.754″, 56 / 56); the DJA reference lacks total-flux columns (rule 2 fails as written)
 - **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_1.md`, frozen before the run. Script `scripts/elgordo_djaref.py`
   (rule 2 as a unit-tested function, `tests/test_elgordo_djaref.py`).

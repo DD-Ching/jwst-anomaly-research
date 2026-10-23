@@ -287,6 +287,7 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - CRDS 14.0.2: https://github.com/spacetelescope/crds
 - snowblind 0.2.1: https://github.com/mpi-astronomy/snowblind
 - grizli 1.14.2: https://github.com/gbrammer/grizli
+- grizli 1.14.3 source (sdist from PyPI, accessed 2026-10-23): `pipeline/photoz.py` (total flux = `{band}_flux_aper_k × flux_auto / flux_aper_k × {band}_tot_corr`), `prep.get_kron_tot_corr`; https://pypi.org/project/grizli/1.14.3/
 - chriswillott/jwst (no release; pushed 2025-12-18): https://github.com/chriswillott/jwst
 - ceers-nircam (no license; last push 2023-05-03): https://github.com/ceers/ceers-nircam
 - photutils 3.0.0: https://github.com/astropy/photutils
