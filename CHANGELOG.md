@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: El Gordo reference-catalogue route, stage 2 (in progress)
+- **Plan:** a frozen stage-2 plan defining the reference flux from `flux_aper_k × tot_corr`, gated by C2 on the
+  catalogued controls (handoff of #481).
+
 ## 2026-10-23: El Gordo reference-catalogue route, stage 1: gate K passes (rms 0.754″, 56 / 56); the DJA reference lacks total-flux columns (rule 2 fails as written)
 - **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_1.md`, frozen before the run. Script `scripts/elgordo_djaref.py`
   (rule 2 as a unit-tested function, `tests/test_elgordo_djaref.py`).
