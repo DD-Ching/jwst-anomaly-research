@@ -144,3 +144,7 @@ Claim and scope committed 2026-10-23 15:55 UTC (37f60ce). This test plan is comm
 - **§5 H** checks sub-pixel consistency across dithers. A constant subarray offset cancels in it.
 - **§5 I:** the no-galaxy residual alone (z_P 19) satisfies the z condition, so I rests on R.
 - **Not recorded:** photutils' fit flags.
+- **§0 (ledger), corrected in RESULT §1:**
+  - the TLS diagnosis of www.stsci.edu ran outside the ledger (an estimated `external` record);
+  - error and redirect responses were counted at the TLS allowance only until the post-review fix;
+  - the live "cut mid-stream" happened before the first body read.

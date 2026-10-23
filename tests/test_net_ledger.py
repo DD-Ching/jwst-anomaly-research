@@ -19,8 +19,23 @@ def server(tmp_path, monkeypatch):
     (tmp_path / "www").mkdir()
     (tmp_path / "www" / "blob.bin").write_bytes(bytes(range(256)) * 400)  # 102400 B
     (tmp_path / "www" / "sub").mkdir()  # "/sub" answers 301 -> "/sub/"
-    handler = partial(SimpleHTTPRequestHandler, directory=str(tmp_path / "www"))
-    handler.log_message = lambda *a, **k: None
+
+    class Handler(SimpleHTTPRequestHandler):
+        def log_message(self, *a, **k):
+            pass
+
+        def do_GET(self):  # noqa: N802
+            if self.path in ("/big500", "/big302"):
+                body = b"x" * 300_000
+                self.send_response(500 if self.path == "/big500" else 302)
+                self.send_header("Location", "/blob.bin")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+            super().do_GET()
+
+    handler = partial(Handler, directory=str(tmp_path / "www"))
     httpd = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
     t.start()
@@ -93,7 +108,7 @@ def test_cut_after_body_data_arrived(tmp_path, server):
     assert nl.CHUNK < used <= cap  # one body chunk was read and counted before the cut
 
 
-def test_error_and_redirect_bodies_counted_and_redirect_not_followed(tmp_path, server):
+def test_error_body_counted_and_redirect_not_followed(tmp_path, server):
     lg = nl.Ledger(tmp_path / "l.jsonl", 10**6)
     base = server.rsplit("/", 1)[0]
     with pytest.raises(RuntimeError):
@@ -132,3 +147,21 @@ def test_cap_admits_exactly_n_under_concurrency(tmp_path):
     for t in ts:
         t.join()
     assert len(ok) == 10 and lg.used() == 1000
+
+
+@pytest.mark.parametrize("path", ["/big500", "/big302"])
+def test_large_error_or_redirect_body_stays_under_cap(tmp_path, server, path):
+    cap = 50_000
+    lg = nl.Ledger(tmp_path / "l.jsonl", cap)
+    base = server.rsplit("/", 1)[0]
+    with pytest.raises(nl.BudgetExceeded):
+        nl.fetch(base + path, lg, est_bytes=100, retries=0)
+    assert lg.used() <= cap
+
+
+def test_redirect_body_counted(tmp_path, server):
+    lg = nl.Ledger(tmp_path / "l.jsonl", 10**6)
+    base = server.rsplit("/", 1)[0]
+    with pytest.raises(RuntimeError):
+        nl.fetch(base + "/big302", lg, est_bytes=100, retries=0)
+    assert lg.used() > 300_000

@@ -1,7 +1,7 @@
 {
  "label": "measured (session clock; ledger totals from net_ledger.jsonl) and estimated where stated",
  "start_utc": "2026-10-23T15:55Z",
- "end_utc": "2026-10-23T16:35Z (last result commit; the merge follows)",
+ "end_utc": "2026-10-23T16:31Z (last commit before the merge; last ledger record 16:26:11Z)",
  "limits": {
   "wall_h": 2,
   "cores": 2,

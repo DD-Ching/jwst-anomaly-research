@@ -161,6 +161,26 @@ def _opener() -> urllib.request.OpenerDirector:
     return urllib.request.build_opener(urllib.request.HTTPSHandler(context=ctx), _NoRedirect)
 
 
+class _Count:
+    """Bytes counted for one request; every chunk is reserved before it is read."""
+
+    def __init__(self, ledger: Ledger, reserved: int):
+        self.ledger, self.reserved, self.got, self.rid = ledger, reserved, TLS_ALLOWANCE, ""
+
+    def drain(self, fp, keep: bool = True) -> bytes:
+        parts = []
+        while True:
+            if self.got + CHUNK > self.reserved:
+                self.ledger.extend(self.rid, self.got + CHUNK - self.reserved)
+                self.reserved = self.got + CHUNK
+            buf = fp.read(CHUNK)
+            if not buf:
+                return b"".join(parts)
+            self.got += len(buf)
+            if keep:
+                parts.append(buf)
+
+
 def fetch(
     url: str,
     ledger: Ledger,
@@ -180,39 +200,32 @@ def fetch(
         est_bytes = byte_range[1] - byte_range[0] + 1
     last: Exception | None = None
     for attempt in range(retries + 1):
-        reserved = int(est_bytes) + HEAD_ALLOWANCE + TLS_ALLOWANCE
-        rid = ledger.reserve(reserved, f"GET {url} range={byte_range} attempt={attempt}")
-        got = TLS_ALLOWANCE
+        c = _Count(ledger, int(est_bytes) + HEAD_ALLOWANCE + TLS_ALLOWANCE)
+        c.rid = ledger.reserve(c.reserved, f"GET {url} range={byte_range} attempt={attempt}")
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "jwst-anomaly-research"})
             if byte_range is not None:
                 req.add_header("Range", f"bytes={byte_range[0]}-{byte_range[1]}")
             with _opener().open(req, timeout=timeout) as resp:
-                got += len(str(resp.headers).encode()) + 32
-                parts = []
-                while True:
-                    if (
-                        got + CHUNK > reserved
-                    ):  # reserve before reading, so counted bytes never pass the cap
-                        ledger.extend(rid, got + CHUNK - reserved)
-                        reserved = got + CHUNK
-                    buf = resp.read(CHUNK)
-                    if not buf:
-                        break
-                    got += len(buf)
-                    parts.append(buf)
-            ledger.done(rid, got, "ok")
-            return b"".join(parts)
+                c.got += len(str(resp.headers).encode()) + 32
+                body = c.drain(resp)
+            ledger.done(c.rid, c.got, "ok")
+            return body
         except BudgetExceeded:
-            ledger.done(rid, got, "cut: budget")
+            ledger.done(c.rid, c.got, "cut: budget")
             raise
-        except urllib.error.HTTPError as e:  # error or redirect: count its header and body
-            body = e.read() if e.fp is not None else b""
-            got += len(str(e.headers).encode()) + 32 + len(body)
-            ledger.done(rid, got, f"error: HTTP {e.code}")
+        except urllib.error.HTTPError as e:  # error or redirect: header and body through the cap
+            c.got += len(str(e.headers).encode()) + 32
+            try:
+                if e.fp is not None:
+                    c.drain(e, keep=False)
+            except BudgetExceeded:
+                ledger.done(c.rid, c.got, f"cut: budget (HTTP {e.code})")
+                raise
+            ledger.done(c.rid, c.got, f"error: HTTP {e.code}")
             last = e
         except Exception as e:  # network error: count what arrived, then retry
-            ledger.done(rid, max(got, TLS_ALLOWANCE), f"error: {type(e).__name__}")
+            ledger.done(c.rid, c.got, f"error: {type(e).__name__}")
             last = e
     raise RuntimeError(f"fetch failed after {retries + 1} attempts: {last}")
 

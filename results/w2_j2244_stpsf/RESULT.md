@@ -28,9 +28,13 @@
   - 52.1 MB for the recomputation re-fetch (§6).
   - 0.38 MB for the post hoc model re-fetch (`posthoc.json`).
   - Dependencies: 0 B (`uv --offline` from the local cache).
-- **Ledger gaps found in the review, fixed after the run** (offline tests added, no data re-read):
-  - error and redirect responses were counted at the 8 kB allowance only, which here means two GitHub 403s, a few kB.
-    They are now counted in full, and redirects are not followed.
+- **Ledger gaps found in the review, fixed after the run** (offline tests added; no image data re-read, only the
+  model file for `posthoc.json`):
+  - error and redirect responses were counted at the 8 kB allowance only. The ledger shows two GitHub 403s (an
+    estimated few kB, not stored); whether a redirect was followed during the run cannot be shown. They are now read
+    through the same reserve-before-each-chunk loop, and redirects are not followed.
+  - Under the new code only www.stsci.edu has been fetched. A redirect from S3, the notebook host or Gaia TAP would
+    now stop the fetch script rather than be followed.
   - refusals are now recorded;
   - a cut after body data has arrived is now tested;
   - the Windows lock now waits at most 300 s.
@@ -85,8 +89,9 @@
   - In the core (r < 3 px) the sums are near zero, but the pixels are not: χ²/ν 31–39 within 5 px.
   - From 3 px (0.4″) outward the data are brighter than the model in every exposure, by 3.0–3.1 % of the fitted flux
     within 12 px (sum of the three outer annuli, post hoc).
-  - The background ring (10–15 px) lies inside the star's halo, so the background is over-subtracted. That pushes
-    the residuals down, so 3.0–3.1 % is a low estimate, and the failures of S and P are not caused by it.
+  - The background ring (10–15 px) lies inside the star's halo, so the background is likely over-subtracted. That
+    would push the residuals down, so 3.0–3.1 % is likely a low estimate; the failures of S and P are not caused by
+    it.
   - Aperture flux within 6 px / fitted flux is 0.92–1.01.
 - **Contact sheet** (looked at, `cases.png`; colour scales are not stored in JSON):
   - the star leaves a structured core residual (colour scale ±12.35 e⁻/s) and a faint positive halo along the
@@ -95,8 +100,9 @@
   - the injected Sérsic sits between them, as placed.
 - **What makes up the pair residual at P is not separated:**
   - its sign matches the star's wing excess;
-  - but P lies 3.1–3.8 px from star A, inside A's structured residual zone, and S varies 2.4× across the four
-    exposures (12.5–29.5 e⁻/s), while the star's outer excess is steady;
+  - but P lies 3.1–3.8 px from star A, so its 2 px aperture overlaps A's structured residual zone, and S varies 2.4×
+    across the four exposures (12.5–29.5 e⁻/s), while the star's outer excess is steady (both post hoc,
+    `posthoc.json`);
   - the pair combines two visits (#474's untested "two PSFs in one pair" reason). The reported 0.94–0.95 %-of-peak
     PSF change covers only the detector-position difference, not focus.
   - Wing excess, core-shape or sub-pixel mismatch, and the two-visit difference may each contribute.
@@ -112,8 +118,8 @@
      across dithers to 1.3 mas.
    - The subarray offset itself is not tested by that check; a 5 px error would change the model by ≤ 4.3 × 10⁻⁴ of
      its peak.
-   - It does not cover two of #474's untested possible reasons: it does not apply to drizzled images, and light
-     beyond its ±12 px square is not modelled.
+   - It does not apply to drizzled images, on which #474 worked. Light beyond its ±12 px square is not modelled, so
+     it does not address #474's untested halo reason.
    - Its documented remedy for star-to-star shape differences (hst1pass focus perturbation) needs at least 10 bright
      isolated stars per exposure, which these fields lack.
 2. **What improved and what still fails?**
@@ -134,7 +140,8 @@
 3. **Is the problem located?**
    - **Only partly described; the cause is not known.**
    - The single star shows structured core residuals and a wing excess. The pair residual at P matches the wing excess
-     in sign but not in stability, and it sits inside the companion's core zone.
+     in sign but not in stability. Its 2 px aperture overlaps the companion's structured zone (centre 3.1–3.8 px
+     away).
    - Wing excess, core-shape or sub-pixel mismatch, and the two-visit PSF difference are not separated, and no test
      in this round could separate them.
 4. **What it takes to reproduce:**
@@ -160,14 +167,15 @@
 
 ## 7. Deviations
 - **The target's product was touched by the ledger tests.** Both used J2244−0550's own drz product (`if8a5k030`):
-  - the 2880 B live request read its FITS primary header;
+  - the 2880 B live request read its first FITS header block;
   - the stop test's un-ranged request was cut after the HTTP header.
-  - No pixel data were read or used.
+  - No pixel data were read by the program (bytes buffered by the operating system: §1).
 - **Post hoc:**
   - the recomputation rerun (§6);
   - the model re-fetch and `posthoc.json` (model properties and the baseline-subtracted z);
   - the sum of the three outer annuli;
-  - the comparison of the pair residual with the injected aperture fluxes.
+  - the comparison of the pair residual with the injected aperture fluxes;
+  - the P-to-star distances and the 2.4× spread of S (`posthoc.json`).
   - None of these enters a decision.
 - **Not in the plan text:** the injected magnitude is normalised within the ±12 px box before PSF convolution (R is
   self-consistent).

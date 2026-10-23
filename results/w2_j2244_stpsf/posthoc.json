@@ -1,5 +1,5 @@
 {
- "label": "derived, post hoc (after the independent review): properties of the official model file and a baseline-subtracted injection z; no fit was rerun",
+ "label": "derived, post hoc (after the independent review and its re-check): properties of the official model file, a baseline-subtracted injection z, and case-2 geometry and spread; no fit was rerun",
  "psf_model": {
   "grid_sums_over_25x25px": [
    1.0319087505340576,
@@ -31,5 +31,18 @@
   "21.0": 37.56020747441845,
   "22.0": 15.816778353317021
  },
- "case3_z_baseline_subtracted_note": "(sum S_inj - sum S_noinj) / sqrt(sum N_inj^2) over the 4 exposures"
+ "case3_z_baseline_subtracted_note": "(sum S_inj - sum S_noinj) / sqrt(sum N_inj^2) over the 4 exposures",
+ "case2_P_distance_to_fainter_star_px": [
+  3.3735147263055465,
+  3.8327377107319256,
+  3.1093995289326837,
+  3.591698936643892
+ ],
+ "case2_P_distance_to_brighter_star_px": [
+  4.383077512590786,
+  4.855748640613164,
+  4.20269470430487,
+  4.302985497371239
+ ],
+ "case2_S_max_over_min": 2.3701393414108756
 }
