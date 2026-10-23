@@ -2394,6 +2394,15 @@ not fitted to those images. Alternatives rejected: transcribing a model from fig
 running gate K with the CLASH maps under the fitted-model thresholds (most images were not its constraints).
 Revisit if: Nishida+2025 or Meena+2023 maps (or GLAFIC parameter files) become public.
 
+**Addendum 2026-10-23w (MACS0647 CLASH held-out test).** `results/lens_consistency/macs0647_clash_heldout/RESULT.md`,
+frozen `PLAN.md`. Families at fitted z: CLASH LTM-Gauss passes gate K0 on the pre-JWST families (rms 1.66″, 37 / 38
+within 3″) and frame check F, and reproduces 31 / 31 certain images of the JWST-first systems 13–23 (rms 1.41″); the
+PIEMD + eNFW map fails K0 (2.34″ > 2.0″). No flag. Post hoc: at the family photo-z both models do worse on the
+pre-JWST systems than on the held-out ones (LTM-Gauss 20 / 35 vs 25 / 31), so the photo-z are no redshift
+constraint. Decision: MACS0647 gives no lensing-residual input from the CLASH maps; the fitted-z test only detects
+images that miss by > 3″ at every z. Alternatives rejected: photo-z as the frozen redshift rule (inconsistent within
+families, e.g. 6-3: 0.52 and 9.19). Revisit if: spectroscopic redshifts of systems 13–23, or a JWST-era model's maps.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
