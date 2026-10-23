@@ -137,7 +137,7 @@ def stage_1b() -> dict:
     return k
 
 
-def y_axis_pa_deg(x, y, ra, dec, axis: int = 1) -> float:
+def axis_pa_deg(x, y, ra, dec, axis: int = 1) -> float:
     """Sky position angle (east of north) of the pixel grid's +y axis (``axis=0``: +x axis), from
     a linear fit of the catalogue's pixel to sky positions (0 for a north-up grid)."""
     x, y, ra, dec = (np.asarray(v, float) for v in (x, y, ra, dec))
@@ -156,9 +156,9 @@ def theta_sample(t: Table) -> np.ndarray:
     with np.errstate(divide="ignore", invalid="ignore"):
         ell = 1.0 - b / a
     keep = (
-        (np.asarray(t["use_phot"]) == 1)
-        & (np.asarray(t["flag_kron"]) == 0)
-        & (np.asarray(t["flag_nearbcg"]) == 0)
+        (np.ma.filled(t["use_phot"], 0) == 1)
+        & (np.ma.filled(t["flag_kron"], 1) == 0)
+        & (np.ma.filled(t["flag_nearbcg"], 1) == 0)
         & (a >= MIN_A_PIX)
         & (ell >= MIN_ELL)
     )
@@ -211,7 +211,7 @@ def stage_2a(cat: Path, segmap: Path) -> dict:
     order = theta_sample(t)
     ids = np.asarray(t["id"], int)
     slices = ndimage.find_objects(seg)
-    used, phis, thetas = [], [], []
+    used, phis, thetas, dcen = [], [], [], []
     for i in order:
         sid = int(ids[i])
         sl = slices[sid - 1] if 0 < sid <= len(slices) else None
@@ -222,6 +222,15 @@ def stage_2a(cat: Path, segmap: Path) -> dict:
             continue
         used.append(sid)
         phis.append(segment_angle(ys, xs))
+        # reported, not a rule: segment centroid vs catalogue x, y (1-based pixels assumed)
+        dcen.append(
+            float(
+                np.hypot(
+                    np.mean(xs) + sl[1].start + 1 - float(t["x"][i]),
+                    np.mean(ys) + sl[0].start + 1 - float(t["y"][i]),
+                )
+            )
+        )
         thetas.append(float(t["theta_J2000"][i]))
         if len(used) == N_MAX:
             break
@@ -234,10 +243,23 @@ def stage_2a(cat: Path, segmap: Path) -> dict:
         "n_rule1_before_segment_cut": int(len(order)),
         "theta_range_rad": [float(np.min(t["theta_J2000"])), float(np.max(t["theta_J2000"]))],
         "pixel_scale_arcsec": float(cr.pixel_scale(t["x"], t["y"], t["ra"], t["dec"])),
-        "y_axis_pa_deg": y_axis_pa_deg(t["x"], t["y"], t["ra"], t["dec"]),
-        "x_axis_pa_deg": y_axis_pa_deg(t["x"], t["y"], t["ra"], t["dec"], axis=0),
+        "y_axis_pa_deg": axis_pa_deg(t["x"], t["y"], t["ra"], t["dec"]),
+        "x_axis_pa_deg": axis_pa_deg(t["x"], t["y"], t["ra"], t["dec"], axis=0),
     }
     res["ids"] = used
+    # post hoc (review): the README's "clockwise from the first image axis" read as cw from +x
+    r = fold_deg(np.asarray(phis) + np.asarray(thetas))
+    res["posthoc_cw_from_x"] = {
+        "median_deg": float(np.median(r)),
+        "frac_within_20deg": float(np.mean(r <= WITHIN_DEG)),
+    }
+    res["posthoc_centroid_offset_pix"] = {
+        "median": float(np.median(dcen)),
+        "p90": float(np.percentile(dcen, 90)),
+    }
+    Table(
+        {"id": used, "theta_rad": thetas, "phi_seg_rad": phis, "centroid_offset_pix": dcen}
+    ).write(OUT / "stage2a_sources.ecsv", format="ascii.ecsv", overwrite=True)
     return res
 
 

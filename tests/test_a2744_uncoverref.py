@@ -12,13 +12,13 @@ from jwst_anomaly import lensmodel
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import a2744_uncover as au  # noqa: E402
 from a2744_uncoverref import (  # noqa: E402
+    axis_pa_deg,
     fold_deg,
     image_list,
     lenstool_id,
     segment_angle,
     theta_check,
     theta_sample,
-    y_axis_pa_deg,
 )
 
 
@@ -158,8 +158,8 @@ def test_y_axis_pa_of_a_north_up_and_rotated_grid():
     dec0 = -30.4
     ra = 3.58 - x * s / np.cos(np.radians(dec0))  # +x west, +y north
     dec = dec0 + y * s
-    assert abs(y_axis_pa_deg(x, y, ra, dec)) < 1e-6
-    assert abs(abs(y_axis_pa_deg(x, y, ra, dec, axis=0)) - 90) < 1e-6  # +x west: PA -90
+    assert abs(axis_pa_deg(x, y, ra, dec)) < 1e-6
+    assert abs(abs(axis_pa_deg(x, y, ra, dec, axis=0)) - 90) < 1e-6  # +x west: PA -90
     c, n = np.cos(np.radians(30)), np.sin(np.radians(30))
     east, north = (-x * c + y * n) * s, (x * n + y * c) * s  # +y at PA 30 deg
-    assert abs(y_axis_pa_deg(x, y, 3.58 + east / np.cos(np.radians(dec0)), dec0 + north) - 30) < 0.1
+    assert abs(axis_pa_deg(x, y, 3.58 + east / np.cos(np.radians(dec0)), dec0 + north) - 30) < 0.1

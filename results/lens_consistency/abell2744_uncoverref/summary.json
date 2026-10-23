@@ -959,6 +959,14 @@
    34279,
    15396,
    33881
-  ]
+  ],
+  "posthoc_cw_from_x": {
+   "median_deg": 43.42132042620599,
+   "frac_within_20deg": 0.24
+  },
+  "posthoc_centroid_offset_pix": {
+   "median": 4.9203326325832295,
+   "p90": 17.44676513620125
+  }
  }
 }

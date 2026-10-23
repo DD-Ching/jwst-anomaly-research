@@ -9,7 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   deleted after the run (cloud disk rule).
 - **Result** (`summary.json` `stage2a_theta_convention`, RESULT.md § Stage 2a): of 2,188 rows passing rule 1, the 500
   largest with segments ≥ 50 px: H_a (SEP) median residual 2.7°, 98.4 % within 20° → adopted; H_b (README) 46.6°,
-  23.2 % → fails. Grid north-up at 0.040″. Contact sheet of 6 segments looked at (not committed): H_a follows the axes.
+  23.2 % → fails; post hoc, clockwise from +x also fails (43.4°). Grid north-up at 0.040″. Contact sheet of six
+segments looked at (image not stored; ids in RESULT): H_a follows the axes.
 - **Handoff:** next is the frozen stage 2b (predicted / control tables with the WLS source; the field spans several
   GO 2561 tiles, so `m0417_extra.run_field`'s single-tile footprint must be extended or run per tile; gate C2 with the
   shared-pair rule; local noise from GO 2561 cutouts, check the pipeline pixel scale against `m1423_canucsref.PIX`).

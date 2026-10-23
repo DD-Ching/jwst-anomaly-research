@@ -2287,8 +2287,8 @@ gate C2 fails, or the WLS and mean sources disagree on an extra-image flag.
 
 **Addendum 2026-10-23l (Abell 2744, UNCOVER DR3 SUPER reference: column convention).** Frozen before the run
 (`abell2744_uncoverref/PLAN_2a.md`; rule `a2744_uncoverref.theta_check`). The README calls `theta_J2000` degrees
-clockwise from +y; its values span ±π/2. On 500 sources' segments of the release segmap, the SEP reading (radians,
-counter-clockwise from +x) passes (median residual 2.7°, 98.4 % within 20°); the README reading fails (46.6°, 23.2 %).
+clockwise from "the first image axis (along y)"; its values span ±π/2. On 500 sources' segments of the release segmap, the SEP reading (radians,
+counter-clockwise from +x) passes (median residual 2.7°, 98.4 % within 20°); clockwise from +y fails (46.6°, 23.2 %), and post hoc clockwise from +x fails (43.4°, 24.0 %).
 The catalogue grid is north-up (+y PA 0.006°, +x PA −90.0°) at 0.040″. Decision: stage 2b maps sky PA = deg(θ) + 90
 (mod 180), i.e. `m0417_canucsref.to_cat`'s offset 90 and sign +1 on θ in degrees; fluxes `f_f200w` / `e_f200w` × 10
 nJy (README, `PHOT_ZP` 28.9); local noise from the GO 2561 pipeline F200W mosaic by byte-range cutouts (the
