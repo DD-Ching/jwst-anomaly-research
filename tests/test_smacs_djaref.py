@@ -1,4 +1,4 @@
-"""Unit tests of the SMACS 0723 reference-catalogue rules (PLAN_1.md rules 0 and 2)."""
+"""Unit tests of the SMACS 0723 reference-catalogue rules (PLAN_1.md 0, 2; PLAN_2.md D2, D3)."""
 
 import io
 import sys
@@ -8,7 +8,7 @@ import numpy as np
 from astropy.io import fits
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from smacs_djaref import STAGE2_COLS, fixed_z_systems, stage2_inputs  # noqa: E402
+from smacs_djaref import STAGE2_COLS, fixed_z_systems, split_z_edge, stage2_inputs  # noqa: E402
 
 PAR = """runmode
 \tz_m_limit  1 4.0 1 1.0 7.0 0.1000
@@ -52,3 +52,18 @@ def test_stage2_inputs_without_a_table_fail():
     buf = io.BytesIO()
     fits.PrimaryHDU().writeto(buf)
     assert not stage2_inputs(buf.getvalue(), 10)["passes"]
+
+
+def test_split_z_edge_reports_edge_families_and_labels_the_rest():
+    flags = ["8@110.8,-73.4", "3@110.9,-73.5", "17@110.7,-73.45"]
+    r = split_z_edge(flags, {"8": 10.0, "3": 1.99, "17": 2.05}, ["1", "3"])
+    assert r["flags_z_edge"] == ["8@110.8,-73.4"]
+    assert r["flags"] == [
+        {"flag": "3@110.9,-73.5", "z": "fixed_z"},
+        {"flag": "17@110.7,-73.45", "z": "fitted_z"},
+    ]
+
+
+def test_split_z_edge_keeps_a_family_just_below_the_edge():
+    r = split_z_edge(["9@1,2"], {"9": 9.99}, [])
+    assert r == {"flags": [{"flag": "9@1,2", "z": "fitted_z"}], "flags_z_edge": []}

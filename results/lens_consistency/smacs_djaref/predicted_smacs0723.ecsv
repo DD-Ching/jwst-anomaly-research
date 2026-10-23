@@ -1,0 +1,34 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: string}
+# - {name: image_class, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: abs_mu, datatype: float64}
+# - {name: ref_counterpart, datatype: int64}
+# - {name: arc_ref, datatype: bool}
+# - {name: L_ref, datatype: float64}
+# - {name: search_arcsec, datatype: float64}
+# - {name: f_pred, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: n_sources, datatype: int64}
+# - {name: max_ratio, datatype: float64}
+# - {name: reading, datatype: string}
+# - {name: m_pred, datatype: float64}
+# - {name: sigma_loc_njy, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: class_local, datatype: string}
+# schema: astropy-2.0
+system image_class ra dec abs_mu ref_counterpart arc_ref L_ref search_arcsec f_pred class n_sources max_ratio reading m_pred sigma_loc_njy pred_over_sigma class_local
+8 no_flux_ref 110.81186850295215 -73.44658107138277 3.448293340510394 -1 False nan 1.0 nan inconsistent_reference 0 nan no_flag "" nan nan inconsistent_reference
+9 missing 110.81118193772755 -73.44824507439304 4.58774245445897 8607 True 1.6096404474307183e-08 1.0 7.38461581709224e-08 recovered 1 0.7528335977967987 no_flag 26.72924585686473 30.53094465188045 2.418731520197954 undetectable_local
+11 no_flux_ref 110.81657854219854 -73.44887566626618 4.0042198898125845 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference
+16 no_flux_ref 110.8194022448317 -73.45851019899656 3.769687288956946 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference
+17 missing 110.82812574707704 -73.45576568451037 10.042442910946942 -1 False nan 1.0 nan inconsistent_reference 0 nan no_flag "" nan nan inconsistent_reference
+17 missing 110.8268967764938 -73.45534889820514 5.242546133789033 -1 False nan 1.0 nan inconsistent_reference 0 nan no_flag "" nan nan inconsistent_reference
+25 no_flux_ref 110.79252639355587 -73.44768047278993 0.8804733487249937 -1 False nan 1.0 nan inconsistent_reference 0 nan no_flag "" nan nan inconsistent_reference
+26 no_flux_ref 110.79749014948298 -73.45024532275575 25.42766088016358 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference
+26 candidate 110.80366330817529 -73.44773724377437 6.066180702384641 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference
+26 no_flux_ref 110.80182605462393 -73.4489820128772 4.31535424684379 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference
+26 no_flux_ref 110.8001566539746 -73.44851795129063 1.653916087571271 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference

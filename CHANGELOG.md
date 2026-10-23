@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: SMACS 0723 reference-catalogue route, stage 2: gate C2 fails (16 / 23, arc 7 / 12); no flag read
+- **Plan:** `results/lens_consistency/smacs_djaref/PLAN_2.md`, frozen before any read (El Gordo stage 2b's rules;
+  deviations D1–D3: all 60 images, z-edge family 8 not flaggable, fixed / fitted z labels; D2 / D3 unit-tested).
+  Run `scripts/smacs_djaref.py --stage 2`.
+- **Result** (`RESULT.md` § Stage 2, `summary.json` `stage2`): rules 2a / 2b pass; gate C2 fails (0.70 and 0.58
+  against 0.8; also without the containing-source or local-noise rule). No flag read; 0 / 11 targets testable.
+- **Contact sheet** (`sheet_2.png`, post hoc) looked at: 5 of 6 `absent` controls show a source in the circle, all
+  6 `absent_sources_too_faint`: flux-ratio misses of the route, cause not isolated. D-034 addendum s.
+- **Data:** DJA table (38.6 MB) and the F200W SCI extension (≈ 196 MB) read into memory; pipeline `_cat.ecsv` in
+  the session scratchpad, deleted.
+- **Handoff:** SMACS's reference route is closed. Next: WHL0137 first checks its inputs: four RELICS models already gave 0 counter-image flags on systems 1–2 (D-033 addendum 4), and the RELICS HLSP has no image list for gate K, so the route needs a public JWST-era image list (Welch+2022 / Scofield+2025 tables) or moves to another field.
+
 ## 2026-10-23: SMACS 0723 reference-catalogue route, stage 1: gate K passes (rms 0.321″, 16 / 16); DJA v7.4 reference has the stage-2b columns
 - **Plan:** `results/lens_consistency/smacs_djaref/PLAN_1.md`, frozen before the run. Script `scripts/smacs_djaref.py`
   (rules 0 and 2 as unit-tested functions, `tests/test_smacs_djaref.py`).
