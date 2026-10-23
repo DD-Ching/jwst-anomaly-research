@@ -38,3 +38,14 @@ def test_flags_one_fibre_without_its_own_source():
     assert f["gaia_a"] is None and f["gaia_b"] == "7"
     assert not f["both_match_distinct_gaia"]
     assert f["dg_tractor"] == 3.88 and not f["close_le_2arcsec"]
+
+
+def test_flags_ignore_non_finite_magnitudes():
+    rec = {
+        "a": _side("1", 0.05, 0.05, "NaN"),
+        "b": _side("2", 0.10, 0.10, "19.5"),
+        "tractor": [{}, {}],
+        "sep_desi": 2.5,
+        "sep_cat": 2.5,
+    }
+    assert ev.flags(rec)["dg_tractor"] is None

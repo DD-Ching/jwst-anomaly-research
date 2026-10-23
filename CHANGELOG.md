@@ -2,7 +2,7 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-23: W2 DESI pairs evidence audit: of the 13 rejected pairs, 3 have stronger ordinary explanations, 2 are disputed, 8 stay open; J2244−0550 is a likely lens in its source paper with public HST / Keck AO imaging not used in any paper found; the DESI classifier line stops
+## 2026-10-23: W2 DESI pairs evidence audit: J2351+1343 is misidentified; of the other 12 rejected pairs 2 have stronger ordinary explanations, 3 are disputed, 7 stay open; J2244−0550 (likely lens in its source paper) has public HST imaging with no published use found; the DESI classifier line stops
 - **Plan:** `results/w2_desi_pairs/evidence/PLAN.md`. Metadata and literature only: no spectrum read, and #472's
   statistic, T and verdict unchanged.
 - **Outputs** (`EVIDENCE.md`, `evidence.json` from `scripts/w2_desi_evidence.py`):
@@ -10,25 +10,30 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - literature, with the quoted basis of each class;
   - archives: MAST, ESO and KOA metadata for 3 open pairs.
 - **Identity:**
-  - J2351+1343's DESI pair is not the SQLS pair: SLED calls the SQLS system QUASAR+STAR, and DESI's second fibre
-    sits on a faint third source.
+  - J2351+1343's DESI pair is not the SQLS pair. The SQLS system is QUASAR+STAR per SLED, and the companion has no
+    DESI row; DESI's second fibre is on a faint third source.
   - 6 pairs are closer than the 1.5″ fibres (0.82–1.31″).
 - **Labels:**
-  - J2244−0550 is in Lemon et al. §4.2 "Likely Lensed Quasars" but has table class NIQ / UQP. 13 of the 17 §4.2
-    systems are UQP in VizieR and therefore "rejected" in D-064.
+  - J2244−0550 is in Lemon et al. §4.2 "Likely Lensed Quasars" but has table class UQP (NIQ in arXiv v1). 13 of the
+    17 §4.2 systems are UQP in VizieR and therefore "rejected" in D-064.
+  - Jing et al. class it QPC from the same DESI spectra: a chromatic flux ratio "suggesting two distinct sources",
+    from overlapping fibres. It is disputed.
   - The "binary" labels of J0740 and J1035 (Hennawi, low-S/N spectra) and of J1511 and J1552 (SQLS, similar Subaru
     spectra) rest on not seeing a lens galaxy.
-  - J1035 is a lensed-quasar candidate in Jing et al. (same DESI data), and J0740 one in Ji et al.
+  - J1035 is an LQC in Jing et al. (same DESI data); J0740 is a "lensing candidate" in Ji et al., citing Lemon et al.
+    2018.
   - J0130's DESI-based analysis (Chen et al.) keeps lensing open.
-  - J0728 was already settled (different NOT spectra; no lens in HST).
+  - For J0728 the published evidence favours a binary (strongly different NOT spectra).
 - **Public data not yet used** (RESULT §4):
-  - J2244−0550: HST F814W (GO 17308), F160W / F475W / F625W (GO 17455), Keck OSIRIS Kp and LRIS; MAST lists the HST
-    data as PUBLIC. No published result was found.
+  - J2244−0550: HST F814W (GO 17308) and F160W / F475W / F625W (GO 17455), PUBLIC in MAST; Keck OSIRIS Kp and LRIS
+    (KOA, access not tried). No published result was found.
   - J1511+3357: none found.
   - J1202+0703: Keck LRIS spectra only.
 - **Corrections:**
-  - #472 wording: D ≤ T is "no difference above threshold", and 9 / 9 is a pass count, not a same-source accuracy;
-  - D-064 addendum (UQP mapping, non-detection-based binaries).
+  - #472 wording: D ≤ T is "no difference above threshold"; 9 / 9 is a pass count, not a same-source accuracy;
+    J2351 is noted.
+  - Without the two disputed Hennawi controls the gate still fails (1 / 5).
+  - D-064 addendum: UQP mapping, non-detection-based binaries.
 - **Failed approach / stop:** the DESI spectral-classifier line stops. The same DESI pairs are already classified by
   Jing et al. (all 13) and Chen et al. (J0130), so a new statistic on them adds no observation.
 

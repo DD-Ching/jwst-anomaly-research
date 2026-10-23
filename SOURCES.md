@@ -1764,11 +1764,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - Inada et al. 2012 (arXiv:1203.1087, §4.1).
 - **Binary catalogues:** Hennawi et al. 2006 (astro-ph/0504535, §3.2 and §5.1); Kayo & Oguri 2012 (arXiv:1203.6410).
 - **Lens-candidate catalogues:**
-  - Dawes et al. 2023 (arXiv:2208.06356; VizieR J/ApJS/269/61/table2, queried at J2244−0550);
-  - Ji et al. (arXiv:2412.08397).
+  - Dawes et al. 2023 (arXiv:2208.06356; VizieR J/ApJS/269/61/table2; grades within 3″ of each pair stored in
+    `identity.json`);
+  - Ji et al. (arXiv:2412.08397), whose J0740+2926 'lensing candidate' cites Lemon et al. 2018 (not read).
 - **Archives** (metadata only, `archives.json`):
-  - MAST CAOM via `astroquery.mast.Observations`; HST GO 17308 (PI Lemon) and GO 17455 (PI Shen) titles and PIs from
-    MAST;
+  - MAST CAOM via `astroquery.mast.Observations`; HST GO 17308 (PI Lemon) and GO 17455 (PI Shen), titles and PIs
+    stored in `archives.json`;
   - ESO ObsCore TAP https://archive.eso.org/tap_obs/sync;
   - KOA TAP https://koa.ipac.caltech.edu/TAP/sync;
   - CADC ObsCore TAP (HTTP 503, not checked).

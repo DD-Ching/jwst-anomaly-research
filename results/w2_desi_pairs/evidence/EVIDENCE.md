@@ -1,8 +1,9 @@
-# Evidence table: the 13 rejected lensed-quasar pairs with DESI DR1 spectra of both components
+# Evidence table: the 13 rejected lensed-quasar pairs #472 listed with DESI DR1 spectra of both components (12 are the catalogued pair; J2351+1343 is not)
 
 - **Sources:**
   - machine-readable `evidence.json`, built by `scripts/w2_desi_evidence.py build` from:
-    - `identity.json`: DESI zpix rows, Gaia DR3 and LS DR10 Tractor matches;
+    - `identity.json`: DESI zpix rows, including every DR1 row within 5″; Gaia DR3 and LS DR10 Tractor matches;
+      Dawes et al. 2023 grades;
     - the pinned D-064 catalogue rows;
     - `literature.json`: classes, quotes and references, with their keys;
   - `archives.json` holds the archive metadata for the 3 pairs of RESULT §4.
@@ -11,7 +12,8 @@
   - matches and flags: derived;
   - classes: catalogued or published;
   - readings: this audit's judgement.
-- **Not used:** no spectrum was read and #472's statistic was not rerun.
+- **Not used:** no spectrum was read. #472's D values are a failed, unvalidated test and are not used as evidence
+  anywhere.
 
 ## A. Identity (DESI DR1 `zpix`; separations in arcsec, catalogued / DESI fibres)
 | pair | TARGETID a (RA, Dec) / TARGETID b (RA, Dec) | sep | DESI z a / b | programme | distinct Gaia DR3 match ≤ 0.5″ for both | Δg (Tractor) |
@@ -38,40 +40,57 @@ Full names of the SQLS / Hennawi pairs:
 - J1035 = J103519.22+075256.3;
 - J2351 = J235108.70+134320.8.
 
-**Identity findings:**
+**Identity findings** (`evidence.json` → `identity`):
+- **Fibre-to-catalogue distances:**
+  - Hennawi pairs: both fibres lie within 0.28″ of a catalogued component.
+  - SQLS DR5/DR7, one row per system: one fibre lies within 0.10″ (J1511, J1552) or 0.32″ (J1613) of it, and the
+    other fibre is the companion.
+  - Lemon, one position per system: the fibre midpoint lies within 0.52″ of it.
 - **J2351+1343 is not the catalogued pair.**
-  - The SQLS companion (g 22.72, z 18.74; Gaia DR3 parallax/error 3.2) has no DESI spectrum and no SQLS redshift. SLED calls the system QUASAR+STAR.
-  - DESI's second fibre sits on a different, faint source (g 23.45) 2.05″ from the quasar, which is 3.9 mag brighter.
-  - That fibre has no Gaia source within 0.5″; its nearest Gaia source is the quasar, at 1.94″.
+  - DESI DR1 has exactly two redshift rows within 5″ (`zpix_5arcsec`), and neither is on the SQLS companion. That
+    companion is very red (g 22.72, z 18.75), has a Gaia DR3 parallax/error of 3.17 and no SQLS redshift. SLED calls
+    the system QUASAR+STAR.
+  - DESI's fibre a is on a third, faint source (Tractor g 23.45; QSO at z 1.2246, zwarn 0). The fibres are 2.05″
+    apart, and fibre a is 1.94″ from the quasar's Gaia position and 1.95″ from the nearest catalogued component.
+    The quasar is 3.87 mag brighter in Tractor g.
   - The pair entered #472 only because its DESI separation fell within 0.5″ of the catalogued one.
-- **Close pairs:** 6 pairs have DESI fibre separations below 1.5″, the fibre diameter: J1613 0.82″, J0909 0.84″,
+- **Fibre overlap:** 6 pairs have fibre separations below 1.5″, the fibre diameter: J1613 0.82″, J0909 0.84″,
   J2244 1.07″, J1202 1.21″, J1552 1.27″ and J1511 1.31″.
   - Their fibres overlap, so each spectrum carries light from both components.
   - J0133 (1.74″) completes the 7 at ≤ 2″ (`close_le_2arcsec`).
   - Pairs with large Δg (J1511 1.33, J0740 1.36, J1035 1.17) risk crosstalk mainly in the fainter spectrum.
-- **Other DESI TARGETIDs** (`literature.json` → `jing_targetid_check`):
-  - Jing et al.'s catalogue lists the same TARGETID pairs as #472 for 11 of the 13.
-  - For J1428 and J1511 it lists another TARGETID (dark programme) for one component, 0.06″ from #472's. DR1 may therefore hold two coadds of that component.
-- **Extra Tractor sources within 6″** (`identity.json`), not lens-galaxy detections:
-  - J2244: a g-only point source (g 22.75) 1.8–2.2″ from both images;
+  - Jing et al. state the same caveat: at < 2″ "the fiber spillover and contaminants are expected to be severe".
+- **Other DESI TARGETIDs:**
+  - Jing et al. list the same TARGETID pairs as #472 for 11 of the 13.
+  - For J1428 and J1511 they list a dark-programme TARGETID for one component (39627909081598681, 39632961548586205).
+    It is 0.06″ from #472's bright / backup TARGETID; both are in `zpix_5arcsec` (QSO, zwarn 0). DR1 therefore holds
+    two coadds of that component.
+- **Extra Tractor sources within 6″** (`identity.json`), nature unknown:
+  - J2244: a point source detected in g only (g 22.75), 1.8–2.2″ from both images;
   - J1035: a red point source (g 23.52, z 21.47) 2.1″ from both images, off the line joining them;
   - J0133 and J0728: faint REX sources 4–6″ away.
 
 ## B. Classes, evidence and what is missing
-"same DESI" = the source used the DESI DR1 spectra #472 holds. Keys are defined in `literature.json` → `sources`.
+- **"Same DESI"** means the source used the DESI DR1 spectra #472 holds. Keys are defined in `literature.json` →
+  `sources`.
+- **Jing et al.'s class definitions are spectral as well as visual:**
+  - QP (≥ 2″): "noticeably different spectral features";
+  - QPC (< 2″): the flux ratio "varies significantly with wavelength, suggesting two distinct sources", with severe
+    fibre spillover expected; follow-up spatially resolved spectra are needed for confirmation;
+  - LQC: "configurations or spectroscopic features indicative of gravitational lensing".
 
 | pair | original class (basis) | later classes (same DESI?) | independent evidence | reading | missing |
 |---|---|---|---|---|---|
-| J0130+0725 | Lemon2023 UQP. NOT spectra differ through absorption in the fainter image; text: "likely a projected pair"; one source not ruled out | Chen2026 dual quasar, lens "cannot be completely ruled out" (yes); Jing2025 QP (yes) | NOT and eBOSS spectra; HST F814W: no lens light to ≈ 23 (D-064) | ordinary favoured: projected / dual; lens not excluded | an independent velocity or profile difference that absorption cannot explain |
+| J0130+0725 | Lemon2023 UQP. NOT spectra differ through absorption in the fainter image, "likely explained by the system being a projected pair"; one source "cannot necessarily be ruled out" | Chen2026 dual quasar, lens "cannot be completely ruled out" (yes); Jing2025 QP (yes) | NOT and eBOSS spectra; HST F814W: no lens light to ≈ 23, which excludes a typical ordinary lens galaxy (D-064) | projected / dual favoured; lens not excluded | an independent velocity or profile difference that absorption cannot explain |
 | J0133+0816 | Lemon2023 UQP. Small CIII] / MgII width differences; deep CFHT riz shows no lens | Jing2025 QPC (yes); Dawes A (no) | NOT spectra; CFHT imaging | open | high-resolution imaging; higher-S/N resolved spectra |
-| J0728+2607 | Lemon2023 UQP, but the text says "large differences in ... profiles and continua ... likely a physical quasar pair" | Jing2025 QP (yes); Dawes C (no) | NOT spectra; HST F814W: no lens light (empirical PSF, D-064) | ordinary favoured: binary; nothing new to do | none for W2 |
+| J0728+2607 | Lemon2023 UQP, but the text says "large differences in their emission line profiles and continua, thus making it a likely physical quasar pair" | Jing2025 QP (yes); Dawes C (no) | NOT spectra; HST F814W: no lens light (empirical PSF, D-064) | binary favoured; #472 added nothing | a second-epoch resolved spectrum, only if microlensing or variability had to be excluded |
 | J0909−0749 | Lemon2023 UQP. Continua "significantly different"; PS1 shows no lens | Jing2025 **Contaminant** (yes; fibres overlap) | NTT spectra; VLASS 2.6 mJy | open; DESI pair unusable | resolved imaging and spectra at 0.8″ |
-| J1202+0703 | Lemon2023 UQP. "Similar continua and profiles, except for absorption in the CIV line of the fainter trace"; no lens | Jing2025 QPC (yes); Dawes A (no) | NTT spectra; Keck LRIS 2022/2023 in KOA (unpublished) | open | high-resolution imaging (none found, RESULT §4) |
+| J1202+0703 | Lemon2023 UQP. "Similar continua and profiles, except for absorption in the CIV line of the fainter trace"; no lens | Jing2025 QPC (yes); Dawes A (no) | NTT spectra; Keck LRIS 2022/2023 in KOA (no published result found) | open | high-resolution imaging (none found, RESULT §4) |
 | J1428+0500 | Lemon2023 UQP. MgII differs through absorption in the fainter image; LS fits two PSFs; Lemon2019 NIQ | Jing2025 QP (yes, one component another TARGETID); Dawes A (no) | WHT spectra; no HST (D-064, 2026-10-09) | open | high-resolution imaging |
-| J2244−0550 | **Lemon2023 conflict:** §4.2.16 "likely lensed" ("almost identical profiles"; no lens in PS1/LS); table NIQ / UQP | Jing2025 QPC (yes); Dawes A (no) | NTT spectra; **HST 2024 and Keck AO 2020 exist, no published result found** (RESULT §4) | open, lens-leaning in its source paper; misfiled as "rejected" (RESULT §3) | lens light in high-resolution imaging (the data exist) |
+| J2244−0550 | Lemon2023: §4.2.16 "likely lensed" ("almost identical profiles"; no lens in PS1/LS), but table class UQP (NIQ in arXiv v1, the same class) | Jing2025 QPC (yes; fibres 1.07″ apart); Dawes A (no) | NTT spectra; **HST 2024 and Keck AO 2020 exist, no published result found** (RESULT §4) | **disputed** | lens light in high-resolution imaging (the data exist) |
 | J1613+1708 | SQLS DR7 "no lensing object": UH88 I imaging only, **no SQLS spectra** | Jing2025 QPC (yes; fibres overlap) | none beyond DESI | open; that both components are quasars rests on overlapping fibres | resolved spectra; high-resolution imaging |
-| J1511+3357 | SQLS DR5 "binary QSO". Subaru spectra **similar** (line shapes and continua); "binary" because no galaxy is seen to M_I ≈ −19.9 | Jing2025 QPC (yes, one component another TARGETID); Kayo & Oguri 2012 binary (no) | Subaru spectra and I imaging | open: the label is a lens-galaxy non-detection, which a dark lens also gives | high-resolution imaging or a time delay (none found, RESULT §4) |
-| J1552+3009 | SQLS DR5 "binary QSO". Subaru spectra similar, MgII of the fainter image "slightly broader"; no galaxy to M_I ≈ −19.8 | Jing2025 QPC (yes); Kayo & Oguri 2012 binary (no) | Subaru spectra and imaging; UKIRT K | open, as J1511 | high-resolution imaging or a time delay (not checked) |
-| J0740+2926 | Hennawi2006 binary; SQLS "QSO pair" (cites Hennawi). APO spectra too low S/N for a spectral argument; no lens in deeper UH88 images; catalogue χ² 4.5 is a **colour** similarity | Jing2025 QP (yes); Ji2024 lens candidate (DESI EDR + SDSS; no); #472 control D = 1.04 (yes) | UH88 imaging; low-S/N APO spectra | **disputed** | higher-S/N resolved spectra not from DESI; high-resolution imaging |
-| J1035+0752 | Hennawi2006 binary; SQLS "QSO pair, no lensing object" (UH88 I, H). Same basis as J0740; colour χ² 41.9 (dissimilar colours) | **Jing2025 LQC, lens candidate** (yes); #472 control D = 1.35 (yes) | UH88 imaging; low-S/N APO spectra | **disputed** | as J0740 |
-| J2351+1343 | SQLS DR3 "no lensing object" (UH88 i imaging); the companion has no redshift | Jing2025 QPC; SLED QUASAR+STAR (yes) | LS: the companion is very red; Gaia parallax at 3.2σ | ordinary for the SQLS system (quasar + star); the DESI pair is a different pair (§A) | none for the SQLS system |
+| J1511+3357 | SQLS DR5 "binary QSO". Subaru spectra **similar** (line shapes and continua); "binary" because no galaxy is seen to M_I ≈ −19.9 | Jing2025 QPC (yes, one component another TARGETID); Kayo & Oguri 2012 binary (no; adopts SQLS) | Subaru spectra and I imaging | open, leaning binary on weak grounds | high-resolution imaging or a time delay (none found, RESULT §4) |
+| J1552+3009 | SQLS DR5 "binary QSO". Subaru spectra similar, MgII of the fainter image "slightly broader"; no galaxy to M_I ≈ −19.8 | Jing2025 QPC (yes); Kayo & Oguri 2012 binary (no; adopts SQLS) | Subaru spectra and imaging; UKIRT K | open, as J1511 | high-resolution imaging or a time delay (not checked) |
+| J0740+2926 | Hennawi2006 binary; SQLS "QSO pair" (cites Hennawi). APO spectra too low S/N for a spectral argument; no lens in deeper UH88 images; catalogue χ² 4.5 is a **colour** similarity | Jing2025 QP (yes); Ji2024 "lensing candidate", citing Lemon2018 (no; not read); #472 control D = 1.04 (failed test, not evidence) | UH88 imaging; low-S/N APO spectra | **disputed** | higher-S/N resolved spectra not from DESI; high-resolution imaging |
+| J1035+0752 | Hennawi2006 binary; SQLS "QSO pair, no lensing object" (UH88 I, H). Same basis as J0740; colour χ² 41.9 (dissimilar colours) | **Jing2025 LQC, lens candidate** (yes); #472 control D = 1.35 (failed test, not evidence) | UH88 imaging; low-S/N APO spectra | **disputed** (the lens side uses the same DESI data) | as J0740 |
+| J2351+1343 | SQLS DR3 "no lensing object" (UH88 i imaging); the companion has no redshift | SLED QUASAR+STAR (no); Jing2025 QPC for the DESI pair (yes) | LS: the companion is very red; Gaia parallax/error 3.17 | **misidentified:** the SQLS system is ordinary (probably quasar + star); the DESI pair is a different pair, unexplained | for the DESI pair, a resolved spectrum of the faint source |

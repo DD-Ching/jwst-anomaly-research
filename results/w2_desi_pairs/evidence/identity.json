@@ -1,9 +1,10 @@
 {
  "label": "observed metadata (desi_dr1.zpix and ls_dr10.tractor via NOIRLab Data Lab TAP; gaiadr3.gaia_source via ESA Gaia TAP); matches derived",
- "retrieved_utc": "2026-10-23T01:56:27Z",
+ "retrieved_utc": "2026-10-23T02:29:51Z",
  "radii_arcsec": {
   "gaia": 5.0,
   "tractor": 6.0,
+  "zpix_all": 5.0,
   "match": 0.5
  },
  "systems": {
@@ -48,6 +49,48 @@
      "mag_z": "18.915653",
      "ref_cat": "GE",
      "ref_id": "2566502031787388672"
+    }
+   ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39627965927001229",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "22.58585642650309",
+     "mean_fiber_dec": "7.420910387031799",
+     "z": "1.553045671183165",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627965927001231",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "22.58597316704288",
+     "mean_fiber_dec": "7.421491434769444",
+     "z": "1.545394932994935",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-022.5859+07.4212",
+     "Grade": "B",
+     "gmag": "19.81",
+     "rmag": "19.45",
+     "zmag": "19.38",
+     "Type": "Double",
+     "Sep": "2.06"
+    },
+    {
+     "Name": "DESI-022.5859+07.4212",
+     "Grade": "",
+     "gmag": "19.11",
+     "rmag": "18.86",
+     "zmag": "18.91",
+     "Type": "",
+     "Sep": ""
     }
    ],
    "a": {
@@ -110,18 +153,18 @@
    "sep_desi": 1.736831256424386,
    "gaia": [
     {
-     "source_id": "2566660193958573312",
-     "ra": "23.26975344128314",
-     "dec": "8.278790808083492",
-     "phot_g_mean_mag": "20.285513",
-     "parallax_over_error": "-2.1760929"
-    },
-    {
      "source_id": "2566660193958109184",
      "ra": "23.269375973928337",
      "dec": "8.27900360849368",
      "phot_g_mean_mag": "20.471607",
      "parallax_over_error": "-0.39418826"
+    },
+    {
+     "source_id": "2566660193958573312",
+     "ra": "23.26975344128314",
+     "dec": "8.278790808083492",
+     "phot_g_mean_mag": "20.285513",
+     "parallax_over_error": "-2.1760929"
     }
    ],
    "tractor": [
@@ -154,6 +197,48 @@
      "mag_z": "20.34952",
      "ref_cat": "GE",
      "ref_id": "2566660193958573312"
+    }
+   ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39627983916368948",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "23.26933457852294",
+     "mean_fiber_dec": "8.279031398996096",
+     "z": "1.278954091540821",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627983916368957",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "23.26976169372159",
+     "mean_fiber_dec": "8.278798771315866",
+     "z": "1.27932833862106",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-023.2696+08.2789",
+     "Grade": "A",
+     "gmag": "20.82",
+     "rmag": "20.39",
+     "zmag": "20.46",
+     "Type": "Double",
+     "Sep": "1.56"
+    },
+    {
+     "Name": "DESI-023.2696+08.2789",
+     "Grade": "",
+     "gmag": "20.76",
+     "rmag": "20.29",
+     "zmag": "20.35",
+     "Type": "",
+     "Sep": ""
     }
    ],
    "a": {
@@ -262,6 +347,48 @@
      "ref_id": "871794729486078336"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39628394240938051",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "112.1156414068888",
+     "mean_fiber_dec": "26.11704113009977",
+     "z": "1.025851217444284",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39628394240938063",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "112.1161354320573",
+     "mean_fiber_dec": "26.11740796725863",
+     "z": "1.025901970663972",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-112.1159+26.1172",
+     "Grade": "C",
+     "gmag": "19.05",
+     "rmag": "18.88",
+     "zmag": "18.79",
+     "Type": "Double",
+     "Sep": "2.31"
+    },
+    {
+     "Name": "DESI-112.1159+26.1172",
+     "Grade": "",
+     "gmag": "19.86",
+     "rmag": "19.70",
+     "zmag": "19.79",
+     "Type": "",
+     "Sep": ""
+    }
+   ],
    "a": {
     "targetid": "39628394240938051",
     "zpix": [
@@ -322,18 +449,18 @@
    "sep_desi": 0.8434569466661951,
    "gaia": [
     {
-     "source_id": "5744279378398163840",
-     "ra": "137.49446644611717",
-     "dec": "-7.817851774800734",
-     "phot_g_mean_mag": "19.052053",
-     "parallax_over_error": "0.59096056"
-    },
-    {
      "source_id": "5744279374103317632",
      "ra": "137.4946928473835",
      "dec": "-7.817878928809783",
      "phot_g_mean_mag": "18.249142",
      "parallax_over_error": "2.0100825"
+    },
+    {
+     "source_id": "5744279378398163840",
+     "ra": "137.49446644611717",
+     "dec": "-7.817851774800734",
+     "phot_g_mean_mag": "19.052053",
+     "parallax_over_error": "0.59096056"
     }
    ],
    "tractor": [
@@ -358,6 +485,29 @@
      "ref_id": "5744279374103317632"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39627600242411562",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "137.4947361505929",
+     "mean_fiber_dec": "-7.817898632237106",
+     "z": "1.07743740616102",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627600242411558",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "137.4945098106812",
+     "mean_fiber_dec": "-7.817830728446276",
+     "z": "1.07895187446774",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [],
    "a": {
     "targetid": "39627600242411562",
     "zpix": [
@@ -454,6 +604,48 @@
      "ref_id": "3898742441091558016"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39627956565313598",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "180.6181508717106",
+     "mean_fiber_dec": "7.057028183630854",
+     "z": "2.191231101252569",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627956565313594",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "180.617964023465",
+     "mean_fiber_dec": "7.057309188461314",
+     "z": "2.187087622353028",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-180.6181+07.0572",
+     "Grade": "A",
+     "gmag": "20.64",
+     "rmag": "20.54",
+     "zmag": "20.28",
+     "Type": "Double",
+     "Sep": "1.22"
+    },
+    {
+     "Name": "DESI-180.6181+07.0572",
+     "Grade": "",
+     "gmag": "19.87",
+     "rmag": "19.83",
+     "zmag": "19.46",
+     "Type": "",
+     "Sep": ""
+    }
+   ],
    "a": {
     "targetid": "39627956565313598",
     "zpix": [
@@ -548,6 +740,58 @@
      "mag_z": "19.95588",
      "ref_cat": "GE",
      "ref_id": "3669139777281314432"
+    }
+   ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "2781075411566612",
+     "survey": "main",
+     "program": "bright",
+     "mean_fiber_ra": "217.231011605658",
+     "mean_fiber_dec": "5.005523519215383",
+     "z": "1.37486172414636",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627909081598677",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "217.2307695526192",
+     "mean_fiber_dec": "5.006086328659032",
+     "z": "1.376438800749883",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627909081598681",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "217.2310166067855",
+     "mean_fiber_dec": "5.005491420807814",
+     "z": "1.374733891513298",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-217.2309+05.0058",
+     "Grade": "A",
+     "gmag": "20.03",
+     "rmag": "19.80",
+     "zmag": "19.95",
+     "Type": "Double",
+     "Sep": "2.23"
+    },
+    {
+     "Name": "DESI-217.2309+05.0058",
+     "Grade": "",
+     "gmag": "19.86",
+     "rmag": "19.71",
+     "zmag": "19.88",
+     "Type": "",
+     "Sep": ""
     }
    ],
    "a": {
@@ -656,6 +900,48 @@
      "ref_id": "0"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39627651668773421",
+     "survey": "main",
+     "program": "bright",
+     "mean_fiber_ra": "341.0473617788773",
+     "mean_fiber_dec": "-5.847315028079489",
+     "z": "2.843811618157589",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627651668773415",
+     "survey": "main",
+     "program": "bright",
+     "mean_fiber_ra": "341.0472094957208",
+     "mean_fiber_dec": "-5.847060277985493",
+     "z": "2.842976087993399",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-341.0473-05.8472",
+     "Grade": "A",
+     "gmag": "18.68",
+     "rmag": "18.34",
+     "zmag": "18.15",
+     "Type": "Double",
+     "Sep": "1.02"
+    },
+    {
+     "Name": "DESI-341.0473-05.8472",
+     "Grade": "",
+     "gmag": "18.28",
+     "rmag": "17.94",
+     "zmag": "17.82",
+     "Type": "",
+     "Sep": ""
+    }
+   ],
    "a": {
     "targetid": "39627651668773421",
     "zpix": [
@@ -750,6 +1036,48 @@
      "mag_z": "19.490583",
      "ref_cat": "GE",
      "ref_id": "1198946481527136384"
+    }
+   ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39628199625230574",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "243.3335146920418",
+     "mean_fiber_dec": "17.14415870802488",
+     "z": "1.544552338218696",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39628199625230565",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "243.333322164346",
+     "mean_fiber_dec": "17.14429514665355",
+     "z": "1.547474291547153",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-243.3334+17.1442",
+     "Grade": "A",
+     "gmag": "20.19",
+     "rmag": "19.69",
+     "zmag": "19.48",
+     "Type": "Double",
+     "Sep": "0.78"
+    },
+    {
+     "Name": "DESI-243.3334+17.1442",
+     "Grade": "",
+     "gmag": "19.54",
+     "rmag": "19.45",
+     "zmag": "19.61",
+     "Type": "",
+     "Sep": ""
     }
    ],
    "a": {
@@ -848,6 +1176,58 @@
      "ref_id": "1290414475883055872"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39632961548586205",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "227.7910851606139",
+     "mean_fiber_dec": "33.95043535150248",
+     "z": "0.7995918971735982",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "2305843018827050187",
+     "survey": "main",
+     "program": "backup",
+     "mean_fiber_ra": "227.7910512393493",
+     "mean_fiber_dec": "33.95044507210386",
+     "z": "0.799625463337125",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39632961548586204",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "227.7909905478907",
+     "mean_fiber_dec": "33.95080555637585",
+     "z": "0.7996676205838863",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-227.7910+33.9506",
+     "Grade": "A",
+     "gmag": "20.39",
+     "rmag": "19.84",
+     "zmag": "19.56",
+     "Type": "Double",
+     "Sep": "1.09"
+    },
+    {
+     "Name": "DESI-227.7910+33.9506",
+     "Grade": "",
+     "gmag": "19.06",
+     "rmag": "18.82",
+     "zmag": "18.86",
+     "Type": "",
+     "Sep": ""
+    }
+   ],
    "a": {
     "targetid": "2305843018827050187",
     "zpix": [
@@ -944,6 +1324,48 @@
      "ref_id": "1320920735233195392"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39628486805029505",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "238.1067078276099",
+     "mean_fiber_dec": "30.15088458012303",
+     "z": "0.7519064610493785",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39628486805029507",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "238.1067415220607",
+     "mean_fiber_dec": "30.15053428581507",
+     "z": "0.7512902047585072",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-238.1067+30.1507",
+     "Grade": "A",
+     "gmag": "19.18",
+     "rmag": "19.08",
+     "zmag": "18.85",
+     "Type": "Double",
+     "Sep": "1.25"
+    },
+    {
+     "Name": "DESI-238.1067+30.1507",
+     "Grade": "",
+     "gmag": "19.52",
+     "rmag": "19.30",
+     "zmag": "19.33",
+     "Type": "",
+     "Sep": ""
+    }
+   ],
    "a": {
     "targetid": "39628486805029505",
     "zpix": [
@@ -1038,6 +1460,48 @@
      "mag_z": "18.293232",
      "ref_cat": "GE",
      "ref_id": "878723302007625344"
+    }
+   ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39628469268646194",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "115.0560154059514",
+     "mean_fiber_dec": "29.44677144427852",
+     "z": "0.9800119786653981",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39628469268646191",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "115.0559552000698",
+     "mean_fiber_dec": "29.44602978331701",
+     "z": "0.9778516954162176",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [
+    {
+     "Name": "DESI-115.0560+29.4464",
+     "Grade": "C",
+     "gmag": "18.41",
+     "rmag": "18.22",
+     "zmag": "18.29",
+     "Type": "Double",
+     "Sep": "2.67"
+    },
+    {
+     "Name": "DESI-115.0560+29.4464",
+     "Grade": "",
+     "gmag": "19.75",
+     "rmag": "19.61",
+     "zmag": "19.58",
+     "Type": "",
+     "Sep": ""
     }
    ],
    "a": {
@@ -1146,6 +1610,29 @@
      "ref_id": "3862931828411652224"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39627980183437464",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "158.8300565288484",
+     "mean_fiber_dec": "7.882378620407103",
+     "z": "1.220157773717791",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39627980183437471",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "158.8306672120247",
+     "mean_fiber_dec": "7.882807395995195",
+     "z": "1.220159789756833",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [],
    "a": {
     "targetid": "39627980183437464",
     "zpix": [
@@ -1252,6 +1739,29 @@
      "ref_id": "0"
     }
    ],
+   "zpix_5arcsec": [
+    {
+     "targetid": "39628119941842459",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "357.7866377041582",
+     "mean_fiber_dec": "13.72301339784319",
+     "z": "1.224620474310898",
+     "zwarn": "0",
+     "spectype": "QSO"
+    },
+    {
+     "targetid": "39628119941842445",
+     "survey": "main",
+     "program": "dark",
+     "mean_fiber_ra": "357.7860534762075",
+     "mean_fiber_dec": "13.72295942990281",
+     "z": "1.22269514544684",
+     "zwarn": "0",
+     "spectype": "QSO"
+    }
+   ],
+   "dawes2023": [],
    "a": {
     "targetid": "39628119941842459",
     "zpix": [

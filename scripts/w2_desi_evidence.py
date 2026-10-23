@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import time
 from pathlib import Path
@@ -34,6 +35,8 @@ GAIA_TAP = "https://gea.esac.esa.int/tap-server/tap/sync"
 GAIA_R, LS_R = 5.0, 6.0  # search radii around the system position (arcsec)
 MATCH_R = 0.5  # a DESI fibre position counts as one Gaia / Tractor source within this (arcsec)
 CLOSE = 2.0  # #472 PLAN section 4 close-pair list (fibres are 1.5")
+ZPIX_R = 5.0  # every DESI DR1 redshift row within this of the system position (arcsec)
+DAWES = "J/ApJS/269/61/table2"
 
 
 def tap_csv(url, query, retries=3):
@@ -70,6 +73,32 @@ def nearest(ra, dec, rows, rakey="ra", deckey="dec"):
     return best
 
 
+def _finite(x):
+    try:
+        return math.isfinite(float(x))
+    except ValueError:
+        return False
+
+
+def dawes(ra, dec):
+    """Dawes et al. 2023 candidate rows (VizieR J/ApJS/269/61/table2) within 3" (grade etc.)."""
+    r = requests.get(
+        "https://vizier.cds.unistra.fr/viz-bin/asu-tsv",
+        params={"-source": DAWES, "-c": f"{ra} {dec}", "-c.rs": "3", "-out.all": ""},
+        timeout=120,
+    )
+    r.raise_for_status()
+    lines = [ln for ln in r.text.splitlines() if ln and not ln.startswith("#")]
+    if len(lines) < 3:
+        return []
+    hdr = lines[0].split("\t")
+    keep = ("Name", "Grade", "Type", "Sep", "gmag", "rmag", "zmag")
+    return [
+        {k: v.strip() for k, v in zip(hdr, ln.split("\t"), strict=False) if k in keep}
+        for ln in lines[3:]
+    ]
+
+
 def cmd_identity(args):
     tg = targets()
     ids = [s[k] for s in tg for k in ("targetid_a", "targetid_b")]
@@ -98,11 +127,17 @@ def cmd_identity(args):
         "SELECT ra, dec, type, mag_g, mag_r, mag_z, ref_cat, ref_id FROM ls_dr10.tractor "
         f"WHERE brick_primary = 1 AND ({boxes})",
     )
+    zboxes = " OR ".join(c for s in tg for c in wd._clauses((s["ra"], s["dec"], ZPIX_R)))
+    zall = tap_csv(  # every DR1 redshift row near the system: any spectype, zwarn, programme
+        wd.TAP,
+        "SELECT targetid, survey, program, mean_fiber_ra, mean_fiber_dec, z, zwarn, spectype "
+        f"FROM desi_dr1.zpix WHERE {zboxes}",
+    )
     out = {
         "label": "observed metadata (desi_dr1.zpix and ls_dr10.tractor via NOIRLab Data Lab TAP; "
         "gaiadr3.gaia_source via ESA Gaia TAP); matches derived",
         "retrieved_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "radii_arcsec": {"gaia": GAIA_R, "tractor": LS_R, "match": MATCH_R},
+        "radii_arcsec": {"gaia": GAIA_R, "tractor": LS_R, "zpix_all": ZPIX_R, "match": MATCH_R},
         "systems": {},
     }
     for s in tg:
@@ -122,6 +157,15 @@ def cmd_identity(args):
             for r in g
         ]
         rec["tractor"] = t
+        rec["zpix_5arcsec"] = [
+            r
+            for r in zall
+            if wd.sep_arcsec(
+                s["ra"], s["dec"], float(r["mean_fiber_ra"]), float(r["mean_fiber_dec"])
+            )
+            <= ZPIX_R
+        ]
+        rec["dawes2023"] = dawes(s["ra"], s["dec"])
         for side in ("a", "b"):
             tid = s[f"targetid_{side}"]
             zr = [r for r in zpix if r["targetid"] == tid]
@@ -164,7 +208,7 @@ def flags(rec):
         if b["tractor_nearest"] and b["tractor_nearest"]["d"] <= MATCH_R
         else None
     )
-    mags = [float(x["mag_g"]) for x in (ta, tb) if x and x["mag_g"] not in ("", "nan")]
+    mags = [float(x["mag_g"]) for x in (ta, tb) if x and _finite(x["mag_g"])]
     return {
         "gaia_a": ga["source_id"] if ga else None,
         "gaia_b": gb["source_id"] if gb else None,
@@ -221,6 +265,41 @@ def catalogue_rows(name, rec):
     return rows
 
 
+def fibre_to_catalogue(rec, cat):
+    """Distance of each DESI fibre to the nearest catalogued component position (SQLS rows and
+    Hennawi components have one per image); Lemon gives one system position, compared with the
+    fibre midpoint."""
+    fib = [
+        (float(rec[s]["zpix"][0]["mean_fiber_ra"]), float(rec[s]["zpix"][0]["mean_fiber_dec"]))
+        for s in ("a", "b")
+    ]
+    comps = []
+    for key, rows in cat.items():
+        for r in rows:
+            if key.startswith("SQLS"):
+                comps.append(niq.sdss_name_radec(r["SDSS"]))
+            elif key == "Hennawi2006":
+                for c in ("1", "2"):
+                    comps.append(
+                        niq.sdss_name_radec(
+                            "J" + r[f"RA{c}"].replace(" ", "") + r[f"DE{c}"].replace(" ", "")
+                        )
+                    )
+    out = {}
+    if comps:
+        for side, (ra, dec) in zip(("a", "b"), fib, strict=True):
+            out[f"fibre_{side}_to_catalogued_component"] = round(
+                min(wd.sep_arcsec(ra, dec, c[0], c[1]) for c in comps), 2
+            )
+    if "Lemon2023" in cat:
+        r = cat["Lemon2023"][0]
+        mid_ra, mid_dec = (fib[0][0] + fib[1][0]) / 2, (fib[0][1] + fib[1][1]) / 2
+        out["fibre_midpoint_to_lemon_position"] = round(
+            wd.sep_arcsec(mid_ra, mid_dec, float(r["RAJ2000"]), float(r["DEJ2000"])), 2
+        )
+    return out
+
+
 def cmd_build(args):
     ident = json.loads((OUT / "identity.json").read_text())
     lit = json.loads((OUT / "literature.json").read_text())
@@ -230,6 +309,7 @@ def cmd_build(args):
         "systems": {},
     }
     for name, rec in ident["systems"].items():
+        cat = catalogue_rows(name, rec)
         out["systems"][name] = {
             "position": {
                 "ra": rec["ra"],
@@ -244,8 +324,8 @@ def cmd_build(args):
                 }
                 for s in ("a", "b")
             },
-            "identity": flags(rec),
-            "catalogue": catalogue_rows(name, rec),
+            "identity": {**flags(rec), **fibre_to_catalogue(rec, cat)},
+            "catalogue": cat,
             "literature": lit["systems"].get(name),
         }
     missing = sorted(set(ident["systems"]) - set(lit["systems"]))
@@ -313,6 +393,8 @@ def cmd_archives(args):
         "proposal_id",
         "dataRights",
         "target_name",
+        "proposal_pi",
+        "obs_title",
     )
     for name in args.names:
         rec = ident[name]

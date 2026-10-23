@@ -45,7 +45,8 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 0.7,
     "sep_desi_minus_cat": 0.07,
-    "close_le_2arcsec": false
+    "close_le_2arcsec": false,
+    "fibre_midpoint_to_lemon_position": 0.05
    },
    "catalogue": {
     "Lemon2023": [
@@ -93,7 +94,7 @@
      {
       "ref": "Jing2025",
       "class": "QP (dv 899.7 km/s)",
-      "basis": "visual inspection of LS DR9 images, model/residual images and DESI DR1 spectra",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
       "same_desi_dr1": true
      },
      {
@@ -109,7 +110,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none detected (HST and ground)"
     },
-    "reading": "ordinary explanation favoured: projected or dual quasar (two independent authors), with a lens not excluded by either",
+    "reading": "projected / dual favoured by two authors (Lemon2023 absorption reading; Chen2026 with the same DESI spectra), both leaving a lens open; HST excludes a typical ordinary lens galaxy but does not itself support a binary",
     "missing": "an independent velocity or profile difference that absorption cannot explain, e.g. higher-resolution resolved spectra of both components, or two-epoch flux ratios"
    }
   },
@@ -157,7 +158,8 @@
     "n_tractor_6arcsec": 3,
     "dg_tractor": 0.07,
     "sep_desi_minus_cat": 0.19,
-    "close_le_2arcsec": true
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.45
    },
    "catalogue": {
     "Lemon2023": [
@@ -196,7 +198,7 @@
      {
       "ref": "Jing2025",
       "class": "QPC (dv 49.2 km/s)",
-      "basis": "visual; QPC = separation < 2\" with two components and no apparent foreground lens",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
       "same_desi_dr1": true
      },
      {
@@ -212,7 +214,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none in ground-based imaging"
     },
-    "reading": "open (UQP); line-width differences hint at two quasars but microlensing can change widths",
+    "reading": "open: Lemon2023 small line-width differences, Jing2025 QPC (chromatic DESI flux ratio, fibres 1.74\" apart); deep CFHT shows no lens",
     "missing": "high-resolution imaging for lens light; higher-S/N resolved spectra"
    }
   },
@@ -260,7 +262,8 @@
     "n_tractor_6arcsec": 3,
     "dg_tractor": 0.81,
     "sep_desi_minus_cat": -0.08,
-    "close_le_2arcsec": false
+    "close_le_2arcsec": false,
+    "fibre_midpoint_to_lemon_position": 0.45
    },
    "catalogue": {
     "Lemon2023": [
@@ -302,7 +305,7 @@
      {
       "ref": "Jing2025",
       "class": "QP (dv 7.5 km/s)",
-      "basis": "visual",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
       "same_desi_dr1": true
      },
      {
@@ -318,8 +321,8 @@
      "time_delay": "not found",
      "lens_galaxy": "none detected (HST)"
     },
-    "reading": "ordinary explanation favoured: binary quasar (different spectra in an independent data set, and no lens in HST); this was already settled as far as public data go, so this round adds nothing for it",
-    "missing": "nothing that is needed for the W2 question; a lens would have to explain both the spectral difference and the missing deflector"
+    "reading": "binary favoured: Lemon2023's NOT spectra differ strongly; HST excludes a typical ordinary lens galaxy (repo_HST) but does not itself support a binary; #472 added nothing here",
+    "missing": "nothing needed for W2 unless microlensing / variability could mimic the NOT differences; a second-epoch resolved spectrum would test that"
    }
   },
   "J0909-0749": {
@@ -366,7 +369,8 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 0.61,
     "sep_desi_minus_cat": 0.03,
-    "close_le_2arcsec": true
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.15
    },
    "catalogue": {
     "Lemon2023": [
@@ -473,7 +477,8 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 0.77,
     "sep_desi_minus_cat": 0.0,
-    "close_le_2arcsec": true
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.52
    },
    "catalogue": {
     "Lemon2023": [
@@ -514,7 +519,7 @@
      {
       "ref": "Jing2025",
       "class": "QPC (dv 389.5 km/s)",
-      "basis": "visual",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
       "same_desi_dr1": true
      },
      {
@@ -530,7 +535,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none in ground-based imaging"
     },
-    "reading": "open; spectra reported similar apart from one absorber, no lens seen",
+    "reading": "open: Lemon2023 similar spectra (one absorber), Jing2025 QPC (chromatic DESI flux ratio, fibres 1.21\" apart); no lens seen",
     "missing": "high-resolution imaging for lens light: none found in MAST, ESO or KOA (archive_check)",
     "archive_check": {
      "new_public_data_found": [
@@ -586,7 +591,8 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 0.19,
     "sep_desi_minus_cat": -0.03,
-    "close_le_2arcsec": false
+    "close_le_2arcsec": false,
+    "fibre_midpoint_to_lemon_position": 0.04
    },
    "catalogue": {
     "Lemon2023": [
@@ -628,7 +634,7 @@
      {
       "ref": "Jing2025",
       "class": "QP (dv 215.2 km/s)",
-      "basis": "visual",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
       "same_desi_dr1": true,
       "limits": "same sources, but for one component Jing2025 lists TARGETID 39627909081598681 (dark programme) where #472 used 2781075411566612 (bright programme), 0.06\" apart: possibly a different DESI coadd of that component"
      },
@@ -693,7 +699,8 @@
     "n_tractor_6arcsec": 3,
     "dg_tractor": 0.46,
     "sep_desi_minus_cat": 0.05,
-    "close_le_2arcsec": true
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.32
    },
    "catalogue": {
     "Lemon2023": [
@@ -728,7 +735,7 @@
     ],
     "catalogue": {
      "source": "Lemon2023",
-     "class": "conflict inside the source paper: discussed in section 4.2 'Likely Lensed Quasars' (subsection 4.2.16), but table 1 gives NIQ (arXiv v1) / UQP (VizieR, journal electronic version)",
+     "class": "conflict inside the source paper: discussed in section 4.2 'Likely Lensed Quasars' (subsection 4.2.16; the abstract counts 17 likely lenses), but table 1 gives the UQP class (named NIQ in arXiv v1 and UQP in VizieR; Lemon2023 section 3.3: UQP is 'akin to Nearly Identical Quasars (NIQs)')",
      "basis": "NTT-EFOSC2, section 4.2.16: 'both components to be quasars at z=2.84 with almost identical profiles. However, no lens residuals are seen in the Pan-STARRS or Legacy Survey PSF-subtracted images.' Section 4.2 intro: these systems 'should be prioritised for follow-up high-resolution imaging'",
      "limits": "the table class does not separate likely lenses from UQPs: 13 of the 17 section 4.2 systems carry VizieR class UQP"
     },
@@ -736,7 +743,7 @@
      {
       "ref": "Jing2025",
       "class": "QPC (dv 65.2 km/s)",
-      "basis": "visual",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
       "same_desi_dr1": true
      },
      {
@@ -752,7 +759,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none in ground-based imaging"
     },
-    "reading": "open, with the source paper itself leaning to a lens; it is not a 'rejected' pair in the paper's own text",
+    "reading": "disputed: likely lens in its source paper (independent NTT spectra 'almost identical'), quasar-pair candidate in Jing2025 (DESI flux ratio varying with wavelength, from fibres 1.07\" apart, where Jing2025 expects severe spillover); a chromatic flux ratio can also come from extinction or microlensing in a lens",
     "missing": "high-resolution imaging for lens light, which is the step Lemon2023 asks for",
     "archive_check": {
      "new_public_data_found": [
@@ -810,7 +817,9 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 0.56,
     "sep_desi_minus_cat": 0.04,
-    "close_le_2arcsec": true
+    "close_le_2arcsec": true,
+    "fibre_a_to_catalogued_component": 0.53,
+    "fibre_b_to_catalogued_component": 0.32
    },
    "catalogue": {
     "SQLS-DR7 table3": [
@@ -840,7 +849,7 @@
      {
       "ref": "Jing2025",
       "class": "QPC (dv 344.1 km/s); SLED: lensed-quasar candidate",
-      "basis": "visual",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
       "limits": "at 0.82\" the two 1.5\" DESI fibres overlap",
       "same_desi_dr1": true
      }
@@ -899,7 +908,9 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 1.33,
     "sep_desi_minus_cat": 0.21,
-    "close_le_2arcsec": true
+    "close_le_2arcsec": true,
+    "fibre_a_to_catalogued_component": 0.1,
+    "fibre_b_to_catalogued_component": 1.21
    },
    "catalogue": {
     "SQLS-DR5 table2": [
@@ -933,7 +944,7 @@
      {
       "ref": "Jing2025",
       "class": "QPC (dv 12.6 km/s); SLED: quasar pair",
-      "basis": "visual",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
       "same_desi_dr1": true,
       "limits": "same sources, but for one component Jing2025 lists TARGETID 39632961548586205 (dark programme) where #472 used 2305843018827050187 (backup programme), 0.06\" apart: possibly a different DESI coadd of that component"
      },
@@ -950,7 +961,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none to M_I ~ -19.9 (Subaru); a residual attributed to host galaxies"
     },
-    "reading": "open; the spectra are lens-like and the 'binary' label is a lens-galaxy non-detection, which is exactly what a dark deflector would also give",
+    "reading": "open, leaning binary in two catalogues on weak grounds: SQLS 'binary' is a lens-galaxy non-detection with similar Subaru spectra; Jing2025 QPC rests on a chromatic DESI flux ratio from fibres closer than 1.5\"",
     "missing": "high-resolution imaging (lens light vs hosts) or a time delay",
     "archive_check": {
      "new_public_data_found": [],
@@ -1004,7 +1015,9 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 0.35,
     "sep_desi_minus_cat": 0.02,
-    "close_le_2arcsec": true
+    "close_le_2arcsec": true,
+    "fibre_a_to_catalogued_component": 1.19,
+    "fibre_b_to_catalogued_component": 0.08
    },
    "catalogue": {
     "SQLS-DR5 table2": [
@@ -1038,7 +1051,7 @@
      {
       "ref": "Jing2025",
       "class": "QPC (dv 105.5 km/s); SLED: quasar pair",
-      "basis": "visual",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
       "same_desi_dr1": true
      },
      {
@@ -1054,7 +1067,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none to M_I ~ -19.8"
     },
-    "reading": "open; same situation as J1511, with one mild line-width difference",
+    "reading": "open, leaning binary in two catalogues on weak grounds: SQLS 'binary' is a lens-galaxy non-detection with similar Subaru spectra; Jing2025 QPC rests on a chromatic DESI flux ratio from fibres closer than 1.5\"",
     "missing": "high-resolution imaging or a time delay (not checked in archives this round)"
    }
   },
@@ -1102,7 +1115,9 @@
     "n_tractor_6arcsec": 2,
     "dg_tractor": 1.36,
     "sep_desi_minus_cat": 0.04,
-    "close_le_2arcsec": false
+    "close_le_2arcsec": false,
+    "fibre_a_to_catalogued_component": 0.05,
+    "fibre_b_to_catalogued_component": 0.01
    },
    "catalogue": {
     "SQLS-DR3 table3": [
@@ -1174,19 +1189,19 @@
      {
       "ref": "Jing2025",
       "class": "QP (dv 327.3 km/s); match: BigMAC dual-AGN candidate",
-      "basis": "visual",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
       "same_desi_dr1": true
      },
      {
       "ref": "Ji2024",
       "class": "lensed-quasar candidate (appendix table)",
-      "basis": "matching broad-line profiles",
-      "limits": "DESI EDR + SDSS DR17, not the DR1 coadds; overlap with DR1 not checked",
+      "basis": "appendix table lists it as 'lensing candidate' with reference [6] = Lemon et al. 2018 (Lemon2018, not read); Ji2024 itself uses DESI EDR + SDSS DR17",
+      "limits": "the lens-candidate class originates in Lemon2018, independent of DESI",
       "same_desi_dr1": false
      },
      {
       "ref": "#472 (this repository)",
-      "class": "control role: D = 1.04 (no difference above T)",
+      "class": "control role, failed test (gate not validated; not evidence): D = 1.04 (no difference above T)",
       "basis": "same DESI DR1 TARGETIDs",
       "same_desi_dr1": true
      }
@@ -1197,7 +1212,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none in UH88 imaging"
     },
-    "reading": "disputed: catalogued binary on lens-galaxy non-detection; a later paper lists it as a lens candidate",
+    "reading": "disputed: catalogued binary on a lens-galaxy non-detection with low-S/N spectra; Ji2024 lists it as a lensing candidate, citing Lemon2018 (a DESI-independent origin, not read)",
     "missing": "higher-S/N resolved spectra independent of DESI, or high-resolution imaging (not checked in archives this round)"
    }
   },
@@ -1245,7 +1260,9 @@
     "n_tractor_6arcsec": 3,
     "dg_tractor": 1.17,
     "sep_desi_minus_cat": 0.01,
-    "close_le_2arcsec": false
+    "close_le_2arcsec": false,
+    "fibre_a_to_catalogued_component": 0.28,
+    "fibre_b_to_catalogued_component": 0.11
    },
    "catalogue": {
     "SQLS-DR3 table3": [
@@ -1323,7 +1340,7 @@
      },
      {
       "ref": "#472 (this repository)",
-      "class": "control role: D = 1.35 (no difference above T)",
+      "class": "control role, failed test (gate not validated; not evidence): D = 1.35 (no difference above T)",
       "basis": "same DESI DR1 TARGETIDs",
       "same_desi_dr1": true
      }
@@ -1334,7 +1351,7 @@
      "time_delay": "not found",
      "lens_galaxy": "none in UH88 imaging; LS DR10 has a faint red point source 2.0-2.1\" from both components, off the line joining them (identity.json; nature unknown)"
     },
-    "reading": "disputed: catalogued binary (non-detection) vs a lens candidate from the same DESI data we hold",
+    "reading": "disputed: catalogued binary on a lens-galaxy non-detection with low-S/N spectra; Jing2025 lists it as a lensed-quasar candidate from the same DESI data #472 holds (not independent)",
     "missing": "resolved spectra independent of DESI, or high-resolution imaging (not checked in archives this round)"
    }
   },
@@ -1382,7 +1399,9 @@
     "n_tractor_6arcsec": 3,
     "dg_tractor": 3.87,
     "sep_desi_minus_cat": 0.19,
-    "close_le_2arcsec": false
+    "close_le_2arcsec": false,
+    "fibre_a_to_catalogued_component": 1.95,
+    "fibre_b_to_catalogued_component": 0.12
    },
    "catalogue": {
     "SQLS-DR3 table3": [
@@ -1422,19 +1441,25 @@
     "later": [
      {
       "ref": "Jing2025",
-      "class": "QPC (dv 259.6 km/s); SLED: QUASAR+STAR",
-      "basis": "visual",
+      "class": "QPC (dv 259.6 km/s)",
+      "basis": "visual (QPC definition, see sources)",
       "same_desi_dr1": true
+     },
+     {
+      "ref": "SLED (via Jing2025 match_type)",
+      "class": "QUASAR+STAR",
+      "basis": "literature compilation",
+      "same_desi_dr1": false
      }
     ],
     "independent": {
-     "imaging": "UH88 WFGS2 i (SQLS); LS DR10: the SQLS companion is very red (g 22.72, z 18.74) with a Gaia DR3 parallax at 3.2 sigma (identity.json)",
+     "imaging": "UH88 WFGS2 i (SQLS); LS DR10: the SQLS companion is very red (g 22.72, z 18.75) with a Gaia DR3 parallax/error of 3.17 (identity.json); no DESI DR1 redshift row on it (identity.json zpix_5arcsec)",
      "resolved_spectra": "none for the SQLS companion",
      "time_delay": "not applicable",
      "lens_galaxy": "none in UH88 imaging"
     },
-    "reading": "identity mismatch: the SQLS system is a quasar plus (per SLED, red colours and a 3.2-sigma parallax) a star; the DESI pair is the same quasar plus a different faint source (g 23.45, 2.05\" away) whose spectrum may be fibre crosstalk from the quasar 3.9 mag brighter. The rejected SQLS system has an ordinary explanation; the DESI pair is not that system",
-    "missing": "nothing for the SQLS system; for the DESI pair, a deblended spectrum of the faint source"
+    "reading": "misidentified: the catalogued SQLS system is a quasar plus (per SLED, red colours and a 3.2-sigma parallax) probably a star, an ordinary explanation; the DESI pair is the quasar plus a different faint source (g 23.45, QSO at z 1.2246, zwarn 0), about 2\" away (fibres 2.05\" apart; fibre a 1.94\" from the quasar's Gaia position), which may be a faint companion or fibre crosstalk from the quasar 3.9 mag brighter: unexplained, not tested here",
+    "missing": "nothing for the SQLS system; for the DESI pair, a resolved spectrum of the faint source"
    }
   }
  }

@@ -19,6 +19,8 @@
   - 9 / 9 is the G2 pass count of that rule on the lenses. It is not an accuracy for identifying one source.
   - The quoted labels "one source" / "consistent with one source" below are PLAN §4's names for D ≤ T, kept for the
     record; read them as "no difference above T".
+  - Of the "13 rejected pairs" below, J2351+1343's DESI pair is not the catalogued pair (evidence audit §1). The count
+    is kept as computed.
 
 ## 1. Data
 - **Sample** (`pairs.json`, PLAN §2): 106 catalogued lenses and 123 rejected pairs (D-064 pinned inputs), plus 27

@@ -3967,7 +3967,7 @@ spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ t
 **Addendum (2026-10-23, evidence audit, `results/w2_desi_pairs/evidence/RESULT.md`).**
 - **Decision:** stop the DESI spectral-classifier line for the rejected pairs. Do not tune a statistic on the same
   DESI DR1 pairs as a default next step.
-  - Jing et al. (arXiv:2505.03103) have already classified all 13 pairs by eye from these spectra, and Chen et al.
+  - Jing et al. (arXiv:2505.03103) have already classified all 13 pairs visually from images and these spectra, and Chen et al.
     (arXiv:2607.00093) analysed J0130+0725.
   - A new statistic on them adds no observation.
 - **Sample caveats** (recorded; the D-064 sample is not re-run):
@@ -3976,7 +3976,9 @@ spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ t
   - The "binary" labels of J0740+2926 and J1035+0752 (Hennawi et al. 2006, low-S/N spectra) and of J1511+3357 and
     J1552+3009 (SQLS IV, similar Subaru spectra) rest on not seeing a lens galaxy. They are not evidence against a
     dark deflector. SQLS IV §4.1: its process "would reject 'dark lenses'".
-  - J2351+1343's DESI pair is not the catalogued pair (SLED: QUASAR+STAR).
+  - J2351+1343's DESI pair is not the catalogued pair (SLED: QUASAR+STAR), so #472's 13 holds 12 catalogued pairs.
+  - Dropping the two disputed Hennawi controls (J0740, J1035) leaves the #472 gate at 1 / 5 binaries flagged, still a
+    failure.
 - **Rejected:**
   - re-running #472's statistic or a variant on the 11 unread pairs;
   - classifying from catalogue strings without their basis.
