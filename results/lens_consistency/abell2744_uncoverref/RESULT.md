@@ -81,3 +81,33 @@ session; a cutout reader would be lighter). The README's flux definition (`f_f20
 
 **Next.** Stage 2b, its own frozen plan: predicted / control tables with the WLS source over the GO 2561 tiles; gate
 C2 with the shared-pair rule; local noise from GO 2561 byte-range cutouts (decision in `PLAN_2a.md`).
+
+## Stage 2b: extra-image test with the WLS source, DR3 SUPER reference and local noise
+
+Plan: `PLAN_2b.md` (frozen and pushed with its tested functions before the run). Numbers: `summary.json` `stage2b`;
+tables `predicted_abell2744.ecsv`, `control_abell2744.ecsv` (frozen), `without_contain/`, `frame/`. Run time 21 min.
+
+- **Frame (rule 1, reported, not used):** 172 spectroscopic images, WLS source; image classes 161 observed, 20
+  candidate, 6 missing, 10 demagnified, 5 no_flux_ref, 1 faint; 9 images unpredicted. Pipeline forced test on GO 2561
+  `o001_t003` F200W: gate C 60 / 60 testable recovered or confused; no pipeline flag.
+- **Gate C2 (rule 5, shared pairs) passes:** all controls 30 / 34 = 0.882, arc-referenced 11 / 13 = 0.846 (≥ 8, ≥ 0.80,
+  ≥ 3). Five shared-pair groups merged (sizes 4, 4, 4, 3, 2). Plain `gate_c2` also passes (arc-referenced 18 / 20).
+- **Flags (rule 6): none.** Target classes after rule 4: 4 recovered, 1 confused, 2 ambiguous, 11
+  undetectable_local, 2 undetectable, 11 no_reference, 1 inconsistent_reference.
+- **Reported, not rules:** without the local-noise rule C2 passes and three targets would be `absent`: 3.2
+  (|μ| 48.2; F_pred / σ_loc 2.2 → undetectable_local), 4.2 (|μ| 9.4; 9.7 σ → ambiguous) and 78.3 (|μ| 6.7; 8.7 σ →
+  ambiguous). Without the containing-source rule C2 fails (arc-referenced 7 / 13).
+- **Contact sheet looked at** (F200W, 6″ stamps, 1″ search circle; image not stored): 3.2 and 4.2 lie in the smooth
+  BCG / ICL light (the mosaic is not bCG-subtracted, so σ_loc is large there, as PLAN_2a expected); 4.2 is the D-041
+  4.2c position. 78.3 lies in a clean field with no obvious source inside the circle except a faint knot near its
+  edge. Not interpreted: 78.3 is system 78 (= 700.1, `../a2744_s700_vet`), already undetermined there.
+
+**Outcome.** The DR3 SUPER reference with pipeline-mosaic local noise passes gate C2 on Abell 2744 (exploratory: the
+local-noise and shared-pair rules were set on earlier fields, not tuned here). No frozen flag. The two `ambiguous`
+targets sit just under the 10 σ absent threshold, so the result depends on that ASSUMPTION.
+
+**Limits.** Single band (F200W); pipeline mosaic not bCG-subtracted (completeness near members lost); F_pred is a total
+flux against an aperture σ (lenient for extended images); no bCG-subtracted re-check of 3.2 / 4.2.
+
+**Next.** A frozen follow-up of 78.3 and 4.2 on a bCG-subtracted image or a second band (F277W / F356W, same
+rules), or `/vet-candidate` only if a frozen rule flags them; not a re-read of this stage's thresholds.

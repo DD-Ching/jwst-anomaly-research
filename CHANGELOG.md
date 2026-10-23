@@ -2,9 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-23: Abell 2744 UNCOVER-reference stage 2b (in progress)
-- Claimed by cloud routine 01QwombrrcwbPbyZfXidDUe8 at 12:16Z: frozen stage 2b plan (predicted / control tables with
-  the WLS source, gate C2 with the shared-pair rule) before any run.
+## 2026-10-23: Abell 2744 UNCOVER-reference stage 2b: gate C2 passes (arc-referenced 11 / 13), no flag; 4.2 and 78.3 ambiguous just under 10 σ
+- **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2b.md`, frozen with `to_cat_super` and
+  `to_njy_per_pixel` (unit-tested) before the run. One GO 2561 tile (`o001_t003`) covers all images (footprint check),
+  so no multi-tile extension. Small reuse hooks: `m0417_extra.run_field(bt_hook=)`, `m1423_canucsref` `pix=`.
+- **Result** (`RESULT.md` § Stage 2b): gate C2 with shared pairs passes (30 / 34; arc 11 / 13); no flag. Without the
+  local-noise rule 3.2, 4.2, 78.3 would be absent; with it 3.2 is undetectable_local, 4.2 (9.7 σ) and 78.3 (8.7 σ)
+  ambiguous. Contact sheet looked at: 3.2 / 4.2 in BCG / ICL light; 78.3 in a clean field, circle empty except a
+  faint edge knot. Without the containing-source rule C2 fails (7 / 13).
+- **Data:** DR3 SUPER catalogue re-streamed (sha256 matches) and deleted; F200W SCI read once by range stream
+  (≈ 430 MB, memory only; reason in the plan).
+- **Handoff:** next is a frozen second-band or bCG-subtracted check of 78.3 and 4.2 under the same rules.
 
 ## 2026-10-23: Abell 2744 UNCOVER-reference stage 2a: DR3 SUPER reference pinned; its `theta_J2000` is SEP's convention (radians, ccw from +x), not the README's
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2a.md`, frozen with its rule functions
