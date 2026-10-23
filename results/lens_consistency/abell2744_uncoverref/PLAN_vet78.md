@@ -33,3 +33,20 @@ UNCOVER-predicted 78.3c (3.575198, −30.355756).
 **What changes the plan.** Outcome 2 closes 78.3c as ordinary; outcomes 3–4 keep it open for tests 1b / 2.
 **Data.** CATS x/y deflection maps (2 × ≈ 16 MB) to the session scratchpad, deleted after the run. Cloud TLS:
 `archive.stsci.edu` needs the certifi bundle (CHANGELOG 2026-10 entry).
+
+## Test 1b (added after test 1 returned "tool not validated"; frozen before the UNCOVER maps are read)
+
+Test 1 could not run as intended: CATS v4.1 puts no critical curve between the a and b images of any 78 knot
+(`vet78_cats.json`). Test 1b asks H_pos inside the model that made the flag. Same script, `--model uncover2`
+(UNCOVER v2.0 maps, `a2744_s700.load_uncover2`, ≈ 250 MB of maps to the scratchpad, deleted after the run; reason:
+the flag is defined in these maps, and no smaller product holds them). Same per-knot procedure (a and b only), so
+the c-type images of 78.1 and 78.2 are predictions here, not fits. Output `vet78_uncover2.json`.
+
+**Frozen decision 1b (in order; `decide_1b`):**
+1. no c-type image for any of 78.1, 78.2, 78.3 → "tool not validated";
+2. the c-type images of 78.1 **and** 78.2 both lie > 1.0″ (search radius) from their own catalogued c → "explained:
+   this model's c positions for system 78 miss by more than the search radius, so a non-detection inside the 78.3c
+   circle is not informative";
+3. else, the 78.3 c-type image lies ≤ 1.0″ from 78.1c or 78.2c → "explained: model position error of the shared c
+   image";
+4. else → "flag survives test 1b".
