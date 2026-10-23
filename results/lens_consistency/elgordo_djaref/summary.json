@@ -190,5 +190,295 @@
    "n_rows": 6751,
    "note": "post hoc, read after rule 2a failed: mag_auto + 2.5 log10(flux_auto x tot_corr), detection-image tot_corr"
   }
+ },
+ "stage2b": {
+  "dja": {
+   "sha256": "ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31",
+   "bytes": 17170560,
+   "rows": 6775
+  },
+  "rule_2a": {
+   "zero_point_mag": 23.9,
+   "n_rows": 6751,
+   "unit_jy": 1e-06,
+   "passes": true
+  },
+  "rule_2b": {
+   "rotation_deg": 0.00019252658854360626,
+   "determinant": -0.001599832425813551,
+   "pixel_scale_arcsec": 0.0399979052678206,
+   "n_rows": 6775,
+   "passes": true
+  },
+  "frame": {
+   "model": "elgordo-caminha23",
+   "model_sha256": "7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472",
+   "image": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f200w_i2d.fits",
+   "depth_mag": 27.08708017374756,
+   "unpredicted": [
+    "23c"
+   ],
+   "image_classes": {
+    "candidate": 8,
+    "demagnified": 2,
+    "faint": 1,
+    "missing": 1,
+    "no_flux_ref": 6,
+    "observed": 56,
+    "outside": 1
+   },
+   "forced_classes_targets": {
+    "confused": 1,
+    "no_reference": 9,
+    "undetectable": 6
+   },
+   "gate_C": {
+    "n_targets": 56,
+    "n_testable": 18,
+    "n_recovered": 17,
+    "fraction": 0.9444444444444444,
+    "passes": true,
+    "classes": {
+     "absent": 1,
+     "confused": 3,
+     "no_reference": 34,
+     "recovered": 14,
+     "undetectable": 4
+    }
+   },
+   "flags": [],
+   "flags_if_gate_ignored": 0
+  },
+  "without_contain": {
+   "gate_C2_shared": {
+    "all": {
+     "n_testable": 15,
+     "n_ok": 11,
+     "fraction": 0.7333333333333333
+    },
+    "arc_referenced": {
+     "n_testable": 8,
+     "n_ok": 7,
+     "fraction": 0.875
+    },
+    "passes": false,
+    "merged_groups": []
+   },
+   "flags": [],
+   "control_classes": {
+    "absent": 4,
+    "inconsistent_reference": 8,
+    "no_reference": 13,
+    "recovered": 11,
+    "undetectable": 5,
+    "undetectable_local": 13
+   },
+   "target_classes": {
+    "inconsistent_reference": 1,
+    "no_reference": 4,
+    "recovered": 1,
+    "undetectable": 7,
+    "undetectable_local": 3
+   },
+   "gate_C2_plain": {
+    "all": {
+     "n_testable": 15,
+     "n_ok": 11,
+     "fraction": 0.7333333333333333
+    },
+    "arc_referenced": {
+     "n_testable": 8,
+     "n_ok": 7,
+     "fraction": 0.875
+    },
+    "passes": false
+   },
+   "without_local_noise_rule": {
+    "gate_C2": {
+     "all": {
+      "n_testable": 28,
+      "n_ok": 22,
+      "fraction": 0.7857142857142857
+     },
+     "arc_referenced": {
+      "n_testable": 9,
+      "n_ok": 8,
+      "fraction": 0.8888888888888888
+     },
+     "passes": false
+    },
+    "control_classes": {
+     "absent": 6,
+     "confused": 2,
+     "inconsistent_reference": 8,
+     "no_reference": 13,
+     "recovered": 20,
+     "undetectable": 5
+    },
+    "target_classes": {
+     "ambiguous": 1,
+     "confused": 1,
+     "inconsistent_reference": 1,
+     "no_reference": 4,
+     "recovered": 2,
+     "undetectable": 7
+    },
+    "flags": []
+   },
+   "posthoc_absent_controls": {
+    "absent_own_segment_centroid_outside_radius": 5,
+    "absent_no_containing_segment": 0,
+    "absent_sources_too_faint": 1
+   },
+   "inputs": {
+    "reference": "elgordo-grizli-v7.0-fix_phot.fits",
+    "reference_sha256": "ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31",
+    "n_rows_kept": 6654,
+    "flux": "f200w_flux_aper_1 x flux_auto / flux_aper_1 x f200w_tot_corr",
+    "noise_image": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f200w_i2d.fits",
+    "noise_pixel_scale_arcsec": 0.031229519611251092,
+    "frame_offset_arcsec": [
+     0.0,
+     0.0
+    ],
+    "pixel_scale_arcsec": 0.0399979052678206,
+    "depth_mag": 28.12751292712364
+   },
+   "rules": {
+    "ELLIPSE_NSIGMA": 3.0,
+    "MIN_REF_SNR": 5.0,
+    "MAX_REF_MU": 50.0,
+    "MAX_REF_SPREAD": 3.0,
+    "FLUX_RANGE": [
+     0.3333333333333333,
+     3.0
+    ],
+    "TEN_SIGMA_DMAG": 0.752574989159953,
+    "BASE_SEARCH": 1.0,
+    "C2": [
+     8,
+     0.8,
+     3
+    ],
+    "ARC_MIN_ELL": 0.5,
+    "contain": false
+   }
+  },
+  "frozen": {
+   "gate_C2_shared": {
+    "all": {
+     "n_testable": 15,
+     "n_ok": 14,
+     "fraction": 0.9333333333333333
+    },
+    "arc_referenced": {
+     "n_testable": 8,
+     "n_ok": 7,
+     "fraction": 0.875
+    },
+    "passes": true,
+    "merged_groups": []
+   },
+   "flags": [],
+   "control_classes": {
+    "absent": 1,
+    "confused": 1,
+    "inconsistent_reference": 8,
+    "no_reference": 13,
+    "recovered": 13,
+    "undetectable": 5,
+    "undetectable_local": 13
+   },
+   "target_classes": {
+    "inconsistent_reference": 1,
+    "no_reference": 4,
+    "recovered": 1,
+    "undetectable": 7,
+    "undetectable_local": 3
+   },
+   "gate_C2_plain": {
+    "all": {
+     "n_testable": 15,
+     "n_ok": 14,
+     "fraction": 0.9333333333333333
+    },
+    "arc_referenced": {
+     "n_testable": 8,
+     "n_ok": 7,
+     "fraction": 0.875
+    },
+    "passes": true
+   },
+   "without_local_noise_rule": {
+    "gate_C2": {
+     "all": {
+      "n_testable": 28,
+      "n_ok": 27,
+      "fraction": 0.9642857142857143
+     },
+     "arc_referenced": {
+      "n_testable": 9,
+      "n_ok": 8,
+      "fraction": 0.8888888888888888
+     },
+     "passes": true
+    },
+    "control_classes": {
+     "absent": 1,
+     "confused": 5,
+     "inconsistent_reference": 8,
+     "no_reference": 13,
+     "recovered": 22,
+     "undetectable": 5
+    },
+    "target_classes": {
+     "ambiguous": 1,
+     "confused": 1,
+     "inconsistent_reference": 1,
+     "no_reference": 4,
+     "recovered": 2,
+     "undetectable": 7
+    },
+    "flags": []
+   },
+   "posthoc_absent_controls": {
+    "absent_own_segment_centroid_outside_radius": 0,
+    "absent_no_containing_segment": 0,
+    "absent_sources_too_faint": 1
+   },
+   "inputs": {
+    "reference": "elgordo-grizli-v7.0-fix_phot.fits",
+    "reference_sha256": "ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31",
+    "n_rows_kept": 6654,
+    "flux": "f200w_flux_aper_1 x flux_auto / flux_aper_1 x f200w_tot_corr",
+    "noise_image": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f200w_i2d.fits",
+    "noise_pixel_scale_arcsec": 0.031229519611251092,
+    "frame_offset_arcsec": [
+     0.0,
+     0.0
+    ],
+    "pixel_scale_arcsec": 0.0399979052678206,
+    "depth_mag": 28.12751292712364
+   },
+   "rules": {
+    "ELLIPSE_NSIGMA": 3.0,
+    "MIN_REF_SNR": 5.0,
+    "MAX_REF_MU": 50.0,
+    "MAX_REF_SPREAD": 3.0,
+    "FLUX_RANGE": [
+     0.3333333333333333,
+     3.0
+    ],
+    "TEN_SIGMA_DMAG": 0.752574989159953,
+    "BASE_SEARCH": 1.0,
+    "C2": [
+     8,
+     0.8,
+     3
+    ],
+    "ARC_MIN_ELL": 0.5,
+    "contain": true
+   }
+  }
  }
 }

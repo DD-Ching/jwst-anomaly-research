@@ -1,5 +1,16 @@
 # El Gordo reference-catalogue extra-image test
 
+## Stage 2b (2026-10-23; `PLAN_2b.md`, `--stage 2b`, `summary.json` `stage2b`)
+- Rule 2a (with `tot_corr`): 23.9 mag → µJy (outcome known before freezing; disclosed). Rule 2b passes as in stage 2.
+- **Gate C2 (shared pairs): passes** (`stage2b.frozen.gate_C2_shared`): 14 / 15 testable controls recovered or
+  confused, arc-referenced 7 / 8. **No flag.** DJA rows kept: 6,654.
+- Targets (`target_classes`, 16 rows): recovered 1, undetectable 7, no_reference 4, undetectable_local 3,
+  inconsistent_reference 1; so 1 of 16 predicted extra images was testable at all (low testability, not a null).
+- Reported, not rules: without the local-noise rule C2 passes, no flag; without the containing-source rule C2 fails
+  (`without_contain`), no flag; plain `gate_c2` passes.
+- **Not done yet:** the contact sheet of the controls and the testable target (scripts/CLAUDE.md); no conclusion
+  beyond the frozen outcome is drawn before it.
+
 ## Stage 2 (2026-10-23; `PLAN_2.md`, `scripts/elgordo_djaref.py --stage 2`, `summary.json` `stage2`)
 - **Rule 2b, grid: passes** (`rule_2b`): rotation 0.0002°, determinant negative (east left), pixel scale
   0.0400″ on 6,775 rows.

@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: El Gordo reference-catalogue route, stage 2b: gate C2 passes (14 / 15, arc 7 / 8), no flag; 1 of 16 targets testable
+- **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_2b.md` (only rule 2a changed, to `flux_auto × tot_corr`;
+  its outcome was known and disclosed). Run `scripts/elgordo_djaref.py --stage 2b`.
+- **Result** (`RESULT.md` § Stage 2b, `summary.json` `stage2b`): C2 passes; no flag; targets mostly untestable
+  (7 undetectable, 4 no_reference, 3 undetectable_local, 1 inconsistent_reference, 1 recovered).
+- **Data:** DJA table and the F200W SCI extension (≈ 185 MB) read into memory; pipeline `_cat.ecsv` in the session
+  scratchpad, deleted.
+- **Handoff:** PR #484 is still a draft: next run looks at the contact sheet, runs `/code-review`, adds the D-034
+  addendum q and TASKS line, then marks it ready and merges if CI is green.
+
 ## 2026-10-23: El Gordo reference-catalogue route, stage 2: grizli total-flux rule frozen; the unit check fails as written (stopped before any flux was read)
 - **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_2.md`, frozen with `flux_unit_jy`, `grid_rotation_deg`
   and `to_cat_dja` (unit-tested) before the run. The grizli 1.14.3 source shows the total flux needs the detection
