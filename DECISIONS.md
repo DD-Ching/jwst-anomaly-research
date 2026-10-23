@@ -2383,6 +2383,17 @@ below the minimum counts, so the route cannot validate itself on this field. Dec
 closed for RXJ2129 (Lenstool maps, DJA v7.0). Revisit if: a reference catalogue with arcs deblended from the bright
 cluster light (e.g. a bCG-subtracted RXJ2129 catalogue) is public.
 
+**Addendum 2026-10-23v (MACS0647 input check).** `results/lens_consistency/macs0647_inputs/RESULT.md`. Image lists:
+Meena+2023 (72 images, 23 systems, photometric z only) and Nishida+2025 (86 images, 28 sources, the JWST GLAFIC
+constraints); where they share images they agree to about 0.1″ (66 / 86 Nishida images within 0.3″). Reference: DJA v7.0 passes SMACS rule 2. Model maps:
+no JWST-era model (Meena+2023 dPIEeNFW / Glafic, Nishida+2025 GLAFIC) has public maps in its arXiv source or on
+Zenodo; only the HST-era CLASH Zitrin v2 maps are pinned. Decision: the fitted-model extra-image route does not run
+on MACS0647. The open alternative is a held-out test of the CLASH maps on the JWST-first systems (Meena+2023 13–23),
+only under a frozen plan with a redshift rule, a CLASH-to-JWST frame check and gate thresholds stated for a model
+not fitted to those images. Alternatives rejected: transcribing a model from figures (no maps, no parameters);
+running gate K with the CLASH maps under the fitted-model thresholds (most images were not its constraints).
+Revisit if: Nishida+2025 or Meena+2023 maps (or GLAFIC parameter files) become public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

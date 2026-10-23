@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: MACS0647 reference-route input check: image lists and reference pass, no JWST-era model maps
+- **Result** (`results/lens_consistency/macs0647_inputs/RESULT.md`, `summary.json`): Meena+2023 (72 images, 23
+  systems, photometric z only) and Nishida+2025 (86 images, 28 sources) parsed from their arXiv TeX and unit-tested;
+  where they share images they agree to about 0.1″ (66 / 86 Nishida images within 0.3″). DJA v7.0 passes SMACS rule 2 (7,956 rows). No public
+  maps of a JWST-era model (Meena dPIEeNFW / Glafic, Nishida GLAFIC); only the HST-era CLASH Zitrin v2 maps.
+  D-034 addendum v: the fitted-model route does not run on MACS0647. No prediction or residual read.
+- **/code-review:** fixed before commit (Nishida z carry across a non-JWST first row, strict row and z parsing,
+  write after the network check, whole-table hash, offset wording conditional on the matched subset, not-stored
+  labels).
+- **Failed approaches / hosts:** arXiv e-print transfers are cut at 8 MB and `arxiv.org` answered 429 to a range
+  read; `export.arxiv.org` served the remainder. `archive.stsci.edu` failed TLS from curl in this session.
+- **Handoff:** next is a frozen-plan held-out test of the CLASH maps on the JWST-first systems (Meena 13–23), or an
+  input check of another field with public JWST-era maps.
+
 ## 2026-10-23: RXJ2129 reference-catalogue route, stage 2: gate C2 fails (4 / 7, arc 2 / 5); no flag read
 - **Plan:** `results/lens_consistency/rxj2129_djaref/PLAN_2.md`, frozen and pushed before any read (El Gordo stage
   2b's rules; deviation D1: overlapping targets of the one-galaxy group 3 / S3-1 / S3-2 joined for flags,
