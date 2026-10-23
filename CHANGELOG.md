@@ -2,7 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-22: MACS0416 D115b σ(8515) scan with every source fitted: started, not finished (resumable)
+## 2026-10-23: MACS0416 D115b σ(8515) scan with every source fitted: finished (555 / 555); gates G1–G3 pass; the flag image vanishes first at σ × 0.75 at Δχ² +12.3 > 6, so D115b stays `inconclusive`
+- **Result** (`results/lens_consistency/macs0416_canucsref/sigma_scan/result.json`, frozen rule `verdict`; `model_prediction`):
+  111 families matched one-to-one at every f (none lost). Δχ² vs f 1.00 (χ²_all 244.58): +5.96 (f 0.85), +0.70 (0.80),
+  +12.28 (0.75), +15.85 (0.70). Flag image present at f ≥ 0.80, absent at 0.75 / 0.70; f* = 0.75; Δχ²(f*) > 6
+  (ASSUMPTION) → `inconclusive` (H1 of the plan). Largest contributions at f*: D70 +2.81, D69 +2.71, D72b +2.46, D15
+  +1.72, D115a +1.50.
+- **Post hoc (not used by the rule):** the f 0.80 dip is D24 alone (2.276 at f 0.80 vs ≈ 10.5 at every other f, the
+  start-point gap noted below); without D24 the Δχ² rises monotonically (+5.93 / +8.88 / +12.23 / +15.79), so the
+  start-point limit does not change f* or the verdict.
+- **06:10Z run:** 479 → 555 (D73 f 0.70 to D99); model files pre-fetched via the MAST download API (sha256 verified);
+  first new row ≈ 10 min after start, then 76 tasks in ≈ 41 min.
+- **Handoff:** per the plan, the only next step for D115b is a Lenstool re-fit with 8515's σ (and the rest of the
+  model) free, on the owner machine. MACS0416's CANUCS-reference flag list holds one `inconclusive` row.
+
+### Earlier runs of this scan (2026-10-22 to 2026-10-23 05:42Z)
 - **Plan** (`results/lens_consistency/macs0416_canucsref/sigma_scan/PLAN.md`, frozen and pushed before any run):
   σ = f × 120.6 km/s, f ∈ {1.00, 0.85, 0.80, 0.75, 0.70}, every family's source fitted (not only D115a / D115b,
   whose post hoc +10.6 of the #458 Δχ² +12.6 sat in unrefitted families); rule as a tested function (`verdict`).

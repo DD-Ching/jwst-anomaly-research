@@ -57,6 +57,23 @@ other parameters free, all sources fitted) absorbs the cost is not tested. Not a
 - **Next:** a Lenstool re-fit with 8515's σ free (owner machine; Lenstool not in the cloud environment), or a
   σ × 0.75–0.85 scan here with every source fitted, to find the smallest σ change that removes the image and its cost.
 
+## 2026-10-23: σ(8515) scan with every source fitted
+
+Frozen plan `results/lens_consistency/macs0416_canucsref/sigma_scan/PLAN.md` (+ pre-run amendment);
+`scripts/m0416_d115_sigma_scan.py`; `sigma_scan/result.json`, `sigma_scan/fits.jsonl` (555 / 555 tasks).
+
+| Test | Tier | Outcome | Evidence | Label |
+|---|---|---|---|---|
+| Smallest σ factor that removes the flag image, all 111 sources fitted | C | f* = 0.75 (90.4 km/s) | flag image present at f 1.00 / 0.85 / 0.80, absent at 0.75 / 0.70; D115a / D115b and all 111 families matched one-to-one at every f; gates G1, G2, G3 pass | model_prediction |
+| χ² cost at f* | C | **above the frozen bound** | Δχ² +12.28 > 6 (ASSUMPTION, system-51 precedent); +5.96 / +0.70 / +15.85 at f 0.85 / 0.80 / 0.70. Post hoc: the f 0.80 value is one family (D24, start-point gap); without it +8.88, monotonic | model_prediction |
+
+**Verdict (frozen rule):** still `inconclusive` (H1). Removing the extra image by lowering 8515's σ alone costs
+more than the accepted bound even with every source refitted; the cost is spread over D70, D69, D72b, D15 and D115a.
+A model tension of a fixed-parameter Lenstool model, not evidence of anything unusual.
+
+### Open questions (updated 2026-10-23)
+- **Only next step:** a Lenstool re-fit with 8515's σ and the other parameters free (owner machine).
+
 ### Regeneration
 Scratch scripts (not committed): `pert.py` (nearest potentials, ±30 % and removal for the three nearest, images of
 D115a / D115b at z 2.2999 by `a2744_s700.solve` on a 0.1″ grid, half-width 58″) and `pert_scan.py` (8515 σ × 0.8–0.95).
