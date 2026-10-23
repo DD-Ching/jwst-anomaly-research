@@ -2333,6 +2333,15 @@ read. Post hoc: with the detection `tot_corr` the zero point is 23.9 mag in ever
 freezes rule 2a as `mag_auto + 2.5 log10(flux_auto × tot_corr)` (disclosed as already seen) and otherwise runs
 PLAN_2.md unchanged. Revisit if: as addendum o.
 
+**Addendum 2026-10-23q (El Gordo stage 2b: gate C2 passes, no flag).** Frozen plan
+`results/lens_consistency/elgordo_djaref/PLAN_2b.md` (rule 2a with `tot_corr`, disclosed as already seen). Rule 2a
+gives 23.9 mag (µJy); gate C2 (shared pairs) passes, 14 / 15 testable controls, arc-referenced 7 / 8; no flag.
+Of 16 predicted extra images only 1 is testable (target 23, `missing`), and post hoc it is the model's 23c,
+1.538″ from the catalogued 23c (`unpredicted` in the frame table): a model position error, as 78.3c in addendum n.
+Contact sheet looked at (`sheet_2b.png`, `sheet_2b_t23.png`). Decision: El Gordo's reference-route test is closed
+with no flag and low testability (1 / 16); the route moves to the next field. Revisit if: a deeper El Gordo
+reference catalogue or a model with a better-fitting 23c is public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

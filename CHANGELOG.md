@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: El Gordo reference-catalogue route, stage 2b: gate C2 passes (14 / 15, arc 7 / 8), no flag; 1 of 16 targets testable
+- **Plan:** `results/lens_consistency/elgordo_djaref/PLAN_2b.md` (only rule 2a changed, to `flux_auto × tot_corr`;
+  its outcome was known and disclosed). Run `scripts/elgordo_djaref.py --stage 2b`.
+- **Result** (`RESULT.md` § Stage 2b, `summary.json` `stage2b`): C2 passes; no flag; targets mostly untestable
+  (7 undetectable, 4 no_reference, 3 undetectable_local, 1 inconsistent_reference, 1 recovered).
+- **Data:** DJA table and the F200W SCI extension (≈ 185 MB) read into memory; pipeline `_cat.ecsv` in the session
+  scratchpad, deleted.
+- **Contact sheet** (`sheet_2b.png`, `sheet_2b_t23.png`) looked at: controls agree with their classes. Post hoc,
+  the one testable target (23, `missing`) is the model's 23c, 1.538″ from the catalogued 23c: a model position
+  error (as Abell 2744 78.3c), not a candidate. D-034 addendum q.
+- **Handoff:** El Gordo's reference route is closed (no flag, 1 / 16 testable). Next: the next field (SMACS 0723 or
+  WHL0137) with a reference catalogue, gate K first.
+
 ## 2026-10-23: W2 J2244 follow-up: the STScI default F160W PSF hooks up to our FLT exposures, but a no-galaxy ~1″ star pair still leaves a residual at the lens position (z 19); image-modelling line paused
 - **Plan:** `results/w2_j2244_stpsf/PLAN.md`, frozen before any fit. Development test on #474 controls; J2244 not
   measured.

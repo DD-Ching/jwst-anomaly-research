@@ -1,0 +1,41 @@
+{
+ "elgordo": {
+  "model": "elgordo-caminha23",
+  "model_sha256": "7b0153ae0ee02f057f6aaa6f46b1b698502e6fc427266ac9a09d241ddc63a472",
+  "image": "s3://stpubdata/jwst/public/jw01176/L3/t/o241/jw01176-o241_t012_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 27.08708017374756,
+  "unpredicted": [
+   "23c"
+  ],
+  "image_classes": {
+   "candidate": 8,
+   "demagnified": 2,
+   "faint": 1,
+   "missing": 1,
+   "no_flux_ref": 6,
+   "observed": 56,
+   "outside": 1
+  },
+  "forced_classes_targets": {
+   "confused": 1,
+   "no_reference": 9,
+   "undetectable": 6
+  },
+  "gate_C": {
+   "n_targets": 56,
+   "n_testable": 18,
+   "n_recovered": 17,
+   "fraction": 0.9444444444444444,
+   "passes": true,
+   "classes": {
+    "absent": 1,
+    "confused": 3,
+    "no_reference": 34,
+    "recovered": 14,
+    "undetectable": 4
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}
