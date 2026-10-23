@@ -12,9 +12,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`RESULT.md`, `summary.json`): gate K passes on 31 spec-z images in 10 families; DJA v7.0 header check
   passes (3,295 rows; headers only); 6 families with more predicted than catalogued images (stage-2 inputs, not
   read). D-034 addendum t.
-- **Data:** Lenstool members range-read from the Zenodo zip (≈ 300 MB cache, deleted at session end).
+- **Data:** Lenstool members range-read from the Zenodo zip (≈ 300 MB session cache, never committed; deleted before the session ends).
 - **Handoff:** next is RXJ2129 stage 2 under a frozen plan with El Gordo stage 2b's rules (F200W tile footprint
-  check first; program 2767 `o002_t001`).
+  check first; program 2767 `o002_t001`). The plan must say how the S3-1 / S3-2 knot families and system 3 are
+  counted (they lie in the same arcs), before any read.
+- **/code-review:** fixed (rule 2 header fetched before the solve, strict JSON, coordinates pinned by checksum in the
+  test); recorded, not changed: the stage-1 driver repeats the SMACS / El Gordo pattern (module-global `FIELDS`,
+  repo-root relative paths), as its siblings do.
 
 ## 2026-10-23: SMACS 0723 reference-catalogue route, stage 2: gate C2 fails (16 / 23, arc 7 / 12); no flag read
 - **Plan:** `results/lens_consistency/smacs_djaref/PLAN_2.md`, frozen before any read (El Gordo stage 2b's rules;

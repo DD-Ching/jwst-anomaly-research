@@ -75,6 +75,7 @@ def image_table() -> Table:
 
 def main(argv: list[str] | None = None) -> int:
     argparse.ArgumentParser(description=__doc__.split("\n\n")[0]).parse_args(argv)
+    blob, total = eg.fetch_head(DJA_PHOT)  # rule 2 first: cheap, and fails before the solve
     OUT.mkdir(parents=True, exist_ok=True)
     t = image_table()
     t.write(OUT / IMAGES, format="ascii.ecsv", overwrite=True)
@@ -83,9 +84,8 @@ def main(argv: list[str] | None = None) -> int:
     summary: dict = {
         "images": {"n": len(t), "families": len(set(t["system"])), "source": PAPER},
         "stage1_gate_K": mi.run_field(FIELD, OUT, GRID_STEP),
+        "stage1_reference_inputs": stage2_inputs(blob, total) | {"url": DJA_PHOT},
     }
-    blob, total = eg.fetch_head(DJA_PHOT)
-    summary["stage1_reference_inputs"] = stage2_inputs(blob, total) | {"url": DJA_PHOT}
     summary["rules"] = {
         "K_MAX_RMS_ARCSEC": mi.K_MAX_RMS_ARCSEC,
         "K_MIN_MATCHED": mi.K_MIN_MATCHED,
@@ -98,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
         fam: mi.rms_of(d[np.asarray(ip["system"], str) == fam])
         for fam in dict.fromkeys(np.asarray(ip["system"], str))
     }
-    (OUT / "summary.json").write_text(json.dumps(_clean(summary), indent=1) + "\n")
+    (OUT / "summary.json").write_text(json.dumps(_clean(summary), indent=1, allow_nan=False) + "\n")
     g = summary["stage1_gate_K"][MODEL]["gate_K"]
     print(json.dumps({"gate_K": g, "ref": summary["stage1_reference_inputs"]}, indent=1))
     return 0

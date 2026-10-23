@@ -19,9 +19,11 @@ Frozen plan: `PLAN_1.md` (committed and pushed before the run). Script `scripts/
 - **Stage-2 inputs, not read** (`extra_predicted`, catalogued / predicted images per family): 2 (3 / 5), 3 (4 / 7),
   4 (3 / 5), 5 (3 / 4), S3-1 (3 / 5), S3-2 (3 / 5). No family has fewer predicted than catalogued images.
 - **Data:** the three pinned Lenstool members (≈ 300 MB in the cache, sha256 verified by `stage_members`) were
-  range-read out of the 4.30 GB Zenodo zip in 250 s (not stored); deleted at the end of the session. No archive tar
-  was stored.
+  range-read out of the 4.30 GB Zenodo zip in 250 s (not stored); kept in the session cache for stage 2 and deleted
+  before the session ends (never committed). No archive tar was stored.
 
 **Next:** stage 2 under a frozen plan with El Gordo stage 2b's rules on this reference (`flux_auto × tot_corr`
 unit check, grid check, frame tables with `m0417_extra.run_field` on an F200W tile containing all 31 images
-(program 2767 `o002_t001` first; footprint check before any read), gate C2 with shared pairs, local noise).
+(program 2767 `o002_t001` first; footprint check before any read), gate C2 with shared pairs, local noise). The S3-1 / S3-2 knots are separate families here, as in the paper's constraint list, but they lie
+inside system 3's arcs: the stage-2 plan must state how their extra predictions and system 3's are counted (one
+target per predicted region, or the shared-pair rule) before any read (/code-review finding).
