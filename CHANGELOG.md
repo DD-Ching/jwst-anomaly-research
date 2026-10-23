@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Abell 2744 UNCOVER-reference stage 2 (in progress)
+- **Claim:** frozen stage-2 plan with the WLS source and the UNCOVER DR3 SUPER reference (handoff of stage 1b).
+
 ## 2026-10-23: Abell 2744 UNCOVER-reference stage 1b: gate K with the WLS source passes (rms 0.835″, 172 / 172 within 3″; deviation after stage 1)
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_1b.md`, frozen before the run, labelled a deviation
   chosen after stage 1's failure; rule 1 committed as the tested function `a2744_uncoverref.gate_k_wls` first.
