@@ -355,20 +355,30 @@ def sparcl_find(ra, dec, rad_arcsec):
             ["data_release", "DESI-DR1"],
         ],
     }
-    r = requests.post(f"{SPARCL}/find/?limit=100", json=body, timeout=180)
-    r.raise_for_status()
-    return r.json()[1:]
+    return _post(f"{SPARCL}/find/?limit=100", body, 180)[1:]
+
+
+def _post(url, body, timeout, retries=4):
+    """SPARCL POST with back-off on 5xx / connection errors (a refusal is raised, never skipped)."""
+    for k in range(retries):
+        try:
+            r = requests.post(url, json=body, timeout=timeout)
+            if r.status_code < 500:
+                r.raise_for_status()
+                return r.json()
+        except requests.ConnectionError:
+            pass
+        time.sleep(10 * 2**k)
+    raise RuntimeError(f"SPARCL unavailable after {retries} tries: {url}")
 
 
 def sparcl_get(ids):
-    r = requests.post(
-        f"{SPARCL}/spectras/?include=flux,ivar,wavelength,specid,redshift,mask&format=json"
-        "&dataset_list=DESI-DR1",
-        json=ids,
-        timeout=600,
+    j = _post(
+        f"{SPARCL}/spectras/?include=sparcl_id,flux,ivar,wavelength,specid,redshift,mask"
+        "&format=json&dataset_list=DESI-DR1",
+        ids,
+        600,
     )
-    r.raise_for_status()
-    j = r.json()
     if not j[0].get("status", {}).get("success"):
         raise RuntimeError(f"SPARCL refused: {j[0]}")
     return j[1:]
@@ -390,7 +400,20 @@ def cmd_fetch(args):
     sdir = out / "spectra"
     sdir.mkdir(exist_ok=True)
     P = json.load(open(out / "pairs.json"))
-    log = []
+    flog = out / "fetch_log.json"
+    log = json.load(open(flog))["entries"] if flog.exists() else []
+
+    def save_log():
+        json.dump(
+            {
+                "label": "SPARCL DESI-DR1 retrievals (observed spectra; line windows kept)",
+                "entries": log,
+            },
+            open(flog, "w"),
+            indent=1,
+        )
+        flog.open("a").write("\n")
+
     for sy in P["systems"]:
         if sy["role"] not in roles or sy["status"] != "pair":
             continue
@@ -406,11 +429,7 @@ def cmd_fetch(args):
             tid = str(sp["specid"])
             ngood = int(np.sum((np.asarray(sp["ivar"]) > 0) & (np.asarray(sp["mask"]) == 0)))
             if tid in want and (tid not in best or ngood > best[tid][0]):
-                best[tid] = (
-                    ngood,
-                    sp,
-                    next(r["sparcl_id"] for r in hits if str(r["specid"]) == tid),
-                )
+                best[tid] = (ngood, sp, sp["sparcl_id"])
         if set(best) != set(want):
             log.append(
                 {
@@ -419,6 +438,7 @@ def cmd_fetch(args):
                     "status": "unknown (SPARCL spectrum missing)",
                 }
             )
+            save_log()
             continue
         z = 0.5 * (sy["z_a"] + sy["z_b"])
         arrays, ids = {}, {}
@@ -439,23 +459,11 @@ def cmd_fetch(args):
                 "status": "ok",
                 "sparcl_ids": ids,
                 "bytes": dst.stat().st_size,
+                "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
         )
+        save_log()
         time.sleep(1)
-    old = (
-        json.load(open(out / "fetch_log.json"))["entries"]
-        if (out / "fetch_log.json").exists()
-        else []
-    )
-    json.dump(
-        {
-            "label": "SPARCL DESI-DR1 retrievals (observed spectra; line windows kept)",
-            "entries": old + log,
-        },
-        open(out / "fetch_log.json", "w"),
-        indent=1,
-    )
-    (out / "fetch_log.json").open("a").write("\n")
     print(
         sum(e["status"] == "ok" for e in log),
         "fetched;",
@@ -573,16 +581,53 @@ def cmd_apply(args):
         print(r["name"], r["status"], r.get("D"), r.get("dv_kms"), r.get("sep_desi"))
 
 
+def cmd_sheet(args):
+    """Contact sheet of the control pairs: the counted line with the best weaker-side S/N."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    out = Path(args.out)
+    res = [r for r in json.load(open(out / "controls.json"))["systems"] if r.get("D") is not None]
+    fig, axs = plt.subplots(4, 4, figsize=(14, 11))
+    for ax, r in zip(axs.flat, res, strict=False):
+        used = {k: v for k, v in r["lines"].items() if v.get("used")}
+        line = max(used, key=lambda k: min(used[k]["snr_a"], used[k]["snr_b"]))
+        d = np.load(out / "spectra" / f"{r['role']}_{r['name'].replace('/', '_')}.npz")
+        z = 0.5 * (r["z_a"] + r["z_b"])
+        a = line_profile(
+            *(d[f"{x}_a"].astype(float) for x in ("wave", "flux", "ivar")), z, LINES[line]
+        )
+        b = line_profile(
+            *(d[f"{x}_b"].astype(float) for x in ("wave", "flux", "ivar")), z, LINES[line]
+        )
+        ax.plot(a[0], a[1], lw=0.5, label="A")
+        ax.plot(b[0], used[line]["s"] * b[1], lw=0.5, label=f"B x {used[line]['s']:.2f}")
+        ax.set_title(
+            f"{r['role']} {r['name'][:22]}\n{line} chi2nu {used[line]['chi2_nu']:.2f}; "
+            f'D {r["D"]:.2f}; sep {r["sep_desi"]:.1f}"',
+            fontsize=7,
+        )
+        ax.tick_params(labelsize=6)
+        ax.legend(fontsize=6)
+    for ax in axs.flat[len(res) :]:
+        ax.axis("off")
+    fig.suptitle("W2 DESI pairs: control line profiles (observed; v in km/s)", fontsize=9)
+    fig.tight_layout()
+    fig.savefig(out / "controls_sheet.png", dpi=70)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("stage", choices=["pairs", "fetch", "validate", "apply"])
+    ap.add_argument("stage", choices=["pairs", "fetch", "validate", "apply", "sheet"])
     ap.add_argument("--out", default="results/w2_desi_pairs")
     ap.add_argument("--cache", default="data/cache/w2_desi_pairs")
     ap.add_argument("--roles", default="control,binary")
     a = ap.parse_args(argv)
-    {"pairs": cmd_pairs, "fetch": cmd_fetch, "validate": cmd_validate, "apply": cmd_apply}[a.stage](
-        a
-    )
+    stages = {"pairs": cmd_pairs, "fetch": cmd_fetch, "validate": cmd_validate}
+    stages.update(apply=cmd_apply, sheet=cmd_sheet)
+    stages[a.stage](a)
 
 
 if __name__ == "__main__":

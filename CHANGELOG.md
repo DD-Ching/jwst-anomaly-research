@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: W2 DESI pairs: spectra of both components exist for 13 rejected lensed-quasar pairs, but the frozen spectral test fails its control gate (binaries 1 / 7); no pair classified
+- **Route choice** (`results/w2_desi_pairs/PLAN.md` §0; 23:47–00:08 UTC) between three options:
+  - W2 HST lens-light refit: rejected, most targets are STRIDES quads with modelled lens galaxies;
+  - Sunrise n0153 new epoch: rejected, only the VENUS 2025 epoch, and an ordinary transient;
+  - DESI DR1 spectra of both images: chosen.
+- **Data:** DESI DR1 (Data Lab TAP, SPARCL; anonymous) has QSO spectra of both components for 13 rejected pairs
+  (incl. J0130+0725, J0728+2607), 9 lenses and 7 Hennawi binaries (θ ≤ 10″).
+- **Result** (`gate.json`, `controls_sheet.png`): the frozen per-pixel profile χ²_ν test (free scale, T = 3) gives
+  9 / 9 lenses "one source" but only 1 / 7 binaries "two spectra", against ≥ 70 % required. The gate fails, so the
+  rejected pairs were not retrieved or read. Two of them are themselves Hennawi binaries that the test called "one
+  source".
+- **Failed approach:** a mean per-pixel χ² of broad-line profiles lacks power at DESI S/N.
+  - Post hoc (not used): the profile Δv separates the same 16 controls, but needs fresh controls.
+  - Catalogue Δz does not separate them: one lens has −0.0054.
+- **Next:** only a new pre-registered statistic with fresh controls; D-064 addendum.
+
 ## 2026-10-22: W3 ZTF × ATLAS dip check, post-review G2 check: one common-mode exposure, two undetermined rows in exposures whose comparison stars scatter > 5 σ both ways; no variability supported by independent exposures; check line closed
 - **Plan:** `results/w3_ztf/atlas_dips/PLAN.md` §3. A post-review supplementary check, not blind. #470's selection,
   checks and deviation record are kept.

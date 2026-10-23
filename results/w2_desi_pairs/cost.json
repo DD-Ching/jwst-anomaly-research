@@ -1,0 +1,19 @@
+{
+ "label": "derived; times from session date -u prints and git commit times",
+ "stages_utc": {
+  "start": "23:47",
+  "route_choice_and_plan_commit": "23:47-00:08 (2279b18)",
+  "tool_and_tests_commit": "00:11 (7dd53f3, d95e0ff)",
+  "pairs_serial_run_timed_out": "00:11-00:36 (killed at the 25 min timeout; no output)",
+  "pairs_batched": "00:38",
+  "fetch_controls": "00:39 (SPARCL 502; partial spectra deleted) and 00:40-00:42 (16 pairs)",
+  "validate": "00:43",
+  "result_and_state_files": "00:44-00:55"
+ },
+ "downloads_mb_estimate": 20,
+ "downloads_note": "estimate, not stored: about 0.47 MB of SPARCL JSON per spectrum (32 kept plus a few in the aborted fetch and a probe); VizieR tables and TAP rows are small",
+ "budget_mb": 2000,
+ "cores_max": 4,
+ "kept_spectra_bytes": 610276,
+ "environment_note": "installing sparclclient into the project venv changed numpy and pandas; both were restored to the cached versions (numpy 2.5.4, pandas 3.0.6) and sparclclient was removed; the REST API is called directly with requests"
+}

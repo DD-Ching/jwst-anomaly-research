@@ -3949,6 +3949,19 @@ and measures the residual flux between the images.
 **Revisit if** HST, Euclid or HSC PDR3 image models (PSF-subtracted) are available for the 11 colour-matched pairs;
 spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ tables add pairs of 2–3″.
 
+**Addendum (2026-10-23, DESI DR1 spectra, `results/w2_desi_pairs/RESULT.md`).**
+- **Data:** DESI DR1 has QSO spectra of both components for 13 rejected pairs, among them J0130+0725, J0728+2607 and
+  J1428+0500. It also has them for 9 catalogued lenses and 7 Hennawi binaries (θ ≤ 10″), all retrieved anonymously
+  through Data Lab TAP and SPARCL.
+- **Test:** a frozen spectral test, the mean per-pixel χ²_ν of continuum-normalised broad-line profiles with a free
+  scale, T = 3.
+  - It passes on the lenses: 9 / 9 "one source".
+  - It fails on the binaries: 1 / 7 "two spectra", with ≥ 70 % required.
+  - So it is not validated, and the rejected pairs' spectra were not retrieved or read.
+- **Rejected:** changing T, the lines or the statistic after the gate; a Δv rule seen post hoc on the same controls.
+- **Revisit if:** a pre-registered statistic with power on broad, moderate differences (binned profiles, velocity
+  offsets, narrow absorbers) is validated on fresh controls.
+
 ## D-065 W5 in Euclid Q1: no count screen; next is a radial-shear screen on Euclid Q1 shapes (2026-10-09)
 
 **Decision.** Do not port the D-063 count screen to Euclid Q1. Its S/N at θ_E ≤ 4′ is limited by galaxy clustering,

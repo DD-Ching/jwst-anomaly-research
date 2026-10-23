@@ -1,0 +1,27 @@
+{
+ "label": "derived (control spectra only; no target retrieved)",
+ "T": 3.0,
+ "rules": {
+  "min_controls": 6,
+  "pos_frac": 0.8,
+  "neg_frac": 0.7
+ },
+ "usable_positive": 9,
+ "usable_negative": 7,
+ "positive_consistent": 9,
+ "negative_different": 1,
+ "positive_frac": 1.0,
+ "positive_wilson95": [
+  0.7008472464490407,
+  1.0
+ ],
+ "negative_frac": 0.14285714285714285,
+ "negative_wilson95": [
+  0.02567895594897479,
+  0.51313450331903
+ ],
+ "G1": true,
+ "G2": true,
+ "G3": false,
+ "passed": false
+}
