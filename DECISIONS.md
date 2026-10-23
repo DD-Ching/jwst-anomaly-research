@@ -2361,6 +2361,16 @@ isolated. Decision: the reference route is closed for SMACS 0723 (model ICLv2, D
 with a public image list (D-033 addendum 4 already covers its systems 1–2).
 Revisit if: a SMACS model with spectroscopic z for systems 12–25 or a total-flux reference built for arcs is public.
 
+**Addendum 2026-10-23t (RXJ2129, Dhanasingham+2026 Lenstool, gate K; reference inputs).** WHL0137 is skipped: its
+JWST-era image list (Scofield+2025) covers only systems 1–2, already tested in D-033 addendum 4, and its JWST-era model
+has an undocumented deflection unit. Frozen plan `results/lens_consistency/rxj2129_djaref/PLAN_1.md`: the paper's
+Appendix B table (31 images, 10 families, all spectroscopic, JWST/Gaia frame) against the pinned
+`rxj2129-lenstool-maps`. Gate K passes (rms 0.449″, 31 / 31 within 3″; own constraints only). The DJA v7.0
+`fix_phot` header carries every SMACS rule-2 column. 6 families have more predicted than catalogued images
+(stage-2 inputs, not read). Decision: RXJ2129 goes to stage 2 with El Gordo stage 2b's rules under a new frozen
+plan. Revisit if: a published erratum or data release changes the table (the text says 11 systems, the table has 10
+families).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
