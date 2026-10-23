@@ -24,6 +24,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - Sérsic flux-unit fix after the v2 runs (before / after kept);
   - a worker restart (v2 validation rerun identically);
   - F814W star G range and pair separations differ from the plan text (RESULT §9).
+## 2026-10-23: Gate C2 shared-pair counting frozen as a rule for the next field (D-034 addendum i); no flag read
+- **Code:** `m0417_arcref.merge_shared_pairs` (moved from `a370_c2_posthoc.py`) and `gate_c2_shared`: arc-referenced
+  controls of different systems sharing one (reference, counterpart) pair count once; merged class by precedence absent
+  > recovered / confused > ambiguous > other (the #469 version took the first member's class when none was absent, so
+  an untestable member could hide a testable one; no stored table has such a group).
+- **Check:** `scripts/a370_c2_posthoc.py` now calls the frozen function; `posthoc.json` is byte-identical (Abell 370
+  arc 19 / 25 → 19 / 23; MACS0416 58 / 59 → 49 / 50; MACS0417, MACS1149, MACS1423 unchanged). Tests cover precedence,
+  non-arc rows and same-system pairs.
+- **Not done:** no new field run; Abell 370's flags stay unread (owner's call, #469). The five CANUCS-reference
+  fields are all used, so the next field needs another reference catalogue (e.g. UNCOVER photometry with Abell 2744;
+  not checked yet) and its own frozen plan with gate K first.
 
 ## 2026-10-23: W2 DESI pairs evidence audit: J2351+1343 is misidentified; of the other 12 rejected pairs 2 have stronger ordinary explanations, 3 are disputed, 7 stay open; J2244−0550 (likely lens in its source paper) has public HST imaging with no published use found; the DESI classifier line stops
 - **Plan:** `results/w2_desi_pairs/evidence/PLAN.md`. Metadata and literature only: no spectrum read, and #472's
