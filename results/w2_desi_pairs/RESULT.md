@@ -13,6 +13,14 @@
   - T = 3: ASSUMPTION.
 - **Scope:** a bounded trial of one route, not a search. It never tests whether a deflector is dark, and nothing here
   is a candidate.
+- **Wording correction (2026-10-23, evidence audit `evidence/RESULT.md`; numbers, T and verdict unchanged):**
+  - D ≤ T means only "no profile difference above T at DESI precision". It does not show one source: 6 of 7
+    catalogued binaries also have D ≤ T, and 8 of the 9 lenses are close enough (≤ 2″) for fibre crosstalk.
+  - 9 / 9 is the G2 pass count of that rule on the lenses. It is not an accuracy for identifying one source.
+  - The quoted labels "one source" / "consistent with one source" below are PLAN §4's names for D ≤ T, kept for the
+    record; read them as "no difference above T".
+  - Of the "13 rejected pairs" below, J2351+1343's DESI pair is not the catalogued pair (evidence audit §1). The count
+    is kept as computed.
 
 ## 1. Data
 - **Sample** (`pairs.json`, PLAN §2): 106 catalogued lenses and 123 rejected pairs (D-064 pinned inputs), plus 27
@@ -28,16 +36,16 @@
 - **Overlap not foreseen by the plan** (`gate.json` → `overlap_rejected_with_controls`): two rejected pairs,
   J074013.42+292645.8 and J103519.22+075256.3, have the same DESI TARGETIDs as the Hennawi controls SDSSJ0740+2926 and
   SDSSJ1035+0752.
-  - Their spectra were therefore retrieved and read, in the control role. D = 1.04 and 1.35: "one source" for two
-    catalogued binaries.
+  - Their spectra were therefore retrieved and read, in the control role. D = 1.04 and 1.35, i.e. D ≤ T ("one source" in
+    PLAN §4 wording) for two catalogued binaries.
   - The other **11 rejected pairs were not retrieved or read.**
   - A future round must remove such overlaps before the gate.
 
 ## 2. Control gate (`gate.json`, `controls.json`, `controls_sheet.png`; PLAN §4)
-| | usable | D ≤ 3 ("one source") | D > 3 ("two spectra") | rule | result |
+| | usable | D ≤ 3 (no difference above T; PLAN: "one source") | D > 3 ("two spectra") | rule | result |
 |---|---|---|---|---|---|
 | G1 | 9 lenses, 7 binaries | | | ≥ 6 each | pass |
-| G2 lenses | 9 | 9 (1.00; Wilson 0.70–1.00) | 0 | ≥ 80 % one source | pass |
+| G2 lenses | 9 | 9 (1.00; Wilson 0.70–1.00) | 0 | ≥ 80 % with D ≤ T | pass |
 | G3 binaries | 7 | 6 | 1 (0.14; Wilson 0.03–0.51) | ≥ 70 % two spectra | **fail** |
 
 - **Lenses:** D = 1.02–1.30.

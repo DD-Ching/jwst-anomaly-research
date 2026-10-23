@@ -1,0 +1,1466 @@
+{
+ "label": "derived (identity.json, pinned catalogue rows, literature.json); no spectrum read",
+ "systems": {
+  "J0130+0725": {
+   "position": {
+    "ra": 22.5859,
+    "dec": 7.4212,
+    "sep_cat": 2.06,
+    "sep_desi": 2.1328820602189906
+   },
+   "desi": {
+    "a": {
+     "targetid": "39627965927001229",
+     "mean_fiber_ra": "22.58585642650309",
+     "mean_fiber_dec": "7.420910387031799",
+     "z": "1.553045671183165",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39627965927001231",
+     "mean_fiber_ra": "22.58597316704288",
+     "mean_fiber_dec": "7.421491434769444",
+     "z": "1.545394932994935",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "2566502031787343744",
+    "gaia_b": "2566502031787388672",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.02,
+     "type": "PSF",
+     "mag_g": "19.816868",
+     "mag_r": "19.451239",
+     "mag_z": "19.385077"
+    },
+    "tractor_match_b": {
+     "d": 0.17,
+     "type": "PSF",
+     "mag_g": "19.114227",
+     "mag_r": "18.862223",
+     "mag_z": "18.915653"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 0.7,
+    "sep_desi_minus_cat": 0.07,
+    "close_le_2arcsec": false,
+    "fibre_midpoint_to_lemon_position": 0.05
+   },
+   "catalogue": {
+    "Lemon2023": [
+     {
+      "recno": "12",
+      "Name": "J0130+0725",
+      "RAJ2000": "022.58590",
+      "DEJ2000": "+07.42120",
+      "Obs": "WD,MD",
+      "G1mag": "18.98",
+      "G2mag": "19.65",
+      "Sep": "2.06",
+      "sigPM1": "1.33",
+      "Run": "NOT",
+      "Class": "UQP",
+      "z": "1.5400",
+      "Flesch15": "0",
+      "Flesch21": "1",
+      "DESI": "1",
+      "AllWISE": "1",
+      "PS1": "1",
+      "GaiaDR2": "1"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "PS1 J013021+072516 (Rusu et al. 2019, rank C)",
+     "Jing2025 J0130+0725"
+    ],
+    "catalogue": {
+     "source": "Lemon2023 table 1",
+     "class": "UQP (arXiv v1: NIQ)",
+     "basis": "NOT-ALFOSC resolved spectra, section 4.3.4: 'different emission line profiles, as there is prominent absorption in the CIV and MgII lines of the fainter quasar'; 'likely explained by the system being a projected pair with some small velocity separation'; an archival eBOSS spectrum resolves both absorption doublets; no residuals in PSF-subtracted images",
+     "limits": "'Intrinsic absorption along different sightlines to the same source quasar cannot necessarily be ruled out.'"
+    },
+    "later": [
+     {
+      "ref": "Chen2026 section 3.1.1",
+      "class": "dual quasar (DQ), table 3: dv 900.8 km/s, 17.4 kpc",
+      "basis": "DESI DR1 spectra of A and B (their Palomar DBSP slit was misaligned and the spectra blended); flux ratio shows 'mild fluctuations' near CIV, CIII], MgII; no deflector detected; similar colours",
+      "limits": "'the LQ hypothesis cannot be completely ruled out'",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Jing2025",
+      "class": "QP (dv 899.7 km/s)",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Dawes2023",
+      "class": "grade B candidate",
+      "basis": "Legacy Survey imaging",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "HST ACS F814W (GO 17308, 674 s): no light between the images to F814W ~ 23, about 3.5 mag below a typical ordinary lens (repo_HST, injection-calibrated)",
+     "resolved_spectra": "NOT-ALFOSC (Lemon2023); archival eBOSS (one fibre)",
+     "time_delay": "not found",
+     "lens_galaxy": "none detected (HST and ground)"
+    },
+    "reading": "projected / dual favoured by two authors (Lemon2023 absorption reading; Chen2026 with the same DESI spectra), both leaving a lens open; HST excludes a typical ordinary lens galaxy but does not itself support a binary",
+    "missing": "an independent velocity or profile difference that absorption cannot explain, e.g. higher-resolution resolved spectra of both components, or two-epoch flux ratios"
+   }
+  },
+  "J0133+0816": {
+   "position": {
+    "ra": 23.2695,
+    "dec": 8.2788,
+    "sep_cat": 1.55,
+    "sep_desi": 1.736831256424386
+   },
+   "desi": {
+    "a": {
+     "targetid": "39627983916368948",
+     "mean_fiber_ra": "23.26933457852294",
+     "mean_fiber_dec": "8.279031398996096",
+     "z": "1.278954091540821",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39627983916368957",
+     "mean_fiber_ra": "23.26976169372159",
+     "mean_fiber_dec": "8.278798771315866",
+     "z": "1.27932833862106",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "2566660193958109184",
+    "gaia_b": "2566660193958573312",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.18,
+     "type": "PSF",
+     "mag_g": "20.822176",
+     "mag_r": "20.396994",
+     "mag_z": "20.456219"
+    },
+    "tractor_match_b": {
+     "d": 0.04,
+     "type": "PSF",
+     "mag_g": "20.75555",
+     "mag_r": "20.284191",
+     "mag_z": "20.34952"
+    },
+    "n_tractor_6arcsec": 3,
+    "dg_tractor": 0.07,
+    "sep_desi_minus_cat": 0.19,
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.45
+   },
+   "catalogue": {
+    "Lemon2023": [
+     {
+      "recno": "13",
+      "Name": "J0133+0816",
+      "RAJ2000": "023.26950",
+      "DEJ2000": "+08.27880",
+      "Obs": "WD,MD",
+      "G1mag": "20.24",
+      "G2mag": "20.57",
+      "Sep": "1.55",
+      "Run": "NOT",
+      "Class": "UQP",
+      "z": "1.2700",
+      "Flesch15": "0",
+      "Flesch21": "1",
+      "DESI": "1",
+      "AllWISE": "1",
+      "PS1": "1",
+      "GaiaDR2": "1"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "Jing2025 J0133+0816"
+    ],
+    "catalogue": {
+     "source": "Lemon2023 table 1",
+     "class": "UQP (arXiv v1: NIQ)",
+     "basis": "NOT spectra, section 4.3.5: 'small differences in the widths of the CIII] and MgII emission lines'; deep CFHT riz MegaCam data fitted as two PSFs show no obvious lensing galaxy",
+     "limits": "S/N of the NOT spectra not quantified in the text"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QPC (dv 49.2 km/s)",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Dawes2023",
+      "class": "grade A candidate",
+      "basis": "Legacy Survey imaging",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "CFHT MegaCam riz (Lemon2023); archives not checked this round",
+     "resolved_spectra": "NOT (Lemon2023)",
+     "time_delay": "not found",
+     "lens_galaxy": "none in ground-based imaging"
+    },
+    "reading": "open: Lemon2023 small line-width differences, Jing2025 QPC (chromatic DESI flux ratio, fibres 1.74\" apart); deep CFHT shows no lens",
+    "missing": "high-resolution imaging for lens light; higher-S/N resolved spectra"
+   }
+  },
+  "J0728+2607": {
+   "position": {
+    "ra": 112.116,
+    "dec": 26.1173,
+    "sep_cat": 2.15,
+    "sep_desi": 2.072221030595395
+   },
+   "desi": {
+    "a": {
+     "targetid": "39628394240938051",
+     "mean_fiber_ra": "112.1156414068888",
+     "mean_fiber_dec": "26.11704113009977",
+     "z": "1.025851217444284",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39628394240938063",
+     "mean_fiber_ra": "112.1161354320573",
+     "mean_fiber_dec": "26.11740796725863",
+     "z": "1.025901970663972",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "871794729486951168",
+    "gaia_b": "871794729486078336",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.11,
+     "type": "PSF",
+     "mag_g": "19.85701",
+     "mag_r": "19.704798",
+     "mag_z": "19.785952"
+    },
+    "tractor_match_b": {
+     "d": 0.13,
+     "type": "PSF",
+     "mag_g": "19.051537",
+     "mag_r": "18.88152",
+     "mag_z": "18.787281"
+    },
+    "n_tractor_6arcsec": 3,
+    "dg_tractor": 0.81,
+    "sep_desi_minus_cat": -0.08,
+    "close_le_2arcsec": false,
+    "fibre_midpoint_to_lemon_position": 0.45
+   },
+   "catalogue": {
+    "Lemon2023": [
+     {
+      "recno": "70",
+      "Name": "J0728+2607",
+      "RAJ2000": "112.11600",
+      "DEJ2000": "+26.11730",
+      "Obs": "WD,MD",
+      "G1mag": "18.92",
+      "G2mag": "19.89",
+      "Sep": "2.15",
+      "sigPM1": "1.89",
+      "sigPM2": "0.38",
+      "Run": "NOT",
+      "Class": "UQP",
+      "z": "1.0250",
+      "Flesch15": "0",
+      "Flesch21": "1",
+      "DESI": "1",
+      "AllWISE": "1",
+      "PS1": "1",
+      "GaiaDR2": "1"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "GraL J0728+2607 (XMM-Newton obs 0902860601, PI Connor, 2022-09-29, 17.2 ks; no published result found)",
+     "Jing2025 J0728+2607"
+    ],
+    "catalogue": {
+     "source": "Lemon2023 table 1",
+     "class": "UQP (arXiv v1: NIQ)",
+     "basis": "NOT-ALFOSC, section 4.3.11: 'large differences in their emission line profiles and continua, thus making it a likely physical quasar pair'",
+     "limits": "listed under UQP despite the text; differences could in principle be microlensing/extinction"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QP (dv 7.5 km/s)",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Dawes2023",
+      "class": "grade C candidate",
+      "basis": "Legacy Survey imaging",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "HST ACS F814W (GO 17308, 674 s): with an empirical PSF no light between the images to F814W ~ 23, at least 1.8 mag below any ordinary lens (repo_HST)",
+     "resolved_spectra": "NOT (Lemon2023)",
+     "time_delay": "not found",
+     "lens_galaxy": "none detected (HST)"
+    },
+    "reading": "binary favoured: Lemon2023's NOT spectra differ strongly; HST excludes a typical ordinary lens galaxy (repo_HST) but does not itself support a binary; #472 added nothing here",
+    "missing": "nothing needed for W2 unless microlensing / variability could mimic the NOT differences; a second-epoch resolved spectrum would test that"
+   }
+  },
+  "J0909-0749": {
+   "position": {
+    "ra": 137.4946,
+    "dec": -7.8179,
+    "sep_cat": 0.81,
+    "sep_desi": 0.8434569466661951
+   },
+   "desi": {
+    "a": {
+     "targetid": "39627600242411562",
+     "mean_fiber_ra": "137.4947361505929",
+     "mean_fiber_dec": "-7.817898632237106",
+     "z": "1.07743740616102",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39627600242411558",
+     "mean_fiber_ra": "137.4945098106812",
+     "mean_fiber_dec": "-7.817830728446276",
+     "z": "1.07895187446774",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "5744279374103317632",
+    "gaia_b": "5744279378398163840",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.17,
+     "type": "PSF",
+     "mag_g": "18.718622",
+     "mag_r": "18.397318",
+     "mag_z": "18.468706"
+    },
+    "tractor_match_b": {
+     "d": 0.17,
+     "type": "PSF",
+     "mag_g": "19.324",
+     "mag_r": "18.949368",
+     "mag_z": "18.983799"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 0.61,
+    "sep_desi_minus_cat": 0.03,
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.15
+   },
+   "catalogue": {
+    "Lemon2023": [
+     {
+      "recno": "87",
+      "Name": "J0909-0749",
+      "RAJ2000": "137.49460",
+      "DEJ2000": "-07.81790",
+      "Obs": "WD,MD",
+      "G1mag": "18.24",
+      "G2mag": "19.11",
+      "Sep": "0.81",
+      "sigPM1": "0.71",
+      "sigPM2": "1.13",
+      "Run": "NTT4",
+      "Class": "UQP",
+      "z": "1.0750",
+      "Flesch15": "0",
+      "Flesch21": "1",
+      "DESI": "1",
+      "AllWISE": "1",
+      "PS1": "1",
+      "GaiaDR2": "1"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "Jing2025 J0909-0749 (Contaminant)",
+     "VLASS 2.6 mJy source"
+    ],
+    "catalogue": {
+     "source": "Lemon2023 table 1",
+     "class": "UQP (arXiv v1: NIQ)",
+     "basis": "NTT-EFOSC2, section 4.3.14: resolved z = 1.075 quasar lines in each component, 'however the continua are significantly different'; Pan-STARRS two-PSF fit shows no significant residuals in the redder bands; VLASS 2.6 mJy",
+     "limits": "continuum differences can come from extinction or microlensing in a lens"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "Contaminant (dv 218.5 km/s)",
+      "basis": "visual; contaminants are 'most plausibly either duplicated observations of a single source or cases with poor spectral quality'",
+      "limits": "at 0.84\" the two 1.5\" DESI fibres overlap",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Makarov et al. 2023 (VizieR J/ApJS/264/4)",
+      "class": "dual-AGN candidate",
+      "basis": "Gaia astrometry (not re-read here)",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "Pan-STARRS only (Lemon2023)",
+     "resolved_spectra": "NTT-EFOSC2 (Lemon2023)",
+     "time_delay": "not found",
+     "lens_galaxy": "none in ground-based imaging"
+    },
+    "reading": "open; the DESI pair itself is unreliable (fibre overlap; Jing2025 'Contaminant')",
+    "missing": "high-resolution imaging and spectra that resolve 0.8\""
+   }
+  },
+  "J1202+0703": {
+   "position": {
+    "ra": 180.6182,
+    "dec": 7.0572,
+    "sep_cat": 1.21,
+    "sep_desi": 1.2120218314453521
+   },
+   "desi": {
+    "a": {
+     "targetid": "39627956565313598",
+     "mean_fiber_ra": "180.6181508717106",
+     "mean_fiber_dec": "7.057028183630854",
+     "z": "2.191231101252569",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39627956565313594",
+     "mean_fiber_ra": "180.617964023465",
+     "mean_fiber_dec": "7.057309188461314",
+     "z": "2.187087622353028",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "3898742441091558016",
+    "gaia_b": "3898742445387564544",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.04,
+     "type": "PSF",
+     "mag_g": "19.863016",
+     "mag_r": "19.826763",
+     "mag_z": "19.464823"
+    },
+    "tractor_match_b": {
+     "d": 0.01,
+     "type": "PSF",
+     "mag_g": "20.634777",
+     "mag_r": "20.527332",
+     "mag_z": "20.289625"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 0.77,
+    "sep_desi_minus_cat": 0.0,
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.52
+   },
+   "catalogue": {
+    "Lemon2023": [
+     {
+      "recno": "121",
+      "Name": "J1202+0703",
+      "RAJ2000": "180.61820",
+      "DEJ2000": "+07.05720",
+      "Obs": "WD",
+      "G1mag": "19.76",
+      "G2mag": "20.74",
+      "Sep": "1.21",
+      "sigPM1": "1.99",
+      "Run": "NTT4",
+      "Class": "UQP",
+      "z": "2.1870",
+      "Flesch15": "0",
+      "Flesch21": "0",
+      "DESI": "1",
+      "AllWISE": "1",
+      "PS1": "1",
+      "GaiaDR2": "1"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "GRALJ1202+0703 / GRAL120228+0703 (Keck LRIS target names)",
+     "Jing2025 J1202+0703"
+    ],
+    "catalogue": {
+     "source": "Lemon2023 table 1",
+     "class": "UQP (arXiv v1: NIQ)",
+     "basis": "NTT-EFOSC2, section 4.3.18: two resolved traces with 'similar continua and profiles, except for absorption in the CIV line of the fainter trace. No lens is seen in the residuals.'",
+     "limits": "imaging used for the residuals not named"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QPC (dv 389.5 km/s)",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Dawes2023",
+      "class": "grade A candidate",
+      "basis": "Legacy Survey imaging",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "ground-based only in the literature",
+     "resolved_spectra": "NTT-EFOSC2 (Lemon2023); Keck LRIS 2022-06-23 and 2023-03-28 in KOA (archive_check), no published result found",
+     "time_delay": "not found",
+     "lens_galaxy": "none in ground-based imaging"
+    },
+    "reading": "open: Lemon2023 similar spectra (one absorber), Jing2025 QPC (chromatic DESI flux ratio, fibres 1.21\" apart); no lens seen",
+    "missing": "high-resolution imaging for lens light: none found in MAST, ESO or KOA (archive_check)",
+    "archive_check": {
+     "new_public_data_found": [
+      "Keck LRIS long-slit spectra (1.5\" slit, 600/4000 + 400/8500), 2 x 600 s each on 2022-06-23 (C278) and 2023-03-28 (C212), PI Djorgovski (Gaia GraL), KOA, proprietary interval 18 months (access not tried)"
+     ],
+     "none_found_in": "MAST (no HST, JWST or other high-resolution imaging within 3\"), ESO ObsCore, KOA AO imagers (NIRC2, OSIRIS)",
+     "published_use": "not found",
+     "not_checked": "CADC (HTTP 503), SMOKA, HSC (account needed)"
+    }
+   }
+  },
+  "J1428+0500": {
+   "position": {
+    "ra": 217.2309,
+    "dec": 5.0058,
+    "sep_cat": 2.23,
+    "sep_desi": 2.204242740040114
+   },
+   "desi": {
+    "a": {
+     "targetid": "2781075411566612",
+     "mean_fiber_ra": "217.231011605658",
+     "mean_fiber_dec": "5.005523519215383",
+     "z": "1.37486172414636",
+     "program": "bright"
+    },
+    "b": {
+     "targetid": "39627909081598677",
+     "mean_fiber_ra": "217.2307695526192",
+     "mean_fiber_dec": "5.006086328659032",
+     "z": "1.376438800749883",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "3669139777281314432",
+    "gaia_b": "3669139777279777408",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.06,
+     "type": "PSF",
+     "mag_g": "20.049294",
+     "mag_r": "19.799305",
+     "mag_z": "19.95588"
+    },
+    "tractor_match_b": {
+     "d": 0.09,
+     "type": "PSF",
+     "mag_g": "19.855526",
+     "mag_r": "19.703772",
+     "mag_z": "19.87292"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 0.19,
+    "sep_desi_minus_cat": -0.03,
+    "close_le_2arcsec": false,
+    "fibre_midpoint_to_lemon_position": 0.04
+   },
+   "catalogue": {
+    "Lemon2023": [
+     {
+      "recno": "138",
+      "Name": "J1428+0500",
+      "RAJ2000": "217.23090",
+      "DEJ2000": "+05.00580",
+      "Obs": "WD,MD",
+      "G1mag": "19.89",
+      "G2mag": "19.96",
+      "Sep": "2.23",
+      "sigPM1": "1.50",
+      "sigPM2": "2.26",
+      "Run": "WHT",
+      "Class": "UQP",
+      "z": "1.3750",
+      "Flesch15": "0",
+      "Flesch21": "1",
+      "DESI": "1",
+      "AllWISE": "1",
+      "PS1": "1",
+      "GaiaDR2": "1"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "Jing2025 J1428+0500",
+     "LAMOST spectra of both components (per SIMBAD; not read)"
+    ],
+    "catalogue": {
+     "source": "Lemon2023 table 1",
+     "class": "UQP (arXiv v1: NIQ)",
+     "basis": "WHT-ISIS, section 4.3.19: both at z = 1.375 'with differing MgII profiles due to absorption in the fainter component'; LS data well fit by two PSFs; Lemon2019 table 4 called it NIQ (same redshift, no lens detected)",
+     "limits": "'If the quasars are distinct...'; absorption differences can arise along two sightlines to one source"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QP (dv 215.2 km/s)",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
+      "same_desi_dr1": true,
+      "limits": "same sources, but for one component Jing2025 lists TARGETID 39627909081598681 (dark programme) where #472 used 2781075411566612 (bright programme), 0.06\" apart: possibly a different DESI coadd of that component"
+     },
+     {
+      "ref": "Dawes2023",
+      "class": "grade A candidate",
+      "basis": "Legacy Survey imaging",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "Legacy Survey only; no HST in MAST within 10\" (repo_HST, 2026-10-09)",
+     "resolved_spectra": "WHT-ISIS (Lemon2019, Lemon2023)",
+     "time_delay": "not found",
+     "lens_galaxy": "none in ground-based imaging"
+    },
+    "reading": "open",
+    "missing": "high-resolution imaging for lens light"
+   }
+  },
+  "J2244-0550": {
+   "position": {
+    "ra": 341.0473,
+    "dec": -5.8471,
+    "sep_cat": 1.02,
+    "sep_desi": 1.0670122417698686
+   },
+   "desi": {
+    "a": {
+     "targetid": "39627651668773421",
+     "mean_fiber_ra": "341.0473617788773",
+     "mean_fiber_dec": "-5.847315028079489",
+     "z": "2.843811618157589",
+     "program": "bright"
+    },
+    "b": {
+     "targetid": "39627651668773415",
+     "mean_fiber_ra": "341.0472094957208",
+     "mean_fiber_dec": "-5.847060277985493",
+     "z": "2.842976087993399",
+     "program": "bright"
+    }
+   },
+   "identity": {
+    "gaia_a": "2623596445097415040",
+    "gaia_b": "2623596440802803584",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.03,
+     "type": "PSF",
+     "mag_g": "18.670261",
+     "mag_r": "18.332388",
+     "mag_z": "18.138075"
+    },
+    "tractor_match_b": {
+     "d": 0.07,
+     "type": "PSF",
+     "mag_g": "18.215233",
+     "mag_r": "17.973907",
+     "mag_z": "17.863176"
+    },
+    "n_tractor_6arcsec": 3,
+    "dg_tractor": 0.46,
+    "sep_desi_minus_cat": 0.05,
+    "close_le_2arcsec": true,
+    "fibre_midpoint_to_lemon_position": 0.32
+   },
+   "catalogue": {
+    "Lemon2023": [
+     {
+      "recno": "166",
+      "Name": "J2244-0550",
+      "RAJ2000": "341.04730",
+      "DEJ2000": "-05.84710",
+      "Obs": "WD",
+      "G1mag": "18.23",
+      "G2mag": "17.81",
+      "Sep": "1.02",
+      "sigPM1": "1.47",
+      "sigPM2": "1.09",
+      "Run": "NTT3",
+      "Class": "UQP",
+      "z": "2.8400",
+      "Flesch15": "0",
+      "Flesch21": "0",
+      "DESI": "1",
+      "AllWISE": "1",
+      "PS1": "1",
+      "GaiaDR2": "1"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "GRAL224411-0550 (Keck LRIS target name)",
+     "DESI-341.0473-05.8472 (Dawes2023, grade A)",
+     "Jing2025 J2244-0550"
+    ],
+    "catalogue": {
+     "source": "Lemon2023",
+     "class": "conflict inside the source paper: discussed in section 4.2 'Likely Lensed Quasars' (subsection 4.2.16; the abstract counts 17 likely lenses), but table 1 gives the UQP class (named NIQ in arXiv v1 and UQP in VizieR; Lemon2023 section 3.3: UQP is 'akin to Nearly Identical Quasars (NIQs)')",
+     "basis": "NTT-EFOSC2, section 4.2.16: 'both components to be quasars at z=2.84 with almost identical profiles. However, no lens residuals are seen in the Pan-STARRS or Legacy Survey PSF-subtracted images.' Section 4.2 intro: these systems 'should be prioritised for follow-up high-resolution imaging'",
+     "limits": "the table class does not separate likely lenses from UQPs: 13 of the 17 section 4.2 systems carry VizieR class UQP"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QPC (dv 65.2 km/s)",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Dawes2023",
+      "class": "grade A candidate ('Double', 1.02\")",
+      "basis": "Legacy Survey imaging",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "Pan-STARRS and Legacy Survey in the literature; public HST (2024) and Keck AO (2020) imaging exist with no published result found (archive_check)",
+     "resolved_spectra": "NTT-EFOSC2 (Lemon2023); Keck LRIS 2020 and 2022 (archive_check), no published result found",
+     "time_delay": "not found",
+     "lens_galaxy": "none in ground-based imaging"
+    },
+    "reading": "disputed: likely lens in its source paper (independent NTT spectra 'almost identical'), quasar-pair candidate in Jing2025 (DESI flux ratio varying with wavelength, from fibres 1.07\" apart, where Jing2025 expects severe spillover); a chromatic flux ratio can also come from extinction or microlensing in a lens",
+    "missing": "high-resolution imaging for lens light, which is the step Lemon2023 asks for",
+    "archive_check": {
+     "new_public_data_found": [
+      "HST ACS/WFC F814W, 674 s, 2024-08-31, GO 17308 (PI Lemon, 'An HST Gap Program for lensed Quasars'), obs jf56c1010 / hst_17308_c1_acs_wfc_f814w_jf56c1, MAST dataRights PUBLIC",
+      "HST WFC3/IR F160W 422 s, WFC3/UVIS F475W 450 s and F625W 450 s, 2024-07-05, GO 17455 (PI Shen, 'A Snapshot Survey of Sub-arcsec Dual Quasars and Lenses at z>2'), obs if8a5k010/020/030, MAST dataRights PUBLIC",
+      "Keck OSIRIS imager (AO), Kp, 8 x 180 s, 2020-11-01, programme C276 (PI Djorgovski, 'Testing the nature of dark matter with strong gravitational lenses'), KOA OI.20201101.*, proprietary interval 18 months (access not tried)",
+      "Keck LRIS long-slit spectra (1.5\" slit, 600/4000 + 400/8500), 2 x 300 s each on 2020-10-18 (C273, Gaia GraL) and 2022-10-24 (C276), KOA, proprietary interval 18 months (access not tried)"
+     ],
+     "published_use": "not found (searches listed above)",
+     "not_checked": "CADC (CFHT, Gemini, Subaru via CADC; HTTP 503 / connection error twice), SMOKA, HSC (account needed), Euclid (Q1 fields do not include it; DR1 not checked)"
+    }
+   }
+  },
+  "J161320.01+170839.2": {
+   "position": {
+    "ra": 243.33337499999996,
+    "dec": 17.144222222222222,
+    "sep_cat": 0.78,
+    "sep_desi": 0.8245633252283928
+   },
+   "desi": {
+    "a": {
+     "targetid": "39628199625230574",
+     "mean_fiber_ra": "243.3335146920418",
+     "mean_fiber_dec": "17.14415870802488",
+     "z": "1.544552338218696",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39628199625230565",
+     "mean_fiber_ra": "243.333322164346",
+     "mean_fiber_dec": "17.14429514665355",
+     "z": "1.547474291547153",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "1198946481525009920",
+    "gaia_b": "1198946481527136384",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.02,
+     "type": "PSF",
+     "mag_g": "19.60892",
+     "mag_r": "19.462938",
+     "mag_z": "19.59684"
+    },
+    "tractor_match_b": {
+     "d": 0.07,
+     "type": "PSF",
+     "mag_g": "20.164429",
+     "mag_r": "19.678383",
+     "mag_z": "19.490583"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 0.56,
+    "sep_desi_minus_cat": 0.04,
+    "close_le_2arcsec": true,
+    "fibre_a_to_catalogued_component": 0.53,
+    "fibre_b_to_catalogued_component": 0.32
+   },
+   "catalogue": {
+    "SQLS-DR7 table3": [
+     {
+      "recno": "52",
+      "SDSS": "J161320.01+170839.2",
+      "z": "1.549",
+      "imag": "18.67",
+      "theta": "0.78",
+      "Di": "0.51",
+      "Image": "Te(I)",
+      "Com": "no lensing object"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "SDSS J1613+1708 (Jing2025)"
+    ],
+    "catalogue": {
+     "source": "Inada2012 table 3 (SQLS DR7, morphological candidate)",
+     "class": "no lensing object",
+     "basis": "follow-up imaging only, Te(I) = Tek2048 I band at UH88; section 4.1: morphological candidates are imaged first and 'most of the candidates are easily rejected ... because they either have only a single component or show no sign of a lens galaxy'; no follow-up spectrum is listed",
+     "limits": "no SQLS spectroscopy, so SQLS never showed two quasars; the rejection is a lens-galaxy non-detection in seeing-limited imaging"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QPC (dv 344.1 km/s); SLED: lensed-quasar candidate",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
+      "limits": "at 0.82\" the two 1.5\" DESI fibres overlap",
+      "same_desi_dr1": true
+     }
+    ],
+    "independent": {
+     "imaging": "UH88 Tek2048 I (SQLS)",
+     "resolved_spectra": "none found apart from DESI DR1 (fibre overlap)",
+     "time_delay": "not found",
+     "lens_galaxy": "none in seeing-limited imaging"
+    },
+    "reading": "open; that both components are quasars at one redshift rests only on overlapping DESI fibres",
+    "missing": "resolved spectra (slit or IFU at < 0.8\" resolution) and high-resolution imaging"
+   }
+  },
+  "J151109.85+335701.7": {
+   "position": {
+    "ra": 227.79104,
+    "dec": 33.95047,
+    "sep_cat": 1.1,
+    "sep_desi": 1.3103425540338802
+   },
+   "desi": {
+    "a": {
+     "targetid": "2305843018827050187",
+     "mean_fiber_ra": "227.7910512393493",
+     "mean_fiber_dec": "33.95044507210386",
+     "z": "0.799625463337125",
+     "program": "backup"
+    },
+    "b": {
+     "targetid": "39632961548586204",
+     "mean_fiber_ra": "227.7909905478907",
+     "mean_fiber_dec": "33.95080555637585",
+     "z": "0.7996676205838863",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "1290414471588399744",
+    "gaia_b": "1290414475883055872",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.07,
+     "type": "PSF",
+     "mag_g": "19.059578",
+     "mag_r": "18.816942",
+     "mag_z": "18.857092"
+    },
+    "tractor_match_b": {
+     "d": 0.25,
+     "type": "PSF",
+     "mag_g": "20.390926",
+     "mag_r": "19.837112",
+     "mag_z": "19.56172"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 1.33,
+    "sep_desi_minus_cat": 0.21,
+    "close_le_2arcsec": true,
+    "fibre_a_to_catalogued_component": 0.1,
+    "fibre_b_to_catalogued_component": 1.21
+   },
+   "catalogue": {
+    "SQLS-DR5 table2": [
+     {
+      "recno": "44",
+      "SDSS": "J151109.85+335701.7",
+      "z": "0.799",
+      "imag": "18.96",
+      "theta": "1.10",
+      "Di": "0.69",
+      "Image": "8k(V),Te(I),FO(I)",
+      "Spec": "FO",
+      "Com": "Binary QSO (z=0.799, 0.799)",
+      "Sloan": "Sloan",
+      "_RA": "227.79104",
+      "_DE": "+33.95047"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "SDSS J1511+3357 (Inada2010; KayoOguri2012; Jing2025)"
+    ],
+    "catalogue": {
+     "source": "Inada2010 table 2 and section 4.2 (SQLS DR5)",
+     "class": "binary QSO (z = 0.799, 0.799)",
+     "basis": "a possible lens galaxy after subtracting two PSFs from the UH88 I image; Subaru FOCAS spectra of both: 'The CII and MgII emission lines ... have similar shapes in the two objects. The slopes of the continua are also similar.' A deeper Subaru I image (seeing 0.6\") shows no galaxy between the quasars to M_I ~ -19.9 (S/N ~ 10); the residual is attributed to the quasar hosts",
+     "limits": "the binary class rests on the non-detection of a lens galaxy, not on any spectral difference; section 4.1: 'our selection process would reject \"dark lenses\"'"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QPC (dv 12.6 km/s); SLED: quasar pair",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
+      "same_desi_dr1": true,
+      "limits": "same sources, but for one component Jing2025 lists TARGETID 39632961548586205 (dark programme) where #472 used 2305843018827050187 (backup programme), 0.06\" apart: possibly a different DESI coadd of that component"
+     },
+     {
+      "ref": "KayoOguri2012",
+      "class": "binary (dv 80 km/s)",
+      "basis": "adopts the SQLS class",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "UH88 I; Subaru I (0.6\" seeing)",
+     "resolved_spectra": "Subaru FOCAS (Inada2010)",
+     "time_delay": "not found",
+     "lens_galaxy": "none to M_I ~ -19.9 (Subaru); a residual attributed to host galaxies"
+    },
+    "reading": "open, leaning binary in two catalogues on weak grounds: SQLS 'binary' is a lens-galaxy non-detection with similar Subaru spectra; Jing2025 QPC rests on a chromatic DESI flux ratio from fibres closer than 1.5\"",
+    "missing": "high-resolution imaging (lens light vs hosts) or a time delay",
+    "archive_check": {
+     "new_public_data_found": [],
+     "none_found_in": "MAST (SDSS, PS1, GALEX, TESS only), ESO ObsCore, KOA (NIRC2, OSIRIS, KCWI, LRIS, ESI, MOSFIRE)",
+     "published_use": "not applicable",
+     "not_checked": "CADC (HTTP 503), SMOKA (Subaru imaging used by Inada2010 is presumably there), HSC (account needed)"
+    }
+   }
+  },
+  "J155225.62+300902.0": {
+   "position": {
+    "ra": 238.10675,
+    "dec": 30.15056,
+    "sep_cat": 1.25,
+    "sep_desi": 1.2654140710337796
+   },
+   "desi": {
+    "a": {
+     "targetid": "39628486805029505",
+     "mean_fiber_ra": "238.1067078276099",
+     "mean_fiber_dec": "30.15088458012303",
+     "z": "0.7519064610493785",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39628486805029507",
+     "mean_fiber_ra": "238.1067415220607",
+     "mean_fiber_dec": "30.15053428581507",
+     "z": "0.7512902047585072",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "1320920735233195392",
+    "gaia_b": "1320920735234508544",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.04,
+     "type": "PSF",
+     "mag_g": "19.528002",
+     "mag_r": "19.31013",
+     "mag_z": "19.287626"
+    },
+    "tractor_match_b": {
+     "d": 0.1,
+     "type": "PSF",
+     "mag_g": "19.180136",
+     "mag_r": "19.076164",
+     "mag_z": "18.841217"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 0.35,
+    "sep_desi_minus_cat": 0.02,
+    "close_le_2arcsec": true,
+    "fibre_a_to_catalogued_component": 1.19,
+    "fibre_b_to_catalogued_component": 0.08
+   },
+   "catalogue": {
+    "SQLS-DR5 table2": [
+     {
+      "recno": "48",
+      "SDSS": "J155225.62+300902.0",
+      "z": "0.750",
+      "imag": "18.85",
+      "theta": "1.25",
+      "Di": "0.57",
+      "Image": "8k(VI),Op(I),FO(I),UF(K)",
+      "Spec": "FO",
+      "Com": "Binary QSO (z=0.752, 0.752)",
+      "Sloan": "Sloan",
+      "_RA": "238.10675",
+      "_DE": "+30.15056"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "SDSS J1552+3009 (Inada2010; KayoOguri2012; Jing2025)"
+    ],
+    "catalogue": {
+     "source": "Inada2010 table 2 and section 4.2 (SQLS DR5)",
+     "class": "binary QSO (z = 0.752, 0.752)",
+     "basis": "a possible lens galaxy in UH88 I and UKIRT K images; Subaru spectra: 'the MgII emission line of the fainter component ... is slightly broader than that of the brighter component, the two quasar have similar continua'; no galaxy between the components to M_I ~ -19.8 in the deep Subaru I image (seeing ~0.6\"), except extended residuals attributed to the quasar hosts",
+     "limits": "as for J1511: the class rests on lens-galaxy non-detection; a slightly broader MgII can also come from microlensing"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QPC (dv 105.5 km/s); SLED: quasar pair",
+      "basis": "visual (QPC: two components imaged, no lens structure, DESI flux ratio varying with wavelength 'suggesting two distinct sources'; fibre spillover 'expected to be severe' at < 2\")",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "KayoOguri2012",
+      "class": "binary (dv 0 km/s)",
+      "basis": "adopts the SQLS class",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "UH88 I, UKIRT K, Subaru I",
+     "resolved_spectra": "Subaru (Inada2010)",
+     "time_delay": "not found",
+     "lens_galaxy": "none to M_I ~ -19.8"
+    },
+    "reading": "open, leaning binary in two catalogues on weak grounds: SQLS 'binary' is a lens-galaxy non-detection with similar Subaru spectra; Jing2025 QPC rests on a chromatic DESI flux ratio from fibres closer than 1.5\"",
+    "missing": "high-resolution imaging or a time delay (not checked in archives this round)"
+   }
+  },
+  "J074013.42+292645.8": {
+   "position": {
+    "ra": 115.05592,
+    "dec": 29.44606,
+    "sep_cat": 2.64,
+    "sep_desi": 2.67664268534335
+   },
+   "desi": {
+    "a": {
+     "targetid": "39628469268646194",
+     "mean_fiber_ra": "115.0560154059514",
+     "mean_fiber_dec": "29.44677144427852",
+     "z": "0.9800119786653981",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39628469268646191",
+     "mean_fiber_ra": "115.0559552000698",
+     "mean_fiber_dec": "29.44602978331701",
+     "z": "0.9778516954162176",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "878723302007625344",
+    "gaia_b": "878723302009111040",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.05,
+     "type": "PSF",
+     "mag_g": "18.409378",
+     "mag_r": "18.226885",
+     "mag_z": "18.293232"
+    },
+    "tractor_match_b": {
+     "d": 0.05,
+     "type": "PSF",
+     "mag_g": "19.767294",
+     "mag_r": "19.622599",
+     "mag_z": "19.584545"
+    },
+    "n_tractor_6arcsec": 2,
+    "dg_tractor": 1.36,
+    "sep_desi_minus_cat": 0.04,
+    "close_le_2arcsec": false,
+    "fibre_a_to_catalogued_component": 0.05,
+    "fibre_b_to_catalogued_component": 0.01
+   },
+   "catalogue": {
+    "SQLS-DR3 table3": [
+     {
+      "recno": "11",
+      "SDSS": "J074013.44+292648.4",
+      "z": "0.980",
+      "imag": "18.42",
+      "Pair": "Pair",
+      "_RA": "115.05600",
+      "_DE": "+29.44678"
+     },
+     {
+      "recno": "12",
+      "SDSS": "J074013.42+292645.8",
+      "f_z": "(",
+      "z": "0.978",
+      "imag": "19.68",
+      "theta": "2.64",
+      "Com": "QSO pair",
+      "r_SDSS": "1",
+      "Pair": "Pair",
+      "_RA": "115.05592",
+      "_DE": "+29.44606"
+     }
+    ],
+    "Hennawi2006": [
+     {
+      "recno": "37",
+      "n_Name1": "3",
+      "Name1": "SDSSJ0740+2926A",
+      "Name2": "SDSSJ0740+2926B",
+      "z1": "0.978",
+      "z2": "0.980",
+      "theta": "2.6",
+      "dV": "230",
+      "r": "15.0",
+      "chi2": "4.5",
+      "RA1": "07 40 13.45",
+      "DE1": "+29 26 48.4",
+      "umag1": "18.61",
+      "gmag1": "18.46",
+      "rmag1": "18.30",
+      "imag1": "18.42",
+      "zmag1": "18.48",
+      "RA2": "07 40 13.43",
+      "DE2": "+29 26 45.7",
+      "umag2": "19.98",
+      "gmag2": "19.67",
+      "rmag2": "19.50",
+      "imag2": "19.68",
+      "zmag2": "20.03",
+      "SDSS": "SDSS"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "SDSSJ0740+2926A/B, APOJ0740+2926B (Hennawi2006)",
+     "SDSS J0740+2926 (Jing2025; Ji2024)"
+    ],
+    "catalogue": {
+     "source": "Hennawi2006 (binqso) and Inada2008 table 3 'QSO pair', citing Hennawi2006",
+     "class": "binary quasar",
+     "basis": "Hennawi2006 section 5.1: discovery spectra (APO) mostly 'too low a signal to noise ratio to make convincing arguments for or against the lensing hypothesis based on spectral dissimilarity' (this pair is not one of the five with Keck spectra); deeper UH88 optical/NIR images of all binaries <= 4\" show no lens galaxies; 'the absence of a deflector ... does not strictly speaking confirm the binary hypothesis'",
+     "limits": "catalogue chi2 = 4.5 is the photometric colour-similarity statistic (typical 4 for identical colours), not a spectral test"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QP (dv 327.3 km/s); match: BigMAC dual-AGN candidate",
+      "basis": "visual (QP: no prominent lens galaxy and 'noticeably different spectral features')",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "Ji2024",
+      "class": "lensed-quasar candidate",
+      "basis": "Ji2024 table 1 (already documented systems) lists it as 'lensing candidate' with reference [6] = Lemon et al. 2018 (Lemon2018, not read); Ji2024 appendix table 2 also marks it among their own selected lens candidates, chosen by similar broad-line profiles from DESI EDR + SDSS DR17",
+      "limits": "the earlier lens-candidate class originates in Lemon2018, independent of DESI; Ji2024's own selection uses DESI EDR, not the DR1 coadds",
+      "same_desi_dr1": false
+     },
+     {
+      "ref": "#472 (this repository)",
+      "class": "control role, failed test (gate not validated; not evidence): D = 1.04 (no difference above T)",
+      "basis": "same DESI DR1 TARGETIDs",
+      "same_desi_dr1": true
+     }
+    ],
+    "independent": {
+     "imaging": "UH88 deep optical/NIR (Hennawi2006)",
+     "resolved_spectra": "APO discovery spectra (low S/N)",
+     "time_delay": "not found",
+     "lens_galaxy": "none in UH88 imaging"
+    },
+    "reading": "disputed: catalogued binary on a lens-galaxy non-detection with low-S/N spectra; Ji2024 lists it as a lensing candidate, citing Lemon2018 (a DESI-independent origin, not read)",
+    "missing": "higher-S/N resolved spectra independent of DESI, or high-resolution imaging (not checked in archives this round)"
+   }
+  },
+  "J103519.22+075256.3": {
+   "position": {
+    "ra": 158.83008,
+    "dec": 7.88231,
+    "sep_cat": 2.66,
+    "sep_desi": 2.6692684474898316
+   },
+   "desi": {
+    "a": {
+     "targetid": "39627980183437464",
+     "mean_fiber_ra": "158.8300565288484",
+     "mean_fiber_dec": "7.882378620407103",
+     "z": "1.220157773717791",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39627980183437471",
+     "mean_fiber_ra": "158.8306672120247",
+     "mean_fiber_dec": "7.882807395995195",
+     "z": "1.220159789756833",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": "3862931828412982912",
+    "gaia_b": "3862931828411652224",
+    "both_match_distinct_gaia": true,
+    "tractor_match_a": {
+     "d": 0.18,
+     "type": "PSF",
+     "mag_g": "20.621454",
+     "mag_r": "20.001514",
+     "mag_z": "20.077545"
+    },
+    "tractor_match_b": {
+     "d": 0.07,
+     "type": "PSF",
+     "mag_g": "19.4564",
+     "mag_r": "19.194492",
+     "mag_z": "19.30935"
+    },
+    "n_tractor_6arcsec": 3,
+    "dg_tractor": 1.17,
+    "sep_desi_minus_cat": 0.01,
+    "close_le_2arcsec": false,
+    "fibre_a_to_catalogued_component": 0.28,
+    "fibre_b_to_catalogued_component": 0.11
+   },
+   "catalogue": {
+    "SQLS-DR3 table3": [
+     {
+      "recno": "82",
+      "SDSS": "J103519.36+075258.0",
+      "z": "1.215",
+      "imag": "19.03",
+      "Pair": "Pair",
+      "_RA": "158.83067",
+      "_DE": "+07.88278"
+     },
+     {
+      "recno": "83",
+      "SDSS": "J103519.22+075256.3",
+      "f_z": "(",
+      "z": "1.218",
+      "imag": "20.11",
+      "theta": "2.66",
+      "Image": "8k(I), QU(H)",
+      "Com": "QSO pair, no lensing object",
+      "r_SDSS": "1",
+      "Pair": "Pair",
+      "_RA": "158.83008",
+      "_DE": "+07.88231"
+     }
+    ],
+    "Hennawi2006": [
+     {
+      "recno": "38",
+      "n_Name1": "3",
+      "Name1": "SDSSJ1035+0752A",
+      "Name2": "SDSSJ1035+0752B",
+      "z1": "1.216",
+      "z2": "1.218",
+      "theta": "2.7",
+      "dV": "270",
+      "r": "15.8",
+      "chi2": "41.9",
+      "RA1": "10 35 19.37",
+      "DE1": "+07 52 58.0",
+      "umag1": "19.17",
+      "gmag1": "19.13",
+      "rmag1": "18.97",
+      "imag1": "19.03",
+      "zmag1": "19.14",
+      "RA2": "10 35 19.23",
+      "DE2": "+07 52 56.4",
+      "umag2": "20.62",
+      "gmag2": "20.42",
+      "rmag2": "19.98",
+      "imag2": "19.84",
+      "zmag2": "19.84",
+      "SDSS": "SDSS"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "SDSSJ1035+0752A/B, APOJ1035+0752B (Hennawi2006)",
+     "SDSS J1035+0752 (Jing2025)"
+    ],
+    "catalogue": {
+     "source": "Hennawi2006 (binqso) and Inada2008 table 3 'QSO pair, no lensing object' (imaging 8k(I), QU(H) at UH88), citing Hennawi2006",
+     "class": "binary quasar",
+     "basis": "as for J0740 (Hennawi2006 section 5.1: low-S/N APO spectra; no lens galaxy in deeper UH88 images)",
+     "limits": "catalogue chi2 = 41.9 means dissimilar photometric colours, which extinction or microlensing in a lens could also produce"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "LQC (lensed-quasar candidate; dv 0.3 km/s); match: BigMAC dual-AGN candidate",
+      "basis": "visual: 'configurations or spectroscopic features indicative of gravitational lensing'",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "#472 (this repository)",
+      "class": "control role, failed test (gate not validated; not evidence): D = 1.35 (no difference above T)",
+      "basis": "same DESI DR1 TARGETIDs",
+      "same_desi_dr1": true
+     }
+    ],
+    "independent": {
+     "imaging": "UH88 I and H (SQLS / Hennawi2006)",
+     "resolved_spectra": "APO discovery spectra (low S/N)",
+     "time_delay": "not found",
+     "lens_galaxy": "none in UH88 imaging; LS DR10 has a faint red point source 2.0-2.1\" from both components, off the line joining them (identity.json; nature unknown)"
+    },
+    "reading": "disputed: catalogued binary on a lens-galaxy non-detection with low-S/N spectra; Jing2025 lists it as a lensed-quasar candidate from the same DESI data #472 holds (not independent)",
+    "missing": "resolved spectra independent of DESI, or high-resolution imaging (not checked in archives this round)"
+   }
+  },
+  "J235108.70+134320.8": {
+   "position": {
+    "ra": 357.78625,
+    "dec": 13.72244,
+    "sep_cat": 1.86,
+    "sep_desi": 2.052395530168067
+   },
+   "desi": {
+    "a": {
+     "targetid": "39628119941842459",
+     "mean_fiber_ra": "357.7866377041582",
+     "mean_fiber_dec": "13.72301339784319",
+     "z": "1.224620474310898",
+     "program": "dark"
+    },
+    "b": {
+     "targetid": "39628119941842445",
+     "mean_fiber_ra": "357.7860534762075",
+     "mean_fiber_dec": "13.72295942990281",
+     "z": "1.22269514544684",
+     "program": "dark"
+    }
+   },
+   "identity": {
+    "gaia_a": null,
+    "gaia_b": "2769992565750101504",
+    "both_match_distinct_gaia": false,
+    "tractor_match_a": {
+     "d": 0.07,
+     "type": "PSF",
+     "mag_g": "23.447443",
+     "mag_r": "22.409672",
+     "mag_z": "22.029306"
+    },
+    "tractor_match_b": {
+     "d": 0.11,
+     "type": "PSF",
+     "mag_g": "19.57303",
+     "mag_r": "19.10119",
+     "mag_z": "19.003914"
+    },
+    "n_tractor_6arcsec": 3,
+    "dg_tractor": 3.87,
+    "sep_desi_minus_cat": 0.19,
+    "close_le_2arcsec": false,
+    "fibre_a_to_catalogued_component": 1.95,
+    "fibre_b_to_catalogued_component": 0.12
+   },
+   "catalogue": {
+    "SQLS-DR3 table3": [
+     {
+      "recno": "259",
+      "SDSS": "J235108.66+134322.6",
+      "z": "1.218",
+      "imag": "18.81",
+      "Pair": "Pair",
+      "_RA": "357.78608",
+      "_DE": "+13.72294"
+     },
+     {
+      "recno": "260",
+      "SDSS": "J235108.70+134320.8",
+      "imag": "19.92",
+      "theta": "1.86",
+      "Image": "WF(i)",
+      "Com": "No lensing object",
+      "Pair": "Pair",
+      "_RA": "357.78625",
+      "_DE": "+13.72244"
+     }
+    ]
+   },
+   "literature": {
+    "aliases": [
+     "SDSS J235108.66+134322.6 (SQLS primary, z = 1.218)",
+     "SDSS J2351+1343 (Jing2025)"
+    ],
+    "catalogue": {
+     "source": "Inada2008 table 3 (SQLS DR3, colour-selected)",
+     "class": "no lensing object",
+     "basis": "imaging only, WF(i) = WFGS2 i band at UH88; the companion has no redshift in the table",
+     "limits": "SQLS never took a spectrum of the companion"
+    },
+    "later": [
+     {
+      "ref": "Jing2025",
+      "class": "QPC (dv 259.6 km/s)",
+      "basis": "visual (QPC definition, see sources)",
+      "same_desi_dr1": true
+     },
+     {
+      "ref": "SLED (via Jing2025 match_type)",
+      "class": "QUASAR+STAR",
+      "basis": "literature compilation",
+      "same_desi_dr1": false
+     }
+    ],
+    "independent": {
+     "imaging": "UH88 WFGS2 i (SQLS); LS DR10: the SQLS companion is very red (g 22.72, z 18.75) with a Gaia DR3 parallax/error of 3.17 (identity.json); no DESI DR1 redshift row on it (identity.json zpix_5arcsec)",
+     "resolved_spectra": "none for the SQLS companion",
+     "time_delay": "not applicable",
+     "lens_galaxy": "none in UH88 imaging"
+    },
+    "reading": "misidentified: the catalogued SQLS system is a quasar plus (per SLED, red colours and a 3.2-sigma parallax) probably a star, an ordinary explanation; the DESI pair is the quasar plus a different faint source (g 23.45, QSO at z 1.2246, zwarn 0), about 2\" away (fibres 2.05\" apart; fibre a 1.94\" from the quasar's Gaia position), which may be a faint companion or fibre crosstalk from the quasar 3.9 mag brighter: unexplained, not tested here",
+    "missing": "nothing for the SQLS system; for the DESI pair, a resolved spectrum of the faint source"
+   }
+  }
+ }
+}

@@ -1750,3 +1750,28 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   - Jing et al., "A Quasar Pair Sample Compiled from DESI DR1" (arXiv:2505.03103);
   - Lemon et al. 2023, "Gravitationally lensed quasars in Gaia – IV" (arXiv:2206.07714);
   - Chen et al., "Search for Quasar Pairs with Gaia Astrometric Data. III" (arXiv:2607.00093).
+
+## W2 DESI pairs evidence audit (accessed 2026-10-23; `results/w2_desi_pairs/evidence/`)
+- **Lemon et al. 2023** (arXiv:2206.07714): only v1 (2022-06-15), LaTeX source read (§4.2–4.3, table 1); VizieR
+  J/MNRAS/520/3305 ReadMe (class notes). The MNRAS text was not read (OUP HTTP 403).
+- **Jing et al.** (arXiv:2505.03103 v2): `DR1QP.csv` from https://github.com/astroliang/DESI_DR1_QP (1842 rows, last
+  commit 2026-01-22, sha256 f3d05bf1fc8377c99848f88cf708569ecdeed41cae40a6e957fd647b1f789f5e; read, not stored).
+- **Chen et al.** (arXiv:2607.00093) §3.1.1 and table 3. Papers I, II and IV of the series: arXiv:2504.17777,
+  2605.09450, 2603.03042.
+- **SQLS:**
+  - Inada et al. 2008 (arXiv:0708.0828);
+  - Inada et al. 2010 (arXiv:1005.5570, §4.1–4.2);
+  - Inada et al. 2012 (arXiv:1203.1087, §4.1).
+- **Binary catalogues:** Hennawi et al. 2006 (astro-ph/0504535, §3.2 and §5.1); Kayo & Oguri 2012 (arXiv:1203.6410).
+- **Lens-candidate catalogues:**
+  - Dawes et al. 2023 (arXiv:2208.06356; VizieR J/ApJS/269/61/table2; grades within 3″ of each pair stored in
+    `identity.json`);
+  - Ji et al. (arXiv:2412.08397), whose J0740+2926 'lensing candidate' cites Lemon et al. 2018 (not read).
+- **Archives** (metadata only, `archives.json`):
+  - MAST CAOM via `astroquery.mast.Observations`; HST GO 17308 (PI Lemon) and GO 17455 (PI Shen), titles and PIs
+    stored in `archives.json`;
+  - ESO ObsCore TAP https://archive.eso.org/tap_obs/sync;
+  - KOA TAP https://koa.ipac.caltech.edu/TAP/sync;
+  - CADC ObsCore TAP (HTTP 503, not checked).
+- **Identity:** ESA Gaia TAP (https://gea.esac.esa.int/tap-server/tap/sync, `gaiadr3.gaia_source`); NOIRLab Data
+  Lab TAP (`desi_dr1.zpix`, `ls_dr10.tractor`).

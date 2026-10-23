@@ -125,3 +125,5 @@ Three options were compared:
 - **§2:** two rejected pairs share their DESI TARGETIDs with two Hennawi controls; the overlap was not foreseen
   (RESULT §1).
 - **§4:** the close-pair list was missing from the first RESULT and was added at review.
+- **§1, §4 wording (evidence audit, 2026-10-23):** "consistent with one source" for D ≤ T over-reads the test. D ≤ T
+  means no profile difference above T at DESI precision; 6 of 7 catalogued binaries also met it (RESULT §2).
