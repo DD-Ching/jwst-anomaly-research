@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Gate C2 shared-pair counting frozen as a rule (in progress)
+- **Plan:** move the #469 proposal (one control per shared (reference, counterpart) pair, absent if any member is
+  absent) into the gate code as the frozen rule for the next field this route runs on; Abell 370's flags stay unread.
+
 ## 2026-10-23: W2 DESI pairs evidence audit: J2351+1343 is misidentified; of the other 12 rejected pairs 2 have stronger ordinary explanations, 3 are disputed, 7 stay open; J2244−0550 (likely lens in its source paper) has public HST imaging with no published use found; the DESI classifier line stops
 - **Plan:** `results/w2_desi_pairs/evidence/PLAN.md`. Metadata and literature only: no spectrum read, and #472's
   statistic, T and verdict unchanged.
