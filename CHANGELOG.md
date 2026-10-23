@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Abell 2744 UNCOVER-reference stage 2a: DR3 SUPER reference pinned; its `theta_J2000` is SEP's convention (radians, ccw from +x), not the README's
+- **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2a.md`, frozen with its rule functions
+  (`a2744_uncoverref.theta_sample`, `segment_angle`, `theta_check`, unit-tested) before the run.
+- **Inputs pinned** (SOURCES.md): SUPER catalogue, segmap and README by sha256; streamed to the session scratchpad and
+  deleted after the run (cloud disk rule).
+- **Result** (`summary.json` `stage2a_theta_convention`, RESULT.md § Stage 2a): of 2,188 rows passing rule 1, the 500
+  largest with segments ≥ 50 px: H_a (SEP) median residual 2.7°, 98.4 % within 20° → adopted; H_b (README) 46.6°,
+  23.2 % → fails; post hoc, clockwise from +x also fails (43.4°). Grid north-up at 0.040″. Contact sheet of six
+segments looked at (image not stored; ids in RESULT): H_a follows the axes.
+- **Handoff:** next is the frozen stage 2b (predicted / control tables with the WLS source; the field spans several
+  GO 2561 tiles, so `m0417_extra.run_field`'s single-tile footprint must be extended or run per tile; gate C2 with the
+  shared-pair rule; local noise from GO 2561 cutouts, check the pipeline pixel scale against `m1423_canucsref.PIX`).
+
 ## 2026-10-23: Abell 2744 UNCOVER-reference stage 1b: gate K with the WLS source passes (rms 0.835″, 172 / 172 within 3″; deviation after stage 1)
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_1b.md`, frozen before the run, labelled a deviation
   chosen after stage 1's failure; rule 1 committed as the tested function `a2744_uncoverref.gate_k_wls` first.

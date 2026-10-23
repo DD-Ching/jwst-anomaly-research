@@ -56,3 +56,28 @@ read here and are not anomalies by themselves (an unlisted counter-image can be 
 (pin by sha256, freeze the column mapping), gate C2 with the frozen shared-pair rule (D-034 addendum i), then flags.
 The 1.84 GB bCG-subtracted mosaic cannot be cut by byte range, so the local-noise rule needs another noise source
 (e.g. catalogue errors) or a stated download reason.
+
+## Stage 2a: position-angle convention of the DR3 SUPER reference
+
+Plan: `PLAN_2a.md` (frozen and committed with its tested rule functions before the run). Numbers: `summary.json`
+(`stage2a_theta_convention`, with the 500 segment ids used). Run time 36 s (not stored).
+
+**Frozen outcome: H_a adopted.** `theta_J2000` is radians counter-clockwise from +x (SEP's `theta`): median residual
+2.7° (≤ 10°), 98.4 % within 20° (≥ 70 %). The README says "degrees clockwise from the first image axis (along y)"; read as clockwise from +y (H_b) it fails:
+46.6°, 23.2 %. **Post hoc** (review): read as clockwise from +x it also fails (43.4°, 24.0 %;
+`posthoc_cw_from_x`). Sample: 2,188
+rows pass rule 1 before the segment cut; the 500 with the largest `a_image` and ≥ 50 segment pixels are used.
+
+**Reported.** Catalogue pixel grid: 0.0400″ per pixel, +y at PA 0.006°, +x at PA −90.0° (north-up, east left). So sky PA
+= deg(θ) + 90 (mod 180). A contact sheet of six of the 500 segments (ids 54653, 51026, 26828, 25022, 37572, 33881) with both
+readings drawn was looked at in the session (image not stored): the H_a line follows each segment's long axis.
+**Post hoc** (review): segment centroid vs catalogue `x`, `y` (1-based pixels assumed), median 4.9 px, 90th
+percentile 17.4 px (`posthoc_centroid_offset_pix`; per source in `stage2a_sources.ecsv`); id = segment label is not
+tested as a rule, but a mismatch would scatter the H_a residuals, which have median 2.7°.
+
+**Limits.** Validates the column against the release's own segmap (unweighted segment moments), not against an
+independent image. No minimum sample size was frozen (here n = 500). The full segmap is read into memory (fine in this
+session; a cutout reader would be lighter). The README's flux definition (`f_f200w` total, 10 nJy) is taken as stated, not tested here.
+
+**Next.** Stage 2b, its own frozen plan: predicted / control tables with the WLS source over the GO 2561 tiles; gate
+C2 with the shared-pair rule; local noise from GO 2561 byte-range cutouts (decision in `PLAN_2a.md`).
