@@ -159,5 +159,36 @@
   "K_MIN_MATCHED": 0.8,
   "MATCH_ARCSEC": 3.0,
   "grid_step_arcsec": 0.25
+ },
+ "stage2": {
+  "dja": {
+   "sha256": "ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31",
+   "bytes": 17170560,
+   "rows": 6775
+  },
+  "rule_2a": {
+   "zero_point_mag": 23.690601264555838,
+   "n_rows": 6751,
+   "unit_jy": null,
+   "passes": false
+  },
+  "rule_2b": {
+   "rotation_deg": 0.00019252658854360626,
+   "determinant": -0.001599832425813551,
+   "pixel_scale_arcsec": 0.0399979052678206,
+   "n_rows": 6775,
+   "passes": true
+  },
+  "outcome": "stopped at rule 2a / 2b; nothing read",
+  "posthoc_rule_2a": {
+   "posthoc_zero_point_with_detection_tot_corr_mag": 23.9,
+   "posthoc_p05_p95_mag": [
+    23.9,
+    23.9
+   ],
+   "posthoc_median_tot_corr": 1.212717079798722,
+   "n_rows": 6751,
+   "note": "post hoc, read after rule 2a failed: mag_auto + 2.5 log10(flux_auto x tot_corr), detection-image tot_corr"
+  }
  }
 }

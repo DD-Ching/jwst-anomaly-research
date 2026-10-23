@@ -2322,6 +2322,17 @@ aperture fluxes with a per-band `tot_corr`. Decision: the route continues only w
 reference flux from those columns and gates it with C2. Revisit if: a JWST-era El Gordo catalogue with segment
 totals (e.g. a PEARLS release) is public.
 
+**Addendum 2026-10-23p (El Gordo stage 2: DJA flux definition and unit check).** Frozen plan
+`results/lens_consistency/elgordo_djaref/PLAN_2.md`. The grizli 1.14.3 source shows the total flux is
+`{band}_flux_aper_k × (flux_auto / flux_aper_k) × {band}_tot_corr`; `tot_corr` alone is only a point-source
+Kron-to-total factor, so the stage-1 handoff's `flux_aper_k × tot_corr` is not adopted. Rule 2b (grid) passes:
+rotation 0.0002°, east left, 0.0400″ per pixel. Rule 2a (unit) fails as written: median `mag_auto + 2.5 log10(flux_auto)`
+is 23.69 mag, neither 23.9 nor 28.9 within 0.05, so the run stopped before any flux row, pixel or prediction was
+read. Post hoc: with the detection `tot_corr` the zero point is 23.9 mag in every row (5–95 %: 23.9–23.9), i.e.
+µJy and `mag_auto` is a total magnitude; the header's `ZP` = 28.9 does not describe these columns. Decision: stage 2b
+freezes rule 2a as `mag_auto + 2.5 log10(flux_auto × tot_corr)` (disclosed as already seen) and otherwise runs
+PLAN_2.md unchanged. Revisit if: as addendum o.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
