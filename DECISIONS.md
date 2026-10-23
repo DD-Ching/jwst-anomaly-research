@@ -2278,6 +2278,13 @@ D-041's WLS source reproduced all 181 own-list images (rms 0.84″). The UNCOVER
 segmentation map and bCG-subtracted F200W mosaic (1.84 GB gzip) are reachable from cloud sessions. Revisit if: a frozen
 gate K with the WLS estimator (a deviation, chosen after this failure) or with Bergamini+23 passes.
 
+**Addendum 2026-10-23k (Abell 2744, UNCOVER v2.0 maps, gate K-WLS).** Frozen as a deviation after addendum j's failure
+(`abell2744_uncoverref/PLAN_1b.md`): the same gate on the same 172 spectroscopic images and grid, with only the family
+source swapped to D-041's WLS source. Passes: rms 0.835″, 100 % within 3″; no family has fewer predicted than
+catalogued images, 31 have one more. Decision: the UNCOVER v2.0 maps go on to the extra-image stages **with the WLS
+source** (own-constraint validation only; the pass is labelled post-failure wherever quoted). Revisit if: stage 2's
+gate C2 fails, or the WLS and mean sources disagree on an extra-image flag.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

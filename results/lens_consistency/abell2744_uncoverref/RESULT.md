@@ -33,3 +33,26 @@ pinned (no sha256 yet).
 **Next.** This model is stopped for the extra-image test under the frozen estimator. Options, each a new frozen plan:
 (a) gate K with the WLS source estimator of D-041, frozen as a deviation (like BUFFALO K2) and labelled as chosen
 after this failure; (b) gate K with Bergamini+23 (`abell2744-bergamini23`, Lenstool) on its own spectroscopic list.
+
+## Stage 1b: gate K with the WLS source (deviation after the stage-1 failure)
+
+Plan: `PLAN_1b.md` (frozen and committed before the run; rule 1 committed as the tested function
+`a2744_uncoverref.gate_k_wls` before the run). Numbers: `summary.json` (`stage1b_gate_K_wls`), per-image table
+`imageplane_wls_abell2744_abell2744-uncover2-maps.ecsv`. Run time 29 s (not stored).
+
+**Frozen outcome: gate K-WLS passes.** On the same 172 spectroscopic images with the same 0.25″ grid, swapping only
+the family source (mean → magnification-weighted least squares, D-041): rms 0.835″ (≤ 1.0″, ASSUMPTION), 100 %
+within 3.0″ (≥ 80 %). **This is a deviation chosen after stage 1 failed**, and it validates the maps on their own
+constraints only (the images are the model's inputs), as BUFFALO K2 (D-034 addendum h). Model sha256 as stage 1.
+
+**Reported (rule 2, not rules).** No image beyond 3″ (largest offset 2.31″, median 0.60″; from the per-image table).
+`fewer_predicted`: none, so the three single-image families of stage 1 (34.1, 80.1, 74) are reproduced, which
+supports the estimator reading of stage 1's RESULT (no other setting changed). 24 images share their nearest
+predicted image with another image of the family (`shared_match`). 31 families have one more predicted image than
+catalogued (`extra_predicted`; 3 vs 2 or 5 vs 4). These are the inputs of the extra-image stages; they are not
+read here and are not anomalies by themselves (an unlisted counter-image can be faint, demagnified or blended).
+
+**Next.** Freeze stage 2 with the WLS source: predicted / control tables, the UNCOVER DR3 SUPER catalogue as reference
+(pin by sha256, freeze the column mapping), gate C2 with the frozen shared-pair rule (D-034 addendum i), then flags.
+The 1.84 GB bCG-subtracted mosaic cannot be cut by byte range, so the local-noise rule needs another noise source
+(e.g. catalogue errors) or a stated download reason.

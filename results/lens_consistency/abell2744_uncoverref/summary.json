@@ -289,5 +289,146 @@
   "passing_models": [],
   "flags": []
  },
- "stopped": "gate K failed: model not used (PLAN.md rule 1)"
+ "stopped": "gate K failed: model not used (PLAN.md rule 1)",
+ "stage1b_gate_K_wls": {
+  "gate_K": {
+   "n_images": 172,
+   "rms_arcsec": 0.8353789733658247,
+   "matched_fraction": 1.0,
+   "passes": true
+  },
+  "estimator": "wls_source (a2744_uncover.imageplane)",
+  "not_reproduced": {},
+  "shared_match": 24,
+  "extra_predicted": {
+   "2.1": [
+    4,
+    5
+   ],
+   "2.2": [
+    4,
+    5
+   ],
+   "2.3": [
+    4,
+    5
+   ],
+   "2.4": [
+    4,
+    5
+   ],
+   "2.5": [
+    4,
+    5
+   ],
+   "2.6": [
+    4,
+    5
+   ],
+   "2.7": [
+    4,
+    5
+   ],
+   "3.1": [
+    2,
+    3
+   ],
+   "3.2": [
+    2,
+    3
+   ],
+   "3.3": [
+    2,
+    3
+   ],
+   "4.1": [
+    4,
+    5
+   ],
+   "4.2": [
+    2,
+    3
+   ],
+   "8.1": [
+    2,
+    3
+   ],
+   "26.2": [
+    2,
+    3
+   ],
+   "26.3": [
+    2,
+    3
+   ],
+   "33.1": [
+    2,
+    3
+   ],
+   "61.1": [
+    2,
+    3
+   ],
+   "62.1": [
+    2,
+    3
+   ],
+   "63.1": [
+    4,
+    5
+   ],
+   "64.1": [
+    2,
+    3
+   ],
+   "84": [
+    4,
+    5
+   ],
+   "85": [
+    2,
+    3
+   ],
+   "65.1": [
+    2,
+    3
+   ],
+   "65.2": [
+    2,
+    3
+   ],
+   "65.3": [
+    2,
+    3
+   ],
+   "67.2": [
+    2,
+    3
+   ],
+   "67.3": [
+    2,
+    3
+   ],
+   "68.1": [
+    4,
+    5
+   ],
+   "69": [
+    4,
+    5
+   ],
+   "70": [
+    2,
+    3
+   ],
+   "78.3": [
+    2,
+    3
+   ]
+  },
+  "fewer_predicted": {},
+  "model_sha256": "156d073a1d046415c60b7c279b5394402ef2d57e26ea4a6794521262a38ae53e",
+  "next": "gate K-WLS passed (deviation): freeze stage 2 with the WLS source"
+ },
+ "status": "stage 1 stopped (mean source); stage 1b passed (WLS source, deviation): stage 2 next"
 }
