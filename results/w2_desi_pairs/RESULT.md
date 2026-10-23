@@ -1,4 +1,4 @@
-# W2 DESI pairs: the frozen spectral test flags 1 of 7 catalogued binaries (gate needs ≥ 70 %), so it is not validated; 11 of the 13 rejected pairs with DESI spectra of both components were not retrieved, and none is classified
+# W2 DESI pairs: the frozen spectral test flags 1 of 7 catalogued binaries (gate needs ≥ 70 %), so it is not validated; 11 of the 13 rejected pairs with DESI spectra of both components were not retrieved or read (2 read only in the control role), and none is classified
 
 - **Plan:** `PLAN.md`, frozen at 2279b18. The tool and unit tests were committed at 7dd53f3 / d95e0ff.
 - **Deviation (probe before freezing):** about 00:07 UTC, before the plan commit, one SPARCL `find` and `retrieve`
@@ -45,6 +45,8 @@
 - **The miss is per line too:** the highest single-line χ²_ν among the 6 unflagged binaries is 2.41 (2QZJ1056-0059
   C IV), below T (`controls.json`).
 - **Verdict:** the frozen statistic **is not validated**. As PLAN §4 requires:
+  - 11 of the 13 rejected pairs were not retrieved or read; the 2 that share TARGETIDs with controls were read only
+    in the control role (§1);
   - `apply` and a rejected-role `fetch` refuse to run;
   - no threshold, line list or statistic was changed, and no second statistic was tried.
 - **Separations, by role** (PLAN §4 close-pair list, added at review: `gate.json` → `close_pairs_le_2arcsec`):

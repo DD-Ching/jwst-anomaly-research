@@ -115,6 +115,8 @@ Three options were compared:
 - **Out of scope:** no expansion beyond this list if the gate passes, and no new search.
 
 ## Errata (added at review, 2026-10-23; the frozen text above is unchanged)
+- **Header:** one SPARCL `find` + `retrieve` probe of control lens J0440-0905 (record format only; no flux
+  examined) ran at about 00:07 UTC, before this plan was committed (RESULT, Deviation).
 - **§0, Sunrise n0153:** "the only newer NIRCam epoch of the field is VENUS 6882" means no public NIRCam epoch of
   WHL0137-08 after VENUS 6882 (2025-07-08) turned up in a MAST query of 2026-10-23 (not stored). VENUS is the epoch
   that showed the brightening.

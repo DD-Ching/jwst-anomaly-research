@@ -3960,8 +3960,8 @@ spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ t
   - So it is not validated. 11 of the 13 rejected pairs' spectra were not retrieved or read. The other 2 share their
     DESI TARGETIDs with two Hennawi controls and were read only in that role.
 - **Rejected:** changing T, the lines or the statistic after the gate; a Δv rule seen post hoc on the same controls.
-- **Revisit if:** a pre-registered statistic with power on broad, moderate differences (binned profiles, velocity
-  offsets, narrow absorbers) is validated on fresh controls.
+- **Revisit if:** a pre-registered statistic that flags binaries with small catalogued velocity differences (binned
+  profiles, velocity offsets, narrow absorbers) is validated on fresh, non-overlapping controls.
 
 ## D-065 W5 in Euclid Q1: no count screen; next is a radial-shear screen on Euclid Q1 shapes (2026-10-09)
 
