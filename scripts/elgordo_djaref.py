@@ -93,10 +93,17 @@ def reference_inputs(blob: bytes, total_bytes: int) -> dict:
 
 
 def fetch_head(url: str = DJA_PHOT) -> tuple[bytes, int]:
-    r = requests.get(url, headers={"Range": f"bytes=0-{HEAD_BYTES - 1}"}, timeout=60)
-    r.raise_for_status()
-    total = int(r.headers.get("Content-Range", "/0").rsplit("/", 1)[-1] or 0)
-    return r.content, total
+    """The first ``HEAD_BYTES`` of ``url`` and its total size (-1 when not stated); a server that
+    ignores the range is refused, so the whole table is never read."""
+    with requests.get(
+        url, headers={"Range": f"bytes=0-{HEAD_BYTES - 1}"}, timeout=60, stream=True
+    ) as r:
+        r.raise_for_status()
+        if r.status_code != 206:
+            raise RuntimeError(f"{url}: range request not honoured (HTTP {r.status_code})")
+        blob = r.raw.read(HEAD_BYTES, decode_content=True)
+        total = r.headers.get("Content-Range", "").rsplit("/", 1)[-1]
+    return blob, int(total) if total.isdigit() else -1
 
 
 def main() -> int:
