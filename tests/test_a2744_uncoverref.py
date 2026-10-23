@@ -11,11 +11,12 @@ from jwst_anomaly import lensmodel
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import a2744_uncover as au  # noqa: E402
-from a2744_uncoverref import (  # noqa: E402
+from a2744_uncoverref import (
     axis_pa_deg,
     fold_deg,
     image_list,
     lenstool_id,
+    outcome_2c,
     segment_angle,
     theta_check,
     theta_sample,
@@ -199,3 +200,39 @@ def test_to_njy_per_pixel_converts_and_masks_zero_coverage():
     np.testing.assert_allclose(d[0, 0], 20.0)  # 1 MJy/sr x 2e-14 sr = 2e-8 Jy = 20 nJy
     assert np.isnan(d[0, 1]) and np.isnan(d[1, 1])
     np.testing.assert_allclose(d[1, 0], 40.0)
+
+
+def test_to_cat_super_reads_the_named_band():
+    t = Table(
+        {
+            "id": [1, 2],
+            "ra": [3.58, 3.59],
+            "dec": [-30.40, -30.41],
+            "a_image": [10.0, 5.0],
+            "b_image": [5.0, 5.0],
+            "theta_J2000": [0.0, 0.0],
+            "f_f200w": [100.0, 50.0],
+            "e_f200w": [10.0, 5.0],
+            "f_f277w": [np.nan, 30.0],
+            "e_f277w": [1.0, 3.0],
+            "flag_star": [0, 0],
+        }
+    )
+    c = to_cat_super(t, "f277w")
+    assert list(c["label"]) == [2]
+    np.testing.assert_allclose(c["flux"], [3e-7])
+    np.testing.assert_allclose(c["snr"], [10.0])
+
+
+def test_outcome_2c_rule_6():
+    # flag: absent in a band whose C2 passes, whatever the other band says
+    assert outcome_2c({"f277w": ("absent", True), "f356w": ("recovered", True)}) == "flag"
+    # an absent in a band whose C2 fails is not read
+    assert outcome_2c({"f277w": ("absent", False), "f356w": ("ambiguous", True)}) == "undetermined"
+    assert outcome_2c({"f277w": ("absent", False), "f356w": ("confused", True)}) == "present"
+    assert (
+        outcome_2c({"f277w": ("recovered", False), "f356w": ("recovered", False)}) == "undetermined"
+    )
+    assert outcome_2c({"f277w": ("undetectable_local", True), "f356w": ("ambiguous", True)}) == (
+        "undetermined"
+    )

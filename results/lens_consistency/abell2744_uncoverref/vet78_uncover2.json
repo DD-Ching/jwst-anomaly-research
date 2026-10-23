@@ -1,0 +1,97 @@
+{
+ "model": "abell2744-uncover2",
+ "z": 2.3151,
+ "grid_step_arcsec": 0.25,
+ "grid_half_width_arcsec": 99.0,
+ "thresholds_arcsec": {
+  "tool": 1.5,
+  "search": 1.0
+ },
+ "knots": {
+  "78.1": {
+   "n_predicted": 3,
+   "source_spread_arcsec": 0.25,
+   "mu": [
+    -24.1,
+    12.27,
+    6.64
+   ],
+   "c_ra": 3.5751784398081763,
+   "post_hoc_pred_to_ab_mid_arcsec": [
+    0.126,
+    1.654,
+    15.033
+   ],
+   "post_hoc_mu_at_ab": [
+    -25.07,
+    -20.47
+   ],
+   "c_dec": -30.355763325376802,
+   "c_abs_mu": 6.64,
+   "c_to_catalogued_arcsec": 1.403,
+   "c_to_catalogued_each_arcsec": {
+    "78.1": 1.455,
+    "78.2": 1.403
+   },
+   "c_to_uncover_78_3c_arcsec": 0.066,
+   "c_to_own_catalogued_arcsec": 1.455
+  },
+  "78.2": {
+   "n_predicted": 3,
+   "source_spread_arcsec": 0.352,
+   "mu": [
+    -25.44,
+    12.96,
+    6.59
+   ],
+   "c_ra": 3.5751543337767036,
+   "post_hoc_pred_to_ab_mid_arcsec": [
+    0.26,
+    1.69,
+    15.108
+   ],
+   "post_hoc_mu_at_ab": [
+    -26.21,
+    -19.48
+   ],
+   "c_dec": -30.35578624149462,
+   "c_abs_mu": 6.59,
+   "c_to_catalogued_arcsec": 1.293,
+   "c_to_catalogued_each_arcsec": {
+    "78.1": 1.343,
+    "78.2": 1.293
+   },
+   "c_to_uncover_78_3c_arcsec": 0.174,
+   "c_to_own_catalogued_arcsec": 1.293
+  },
+  "78.3": {
+   "n_predicted": 3,
+   "source_spread_arcsec": 0.103,
+   "mu": [
+    -21.92,
+    10.32,
+    6.7
+   ],
+   "c_ra": 3.5751979920933445,
+   "post_hoc_pred_to_ab_mid_arcsec": [
+    0.024,
+    1.812,
+    15.051
+   ],
+   "post_hoc_mu_at_ab": [
+    -22.95,
+    -20.54
+   ],
+   "c_dec": -30.35575631582489,
+   "c_abs_mu": 6.7,
+   "c_to_catalogued_arcsec": 1.46,
+   "c_to_catalogued_each_arcsec": {
+    "78.1": 1.513,
+    "78.2": 1.46
+   },
+   "c_to_uncover_78_3c_arcsec": 0.001
+  }
+ },
+ "outcome": "explained: this model's c positions for system 78 miss by more than the search radius",
+ "provenance": "model_prediction (positions observed)"
+}

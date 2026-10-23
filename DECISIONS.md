@@ -2305,6 +2305,15 @@ same rules; the near-threshold targets get a frozen second-band or bCG-subtracte
 10 σ threshold. Alternatives rejected: the bCG-subtracted mosaic (1.84 GB gzip, no byte ranges). Revisit if: the
 second-band check of 4.2 / 78.3 disagrees with F200W, or C2 fails on another band.
 
+**Addendum 2026-10-23n (Abell 2744 stage 2c and the 78.3c vetting).** Stage 2c (`PLAN_2c.md`): gate C2 passes in
+F277W and F356W; frozen flags 4.2 (= vetted 4.2c) and 78.3c. Vetting (`PLAN_vet78.md`): CATS v4.1 has no critical
+curve between the 78 a/b images (test 1 "tool not validated"); in the UNCOVER maps the c images of 78.1 / 78.2
+predicted from a+b miss their catalogued c by 1.455″ / 1.293″ and lie 0.07″ / 0.17″ from the predicted 78.3c (test
+1b "explained"). Decision: 78.3c is closed as a model c-position error; a predicted image whose own system's
+detected images are mispredicted by more than the search radius is not a flag. Alternatives rejected: μ
+perturbation of the northern group first (needs a re-fit; position test is cheaper and decisive). Revisit if: a
+model with a fold critical curve through the 78 arc predicts knot 3's c image ≥ 1″ from the 78.1c / 78.2c images.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
