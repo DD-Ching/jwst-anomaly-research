@@ -15,7 +15,12 @@ def test_threshold_from_development_negatives():
 def test_status_order():
     assert r.status(None, 25, 0.1, 1.0, True) == "fit unreliable"
     assert r.status(100, 25, 0.1, 1.0, False) == "fit unreliable"
-    assert r.status(100, 25, 0.1, 3.5, True) == "fit unreliable"
+    assert r.status(100, 25, 0.1, 10.5, True) == "fit unreliable"
+    assert (
+        r.status(100, 25, 0.1, 1.0, True, sersic_r=0.05, sersic_flux=10.0, band="F814W")
+        == "unresolved"
+    )
+    assert r.status(100, 25, 0.1, 1.0, True, sersic_r=0.3, sersic_flux=0.0, band="F814W") == "none"
     assert r.status(20, 25, 0.1, 1.0, True) == "none"
     assert r.status(30, 25, 0.7, 1.0, True) == "extended light offset"
     assert r.status(30, 25, 0.3, 1.0, True) == "extended light"

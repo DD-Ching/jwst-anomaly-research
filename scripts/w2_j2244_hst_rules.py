@@ -18,7 +18,10 @@ class Params:
     )
     t_factor: float = 2.0  # T = max(t_min, t_factor * largest development-negative delta chi^2)
     centre_max: float = 0.6  # extended-light centre within this of the image midpoint (arcsec)
-    redchi_max: float = 3.0  # a fit with reduced chi^2 above this is "fit unreliable"
+    redchi_max: float = 10.0  # v2 (from development): only catastrophic fits are "fit unreliable"
+    r_min: dict = field(
+        default_factory=lambda: {"F160W": 0.15, "F814W": 0.075}
+    )  # v2: resolved Sersic
     pos_tol: float = 0.15  # fitted point sources within this of the initial peaks (arcsec)
     gate_min_neg: int = 5  # validation negatives needed
     gate_min_pos: int = 3  # validation positives needed
@@ -53,14 +56,19 @@ def status(
     redchi: float | None,
     pos_ok: bool,
     p: Params = P,
+    sersic_r: float | None = None,
+    sersic_flux: float | None = None,
+    band: str | None = None,
 ) -> str:
-    """Outcome: 'fit unreliable', 'extended light', 'extended light offset' or 'none'."""
+    """Outcome: fit unreliable, extended light (offset), unresolved or none."""
     if dchi2 is None or redchi is None or not math.isfinite(dchi2) or not pos_ok:
         return "fit unreliable"
     if redchi > p.redchi_max:
         return "fit unreliable"
-    if dchi2 < t:
+    if dchi2 < t or (sersic_flux is not None and sersic_flux <= 0):
         return "none"
+    if band is not None and sersic_r is not None and sersic_r < p.r_min[band]:
+        return "unresolved"
     if centre_offset is None or centre_offset > p.centre_max:
         return "extended light offset"
     return "extended light"

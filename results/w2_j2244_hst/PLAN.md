@@ -144,3 +144,40 @@ Owner brief 2026-10-23 after #473 (start 06:23 UTC).
 - Stop when a band's gate fails, or when fewer than 3 positives or 5 negatives are decidable.
 - Stop when the 4 h, 8 CPU-h or 3 GB budget would be exceeded.
 - Stop when the work turns into tool building.
+
+## v2 (2026-10-23 07:18 UTC): development settings and thresholds, frozen before any validation control, injection or target run
+- **Development changes** (development controls only; each changed run is recorded):
+  - **Iteration 1:** the v1 settings. Recorded in the RESULT log (not stored).
+    - F160W negatives: Δχ² 1041, −3759, 27.5; reduced χ² 14–56.
+    - F814W negatives: Δχ² 645, 176, 948.
+    - Sérsic amplitudes came out negative.
+    - Star stamps were drawn from the brightest library stars: in F160W 2–5× brighter than the target, in F814W
+      ≈ 3.5× fainter.
+  - **Before any control run (implementation):** stars are re-centred on their smoothed peak within ±6 px. The WHT
+    rule now applies to the central 7 × 7 px, with ≤ 5 % low-weight pixels overall. The v1 rule (centre within
+    1 px; any low-weight pixel) accepted 0 of 40 ACS fields' stars.
+  - **v2 changes after the development runs:**
+    1. Non-negative amplitudes (lenstronomy `check_positive_flux`). A negative "extended light" is subtracted PSF
+       mismatch, not a galaxy.
+    2. A detection needs a resolved Sérsic: R ≥ 0.15″ in F160W, R ≥ 0.075″ in F814W (≈ 1.2 and 1.5 px); smaller is
+       "unresolved".
+    3. Reduced χ²(M1) > 10, not > 3, marks a fit unreliable. All development positives have 1.9–4.0.
+    4. Negative pairs are matched to the target's brightness: Gaia G within 0.75 mag of 18.0 (the images' 17.80 and
+       18.21), paired in order of |G − 18.0|.
+       - F814W stars with saturated cores are allowed up to G 19, because the target's brighter image is saturated
+         too. They are never used for a PSF.
+       - The F160W library uses all 144 GO 17455 fields (91 stars), the F814W library 80 GO 17308 fields
+         (375 stars).
+    5. Core radius 0.30″ in F160W and 0.15″ in F814W (v1: 0.18″ and 0.10″). Iteration 3 showed core dipoles from the
+       undersampled PSF beyond 0.18″.
+- **Iteration 4 = frozen settings** (`runs/dev.json`, `png/dev_*`):
+
+| band | development negatives Δχ² (reduced χ²) | T = max(25, 2 × max) | development positives Δχ² → status |
+|---|---|---|---|
+| F160W | −838 (26.5), −899 (18.7), 3887 (3.7) | **7774.3** | J0743 7707 → none; J0818 5750 → none |
+| F814W | 350 (8.6), 4592 (5.0), 930 (1.9) | **9184.5** | J0743 46151 → extended light; J0818 3681 → none |
+
+- **Expectation, stated before validation:** the development numbers already put both F160W positives below T, so
+  F160W is expected to fail its gate. The rule (§3, factor 2) is not changed; validation and the gate decide.
+- **Validation:** 3 F160W and 10 F814W positives as listed in §3, plus 6 negative pairs per band (pairs 3–8). Then
+  the injections of §5 into validation pairs 3 and 4 of each band. Then the target, only in a band whose gate passes.
