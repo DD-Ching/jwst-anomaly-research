@@ -19,6 +19,8 @@ from a2744_uncoverref import (  # noqa: E402
     segment_angle,
     theta_check,
     theta_sample,
+    to_cat_super,
+    to_njy_per_pixel,
 )
 
 
@@ -163,3 +165,37 @@ def test_y_axis_pa_of_a_north_up_and_rotated_grid():
     c, n = np.cos(np.radians(30)), np.sin(np.radians(30))
     east, north = (-x * c + y * n) * s, (x * n + y * c) * s  # +y at PA 30 deg
     assert abs(axis_pa_deg(x, y, 3.58 + east / np.cos(np.radians(dec0)), dec0 + north) - 30) < 0.1
+
+
+def test_to_cat_super_maps_units_pa_and_drops_nonfinite_flux():
+    t = Table(
+        {
+            "id": [1, 2, 3],
+            "ra": [3.58, 3.59, 3.60],
+            "dec": [-30.40, -30.41, -30.42],
+            "a_image": [10.0, 5.0, 4.0],
+            "b_image": [5.0, 5.0, 2.0],
+            "theta_J2000": [0.0, np.pi / 4, -np.pi / 2],
+            "f_f200w": [100.0, np.nan, 50.0],
+            "e_f200w": [10.0, 1.0, 5.0],
+            "flag_star": [0, 0, 1],
+        }
+    )
+    c = to_cat_super(t)
+    assert list(c["label"]) == [1, 3]
+    np.testing.assert_allclose(c["flux"], [1e-6, 5e-7])  # 10 nJy units -> Jy
+    np.testing.assert_allclose(c["snr"], [10.0, 10.0])
+    np.testing.assert_allclose(c["a"], [0.4, 0.16])
+    np.testing.assert_allclose(c["b"], [0.2, 0.08])
+    # H_a: radians ccw from +x on a north-up grid -> east of north = deg + 90 (mod 180)
+    np.testing.assert_allclose(c["pa"], [90.0, 0.0])
+    np.testing.assert_allclose(c["ell"], [0.5, 0.5])
+    assert list(c["ext"]) == [True, False]
+
+
+def test_to_njy_per_pixel_converts_and_masks_zero_coverage():
+    sci = np.array([[1.0, 0.0], [2.0, np.nan]])
+    d = to_njy_per_pixel(sci, 2.0e-14)
+    np.testing.assert_allclose(d[0, 0], 20.0)  # 1 MJy/sr x 2e-14 sr = 2e-8 Jy = 20 nJy
+    assert np.isnan(d[0, 1]) and np.isnan(d[1, 1])
+    np.testing.assert_allclose(d[1, 0], 40.0)

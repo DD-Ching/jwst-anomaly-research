@@ -1,0 +1,50 @@
+{
+ "abell2744": {
+  "model": "abell2744-uncover2-maps",
+  "model_sha256": "156d073a1d046415c60b7c279b5394402ef2d57e26ea4a6794521262a38ae53e",
+  "image": "s3://stpubdata/jwst/public/jw02561/L3/t/o001/jw02561-o001_t003_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 27.797921799948043,
+  "unpredicted": [
+   "3.3a",
+   "8.1a",
+   "22.1c",
+   "26.1a",
+   "26.2a",
+   "26.3a",
+   "86b",
+   "65.1b",
+   "65.2b"
+  ],
+  "image_classes": {
+   "candidate": 20,
+   "demagnified": 10,
+   "faint": 1,
+   "missing": 6,
+   "no_flux_ref": 5,
+   "observed": 161
+  },
+  "forced_classes_targets": {
+   "confused": 3,
+   "inconsistent_reference": 1,
+   "no_reference": 20,
+   "recovered": 4,
+   "undetectable": 4
+  },
+  "gate_C": {
+   "n_targets": 161,
+   "n_testable": 60,
+   "n_recovered": 60,
+   "fraction": 1.0,
+   "passes": true,
+   "classes": {
+    "confused": 24,
+    "inconsistent_reference": 2,
+    "no_reference": 94,
+    "recovered": 36,
+    "undetectable": 5
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}

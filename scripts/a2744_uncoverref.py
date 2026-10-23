@@ -2,14 +2,17 @@
 
 Frozen plans: ``results/lens_consistency/abell2744_uncoverref/PLAN.md`` (stage 1), ``PLAN_1b.md``
 (``--stage 1b``: gate K with the WLS source of ``a2744_uncover``; a deviation after stage 1 failed)
-and ``PLAN_2a.md`` (``--stage 2a``: the position-angle convention of the UNCOVER DR3 SUPER
-catalogue, measured on the release's segmentation map; needs ``--cat`` and ``--segmap``).
+``PLAN_2a.md`` (``--stage 2a``: the position-angle convention of the UNCOVER DR3 SUPER
+catalogue, measured on the release's segmentation map; needs ``--cat`` and ``--segmap``) and
+``PLAN_2b.md`` (``--stage 2b``: predicted / control tables with the WLS source on GO 2561 F200W,
+the DR3 SUPER reference, the local-noise rule and gate C2 with shared pairs; needs ``--cat``).
 Runs gate K of ``m0417_images`` on the spectroscopic images of the UNCOVER v2.0 multiple-image
 table with the v2.0 deflection maps (``abell2744-uncover2-maps``). The extra-image stages follow
 in a later cycle only if the gate passes. Writes ``summary.json`` to the plan's directory.
 
     python scripts/a2744_uncoverref.py [--stage 1b]
     python scripts/a2744_uncoverref.py --stage 2a --cat <SUPER.fits> --segmap <SEGMAP.fits.gz>
+    python scripts/a2744_uncoverref.py --stage 2b --cat <SUPER.fits> [--cache data/cache/a2744x]
 """
 
 from __future__ import annotations
@@ -20,11 +23,17 @@ from pathlib import Path
 
 import a2744_uncover as au
 import lens_consistency as lc
+import m0417_arcref as ar
 import m0417_canucsref as cr
+import m0417_extra as mx
 import m0417_images as mi
+import m1423_canucsref as m14
 import numpy as np
+from astropy.coordinates import SkyCoord
 from astropy.io import fits
 from astropy.table import Table
+from astropy.wcs import WCS
+from astropy.wcs.utils import proj_plane_pixel_scales
 from m0417_canucsref_posthoc import _clean
 
 from jwst_anomaly import lensmodel
@@ -44,6 +53,13 @@ SEGMAP_SHA = "5a64d01fcd75ecbea38efcc4ec673d2cb5fb3fb19b76ced21417fed6bc00087a"
 # PLAN_2a.md rules 1 and 3 (ASSUMPTIONs)
 MIN_A_PIX, MIN_ELL, MIN_SEG_PIX, N_MAX = 4.0, 0.4, 50, 500
 MEDIAN_MAX_DEG, WITHIN_DEG, WITHIN_FRAC = 10.0, 20.0, 0.70
+# stage 2b (PLAN_2b.md)
+IMAGES_SPEC = "uncover2_images_spec.ecsv"  # the 172 spectroscopic images gate K-WLS validated
+OBS, TILE = "o001", "t003"  # GO 2561 F200W tile covering all images (PLAN_2b.md footprint check)
+S3_2561 = "s3://stpubdata/jwst/public/jw02561/L3/t/{0}/jw02561-{0}_{1}_nircam_clear-f200w_{2}"
+FRAME = OUT / "frame"
+SUPER_PIX = 0.04  # arcsec per catalogue pixel (PLAN_2a.md rule 4)
+SUPER_FLUX_JY = 1e-8  # f_f200w unit, 10 nJy (PHOT_ZP 28.9)
 
 lc.MODELS[MODEL] = {
     "files": {k: au.UNCOVER_V2[k] for k in ("alpha_x", "alpha_y")},
@@ -263,13 +279,153 @@ def stage_2a(cat: Path, segmap: Path) -> dict:
     return res
 
 
+def to_cat_super(t: Table) -> dict:
+    """PLAN_2b.md rule 2: the DR3 SUPER table in ``m0417_arcref``'s catalogue form."""
+    flux = np.ma.filled(np.ma.asarray(t["f_f200w"], float), np.nan) * SUPER_FLUX_JY
+    keep = np.isfinite(flux)
+    t, flux = t[keep], flux[keep]
+    with np.errstate(divide="ignore", invalid="ignore"):
+        snr = flux / (np.ma.filled(np.ma.asarray(t["e_f200w"], float), np.nan) * SUPER_FLUX_JY)
+        ell = 1.0 - np.asarray(t["b_image"], float) / np.asarray(t["a_image"], float)
+    return {
+        "label": np.asarray(t["id"]),
+        "ra": np.asarray(t["ra"], float),
+        "dec": np.asarray(t["dec"], float),
+        "a": np.asarray(t["a_image"], float) * SUPER_PIX,
+        "b": np.asarray(t["b_image"], float) * SUPER_PIX,
+        "pa": cr.sky_pa(np.degrees(np.asarray(t["theta_J2000"], float))),
+        "flux": flux,
+        "snr": snr,
+        "ext": ~np.ma.filled(np.ma.asarray(t["flag_star"]), 0).astype(bool),
+        "ell": ell,
+        "scale": SUPER_PIX,
+    }
+
+
+def to_njy_per_pixel(sci, pixar_sr: float) -> np.ndarray:
+    """PLAN_2b.md rule 4: MJy/sr -> nJy per pixel; exact zeros (no coverage) -> NaN."""
+    d = np.asarray(sci, float) * pixar_sr * 1e15
+    d[np.asarray(sci) == 0] = np.nan
+    return d
+
+
+def register_2b() -> None:
+    """Point ``m0417_extra``'s field table at this field, tile and directory."""
+    mx.FIELDS[FIELD] = (IMAGES_SPEC, MODEL, OBS, TILE)
+    mx.IMAGES = OUT
+    mx.OUT = FRAME
+    mx.S3 = S3_2561
+
+
+def stage_2b(cat: Path, cache: Path) -> dict:
+    """PLAN_2b.md: frame tables (WLS source), DR3 SUPER reference, local noise, gate C2 shared."""
+    import s3fs
+
+    if file_sha256(cat) != SUPER_SHA:
+        raise SystemExit("error: --cat is not the pinned UNCOVER DR3 SUPER catalogue")
+    images = Table.read(OUT / IMAGES)
+    images[np.asarray(images["z_spec"], bool)].write(
+        OUT / IMAGES_SPEC, format="ascii.ecsv", overwrite=True
+    )
+    register_2b()
+    fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
+    cache.mkdir(parents=True, exist_ok=True)
+    shapes = cache / Path(S3_2561.format(OBS, TILE, "cat.ecsv")).name
+    if not shapes.exists():
+        fs.get(S3_2561.format(OBS, TILE, "cat.ecsv")[5:], str(shapes))
+    FRAME.mkdir(parents=True, exist_ok=True)
+    frame = mx.run_field(FIELD, cache, bt_hook=au.wls_backtrace)  # rule 1
+    (FRAME / "summary.json").write_text(
+        json.dumps(_clean({FIELD: frame}), indent=1, allow_nan=False) + "\n"
+    )
+    # one sequential range stream of the SCI extension (PLAN_2b.md "Data volume")
+    i2d = S3_2561.format(OBS, TILE, "i2d.fits")[5:]
+    with fs.open(i2d, block_size=32 * 2**20) as fh, fits.open(fh) as hl:
+        h = hl["SCI"].header
+        if h.get("BUNIT") != "MJy/sr":
+            raise ValueError(f"unexpected BUNIT {h.get('BUNIT')!r}")
+        w = WCS(h)
+        d = to_njy_per_pixel(hl["SCI"].data, float(h["PIXAR_SR"]))
+    pix = float(proj_plane_pixel_scales(w.celestial).mean() * 3600.0)
+    t = Table.read(cat)
+    rc = to_cat_super(t)
+    inputs = {
+        "reference": SUPER_CAT,
+        "reference_sha256": SUPER_SHA,
+        "n_rows_finite_flux": int(len(rc["flux"])),
+        "flux_column": "f_f200w",
+        "noise_image": S3_2561.format(OBS, TILE, "i2d.fits"),
+        "noise_pixel_scale_arcsec": pix,
+    }
+    depth = cr.depth_mag(rc["flux"], rc["snr"])
+    src_x, src_y = (
+        np.asarray(v, float) for v in w.world_to_pixel(SkyCoord(t["ra"], t["dec"], unit="deg"))
+    )
+    res: dict = {"frame": frame}
+    for contain, out in ((False, OUT / "without_contain"), (True, OUT)):  # rule 3 / rule 7
+        s = ar.run(
+            Path("."),
+            cat=rc,
+            depth=depth,
+            cat_inputs=inputs,
+            out=out,
+            field=FIELD,
+            frame=FRAME,
+            offset=(0.0, 0.0),
+            contain=contain,
+        )
+        rng = np.random.default_rng(m14.SEED)
+        ctrl = Table.read(out / f"control_{FIELD}.ecsv")
+        pred = Table.read(out / f"predicted_{FIELD}.ecsv")
+        m14.apply_local(ctrl, d, w, src_x, src_y, rng, pix)  # rule 4
+        if len(pred):
+            m14.apply_local(pred, d, w, src_x, src_y, rng, pix)
+        cl = [str(c) for c in ctrl["class_local"]]
+        pairs = [
+            (int(a), int(b))
+            for a, b in zip(ctrl["ref_counterpart"], ctrl["counterpart"], strict=True)
+        ]
+        c2 = ar.gate_c2_shared(cl, list(ctrl["arc_ref"]), [str(x) for x in ctrl["system"]], pairs)
+        flags = [
+            f"{r['system']}@{r['ra']:.6f},{r['dec']:.6f}"
+            for r in pred
+            if c2["passes"] and str(r["class_local"]) == "absent"
+        ]
+        ctrl.write(out / f"control_{FIELD}.ecsv", overwrite=True)
+        pred.write(out / f"predicted_{FIELD}.ecsv", overwrite=True)
+        res["frozen" if contain else "without_contain"] = {
+            "gate_C2_shared": c2,
+            "flags": flags,
+            "control_classes": m14._count(ctrl["class_local"]),
+            "target_classes": m14._count(pred["class_local"]) if len(pred) else {},
+            "gate_C2_plain": ar.gate_c2(cl, list(ctrl["arc_ref"])),
+            "without_local_noise_rule": {
+                k: s[k] for k in ("gate_C2", "control_classes", "target_classes", "flags")
+            },
+            "posthoc_absent_controls": s["posthoc_absent_controls"],
+            "inputs": s["inputs"],
+            "rules": s["rules"],
+        }
+    return res
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--stage", choices=("1", "1b", "2a"), default="1")
-    ap.add_argument("--cat", type=Path, help="stage 2a: the DR3 SUPER catalogue")
+    ap.add_argument("--stage", choices=("1", "1b", "2a", "2b"), default="1")
+    ap.add_argument("--cat", type=Path, help="stages 2a, 2b: the DR3 SUPER catalogue")
+    ap.add_argument("--cache", type=Path, default=Path("data/cache/a2744x"))
     ap.add_argument("--segmap", type=Path, help="stage 2a: the DR3 segmentation map")
     args = ap.parse_args(argv)
     OUT.mkdir(parents=True, exist_ok=True)
+    if args.stage == "2b":
+        if args.cat is None:
+            ap.error("--stage 2b needs --cat")
+        summary = read_summary()
+        summary["stage2b"] = _clean(stage_2b(args.cat, args.cache))
+        write_summary(summary)
+        r = summary["stage2b"]["frozen"]
+        print(json.dumps({k: r[k] for k in ("gate_C2_shared", "flags", "target_classes")}))
+        return 0
     if args.stage == "2a":
         if args.cat is None or args.segmap is None:
             ap.error("--stage 2a needs --cat and --segmap")

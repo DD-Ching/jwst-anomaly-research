@@ -67,12 +67,16 @@ def load_images(field: str) -> Table:
     return t
 
 
-def run_field(field: str, cache: Path) -> dict:
+def run_field(field: str, cache: Path, bt_hook=None) -> dict:
+    """``bt_hook(model, bt)``, if given, replaces the back-traced table (e.g. another source
+    estimator) before prediction and forced photometry."""
     _, name, obs, tile = FIELDS[field]
     images = load_images(field)
     model, _, _ = lc.load_model(name)
     lc.apply_frame_offset(name, model)
     bt = lensmodel.backtrace_images(model, images, {})
+    if bt_hook is not None:
+        bt = bt_hook(model, bt)
     traced = images[np.isfinite(bt["beta_x"])]
     half = lc.grid_half_width(model, traced)
     grid = lensmodel.DeflectionGrid.cached(

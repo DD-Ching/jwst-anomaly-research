@@ -2295,6 +2295,16 @@ nJy (README, `PHOT_ZP` 28.9); local noise from the GO 2561 pipeline F200W mosaic
 bCG-subtracted mosaic has no byte ranges; a larger σ near members only moves classes away from `absent`). Revisit
 if: a later UNCOVER release changes the column, or the 2b noise route fails its own check.
 
+**Addendum 2026-10-23m (Abell 2744 stage 2b: DR3 SUPER reference passes gate C2).** Frozen plan
+`abell2744_uncoverref/PLAN_2b.md`. One GO 2561 F200W tile (`o001_t003`) covers every image, so the stage runs on it
+alone. The local noise reads the mosaic's SCI extension once into memory (≈ 430 MB range stream, cheaper than ~170
+cutouts with 64 kB read-ahead) at the mosaic's own 0.031″ pixels (new `pix` argument; radii stay in arcsec). Gate C2
+with shared pairs passes (arc-referenced 11 / 13, all 30 / 34); no flag; 4.2 and 78.3 are `ambiguous` at 9.7 σ /
+8.7 σ. Decision: the DR3 SUPER + pipeline-noise reference counts as validated on Abell 2744 for follow-ups under the
+same rules; the near-threshold targets get a frozen second-band or bCG-subtracted check, never a re-read of the
+10 σ threshold. Alternatives rejected: the bCG-subtracted mosaic (1.84 GB gzip, no byte ranges). Revisit if: the
+second-band check of 4.2 / 78.3 disagrees with F200W, or C2 fails on another band.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

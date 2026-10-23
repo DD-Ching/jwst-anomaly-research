@@ -41,16 +41,16 @@ SEED = 20261022
 MIN_SIGMA, ABSENT_SIGMA = 5.0, 10.0
 
 
-def local_noise(d, x, y, src_x, src_y, rng) -> float:
-    """sigma-clipped std of ``N_RAND`` random aperture sums 1.5-4" from (x, y) (pixels),
-    redrawn within ``SRC_EXCL`` of a source or on NaN pixels."""
-    r = AP_ARCSEC / PIX
+def local_noise(d, x, y, src_x, src_y, rng, pix: float = PIX) -> float:
+    """sigma-clipped std of ``N_RAND`` random aperture sums 1.5-4" from (x, y) (pixels of
+    ``pix`` arcsec), redrawn within ``SRC_EXCL`` of a source or on NaN pixels."""
+    r = AP_ARCSEC / pix
     vals, tries = [], 0
     while len(vals) < N_RAND and tries < 50 * N_RAND:
         tries += 1
-        a, s = rng.uniform(0, 2 * np.pi), rng.uniform(*R_RAND) / PIX
+        a, s = rng.uniform(0, 2 * np.pi), rng.uniform(*R_RAND) / pix
         rx, ry = x + s * np.cos(a), y + s * np.sin(a)
-        if len(src_x) and np.hypot(src_x - rx, src_y - ry).min() * PIX < SRC_EXCL:
+        if len(src_x) and np.hypot(src_x - rx, src_y - ry).min() * pix < SRC_EXCL:
             continue
         v = aperture_sum(d, rx, ry, r)
         if np.isfinite(v):
@@ -71,14 +71,14 @@ def local_class(cls: str, f_pred_njy: float, sigma_njy: float) -> str:
     return cls
 
 
-def apply_local(tab: Table, d, w, src_x, src_y, rng) -> None:
+def apply_local(tab: Table, d, w, src_x, src_y, rng, pix: float = PIX) -> None:
     """Add ``sigma_loc_njy``, ``pred_over_sigma`` and ``class_local`` columns in place."""
     sig, cls = [], []
     for r in tab:
         f = float(r["f_pred"]) * 1e9
         if str(r["class"]) in ar.TESTABLE:
             x, y = (float(v) for v in w.world_to_pixel_values(r["ra"], r["dec"]))
-            s = local_noise(d, x, y, src_x, src_y, rng)
+            s = local_noise(d, x, y, src_x, src_y, rng, pix)
         else:
             s = float("nan")
         sig.append(s)
