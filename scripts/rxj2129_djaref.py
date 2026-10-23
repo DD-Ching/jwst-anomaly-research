@@ -28,7 +28,6 @@ import smacs_djaref as sd
 from astropy.coordinates import SkyCoord
 from astropy.table import Table
 from m0417_canucsref_posthoc import _clean
-from smacs_djaref import stage2_inputs
 
 from jwst_anomaly import lensmodel
 
@@ -200,7 +199,7 @@ def stage_1() -> int:
     summary: dict = {
         "images": {"n": len(t), "families": len(set(t["system"])), "source": PAPER},
         "stage1_gate_K": mi.run_field(FIELD, OUT, GRID_STEP),
-        "stage1_reference_inputs": stage2_inputs(blob, total) | {"url": DJA_PHOT},
+        "stage1_reference_inputs": sd.stage2_inputs(blob, total) | {"url": DJA_PHOT},
     }
     summary["rules"] = {
         "K_MAX_RMS_ARCSEC": mi.K_MAX_RMS_ARCSEC,

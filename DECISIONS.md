@@ -2378,7 +2378,7 @@ v7.0; deviation D1 before any read: overlapping targets of the one-galaxy group 
 arc-referenced 2 / 5 (0.40), against 0.8 and minimum counts 8 / 3; it also fails without the containing-source or
 local-noise rule. No flag is read. Post hoc: all 3 `absent` controls (1, 2, 7) take the same reference row, DJA
 1506 (16.38 mag, 3a = 8.7″), so their predicted fluxes are 16.7–18.1 mag; the contact sheet (`sheet_2.png`) shows
-faint sources in the circles of the system 1 and 2 controls. Without that row C2 would be 4 / 4 (arc 2 / 2), still
+faint sources in the circles of the system 1 and 2 controls. Without that row C2 would be 4 / 4 (arc 2 / 2; computed in the session, not stored), still
 below the minimum counts, so the route cannot validate itself on this field. Decision: the reference route is
 closed for RXJ2129 (Lenstool maps, DJA v7.0). Revisit if: a reference catalogue with arcs deblended from the bright
 cluster light (e.g. a bCG-subtracted RXJ2129 catalogue) is public.

@@ -52,5 +52,10 @@ from `summary.json` `stage2`; tables `control_rxj2129.ecsv`, `predicted_rxj2129.
 - **Data:** F200W SCI extension (≈ 82 MB) and the DJA table read into memory; pipeline `_cat.ecsv` and the Lenstool
   members (≈ 300 MB, re-staged by range reads) in the session cache, deleted after the run.
 
+**Known limitation (/code-review, not changed after the run):** `merge_knot_targets` names a joined set by its
+first row, which need not be an `absent` row (here set 1 would be named by the system-3 row classed
+`inconsistent_reference`), and D1 is not applied to the `without_local_noise_rule` block. Neither changes this
+result (no flag read); a reuse fixes both in a new frozen plan.
+
 **Reading:** the reference route is closed for RXJ2129 (D-034 addendum u). Across four fields it validated on
 Abell 2744 and El Gordo and failed on SMACS 0723 and RXJ2129.

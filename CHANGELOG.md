@@ -16,6 +16,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** the reference route validated on Abell 2744 and El Gordo, failed on SMACS 0723 and RXJ2129. Next is
   an input check for the remaining fields (e.g. MACS0647: image list, model maps, a reference that deblends arcs
   from cluster light) before any new stage.
+- **/code-review:** fixed (a "not stored" label in D-034 addendum u, a duplicate import); recorded, not changed
+  (frozen before the run, no effect here): a joined knot set is named by its first row, not its first absent row,
+  and D1 is not applied to the no-local-noise block; the stage-2 driver is a third copy of the SMACS / El Gordo one.
 
 ## 2026-10-23: RXJ2129 reference-catalogue route, stage 1: gate K passes (rms 0.449″, 31 / 31); DJA v7.0 reference has the stage-2b columns
 - **Why RXJ2129, not WHL0137:** WHL0137's only JWST-era image list covers systems 1–2, already tested with four
