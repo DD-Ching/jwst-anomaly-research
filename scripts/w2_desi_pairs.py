@@ -134,32 +134,66 @@ def pair_statistic(wave, fa, iva, fb, ivb, z):
 
 # ------------------------------------------------- sample and DESI pairs (PLAN section 2)
 def tap(query, retries=3):
+    last = ""
     for k in range(retries):
         try:
-            r = requests.get(
+            r = requests.post(
                 TAP,
-                params={"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": query},
-                timeout=180,
+                data={"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": query},
+                timeout=300,
             )
             if r.status_code == 200 and r.text.startswith("targetid"):
                 lines = r.text.strip().splitlines()
                 cols = lines[0].split(",")
                 return [dict(zip(cols, ln.split(","), strict=True)) for ln in lines[1:]]
-        except requests.RequestException:
-            pass
+            last = f"HTTP {r.status_code}: {r.text[:300]}"
+        except requests.RequestException as exc:
+            last = type(exc).__name__
         time.sleep(5 * (k + 1))
-    raise RuntimeError(f"TAP failed: {query[:120]}")
+    raise RuntimeError(f"TAP failed ({last}): {query[:120]}")
+
+
+def _box(ra, dec, rad_arcsec):
+    d = rad_arcsec / 3600.0
+    dr = d / math.cos(math.radians(dec))
+    return ra - dr, ra + dr, dec - d, dec + d
+
+
+ZPIX = []  # rows prefetched by zpix_prefetch (batched box ORs; Data Lab takes no uploads)
+
+
+def _clauses(bx):
+    a, b, c, d = _box(*bx)
+    spans = [(a, b)] if a >= 0 and b <= 360 else [(a % 360, 360), (0, b % 360)]  # RA wrap
+    return [
+        f"(mean_fiber_ra BETWEEN {lo} AND {hi} AND mean_fiber_dec BETWEEN {c} AND {d})"
+        for lo, hi in spans
+    ]
+
+
+def zpix_prefetch(boxes, per_query=20):
+    """One TAP query per batch of boxes (ra, dec, radius arcsec): ORed BETWEEN clauses."""
+    for i in range(0, len(boxes), per_query):
+        clauses = [cl for bx in boxes[i : i + per_query] for cl in _clauses(bx)]
+        q = (
+            "SELECT targetid, mean_fiber_ra, mean_fiber_dec, z, zwarn, spectype "
+            "FROM desi_dr1.zpix WHERE " + " OR ".join(clauses)
+        )
+        ZPIX.extend(tap(q))
 
 
 def zpix_near(ra, dec, rad_arcsec):
-    d = rad_arcsec / 3600.0
-    dr = d / math.cos(math.radians(dec))
-    q = (
-        "SELECT targetid, mean_fiber_ra, mean_fiber_dec, z, zwarn, spectype FROM desi_dr1.zpix "
-        f"WHERE mean_fiber_ra BETWEEN {ra - dr} AND {ra + dr} "
-        f"AND mean_fiber_dec BETWEEN {dec - d} AND {dec + d}"
-    )
-    rows = [r for r in tap(q) if r["spectype"] == "QSO" and int(r["zwarn"]) == 0]
+    """QSO rows with zwarn 0 inside the box, one per TARGETID, from the prefetched rows."""
+    a, b, c, d = _box(ra, dec, rad_arcsec)
+    half = 0.5 * (b - a)
+    rows = [
+        r
+        for r in ZPIX
+        if abs((float(r["mean_fiber_ra"]) - ra + 180) % 360 - 180) <= half
+        and c <= float(r["mean_fiber_dec"]) <= d
+        and r["spectype"] == "QSO"
+        and int(r["zwarn"]) == 0
+    ]
     uniq = {}
     for r in rows:  # one row per TARGETID (zpix can hold several survey / program coadds)
         uniq.setdefault(r["targetid"], r)
@@ -237,6 +271,9 @@ def cmd_pairs(args):
                     "dec2": float(de2[i]),
                 }
             )
+    boxes = [(sy["ra"], sy["dec"], sy["sep_cat"] + EXTRA) for sy in systems]
+    boxes += [(sy["ra2"], sy["dec2"], POS_TOL + 0.5) for sy in systems if sy["role"] == "binary"]
+    zpix_prefetch(boxes)
     rows = []
     for sy in systems:
         q = zpix_near(sy["ra"], sy["dec"], sy["sep_cat"] + EXTRA)
