@@ -2,6 +2,134 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: MACS0416 D115b σ(8515) scan with every source fitted: finished (555 / 555); gates G1–G3 pass; the flag image vanishes first at σ × 0.75 at Δχ² +12.3 > 6, so D115b stays `inconclusive`
+- **Result** (`results/lens_consistency/macs0416_canucsref/sigma_scan/result.json`, frozen rule `verdict`; `model_prediction`):
+  111 families matched one-to-one at every f (none lost). Δχ² vs f 1.00 (χ²_all 244.58): +5.96 (f 0.85), +0.70 (0.80),
+  +12.28 (0.75), +15.85 (0.70). Flag image present at f ≥ 0.80, absent at 0.75 / 0.70; f* = 0.75; Δχ²(f*) > 6
+  (ASSUMPTION) → `inconclusive` (H1 of the plan). Largest contributions at f*: D70 +2.81, D69 +2.71, D72b +2.46, D15
+  +1.72, D115a +1.50.
+- **Post hoc (not used by the rule):** the f 0.80 dip is D24 alone (2.276 at f 0.80 vs ≈ 10.5 at every other f, the
+  start-point gap noted below); without D24 the Δχ² rises monotonically (+5.93 / +8.88 / +12.23 / +15.79), so the
+  start-point limit does not change f* or the verdict.
+- **06:10Z run:** 479 → 555 (D73 f 0.70 to D99); model files pre-fetched via the MAST download API (sha256 verified);
+  first new row ≈ 10 min after start, then 76 tasks in ≈ 41 min.
+- **Handoff:** per the plan, the only next step for D115b is a Lenstool re-fit with 8515's σ (and the rest of the
+  model) free, on the owner machine. MACS0416's CANUCS-reference flag list holds one `inconclusive` row.
+- **/code-review on the final diff (08:14Z run):** fixed without changing any stored number (`result.json` recomputed
+  from `fits.jsonl`: scan, gates and verdict identical): `verdict` now returns `gates_failed` when a gate fails (the
+  plan's "a failure stops the interpretation"); results are written as each task finishes (`as_completed`), and a
+  cut-off last `fits.jsonl` line is dropped on resume; `OMP_NUM_THREADS` is set before numpy loads; G3 and the G1 flag
+  condition are tested. **Recorded, not changed:** (1) the plan names 90.5 km/s for f 0.75; the run used 0.75 × 120.6
+  formatted as 90.4 km/s (90.45 rounded down), the same f. (2) G2 compares the one-to-one χ² with `validate`'s
+  nearest-match χ², so it is not true by construction where validate's matches are shared; it passed for all 111
+  families here. (3) The per-family fit can be start-point-limited (D24, gap ≈ 8 > 6); without D24 the verdict is
+  unchanged (post hoc above). A multi-start amendment would be a new frozen plan, the owner's call.
+
+### Earlier runs of this scan (2026-10-22 to 2026-10-23 05:42Z)
+- **Plan** (`results/lens_consistency/macs0416_canucsref/sigma_scan/PLAN.md`, frozen and pushed before any run):
+  σ = f × 120.6 km/s, f ∈ {1.00, 0.85, 0.80, 0.75, 0.70}, every family's source fitted (not only D115a / D115b,
+  whose post hoc +10.6 of the #458 Δχ² +12.6 sat in unrefitted families); rule as a tested function (`verdict`).
+- **Amendment before any run (cost):** one 0.1″ image solve takes 1.5 s, so the plan as written is ≈ 90 CPU-h (not
+  stored); the search now runs on the 0.25″ grid, final χ² on 0.1″; gate G3 added (f = 1 reproduces #458).
+- **Progress:** 14 / 555 (f, family) tasks in `sigma_scan/fits.jsonl` (11:14Z run added 8). D115a fitted χ² 0.919 /
+  1.744 / 2.069 / 2.415 / 2.765 at f 1.00 / 0.85 / 0.80 / 0.75 / 0.70; D115b 0.386 / 0.465 / 0.490 / 0.515 / 0.538,
+  flag image present at f ≥ 0.80, absent at 0.75 and 0.70 (nearest predicted image 0.90″ / 7.08″); D115a / D115b
+  matched one-to-one at every f. Gates G1 and G3 reproduce `../d115_refit` for both families (G2 needs all f = 1
+  tasks). D34 (f 1.00–0.75): 0.678 / 0.596 / 0.578 / 0.564. No Δχ², no verdict yet (needs every family).
+- **14:19Z run:** 28 / 555 (added D34 f 0.70, D70, D69, D15 f 1.00–0.80). Fitted χ² at f 1.00 → 0.75: D70 4.366 →
+  7.171, D69 4.766 → 7.475; D15 2.696 / 3.628 / 4.006 at f 1.00 / 0.85 / 0.80; all matched one-to-one. Partial sums
+  only; no Δχ², no verdict (needs every family). archive.stsci.edu reset every connection again; the three pinned
+  CANUCS model files were fetched through `mast.stsci.edu/api/v0.1/Download/file?uri=mast:HLSP/...` (sha256 verified).
+- **15:15Z run:** 38 / 555 (added D15 f 0.75 / 0.70, D72b, D74 f 1.00–0.80). Fitted χ² D15 4.415 / 4.837 at f 0.75 /
+  0.70; D72b 7.128 → 10.121 (f 1.00 → 0.70); D74 1.016 / 0.107 / 0.046 at f 1.00 / 0.85 / 0.80 (2 observed, 3 predicted
+  images). Partial sums only; no Δχ², no verdict. Setup took 18 min of the 34-min run; model files via the MAST download
+  API again (sha256 verified).
+- **16:16Z run:** 68 / 555 (added D74 f 0.75 / 0.70, D7, D72a, C1, C2, C3, D10 f 1.00–0.80). Fitted χ² at
+  f 1.00 → 0.70: D7 1.118 → 2.125, D72a 5.178 → 5.796, C1 1.439 → 1.498, C2 0.318 → 0.331, C3 0.312 → 0.385; D74 0.088 /
+  0.218 at f 0.75 / 0.70; D10 1.114 / 1.124 / 1.127 at f 1.00 / 0.85 / 0.80; all matched one-to-one. Partial sums only;
+  no Δχ², no verdict. Setup took ≈ 10 min with the three model files pre-fetched through the MAST download API (sha256
+  verified) before the script started; then 30 tasks in ≈ 21 min (≈ 1.4 per minute on 4 workers; not stored).
+- **17:09Z run:** 79 / 555 (added D10 f 0.75 / 0.70, D100, D106 f 1.00–0.75). Fitted χ² D10 1.130 / 1.134 at f 0.75 /
+  0.70; D100 5.968 → 5.729 and D106 0.114 → 0.126 (f 1.00 → 0.75); all matched one-to-one (3 observed, 3 predicted).
+  Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256 verified), but the
+  first task finished only ≈ 20 min after start, so 11 tasks in ≈ 31 min.
+- **18:12Z run:** 98 / 555 (added D106 f 0.70, D109, D11, D12a, D12b f 1.00–0.80). Fitted χ² at f 1.00 → 0.70: D109
+  0.041 → 0.042, D11 0.394 → 0.267, D12a 2.084 → 2.097; D106 0.129 at f 0.70; D12b 2.150 / 2.156 / 2.158 at f 1.00 /
+  0.85 / 0.80. Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256
+  verified); first task finished ≈ 17 min after start, then 19 tasks in ≈ 15 min (not stored).
+- **19:11Z run:** 109 / 555 (added D12b f 0.75 / 0.70, D13, D14a f 1.00–0.75). Fitted χ² D12b 2.160 / 2.162 at f
+  0.75 / 0.70; D13 0.767 → 0.699 (f 1.00 → 0.70); D14a 0.761 / 0.812 / 0.827 / 0.842 at f 1.00 / 0.85 / 0.80 / 0.75; all
+  matched one-to-one. Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256
+  verified); first task finished ≈ 18 min after start, then 11 tasks in ≈ 13 min (not stored).
+- **21:10Z run:** 169 / 555 (added D14a f 0.70, D14b, D16, D17, D18, D19, D1a–D1f, D2 f 1.00–0.75). Fitted χ² at f
+  1.00 → 0.70: D14b 0.188 → 0.182, D16 6.369 → 6.291, D17 1.189 → 1.155, D18 0.756 → 0.783, D19 0.047 → 0.065, D1a–D1f
+  each ≤ 0.145 and within 0.005; D2 11.659 → 11.877 (f 0.75); all matched one-to-one. Partial sums only; no Δχ², no
+  verdict. **Setup speed-up (no output change):** every worker re-ran `validate`'s image-plane solve for all families
+  (≈ 1.75 min, measured) for each (f, grid) it touched, though a task uses only its own family's residuals; the solve now
+  runs per family inside the task. `chi2_validate_source` is bit-identical to the stored rows for 6 families at f = 1
+  (not stored). First task 5.6 min after start (was 17–20 min), then ≈ 2.4 tasks per minute on 4 workers (was 1.3–1.4);
+  ≈ 386 tasks (≈ 2.7 h of 4-core fitting) remain.
+- **22:27Z run:** 187 / 555 (added D2 f 0.70, D20, D21, D22a, D22b f 1.00 / 0.85). Fitted χ² at f 1.00 → 0.70: D20
+  3.613 → 3.677 (3 observed, 4 predicted), D21 0.164 → 0.211, D22a 1.871 → 1.867; D2 11.913 at f 0.70; D22b 1.949 /
+  1.950 at f 1.00 / 0.85; all matched one-to-one. Partial sums only; no Δχ², no verdict. Model files pre-fetched via
+  the MAST download API (sha256 verified). Setup (single-process `setup(1.0)` plus the workers' first grids) took
+  ≈ 14 min before the first new row, then 18 tasks in ≈ 11 min (not stored); ≈ 10 min of the run were also lost to a
+  wait loop whose `pgrep -f` matched itself. ≈ 368 tasks remain.
+- **23:10Z run:** 257 / 555 (added D22b f 0.80–0.70, D23–D26, D28, D29, D3, D30, D31a–D31e, D31f f 1.00 / 0.85).
+  Fitted χ² at f 1.00 → 0.70: D23 0.840 → 0.868, D26 2.249 → 2.292, D28 13.067 → 13.116, D31a 1.139 → 1.108; the
+  rest ≤ 0.95 and within 0.03. **Fit-reliability clue (post hoc, not a rule):** D24's fit stays at the validate source
+  (χ² 10.454–10.517) at f 1.00 / 0.85 / 0.75 / 0.70 but finds a source 0.06″ away at f 0.80 with χ² 2.276 and 4
+  predicted images for 3 observed (`fits.jsonl`). A gap of ≈ 8 in one family exceeds the Δχ² 6 threshold, so the
+  frozen per-family fit may be start-point-limited; the verdict should be read with that in mind (owner's call
+  whether to amend, e.g. multi-start for every family, before reading Δχ²). **Setup:** `main()` now takes the family
+  list from an analytic back-trace (1.3 s, same order as the stored rows, not stored) instead of a single-process
+  0.1″ grid build; first new row ≈ 7 min after start (was ≈ 14), then 70 tasks in ≈ 30 min. ≈ 298 tasks remain.
+- **00:10Z run (2026-10-23):** 283 / 555 (added D31f f 0.80–0.70, D32, D33, D35, D36, D37 f 1.00–0.80). Fitted χ² at
+  f 1.00 → 0.70: D32 5.684 → 5.587, D33 1.729 → 1.762 (6 observed, 7 predicted), D35 3.274 → 3.328, D36 1.112 → 1.110
+  (2 observed, 3 predicted); D31f 0.536 / 0.535 / 0.535 at f 0.80 / 0.75 / 0.70; D37 1.261 / 1.259 / 1.259 at f 1.00 /
+  0.85 / 0.80. D35's fit moves χ² from the validate source's 5.474 to 3.274 at f 1.00 (a smaller start-point gap than
+  D24's, same direction at every f). Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST
+  download API (sha256 verified); 26 tasks in ≈ 22 min including setup (not stored). ≈ 272 tasks remain.
+- **01:09Z run:** 337 / 555 (added D37 f 0.75 / 0.70, D38–D46, D4, D47 f 1.00 / 0.85). Fitted χ² at f 1.00 → 0.70:
+  D38 1.254 → 0.994, D39 4.000 → 3.977, D4 1.889 → 1.948, D40 1.235 → 1.241 (2 observed, 3 predicted), D41 1.849 →
+  1.986, D42 6.958 → 6.879, D43 3.290 → 3.320, D44 0.258 → 0.456, D45 1.982 → 1.990 (2 observed, 3 predicted), D46
+  7.656 → 7.446; D37 1.259 / 1.260 at f 0.75 / 0.70; D47 0.279 / 0.281 at f 1.00 / 0.85. D38's fit moves χ² from the
+  validate source's 2.405 to 1.254 at f 1.00 (a start-point gap of 1.15, smaller than D24's). Partial sums only; no
+  Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256 verified); 54 tasks in ≈ 33 min
+  including setup (not stored). ≈ 218 tasks remain.
+- **02:10Z run:** 365 / 555 (added D47 f 0.80–0.70, D49a, D49b, D5, D50, D52a). Fitted χ² at f 1.00 → 0.70: D49a
+  3.008 → 2.891, D49b 2.937 → 2.810, D5 2.958 → 2.980, D50 1.118 → 1.260, D52a 5.405 → 5.277 (3 observed, 6 predicted);
+  D47 0.282 / 0.282 / 0.283 at f 0.80 / 0.75 / 0.70; all matched one-to-one. Start-point gaps (fit vs validate source,
+  f 1.00): D5 1.36, D52a 2.07, both smaller than D24's ≈ 8. Partial sums only; no Δχ², no verdict. Model files
+  pre-fetched via the MAST download API (sha256 verified); first new row ≈ 11 min after start, then 28 tasks in ≈ 21 min
+  (not stored). ≈ 190 tasks remain.
+- **03:10Z run:** 397 / 555 (added D52b, D52c, D53, D54, D55a, D55b, D57 f 1.00 / 0.85). Fitted χ² at f 1.00 → 0.70:
+  D52b 5.639 → 5.505, D52c 5.046 → 4.911 (both 3 observed, 6 predicted), D53 0.478 → 0.372, D54 0.393 → 1.026, D55a
+  4.729 → 4.728, D55b 5.035 → 5.030; D57 4.154 / 4.063 at f 1.00 / 0.85 (2 observed, 3 predicted). Start-point gaps (fit
+  vs validate source, f 1.00): D52b 2.06, D52c 1.99, both smaller than D24's ≈ 8. Partial sums only; no Δχ², no
+  verdict. Model files pre-fetched via the MAST download API (sha256 verified); first new row ≈ 10 min after start,
+  then 32 tasks in ≈ 20 min (not stored). ≈ 158 tasks remain.
+- **04:10Z run:** 429 / 555 (added D57 f 0.80–0.70, D62a, D62b, D63, D64a, D64b, D65 f 1.00–0.75). Fitted χ² at
+  f 1.00 → 0.70: D62a 0.485 → 0.493, D62b 2.905 → 2.985, D63 7.939 → 7.752, D64a 1.170 → 1.167, D64b 1.184 → 1.181;
+  D57 4.036 / 4.010 / 3.987 at f 0.80 / 0.75 / 0.70; D65 1.006 → 1.008 (f 1.00 → 0.75). D57 and D62a: 2 observed, 3
+  predicted. Start-point gap (fit vs validate source, f 1.00): D62b 2.50, smaller than D24's ≈ 8. Partial sums only;
+  no Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256 verified); first new row ≈ 9 min
+  after start, then 32 tasks in ≈ 19 min (not stored). ≈ 126 tasks remain.
+- **05:12Z run:** 479 / 555 (added D65 f 0.70, D66, D67, D68, D6a–D6e, D71, D73 f 1.00–0.75). Fitted χ² at
+  f 1.00 → 0.70: D66 1.100 → 1.089, D67 1.529 → 1.637, D68 3.293 → 3.617, D6a 0.541 → 0.993, D6b 0.550 → 0.906, D6c
+  0.907 → 1.156, D6d 1.445 → 1.687, D6e 2.282 → 2.608, D71 1.249 → 1.197; D65 1.009 at f 0.70; D73 4.878 → 4.662 (f 1.00
+  → 0.75). D66, D67 and D73: 2 observed, 3 predicted. Start-point gaps (fit vs validate source, f 1.00): D73 3.89,
+  D68 1.38, both smaller than D24's ≈ 8. Partial sums only; no Δχ², no verdict. Model files pre-fetched via the MAST
+  download API (sha256 verified); first new row ≈ 7 min after start, then 50 tasks in ≈ 27 min (not stored). ≈ 76
+  tasks remain.
+- **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
+  between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
+  runs, most of each spent on setup).
+- **Environment:** archive.stsci.edu now chains to emSign Root CA - G1, absent from the session proxy CA bundle
+  (`CERTIFICATE_VERIFY_FAILED` in urllib and curl). Workaround with verification on: `cat /root/.ccr/ca-bundle.crt
+  "$(python -c 'import certifi; print(certifi.where())')" > ca.pem; export SSL_CERT_FILE=ca.pem`.
+- **Handoff:** resume with `python scripts/m0416_d115_sigma_scan.py` (skips finished tasks); better on the owner
+  machine (setup paid once). Alternatively freeze a reduced family set before reading more results.
 ## 2026-10-23: Gate C2 shared-pair counting frozen as a rule for the next field (D-034 addendum i); no flag read
 - **Code:** `m0417_arcref.merge_shared_pairs` (moved from `a370_c2_posthoc.py`) and `gate_c2_shared`: arc-referenced
   controls of different systems sharing one (reference, counterpart) pair count once; merged class by precedence absent
