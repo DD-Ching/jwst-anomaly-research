@@ -1,0 +1,38 @@
+{
+ "rxj2129": {
+  "model": "rxj2129-lenstool-maps",
+  "model_sha256": "f5861958e876f2017a026c8dccdfbca382cf61205134170804d77a967643655b",
+  "image": "s3://stpubdata/jwst/public/jw02767/L3/t/o002/jw02767-o002_t001_nircam_clear-f200w_i2d.fits",
+  "depth_mag": null,
+  "unpredicted": [],
+  "image_classes": {
+   "candidate": 6,
+   "demagnified": 3,
+   "faint": 4,
+   "no_flux_ref": 1,
+   "observed": 29
+  },
+  "forced_classes_targets": {
+   "confused": 2,
+   "no_reference": 5,
+   "recovered": 1,
+   "undetectable": 3
+  },
+  "gate_C": {
+   "n_targets": 29,
+   "n_testable": 11,
+   "n_recovered": 10,
+   "fraction": 0.9090909090909091,
+   "passes": true,
+   "classes": {
+    "absent": 1,
+    "confused": 4,
+    "no_reference": 17,
+    "recovered": 6,
+    "undetectable": 1
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}

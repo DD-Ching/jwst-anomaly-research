@@ -8,7 +8,7 @@ checks SMACS rule 2's columns. Writes ``summary.json``. ``PLAN_2.md`` (``--stage
 stage 2b's rules on GO 2767 F200W and the DJA v7.0 reference, with the system-3 knot group's
 overlapping targets joined for flags (deviation D1).
 
-    python scripts/rxj2129_djaref.py [--stage 2] [--cache data/cache/rxj2129x]
+    python scripts/rxj2129_djaref.py [--stage 2|sheet] [--cache data/cache/rxj2129x]
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ import m0417_canucsref as cr
 import m0417_extra as mx
 import m0417_images as mi
 import numpy as np
+import smacs_djaref as sd
 from astropy.coordinates import SkyCoord
 from astropy.table import Table
 from m0417_canucsref_posthoc import _clean
@@ -221,11 +222,15 @@ def stage_1() -> int:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--stage", choices=("1", "2"), default="1")
+    ap.add_argument("--stage", choices=("1", "2", "sheet"), default="1")
     ap.add_argument("--cache", type=Path, default=Path("data/cache/rxj2129x"))
     args = ap.parse_args(argv)
     if args.stage == "1":
         return stage_1()
+    if args.stage == "sheet":  # post hoc contact sheet of the stage-2 controls (SMACS's)
+        sd.OUT, sd.FIELD, sd.OBS, sd.TILE, sd.S3_2736 = OUT, FIELD, OBS, TILE, S3_2767
+        print(sd.sheet(OUT / "sheet_2.png"), "controls")
+        return 0
     summary = json.loads((OUT / "summary.json").read_text())
     summary["stage2"] = _clean(stage_2(args.cache))
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")

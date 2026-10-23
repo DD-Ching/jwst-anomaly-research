@@ -2,8 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-23: RXJ2129 reference-catalogue route, stage 2 (in progress)
-- Claimed by the 21:09Z cloud routine; plan `results/lens_consistency/rxj2129_djaref/PLAN_2.md` to be frozen before any read.
+## 2026-10-23: RXJ2129 reference-catalogue route, stage 2: gate C2 fails (4 / 7, arc 2 / 5); no flag read
+- **Plan:** `results/lens_consistency/rxj2129_djaref/PLAN_2.md`, frozen and pushed before any read (El Gordo stage
+  2b's rules; deviation D1: overlapping targets of the one-galaxy group 3 / S3-1 / S3-2 joined for flags,
+  `merge_knot_targets`, unit-tested). Footprint check first: GO 2767 `o002_t001` F200W contains all 31 images.
+- **Result** (`RESULT.md` § Stage 2, `summary.json` `stage2`): rules 2a / 2b pass; gate C2 fails (0.57 and 0.40
+  against 0.8; also without the containing-source or local-noise rule). No flag read.
+- **Contact sheet** (`sheet_2.png`, post hoc) looked at: the 3 absent controls all take one reference row (DJA 1506,
+  16.38 mag, 3a 8.7″); faint sources sit in two of their circles. Without that row C2 is still below its minimum
+  counts. Route closed for RXJ2129. D-034 addendum u.
+- **Data:** F200W SCI (≈ 82 MB) and DJA table in memory; Lenstool members (≈ 300 MB) re-staged by range reads and the
+  pipeline `_cat.ecsv` in the session cache, deleted.
+- **Handoff:** the reference route validated on Abell 2744 and El Gordo, failed on SMACS 0723 and RXJ2129. Next is
+  an input check for the remaining fields (e.g. MACS0647: image list, model maps, a reference that deblends arcs
+  from cluster light) before any new stage.
 
 ## 2026-10-23: RXJ2129 reference-catalogue route, stage 1: gate K passes (rms 0.449″, 31 / 31); DJA v7.0 reference has the stage-2b columns
 - **Why RXJ2129, not WHL0137:** WHL0137's only JWST-era image list covers systems 1–2, already tested with four
