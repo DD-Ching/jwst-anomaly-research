@@ -21,3 +21,5 @@ Frozen plan: `PLAN_1.md` (committed before the run). Script `scripts/smacs_djare
 **Next:** stage 2 under a frozen plan: El Gordo stage 2b's rules on this reference (`flux_auto × tot_corr` unit
 check, grid check, frame tables with `m0417_extra.run_field` on a GO 2736 F200W tile, gate C2 with shared pairs,
 local noise).
+
+**Stage 2 (claimed 2026-10-23 19:15Z):** frozen plan `PLAN_2.md` in progress.
