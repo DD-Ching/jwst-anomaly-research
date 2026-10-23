@@ -204,8 +204,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    F814W ≈ 23 (D-064 addendum: binary vs dark lens needs spectra of both images or two-epoch flux ratios), J0728+2607
    has none either with an empirical PSF (F814W ≈ 23), and 9 have no HST (Euclid DR1 when public);
    DESI DR1 has spectra of both components for 13 rejected pairs (2026-10-23, `results/w2_desi_pairs/RESULT.md`), but
-   the frozen profile test flags only 1 / 7 catalogued binaries, so none is classified; next only with a more
-   powerful pre-registered statistic and fresh, non-overlapping controls; catalogued image separations for the 15
+   the frozen profile test flags only 1 / 7 catalogued binaries, so none is classified; the DESI classifier line is
+   stopped (evidence audit, `results/w2_desi_pairs/evidence/RESULT.md`: J2351 misidentified; of 12, 2 ordinary, 3 disputed, 7 open; D-064
+   addendum). Only follow-up with value: J2244−0550 (likely lens in Lemon et al. §4.2) has public HST F814W / F160W
+   (GO 17308, 17455) no paper is known to use. It needs a pre-registered ~1″ PSF test with same-programme controls,
+   so ask the owner before starting. D-064 sample fix (UQP includes 13 §4.2 likely lenses) is open; catalogued image separations for the 15
    pair-decided systems the pair check cannot test yet (incl. the 3 CHITAH pairs; HSC lens models); HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;
    deeper imaging (HSC PDR, Euclid DR1) for the conservative variant; a lens list with image positions for W1.
 3. **W5** (D-063): Legacy Surveys DR10, 340.5 deg², 40 flags, 0 survivors; n₉₅ ≈ 0.012–0.018 deg⁻² at θ_E = 8–32′.
@@ -388,8 +391,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
       the model's own gold list passes, rms 0.910″); next: pin the CANUCS DR1 Abell 370 catalogue and mosaic and run the
       extra-image stages on the BUFFALO gold systems (frozen plan first); done 2026-10-22 (#468: gate K passes, C2 fails 19 / 25,
       no flag read); post hoc C2 diagnosis done 2026-10-22 (`abell370_buffalo_extra/posthoc_c2/RESULT.md`: 3 of 6 absent
-      arc controls are one segment pair counted three times; counted once 19 / 23, other fields unchanged). Next: freeze the
-      shared-pair rule before any new field; reading Abell 370's flags under it is the owner's call;
+      arc controls are one segment pair counted three times; counted once 19 / 23, other fields unchanged). ~~Freeze the
+      shared-pair rule~~ done 2026-10-23 (D-034 addendum i, `m0417_arcref.gate_c2_shared`); reading Abell 370's flags under it is the owner's call;
+      next field needs a non-CANUCS reference catalogue (Abell 2744 + UNCOVER photometry is the first to check; gate K first);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows

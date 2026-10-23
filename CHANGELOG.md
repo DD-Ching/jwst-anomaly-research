@@ -121,6 +121,53 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   "$(python -c 'import certifi; print(certifi.where())')" > ca.pem; export SSL_CERT_FILE=ca.pem`.
 - **Handoff:** resume with `python scripts/m0416_d115_sigma_scan.py` (skips finished tasks); better on the owner
   machine (setup paid once). Alternatively freeze a reduced family set before reading more results.
+## 2026-10-23: Gate C2 shared-pair counting frozen as a rule for the next field (D-034 addendum i); no flag read
+- **Code:** `m0417_arcref.merge_shared_pairs` (moved from `a370_c2_posthoc.py`) and `gate_c2_shared`: arc-referenced
+  controls of different systems sharing one (reference, counterpart) pair count once; merged class by precedence absent
+  > recovered / confused > ambiguous > other (the #469 version took the first member's class when none was absent, so
+  an untestable member could hide a testable one; no stored table has such a group).
+- **Check:** `scripts/a370_c2_posthoc.py` now calls the frozen function; `posthoc.json` is byte-identical (Abell 370
+  arc 19 / 25 → 19 / 23; MACS0416 58 / 59 → 49 / 50; MACS0417, MACS1149, MACS1423 unchanged). Tests cover precedence,
+  non-arc rows and same-system pairs.
+- **Not done:** no new field run; Abell 370's flags stay unread (owner's call, #469). The five CANUCS-reference
+  fields are all used, so the next field needs another reference catalogue (e.g. UNCOVER photometry with Abell 2744;
+  not checked yet) and its own frozen plan with gate K first.
+
+## 2026-10-23: W2 DESI pairs evidence audit: J2351+1343 is misidentified; of the other 12 rejected pairs 2 have stronger ordinary explanations, 3 are disputed, 7 stay open; J2244−0550 (likely lens in its source paper) has public HST imaging with no published use found; the DESI classifier line stops
+- **Plan:** `results/w2_desi_pairs/evidence/PLAN.md`. Metadata and literature only: no spectrum read, and #472's
+  statistic, T and verdict unchanged.
+- **Outputs** (`EVIDENCE.md`, `evidence.json` from `scripts/w2_desi_evidence.py`):
+  - identity: DESI zpix, Gaia DR3 and LS DR10 matches;
+  - literature, with the quoted basis of each class;
+  - archives: MAST, ESO and KOA metadata for 3 open pairs.
+- **Identity:**
+  - J2351+1343's DESI pair is not the SQLS pair. The SQLS system is QUASAR+STAR per SLED, and the companion has no
+    DESI row; DESI's second fibre is on a faint third source.
+  - 6 pairs are closer than the 1.5″ fibres (0.82–1.31″).
+- **Labels:**
+  - J2244−0550 is in Lemon et al. §4.2 "Likely Lensed Quasars" but has table class UQP (NIQ in arXiv v1). 13 of the
+    17 §4.2 systems are UQP in VizieR and therefore "rejected" in D-064.
+  - Jing et al. class it QPC from the same DESI spectra: a chromatic flux ratio "suggesting two distinct sources",
+    from overlapping fibres. It is disputed.
+  - The "binary" labels of J0740 and J1035 (Hennawi, low-S/N spectra) and of J1511 and J1552 (SQLS, similar Subaru
+    spectra) rest on not seeing a lens galaxy.
+  - J1035 is an LQC in Jing et al. (same DESI data); J0740 is a "lensing candidate" in Ji et al., citing Lemon et al.
+    2018.
+  - J0130's DESI-based analysis (Chen et al.) keeps lensing open.
+  - For J0728 the published evidence favours a binary (strongly different NOT spectra).
+- **Public data not yet used** (RESULT §4):
+  - J2244−0550: HST F814W (GO 17308) and F160W / F475W / F625W (GO 17455), PUBLIC in MAST; Keck OSIRIS Kp and LRIS
+    (KOA, access not tried). No published result was found.
+  - J1511+3357: none found.
+  - J1202+0703: Keck LRIS spectra only.
+- **Corrections:**
+  - #472 wording: D ≤ T is "no difference above threshold"; 9 / 9 is a pass count, not a same-source accuracy;
+    J2351 is noted.
+  - Without the two disputed Hennawi controls the gate still fails (1 / 5).
+  - D-064 addendum: UQP mapping, non-detection-based binaries.
+- **Failed approach / stop:** the DESI spectral-classifier line stops. The same DESI pairs are already classified by
+  Jing et al. (all 13) and Chen et al. (J0130), so a new statistic on them adds no observation.
+
 ## 2026-10-23: W2 DESI pairs: spectra of both components exist for 13 rejected lensed-quasar pairs, but the frozen spectral test flags only 1 of 7 catalogued binaries (gate needs ≥ 70 %); no pair classified
 - **Route choice** (`results/w2_desi_pairs/PLAN.md` §0; 23:47–00:08 UTC) between three options:
   - W2 HST lens-light refit: rejected, most targets are STRIDES quads with modelled lens galaxies;
@@ -130,10 +177,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Data:** DESI DR1 (Data Lab TAP, SPARCL; anonymous) has QSO spectra of both components for 13 rejected pairs
   (incl. J0130+0725, J0728+2607), 9 lenses and 7 Hennawi binaries (θ ≤ 10″).
 - **Result** (`gate.json`, `controls_sheet.png`): the frozen per-pixel profile χ²_ν test (free scale, T = 3).
-  - 9 / 9 lenses "one source" (8 of them at ≤ 2″, where fibre crosstalk may help); 1 / 7 binaries "two spectra",
-    against ≥ 70 % required.
+  - 9 / 9 lenses with D ≤ T, i.e. no difference above threshold (8 of them at ≤ 2″, where fibre crosstalk may help;
+    not an accuracy for "one source", wording corrected by the 2026-10-23 evidence audit); 1 / 7 binaries "two
+    spectra", against ≥ 70 % required.
   - The gate fails, so 11 of the 13 rejected pairs were not retrieved or read.
-  - The other 2 share their DESI TARGETIDs with Hennawi controls and were read only in that role, as "one source".
+  - The other 2 share their DESI TARGETIDs with Hennawi controls and were read only in that role, with D ≤ T.
 - **Failed approach:** a mean per-pixel χ² of broad-line profiles flagged 1 of 7 catalogued binaries (catalogued
   |dV| 10–350 km/s).
   - Post hoc (not used): profile Δv is 0–86 km/s for the 9 lenses and 170–579 km/s for 6 of 7 binaries.
