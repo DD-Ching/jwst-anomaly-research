@@ -22,7 +22,8 @@
   - The availability count in `availability.json` (20 rejected, 12 lenses, 17 binaries) was made before the pair
     rule. It counted any ≥ 2 QSOs in the box, and the Hennawi count was before the |Δv| cut.
 - **Retrieved** (`fetch_log.json`): only the 16 control pairs.
-  - 32 spectra; the line windows are kept in `spectra/` (610 kB in total, with SPARCL ids).
+  - 32 spectra; the line windows are kept as text in `spectra/<role>_<name>.csv.gz` (16 files, ≤ 66 kB each, with
+    SPARCL ids in `fetch_log.json`).
   - The rejected pairs' spectra were **not retrieved**.
 
 ## 2. Control gate (`gate.json`, `controls.json`, `controls_sheet.png`; PLAN §4)

@@ -392,6 +392,26 @@ def windows_mask(wave, z):
     return m
 
 
+PAIR_COLS = ("wave_a", "flux_a", "ivar_a", "wave_b", "flux_b", "ivar_b")
+
+
+def save_pair(dst, arrays):
+    """Line windows of both spectra as text (float32 values, round-trip exact via %.9g)."""
+    import gzip
+
+    n = len(arrays["wave_a"])
+    with gzip.open(dst, "wt", compresslevel=9) as f:
+        f.write(",".join(PAIR_COLS) + "\n")
+        for i in range(n):
+            f.write(",".join(f"{float(arrays[c][i]):.9g}" for c in PAIR_COLS) + "\n")
+
+
+def load_pair(path):
+    """Inverse of save_pair: float32 arrays, as stored."""
+    t = np.loadtxt(path, delimiter=",", skiprows=1, ndmin=2)
+    return {c: t[:, k].astype(np.float32) for k, c in enumerate(PAIR_COLS)}
+
+
 def cmd_fetch(args):
     out = Path(args.out)
     roles = set(args.roles.split(","))
@@ -417,7 +437,7 @@ def cmd_fetch(args):
     for sy in P["systems"]:
         if sy["role"] not in roles or sy["status"] != "pair":
             continue
-        dst = sdir / f"{sy['role']}_{sy['name'].replace('/', '_')}.npz"
+        dst = sdir / f"{sy['role']}_{sy['name'].replace('/', '_')}.csv.gz"
         if dst.exists():
             continue
         recs = sparcl_find(sy["ra"], sy["dec"], sy["sep_cat"] + EXTRA + 1.0)
@@ -451,7 +471,7 @@ def cmd_fetch(args):
             arrays[f"flux_{side}"] = np.asarray(sp["flux"], float)[m].astype(np.float32)
             arrays[f"ivar_{side}"] = iv[m].astype(np.float32)
             ids[side] = sid
-        np.savez_compressed(dst, **arrays)
+        save_pair(dst, arrays)
         log.append(
             {
                 "name": sy["name"],
@@ -482,7 +502,7 @@ def analyse(out, roles):
             k: sy.get(k)
             for k in ("role", "name", "sep_cat", "sep_desi", "z_a", "z_b", "comment", "status")
         }
-        f = out / "spectra" / f"{sy['role']}_{sy['name'].replace('/', '_')}.npz"
+        f = out / "spectra" / f"{sy['role']}_{sy['name'].replace('/', '_')}.csv.gz"
         if sy["status"] != "pair":
             res.append(rec)
             continue
@@ -490,7 +510,7 @@ def analyse(out, roles):
             rec["status"] = "unknown (SPARCL spectrum missing)"
             res.append(rec)
             continue
-        d = np.load(f)
+        d = load_pair(f)
         wa, wb = d["wave_a"].astype(float), d["wave_b"].astype(float)
         if len(wa) != len(wb) or np.max(np.abs(wa - wb)) > 1e-3:
             raise RuntimeError(f"{sy['name']}: wavelength grids differ")
@@ -594,7 +614,7 @@ def cmd_sheet(args):
     for ax, r in zip(axs.flat, res, strict=False):
         used = {k: v for k, v in r["lines"].items() if v.get("used")}
         line = max(used, key=lambda k: min(used[k]["snr_a"], used[k]["snr_b"]))
-        d = np.load(out / "spectra" / f"{r['role']}_{r['name'].replace('/', '_')}.npz")
+        d = load_pair(out / "spectra" / f"{r['role']}_{r['name'].replace('/', '_')}.csv.gz")
         z = 0.5 * (r["z_a"] + r["z_b"])
         a = line_profile(
             *(d[f"{x}_a"].astype(float) for x in ("wave", "flux", "ivar")), z, LINES[line]
