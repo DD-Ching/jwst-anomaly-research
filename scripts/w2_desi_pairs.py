@@ -3,14 +3,15 @@
 
 Stages (each writes into ``--out``, default ``results/w2_desi_pairs``):
 
-    python scripts/w2_desi_pairs.py pairs              # sample (D-064 inputs + Hennawi binaries) and DESI pairs
-    python scripts/w2_desi_pairs.py fetch --roles control,binary   # SPARCL spectra, compact line windows
-    python scripts/w2_desi_pairs.py validate           # control gate (PLAN section 4)
+    python scripts/w2_desi_pairs.py pairs     # sample (D-064 inputs + Hennawi binaries), DESI pairs
+    python scripts/w2_desi_pairs.py fetch --roles control,binary   # SPARCL spectra, line windows
+    python scripts/w2_desi_pairs.py validate  # control gate (PLAN section 4)
     python scripts/w2_desi_pairs.py fetch --roles rejected         # only after the gate passed
-    python scripts/w2_desi_pairs.py apply              # targets, refused unless the gate passed
+    python scripts/w2_desi_pairs.py apply     # targets, refused unless the gate passed
 
-Spectra are ``observed`` (DESI DR1 via SPARCL, anonymous public access); the statistic and classes are
-``derived``. "Consistent with one source" is necessary for a dark lens, never evidence of one.
+Spectra are ``observed`` (DESI DR1 via SPARCL, anonymous public access); the statistic and
+classes are ``derived``. "Consistent with one source" is necessary for a dark lens, never
+evidence of one.
 """
 
 from __future__ import annotations
@@ -44,7 +45,7 @@ SPARCL = "https://astrosparcl.datalab.noirlab.edu/api"
 
 # ---------------------------------------------------------------- statistic (PLAN section 3)
 def line_profile(wave, flux, ivar, z, rest):
-    """Continuum-normalised profile p = F / C - 1 and its sigma on |v| <= LINE_V; NaN where unusable."""
+    """Profile p = F / C - 1 and its sigma on |v| <= LINE_V (continuum C); NaN where unusable."""
     v = C_KMS * (wave / (rest * (1 + z)) - 1)
     good = ivar > 0
     cw = good & (np.abs(v) >= CONT_V[0]) & (np.abs(v) <= CONT_V[1])
@@ -96,7 +97,7 @@ def velocity_offset(pa, pb, dv_pix):
 
 
 def pair_statistic(wave, fa, iva, fb, ivb, z):
-    """PLAN section 3: per-line chi2_nu with a free scale, D = mean over counted lines, dv reported."""
+    """PLAN section 3: per-line chi2_nu with a free scale; D = mean over counted lines."""
     out = {"lines": {}, "D": None, "dv_kms": None}
     ds, dvs = [], []
     for name, rest in LINES.items():
@@ -131,7 +132,7 @@ def pair_statistic(wave, fa, iva, fb, ivb, z):
     return out
 
 
-# ---------------------------------------------------------------- sample and DESI pairs (PLAN section 2)
+# ------------------------------------------------- sample and DESI pairs (PLAN section 2)
 def tap(query, retries=3):
     for k in range(retries):
         try:
@@ -143,7 +144,7 @@ def tap(query, retries=3):
             if r.status_code == 200 and r.text.startswith("targetid"):
                 lines = r.text.strip().splitlines()
                 cols = lines[0].split(",")
-                return [dict(zip(cols, ln.split(","))) for ln in lines[1:]]
+                return [dict(zip(cols, ln.split(","), strict=True)) for ln in lines[1:]]
         except requests.RequestException:
             pass
         time.sleep(5 * (k + 1))
@@ -155,7 +156,8 @@ def zpix_near(ra, dec, rad_arcsec):
     dr = d / math.cos(math.radians(dec))
     q = (
         "SELECT targetid, mean_fiber_ra, mean_fiber_dec, z, zwarn, spectype FROM desi_dr1.zpix "
-        f"WHERE mean_fiber_ra BETWEEN {ra - dr} AND {ra + dr} AND mean_fiber_dec BETWEEN {dec - d} AND {dec + d}"
+        f"WHERE mean_fiber_ra BETWEEN {ra - dr} AND {ra + dr} "
+        f"AND mean_fiber_dec BETWEEN {dec - d} AND {dec + d}"
     )
     rows = [r for r in tap(q) if r["spectype"] == "QSO" and int(r["zwarn"]) == 0]
     uniq = {}
@@ -290,7 +292,8 @@ def cmd_pairs(args):
         rows.append(rec)
     json.dump(
         {
-            "label": "derived (D-064 pinned inputs, Hennawi et al. 2006, desi_dr1.zpix via NOIRLab Data Lab TAP)",
+            "label": "derived (D-064 pinned inputs, Hennawi et al. 2006, desi_dr1.zpix via "
+            "NOIRLab Data Lab TAP)",
             "retrieved_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "systems": rows,
         },
@@ -519,7 +522,8 @@ def cmd_apply(args):
     res = analyse(out, {"rejected"})
     json.dump(
         {
-            "label": "derived; observed DESI spectra; classes are spectral only, never a dark-lens claim",
+            "label": "derived; observed DESI spectra; classes are spectral only, "
+            "never a dark-lens claim",
             "T": T_D,
             "systems": res,
         },
