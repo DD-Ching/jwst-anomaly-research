@@ -1,0 +1,97 @@
+{
+ "plan": "results/lens_consistency/macs0416_canucsref/sigma_scan/PLAN.md",
+ "provenance": "model_prediction",
+ "grid_step_arcsec": 0.1,
+ "dchi2_max_assumption": 6.0,
+ "gates": {
+  "G1": true,
+  "G2": true,
+  "G2_failures": [],
+  "G3": true
+ },
+ "scan": {
+  "1.00": {
+   "sigma_kms": 120.6,
+   "chi2_all_matched": 244.58121692578794,
+   "dchi2": 0.0,
+   "n_families_compared": 111,
+   "lost_match": [],
+   "flag_image": true,
+   "d115_matched": true,
+   "top5": {
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "D10": 0.0,
+    "D100": 0.0
+   }
+  },
+  "0.85": {
+   "sigma_kms": 102.5,
+   "chi2_all_matched": 250.54268548778322,
+   "dchi2": 5.96146856199528,
+   "n_families_compared": 111,
+   "lost_match": [],
+   "flag_image": true,
+   "d115_matched": true,
+   "top5": {
+    "D69": 1.4503844505453394,
+    "D70": 1.44423065498391,
+    "D72b": 1.396743352210854,
+    "D15": 0.9320113218702311,
+    "D74": -0.9090868763943054
+   }
+  },
+  "0.80": {
+   "sigma_kms": 96.5,
+   "chi2_all_matched": 245.27902504159914,
+   "dchi2": 0.697808115811201,
+   "n_families_compared": 111,
+   "lost_match": [],
+   "flag_image": true,
+   "d115_matched": true,
+   "top5": {
+    "D24": -8.177791205518849,
+    "D70": 2.089826333652569,
+    "D69": 2.054046448049756,
+    "D72b": 1.9149901493134918,
+    "D15": 1.3095178880101148
+   }
+  },
+  "0.75": {
+   "sigma_kms": 90.4,
+   "chi2_all_matched": 256.86402012798396,
+   "dchi2": 12.282803202196003,
+   "n_families_compared": 111,
+   "lost_match": [],
+   "flag_image": false,
+   "d115_matched": true,
+   "top5": {
+    "D70": 2.805023779868658,
+    "D69": 2.70838199166053,
+    "D72b": 2.455827978443298,
+    "D15": 1.7190228392139622,
+    "D115a": 1.495461087222582
+   }
+  },
+  "0.70": {
+   "sigma_kms": 84.4,
+   "chi2_all_matched": 260.43588265063363,
+   "dchi2": 15.85466572484567,
+   "n_families_compared": 111,
+   "lost_match": [],
+   "flag_image": false,
+   "d115_matched": true,
+   "top5": {
+    "D70": 3.5508719379123708,
+    "D69": 3.3792059005712805,
+    "D72b": 2.9935710351674585,
+    "D15": 2.141141624930862,
+    "D115a": 1.8452634355771893
+   }
+  }
+ },
+ "f_star": "0.75",
+ "verdict": "inconclusive",
+ "fits": "results/lens_consistency/macs0416_canucsref/sigma_scan/fits.jsonl"
+}
