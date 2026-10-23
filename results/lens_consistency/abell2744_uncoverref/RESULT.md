@@ -152,6 +152,9 @@ stored; looked at):
 flags. 4.2 repeats the vetted 4.2c. 78.3c is an unvetted flag, not a candidate.
 
 **Next.** `/vet-candidate` on 78.3c, cheapest test first:
-1. μ(78.3c) under ±30 % of the nearby member and group components (D-036 rule: untestable if μ moves > 2×);
+1. model dependence (D-036 rule: untestable if μ moves > 2× or an independent model disagrees). Bergamini+23
+   reproduces 700.1 at no z (`../a2744_s700_zscan`, outcome B), so its members cannot be perturbed for this system as
+   they are. The cheapest independent check is whether the CATS v4.1 maps (D-035) predict 78.3c from 78.3a;
+   then μ(78.3c) under ±30 % of the nearby member and group components;
 2. 78.3a's knot identity (a single-image system);
 3. the flux of the 51679 source.

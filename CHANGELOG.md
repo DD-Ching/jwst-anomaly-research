@@ -12,7 +12,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   78.2c, which use the same arc reference, are recovered. Contact sheet looked at (`sheet_2c.png`).
 - **Data:** DR3 SUPER re-streamed (sha256 matches); F277W / F356W SCI read by range stream into memory; nothing kept.
 - **Handoff:** PR #480 stays a draft (trial T2: unvetted hits stay on the claim PR). Next: `/vet-candidate` on 78.3c
-  (μ under ±30 % changes of member 20036 / group O4 / O9 in Bergamini+23, then the single-image identity of 78.3a).
+  (model dependence first: Bergamini+23 reproduces 700.1 at no z, so start with whether the CATS v4.1 maps predict 78.3c from 78.3a; then μ under ±30 % member / group changes; then the single-image identity of 78.3a).
 
 ## 2026-10-23: Abell 2744 UNCOVER-reference stage 2b: gate C2 passes (arc-referenced 11 / 13), no flag; 4.2 and 78.3 ambiguous just under 10 σ
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_2b.md`, frozen with `to_cat_super` and
