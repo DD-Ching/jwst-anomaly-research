@@ -1,0 +1,35 @@
+{
+ "label": "derived, post hoc (after the independent review): properties of the official model file and a baseline-subtracted injection z; no fit was rerun",
+ "psf_model": {
+  "grid_sums_over_25x25px": [
+   1.0319087505340576,
+   1.0288753509521484,
+   1.0282442569732666,
+   1.0305774211883545,
+   1.0271008014678955,
+   1.0289772748947144,
+   1.0365527868270874,
+   1.0304508209228516,
+   1.0371246337890625
+  ],
+  "centre_psf_enclosed": {
+   "r<=3px": 0.9432093444047494,
+   "r<=6px": 1.0077944347140142,
+   "r<=10px": 1.0263418643397626,
+   "all": 1.0252191987149375
+  },
+  "centre_psf_max_nonzero_radius_px": 16.97056274847714,
+  "centre_psf_max_radius_on_axes_px": 12.0,
+  "change_for_5px_shift_over_peak": 0.0004263127971022152,
+  "evaluated_at_0based": [
+   506.0,
+   506.0
+  ]
+ },
+ "case3_z_baseline_subtracted": {
+  "20.0": 90.08460865987402,
+  "21.0": 37.56020747441845,
+  "22.0": 15.816778353317021
+ },
+ "case3_z_baseline_subtracted_note": "(sum S_inj - sum S_noinj) / sqrt(sum N_inj^2) over the 4 exposures"
+}

@@ -1,16 +1,16 @@
 {
  "label": "measured (session clock; ledger totals from net_ledger.jsonl) and estimated where stated",
  "start_utc": "2026-10-23T15:55Z",
- "end_utc": "2026-10-23T16:2xZ (updated at merge)",
+ "end_utc": "2026-10-23T16:35Z (last result commit; the merge follows)",
  "limits": {
   "wall_h": 2,
   "cores": 2,
   "download_bytes": 1000000000
  },
- "download_bytes_total_ledger": 104910070,
+ "download_bytes_total_ledger": 105290057,
  "download_bytes_first_fetch": 52816656,
  "download_bytes_refetch_for_recompute_check": 52093414,
- "download_note": "includes the 2880 B live test, the stop-test ledger's 8738 B (charged as external), a 20 kB estimated TLS diagnosis, 0 B for dependencies (uv --offline); TCP-buffered bytes after a cut-off are not counted",
+ "download_note": "includes the 2880 B live test, the stop-test ledger's 8738 B (charged as external), a 20 kB estimated TLS diagnosis, 0 B for dependencies (uv --offline); TCP-buffered bytes after a cut-off are not counted; error/redirect responses counted at the TLS allowance only before the post-review fix (two GitHub 403s)",
  "run_seconds_wall": {
   "first_run": 11,
   "recompute_run": "not stored (seconds)"
@@ -23,5 +23,6 @@
   "scipy==1.18.1",
   "matplotlib (from the uv cache)"
  ],
- "scratch_deleted": "FLTs, model file, Gaia response, refetch copies and the isolated env deleted after the recompute check"
+ "scratch_deleted": "FLTs, model file, Gaia response, refetch copies and the isolated env deleted after the recompute check",
+ "download_bytes_posthoc_model_refetch": 379987
 }

@@ -3825,14 +3825,14 @@ the known-lens set; HSC v4 or a lens-aware HST catalogue appears.
   covers the #474 lenstronomy chain and the official-PSF hook-up. No larger PSF, star library or budget is proposed.
 - **Evidence:** the STScI default STDPSF model (hst_notebooks WFC3 PSF notebook §2.2.1, photutils
   `GriddedPSFModel`) was fitted on single F160W FLT exposures.
-  - It hooks up: subarray, detector and sub-pixel position work, and positions agree to 1.3 mas.
-  - It does not model a real G 18 star to the noise (χ²/ν 31–39; wings at 3–12 px 3.0–3.1 % above the tapered
-    model).
-  - A no-galaxy ~1″ star pair shows a false extended-light residual of z 19 at the lens position.
+  - It hooks up: FLT positions agree across dithers to 1.3 mas (sub-pixel consistency).
+  - It does not model a real G 18 star to the noise (χ²/ν 31–39; wings at 3–12 px 3.0–3.1 % above the model).
+  - A no-galaxy ~1″ star pair leaves a residual of z 19 at the lens position. Its wing, core-shape and two-visit
+    contributions are not separated.
 - **Rejected inside the unit:** focus or spatial perturbation (hst1pass needs at least 10 bright isolated stars per
   exposure); stacked or drizzled PSFs (other methods; drizzled empirical models are not officially supported).
-- **Revisit if:** the owner reopens the line, or an official PSF product that models the F160W wings beyond 1.6″ on
-  drizzled or exposure-level data becomes available.
+- **Revisit if:** the owner reopens the line, or an official PSF route models a real G ≈ 18 F160W star to the
+  noise within 1.5″ (core and wings), on exposure-level or drizzled data.
 
 ## D-061 W3 in the Gaia DR3 microlensing candidates: the published selection also rejects W3 (2026-10-08)
 

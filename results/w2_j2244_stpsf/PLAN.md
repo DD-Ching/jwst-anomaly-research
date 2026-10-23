@@ -133,3 +133,14 @@ Claim and scope committed 2026-10-23 15:55 UTC (37f60ce). This test plan is comm
 - J2244−0550.
 - DESI classifier, X4, W3 / ATLAS and other paused units.
 - Outside contact, accounts or schedules.
+
+## Errata after the run (from the independent review; no setting or rule changed)
+- **"No exposure of its visit is read" (header):** no pixel of J2244−0550's visit was read. But the ledger's live
+  tests (§0) used its drz product `if8a5k030`: a 2880 B primary-header read, and an un-ranged request cut after the
+  HTTP header (RESULT §7).
+- **§1 "zero beyond r ≈ 12.5 px":** the model is a 25 × 25 px square (±12 px on the axes) and is tapered at large
+  radii (`posthoc.json`).
+- **§3 case 3:** the injected magnitude is normalised within the ±12 px box before PSF convolution.
+- **§5 H** checks sub-pixel consistency across dithers. A constant subarray offset cancels in it.
+- **§5 I:** the no-galaxy residual alone (z_P 19) satisfies the z condition, so I rests on R.
+- **Not recorded:** photutils' fit flags.

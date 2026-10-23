@@ -137,3 +137,7 @@
 {"bytes": 60418, "ev": "extend", "id": "83ea9578f140", "pid": 1063, "t": 1792771839.316}
 {"bytes": 1600, "ev": "extend", "id": "83ea9578f140", "pid": 1063, "t": 1792771839.371}
 {"counted": 10370, "ev": "done", "id": "83ea9578f140", "pid": 1063, "status": "ok", "t": 1792771839.371}
+{"bytes": 383808, "ev": "reserve", "id": "f416657aab01", "pid": 2312, "t": 1792772771.047, "what": "GET https://www.stsci.edu/~jayander/HST1PASS/LIB/PSFs/STDPSFs/WFC3IR/STDPSF_WFC3IR_F160W.fits range=None attempt=0"}
+{"bytes": 17875, "ev": "extend", "id": "f416657aab01", "pid": 2312, "t": 1792772771.693}
+{"bytes": 43840, "ev": "extend", "id": "f416657aab01", "pid": 2312, "t": 1792772771.694}
+{"counted": 379987, "ev": "done", "id": "f416657aab01", "pid": 2312, "status": "ok", "t": 1792772771.695}

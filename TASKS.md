@@ -210,7 +210,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    lenstronomy two-point-source + Sérsic implementation fails validation in both bands, before and after the review
    fixes (v3: F814W 2 / 6 close known lenses; F160W 2 eligible positives, 3 needed). The target was not measured. Do
    not rerun with new thresholds. The follow-up STScI default-PSF check (`results/w2_j2244_stpsf/RESULT.md`, D-060
-   addendum 2) hooks up but fails (a no-galaxy pair shows false extended light, z 19). The J2244 image-modelling
+   addendum 2) hooks up but fails (a no-galaxy pair leaves a residual at the lens position, z 19). The J2244 image-modelling
    line is paused; reopening it needs the owner. D-064
    sample fix (UQP includes 13 §4.2 likely lenses) is open; catalogued image separations for the 15
    pair-decided systems the pair check cannot test yet (incl. the 3 CHITAH pairs; HSC lens models); HST lens photometry (CASTLES-type) for the blended quasar systems; ALMA positions for submm systems;

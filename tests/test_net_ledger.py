@@ -18,6 +18,7 @@ def server(tmp_path, monkeypatch):
     monkeypatch.setenv("no_proxy", "127.0.0.1,localhost")
     (tmp_path / "www").mkdir()
     (tmp_path / "www" / "blob.bin").write_bytes(bytes(range(256)) * 400)  # 102400 B
+    (tmp_path / "www" / "sub").mkdir()  # "/sub" answers 301 -> "/sub/"
     handler = partial(SimpleHTTPRequestHandler, directory=str(tmp_path / "www"))
     handler.log_message = lambda *a, **k: None
     httpd = ThreadingHTTPServer(("127.0.0.1", 0), handler)
@@ -81,3 +82,53 @@ def test_fetch_cut_mid_stream_on_underestimate(tmp_path, server):
     with pytest.raises(nl.BudgetExceeded):
         nl.fetch(server, lg, est_bytes=1000)
     assert lg.used() <= cap
+
+
+def test_cut_after_body_data_arrived(tmp_path, server):
+    cap = 100_000
+    lg = nl.Ledger(tmp_path / "l.jsonl", cap)
+    with pytest.raises(nl.BudgetExceeded):
+        nl.fetch(server, lg, est_bytes=1000)
+    used = lg.used()
+    assert nl.CHUNK < used <= cap  # one body chunk was read and counted before the cut
+
+
+def test_error_and_redirect_bodies_counted_and_redirect_not_followed(tmp_path, server):
+    lg = nl.Ledger(tmp_path / "l.jsonl", 10**6)
+    base = server.rsplit("/", 1)[0]
+    with pytest.raises(RuntimeError):
+        nl.fetch(base + "/missing.bin", lg, est_bytes=100, retries=0)  # 404 with an HTML body
+    after_404 = lg.used()
+    assert after_404 > nl.TLS_ALLOWANCE + 100
+    with pytest.raises(RuntimeError):
+        nl.fetch(base + "/sub", lg, est_bytes=100, retries=0)  # 301 to /sub/, not followed
+    assert lg.used() > after_404 + nl.TLS_ALLOWANCE
+
+
+def test_refusal_is_recorded(tmp_path):
+    p = tmp_path / "l.jsonl"
+    lg = nl.Ledger(p, 100)
+    with pytest.raises(nl.BudgetExceeded):
+        lg.reserve(200, "too big")
+    assert '"ev": "refused"' in p.read_text()
+    assert lg.used() == 0
+
+
+def test_cap_admits_exactly_n_under_concurrency(tmp_path):
+    lg = nl.Ledger(tmp_path / "l.jsonl", 10 * 100)
+    ok = []
+
+    def work():
+        for _ in range(5):
+            try:
+                nl.Ledger(lg.path, lg.cap).reserve(100, "t")
+                ok.append(1)
+            except nl.BudgetExceeded:
+                pass
+
+    ts = [threading.Thread(target=work) for _ in range(6)]
+    for t in ts:
+        t.start()
+    for t in ts:
+        t.join()
+    assert len(ok) == 10 and lg.used() == 1000

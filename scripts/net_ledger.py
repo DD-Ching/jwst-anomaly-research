@@ -23,6 +23,7 @@ import os
 import ssl
 import sys
 import time
+import urllib.error
 import urllib.request
 import uuid
 from contextlib import contextmanager
@@ -40,13 +41,16 @@ try:  # POSIX
 except ImportError:  # Windows (the owner's machine): lock byte 0 of the ledger file
     import msvcrt
 
-    def _lock(fh) -> None:
+    def _lock(fh, wait_s: float = 300.0) -> None:
         fh.seek(0)
+        t0 = time.monotonic()
         while True:
             try:
                 msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
                 return
-            except OSError:  # LK_LOCK gives up after ~10 s; keep waiting
+            except OSError:  # LK_LOCK gives up after ~10 s; retry until wait_s, then fail
+                if time.monotonic() - t0 > wait_s:
+                    raise
                 time.sleep(0.05)
 
     def _unlock(fh) -> None:
@@ -116,6 +120,7 @@ class Ledger:
         with self._locked() as fh:
             used = self._used(fh.readlines())
             if used + nbytes > self.cap:
+                self._append(fh, {"ev": "refused", "bytes": int(nbytes), "what": what})
                 raise BudgetExceeded(
                     f"reserve {nbytes} B for {what}: used {used} + {nbytes} > cap {self.cap}"
                 )
@@ -141,11 +146,19 @@ class Ledger:
             self._append(fh, {"ev": "external", "bytes": int(nbytes), "what": what})
 
 
-def _context() -> ssl.SSLContext:
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Redirects are not followed (urllib would read their body uncounted); they raise HTTPError."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def _opener() -> urllib.request.OpenerDirector:
     # NET_LEDGER_CAFILE: a combined CA file (e.g. the proxy bundle + certifi's Mozilla roots) for
     # hosts whose chain ends at a root the system bundle lacks. Verification is never disabled.
     cafile = os.environ.get("NET_LEDGER_CAFILE") or os.environ.get("SSL_CERT_FILE") or None
-    return ssl.create_default_context(cafile=cafile)
+    ctx = ssl.create_default_context(cafile=cafile)
+    return urllib.request.build_opener(urllib.request.HTTPSHandler(context=ctx), _NoRedirect)
 
 
 def fetch(
@@ -174,7 +187,7 @@ def fetch(
             req = urllib.request.Request(url, headers={"User-Agent": "jwst-anomaly-research"})
             if byte_range is not None:
                 req.add_header("Range", f"bytes={byte_range[0]}-{byte_range[1]}")
-            with urllib.request.urlopen(req, timeout=timeout, context=_context()) as resp:
+            with _opener().open(req, timeout=timeout) as resp:
                 got += len(str(resp.headers).encode()) + 32
                 parts = []
                 while True:
@@ -193,6 +206,11 @@ def fetch(
         except BudgetExceeded:
             ledger.done(rid, got, "cut: budget")
             raise
+        except urllib.error.HTTPError as e:  # error or redirect: count its header and body
+            body = e.read() if e.fp is not None else b""
+            got += len(str(e.headers).encode()) + 32 + len(body)
+            ledger.done(rid, got, f"error: HTTP {e.code}")
+            last = e
         except Exception as e:  # network error: count what arrived, then retry
             ledger.done(rid, max(got, TLS_ALLOWANCE), f"error: {type(e).__name__}")
             last = e
