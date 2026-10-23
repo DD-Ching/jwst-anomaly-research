@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-23: Abell 2744 UNCOVER-reference stage 1b: gate K with the WLS source passes (rms 0.835″, 172 / 172 within 3″; deviation after stage 1)
+- **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN_1b.md`, frozen before the run, labelled a deviation
+  chosen after stage 1's failure; rule 1 committed as the tested function `a2744_uncoverref.gate_k_wls` first.
+- **Result** (`RESULT.md` § Stage 1b, `summary.json` `stage1b_gate_K_wls`): only the family source changed (mean →
+  WLS, D-041). Gate K passes: rms 0.835″ (≤ 1.0″), 100 % within 3″ (≥ 80 %); no family with fewer predicted images, so
+  stage 1's single-image families (34.1, 80.1, 74) come back. 31 families have one more predicted image than
+  catalogued: inputs of stage 2, not read here. Own-constraint validation only (D-034 addendum k).
+- **Handoff:** next is a frozen stage 2 with the WLS source: pin the UNCOVER DR3 SUPER catalogue (83.7 MB) by sha256,
+  freeze its column mapping, predicted / control tables, gate C2 with the shared-pair rule (addendum i). The bCG
+  mosaic has no byte ranges (1.84 GB gzip), so the noise rule needs catalogue errors or a stated download reason.
+
 ## 2026-10-23: Abell 2744 UNCOVER-reference extra-image test, stage 1: the UNCOVER v2.0 maps fail gate K (rms 4.90″); route stopped with this estimator
 - **Plan:** `results/lens_consistency/abell2744_uncoverref/PLAN.md`, frozen before the run (the prior own-list rms
   0.84″ of D-041 was disclosed there). Script `scripts/a2744_uncoverref.py`, tests `tests/test_a2744_uncoverref.py`.
