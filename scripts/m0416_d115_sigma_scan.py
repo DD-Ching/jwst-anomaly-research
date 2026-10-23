@@ -10,20 +10,22 @@ plane as in ``m0416_d115_refit.py`` and the summed χ² is compared with f = 1. 
 
 from __future__ import annotations
 
-import json
 import os
-from concurrent.futures import ProcessPoolExecutor
-from functools import lru_cache
-from pathlib import Path
+
+os.environ.setdefault("OMP_NUM_THREADS", "1")  # before numpy loads BLAS; spawned workers rerun it
+
+import json  # noqa: E402
+from concurrent.futures import ProcessPoolExecutor, as_completed  # noqa: E402
+from functools import lru_cache  # noqa: E402
+from pathlib import Path  # noqa: E402
 
 import lens_consistency as lc
 import m0416_d115_refit as refit
 import numpy as np
 from scipy.optimize import minimize
 
-from jwst_anomaly import lensmodel
+from jwst_anomaly import lensmodel  # noqa: E402
 
-os.environ.setdefault("OMP_NUM_THREADS", "1")
 MODEL = refit.MODEL
 OUT = Path("results/lens_consistency/macs0416_canucsref/sigma_scan")
 SIGMA_FIT = 120.6  # km/s, 8515 in the pinned best.par
@@ -95,7 +97,7 @@ def fit_family(task: tuple[float, str]) -> dict:
     def fine(b):
         pred = lensmodel.find_images(model, grid, float(b[0]), float(b[1]), z)
         c, _, shared = refit.family_chi2(ox, oy, sig, pred)
-        return c + (1e4 if shared else 0.0), pred
+        return c + (1e4 if shared else 0.0), c, shared, pred
 
     bxs, bys = np.asarray(obs["beta_x"], float), np.asarray(obs["beta_y"], float)
     starts = [(bxs.mean(), bys.mean())] + list(zip(bxs, bys, strict=True))
@@ -106,8 +108,7 @@ def fit_family(task: tuple[float, str]) -> dict:
             options={"xatol": 1e-4, "fatol": 1e-3, "maxfev": 300},
         )  # fmt: skip
         ends.append(r.x)
-    best_c, pred, best_x = min((fine(x) + (x,) for x in ends), key=lambda t: t[0])
-    c, _, shared = refit.family_chi2(ox, oy, sig, pred)
+    _, c, shared, pred, best_x = min((fine(x) + (x,) for x in ends), key=lambda t: t[0])
     out = {
         "family": fam,
         "f": f,
@@ -165,8 +166,13 @@ def gates(fits: list[dict]) -> dict:
     return {"G1": bool(g1), "G2": not g2_fail, "G2_failures": g2_fail, "G3": bool(g3)}
 
 
-def verdict(scan: dict) -> tuple[str, str | None]:
-    """Frozen rule: f* is the largest f < 1 without the flag image and with D115 matched."""
+def verdict(scan: dict, gate: dict | None = None) -> tuple[str, str | None]:
+    """Frozen rule: f* is the largest f < 1 without the flag image and with D115 matched.
+
+    A failed gate stops the interpretation (plan): the verdict is then ``gates_failed``.
+    """
+    if gate is not None and not (gate["G1"] and gate["G2"] and gate["G3"]):
+        return "gates_failed", None
     cands = [k for k in sorted(scan, reverse=True) if float(k) < 1.0]
     fstar = next((k for k in cands if not scan[k]["flag_image"] and scan[k]["d115_matched"]), None)
     if fstar is None:
@@ -176,16 +182,30 @@ def verdict(scan: dict) -> tuple[str, str | None]:
     return ("ordinary" if ok else "inconclusive"), fstar
 
 
+def load_fits() -> list[dict]:
+    """Finished rows; a last line cut off by a killed run is dropped (and the file trimmed)."""
+    if not FITS.exists():
+        return []
+    lines = FITS.read_text().splitlines()
+    try:
+        rows = [json.loads(line) for line in lines]
+    except json.JSONDecodeError:
+        rows = [json.loads(line) for line in lines[:-1]]  # only the last line may be partial
+        FITS.write_text("".join(line + "\n" for line in lines[:-1]))
+    return rows
+
+
 def main() -> None:
     fams = families()  # the grids are built in parallel by build(), not here
     OUT.mkdir(parents=True, exist_ok=True)
-    fits = [json.loads(line) for line in FITS.read_text().splitlines()] if FITS.exists() else []
+    fits = load_fits()
     done = {(r["f"], r["family"]) for r in fits}
     tasks = [(f, fam) for fam in fams for f in FACTORS if (f, fam) not in done]
     with ProcessPoolExecutor(4) as ex:
         list(ex.map(build, FACTORS))
         with FITS.open("a") as fh:
-            for r in ex.map(fit_family, tasks):
+            for fut in as_completed([ex.submit(fit_family, t) for t in tasks]):
+                r = fut.result()
                 fits.append(r)
                 fh.write(json.dumps(r) + "\n")
                 fh.flush()
@@ -193,13 +213,14 @@ def main() -> None:
                     f"{len(fits)} / {len(fams) * len(FACTORS)} {r['family']} f={r['f']}", flush=True
                 )
     scan = summarize(fits)
-    v, fstar = verdict(scan)
+    gate = gates(fits)
+    v, fstar = verdict(scan, gate)
     result = {
         "plan": str(OUT / "PLAN.md"),
         "provenance": "model_prediction",
         "grid_step_arcsec": refit.GRID_STEP,
         "dchi2_max_assumption": refit.DCHI2_MAX,
-        "gates": gates(fits),
+        "gates": gate,
         "scan": scan,
         "f_star": fstar,
         "verdict": v,

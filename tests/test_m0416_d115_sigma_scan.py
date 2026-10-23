@@ -53,3 +53,17 @@ def test_gates():
     fits[0]["chi2_validate_source"] = 0.5  # f = 1 D115a fit worse than its start
     g = m.gates(fits)
     assert not g["G1"] and g["G2_failures"] == ["D115a"]
+
+
+def test_gate_g3_and_flag_and_failed_gates_stop_verdict():
+    c = _chi2({})
+    c[0.70].update({"D115a": 2.78, "D115b": 0.53})
+    c[1.0].update({"D115a": 0.92, "D115b": 0.39})
+    g = m.gates(_fits(c, flag={0.70: False}))
+    assert g["G1"] and g["G2"] and g["G3"]
+    assert not m.gates(_fits(c, flag={0.70: True}))["G1"]  # flag image at f 0.70 fails G1
+    c[1.0]["D115b"] = 0.5
+    g = m.gates(_fits(c))
+    assert not g["G3"]
+    scan = m.summarize(_fits(c))
+    assert m.verdict(scan, g) == ("gates_failed", None)

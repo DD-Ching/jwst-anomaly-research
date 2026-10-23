@@ -15,6 +15,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   first new row ≈ 10 min after start, then 76 tasks in ≈ 41 min.
 - **Handoff:** per the plan, the only next step for D115b is a Lenstool re-fit with 8515's σ (and the rest of the
   model) free, on the owner machine. MACS0416's CANUCS-reference flag list holds one `inconclusive` row.
+- **/code-review on the final diff (08:14Z run):** fixed without changing any stored number (`result.json` recomputed
+  from `fits.jsonl`: scan, gates and verdict identical): `verdict` now returns `gates_failed` when a gate fails (the
+  plan's "a failure stops the interpretation"); results are written as each task finishes (`as_completed`), and a
+  cut-off last `fits.jsonl` line is dropped on resume; `OMP_NUM_THREADS` is set before numpy loads; G3 and the G1 flag
+  condition are tested. **Recorded, not changed:** (1) the plan names 90.5 km/s for f 0.75; the run used 0.75 × 120.6
+  formatted as 90.4 km/s (90.45 rounded down), the same f. (2) G2 compares the one-to-one χ² with `validate`'s
+  nearest-match χ², so it is not true by construction where validate's matches are shared; it passed for all 111
+  families here. (3) The per-family fit can be start-point-limited (D24, gap ≈ 8 > 6); without D24 the verdict is
+  unchanged (post hoc above). A multi-start amendment would be a new frozen plan, the owner's call.
 
 ### Earlier runs of this scan (2026-10-22 to 2026-10-23 05:42Z)
 - **Plan** (`results/lens_consistency/macs0416_canucsref/sigma_scan/PLAN.md`, frozen and pushed before any run):
