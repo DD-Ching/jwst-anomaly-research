@@ -74,6 +74,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   validate source's 2.405 to 1.254 at f 1.00 (a start-point gap of 1.15, smaller than D24's). Partial sums only; no
   Δχ², no verdict. Model files pre-fetched via the MAST download API (sha256 verified); 54 tasks in ≈ 33 min
   including setup (not stored). ≈ 218 tasks remain.
+- **02:10Z run:** 365 / 555 (added D47 f 0.80–0.70, D49a, D49b, D5, D50, D52a). Fitted χ² at f 1.00 → 0.70: D49a
+  3.008 → 2.891, D49b 2.937 → 2.810, D5 2.958 → 2.980, D50 1.118 → 1.260, D52a 5.405 → 5.277 (3 observed, 6 predicted);
+  D47 0.282 / 0.282 / 0.283 at f 0.80 / 0.75 / 0.70; all matched one-to-one. Start-point gaps (fit vs validate source,
+  f 1.00): D5 1.36, D52a 2.07, both smaller than D24's ≈ 8. Partial sums only; no Δχ², no verdict. Model files
+  pre-fetched via the MAST download API (sha256 verified); first new row ≈ 11 min after start, then 28 tasks in ≈ 21 min
+  (not stored). ≈ 190 tasks remain.
 - **Cost (measured 11:14Z run, 4 workers):** ≈ 14 min of grid/back-trace setup per container (grids are not kept
   between cloud sessions), then ≈ 2.3 min per task per worker, so ≈ 5 h of 4-core time remain (≈ 12+ hourly cloud
   runs, most of each spent on setup).
