@@ -406,9 +406,9 @@
     },
     {
      "ref": "Ji2024",
-     "class": "lensed-quasar candidate (appendix table)",
-     "basis": "appendix table lists it as 'lensing candidate' with reference [6] = Lemon et al. 2018 (Lemon2018, not read); Ji2024 itself uses DESI EDR + SDSS DR17",
-     "limits": "the lens-candidate class originates in Lemon2018, independent of DESI",
+     "class": "lensed-quasar candidate",
+     "basis": "Ji2024 table 1 (already documented systems) lists it as 'lensing candidate' with reference [6] = Lemon et al. 2018 (Lemon2018, not read); Ji2024 appendix table 2 also marks it among their own selected lens candidates, chosen by similar broad-line profiles from DESI EDR + SDSS DR17",
+     "limits": "the earlier lens-candidate class originates in Lemon2018, independent of DESI; Ji2024's own selection uses DESI EDR, not the DR1 coadds",
      "same_desi_dr1": false
     },
     {

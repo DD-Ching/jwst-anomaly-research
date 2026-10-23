@@ -63,8 +63,8 @@
   - Lemon et al.'s NOT spectra show "large differences in their emission line profiles and continua, thus making it
     a likely physical quasar pair".
   - The D-064 HST check found no lens light.
-  - Only microlensing or variability could make one source look like this. Listing it as a #472 target repeated
-    finished work.
+  - One source could look like this only through microlensing, variability with a time delay, extinction or
+    blending. Listing it as a #472 target repeated finished work.
 - **J0740+2926 and J1035+0752 (the Hennawi overlap): "binary" rests on not seeing a lens galaxy.**
   - Hennawi et al. 2006 §5.1 say the APO discovery spectra are mostly "too low a signal to noise ratio to make
     convincing arguments for or against the lensing hypothesis based on spectral dissimilarity". These two are not
@@ -75,11 +75,13 @@
   - SQLS DR3 cites Hennawi.
   - Later classes:
     - J1035 is an LQC (lens candidate) in Jing et al., from the same DESI spectra;
-    - Ji et al. (arXiv:2412.08397) list J0740 as a "lensing candidate", citing Lemon et al. 2018 (not read).
+    - Ji et al. (arXiv:2412.08397) list J0740 as a "lensing candidate", citing Lemon et al. 2018 (not read). Their
+      appendix also selects it as a lens candidate from similar broad-line profiles (DESI EDR + SDSS).
   - #472 used both as negative controls. Dropping them leaves 1 of 5 binaries flagged, still below the 70 % rule.
     The other four non-flagged binaries are at 5.2–7.3″ (no fibre overlap) with D = 1.18–1.60 (`controls.json`). So
     the gate fails either way.
-- **J1511+3357 and J1552+3009, SQLS "Binary QSO": the spectra are lens-like and the label is again a non-detection.**
+- **J1511+3357 and J1552+3009, SQLS "Binary QSO": the Subaru spectra are similar, and the label is again a
+  non-detection.**
   - SQLS IV (Inada et al. 2010, §4.2) took Subaru spectra of both components:
     - J1511: "similar shapes" and "similar" continua;
     - J1552: the fainter component's MgII is "slightly broader", with similar continua.
@@ -122,7 +124,7 @@
   - MAST CAOM, all missions, footprint containing the position within 3″; PI and title stored;
   - ESO ObsCore (same footprint test);
   - KOA NIRC2, OSIRIS, KCWI, LRIS, ESI and MOSFIRE (pointing within 60″).
-  - **Not checked:** CADC (CFHT, Gemini, Subaru) returned HTTP 503 or a connection error (`archives.json`); SMOKA;
+  - **Not checked:** CADC (CFHT, Gemini, Subaru) returned HTTP 503 (`archives.json`); SMOKA;
     HSC (needs an account); Euclid.
 
 | pair | gap | public data found that no published paper is known to use | access | could it change the call? |

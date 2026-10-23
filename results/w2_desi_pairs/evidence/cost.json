@@ -1,11 +1,16 @@
 {
- "label": "measured (wall clock from session timestamps; scratch sizes from du); end time updated at merge",
+ "label": "measured (wall clock from session timestamps; scratch sizes from du before deletion)",
  "start_utc": "2026-10-23T01:48Z",
- "end_utc": "2026-10-23T02:20Z (before review; updated at merge)",
+ "end_utc": "2026-10-23T02:40Z (PR ready; CI and merge follow)",
  "spectra_downloaded": 0,
- "scratch_disk_mb": {"lemon2023_arxiv_source_and_html": 15, "sqls_hennawi_papers": 39, "desi_pair_papers_and_tables": 168},
- "scratch_note": "arXiv PDFs, TeX sources (with figures) and catalogue files fetched by the literature subagents; deleted after review",
+ "scratch_disk_mb": {
+  "lemon2023_arxiv_source_and_html": 15,
+  "sqls_hennawi_papers": 39,
+  "desi_pair_papers_and_tables": 168
+ },
+ "scratch_note": "arXiv PDFs, TeX sources (with figures) and catalogue files fetched by the literature subagents; deleted at 02:37Z",
  "queries": "Data Lab TAP (zpix, ls_dr10.tractor), ESA Gaia TAP, VizieR (Dawes table2 cone), MAST CAOM (3 positions + 2 programme lookups), ESO and KOA TAP (3 positions), CADC TAP (failed)",
  "cores": "1-2 (I/O bound)",
- "subagents": "3 literature subagents (Lemon UQPs, SQLS/Hennawi, DESI DR1 papers); the SQLS/Hennawi one stalled on a repository-access request and was stopped"
+ "subagents": "3 literature subagents (Lemon UQPs, SQLS/Hennawi, DESI DR1 papers); the SQLS/Hennawi one stalled on a repository-access request and was stopped",
+ "review": "one independent review (3 blocking, 10 minor findings, all fixed or labelled) and one targeted re-check (4 minor + 1 label, fixed)"
 }

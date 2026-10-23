@@ -135,7 +135,8 @@ def cmd_identity(args):
     )
     out = {
         "label": "observed metadata (desi_dr1.zpix and ls_dr10.tractor via NOIRLab Data Lab TAP; "
-        "gaiadr3.gaia_source via ESA Gaia TAP); matches derived",
+        "gaiadr3.gaia_source via ESA Gaia TAP; Dawes et al. 2023 grades via VizieR); "
+        "matches derived",
         "retrieved_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "radii_arcsec": {"gaia": GAIA_R, "tractor": LS_R, "zpix_all": ZPIX_R, "match": MATCH_R},
         "systems": {},

@@ -1,5 +1,5 @@
 {
- "label": "observed metadata (desi_dr1.zpix and ls_dr10.tractor via NOIRLab Data Lab TAP; gaiadr3.gaia_source via ESA Gaia TAP); matches derived",
+ "label": "observed metadata (desi_dr1.zpix and ls_dr10.tractor via NOIRLab Data Lab TAP; gaiadr3.gaia_source via ESA Gaia TAP; Dawes et al. 2023 grades via VizieR); matches derived",
  "retrieved_utc": "2026-10-23T02:29:51Z",
  "radii_arcsec": {
   "gaia": 5.0,
