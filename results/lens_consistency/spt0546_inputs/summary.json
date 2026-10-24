@@ -6,6 +6,12 @@
   "actcl0546_mulfile_v1.mul": "6e3d403fb7bc5a462c8aefa9caa567a4dd9b63d89f8af2ba20969d457badd490",
   "actcl0546_spec-z.cat": "cdfa8c992ab18ed818c40ce6dbc78da07a9a4df01cdb4ffe54d0a2468fe9dee0"
  },
+ "inputs_bytes": {
+  "alpha_x_sptcl0546_z3p5_20250611_LTM_Gc.fits": 27042880,
+  "alpha_y_sptcl0546_z3p5_20250611_LTM_Gc.fits": 27042880,
+  "actcl0546_mulfile_v1.mul": 2720,
+  "actcl0546_spec-z.cat": 10696
+ },
  "cosmology": {
   "H0": 70.0,
   "Om0": 0.3,
@@ -58,85 +64,105 @@
    "A_arcsec": {
     "1": {
      "min_rms_arcsec": 0.8504014345276891,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "2": {
      "min_rms_arcsec": 1.4213899421107585,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "3": {
      "min_rms_arcsec": 65.0629363926718,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "4": {
      "min_rms_arcsec": 22.727664001943758,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "5": {
      "min_rms_arcsec": 32.70533015831853,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "6": {
      "min_rms_arcsec": 82.98229113902768,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "7": {
      "min_rms_arcsec": 85.33371432457574,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "8": {
      "min_rms_arcsec": 18.199899056062517,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "9": {
      "min_rms_arcsec": 70.20162059513491,
-     "z_at_min": 10.0
+     "z_at_min": 10.0,
+     "z_at_min_on_edge": true
     },
     "10": {
      "min_rms_arcsec": 1.5993666533199518,
-     "z_at_min": 1.27
+     "z_at_min": 1.27,
+     "z_at_min_on_edge": true
     }
    },
    "P_pixels": {
     "1": {
      "min_rms_arcsec": 0.13322731833265233,
-     "z_at_min": 1.8659120218324152
+     "z_at_min": 1.8659120218324152,
+     "z_at_min_on_edge": false
     },
     "2": {
      "min_rms_arcsec": 0.2475038013062742,
-     "z_at_min": 1.8017784794329248
+     "z_at_min": 1.8017784794329248,
+     "z_at_min_on_edge": false
     },
     "3": {
      "min_rms_arcsec": 1.5525483902050237,
-     "z_at_min": 3.5019260974794237
+     "z_at_min": 3.5019260974794237,
+     "z_at_min_on_edge": false
     },
     "4": {
      "min_rms_arcsec": 1.4179094753023433,
-     "z_at_min": 3.7556621010307603
+     "z_at_min": 3.7556621010307603,
+     "z_at_min_on_edge": false
     },
     "5": {
      "min_rms_arcsec": 1.3901616538882233,
-     "z_at_min": 3.3815608695240233
+     "z_at_min": 3.3815608695240233,
+     "z_at_min_on_edge": false
     },
     "6": {
      "min_rms_arcsec": 1.784609336194836,
-     "z_at_min": 7.828375118320909
+     "z_at_min": 7.828375118320909,
+     "z_at_min_on_edge": false
     },
     "7": {
      "min_rms_arcsec": 2.1284135297173545,
-     "z_at_min": 7.29948285821095
+     "z_at_min": 7.29948285821095,
+     "z_at_min_on_edge": false
     },
     "8": {
      "min_rms_arcsec": 1.115146328489392,
-     "z_at_min": 4.027782832787683
+     "z_at_min": 4.027782832787683,
+     "z_at_min_on_edge": false
     },
     "9": {
      "min_rms_arcsec": 1.3752204081204566,
-     "z_at_min": 2.9400731744530026
+     "z_at_min": 2.9400731744530026,
+     "z_at_min_on_edge": false
     },
     "10": {
      "min_rms_arcsec": 0.4976134144291921,
-     "z_at_min": 4.171150058021625
+     "z_at_min": 4.171150058021625,
+     "z_at_min_on_edge": false
     }
    }
   }

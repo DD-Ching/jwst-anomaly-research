@@ -56,6 +56,8 @@ GRID_STEP = 0.25
 # Allingham+2025 (arXiv:2507.08949v2, Sect. III): rms ~1.2" over 39 constraints, chi2 ~68 / 11 dof,
 # anchor system 3 at z_s 3.5 (photo-z); read 2026-10-24, used only in the post hoc block
 AUTHORS_RMS_ARCSEC = 1.2
+AUTHORS_CONSTRAINTS = 39
+AUTHORS_CHI2_DOF = (68.0, 11)
 AUTHORS_ANCHOR = {"system": "3", "z": 3.5}
 DJA_NAMES = ("spt0546", "spt-0546", "j0546", "sptcl0546", "actcl0546")
 
@@ -101,8 +103,10 @@ def parse_specz(text: str) -> Table:
     rows = [
         [float(v) for v in ln.split()[:9]]
         for ln in text.splitlines()
-        if ln.strip() and not ln.startswith("#")
+        if ln.strip() and not ln.lstrip().startswith("#")
     ]
+    if not rows or min(len(r) for r in rows) < 9:
+        raise ValueError("spec-z catalogue: no rows or fewer than 9 columns")
     t = Table(rows=rows, names=("id", "ra", "dec", "a", "b", "theta", "z", "mag", "conf"))
     t["conf"] = np.asarray(t["conf"], int)
     return t
@@ -156,7 +160,11 @@ def unit_minima(model, images: Table, zs: np.ndarray) -> dict[str, dict]:
         r = np.array([mi.rms_of(d[m]) for d in per_z])
         r = np.where(np.isfinite(r), r, np.inf)
         k = int(np.argmin(r))
-        out[s] = {"min_rms_arcsec": float(r[k]), "z_at_min": float(zs[k])}
+        out[s] = {
+            "min_rms_arcsec": float(r[k]) if np.isfinite(r[k]) else None,
+            "z_at_min": float(zs[k]) if np.isfinite(r[k]) else None,
+            "z_at_min_on_edge": bool(np.isfinite(r[k]) and k in (0, len(zs) - 1)),
+        }
     return out
 
 
@@ -165,7 +173,7 @@ def unit_check(minima: dict[str, dict[str, float]]) -> dict:
     <= U_MAX_MEDIAN_ARCSEC; U passes when exactly one reading is accepted."""
     med = {}
     for r, d in minima.items():
-        v = np.array(list(d.values()), float)
+        v = np.array([np.nan if x is None else x for x in d.values()], float)
         med[r] = float(np.median(v)) if v.size and np.all(np.isfinite(v)) else float("nan")
     accepted = [r for r, v in med.items() if np.isfinite(v) and v <= U_MAX_MEDIAN_ARCSEC]
     return {
@@ -204,20 +212,23 @@ def candidate_offsets(model, grid, main_ip: Table, images: Table) -> dict:
     out = {}
     cands = images[np.asarray(images["candidate"], bool)]
     sysv = np.asarray(main_ip["system"], str)
+    preds = {}  # system -> predicted images, solved once
     for r in cands:
-        m = sysv == str(r["system"])
+        sid = str(r["system"])
+        m = sysv == sid
         if not m.any():
             continue
         z = float(main_ip["z_fit"][m][0])
-        fam = images[
-            (np.asarray(images["system"], str) == str(r["system"]))
-            & ~np.asarray(images["candidate"], bool)
-        ]
-        fam["z"] = z
-        bt = lensmodel.backtrace_images(model, fam, {})
-        pred = lensmodel.find_images(
-            model, grid, float(np.mean(bt["beta_x"])), float(np.mean(bt["beta_y"])), z
-        )
+        if sid not in preds:
+            fam = images[
+                (np.asarray(images["system"], str) == sid) & ~np.asarray(images["candidate"], bool)
+            ]
+            fam["z"] = z
+            bt = lensmodel.backtrace_images(model, fam, {})
+            preds[sid] = lensmodel.find_images(
+                model, grid, float(np.mean(bt["beta_x"])), float(np.mean(bt["beta_y"])), z
+            )
+        pred = preds[sid]
         ox, oy = model.to_frame(np.atleast_1d(float(r["ra"])), np.atleast_1d(float(r["dec"])))
         d = np.hypot(np.asarray(pred["x"]) - ox[0], np.asarray(pred["y"]) - oy[0])
         out[str(r["image_id"])] = {
@@ -265,6 +276,12 @@ def read_map(path: Path) -> tuple[np.ndarray, fits.Header]:
             return np.asarray(hdul[0].data, float), hdul[0].header.copy()
 
 
+def read_map_header(path: Path) -> fits.Header:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return fits.getheader(path)
+
+
 def build_model(ax, ay, header, scale: float, sha: str, name: str) -> lensmodel.MapLensModel:
     """Map values x ``scale`` (arcsec) / (D_LS/D_S)(Z_NORM): deflection at D_LS/D_S = 1."""
     with warnings.catch_warnings():
@@ -279,22 +296,48 @@ def build_model(ax, ay, header, scale: float, sha: str, name: str) -> lensmodel.
     return model
 
 
-def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
-    session = requests.Session()
-    shas = fetch_inputs(session, maps)
+def load(maps: Path) -> tuple[dict, Table, Table, dict]:
+    """Verified inputs: sha256 per file, the image list, its main images and both readings."""
+    shas = fetch_inputs(requests.Session(), maps)
     images = parse_mul((maps / MUL).read_text())
     main = images[~np.asarray(images["candidate"], bool)]
     main["a"] = np.ones(len(main))
-    cat = parse_specz((maps / SPECZ).read_text())
     (ax, hx), (ay, _) = (read_map(maps / f) for f in MAPS)
     model_sha = hashlib.sha256((shas[MAPS[0]] + shas[MAPS[1]]).encode()).hexdigest()
     models = {
         r: build_model(ax, ay, hx, s, model_sha, f"spt0546-ltm ({r})") for r, s in READINGS.items()
     }
+    return shas, images, main, models
+
+
+def gate_k_block(model, images: Table, main: Table, grid_step: float) -> tuple[Table, dict]:
+    """PLAN.md rule 4 computation: exact image plane at fitted z, gate K, per-system report."""
+    half = lc.grid_half_width(model, images)
+    grid = lensmodel.DeflectionGrid.compute(model, half, grid_step)
+    ip = fitted_z(model, grid, main, z_grid())
+    systems = bg.per_system(ip)
+    for s in systems:
+        m = np.asarray(ip["system"], str) == s
+        systems[s]["z_fit"] = float(ip["z_fit"][m][0])
+        systems[s]["z_fit_on_edge"] = bool(ip["z_fit_on_edge"][m][0])
+    return ip, {
+        "grid_step_arcsec": grid_step,
+        "grid_half_width_arcsec": half,
+        "gate_K": mi.gate_k(ip),
+        "per_system": systems,
+        "candidates": candidate_offsets(model, grid, ip, images),
+    }
+
+
+def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
+    shas, images, main, models = load(maps)
+    cat = parse_specz((maps / SPECZ).read_text())
+    hx = models["A_arcsec"].wcs.to_header()
     zs = z_grid()
     summary = {
         "plan": str(out / "PLAN.md"),
         "inputs_sha256": shas,
+        "inputs_bytes": {f: (maps / f).stat().st_size for f in shas},
         "cosmology": {"H0": COSMOLOGY[0], "Om0": COSMOLOGY[1], "z_lens": Z_LENS, "z_norm": Z_NORM},
         "image_list": {
             "rows": len(images),
@@ -303,10 +346,10 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
             "candidate_rows": int(np.sum(images["candidate"])),
         },
         "map_header": {
-            "shape": list(ax.shape),
+            "shape": list(models["A_arcsec"].shape),
             "pixel_arcsec": round(models["A_arcsec"].pixel_arcsec, 6),
             "ctype": [hx["CTYPE1"], hx["CTYPE2"]],
-            "bunit": hx.get("BUNIT"),
+            "bunit": read_map_header(maps / MAPS[0]).get("BUNIT"),
         },
         "check_C": coverage(models["A_arcsec"], main),
         "check_Z": specz_systems(images, cat),
@@ -319,28 +362,11 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
         )
         summary["check_U"] = {**u, "per_system": minima}
         if u["passes"]:
-            model = models[u["reading"]]
-            half = lc.grid_half_width(model, images)
-            grid = lensmodel.DeflectionGrid.compute(model, half, grid_step)
-            ip = fitted_z(model, grid, main, zs)
+            ip, k = gate_k_block(models[u["reading"]], images, main, grid_step)
             lc._write(ip, out / "imageplane_fitz.ecsv")
-            systems = bg.per_system(ip)
-            for s in systems:
-                m = np.asarray(ip["system"], str) == s
-                systems[s]["z_fit"] = float(ip["z_fit"][m][0])
-                systems[s]["z_fit_on_edge"] = bool(ip["z_fit_on_edge"][m][0])
-            summary.update(
-                {
-                    "grid_step_arcsec": grid_step,
-                    "grid_half_width_arcsec": half,
-                    "gate_K_free_z": mi.gate_k(ip),
-                    "reported": {
-                        "per_system": systems,
-                        "candidates": candidate_offsets(model, grid, ip, images),
-                    },
-                }
-            )
-    summary["check_R"] = dja_check(m19._get(session, m19.DJA_INDEX).text)
+            summary["gate_K_free_z"] = k.pop("gate_K")
+            summary["reported"] = k
+    summary["check_R"] = dja_check(m19._get(requests.Session(), m19.DJA_INDEX).text)
     out.mkdir(parents=True, exist_ok=True)
     img = images.copy()
     img.meta = {
@@ -356,32 +382,20 @@ def posthoc(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     """Post hoc (added after U failed; no verdict depends on it): the free-z gate K numbers with
     the pixel reading, i.e. exact image-plane residuals instead of U's source-plane approximation.
     Written to ``posthoc.json``; ``summary.json`` is left as frozen."""
-    shas = fetch_inputs(requests.Session(), maps)
-    images = parse_mul((maps / MUL).read_text())
-    main = images[~np.asarray(images["candidate"], bool)]
-    main["a"] = np.ones(len(main))
-    (ax, hx), (ay, _) = (read_map(maps / f) for f in MAPS)
-    model_sha = hashlib.sha256((shas[MAPS[0]] + shas[MAPS[1]]).encode()).hexdigest()
+    _, images, main, models = load(maps)
     reading = "P_pixels"
-    model = build_model(ax, ay, hx, READINGS[reading], model_sha, f"spt0546-ltm ({reading})")
-    half = lc.grid_half_width(model, images)
-    grid = lensmodel.DeflectionGrid.compute(model, half, grid_step)
-    ip = fitted_z(model, grid, main, z_grid())
-    systems = bg.per_system(ip)
-    for s in systems:
-        m = np.asarray(ip["system"], str) == s
-        systems[s]["z_fit"] = float(ip["z_fit"][m][0])
-        systems[s]["z_fit_on_edge"] = bool(ip["z_fit_on_edge"][m][0])
+    _, k = gate_k_block(models[reading], images, main, grid_step)
     res = {
         "label": "post hoc diagnostic, added after U failed; no verdict depends on it",
         "reading": reading,
-        "grid_step_arcsec": grid_step,
-        "grid_half_width_arcsec": half,
-        "gate_K_numbers_free_z": mi.gate_k(ip),
-        "per_system": systems,
-        "candidates": candidate_offsets(model, grid, ip, images),
+        "grid_step_arcsec": k.pop("grid_step_arcsec"),
+        "grid_half_width_arcsec": k.pop("grid_half_width_arcsec"),
+        "gate_K_numbers_free_z": k.pop("gate_K"),
+        **k,
         "authors_reported": {
             "rms_arcsec": AUTHORS_RMS_ARCSEC,
+            "constraints": AUTHORS_CONSTRAINTS,
+            "chi2_dof": list(AUTHORS_CHI2_DOF),
             "anchor": AUTHORS_ANCHOR,
             "source": "arXiv:2507.08949v2 Sect. III (paper text, not a released file)",
         },

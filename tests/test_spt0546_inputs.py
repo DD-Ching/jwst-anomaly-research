@@ -109,6 +109,7 @@ def test_unit_minima_point_lens_recovers_z():
     out = sp.unit_minima(m, images, zs)
     assert out["1"]["min_rms_arcsec"] < 0.05
     assert out["1"]["z_at_min"] == pytest.approx(z_true, rel=0.05)
+    assert not out["1"]["z_at_min_on_edge"]
 
 
 def test_dja_check():
@@ -117,3 +118,15 @@ def test_dja_check():
     assert not sp.dja_check("<a>macs0416-grizli-v7.0</a>")["passes"]
     with pytest.raises(ValueError):
         sp.dja_check("nothing")
+
+
+def test_unit_check_none_minimum_rejects_reading():
+    r = sp.unit_check({"A_arcsec": {"1": 0.1, "2": None}, "P_pixels": {"1": 0.2, "2": 0.3}})
+    assert r["passes"] and r["reading"] == "P_pixels"
+
+
+def test_parse_specz_comments_and_short_rows():
+    good = "# Id RA Dec\n  # indented comment\n1 86.6 -53.7 0.5 0.5 0 1.2 22.0 4\n"
+    assert len(sp.parse_specz(good)) == 1
+    with pytest.raises(ValueError):
+        sp.parse_specz("1 86.6 -53.7 0.5\n")

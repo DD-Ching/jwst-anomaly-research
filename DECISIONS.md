@@ -2498,10 +2498,10 @@ releases RXCJ2211 deflection maps or a reference catalogue, or a new frozen plan
 **Addendum 2026-10-24ak (SPT-CL J0546-5345 LTM input check).** `results/lens_consistency/spt0546_inputs/RESULT.md`, plan
 frozen in aa0a8ef. The Allingham+2025 LTM release (Zenodo 10.5281/zenodo.16534337) has α maps (0.04″, z_s 3.5, no unit
 keyword) and 35 main images in 10 systems, none with a spectroscopic z; DJA v7 has no field for the cluster. Unit check U
-(per-system z free) fails: median minimum rms 27.72″ (arcsec reading) and 1.38″ (pixel reading) vs ≤ 0.5″. Decision: no
-fitted-model route for SPT-CL J0546 from this release as frozen. Post hoc only: exact image-plane rms 1.66″ (91.4 %
-within 3″) with the pixel reading; the authors report ≈ 1.2″, so the 1.0″ gate used elsewhere cannot be met by this
-model. Alternatives rejected: relaxing U or K after the run (tuning on the outcome). Revisit if: spectroscopic
+(per-system z free) fails: median minimum rms 27.72″ (arcsec reading, every minimum on a z-grid edge) and 1.38″ (pixel
+reading) vs ≤ 0.5″; the unit stays undecided by the rule. Decision: no fitted-model route for SPT-CL J0546 from this
+release as frozen. Post hoc only: exact image-plane rms 1.66″ (91.4 % within 3″) with the pixel reading; the authors
+report ≈ 1.2″ over their own z and constraints (not directly comparable). Alternatives rejected: relaxing U or K after the run (tuning on the outcome). Revisit if: spectroscopic
 redshifts for the lensed systems and a public deblended reference catalogue (e.g. SLICE GO-5594) appear, with a model
 refit to them.
 
