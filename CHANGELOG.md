@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: Abell 370 MARS held-out misses are reproduced by BUFFALO model A (D-034 addendum aq)
+- **Result** (`results/lens_consistency/a370_mars_misses/RESULT.md`): the four Abell 370 images MARS misses by > 3″
+  (3b.1, 5.3, 7.6, 24e.2) are all within 3″ under BUFFALO model A (0.49–2.18″); 36 / 40 reproduced by both, 0 by
+  neither. Closed as MARS-specific model misses; no flag.
+- **Failed approach:** `urllib` to archive.stsci.edu needs `SSL_CERT_FILE` = proxy bundle + certifi
+  (docs/operations.md); the proxy bundle alone fails.
+- **Handoff:** next, a MARS vs CANUCS two-model extra-image comparison on MACS0416 (MARS validated there by
+  addendum ap). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MARS HFF maps on held-out JWST-era images: MACS0416 reproduces, Abell 370 fails on rms (D-034 addendum ap)
 - **Result** (`results/lens_consistency/mars_hff_heldout/RESULT.md`): first held-out test of a lens model on image
   positions it was not fitted to. MACS0416: 77 CANUCS images absent from the MARS catalogue, rms 0.514″, 100 % within

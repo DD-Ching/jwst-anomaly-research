@@ -1,0 +1,44 @@
+{
+ "plan": "results/lens_consistency/a370_mars_misses/PLAN.md",
+ "zip": {
+  "bytes": 2713478,
+  "md5": "2d87f9a36aadb430f7a7b937fe70b8c2",
+  "sha256": "0d4cc2c6342f597c4d418f1c416f9f355d72ab8ac9e55206bd6050dd60be8e14"
+ },
+ "model": "abell370-buffalo-a-maps",
+ "n_tested": 40,
+ "gate_H_buffalo_reported": {
+  "n_tested": 40,
+  "rms_arcsec": 1.1701659886711366,
+  "matched_fraction": 1.0,
+  "passes": false
+ },
+ "classes": {
+  "both": 36,
+  "MARS only": 0,
+  "BUFFALO only": 4,
+  "neither": 0
+ },
+ "mars_misses": {
+  "3b.1": {
+   "class": "BUFFALO only",
+   "dtheta_buffalo_arcsec": 1.4519718782858702,
+   "n_predicted": 3
+  },
+  "5.3": {
+   "class": "BUFFALO only",
+   "dtheta_buffalo_arcsec": 0.6172138374236005,
+   "n_predicted": 5
+  },
+  "7.6": {
+   "class": "BUFFALO only",
+   "dtheta_buffalo_arcsec": 0.48976266590638845,
+   "n_predicted": 7
+  },
+  "24e.2": {
+   "class": "BUFFALO only",
+   "dtheta_buffalo_arcsec": 2.182830507416357,
+   "n_predicted": 3
+  }
+ }
+}

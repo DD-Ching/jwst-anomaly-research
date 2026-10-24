@@ -2554,6 +2554,14 @@ held-out-validated second model on MACS0416; on Abell 370 the four > 3″ images
 rejected: dropping the two large misses after the run. Revisit if: a model passing gate K on Abell 370 (BUFFALO
 model A, K2 0.910″) is checked on 7.6 and 24e.2 under a frozen plan.
 
+**Addendum 2026-10-24aq (Abell 370 MARS misses under BUFFALO model A).** `results/lens_consistency/a370_mars_misses/RESULT.md`,
+plan frozen in fae1d495, `classify` and test in e58a959f, both before the run. On the 40 Abell 370 images held out
+from MARS (same anchors), BUFFALO model A reproduces all four MARS misses within 3″ (3b.1 1.45″, 5.3 0.62″, 7.6
+0.49″, 24e.2 2.18″ with three predicted images); 36 are reproduced by both, none by neither; BUFFALO overall rms
+1.170″, 100 % within 3″ (reported). Decision: the four are closed as MARS-specific model misses, not flags.
+Alternatives rejected: a CANUCS family / z check (only needed for "neither"). Revisit if: MARS is used on Abell 370
+in a later stage (validated only on MACS0416).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
