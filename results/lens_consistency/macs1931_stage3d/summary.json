@@ -1,0 +1,58 @@
+{
+ "catalogue": {
+  "image": "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_i2d.fits",
+  "section_y0_y1_x0_x1": [
+   557,
+   3900,
+   202,
+   3651
+  ],
+  "bkg_box_pix": 64,
+  "n_segments_detected": 852,
+  "n_segments_deblended": 1153,
+  "n_rows_kept": 1153,
+  "pixel_scale_arcsec": 0.031225893511896287,
+  "masked_fraction": 2.4284460538488833e-06,
+  "kron_snr_min": 7.016031108674609,
+  "n_rows_snr_4_6": 0
+ },
+ "frame_F_c": {
+  "n_gold": 18,
+  "n_matched": 17,
+  "median_dx_arcsec": 0.040386202820661736,
+  "median_dy_arcsec": 0.0167398357335452,
+  "median_sep_arcsec": 0.12062516962393012,
+  "rules": {
+   "match_arcsec": 0.5,
+   "max_abs_median_arcsec": 0.1,
+   "min_n": 0
+  },
+  "passes": true,
+  "passes_matcher_medians": true,
+  "chance_shifted_counts": [
+   3,
+   0,
+   2,
+   3,
+   0,
+   0,
+   0,
+   1
+  ],
+  "chance_mean": 1.125,
+  "chance_passes": true,
+  "n_continuum": 18,
+  "continuum_classes": {
+   "continuum": 18,
+   "faint": 33
+  },
+  "fc_rules": {
+   "aperture_arcsec": 0.3,
+   "min_snr": 5.0,
+   "min_n": 10,
+   "min_fraction": 0.5
+  }
+ },
+ "n_images": 51,
+ "plan": "results/lens_consistency/macs1931_stage3d/PLAN.md"
+}

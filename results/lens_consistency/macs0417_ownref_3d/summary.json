@@ -1,0 +1,63 @@
+{
+ "catalogue": {
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f200w_i2d.fits",
+  "section_y0_y1_x0_x1": [
+   1200,
+   4948,
+   5277,
+   9354
+  ],
+  "bkg_box_pix": 64,
+  "n_segments_detected": 1232,
+  "n_segments_deblended": 1577,
+  "n_rows_kept": 1577,
+  "pixel_scale_arcsec": 0.03122991199234541,
+  "masked_fraction": 0.09096948836288846,
+  "kron_snr_min": 8.75857288424181,
+  "n_rows_snr_4_6": 0
+ },
+ "frame_F_c": {
+  "n_gold": 46,
+  "n_matched": 41,
+  "median_dx_arcsec": 0.021559214028715495,
+  "median_dy_arcsec": -0.006179223225352558,
+  "median_sep_arcsec": 0.12787814612025605,
+  "rules": {
+   "match_arcsec": 0.5,
+   "max_abs_median_arcsec": 0.1,
+   "min_n": 0
+  },
+  "passes": true,
+  "passes_matcher_medians": true,
+  "chance_shifted_counts": [
+   3,
+   5,
+   2,
+   3,
+   1,
+   6,
+   5,
+   5
+  ],
+  "chance_mean": 3.75,
+  "chance_passes": true,
+  "n_continuum": 46,
+  "continuum_classes": {
+   "continuum": 46,
+   "faint": 7,
+   "off_section": 3
+  },
+  "fc_rules": {
+   "aperture_arcsec": 0.3,
+   "min_snr": 5.0,
+   "min_n": 10,
+   "min_fraction": 0.5
+  }
+ },
+ "frame_offset_arcsec": [
+  0.10084636860364347,
+  -0.2917131053097502
+ ],
+ "n_images": 56,
+ "plan": "results/lens_consistency/macs1931_stage3d/PLAN.md"
+}

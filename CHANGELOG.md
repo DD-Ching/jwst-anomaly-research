@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 stage 3d: continuum-restricted F passes; 0 of 11 predictions testable (D-034 addendum ag)
+- **Result** (`results/lens_consistency/macs1931_stage3d/RESULT.md`): plan frozen in 1314a97, functions and tests
+  in bce45c1, both before any run. F_c counts only images with ≥ 5 σ F200W light at their position.
+  - MACS0417 validation passes: 41 / 46.
+  - MACS J1931: F_c passes, 17 / 18 (33 / 51 images faint).
+  - Gate C2 passes: 11 / 11, arc-referenced 7 / 7.
+  - 0 of 11 predicted extra images testable: 10 `no_reference` (systems 5, 6, 7, 100, 101, no F200W continuum at
+    any observed image), 1 at 1.11 σ. No flag; not a null.
+- **Looked at:** contact sheet of the 11 targets (not stored). No source at any target position.
+- **Handoff:** the F200W own-reference route for MACS J1931 is finished. Next: a line-flux reference (public MUSE cube)
+  for the five continuum-free spec-z systems under a frozen plan, or another field with public JWST-era maps.
+  #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MACS J1931 stage 3c: wider background box; frame check F fails again (D-034 addendum af)
 - **Result** (`results/lens_consistency/macs1931_stage3c/RESULT.md`): plan frozen in e1f21a8 before any run. One builder
   change, background box 64 → 256 px (≈ 8″). MACS0417 gate passes (C2 shared 24 / 27, arc 10 / 10). MACS J1931: gate
