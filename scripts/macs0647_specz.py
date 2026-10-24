@@ -48,7 +48,7 @@ def _agree(z: list[float]) -> bool:
 
 def image_z(rows: list[dict]) -> tuple[str, float | None]:
     """S1: the image's spec-z from its matched DJA rows (grade 3 only)."""
-    z = [float(r["z_best"]) for r in rows if str(r.get("grade", "")).strip() == str(SPEC_GRADE)]
+    z = [float(r["z_best"]) for r in rows if _is_spec(r)]
     if not z:
         return "none", None
     if not _agree(z):
@@ -129,14 +129,24 @@ def match_rows(table_csv: Path, images: Table) -> tuple[dict[str, list[dict]], i
     return out, n
 
 
+def _is_spec(row: dict) -> bool:
+    return str(row.get("grade", "")).strip() == str(SPEC_GRADE)
+
+
+def spec_sources(rows: list[dict]) -> set[str]:
+    """Grade-3 DJA source ids of one image's rows. ``srcid`` is the MSA source id; the matched
+    rows all come from MACS0647 roots, where the -hr / -single / plain extractions of one source
+    share it. Rows without an id are left out."""
+    return {str(r["srcid"]) for r in rows if _is_spec(r) and r.get("srcid")}
+
+
 def shared_sources(matches: dict[str, list[dict]], spec_images: set[str]) -> dict[str, list[str]]:
     """DJA ``srcid``s whose rows set the S1 z of more than one image (not independent spectra)."""
     by_src: dict[str, set[str]] = {}
     for i, rows in matches.items():
         if i in spec_images:
-            for r in rows:
-                if str(r.get("grade", "")).strip() == str(SPEC_GRADE):
-                    by_src.setdefault(str(r["srcid"]), set()).add(i)
+            for s in spec_sources(rows):
+                by_src.setdefault(s, set()).add(i)
     return {s: sorted(v) for s, v in by_src.items() if len(v) > 1}
 
 
@@ -149,6 +159,8 @@ def main(argv: list[str] | None = None) -> int:
     allimg["image_id"] = np.asarray(allimg["image_id"], str)
     allimg["system"] = np.asarray(allimg["system"], str)
     matches, n_rows = match_rows(args.table_csv, allimg)
+    if n_rows != TABLE["n_rows"]:  # a cut-off stream changes the matches
+        raise SystemExit(f"read {n_rows} rows, expected {TABLE['n_rows']}: incomplete table")
     certain = allimg[~np.asarray(allimg["uncertain"], bool)]
     s1 = {i: image_z(matches.get(i, [])) for i in np.asarray(allimg["image_id"], str)}
     fam = np.asarray(certain["system"], str)
@@ -191,6 +203,9 @@ def main(argv: list[str] | None = None) -> int:
         ip = ip[[order[i] for i in np.asarray(t["image_id"], str)]]
         d = np.asarray(ip["dtheta_arcsec"], float)
         held = np.asarray(t["new_in_jwst"], bool)  # as macs0647_clash_heldout
+        plan_held = np.isin(np.asarray(t["system"], str), [str(f) for f in range(13, 24)])
+        if not np.array_equal(held, plan_held):  # PLAN.md: held out = families 13-23
+            raise SystemExit("new_in_jwst disagrees with the plan's families 13-23")
         s3 = gate_s3(d[~held])
         r = readings(d[held], s3["passes"])
         summary["model"] = MODEL
@@ -208,19 +223,16 @@ def main(argv: list[str] | None = None) -> int:
             )
         }
         summary["S3"] = s3
-        # Post hoc (not in PLAN.md): each DJA source counted once; a family whose S2 z comes only
-        # from sources an earlier family already used is left out of the control.
+        # Post hoc (not in PLAN.md): each DJA source counted once among the control families, in
+        # image-list order; a family whose S2 z comes only from sources an earlier control family
+        # already used is left out.
+        controls = set(np.asarray(t["system"], str)[~held])
         used: set[str] = set()
         once = []
         for f, v in s2.items():
-            if v[0] != "spec_z":
+            if v[0] != "spec_z" or f not in controls:
                 continue
-            src = {
-                str(r["srcid"])
-                for i in v[2]
-                for r in matches.get(i, [])
-                if str(r.get("grade", "")).strip() == str(SPEC_GRADE)
-            }
+            src = set().union(*(spec_sources(matches.get(i, [])) for i in v[2]))
             if src <= used:
                 continue
             used |= src

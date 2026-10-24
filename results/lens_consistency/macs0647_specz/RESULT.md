@@ -9,8 +9,12 @@ catalogued redshifts.
 ## Frozen outcome: **not decided** (gate S3 fails)
 
 - DJA v4.6 (99,478 rows read, `rows_read`; sha256 `ee64bb46…c6ddf3`, same bytes as in `../macs1149_s16_specz/dja_v46/`),
-  streamed and matched within 0.5″. The first run read a copy cut to a box around the cluster; the stored
-  `summary.json` is from the full stream and is byte-identical to that run's before the review fixes (not stored).
+  streamed and matched within 0.5″ (the script stops unless all rows are read). The first run read a copy cut to a
+  box around the cluster; a full-stream rerun with the same code gave a byte-identical summary (comparison not
+  stored). The stored `summary.json` is from the full stream after the review fixes.
+- **Deviation (review fix, after the table was read):** S1 / S2 agreement is now the full spread ≤ 0.01 (1 + z),
+  as PLAN.md words it; the frozen code (b91478c) measured the distance to the median. No outcome changes: every
+  image's grade-3 rows carry one z value and every family z rests on one image (`matches`, `S2`).
 - 19 Meena+2023 images have a DJA row within 0.5″ (`S1`); 10 have a grade-3 z (S1). Families with an S2 z: 1, 2, 3,
   6-1, 6-2, 10, 11 (pre-JWST controls) and 13, 15 (held out); 16.4's grade-3 z 6.13 sits on an uncertain row and is
   not used. Each S2 z rests on one image (`S2.images`); no family is `inconsistent` and no image `ambiguous`.
