@@ -226,6 +226,12 @@
    "101"
   ],
   "fewer_predicted_spec": [],
-  "authors_chires_bary_rms_arcsec": 0.4444
+  "authors_chires_rms_arcsec_all_used": {
+   "images": 51,
+   "missing": [],
+   "ByEye_RMSi": 0.662,
+   "Avg_RMSi": 0.4291,
+   "Bary_RMSi": 0.4444
+  }
  }
 }

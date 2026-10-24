@@ -208,5 +208,10 @@
  "rms_ours_without_mixed_z": 4.930919475159628,
  "rms_authors_bary_spec": 0.6057618353394725,
  "n_spec": 26,
+ "n_spec_with_authors_value": 26,
+ "partial_families": [
+  "13",
+  "16"
+ ],
  "n_without_mixed_z": 34
 }

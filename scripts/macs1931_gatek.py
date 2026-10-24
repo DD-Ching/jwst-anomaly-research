@@ -23,6 +23,7 @@ import zipfile
 from pathlib import Path
 
 import a2744_uncover as au
+import bullet_gatek as bg
 import lens_consistency as lc
 import m0417_images as mi
 import macs1931_inputs as m19
@@ -46,7 +47,6 @@ READINGS = {"A_arcsec": 1.0, "P_pixels": PIXEL_ARCSEC}  # map value -> arcsec
 U_MAX_MEDIAN_ARCSEC = 0.5  # ASSUMPTION (PLAN.md rule 1)
 GRID_STEP = 0.25  # m0417_images default (PLAN.md rule 2)
 MAPS = ("Alpha_x.fits.zip", "Alpha_y.fits.zip")
-CHIRES_BARY = 0.4444  # ../macs1931_inputs/summary.json chires_rms_arcsec.Bary_RMSi
 
 
 def dls_ds(z_s: float) -> float:
@@ -113,7 +113,7 @@ def build_model(ax, ay, header, scale: float, sha: str, name: str) -> lensmodel.
         warnings.simplefilter("ignore", FITSFixedWarning)
         wcs = WCS(header)
     k = scale / dls_ds(Z_NORM)
-    return lensmodel.MapLensModel(
+    model = lensmodel.MapLensModel(
         ax * k,
         ay * k,
         wcs,
@@ -122,6 +122,9 @@ def build_model(ax, ay, header, scale: float, sha: str, name: str) -> lensmodel.
         source=name,
         sha256=sha,
     )
+    if not np.isclose(model.pixel_arcsec, PIXEL_ARCSEC, rtol=1e-6):  # the pixel reading's scale
+        raise ValueError(f'{name}: map pixel {model.pixel_arcsec}" != {PIXEL_ARCSEC}"')
+    return model
 
 
 def parse_sourcepos(text: str) -> dict[str, tuple[float, float]]:
@@ -187,36 +190,30 @@ def load_images(path: Path = IMAGES) -> Table:
     return t
 
 
-def per_system(ip: Table) -> dict:
-    out = {}
-    sysv = np.asarray(ip["system"], str)
-    d = np.asarray(ip["dtheta_arcsec"], float)
-    for s in dict.fromkeys(sysv):
-        m = sysv == s
-        out[s] = {
-            "rms_arcsec": mi.rms_of(d[m]),
-            "n_catalogued": int(m.sum()),
-            "n_predicted": int(np.max(ip["n_predicted"][m])),
-        }
-    return out
+def verified_inputs(maps: Path) -> tuple[dict[str, str], str]:
+    """sha256 of every input after its md5 matched the Zenodo record, and the model's sha256."""
+    checks = record_checksums()
+    shas = {f: md5_ok(maps / f, checks) for f in (*MAPS, "sourcepos.txt", "chires.txt")}
+    return shas, hashlib.sha256((shas[MAPS[0]] + shas[MAPS[1]]).encode()).hexdigest()
+
+
+def load_models(maps: Path, model_sha: str, readings=READINGS) -> dict:
+    (ax, hx), (ay, _) = (read_zip_map(maps / f) for f in MAPS)
+    return {
+        r: build_model(ax, ay, hx, READINGS[r], model_sha, f"m1931-venus-v2.1 ({r})")
+        for r in readings
+    }
 
 
 def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     norm = k_dlds_check()
     if not norm["passes"]:
         raise SystemExit(f"error: k_dlds check fails: {norm}")
-    checks = record_checksums()
-    shas = {f: md5_ok(maps / f, checks) for f in (*MAPS, "sourcepos.txt", "chires.txt")}
+    shas, model_sha = verified_inputs(maps)
     src = parse_sourcepos((maps / "sourcepos.txt").read_text())
-    (ax, hx), (ay, _) = (read_zip_map(maps / f) for f in MAPS)
     images = load_images()
     spec = images[np.asarray(images["z_spec"], bool)]
-    model_sha = hashlib.sha256((shas[MAPS[0]] + shas[MAPS[1]]).encode()).hexdigest()
-    models = {
-        r: build_model(ax, ay, hx, s, model_sha, f"m1931-venus-v2.1 ({r})")
-        for r, s in READINGS.items()
-    }
-    del ax, ay
+    models = load_models(maps, model_sha)
     dist = {r: unit_distances(m, spec, src) for r, m in models.items()}
     u = unit_check(dist)
     summary = {
@@ -229,17 +226,15 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
         model = models[u["reading"]]
         half = lc.grid_half_width(model, images)
         grid = lensmodel.DeflectionGrid.compute(model, half, grid_step)
-        ip = lensmodel.imageplane_residuals(
-            model, grid, lensmodel.backtrace_images(model, spec, {})
-        )
-        lc._write(ip, out / "imageplane_spec.ecsv")
         bt_spec = lensmodel.backtrace_images(model, spec, {})
+        ip = lensmodel.imageplane_residuals(model, grid, bt_spec)
+        lc._write(ip, out / "imageplane_spec.ecsv")
         ip_wls = au.imageplane(model, grid, bt_spec)
         nz = images[np.asarray(images["z"], float) > 0]
         ip_all = lensmodel.imageplane_residuals(
             model, grid, lensmodel.backtrace_images(model, nz, {})
         )
-        systems = per_system(ip)
+        systems = bg.per_system(ip)
         summary.update(
             {
                 "grid_step_arcsec": grid_step,
@@ -249,14 +244,16 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
                     "gate_K_numbers_wls": mi.gate_k(ip_wls),
                     "gate_K_numbers_nonzero_z": mi.gate_k(ip_all),
                     "per_system_spec": systems,
-                    "per_system_nonzero_z": per_system(ip_all),
+                    "per_system_nonzero_z": bg.per_system(ip_all),
                     "extra_predicted_spec": [
                         s for s, v in systems.items() if v["n_predicted"] > v["n_catalogued"]
                     ],
                     "fewer_predicted_spec": [
                         s for s, v in systems.items() if v["n_predicted"] < v["n_catalogued"]
                     ],
-                    "authors_chires_bary_rms_arcsec": CHIRES_BARY,
+                    "authors_chires_rms_arcsec_all_used": m19.chires_rms(
+                        (maps / "chires.txt").read_text(), list(images["image_id"])
+                    ),
                 },
             }
         )
@@ -277,10 +274,13 @@ def posthoc(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     authors' ``chires.txt`` Bary residual. Run :func:`run` first (it checks the inputs)."""
     s = json.loads((out / "summary.json").read_text())
     reading = s["unit_check_U"]["reading"]
+    if reading is None:
+        raise SystemExit("error: unit check U did not pass; no reading to use")
+    shas, model_sha = verified_inputs(maps)
+    if shas != s["inputs_sha256"]:
+        raise SystemExit("error: inputs differ from the plan run's (summary.json)")
     src = parse_sourcepos((maps / "sourcepos.txt").read_text())
-    (ax, hx), (ay, _) = (read_zip_map(maps / f) for f in MAPS)
-    model = build_model(ax, ay, hx, READINGS[reading], "posthoc", f"m1931 ({reading})")
-    del ax, ay
+    model = load_models(maps, model_sha, (reading,))[reading]
     images = load_images()
     nz = images[np.asarray(images["z"], float) > 0]
     dist = unit_distances(model, nz, src)
@@ -291,6 +291,9 @@ def posthoc(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     d = np.asarray(ip["dtheta_arcsec"], float)
     sysv = np.asarray(nz["system"], str)
     zs = np.asarray(nz["z"], float)
+    spec_bary = np.array([bary.get(i, np.nan) for i in ids[np.asarray(nz["z_spec"], bool)]])
+    allsys = np.asarray(images["system"], str)
+    partial = sorted({k for k in sysv if (allsys == k).sum() > (sysv == k).sum()}, key=int)
     mixed = sorted({k for k in sysv if len(set(zs[sysv == k])) > 1}, key=int)
     res = {
         "label": "post hoc (not in PLAN.md)",
@@ -302,10 +305,10 @@ def posthoc(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
             for i, v in zip(ids, d, strict=True)
         },
         "rms_ours_without_mixed_z": mi.rms_of(d[~np.isin(sysv, mixed)]),
-        "rms_authors_bary_spec": mi.rms_of(
-            np.array([bary.get(i, np.nan) for i in ids[np.asarray(nz["z_spec"], bool)]])
-        ),
-        "n_spec": int(np.sum(np.asarray(nz["z_spec"], bool))),
+        "rms_authors_bary_spec": mi.rms_of(spec_bary),
+        "n_spec": len(spec_bary),
+        "n_spec_with_authors_value": int(np.isfinite(spec_bary).sum()),
+        "partial_families": partial,
         "n_without_mixed_z": int(np.sum(~np.isin(sysv, mixed))),
     }
     (out / "posthoc.json").write_text(json.dumps(res, indent=1) + "\n")

@@ -22,7 +22,10 @@ and source-plane number is a model_prediction; the image list is observed.
 - With the D-041 WLS family source: rms **0.630″**, 26 / 26 within 3″.
 - Over the 44 used images with a non-zero catalogue z: rms 4.83″, 84.1 % within 3″ (it would fail gate K). Systems
   8 (rms 15.8″) and 10 (5.08″) get one predicted image for three and two catalogued; 15 (9.16″) is one of the five
-  systems with different z per image (11, 13, 15, 16, 17), which our solver runs at the first image's z.
+  systems with different z per image (11, 13, 15, 16, 17). For those five the mean source averages back-traces from
+  different source planes and the solver then runs at the first image's z, so their rms is not a coherent model
+  residual. Systems 13 and 16 also enter with 2 of 3 images (their z = 0 image skipped, as the plan says;
+  `posthoc.json` `partial_families`).
 - Spec-z systems with more predicted than catalogued images: 1, 5, 6, 7, 100, 101 (none with fewer). They are the
   targets of a later counter-image test; none is read here.
 - Authors' `chires.txt` Bary rms: 0.444″ over all 51 used images; 0.606″ over the 26 spec-z images (post hoc, below).
@@ -36,10 +39,14 @@ and source-plane number is a model_prediction; the image list is observed.
 - Per-image comparison: the authors' Bary residuals on the 26 spec-z images have rms 0.606″, ours 0.919″ with the
   mean source and 0.630″ with the WLS source (summary.json). Their residual definition was not reproduced.
 
+**Review fixes (/code-review, before the PR):** the post hoc step re-verifies the inputs' md5 and refuses a failed U;
+the pixel scale is checked against the header; the spec-z back-trace is computed once; the authors' rms is computed
+from the verified `chires.txt`. A re-run reproduces every number above.
+
 ## Reading
 - The VENUS maps, read in pixels and normalised at z_s 5.079, reproduce the spec-z images the model was fitted to
-  (own-constraint validation only). The maps can be used with the spec-z systems; the photo-z systems 8, 10 and the
-  mixed-z systems are not reproduced as catalogued and are excluded from any later test until their z is settled.
+  (own-constraint validation only). The maps can be used with the spec-z systems; the photo-z systems 8 and 10 are not
+  reproduced as catalogued, and the mixed-z systems are not tested coherently by our solver; all are excluded from any later test until their z is settled.
 - No deblended reference catalogue is public for this field (D-034 addendum aa), so gate C2 and the extra-image test
   still cannot run. Next: a counter-image test for the six spec-z systems with extra predicted images needs
   imaging; the VENUS mosaics on MAST could not be checked from this session before (connection failure).
