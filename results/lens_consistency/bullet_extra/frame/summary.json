@@ -1,0 +1,41 @@
+{
+ "bullet": {
+  "model": "bullet-canucs-maps",
+  "model_sha256": "893cd05fdf09b8b2dd9631fc7fddc4d51a1f1d6e606ed136e6065cff2f392593",
+  "image": "s3://stpubdata/jwst/public/jw04598/L3/t/o001/jw04598-o001_t001_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 26.53565585558747,
+  "unpredicted": [],
+  "image_classes": {
+   "candidate": 6,
+   "demagnified": 7,
+   "faint": 7,
+   "missing": 1,
+   "no_flux_ref": 8,
+   "observed": 136
+  },
+  "forced_classes_targets": {
+   "confused": 3,
+   "no_reference": 10,
+   "recovered": 1,
+   "undetectable": 8
+  },
+  "gate_C": {
+   "n_targets": 136,
+   "n_testable": 60,
+   "n_recovered": 58,
+   "fraction": 0.9666666666666667,
+   "passes": true,
+   "classes": {
+    "absent": 1,
+    "ambiguous": 1,
+    "confused": 10,
+    "inconsistent_reference": 5,
+    "no_reference": 68,
+    "recovered": 48,
+    "undetectable": 3
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}
