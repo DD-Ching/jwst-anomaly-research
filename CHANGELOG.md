@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS0416 CANUCS extra images under the MARS maps: the D115b flag is CANUCS-only (D-034 addendum ar)
+- **Result** (`results/lens_consistency/m0416_mars_extra/RESULT.md`): of 49 CANUCS extra-image predictions, 38 have
+  a free MARS image within 3″ and 11 do not; all 5 with |μ_CANUCS| ≥ 10 are CANUCS only, the D115b flag included
+  (7.29″). Vetting record updated; verdict stays `inconclusive` (MARS pixels 1.515″).
+- **Handoff:** next, forced photometry at the one MARS-only D115a image (store its position first), or a
+  two-model extra-image check on another field with a held-out-validated second model. #374 waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-24: Abell 370 MARS held-out misses are reproduced by BUFFALO model A (D-034 addendum aq)
 - **Result** (`results/lens_consistency/a370_mars_misses/RESULT.md`): the four Abell 370 images MARS misses by > 3″
   (3b.1, 5.3, 7.6, 24e.2) are all within 3″ under BUFFALO model A (0.49–2.18″); 36 / 40 reproduced by both, 0 by
