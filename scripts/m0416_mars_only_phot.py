@@ -344,7 +344,8 @@ def posthoc(cat_path: Path, out: Path = OUT) -> dict:
                     "paired_to_mars": str(r["image_id"]) in paired,
                 }
             )
-        rcp = int(np.flatnonzero(cat["label"] == tg["ref_counterpart"])[0])
+        k_ref = np.flatnonzero(cat["label"] == tg["ref_counterpart"])
+        rcp = int(k_ref[0]) if len(k_ref) else -1  # -1: no reference (no exclusion)
         srcs = [
             {
                 "label": int(cat["label"][k]),
