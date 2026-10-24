@@ -10,8 +10,20 @@
   }
  },
  "readme": {
-  "zl": "0.3970",
-  "fit": "chi2 = 174.99 , dof = 180 , rms[arcsec] =  0.61"
+  "omega": 0.3,
+  "lambda": 0.7,
+  "hubble": 0.7,
+  "weos": -1.0,
+  "zl": 0.397,
+  "chi2": 174.99,
+  "dof": 180.0,
+  "rms[arcsec]": 0.61
+ },
+ "cosmology_used": {
+  "H0": 70.0,
+  "Om0": 0.3,
+  "flat": true,
+  "z_lens": 0.397
  },
  "image_list": {
   "rows": 146,
@@ -60,33 +72,34 @@
   "median_arcsec": 14.1278,
   "p90_arcsec": 15.6676,
   "max_arcsec": 20.3247,
-  "passes": false
+  "passes": false,
+  "rows_inside_map": 136
  },
  "check_D_affine": {
   "fit_on": "odd systems",
   "fit_rows": 70,
   "coef_east": [
-   0.609851,
+   0.609842,
    -0.274671,
    0.002439
   ],
   "coef_north": [
-   -0.419405,
+   -0.419178,
    -0.002867,
    -0.316603
   ],
   "test_even": {
    "n": 66,
-   "median_arcsec": 2.6552,
-   "p90_arcsec": 4.3457,
-   "max_arcsec": 6.0375,
+   "median_arcsec": 2.6554,
+   "p90_arcsec": 4.3455,
+   "max_arcsec": 6.0377,
    "passes": false
   },
   "train_odd_reported": {
    "n": 70,
-   "median_arcsec": 2.1188,
-   "p90_arcsec": 3.6536,
-   "max_arcsec": 5.6822,
+   "median_arcsec": 2.1187,
+   "p90_arcsec": 3.6538,
+   "max_arcsec": 5.6824,
    "passes": false
   },
   "passes": false
@@ -108,7 +121,7 @@
   "scale_fit_all_rows": 0.7629,
   "after_scale": {
    "n": 136,
-   "median_arcsec": 1.7135,
+   "median_arcsec": 1.7136,
    "p90_arcsec": 2.4241,
    "max_arcsec": 4.1405
   },

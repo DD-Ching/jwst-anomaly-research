@@ -2489,7 +2489,7 @@ minimum after seeing 18 (tuning on the outcome). Revisit if: a public deblended 
 e9ccd27. The VENUS GLAFIC v0.91 release (Zenodo 10.5281/zenodo.20312327) has an image list with model deflections
 (146 rows, 43 systems; spec-z references for 3 systems) but only κ / γ maps (200″, header z_s 3). Deflections computed
 from κ by FFT fail check D (median 14.13″ vs ≤ 0.10″) and the cross-validated affine fallback (test median 2.66″);
-DJA v7 has no field for the cluster. Decision: no fitted-model route for RXCJ2211 from this release. Post hoc only: a
+DJA v7 has no field for the cluster. Decision: no fitted-model route for RXCJ2211 from this release as frozen (only the header z_s reading was declared, so an input-convention cause is not excluded). Post hoc only: a
 single scale 0.763 ≈ D_ds / D_s(z_s 3) = 0.7575 leaves 1.71″, so the map may be normalised to D_ds / D_s = 1.
 Alternatives rejected: tuning the scale or a larger correction after seeing D (tuning on the outcome); lenstronomy's
 κ-to-α integral (not a dependency; a 10-line FFT kernel tested on a uniform disc does the same). Revisit if: VENUS

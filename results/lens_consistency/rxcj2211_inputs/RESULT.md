@@ -16,9 +16,16 @@ image list `rj2211_images.ecsv`, tests `tests/test_rxcj2211_inputs.py`.
 | D-affine: + 6-parameter affine term fitted on odd systems (70 rows), tested on even (66) | test median 2.66″, 90th percentile 4.35″ | **fails** |
 | R: DJA v7 imaging field (35 listed) named rxj2211 / rxcj2211 / j2211 / rj2211 | none | **fails** |
 
-**Reading.** As frozen, the κ map cannot stand in for the missing deflection maps, so the map route for RXCJ2211 stops,
-and gate C2 could not run anyway without a public deblended reference. No gate-K residual and no predicted image were
-read.
+**Reading.** As frozen, the κ map, read at its header z_s = 3, cannot stand in for the missing deflection maps, so
+the map route for RXCJ2211 stops here, and gate C2 could not run anyway without a public deblended reference. No
+gate-K residual and no predicted image were read. The plan declared only the header normalisation; unlike the MACS
+J1931 unit check U it did not state both readings before the run, so this failure may come from an input convention
+rather than from the model (see the post hoc line).
+
+**Review fixes (/code-review, before the PR):** pixel positions from the header WCS (`astropy.wcs`) instead of a hand
+offset, images outside the map refused (136 / 136 inside), ids read as strings, `sample`, `dls_ds`, `read_csv` and
+the README parser unit-tested, the cosmology stored, and the post hoc block written only when D-affine fails. The
+verdicts and numbers are unchanged to 0.001″.
 
 **Post hoc (added after D and D-affine failed; no verdict depends on it):** one scale factor fitted to all 136 rows
 is 0.763, close to D_ds / D_s at z_s 3 (0.7575); after it the median mismatch is 1.71″ (90th percentile 2.42″). So the

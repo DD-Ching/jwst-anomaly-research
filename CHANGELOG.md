@@ -12,8 +12,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   residual or prediction read.
 - **Post hoc:** one scale 0.763 ≈ D_ds / D_s(z_s 3) = 0.7575 leaves median 1.71″; the κ map may be normalised to
   D_ds / D_s = 1 (hypothesis).
-- **Handoff:** RXCJ2211 map route stopped unless VENUS releases deflection maps or a new frozen scale + affine plan is
-  justified (it would still lack a reference catalogue). Next: another field (e.g. SPT-CL J0546 LTM maps, input check
+- **Handoff:** RXCJ2211 map route stopped as frozen; only the header z_s reading was declared, so a retry that
+  declares both normalisations before its run (as MACS J1931 check U did) is justified, but gate C2 would still lack a
+  reference catalogue. Next: another field (e.g. SPT-CL J0546 LTM maps, input check
   first). #374 waits for the 2026-10-26 weekly run.
 
 ## 2026-10-24: MACS0647 at DJA NIRSpec redshifts: control S3 fails; held-out families not decided (D-034 addendum ai)

@@ -21,6 +21,7 @@ import argparse
 import hashlib
 import io
 import json
+import re
 import zipfile
 from pathlib import Path
 
@@ -30,6 +31,7 @@ import requests
 from astropy.cosmology import FlatLambdaCDM
 from astropy.io import fits
 from astropy.table import Table
+from astropy.wcs import WCS
 from scipy.ndimage import map_coordinates
 from scipy.signal import fftconvolve
 
@@ -86,25 +88,28 @@ def alpha_from_kappa(kappa: np.ndarray, pix: float) -> tuple[np.ndarray, np.ndar
 
 
 def dls_ds(z) -> np.ndarray:
+    """D_ds / D_s for source redshift(s) z behind the lens (flat: 1 - D_M(z_l) / D_M(z_s))."""
     z = np.atleast_1d(np.asarray(z, float))
+    if np.any(z <= Z_LENS):
+        raise ValueError("source redshift not behind the lens")
     return (
-        np.array([COSMO.angular_diameter_distance(Z_LENS, zi).value for zi in z])
-        / COSMO.angular_diameter_distance(z).value
+        1.0
+        - (COSMO.comoving_transverse_distance(Z_LENS) / COSMO.comoving_transverse_distance(z)).value
     )
 
 
 def sample(ax, ay, wcs_hdr, ra, dec, z, zs_map):
     """Map deflections at (ra, dec), rescaled from the map's z_s to each image z, as (east, north)
-    arcsec. The map is RA---CAR / DEC--CAR with CDELT1 < 0: array +x is −RA (west)."""
-    cd1, cd2 = float(wcs_hdr["CDELT1"]), float(wcs_hdr["CDELT2"])
-    e, n = offsets_arcsec(ra, dec, wcs_hdr["CRVAL1"], wcs_hdr["CRVAL2"])
-    # FITS pixels are 1-based; numpy 0-based
-    px = wcs_hdr["CRPIX1"] - 1 + (e / 3600.0) / cd1
-    py = wcs_hdr["CRPIX2"] - 1 + (n / 3600.0) / cd2
-    vx = map_coordinates(ax, [py, px], order=1, mode="nearest")
-    vy = map_coordinates(ay, [py, px], order=1, mode="nearest")
+    arcsec, and a mask of positions inside the map (outside: NaN). Pixels from the header WCS
+    (0-based); the deflection axes follow the array, so +x is east when CDELT1 > 0, else west."""
+    px, py = WCS(wcs_hdr).world_to_pixel_values(np.asarray(ra, float), np.asarray(dec, float))
+    ny, nx = ax.shape
+    inside = (px >= 0) & (px <= nx - 1) & (py >= 0) & (py <= ny - 1)
+    vx = map_coordinates(ax, [py, px], order=1, mode="constant", cval=np.nan)
+    vy = map_coordinates(ay, [py, px], order=1, mode="constant", cval=np.nan)
     scale = dls_ds(z) / dls_ds(zs_map)[0]
-    return np.sign(cd1) * vx * scale, vy * scale  # array +x maps to sign(CDELT1) east
+    sx = np.sign(float(wcs_hdr["CDELT1"]))
+    return np.where(inside, sx * vx * scale, np.nan), np.where(inside, vy * scale, np.nan), inside
 
 
 def compare(pred_e, pred_n, csv_e, csv_n) -> dict:
@@ -134,7 +139,7 @@ def affine_apply(ce, cn, theta_e, theta_n):
 
 def dja_check(index_html: str) -> dict:
     """Fields of the DJA v7 imaging index whose name holds one of ``DJA_NAMES``."""
-    fields = sorted(set(m1931.re.findall(r"([a-z0-9][a-z0-9_-]*?)-grizli-v7", index_html.lower())))
+    fields = sorted(set(re.findall(r"([a-z0-9][a-z0-9_-]*?)-grizli-v7", index_html.lower())))
     if not fields:
         raise ValueError("no field parsed from the DJA index")
     hits = [f for f in fields if any(n in f for n in DJA_NAMES)]
@@ -147,12 +152,38 @@ def dja_check(index_html: str) -> dict:
     }
 
 
+def readme_header(text: str) -> dict:
+    """``key = value`` pairs of the README's ``#`` header lines (cosmology, zl, fit)."""
+    out = {}
+    for ln in text.splitlines():
+        if ln.startswith("#") and "REF" not in ln:
+            for k, v in re.findall(r"([A-Za-z0-9_\[\]]+)\s*=\s*([-+0-9.eE]+)", ln):
+                out[k] = float(v)
+    return out
+
+
+def posthoc_scale(pe, pn, csv_e, csv_n, zs_map) -> dict:
+    """Post hoc (added after D and D-affine failed; no verdict depends on it): one scale factor."""
+    s_fit = float(np.sum(pe * csv_e + pn * csv_n) / np.sum(pe**2 + pn**2))
+    out = {
+        "label": "post hoc diagnostic, added after D and D-affine failed",
+        "scale_fit_all_rows": round(s_fit, 4),
+        "after_scale": compare(s_fit * pe, s_fit * pn, csv_e, csv_n),
+        "dls_ds_zs3": round(float(dls_ds(zs_map)[0]), 4),
+        "median_csv_deflection_arcsec": round(float(np.median(np.hypot(csv_e, csv_n))), 3),
+        "median_map_deflection_arcsec": round(float(np.median(np.hypot(pe, pn))), 3),
+    }
+    out["after_scale"].pop("passes")
+    return out
+
+
 def read_csv(text: str) -> Table:
-    t = Table.read(text, format="ascii.csv", fill_values=[("", "nan")])
+    """The GLAFIC output table; ids kept as written (strings), empty cells NaN."""
+    t = Table.read(text, format="ascii.csv", converters={"id": str}, fill_values=[("", "nan")])
     for c in t.colnames:
         if c != "id" and hasattr(t[c], "filled"):
             t[c] = t[c].filled(np.nan)
-    t["id"] = [f"{float(v):.1f}" if not isinstance(v, str) else v for v in t["id"]]
+    t["id"] = [str(v) for v in t["id"]]
     t["system"] = [s.split(".")[0] for s in t["id"]]
     return t
 
@@ -181,8 +212,10 @@ def main(argv: list[str] | None = None) -> int:
     sx = -1.0 if s["convention"] == "x_along_minus_ra" else 1.0
     csv_e, csv_n = sx * np.asarray(r["deflect_x_best"]), np.asarray(r["deflect_y_best"])
     ax, ay = alpha_from_kappa(kappa, pix)
-    pe, pn = sample(ax, ay, hdr, r["ra"], r["dec"], r["z_lensing"], zs_map)
-    d = compare(pe, pn, csv_e, csv_n)
+    pe, pn, inside = sample(ax, ay, hdr, r["ra"], r["dec"], r["z_lensing"], zs_map)
+    if not inside.all():
+        raise RuntimeError(f"{int((~inside).sum())} images outside the kappa map")
+    d = compare(pe, pn, csv_e, csv_n) | {"rows_inside_map": int(inside.sum())}
     d_aff = None
     if not d["passes"]:
         te, tn = offsets_arcsec(r["ra"], r["dec"], hdr["CRVAL1"], hdr["CRVAL2"])
@@ -198,17 +231,9 @@ def main(argv: list[str] | None = None) -> int:
             "train_odd_reported": compare((pe + fe)[odd], (pn + fn)[odd], csv_e[odd], csv_n[odd]),
         }
         d_aff["passes"] = d_aff["test_even"]["passes"]
-    # post hoc (added after the frozen checks failed; no verdict depends on it): one scale factor
-    s_fit = float(np.sum(pe * csv_e + pn * csv_n) / np.sum(pe**2 + pn**2))
-    posthoc = {
-        "label": "post hoc diagnostic, added after D and D-affine failed",
-        "scale_fit_all_rows": round(s_fit, 4),
-        "after_scale": compare(s_fit * pe, s_fit * pn, csv_e, csv_n),
-        "dls_ds_zs3": round(float(dls_ds(zs_map)[0]), 4),
-        "median_csv_deflection_arcsec": round(float(np.median(np.hypot(csv_e, csv_n))), 3),
-        "median_map_deflection_arcsec": round(float(np.median(np.hypot(pe, pn))), 3),
-    }
-    posthoc["after_scale"].pop("passes")
+    posthoc = None
+    if d_aff is not None and not d_aff["passes"]:
+        posthoc = posthoc_scale(pe, pn, csv_e, csv_n, zs_map)
     dja = dja_check(m1931._get(session, m1931.DJA_INDEX).text)
 
     zs = np.asarray(t["z_lensing"], float)
@@ -226,12 +251,8 @@ def main(argv: list[str] | None = None) -> int:
                 n: hashlib.sha256(zf.read(n)).hexdigest() for n in (CSV, README, KAPPA)
             },
         },
-        "readme": {
-            ln[2:].split("=")[0].strip(): ln.split("=", 1)[1].strip()
-            for ln in readme.splitlines()[:3]
-            if "=" in ln and "," not in ln
-        }
-        | {"fit": readme.splitlines()[2][2:].strip()},
+        "readme": readme_header(readme),
+        "cosmology_used": {"H0": 70.0, "Om0": 0.3, "flat": True, "z_lens": Z_LENS},
         "image_list": {
             "rows": len(t),
             "systems": len(set(t["system"])),

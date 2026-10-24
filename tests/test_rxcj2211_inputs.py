@@ -68,3 +68,62 @@ def test_dja_check():
     d = rj.dja_check(html)
     assert d["matches"] == ["rxj2211"] and d["passes"]
     assert not rj.dja_check("abell2744-grizli-v7")["passes"]
+
+
+def _hdr(n=101, cdelt=0.5 / 3600):
+    from astropy.io import fits
+
+    h = fits.Header()
+    h.update(
+        CTYPE1="RA---CAR", CTYPE2="DEC--CAR", CRVAL1=332.94, CRVAL2=-3.83,
+        CRPIX1=(n + 1) / 2, CRPIX2=(n + 1) / 2, CDELT1=-cdelt, CDELT2=cdelt, ZS=3.0,
+    )  # fmt: skip
+    return h
+
+
+def test_sample_axes_signs_and_scaling():
+    n = 101
+    h = _hdr(n)
+    ax = np.ones((n, n))  # +1" along array +x (west, CDELT1 < 0)
+    ay = np.full((n, n), 2.0)  # +2" north
+    e, nn, inside = rj.sample(ax, ay, h, [332.94], [-3.83], [3.0], 3.0)
+    assert inside.all()
+    assert e[0] == pytest.approx(-1.0) and nn[0] == pytest.approx(2.0)
+    e2, _, _ = rj.sample(ax, ay, h, [332.94], [-3.83], [6.0], 3.0)
+    assert e2[0] == pytest.approx(-rj.dls_ds(6.0)[0] / rj.dls_ds(3.0)[0])
+    # 100" east is outside a 50" map: NaN and not inside
+    ra_out = 332.94 + 100 / 3600 / np.cos(np.radians(-3.83))
+    e3, _, inside3 = rj.sample(ax, ay, h, [ra_out], [-3.83], [3.0], 3.0)
+    assert not inside3[0] and np.isnan(e3[0])
+
+
+def test_sample_pixel_position():
+    # a gradient along array x: value = pixel index; 10" east of centre is 20 px toward lower x
+    n = 101
+    h = _hdr(n)
+    ax = np.tile(np.arange(n, dtype=float), (n, 1))
+    ra = 332.94 + 10 / 3600 / np.cos(np.radians(-3.83))
+    e, _, _ = rj.sample(ax, np.zeros((n, n)), h, [ra], [-3.83], [3.0], 3.0)
+    assert -e[0] == pytest.approx(50 - 20, abs=0.05)
+
+
+def test_dls_ds():
+    assert 0 < rj.dls_ds(3.0)[0] < rj.dls_ds(10.0)[0] < 1
+    with pytest.raises(ValueError):
+        rj.dls_ds(0.2)
+
+
+def test_read_csv_keeps_ids_and_nan():
+    text = "id,ra,dec,z_lensing,deflect_x_best\n12.10,1.0,2.0,2.0,3.0\n7.1,1.0,2.0,-1.0,\n"
+    t = rj.read_csv(text)
+    assert list(t["id"]) == ["12.10", "7.1"] and list(t["system"]) == ["12", "7"]
+    assert np.isnan(t["deflect_x_best"][1])
+
+
+def test_readme_header():
+    text = (
+        "# omega = 0.3000 , hubble = 0.7000\n# zl = 0.3970\n"
+        "# chi2 = 174.99 , rms[arcsec] =  0.61\n# MI_REF  1 x\n"
+    )
+    d = rj.readme_header(text)
+    assert d == {"omega": 0.3, "hubble": 0.7, "zl": 0.397, "chi2": 174.99, "rms[arcsec]": 0.61}
