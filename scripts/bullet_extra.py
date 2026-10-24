@@ -110,17 +110,42 @@ def check_inputs(cat: Path, image: Path) -> None:
         raise SystemExit("error: --cat / --image are not the CANUCS DR1 Bullet files pinned")
 
 
-def read_image(path: Path) -> tuple:
-    """CANUCS F200W mosaic -> (WCS, nJy per pixel, pixel scale); nJy and 0.04 arcsec checked."""
+def read_image(path: Path, wcs_fn=WCS) -> tuple:
+    """CANUCS F200W mosaic -> (WCS, nJy per pixel, pixel scale); nJy and 0.04 arcsec checked.
+    ``wcs_fn`` builds the WCS from the header (``header_wcs`` under PLAN_1b.md)."""
     with fits.open(path) as hl:
         hdu = next(h for h in hl if h.data is not None)
         if hdu.header.get("BUNIT") != "nJy":
             raise ValueError(f"unexpected BUNIT {hdu.header.get('BUNIT')!r}")
-        w, d = WCS(hdu.header), np.asarray(hdu.data, float)
+        w, d = wcs_fn(hdu.header), np.asarray(hdu.data, float)
     pix = float(proj_plane_pixel_scales(w.celestial).mean() * 3600.0)
     if abs(pix - m14.PIX) > 1e-4:
         raise ValueError(f"image pixel scale {pix} is not 0.04 arcsec")
     return w, d, pix
+
+
+def stage3(t: Table, w, d, pix: float, summary: dict, image_wcs: str) -> None:
+    """PLAN.md rules 4-8 on the stored frame tables; results go into ``summary``."""
+    rc = cr.to_cat(t)  # rule 4
+    inputs = {
+        "canucs_cat": CAT_NAME,
+        "canucs_url": BASE + CAT_NAME,
+        "canucs_cat_sha256": CAT_SHA,
+        "n_rows_finite_flux": int(len(rc["flux"])),
+        "flux_column": f"FLUX_KRON_TOTAL_{cr.BAND}",
+        "image": IMAGE_NAME,
+        "image_url": BASE + IMAGE_NAME,
+        "image_sha256": IMAGE_SHA,
+        "image_wcs": image_wcs,
+        "noise_pixel_scale_arcsec": pix,
+    }
+    depth = cr.depth_mag(rc["flux"], rc["snr"])
+    src_x, src_y = (np.asarray(v, float) for v in w.world_to_pixel_values(t["RA"], t["DEC"]))
+    for contain, out in ((False, OUT / "without_contain"), (True, OUT)):  # rule 8 / rules 5-7
+        out.mkdir(parents=True, exist_ok=True)
+        summary["frozen" if contain else "without_contain"] = ur._reference_run(
+            rc, depth, inputs, out, contain, d, w, src_x, src_y, pix, field=FIELD, frame=FRAME
+        )
 
 
 def header_wcs(header) -> WCS:
@@ -214,14 +239,7 @@ def wcs_pixel_check(w: WCS, d, t: Table) -> dict:
 
 def read_image_1b(path: Path, t: Table) -> tuple:
     """CANUCS F200W mosaic with the PLAN_1b.md WCS -> (WCS, nJy per pixel, scale, W1, W2)."""
-    with fits.open(path) as hl:
-        hdu = next(h for h in hl if h.data is not None)
-        if hdu.header.get("BUNIT") != "nJy":
-            raise ValueError(f"unexpected BUNIT {hdu.header.get('BUNIT')!r}")
-        w, d = header_wcs(hdu.header), np.asarray(hdu.data, float)
-    pix = float(proj_plane_pixel_scales(w).mean() * 3600.0)
-    if abs(pix - m14.PIX) > 1e-4:
-        raise ValueError(f"image pixel scale {pix} is not 0.04 arcsec")
+    w, d, pix = read_image(path, header_wcs)
     w1 = wcs_catalogue_check(w, t["X"], t["Y"], t["RA"], t["DEC"])
     w2 = wcs_pixel_check(w, d, t) if w1["passes"] else None
     return w, d, pix, w1, w2
@@ -247,26 +265,7 @@ def run_1b(cat: Path, image: Path) -> dict:
         summary["stopped"] = "W2 failed (PLAN_1b.md)"
         return summary
     register()
-    rc = cr.to_cat(t)  # rule 4
-    inputs = {
-        "canucs_cat": CAT_NAME,
-        "canucs_url": BASE + CAT_NAME,
-        "canucs_cat_sha256": CAT_SHA,
-        "n_rows_finite_flux": int(len(rc["flux"])),
-        "flux_column": f"FLUX_KRON_TOTAL_{cr.BAND}",
-        "image": IMAGE_NAME,
-        "image_url": BASE + IMAGE_NAME,
-        "image_sha256": IMAGE_SHA,
-        "image_wcs": "PLAN_1b.md W0 (header CRPIX/CRVAL/PC, CDELT 0.04 arcsec)",
-        "noise_pixel_scale_arcsec": pix,
-    }
-    depth = cr.depth_mag(rc["flux"], rc["snr"])
-    src_x, src_y = (np.asarray(v, float) for v in w.world_to_pixel_values(t["RA"], t["DEC"]))
-    for contain, out in ((False, OUT / "without_contain"), (True, OUT)):  # rule 8 / rules 5-7
-        out.mkdir(parents=True, exist_ok=True)
-        summary["frozen" if contain else "without_contain"] = ur._reference_run(
-            rc, depth, inputs, out, contain, d, w, src_x, src_y, pix, field=FIELD, frame=FRAME
-        )
+    stage3(t, w, d, pix, summary, "PLAN_1b.md W0 (header CRPIX/CRVAL/PC, CDELT 0.04 arcsec)")
     return summary
 
 
@@ -303,27 +302,7 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps(_clean({FIELD: frame}), indent=1, allow_nan=False) + "\n"
         )
         w, d, pix = read_image(args.image)
-        rc = cr.to_cat(t)  # rule 4
-        inputs = {
-            "canucs_cat": CAT_NAME,
-            "canucs_url": BASE + CAT_NAME,
-            "canucs_cat_sha256": CAT_SHA,
-            "n_rows_finite_flux": int(len(rc["flux"])),
-            "flux_column": f"FLUX_KRON_TOTAL_{cr.BAND}",
-            "image": IMAGE_NAME,
-            "image_url": BASE + IMAGE_NAME,
-            "image_sha256": IMAGE_SHA,
-            "noise_pixel_scale_arcsec": pix,
-        }
-        depth = cr.depth_mag(rc["flux"], rc["snr"])
-        src_x, src_y = (
-            np.asarray(v, float) for v in w.world_to_pixel(SkyCoord(t["RA"], t["DEC"], unit="deg"))
-        )
-        for contain, out in ((False, OUT / "without_contain"), (True, OUT)):  # rule 8 / rules 5-7
-            out.mkdir(parents=True, exist_ok=True)
-            summary["frozen" if contain else "without_contain"] = ur._reference_run(
-                rc, depth, inputs, out, contain, d, w, src_x, src_y, pix, field=FIELD, frame=FRAME
-            )
+        stage3(t, w, d, pix, summary, "WCS(header)")
     return _write(summary)
 
 
