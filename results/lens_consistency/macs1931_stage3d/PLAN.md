@@ -32,4 +32,5 @@ remain the quality gates. Written before any stage 3d code runs on either field.
 
 ## Run
 `python scripts/m1931_stage3d.py validate`, then `python scripts/m1931_stage3d.py f` (refuses unless 3d-2 passed),
-then, only if F_c passed, `python scripts/m1931_stage3d.py run --maps DIR`.
+then, only if F_c passed, `python scripts/m1931_stage3d.py run --maps DIR` (wiring `use_fc`, committed before its run:
+stage 3 `run` with the 3b section and the 64 px box, rule 5 replaced by the stored F_c after a row-count check).

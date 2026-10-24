@@ -79,3 +79,14 @@ def test_matched_each():
     ra, dec = _grid(4)
     m = s3d.matched_each(ra, dec, ra[:2], dec[:2] + 0.4 / 3600.0)
     assert m.tolist() == [True, True, False, False]
+
+
+def test_use_fc_replaces_rule5_and_checks_catalogue():
+    import pytest
+
+    stored = {"catalogue": {"n_rows_kept": 3}, "frame_F_c": {"passes": True}}
+    f = {"passes": False}
+    s3d.use_fc(stored)(f, None, {"ra": [1, 2, 3]})
+    assert f["passes"] and not f["passes_stage3_rule"]
+    with pytest.raises(ValueError):
+        s3d.use_fc(stored)({"passes": False}, None, {"ra": [1, 2]})

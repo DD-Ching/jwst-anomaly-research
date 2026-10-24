@@ -96,6 +96,21 @@ def frame_check_fc(ra, dec, snr, cra, cdec) -> dict:
     return f
 
 
+def use_fc(stored: dict):
+    """Rule 3d-4 wiring: ``m1931_stage3.run``'s rule 5 outcome becomes the stored F_c outcome,
+    after checking that ``run`` rebuilt the same catalogue (row count) as rule 3d-3."""
+    want = int(stored["catalogue"]["n_rows_kept"])
+
+    def extra_f(f: dict, images, cat) -> None:
+        if len(cat["ra"]) != want:
+            raise ValueError(f"catalogue has {len(cat['ra'])} rows, rule 3d-3 had {want}")
+        f["passes_stage3_rule"] = f["passes"]
+        f["frame_F_c"] = stored["frame_F_c"]
+        f["passes"] = bool(stored["frame_F_c"]["passes"])
+
+    return extra_f
+
+
 def _fc_on(images: Table, sci, err, w, box, uri: str) -> tuple[dict, Table]:
     cat, meta, _, data, (sx, sy) = md.build(sci, err, w)
     snr = continuum_snr(data, w, images["ra"], images["dec"], sx, sy, meta["pixel_scale_arcsec"])
@@ -171,8 +186,17 @@ def main(argv: list[str] | None = None) -> int:
     f = json.loads((OUT / "summary.json").read_text())
     if not f["frame_F_c"]["passes"]:
         ap.error("rule 3d-3 F_c failed on MACS J1931: no reading (PLAN.md)")
-    ap.error("rule 3d-4 is not implemented in this stage; freeze its wiring first")
-    return 2
+    if a.maps is None:
+        ap.error("--maps is required for run")
+    s = s3.run(a.maps, a.cache, OUT, True, md.BKG_BOX, use_fc(f))
+    s["plan"] = str(OUT / "PLAN.md")
+    s = cp._clean(s)
+    (OUT / "run_summary.json").write_text(json.dumps(s, indent=1, allow_nan=False) + "\n")
+    keys = ("rule2_gate_K_wls", "rule5_frame_F", "stopped")
+    print(json.dumps({k: s[k] for k in keys if k in s}, indent=1))
+    if "frozen" in s:
+        print(json.dumps({k: s["frozen"][k] for k in ("gate_C2_shared", "flags")}, indent=1))
+    return 0
 
 
 if __name__ == "__main__":
