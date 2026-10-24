@@ -1,0 +1,381 @@
+"""MACS J1931 stage 4: MUSE Lyα line-flux reference for continuum-free systems 5-7, 100, 101.
+
+Frozen plan: ``results/lens_consistency/macs1931_muse/PLAN.md``. The cube is read only as ESO SODA
+``BAND`` cutouts (full field), streamed to a scratch directory and deleted after use.
+
+    python scripts/m1931_muse.py run --scratch DIR
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import urllib.request
+from pathlib import Path
+
+import m0417_canucsref_posthoc as cp
+import numpy as np
+from astropy.io import fits
+from astropy.stats import sigma_clipped_stats
+from astropy.table import Table
+from astropy.wcs import WCS
+
+OUT = Path("results/lens_consistency/macs1931_muse")
+IMAGES = Path("results/lens_consistency/macs1931_inputs/m1931_images.ecsv")
+MU_OBS = Path("results/lens_consistency/macs1931_gatek/imageplane_spec.ecsv")
+TARGETS = Path("results/lens_consistency/macs1931_stage3d/predicted_macs1931.ecsv")
+CUBE_ID = "ADP.2017-03-27T15:26:07.707"
+SODA = "https://dataportal.eso.org/dataPortal/soda/sync"
+SYSTEMS = (5, 6, 7, 100, 101)
+LYA = 1215.67
+# Frozen constants (PLAN.md rules 1-8; ASSUMPTIONs)
+HALF_BAND, CONT_GAP, PEAK_SEARCH, WIN_HALF = 80.0, 30.0, 20.0, 4
+PIX, AP_ARCSEC = 0.2, 0.8
+N_RAND, R_RAND, SRC_EXCL, SEED = 200, (2.0, 6.0), 1.0, 20261024
+BLEND_ARCSEC, CTRL_SEARCH = 1.6, 1.0
+MIN_SIGMA, ABSENT_SIGMA, FLUX_RANGE = 5.0, 10.0, (1 / 3, 3.0)
+REF_SNR, GATE_MIN, GATE_FRAC = 5.0, 4, 0.75
+TESTABLE = ("recovered", "confused", "absent", "ambiguous")
+
+
+def lam_nom(z: float) -> float:
+    return LYA * (1.0 + z)
+
+
+def continuum_mask(lam: np.ndarray, lnom: float) -> np.ndarray:
+    """Rule 1: continuum slices are those more than CONT_GAP from the nominal line."""
+    return np.abs(lam - lnom) > CONT_GAP
+
+
+def subtract_continuum(cube: np.ndarray, cmask: np.ndarray) -> np.ndarray:
+    """Data minus each spaxel's median over the continuum slices."""
+    return cube - np.nanmedian(cube[cmask], axis=0)[None]
+
+
+def line_window(spec: np.ndarray, lam: np.ndarray, lnom: float) -> tuple[int, int, int]:
+    """Rule 2: (lo, hi, peak) slice indices; hi exclusive."""
+    near = np.where(np.abs(lam - lnom) <= PEAK_SEARCH)[0]
+    k = int(near[np.nanargmax(spec[near])])
+    return max(k - WIN_HALF, 0), min(k + WIN_HALF + 1, len(lam)), k
+
+
+def narrow_band(sub: np.ndarray, lo: int, hi: int, dlam: float) -> np.ndarray:
+    """Rule 3: continuum-subtracted window sum times the slice width."""
+    return dlam * sub[lo:hi].sum(axis=0)
+
+
+def aperture_spectrum(sub: np.ndarray, x: float, y: float) -> np.ndarray:
+    r = AP_ARCSEC / PIX
+    return np.array([cp.aperture_sum(np.nan_to_num(s), x, y, r) for s in sub])
+
+
+def local_noise(nb: np.ndarray, x: float, y: float, ex_x, ex_y, rng) -> float:
+    """Rule 4: sigma-clipped std of N_RAND random apertures R_RAND away, avoiding listed images."""
+    r = AP_ARCSEC / PIX
+    vals, tries = [], 0
+    while len(vals) < N_RAND and tries < 50 * N_RAND:
+        tries += 1
+        a, s = rng.uniform(0, 2 * np.pi), rng.uniform(*R_RAND) / PIX
+        rx, ry = x + s * np.cos(a), y + s * np.sin(a)
+        if (
+            len(ex_x)
+            and np.hypot(np.asarray(ex_x) - rx, np.asarray(ex_y) - ry).min() * PIX < SRC_EXCL
+        ):
+            continue
+        v = cp.aperture_sum(nb, rx, ry, r)
+        if np.isfinite(v):
+            vals.append(v)
+    if len(vals) < N_RAND:
+        raise RuntimeError(f"only {len(vals)} of {N_RAND} random apertures accepted")
+    return float(sigma_clipped_stats(vals)[2])
+
+
+def max_in_radius(nb: np.ndarray, x: float, y: float, radius_arcsec: float) -> float:
+    """Rule 7: max aperture sum over spaxel centres within the search radius (NaN if none)."""
+    r, rs = AP_ARCSEC / PIX, radius_arcsec / PIX
+    best = float("nan")
+    for yy in range(int(np.floor(y - rs)), int(np.ceil(y + rs)) + 1):
+        for xx in range(int(np.floor(x - rs)), int(np.ceil(x + rs)) + 1):
+            if (xx - x) ** 2 + (yy - y) ** 2 > rs * rs:
+                continue
+            v = cp.aperture_sum(nb, xx, yy, r)
+            if np.isfinite(v) and not v <= best:
+                best = v
+    return best
+
+
+def is_blended(sep_other_arcsec) -> bool:
+    """Rule 5: within BLEND_ARCSEC of an observed image of another system, overlapping window."""
+    s = np.asarray(sep_other_arcsec, float)
+    return bool(s.size and (s < BLEND_ARCSEC).any())
+
+
+def classify(in_cube: bool, blended: bool, f_pred: float, f_meas: float, sigma: float) -> str:
+    """Rule 7, classes in order."""
+    if not in_cube or not np.isfinite(f_meas):
+        return "off_cube"
+    if blended:
+        return "blended"
+    if not f_pred >= MIN_SIGMA * sigma:
+        return "undetectable_local"
+    r = f_meas / f_pred
+    if FLUX_RANGE[0] <= r <= FLUX_RANGE[1]:
+        return "recovered"
+    if r > FLUX_RANGE[1]:
+        return "confused"
+    if f_pred >= ABSENT_SIGMA * sigma:
+        return "absent"
+    return "ambiguous"
+
+
+def gate_l(classes) -> dict:
+    """Rule 8."""
+    c = [str(v) for v in classes]
+    n = sum(v in TESTABLE for v in c)
+    ok = sum(v in ("recovered", "confused") for v in c)
+    frac = ok / n if n else float("nan")
+    return {
+        "n_testable": n,
+        "n_ok": ok,
+        "frac": frac,
+        "passes": bool(n >= GATE_MIN and frac >= GATE_FRAC),
+    }
+
+
+def windows_overlap(a: tuple[float, float], b: tuple[float, float]) -> bool:
+    return a[0] < b[1] and b[0] < a[1]
+
+
+# ----------------------------------------------------------------------------------- I/O and run
+
+
+def fetch_band(z: float, scratch: Path) -> tuple[Path, dict]:
+    lnom = lam_nom(z)
+    lo, hi = (lnom - HALF_BAND) * 1e-10, (lnom + HALF_BAND) * 1e-10
+    url = f"{SODA}?ID=ivo://eso.org/ID?{CUBE_ID}&BAND={lo:.4e}%20{hi:.4e}"
+    p = scratch / f"m1931_muse_z{z:.3f}.fits"
+    h = hashlib.sha256()
+    with urllib.request.urlopen(url, timeout=600) as r, open(p, "wb") as f:
+        while b := r.read(1 << 20):
+            h.update(b)
+            f.write(b)
+    return p, {"url": url, "bytes": p.stat().st_size, "sha256": h.hexdigest()}
+
+
+def load_band(p: Path):
+    with fits.open(p) as hd:
+        data = hd["DATA"].data.astype(float)
+        hdr = hd["DATA"].header
+    w = WCS(hdr).celestial
+    lam = hdr["CRVAL3"] + (np.arange(hdr["NAXIS3"]) + 1 - hdr["CRPIX3"]) * hdr["CD3_3"]
+    return data, w, lam, float(hdr["CD3_3"])
+
+
+def in_cube(w: WCS, shape, ra: float, dec: float) -> tuple[bool, float, float]:
+    x, y = (float(v) for v in w.world_to_pixel_values(ra, dec))
+    return bool(0 <= x < shape[-1] and 0 <= y < shape[-2]), x, y
+
+
+def run(scratch: Path) -> dict:
+    imgs = Table.read(IMAGES)
+    mu = {str(r["image_id"]): abs(float(r["magnification"])) for r in Table.read(MU_OBS)}
+    tg = Table.read(TARGETS)
+    zsys = {int(s): float(imgs["z"][imgs["system"] == s][0]) for s in SYSTEMS}
+    lams = {s: (lam_nom(z) - PEAK_SEARCH, lam_nom(z) + PEAK_SEARCH) for s, z in zsys.items()}
+    all_ra, all_dec = np.asarray(imgs["ra"], float), np.asarray(imgs["dec"], float)
+    rows, cutouts, windows, gate_rows = [], [], {}, []
+    rng = np.random.default_rng(SEED)
+    for z in sorted(set(zsys.values())):
+        p, meta = fetch_band(z, scratch)
+        cutouts.append({"z": z, **meta})
+        data, w, lam, dlam = load_band(p)
+        sub = subtract_continuum(data, continuum_mask(lam, lam_nom(z)))
+        ex = w.world_to_pixel_values(all_ra, all_dec)
+        for s in [k for k, v in zsys.items() if v == z]:
+            others = [o for o in SYSTEMS if o != s and windows_overlap(lams[s], lams[o])]
+            oth = imgs[np.isin(imgs["system"], others)]
+
+            def sep_other(ra, dec, oth=oth):
+                d = np.hypot(
+                    (np.asarray(oth["ra"]) - ra) * np.cos(np.radians(dec)),
+                    np.asarray(oth["dec"]) - dec,
+                )
+                return d * 3600.0
+
+            own = imgs[imgs["system"] == s]
+            pos = []
+            for r in own:
+                ok, x, y = in_cube(w, data.shape, float(r["ra"]), float(r["dec"]))
+                pos.append(
+                    (
+                        str(r["image_id"]),
+                        ok,
+                        x,
+                        y,
+                        is_blended(sep_other(float(r["ra"]), float(r["dec"]))),
+                    )
+                )
+            spec = np.sum([aperture_spectrum(sub, x, y) for _, ok, x, y, _ in pos if ok], axis=0)
+            lo, hi, pk = line_window(spec, lam, lam_nom(z))
+            windows[s] = {
+                "lam_nom": lam_nom(z),
+                "peak": float(lam[pk]),
+                "lo": float(lam[lo]),
+                "hi": float(lam[hi - 1]),
+            }
+            nb = narrow_band(sub, lo, hi, dlam)
+            meas = {}
+            for iid, ok, x, y, bl in pos:
+                f = cp.aperture_sum(nb, x, y, AP_ARCSEC / PIX) if ok else float("nan")
+                sg = (
+                    local_noise(nb, x, y, ex[0], ex[1], rng)
+                    if ok and np.isfinite(f)
+                    else float("nan")
+                )
+                meas[iid] = (ok, x, y, bl, f, sg)
+            cand = {
+                k: v
+                for k, v in meas.items()
+                if v[0] and not v[3] and np.isfinite(v[4]) and v[5] > 0
+            }
+            ref = max(cand, key=lambda k: cand[k][4] / cand[k][5]) if cand else None
+            ref_snr = cand[ref][4] / cand[ref][5] if ref else float("nan")
+            windows[s].update({"reference": ref, "ref_snr": ref_snr})
+            usable = ref is not None and ref_snr >= REF_SNR
+            for iid, (ok, x, y, bl, _, _) in meas.items():
+                if iid == ref:
+                    continue
+                gate_rows.append(
+                    _row(
+                        s,
+                        "control",
+                        iid,
+                        ok,
+                        x,
+                        y,
+                        bl,
+                        mu.get(iid),
+                        CTRL_SEARCH,
+                        nb,
+                        ex,
+                        rng,
+                        usable,
+                        cand,
+                        ref,
+                        mu,
+                    )
+                )
+            for r in tg[tg["System"] == s]:
+                ok, x, y = in_cube(w, data.shape, float(r["ra"]), float(r["dec"]))
+                bl = is_blended(sep_other(float(r["ra"]), float(r["dec"])))
+                rows.append(
+                    _row(
+                        s,
+                        "target",
+                        str(r["image_class"]),
+                        ok,
+                        x,
+                        y,
+                        bl,
+                        float(r["abs_mu"]),
+                        float(r["search_arcsec"]),
+                        nb,
+                        ex,
+                        rng,
+                        usable,
+                        cand,
+                        ref,
+                        mu,
+                        ra=float(r["ra"]),
+                        dec=float(r["dec"]),
+                    )
+                )
+        p.unlink()
+    g = gate_l([r["class"] for r in gate_rows])
+    for r in rows:
+        r["flag"] = bool(g["passes"] and r["class"] == "absent")
+    Table(rows=gate_rows).write(OUT / "controls.ecsv", overwrite=True)
+    Table(rows=rows).write(OUT / "targets.ecsv", overwrite=True)
+    summary = {
+        "cube": CUBE_ID,
+        "cutouts_streamed_deleted": cutouts,
+        "windows": windows,
+        "gate_l": g,
+        "target_classes": {
+            c: sum(r["class"] == c for r in rows) for c in sorted({r["class"] for r in rows})
+        },
+        "flags": sum(r["flag"] for r in rows),
+    }
+    (OUT / "summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
+    return summary
+
+
+def _row(
+    s,
+    kind,
+    iid,
+    ok,
+    x,
+    y,
+    bl,
+    mu_t,
+    search,
+    nb,
+    ex,
+    rng,
+    usable,
+    cand,
+    ref,
+    mu,
+    ra=np.nan,
+    dec=np.nan,
+):
+    out = {
+        "system": s,
+        "kind": kind,
+        "id": iid,
+        "ra": ra,
+        "dec": dec,
+        "x": x,
+        "y": y,
+        "blended": bl,
+        "abs_mu": np.nan if mu_t is None else mu_t,
+        "reference": ref or "",
+        "f_pred": np.nan,
+        "f_meas": np.nan,
+        "sigma_loc": np.nan,
+        "pred_over_sigma": np.nan,
+        "ratio": np.nan,
+    }
+    if not usable:
+        out["class"] = "no_line_reference"
+        return out
+    f_pred = cand[ref][4] * out["abs_mu"] / mu[ref]
+    f_meas = max_in_radius(nb, x, y, search) if ok else float("nan")
+    sg = local_noise(nb, x, y, ex[0], ex[1], rng) if ok and np.isfinite(f_meas) else float("nan")
+    out.update(
+        {
+            "f_pred": f_pred,
+            "f_meas": f_meas,
+            "sigma_loc": sg,
+            "pred_over_sigma": f_pred / sg,
+            "ratio": f_meas / f_pred,
+        }
+    )
+    out["class"] = classify(ok, bl, f_pred, f_meas, sg)
+    return out
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("cmd", choices=["run"])
+    ap.add_argument("--scratch", type=Path, required=True)
+    a = ap.parse_args(argv)
+    a.scratch.mkdir(parents=True, exist_ok=True)
+    print(json.dumps(run(a.scratch), indent=1, default=float))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
