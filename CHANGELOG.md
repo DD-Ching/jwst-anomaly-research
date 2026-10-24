@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: New-data screening of three other lines: none qualifies now; no recommendation
+- **Scope:** owner request; metadata and literature only (2.6 MB through the ledger), `results/screening_2026_10_24/`.
+- **Sunrise n0153:** MAST shows only the 2022 and 2025 epochs; no spectrum.
+- **Abell S1063 1316 / 1557:** nothing released since 2026-10-16. 19 of 39 116.28VK.001 products are released
+  2026-11-20 to 2027-03-12.
+- **Abell 370 1565:**
+  - Unused public data exist: GO 5890 F150W (37,106 s), F210M (30,257 s) and NIRISS F090W WFSS (GO 3362).
+  - The estimated F150W/F200W precision is 0.14–0.21 (optimistic), against the ≤ 0.15 reopen condition; a colour
+    gives no redshift.
+  - #199's forced-photometry scripts were not kept.
+- **Paused lines unchanged.** Re-screen points are in TASKS.
+
 ## 2026-10-23: MACS0647 CLASH held-out test: LTM-Gauss reproduces the JWST-first systems at fitted z; no flag
 - **Plan:** `results/lens_consistency/macs0647_clash_heldout/PLAN.md`, frozen and pushed (031af83) before any model
   read; rule functions tested (`tests/test_macs0647_clash_heldout.py`).
