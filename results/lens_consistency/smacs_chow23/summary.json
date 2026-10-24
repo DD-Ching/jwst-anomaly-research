@@ -1,0 +1,206 @@
+{
+ "plan": "results/lens_consistency/smacs_chow23/PLAN.md",
+ "files": {
+  "Chow23+_LensModel_alpha_x.fits": {
+   "sha256": "a69a553ce92f169802e1c024aaba2eaf61f939cd76e45889bd9746e44da6e760",
+   "bytes": 42514560
+  },
+  "Chow23+_LensModel_alpha_y.fits": {
+   "sha256": "0d8b5a2d9e0c0431c522f94ab37401ba6e0324cd2df974970485382220e04bf2",
+   "bytes": 42514560
+  }
+ },
+ "cosmology": {
+  "H0": 70.0,
+  "Om0": 0.3,
+  "z_lens": 0.39
+ },
+ "image_list": {
+  "source": "results/lens_consistency/smacs_djaref/mahler22_images.ecsv",
+  "images": 16,
+  "systems": [
+   "1",
+   "2",
+   "3",
+   "5",
+   "7"
+  ]
+ },
+ "map_header": {
+  "shape": [
+   3260,
+   3260
+  ],
+  "pixel_arcsec": 0.06,
+  "ctype": [
+   "RA---CAR",
+   "DEC--CAR"
+  ],
+  "bunit": null
+ },
+ "check_C": {
+  "n": 16,
+  "inside": 16,
+  "outside": [],
+  "passes": true
+ },
+ "check_U": {
+  "median_arcsec": {
+   "A": 0.7665714346475362,
+   "A_neg_x": 2.393585639000483,
+   "P": 11.34540946139697,
+   "P_neg_x": 11.346492212457253
+  },
+  "accepted": [
+   "A"
+  ],
+  "passes": true,
+  "reading": "A",
+  "per_system": {
+   "A": {
+    "1": 0.5291395040149115,
+    "2": 0.7197103862574872,
+    "3": 0.7665714346475362,
+    "5": 0.978778025940536,
+    "7": 1.9028842336404106
+   },
+   "A_neg_x": {
+    "1": 2.258706377528606,
+    "2": 2.393585639000483,
+    "3": 4.160017830518599,
+    "5": 2.301196734332465,
+    "7": 2.7206913584469996
+   },
+   "P": {
+    "1": 11.253790545991292,
+    "2": 11.34540946139697,
+    "3": 14.356537495584007,
+    "5": 13.200563837096745,
+    "7": 3.810982126376456
+   },
+   "P_neg_x": {
+    "1": 11.253135938389697,
+    "2": 11.346492212457253,
+    "3": 14.38845947143292,
+    "5": 13.201393966535655,
+    "7": 3.8147465047254316
+   }
+  }
+ },
+ "gate_K": {
+  "n_images": 16,
+  "rms_arcsec": 10.182613290903452,
+  "matched_fraction": 0.75,
+  "passes": false
+ },
+ "reported": {
+  "grid_step_arcsec": 0.25,
+  "grid_half_width_arcsec": 54.0,
+  "K_wls_not_a_gate": {
+   "n_images": 16,
+   "rms_arcsec": 1.9470702559857582,
+   "matched_fraction": 0.9375,
+   "passes": false
+  },
+  "per_system": {
+   "1": {
+    "rms_arcsec": 0.5329214880929232,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "2": {
+    "rms_arcsec": 0.7038740905182906,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "3": {
+    "rms_arcsec": 0.7459706615379957,
+    "n_catalogued": 4,
+    "n_predicted": 5
+   },
+   "5": {
+    "rms_arcsec": 22.98235531083661,
+    "n_catalogued": 3,
+    "n_predicted": 1
+   },
+   "7": {
+    "rms_arcsec": 4.824922346798099,
+    "n_catalogued": 3,
+    "n_predicted": 1
+   }
+  },
+  "per_system_wls": {
+   "1": {
+    "rms_arcsec": 0.4140564144993922,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "2": {
+    "rms_arcsec": 0.47567078665102674,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "3": {
+    "rms_arcsec": 0.6748102097267267,
+    "n_catalogued": 4,
+    "n_predicted": 5
+   },
+   "5": {
+    "rms_arcsec": 0.6197758124351788,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "7": {
+    "rms_arcsec": 4.339368756830978,
+    "n_catalogued": 3,
+    "n_predicted": 1
+   }
+  },
+  "iclv2_same_run": {
+   "gate_K": {
+    "n_images": 16,
+    "rms_arcsec": 0.3210967735622033,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "K_wls": {
+    "n_images": 16,
+    "rms_arcsec": 0.2925727280184054,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "per_system": {
+    "1": {
+     "rms_arcsec": 0.5528314467867297,
+     "n_catalogued": 3,
+     "n_predicted": 3
+    },
+    "2": {
+     "rms_arcsec": 0.14127599820514922,
+     "n_catalogued": 3,
+     "n_predicted": 3
+    },
+    "3": {
+     "rms_arcsec": 0.32504077945312354,
+     "n_catalogued": 4,
+     "n_predicted": 5
+    },
+    "5": {
+     "rms_arcsec": 0.16488515892930466,
+     "n_catalogued": 3,
+     "n_predicted": 3
+    },
+    "7": {
+     "rms_arcsec": 0.23716258773395407,
+     "n_catalogued": 3,
+     "n_predicted": 3
+    }
+   }
+  },
+  "predicted_count_differs": [
+   "5",
+   "7"
+  ],
+  "iclv2_K_rms_arcsec_d034r": 0.321
+ }
+}

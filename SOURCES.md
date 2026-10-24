@@ -773,6 +773,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Other Zenodo lens-model records seen in the same search, not used: SPT-CL J0546-5345 LTM (10.5281/zenodo.16534337),
     Abell S1063 WSLAP+ JWST 2025 (10.5281/zenodo.17726321, 1.0 GB zip), CANUCS thesis data with MACS0416 and Bullet
     image lists (10.5281/zenodo.22883437).
+- SMACS 0723 Chow+2023 (`results/lens_consistency/smacs_chow23/`, accessed 2026-10-24): Chow et al. 2023, "A Lens
+  Finder Map to check claimed High-z Galaxies behind SMACS J0723.3-7327", arXiv:2310.09790 (HTML read for the GLAFIC
+  method, the five spectroscopic systems and the 0.492″ rms); Zenodo record 10.5281/zenodo.10158248
+  (https://zenodo.org/records/10158248, published 2023-11-20): `Chow23+_LensModel_alpha_x.fits`, `..._alpha_y.fits`
+  (42,514,560 B each; sha256 in `summary.json`), `readme.md`.
 - Abell S1063 WSLAP+ JWST 2025 (`results/lens_consistency/s1063_wslap/`, accessed 2026-10-24): Zenodo record
   10.5281/zenodo.17726321 (https://zenodo.org/records/17726321, published 2025-11-26, CC-BY-SA-4.0), zip
   `LensModel_AS1063_WSLAPplus_JWST_Case3_2025.zip` (1,016,075,135 B, md5 6a6558557078c1dc2b0c8a2a13d17944); members
