@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 stage V: own deblended reference passes the MACS0417 gate C2 at the threshold (D-034 addendum ad)
+- **Result** (`results/lens_consistency/macs0417_ownref/RESULT.md`): photutils builder (2″ background box, 3σ, 25 px,
+  deblend contrast 0.001) on an S3 section of the MACS0417 GO 1208 F200W mosaic, 1,577 sources. V1 as frozen: depth
+  undefined (0 rows at S/N 4–6), gate not valid. V2 amendment (frozen before its run): gate C2 shared pairs 28 / 35
+  = 0.80, arc-referenced 14 / 14, passes with zero margin (CANUCS 37 / 40, pipeline 10 / 27).
+- **Failed approach:** the route's catalogue depth proxy (median mag at S/N 4–6) cannot be computed on a 3σ / 25 px
+  catalogue; with a NaN depth the class rule silently returns `ambiguous` for everything unmatched.
+- **Handoff:** next is freezing stage 3 for MACS J1931 (`macs1931_counter/PLAN.md`: gate K-WLS, frame tables, the
+  same builder on the GO 6882 F200W section, V2 chain); #374 still waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MACS J1931 imaging footprint for the counter-image route (D-034 addendum ac)
 - **Result** (`results/lens_consistency/macs1931_counter/RESULT.md`, `summary.json`): VENUS GO 6882 tile `o038_t041`
   covers all 51 used images (26 spec-z) in 10 bands; F200W i2d 1.29 GB, read by S3 byte range (header: 0.0312″ / px).

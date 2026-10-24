@@ -33,9 +33,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4", "numba>=0.60", "sympy>=1.12"]  # sympy: X2 S5 radial derivation
+dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4", "numba>=0.60", "sympy>=1.12", "photutils>=2.0,<4", "scikit-image>=0.22"]  # sympy: X2 S5 radial derivation; photutils (+ scikit-image for deblending): m1931_deblend tests
 # Compiled hot loops (E1 GW-GW sky-map classes, S-2); every caller has a numpy fallback.
 fast = ["numba>=0.60"]
+# Own deblended reference catalogues on level-3 mosaics (scripts/m1931_deblend.py; D-034 addendum ad).
+deblend = ["photutils>=2.0,<4", "scikit-image>=0.22"]  # 3.x deprecates the column names used
 # Byte-range reads of cloud-hosted FITS (s3://stpubdata) without full downloads.
 cloud = ["fsspec>=2024.2", "s3fs>=2024.2"]
 # Ordinary microlensing fits (point/finite-source/binary lens, parallax) for W3 vetting (D-054).

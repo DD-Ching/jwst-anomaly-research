@@ -1,0 +1,29 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: string}
+# - {name: image_class, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: abs_mu, datatype: float64}
+# - {name: ref_counterpart, datatype: int64}
+# - {name: arc_ref, datatype: bool}
+# - {name: L_ref, datatype: float64}
+# - {name: search_arcsec, datatype: float64}
+# - {name: f_pred, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: n_sources, datatype: int64}
+# - {name: max_ratio, datatype: float64}
+# - {name: reading, datatype: string}
+# - {name: m_pred, datatype: float64}
+# - {name: sigma_loc_njy, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: class_local, datatype: string}
+# schema: astropy-2.0
+system image_class ra dec abs_mu ref_counterpart arc_ref L_ref search_arcsec f_pred class n_sources max_ratio reading m_pred sigma_loc_njy pred_over_sigma class_local
+8 faint 64.37964806183633 -11.901771700072985 4.090009209554476 -1 False nan 1.0 nan inconsistent_reference 0 nan no_flag "" nan nan inconsistent_reference
+9 faint 64.39597279927044 -11.89113582776816 3.3819465175647774 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference
+10 missing 64.39479649706004 -11.907537311141732 6.108375984835372 340 True 3.311740430122708e-08 1.0 2.0229355711369914e-07 confused 2 212.8830906640889 no_flag 25.635110494625195 372.8109808759938 0.5426169493140198 undetectable_local
+10 missing 64.39462863940717 -11.906916955092163 4.851896289685542 340 True 3.311740430122708e-08 1.0 1.6068221105313968e-07 absent 0 nan lensing_residual_input 25.885146124354783 131.30693684601562 1.2237145646126266 undetectable_local
+10 candidate 64.38471416304424 -11.915405023989534 2.84978661819737 340 True 3.311740430122708e-08 1.0 9.437753560706896e-08 absent 0 nan lensing_residual_input 26.462894040215865 26.22043613606091 3.5993884738351754 undetectable_local
+17 faint 64.38008866450667 -11.902207706487063 4.140015727321617 -1 False nan 1.0 nan no_reference 0 nan no_flag "" nan nan no_reference
