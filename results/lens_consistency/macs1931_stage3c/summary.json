@@ -1,0 +1,99 @@
+{
+ "plan": "results/lens_consistency/macs1931_stage3c/PLAN.md",
+ "deviation": "results/lens_consistency/macs1931_stage3/PLAN_3b.md",
+ "inputs_sha256": {
+  "Alpha_x.fits.zip": "2325c8e4252bda15745aa7c421abd4be8963576ff2da7d8dd6a13563d5a4a476",
+  "Alpha_y.fits.zip": "533bb39435682840cccffb9c3bfd3ddbf06fa0f35be2db72a959a4115934492c",
+  "sourcepos.txt": "0f7e7cf20e2f4df8f275fe57abdf4d584c6fa38f94d4d0b62d7825a5ad964c2a",
+  "chires.txt": "f301e3fdef9005d462612312a4b4b967daa18d3c7e052f0259723ca6158a7908"
+ },
+ "n_images_used": 51,
+ "n_images_spec": 26,
+ "rule2_gate_K_wls": {
+  "n_images": 26,
+  "rms_arcsec": 0.6296973259434857,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "rule2_stored_passes": true,
+ "rule3_frame_tables": {
+  "unpredicted": [],
+  "pipeline_depth_mag": null,
+  "image_classes": {
+   "candidate": 9,
+   "faint": 1,
+   "no_flux_ref": 1,
+   "observed": 26
+  },
+  "grid_half_width_arcsec": 48.0,
+  "grid_step_arcsec": 0.25
+ },
+ "rule4_catalogue": {
+  "image": "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_i2d.fits",
+  "section_y0_y1_x0_x1": [
+   557,
+   3900,
+   202,
+   3651
+  ],
+  "bkg_box_pix": 256,
+  "n_segments_detected": 826,
+  "n_segments_deblended": 1164,
+  "n_rows_kept": 1164,
+  "pixel_scale_arcsec": 0.031225893511896287,
+  "masked_fraction": 2.4284460538488833e-06,
+  "kron_snr_min": 11.314356405479108,
+  "n_rows_snr_4_6": 0,
+  "depth_mag_v2a": 26.66400276096731
+ },
+ "rule5_frame_F": {
+  "n_gold": 51,
+  "n_matched": 17,
+  "median_dx_arcsec": 0.03329548261556069,
+  "median_dy_arcsec": -0.02148446043425956,
+  "median_sep_arcsec": 0.10748513716403815,
+  "rules": {
+   "match_arcsec": 0.5,
+   "max_abs_median_arcsec": 0.1,
+   "min_n": 20
+  },
+  "passes": false,
+  "passes_stage3_rule": false,
+  "chance_shifted_counts": [
+   4,
+   5,
+   7,
+   6,
+   2,
+   1,
+   3,
+   1
+  ],
+  "chance_mean": 3.625,
+  "chance_passes": true,
+  "chance_rules": {
+   "shift_arcsec": 5.0,
+   "n_directions": 8,
+   "min_ratio": 2.0
+  },
+  "n_images_in_section": 51
+ },
+ "stopped": "frame check F failed (rule 5)",
+ "rule3c_1_gate": {
+  "gate_C2_shared": {
+   "all": {
+    "n_testable": 27,
+    "n_ok": 24,
+    "fraction": 0.8888888888888888
+   },
+   "arc_referenced": {
+    "n_testable": 10,
+    "n_ok": 10,
+    "fraction": 1.0
+   },
+   "passes": true,
+   "merged_groups": []
+  },
+  "stage_V2_passes": true
+ }
+}

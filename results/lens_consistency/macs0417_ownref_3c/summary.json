@@ -1,0 +1,109 @@
+{
+ "gate_C2_shared": {
+  "all": {
+   "n_testable": 27,
+   "n_ok": 24,
+   "fraction": 0.8888888888888888
+  },
+  "arc_referenced": {
+   "n_testable": 10,
+   "n_ok": 10,
+   "fraction": 1.0
+  },
+  "passes": true,
+  "merged_groups": []
+ },
+ "stage_V2_passes": true,
+ "depth_mag_v2a": 27.722422910454373,
+ "control_classes": {
+  "absent": 3,
+  "confused": 5,
+  "inconsistent_reference": 13,
+  "no_reference": 9,
+  "recovered": 19,
+  "undetectable_local": 5
+ },
+ "target_classes": {
+  "inconsistent_reference": 1,
+  "no_reference": 2,
+  "undetectable_local": 3
+ },
+ "predicted_classes_note": "written, not read (PLAN.md stage V2-c)",
+ "without_local_noise_rule": {
+  "gate_C2": {
+   "all": {
+    "n_testable": 32,
+    "n_ok": 28,
+    "fraction": 0.875
+   },
+   "arc_referenced": {
+    "n_testable": 11,
+    "n_ok": 11,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "control_classes": {
+   "absent": 4,
+   "confused": 7,
+   "inconsistent_reference": 13,
+   "no_reference": 9,
+   "recovered": 21
+  },
+  "target_classes": {
+   "absent": 1,
+   "confused": 2,
+   "inconsistent_reference": 1,
+   "no_reference": 2
+  },
+  "flags": [
+   "10@64.384714,-11.915405"
+  ]
+ },
+ "posthoc_absent_controls": {
+  "absent_own_segment_centroid_outside_radius": 0,
+  "absent_no_containing_segment": 2,
+  "absent_sources_too_faint": 2
+ },
+ "inputs": {
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f200w_i2d.fits",
+  "section_y0_y1_x0_x1": [
+   1200,
+   4948,
+   5277,
+   9354
+  ],
+  "bkg_box_pix": 256,
+  "n_segments_detected": 1121,
+  "n_segments_deblended": 1548,
+  "n_rows_kept": 1548,
+  "pixel_scale_arcsec": 0.03122991199234541,
+  "masked_fraction": 0.09096948836288846,
+  "kron_snr_min": 9.252743974853109,
+  "n_rows_snr_4_6": 0,
+  "frame_offset_arcsec": [
+   0.10084636860364347,
+   -0.2917131053097502
+  ],
+  "depth_mag": 27.722422910454373
+ },
+ "rules": {
+  "ELLIPSE_NSIGMA": 3.0,
+  "MIN_REF_SNR": 5.0,
+  "MAX_REF_MU": 50.0,
+  "MAX_REF_SPREAD": 3.0,
+  "FLUX_RANGE": [
+   0.3333333333333333,
+   3.0
+  ],
+  "TEN_SIGMA_DMAG": 0.752574989159953,
+  "BASE_SEARCH": 1.0,
+  "C2": [
+   8,
+   0.8,
+   3
+  ],
+  "ARC_MIN_ELL": 0.5,
+  "contain": true
+ }
+}
