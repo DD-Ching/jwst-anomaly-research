@@ -1,0 +1,38 @@
+{
+ "abells1063": {
+  "model": "abells1063-wslap",
+  "model_sha256": "3863795e6447e4206da84912e78a4cd970e0139cfa8974f7846ba02134f19ca7",
+  "image": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 29.337633912306842,
+  "unpredicted": [
+   "10.3"
+  ],
+  "image_classes": {
+   "candidate": 3,
+   "demagnified": 8,
+   "faint": 1,
+   "missing": 5,
+   "observed": 37
+  },
+  "forced_classes_targets": {
+   "confused": 1,
+   "inconsistent_reference": 3,
+   "no_reference": 5
+  },
+  "gate_C": {
+   "n_targets": 37,
+   "n_testable": 8,
+   "n_recovered": 8,
+   "fraction": 1.0,
+   "passes": true,
+   "classes": {
+    "confused": 1,
+    "inconsistent_reference": 10,
+    "no_reference": 19,
+    "recovered": 7
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ }
+}
