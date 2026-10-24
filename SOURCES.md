@@ -1633,6 +1633,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   not downloaded) and ADP.2017-03-23T15:58:03.937 (60.A-9345, 5.73 GB, not downloaded), as 12–17 MB cutouts that
   were deleted after use. The coverage of every listed public cube is in
   `results/arcs/abells1063-cats/vetting/muse_coverage.ecsv`.
+- ESO Science Archive, MUSE combined cube towards MACS J1931.8−2635, ADP.2017-03-27T15:26:07.707 (095.A-0525(A),
+  8,127 s, ≈ 3.0 GB, not downloaded), accessed 2026-10-24 (`scripts/m1931_muse.py`): ObsCore TAP
+  https://archive.eso.org/tap_obs/sync and SODA sync `BAND` cutouts (four × 105,131,520 B, deleted after use; URLs
+  and DATA-HDU sha256 in `results/lens_consistency/macs1931_muse/*/summary.json`).
+- Gaia DR3 `gaiadr3.gaia_source` box over that cube's footprint, ESA Gaia TAP https://gea.esac.esa.int/tap-server/tap,
+  queried 2026-10-24 (10 rows, `results/lens_consistency/macs1931_muse/gaia_dr3.csv`), for the MUSE registration.
 - GLIMPSE 3293 o001 F090W and F115W pipeline catalogues (`jw03293-o001_t001_nircam_clear-{f090w,f115w}_cat.ecsv`;
   sha256 `3eecb26c…`, `3775f1f9…`, which match `data/manifests/abells1063.ecsv`), read 2026-10-16 for continuum
   magnitudes.

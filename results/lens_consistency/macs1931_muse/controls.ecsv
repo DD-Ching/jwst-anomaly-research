@@ -1,0 +1,30 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: int64}
+# - {name: kind, datatype: string}
+# - {name: id, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: x, datatype: float64}
+# - {name: y, datatype: float64}
+# - {name: blended, datatype: bool}
+# - {name: abs_mu, datatype: float64}
+# - {name: reference, datatype: string}
+# - {name: f_pred, datatype: float64}
+# - {name: f_meas, datatype: float64}
+# - {name: sigma_loc, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: ratio, datatype: float64}
+# - {name: class, datatype: string}
+# schema: astropy-2.0
+system kind id ra dec x y blended abs_mu reference f_pred f_meas sigma_loc pred_over_sigma ratio class
+5 control 5.2 nan nan 273.57117542379035 215.3876810157489 False 7.300276923168954 5.1 nan nan nan nan nan no_line_reference
+6 control 6.1 nan nan 107.86999233150476 119.31845076648634 False 13.709895005683178 6.2 nan nan nan nan nan no_line_reference
+6 control 6.3 nan nan 146.90322110188154 201.37393876316187 False 5.3086642403671425 6.2 nan nan nan nan nan no_line_reference
+100 control 100.1 nan nan 198.67711015866058 187.0313109251569 True 15.005580353611649 100.3 nan nan nan nan nan no_line_reference
+100 control 100.2 nan nan 202.60360180546448 193.07744062140387 True 18.78971740311936 100.3 nan nan nan nan nan no_line_reference
+100 control 100.4 nan nan 218.88946445276065 101.36706891921526 False 11.07672754563701 100.3 nan nan nan nan nan no_line_reference
+101 control 101.1 nan nan 199.3854463501536 187.64329879397496 True 24.698133370783577 "" nan nan nan nan nan no_line_reference
+101 control 101.2 nan nan 201.89363669061214 191.58705388584727 True 28.69960197165296 "" nan nan nan nan nan no_line_reference
+7 control 7.1 nan nan 236.2100151085287 224.19853309932006 False 8.52503438319688 7.2 nan nan nan nan nan no_line_reference
