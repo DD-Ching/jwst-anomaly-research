@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 stage 3 (in progress)
+- **Plan:** freeze stage 3 of `results/lens_consistency/macs1931_counter/PLAN.md` (footprint rule added), then run it.
+
 ## 2026-10-24: MACS J1931 stage V: own deblended reference passes the MACS0417 gate C2 at the threshold (D-034 addendum ad)
 - **Result** (`results/lens_consistency/macs0417_ownref/RESULT.md`): photutils builder (2″ background box, 3σ, 25 px,
   deblend contrast 0.001) on an S3 section of the MACS0417 GO 1208 F200W mosaic, 1,577 sources. V1 as frozen: depth
