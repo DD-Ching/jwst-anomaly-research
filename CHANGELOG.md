@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: lens-consistency input check of a further field (in progress)
+- Claim: input check (image list, JWST-era model maps, reference catalogue) for a field not yet checked.
+
 ## 2026-10-23: MACS0647 CLASH held-out test: LTM-Gauss reproduces the JWST-first systems at fitted z; no flag
 - **Plan:** `results/lens_consistency/macs0647_clash_heldout/PLAN.md`, frozen and pushed (031af83) before any model
   read; rule functions tested (`tests/test_macs0647_clash_heldout.py`).
