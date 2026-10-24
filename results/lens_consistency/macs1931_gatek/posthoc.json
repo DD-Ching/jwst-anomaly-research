@@ -1,0 +1,217 @@
+{
+ "label": "post hoc (not in PLAN.md)",
+ "reading": "P_pixels",
+ "u_distance_arcsec_all_systems": {
+  "1": 0.12036593207654192,
+  "2": 0.17528792528081918,
+  "3": 0.12494787548430401,
+  "4": 0.26454601461715693,
+  "5": 0.022739174708157964,
+  "6": 0.0599148594630598,
+  "7": 0.029382958201460283,
+  "8": 3.1797706553303775,
+  "10": 0.1012627785732649,
+  "11": 2.407597792814585,
+  "13": 0.884887333044022,
+  "14": 0.12066282327972079,
+  "15": 0.2234293752591558,
+  "16": 0.5446187124241475,
+  "17": 0.7835573056665124,
+  "100": 0.11014530860719376,
+  "101": 0.06114216482249741
+ },
+ "mixed_z_systems": [
+  "11",
+  "13",
+  "15",
+  "16",
+  "17"
+ ],
+ "per_image": {
+  "1.1": {
+   "ours_arcsec": 0.9686998012178231,
+   "authors_bary_arcsec": 0.6788
+  },
+  "1.2": {
+   "ours_arcsec": 1.151554190215566,
+   "authors_bary_arcsec": 1.5036
+  },
+  "1.3": {
+   "ours_arcsec": 0.6857904216585642,
+   "authors_bary_arcsec": 0.4252
+  },
+  "1.4": {
+   "ours_arcsec": 0.22574417871719965,
+   "authors_bary_arcsec": 0.204
+  },
+  "2.1": {
+   "ours_arcsec": 2.6164926753849502,
+   "authors_bary_arcsec": 0.1789
+  },
+  "2.2": {
+   "ours_arcsec": 1.3152484062967085,
+   "authors_bary_arcsec": 0.0894
+  },
+  "2.3": {
+   "ours_arcsec": 0.8568437208126477,
+   "authors_bary_arcsec": 0.52
+  },
+  "3.1": {
+   "ours_arcsec": 0.700467556042681,
+   "authors_bary_arcsec": 0.5381
+  },
+  "3.2": {
+   "ours_arcsec": 0.7398732917148259,
+   "authors_bary_arcsec": 0.1265
+  },
+  "3.3": {
+   "ours_arcsec": 0.8357297380351232,
+   "authors_bary_arcsec": 0.3225
+  },
+  "4.1": {
+   "ours_arcsec": 0.6820163785212803,
+   "authors_bary_arcsec": 0.0
+  },
+  "4.2": {
+   "ours_arcsec": 1.2683594485149612,
+   "authors_bary_arcsec": 0.0
+  },
+  "4.3": {
+   "ours_arcsec": 1.4336667166719566,
+   "authors_bary_arcsec": 0.4883
+  },
+  "5.1": {
+   "ours_arcsec": 0.18744903754715334,
+   "authors_bary_arcsec": 0.04
+  },
+  "5.2": {
+   "ours_arcsec": 0.2555744334496264,
+   "authors_bary_arcsec": 0.04
+  },
+  "6.1": {
+   "ours_arcsec": 0.1821277077192559,
+   "authors_bary_arcsec": 0.0
+  },
+  "6.2": {
+   "ours_arcsec": 1.1579896017214,
+   "authors_bary_arcsec": 0.08
+  },
+  "6.3": {
+   "ours_arcsec": 0.7209545061500695,
+   "authors_bary_arcsec": 0.2433
+  },
+  "7.1": {
+   "ours_arcsec": 0.22318480005917132,
+   "authors_bary_arcsec": 0.0894
+  },
+  "7.2": {
+   "ours_arcsec": 0.3567981610509091,
+   "authors_bary_arcsec": 0.04
+  },
+  "8.1": {
+   "ours_arcsec": 8.610863862414673,
+   "authors_bary_arcsec": 0.0566
+  },
+  "8.2": {
+   "ours_arcsec": 21.331430891792756,
+   "authors_bary_arcsec": 0.04
+  },
+  "8.3": {
+   "ours_arcsec": 14.93041376761503,
+   "authors_bary_arcsec": 0.0
+  },
+  "10.1": {
+   "ours_arcsec": 0.2967926532179785,
+   "authors_bary_arcsec": 0.2561
+  },
+  "10.2": {
+   "ours_arcsec": 7.171707230042556,
+   "authors_bary_arcsec": 0.0
+  },
+  "11.1": {
+   "ours_arcsec": 3.2252632621570854,
+   "authors_bary_arcsec": 0.0
+  },
+  "11.2": {
+   "ours_arcsec": 2.7050534180446193,
+   "authors_bary_arcsec": 0.0
+  },
+  "13.1": {
+   "ours_arcsec": 2.036145704570162,
+   "authors_bary_arcsec": 0.0
+  },
+  "13.2": {
+   "ours_arcsec": 2.783087675098732,
+   "authors_bary_arcsec": 0.2263
+  },
+  "14.1": {
+   "ours_arcsec": 0.19524907670247063,
+   "authors_bary_arcsec": 0.08
+  },
+  "14.2": {
+   "ours_arcsec": 0.8403797314977656,
+   "authors_bary_arcsec": 0.4079
+  },
+  "14.3": {
+   "ours_arcsec": 0.5818411759179581,
+   "authors_bary_arcsec": 0.0894
+  },
+  "15.1": {
+   "ours_arcsec": 9.212314871130614,
+   "authors_bary_arcsec": 0.0
+  },
+  "15.2": {
+   "ours_arcsec": 9.11169894869837,
+   "authors_bary_arcsec": 0.0
+  },
+  "16.2": {
+   "ours_arcsec": 1.6605387807687928,
+   "authors_bary_arcsec": 0.04
+  },
+  "16.3": {
+   "ours_arcsec": 0.5532921435069597,
+   "authors_bary_arcsec": 0.1131
+  },
+  "17.1": {
+   "ours_arcsec": 1.061763299957236,
+   "authors_bary_arcsec": 0.0566
+  },
+  "17.2": {
+   "ours_arcsec": 0.3405169171190707,
+   "authors_bary_arcsec": 0.0566
+  },
+  "100.1": {
+   "ours_arcsec": 0.09223918028380955,
+   "authors_bary_arcsec": 0.0
+  },
+  "100.2": {
+   "ours_arcsec": 0.17128597177817648,
+   "authors_bary_arcsec": 0.04
+  },
+  "100.3": {
+   "ours_arcsec": 0.5243496813796401,
+   "authors_bary_arcsec": 0.0894
+  },
+  "100.4": {
+   "ours_arcsec": 1.2366231523787914,
+   "authors_bary_arcsec": 2.3559
+  },
+  "101.1": {
+   "ours_arcsec": 0.021900316351096443,
+   "authors_bary_arcsec": 0.0
+  },
+  "101.2": {
+   "ours_arcsec": 0.027421230435804213,
+   "authors_bary_arcsec": 0.0
+  }
+ },
+ "rms_ours_without_mixed_z": 4.930919475159628,
+ "rms_authors_bary_spec": 0.6057618353394725,
+ "n_spec": 26,
+ "n_spec_with_authors_value": 26,
+ "partial_families": [
+  "13",
+  "16"
+ ],
+ "n_without_mixed_z": 34
+}

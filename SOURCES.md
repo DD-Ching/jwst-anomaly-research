@@ -772,6 +772,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Zenodo record 10.5281/zenodo.18646525 (https://zenodo.org/records/18646525, published 2026-02-15): arcs list,
     MUSE z list, README, `chires.txt` (sha256 in `summary.json`); `Alpha_x/y.fits.zip` headers only (HTTP range).
   - Caminha et al. 2019, arXiv:1903.05103 (cited by the README for the spec-z of systems 1–7; not read).
+  - Same record, used by `results/lens_consistency/macs1931_gatek/` (accessed 2026-10-24): `Alpha_x.fits.zip`,
+    `Alpha_y.fits.zip`, `sourcepos.txt`, `chires.txt` (md5 checked against the record, sha256 in `summary.json`), and
+    `Readme_Magnifications_summary.txt` (its three `k_dlds` values are constants in `scripts/macs1931_gatek.py`).
 - Bullet Cluster (1E 0657-56) inputs (`results/lens_consistency/bullet_inputs/`, accessed 2026-10-24):
   - Rihtaršič et al. 2026, "Mapping dark matter in the Bullet Cluster using JWST imaging and spectroscopy",
     A&A (2026), arXiv:2601.22245; image catalogue also as VizieR J/A+A/710/A207 (identifier from the GAVO registry record

@@ -2441,6 +2441,15 @@ until a deblended reference catalogue is public. Alternatives rejected (survey, 
 MACS J0138, SPT-CL J0615, Sunburst (no public JWST-era maps found). Revisit if: a VENUS or DJA catalogue for the field
 appears, or MAST hosts a VENUS HLSP with a catalogue.
 
+**Addendum 2026-10-24ab (MACS J1931 gate K).** `results/lens_consistency/macs1931_gatek/RESULT.md`. The VENUS
+`Alpha_x/y` maps are in pixels (0.04″; header `BUNIT`, not the README's arcsec) and normalised at z_s 5.079 (the
+authors' `k_dlds` reproduced to 4e-6): unit check U accepts only the pixel reading (median 0.110″ to the authors'
+sources) and gate K passes on the 26 spec-z images (rms 0.919″, 100 % within 3″). Decision: use these maps, with
+that scaling, for the 9 spec-z systems only; the photo-z systems 8 and 10 are not reproduced as catalogued and the
+mixed-z systems are not tested coherently by our single-z solver (reported 4.83″ over 44 images); they stay out until
+their z is settled. Alternatives rejected: the
+README unit (fails U by three orders of magnitude). Revisit if: a later VENUS release changes the maps or the z list.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
