@@ -63,3 +63,17 @@ ASSUMPTIONs fixed here, not tuned on the result.
    ≥ 0.8). The MACS0417 predicted-target classes are written but **not read** (that field's flags belong to
    `../macs0417_canucsref`). Fails → the builder is not used for MACS J1931; next is the arc-aperture alternative as
    a new plan. A contact sheet of the controls with the deblended segments is looked at before the result is written.
+
+## Stage V2: amendment (frozen 2026-10-24 after the V1 run, before any V2 number)
+V1 (rules 1–6 above) ran and its depth is undefined: the own catalogue has no row at Kron S/N 4–6, so
+`depth_mag` is NaN and `m0417_arcref.classify` can return neither `absent` nor `undetectable` (every
+non-matching control becomes `ambiguous`). V1's gate C2 (28 / 35) is therefore **not a valid gate reading**
+(`../macs0417_ownref/RESULT.md`). Plan defect, not a builder result. V2 changes only these, rules 1–4 unchanged:
+- **V2-a depth:** `depth` = AB magnitude of 5 × the median `kron_fluxerr` of the kept rows (a 5σ Kron-total limit of
+  this catalogue; ASSUMPTION). Recorded with the minimum Kron S/N and the number of rows at S/N 4–6.
+- **V2-b chain = the stage 3 chain:** `m0417_arcref.run` with the MACS0417 frame offset (as every MACS0417 run) and the
+  containing-source rule **on**, then `m1423_canucsref.apply_local` on the background-subtracted section (nJy per
+  pixel, masked pixels NaN) with source positions = the kept rows of the own catalogue, constants and seed unchanged
+  (0.3″ apertures, 200 draws at 1.5–4″, 0.5″ exclusion, seed 20261022, 5σ / 10σ).
+- **V2-c verdict:** `gate_c2_shared` on `class_local`; passes as in rule 6. Predicted MACS0417 classes are written, not
+  read. Output `../macs0417_ownref_v2/`. Fails → the builder is not used for MACS J1931 (rule 6's fallback).
