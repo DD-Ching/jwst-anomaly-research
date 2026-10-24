@@ -2,8 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-24: MACS J1931 stage 4 (in progress): MUSE line-flux reference for systems 5, 6, 7, 100, 101
-- Claim: feasibility of a public MUSE cube as the reference for the 10 `no_reference` extra-image targets.
+## 2026-10-24: MACS J1931 stage 4 / 4b: MUSE Lyα references; gate L fails on count; 0 of 10 targets testable (D-034 addendum ah)
+- **Result** (`results/lens_consistency/macs1931_muse/RESULT.md`): plan frozen in dea0952, deviation 4b in d2da6f9.
+  ESO MUSE cube `ADP.2017-03-27T15:26:07.707` read as four 105 MB SODA band cutouts, deleted after use.
+  - Stage 4 as frozen: no ≥ 5σ reference (best S/N 1.83); no reading.
+  - Post hoc: the cube frame is offset from Gaia DR3 by ≈ (+1.30″, −0.88″) on 6 stars.
+  - 4b (Gaia registration, MAD ≤ 0.062″): Lyα peaks at the nominal wavelengths; references 5.2, 6.1, 100.4 at
+    15.4, 11.2, 7.0 σ. Gate L fails: 3 testable controls (rule ≥ 4), all 3 recovered (ratios 0.62–0.78).
+  - Targets: 3 off the 1′ field, 1 at 1.36 σ, 6 without a reference (system 7 at 2.3 σ; 101 blended with 100).
+    0 testable, no flag; not a null.
+- **Looked at:** narrow-band contact sheet (not stored): line blobs at 5.1, 5.2, 6.1–6.3; no source at any in-cube target.
+- **Failed approach:** a MUSE reference without frame registration (≈ 1.6″ offset, larger than the 0.8″ aperture).
+- **Handoff:** the MACS J1931 extra-image line is exhausted with public data (F200W and MUSE). Next: another field with
+  public JWST-era maps. #374 waits for the 2026-10-26 weekly run.
 
 ## 2026-10-24: MACS J1931 stage 3d: continuum-restricted F passes; 0 of 11 predictions testable (D-034 addendum ag)
 - **Result** (`results/lens_consistency/macs1931_stage3d/RESULT.md`): plan frozen in 1314a97, functions and tests

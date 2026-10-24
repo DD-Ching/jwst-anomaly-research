@@ -1,0 +1,30 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: int64}
+# - {name: kind, datatype: string}
+# - {name: id, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: x, datatype: float64}
+# - {name: y, datatype: float64}
+# - {name: blended, datatype: bool}
+# - {name: abs_mu, datatype: float64}
+# - {name: reference, datatype: string}
+# - {name: f_pred, datatype: float64}
+# - {name: f_meas, datatype: float64}
+# - {name: sigma_loc, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: ratio, datatype: float64}
+# - {name: class, datatype: string}
+# schema: astropy-2.0
+system kind id ra dec x y blended abs_mu reference f_pred f_meas sigma_loc pred_over_sigma ratio class
+5 control 5.1 nan nan 223.49763361466447 246.2635646571988 False 7.0267506181942165 5.2 1065.3617983592308 831.0099044582512 83.80148281459975 12.712923000613364 0.7800260021882649 recovered
+6 control 6.2 nan nan 79.30045280318868 144.75730392098487 False 18.88557022047749 6.1 1217.5781011355762 945.3182350777206 76.96634464521492 15.819617090406727 0.7763922775845492 recovered
+6 control 6.3 nan nan 140.37894420645472 196.97870021969504 False 5.3086642403671425 6.1 342.25672033688465 595.5653177161003 87.53914437900586 3.909756289769798 1.7401128519255455 undetectable_local
+100 control 100.1 nan nan 191.9154072174171 182.64205987846523 True 15.005580353611649 100.4 606.3915199689355 521.077278314624 69.21056075927312 8.761546118345656 0.8593083200459629 blended
+100 control 100.2 nan nan 195.84187903117314 188.6882024488352 True 18.78971740311936 100.4 759.3125375601978 529.6336799493292 68.38639683214024 11.103268672335375 0.6975173643927093 blended
+100 control 100.3 nan nan 247.93665236817412 121.91573235125313 False 13.176632141450535 100.4 532.4817703836816 330.28363434554194 74.07258085057883 7.188648812680334 0.6202721909288179 recovered
+101 control 101.1 nan nan 192.62374140111132 183.2540500700361 True 24.698133370783577 "" nan nan nan nan nan no_line_reference
+101 control 101.2 nan nan 195.1319188051733 187.19781338586805 True 28.69960197165296 "" nan nan nan nan nan no_line_reference
+7 control 7.2 nan nan 256.0338053631198 190.2344100611811 False 10.623363303592589 7.1 nan nan nan nan nan no_line_reference

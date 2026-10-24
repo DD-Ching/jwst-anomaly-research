@@ -1,0 +1,32 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: int64}
+# - {name: kind, datatype: string}
+# - {name: id, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: x, datatype: float64}
+# - {name: y, datatype: float64}
+# - {name: blended, datatype: bool}
+# - {name: abs_mu, datatype: float64}
+# - {name: reference, datatype: string}
+# - {name: f_pred, datatype: float64}
+# - {name: f_meas, datatype: float64}
+# - {name: sigma_loc, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: ratio, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: flag, datatype: bool}
+# schema: astropy-2.0
+system kind id ra dec x y blended abs_mu reference f_pred f_meas sigma_loc pred_over_sigma ratio class flag
+5 target candidate 292.9671797778639 -26.57344132791554 -1.9064042378958845 208.38527648462554 False 2.3440274977646594 5.2 355.39006378794795 nan nan nan nan off_cube False
+6 target candidate 292.9452607418308 -26.57757054479858 350.9849848099842 134.088320324235 False 2.1797002843733586 6.1 140.52820763729574 nan nan nan nan off_cube False
+6 target no_flux_ref 292.9579226152384 -26.575487876564996 147.15472836993922 171.58478758945986 False 2.102831324767391 6.1 135.57236247187848 342.25681718671694 99.4091483652908 1.36378155030261 2.5245323674116147 undetectable_local False
+100 target candidate 292.96823536944964 -26.576070966179113 -19.098828292693895 161.08695584908594 False 2.1916205474820103 100.4 88.56572579433083 nan nan nan nan off_cube False
+101 target candidate 292.9516213522909 -26.5780903174031 248.35447046332854 124.74500199811068 True 14.51107999801228 "" nan nan nan nan nan no_line_reference False
+101 target faint 292.95340272407014 -26.579318298639212 219.6776020572666 102.6423175760632 False 11.92994836598434 "" nan nan nan nan nan no_line_reference False
+101 target candidate 292.96834208489605 -26.575989608587644 -20.816879713302427 162.55123946132056 False 2.1708779249817476 "" nan nan nan nan nan no_line_reference False
+7 target candidate 292.9551183453231 -26.577589541511795 192.24411965945748 133.77673215675782 False 8.257747527601607 7.1 nan nan nan nan nan no_line_reference False
+7 target candidate 292.95530424136933 -26.57717552103249 189.25167088973518 141.22914002509606 False 5.435818573306577 7.1 nan nan nan nan nan no_line_reference False
+7 target candidate 292.9681799663417 -26.574451518955208 -18.025889020562914 190.25332536731725 False 2.1790992057841314 7.1 nan nan nan nan nan no_line_reference False
