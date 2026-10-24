@@ -1,0 +1,41 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: z_used, datatype: float64}
+# - {name: dtheta_arcsec, datatype: float64}
+# - {name: magnification, datatype: float64}
+# - {name: n_predicted, datatype: int64}
+# - {name: shared_match, datatype: bool}
+# meta: !!omap
+# - {provenance: model_prediction}
+# - {source: 'smacs0723-iclv2 arcs.dat (sha256 in lensmodel.SMACS0723_MAHLER22_ICLV2); z_spec = systems without z_m_limit in input.par
+#     (PLAN_1.md rule 0, ASSUMPTION) traced with smacs0723-chow23 (A), image-plane solve'}
+# - {model_sha256: f419aa2899119a0ef1438ffecdfac58abfa1167029baff54e512bd6615abe02c}
+# - {z_lens: 0.39}
+# - reference_radec: [110.827212062959, -73.45466123333333]
+# - {cosmology: 'FlatLambdaCDM(H0=70, Om0=0.3)'}
+# - {frame: 'x = -dRA cos(dec0) * 3600 (West), y = dDec * 3600 (North), arcsec'}
+# - maps:
+#     interpolation: bilinear; Hessian from centred finite differences
+#     pixel_arcsec: 0.06000000000000012
+#     shape: [3260, 3260]
+# schema: astropy-2.0
+image_id system z_used dtheta_arcsec magnification n_predicted shared_match
+1.1 1 1.449 0.20837945465214577 11.022042979616021 3 False
+1.2 1 1.449 0.5787065470432236 -18.59121486467247 3 False
+1.3 1 1.449 0.6882533492121274 7.933014480044518 3 False
+2.1 2 1.3779 0.15788073809379544 9.172322931844155 3 False
+2.2 2 1.3779 1.1628183042506715 -19.999746505705055 3 False
+2.3 2 1.3779 0.3305199990127728 7.4809561761175205 3 False
+3.1 3 1.9914 1.0294242733964605 5.318868454854184 5 False
+3.2 3 1.9914 0.7840771365852354 -6.199875282036001 5 False
+3.3 3 1.9914 0.4732566497620331 10.871175082275128 5 False
+3.4 3 1.9914 0.5722112933036392 -5.866470673762022 5 False
+5.1 5 1.425 29.766875591744935 4.960273669178661 1 True
+5.2 5 1.425 26.424812532323642 4.960273669178661 1 True
+5.3 5 1.425 0.4778776388889669 4.960273669178661 1 True
+7.1 7 5.17 6.35583903614343 20.52786061546964 1 True
+7.2 7 5.17 4.834227822862996 20.52786061546964 1 True
+7.3 7 5.17 2.464381963330292 20.52786061546964 1 True

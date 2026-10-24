@@ -2524,6 +2524,16 @@ extra-image route is closed as no reach under these rules. Alternatives rejected
 after the run. Revisit if: a deeper JWST-era S1063 photometry catalogue (e.g. built on GO 3293) or a released WSLAP+
 image list appears.
 
+**Addendum 2026-10-24an (SMACS 0723 Chow+2023 GLAFIC maps, fixed-z gate K).** `results/lens_consistency/smacs_chow23/RESULT.md`,
+plan frozen in 014dc2c (functions committed after the run: labelled deviation). Zenodo 10.5281/zenodo.10158248 α maps
+(0.06″ CAR, D_ds / D_s = 1, 85 MB, deleted). On the 16 Mahler+22 fixed-z images: C passes, U accepts only arcsec with
+α_x as given (0.767″), gate K (mean source) fails, rms 10.18″, 75 % within 3″; K-WLS (reported) 1.947″, 15 / 16;
+systems 5 (one predicted image under the mean source) and 7 (z 5.17, fails with both sources). ICLv2 repeats 0.321″
+in the same run. Post hoc: system 7 has no z ≤ 10 below 1.08″ in this model; Chow+23's spectroscopic systems are five
+at 1.38–2.21, so Mahler system 7's z is a model value. Decision: no cross-model or extra-image stage from this run.
+Alternatives rejected: dropping system 7 after the run. Revisit if: a frozen WLS-gated stage on systems 1, 2, 3, 5
+(labelled deviation) is wanted for a two-model comparison, and a validated SMACS reference exists.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

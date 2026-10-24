@@ -1,0 +1,56 @@
+{
+ "label": "post hoc (not in PLAN.md)",
+ "z_grid": [
+  0.5,
+  10.0,
+  0.01
+ ],
+ "free_z_minima": {
+  "1": {
+   "min_rms_arcsec": 0.5148158660248069,
+   "z_at_min": 1.44,
+   "z_at_min_on_edge": false
+  },
+  "2": {
+   "min_rms_arcsec": 0.719377908333576,
+   "z_at_min": 1.38,
+   "z_at_min_on_edge": false
+  },
+  "3": {
+   "min_rms_arcsec": 0.7609662278906743,
+   "z_at_min": 1.97,
+   "z_at_min_on_edge": false
+  },
+  "5": {
+   "min_rms_arcsec": 0.42294758389882864,
+   "z_at_min": 1.47,
+   "z_at_min_on_edge": false
+  },
+  "7": {
+   "min_rms_arcsec": 1.0769105245268753,
+   "z_at_min": 10.0,
+   "z_at_min_on_edge": true
+  }
+ },
+ "catalogue_z": {
+  "1": 1.449,
+  "2": 1.3779,
+  "3": 1.9914,
+  "5": 1.425,
+  "7": 5.17
+ },
+ "without_system_7": {
+  "K": {
+   "n_images": 13,
+   "rms_arcsec": 11.05625540989716,
+   "matched_fraction": 0.8461538461538461,
+   "passes": false
+  },
+  "K_wls": {
+   "n_images": 13,
+   "rms_arcsec": 0.5661582875043849,
+   "matched_fraction": 1.0,
+   "passes": true
+  }
+ }
+}
