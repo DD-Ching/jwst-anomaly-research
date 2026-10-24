@@ -1,0 +1,33 @@
+{
+ "label": "observed (session clocks and ledger)",
+ "start_utc": "07:39:14Z (2026-10-24)",
+ "plan_commit_utc": "07:56:30Z (314ebc5)",
+ "stages_utc": {
+  "fetch dev": "07:56:41Z",
+  "inject dev": "07:57:15Z",
+  "fetch val": "08:02:41Z",
+  "inject val": "08:03:06Z",
+  "fetch search": "08:07:11Z",
+  "search": "08:08:33Z"
+ },
+ "inject_elapsed_s": {
+  "dev": 258.3,
+  "val": 229.6
+ },
+ "cores": 4,
+ "ledger_bytes": 766466809,
+ "ledger_cap_bytes": 2000000000,
+ "ledger_note": "includes the DR25 stellar-table query (2.2 MB) and the interface check on non-target KIC 2578941 (one listing, one file) before the plan commit",
+ "llc_files": {
+  "dev": 355,
+  "val": 347,
+  "search": 1048
+ },
+ "llc_bytes": {
+  "dev": 149947200,
+  "val": 149325120,
+  "search": 448519680
+ },
+ "search_end_utc": "08:08:49Z",
+ "cache": "column cache under the session data root; deleted at the end (not stored)"
+}

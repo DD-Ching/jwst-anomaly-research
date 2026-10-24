@@ -1,0 +1,184 @@
+"""Post hoc diagnostics for the W3 / Kepler pilot (not gating; written after the gate and search).
+
+    JWST_ANOMALY_DATA=<data root> python results/w3_kepler/posthoc_script.py.txt
+
+Writes posthoc.json and cases.png next to this file:
+- real light curves (all 100 stars): good cadences with rel <= 10^-0.4 (dm >= 1) and the longest
+  such run (to check that "no flag" is not an empty pipeline);
+- recovered W3 injections: the data bound U on each edge (max of the two sides), per phase and cell;
+- non-recovered W3 injections (val): reason classes from the stored rows plus the carrier's data;
+- example light curves (injections replayed with their stored seeds).
+"""
+
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+import w3_kepler as wk  # noqa: E402
+import w3_ztf as wz  # noqa: E402
+
+out = {"label": "derived (post hoc diagnostics, not gating)"}
+
+# 1. real light curves: how deep do they get?
+deep = {}
+for s in wk.sample_stars(["dev", "val", "search"]):
+    st = wk.load_star(s["kepid"])
+    g = wk.good_mask(st)
+    rel, _ = wk.normalise(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], g)
+    ok = np.isfinite(rel)
+    d = rel[ok] <= 10 ** (-0.4 * wz.DIM_MAG)
+    longest = max((j - i + 1 for i, j in wz.runs(d)), default=0)
+    deep[s["kepid"]] = {
+        "group": s["group"],
+        "good_cadences": int(ok.sum()),
+        "dim_cadences": int(d.sum()),
+        "longest_dim_run": int(longest),
+        "min_rel": round(float(np.nanmin(rel[ok])), 4),
+        "p0.1_rel": round(float(np.percentile(rel[ok], 0.1)), 4),
+    }
+out["real_depth"] = {
+    "stars": len(deep),
+    "stars_with_any_dim_cadence": sum(v["dim_cadences"] > 0 for v in deep.values()),
+    "max_longest_dim_run": max(v["longest_dim_run"] for v in deep.values()),
+    "min_rel_over_stars": min(v["min_rel"] for v in deep.values()),
+    "good_cadences_total": sum(v["good_cadences"] for v in deep.values()),
+    "per_star": {str(k): v for k, v in deep.items()},
+}
+
+# 2. edge bounds of recovered W3 injections
+out["edge_bound_recovered"] = {}
+for phase in ("dev", "val"):
+    rows = json.loads((HERE / f"injections_{phase}.json").read_text())["rows"]
+    per = []
+    for c, (rho, blend, te) in enumerate(wk.CELLS):
+        r = [x for x in rows if x["kind"] == "w3" and x["cell"] == c and x["pass"]]
+        u = np.array([max(x["edge_pre_max_d"], x["edge_post_max_d"]) for x in r])
+        per.append(
+            {
+                "rho": rho,
+                "blend": blend,
+                "tE": te,
+                "n_recovered": len(r),
+                "U_median_d": round(float(np.median(u)), 4),
+                "U_p90_d": round(float(np.percentile(u, 90)), 4),
+                "frac_U_le_2_cadences": round(float(np.mean(u <= 2 * wk.CAD + 1e-9)), 3),
+            }
+        )
+    allu = np.array(
+        [
+            max(x["edge_pre_max_d"], x["edge_post_max_d"])
+            for x in rows
+            if x["kind"] == "w3" and x["pass"]
+        ]
+    )
+    out["edge_bound_recovered"][phase] = {
+        "all_cells": {
+            "n": int(len(allu)),
+            "U_median_d": round(float(np.median(allu)), 4),
+            "U_p90_d": round(float(np.percentile(allu, 90)), 4),
+            "frac_U_le_2_cadences": round(float(np.mean(allu <= 2 * wk.CAD + 1e-9)), 3),
+        },
+        "per_cell": per,
+    }
+
+# 3. why W3 injections were not recovered (val), from the stored rows and the carrier data
+rows = json.loads((HERE / "injections_val.json").read_text())["rows"]
+why = {}
+cache = {}
+for x in rows:
+    if x["kind"] != "w3" or x["pass"]:
+        continue
+    st = cache.setdefault(x["kepid"], wk.load_star(x["kepid"]))
+    g = wk.good_mask(st)
+    t = st["TIME"][g]
+    rho, blend, te = wk.CELLS[x["cell"]]
+    half = te * np.sqrt(4 - x["u0"] ** 2)
+    cover = ((t >= x["t0"] - half) & (t <= x["t0"] + half)).sum() / (2 * half / wk.CAD)
+    if not x["flagged"]:
+        k = "not flagged: umbra < 50 % covered by good cadences" if cover < 0.5 else (
+            "not flagged: umbra covered (grazing u0, data end, or quarter join)"
+        )
+    elif x["insufficient"]:
+        k = "flagged: edge not bounded (gap or quarter boundary)"
+    elif x.get("edge_class") == "slow":
+        k = "flagged: slow edge"
+    elif x.get("oneoff_ok") is False:
+        k = "flagged: one-off fails (umbra split by the quarter join)"
+    elif x.get("common_mode_ok") is False:
+        k = "flagged: common mode"
+    elif x.get("shoulder_ok") is False:
+        k = "flagged: shoulder missing"
+    else:
+        k = "flagged: other"
+    why[k] = why.get(k, 0) + 1
+out["w3_not_recovered_val"] = {"n": sum(why.values()), "classes": why}
+(HERE / "posthoc.json").write_text(json.dumps(out, indent=1) + "\n")
+
+# 4. example light curves (replayed injections; val carriers)
+import matplotlib  # noqa: E402
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+
+wk._init(str(wk.CACHE / "ctx_val.pkl"))
+
+
+def replay(kind, c, j, seed):
+    rng = np.random.default_rng([seed, j])
+    kids = wk._CTX["kids"]
+    kid = kids[rng.integers(len(kids))]
+    st = wk._CTX["stars"][kid]
+    g = wk.good_mask(st)
+    tg = st["TIME"][g]
+    if kind == "w3":
+        rho, blend, te = wk.CELLS[c]
+        t0, u0 = rng.uniform(tg.min(), tg.max()), rng.uniform(0, 2)
+        f = wk.w3_flux_avg(st["TIME"], t0, te, u0, rho, blend)
+        win = te * np.sqrt(4 - u0**2) * 1.8 + 0.3
+    else:
+        f, _ = wk.control_flux(c, st, g, rng)
+        t0 = st["TIME"][np.nanargmin(np.where(np.isfinite(f), f, 9))]
+        win = 3.0
+    sap, err = wk.inject_sap(st["SAP_FLUX"], st["SAP_FLUX_ERR"], f, rng)
+    rel, _ = wk.normalise(st, sap, err, g)
+    return kid, st["TIME"], rel, t0, win
+
+
+val = json.loads((HERE / "injections_val.json").read_text())["rows"]
+
+
+def first(pred):
+    return next(x for x in val if pred(x))
+
+
+picks = [
+    ("W3 rho 0.01 blend 1 tE 0.1 d (recovered)", first(lambda x: x["kind"] == "w3" and x["cell"] == 0 and x["pass"])),
+    ("W3 rho 0.1 blend 0.7 tE 1 d (recovered)", first(lambda x: x["kind"] == "w3" and x["cell"] == 17 and x["pass"])),
+    ("W3 rho 0.1 blend 0.7 tE 10 d (recovered)", first(lambda x: x["kind"] == "w3" and x["cell"] == 19 and x["pass"])),
+    ("W3 rho 0.1 blend 1 tE 3 d (edge not bounded)", first(lambda x: x["kind"] == "w3" and x["cell"] == 8 and x["insufficient"])),
+    ("single eclipse control (passes without shoulder test)", first(lambda x: x["kind"] == "ctl" and x["cell"] == "single_eclipse" and x["pass_no_shoulder"])),
+    ("quarter step control (edge not bounded)", first(lambda x: x["kind"] == "ctl" and x["cell"] == "quarter_step" and x["insufficient"])),
+]
+seeds = {"w3": 3300, "ctl": 3400}
+fig, axs = plt.subplots(3, 2, figsize=(11, 9))
+for ax, (title, x) in zip(axs.ravel(), picks, strict=True):
+    seed = seeds["w3"] + x["cell"] if x["kind"] == "w3" else seeds["ctl"] + list(wk.CONTROLS).index(x["cell"])
+    kid, t, rel, t0, win = replay(x["kind"], x["cell"], x["j"], seed)
+    m = np.isfinite(rel) & (np.abs(t - t0) <= win)
+    ax.plot(t[m] - t0, rel[m], ".", ms=2.5, color="k")
+    ax.axhline(10 ** -0.4, color="tab:red", lw=0.6, ls="--")
+    ax.axhline(1 + wk.SHOULDER_MIN, color="tab:blue", lw=0.6, ls=":")
+    ax.set_title(f"{title}\nKIC {kid}", fontsize=8)
+    ax.set_xlabel("t - t0 (d)", fontsize=8)
+    ax.set_ylabel("SAP / quarter median", fontsize=8)
+    ax.tick_params(labelsize=7)
+fig.suptitle("Simulated injections on observed Kepler DR25 SAP light curves (val carriers); red: 1 mag, blue: shoulder threshold", fontsize=9)
+fig.tight_layout()
+fig.savefig(HERE / "cases.png", dpi=90)
+print(json.dumps({k: out[k] for k in ("w3_not_recovered_val",)}, indent=1))
+print(json.dumps(out["real_depth"] | {"per_star": "..."}, indent=1))
+print(json.dumps({p: out["edge_bound_recovered"][p]["all_cells"] for p in ("dev", "val")}))
