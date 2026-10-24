@@ -1,0 +1,69 @@
+{
+ "label": "post hoc; not in the frozen plan",
+ "groups": {
+  "202-204": {
+   "cats": {
+    "n": 7,
+    "rms_arcsec": 0.877,
+    "max_arcsec": 1.18
+   },
+   "sharon": {
+    "n": 7,
+    "rms_arcsec": 1.229,
+    "max_arcsec": 2.08
+   },
+   "mars": {
+    "n": 7,
+    "rms_arcsec": 2.727,
+    "max_arcsec": 3.72
+   },
+   "canucs_saw_them": {
+    "n": 7,
+    "rms_arcsec": 0.757,
+    "max_arcsec": 1.33
+   }
+  },
+  "201-204": {
+   "cats": {
+    "n": 7,
+    "rms_arcsec": 0.877,
+    "max_arcsec": 1.18
+   },
+   "sharon": {
+    "n": 10,
+    "rms_arcsec": 1.099,
+    "max_arcsec": 2.08
+   },
+   "mars": {
+    "n": 10,
+    "rms_arcsec": 2.511,
+    "max_arcsec": 3.72
+   },
+   "canucs_saw_them": {
+    "n": 10,
+    "rms_arcsec": 0.716,
+    "max_arcsec": 1.33
+   }
+  },
+  "401": {
+   "cats": {
+    "n": 4,
+    "rms_arcsec": 3.916,
+    "max_arcsec": 6.0
+   },
+   "sharon": {
+    "n": 4,
+    "rms_arcsec": 0.863,
+    "max_arcsec": 1.13
+   },
+   "mars": {
+    "n": 0
+   },
+   "canucs_saw_them": {
+    "n": 4,
+    "rms_arcsec": 1.237,
+    "max_arcsec": 1.77
+   }
+  }
+ }
+}
