@@ -13,18 +13,19 @@ Plan `PLAN.md` (frozen in 3613c8f, before any map value was read). Script `scrip
 - Per the plan, no flag is read and the extra-image test does not run on these maps.
 
 ## Post hoc checks (not in the plan; they do not change the gate outcome)
-- **Loading check against Lenstool** (`posthoc_compare.json`): our and Lenstool's per-image residuals have the same
-  median (0.335″ vs 0.334″) and correlate at 0.88 outside K1b / K1e. Without those two systems: 129 images, rms 0.435″
-  (Lenstool 0.419″), 100 % within 3″. So the maps load correctly (orientation, units, D_LS / D_S scaling, frame) to
-  the level gate K tests; the difference is confined to K1b / K1e.
+- **Comparison with Lenstool** (`posthoc_compare.json`): over all 135 images our and Lenstool's per-image residuals
+  have the same median (0.335″ vs 0.334″); outside K1b / K1e they correlate at 0.88. Without those two systems: 129
+  images, rms 0.435″ (Lenstool 0.419″), 100 % within 3″. This agreement makes a loading error (orientation, units,
+  D_LS / D_S scaling) unlikely; it is not a frame test against the JWST catalogue (frame check F is still to run).
 - **Grid** (`posthoc_grid010/`): a 0.1″ grid gives the same rms (1.196″) and the same single images for K1b / K1e, so
   grid resolution is not the cause.
 - **Caustic proximity** (`posthoc_k1_sources.json`): the back-traced sources of K1b and K1e scatter by only 0.061″ and
   0.026″ about their means, yet the predicted multiplicity switches between 1 and 3 depending on which image's own
-  source is used (K1b: 1, 3, 3; K1e: 2, 3, 1; the reproduced neighbour K1d also gives 3, 3, 1). These sources sit
-  within a few hundredths of an arcsecond of the caustic, so the number of images depends on the source-position
-  estimator (our mean back-trace vs Lenstool's), not on the deflection maps. This is a reading of the numbers above,
-  not a separate test.
+  source is used (K1b: 1, 3, 3; K1e: 2, 3, 1; the reproduced neighbour K1d also gives 3, 3, 1). Since the
+  own-image sources of one family lie within twice that scatter of each other (≤ 0.12″, derived, not stored) and give
+  different multiplicities, a caustic passes within that distance of these sources, and the number of predicted
+  images depends on the source-position estimator. Lenstool's estimator was not reproduced; this is a reading of the
+  numbers above, not a separate test.
 
 ## Gate K-WLS (`PLAN_1b.md`, post-failure deviation; frozen in 3774ed9 before its run)
 - The Abell 2744 precedent (D-034 addendum k) applied unchanged: only the family source changes, to D-041's

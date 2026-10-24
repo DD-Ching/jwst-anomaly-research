@@ -4,15 +4,15 @@ Frozen plan: ``results/lens_consistency/bullet_gatek/PLAN.md``. Gate K of ``m041
 code as MACS0417 / MACS1423 / MACS1149) on the 135 gold images at their system z; Lenstool's own
 image-plane rms from ``chires.dat`` is reported next to ours. No extra-image or flag reading.
 
-    python scripts/bullet_gatek.py [--grid-step 0.25] [--out DIR] [--posthoc-k1]
+    python scripts/bullet_gatek.py [--grid-step 0.25] [--out DIR]   # PLAN.md
+    python scripts/bullet_gatek.py --posthoc-k1    # post hoc checks (after the plan run)
+    python scripts/bullet_gatek.py --wls           # PLAN_1b.md (deviation)
 """
 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
-import urllib.request
 from pathlib import Path
 
 import lens_consistency as lc
@@ -20,6 +20,7 @@ import m0417_images as mi
 import numpy as np
 
 from jwst_anomaly import lensmodel
+from jwst_anomaly.photometry import fetch_catalog
 
 MODEL = "bullet-canucs-maps"
 OUT = Path("results/lens_consistency/bullet_gatek")
@@ -27,6 +28,7 @@ GOLD = Path("results/lens_consistency/bullet_inputs/bullet_gold_images.ecsv")
 CHIRES = (
     "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/lensing/best_fit_model/chires.dat"
 )
+CHIRES_SHA = "bee76b1c570e10c9b216055233d15a8da0889dfecd3c12b5387810303b6cea57"  # 2026-10-24
 GRID_STEP = 0.25  # m0417_images default (PLAN.md rule 1)
 
 
@@ -41,12 +43,12 @@ def parse_chires(text: str) -> dict:
         if f[0] == "chimul":
             total = {"chi2": float(f[1]), "rms_source": float(f[5]), "rms_image": float(f[6])}
         elif len(f) == 13 and f[0].isdigit() and f[3] == "1":
-            images[f[1]] = (float(f[10]), float(f[11]))
+            images[f[1]] = tuple(np.nan if v == "N/A" else float(v) for v in f[10:12])
     if total is None:
         raise ValueError("chires.dat: no chimul row")
     d = np.hypot(*np.asarray(list(images.values()), float).T) if images else np.array([])
     total["n_images"] = len(images)
-    total["rms_from_rows"] = float(np.sqrt(np.mean(d**2))) if len(d) else float("nan")
+    total["rms_from_rows"] = mi.rms_of(d)
     return {"total": total, "images": images}
 
 
@@ -65,17 +67,21 @@ def per_system(ip) -> dict:
     return out
 
 
-def run(out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
+def lenstool_chires() -> dict:
+    """The pinned ``chires.dat`` of the fit (sha256-verified), parsed."""
+    return parse_chires(fetch_catalog(CHIRES, CHIRES_SHA).read_text())
+
+
+def run(out: Path = OUT, grid_step: float = GRID_STEP, plan: str = "PLAN.md") -> dict:
+    """Gate K as ``PLAN.md``; ``plan`` labels a post hoc re-run (e.g. another grid step)."""
     images = mi.load_images(GOLD)
     solver = mi.Solver(MODEL, images, grid_step)
     ip = solver.image_plane(images)
     lc._write(ip, out / f"imageplane_bullet_{MODEL}.ecsv")
     systems = per_system(ip)
-    with urllib.request.urlopen(CHIRES, timeout=60) as r:  # noqa: S310 (fixed https URL)
-        raw = r.read()
-    lt = parse_chires(raw.decode())
+    lt = lenstool_chires()
     summary = {
-        "plan": str(out / "PLAN.md"),
+        "plan": plan,
         "model": MODEL,
         "model_sha256": solver.model.sha256,
         "grid_step_arcsec": grid_step,
@@ -89,7 +95,7 @@ def run(out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
         "per_system": systems,
         "lenstool_chires": {
             "url": CHIRES,
-            "sha256": hashlib.sha256(raw).hexdigest(),
+            "sha256": CHIRES_SHA,
             **lt["total"],
         },
     }
@@ -131,21 +137,23 @@ def posthoc_k1(out: Path = OUT, families=("K1b", "K1e", "K1c", "K1d")) -> dict:
 
 def posthoc_compare(out: Path = OUT, skip=("K1b", "K1e")) -> dict:
     """Post hoc (not in PLAN.md): our per-image residuals against Lenstool's ``chires.dat`` rows,
-    and gate K's numbers without the ``skip`` systems (reported, not a gate)."""
+    and gate K's numbers without the ``skip`` systems (reported, not a gate). Reads the image-plane
+    table that :func:`run` wrote into ``out``, so run that first."""
     from astropy.table import Table
 
     ip = Table.read(out / f"imageplane_bullet_{MODEL}.ecsv")
-    with urllib.request.urlopen(CHIRES, timeout=60) as r:  # noqa: S310 (fixed https URL)
-        lt = parse_chires(r.read().decode())["images"]
+    lt = lenstool_chires()["images"]
     ids = np.asarray(ip["image_id"], str)
     d = np.asarray(ip["dtheta_arcsec"], float)
     ltd = np.array([np.hypot(*lt[i]) if i in lt else np.nan for i in ids])
     keep = ~np.isin(np.asarray(ip["system"], str), skip)
+    both = keep & np.isfinite(d) & np.isfinite(ltd)
     res = {
+        "chires_sha256": CHIRES_SHA,
         "n_images_in_both": int(np.sum(np.isfinite(d) & np.isfinite(ltd))),
         "median_ours_arcsec": float(np.nanmedian(d)),
         "median_lenstool_arcsec": float(np.nanmedian(ltd)),
-        "per_image_correlation": float(np.corrcoef(d[keep], ltd[keep])[0, 1]),
+        "per_image_correlation_without_skipped": float(np.corrcoef(d[both], ltd[both])[0, 1]),
         "skipped_systems": list(skip),
         "without_skipped": {
             "n_images": int(keep.sum()),
@@ -176,8 +184,12 @@ def run_wls(out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
         "model_sha256": solver.model.sha256,
         "grid_step_arcsec": grid_step,
         "gate_K_wls": mi.gate_k(ip),
-        "extra_predicted": {s: v for s, v in systems.items() if v["n_predicted"] > v["n_catalogued"]},
-        "fewer_predicted": {s: v for s, v in systems.items() if v["n_predicted"] < v["n_catalogued"]},
+        "extra_predicted": {
+            s: v for s, v in systems.items() if v["n_predicted"] > v["n_catalogued"]
+        },
+        "fewer_predicted": {
+            s: v for s, v in systems.items() if v["n_predicted"] < v["n_catalogued"]
+        },
     }
     (out / "summary_wls.json").write_text(json.dumps(res, indent=1) + "\n")
     return res
@@ -198,7 +210,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.wls:
         print(json.dumps(run_wls(args.out, args.grid_step)["gate_K_wls"], indent=1))
         return 0
-    s = run(args.out, args.grid_step)
+    plan = (
+        "PLAN.md"
+        if args.grid_step == GRID_STEP
+        else f"post hoc: PLAN.md with a {args.grid_step}″ grid"
+    )
+    s = run(args.out, args.grid_step, plan)
     print(json.dumps({k: s[k] for k in ("gate_K", "lenstool_chires")}, indent=1))
     return 0
 

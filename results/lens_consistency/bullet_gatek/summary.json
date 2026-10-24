@@ -1,5 +1,5 @@
 {
- "plan": "results/lens_consistency/bullet_gatek/PLAN.md",
+ "plan": "PLAN.md",
  "model": "bullet-canucs-maps",
  "model_sha256": "893cd05fdf09b8b2dd9631fc7fddc4d51a1f1d6e606ed136e6065cff2f392593",
  "grid_step_arcsec": 0.25,

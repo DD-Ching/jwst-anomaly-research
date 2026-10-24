@@ -1,8 +1,9 @@
 {
+ "chires_sha256": "bee76b1c570e10c9b216055233d15a8da0889dfecd3c12b5387810303b6cea57",
  "n_images_in_both": 135,
  "median_ours_arcsec": 0.3345693229733489,
  "median_lenstool_arcsec": 0.33421549934136807,
- "per_image_correlation": 0.8811321396328263,
+ "per_image_correlation_without_skipped": 0.8811321396328263,
  "skipped_systems": [
   "K1b",
   "K1e"

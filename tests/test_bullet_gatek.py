@@ -28,3 +28,10 @@ def test_parse_chires():
 def test_parse_chires_needs_total():
     with pytest.raises(ValueError):
         bg.parse_chires(CHIRES.replace("chimul", "other"))
+
+
+def test_parse_chires_na_offsets():
+    text = CHIRES.replace("-0.60   -0.80", "N/A     N/A")
+    r = bg.parse_chires(text)
+    assert r["total"]["n_images"] == 2
+    assert r["total"]["rms_from_rows"] == pytest.approx(0.5)
