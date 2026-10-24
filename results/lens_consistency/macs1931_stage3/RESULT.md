@@ -18,15 +18,16 @@ Reading (frozen rule): **no stage 3 reading for MACS J1931**. No counter-image t
 
 ## Deviation 3b (post failure; `PLAN_3b.md`, frozen in 7324612 before its run)
 Code review found that 3 of the 51 F images (13.1–13.3, photo-z) lay outside the stage 3 section (`posthoc.json`
-`inside_section` 48 / 51), so stage 3's F could have flipped (18 + 3 ≥ 20). 3b widens only the section to all 51
-images (`../macs1931_stage3b/summary.json`): section y 557–3900, x 202–3651; 852 → 1,153 deblended rows; depth 26.75 AB.
+`inside_section` 48 / 51, `ids_outside_section`), so stage 3's F could have flipped (18 + 3 ≥ 20). 3b widens only the section to all 51
+images (`../macs1931_stage3b/summary.json`): section y 557–3900, x 202–3651; 852 segments → 1,153 after deblending; depth 26.75 AB.
 **F fails again: 18 / 51 matched (51 / 51 in the section), median dx 0.048″, dy 0.006″.** The stop stands.
 
 ## Post hoc (not rules; `posthoc.json`, 3b: `../macs1931_stage3b/posthoc.json`)
-- The matched images agree in frame (medians ≤ 0.045″, median separation 0.107″); the failure is the count.
+- The matched images agree in frame (|medians| ≤ 0.048″ in both runs; median separation 0.107″ / 0.122″); the
+  failure is the count.
 - Images with any row within 0.5 / 1.0 / 1.5″: own catalogue 18 / 20 / 27 of 51, the JWST pipeline catalogue 18 / 24 / 33.
   Spec-z only (26): own 10 / 11 / 14, pipeline 13 / 16 / 19. Only 15 / 51 (10 / 26 spec-z) positions fall inside
-  any own deblended segment (3b: own 18 / 20 / 28, 14 / 51 inside a segment; spec-z unchanged).
+  any own deblended segment (`ids_not_in_own_segment`; 3b: own 18 / 20 / 28, 14 / 51 inside a segment; spec-z unchanged).
 - Looked at (contact sheet of the 51 positions with the segment outlines, 6″ boxes, not stored): systems 5, 6, 7,
   100 and 101 show little or no F200W emission at the catalogued positions; several arcs (8.2, 9.1, 10.1, 12.2) are
   visible but not segmented at 3σ / 25 px after the 2″ background filter. No sign of a frame shift. Reading by eye,
@@ -36,5 +37,6 @@ images (`../macs1931_stage3b/summary.json`): section y 557–3900, x 202–3651;
 - Deviation 3b (above), labelled post failure; the post hoc diagnostic was added after the failure. The first
   `posthoc.json` indexed segment pixels without a bounds check; both files were regenerated with the checked code.
 - The rule 3 depth proxy (median mag at S/N 4–6 of the pipeline catalogue) is undefined here, as V1's was; it only
-  enters the model-prediction classes of `frame/`, which were not read.
+  enters the model-prediction classes of `frame/`, which were not read. Any retry must define it first (with a NaN
+  depth the rule 3 depth comparisons are all false).
 - F's minimum (20) was an ASSUMPTION scaled from the Bullet's 30 / 135; the rule was not changed after the run.

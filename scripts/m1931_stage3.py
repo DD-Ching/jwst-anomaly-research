@@ -47,7 +47,7 @@ def footprint_class(cls: str, x: float, y: float, data: np.ndarray) -> str:
     else ``cls`` unchanged."""
     if not (np.isfinite(x) and np.isfinite(y)):
         return OFF_IMAGE
-    ix, iy = int(np.rint(x)), int(np.rint(y))
+    ix, iy = int(np.floor(x + 0.5)), int(np.floor(y + 0.5))  # nearest pixel, halves up
     ny, nx = data.shape
     if not (0 <= ix < nx and 0 <= iy < ny) or not np.isfinite(data[iy, ix]):
         return OFF_IMAGE
@@ -78,7 +78,7 @@ def section_positions(table: Table, ctrl: Table, images: Table, all_images: bool
     return vstack(parts)
 
 
-def frame_tables(model, spec: Table, cache: Path) -> tuple[dict, object]:
+def frame_tables(model, spec: Table, cache: Path, frame_dir: Path = FRAME) -> tuple[dict, object]:
     """Rules 2-3: gate K-WLS repeated, then predicted / control tables from the WLS source."""
     half = lc.grid_half_width(model, spec)
     grid = lensmodel.DeflectionGrid.compute(model, half, mg.GRID_STEP)
@@ -95,9 +95,9 @@ def frame_tables(model, spec: Table, cache: Path) -> tuple[dict, object]:
     table, unpredicted = lc.predict_counter_images(model, grid, wbt, shapes, depth=depth)
     control = table[np.asarray(table["image_class"], str) == "observed"]
     control["image_class"] = "control"
-    FRAME.mkdir(parents=True, exist_ok=True)
-    lc._write(table, FRAME / f"predicted_{FIELD}.ecsv")
-    lc._write(control, FRAME / f"control_{FIELD}.ecsv")
+    frame_dir.mkdir(parents=True, exist_ok=True)
+    lc._write(table, frame_dir / f"predicted_{FIELD}.ecsv")
+    lc._write(control, frame_dir / f"control_{FIELD}.ecsv")
     cls = np.asarray(table["image_class"], str)
     frame = {
         "unpredicted": unpredicted,
@@ -106,7 +106,7 @@ def frame_tables(model, spec: Table, cache: Path) -> tuple[dict, object]:
         "grid_half_width_arcsec": half,
         "grid_step_arcsec": mg.GRID_STEP,
     }
-    (FRAME / "summary.json").write_text(
+    (frame_dir / "summary.json").write_text(
         json.dumps(cp._clean({FIELD: frame}), indent=1, allow_nan=False) + "\n"
     )
     res["rule3_frame_tables"] = frame
@@ -126,11 +126,12 @@ def run(maps: Path, cache: Path, out_dir: Path = OUT, all_images: bool = False) 
         summary["deviation"] = str(OUT / "PLAN_3b.md")
     summary["inputs_sha256"] = shas
     summary["n_images_used"], summary["n_images_spec"] = len(images), len(spec)
-    res, table = frame_tables(model, spec, cache)
+    frame_dir = out_dir / "frame"
+    res, table = frame_tables(model, spec, cache, frame_dir)
     summary.update(res)
     if table is None:
         return summary
-    ctrl = Table.read(FRAME / f"control_{FIELD}.ecsv")
+    ctrl = Table.read(frame_dir / f"control_{FIELD}.ecsv")
     pos = section_positions(table, ctrl, images, all_images)
     fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
     uri = S3_6882.format("i2d.fits")
@@ -161,7 +162,7 @@ def run(maps: Path, cache: Path, out_dir: Path = OUT, all_images: bool = False) 
                 cat_inputs=inputs,
                 out=out,
                 field=FIELD,
-                frame=FRAME,
+                frame=frame_dir,
                 offset=(0.0, 0.0),
                 contain=contain,
             )
@@ -219,30 +220,32 @@ def match_counts(ra, dec, cra, cdec, radii=POSTHOC_RADII) -> dict:
     return {f"{r:g}": int(np.sum(sep <= r)) for r in radii}
 
 
-def posthoc(cache: Path, all_images: bool = False) -> dict:
+def posthoc(cache: Path, out_dir: Path = OUT, all_images: bool = False) -> dict:
     """Why frame check F failed (not a rule): nearest-row counts against the own and the
     pipeline catalogues, and images inside a deblended segment, for all and spec-z images."""
     import s3fs
 
     images = mg.load_images()
     spec = np.asarray(images["z_spec"], bool)
-    table = Table.read(FRAME / f"predicted_{FIELD}.ecsv")
-    ctrl = Table.read(FRAME / f"control_{FIELD}.ecsv")
+    table = Table.read(out_dir / "frame" / f"predicted_{FIELD}.ecsv")
+    ctrl = Table.read(out_dir / "frame" / f"control_{FIELD}.ecsv")
     pos = section_positions(table, ctrl, images, all_images)
     fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
     sci, err, w, _ = md.read_section(fs, S3_6882.format("i2d.fits")[5:], pos["ra"], pos["dec"])
-    cat, _, deb, _, _ = md.build(sci, err, w)
+    cat, _, deb, data, _ = md.build(sci, err, w)
     shapes = lc.load_shapes(cache / Path(S3_6882.format("cat.ecsv")).name)
     x, y = w.world_to_pixel_values(images["ra"], images["dec"])
     seg = np.where(deb.data > 0, 1.0, np.nan)
     in_seg = np.array([footprint_class("in", a, b, seg) == "in" for a, b in zip(x, y, strict=True)])
     in_sec = np.array(
-        [
-            footprint_class("in", a, b, np.zeros(seg.shape)) == "in"
-            for a, b in zip(x, y, strict=True)
-        ]
+        [footprint_class("in", a, b, data) == "in" for a, b in zip(x, y, strict=True)]
     )
-    out = {"note": "post hoc, not a frozen rule (PLAN.md stage 3 rule 5 failed)"}
+    ids = np.asarray(images["image_id"], str)
+    out = {
+        "note": "post hoc, not a frozen rule (PLAN.md stage 3 rule 5 failed)",
+        "ids_outside_section": [str(i) for i in ids[~in_sec]],
+        "ids_not_in_own_segment": [str(i) for i in ids[~in_seg]],
+    }
     for name, m in (("all_used", np.ones(len(images), bool)), ("spec_z", spec)):
         out[name] = {
             "n_images": int(m.sum()),
@@ -260,7 +263,7 @@ def posthoc(cache: Path, all_images: bool = False) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--maps", type=Path, required=True)
+    ap.add_argument("--maps", type=Path, help="VENUS map directory (required unless --posthoc)")
     ap.add_argument("--cache", type=Path, default=Path("data/cache/m1931s3"))
     ap.add_argument("--posthoc", action="store_true", help="frame check F diagnostic only")
     ap.add_argument("--plan-3b", action="store_true", help="PLAN_3b.md: section covers all images")
@@ -268,10 +271,12 @@ def main(argv: list[str] | None = None) -> int:
     out = OUT_3B if a.plan_3b else OUT
     out.mkdir(parents=True, exist_ok=True)
     if a.posthoc:
-        s = cp._clean(posthoc(a.cache, a.plan_3b))
+        s = cp._clean(posthoc(a.cache, out, a.plan_3b))
         (out / "posthoc.json").write_text(json.dumps(s, indent=1, allow_nan=False) + "\n")
         print(json.dumps(s, indent=1))
         return 0
+    if a.maps is None:
+        ap.error("--maps is required unless --posthoc")
     s = cp._clean(run(a.maps, a.cache, out, a.plan_3b))
     (out / "summary.json").write_text(json.dumps(s, indent=1, allow_nan=False) + "\n")
     keys = ("rule2_gate_K_wls", "rule5_frame_F", "stopped")

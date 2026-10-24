@@ -9,8 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   deviation 3b (`PLAN_3b.md`, frozen before its run) widens only the section: F fails again, 18 / 51 with 51 / 51
   inside. No gate C2, no flag reading: not a null.
 - **Failed approach:** the stage V builder (2″ background box, 3σ, 25 px) leaves most MACS J1931 images undetected:
-  15 / 51 positions inside any segment (post hoc, `posthoc.json`); contact sheet: systems 5, 6, 7, 100, 101 faint,
-  arcs 8.2, 9.1, 10.1, 12.2 unsegmented. The pipeline catalogue's S/N 4–6 depth proxy is undefined here too.
+  15 / 51 positions inside any segment (post hoc, `posthoc.json`); contact sheet (not stored): systems 5, 6, 7, 100,
+  101 faint, arcs 8.2, 9.1, 10.1, 12.2 unsegmented. The pipeline catalogue's S/N 4–6 depth proxy is undefined here too.
 - **Handoff:** MACS J1931 needs a new frozen reference plan (deeper / multi-band detection or arc-aperture sums,
   validated on MACS0417 first), or move to another field with public JWST-era maps; #374 still waits for the
   2026-10-26 weekly run.
