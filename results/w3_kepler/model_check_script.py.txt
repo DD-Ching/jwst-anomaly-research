@@ -1,0 +1,46 @@
+"""Produces model_check.json (model only, no data), committed after the review (finding: no source
+script). Same code as run at 07:55 UTC before the plan commit.
+
+    python results/w3_kepler/model_check_script.py.txt
+
+Note (review): the window is the 20 cadences before the first crossing (0.41 d), wider than the
+shoulder test's 0.25 d minimum window, and u0 runs only to 1.98.
+"""
+
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+import w3_kepler as wk  # noqa: E402
+
+out = {
+    "label": "simulated (model only, no data)",
+    "what": "exposure-averaged W3 flux factor just outside the umbra edge: max over the 20 cadences "
+    "before the first dim-edge crossing of (F - 1); minimum over 5 cadence phases; 12 u0 values in "
+    "[0, 1.98]",
+    "cells": [],
+}
+for rho, blend, te in wk.CELLS:
+    ex = []
+    for u0 in np.linspace(0, 1.98, 12):
+        tc = -te * np.sqrt(4 - u0**2)
+        best = []
+        for ph in np.linspace(0, wk.CAD, 5, endpoint=False):
+            tg = np.arange(tc - 20 * wk.CAD - ph, tc + 3 * wk.CAD, wk.CAD)
+            f = wk.w3_flux_avg(tg, 0.0, te, u0, rho, blend)
+            best.append(float(f[tg < tc + wk.CAD / 2].max() - 1))
+        ex.append(min(best))
+    out["cells"].append(
+        {
+            "rho": rho,
+            "blend": blend,
+            "tE": te,
+            "shoulder_excess_min": round(min(ex), 3),
+            "shoulder_excess_median": round(float(np.median(ex)), 3),
+        }
+    )
+print(json.dumps(out, indent=1))

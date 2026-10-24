@@ -9,16 +9,21 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     20 val and 60 search. 766 MB through the ledger.
 - **Validation (gate passes):** the 20 W3 cells (t_E 0.1–10 d, ρ 0.01 / 0.1, blend 1 / 0.7) recover
   78–91 / 100.
-  - Six ordinary control families (periodic and single eclipse, fade, PSPL, common mode, quarter step)
-    pass 0 / 100 each.
-  - The median data bound on the W3 edges is 0.041 d (post hoc).
-- **What separates W3 from a single eclipse:** a new shoulder test (the brightening just outside the
-  umbra). Without it, single eclipses pass 85–91 / 100.
+  - Among recovered injections the median edge bound is 0.041 d (90th percentile 0.22–0.27 d,
+    post hoc).
+  - Six ordinary control families pass 0 / 100 each. Every family is rejected by a property of its
+    model, so this checks the chain; it does not test real ordinary events.
+- **The shoulder test** (the brightening just outside the umbra) is the only test that stops single
+  eclipses: without it they pass 85–91 / 100.
+  - At review, 4 of the 100 real SAP light curves already met the shoulder criterion within a
+    quarter (up to rel 1.17; `posthoc2.json`). A deep single dip there would pass.
 - **Search:** 0 flagged runs in 60 stars, so no survivors and nothing vetted.
-  - No star of the 100 has any cadence ≥ 1 mag dim (post hoc). The real-data check therefore met no
-    deep ordinary dimming.
+  - No star of the 100 has any cadence ≥ 1 mag dim. The real-data check met no deep ordinary
+    dimming.
 - **Limits:** efficiency is from the SAP product onward only; single band (achromatic not tested);
   t_E ≥ 30 d excluded; no rate limit computed. The physical judgement is unchanged.
+- **Failed approach:** setting `w3_ztf.EDGE_RULE` at import leaked into `tests/test_w3_ztf.py`. It
+  was removed; outcomes are unchanged (`rerun_compare.json`).
 
 ## 2026-10-24: MACS J1931 imaging footprint for the counter-image route (D-034 addendum ac)
 - **Result** (`results/lens_consistency/macs1931_counter/RESULT.md`, `summary.json`): VENUS GO 6882 tile `o038_t041`

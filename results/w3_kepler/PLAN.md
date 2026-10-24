@@ -158,3 +158,15 @@ Owner authorization 2026-10-24. Start 07:39 UTC. Limits: 3 h (to 10:39 UTC), 2 G
   (especially short Q1 / Q17) lose their dip in the per-quarter median.
 - **Sample:** 100 FGK dwarfs at Kp 12–14, observed in all 17 quarters; not a sky rate.
 - **Labels:** injections are simulated; light curves and flags observed; outcomes derived.
+
+## Errata after review (added 08:30 UTC, after all runs; method and thresholds unchanged)
+- §5 test 4 says "eclipses, fades and steps have no shoulder". That holds for the control *models*.
+  Real SAP light curves can show in-quarter brightenings that meet the criterion (4 of 100 stars,
+  `posthoc2.json`). See RESULT §2.
+- §4 seeds: k is the index in the code's `CONTROLS` tuple (eclipse, single_eclipse, fade, pspl,
+  common, quarter_step), not the order listed in §4.
+- §4 says every control uses the exposure average. `common` sets 5 cadences directly to 3 mag, as
+  in ZTF.
+- §4 noise: for F > 1 the injected error err √F is smaller than the scatter err F, so shoulder S/N
+  is overstated by up to √F (see RESULT §2).
+- §1 / `cost.json`: the column cache is deleted at the end of the session, after the review re-run.

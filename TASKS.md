@@ -78,8 +78,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 - **W3 / Kepler pilot 2026-10-24** (`results/w3_kepler/RESULT.md`, D-107):
   - Validation passed: 78–91 / 100 per cell, 0 control passes.
   - The 60-star search has 0 flags.
-  - Next step only on an owner decision, e.g. a larger Kepler sample, t_E ≥ 30 d with another join,
-    or K2 / TESS; nothing is queued.
+  - Next step only on an owner decision. Any larger Kepler search first needs a hardened shoulder
+    test (D-107 "Revisit if"); t_E ≥ 30 d needs another join. Nothing is queued.
 
 - **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; **closed by the owner 2026-10-24**):
   - Sunrise n0153: no new epoch;

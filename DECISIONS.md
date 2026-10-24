@@ -6085,24 +6085,25 @@ confining radiation at a throat is found.
 - **Revisit if:** a W3 search targets caustic-transient stars (then add a microlens population κ_* and λ2 ≠ 1), or
   a published treatment of negative-mass microlensing with external shear disagrees.
 
-## D-107 W3 on Kepler DR25 long-cadence SAP: dense cadence bounds the edges; pilot validation passed, 60-star search null (2026-10-24)
+## D-107 W3 on Kepler DR25 long-cadence SAP: pilot validation passed, 60-star search null; shoulder test needs hardening before any scale-up (2026-10-24)
 - **Decision:**
   - For W3 (finite-source negative-mass point lens), Kepler long-cadence SAP light curves are a
-    working route for t_E 0.1–10 d at the pilot level.
-  - The W3 vetting on this route adds a **shoulder test**: the brightening of the lens just outside
-    the umbra, on both sides. At Kepler precision this test, not the edge timing alone, separates W3
-    from a single eclipse.
+    working route for t_E 0.1–10 d at the pilot level: injections are recovered at 78–91 / 100 per
+    cell, and recovered edges are bounded with a median of 0.041 d.
+  - The vetting on this route adds a **shoulder test** (a brightening just outside the umbra, on
+    both sides). It is the only test that separates W3 from a single box eclipse.
   - Edges are bounded per quarter: a cross-quarter edge is not measured.
 - **Alternatives rejected:**
   - The ZTF chain unchanged (single eclipses then pass 85–91 / 100).
-  - PDCSAP as the primary flux (the owner specified SAP; PDCSAP is a diagnostic from the same observation).
+  - PDCSAP as the primary flux (the owner specified SAP; PDCSAP is a diagnostic from the same
+    observation).
   - t_E ≥ 30 d with the per-quarter join (the umbra spans quarters).
 - **Evidence:** `results/w3_kepler/RESULT.md`.
-  - Validation 78–91 / 100 per cell; 0 / 100 in each of 6 control families.
-  - The median edge bound is 0.041 d.
-  - Search: 0 flags in 60 stars.
-  - ZTF DR24 under the same bounds rule: 43–114 / 200 per cell, gate failed (D-104).
-- **Revisit if:**
-  - the owner asks for a larger sample or a rate limit;
-  - long t_E is needed (a different quarter join first);
-  - a second band or pixel-level injection becomes available.
+  - The 0 / 100 control rates follow from the control models' design (RESULT §2).
+  - 4 of 100 real SAP light curves already meet the shoulder criterion within a quarter
+    (`posthoc2.json`).
+  - ZTF DR24 under the bounds rule: 43–114 / 200 per cell, gate failed (D-104).
+- **Revisit if:** before any larger Kepler search, harden the shoulder test: several cadences per
+  side, a local in-quarter baseline instead of the quarter median, and a control with real
+  in-quarter brightenings and long dips. Also revisit if long t_E is needed (a different quarter
+  join first), or if a second band or pixel-level injection becomes available.
