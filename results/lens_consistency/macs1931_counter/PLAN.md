@@ -1,6 +1,7 @@
 # MACS J1931 counter-image route: proposal (not frozen)
 
-Status: **stage V frozen 2026-10-24** (section "Stage V: frozen rules" below, committed before any run; claude/macs1931-stagev). Stage 3 stays a proposal. Nothing here has been run; no predicted position, map value or pixel was read for it.
+Status: **stage V frozen and run 2026-10-24**; V1 not valid (depth undefined), V2 amendment passes gate C2 at the
+threshold (28 / 35, arc 14 / 14; `../macs0417_ownref/RESULT.md`). Stage 3 stays a proposal until frozen. Nothing here has been run; no predicted position, map value or pixel was read for it.
 Follows `../macs1931_gatek/RESULT.md` (gate K passes; spec-z systems 1, 5, 6, 7, 100, 101 have more predicted than
 catalogued images) and the footprint step (`RESULT.md` here).
 
