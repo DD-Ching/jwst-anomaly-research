@@ -88,3 +88,12 @@ def test_read_zip_map_single_member(tmp_path):
         z.writestr("other.fits", buf.getvalue())
     with pytest.raises(ValueError):
         mg.read_zip_map(p)
+
+
+def test_parse_chires_bary_last_column():
+    text = (
+        "      Image     ByEye_RMSi [arcsec] Avg_RMSi [arcsec] Bary_RMSi [arcsec]\n"
+        "       1.1             0.8132             0.9904            0.6788\n"
+        "       8.3             0.0974             0.0000            0.0000\n"
+    )
+    assert mg.parse_chires_bary(text) == {"1.1": 0.6788, "8.3": 0.0}

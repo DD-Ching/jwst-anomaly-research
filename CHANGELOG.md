@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 gate K passes on the VENUS maps (pixel unit, z_s 5.079 normalisation) (D-034 addendum ab)
+- **Plan** frozen in b7ac41b (`results/lens_consistency/macs1931_gatek/PLAN.md`) before any map value was read: the
+  α normalisation from the authors' `k_dlds` values, unit check U against their `sourcepos.txt`, then gate K.
+- **Result** (`RESULT.md`, `summary.json`): normalisation check passes (z_s 5.079); U picks the header unit (pixels):
+  median source distance 0.110″ vs 363″ for the README's arcsec; gate K passes, rms 0.919″, 26 / 26 within 3″
+  (WLS source 0.630″, reported). Over the 44 non-zero-z images the rms is 4.83″ (reported; systems 8, 10 and the
+  mixed-z systems). Spec-z systems with extra predicted images: 1, 5, 6, 7, 100, 101.
+- **Post hoc** (`posthoc.json`): system 8's source lies 3.18″ from the authors' at the catalogue z; not tested.
+- **Failed approach:** archive.stsci.edu fails TLS through the session proxy (curl and urllib), so the VENUS
+  mosaics / HLSP were again not checked.
+- **Handoff:** next is a counter-image test design for the six spec-z systems, which needs VENUS imaging (MAST, or a
+  local session if archive.stsci.edu stays unreachable from cloud); #374 still waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MACS J1931 input check: image list and maps public, unit conflict, no reference catalogue (D-034 addendum aa)
 - **Survey** (research subagent; not stored): of PLCK G165.7+67.0, MACS J0138, SPT-CL J0615, Sunburst, Abell 1689 and
   others, only MACS J1931 has public JWST-era deflection maps (VENUS AstroLensPy v2.1, Zenodo 10.5281/zenodo.18646525).

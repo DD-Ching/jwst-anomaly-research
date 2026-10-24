@@ -265,12 +265,64 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     return summary
 
 
+def parse_chires_bary(text: str) -> dict[str, float]:
+    """``chires.txt``: image -> the authors' Bary image-plane residual (arcsec)."""
+    rows = [ln.split() for ln in text.splitlines()[1:]]
+    return {r[0]: float(r[3]) for r in rows if len(r) == 4}
+
+
+def posthoc(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
+    """Post hoc (not in PLAN.md; after gate K): for the 44 non-zero-z images, the U distance of
+    every system (its mixed per-image z as catalogued) and our image-plane residual next to the
+    authors' ``chires.txt`` Bary residual. Run :func:`run` first (it checks the inputs)."""
+    s = json.loads((out / "summary.json").read_text())
+    reading = s["unit_check_U"]["reading"]
+    src = parse_sourcepos((maps / "sourcepos.txt").read_text())
+    (ax, hx), (ay, _) = (read_zip_map(maps / f) for f in MAPS)
+    model = build_model(ax, ay, hx, READINGS[reading], "posthoc", f"m1931 ({reading})")
+    del ax, ay
+    images = load_images()
+    nz = images[np.asarray(images["z"], float) > 0]
+    dist = unit_distances(model, nz, src)
+    grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, images), grid_step)
+    ip = lensmodel.imageplane_residuals(model, grid, lensmodel.backtrace_images(model, nz, {}))
+    bary = parse_chires_bary((maps / "chires.txt").read_text())
+    ids = np.asarray(ip["image_id"], str)
+    d = np.asarray(ip["dtheta_arcsec"], float)
+    sysv = np.asarray(nz["system"], str)
+    zs = np.asarray(nz["z"], float)
+    mixed = sorted({k for k in sysv if len(set(zs[sysv == k])) > 1}, key=int)
+    res = {
+        "label": "post hoc (not in PLAN.md)",
+        "reading": reading,
+        "u_distance_arcsec_all_systems": dist,
+        "mixed_z_systems": mixed,
+        "per_image": {
+            i: {"ours_arcsec": float(v), "authors_bary_arcsec": bary.get(i)}
+            for i, v in zip(ids, d, strict=True)
+        },
+        "rms_ours_without_mixed_z": mi.rms_of(d[~np.isin(sysv, mixed)]),
+        "rms_authors_bary_spec": mi.rms_of(
+            np.array([bary.get(i, np.nan) for i in ids[np.asarray(nz["z_spec"], bool)]])
+        ),
+        "n_spec": int(np.sum(np.asarray(nz["z_spec"], bool))),
+        "n_without_mixed_z": int(np.sum(~np.isin(sysv, mixed))),
+    }
+    (out / "posthoc.json").write_text(json.dumps(res, indent=1) + "\n")
+    return res
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--maps", type=Path, required=True)
     ap.add_argument("--grid-step", type=float, default=GRID_STEP)
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--posthoc", action="store_true", help="post hoc checks after the plan run")
     args = ap.parse_args(argv)
+    if args.posthoc:
+        r = posthoc(args.maps, args.out, args.grid_step)
+        print(json.dumps(r["u_distance_arcsec_all_systems"], indent=1))
+        return 0
     s = run(args.maps, args.out, args.grid_step)
     print(
         json.dumps(
