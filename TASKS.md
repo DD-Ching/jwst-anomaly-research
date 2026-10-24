@@ -75,6 +75,14 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   θ_E ≳ 3 mas and t_E ≈ 100 d (under the assumed per-transit σ). Next: wait for ESA's DR4 epoch-astrometry documentation (2 Dec 2026); develop only if it carries AL
   coordinates, scan angles and σ for those sources.
 
+- **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; owner decides, nothing reopened):
+  - Sunrise n0153: no new epoch;
+  - S1063 1316 / 1557: 116.28VK.001 releases 2026-11-20 to 2027-03-12;
+  - Abell 370 1565: unused GO 5890 F150W (37 ks) and F210M exist, but the estimated F150W/F200W precision is 0.14–0.21
+    now and 0.13–0.16 after 2027-01-28.
+  - Recommendation: none now. Re-screen points: S1063 after the releases; 1565 after 2027-01-28; Euclid DR1 (staged
+    from November 2026).
+
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and
    separation. The five requested channels are null (family p = 0.27 on the re-pinned GBM snapshot). The
