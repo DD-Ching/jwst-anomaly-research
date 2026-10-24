@@ -129,7 +129,7 @@ def _fc_on(images: Table, sci, err, w, box, uri: str) -> tuple[dict, Table]:
     return {"catalogue": cat_info, "frame_F_c": f}, rows
 
 
-def validate() -> dict:
+def validate() -> tuple[dict, Table]:
     """Rule 3d-2: F_c on the MACS0417 gold images (measured frame offset) on the V2 section."""
     off = json.loads((mf.OUT / "summary.json").read_text())["measurement"]["offset"]
     images = mf.shifted_loader(off["dra"], off["ddec"])("macs0417")
@@ -140,7 +140,7 @@ def validate() -> dict:
     return s, rows
 
 
-def field_f() -> dict:
+def field_f() -> tuple[dict, Table]:
     """Rule 3d-3: F_c on the 51 used MACS J1931 images on the 3b section."""
     import s3fs
 
