@@ -2,17 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-24: Bullet Cluster extra-image test: frozen run stopped at the CANUCS mosaic WCS (incomplete)
-- **Plan:** `results/lens_consistency/bullet_extra/PLAN.md` (frozen 2a7e851; script and CANUCS sha256 pins 1ae40dd, before
-  the run): frame check F, gate K-WLS repeat, frame tables with the WLS source on GO 4598 `o001_t001`, CANUCS reference
-  with local noise, gate C2 shared, flags.
-- **Ran:** F passed (numbers not stored); K-WLS repeat rms 0.391″, 135 / 135; frame tables written (pipeline gate C
-  58 / 60, reported only). `RESULT.md`.
-- **Stopped:** the CANUCS F200W `bgsub-sci` header has `CD` (0.08″) and `PC` without `CDELT`; neither matches the
-  catalogue's 0.04″ grid, so the frozen pixel-scale check refuses it. No C2, no flag.
-- **Failed approach:** a 10-min background job limit killed the first attempt; rules 1–3 take ~16 min. Run detached.
-- **Handoff:** draft #494 stays open (unit in flight, claim released). Next: a frozen `PLAN_1b.md` deviation for the
-  mosaic WCS (catalogue-fitted TAN WCS with a residual gate, or the `sci` / `rms` headers if they pass), then rules 4–8.
+## 2026-10-24: Bullet Cluster extra-image test (WLS source): gate C2 passes, no flag (D-034 addendum z)
+- **Plans:** `results/lens_consistency/bullet_extra/PLAN.md` (frozen 2a7e851) and the post-failure deviation `PLAN_1b.md`
+  (frozen 6d75951, code 72d7b61, before any CANUCS pixel was read): the F200W `bgsub-sci` header has `PC` without
+  `CDELT` and a 0.08″ `CD`, so the WCS is the header's `CRPIX` / `CRVAL` / `PC` at 0.04″, gated by the catalogue (W1)
+  and by point-source centroids (W2).
+- **Results:** F passes (92 / 135, medians < 0.001″); W1 passes (rms 1e-10″, catalogue 0-based); W2 passes (Δx −0.035,
+  Δy +0.205 px, 51 sources; Δy near the 0.25 px limit); gate C2 shared passes (58 / 67, arc 37 / 42); 0 / 22 targets
+  absent, **no flag**. Without the local-noise rule 5 targets read absent (N2a, N5a ×2, N5b ×2); locally they are
+  pred / σ 1.0–2.4 near stars, bCG residuals and cluster halos (contact sheet checked). `RESULT.md`.
+- **Failed approaches:** `WCS(header)` of the mosaic as written (3600″ / px); a 10-min background limit killed the first
+  run (rules 1–3 ~16 min). `--plan-1b` reuses stored rule 2–3 outputs (~9 min, `nohup`).
+- **Handoff:** Bullet extra-image line closed (null, limited reach). Next: input check of another field with public
+  JWST-era maps and an image list (TASKS.md); #374 still waits for the 2026-10-26 weekly run.
 
 ## 2026-10-24: Bullet Cluster gate K: fails as written (mean source); gate K-WLS passes (deviation)
 - **Plan:** `results/lens_consistency/bullet_gatek/PLAN.md`, frozen and pushed (3613c8f) before any map value was

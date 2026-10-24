@@ -2420,6 +2420,17 @@ within 3″. Decision: the Bullet maps go on to gate C2 and the extra-image test
 yet. Alternatives rejected: exempting K1b / K1e by hand. Revisit if: gate C2 fails, or the WLS and mean sources
 disagree on an extra-image flag.
 
+**Addendum 2026-10-24z (Bullet Cluster extra-image test).** `results/lens_consistency/bullet_extra/RESULT.md`. The
+CANUCS F200W `bgsub-sci` mosaic header carries `PC` without `CDELT` and a 0.08″ `CD`; the frozen deviation
+`PLAN_1b.md` uses the header's `CRPIX` / `CRVAL` / `PC` with `CDELT` 0.04″, gated by the catalogue (W1, rms 1e-10″,
+0-based `X`, `Y`) and by point-source centroids (W2, median offsets −0.035 / +0.205 px, 51 sources). Frame check F
+passes (92 / 135, medians < 0.001″); gate C2 (shared) passes, 58 / 67 and arc-referenced 37 / 42; **no flag**
+(0 / 22 targets absent; 13 untestable at local 5 σ). Decision: the Bullet Cluster extra-image test is closed as a null
+with these limits; the route (CANUCS reference + local noise + containing-source rule) is validated here as on
+MACS1423 / Abell 370. Alternatives rejected: a free TAN fit to catalogue `X`, `Y` (not needed once W1 agrees to
+1e-10″). Revisit if: CANUCS republishes the mosaic with a different WCS, or a deeper / star-cleaned F200W image makes
+N2a, N5a, N5b testable.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

@@ -1,0 +1,414 @@
+{
+ "plan": "results/lens_consistency/bullet_extra/PLAN.md",
+ "deviation": "results/lens_consistency/bullet_extra/PLAN_1b.md",
+ "rule1_frame_F": {
+  "n_gold": 135,
+  "n_matched": 92,
+  "median_dx_arcsec": -0.0004540106952270676,
+  "median_dy_arcsec": -3.3873899690647085e-06,
+  "median_sep_arcsec": 0.09777091593312175,
+  "rules": {
+   "match_arcsec": 0.5,
+   "max_abs_median_arcsec": 0.1,
+   "min_n": 30
+  },
+  "passes": true
+ },
+ "rule2_gate_K_wls": "stored: summary_wls.json (not re-run, PLAN_1b.md)",
+ "rule3_frame_tables": "stored: frame/ (not re-run, PLAN_1b.md)",
+ "W1_catalogue_wcs": {
+  "n_rows": 20138,
+  "origin_0": {
+   "rms_arcsec": 9.976693139788955e-11,
+   "p99_arcsec": 5.7302806657604124e-11,
+   "passes": true
+  },
+  "origin_1": {
+   "rms_arcsec": 0.05656852800092132,
+   "p99_arcsec": 0.056568542305633365,
+   "passes": false
+  },
+  "catalogue_origin": 0,
+  "passes": true
+ },
+ "W2_pixel_wcs": {
+  "n_selected": 51,
+  "n_usable": 51,
+  "median_dx_pix": -0.035228974101528365,
+  "median_dy_pix": 0.20497510456880264,
+  "saturation_guard_njy": 1984.6160105529125,
+  "passes": true
+ },
+ "without_contain": {
+  "gate_C2_shared": {
+   "all": {
+    "n_testable": 67,
+    "n_ok": 51,
+    "fraction": 0.7611940298507462
+   },
+   "arc_referenced": {
+    "n_testable": 42,
+    "n_ok": 31,
+    "fraction": 0.7380952380952381
+   },
+   "passes": false,
+   "merged_groups": [
+    [
+     5,
+     8
+    ],
+    [
+     13,
+     19
+    ],
+    [
+     20,
+     23
+    ],
+    [
+     21,
+     24
+    ],
+    [
+     22,
+     25
+    ],
+    [
+     26,
+     32,
+     35
+    ],
+    [
+     27,
+     33
+    ],
+    [
+     28,
+     34
+    ],
+    [
+     48,
+     52
+    ],
+    [
+     68,
+     69,
+     71,
+     72
+    ],
+    [
+     97,
+     100
+    ],
+    [
+     111,
+     114
+    ],
+    [
+     112,
+     115
+    ],
+    [
+     113,
+     116
+    ]
+   ]
+  },
+  "flags": [],
+  "control_classes": {
+   "absent": 14,
+   "ambiguous": 7,
+   "confused": 5,
+   "inconsistent_reference": 19,
+   "no_reference": 15,
+   "recovered": 56,
+   "undetectable": 2,
+   "undetectable_local": 16
+  },
+  "target_classes": {
+   "confused": 1,
+   "inconsistent_reference": 5,
+   "no_reference": 2,
+   "recovered": 1,
+   "undetectable": 5,
+   "undetectable_local": 8
+  },
+  "gate_C2_plain": {
+   "all": {
+    "n_testable": 82,
+    "n_ok": 61,
+    "fraction": 0.7439024390243902
+   },
+   "arc_referenced": {
+    "n_testable": 57,
+    "n_ok": 41,
+    "fraction": 0.7192982456140351
+   },
+   "passes": false
+  },
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 98,
+     "n_ok": 73,
+     "fraction": 0.7448979591836735
+    },
+    "arc_referenced": {
+     "n_testable": 69,
+     "n_ok": 50,
+     "fraction": 0.7246376811594203
+    },
+    "passes": false
+   },
+   "control_classes": {
+    "absent": 25,
+    "confused": 8,
+    "inconsistent_reference": 19,
+    "no_reference": 15,
+    "recovered": 65,
+    "undetectable": 2
+   },
+   "target_classes": {
+    "absent": 5,
+    "ambiguous": 1,
+    "confused": 2,
+    "inconsistent_reference": 5,
+    "no_reference": 2,
+    "recovered": 2,
+    "undetectable": 5
+   },
+   "flags": []
+  },
+  "posthoc_absent_controls": {
+   "absent_own_segment_centroid_outside_radius": 6,
+   "absent_no_containing_segment": 12,
+   "absent_sources_too_faint": 7
+  },
+  "inputs": {
+   "canucs_cat": "catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits",
+   "canucs_url": "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits",
+   "canucs_cat_sha256": "536b4d56cad8f00a89a79b7bfcf1acbe1cf68ac37fea7af8355623cf2d830f8e",
+   "n_rows_finite_flux": 19952,
+   "flux_column": "FLUX_KRON_TOTAL_F200W",
+   "image": "images/hlsp_canucs_jwst_nircam_bullet-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_url": "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/images/hlsp_canucs_jwst_nircam_bullet-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_sha256": "5023e937be3071faed1dc4219139dade69aaf7d590b46dcdecf7d511743f2bac",
+   "image_wcs": "PLAN_1b.md W0 (header CRPIX/CRVAL/PC, CDELT 0.04 arcsec)",
+   "noise_pixel_scale_arcsec": 0.03999999999999996,
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "pixel_scale_arcsec": 0.03999957665080061,
+   "depth_mag": 27.690281385192602
+  },
+  "rules": {
+   "ELLIPSE_NSIGMA": 3.0,
+   "MIN_REF_SNR": 5.0,
+   "MAX_REF_MU": 50.0,
+   "MAX_REF_SPREAD": 3.0,
+   "FLUX_RANGE": [
+    0.3333333333333333,
+    3.0
+   ],
+   "TEN_SIGMA_DMAG": 0.752574989159953,
+   "BASE_SEARCH": 1.0,
+   "C2": [
+    8,
+    0.8,
+    3
+   ],
+   "ARC_MIN_ELL": 0.5,
+   "contain": false
+  }
+ },
+ "frozen": {
+  "gate_C2_shared": {
+   "all": {
+    "n_testable": 67,
+    "n_ok": 58,
+    "fraction": 0.8656716417910447
+   },
+   "arc_referenced": {
+    "n_testable": 42,
+    "n_ok": 37,
+    "fraction": 0.8809523809523809
+   },
+   "passes": true,
+   "merged_groups": [
+    [
+     5,
+     8
+    ],
+    [
+     13,
+     19
+    ],
+    [
+     20,
+     23
+    ],
+    [
+     21,
+     24
+    ],
+    [
+     22,
+     25
+    ],
+    [
+     26,
+     32,
+     35
+    ],
+    [
+     27,
+     33
+    ],
+    [
+     28,
+     34
+    ],
+    [
+     48,
+     52
+    ],
+    [
+     68,
+     69,
+     71,
+     72
+    ],
+    [
+     97,
+     100
+    ],
+    [
+     111,
+     114
+    ],
+    [
+     112,
+     115
+    ],
+    [
+     113,
+     116
+    ]
+   ]
+  },
+  "flags": [],
+  "control_classes": {
+   "absent": 8,
+   "ambiguous": 6,
+   "confused": 7,
+   "inconsistent_reference": 19,
+   "no_reference": 15,
+   "recovered": 61,
+   "undetectable": 2,
+   "undetectable_local": 16
+  },
+  "target_classes": {
+   "confused": 1,
+   "inconsistent_reference": 5,
+   "no_reference": 2,
+   "recovered": 1,
+   "undetectable": 5,
+   "undetectable_local": 8
+  },
+  "gate_C2_plain": {
+   "all": {
+    "n_testable": 82,
+    "n_ok": 68,
+    "fraction": 0.8292682926829268
+   },
+   "arc_referenced": {
+    "n_testable": 57,
+    "n_ok": 47,
+    "fraction": 0.8245614035087719
+   },
+   "passes": true
+  },
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 98,
+     "n_ok": 80,
+     "fraction": 0.8163265306122449
+    },
+    "arc_referenced": {
+     "n_testable": 69,
+     "n_ok": 56,
+     "fraction": 0.8115942028985508
+    },
+    "passes": true
+   },
+   "control_classes": {
+    "absent": 18,
+    "confused": 10,
+    "inconsistent_reference": 19,
+    "no_reference": 15,
+    "recovered": 70,
+    "undetectable": 2
+   },
+   "target_classes": {
+    "absent": 5,
+    "ambiguous": 1,
+    "confused": 2,
+    "inconsistent_reference": 5,
+    "no_reference": 2,
+    "recovered": 2,
+    "undetectable": 5
+   },
+   "flags": [
+    "N2a@104.656885,-55.956333",
+    "N5a@104.647487,-55.950129",
+    "N5a@104.645843,-55.948895",
+    "N5b@104.647197,-55.950248",
+    "N5b@104.646028,-55.949030"
+   ]
+  },
+  "posthoc_absent_controls": {
+   "absent_own_segment_centroid_outside_radius": 0,
+   "absent_no_containing_segment": 12,
+   "absent_sources_too_faint": 6
+  },
+  "inputs": {
+   "canucs_cat": "catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits",
+   "canucs_url": "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits",
+   "canucs_cat_sha256": "536b4d56cad8f00a89a79b7bfcf1acbe1cf68ac37fea7af8355623cf2d830f8e",
+   "n_rows_finite_flux": 19952,
+   "flux_column": "FLUX_KRON_TOTAL_F200W",
+   "image": "images/hlsp_canucs_jwst_nircam_bullet-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_url": "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/images/hlsp_canucs_jwst_nircam_bullet-clu-40mas_f200w_v1_bgsub-sci.fits.gz",
+   "image_sha256": "5023e937be3071faed1dc4219139dade69aaf7d590b46dcdecf7d511743f2bac",
+   "image_wcs": "PLAN_1b.md W0 (header CRPIX/CRVAL/PC, CDELT 0.04 arcsec)",
+   "noise_pixel_scale_arcsec": 0.03999999999999996,
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "pixel_scale_arcsec": 0.03999957665080061,
+   "depth_mag": 27.690281385192602
+  },
+  "rules": {
+   "ELLIPSE_NSIGMA": 3.0,
+   "MIN_REF_SNR": 5.0,
+   "MAX_REF_MU": 50.0,
+   "MAX_REF_SPREAD": 3.0,
+   "FLUX_RANGE": [
+    0.3333333333333333,
+    3.0
+   ],
+   "TEN_SIGMA_DMAG": 0.752574989159953,
+   "BASE_SEARCH": 1.0,
+   "C2": [
+    8,
+    0.8,
+    3
+   ],
+   "ARC_MIN_ELL": 0.5,
+   "contain": true
+  }
+ }
+}
