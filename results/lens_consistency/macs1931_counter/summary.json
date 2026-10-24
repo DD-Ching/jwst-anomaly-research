@@ -1,0 +1,137 @@
+{
+ "program": "6882",
+ "f200w_i2d_header": {
+  "uri": "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_i2d.fits",
+  "naxis": [
+   10077,
+   4577
+  ],
+  "bunit": "MJy/sr",
+  "pixel_arcsec": 0.031225893511896294
+ },
+ "centre_deg": [
+  292.95628905,
+  -26.577046057407415
+ ],
+ "box_deg": 0.1,
+ "mosaics": [
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f090w",
+   "filter": "F090W",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.04106763889,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f115w",
+   "filter": "F115W",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.07225935185,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f150w",
+   "filter": "F150W",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.09860423611,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f200w",
+   "filter": "F200W",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.12047533565,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f210m",
+   "filter": "F210M",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.14197421297,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f277w",
+   "filter": "F277W",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.12047607639,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f300m",
+   "filter": "F300M",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.14197421297,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f356w",
+   "filter": "F356W",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.09860423611,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f410m",
+   "filter": "F410M",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.04106837963,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f444w",
+   "filter": "F444W",
+   "target_name": "MACSJ1931-2635",
+   "t_min_mjd": 60919.07225935185,
+   "n_used_inside": 51,
+   "n_used": 51,
+   "n_spec_inside": 26,
+   "n_spec": 26
+  }
+ ],
+ "f200w_products": [
+  {
+   "file": "jw06882-o038_t041_nircam_clear-f200w_cat.ecsv",
+   "bytes": 3927313,
+   "s3": "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_cat.ecsv"
+  },
+  {
+   "file": "jw06882-o038_t041_nircam_clear-f200w_i2d.fits",
+   "bytes": 1291757760,
+   "s3": "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_i2d.fits"
+  },
+  {
+   "file": "jw06882-o038_t041_nircam_clear-f200w_segm.fits",
+   "bytes": 184645440,
+   "s3": "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_segm.fits"
+  }
+ ],
+ "provenance": "observed (MAST CAOM metadata); positions: VENUS image list (observed)"
+}
