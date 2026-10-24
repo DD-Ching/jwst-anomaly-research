@@ -2431,6 +2431,16 @@ MACS1423 / Abell 370. Alternatives rejected: a free TAN fit to catalogue `X`, `Y
 1e-10″). Revisit if: CANUCS republishes the mosaic with a different WCS, or a deeper / star-cleaned F200W image makes
 N2a, N5a, N5b testable.
 
+**Addendum 2026-10-24aa (MACS J1931 input check).** `results/lens_consistency/macs1931_inputs/RESULT.md`. The VENUS
+AstroLensPy v2.1 model (Allingham+2026, Zenodo 10.5281/zenodo.18646525) gives a JWST-era image list (51 used images,
+19 systems, 9 spec-z systems with 26 images) and 0.04″ deflection maps; its headers say `BUNIT = 'Pixels'` while the
+README says arcsec, and the α normalisation redshift is not in the header. DJA v7 lists no MACS J1931 field.
+Decision: MACS J1931 is a gate-K-only field: next a frozen plan that resolves the unit (the authors' description, or
+both readings with gate K on the spec-z images deciding) before any residual is read; no gate C2 / extra-image test
+until a deblended reference catalogue is public. Alternatives rejected (survey, not stored): PLCK G165.7+67.0,
+MACS J0138, SPT-CL J0615, Sunburst (no public JWST-era maps found). Revisit if: a VENUS or DJA catalogue for the field
+appears, or MAST hosts a VENUS HLSP with a catalogue.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

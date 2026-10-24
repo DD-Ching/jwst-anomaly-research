@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 input check: image list and maps public, unit conflict, no reference catalogue (D-034 addendum aa)
+- **Survey** (research subagent; not stored): of PLCK G165.7+67.0, MACS J0138, SPT-CL J0615, Sunburst, Abell 1689 and
+  others, only MACS J1931 has public JWST-era deflection maps (VENUS AstroLensPy v2.1, Zenodo 10.5281/zenodo.18646525).
+- **Result** (`results/lens_consistency/macs1931_inputs/RESULT.md`, `summary.json`): 51 used images in 19 systems
+  (9 spec-z systems, 26 images); 0.04″ maps, header `BUNIT = 'Pixels'` vs README arcsec; `chires` rms 0.444″ (Bary);
+  DJA v7 has no MACS J1931 field, so only gate K can run.
+- **Failed approach:** the record's MUSE z list confirms only systems 100 / 101; systems 1–7 have no entry there
+  (Caminha+19 not read). archive.stsci.edu did not answer (connection failure), so a VENUS HLSP was not checked.
+- **Handoff:** next is a frozen MACS J1931 gate-K plan resolving the deflection unit and α normalisation first
+  (maps 2 × 67 MB zipped, under the 200 MB rule); #374 still waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: Bullet Cluster extra-image test (WLS source): gate C2 passes, no flag (D-034 addendum z)
 - **Plans:** `results/lens_consistency/bullet_extra/PLAN.md` (frozen 2a7e851) and the post-failure deviation `PLAN_1b.md`
   (frozen 6d75951, code 72d7b61, before any CANUCS pixel was read): the F200W `bgsub-sci` header has `PC` without
