@@ -1,0 +1,24 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: abs_mu, datatype: float64}
+# - {name: L_ref, datatype: float64}
+# - {name: ref_counterpart, datatype: int64}
+# - {name: arc_ref, datatype: bool}
+# - {name: f_pred, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: n_sources, datatype: int64}
+# - {name: max_ratio, datatype: float64}
+# - {name: sigma_loc_njy, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: class_local, datatype: string}
+# - {name: reading, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: results/lens_consistency/m0416_mars_only_phot/PLAN.md; MARS maps (model_prediction) + CANUCS DR1 F200W}
+# schema: astropy-2.0
+system ra dec abs_mu L_ref ref_counterpart arc_ref f_pred class n_sources max_ratio sigma_loc_njy pred_over_sigma class_local reading
+D115a 64.0447423215326 -24.06090060304654 29.188202952939257 1.4128375211349229e-08 3121368 False 4.123818830641374e-07 recovered 4 0.5503158221373637 4.79127656243072 86.06931319675836 recovered seen_where_only_mars_predicts

@@ -1,0 +1,62 @@
+{
+ "label": "post hoc, not a frozen rule",
+ "targets": [
+  {
+   "system": "D115a",
+   "observed_images": [
+    {
+     "image_id": "D115a.1",
+     "d_arcsec": 0.8525429911455242,
+     "counterpart": 3121427,
+     "paired_to_mars": true
+    },
+    {
+     "image_id": "D115a.2",
+     "d_arcsec": 3.242175197392085,
+     "counterpart": 3121426,
+     "paired_to_mars": false
+    },
+    {
+     "image_id": "D115a.3",
+     "d_arcsec": 26.81045692634396,
+     "counterpart": 3121368,
+     "paired_to_mars": true
+    },
+    {
+     "image_id": "D115b.1",
+     "d_arcsec": 0.21401187436383795,
+     "counterpart": 3121428,
+     "paired_to_mars": true
+    },
+    {
+     "image_id": "D115b.2",
+     "d_arcsec": 3.6799900615252503,
+     "counterpart": 3121426,
+     "paired_to_mars": true
+    }
+   ],
+   "compared_sources": [
+    {
+     "label": 3112621,
+     "d_arcsec": 1.4482919907923717,
+     "f_over_fpred": 0.00935189058530033
+    },
+    {
+     "label": 3112673,
+     "d_arcsec": 1.28190500324355,
+     "f_over_fpred": 0.004259642501283418
+    },
+    {
+     "label": 3121427,
+     "d_arcsec": 0.9009569367090109,
+     "f_over_fpred": 0.5503158221373637
+    },
+    {
+     "label": 3121428,
+     "d_arcsec": 0.3811987469834749,
+     "f_over_fpred": 0.35011728919288515
+    }
+   ]
+  }
+ ]
+}

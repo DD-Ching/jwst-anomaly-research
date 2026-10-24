@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS0416 forced photometry at the MARS-only image: the flux is the catalogued D115a.1 / D115b.1 arc (D-034 addendum as)
+- **Result** (`results/lens_consistency/m0416_mars_only_phot/RESULT.md`): gate C2 at MARS positions passes (39 / 41);
+  the MARS-only D115a image (|μ| 29.2) is `recovered`. Post hoc, the matching sources are the counterparts of
+  catalogued D115a.1 and D115b.1 (0.85″ / 0.21″ from the target); D115a.2 (unpaired) is 3.24″ away. No new image;
+  the D115 two-model route stops; D115b record unchanged (`inconclusive`).
+- **Handoff:** next, a two-model extra-image check on another field with a held-out-validated second model, or the
+  D115b Lenstool re-fit with 8515's σ free. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MACS0416 CANUCS extra images under the MARS maps: the D115b flag is CANUCS-only (D-034 addendum ar)
 - **Result** (`results/lens_consistency/m0416_mars_extra/RESULT.md`): of 49 CANUCS extra-image predictions, 38 have
   a free MARS image within 3″ and 11 do not; all 5 with |μ_CANUCS| ≥ 10 are CANUCS only, the D115b flag included

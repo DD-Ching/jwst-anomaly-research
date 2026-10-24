@@ -2570,6 +2570,14 @@ Decision: the flag's record gets a model-specific reading; its verdict stays `in
 Alternatives rejected: closing the flag on MARS alone (1.515″ map pixels at a galaxy-scale critical curve).
 Revisit if: a Lenstool re-fit with 8515's σ free, or a finer-resolution independent model of MACS0416.
 
+**Addendum 2026-10-24as (MACS0416 forced photometry at the MARS-only image).** `results/lens_consistency/m0416_mars_only_phot/RESULT.md`,
+plan, rule functions and tests frozen before the run. `m0417_arcref` photometry with the CANUCS catalogue at MARS
+positions and MARS |μ| (1.5″ radius, ASSUMPTION). Gate C2 passes (39 / 41, arc 12 / 13); the one MARS-only image
+(D115a, |μ| 29.2) is `recovered`. Post hoc, its flux is the catalogued D115a.1 / D115b.1 counterparts (0.90″, 0.38″);
+D115a.2, the one D115a image without a MARS pair, is 3.24″ away. Decision: no new image; the D115 two-model route
+stops. Alternatives rejected: a colour test (the flux is already tied to catalogued images). Revisit if: a
+finer-resolution independent MACS0416 model predicts a D115 image away from the catalogued ones.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

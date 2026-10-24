@@ -305,13 +305,61 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--zip", type=Path, required=True, help="directory for the MARS zip")
     ap.add_argument("--cat", type=Path, required=True)
     ap.add_argument("--image", type=Path, required=True)
+    ap.add_argument("--posthoc", action="store_true", help="only the post hoc table (after a run)")
     a = ap.parse_args(argv)
+    if a.posthoc:
+        print(json.dumps(posthoc(a.cat), indent=1))
+        return 0
     try:
         s = run(a.zip, a.cat, a.image)
     finally:
         (a.zip / mh.ZIP).unlink(missing_ok=True)
     print(json.dumps(_clean({k: v for k, v in s.items() if k != "zip"}), indent=1))
     return 0
+
+
+def posthoc(cat_path: Path, out: Path = OUT) -> dict:
+    """Post hoc (not a frozen rule): distance from each target to its source's observed images
+    (D115a / D115b share one source) and the compared sources with their CANUCS counterparts."""
+    cat = cr.to_cat(Table.read(cat_path))
+    images = Table.read(mo.FIELDS[me.FIELD][0])
+    ctl = Table.read(out / "controls.ecsv")
+    paired = {i for s in ctl["images"] for i in str(s).split("+")}
+    res = []
+    for tg in Table.read(out / "targets.ecsv"):
+        ra, dec = float(tg["ra"]), float(tg["dec"])
+        stem = str(tg["system"]).rstrip("abcdefgh")
+        near = []
+        for r in images:
+            if lensmodel.image_family(str(r["image_id"])).rstrip("abcdefgh") != stem:
+                continue
+            k = ar.counterpart(float(r["ra"]), float(r["dec"]), cat)
+            near.append(
+                {
+                    "image_id": str(r["image_id"]),
+                    "d_arcsec": float(
+                        np.hypot((r["ra"] - ra) * np.cos(np.radians(dec)), r["dec"] - dec) * 3600
+                    ),
+                    "counterpart": int(cat["label"][k]) if k >= 0 else -1,
+                    "paired_to_mars": str(r["image_id"]) in paired,
+                }
+            )
+        rcp = int(np.flatnonzero(cat["label"] == tg["ref_counterpart"])[0])
+        srcs = [
+            {
+                "label": int(cat["label"][k]),
+                "d_arcsec": float(
+                    np.hypot((cat["ra"][k] - ra) * np.cos(np.radians(dec)), cat["dec"][k] - dec)
+                    * 3600
+                ),
+                "f_over_fpred": float(cat["flux"][k] / tg["f_pred"]),
+            }
+            for k in ar.compared_sources(ra, dec, SEARCH_ARCSEC, cat, rcp, contain=True)
+        ]
+        res.append({"system": str(tg["system"]), "observed_images": near, "compared_sources": srcs})
+    p = {"label": "post hoc, not a frozen rule", "targets": res}
+    (out / "posthoc.json").write_text(json.dumps(_clean(p), indent=1, allow_nan=False) + "\n")
+    return p
 
 
 if __name__ == "__main__":
