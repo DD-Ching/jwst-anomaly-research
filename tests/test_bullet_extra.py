@@ -86,3 +86,55 @@ def test_frame_check_ignores_non_finite_catalogue_rows():
     cdec = np.r_[cdec, DEC0]
     r = m.frame_check_f(*_grid(), cra, cdec)
     assert r["passes"] and r["median_dx_arcsec"] == pytest.approx(0.0, abs=1e-6)
+
+
+def _bullet_header():
+    from astropy.io import fits
+
+    h = fits.Header()
+    h.update(
+        NAXIS=2, NAXIS1=200, NAXIS2=160, CRPIX1=100.5, CRPIX2=80.5, CRVAL1=RA0, CRVAL2=DEC0,
+        CTYPE1="RA---TAN", CTYPE2="DEC--TAN", CUNIT1="deg", CUNIT2="deg",
+        PC1_1=-1.0, PC1_2=0.0, PC2_1=0.0, PC2_2=1.0,
+        CD1_1=-2.2222222222222e-05, CD1_2=0.0, CD2_1=0.0, CD2_2=2.22222222222222e-05,
+    )  # fmt: skip
+    return h
+
+
+def test_header_wcs_drops_cd_and_sets_0p04_arcsec():
+    from astropy.wcs.utils import proj_plane_pixel_scales
+
+    w = m.header_wcs(_bullet_header())
+    assert np.allclose(proj_plane_pixel_scales(w) * 3600.0, 0.04)
+    # header CRPIX is 1-based: 0-based pixel (99.5, 79.5) is CRVAL
+    ra, dec = w.pixel_to_world_values(99.5, 79.5)
+    assert abs(ra - RA0) < 1e-9 and abs(dec - DEC0) < 1e-9
+    # east is to -x
+    ra1, _ = w.pixel_to_world_values(100.5, 79.5)
+    assert ra1 < ra
+
+
+@pytest.mark.parametrize("origin", [0, 1])
+def test_wcs_catalogue_check_finds_the_catalogue_convention(origin):
+    w = m.header_wcs(_bullet_header())
+    rng = np.random.default_rng(1)
+    x0, y0 = rng.uniform(5, 190, 300), rng.uniform(5, 150, 300)
+    ra, dec = w.pixel_to_world_values(x0, y0)
+    r = m.wcs_catalogue_check(w, x0 + origin, y0 + origin, ra, dec)
+    assert r["catalogue_origin"] == origin and r["passes"]
+    assert r[f"origin_{origin}"]["rms_arcsec"] < 1e-6
+    assert not r[f"origin_{1 - origin}"]["passes"]  # one pixel = 0.04" rms > 0.01"
+    # a 0.08" scale catalogue fails both readings
+    assert not m.wcs_catalogue_check(w, 2 * x0, 2 * y0, ra, dec)["passes"]
+
+
+def test_centroid_offsets_recover_a_subpixel_shift():
+    yy, xx = np.mgrid[0:60, 0:60]
+    xs, ys = np.array([20.3, 40.0]), np.array([30.0, 15.7])
+    d = 5.0 + sum(
+        100 * np.exp(-((xx - x) ** 2 + (yy - y) ** 2) / (2 * 1.2**2))
+        for x, y in zip(xs, ys, strict=True)
+    )
+    off = m.centroid_offsets(d, xs - 0.2, ys + 0.1)  # positions given wrong by (-0.2, +0.1)
+    assert np.allclose(off, [[0.2, -0.1], [0.2, -0.1]], atol=0.03)
+    assert np.isnan(m.centroid_offsets(d, np.array([1.0]), np.array([1.0]))).all()  # off edge

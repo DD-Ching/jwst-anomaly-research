@@ -57,6 +57,10 @@ IMAGE_SHA: str | None = "5023e937be3071faed1dc4219139dade69aaf7d590b46dcdecf7d51
 F_MATCH_ARCSEC = 0.5
 F_MAX_MEDIAN_ARCSEC = 0.1
 F_MIN_N = 30
+# Frozen PLAN_1b.md rules W1 / W2 (ASSUMPTIONs)
+W1_RMS_ARCSEC, W1_P99_ARCSEC = 0.01, 0.04
+W2_N, W2_MIN_USABLE, W2_EDGE, W2_HALF, W2_ISOL_ARCSEC = 100, 50, 10, 4, 1.0
+W2_MAX_MEDIAN_PIX, W2_SAT_FRAC, W2_SAT_PCT = 0.25, 0.5, 99.999
 
 
 def frame_check_f(gra, gdec, cra, cdec) -> dict:
@@ -119,14 +123,166 @@ def read_image(path: Path) -> tuple:
     return w, d, pix
 
 
+def header_wcs(header) -> WCS:
+    """PLAN_1b.md W0: header CRPIX, CRVAL, CTYPE and PC; CD removed, CDELT 0.04 arcsec."""
+    h = header.copy()
+    for k in ("CD1_1", "CD1_2", "CD2_1", "CD2_2"):
+        h.remove(k, ignore_missing=True)
+    h["CDELT1"] = h["CDELT2"] = m14.PIX / 3600.0
+    return WCS(h).celestial
+
+
+def wcs_catalogue_check(w: WCS, x, y, ra, dec) -> dict:
+    """PLAN_1b.md W1: ``w`` applied to catalogue X, Y read 0-based and 1-based, against RA, DEC."""
+    x, y, ra, dec = (np.asarray(v, float) for v in (x, y, ra, dec))
+    ok = np.isfinite(x) & np.isfinite(y) & np.isfinite(ra) & np.isfinite(dec)
+    sky = SkyCoord(ra[ok] * u.deg, dec[ok] * u.deg)
+    res: dict = {"n_rows": int(ok.sum())}
+    for origin in (0, 1):
+        sep = w.pixel_to_world(x[ok] - origin, y[ok] - origin).separation(sky).arcsec
+        rms, p99 = float(np.sqrt(np.mean(sep**2))), float(np.percentile(sep, 99))
+        res[f"origin_{origin}"] = {
+            "rms_arcsec": rms,
+            "p99_arcsec": p99,
+            "passes": bool(rms <= W1_RMS_ARCSEC and p99 <= W1_P99_ARCSEC),
+        }
+    best = min((0, 1), key=lambda o: res[f"origin_{o}"]["rms_arcsec"])
+    res["catalogue_origin"] = best
+    res["passes"] = bool(res["origin_0"]["passes"] or res["origin_1"]["passes"])
+    return res
+
+
+def centroid_offsets(d, xs, ys, half: int = W2_HALF) -> np.ndarray:
+    """Intensity-weighted centroid minus (x, y) in a (2 half + 1)^2 box at the nearest pixel, after
+    subtracting the median of the box border; NaN rows where the box sum is not finite and > 0."""
+    out = np.full((len(xs), 2), np.nan)
+    k = np.arange(-half, half + 1)
+    for i, (x, y) in enumerate(zip(xs, ys, strict=True)):
+        ix, iy = int(np.rint(x)), int(np.rint(y))
+        box = np.asarray(d[iy - half : iy + half + 1, ix - half : ix + half + 1], float)
+        if box.shape != (2 * half + 1, 2 * half + 1):
+            continue
+        border = np.concatenate([box[0], box[-1], box[1:-1, 0], box[1:-1, -1]])
+        b = box - np.median(border)
+        s = b.sum()
+        if not (np.isfinite(s) and s > 0):
+            continue
+        out[i] = (ix + (b.sum(0) * k).sum() / s - x, iy + (b.sum(1) * k).sum() / s - y)
+    return out
+
+
+def wcs_pixel_check(w: WCS, d, t: Table) -> dict:
+    """PLAN_1b.md W2: centroids of bright isolated unsaturated point sources at ``w`` positions."""
+    ra, dec = np.asarray(t["RA"], float), np.asarray(t["DEC"], float)
+    ok = np.isfinite(ra) & np.isfinite(dec)
+    sky = SkyCoord(ra[ok] * u.deg, dec[ok] * u.deg)
+    _, sep2, _ = sky.match_to_catalog_sky(sky, nthneighbor=2)
+    isolated = np.zeros(len(t), bool)
+    isolated[np.flatnonzero(ok)] = sep2.arcsec > W2_ISOL_ARCSEC
+    with np.errstate(invalid="ignore"):
+        x, y = (np.asarray(v, float) for v in w.world_to_pixel_values(ra, dec))
+    ny, nx = d.shape
+    inside = (x >= W2_EDGE) & (x <= nx - 1 - W2_EDGE) & (y >= W2_EDGE) & (y <= ny - 1 - W2_EDGE)
+    sat = W2_SAT_FRAC * float(np.nanpercentile(d, W2_SAT_PCT))
+    cand = np.flatnonzero(np.asarray(t["FLAG_POINTSRC"], bool) & isolated & inside)
+    cand = cand[np.argsort(-np.asarray(t["SNR_DETIMG"], float)[cand], kind="stable")]
+    chosen = []
+    for i in cand:
+        ix, iy = int(np.rint(x[i])), int(np.rint(y[i]))
+        pk = np.nanmax(d[iy - W2_HALF : iy + W2_HALF + 1, ix - W2_HALF : ix + W2_HALF + 1])
+        if pk < sat:
+            chosen.append(i)
+        if len(chosen) == W2_N:
+            break
+    chosen = np.asarray(chosen, int)
+    off = centroid_offsets(d, x[chosen], y[chosen])
+    good = np.isfinite(off).all(1)
+    n = int(good.sum())
+    mdx = float(np.median(off[good, 0])) if n else float("nan")
+    mdy = float(np.median(off[good, 1])) if n else float("nan")
+    return {
+        "n_selected": len(chosen),
+        "n_usable": n,
+        "median_dx_pix": mdx,
+        "median_dy_pix": mdy,
+        "saturation_guard_njy": sat,
+        "passes": bool(
+            n >= W2_MIN_USABLE and abs(mdx) <= W2_MAX_MEDIAN_PIX and abs(mdy) <= W2_MAX_MEDIAN_PIX
+        ),
+    }
+
+
+def read_image_1b(path: Path, t: Table) -> tuple:
+    """CANUCS F200W mosaic with the PLAN_1b.md WCS -> (WCS, nJy per pixel, scale, W1, W2)."""
+    with fits.open(path) as hl:
+        hdu = next(h for h in hl if h.data is not None)
+        if hdu.header.get("BUNIT") != "nJy":
+            raise ValueError(f"unexpected BUNIT {hdu.header.get('BUNIT')!r}")
+        w, d = header_wcs(hdu.header), np.asarray(hdu.data, float)
+    pix = float(proj_plane_pixel_scales(w).mean() * 3600.0)
+    if abs(pix - m14.PIX) > 1e-4:
+        raise ValueError(f"image pixel scale {pix} is not 0.04 arcsec")
+    w1 = wcs_catalogue_check(w, t["X"], t["Y"], t["RA"], t["DEC"])
+    w2 = wcs_pixel_check(w, d, t) if w1["passes"] else None
+    return w, d, pix, w1, w2
+
+
+def run_1b(cat: Path, image: Path) -> dict:
+    """PLAN_1b.md: rule 1 recomputed, W1 / W2, then PLAN.md rules 4-8 on the stored frame tables."""
+    t = Table.read(cat)
+    gold = Table.read(GATEK / GOLD_REL)
+    summary: dict = {"plan": str(OUT / "PLAN.md"), "deviation": str(OUT / "PLAN_1b.md")}
+    summary["rule1_frame_F"] = f = frame_check_f(gold["ra"], gold["dec"], t["RA"], t["DEC"])
+    summary["rule2_gate_K_wls"] = "stored: summary_wls.json (not re-run, PLAN_1b.md)"
+    summary["rule3_frame_tables"] = "stored: frame/ (not re-run, PLAN_1b.md)"
+    if not f["passes"]:
+        summary["stopped"] = "frame check F failed on recompute (PLAN_1b.md)"
+        return summary
+    w, d, pix, w1, w2 = read_image_1b(image, t)
+    summary["W1_catalogue_wcs"], summary["W2_pixel_wcs"] = w1, w2
+    if not w1["passes"]:
+        summary["stopped"] = "W1 failed (PLAN_1b.md)"
+        return summary
+    if not w2["passes"]:
+        summary["stopped"] = "W2 failed (PLAN_1b.md)"
+        return summary
+    register()
+    rc = cr.to_cat(t)  # rule 4
+    inputs = {
+        "canucs_cat": CAT_NAME,
+        "canucs_url": BASE + CAT_NAME,
+        "canucs_cat_sha256": CAT_SHA,
+        "n_rows_finite_flux": int(len(rc["flux"])),
+        "flux_column": f"FLUX_KRON_TOTAL_{cr.BAND}",
+        "image": IMAGE_NAME,
+        "image_url": BASE + IMAGE_NAME,
+        "image_sha256": IMAGE_SHA,
+        "image_wcs": "PLAN_1b.md W0 (header CRPIX/CRVAL/PC, CDELT 0.04 arcsec)",
+        "noise_pixel_scale_arcsec": pix,
+    }
+    depth = cr.depth_mag(rc["flux"], rc["snr"])
+    src_x, src_y = (np.asarray(v, float) for v in w.world_to_pixel_values(t["RA"], t["DEC"]))
+    for contain, out in ((False, OUT / "without_contain"), (True, OUT)):  # rule 8 / rules 5-7
+        out.mkdir(parents=True, exist_ok=True)
+        summary["frozen" if contain else "without_contain"] = ur._reference_run(
+            rc, depth, inputs, out, contain, d, w, src_x, src_y, pix, field=FIELD, frame=FRAME
+        )
+    return summary
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--cat", type=Path, required=True)
     ap.add_argument("--image", type=Path, required=True)
     ap.add_argument("--cache", type=Path, default=Path("data/cache/bulletx"))
+    ap.add_argument(
+        "--plan-1b", action="store_true", help="PLAN_1b.md: mosaic WCS gates, then rules 4-8"
+    )
     args = ap.parse_args(argv)
     check_inputs(args.cat, args.image)
     OUT.mkdir(parents=True, exist_ok=True)
+    if args.plan_1b:
+        return _write(run_1b(args.cat, args.image))
     t = Table.read(args.cat)
     gold = Table.read(GATEK / GOLD_REL)
     summary: dict = {"plan": str(OUT / "PLAN.md")}
@@ -168,11 +324,15 @@ def main(argv: list[str] | None = None) -> int:
             summary["frozen" if contain else "without_contain"] = ur._reference_run(
                 rc, depth, inputs, out, contain, d, w, src_x, src_y, pix, field=FIELD, frame=FRAME
             )
+    return _write(summary)
+
+
+def _write(summary: dict) -> int:
     summary = _clean(summary)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1, allow_nan=False) + "\n")
     print(
         json.dumps(
-            {k: summary[k] for k in summary if k.startswith(("rule1", "stopped"))}
+            {k: summary[k] for k in summary if k.startswith(("rule1", "W1", "W2", "stopped"))}
             | {k: summary[k].get("gate_C2_shared") for k in ("frozen",) if k in summary}
             | {"flags": summary.get("frozen", {}).get("flags")},
             indent=1,
