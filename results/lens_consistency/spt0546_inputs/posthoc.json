@@ -1,0 +1,139 @@
+{
+ "label": "post hoc diagnostic, added after U failed; no verdict depends on it",
+ "reading": "P_pixels",
+ "grid_step_arcsec": 0.25,
+ "grid_half_width_arcsec": 59.0,
+ "gate_K_numbers_free_z": {
+  "n_images": 35,
+  "rms_arcsec": 1.6594769095190467,
+  "matched_fraction": 0.9142857142857143,
+  "passes": false
+ },
+ "per_system": {
+  "1": {
+   "rms_arcsec": 0.1314840103016341,
+   "n_catalogued": 2,
+   "n_predicted": 7,
+   "z_fit": 1.8659120218324152,
+   "z_fit_on_edge": false
+  },
+  "2": {
+   "rms_arcsec": 0.23665714882186997,
+   "n_catalogued": 2,
+   "n_predicted": 5,
+   "z_fit": 1.8017784794329248,
+   "z_fit_on_edge": false
+  },
+  "3": {
+   "rms_arcsec": 1.8062805780474196,
+   "n_catalogued": 5,
+   "n_predicted": 5,
+   "z_fit": 3.5019260974794237,
+   "z_fit_on_edge": false
+  },
+  "4": {
+   "rms_arcsec": 1.2197089703797224,
+   "n_catalogued": 3,
+   "n_predicted": 5,
+   "z_fit": 3.8893433039888645,
+   "z_fit_on_edge": false
+  },
+  "5": {
+   "rms_arcsec": 1.3451900614698262,
+   "n_catalogued": 5,
+   "n_predicted": 5,
+   "z_fit": 3.5019260974794237,
+   "z_fit_on_edge": false
+  },
+  "6": {
+   "rms_arcsec": 1.7182060662304532,
+   "n_catalogued": 3,
+   "n_predicted": 3,
+   "z_fit": 7.828375118320909,
+   "z_fit_on_edge": false
+  },
+  "7": {
+   "rms_arcsec": 2.385220535181611,
+   "n_catalogued": 5,
+   "n_predicted": 5,
+   "z_fit": 7.5593048611514915,
+   "z_fit_on_edge": false
+  },
+  "8": {
+   "rms_arcsec": 1.2227116860172815,
+   "n_catalogued": 5,
+   "n_predicted": 7,
+   "z_fit": 4.027782832787683,
+   "z_fit_on_edge": false
+  },
+  "9": {
+   "rms_arcsec": 2.6570449917225925,
+   "n_catalogued": 3,
+   "n_predicted": 11,
+   "z_fit": 3.0447238347554455,
+   "z_fit_on_edge": false
+  },
+  "10": {
+   "rms_arcsec": 0.4778981261383457,
+   "n_catalogued": 2,
+   "n_predicted": 7,
+   "z_fit": 4.171150058021625,
+   "z_fit_on_edge": false
+  }
+ },
+ "candidates": {
+  "c2.3": {
+   "z_fit": 1.8017784794329248,
+   "nearest_predicted_arcsec": 10.364586476096752
+  },
+  "c4.11": {
+   "z_fit": 3.8893433039888645,
+   "nearest_predicted_arcsec": 3.6472029650512092
+  },
+  "c4.12": {
+   "z_fit": 3.8893433039888645,
+   "nearest_predicted_arcsec": 2.9002931841099806
+  },
+  "c5.6": {
+   "z_fit": 3.5019260974794237,
+   "nearest_predicted_arcsec": 1.1048855487975175
+  },
+  "c6.21": {
+   "z_fit": 7.828375118320909,
+   "nearest_predicted_arcsec": 1.1276556581987076
+  },
+  "c6.22": {
+   "z_fit": 7.828375118320909,
+   "nearest_predicted_arcsec": 1.1313735128908529
+  },
+  "c6.23": {
+   "z_fit": 7.828375118320909,
+   "nearest_predicted_arcsec": 1.801900318191512
+  },
+  "c7.6": {
+   "z_fit": 7.5593048611514915,
+   "nearest_predicted_arcsec": 9.73630813688863
+  },
+  "c7.7": {
+   "z_fit": 7.5593048611514915,
+   "nearest_predicted_arcsec": 13.182578177574214
+  },
+  "c7.8": {
+   "z_fit": 7.5593048611514915,
+   "nearest_predicted_arcsec": 19.372276787812016
+  }
+ },
+ "authors_reported": {
+  "rms_arcsec": 1.2,
+  "constraints": 39,
+  "chi2_dof": [
+   68.0,
+   11
+  ],
+  "anchor": {
+   "system": "3",
+   "z": 3.5
+  },
+  "source": "arXiv:2507.08949v2 Sect. III (paper text, not a released file)"
+ }
+}
