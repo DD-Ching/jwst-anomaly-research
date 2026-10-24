@@ -773,6 +773,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Other Zenodo lens-model records seen in the same search, not used: SPT-CL J0546-5345 LTM (10.5281/zenodo.16534337),
     Abell S1063 WSLAP+ JWST 2025 (10.5281/zenodo.17726321, 1.0 GB zip), CANUCS thesis data with MACS0416 and Bullet
     image lists (10.5281/zenodo.22883437).
+- Abell S1063 WSLAP+ JWST 2025 (`results/lens_consistency/s1063_wslap/`, accessed 2026-10-24): Zenodo record
+  10.5281/zenodo.17726321 (https://zenodo.org/records/17726321, published 2025-11-26, CC-BY-SA-4.0), zip
+  `LensModel_AS1063_WSLAPplus_JWST_Case3_2025.zip` (1,016,075,135 B, md5 6a6558557078c1dc2b0c8a2a13d17944); members
+  `AlphaX_DdsDs1_arcsec.fits`, `AlphaY_DdsDs1_arcsec.fits` read by range (CRC-32 and sha256 in `summary.json`). No paper
+  read; the record names BUFFALO identifications.
 - SPT-CL J0546-5345 inputs (`results/lens_consistency/spt0546_inputs/`, accessed 2026-10-24):
   - Allingham et al. 2025, "SLICE: SPT-CL J0546-5345 -- A prominent strong-lensing cluster at z=1.07", ApJL 990, 1,
     arXiv:2507.08949v2 (HTML read for the rms ≈ 1.2″ and the z_s 3.5 anchor).

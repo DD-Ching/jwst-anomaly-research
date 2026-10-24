@@ -168,14 +168,14 @@ def unit_minima(model, images: Table, zs: np.ndarray) -> dict[str, dict]:
     return out
 
 
-def unit_check(minima: dict[str, dict[str, float]]) -> dict:
+def unit_check(minima: dict[str, dict[str, float]], threshold: float = U_MAX_MEDIAN_ARCSEC) -> dict:
     """PLAN.md rule 3: a reading is accepted when the median of its per-system minima is
-    <= U_MAX_MEDIAN_ARCSEC; U passes when exactly one reading is accepted."""
+    <= ``threshold``; U passes when exactly one reading is accepted."""
     med = {}
     for r, d in minima.items():
         v = np.array([np.nan if x is None else x for x in d.values()], float)
         med[r] = float(np.median(v)) if v.size and np.all(np.isfinite(v)) else float("nan")
-    accepted = [r for r, v in med.items() if np.isfinite(v) and v <= U_MAX_MEDIAN_ARCSEC]
+    accepted = [r for r, v in med.items() if np.isfinite(v) and v <= threshold]
     return {
         "median_arcsec": med,
         "accepted": accepted,
@@ -238,15 +238,15 @@ def candidate_offsets(model, grid, main_ip: Table, images: Table) -> dict:
     return out
 
 
-def dja_check(index_html: str) -> dict:
+def dja_check(index_html: str, names: tuple[str, ...] = DJA_NAMES) -> dict:
     fields = sorted(set(re.findall(r"([a-z0-9][a-z0-9_-]*?)-grizli-v7", index_html.lower())))
     if not fields:
         raise ValueError("no field parsed from the DJA index")
-    hits = [f for f in fields if any(n in f for n in DJA_NAMES)]
+    hits = [f for f in fields if any(n in f for n in names)]
     return {
         "index": m19.DJA_INDEX,
         "fields_listed": len(fields),
-        "names_searched": list(DJA_NAMES),
+        "names_searched": list(names),
         "matches": hits,
         "passes": bool(hits),
     }

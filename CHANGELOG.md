@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: Abell S1063 WSLAP+ JWST 2025: gate K fails on one system; WLS statistic 0.58″ (D-034 addendum al)
+- **Result** (`results/lens_consistency/s1063_wslap/RESULT.md`): plan, functions and tests frozen in be21669 before any
+  map value. Two α members streamed from the 1 GB Zenodo zip by range reads (≈ 262 MB, CRC-checked, deleted). On the 36
+  Chan+2020 z_spec images: C passes, U picks arcsec (0.369″ vs 21.14″), gate K (mean source) fails, rms 4.197″, 94.4 %
+  within 3″; system 10 (z 0.73) gets one predicted image. Declared WLS statistic (not a gate) 0.581″, 100 %. CATS v4.1
+  gave 18.5″ on the same images (D-035 addendum b). DJA v7 lists `abells1063`.
+- **Post hoc:** without system 10 the mean source gives 0.506″, 33 / 33.
+- **Method:** HTTP range reads of single zip members (ZIP64 directory parsed, streaming inflate) avoid fetching a whole
+  archive in cloud sessions (`s1063_wslap.fetch_member`).
+- **Handoff:** next, a frozen S1063 plan gating on the WLS source (labelled deviation, addendum k precedent), then gate
+  C2 on DJA v7 `abells1063` and the extra-image predictions. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: SPT-CL J0546-5345 LTM input check: unit check U fails; no spec-z systems (D-034 addendum ak)
 - **Result** (`results/lens_consistency/spt0546_inputs/RESULT.md`): plan frozen in aa0a8ef, functions and tests in 4da5b19,
   both before any map value. Allingham+2025 LTM (Zenodo 10.5281/zenodo.16534337): α maps at z_s 3.5, 0.04″ / px, no unit

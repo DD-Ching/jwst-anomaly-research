@@ -2505,6 +2505,16 @@ report ≈ 1.2″ over their own z and constraints (not directly comparable). Al
 redshifts for the lensed systems and a public deblended reference catalogue (e.g. SLICE GO-5594) appear, with a model
 refit to them.
 
+**Addendum 2026-10-24al (Abell S1063 WSLAP+ JWST 2025, spec-z gate K).** `results/lens_consistency/s1063_wslap/RESULT.md`,
+plan frozen in be21669. Only the two α members of the 1 GB Zenodo zip (10.5281/zenodo.17726321) were fetched by range
+reads (≈ 262 MB, CRC-checked, deleted). On the 36 Chan+2020 z_spec images (12 systems): C passes, U passes for the
+arcsec reading (median 0.369″ vs 21.14″ for pixels), gate K (mean source) fails, rms 4.197″ with 94.4 % within 3″,
+entirely from system 10 (z 0.73, one predicted image). The pre-declared WLS statistic (not a gate) gives 0.581″,
+100 %; post hoc without system 10 the mean source gives 0.506″. DJA v7 has `abells1063`. Decision: no extra-image stage
+from this run; a next stage may gate on the WLS source only as a labelled deviation citing this number (addendum k
+precedent). Alternatives rejected: dropping system 10 after the run. Revisit if: the WLS-gated stage fails gate C2, or
+the BUFFALO identification of system 10 differs from Chan's.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
