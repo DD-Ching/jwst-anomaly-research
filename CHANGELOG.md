@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: SPT-CL J0546-5345 LTM input check: unit check U fails; no spec-z systems (D-034 addendum ak)
+- **Result** (`results/lens_consistency/spt0546_inputs/RESULT.md`): plan frozen in aa0a8ef, functions and tests in 4da5b19,
+  both before any map value. Allingham+2025 LTM (Zenodo 10.5281/zenodo.16534337): α maps at z_s 3.5, 0.04″ / px, no unit
+  keyword; 35 main images / 10 systems, 24 candidate rows. C passes (35 / 35 inside); Z: 0 systems with a spectroscopic z;
+  U (per-system z free) fails: median minimum rms 27.72″ (arcsec) and 1.38″ (pixels) vs ≤ 0.5″; K not run; no DJA v7 field.
+- **Post hoc:** pixel reading, exact image plane at fitted z: rms 1.66″, 91.4 % within 3″; the authors report ≈ 1.2″
+  (paper), above the 1.0″ gate. The anchor system 3 fits at z 3.50.
+- **Plan count correction:** the plan listed 45 / 14 main / candidate rows; the file has 35 / 24 (miscount; rule unchanged).
+- **Handoff:** SPT-CL J0546 route stopped as frozen. Next: a field with public JWST-era maps and spectroscopic systems
+  (Abell S1063 WSLAP+ is 1.0 GB, so it needs a stated reason). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: RXCJ2211-0350 input check: no deflection maps; κ-derived deflections fail check D (D-034 addendum aj)
 - **Search:** Zenodo lens-model records (2026-10-24) found VENUS GLAFIC v0.91 for RXCJ2211-0350 (10.5281/zenodo.20312327,
   CC0) and, not used, SPT-CL J0546 LTM, Abell S1063 WSLAP+ (1.0 GB) and CANUCS thesis image lists (SOURCES.md).

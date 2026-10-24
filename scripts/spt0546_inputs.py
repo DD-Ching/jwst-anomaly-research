@@ -53,6 +53,10 @@ SPECZ_MATCH_ARCSEC = 0.5  # PLAN.md rule 2
 SPECZ_CONF = (3, 4)
 SPECZ_MIN_DZ = 0.1  # z > z_lens + 0.1
 GRID_STEP = 0.25
+# Allingham+2025 (arXiv:2507.08949v2, Sect. III): rms ~1.2" over 39 constraints, chi2 ~68 / 11 dof,
+# anchor system 3 at z_s 3.5 (photo-z); read 2026-10-24, used only in the post hoc block
+AUTHORS_RMS_ARCSEC = 1.2
+AUTHORS_ANCHOR = {"system": "3", "z": 3.5}
 DJA_NAMES = ("spt0546", "spt-0546", "j0546", "sptcl0546", "actcl0546")
 
 
@@ -205,12 +209,14 @@ def candidate_offsets(model, grid, main_ip: Table, images: Table) -> dict:
         if not m.any():
             continue
         z = float(main_ip["z_fit"][m][0])
+        fam = images[
+            (np.asarray(images["system"], str) == str(r["system"]))
+            & ~np.asarray(images["candidate"], bool)
+        ]
+        fam["z"] = z
+        bt = lensmodel.backtrace_images(model, fam, {})
         pred = lensmodel.find_images(
-            model,
-            grid,
-            float(np.mean(main_ip["beta_x"][m])),
-            float(np.mean(main_ip["beta_y"][m])),
-            z,
+            model, grid, float(np.mean(bt["beta_x"])), float(np.mean(bt["beta_y"])), z
         )
         ox, oy = model.to_frame(np.atleast_1d(float(r["ra"])), np.atleast_1d(float(r["dec"])))
         d = np.hypot(np.asarray(pred["x"]) - ox[0], np.asarray(pred["y"]) - oy[0])
@@ -346,15 +352,55 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     return summary
 
 
+def posthoc(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
+    """Post hoc (added after U failed; no verdict depends on it): the free-z gate K numbers with
+    the pixel reading, i.e. exact image-plane residuals instead of U's source-plane approximation.
+    Written to ``posthoc.json``; ``summary.json`` is left as frozen."""
+    shas = fetch_inputs(requests.Session(), maps)
+    images = parse_mul((maps / MUL).read_text())
+    main = images[~np.asarray(images["candidate"], bool)]
+    main["a"] = np.ones(len(main))
+    (ax, hx), (ay, _) = (read_map(maps / f) for f in MAPS)
+    model_sha = hashlib.sha256((shas[MAPS[0]] + shas[MAPS[1]]).encode()).hexdigest()
+    reading = "P_pixels"
+    model = build_model(ax, ay, hx, READINGS[reading], model_sha, f"spt0546-ltm ({reading})")
+    half = lc.grid_half_width(model, images)
+    grid = lensmodel.DeflectionGrid.compute(model, half, grid_step)
+    ip = fitted_z(model, grid, main, z_grid())
+    systems = bg.per_system(ip)
+    for s in systems:
+        m = np.asarray(ip["system"], str) == s
+        systems[s]["z_fit"] = float(ip["z_fit"][m][0])
+        systems[s]["z_fit_on_edge"] = bool(ip["z_fit_on_edge"][m][0])
+    res = {
+        "label": "post hoc diagnostic, added after U failed; no verdict depends on it",
+        "reading": reading,
+        "grid_step_arcsec": grid_step,
+        "grid_half_width_arcsec": half,
+        "gate_K_numbers_free_z": mi.gate_k(ip),
+        "per_system": systems,
+        "candidates": candidate_offsets(model, grid, ip, images),
+        "authors_reported": {
+            "rms_arcsec": AUTHORS_RMS_ARCSEC,
+            "anchor": AUTHORS_ANCHOR,
+            "source": "arXiv:2507.08949v2 Sect. III (paper text, not a released file)",
+        },
+    }
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "posthoc.json").write_text(json.dumps(res, indent=1) + "\n")
+    return res
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--maps", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--grid-step", type=float, default=GRID_STEP)
     ap.add_argument("--keep", action="store_true", help="keep the downloaded maps")
+    ap.add_argument("--posthoc", action="store_true", help="post hoc pixel-reading gate K numbers")
     a = ap.parse_args(argv)
     try:
-        s = run(a.maps, a.out, a.grid_step)
+        s = (posthoc if a.posthoc else run)(a.maps, a.out, a.grid_step)
     finally:
         if not a.keep:
             for f in MAPS:
