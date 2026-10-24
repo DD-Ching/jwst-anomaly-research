@@ -63,9 +63,9 @@ W2_N, W2_MIN_USABLE, W2_EDGE, W2_HALF, W2_ISOL_ARCSEC = 100, 50, 10, 4, 1.0
 W2_MAX_MEDIAN_PIX, W2_SAT_FRAC, W2_SAT_PCT = 0.25, 0.5, 99.999
 
 
-def frame_check_f(gra, gdec, cra, cdec) -> dict:
+def frame_check_f(gra, gdec, cra, cdec, min_n: int = F_MIN_N) -> dict:
     """Rule 1: nearest catalogue row within ``F_MATCH_ARCSEC`` of each gold image; passes iff
-    ``n >= F_MIN_N`` and |median dx| and |median dy| <= ``F_MAX_MEDIAN_ARCSEC`` (gold - catalogue,
+    ``n >= min_n`` and |median dx| and |median dy| <= ``F_MAX_MEDIAN_ARCSEC`` (gold - catalogue,
     dx along RA cos dec, arcsec)."""
     cra, cdec = np.asarray(cra, float), np.asarray(cdec, float)
     ok = np.isfinite(cra) & np.isfinite(cdec)
@@ -87,10 +87,10 @@ def frame_check_f(gra, gdec, cra, cdec) -> dict:
         "rules": {
             "match_arcsec": F_MATCH_ARCSEC,
             "max_abs_median_arcsec": F_MAX_MEDIAN_ARCSEC,
-            "min_n": F_MIN_N,
+            "min_n": min_n,
         },
         "passes": bool(
-            n >= F_MIN_N and abs(mdx) <= F_MAX_MEDIAN_ARCSEC and abs(mdy) <= F_MAX_MEDIAN_ARCSEC
+            n >= min_n and abs(mdx) <= F_MAX_MEDIAN_ARCSEC and abs(mdy) <= F_MAX_MEDIAN_ARCSEC
         ),
     }
 

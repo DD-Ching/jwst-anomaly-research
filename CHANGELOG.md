@@ -24,6 +24,19 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   t_E ≥ 30 d excluded; no rate limit computed. The physical judgement is unchanged.
 - **Failed approach:** setting `w3_ztf.EDGE_RULE` at import leaked into `tests/test_w3_ztf.py`. It
   was removed; outcomes are unchanged (`rerun_compare.json`).
+## 2026-10-24: MACS J1931 stage 3 stops at frame check F (D-034 addendum ae)
+- **Result** (`results/lens_consistency/macs1931_stage3/RESULT.md`): rules frozen in 052ba6a before the run. Gate
+  K-WLS repeats (rms 0.630″, 26 / 26). Own deblended F200W catalogue: 897 rows, depth 26.76 AB. Frame check F fails:
+  18 / 51 images matched within 0.5″ (rule ≥ 20), medians 0.045″ / 0.004″. Review found 3 images outside the section;
+  deviation 3b (`PLAN_3b.md`, frozen before its run) widens only the section: F fails again, 18 / 51 with 51 / 51
+  inside. No gate C2, no flag reading: not a null.
+- **Failed approach:** the stage V builder (2″ background box, 3σ, 25 px) leaves most MACS J1931 images undetected:
+  15 / 51 positions inside any segment (post hoc, `posthoc.json`); contact sheet (not stored): systems 5, 6, 7, 100,
+  101 faint, arcs 8.2, 9.1, 10.1, 12.2 unsegmented. The pipeline catalogue's S/N 4–6 depth proxy is undefined here too.
+- **Handoff:** MACS J1931 needs a new frozen reference plan (deeper / multi-band detection or arc-aperture sums,
+  validated on MACS0417 first), or move to another field with public JWST-era maps; #374 still waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-24: MACS J1931 stage V: own deblended reference passes the MACS0417 gate C2 at the threshold (D-034 addendum ad)
 - **Result** (`results/lens_consistency/macs0417_ownref/RESULT.md`): photutils builder (2″ background box, 3σ, 25 px,
   deblend contrast 0.001) on an S3 section of the MACS0417 GO 1208 F200W mosaic, 1,577 sources. V1 as frozen: depth

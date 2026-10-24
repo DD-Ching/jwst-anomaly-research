@@ -1,0 +1,14 @@
+{
+ "macs1931": {
+  "unpredicted": [],
+  "pipeline_depth_mag": null,
+  "image_classes": {
+   "candidate": 9,
+   "faint": 1,
+   "no_flux_ref": 1,
+   "observed": 26
+  },
+  "grid_half_width_arcsec": 48.0,
+  "grid_step_arcsec": 0.25
+ }
+}
