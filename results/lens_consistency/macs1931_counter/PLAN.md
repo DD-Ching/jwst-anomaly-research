@@ -1,6 +1,6 @@
 # MACS J1931 counter-image route: proposal (not frozen)
 
-Status: **proposal, not frozen**. Nothing here has been run; no predicted position, map value or pixel was read for it.
+Status: **proposal, not frozen**. In progress 2026-10-24 (claude/macs1931-stagev): reuse check, freeze, stage V. Nothing here has been run; no predicted position, map value or pixel was read for it.
 Follows `../macs1931_gatek/RESULT.md` (gate K passes; spec-z systems 1, 5, 6, 7, 100, 101 have more predicted than
 catalogued images) and the footprint step (`RESULT.md` here).
 
