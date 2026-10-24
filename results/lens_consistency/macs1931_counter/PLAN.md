@@ -1,8 +1,8 @@
-# MACS J1931 counter-image route: plan (stage V frozen and run; stage 3 a proposal)
+# MACS J1931 counter-image route: plan (stage V frozen and run; stage 3 frozen)
 
 Status: **stage V frozen and run 2026-10-24**; V1 not valid (depth undefined), V2 amendment passes gate C2 at the
-threshold (28 / 35, arc 14 / 14; `../macs0417_ownref/RESULT.md`). Stage 3 stays a proposal until frozen; for stage 3 nothing has been run and no MACS J1931 predicted position, map
-value or pixel was read (stage V read MACS0417 pixels and frame tables only).
+threshold (28 / 35, arc 14 / 14; `../macs0417_ownref/RESULT.md`). Stage 3 frozen 2026-10-24 ("Stage 3: frozen rules" below), before any MACS J1931 predicted position, map
+value or pixel was read for it (stage V read MACS0417 pixels and frame tables only).
 Follows `../macs1931_gatek/RESULT.md` (gate K passes; spec-z systems 1, 5, 6, 7, 100, 101 have more predicted than
 catalogued images) and the footprint step (`RESULT.md` here).
 
@@ -82,3 +82,40 @@ non-matching control becomes `ambiguous`). V1's gate C2 (28 / 35) is therefore *
   (0.3″ apertures, 200 draws at 1.5–4″, 0.5″ exclusion, seed 20261022, 5σ / 10σ).
 - **V2-c verdict:** `gate_c2_shared` on `class_local`; passes as in rule 6. Predicted MACS0417 classes are written, not
   read. Output `../macs0417_ownref_v2/`. Fails → the builder is not used for MACS J1931 (rule 6's fallback).
+
+## Stage 3: frozen rules (2026-10-24, before any stage 3 run)
+Frozen before any MACS J1931 counter-image prediction, own-catalogue row or F200W pixel was read. Script
+`scripts/m1931_stage3.py`; tests `tests/test_m1931_stage3.py` (rule functions tested before the run). Numbers are
+ASSUMPTIONs fixed here. Output `results/lens_consistency/macs1931_stage3/`.
+1. **Model and images.** `macs1931_gatek.load_models` (md5-verified VENUS v2.1 maps, reading `P_pixels`, z_s 5.079
+   normalisation) and `macs1931_gatek.load_images`. Systems: the 9 spec-z systems only (`z_spec` true); z = the
+   catalogue z (ASSUMPTION: z fixed). Photo-z and mixed-z systems are out.
+2. **Gate K-WLS repeated:** `a2744_uncover.imageplane` on the spec-z back-trace, 0.25″ grid, `m0417_images.gate_k`.
+   An outcome different from `../macs1931_gatek/summary.json` "gate_K_numbers_wls" pass / fail → stop.
+3. **Frame tables:** `a2744_uncover.wls_backtrace` (WLS source per system), then
+   `lens_consistency.predict_counter_images` with its defaults, shapes = the JWST pipeline
+   `jw06882-o038_t041_nircam_clear-f200w_cat.ecsv` (`lens_consistency.load_shapes`), depth
+   `lens_consistency.depth_mag(shapes)`. Controls = the rows of class `observed`. No pipeline forced photometry
+   (the bullet route reports it only; omitted here).
+4. **Reference catalogue:** `m1931_deblend.build` (stage V rules 1–4 unchanged, 64 px box = 2.0″ at 0.0312″) on the
+   SCI / ERR section of `jw06882-o038_t041_nircam_clear-f200w_i2d.fits` bounding every control and predicted position
+   plus 15″, read by S3 byte range (not stored). Depth `m1931_deblend.kron_depth` (V2-a).
+5. **Frame check F:** `bullet_extra.frame_check_f` of all 51 used images against the own catalogue (0.5″ match,
+   |median dx| and |median dy| ≤ 0.1″), with the minimum number matched set to **20** (ASSUMPTION; 51 images here
+   vs 135 in the Bullet). Fails → stop, no stage 3 reading. Frame offset (0, 0).
+6. **Chain (= V2-b):** `m0417_arcref.run` with offset (0, 0) and the containing-source rule **on**, then
+   `m1423_canucsref.apply_local` on the background-subtracted section (masked pixels NaN), source positions = the
+   kept rows of the own catalogue, constants and seed unchanged.
+7. **Footprint rule (new, required by the stage V review):** a control or target whose position falls outside the
+   section, or whose nearest section pixel is masked (NaN), gets `class_local` = `off_image`. `off_image` is not in
+   `m0417_arcref.TESTABLE`, so it counts neither for nor against gate C2, and it is never a flag. Function
+   `m1931_stage3.footprint_class`.
+8. **Gate C2:** `m0417_arcref.gate_c2_shared` on `class_local` after rule 7 (≥ 8 testable and ≥ 0.8; arc-referenced
+   ≥ 3 and ≥ 0.8).
+9. **Flag:** a predicted target (classes other than `observed` and the skipped classes) with `class_local` =
+   `absent` while F, K-WLS and C2 pass. Contact sheet of controls and flags before RESULT.md; every flag goes to
+   `/vet-candidate` in a later cycle, no interpretation here. Stage V's zero margin is stated with any flag.
+10. Reported, not rules: the run without the containing-source rule, plain `gate_c2`, classes without rule 7.
+
+Expected: F passes (the image list comes from the same VENUS mosaics); C2 passes or fails narrowly (stage V margin 0);
+0–3 flags with ordinary readings near critical curves. Budget: one cycle; an unfinished run is rerun unchanged.
