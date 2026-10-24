@@ -66,10 +66,10 @@ def sky_pa(x, y, theta_deg, wcs: WCS) -> np.ndarray:
     return np.mod(c0.position_angle(c1).deg, 180.0)
 
 
-def build(sci: np.ndarray, err: np.ndarray, wcs: WCS) -> tuple:
+def build(sci: np.ndarray, err: np.ndarray, wcs: WCS, bkg_box: int = BKG_BOX) -> tuple:
     """Rules 1-4 on one section (nJy per pixel): (catalogue in ``m0417_arcref`` form, metadata,
     deblended segmentation image, background-subtracted image with masked pixels NaN, (x, y)
-    pixel positions of the kept rows)."""
+    pixel positions of the kept rows). ``bkg_box`` (pixels) is stage 3c's one change."""
     from astropy.convolution import convolve
     from astropy.stats import SigmaClip
     from photutils.background import Background2D, SExtractorBackground
@@ -85,7 +85,7 @@ def build(sci: np.ndarray, err: np.ndarray, wcs: WCS) -> tuple:
     err = np.where(mask, 0.0, err)
     bkg = Background2D(
         sci,
-        BKG_BOX,
+        bkg_box,
         filter_size=BKG_FILTER,
         coverage_mask=mask,
         sigma_clip=SigmaClip(sigma=BKG_SIGMA),
@@ -121,6 +121,7 @@ def build(sci: np.ndarray, err: np.ndarray, wcs: WCS) -> tuple:
         raise ValueError("no source with a positive finite Kron flux and error")
     xy = (cat.pop("x"), cat.pop("y"))
     meta = {
+        "bkg_box_pix": int(bkg_box),
         "n_segments_detected": int(segm.n_labels),
         "n_segments_deblended": int(deb.n_labels),
         "n_rows_kept": int(len(cat["flux"])),
@@ -234,22 +235,23 @@ def stage_v() -> int:
     return _write(OUT, s, ("gate_C2", "gate_C2_shared_pairs", "stage_V_passes"))
 
 
-def stage_v2() -> int:
-    """V2-a to V2-c: catalogue 5-sigma Kron depth, containing-source rule, local noise."""
+def stage_v2(out_dir: Path = OUT_V2, bkg_box: int = BKG_BOX) -> int:
+    """V2-a to V2-c: catalogue 5-sigma Kron depth, containing-source rule, local noise
+    (stage 3c reruns it with ``bkg_box`` into its own ``out_dir``)."""
     uri, (sci, err, w, box) = _section()
-    cat, meta, _, data, (sx, sy) = build(sci, err, w)
-    OUT_V2.mkdir(parents=True, exist_ok=True)
+    cat, meta, _, data, (sx, sy) = build(sci, err, w, bkg_box)
+    out_dir.mkdir(parents=True, exist_ok=True)
     depth = kron_depth(cat)
     inputs = {"image": uri, "section_y0_y1_x0_x1": [int(v) for v in box], **meta}
-    s = ar.run(Path("."), cat=cat, depth=depth, cat_inputs=inputs, out=OUT_V2, contain=True)
+    s = ar.run(Path("."), cat=cat, depth=depth, cat_inputs=inputs, out=out_dir, contain=True)
     rng = np.random.default_rng(m14.SEED)
-    ctrl = Table.read(OUT_V2 / "control_macs0417.ecsv")
-    pred = Table.read(OUT_V2 / "predicted_macs0417.ecsv")
+    ctrl = Table.read(out_dir / "control_macs0417.ecsv")
+    pred = Table.read(out_dir / "predicted_macs0417.ecsv")
     m14.apply_local(ctrl, data, w, sx, sy, rng, meta["pixel_scale_arcsec"])
     if len(pred):
         m14.apply_local(pred, data, w, sx, sy, rng, meta["pixel_scale_arcsec"])
-    ctrl.write(OUT_V2 / "control_macs0417.ecsv", overwrite=True)
-    pred.write(OUT_V2 / "predicted_macs0417.ecsv", overwrite=True)
+    ctrl.write(out_dir / "control_macs0417.ecsv", overwrite=True)
+    pred.write(out_dir / "predicted_macs0417.ecsv", overwrite=True)
     cl = [str(c) for c in ctrl["class_local"]]
     shared = ar.gate_c2_shared(
         cl, [bool(a) for a in ctrl["arc_ref"]], [str(x) for x in ctrl["system"]], _pairs(ctrl)
@@ -268,7 +270,7 @@ def stage_v2() -> int:
         "inputs": s["inputs"],
         "rules": s["rules"],
     }
-    return _write(OUT_V2, out, ("gate_C2_shared", "stage_V2_passes", "control_classes"))
+    return _write(out_dir, out, ("gate_C2_shared", "stage_V2_passes", "control_classes"))
 
 
 def main(argv: list[str] | None = None) -> int:

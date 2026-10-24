@@ -113,8 +113,17 @@ def frame_tables(model, spec: Table, cache: Path, frame_dir: Path = FRAME) -> tu
     return res, table
 
 
-def run(maps: Path, cache: Path, out_dir: Path = OUT, all_images: bool = False) -> dict:
-    """Stage 3 rules; ``all_images`` and ``out_dir`` select the PLAN_3b.md deviation."""
+def run(
+    maps: Path,
+    cache: Path,
+    out_dir: Path = OUT,
+    all_images: bool = False,
+    bkg_box: int = md.BKG_BOX,
+    extra_f=None,
+) -> dict:
+    """Stage 3 rules; ``all_images`` and ``out_dir`` select the PLAN_3b.md deviation;
+    ``bkg_box`` and ``extra_f`` (a callable updating the rule 5 dict, e.g. stage 3c's chance
+    control) select stage 3c."""
     import s3fs
 
     shas, model_sha = mg.verified_inputs(maps)  # rule 1
@@ -136,9 +145,11 @@ def run(maps: Path, cache: Path, out_dir: Path = OUT, all_images: bool = False) 
     fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
     uri = S3_6882.format("i2d.fits")
     sci, err, w, box = md.read_section(fs, uri[5:], pos["ra"], pos["dec"])  # rule 4
-    cat, meta, _, data, (sx, sy) = md.build(sci, err, w)
+    cat, meta, _, data, (sx, sy) = md.build(sci, err, w, bkg_box)
     depth = md.kron_depth(cat)
     f = be.frame_check_f(images["ra"], images["dec"], cat["ra"], cat["dec"], F_MIN_N)  # rule 5
+    if extra_f is not None:
+        extra_f(f, images, cat)
     x, y = w.world_to_pixel_values(images["ra"], images["dec"])
     f["n_images_in_section"] = sum(
         footprint_class("in", xi, yi, data) == "in" for xi, yi in zip(x, y, strict=True)
@@ -220,7 +231,9 @@ def match_counts(ra, dec, cra, cdec, radii=POSTHOC_RADII) -> dict:
     return {f"{r:g}": int(np.sum(sep <= r)) for r in radii}
 
 
-def posthoc(cache: Path, out_dir: Path = OUT, all_images: bool = False) -> dict:
+def posthoc(
+    cache: Path, out_dir: Path = OUT, all_images: bool = False, bkg_box: int = md.BKG_BOX
+) -> dict:
     """Why frame check F failed (not a rule): nearest-row counts against the own and the
     pipeline catalogues, and images inside a deblended segment, for all and spec-z images."""
     import s3fs
@@ -232,7 +245,7 @@ def posthoc(cache: Path, out_dir: Path = OUT, all_images: bool = False) -> dict:
     pos = section_positions(table, ctrl, images, all_images)
     fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
     sci, err, w, _ = md.read_section(fs, S3_6882.format("i2d.fits")[5:], pos["ra"], pos["dec"])
-    cat, _, deb, data, _ = md.build(sci, err, w)
+    cat, _, deb, data, _ = md.build(sci, err, w, bkg_box)
     shapes = lc.load_shapes(cache / Path(S3_6882.format("cat.ecsv")).name)
     x, y = w.world_to_pixel_values(images["ra"], images["dec"])
     seg = np.where(deb.data > 0, 1.0, np.nan)
