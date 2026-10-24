@@ -2471,7 +2471,7 @@ this builder.
 
 **Addendum 2026-10-24ae (MACS J1931 stage 3 stops at frame check F).** `results/lens_consistency/macs1931_stage3/RESULT.md`.
 Gate K-WLS repeats (0.630″, 26 / 26) but frame check F fails as frozen: 18 / 51 images have an own-catalogue row within
-0.5″ (rule ≥ 20; medians 0.045″ / 0.004″). Post hoc only 15 / 51 positions lie inside any deblended segment; the
+0.5″ (rule ≥ 20; medians 0.045″ / 0.004″), and again under deviation 3b with every image inside the section (18 / 51). Post hoc only 15 / 51 positions lie inside any deblended segment; the
 contact sheet shows faint or unsegmented images (systems 5, 6, 7, 100, 101; arcs 8.2, 9.1, 10.1, 12.2). Decision: no
 MACS J1931 counter-image reading from this builder; any retry is a new plan frozen before its run (e.g. a deeper or
 multi-band detection image, or arc-aperture sums), validated on MACS0417 first. Alternatives rejected: lowering F's

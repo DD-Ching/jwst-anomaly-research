@@ -12,7 +12,8 @@
    "1": 24,
    "1.5": 33
   },
-  "inside_own_segment": 15
+  "inside_own_segment": 15,
+  "inside_section": 48
  },
  "spec_z": {
   "n_images": 26,
@@ -26,6 +27,7 @@
    "1": 16,
    "1.5": 19
   },
-  "inside_own_segment": 10
+  "inside_own_segment": 10,
+  "inside_section": 26
  }
 }

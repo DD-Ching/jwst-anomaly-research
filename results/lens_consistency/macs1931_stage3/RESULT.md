@@ -1,4 +1,4 @@
-# MACS J1931 stage 3: extra-image test with the own deblended reference (result: stopped at frame check F)
+# MACS J1931 stage 3: extra-image test with the own deblended reference (result: stopped at frame check F, also under deviation 3b)
 
 Plan: `../macs1931_counter/PLAN.md`, "Stage 3: frozen rules" (052ba6a), committed before the run; driver and the
 footprint-rule tests committed before the run as well. Script `scripts/m1931_stage3.py`. Numbers: `summary.json`
@@ -16,18 +16,25 @@ footprint-rule tests committed before the run as well. Script `scripts/m1931_sta
 
 Reading (frozen rule): **no stage 3 reading for MACS J1931**. No counter-image test was made; this is not a null.
 
-## Post hoc (not rules; `posthoc.json`)
+## Deviation 3b (post failure; `PLAN_3b.md`, frozen in 7324612 before its run)
+Code review found that 3 of the 51 F images (13.1–13.3, photo-z) lay outside the stage 3 section (`posthoc.json`
+`inside_section` 48 / 51), so stage 3's F could have flipped (18 + 3 ≥ 20). 3b widens only the section to all 51
+images (`../macs1931_stage3b/summary.json`): section y 557–3900, x 202–3651; 852 → 1,153 deblended rows; depth 26.75 AB.
+**F fails again: 18 / 51 matched (51 / 51 in the section), median dx 0.048″, dy 0.006″.** The stop stands.
+
+## Post hoc (not rules; `posthoc.json`, 3b: `../macs1931_stage3b/posthoc.json`)
 - The matched images agree in frame (medians ≤ 0.045″, median separation 0.107″); the failure is the count.
 - Images with any row within 0.5 / 1.0 / 1.5″: own catalogue 18 / 20 / 27 of 51, the JWST pipeline catalogue 18 / 24 / 33.
   Spec-z only (26): own 10 / 11 / 14, pipeline 13 / 16 / 19. Only 15 / 51 (10 / 26 spec-z) positions fall inside
-  any own deblended segment.
+  any own deblended segment (3b: own 18 / 20 / 28, 14 / 51 inside a segment; spec-z unchanged).
 - Looked at (contact sheet of the 51 positions with the segment outlines, 6″ boxes, not stored): systems 5, 6, 7,
   100 and 101 show little or no F200W emission at the catalogued positions; several arcs (8.2, 9.1, 10.1, 12.2) are
   visible but not segmented at 3σ / 25 px after the 2″ background filter. No sign of a frame shift. Reading by eye,
   not measured: the builder does not detect most catalogued images in this field.
 
 ## Limitations and deviations
-- None from the frozen plan; the posthoc diagnostic was added after the failure and is labelled as such.
+- Deviation 3b (above), labelled post failure; the post hoc diagnostic was added after the failure. The first
+  `posthoc.json` indexed segment pixels without a bounds check; both files were regenerated with the checked code.
 - The rule 3 depth proxy (median mag at S/N 4–6 of the pipeline catalogue) is undefined here, as V1's was; it only
   enters the model-prediction classes of `frame/`, which were not read.
 - F's minimum (20) was an ASSUMPTION scaled from the Bullet's 30 / 135; the rule was not changed after the run.
