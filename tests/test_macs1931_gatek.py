@@ -76,7 +76,9 @@ def test_authors_sources_reference_pixel_is_origin():
 
 def test_read_zip_map_single_member(tmp_path):
     buf = io.BytesIO()
-    fits.PrimaryHDU(np.ones((3, 3), np.float32), header=_header(3)).writeto(buf)
+    fits.HDUList(
+        [fits.PrimaryHDU(), fits.ImageHDU(np.ones((3, 3), np.float32), header=_header(3))]
+    ).writeto(buf)
     p = tmp_path / "Alpha_x.fits.zip"
     with zipfile.ZipFile(p, "w") as z:
         z.writestr("Alpha_x.fits", buf.getvalue())

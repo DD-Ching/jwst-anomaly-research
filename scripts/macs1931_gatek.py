@@ -88,7 +88,7 @@ def record_checksums() -> dict[str, str]:
 
 
 def read_zip_map(path: Path) -> tuple[np.ndarray, object]:
-    """The single FITS member of a map zip: (float64 data, header)."""
+    """The single FITS member of a map zip, its one 2-D HDU: (float64 data, header)."""
     from astropy.io import fits
 
     with zipfile.ZipFile(path) as z:
@@ -97,7 +97,10 @@ def read_zip_map(path: Path) -> tuple[np.ndarray, object]:
             raise ValueError(f"{path.name}: expected one FITS member, found {names}")
         blob = z.read(names[0])
     with fits.open(io.BytesIO(blob)) as hdul:
-        return np.asarray(hdul[0].data, np.float64), hdul[0].header.copy()
+        hdus = [h for h in hdul if h.data is not None and h.data.ndim == 2]
+        if len(hdus) != 1:  # the VENUS maps sit in one image extension after an empty primary
+            raise ValueError(f"{path.name}: expected one 2-D HDU, found {len(hdus)}")
+        return np.asarray(hdus[0].data, np.float64), hdus[0].header.copy()
 
 
 def build_model(ax, ay, header, scale: float, sha: str, name: str) -> lensmodel.MapLensModel:
