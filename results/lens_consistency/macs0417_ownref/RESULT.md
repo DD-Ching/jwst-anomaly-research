@@ -44,3 +44,6 @@ lie off the image.
   (2″ background box, 3σ, 25 px, contrast 0.001) were fixed before the run and not varied.
 - The first V1 run stopped on a NaN in the summary JSON (the undefined depth); the stored V1 files are from the
   re-run with non-finite values written as null (same classes).
+- After the runs (code review, no rule change): photutils pinned `<4`, an empty-catalogue guard, the row filter
+  written once (`keep_rows`), the cache under `$JWST_ANOMALY_DATA`, a tighter PA test and a row-filter test. The
+  footprint gap is carried into the stage 3 plan as a required rule.

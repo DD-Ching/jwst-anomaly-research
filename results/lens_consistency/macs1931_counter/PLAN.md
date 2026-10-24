@@ -1,7 +1,8 @@
-# MACS J1931 counter-image route: proposal (not frozen)
+# MACS J1931 counter-image route: plan (stage V frozen and run; stage 3 a proposal)
 
 Status: **stage V frozen and run 2026-10-24**; V1 not valid (depth undefined), V2 amendment passes gate C2 at the
-threshold (28 / 35, arc 14 / 14; `../macs0417_ownref/RESULT.md`). Stage 3 stays a proposal until frozen. Nothing here has been run; no predicted position, map value or pixel was read for it.
+threshold (28 / 35, arc 14 / 14; `../macs0417_ownref/RESULT.md`). Stage 3 stays a proposal until frozen; for stage 3 nothing has been run and no MACS J1931 predicted position, map
+value or pixel was read (stage V read MACS0417 pixels and frame tables only).
 Follows `../macs1931_gatek/RESULT.md` (gate K passes; spec-z systems 1, 5, 6, 7, 100, 101 have more predicted than
 catalogued images) and the footprint step (`RESULT.md` here).
 
@@ -29,6 +30,9 @@ images.
    frame tables with the WLS source, local noise on the same F200W mosaic (constants of `../bullet_extra/PLAN.md`
    rule 5), gate C2 (shared pairs), flags = predicted targets classed `absent` while C2 passes. Photo-z and mixed-z
    systems (8, 10, 11, 13, 15, 16, 17) stay out until their z is settled (`../macs1931_gatek/RESULT.md` reading).
+   Required addition before freezing (code review of stage V): a footprint rule, i.e. a target whose position is off
+   the section or on a masked pixel is classed `off_image` and is neither a control failure nor a flag (stage V
+   counted the off-footprint control 15.1 as `absent`).
 
 ## Hypothesis, ordinary explanations, what would change the plan
 - Question (science, stage 3): do the VENUS maps predict a magnified, unmatched counter-image of a spec-z system

@@ -24,6 +24,8 @@ from astropy.table import Table, vstack
 from astropy.wcs import WCS
 from astropy.wcs.utils import proj_plane_pixel_scales
 
+from jwst_anomaly.paths import data_root
+
 LC = Path("results/lens_consistency")
 FRAME = LC / "macs0417_frame"
 OUT = LC / "macs0417_ownref"
@@ -115,9 +117,9 @@ def build(sci: np.ndarray, err: np.ndarray, wcs: WCS) -> tuple:
     )  # fmt: skip
     scale = float(proj_plane_pixel_scales(wcs.celestial).mean() * 3600.0)
     cat = to_cat(t, wcs, scale)
-    f, e = np.asarray(t["kron_flux"], float), np.asarray(t["kron_fluxerr"], float)
-    keep = np.isfinite(f) & np.isfinite(e) & (f > 0) & (e > 0)
-    xy = (np.asarray(t["xcentroid"], float)[keep], np.asarray(t["ycentroid"], float)[keep])
+    if not len(cat["flux"]):
+        raise ValueError("no source with a positive finite Kron flux and error")
+    xy = (cat.pop("x"), cat.pop("y"))
     meta = {
         "n_segments_detected": int(segm.n_labels),
         "n_segments_deblended": int(deb.n_labels),
@@ -140,7 +142,7 @@ def to_cat(t: Table, wcs: WCS, scale: float) -> dict:
     are dropped)."""
     f = np.asarray(t["kron_flux"], float)
     e = np.asarray(t["kron_fluxerr"], float)
-    keep = np.isfinite(f) & np.isfinite(e) & (f > 0) & (e > 0)
+    keep = keep_rows(f, e)
     t = t[keep]
     sky = t["sky_centroid"]
     a = np.asarray(t["semimajor_sigma"], float)
@@ -156,7 +158,15 @@ def to_cat(t: Table, wcs: WCS, scale: float) -> dict:
         "ext": a > EXT_MIN_SIGMA_PIX,
         "ell": np.asarray(t["ellipticity"], float),
         "scale": scale,
+        "x": np.asarray(t["xcentroid"], float),  # pixel positions; ``build`` pops them
+        "y": np.asarray(t["ycentroid"], float),
     }
+
+
+def keep_rows(f, e) -> np.ndarray:
+    """Rule 4 row filter: positive finite Kron flux and error."""
+    f, e = np.asarray(f, float), np.asarray(e, float)
+    return np.isfinite(f) & np.isfinite(e) & (f > 0) & (e > 0)
 
 
 def read_section(fs, path: str, ra, dec) -> tuple:
@@ -205,7 +215,7 @@ def stage_v() -> int:
     uri, (sci, err, w, box) = _section()
     cat, meta, deb, _, _ = build(sci, err, w)
     OUT.mkdir(parents=True, exist_ok=True)
-    cache = Path("data/cache")  # gitignored: segmentation and science section for the contact sheet
+    cache = data_root() / "cache"  # segmentation and science section for the contact sheet
     cache.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(cache / "m0417_ownref_section.npz", segm=deb.data, sci=sci, box=box)
     depth = cr.depth_mag(cat["flux"], cat["snr"])
