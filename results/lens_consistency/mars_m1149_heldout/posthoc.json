@@ -1,0 +1,21 @@
+{
+ "label": "post hoc; CANUCS v1 saw these systems (training-set check, not held-out)",
+ "model": "macs1149-canucs-maps",
+ "files": {
+  "alpha_x": "0ff9b4cf21a7_hlsp_canucs_jwst-hst_multi_macs1149-dpl1-dlsds1-best-100mas_multi_v1_model.fits.gz",
+  "alpha_y": "38533c11a4f2_hlsp_canucs_jwst-hst_multi_macs1149-dpl2-dlsds1-best-100mas_multi_v1_model.fits.gz"
+ },
+ "all_inside": {
+  "n_tested": 17,
+  "rms_arcsec": 0.8494759570133139,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "same_images_as_mars_test": {
+  "n_tested": 10,
+  "rms_arcsec": 0.7157239602281574,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "over_3arcsec": []
+}

@@ -2578,6 +2578,15 @@ D115a.2, the one D115a image without a MARS pair, is 3.24″ away. Decision: no 
 stops. Alternatives rejected: a colour test (the flux is already tied to catalogued images). Revisit if: a
 finer-resolution independent MACS0416 model predicts a D115 image away from the catalogued ones.
 
+**Addendum 2026-10-24at (MARS MACS1149 map vs Schuldt+2024 new images).** `results/lens_consistency/mars_m1149_heldout/RESULT.md`,
+plan and image list frozen in 28d41c36, script and tests in 9a515ebf, both before the run; rules 1–5 of addendum ap
+unchanged. Held-out list: Schuldt et al. 2024 Table 2 (18 images, 6 families + SXa, published after MARS). 0 seen,
+17 type N; 7 (families 301, 401) outside the map; gate H fails: rms 2.51″, 70 % within 3″ on 10 images (training K
+0.742″). Post hoc, the CANUCS v1 maps (fitted to these systems; not held-out) reproduce all 17 (rms 0.849″), so the
+families are self-consistent and the miss is MARS-specific. Decision: MARS is not a second model on MACS1149; no
+MARS two-model stage there (MARS passes gate H on 1 of 3 fields). Alternatives rejected: a frame offset (1 pair).
+Revisit if: a finer MARS-type free-form MACS1149 map, or the CANUCS v2 input list (held-out tests of other models).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

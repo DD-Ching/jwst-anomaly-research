@@ -1,0 +1,48 @@
+{
+ "plan": "results/lens_consistency/mars_m1149_heldout/PLAN.md",
+ "zip": {
+  "bytes": 2713478,
+  "md5": "2d87f9a36aadb430f7a7b937fe70b8c2",
+  "sha256": "0d4cc2c6342f597c4d418f1c416f9f355d72ab8ac9e55206bd6050dd60be8e14"
+ },
+ "images": "results/lens_consistency/mars_m1149_heldout/schuldt24_new_images.ecsv",
+ "field": {
+  "canucs_images": 18,
+  "frame_offset": {
+   "n_pairs": 1,
+   "dx_arcsec": 0.0,
+   "dy_arcsec": 0.0,
+   "applied": false
+  },
+  "seen": 0,
+  "held_out": 18,
+  "held_out_families": 7,
+  "types": {
+   "E": 0,
+   "N": 17,
+   "M": 0
+  },
+  "outside_map": 7,
+  "gate_H": {
+   "n_tested": 10,
+   "rms_arcsec": 2.510663654070399,
+   "matched_fraction": 0.7,
+   "passes": false
+  },
+  "reported": {
+   "type_E_only": {
+    "n_tested": 0,
+    "rms_arcsec": null,
+    "matched_fraction": 0.0,
+    "passes": false
+   },
+   "training_gate_K_rms_arcsec": 0.742
+  },
+  "outcome": "does not reproduce",
+  "over_3arcsec": [
+   "202.1",
+   "203.1",
+   "203.2"
+  ]
+ }
+}
