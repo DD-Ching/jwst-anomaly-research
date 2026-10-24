@@ -1,0 +1,367 @@
+{
+ "plan": "results/lens_consistency/bullet_gatek/PLAN.md",
+ "model": "bullet-canucs-maps",
+ "model_sha256": "893cd05fdf09b8b2dd9631fc7fddc4d51a1f1d6e606ed136e6065cff2f392593",
+ "grid_step_arcsec": 0.25,
+ "gate_K": {
+  "n_images": 135,
+  "rms_arcsec": 1.1963159255195248,
+  "matched_fraction": 0.9703703703703703,
+  "passes": false
+ },
+ "extra_predicted": {
+  "K5": {
+   "rms_arcsec": 0.3968999715037511,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "K7a": {
+   "rms_arcsec": 0.06824885568697661,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K7b": {
+   "rms_arcsec": 0.10757388160817484,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K8a": {
+   "rms_arcsec": 0.3230709248943,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "K8b": {
+   "rms_arcsec": 0.30899367661510235,
+   "n_catalogued": 3,
+   "n_predicted": 4
+  },
+  "K9a": {
+   "rms_arcsec": 0.21093718178854998,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K9b": {
+   "rms_arcsec": 0.2397484010764579,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K13b": {
+   "rms_arcsec": 0.42717296184367737,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K14b": {
+   "rms_arcsec": 0.13000240319559803,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N2a": {
+   "rms_arcsec": 0.3609849922280431,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "N2b": {
+   "rms_arcsec": 0.3560724944494295,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "N5a": {
+   "rms_arcsec": 0.27608717111314746,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N5b": {
+   "rms_arcsec": 0.4283089721263502,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N9a": {
+   "rms_arcsec": 0.3292325851837662,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N9b": {
+   "rms_arcsec": 0.11972102056447469,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N11": {
+   "rms_arcsec": 0.7059730953527433,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N12": {
+   "rms_arcsec": 0.32035257677624573,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  }
+ },
+ "fewer_predicted": {
+  "K1b": {
+   "rms_arcsec": 4.957760649669565,
+   "n_catalogued": 3,
+   "n_predicted": 1
+  },
+  "K1e": {
+   "rms_arcsec": 5.629255801400928,
+   "n_catalogued": 3,
+   "n_predicted": 1
+  }
+ },
+ "per_system": {
+  "K1b": {
+   "rms_arcsec": 4.957760649669565,
+   "n_catalogued": 3,
+   "n_predicted": 1
+  },
+  "K1c": {
+   "rms_arcsec": 0.18938458610073883,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K1d": {
+   "rms_arcsec": 0.19004651387963883,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K1e": {
+   "rms_arcsec": 5.629255801400928,
+   "n_catalogued": 3,
+   "n_predicted": 1
+  },
+  "K2a": {
+   "rms_arcsec": 0.5484429625826253,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K2b": {
+   "rms_arcsec": 0.5427785287718675,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K2c": {
+   "rms_arcsec": 0.5815593289987265,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K3a": {
+   "rms_arcsec": 0.33916938542260533,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K3b": {
+   "rms_arcsec": 0.26891578475534855,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K4a": {
+   "rms_arcsec": 0.11968750112755495,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K4b": {
+   "rms_arcsec": 0.21030487569292372,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K4c": {
+   "rms_arcsec": 0.2130879861272594,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K4d": {
+   "rms_arcsec": 0.28248495688595127,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K5": {
+   "rms_arcsec": 0.3968999715037511,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "K6": {
+   "rms_arcsec": 0.5360759054619033,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K7a": {
+   "rms_arcsec": 0.06824885568697661,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K7b": {
+   "rms_arcsec": 0.10757388160817484,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K8a": {
+   "rms_arcsec": 0.3230709248943,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "K8b": {
+   "rms_arcsec": 0.30899367661510235,
+   "n_catalogued": 3,
+   "n_predicted": 4
+  },
+  "K9a": {
+   "rms_arcsec": 0.21093718178854998,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K9b": {
+   "rms_arcsec": 0.2397484010764579,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K10a": {
+   "rms_arcsec": 0.33126300989604424,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K10b": {
+   "rms_arcsec": 0.3797952713465719,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K11": {
+   "rms_arcsec": 0.5576037986488104,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K12a": {
+   "rms_arcsec": 0.33596017331346173,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K12b": {
+   "rms_arcsec": 0.40576122162432354,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K13a": {
+   "rms_arcsec": 0.6352721481576832,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K13b": {
+   "rms_arcsec": 0.42717296184367737,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K14a": {
+   "rms_arcsec": 0.23319984199572413,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "K14b": {
+   "rms_arcsec": 0.13000240319559803,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K15": {
+   "rms_arcsec": 0.7904526619993969,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N1": {
+   "rms_arcsec": 0.664803676692693,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N2a": {
+   "rms_arcsec": 0.3609849922280431,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "N2b": {
+   "rms_arcsec": 0.3560724944494295,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "N3a": {
+   "rms_arcsec": 0.34289035168857607,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N3b": {
+   "rms_arcsec": 0.37438144415248353,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N4": {
+   "rms_arcsec": 0.4435580221644507,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N5a": {
+   "rms_arcsec": 0.27608717111314746,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N5b": {
+   "rms_arcsec": 0.4283089721263502,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N6": {
+   "rms_arcsec": 0.9943828304632688,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N7a": {
+   "rms_arcsec": 0.43273538210906815,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N7b": {
+   "rms_arcsec": 0.3015949704291215,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N8a": {
+   "rms_arcsec": 0.6498471921177101,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N8b": {
+   "rms_arcsec": 0.621865571579094,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N9a": {
+   "rms_arcsec": 0.3292325851837662,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N9b": {
+   "rms_arcsec": 0.11972102056447469,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N10": {
+   "rms_arcsec": 0.30209958648070634,
+   "n_catalogued": 3,
+   "n_predicted": 3
+  },
+  "N11": {
+   "rms_arcsec": 0.7059730953527433,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N12": {
+   "rms_arcsec": 0.32035257677624573,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  }
+ },
+ "lenstool_chires": {
+  "url": "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/lensing/best_fit_model/chires.dat",
+  "sha256": "bee76b1c570e10c9b216055233d15a8da0889dfecd3c12b5387810303b6cea57",
+  "chi2": 92.1,
+  "rms_source": 0.166,
+  "rms_image": 0.41,
+  "n_images": 135,
+  "rms_from_rows": 0.41298641355107285
+ }
+}

@@ -560,6 +560,26 @@ MACS1149_CANUCS_MAPS: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: CANUCS Bullet Cluster DR1 Lenstool fiducial best-fit maps (Rihtarsic et al. 2026,
+#: arXiv:2601.22245; CANFAR vault ``canucs/BULLET_DR1/lensing/best_fit_model/best_fit_maps``;
+#: README of 2026-03-17;
+#: accessed 2026-10-24): 50 mas, D_LS/D_S = 1, deflection in arcsec (``dpl1`` x, ``dpl2`` y);
+#: 219 / 205 MiB (gzip).
+_BULLET_MAP = (
+    "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/lensing/best_fit_model/"
+    "best_fit_maps/bulletclu-{0}-best-50mas.fits.gz"
+)
+BULLET_CANUCS_MAPS: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _BULLET_MAP.format("dpl1"),
+        "ea4fd14ab17d6f6789cef903d553fcf4ac32b4cd1a82e339e37246bf7629231a",
+    ),
+    "alpha_y": (
+        _BULLET_MAP.format("dpl2"),
+        "5079173e0cb8d44cb9f2adbd5d1a006a6c678f2b4a1b175deb992800babad33a",
+    ),
+}
+
 #: BUFFALO Lenstool maps of Abell 370, model A (Niemiec et al. 2023; image-plane fit; readme
 #: ``hlsp_buffalo_model_abell370_par_niemiec_v1.0_readme.txt``; accessed 2026-10-22): ``main``
 #: field, 3000 x 3000 pixels of 0.12", D_LS/D_S = 1, deflection in arcsec; 36.0 MB each. The HLSP

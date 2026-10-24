@@ -1,0 +1,111 @@
+{
+ "plan": "results/lens_consistency/bullet_gatek/PLAN_1b.md",
+ "label": "post-failure deviation (D-034 addendum k precedent)",
+ "model_sha256": "893cd05fdf09b8b2dd9631fc7fddc4d51a1f1d6e606ed136e6065cff2f392593",
+ "grid_step_arcsec": 0.25,
+ "gate_K_wls": {
+  "n_images": 135,
+  "rms_arcsec": 0.3914132791922912,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "extra_predicted": {
+  "K5": {
+   "rms_arcsec": 0.3885252380554611,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "K7a": {
+   "rms_arcsec": 0.06746532692453992,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K7b": {
+   "rms_arcsec": 0.10561556500006113,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K8a": {
+   "rms_arcsec": 0.32078945849852697,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "K8b": {
+   "rms_arcsec": 0.30894027867908663,
+   "n_catalogued": 3,
+   "n_predicted": 4
+  },
+  "K9a": {
+   "rms_arcsec": 0.21160398363737293,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K9b": {
+   "rms_arcsec": 0.27738409621135074,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K12b": {
+   "rms_arcsec": 0.3838865603133462,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "K13b": {
+   "rms_arcsec": 0.4240627963919172,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "K14b": {
+   "rms_arcsec": 0.14502460942547477,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N2a": {
+   "rms_arcsec": 0.3568661824439097,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "N2b": {
+   "rms_arcsec": 0.35088577892812695,
+   "n_catalogued": 3,
+   "n_predicted": 5
+  },
+  "N5a": {
+   "rms_arcsec": 0.2591496526423479,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N5b": {
+   "rms_arcsec": 0.3219282653406636,
+   "n_catalogued": 2,
+   "n_predicted": 5
+  },
+  "N9a": {
+   "rms_arcsec": 0.3374969916791945,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N9b": {
+   "rms_arcsec": 0.1155298445095942,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  },
+  "N11": {
+   "rms_arcsec": 0.5569975887775236,
+   "n_catalogued": 2,
+   "n_predicted": 7
+  },
+  "N12": {
+   "rms_arcsec": 0.3218470671422808,
+   "n_catalogued": 2,
+   "n_predicted": 3
+  }
+ },
+ "fewer_predicted": {
+  "K1e": {
+   "rms_arcsec": 0.36932449391163724,
+   "n_catalogued": 3,
+   "n_predicted": 2
+  }
+ }
+}
