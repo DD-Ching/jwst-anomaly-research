@@ -1,0 +1,146 @@
+{
+ "label": "simulated (model only, no data)",
+ "what": "exposure-averaged W3 flux factor just outside the umbra edge: max over the 20 cadences before the first dim-edge crossing of (F - 1); minimum over 5 cadence phases; 12 u0 values in [0, 1.98]",
+ "cells": [
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 0.1,
+   "shoulder_excess_min": 0.569,
+   "shoulder_excess_median": 0.656
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 0.3,
+   "shoulder_excess_min": 1.457,
+   "shoulder_excess_median": 1.619
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 1.0,
+   "shoulder_excess_min": 3.622,
+   "shoulder_excess_median": 3.942
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 3.0,
+   "shoulder_excess_min": 5.342,
+   "shoulder_excess_median": 5.509
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 10.0,
+   "shoulder_excess_min": 5.953,
+   "shoulder_excess_median": 5.971
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 0.1,
+   "shoulder_excess_min": 0.561,
+   "shoulder_excess_median": 0.641
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 0.3,
+   "shoulder_excess_min": 1.106,
+   "shoulder_excess_median": 1.182
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 1.0,
+   "shoulder_excess_min": 1.333,
+   "shoulder_excess_median": 1.338
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 3.0,
+   "shoulder_excess_min": 1.108,
+   "shoulder_excess_median": 1.351
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 10.0,
+   "shoulder_excess_min": 0.916,
+   "shoulder_excess_median": 1.211
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 0.1,
+   "shoulder_excess_min": 0.398,
+   "shoulder_excess_median": 0.459
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 0.3,
+   "shoulder_excess_min": 1.02,
+   "shoulder_excess_median": 1.133
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 1.0,
+   "shoulder_excess_min": 2.535,
+   "shoulder_excess_median": 2.759
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 3.0,
+   "shoulder_excess_min": 3.739,
+   "shoulder_excess_median": 3.856
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 10.0,
+   "shoulder_excess_min": 4.167,
+   "shoulder_excess_median": 4.18
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 0.1,
+   "shoulder_excess_min": 0.393,
+   "shoulder_excess_median": 0.448
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 0.3,
+   "shoulder_excess_min": 0.775,
+   "shoulder_excess_median": 0.828
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 1.0,
+   "shoulder_excess_min": 0.933,
+   "shoulder_excess_median": 0.937
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 3.0,
+   "shoulder_excess_min": 0.776,
+   "shoulder_excess_median": 0.946
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 10.0,
+   "shoulder_excess_min": 0.641,
+   "shoulder_excess_median": 0.848
+  }
+ ]
+}

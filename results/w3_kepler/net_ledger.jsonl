@@ -1,0 +1,20 @@
+{"bytes": 8012288, "ev": "reserve", "id": "740f3f1f1a43", "pid": 484, "t": 1792827998.752, "what": "GET https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+kepid%2Ckepmag%2Cteff%2Clogg%2Cst_quarters%2Cra%2Cdec+from+q1_q17_dr25_stellar+where+logg%3E%3D4.0+and+teff%3E%3D4500+and+teff%3C%3D6500+and+kepmag%3E%3D12.0+and+kepmag%3C%3D14.0&format=csv range=None attempt=0"}
+{"counted": 8721, "ev": "done", "id": "740f3f1f1a43", "pid": 484, "status": "error: HTTP 400", "t": 1792828000.617}
+{"bytes": 8012288, "ev": "reserve", "id": "77325bffd786", "pid": 484, "t": 1792828000.619, "what": "GET https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+kepid%2Ckepmag%2Cteff%2Clogg%2Cst_quarters%2Cra%2Cdec+from+q1_q17_dr25_stellar+where+logg%3E%3D4.0+and+teff%3E%3D4500+and+teff%3C%3D6500+and+kepmag%3E%3D12.0+and+kepmag%3C%3D14.0&format=csv range=None attempt=1"}
+{"counted": 8721, "ev": "done", "id": "77325bffd786", "pid": 484, "status": "error: HTTP 400", "t": 1792828001.876}
+{"bytes": 32288, "ev": "reserve", "id": "8b141f13b8ab", "pid": 490, "t": 1792828009.249, "what": "GET https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+%2A+from+q1_q17_dr25_stellar&format=csv range=None attempt=0"}
+{"bytes": 41657, "ev": "extend", "id": "8b141f13b8ab", "pid": 490, "t": 1792828010.378}
+{"bytes": 312, "ev": "extend", "id": "8b141f13b8ab", "pid": 490, "t": 1792828010.519}
+{"counted": 8721, "ev": "done", "id": "8b141f13b8ab", "pid": 490, "status": "error: HTTP 400", "t": 1792828010.52}
+{"bytes": 32288, "ev": "reserve", "id": "3dfdd8f75c3a", "pid": 490, "t": 1792828010.521, "what": "GET https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+%2A+from+keplerstellar&format=csv range=None attempt=0"}
+{"bytes": 41674, "ev": "extend", "id": "3dfdd8f75c3a", "pid": 490, "t": 1792828016.698}
+{"bytes": 1384, "ev": "extend", "id": "3dfdd8f75c3a", "pid": 490, "t": 1792828016.824}
+{"counted": 9810, "ev": "done", "id": "3dfdd8f75c3a", "pid": 490, "status": "ok", "t": 1792828016.825}
+{"bytes": 6012288, "ev": "reserve", "id": "7cb1d96bad27", "pid": 499, "t": 1792828028.627, "what": "GET https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+kepid%2Ckepmag%2Cteff%2Clogg%2Cst_quarters%2Cra%2Cdec%2Cdataspan%2Cdutycycle%2Cnkoi%2Cntce+from+keplerstellar+where+st_delivname%3D%27q1_q17_dr25_stellar%27+and+logg%3E%3D4.0+and+teff%3E%3D4500+and+teff%3C%3D6500+and+kepmag%3E%3D12.0+and+kepmag%3C%3D14.0&format=csv range=None attempt=0"}
+{"counted": 2165547, "ev": "done", "id": "7cb1d96bad27", "pid": 499, "status": "ok", "t": 1792828031.63}
+{"bytes": 32288, "ev": "reserve", "id": "184923f33d0b", "pid": 502, "t": 1792828048.774, "what": "GET https://archive.stsci.edu/missions/kepler/lightcurves/0025/002578941/ range=None attempt=0"}
+{"bytes": 41684, "ev": "extend", "id": "184923f33d0b", "pid": 502, "t": 1792828049.243}
+{"bytes": 2191, "ev": "extend", "id": "184923f33d0b", "pid": 502, "t": 1792828049.244}
+{"counted": 10627, "ev": "done", "id": "184923f33d0b", "pid": 502, "status": "ok", "t": 1792828049.245}
+{"bytes": 612288, "ev": "reserve", "id": "1e889441b1f0", "pid": 502, "t": 1792828049.52, "what": "GET https://archive.stsci.edu/missions/kepler/lightcurves/0025/002578941/kplr002578941-2010174085026_llc.fits range=None attempt=0"}
+{"counted": 500994, "ev": "done", "id": "1e889441b1f0", "pid": 502, "status": "ok", "t": 1792828049.766}

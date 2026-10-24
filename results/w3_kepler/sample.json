@@ -1,0 +1,1015 @@
+{
+ "label": "observed (metadata)",
+ "pool_query": "select kepid,kepmag,teff,logg,st_quarters,ra,dec,dataspan,dutycycle,nkoi,ntce from keplerstellar where st_delivname='q1_q17_dr25_stellar' and logg>=4.0 and teff>=4500 and teff<=6500 and kepmag>=12.0 and kepmag<=14.0 (NExScI TAP, 2026-10-24)",
+ "pool_sha256": "013b8a0d0f464a9574a3e4e8a1dce0c1b306116b468c18f638efe83fa13c60b0",
+ "pool_rows": 24474,
+ "pool_all_q1_q17": 18570,
+ "rule": "sort by sha256('w3-kepler-2026-10-24:<kepid>'); ranks 0-19 dev, 20-39 val, 40-99 search",
+ "interface_test_star": {
+  "rank": 100,
+  "kepid": 2578941,
+  "target": false
+ },
+ "stars": [
+  {
+   "rank": 0,
+   "kepid": 10468501,
+   "group": "dev",
+   "kepmag": 13.036,
+   "teff": 5804.0,
+   "logg": 4.294,
+   "ra": 291.10031,
+   "dec": 47.66703
+  },
+  {
+   "rank": 1,
+   "kepid": 7941056,
+   "group": "dev",
+   "kepmag": 13.066,
+   "teff": 5043.0,
+   "logg": 4.502,
+   "ra": 283.29272,
+   "dec": 43.706081
+  },
+  {
+   "rank": 2,
+   "kepid": 6139835,
+   "group": "dev",
+   "kepmag": 13.853,
+   "teff": 5952.0,
+   "logg": 4.318,
+   "ra": 296.31317,
+   "dec": 41.402649
+  },
+  {
+   "rank": 3,
+   "kepid": 8780608,
+   "group": "dev",
+   "kepmag": 13.584,
+   "teff": 6046.0,
+   "logg": 4.372,
+   "ra": 300.24802,
+   "dec": 44.97884
+  },
+  {
+   "rank": 4,
+   "kepid": 9137992,
+   "group": "dev",
+   "kepmag": 12.981,
+   "teff": 5695.0,
+   "logg": 4.242,
+   "ra": 283.46033,
+   "dec": 45.555801
+  },
+  {
+   "rank": 5,
+   "kepid": 10329365,
+   "group": "dev",
+   "kepmag": 13.055,
+   "teff": 4923.0,
+   "logg": 4.607,
+   "ra": 287.23959,
+   "dec": 47.402161
+  },
+  {
+   "rank": 6,
+   "kepid": 6693494,
+   "group": "dev",
+   "kepmag": 13.824,
+   "teff": 6306.0,
+   "logg": 4.414,
+   "ra": 292.43756,
+   "dec": 42.11182
+  },
+  {
+   "rank": 7,
+   "kepid": 3747849,
+   "group": "dev",
+   "kepmag": 13.92,
+   "teff": 6161.0,
+   "logg": 4.238,
+   "ra": 291.68622,
+   "dec": 38.86673
+  },
+  {
+   "rank": 8,
+   "kepid": 11764067,
+   "group": "dev",
+   "kepmag": 13.268,
+   "teff": 6164.0,
+   "logg": 4.047,
+   "ra": 292.38434,
+   "dec": 49.939659
+  },
+  {
+   "rank": 9,
+   "kepid": 6060752,
+   "group": "dev",
+   "kepmag": 12.392,
+   "teff": 5204.0,
+   "logg": 4.525,
+   "ra": 296.8082,
+   "dec": 41.349892
+  },
+  {
+   "rank": 10,
+   "kepid": 12407740,
+   "group": "dev",
+   "kepmag": 13.488,
+   "teff": 4878.0,
+   "logg": 4.495,
+   "ra": 291.42093,
+   "dec": 51.211788
+  },
+  {
+   "rank": 11,
+   "kepid": 8227622,
+   "group": "dev",
+   "kepmag": 13.38,
+   "teff": 5530.0,
+   "logg": 4.425,
+   "ra": 289.83292,
+   "dec": 44.19202
+  },
+  {
+   "rank": 12,
+   "kepid": 4037439,
+   "group": "dev",
+   "kepmag": 12.203,
+   "teff": 6367.0,
+   "logg": 4.156,
+   "ra": 285.14716,
+   "dec": 39.168556
+  },
+  {
+   "rank": 13,
+   "kepid": 9823404,
+   "group": "dev",
+   "kepmag": 12.684,
+   "teff": 6343.0,
+   "logg": 4.289,
+   "ra": 288.18607,
+   "dec": 46.628731
+  },
+  {
+   "rank": 14,
+   "kepid": 5552801,
+   "group": "dev",
+   "kepmag": 13.68,
+   "teff": 5403.0,
+   "logg": 4.471,
+   "ra": 296.82086,
+   "dec": 40.770432
+  },
+  {
+   "rank": 15,
+   "kepid": 9575789,
+   "group": "dev",
+   "kepmag": 13.056,
+   "teff": 5938.0,
+   "logg": 4.348,
+   "ra": 285.67697,
+   "dec": 46.275082
+  },
+  {
+   "rank": 16,
+   "kepid": 11297686,
+   "group": "dev",
+   "kepmag": 12.994,
+   "teff": 5425.0,
+   "logg": 4.487,
+   "ra": 292.22458,
+   "dec": 49.04348
+  },
+  {
+   "rank": 17,
+   "kepid": 7376321,
+   "group": "dev",
+   "kepmag": 13.373,
+   "teff": 6081.0,
+   "logg": 4.01,
+   "ra": 295.64572,
+   "dec": 42.908009
+  },
+  {
+   "rank": 18,
+   "kepid": 3231137,
+   "group": "dev",
+   "kepmag": 13.561,
+   "teff": 6407.0,
+   "logg": 4.48,
+   "ra": 290.34735,
+   "dec": 38.377899
+  },
+  {
+   "rank": 19,
+   "kepid": 8604869,
+   "group": "dev",
+   "kepmag": 13.453,
+   "teff": 6116.0,
+   "logg": 4.389,
+   "ra": 282.1759,
+   "dec": 44.758705
+  },
+  {
+   "rank": 20,
+   "kepid": 6442709,
+   "group": "val",
+   "kepmag": 13.355,
+   "teff": 6002.0,
+   "logg": 4.24,
+   "ra": 291.7569,
+   "dec": 41.864037
+  },
+  {
+   "rank": 21,
+   "kepid": 10518739,
+   "group": "val",
+   "kepmag": 13.716,
+   "teff": 5215.0,
+   "logg": 4.455,
+   "ra": 283.91791,
+   "dec": 47.778648
+  },
+  {
+   "rank": 22,
+   "kepid": 9326150,
+   "group": "val",
+   "kepmag": 13.689,
+   "teff": 5880.0,
+   "logg": 4.117,
+   "ra": 283.50339,
+   "dec": 45.832439
+  },
+  {
+   "rank": 23,
+   "kepid": 6699421,
+   "group": "val",
+   "kepmag": 13.826,
+   "teff": 6404.0,
+   "logg": 4.096,
+   "ra": 294.02609,
+   "dec": 42.14856
+  },
+  {
+   "rank": 24,
+   "kepid": 7957498,
+   "group": "val",
+   "kepmag": 13.658,
+   "teff": 5957.0,
+   "logg": 4.466,
+   "ra": 290.92972,
+   "dec": 43.716911
+  },
+  {
+   "rank": 25,
+   "kepid": 7185532,
+   "group": "val",
+   "kepmag": 12.354,
+   "teff": 5996.0,
+   "logg": 4.185,
+   "ra": 286.63495,
+   "dec": 42.730629
+  },
+  {
+   "rank": 26,
+   "kepid": 8260220,
+   "group": "val",
+   "kepmag": 13.591,
+   "teff": 6040.0,
+   "logg": 4.096,
+   "ra": 299.78683,
+   "dec": 44.103031
+  },
+  {
+   "rank": 27,
+   "kepid": 6780263,
+   "group": "val",
+   "kepmag": 13.792,
+   "teff": 5506.0,
+   "logg": 4.141,
+   "ra": 292.6904,
+   "dec": 42.26355
+  },
+  {
+   "rank": 28,
+   "kepid": 10959110,
+   "group": "val",
+   "kepmag": 13.95,
+   "teff": 5964.0,
+   "logg": 4.335,
+   "ra": 281.91489,
+   "dec": 48.446541
+  },
+  {
+   "rank": 29,
+   "kepid": 12216195,
+   "group": "val",
+   "kepmag": 13.804,
+   "teff": 6338.0,
+   "logg": 4.418,
+   "ra": 295.52362,
+   "dec": 50.815411
+  },
+  {
+   "rank": 30,
+   "kepid": 10198664,
+   "group": "val",
+   "kepmag": 13.701,
+   "teff": 5706.0,
+   "logg": 4.537,
+   "ra": 287.78583,
+   "dec": 47.274288
+  },
+  {
+   "rank": 31,
+   "kepid": 6541920,
+   "group": "val",
+   "kepmag": 13.709,
+   "teff": 5657.0,
+   "logg": 4.364,
+   "ra": 297.11511,
+   "dec": 41.909142
+  },
+  {
+   "rank": 32,
+   "kepid": 8488758,
+   "group": "val",
+   "kepmag": 13.583,
+   "teff": 6063.0,
+   "logg": 4.476,
+   "ra": 289.3537,
+   "dec": 44.564548
+  },
+  {
+   "rank": 33,
+   "kepid": 4158803,
+   "group": "val",
+   "kepmag": 13.113,
+   "teff": 5959.0,
+   "logg": 4.201,
+   "ra": 291.92368,
+   "dec": 39.243649
+  },
+  {
+   "rank": 34,
+   "kepid": 9490791,
+   "group": "val",
+   "kepmag": 13.785,
+   "teff": 5985.0,
+   "logg": 4.147,
+   "ra": 300.26566,
+   "dec": 46.014019
+  },
+  {
+   "rank": 35,
+   "kepid": 12600849,
+   "group": "val",
+   "kepmag": 13.45,
+   "teff": 6362.0,
+   "logg": 4.542,
+   "ra": 289.56961,
+   "dec": 51.664982
+  },
+  {
+   "rank": 36,
+   "kepid": 6385010,
+   "group": "val",
+   "kepmag": 12.348,
+   "teff": 6026.0,
+   "logg": 4.372,
+   "ra": 297.4834,
+   "dec": 41.71069
+  },
+  {
+   "rank": 37,
+   "kepid": 10339390,
+   "group": "val",
+   "kepmag": 13.157,
+   "teff": 5862.0,
+   "logg": 4.416,
+   "ra": 291.79324,
+   "dec": 47.434479
+  },
+  {
+   "rank": 38,
+   "kepid": 10519594,
+   "group": "val",
+   "kepmag": 13.753,
+   "teff": 5600.0,
+   "logg": 4.474,
+   "ra": 284.38895,
+   "dec": 47.765911
+  },
+  {
+   "rank": 39,
+   "kepid": 6436621,
+   "group": "val",
+   "kepmag": 12.72,
+   "teff": 5907.0,
+   "logg": 4.49,
+   "ra": 289.75009,
+   "dec": 41.879662
+  },
+  {
+   "rank": 40,
+   "kepid": 1435736,
+   "group": "search",
+   "kepmag": 13.136,
+   "teff": 6338.0,
+   "logg": 4.32,
+   "ra": 292.14029,
+   "dec": 37.072319
+  },
+  {
+   "rank": 41,
+   "kepid": 6213523,
+   "group": "search",
+   "kepmag": 13.94,
+   "teff": 6257.0,
+   "logg": 4.23,
+   "ra": 294.41031,
+   "dec": 41.579189
+  },
+  {
+   "rank": 42,
+   "kepid": 7363570,
+   "group": "search",
+   "kepmag": 13.763,
+   "teff": 5066.0,
+   "logg": 4.496,
+   "ra": 292.03348,
+   "dec": 42.934361
+  },
+  {
+   "rank": 43,
+   "kepid": 6208655,
+   "group": "search",
+   "kepmag": 13.157,
+   "teff": 6153.0,
+   "logg": 4.487,
+   "ra": 292.9877,
+   "dec": 41.523521
+  },
+  {
+   "rank": 44,
+   "kepid": 8555244,
+   "group": "search",
+   "kepmag": 12.386,
+   "teff": 6225.0,
+   "logg": 4.189,
+   "ra": 290.04599,
+   "dec": 44.697849
+  },
+  {
+   "rank": 45,
+   "kepid": 5610483,
+   "group": "search",
+   "kepmag": 13.713,
+   "teff": 6295.0,
+   "logg": 4.325,
+   "ra": 288.84991,
+   "dec": 40.887798
+  },
+  {
+   "rank": 46,
+   "kepid": 5536083,
+   "group": "search",
+   "kepmag": 13.732,
+   "teff": 6344.0,
+   "logg": 4.076,
+   "ra": 292.58142,
+   "dec": 40.723259
+  },
+  {
+   "rank": 47,
+   "kepid": 7120032,
+   "group": "search",
+   "kepmag": 13.911,
+   "teff": 6129.0,
+   "logg": 4.214,
+   "ra": 292.48581,
+   "dec": 42.693829
+  },
+  {
+   "rank": 48,
+   "kepid": 10387636,
+   "group": "search",
+   "kepmag": 13.434,
+   "teff": 5906.0,
+   "logg": 4.369,
+   "ra": 283.36499,
+   "dec": 47.538303
+  },
+  {
+   "rank": 49,
+   "kepid": 1570554,
+   "group": "search",
+   "kepmag": 12.811,
+   "teff": 5929.0,
+   "logg": 4.061,
+   "ra": 290.77972,
+   "dec": 37.154491
+  },
+  {
+   "rank": 50,
+   "kepid": 4996108,
+   "group": "search",
+   "kepmag": 13.599,
+   "teff": 5766.0,
+   "logg": 4.089,
+   "ra": 286.71417,
+   "dec": 40.142029
+  },
+  {
+   "rank": 51,
+   "kepid": 5306787,
+   "group": "search",
+   "kepmag": 13.327,
+   "teff": 6408.0,
+   "logg": 4.319,
+   "ra": 299.19498,
+   "dec": 40.44799
+  },
+  {
+   "rank": 52,
+   "kepid": 7846305,
+   "group": "search",
+   "kepmag": 13.173,
+   "teff": 6341.0,
+   "logg": 4.446,
+   "ra": 298.74081,
+   "dec": 43.597939
+  },
+  {
+   "rank": 53,
+   "kepid": 6358676,
+   "group": "search",
+   "kepmag": 13.517,
+   "teff": 5788.0,
+   "logg": 4.475,
+   "ra": 290.0166,
+   "dec": 41.749962
+  },
+  {
+   "rank": 54,
+   "kepid": 8367302,
+   "group": "search",
+   "kepmag": 12.406,
+   "teff": 6131.0,
+   "logg": 4.124,
+   "ra": 292.49393,
+   "dec": 44.30481
+  },
+  {
+   "rank": 55,
+   "kepid": 2854411,
+   "group": "search",
+   "kepmag": 13.9,
+   "teff": 4502.0,
+   "logg": 4.622,
+   "ra": 291.86353,
+   "dec": 38.034561
+  },
+  {
+   "rank": 56,
+   "kepid": 10923633,
+   "group": "search",
+   "kepmag": 13.046,
+   "teff": 6440.0,
+   "logg": 4.352,
+   "ra": 293.50308,
+   "dec": 48.35675
+  },
+  {
+   "rank": 57,
+   "kepid": 5693275,
+   "group": "search",
+   "kepmag": 12.154,
+   "teff": 6484.0,
+   "logg": 4.256,
+   "ra": 287.69681,
+   "dec": 40.917629
+  },
+  {
+   "rank": 58,
+   "kepid": 4645045,
+   "group": "search",
+   "kepmag": 13.715,
+   "teff": 6280.0,
+   "logg": 4.375,
+   "ra": 288.84149,
+   "dec": 39.732738
+  },
+  {
+   "rank": 59,
+   "kepid": 7697280,
+   "group": "search",
+   "kepmag": 13.328,
+   "teff": 5321.0,
+   "logg": 4.372,
+   "ra": 296.43341,
+   "dec": 43.363903
+  },
+  {
+   "rank": 60,
+   "kepid": 10396306,
+   "group": "search",
+   "kepmag": 12.877,
+   "teff": 5953.0,
+   "logg": 4.175,
+   "ra": 288.09933,
+   "dec": 47.592251
+  },
+  {
+   "rank": 61,
+   "kepid": 6580292,
+   "group": "search",
+   "kepmag": 12.906,
+   "teff": 6070.0,
+   "logg": 4.19,
+   "ra": 281.92133,
+   "dec": 42.024155
+  },
+  {
+   "rank": 62,
+   "kepid": 2974598,
+   "group": "search",
+   "kepmag": 13.898,
+   "teff": 6221.0,
+   "logg": 4.206,
+   "ra": 287.3717,
+   "dec": 38.16761
+  },
+  {
+   "rank": 63,
+   "kepid": 3527946,
+   "group": "search",
+   "kepmag": 13.859,
+   "teff": 6108.0,
+   "logg": 4.509,
+   "ra": 285.98248,
+   "dec": 38.60474
+  },
+  {
+   "rank": 64,
+   "kepid": 8607297,
+   "group": "search",
+   "kepmag": 12.474,
+   "teff": 6134.0,
+   "logg": 4.396,
+   "ra": 283.49124,
+   "dec": 44.779758
+  },
+  {
+   "rank": 65,
+   "kepid": 11958229,
+   "group": "search",
+   "kepmag": 12.413,
+   "teff": 6122.0,
+   "logg": 4.071,
+   "ra": 288.61914,
+   "dec": 50.37793
+  },
+  {
+   "rank": 66,
+   "kepid": 4737965,
+   "group": "search",
+   "kepmag": 13.793,
+   "teff": 5931.0,
+   "logg": 4.157,
+   "ra": 289.12842,
+   "dec": 39.89983
+  },
+  {
+   "rank": 67,
+   "kepid": 2993611,
+   "group": "search",
+   "kepmag": 13.926,
+   "teff": 6055.0,
+   "logg": 4.461,
+   "ra": 292.30179,
+   "dec": 38.121342
+  },
+  {
+   "rank": 68,
+   "kepid": 12555818,
+   "group": "search",
+   "kepmag": 13.756,
+   "teff": 6137.0,
+   "logg": 4.448,
+   "ra": 289.9328,
+   "dec": 51.54929
+  },
+  {
+   "rank": 69,
+   "kepid": 9812966,
+   "group": "search",
+   "kepmag": 13.151,
+   "teff": 6412.0,
+   "logg": 4.304,
+   "ra": 281.99744,
+   "dec": 46.663189
+  },
+  {
+   "rank": 70,
+   "kepid": 5530576,
+   "group": "search",
+   "kepmag": 13.242,
+   "teff": 6357.0,
+   "logg": 4.351,
+   "ra": 290.81357,
+   "dec": 40.754581
+  },
+  {
+   "rank": 71,
+   "kepid": 8752026,
+   "group": "search",
+   "kepmag": 13.457,
+   "teff": 6175.0,
+   "logg": 4.458,
+   "ra": 291.25949,
+   "dec": 44.968262
+  },
+  {
+   "rank": 72,
+   "kepid": 6280271,
+   "group": "search",
+   "kepmag": 13.504,
+   "teff": 5445.0,
+   "logg": 4.499,
+   "ra": 290.22,
+   "dec": 41.640553
+  },
+  {
+   "rank": 73,
+   "kepid": 3734473,
+   "group": "search",
+   "kepmag": 13.831,
+   "teff": 5993.0,
+   "logg": 4.146,
+   "ra": 287.54721,
+   "dec": 38.871719
+  },
+  {
+   "rank": 74,
+   "kepid": 8414283,
+   "group": "search",
+   "kepmag": 12.426,
+   "teff": 5940.0,
+   "logg": 4.429,
+   "ra": 284.19308,
+   "dec": 44.455681
+  },
+  {
+   "rank": 75,
+   "kepid": 10382575,
+   "group": "search",
+   "kepmag": 12.815,
+   "teff": 5940.0,
+   "logg": 4.028,
+   "ra": 280.12631,
+   "dec": 47.527985
+  },
+  {
+   "rank": 76,
+   "kepid": 5525228,
+   "group": "search",
+   "kepmag": 13.879,
+   "teff": 5776.0,
+   "logg": 4.554,
+   "ra": 289.20648,
+   "dec": 40.794621
+  },
+  {
+   "rank": 77,
+   "kepid": 8554884,
+   "group": "search",
+   "kepmag": 13.905,
+   "teff": 6003.0,
+   "logg": 4.507,
+   "ra": 289.91214,
+   "dec": 44.68589
+  },
+  {
+   "rank": 78,
+   "kepid": 2856758,
+   "group": "search",
+   "kepmag": 13.693,
+   "teff": 6003.0,
+   "logg": 4.507,
+   "ra": 292.34341,
+   "dec": 38.078079
+  },
+  {
+   "rank": 79,
+   "kepid": 7909803,
+   "group": "search",
+   "kepmag": 13.826,
+   "teff": 5865.0,
+   "logg": 4.24,
+   "ra": 297.56354,
+   "dec": 43.60104
+  },
+  {
+   "rank": 80,
+   "kepid": 5084965,
+   "group": "search",
+   "kepmag": 13.592,
+   "teff": 5601.0,
+   "logg": 4.583,
+   "ra": 287.06052,
+   "dec": 40.249329
+  },
+  {
+   "rank": 81,
+   "kepid": 7778157,
+   "group": "search",
+   "kepmag": 13.964,
+   "teff": 6258.0,
+   "logg": 4.367,
+   "ra": 299.03366,
+   "dec": 43.49469
+  },
+  {
+   "rank": 82,
+   "kepid": 9286924,
+   "group": "search",
+   "kepmag": 12.296,
+   "teff": 6459.0,
+   "logg": 4.102,
+   "ra": 294.21967,
+   "dec": 45.719952
+  },
+  {
+   "rank": 83,
+   "kepid": 9702971,
+   "group": "search",
+   "kepmag": 13.506,
+   "teff": 6126.0,
+   "logg": 4.458,
+   "ra": 288.52032,
+   "dec": 46.46423
+  },
+  {
+   "rank": 84,
+   "kepid": 11454502,
+   "group": "search",
+   "kepmag": 13.709,
+   "teff": 5575.0,
+   "logg": 4.437,
+   "ra": 291.46948,
+   "dec": 49.326698
+  },
+  {
+   "rank": 85,
+   "kepid": 6042905,
+   "group": "search",
+   "kepmag": 12.408,
+   "teff": 6333.0,
+   "logg": 4.181,
+   "ra": 291.97235,
+   "dec": 41.397511
+  },
+  {
+   "rank": 86,
+   "kepid": 8752340,
+   "group": "search",
+   "kepmag": 12.334,
+   "teff": 6456.0,
+   "logg": 4.294,
+   "ra": 291.37381,
+   "dec": 44.962959
+  },
+  {
+   "rank": 87,
+   "kepid": 3834001,
+   "group": "search",
+   "kepmag": 13.555,
+   "teff": 6113.0,
+   "logg": 4.529,
+   "ra": 285.92676,
+   "dec": 38.940929
+  },
+  {
+   "rank": 88,
+   "kepid": 9594013,
+   "group": "search",
+   "kepmag": 13.408,
+   "teff": 5529.0,
+   "logg": 4.464,
+   "ra": 294.20453,
+   "dec": 46.211552
+  },
+  {
+   "rank": 89,
+   "kepid": 7667596,
+   "group": "search",
+   "kepmag": 13.69,
+   "teff": 5465.0,
+   "logg": 4.459,
+   "ra": 285.72495,
+   "dec": 43.327221
+  },
+  {
+   "rank": 90,
+   "kepid": 5985654,
+   "group": "search",
+   "kepmag": 13.762,
+   "teff": 4963.0,
+   "logg": 4.605,
+   "ra": 298.25583,
+   "dec": 41.243858
+  },
+  {
+   "rank": 91,
+   "kepid": 11569091,
+   "group": "search",
+   "kepmag": 13.695,
+   "teff": 5134.0,
+   "logg": 4.445,
+   "ra": 296.45789,
+   "dec": 49.528229
+  },
+  {
+   "rank": 92,
+   "kepid": 11086821,
+   "group": "search",
+   "kepmag": 12.466,
+   "teff": 6060.0,
+   "logg": 4.494,
+   "ra": 293.2164,
+   "dec": 48.682892
+  },
+  {
+   "rank": 93,
+   "kepid": 7678493,
+   "group": "search",
+   "kepmag": 13.881,
+   "teff": 5307.0,
+   "logg": 4.57,
+   "ra": 290.41312,
+   "dec": 43.322929
+  },
+  {
+   "rank": 94,
+   "kepid": 2715763,
+   "group": "search",
+   "kepmag": 12.856,
+   "teff": 5566.0,
+   "logg": 4.44,
+   "ra": 292.04877,
+   "dec": 37.933907
+  },
+  {
+   "rank": 95,
+   "kepid": 8416310,
+   "group": "search",
+   "kepmag": 13.824,
+   "teff": 5160.0,
+   "logg": 4.575,
+   "ra": 285.29495,
+   "dec": 44.45179
+  },
+  {
+   "rank": 96,
+   "kepid": 5269222,
+   "group": "search",
+   "kepmag": 12.299,
+   "teff": 5947.0,
+   "logg": 4.311,
+   "ra": 290.03946,
+   "dec": 40.488491
+  },
+  {
+   "rank": 97,
+   "kepid": 5214512,
+   "group": "search",
+   "kepmag": 13.855,
+   "teff": 6263.0,
+   "logg": 4.365,
+   "ra": 298.33197,
+   "dec": 40.370861
+  },
+  {
+   "rank": 98,
+   "kepid": 8455291,
+   "group": "search",
+   "kepmag": 13.197,
+   "teff": 6129.0,
+   "logg": 4.387,
+   "ra": 299.34467,
+   "dec": 44.495644
+  },
+  {
+   "rank": 99,
+   "kepid": 11402999,
+   "group": "search",
+   "kepmag": 13.296,
+   "teff": 6074.0,
+   "logg": 4.002,
+   "ra": 291.9108,
+   "dec": 49.279831
+  }
+ ]
+}
