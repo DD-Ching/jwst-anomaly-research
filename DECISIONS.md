@@ -2562,6 +2562,14 @@ from MARS (same anchors), BUFFALO model A reproduces all four MARS misses within
 Alternatives rejected: a CANUCS family / z check (only needed for "neither"). Revisit if: MARS is used on Abell 370
 in a later stage (validated only on MACS0416).
 
+**Addendum 2026-10-24ar (MACS0416 CANUCS extra images under the MARS maps).** `results/lens_consistency/m0416_mars_extra/RESULT.md`,
+plan frozen in 50c7a749, rule functions and tests in 0e239c56, both before the run. Each of the 49 stored CANUCS extra
+predictions is "both" when a MARS image not matched to an observed image of the family lies within 3.0″
+(ASSUMPTION). 38 both, 11 CANUCS only; all 5 with |μ_CANUCS| ≥ 10 are CANUCS only, the D115b flag included (7.29″).
+Decision: the flag's record gets a model-specific reading; its verdict stays `inconclusive` (frozen rule).
+Alternatives rejected: closing the flag on MARS alone (1.515″ map pixels at a galaxy-scale critical curve).
+Revisit if: a Lenstool re-fit with 8515's σ free, or a finer-resolution independent model of MACS0416.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
