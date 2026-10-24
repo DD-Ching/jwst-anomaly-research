@@ -1,5 +1,8 @@
 {
  "label": "estimate, not a measurement: white-noise scaling of the PR #199 random-aperture errors with exposure time (ASSUMPTION; cluster-light structure and confusion do not average down, so these are optimistic). Exposure times from metadata/a370_1565_exptime.csv; #199 numbers from its unmerged record docs/candidates/abell370-1565.md (provisional).",
+ "sigma_ratio_meaning": "uncertainty of the flux ratio r = F150W/F200W (nJy / nJy), not a magnitude or colour error in mag",
+ "red_side_assumption": "ASSUMPTION: F210M exposure counts as F200W-equivalent time t_F210M / f200w_over_f210m_bandwidth_assumed, i.e. photon-limited noise and the same flux density in F200W and F210M; red_side_F200W_equiv_s ~ t_f200w_public_s + t_f210m_public_s / 2.259 (ratio shown rounded) (plus 9371 / 7345 F200W in the second case)",
+ "status": "optimistic and unmeasured; does not establish the <= 0.15 reopen condition of #199",
  "inputs": {
   "f150w_nJy": [
    6.7,
