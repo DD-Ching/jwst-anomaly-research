@@ -2544,6 +2544,16 @@ for a held-out stage (JWST-era spectroscopic images absent from the 2023 catalog
 Alternatives rejected: bicubic interpolation after the run (not in the plan). Revisit if: a held-out stage needs
 sub-arcsecond accuracy (bilinear interpolation of the coarse maps is untested against the authors' bicubic scheme).
 
+**Addendum 2026-10-24ap (MARS HFF maps on held-out JWST-era CANUCS images).** `results/lens_consistency/mars_hff_heldout/RESULT.md`,
+plan frozen in e5199c1c, functions and tests in 412de9dd, both before the run. CANUCS DR1 images with no MARS
+catalogue row within 0.5″ (after a median frame offset) are held out; per family the source comes from the seen
+images (type E) or from all images (types N / M). Gate H (rms ≤ 1.0″ and ≥ 80 % within 3″): MACS0416 passes, 77
+held-out images in 34 families, rms 0.514″ (training K 0.513″), 100 % within 3″; Abell 370 fails, 40 images, rms
+14.81″, 90 % within 3″ (7.6 at 20.91″ and 24e.2 at 90.85″ with one predicted image). Decision: MARS counts as a
+held-out-validated second model on MACS0416; on Abell 370 the four > 3″ images are not flags. Alternatives
+rejected: dropping the two large misses after the run. Revisit if: a model passing gate K on Abell 370 (BUFFALO
+model A, K2 0.910″) is checked on 7.6 and 24e.2 under a frozen plan.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

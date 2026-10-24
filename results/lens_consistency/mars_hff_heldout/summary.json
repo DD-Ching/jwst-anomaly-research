@@ -1,0 +1,85 @@
+{
+ "plan": "results/lens_consistency/mars_hff_heldout/PLAN.md",
+ "zip": {
+  "bytes": 2713478,
+  "md5": "2d87f9a36aadb430f7a7b937fe70b8c2",
+  "sha256": "0d4cc2c6342f597c4d418f1c416f9f355d72ab8ac9e55206bd6050dd60be8e14"
+ },
+ "fields": {
+  "Abell 370": {
+   "canucs_images": 115,
+   "frame_offset": {
+    "n_pairs": 94,
+    "dx_arcsec": -0.03328894114590834,
+    "dy_arcsec": 0.005805472195374861,
+    "applied": true
+   },
+   "seen": 75,
+   "held_out": 40,
+   "held_out_families": 21,
+   "types": {
+    "E": 2,
+    "N": 25,
+    "M": 13
+   },
+   "outside_map": 0,
+   "gate_H": {
+    "n_tested": 40,
+    "rms_arcsec": 14.808995357143797,
+    "matched_fraction": 0.9,
+    "passes": false
+   },
+   "reported": {
+    "type_E_only": {
+     "n_tested": 2,
+     "rms_arcsec": 1.8254895621169622,
+     "matched_fraction": 1.0,
+     "passes": false
+    },
+    "training_gate_K_rms_arcsec": 0.85
+   },
+   "outcome": "does not reproduce",
+   "over_3arcsec": [
+    "3b.1",
+    "5.3",
+    "7.6",
+    "24e.2"
+   ]
+  },
+  "MACS J0416.1-2403": {
+   "canucs_images": 303,
+   "frame_offset": {
+    "n_pairs": 242,
+    "dx_arcsec": -0.21782995465938992,
+    "dy_arcsec": 0.08230752422022647,
+    "applied": true
+   },
+   "seen": 226,
+   "held_out": 77,
+   "held_out_families": 34,
+   "types": {
+    "E": 6,
+    "N": 68,
+    "M": 3
+   },
+   "outside_map": 0,
+   "gate_H": {
+    "n_tested": 77,
+    "rms_arcsec": 0.5144039102813955,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "reported": {
+    "type_E_only": {
+     "n_tested": 6,
+     "rms_arcsec": 0.4882362857863751,
+     "matched_fraction": 1.0,
+     "passes": true
+    },
+    "training_gate_K_rms_arcsec": 0.513
+   },
+   "outcome": "reproduces",
+   "over_3arcsec": []
+  }
+ }
+}
