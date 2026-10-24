@@ -1,0 +1,31 @@
+{
+ "note": "post hoc, not a frozen rule (PLAN.md stage 3 rule 5 failed)",
+ "all_used": {
+  "n_images": 51,
+  "own_within_arcsec": {
+   "0.5": 18,
+   "1": 20,
+   "1.5": 27
+  },
+  "pipeline_within_arcsec": {
+   "0.5": 18,
+   "1": 24,
+   "1.5": 33
+  },
+  "inside_own_segment": 15
+ },
+ "spec_z": {
+  "n_images": 26,
+  "own_within_arcsec": {
+   "0.5": 10,
+   "1": 11,
+   "1.5": 14
+  },
+  "pipeline_within_arcsec": {
+   "0.5": 13,
+   "1": 16,
+   "1.5": 19
+  },
+  "inside_own_segment": 10
+ }
+}

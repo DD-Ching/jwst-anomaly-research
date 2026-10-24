@@ -38,6 +38,7 @@ GATEK_SUMMARY = mg.OUT / "summary.json"
 S3_6882 = "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_{0}"
 F_MIN_N = 20  # frozen rule 5 (ASSUMPTION; 51 images)
 OFF_IMAGE = "off_image"
+POSTHOC_RADII = (0.5, 1.0, 1.5)  # post hoc diagnostic only
 
 
 def footprint_class(cls: str, x: float, y: float, data: np.ndarray) -> str:
@@ -193,11 +194,58 @@ def chain(s: dict, out: Path, data, w, sx, sy, meta: dict) -> dict:
     }
 
 
+def match_counts(ra, dec, cra, cdec, radii=POSTHOC_RADII) -> dict:
+    """Post hoc (not a rule): images with a catalogue row within each radius (arcsec)."""
+    from astropy.coordinates import SkyCoord
+
+    g = SkyCoord(np.asarray(ra, float), np.asarray(dec, float), unit="deg")
+    c = SkyCoord(np.asarray(cra, float), np.asarray(cdec, float), unit="deg")
+    sep = g.match_to_catalog_sky(c)[1].arcsec
+    return {f"{r:g}": int(np.sum(sep <= r)) for r in radii}
+
+
+def posthoc(cache: Path) -> dict:
+    """Why frame check F failed (not a rule): nearest-row counts against the own and the
+    pipeline catalogues, and images inside a deblended segment, for all and spec-z images."""
+    import s3fs
+
+    images = mg.load_images()
+    spec = np.asarray(images["z_spec"], bool)
+    table = Table.read(FRAME / f"predicted_{FIELD}.ecsv")
+    ctrl = Table.read(FRAME / f"control_{FIELD}.ecsv")
+    pos = vstack([table["ra", "dec"], ctrl["ra", "dec"]])
+    fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
+    sci, err, w, _ = md.read_section(fs, S3_6882.format("i2d.fits")[5:], pos["ra"], pos["dec"])
+    cat, _, deb, _, _ = md.build(sci, err, w)
+    shapes = lc.load_shapes(cache / Path(S3_6882.format("cat.ecsv")).name)
+    x, y = (np.rint(v).astype(int) for v in w.world_to_pixel_values(images["ra"], images["dec"]))
+    in_seg = deb.data[y, x] > 0
+    out = {"note": "post hoc, not a frozen rule (PLAN.md stage 3 rule 5 failed)"}
+    for name, m in (("all_used", np.ones(len(images), bool)), ("spec_z", spec)):
+        out[name] = {
+            "n_images": int(m.sum()),
+            "own_within_arcsec": match_counts(
+                images["ra"][m], images["dec"][m], cat["ra"], cat["dec"]
+            ),
+            "pipeline_within_arcsec": match_counts(
+                images["ra"][m], images["dec"][m], shapes["ra"], shapes["dec"]
+            ),
+            "inside_own_segment": int(in_seg[m].sum()),
+        }
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--maps", type=Path, required=True)
     ap.add_argument("--cache", type=Path, default=Path("data/cache/m1931s3"))
+    ap.add_argument("--posthoc", action="store_true", help="frame check F diagnostic only")
     a = ap.parse_args(argv)
+    if a.posthoc:
+        s = posthoc(a.cache)
+        (OUT / "posthoc.json").write_text(json.dumps(s, indent=1) + "\n")
+        print(json.dumps(s, indent=1))
+        return 0
     OUT.mkdir(parents=True, exist_ok=True)
     s = cp._clean(run(a.maps, a.cache))
     (OUT / "summary.json").write_text(json.dumps(s, indent=1, allow_nan=False) + "\n")

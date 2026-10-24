@@ -1,6 +1,6 @@
 # MACS J1931 counter-image route: plan (stage V frozen and run; stage 3 frozen)
 
-Status: **stage V frozen and run 2026-10-24**; V1 not valid (depth undefined), V2 amendment passes gate C2 at the
+Status: **stage V frozen and run 2026-10-24**; stage 3 frozen and run 2026-10-24, stopped at frame check F (18 / 51 < 20; `../macs1931_stage3/RESULT.md`); V1 not valid (depth undefined), V2 amendment passes gate C2 at the
 threshold (28 / 35, arc 14 / 14; `../macs0417_ownref/RESULT.md`). Stage 3 frozen 2026-10-24 ("Stage 3: frozen rules" below), before any MACS J1931 predicted position, map
 value or pixel was read for it (stage V read MACS0417 pixels and frame tables only).
 Follows `../macs1931_gatek/RESULT.md` (gate K passes; spec-z systems 1, 5, 6, 7, 100, 101 have more predicted than
