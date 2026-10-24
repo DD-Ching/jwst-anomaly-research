@@ -3,7 +3,7 @@
 Plans: `PLAN.md` (frozen in dea0952, before any spectrum was read) and the deviation `PLAN_4b.md` (frozen in d2da6f9,
 after the stage 4 run and a post hoc look; **not blind**). Code: `scripts/m1931_muse.py`, tests
 `tests/test_m1931_muse.py`. Cube: ESO MUSE `ADP.2017-03-27T15:26:07.707` (095.A-0525(A), 8,127 s), read as four
-full-field SODA `BAND` cutouts of 105,131,520 B each, deleted after use (URLs and sha256 in each `summary.json`).
+full-field SODA `BAND` cutouts of 105,131,520 B each, deleted after use (URLs in each `summary.json`; the file sha256 changes between identical requests, the DATA-HDU `data_sha256` is stable across both runs).
 Image list observed; |μ| model_prediction (VENUS AstroLensPy v2.1, K-WLS as stage 3d).
 
 | Step | Outcome (stored in) |
@@ -29,6 +29,12 @@ clear source; 101 stamps overlap system 100 light; no visible source at any in-c
 Stage 4 as frozen had no frame registration. The 2016 MUSE pipeline cube is offset by ≈ 1.6″ from the Gaia-tied
 image list, so every reference aperture missed its image. Any MUSE reference stage needs a registration rule (as
 PLAN_4b rule 0) before measurement.
+
+## Implementation notes (post hoc review, outcomes unchanged)
+- Rule 5's overlap test uses each system's ±20 Å peak-search range, not its fitted 11.25 Å window. Here they agree:
+  only systems 100 and 101 share a band (both windows 7450.0–7460.0 Å); the other nominal wavelengths are ≥ 65 Å apart.
+- Review fixes (cutout deletion in `finally`, download retries, DATA-HDU hash, NaN-free JSON, a guard for systems
+  without a usable spectrum and for missing μ) were followed by a re-run of both stages: every ECSV row is identical.
 
 ## Limitations
 - PLAN_4b was written after a post hoc 2″ line search around the system 6 and 100 / 101 images; its registration

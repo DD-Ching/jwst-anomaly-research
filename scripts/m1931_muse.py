@@ -12,6 +12,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -156,12 +158,26 @@ def fetch_band(z: float, scratch: Path) -> tuple[Path, dict]:
     lo, hi = (lnom - HALF_BAND) * 1e-10, (lnom + HALF_BAND) * 1e-10
     url = f"{SODA}?ID=ivo://eso.org/ID?{CUBE_ID}&BAND={lo:.4e}%20{hi:.4e}"
     p = scratch / f"m1931_muse_z{z:.3f}.fits"
-    h = hashlib.sha256()
-    with urllib.request.urlopen(url, timeout=600) as r, open(p, "wb") as f:
-        while b := r.read(1 << 20):
-            h.update(b)
-            f.write(b)
-    return p, {"url": url, "bytes": p.stat().st_size, "sha256": h.hexdigest()}
+    for attempt in range(4):  # back-off on transient 429 / 5xx / network errors
+        try:
+            h = hashlib.sha256()
+            with urllib.request.urlopen(url, timeout=600) as r, open(p, "wb") as f:
+                while b := r.read(1 << 20):
+                    h.update(b)
+                    f.write(b)
+            break
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+            p.unlink(missing_ok=True)
+            code = getattr(e, "code", None)
+            if attempt == 3 or (code is not None and code != 429 and code < 500):
+                raise
+            time.sleep(2 ** (attempt + 1))
+    # The file sha256 differs between identical requests (SODA rewrites header cards), so the
+    # DATA HDU's array bytes are hashed too; that hash identifies the cube data.
+    with fits.open(p) as hd:
+        data_sha = hashlib.sha256(np.ascontiguousarray(hd["DATA"].data).tobytes()).hexdigest()
+    meta = {"url": url, "bytes": p.stat().st_size, "sha256": h.hexdigest(), "data_sha256": data_sha}
+    return p, meta
 
 
 def load_band(p: Path):
@@ -211,7 +227,7 @@ def measure_registration(data: np.ndarray, w: WCS) -> dict:
 
     img = np.nanmedian(data, axis=0)
     g = Table.read(GAIA, format="ascii.csv")
-    dra, ddec = [], []
+    dra, ddec, stars = [], [], []
     for r in g:
         if np.ma.is_masked(r["pmra"]) or not np.isfinite(float(r["pmra"])):
             continue
@@ -233,7 +249,10 @@ def measure_registration(data: np.ndarray, w: WCS) -> dict:
         rr, dd = w.pixel_to_world_values(xi - STAMP + cx, yi - STAMP + cy)
         dra.append((float(rr) - ra) * np.cos(np.radians(dec)) * 3600.0)
         ddec.append((float(dd) - dec) * 3600.0)
-    return registration_ok(dra, ddec)
+        stars.append(
+            {"source_id": str(r["source_id"]), "dra_arcsec": dra[-1], "ddec_arcsec": ddec[-1]}
+        )
+    return {**registration_ok(dra, ddec), "stars": stars}
 
 
 def run(scratch: Path, register: bool = False, out: Path = OUT) -> dict:
@@ -249,12 +268,14 @@ def run(scratch: Path, register: bool = False, out: Path = OUT) -> dict:
     for z in sorted(set(zsys.values())):
         p, meta = fetch_band(z, scratch)
         cutouts.append({"z": z, **meta})
-        data, w, lam, dlam = load_band(p)
+        try:
+            data, w, lam, dlam = load_band(p)
+        finally:
+            p.unlink()  # cloud disk rule: the band is held in memory only
         if register:
             reg = measure_registration(data, w)
             cutouts[-1]["registration"] = reg
             if not reg["applied"]:
-                p.unlink()
                 raise RuntimeError(f"PLAN_4b rule 0 fails: {reg}")
             w = shifted_wcs(w, reg["dra"], reg["ddec"])
         sub = subtract_continuum(data, continuum_mask(lam, lam_nom(z)))
@@ -283,7 +304,57 @@ def run(scratch: Path, register: bool = False, out: Path = OUT) -> dict:
                         is_blended(sep_other(float(r["ra"]), float(r["dec"]))),
                     )
                 )
-            spec = np.sum([aperture_spectrum(sub, x, y) for _, ok, x, y, _ in pos if ok], axis=0)
+            specs = [aperture_spectrum(sub, x, y) for _, ok, x, y, _ in pos if ok]
+            near = np.abs(lam - lam_nom(z)) <= PEAK_SEARCH
+            spec = np.sum(specs, axis=0) if specs else np.full(lam.shape, np.nan)
+            if not np.isfinite(spec[near]).any():
+                # no in-cube image with a usable spectrum: no window, hence no reference
+                windows[s] = {"lam_nom": lam_nom(z), "reference": None, "ref_snr": float("nan")}
+                for iid, ok, x, y, bl in pos:
+                    gate_rows.append(
+                        _row(
+                            s,
+                            "control",
+                            iid,
+                            ok,
+                            x,
+                            y,
+                            bl,
+                            mu.get(iid),
+                            CTRL_SEARCH,
+                            None,
+                            None,
+                            rng,
+                            False,
+                            {},
+                            None,
+                            mu,
+                        )
+                    )
+                for r in tg[tg["system"] == str(s)]:
+                    rows.append(
+                        _row(
+                            s,
+                            "target",
+                            str(r["image_class"]),
+                            False,
+                            np.nan,
+                            np.nan,
+                            False,
+                            float(r["abs_mu"]),
+                            float(r["search_arcsec"]),
+                            None,
+                            None,
+                            rng,
+                            False,
+                            {},
+                            None,
+                            mu,
+                            ra=float(r["ra"]),
+                            dec=float(r["dec"]),
+                        )
+                    )
+                continue
             lo, hi, pk = line_window(spec, lam, lam_nom(z))
             windows[s] = {
                 "lam_nom": lam_nom(z),
@@ -358,7 +429,6 @@ def run(scratch: Path, register: bool = False, out: Path = OUT) -> dict:
                         dec=float(r["dec"]),
                     )
                 )
-        p.unlink()
     g = gate_l([r["class"] for r in gate_rows])
     for r in rows:
         r["flag"] = bool(g["passes"] and r["class"] == "absent")
@@ -374,7 +444,8 @@ def run(scratch: Path, register: bool = False, out: Path = OUT) -> dict:
         },
         "flags": sum(r["flag"] for r in rows),
     }
-    (out / "summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
+    text = json.dumps(cp._clean(summary), indent=1, allow_nan=False, default=float)
+    (out / "summary.json").write_text(text + "\n")
     return summary
 
 
@@ -418,6 +489,8 @@ def _row(
     if not usable:
         out["class"] = "no_line_reference"
         return out
+    if mu_t is None or ref not in mu:
+        raise KeyError(f"no model magnification for {iid} or reference {ref}")
     f_pred = cand[ref][4] * out["abs_mu"] / mu[ref]
     f_meas = max_in_radius(nb, x, y, search) if ok else float("nan")
     sg = local_noise(nb, x, y, ex[0], ex[1], rng) if ok and np.isfinite(f_meas) else float("nan")

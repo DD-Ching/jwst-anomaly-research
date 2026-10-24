@@ -5,25 +5,29 @@
    "z": 4.745,
    "url": "https://dataportal.eso.org/dataPortal/soda/sync?ID=ivo://eso.org/ID?ADP.2017-03-27T15:26:07.707&BAND=6.9040e-07%207.0640e-07",
    "bytes": 105131520,
-   "sha256": "ed05df5d2bac49e87001e04d0d9105c3e7128d7e79388ae3f137b84a81f5cc51"
+   "sha256": "1740cd4bbbe9e189884361afa6c0dd4fa26d533831d1bf8e2a80149848292c13",
+   "data_sha256": "ca80cf37991e1256adcddd1758214165cfc403745fb3d361929362ca6427c75c"
   },
   {
    "z": 5.079,
    "url": "https://dataportal.eso.org/dataPortal/soda/sync?ID=ivo://eso.org/ID?ADP.2017-03-27T15:26:07.707&BAND=7.3101e-07%207.4701e-07",
    "bytes": 105131520,
-   "sha256": "2570e77a01362aa9671d0779c319c1541f0cef9f3620c502ce11e082af1f8446"
+   "sha256": "6d5949bcf80ab1f1aa07e0b66ca02cb10a79f27aa09d536e8400a53456704463",
+   "data_sha256": "55af3c2b7024b0fbdba645be5545705de90fd17335a60700cbe161223f782b54"
   },
   {
    "z": 5.133,
    "url": "https://dataportal.eso.org/dataPortal/soda/sync?ID=ivo://eso.org/ID?ADP.2017-03-27T15:26:07.707&BAND=7.3757e-07%207.5357e-07",
    "bytes": 105131520,
-   "sha256": "41dd9c0d85d3eaa0388c76042e3b280a138a137677e82cb333d0f661cda75f79"
+   "sha256": "485dbf116b0e51c8152163f6eba8e264a8156d9a3e444ebcb7e91bc2c7c211fe",
+   "data_sha256": "89c60580e66c5e9d33aa837c8c855ee5c465e31333df4b21c44cded6d30b50e5"
   },
   {
    "z": 5.339,
    "url": "https://dataportal.eso.org/dataPortal/soda/sync?ID=ivo://eso.org/ID?ADP.2017-03-27T15:26:07.707&BAND=7.6261e-07%207.7861e-07",
    "bytes": 105131520,
-   "sha256": "89f2c16686b36aa275251e4e7f4d47f0ba16cc9d10ef40251df6efefd18b091e"
+   "sha256": "09fc6779b59d351c5a08643762e17c4d01f01cfa7a0744aeedb4918a70e06758",
+   "data_sha256": "e571e1b68b219c2bfc76e7f591b83e8753af15b42e2c07d0f090c6e90016b627"
   }
  ],
  "windows": {
@@ -57,7 +61,7 @@
    "lo": 7449.9677734375,
    "hi": 7459.9677734375,
    "reference": null,
-   "ref_snr": NaN
+   "ref_snr": null
   },
   "7": {
    "lam_nom": 7706.132130000001,
@@ -71,7 +75,7 @@
  "gate_l": {
   "n_testable": 0,
   "n_ok": 0,
-  "frac": NaN,
+  "frac": null,
   "passes": false
  },
  "target_classes": {
