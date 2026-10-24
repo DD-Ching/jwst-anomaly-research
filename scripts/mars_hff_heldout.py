@@ -152,9 +152,12 @@ def outcome(g: dict, min_tested: int = MIN_TESTED) -> str:
     return "reproduces" if g["passes"] else "does not reproduce"
 
 
-def field_block(zf, field: str, cat: Table, out: Path) -> dict:
+def field_block(
+    zf, field: str, cat: Table, out: Path, images: tuple[Path, float] | None = None
+) -> dict:
+    """One field; ``images`` = (image list, training gate K rms) overrides ``FIELDS[field]``."""
     folder, tag, z_lens = mh.FIELDS[field]
-    path, k_train = FIELDS[field]
+    path, k_train = images or FIELDS[field]
     base = f"{mh.ROOT}{folder}/deflection_angle_{tag}_"
     (ax, hx), (ay, _) = (mh._fits(zf, base + f"{c}_w_header.fits") for c in "xy")
     model = mh.build_model(
