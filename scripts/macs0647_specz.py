@@ -2,12 +2,11 @@
 LTM-Gauss maps at those redshifts.
 
 Frozen plan: ``results/lens_consistency/macs0647_specz/PLAN.md``. Rules S1-S4 are the functions
-below. The DJA table is streamed and cut to a box around the cluster before this script reads it
-(not stored; cloud disk rule):
+below. The DJA table (``TABLE["url"]``) is streamed, not stored (cloud disk rule):
 
-    curl -sS https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.6.csv.gz \
-      | gunzip -c | <box filter> > box.csv
-    python scripts/macs0647_specz.py box.csv [--grid-step 0.25]
+    curl -sS <TABLE url> | gunzip -c | python scripts/macs0647_specz.py /dev/stdin
+
+The 2026-10-24 run read a copy cut to ``box_prefilter_deg`` first; every match lies inside it.
 """
 
 from __future__ import annotations
@@ -94,7 +93,19 @@ def sep_arcsec(ra1, dec1, ra2, dec2) -> np.ndarray:
     return np.degrees(np.arccos(np.clip(c, -1, 1))) * 3600
 
 
-KEEP = ("file", "srcid", "ra", "dec", "grating", "root", "sn50", "zline", "z_best", "z_phot", "grade")
+KEEP = (
+    "file",
+    "srcid",
+    "ra",
+    "dec",
+    "grating",
+    "root",
+    "sn50",
+    "zline",
+    "z_best",
+    "z_phot",
+    "grade",
+)
 
 
 def match_rows(table_csv: Path, images: Table) -> dict[str, list[dict]]:
