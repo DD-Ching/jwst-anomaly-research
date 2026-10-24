@@ -1,4 +1,4 @@
-"""Re-run check after implementation fixes (results/w3_kepler/RESULT.md, "Fixes after review").
+"""Re-run check after the EDGE_RULE fix (results/w3_kepler/RESULT.md, "Deviations from the plan").
 
     JWST_ANOMALY_DATA=<data root> python results/w3_kepler/rerun_script.py.txt OUT_DIR
 

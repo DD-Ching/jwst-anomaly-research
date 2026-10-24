@@ -59,7 +59,8 @@ Validation passes:
 - **Why each control family is rejected** (all by its model):
   - **PSPL** only brightens, so it is never flagged.
   - **Common mode** fails by construction.
-  - **Periodic eclipses** (P ≤ 50 d over ~4 yr) always repeat, so they fail the one-off test.
+  - **Periodic eclipses** (P ≤ 50 d over ~4 yr) always repeat, so by design they fail the one-off
+    test. This is inferred from the model; control rows do not store the failing test.
   - **Quarter steps** end at a quarter roll, so their second edge is never bounded (43 / 43 flagged
     are "insufficient").
   - **Fades** (val): 27 of 75 flagged are "insufficient". The other 48 fail another test; the edge
@@ -101,7 +102,8 @@ Validation passes:
     the cadence as the cause.
 - **ZTF comparison:**
   - Under the v23 "bounds" rule, without Kepler's per-quarter restriction, ZTF DR24 recovered 43–114
-    of 200 per cell and failed its gate (`../w3_ztf/v24/gate.json`, cells_bounds_recovered).
+    of 200 per cell (`../w3_ztf/v24/gate.json`, cells_bounds_recovered; the denominator of 200 is
+    in `../w3_ztf/v23/RESULT.md`) and failed its validation gate (D-104).
   - Its losses relative to the earlier v13 rule were all unbounded edges
     (`bounds_losses_all_insufficient`). It also lost events to slow edges, one-off or band failures
     and missed flags (`../w3_ztf/v24/RESULT.md` §1).
@@ -120,7 +122,7 @@ Validation passes:
 
   - Before the val phase, two dev rows were replayed: an event at the end of the data and a long
     event in Q1 / Q17. Neither was a code error. This was seen in the session and is not stored.
-    The review later replayed 40 stored val rows exactly.
+    The review later replayed 40 stored val rows exactly (review session; not stored).
 - **Real light curves:** none of the 100 stars has any good cadence ≥ 1 mag below its quarter median
   (6,191,683 good cadences; the lowest relative flux is 0.802).
   - So the real-data check met no deep ordinary dimming.

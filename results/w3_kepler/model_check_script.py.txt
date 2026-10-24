@@ -1,7 +1,7 @@
-"""Produces model_check.json (model only, no data), committed after the review (finding: no source
-script). Same code as run at 07:55 UTC before the plan commit.
+"""Prints the content of model_check.json (model only, no data); committed after the review
+(finding: no source script). Same code as run at 07:55 UTC, before the plan commit.
 
-    python results/w3_kepler/model_check_script.py.txt
+    python results/w3_kepler/model_check_script.py.txt > results/w3_kepler/model_check.json
 
 Note (review): the window is the 20 cadences before the first crossing (0.41 d), wider than the
 shoulder test's 0.25 d minimum window, and u0 runs only to 1.98.

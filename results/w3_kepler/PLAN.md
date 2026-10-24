@@ -159,10 +159,12 @@ Owner authorization 2026-10-24. Start 07:39 UTC. Limits: 3 h (to 10:39 UTC), 2 G
 - **Sample:** 100 FGK dwarfs at Kp 12–14, observed in all 17 quarters; not a sky rate.
 - **Labels:** injections are simulated; light curves and flags observed; outcomes derived.
 
-## Errata after review (added 08:30 UTC, after all runs; method and thresholds unchanged)
-- §5 test 4 says "eclipses, fades and steps have no shoulder". That holds for the control *models*.
-  Real SAP light curves can show in-quarter brightenings that meet the criterion (4 of 100 stars,
-  `posthoc2.json`). See RESULT §2.
+## Errata after review (added about 08:25 UTC, after all runs; method and thresholds unchanged)
+- §5 test 4 says "eclipses, fades and steps have no shoulder". That holds for the control *models*
+  themselves, with two exceptions. Real SAP light curves can show in-quarter brightenings that meet
+  the criterion (4 of 100 stars, `posthoc2.json`). A deep event covering much of a quarter lowers
+  that quarter's median and can create a "shoulder" (seen by the reviewer in fades; not stored).
+  See RESULT §2.
 - §4 seeds: k is the index in the code's `CONTROLS` tuple (eclipse, single_eclipse, fade, pspl,
   common, quarter_step), not the order listed in §4.
 - §4 says every control uses the exposure average. `common` sets 5 cadences directly to 3 mag, as
