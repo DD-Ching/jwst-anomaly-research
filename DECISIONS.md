@@ -2534,6 +2534,16 @@ at 1.38–2.21, so Mahler system 7's z is a model value. Decision: no cross-mode
 Alternatives rejected: dropping system 7 after the run. Revisit if: a frozen WLS-gated stage on systems 1, 2, 3, 5
 (labelled deviation) is wanted for a two-model comparison, and a validated SMACS reference exists.
 
+**Addendum 2026-10-24ao (MARS HFF free-form maps, fixed-z gate K on six fields).** `results/lens_consistency/mars_hff_inputs/RESULT.md`,
+plan frozen in 896c4c1, functions and tests in b28d5dd, both before the run. A Zenodo search found no unused JWST-era
+cluster map record (`search.json`); the HST-era Cha & Jee 2023 MARS record (10.5281/zenodo.7804575, 100 × 100 maps,
+0.76–2.02″ pixels) was used. C passes and U accepts arcsec on all six fields; gate K (mean source) passes on Abell 370
+(0.850″), MACS0416 (0.513″), MACS0717 (0.099″) and MACS1149 (0.742″), fails on Abell 2744 (1.112″) and Abell S1063
+(8.020″; system 4 gets one predicted image; K-WLS 0.078″, reported). Decision: the record is usable on those four fields
+for a held-out stage (JWST-era spectroscopic images absent from the 2023 catalogue), each with a frozen plan.
+Alternatives rejected: bicubic interpolation after the run (not in the plan). Revisit if: a held-out stage needs
+sub-arcsecond accuracy (bilinear interpolation of the coarse maps is untested against the authors' bicubic scheme).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

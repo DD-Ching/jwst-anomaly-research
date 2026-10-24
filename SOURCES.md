@@ -773,6 +773,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Other Zenodo lens-model records seen in the same search, not used: SPT-CL J0546-5345 LTM (10.5281/zenodo.16534337),
     Abell S1063 WSLAP+ JWST 2025 (10.5281/zenodo.17726321, 1.0 GB zip), CANUCS thesis data with MACS0416 and Bullet
     image lists (10.5281/zenodo.22883437).
+- MARS HFF models (`results/lens_consistency/mars_hff_inputs/`, accessed 2026-10-24): Cha & Jee 2023, "Model-Independent
+  Mass Reconstruction of the Hubble Frontier Field Clusters with MARS Based on Self-Consistent Strong Lensing Data",
+  arXiv:2301.08765 (not read; README and code in the record read); Zenodo record 10.5281/zenodo.7804575
+  (https://zenodo.org/records/7804575, published 2023-04-06, CC-BY-4.0): `MARS_HFF_clusters_result.zip` (2,713,478 B,
+  md5 2d87f9a36aadb430f7a7b937fe70b8c2; sha256 in `summary.json`).
 - SMACS 0723 Chow+2023 (`results/lens_consistency/smacs_chow23/`, accessed 2026-10-24): Chow et al. 2023, "A Lens
   Finder Map to check claimed High-z Galaxies behind SMACS J0723.3-7327", arXiv:2310.09790 (HTML read for the GLAFIC
   method, the five spectroscopic systems and the 0.492″ rms); Zenodo record 10.5281/zenodo.10158248
