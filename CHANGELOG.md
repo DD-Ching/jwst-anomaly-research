@@ -13,6 +13,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     gives no redshift.
   - #199's forced-photometry scripts were not kept.
 - **Paused lines unchanged.** Re-screen points are in TASKS.
+
 ## 2026-10-24: Bullet Cluster reference-route input check: image list, JWST-era maps and reference all public
 - **Result** (`results/lens_consistency/bullet_inputs/RESULT.md`, `summary.json`): CANUCS Bullet DR1 (GO 4598,
   Rihtaršič+2026) has the Lenstool gold list (135 images, 49 systems, 27 galaxies, all with a system z; equals the
