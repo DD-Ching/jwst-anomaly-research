@@ -1,0 +1,235 @@
+{
+ "plan": "results/lens_consistency/s1063_wslap/PLAN.md",
+ "zip_bytes": 1016075135,
+ "members": {
+  "AlphaX_DdsDs1_arcsec.fits": {
+   "sha256": "98411c2bfe54b58aeb3e3a6bb9d6dc79adaeffdf8e0beb81be9159d3a920519d",
+   "bytes": 141122880,
+   "deflated_bytes": 131270062,
+   "crc32": "cc397319"
+  },
+  "AlphaY_DdsDs1_arcsec.fits": {
+   "sha256": "26ec481cde349aafd79f7f4569fef392f0469a8e5c9ebdf6e4829ff68c8be007",
+   "bytes": 141122880,
+   "deflated_bytes": 131129129,
+   "crc32": "87568e0d"
+  }
+ },
+ "cosmology": {
+  "H0": 70.0,
+  "Om0": 0.3,
+  "z_lens": 0.348
+ },
+ "image_list": {
+  "source": "results/lens_consistency/abells1063_images/chan20_images.ecsv",
+  "images": 36,
+  "systems": 12
+ },
+ "map_header": {
+  "shape": [
+   4200,
+   4200
+  ],
+  "pixel_arcsec": 0.06,
+  "bunit": null
+ },
+ "check_C": {
+  "n": 36,
+  "inside": 36,
+  "outside": [],
+  "passes": true
+ },
+ "check_U": {
+  "median_arcsec": {
+   "A_arcsec": 0.3687879028882327,
+   "P_pixels": 21.144297895551986
+  },
+  "accepted": [
+   "A_arcsec"
+  ],
+  "passes": true,
+  "reading": "A_arcsec",
+  "per_system": {
+   "A_arcsec": {
+    "1": 0.0998501183078182,
+    "2": 0.5892691372274773,
+    "5": 0.2052679830813528,
+    "6": 0.3020947176241456,
+    "7": 0.43548108815231984,
+    "10": 3.867325924299927,
+    "11": 1.5122404774692715,
+    "12": 0.2768281967250257,
+    "13": 0.577472722363277,
+    "14": 0.16363424251228562,
+    "19": 0.5108157698241145,
+    "52": 0.16244173525553932
+   },
+   "P_pixels": {
+    "1": 15.674138955674175,
+    "2": 21.009453023928817,
+    "5": 23.695075915900482,
+    "6": 22.945205885067235,
+    "7": 23.695877895882088,
+    "10": 8.885180138054002,
+    "11": 21.049257412658577,
+    "12": 26.830447230185637,
+    "13": 3.341315171770166,
+    "14": 30.26705603245918,
+    "19": 14.664059352610899,
+    "52": 21.239338378445392
+   }
+  }
+ },
+ "gate_K": {
+  "n_images": 36,
+  "rms_arcsec": 4.196918859263381,
+  "matched_fraction": 0.9444444444444444,
+  "passes": false
+ },
+ "reported": {
+  "grid_step_arcsec": 0.25,
+  "grid_half_width_arcsec": 66.0,
+  "K_wls_not_a_gate": {
+   "n_images": 36,
+   "rms_arcsec": 0.5805172032673559,
+   "matched_fraction": 1.0,
+   "passes": true
+  },
+  "per_system": {
+   "1": {
+    "rms_arcsec": 0.0999596381362849,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "2": {
+    "rms_arcsec": 0.7374143650189064,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "5": {
+    "rms_arcsec": 0.20494789034244168,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "6": {
+    "rms_arcsec": 0.30456458914833867,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "7": {
+    "rms_arcsec": 0.40408710347463417,
+    "n_catalogued": 3,
+    "n_predicted": 5
+   },
+   "10": {
+    "rms_arcsec": 14.441177468732002,
+    "n_catalogued": 3,
+    "n_predicted": 1
+   },
+   "11": {
+    "rms_arcsec": 1.1046334635432533,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "12": {
+    "rms_arcsec": 0.27980678247330615,
+    "n_catalogued": 5,
+    "n_predicted": 13
+   },
+   "13": {
+    "rms_arcsec": 0.5581383681025898,
+    "n_catalogued": 2,
+    "n_predicted": 5
+   },
+   "14": {
+    "rms_arcsec": 0.16332307321148773,
+    "n_catalogued": 3,
+    "n_predicted": 5
+   },
+   "19": {
+    "rms_arcsec": 0.6060986300086968,
+    "n_catalogued": 3,
+    "n_predicted": 7
+   },
+   "52": {
+    "rms_arcsec": 0.1629248925980037,
+    "n_catalogued": 2,
+    "n_predicted": 3
+   }
+  },
+  "per_system_wls": {
+   "1": {
+    "rms_arcsec": 0.08143241628114134,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "2": {
+    "rms_arcsec": 0.18713439884151345,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "5": {
+    "rms_arcsec": 0.20428179298221225,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "6": {
+    "rms_arcsec": 0.26865185456408247,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "7": {
+    "rms_arcsec": 0.8079663991522749,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "10": {
+    "rms_arcsec": 1.4614426673985819,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "11": {
+    "rms_arcsec": 0.8375092197742193,
+    "n_catalogued": 3,
+    "n_predicted": 3
+   },
+   "12": {
+    "rms_arcsec": 0.25430964049868526,
+    "n_catalogued": 5,
+    "n_predicted": 13
+   },
+   "13": {
+    "rms_arcsec": 0.45825514913887605,
+    "n_catalogued": 2,
+    "n_predicted": 5
+   },
+   "14": {
+    "rms_arcsec": 0.16325215373230995,
+    "n_catalogued": 3,
+    "n_predicted": 5
+   },
+   "19": {
+    "rms_arcsec": 0.34677567444414065,
+    "n_catalogued": 3,
+    "n_predicted": 7
+   },
+   "52": {
+    "rms_arcsec": 0.07458966229061895,
+    "n_catalogued": 2,
+    "n_predicted": 3
+   }
+  },
+  "cats_v41_rms_arcsec_d035b": 18.5
+ },
+ "check_R": {
+  "index": "https://dawn-cph.github.io/dja/imaging/v7/",
+  "fields_listed": 35,
+  "names_searched": [
+   "abells1063"
+  ],
+  "matches": [
+   "abells1063"
+  ],
+  "passes": true
+ }
+}

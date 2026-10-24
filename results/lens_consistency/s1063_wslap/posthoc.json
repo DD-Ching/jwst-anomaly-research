@@ -1,0 +1,29 @@
+{
+ "label": "post hoc diagnostic, added after gate K failed; no verdict depends on it",
+ "gate_K_numbers_mean_source_without_system_10": {
+  "n_images": 33,
+  "rms_arcsec": 0.5064967245227366,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "gate_K_numbers_wls_without_system_10": {
+  "n_images": 33,
+  "rms_arcsec": 0.4164992643646399,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "system_10_mean_source": {
+  "z": 0.73,
+  "dtheta_arcsec": [
+   19.394799149670295,
+   15.743327457898971,
+   1.2775862192240603
+  ],
+  "n_predicted": 1,
+  "shared_match": [
+   true,
+   true,
+   true
+  ]
+ }
+}
