@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 stage 4 (in progress): MUSE line-flux reference for systems 5, 6, 7, 100, 101
+- Claim: feasibility of a public MUSE cube as the reference for the 10 `no_reference` extra-image targets.
+
 ## 2026-10-24: MACS J1931 stage 3d: continuum-restricted F passes; 0 of 11 predictions testable (D-034 addendum ag)
 - **Result** (`results/lens_consistency/macs1931_stage3d/RESULT.md`): plan frozen in 1314a97, functions and tests
   in bce45c1, both before any run. F_c counts only images with ≥ 5 σ F200W light at their position.
