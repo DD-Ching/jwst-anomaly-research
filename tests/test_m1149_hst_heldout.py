@@ -28,3 +28,18 @@ def test_schuldt_images_are_not_in_the_sharon_gold_list():
     s = mo.split_seen(t, gold)
     assert not s["seen"].any()  # held out by construction: no Sharon gold row within 0.5"
     assert not mo.frame_offset(t, gold)["applied"]
+
+
+def test_posthoc_groups_rms_and_max(tmp_path):
+    rows = Table(
+        {
+            "image_id": ["401.1", "401.2", "202.1"],
+            "system": ["401", "401", "202"],
+            "dtheta_arcsec": [3.0, 4.0, float("nan")],
+        }
+    )
+    p = tmp_path / "t.ecsv"
+    rows.write(p, format="ascii.ecsv")
+    g = hh.posthoc({"m": p})["groups"]
+    assert g["401"]["m"] == {"n": 2, "rms_arcsec": 3.536, "max_arcsec": 4.0}
+    assert g["202-204"]["m"] == {"n": 0}

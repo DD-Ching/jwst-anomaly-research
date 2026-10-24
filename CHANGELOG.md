@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`results/lens_consistency/m1149_hst_heldout/RESULT.md`): CATS v4.1 already lists 201, 301, SXa; on 11
   held-out images rms 2.46″ (82 % within 3″), carried by family 401 (4.50″, 6.00″). Sharon v4cor: rms 1.12″, 17 / 17
   within 3″ (fails on rms only). Post hoc, no image fails in two held-out models; the MARS miss is mainly
-  MARS-specific (2.51″ vs 0.88–1.10″ on the same families). No validated second model on MACS1149; no flag.
+  MARS-specific (2.3× Sharon's and 3.1× CATS's rms on the same images). No validated second model on MACS1149; no flag.
 - **Failed approach (again):** model fetches need `SSL_CERT_FILE` = proxy bundle + certifi (addendum aq note).
 - **Handoff:** next, a two-model extra-image check on another field with a held-out-validated second model, or the
   D115b Lenstool re-fit with 8515's σ free. #374 waits for the 2026-10-26 weekly run.

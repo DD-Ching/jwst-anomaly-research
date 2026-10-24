@@ -2592,7 +2592,7 @@ plan frozen in 2ab445c2, script and tests before the run; rules 1–5 of addendu
 list as "seen". CATS v4.1 already lists 201, 301 and SXa (7 seen); on 11 held-out images gate H fails, rms 2.46″,
 82 % within 3″, carried by family 401 (4.50″, 6.00″; others ≤ 2.12″). Sharon v4cor (gold list, 0 seen) fails on rms
 only: 1.12″, 17 / 17 within 3″. Post hoc, no image fails in two held-out models (401 is CATS-only; MARS's 202 / 203
-misses are not shared); MARS's 2.51″ on 201–204 is 2.3–2.9× the HST-era parametric rms. Decision: no held-out-validated
+misses are not shared); on the same images MARS's rms is 2.3× Sharon's and 3.1× CATS's. Decision: no held-out-validated
 second model on MACS1149 under the frozen rule; no two-model extra-image stage there; no flag. Alternatives rejected:
 promoting Sharon's near-pass post hoc. Revisit if: the CANUCS v2 input list, or a JWST-era MACS1149 model fitted
 without the Schuldt systems.

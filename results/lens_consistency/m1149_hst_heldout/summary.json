@@ -18,7 +18,17 @@
     "applied": true
    },
    "seen": 7,
+   "seen_rows": {
+    "SXa": 0.23,
+    "201.1": 0.046,
+    "201.2": 0.011,
+    "201.3": 0.047,
+    "301.1": 0.036,
+    "301.2": 0.057,
+    "301.3": 0.0
+   },
    "held_out": 11,
+   "held_out_untested": [],
    "types": {
     "E": 0,
     "N": 11,
@@ -50,7 +60,11 @@
     "applied": false
    },
    "seen": 0,
+   "seen_rows": {},
    "held_out": 18,
+   "held_out_untested": [
+    "SXa"
+   ],
    "types": {
     "E": 0,
     "N": 17,
