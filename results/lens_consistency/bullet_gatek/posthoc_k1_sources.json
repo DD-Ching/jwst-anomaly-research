@@ -1,0 +1,118 @@
+{
+ "K1b": {
+  "own_source_solutions": {
+   "K1b.1": {
+    "n_predicted": 1,
+    "dtheta_arcsec_per_catalogued_image": [
+     5.809833991307505e-06,
+     5.415494525399924,
+     6.876534808268128
+    ]
+   },
+   "K1b.2": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     0.2014848065064679,
+     1.6607274638653618e-05,
+     0.014595227781001117
+    ]
+   },
+   "K1b.3": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     0.21298193821182337,
+     0.022927256991585696,
+     1.9692528700655725e-06
+    ]
+   }
+  },
+  "source_scatter_arcsec": 0.06148399936508951
+ },
+ "K1e": {
+  "own_source_solutions": {
+   "K1e.1": {
+    "n_predicted": 2,
+    "dtheta_arcsec_per_catalogued_image": [
+     0.0973141126987899,
+     0.6159085572587463,
+     0.12442017757908284
+    ]
+   },
+   "K1e.2": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     0.5189840846410948,
+     8.725309662153006e-06,
+     0.10684416041742395
+    ]
+   },
+   "K1e.3": {
+    "n_predicted": 1,
+    "dtheta_arcsec_per_catalogued_image": [
+     7.212307945121357,
+     6.7009588779184766,
+     3.3882804323927823e-06
+    ]
+   }
+  },
+  "source_scatter_arcsec": 0.025861790720681743
+ },
+ "K1c": {
+  "own_source_solutions": {
+   "K1c.1": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     7.609448200596371e-06,
+     0.3026735134380128,
+     0.7003024959942928
+    ]
+   },
+   "K1c.2": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     0.2242129805523443,
+     1.2246610995155194e-05,
+     0.2657580230848622
+    ]
+   },
+   "K1c.3": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     0.31951156075390563,
+     0.4782745896938835,
+     4.013335757797849e-06
+    ]
+   }
+  },
+  "source_scatter_arcsec": 0.04494203515040413
+ },
+ "K1d": {
+  "own_source_solutions": {
+   "K1d.1": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     9.112660019194421e-06,
+     0.1844168912028018,
+     0.4039409775542105
+    ]
+   },
+   "K1d.2": {
+    "n_predicted": 3,
+    "dtheta_arcsec_per_catalogued_image": [
+     0.09333794245080429,
+     4.619150500577269e-06,
+     0.17391108530577204
+    ]
+   },
+   "K1d.3": {
+    "n_predicted": 1,
+    "dtheta_arcsec_per_catalogued_image": [
+     7.331271857512643,
+     5.277119797351296,
+     3.039809606823131e-06
+    ]
+   }
+  },
+  "source_scatter_arcsec": 0.027911832560426605
+ }
+}

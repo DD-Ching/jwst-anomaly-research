@@ -2411,6 +2411,15 @@ field for the fitted-model extra-image route (gate K, then gate C2), in the MACS
 Alternatives rejected: the paper's Dropbox folder link (one 24.5 GB zip, ranges ignored). Revisit if: gate K fails,
 or the 50 mas maps cannot be fetched within the cloud disk rule (then the 200 mas sample maps).
 
+**Addendum 2026-10-24y (Bullet Cluster gate K).** `results/lens_consistency/bullet_gatek/RESULT.md`. Gate K of the
+CANUCS Bullet DR1 Lenstool best-fit maps (50 mas) on the 135 gold images fails as written: rms 1.196″ (≤ 1.0″), 97.0 %
+within 3″. Two caustic-straddling sources (K1b, K1e) get one predicted image instead of three under the mean source;
+post hoc, the other 129 images give rms 0.435″ against Lenstool's 0.419″, and a 0.1″ grid changes nothing. Gate K-WLS
+(`PLAN_1b.md`, frozen as a post-failure deviation, the addendum k precedent unchanged) passes: rms 0.391″, 100 %
+within 3″. Decision: the Bullet maps go on to gate C2 and the extra-image test **with the WLS source**; no flag read
+yet. Alternatives rejected: exempting K1b / K1e by hand. Revisit if: gate C2 fails, or the WLS and mean sources
+disagree on an extra-image flag.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

@@ -245,6 +245,16 @@ MODELS = {
         "z_lens": 0.543,
         "cosmology": (70.0, 0.3),
     },
+    # z_lens 0.296 (best.par potentials) and flat H0 70, Om 0.3 (README). The best-fit maps exist
+    # only at 50 mas (219 / 205 MiB gzip): the 200 mas maps are posterior samples, not the fiducial
+    # model (results/lens_consistency/bullet_gatek/PLAN.md, the > 200 MB reason)
+    "bullet-canucs-maps": {
+        "files": lensmodel.BULLET_CANUCS_MAPS,
+        "kind": "maps",
+        "z_lens": 0.296,
+        "cosmology": (70.0, 0.3),
+        "max_bytes": 240_000_000,
+    },
     # z_lens 0.375 and flat H0 70, Om 0.3 from the HLSP input.par (issue #465)
     "abell370-buffalo-a-maps": {
         "files": lensmodel.ABELL370_BUFFALO_A_MAPS,
@@ -515,8 +525,10 @@ def model_files(name: str, keys=None) -> dict[str, Path]:
     against the member's size, and renamed into place, so an interrupted run leaves no partial map.
     """
     spec = MODELS[name]
+    # a model whose files exceed 200 MB states its reason next to its "max_bytes" (CLAUDE.md)
+    kw = {"max_bytes": spec["max_bytes"]} if "max_bytes" in spec else {}
     files = {
-        key: fetch_catalog(url, sha)
+        key: fetch_catalog(url, sha, **kw)
         for key, (url, sha) in spec["files"].items()
         if keys is None or key in keys
     }
