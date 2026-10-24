@@ -26,7 +26,7 @@ def test_constants_name_the_planned_field_model_tile_and_reference():
 
 
 def test_spec_images_are_the_36_gate_k_images():
-    t = m.spec_images_table()
+    t = m.spec_images_table(m.sw.spec_images())
     assert len(t) == 36 and "system" not in t.colnames
     assert len({str(i).split(".")[0] for i in t["image_id"]}) == 12
 
@@ -49,21 +49,34 @@ def test_frame_check_f_uses_the_lower_count():
     assert shifted["n_matched"] == 20 and not shifted["passes"]
 
 
-def test_install_model_routes_only_this_name():
-    orig = lc.load_model
+def test_register_points_the_frame_tables_at_go3293_tile():
+    m.register()
+    assert mx.FIELDS[m.FIELD] == (m.IMAGES_SPEC, m.MODEL, "o001", "t001")
+    assert mx.IMAGES == m.OUT and mx.OUT == m.FRAME and mx.S3 == m.S3_3293
+    mx.FIELDS.pop(m.FIELD)
+
+
+def test_run_field_uses_a_given_model_without_registry_or_offset(monkeypatch):
+    seen = {}
+
+    def no_lookup(name):
+        raise AssertionError("registry lookup with a given model")
+
+    class Stop(Exception):
+        pass
+
+    def backtrace(model, images, _):
+        seen["model"] = model
+        raise Stop
+
+    monkeypatch.setattr(lc, "load_model", no_lookup)
+    monkeypatch.setattr(lc, "apply_frame_offset", no_lookup)
+    monkeypatch.setattr(mx, "load_images", lambda field: None)
+    monkeypatch.setattr(mx.lensmodel, "backtrace_images", backtrace)
+    monkeypatch.setitem(mx.FIELDS, "x", ("f", "name", "o", "t"))
+    sentinel = object()
     try:
-        sentinel = object()
-        m.install_model(sentinel)
-        m.install_model(sentinel)  # idempotent: no nested wrappers
-        assert lc.load_model(m.MODEL) == (sentinel, {}, None)
-        assert lc.load_model.__closure__ is not None
-        assert mx.FIELDS[m.FIELD] == (m.IMAGES_SPEC, m.MODEL, "o001", "t001")
-        assert mx.IMAGES == m.OUT and mx.OUT == m.FRAME and mx.S3 == m.S3_3293
-        assert lc.MODELS[m.MODEL].get("frame_offset_arcsec") is None
-        other = next(n for n in lc.MODELS if n != m.MODEL)
-        assert lc.load_model.__code__ is not orig.__code__
-        assert other in lc.MODELS
-    finally:
-        lc.load_model = orig
-        lc.MODELS.pop(m.MODEL, None)
-        mx.FIELDS.pop(m.FIELD, None)
+        mx.run_field("x", Path("."), model=sentinel)
+    except Stop:
+        pass
+    assert seen["model"] is sentinel

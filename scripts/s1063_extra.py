@@ -47,9 +47,9 @@ K_REPEAT_TOL_ARCSEC = 1e-6  # rule 2: same map bytes -> same rms
 F_MIN_N = 18  # rule 1 (ASSUMPTION): half of the 36 images; match radius and medians as Bullet
 
 
-def spec_images_table():
-    """The 36 gate-K images in ``m1149_sharon.gold_images`` form (``system`` / ``a`` re-derived)."""
-    t = sw.spec_images()
+def spec_images_table(images):
+    """The gate-K images in ``m1149_sharon.gold_images`` form (``system`` / ``a`` re-derived)."""
+    t = images.copy()
     t.remove_columns(["system", "a"])
     return t
 
@@ -69,22 +69,8 @@ def k_repeat(k_wls: dict, stored: dict, tol: float = K_REPEAT_TOL_ARCSEC) -> dic
     }
 
 
-_INSTALLED: dict = {}
-
-
-def install_model(model) -> None:
-    """Make ``lens_consistency.load_model(MODEL)`` return the in-memory WSLAP+ model (no frame
-    offset: gate K placed it on the Chan+2020 positions); point ``m0417_extra`` at this field."""
-    _INSTALLED["model"] = model
-    lc.MODELS.setdefault(MODEL, {"kind": "maps"})
-    if not getattr(lc.load_model, "_s1063", False):
-        orig = lc.load_model
-
-        def load(name):
-            return (_INSTALLED["model"], {}, None) if name == MODEL else orig(name)
-
-        load._s1063 = True
-        lc.load_model = load
+def register() -> None:
+    """Point ``m0417_extra``'s field table at this field, tile and directory."""
     mx.FIELDS[FIELD] = (IMAGES_SPEC, MODEL, OBS, TILE)
     mx.IMAGES = OUT
     mx.OUT = FRAME
@@ -92,8 +78,8 @@ def install_model(model) -> None:
 
 
 def fetch_maps(maps: Path) -> tuple:
-    session = requests.Session()
-    _, directory = sw.zip_directory(session)
+    with requests.Session() as session:
+        _, directory = sw.zip_directory(session)
     maps.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(len(sw.MAPS)) as pool:
         futs = {
@@ -112,7 +98,7 @@ def run(maps: Path, cache: Path) -> dict:
     stored = json.loads(GATEK.read_text())
     images = sw.spec_images()
     OUT.mkdir(parents=True, exist_ok=True)
-    spec_images_table().write(OUT / IMAGES_SPEC, format="ascii.ecsv", overwrite=True)
+    spec_images_table(images).write(OUT / IMAGES_SPEC, format="ascii.ecsv", overwrite=True)
     t, sha, nbytes = eg.fetch_table(DJA_PHOT)
     summary: dict = {
         "plan": str(OUT / "PLAN.md"),
@@ -137,14 +123,17 @@ def run(maps: Path, cache: Path) -> dict:
     if not (unit["passes"] and grid["passes"]):
         summary["stopped"] = "rule 4a / 4b failed (PLAN.md rule 4)"
         return summary
-    install_model(model)
+    register()
     fs = s3fs.S3FileSystem(anon=True, default_block_size=64 * 1024)
     cache.mkdir(parents=True, exist_ok=True)
     shapes = cache / Path(S3_3293.format(OBS, TILE, "cat.ecsv")).name
     if not shapes.exists():
         fs.get(S3_3293.format(OBS, TILE, "cat.ecsv")[5:], str(shapes))
     FRAME.mkdir(parents=True, exist_ok=True)
-    frame = mx.run_field(FIELD, cache, bt_hook=au.wls_backtrace)  # rule 3
+    try:  # rule 3 (the model as gate K-WLS used it: no frame offset)
+        frame = mx.run_field(FIELD, cache, bt_hook=au.wls_backtrace, model=model)
+    finally:
+        shapes.unlink(missing_ok=True)  # cloud disk rule: the pipeline catalogue is not kept
     summary["rule3_frame_tables"] = frame
     (FRAME / "summary.json").write_text(
         json.dumps(_clean({FIELD: frame}), indent=1, allow_nan=False) + "\n"

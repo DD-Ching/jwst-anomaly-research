@@ -19,7 +19,7 @@ import numpy as np  # noqa: E402
 import s1063_extra as sx  # noqa: E402
 from astropy.io import fits  # noqa: E402
 from astropy.table import Table  # noqa: E402
-from astropy.wcs import WCS  # noqa: E402
+from astropy.wcs import WCS, FITSFixedWarning  # noqa: E402
 from astropy.wcs.utils import proj_plane_pixel_scales  # noqa: E402
 
 HALF_ARCSEC = 3.0
@@ -33,21 +33,32 @@ def main() -> int:
     key = sx.S3_3293.format(sx.OBS, sx.TILE, "i2d.fits")[5:]
     n = len(t)
     fig, axes = plt.subplots(1, n, figsize=(2.2 * n, 2.6), squeeze=False)
-    warnings.simplefilter("ignore")
-    with fs.open(key) as fh, fits.open(fh, lazy_load_hdus=True) as hl:
-        h = hl["SCI"].header
-        w = WCS(h)
-        pix = float(proj_plane_pixel_scales(w.celestial).mean() * 3600.0)
-        half = int(round(HALF_ARCSEC / pix))
-        for ax, r in zip(axes[0], t, strict=True):
-            x, y = (int(round(float(v))) for v in w.world_to_pixel_values(r["ra"], r["dec"]))
-            d = np.asarray(hl["SCI"].section[y - half : y + half, x - half : x + half], float)
-            lo, hi = np.nanpercentile(d, [5, 99.5])
-            ax.imshow(d, origin="lower", cmap="gray_r", vmin=lo, vmax=hi)
-            ax.add_patch(plt.Circle((half, half), r["search_arcsec"] / pix, fill=False, color="r"))
-            ax.set_title(f"{r['system']} {r['image_class']}\n{r['class_local']}", fontsize=7)
-            ax.set_xticks([])
-            ax.set_yticks([])
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", FITSFixedWarning)
+        with fs.open(key) as fh, fits.open(fh, lazy_load_hdus=True) as hl:
+            h = hl["SCI"].header
+            w = WCS(h)
+            ny, nx = h["NAXIS2"], h["NAXIS1"]
+            pix = float(proj_plane_pixel_scales(w.celestial).mean() * 3600.0)
+            half = int(round(HALF_ARCSEC / pix))
+            for ax, r in zip(axes[0], t, strict=True):
+                xf, yf = (float(v) for v in w.world_to_pixel_values(r["ra"], r["dec"]))
+                x, y = int(round(xf)), int(round(yf))
+                x0, x1 = max(x - half, 0), min(x + half, nx)
+                y0, y1 = max(y - half, 0), min(y + half, ny)
+                ax.set_xticks([])
+                ax.set_yticks([])
+                ax.set_title(f"{r['system']} {r['image_class']}\n{r['class_local']}", fontsize=7)
+                if x0 >= x1 or y0 >= y1:
+                    ax.text(0.5, 0.5, "off image", ha="center", transform=ax.transAxes)
+                    continue
+                d = np.asarray(hl["SCI"].section[y0:y1, x0:x1], float)
+                lo, hi = np.nanpercentile(d, [5, 99.5])
+                ax.imshow(d, origin="lower", cmap="gray_r", vmin=lo, vmax=hi)
+                circ = plt.Circle(
+                    (xf - x0, yf - y0), r["search_arcsec"] / pix, fill=False, color="r"
+                )
+                ax.add_patch(circ)
     title = "Abell S1063 WSLAP+ (WLS) predicted targets, GO 3293 F200W, 6-arcsec stamps"
     fig.suptitle(title, fontsize=8)
     fig.tight_layout()

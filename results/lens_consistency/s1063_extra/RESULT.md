@@ -34,13 +34,17 @@ stamp is a noisy region crossed by a diagonal streak. Nothing in the stamps chan
 any verdict.
 
 **Limitations.** The DJA v7 table has 1,621 rows (1,587 kept; reference depth 27.39 mag, `frozen.inputs`). Which
-exposures it was built from was not checked (Last-Modified 2023-09-26, before the GO 3293 data); a deeper JWST-era
-catalogue could make systems 12 and 19 consistent. The reference fluxes are not bCG-subtracted. z is fixed at z_spec;
+exposures it was built from was not checked (HTTP Last-Modified 2023-09-26, not stored; GO 3293 F200W is dated 2024-09-28
+in its header, not stored); whether a deeper catalogue would make systems 12 and 19 consistent is untested. The reference fluxes are not bCG-subtracted. z is fixed at z_spec;
 the 36 images are WSLAP+'s own constraints (not held out).
 
 **Data.** Two α members re-fetched by range reads (sha256 in `summary.json`, equal to the gate-K run), held in the
 session scratchpad and deleted after the run; DJA table (4,389,120 B) in memory only; GO 3293 SCI read once by a range
-stream; the pipeline `_cat.ecsv` in the session cache, deleted.
+stream; the pipeline `_cat.ecsv` in the session cache, deleted by the script after rule 3.
+After `/code-review` the code was revised (the model is passed to `m0417_extra.run_field` as a `model=` argument
+instead of through the `install_model` hook named in PLAN rule 3, with the same behaviour: no registry lookup, no frame
+offset; cache deletion; contact-sheet edge clipping) and the run repeated: `summary.json` and every table identical
+(diff of the two runs not stored). Deviation in wording only.
 
 ## Next
 - S1063 extra-image route closed as no reach under these rules. Reopen with a deeper JWST-era S1063 photometry

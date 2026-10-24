@@ -67,13 +67,15 @@ def load_images(field: str) -> Table:
     return t
 
 
-def run_field(field: str, cache: Path, bt_hook=None) -> dict:
+def run_field(field: str, cache: Path, bt_hook=None, model=None) -> dict:
     """``bt_hook(model, bt)``, if given, replaces the back-traced table (e.g. another source
-    estimator) before prediction and forced photometry."""
+    estimator) before prediction and forced photometry. ``model``, if given, is used as it is (no
+    registry lookup, no frame offset) in place of ``lens_consistency.load_model``."""
     _, name, obs, tile = FIELDS[field]
     images = load_images(field)
-    model, _, _ = lc.load_model(name)
-    lc.apply_frame_offset(name, model)
+    if model is None:
+        model, _, _ = lc.load_model(name)
+        lc.apply_frame_offset(name, model)
     bt = lensmodel.backtrace_images(model, images, {})
     if bt_hook is not None:
         bt = bt_hook(model, bt)
