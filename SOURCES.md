@@ -766,6 +766,13 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     28 sources (JWST GLAFIC constraints).
   - DJA v7.0 `https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/macs0647-grizli-v7.0-fix_phot.fits`
     (25,427,520 B; headers only, HTTP range, 2026-10-23).
+- RXCJ2211-0350 inputs (`results/lens_consistency/rxcj2211_inputs/`, accessed 2026-10-24):
+  - Zenodo record 10.5281/zenodo.20312327 (https://zenodo.org/records/20312327, published 2026-05-20, CC0): VENUS
+    GLAFIC v0.91 `RXCJ2211_lens_model_GLAFIC.zip` (md5 87a9bfab62c1e5357e676f93d44db4ac; member sha256 in
+    `summary.json`); the record cites arXiv:2512.05180 (not read).
+  - Other Zenodo lens-model records seen in the same search, not used: SPT-CL J0546-5345 LTM (10.5281/zenodo.16534337),
+    Abell S1063 WSLAP+ JWST 2025 (10.5281/zenodo.17726321, 1.0 GB zip), CANUCS thesis data with MACS0416 and Bullet
+    image lists (10.5281/zenodo.22883437).
 - MACS J1931.8-2635 inputs (`results/lens_consistency/macs1931_inputs/`, accessed 2026-10-24):
   - Allingham et al. 2026, "VENUS: Strong-lensing model of MACS J1931.8-2635 -- revealing the farthest multiply imaged
     supernova", arXiv:2602.14074.

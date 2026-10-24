@@ -88,7 +88,7 @@ def alpha_from_kappa(kappa: np.ndarray, pix: float) -> tuple[np.ndarray, np.ndar
 def dls_ds(z) -> np.ndarray:
     z = np.atleast_1d(np.asarray(z, float))
     return (
-        np.array([COSMO.angular_diameter_distance_z1z2(Z_LENS, zi).value for zi in z])
+        np.array([COSMO.angular_diameter_distance(Z_LENS, zi).value for zi in z])
         / COSMO.angular_diameter_distance(z).value
     )
 
@@ -198,6 +198,17 @@ def main(argv: list[str] | None = None) -> int:
             "train_odd_reported": compare((pe + fe)[odd], (pn + fn)[odd], csv_e[odd], csv_n[odd]),
         }
         d_aff["passes"] = d_aff["test_even"]["passes"]
+    # post hoc (added after the frozen checks failed; no verdict depends on it): one scale factor
+    s_fit = float(np.sum(pe * csv_e + pn * csv_n) / np.sum(pe**2 + pn**2))
+    posthoc = {
+        "label": "post hoc diagnostic, added after D and D-affine failed",
+        "scale_fit_all_rows": round(s_fit, 4),
+        "after_scale": compare(s_fit * pe, s_fit * pn, csv_e, csv_n),
+        "dls_ds_zs3": round(float(dls_ds(zs_map)[0]), 4),
+        "median_csv_deflection_arcsec": round(float(np.median(np.hypot(csv_e, csv_n))), 3),
+        "median_map_deflection_arcsec": round(float(np.median(np.hypot(pe, pn))), 3),
+    }
+    posthoc["after_scale"].pop("passes")
     dja = dja_check(m1931._get(session, m1931.DJA_INDEX).text)
 
     zs = np.asarray(t["z_lensing"], float)
@@ -246,6 +257,7 @@ def main(argv: list[str] | None = None) -> int:
         "check_D": d,
         "check_D_affine": d_aff,
         "reference_catalogue_dja_v7": dja,
+        "posthoc": posthoc,
     }
     OUT.mkdir(parents=True, exist_ok=True)
     keep = ["id", "system", "ra", "dec", "z_lensing", "mu_best", "mu_16", "mu_84"]

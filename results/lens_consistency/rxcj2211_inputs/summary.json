@@ -1,0 +1,119 @@
+{
+ "sources": {
+  "record": "https://zenodo.org/api/records/20312327 (doi 10.5281/zenodo.20312327, published 2026-05-20, license cc-zero)",
+  "zip_md5": "md5:87a9bfab62c1e5357e676f93d44db4ac",
+  "zip_bytes": 43000065,
+  "members_sha256": {
+   "RXCJ2211_lens_model_GLAFIC/full_output_v91.csv": "0ef1579073bcdcd465f5e006ab4f896f10f4eab079839a6bded543c8440ba2d0",
+   "RXCJ2211_lens_model_GLAFIC/glafic_rj2211_v0.91_readme.txt": "ea9ef76313f80288669fd1bb6c8f04099e0e0237ea7ab1bfab71722859016de2",
+   "RXCJ2211_lens_model_GLAFIC/hlsp_venus_model_rj2211_glafic_v0.91_kappa.fits": "081606a8fc7a14e78b6f928abe49e68cc18029f33369555b57448e348da45d05"
+  }
+ },
+ "readme": {
+  "zl": "0.3970",
+  "fit": "chi2 = 174.99 , dof = 180 , rms[arcsec] =  0.61"
+ },
+ "image_list": {
+  "rows": 146,
+  "systems": 43,
+  "rows_z_free": 10,
+  "systems_z_free": [
+   "5",
+   "7",
+   "43"
+  ],
+  "systems_with_zs_ref": [
+   "1",
+   "14",
+   "32"
+  ],
+  "rows_with_deflection": 136
+ },
+ "maps": {
+  "released": [
+   "hlsp_venus_model_rj2211_glafic_v0.91_gamma1.fits",
+   "hlsp_venus_model_rj2211_glafic_v0.91_gamma2.fits",
+   "hlsp_venus_model_rj2211_glafic_v0.91_kappa.fits"
+  ],
+  "deflection_maps_released": false,
+  "shape": [
+   2000,
+   2000
+  ],
+  "pixel_arcsec": 0.1,
+  "ctype": [
+   "RA---CAR",
+   "DEC--CAR"
+  ],
+  "zs": 3.0,
+  "kappa_edge_median": 0.2083
+ },
+ "check_S": {
+  "rows": 136,
+  "x_along_minus_ra": 0.00016,
+  "x_along_plus_ra": 70.79278,
+  "convention": "x_along_minus_ra",
+  "passes": true
+ },
+ "check_D": {
+  "n": 136,
+  "median_arcsec": 14.1278,
+  "p90_arcsec": 15.6676,
+  "max_arcsec": 20.3247,
+  "passes": false
+ },
+ "check_D_affine": {
+  "fit_on": "odd systems",
+  "fit_rows": 70,
+  "coef_east": [
+   0.609851,
+   -0.274671,
+   0.002439
+  ],
+  "coef_north": [
+   -0.419405,
+   -0.002867,
+   -0.316603
+  ],
+  "test_even": {
+   "n": 66,
+   "median_arcsec": 2.6552,
+   "p90_arcsec": 4.3457,
+   "max_arcsec": 6.0375,
+   "passes": false
+  },
+  "train_odd_reported": {
+   "n": 70,
+   "median_arcsec": 2.1188,
+   "p90_arcsec": 3.6536,
+   "max_arcsec": 5.6822,
+   "passes": false
+  },
+  "passes": false
+ },
+ "reference_catalogue_dja_v7": {
+  "index": "https://dawn-cph.github.io/dja/imaging/v7/",
+  "fields_listed": 35,
+  "names_searched": [
+   "rxj2211",
+   "rxcj2211",
+   "j2211",
+   "rj2211"
+  ],
+  "matches": [],
+  "passes": false
+ },
+ "posthoc": {
+  "label": "post hoc diagnostic, added after D and D-affine failed",
+  "scale_fit_all_rows": 0.7629,
+  "after_scale": {
+   "n": 136,
+   "median_arcsec": 1.7135,
+   "p90_arcsec": 2.4241,
+   "max_arcsec": 4.1405
+  },
+  "dls_ds_zs3": 0.7575,
+  "median_csv_deflection_arcsec": 45.56,
+  "median_map_deflection_arcsec": 59.543
+ }
+}
