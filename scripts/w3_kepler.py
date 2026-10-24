@@ -39,8 +39,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import net_ledger as nl  # noqa: E402
 import w3_ztf as wz  # noqa: E402
 
-wz.EDGE_RULE = "bounds"  # v23 rule: both edges must be bounded below EDGE_FRAC * span
-
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "w3_kepler"
 CACHE = Path(os.environ.get("JWST_ANOMALY_DATA", ROOT / "data")) / "cache" / "w3_kepler"
@@ -361,7 +359,7 @@ def screen_star(st, sap, err, frac, frac_override=None) -> list[dict]:
     out = []
     for run in flagged_runs_kepler(s):
         i, j = run
-        v = wz.vet(s, run, None, None)
+        v = wz.vet(s, run, None, None)  # common mode and one-off only; edges: edge_bounds_kepler
         span = max(s[j][0] - s[i][0], 1.0)
         e = edge_bounds_kepler(s, quarter, run, span)
         sh = shoulder(s, quarter, r_s, sg_s, run, span)
