@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: W3 / Kepler dense-cadence pilot: validation passes; 60-star search has 0 flags (D-107)
+- **Scope:** owner-authorized pilot; `results/w3_kepler/` (frozen `PLAN.md` before any target flux;
+  `scripts/w3_kepler.py`, a thin interface to the W3 model and the ZTF chain).
+  - Data: Kepler DR25 long-cadence SAP light curves, 100 FGK dwarfs at Kp 12–14, split 20 dev,
+    20 val and 60 search. 766 MB through the ledger.
+- **Validation (gate passes):** the 20 W3 cells (t_E 0.1–10 d, ρ 0.01 / 0.1, blend 1 / 0.7) recover
+  78–91 / 100.
+  - Six ordinary control families (periodic and single eclipse, fade, PSPL, common mode, quarter step)
+    pass 0 / 100 each.
+  - The median data bound on the W3 edges is 0.041 d (post hoc).
+- **What separates W3 from a single eclipse:** a new shoulder test (the brightening just outside the
+  umbra). Without it, single eclipses pass 85–91 / 100.
+- **Search:** 0 flagged runs in 60 stars, so no survivors and nothing vetted.
+  - No star of the 100 has any cadence ≥ 1 mag dim (post hoc). The real-data check therefore met no
+    deep ordinary dimming.
+- **Limits:** efficiency is from the SAP product onward only; single band (achromatic not tested);
+  t_E ≥ 30 d excluded; no rate limit computed. The physical judgement is unchanged.
+
 ## 2026-10-24: MACS J1931 imaging footprint for the counter-image route (D-034 addendum ac)
 - **Result** (`results/lens_consistency/macs1931_counter/RESULT.md`, `summary.json`): VENUS GO 6882 tile `o038_t041`
   covers all 51 used images (26 spec-z) in 10 bands; F200W i2d 1.29 GB, read by S3 byte range (header: 0.0312″ / px).
