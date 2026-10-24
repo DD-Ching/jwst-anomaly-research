@@ -133,6 +133,8 @@ def muse_check(t: Table, muse: Table) -> dict:
     systems = sorted(set(s["system"]), key=int)
     matched = sorted({str(x) for x in s["system"][ok]}, key=int)
     return {
+        "muse_entries": len(muse),
+        "muse_entries_conf_ok": len(m),
         "spec_images": len(s),
         "images_matched": int(ok.sum()),
         "systems_matched": matched,
@@ -148,6 +150,8 @@ def chires_rms(text: str, used_ids: list[str]) -> dict:
     head, rows = lines[0], {p[0]: [float(v) for v in p[1:]] for p in lines[1:] if len(p) == 4}
     cols = [c for c in head[1:] if not c.startswith("[")]
     have = [i for i in used_ids if i in rows]
+    if not have:
+        raise ValueError("no used image found in chires.txt")
     v = np.array([rows[i] for i in have])
     return {
         "images": len(have),
@@ -158,9 +162,11 @@ def chires_rms(text: str, used_ids: list[str]) -> dict:
 
 def zip_first_member_header(blob: bytes) -> dict:
     """FITS headers of the first member of a zip, from its leading bytes (deflate or stored)."""
-    sig, meth, nl, el = struct.unpack("<I4xH16xHH", blob[:30])
+    sig, flags, meth, nl, el = struct.unpack("<I2xHH16xHH", blob[:30])
     if sig != 0x04034B50:
         raise ValueError("not a zip local file header")
+    if flags & 1 or meth not in (0, 8):
+        raise ValueError(f"zip member encrypted or compressed with method {meth}")
     data = blob[30 + nl + el :]
     raw = zlib.decompressobj(-15).decompress(data) if meth == 8 else data
     heads = eg.header_cards(raw)
@@ -170,7 +176,8 @@ def zip_first_member_header(blob: bytes) -> dict:
     keys = ("NAXIS1", "NAXIS2", "CTYPE1", "CTYPE2", "CRVAL1", "CRVAL2", "CRPIX1", "CRPIX2")
     keys += ("CDELT1", "CDELT2", "RADESYS", "BUNIT", "MODEL", "Z_CL", "EXTNAME")
     out = {"member": blob[30 : 30 + nl].decode(), **{k: img.get(k) for k in keys}}
-    out["comment"] = " ".join(str(c) for c in img.get("COMMENT", []))
+    # COMMENT text wraps at 72 characters, often mid-word: pad each card, then collapse spaces
+    out["comment"] = " ".join("".join(str(c).ljust(72) for c in img.get("COMMENT", [])).split())
     out["pixel_arcsec"] = round(abs(float(img["CDELT2"])) * 3600, 6)
     return out
 
@@ -183,10 +190,11 @@ def unit_check(headers: list[dict]) -> dict:
 
 
 def dja_check(index_html: str) -> dict:
-    fields = sorted(set(re.findall(r"([a-z0-9]+)-grizli-v7", index_html)))
+    # full field names, which may hold '-' or '_' (cluster-j002748p2616, spitzer_idf)
+    fields = sorted(set(re.findall(r"([a-z0-9][a-z0-9_-]*?)-grizli-v7", index_html.lower())))
     if not fields:
         raise ValueError("no field parsed from the DJA index")
-    hits = [f for f in fields if any(f.startswith(n) for n in DJA_NAMES)]
+    hits = [f for f in fields if any(n in f for n in DJA_NAMES)]
     return {"index": DJA_INDEX, "fields_listed": len(fields), "matches": hits, "passes": bool(hits)}
 
 

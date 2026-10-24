@@ -68,6 +68,9 @@ def test_chires_rms():
     assert r["ByEye_RMSi"] == pytest.approx(0.3536, abs=1e-4) and r["Bary_RMSi"] == 0.0
 
 
+COMMENT = "x" * 66 + " wrapped mid-word card text"
+
+
 def _zip_head(bunit="Pixels", method=8):
     h = fits.ImageHDU(data=None).header
     h["NAXIS"], h["NAXIS1"], h["NAXIS2"] = 2, 3001, 3001
@@ -79,6 +82,7 @@ def _zip_head(bunit="Pixels", method=8):
         1.1111111e-05,
     )
     h["BUNIT"] = bunit
+    h.add_comment(COMMENT)  # longer than one card: astropy wraps it mid-word
     raw = fits.PrimaryHDU().header.tostring().encode() + h.tostring().encode()
     data = zlib.compress(raw)[2:-4] if method == 8 else raw
     name = b"Alpha_x.fits"
@@ -97,6 +101,7 @@ def test_zip_first_member_header_and_unit(method):
         "Pixels",
         0.04,
     )
+    assert h["comment"] == COMMENT
     assert not mi.unit_check([h])["agree"]
     assert mi.unit_check([mi.zip_first_member_header(_zip_head("arcsec", method))])["agree"]
     with pytest.raises(ValueError):
@@ -106,6 +111,8 @@ def test_zip_first_member_header_and_unit(method):
 def test_dja_check():
     assert mi.dja_check("x abell1689-grizli-v7.4 sunrise-grizli-v7.0")["matches"] == []
     assert mi.dja_check("macs1931-grizli-v7.4")["passes"]
+    hit = mi.dja_check('href="v7/cluster-j193148m2635-grizli-v7.0/" spitzer_idf-grizli-v7.4')
+    assert hit["matches"] == ["cluster-j193148m2635"] and hit["fields_listed"] == 2
     with pytest.raises(ValueError):
         mi.dja_check("<html></html>")
 

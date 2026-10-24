@@ -37,6 +37,8 @@
   "photo_images_z0": 7
  },
  "muse_check": {
+  "muse_entries": 50,
+  "muse_entries_conf_ok": 50,
   "spec_images": 26,
   "images_matched": 6,
   "systems_matched": [
@@ -82,7 +84,7 @@
    "MODEL": "vA_52",
    "Z_CL": 0.3525,
    "EXTNAME": "ALPHA_X",
-   "comment": "JWST-VENUS model v2.0. Includes Sys 101, a transient, possibly a superno va at redshift z=5.13. Includes the probable host Lyman-a emitter, Sys 1 00. Imaging: VENUS.",
+   "comment": "JWST-VENUS model v2.0. Includes Sys 101, a transient, possibly a supernova at redshift z=5.13. Includes the probable host Lyman-a emitter, Sys 100. Imaging: VENUS.",
    "pixel_arcsec": 0.04
   },
   {
@@ -104,7 +106,7 @@
    "MODEL": "vA_52",
    "Z_CL": 0.3525,
    "EXTNAME": "ALPHA_Y",
-   "comment": "JWST-VENUS model v2.0. Includes Sys 101, a transient, possibly a superno va at redshift z=5.13. Includes the probable host Lyman-a emitter, Sys 1 00. Imaging: VENUS.",
+   "comment": "JWST-VENUS model v2.0. Includes Sys 101, a transient, possibly a supernova at redshift z=5.13. Includes the probable host Lyman-a emitter, Sys 100. Imaging: VENUS.",
    "pixel_arcsec": 0.04
   }
  ],
