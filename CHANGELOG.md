@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: Bullet Cluster extra-image test: frozen run stopped at the CANUCS mosaic WCS (incomplete)
+- **Plan:** `results/lens_consistency/bullet_extra/PLAN.md` (frozen 2a7e851; script and CANUCS sha256 pins 1ae40dd, before
+  the run): frame check F, gate K-WLS repeat, frame tables with the WLS source on GO 4598 `o001_t001`, CANUCS reference
+  with local noise, gate C2 shared, flags.
+- **Ran:** F passed (numbers not stored); K-WLS repeat rms 0.391″, 135 / 135; frame tables written (pipeline gate C
+  58 / 60, reported only). `RESULT.md`.
+- **Stopped:** the CANUCS F200W `bgsub-sci` header has `CD` (0.08″) and `PC` without `CDELT`; neither matches the
+  catalogue's 0.04″ grid, so the frozen pixel-scale check refuses it. No C2, no flag.
+- **Failed approach:** a 10-min background job limit killed the first attempt; rules 1–3 take ~16 min. Run detached.
+- **Handoff:** draft #494 stays open (unit in flight, claim released). Next: a frozen `PLAN_1b.md` deviation for the
+  mosaic WCS (catalogue-fitted TAN WCS with a residual gate, or the `sci` / `rms` headers if they pass), then rules 4–8.
+
 ## 2026-10-24: Bullet Cluster gate K: fails as written (mean source); gate K-WLS passes (deviation)
 - **Plan:** `results/lens_consistency/bullet_gatek/PLAN.md`, frozen and pushed (3613c8f) before any map value was
   read; the > 200 MB reason is stated there (best-fit maps only at 50 mas, 219 / 205 MiB).
