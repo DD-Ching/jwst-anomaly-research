@@ -3,7 +3,8 @@
 Frozen plan: ``results/lens_consistency/macs1931_muse/PLAN.md``. The cube is read only as ESO SODA
 ``BAND`` cutouts (full field), streamed to a scratch directory and deleted after use.
 
-    python scripts/m1931_muse.py run --scratch DIR
+    python scripts/m1931_muse.py run --scratch DIR      # PLAN.md
+    python scripts/m1931_muse.py run4b --scratch DIR    # PLAN_4b.md (Gaia registration)
 """
 
 from __future__ import annotations
@@ -172,16 +173,75 @@ def load_band(p: Path):
     return data, w, lam, float(hdr["CD3_3"])
 
 
+def shifted_wcs(w: WCS, dra: float, ddec: float) -> WCS:
+    """A WCS that maps catalogue (Gaia-frame) positions to the cube pixels where MUSE shows them:
+    a source at (ra, dec) appears at (ra + dra / cos dec, dec + ddec) in the cube's own WCS."""
+    w2 = w.deepcopy()
+    w2.wcs.crval = [
+        w.wcs.crval[0] - dra / 3600.0 / np.cos(np.radians(w.wcs.crval[1])),
+        w.wcs.crval[1] - ddec / 3600.0,
+    ]
+    return w2
+
+
 def in_cube(w: WCS, shape, ra: float, dec: float) -> tuple[bool, float, float]:
     x, y = (float(v) for v in w.world_to_pixel_values(ra, dec))
     return bool(0 <= x < shape[-1] and 0 <= y < shape[-2]), x, y
 
 
-def run(scratch: Path) -> dict:
+GAIA = OUT / "gaia_dr3.csv"
+GAIA_EPOCH, MUSE_EPOCH, REG_MIN, REG_MAD, STAMP = 2016.0, 2015.5, 4, 0.2, 7  # PLAN_4b rule 0
+
+
+def registration_ok(dra, ddec) -> dict:
+    """PLAN_4b rule 0: per-axis median MUSE - Gaia offset (arcsec) and whether it may be applied."""
+    a, b = np.asarray(dra, float), np.asarray(ddec, float)
+    mad = [float(np.median(np.abs(v - np.median(v)))) if v.size else np.nan for v in (a, b)]
+    return {
+        "n": int(a.size),
+        "dra": float(np.median(a)) if a.size else np.nan,
+        "ddec": float(np.median(b)) if b.size else np.nan,
+        "mad": mad,
+        "applied": bool(a.size >= REG_MIN and max(mad) <= REG_MAD),
+    }
+
+
+def measure_registration(data: np.ndarray, w: WCS) -> dict:
+    from photutils.centroids import centroid_2dg
+
+    img = np.nanmedian(data, axis=0)
+    g = Table.read(GAIA, format="ascii.csv")
+    dra, ddec = [], []
+    for r in g:
+        if np.ma.is_masked(r["pmra"]) or not np.isfinite(float(r["pmra"])):
+            continue
+        dec0 = float(r["dec"])
+        dt = MUSE_EPOCH - GAIA_EPOCH
+        ra = float(r["ra"]) + float(r["pmra"]) * dt / 3.6e6 / np.cos(np.radians(dec0))
+        dec = dec0 + float(r["pmdec"]) * dt / 3.6e6
+        x, y = (float(v) for v in w.world_to_pixel_values(ra, dec))
+        xi, yi = int(round(x)), int(round(y))
+        st = img[yi - STAMP : yi + STAMP + 1, xi - STAMP : xi + STAMP + 1]
+        if (
+            yi - STAMP < 0
+            or xi - STAMP < 0
+            or st.shape != (2 * STAMP + 1,) * 2
+            or not np.isfinite(st).all()
+        ):
+            continue
+        cx, cy = centroid_2dg(st - np.median(st))
+        rr, dd = w.pixel_to_world_values(xi - STAMP + cx, yi - STAMP + cy)
+        dra.append((float(rr) - ra) * np.cos(np.radians(dec)) * 3600.0)
+        ddec.append((float(dd) - dec) * 3600.0)
+    return registration_ok(dra, ddec)
+
+
+def run(scratch: Path, register: bool = False, out: Path = OUT) -> dict:
+    out.mkdir(parents=True, exist_ok=True)
     imgs = Table.read(IMAGES)
     mu = {str(r["image_id"]): abs(float(r["magnification"])) for r in Table.read(MU_OBS)}
     tg = Table.read(TARGETS)
-    zsys = {int(s): float(imgs["z"][imgs["system"] == s][0]) for s in SYSTEMS}
+    zsys = {int(s): float(imgs["z"][imgs["system"] == str(s)][0]) for s in SYSTEMS}
     lams = {s: (lam_nom(z) - PEAK_SEARCH, lam_nom(z) + PEAK_SEARCH) for s, z in zsys.items()}
     all_ra, all_dec = np.asarray(imgs["ra"], float), np.asarray(imgs["dec"], float)
     rows, cutouts, windows, gate_rows = [], [], {}, []
@@ -190,11 +250,18 @@ def run(scratch: Path) -> dict:
         p, meta = fetch_band(z, scratch)
         cutouts.append({"z": z, **meta})
         data, w, lam, dlam = load_band(p)
+        if register:
+            reg = measure_registration(data, w)
+            cutouts[-1]["registration"] = reg
+            if not reg["applied"]:
+                p.unlink()
+                raise RuntimeError(f"PLAN_4b rule 0 fails: {reg}")
+            w = shifted_wcs(w, reg["dra"], reg["ddec"])
         sub = subtract_continuum(data, continuum_mask(lam, lam_nom(z)))
         ex = w.world_to_pixel_values(all_ra, all_dec)
         for s in [k for k, v in zsys.items() if v == z]:
             others = [o for o in SYSTEMS if o != s and windows_overlap(lams[s], lams[o])]
-            oth = imgs[np.isin(imgs["system"], others)]
+            oth = imgs[np.isin(imgs["system"], [str(o) for o in others])]
 
             def sep_other(ra, dec, oth=oth):
                 d = np.hypot(
@@ -203,7 +270,7 @@ def run(scratch: Path) -> dict:
                 )
                 return d * 3600.0
 
-            own = imgs[imgs["system"] == s]
+            own = imgs[imgs["system"] == str(s)]
             pos = []
             for r in own:
                 ok, x, y = in_cube(w, data.shape, float(r["ra"]), float(r["dec"]))
@@ -266,7 +333,7 @@ def run(scratch: Path) -> dict:
                         mu,
                     )
                 )
-            for r in tg[tg["System"] == s]:
+            for r in tg[tg["system"] == str(s)]:
                 ok, x, y = in_cube(w, data.shape, float(r["ra"]), float(r["dec"]))
                 bl = is_blended(sep_other(float(r["ra"]), float(r["dec"])))
                 rows.append(
@@ -295,8 +362,8 @@ def run(scratch: Path) -> dict:
     g = gate_l([r["class"] for r in gate_rows])
     for r in rows:
         r["flag"] = bool(g["passes"] and r["class"] == "absent")
-    Table(rows=gate_rows).write(OUT / "controls.ecsv", overwrite=True)
-    Table(rows=rows).write(OUT / "targets.ecsv", overwrite=True)
+    Table(rows=gate_rows).write(out / "controls.ecsv", overwrite=True)
+    Table(rows=rows).write(out / "targets.ecsv", overwrite=True)
     summary = {
         "cube": CUBE_ID,
         "cutouts_streamed_deleted": cutouts,
@@ -307,7 +374,7 @@ def run(scratch: Path) -> dict:
         },
         "flags": sum(r["flag"] for r in rows),
     }
-    (OUT / "summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
+    (out / "summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
     return summary
 
 
@@ -369,11 +436,15 @@ def _row(
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("cmd", choices=["run"])
+    ap.add_argument("cmd", choices=["run", "run4b"])
     ap.add_argument("--scratch", type=Path, required=True)
     a = ap.parse_args(argv)
     a.scratch.mkdir(parents=True, exist_ok=True)
-    print(json.dumps(run(a.scratch), indent=1, default=float))
+    if a.cmd == "run4b":
+        res = run(a.scratch, register=True, out=OUT / "stage4b")
+    else:
+        res = run(a.scratch)
+    print(json.dumps(res, indent=1, default=float))
     return 0
 
 

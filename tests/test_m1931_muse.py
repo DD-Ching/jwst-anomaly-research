@@ -68,3 +68,26 @@ def test_local_noise_reproducible():
     a = mm.local_noise(nb, 50, 50, [50.0], [50.0], np.random.default_rng(mm.SEED))
     b = mm.local_noise(nb, 50, 50, [50.0], [50.0], np.random.default_rng(mm.SEED))
     assert a == b and 4 < a < 9  # ~sqrt(49 spaxels)
+
+
+def test_registration_rule():
+    ok = mm.registration_ok([1.3, 1.29, 1.41, 1.44], [-0.8, -0.9, -0.88, -0.85])
+    assert ok["applied"] and ok["n"] == 4 and abs(ok["dra"] - 1.355) < 1e-9
+    assert not mm.registration_ok([1.3, 1.3, 1.3], [0, 0, 0])["applied"]  # 3 stars
+    assert mm.registration_ok([0, 0, 1, 1, 1], [0, 0, 0, 0, 0.0])["applied"]  # MAD 0 on both axes
+    assert not mm.registration_ok([0, 0, 0.5, 0.5], [0, 0, 0, 0])["applied"]  # MAD 0.25
+
+
+def test_shifted_wcs_maps_catalogue_to_seen_position():
+    from astropy.wcs import WCS
+
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [292.95, -26.57]
+    w.wcs.crpix = [100, 100]
+    w.wcs.cdelt = [-0.2 / 3600, 0.2 / 3600]
+    ra, dec = 292.951, -26.571
+    dra, ddec = 1.3, -0.88
+    seen = w.world_to_pixel_values(ra + dra / 3600 / np.cos(np.radians(dec)), dec + ddec / 3600)
+    got = mm.shifted_wcs(w, dra, ddec).world_to_pixel_values(ra, dec)
+    assert np.allclose(seen, got, atol=0.01)
