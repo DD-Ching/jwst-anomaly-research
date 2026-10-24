@@ -2403,6 +2403,14 @@ constraint. Decision: MACS0647 gives no lensing-residual input from the CLASH ma
 images that miss by > 3″ at every z. Alternatives rejected: photo-z as the frozen redshift rule (inconsistent within
 families, e.g. 6-3: 0.52 and 9.19). Revisit if: spectroscopic redshifts of systems 13–23, or a JWST-era model's maps.
 
+**Addendum 2026-10-24x (Bullet Cluster input check).** `results/lens_consistency/bullet_inputs/RESULT.md`. The CANUCS
+Bullet DR1 on CANFAR gives the Rihtaršič+2026 Lenstool gold image list (135 images, 49 systems, 27 galaxies with system
+z), the fiducial model's best-fit deflection maps (50 mas, D_LS / D_S = 1) and Bayesian sample maps (200 mas), and a
+CANUCS-format photometry catalogue that passes the frozen column mapping. Decision: the Bullet Cluster is the next
+field for the fitted-model extra-image route (gate K, then gate C2), in the MACS0416 / MACS1149 CANUCS form.
+Alternatives rejected: the paper's Dropbox folder link (one 24.5 GB zip, ranges ignored). Revisit if: gate K fails,
+or the 50 mas maps cannot be fetched within the cloud disk rule (then the 200 mas sample maps).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
