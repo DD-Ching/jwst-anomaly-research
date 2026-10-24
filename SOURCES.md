@@ -766,6 +766,12 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     28 sources (JWST GLAFIC constraints).
   - DJA v7.0 `https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/macs0647-grizli-v7.0-fix_phot.fits`
     (25,427,520 B; headers only, HTTP range, 2026-10-23).
+- MACS J1931.8-2635 inputs (`results/lens_consistency/macs1931_inputs/`, accessed 2026-10-24):
+  - Allingham et al. 2026, "VENUS: Strong-lensing model of MACS J1931.8-2635 -- revealing the farthest multiply imaged
+    supernova", arXiv:2602.14074.
+  - Zenodo record 10.5281/zenodo.18646525 (https://zenodo.org/records/18646525, published 2026-02-15): arcs list,
+    MUSE z list, README, `chires.txt` (sha256 in `summary.json`); `Alpha_x/y.fits.zip` headers only (HTTP range).
+  - Caminha et al. 2019, arXiv:1903.05103 (cited by the README for the spec-z of systems 1–7; not read).
 - Bullet Cluster (1E 0657-56) inputs (`results/lens_consistency/bullet_inputs/`, accessed 2026-10-24):
   - Rihtaršič et al. 2026, "Mapping dark matter in the Bullet Cluster using JWST imaging and spectroscopy",
     A&A (2026), arXiv:2601.22245; image catalogue also as VizieR J/A+A/710/A207 (identifier from the GAVO registry record

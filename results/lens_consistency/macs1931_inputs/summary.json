@@ -1,0 +1,126 @@
+{
+ "sources": {
+  "record": "https://zenodo.org/api/records/18646525 (doi 10.5281/zenodo.18646525, published 2026-02-15)",
+  "paper": "Allingham et al. 2026, arXiv:2602.14074 (AstroLensPy, VENUS)",
+  "files_sha256": {
+   "README_Allingham_m1931_AstroLensPy_Allingham26.txt": "5b550779800f39bdca8e359b5d27fa27a1e9f517e1bc4009cec39b87cf94a12a",
+   "m1931_AstroLensPy_v2.1_arcs_WCS.txt": "9b34fa2dee2ec5b8ae2d4dc80546d8476e663cdd4ac4cfa6a7a09cd4a80d7b32",
+   "m1931_redshifts_MUSE.txt": "bac3e32c1cb1cfc21b13e03cd5b1e53879a2902ef8e5aa0a4beca2ffaa1c93f6",
+   "chires.txt": "f301e3fdef9005d462612312a4b4b967daa18d3c7e052f0259723ca6158a7908"
+  }
+ },
+ "record_files": 53,
+ "deflection_maps_listed": {
+  "Alpha_x.fits.zip": 67654544,
+  "Alpha_y.fits.zip": 66955301
+ },
+ "image_list": {
+  "rows": 54,
+  "used_images": 51,
+  "used_systems": 19,
+  "spec_images": 26,
+  "spec_systems": 9,
+  "spec_systems_single_z": 9,
+  "candidates_not_used": [
+   "c11.3",
+   "c18.1",
+   "c18.2"
+  ],
+  "photo_systems": 10,
+  "photo_systems_mixed_z": [
+   "11",
+   "13",
+   "15",
+   "16",
+   "17"
+  ],
+  "photo_images_z0": 7
+ },
+ "muse_check": {
+  "muse_entries": 50,
+  "muse_entries_conf_ok": 50,
+  "spec_images": 26,
+  "images_matched": 6,
+  "systems_matched": [
+   "100",
+   "101"
+  ],
+  "systems_unmatched": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7"
+  ],
+  "max_abs_dz_matched": 7.999999999963592e-05,
+  "passes": false
+ },
+ "chires_rms_arcsec": {
+  "images": 51,
+  "missing": [],
+  "ByEye_RMSi": 0.662,
+  "Avg_RMSi": 0.4291,
+  "Bary_RMSi": 0.4444
+ },
+ "deflection_headers": [
+  {
+   "file": "Alpha_x.fits.zip",
+   "zip_bytes": 67654544,
+   "member": "Alpha_x.fits",
+   "NAXIS1": 3001,
+   "NAXIS2": 3001,
+   "CTYPE1": "RA---TAN",
+   "CTYPE2": "DEC--TAN",
+   "CRVAL1": 292.9570833,
+   "CRVAL2": -26.5761,
+   "CRPIX1": 1484.3661672129228,
+   "CRPIX2": 1451.3754306852206,
+   "CDELT1": -1.1111111111111e-05,
+   "CDELT2": 1.11111111111111e-05,
+   "RADESYS": "FK5",
+   "BUNIT": "Pixels",
+   "MODEL": "vA_52",
+   "Z_CL": 0.3525,
+   "EXTNAME": "ALPHA_X",
+   "comment": "JWST-VENUS model v2.0. Includes Sys 101, a transient, possibly a supernova at redshift z=5.13. Includes the probable host Lyman-a emitter, Sys 100. Imaging: VENUS.",
+   "pixel_arcsec": 0.04
+  },
+  {
+   "file": "Alpha_y.fits.zip",
+   "zip_bytes": 66955301,
+   "member": "Alpha_y.fits",
+   "NAXIS1": 3001,
+   "NAXIS2": 3001,
+   "CTYPE1": "RA---TAN",
+   "CTYPE2": "DEC--TAN",
+   "CRVAL1": 292.9570833,
+   "CRVAL2": -26.5761,
+   "CRPIX1": 1484.3661672129228,
+   "CRPIX2": 1451.3754306852206,
+   "CDELT1": -1.1111111111111e-05,
+   "CDELT2": 1.11111111111111e-05,
+   "RADESYS": "FK5",
+   "BUNIT": "Pixels",
+   "MODEL": "vA_52",
+   "Z_CL": 0.3525,
+   "EXTNAME": "ALPHA_Y",
+   "comment": "JWST-VENUS model v2.0. Includes Sys 101, a transient, possibly a supernova at redshift z=5.13. Includes the probable host Lyman-a emitter, Sys 100. Imaging: VENUS.",
+   "pixel_arcsec": 0.04
+  }
+ ],
+ "deflection_unit": {
+  "bunit": [
+   "Pixels"
+  ],
+  "readme": "arcsec",
+  "agree": false
+ },
+ "reference_catalogue_dja_v7": {
+  "index": "https://dawn-cph.github.io/dja/imaging/v7/",
+  "fields_listed": 35,
+  "matches": [],
+  "passes": false
+ }
+}
