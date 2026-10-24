@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: Bullet Cluster gate K: fails as written (mean source); gate K-WLS passes (deviation)
+- **Plan:** `results/lens_consistency/bullet_gatek/PLAN.md`, frozen and pushed (3613c8f) before any map value was
+  read; the > 200 MB reason is stated there (best-fit maps only at 50 mas, 219 / 205 MiB).
+- **Result** (`RESULT.md`, `summary.json`): gate K fails, rms 1.196″ (≤ 1.0″), 97.0 % within 3″. K1b and K1e get one
+  predicted image instead of three. Lenstool's own rms on the same fit is 0.41″ (`chires.dat`).
+- **Post hoc:** without K1b / K1e, 129 images give rms 0.435″ (Lenstool 0.419″); a 0.1″ grid changes nothing; their
+  back-traced sources scatter by 0.026–0.061″ yet switch between 1 and 3 images (caustic-straddling).
+- **Deviation** (`PLAN_1b.md`, frozen in 3774ed9 after the failure; the Abell 2744 addendum k precedent): gate
+  K-WLS passes, rms 0.391″, 135 / 135 within 3″; 18 families have extra predicted images. D-034 addendum y.
+- **Data:** the two maps lived in the session cache only and were deleted.
+- **Handoff:** next is a frozen gate C2 / extra-image plan with the CANUCS Bullet catalogue and the WLS source,
+  frame check F first.
+
 ## 2026-10-24: New-data screening of three other lines: none qualifies now; no recommendation
 - **Scope:** owner request; metadata and literature only (2.6 MB through the ledger), `results/screening_2026_10_24/`.
 - **Sunrise n0153:** MAST shows only the 2022 and 2025 epochs; no spectrum.
