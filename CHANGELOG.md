@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 imaging footprint for the counter-image route (D-034 addendum ac)
+- **Result** (`results/lens_consistency/macs1931_counter/RESULT.md`, `summary.json`): VENUS GO 6882 tile `o038_t041`
+  covers all 51 used images (26 spec-z) in 10 bands; F200W i2d 1.29 GB, read by S3 byte range (header: 0.0312″ / px).
+  MAST and S3 work from the cloud session; only archive.stsci.edu fails TLS.
+- **Route proposal** (`PLAN.md`, not frozen, nothing run): own photutils deblended catalogue on a background-filtered
+  cutout, validated first against the frozen MACS0417 gate C2 (stage V).
+- **Handoff:** next is `/reuse-check` for photutils, then freeze the plan and run stage V; #374 still waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-24: MACS J1931 gate K passes on the VENUS maps (pixel unit, z_s 5.079 normalisation) (D-034 addendum ab)
 - **Plan** frozen in b7ac41b (`results/lens_consistency/macs1931_gatek/PLAN.md`) before any map value was read: the
   α normalisation from the authors' `k_dlds` values, unit check U against their `sourcepos.txt`, then gate K.

@@ -2450,6 +2450,14 @@ mixed-z systems are not tested coherently by our single-z solver (reported 4.83â
 their z is settled. Alternatives rejected: the
 README unit (fails U by three orders of magnitude). Revisit if: a later VENUS release changes the maps or the z list.
 
+**Addendum 2026-10-24ac (MACS J1931 imaging footprint).** `results/lens_consistency/macs1931_counter/RESULT.md`. VENUS GO 6882 tile
+`jw06882-o038_t041` covers all 51 used images in 10 NIRCam bands; the 1.29 GB F200W i2d reads by S3 byte range
+(0.0312â€³ / px). Decision: imaging is not the blocker; the reference catalogue is. Proposed route (not frozen, `PLAN.md`):
+an own photutils deblended catalogue on a background-filtered F200W cutout, accepted for MACS J1931 only if it passes
+the frozen MACS0417 gate C2 (where CANUCS passes and pipeline segments fail). Alternatives rejected: pipeline segments
+(addendum 2026-10-22); waiting for a VENUS HLSP catalogue (unknown; archive.stsci.edu unreachable from cloud).
+Revisit if: a public deblended MACS J1931 catalogue appears.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

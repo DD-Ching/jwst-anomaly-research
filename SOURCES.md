@@ -775,6 +775,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Same record, used by `results/lens_consistency/macs1931_gatek/` (accessed 2026-10-24): `Alpha_x.fits.zip`,
     `Alpha_y.fits.zip`, `sourcepos.txt`, `chires.txt` (md5 checked against the record, sha256 in `summary.json`), and
     `Readme_Magnifications_summary.txt` (its three `k_dlds` values are constants in `scripts/macs1931_gatek.py`).
+  - JWST GO 6882 (VENUS) level-3 tile `jw06882-o038_t041` (MAST CAOM metadata, accessed 2026-10-24; used by
+    `results/lens_consistency/macs1931_counter/`): 10 NIRCam bands; F200W `_i2d.fits` / `_cat.ecsv` / `_segm.fits` under
+    `s3://stpubdata/jwst/public/jw06882/L3/t/o038/` (sizes in `summary.json`; header only read).
 - Bullet Cluster (1E 0657-56) inputs (`results/lens_consistency/bullet_inputs/`, accessed 2026-10-24):
   - Rihtaršič et al. 2026, "Mapping dark matter in the Bullet Cluster using JWST imaging and spectroscopy",
     A&A (2026), arXiv:2601.22245; image catalogue also as VizieR J/A+A/710/A207 (identifier from the GAVO registry record
