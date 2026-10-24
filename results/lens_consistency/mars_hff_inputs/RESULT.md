@@ -32,6 +32,8 @@ listed. The one unused cluster-map record with an image list is HST-era: Cha & J
 - MACS0416's K-WLS (4.52″) is far worse than its mean-source value (0.51″); not diagnosed.
 
 ## Not done / limits
+- Code fix after the run (review finding): the ≥ 2-images rule is re-applied after C drops images outside the map. No
+  effect on these numbers, since C kept every image on all six fields.
 - No extra-image, flux or flag reading (frozen). These are HST-era fits to these same images, so the stage tests
   our loading and the maps, not lensing consistency.
 - The catalogue labels MACS1149 "MACS J1149.5-2223" (the map header CRVAL2 is +22.40°); the script maps it to the `MACS J1149.5+2223`

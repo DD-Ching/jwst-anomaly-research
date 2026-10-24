@@ -98,11 +98,16 @@ def spec_images(cat: Table, field: str) -> Table:
         & (np.asarray(cat["cls"]) == "gold")
         & ~np.asarray(cat["fitted_z"], bool)
     ]
-    sysv = np.asarray(t["system"], str)
-    keep = np.array([np.sum(sysv == s) >= MIN_SPEC_PER_SYSTEM for s in sysv], bool)
-    t = t[keep] if len(t) else t
+    t = min_per_system(t)
     t["a"] = np.ones(len(t))
     return t
+
+
+def min_per_system(t: Table, n: int = MIN_SPEC_PER_SYSTEM) -> Table:
+    """Rows of systems with >= ``n`` rows."""
+    sysv = np.asarray(t["system"], str)
+    keep = np.array([np.sum(sysv == s) >= n for s in sysv], bool)
+    return t[keep] if len(t) else t
 
 
 def coverage_field(model, images: Table, min_inside: float = C_MIN_INSIDE) -> dict:
@@ -197,7 +202,7 @@ def field_block(zf, field: str, cat: Table, out: Path, grid_step: float) -> dict
     res["check_C"] = c
     if not c["passes"]:
         return res
-    images = images[mask]
+    images = min_per_system(images[mask])  # PLAN.md: >= 2 spec images per system, after C
     vals = {r: per_system_u(m, images) for r, m in models.items()}
     u = sp.unit_check(vals, U_MAX_MEDIAN_ARCSEC)
     res["check_U"] = {**u, "per_system": vals}

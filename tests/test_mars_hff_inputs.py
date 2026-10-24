@@ -126,3 +126,8 @@ def test_record_outcome_counts_all_three():
     }
     o = mh.record_outcome(f)
     assert o["usable_fields"] == ["a"] and o["n_usable"] == 1 and o["n_fields"] == 3
+
+
+def test_min_per_system_drops_singletons():
+    t = Table({"system": ["1", "1", "2"], "image_id": ["1.1", "1.2", "2.1"]})
+    assert list(mh.min_per_system(t)["image_id"]) == ["1.1", "1.2"]
