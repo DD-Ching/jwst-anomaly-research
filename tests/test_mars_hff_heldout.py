@@ -34,6 +34,7 @@ def test_frame_offset_median_and_too_few_pairs():
     assert np.isclose(off["dx_arcsec"], 0.2, atol=1e-6) and np.isclose(
         off["dy_arcsec"], -0.1, atol=1e-6
     )
+    assert not mo.frame_offset(can, mars[:0])["applied"]
     off4 = mo.frame_offset(can[:4], mars)
     assert not off4["applied"] and off4["dx_arcsec"] == 0.0
     sh = mo.shift(can, off)

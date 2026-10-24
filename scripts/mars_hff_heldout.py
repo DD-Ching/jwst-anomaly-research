@@ -51,6 +51,8 @@ def _offsets_arcsec(ra, dec, ra_ref, dec_ref) -> tuple[np.ndarray, np.ndarray, n
 
 def frame_offset(canucs: Table, mars: Table, pair_arcsec: float = OFFSET_PAIR_ARCSEC) -> dict:
     """PLAN.md rule 1: median offset (arcsec, east, north) from CANUCS to the nearest MARS row."""
+    if not len(mars) or not len(canucs):
+        return {"n_pairs": 0, "dx_arcsec": 0.0, "dy_arcsec": 0.0, "applied": False}
     dx, dy, d = _offsets_arcsec(canucs["ra"], canucs["dec"], mars["ra"], mars["dec"])
     k = np.argmin(d, axis=1)
     i = np.arange(len(canucs))
