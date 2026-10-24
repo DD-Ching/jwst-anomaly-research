@@ -1,0 +1,16 @@
+{
+ "date": "2026-10-24",
+ "service": "https://zenodo.org/api/records (unauthenticated, size 25, default relevance sort)",
+ "queries": ["\"lens model\" cluster JWST", "\"deflection\" cluster lensing", "\"strong lensing\" cluster model", "lenstool", "glafic", "\"magnification map\" cluster", "\"multiple images\" cluster lensing", "free-form lens model", "MARS lens", "MARS Abell 2744 JWST", "MARS MACS0416", "Cha Jee lensing"],
+ "cluster_lens_model_records_seen": {
+  "already_used_or_listed_in_SOURCES": ["17726321 WSLAP+ JWST 2025 (Abell S1063)", "21460864 RX J2129 models", "20312327 RXCJ2211 GLAFIC", "18646525 MACS J1931 AstroLensPy", "16534337 SPT-CL J0546 LTM", "10158248 SMACS 0723 Chow+2023", "22883437 CANUCS thesis data"],
+  "new": {
+   "7804575": "Cha & Jee 2023 MARS, six HFF clusters, maps + image catalogue (HST-era; used here)",
+   "13843384": "'El Gordo' galaxy cluster through the eyes of HST and JWST (2024-07-31): record has no files and no description",
+   "6471404": "Abell S1063 HST-era parametric model (2022; not inspected)",
+   "5032204": "ACT-CL J0102-4915 HST-era analysis (2021; not inspected)",
+   "7104520": "Fundamental-plane cluster models (2022; not inspected)"
+  }
+ },
+ "mars_zip": {"name": "MARS_HFF_clusters_result.zip", "bytes": 2713478, "md5": "2d87f9a36aadb430f7a7b937fe70b8c2", "sha256": "0d4cc2c6342f597c4d418f1c416f9f355d72ab8ac9e55206bd6050dd60be8e14"}
+}

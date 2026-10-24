@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MARS HFF free-form maps: C / U pass on six fields, gate K passes on four (D-034 addendum ao)
+- **Search** (`results/lens_consistency/mars_hff_inputs/search.json`): Zenodo (12 queries) shows no JWST-era cluster
+  map record not used or listed already; the unused HST-era Cha & Jee 2023 MARS record (six HFF clusters, 100 × 100
+  maps, image catalogue) was taken instead.
+- **Result** (`results/lens_consistency/mars_hff_inputs/RESULT.md`): plan frozen in 896c4c1, functions and tests in
+  b28d5dd, both before the run. C passes and U picks arcsec on all six; gate K (mean source, catalogue z) passes on
+  Abell 370 0.850″, MACS0416 0.513″, MACS0717 0.099″, MACS1149 0.742″; fails on Abell 2744 1.112″ and Abell S1063
+  8.020″ (system 4 gets one predicted image; K-WLS 0.078″ reported). No flag read (frozen).
+- **Handoff:** next, a frozen held-out stage on the four usable fields: JWST-era spectroscopic images absent from the
+  2023 MARS catalogue (CANUCS DR1 lists for MACS0416 / MACS1149 / Abell 370 are pinned here). #374 waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-24: SMACS 0723 Chow+2023 GLAFIC maps: U passes, gate K fails on systems 5 and 7 (D-034 addendum an)
 - **Search:** Zenodo lens-model records (2026-10-24) show no new cluster-map record beyond those used, except Chow+2023
   SMACS 0723 (10.5281/zenodo.10158248, never used here). MAST HLSPs: archive.stsci.edu answers with the certifi CA
