@@ -45,9 +45,10 @@ from the verified `chires.txt`. A re-run reproduces every number above.
 
 ## Reading
 - The VENUS maps, read in pixels and normalised at z_s 5.079, reproduce the spec-z images the model was fitted to
-  (own-constraint validation only). The maps can be used with the spec-z systems; the photo-z systems 8 and 10 are not
-  reproduced as catalogued, and the mixed-z systems are not tested coherently by our solver; all are excluded from any later test until their z is settled.
+  (own-constraint validation only). The maps can be used with the spec-z systems. The photo-z systems 8 and 10
+  are not reproduced as catalogued, and the mixed-z systems are not tested coherently by our solver; all stay out of
+  any later test until their z is settled.
 - No deblended reference catalogue is public for this field (D-034 addendum aa), so gate C2 and the extra-image test
   still cannot run. Next: a counter-image test for the six spec-z systems with extra predicted images needs
-  imaging; the VENUS mosaics on MAST could not be checked from this session before (connection failure).
+  imaging; the VENUS mosaics on MAST could not be checked: archive.stsci.edu fails TLS through this session's proxy.
 - Data: the two maps (67.7 / 67.0 MB zipped) were held in the session scratchpad only and deleted after the run.
