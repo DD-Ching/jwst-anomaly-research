@@ -1,0 +1,89 @@
+{
+ "posthoc_absent_controls": {
+  "absent_own_segment_centroid_outside_radius": 0,
+  "absent_no_containing_segment": 0,
+  "absent_sources_too_faint": 0
+ },
+ "inputs": {
+  "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f200w_i2d.fits",
+  "section_y0_y1_x0_x1": [
+   1200,
+   4948,
+   5277,
+   9354
+  ],
+  "n_segments_detected": 1232,
+  "n_segments_deblended": 1577,
+  "n_rows_kept": 1577,
+  "pixel_scale_arcsec": 0.03122991199234541,
+  "masked_fraction": 0.09096948836288846,
+  "frame_offset_arcsec": [
+   0.10084636860364347,
+   -0.2917131053097502
+  ],
+  "depth_mag": null
+ },
+ "gate_C2": {
+  "all": {
+   "n_testable": 35,
+   "n_ok": 28,
+   "fraction": 0.8
+  },
+  "arc_referenced": {
+   "n_testable": 14,
+   "n_ok": 14,
+   "fraction": 1.0
+  },
+  "passes": true
+ },
+ "control_classes": {
+  "ambiguous": 7,
+  "confused": 3,
+  "inconsistent_reference": 10,
+  "no_reference": 9,
+  "recovered": 25
+ },
+ "target_classes": {
+  "ambiguous": 2,
+  "confused": 1,
+  "inconsistent_reference": 1,
+  "no_reference": 2
+ },
+ "flags": [],
+ "flags_if_gate_ignored": 0,
+ "rules": {
+  "ELLIPSE_NSIGMA": 3.0,
+  "MIN_REF_SNR": 5.0,
+  "MAX_REF_MU": 50.0,
+  "MAX_REF_SPREAD": 3.0,
+  "FLUX_RANGE": [
+   0.3333333333333333,
+   3.0
+  ],
+  "TEN_SIGMA_DMAG": 0.752574989159953,
+  "BASE_SEARCH": 1.0,
+  "C2": [
+   8,
+   0.8,
+   3
+  ],
+  "ARC_MIN_ELL": 0.5,
+  "contain": false
+ },
+ "gate_C2_shared_pairs": {
+  "all": {
+   "n_testable": 35,
+   "n_ok": 28,
+   "fraction": 0.8
+  },
+  "arc_referenced": {
+   "n_testable": 14,
+   "n_ok": 14,
+   "fraction": 1.0
+  },
+  "passes": true,
+  "merged_groups": []
+ },
+ "stage_V_passes": true,
+ "predicted_classes_note": "written, not read (PLAN.md stage V rule 6)"
+}

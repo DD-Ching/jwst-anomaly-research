@@ -52,9 +52,16 @@ def test_build_deblends_two_blobs_on_a_halo():
     img = halo + blob(100, 128, 80, 3) + blob(110, 128, 80, 3) + blob(180, 60, 40, 2)
     err = np.full((n, n), 1.0)
     sci = img + rng.normal(0, 1.0, (n, n))
-    cat, meta, deb = md.build(sci, err, _wcs())
+    cat, meta, deb, data, xy = md.build(sci, err, _wcs())
     assert meta["n_segments_deblended"] >= meta["n_segments_detected"]
     assert len(cat["flux"]) >= 3  # the close pair is split, the third source is found
     assert np.all(cat["flux"] > 0) and np.all(cat["snr"] > 0)
     assert set(cat) == {"label", "ra", "dec", "a", "b", "pa", "flux", "snr", "ext", "ell", "scale"}
     assert np.all((cat["pa"] >= 0) & (cat["pa"] < 180))
+    assert len(xy[0]) == len(cat["flux"]) and data.shape == sci.shape
+
+
+def test_kron_depth_is_5_sigma_of_median_error():
+    cat = {"flux": np.array([1e-6, 2e-6, 4e-6]), "snr": np.array([10.0, 10.0, 10.0])}
+    # errors 1e-7, 2e-7, 4e-7 Jy -> median 2e-7 -> 5 sigma 1e-6 Jy -> 23.9 AB
+    assert md.kron_depth(cat) == pytest.approx(-2.5 * np.log10(1e-6 / 3631.0))
