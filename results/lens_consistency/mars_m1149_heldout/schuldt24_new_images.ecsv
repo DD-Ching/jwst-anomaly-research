@@ -1,0 +1,35 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: ra, unit: deg, datatype: float64}
+# - {name: dec, unit: deg, datatype: float64}
+# - {name: z, datatype: float64}
+# - {name: qf, datatype: int64}
+# - {name: identification, datatype: string}
+# - {name: z_spec, datatype: bool}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'Schuldt et al. 2024, A&A 689, A42 (arXiv:2405.12287v2 HTML, Table 2 "New multiple images, in addition
+#     to those from Tables 2 and 3 of Grillo et al. 2016"), transcribed by script from the HTML table 2026-10-24;
+#     z_spec = true (MUSE spectroscopic, QF 3 or 9 as listed)'}
+# schema: astropy-2.0
+image_id ra dec z qf identification z_spec
+SXa 177.40021 22.39681 1.489 3 HST True
+201.1 177.40562 22.40243 2.950 3 HST True
+201.2 177.40216 22.39675 2.950 9 HST True
+201.3 177.39530 22.39182 2.950 9 HST True
+202.1 177.40014 22.40415 4.384 3 HST True
+202.2 177.39834 22.40378 4.384 3 HST True
+203.1 177.40028 22.39641 4.497 9 MUSE True
+203.2 177.39575 22.40000 4.497 3 MUSE True
+203.3 177.39457 22.39442 4.497 3 MUSE True
+204.1 177.40043 22.40389 5.806 9 MUSE True
+204.2 177.39949 22.40376 5.806 9 MUSE True
+301.1 177.39504 22.41269 3.447 9 HST True
+301.2 177.39353 22.41307 3.447 3 HST True
+301.3 177.39285 22.41287 3.447 3 HST True
+401.1 177.39591 22.41239 5.983 3 MUSE True
+401.2 177.39357 22.41142 5.983 3 MUSE True
+401.3 177.39168 22.41153 5.983 9 MUSE True
+401.4 177.39319 22.41295 5.983 9 MUSE True
