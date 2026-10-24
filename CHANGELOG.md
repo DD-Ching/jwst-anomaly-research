@@ -4,8 +4,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-24: SMACS 0723 Chow+2023 GLAFIC maps: U passes, gate K fails on systems 5 and 7 (D-034 addendum an)
 - **Search:** Zenodo lens-model records (2026-10-24) show no new cluster-map record beyond those used, except Chow+2023
-  SMACS 0723 (10.5281/zenodo.10158248, never used here). archive.stsci.edu still fails TLS from the cloud session, so
-  MAST HLSPs (GLIMPSE, PEARLS) were not checked.
+  SMACS 0723 (10.5281/zenodo.10158248, never used here). MAST HLSPs: archive.stsci.edu answers with the certifi CA
+  bundle, but `/hlsps/glimpse/` and `/hlsps/pearls/` gave no directory listing; not searched further.
 - **Result** (`results/lens_consistency/smacs_chow23/RESULT.md`): plan frozen in 014dc2c before any map value. On the
   16 fixed-z Mahler+22 images: C passes; U accepts only the arcsec, α_x-as-given reading (median 0.767″); gate K (mean
   source) fails, rms 10.18″, 12 / 16 within 3″; K-WLS (reported) 1.947″, 15 / 16. Systems 5 (mean-source estimator,
@@ -14,8 +14,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   13 / 13. The paper's spectroscopic systems are five at 1.38 ≤ z ≤ 2.21, so Mahler system 7's z 5.17 is a model
   value, not spectroscopic (D-034 addendum r rule 0 was an ASSUMPTION).
 - **Deviation:** rule functions were written before the run but committed after it (a lint error stopped the commit).
-- **Handoff:** route stopped as frozen. Fields with public JWST-era maps reachable from the cloud look exhausted; next
-  needs a MAST HLSP check from a local session (archive.stsci.edu) or new releases. #374 waits for the 2026-10-26
+- **Handoff:** route stopped as frozen. No other unused public JWST-era map record was found on Zenodo; next, a
+  MAST HLSP / paper-data search for JWST-era maps (e.g. GLIMPSE, PEARLS) or new releases. #374 waits for the 2026-10-26
   weekly run.
 
 ## 2026-10-24: Abell S1063 WSLAP+ extra-image test (WLS source, DJA v7): C2 passes, no flag, 0 / 9 targets testable (D-034 addendum am)
