@@ -364,7 +364,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - Abell S1063 image list (D-035 revisit): run 2026-10-21 with the Chan+2020 z_spec, gate fails (rms 18.5″;
        the CATS `arcs.txt` z already match, so redshifts are not the cause; D-035 addendum,
        `results/lens_consistency/abells1063_d035/`). Image-plane source fit done 2026-10-21 (D-035 addendum b, `results/lens_consistency/imageplane_fit/`): passes
-       on MACS1149 (0.657″), S1063 z_spec 0.978″ > 0.72″, no system ≤ 0.5″: map only; waits on another public S1063 model (WSLAP+ JWST 2025 found and tested 2026-10-24, D-034 addendum al).
+       on MACS1149 (0.657″), S1063 z_spec 0.978″ > 0.72″, no system ≤ 0.5″: map only; waits on another public S1063 model (WSLAP+ JWST 2025 found and tested 2026-10-24, D-034 addendum al; extra-image test with the WLS source: C2 passes, 0 / 9 targets testable, no flag, addendum am).
        Cloud sessions reach `archive.stsci.edu` with a CA bundle holding Mozilla's roots (certifi; `scripts/s1063_d035.py`);
      - CANUCS models pinned (D-044: `macs0416-canucs`, `abell370-canucs`); next, the 100 MCMC sample maps for μ spreads;
      - `radial`: low-weight veto (relative WHT < 0.5) or aper50 S/N floor; pass `--spike-stars` (Gaia, D-043) on every

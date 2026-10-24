@@ -1,0 +1,315 @@
+{
+ "plan": "results/lens_consistency/s1063_extra/PLAN.md",
+ "dja": {
+  "url": "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/abells1063-grizli-v7.0-fix_phot.fits",
+  "sha256": "f6c9201e55ce100193082a9fc1a7cedfecec0fa00472be4ba62c86bf8b8f13c2",
+  "bytes": 4389120,
+  "rows": 1621
+ },
+ "rule1_frame_F": {
+  "n_gold": 36,
+  "n_matched": 22,
+  "median_dx_arcsec": 0.008283518406092316,
+  "median_dy_arcsec": 0.06768522187951814,
+  "median_sep_arcsec": 0.07578501779819717,
+  "rules": {
+   "match_arcsec": 0.5,
+   "max_abs_median_arcsec": 0.1,
+   "min_n": 18
+  },
+  "passes": true
+ },
+ "maps_sha256": {
+  "AlphaX_DdsDs1_arcsec.fits": "98411c2bfe54b58aeb3e3a6bb9d6dc79adaeffdf8e0beb81be9159d3a920519d",
+  "AlphaY_DdsDs1_arcsec.fits": "26ec481cde349aafd79f7f4569fef392f0469a8e5c9ebdf6e4829ff68c8be007"
+ },
+ "rule2_gate_K_wls": {
+  "K_wls": {
+   "n_images": 36,
+   "rms_arcsec": 0.5805172032673559,
+   "matched_fraction": 1.0,
+   "passes": true
+  },
+  "stored": {
+   "n_images": 36,
+   "rms_arcsec": 0.5805172032673559,
+   "matched_fraction": 1.0,
+   "passes": true
+  },
+  "reproduced": true,
+  "passes": true
+ },
+ "rule4a_unit": {
+  "zero_point_mag": 23.9,
+  "n_rows": 1609,
+  "unit_jy": 1e-06,
+  "passes": true
+ },
+ "rule4b_grid": {
+  "rotation_deg": 0.0001738410712590222,
+  "determinant": -0.0016000046991859736,
+  "pixel_scale_arcsec": 0.04000005873978154,
+  "n_rows": 1621,
+  "passes": true
+ },
+ "rule3_frame_tables": {
+  "model": "abells1063-wslap",
+  "model_sha256": "3863795e6447e4206da84912e78a4cd970e0139cfa8974f7846ba02134f19ca7",
+  "image": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits",
+  "depth_mag": 29.337633912306842,
+  "unpredicted": [
+   "10.3"
+  ],
+  "image_classes": {
+   "candidate": 3,
+   "demagnified": 8,
+   "faint": 1,
+   "missing": 5,
+   "observed": 37
+  },
+  "forced_classes_targets": {
+   "confused": 1,
+   "inconsistent_reference": 3,
+   "no_reference": 5
+  },
+  "gate_C": {
+   "n_targets": 37,
+   "n_testable": 8,
+   "n_recovered": 8,
+   "fraction": 1.0,
+   "passes": true,
+   "classes": {
+    "confused": 1,
+    "inconsistent_reference": 10,
+    "no_reference": 19,
+    "recovered": 7
+   }
+  },
+  "flags": [],
+  "flags_if_gate_ignored": 0
+ },
+ "without_contain": {
+  "gate_C2_shared": {
+   "all": {
+    "n_testable": 20,
+    "n_ok": 15,
+    "fraction": 0.75
+   },
+   "arc_referenced": {
+    "n_testable": 8,
+    "n_ok": 6,
+    "fraction": 0.75
+   },
+   "passes": false,
+   "merged_groups": []
+  },
+  "flags": [],
+  "control_classes": {
+   "absent": 4,
+   "ambiguous": 1,
+   "confused": 1,
+   "inconsistent_reference": 8,
+   "no_reference": 3,
+   "recovered": 14,
+   "undetectable_local": 3
+  },
+  "target_classes": {
+   "inconsistent_reference": 6,
+   "no_reference": 1,
+   "undetectable": 1,
+   "undetectable_local": 1
+  },
+  "gate_C2_plain": {
+   "all": {
+    "n_testable": 20,
+    "n_ok": 15,
+    "fraction": 0.75
+   },
+   "arc_referenced": {
+    "n_testable": 8,
+    "n_ok": 6,
+    "fraction": 0.75
+   },
+   "passes": false
+  },
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 23,
+     "n_ok": 17,
+     "fraction": 0.7391304347826086
+    },
+    "arc_referenced": {
+     "n_testable": 10,
+     "n_ok": 8,
+     "fraction": 0.8
+    },
+    "passes": false
+   },
+   "control_classes": {
+    "absent": 5,
+    "ambiguous": 1,
+    "confused": 1,
+    "inconsistent_reference": 8,
+    "no_reference": 3,
+    "recovered": 16
+   },
+   "target_classes": {
+    "ambiguous": 1,
+    "inconsistent_reference": 6,
+    "no_reference": 1,
+    "undetectable": 1
+   },
+   "flags": []
+  },
+  "posthoc_absent_controls": {
+   "absent_own_segment_centroid_outside_radius": 5,
+   "absent_no_containing_segment": 0,
+   "absent_sources_too_faint": 0
+  },
+  "inputs": {
+   "reference": "abells1063-grizli-v7.0-fix_phot.fits",
+   "reference_sha256": "f6c9201e55ce100193082a9fc1a7cedfecec0fa00472be4ba62c86bf8b8f13c2",
+   "n_rows_kept": 1587,
+   "flux": "f200w_flux_aper_1 x flux_auto / flux_aper_1 x f200w_tot_corr",
+   "noise_image": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits",
+   "noise_pixel_scale_arcsec": 0.031226495113779767,
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "pixel_scale_arcsec": 0.04000005873978154,
+   "depth_mag": 27.394631020188946
+  },
+  "rules": {
+   "ELLIPSE_NSIGMA": 3.0,
+   "MIN_REF_SNR": 5.0,
+   "MAX_REF_MU": 50.0,
+   "MAX_REF_SPREAD": 3.0,
+   "FLUX_RANGE": [
+    0.3333333333333333,
+    3.0
+   ],
+   "TEN_SIGMA_DMAG": 0.752574989159953,
+   "BASE_SEARCH": 1.0,
+   "C2": [
+    8,
+    0.8,
+    3
+   ],
+   "ARC_MIN_ELL": 0.5,
+   "contain": false
+  }
+ },
+ "frozen": {
+  "gate_C2_shared": {
+   "all": {
+    "n_testable": 20,
+    "n_ok": 19,
+    "fraction": 0.95
+   },
+   "arc_referenced": {
+    "n_testable": 8,
+    "n_ok": 8,
+    "fraction": 1.0
+   },
+   "passes": true,
+   "merged_groups": []
+  },
+  "flags": [],
+  "control_classes": {
+   "ambiguous": 1,
+   "confused": 2,
+   "inconsistent_reference": 8,
+   "no_reference": 3,
+   "recovered": 17,
+   "undetectable_local": 3
+  },
+  "target_classes": {
+   "inconsistent_reference": 6,
+   "no_reference": 1,
+   "undetectable": 1,
+   "undetectable_local": 1
+  },
+  "gate_C2_plain": {
+   "all": {
+    "n_testable": 20,
+    "n_ok": 19,
+    "fraction": 0.95
+   },
+   "arc_referenced": {
+    "n_testable": 8,
+    "n_ok": 8,
+    "fraction": 1.0
+   },
+   "passes": true
+  },
+  "without_local_noise_rule": {
+   "gate_C2": {
+    "all": {
+     "n_testable": 23,
+     "n_ok": 22,
+     "fraction": 0.9565217391304348
+    },
+    "arc_referenced": {
+     "n_testable": 10,
+     "n_ok": 10,
+     "fraction": 1.0
+    },
+    "passes": true
+   },
+   "control_classes": {
+    "ambiguous": 1,
+    "confused": 3,
+    "inconsistent_reference": 8,
+    "no_reference": 3,
+    "recovered": 19
+   },
+   "target_classes": {
+    "ambiguous": 1,
+    "inconsistent_reference": 6,
+    "no_reference": 1,
+    "undetectable": 1
+   },
+   "flags": []
+  },
+  "posthoc_absent_controls": {
+   "absent_own_segment_centroid_outside_radius": 0,
+   "absent_no_containing_segment": 0,
+   "absent_sources_too_faint": 0
+  },
+  "inputs": {
+   "reference": "abells1063-grizli-v7.0-fix_phot.fits",
+   "reference_sha256": "f6c9201e55ce100193082a9fc1a7cedfecec0fa00472be4ba62c86bf8b8f13c2",
+   "n_rows_kept": 1587,
+   "flux": "f200w_flux_aper_1 x flux_auto / flux_aper_1 x f200w_tot_corr",
+   "noise_image": "s3://stpubdata/jwst/public/jw03293/L3/t/o001/jw03293-o001_t001_nircam_clear-f200w_i2d.fits",
+   "noise_pixel_scale_arcsec": 0.031226495113779767,
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "pixel_scale_arcsec": 0.04000005873978154,
+   "depth_mag": 27.394631020188946
+  },
+  "rules": {
+   "ELLIPSE_NSIGMA": 3.0,
+   "MIN_REF_SNR": 5.0,
+   "MAX_REF_MU": 50.0,
+   "MAX_REF_SPREAD": 3.0,
+   "FLUX_RANGE": [
+    0.3333333333333333,
+    3.0
+   ],
+   "TEN_SIGMA_DMAG": 0.752574989159953,
+   "BASE_SEARCH": 1.0,
+   "C2": [
+    8,
+    0.8,
+    3
+   ],
+   "ARC_MIN_ELL": 0.5,
+   "contain": true
+  }
+ }
+}

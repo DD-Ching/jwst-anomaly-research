@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: Abell S1063 WSLAP+ extra-image test (WLS source, DJA v7): C2 passes, no flag, 0 / 9 targets testable (D-034 addendum am)
+- **Result** (`results/lens_consistency/s1063_extra/RESULT.md`): plan, functions and tests frozen in fdedcac before any
+  value; WLS gate labelled as a post-failure deviation. F passes (22 / 36 within 0.5″, medians +0.008″ / +0.068″), K-WLS
+  reproduced (0.5805″, 36 / 36), DJA v7 unit / grid pass, gate C2 passes 19 / 20 (arc 8 / 8) on GO 3293 F200W local
+  noise; 9 targets, none testable (6 inconsistent_reference, 1 no_reference, 2 undetectable): no flag, no reach.
+- **Reported:** without the containing-source rule C2 fails (15 / 20); without local noise it passes (22 / 23), no flag.
+- **Contact sheet** (`sheet.png`) looked at: members near the system 10 / 12 circles, system 13 on a noisy streaked
+  region; no class changed.
+- **Handoff:** S1063 route closed (reopen with a deeper JWST-era S1063 catalogue or a WSLAP+ image list). Next: another
+  field with public JWST-era maps and spec-z systems. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: Abell S1063 WSLAP+ JWST 2025: gate K fails on one system; WLS statistic 0.58″ (D-034 addendum al)
 - **Result** (`results/lens_consistency/s1063_wslap/RESULT.md`): plan, functions and tests frozen in be21669 before any
   map value. Two α members streamed from the 1 GB Zenodo zip by range reads (≈ 262 MB, CRC-checked, deleted). On the 36

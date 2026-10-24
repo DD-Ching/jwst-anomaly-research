@@ -2515,6 +2515,15 @@ from this run; a next stage may gate on the WLS source only as a labelled deviat
 precedent). Alternatives rejected: dropping system 10 after the run. Revisit if: the WLS-gated stage fails gate C2, or
 the BUFFALO identification of system 10 differs from Chan's.
 
+**Addendum 2026-10-24am (Abell S1063 extra-image test, WLS source, DJA v7).** `results/lens_consistency/s1063_extra/RESULT.md`,
+plan frozen in fdedcac (WLS gate as a labelled post-failure deviation, addendum al). Frame check F passes (22 / 36,
+median offsets +0.008″ / +0.068″), gate K-WLS is reproduced (0.5805″, 36 / 36), DJA rules 4a / 4b pass (µJy, 0.0002°),
+gate C2 (shared, local noise on GO 3293 F200W) passes 19 / 20, arc-referenced 8 / 8; **no flag, and 0 of 9 targets
+testable** (6 inconsistent_reference in systems 12 / 19, 1 no_reference, 2 undetectable). Decision: the S1063
+extra-image route is closed as no reach under these rules. Alternatives rejected: relaxing the reference spread rule
+after the run. Revisit if: a deeper JWST-era S1063 photometry catalogue (e.g. built on GO 3293) or a released WSLAP+
+image list appears.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
