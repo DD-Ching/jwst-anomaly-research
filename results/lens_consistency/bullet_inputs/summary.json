@@ -1,0 +1,63 @@
+{
+ "sources": {
+  "release": "CANUCS Bullet Cluster DR1 (GO 4598), https://niriss.github.io/data_release_bullet_cluster.html; Rihtarsic et al. 2026, arXiv:2601.22245",
+  "files_sha256": {
+   "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/lensing/bullet_gold_v4.dat": "b2803c7b83e105ff9234a0bcbe4348b46a0e1592d0a4d39d39c194a038162290",
+   "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/lensing/bullet_multim_full.dat": "ef91278798c784a9f5f911d755e8c3a4ffa0f0e464b40e3c19c5fbda61de8c73",
+   "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/lensing/README.dat": "b07d5ba4dcdda65342e974faecb23714a8c63887d9711c9b40e38b25c8a6b84e"
+  }
+ },
+ "image_list_gold": {
+  "images": 135,
+  "systems": 49,
+  "galaxies": 27,
+  "distinct_z": 27,
+  "z_min": 0.897,
+  "z_max": 6.64
+ },
+ "image_list_full": {
+  "gold": 135,
+  "silver": 22,
+  "bronze": 42
+ },
+ "gold_vs_full": {
+  "n_gold_list": 135,
+  "n_full_gold": 135,
+  "n_shared": 135,
+  "only_in_gold_list": [],
+  "only_in_full_gold": [],
+  "max_sep_arcsec": 0.0,
+  "max_abs_dz": 0.0,
+  "passes": true
+ },
+ "reference_catalogue": {
+  "url": "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits",
+  "bytes": 51721920,
+  "rows": 20138,
+  "n_columns": 323,
+  "mapping_columns_missing": [],
+  "flux_unit_f200w": "nJy",
+  "passes": true
+ },
+ "model_best_fit_maps": {
+  "bulletclu-dpl1-best-50mas.fits.gz": "219.03 MB",
+  "bulletclu-dpl2-best-50mas.fits.gz": "204.85 MB",
+  "bulletclu-gamma-best-50mas.fits.gz": "207.02 MB",
+  "bulletclu-gamma1-best-50mas.fits.gz": "221.05 MB",
+  "bulletclu-gamma2-best-50mas.fits.gz": "218.13 MB",
+  "bulletclu-kappa-best-50mas.fits.gz": "208.87 MB",
+  "bulletclu-psi-200mas_.fits.gz": "199.72 MB"
+ },
+ "model_maps_check": {
+  "deflection_maps_missing": [],
+  "passes": true
+ },
+ "model_sample_maps": {
+  "listing_page_entries": 35,
+  "examples": {
+   "bayes.dat": "35.01 KB",
+   "bulletclu-dpl1-200mas_0.fits.gz": "13.82 MB",
+   "bulletclu-dpl1-200mas_1.fits.gz": "13.81 MB"
+  }
+ }
+}

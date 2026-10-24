@@ -766,6 +766,14 @@ All of these were rejected for D-018; they are listed so later sessions do not s
     28 sources (JWST GLAFIC constraints).
   - DJA v7.0 `https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/macs0647-grizli-v7.0-fix_phot.fits`
     (25,427,520 B; headers only, HTTP range, 2026-10-23).
+- Bullet Cluster (1E 0657-56) inputs (`results/lens_consistency/bullet_inputs/`, accessed 2026-10-24):
+  - Rihtaršič et al. 2026, "Mapping dark matter in the Bullet Cluster using JWST imaging and spectroscopy",
+    A&A (2026), arXiv:2601.22245; image catalogue also as VizieR J/A+A/710/A207 (identifier from the GAVO registry record
+    https://dc.g-vo.org/rr/q/lp/custom/CDS.VizieR/J/A+A/710/A207; the VizieR table itself was not read, it timed out).
+  - CANUCS Bullet Cluster DR1 (GO 4598), https://niriss.github.io/data_release_bullet_cluster.html; files under
+    https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/ (`lensing/bullet_gold_v4.dat`,
+    `lensing/bullet_multim_full.dat`, `lensing/README.dat`: sha256 in `summary.json`; photometry catalogue
+    `catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits`, 51,721,920 B, header only).
 - MACS0417 / MACS1423 multiple-image lists (`results/lens_consistency/macs0417_images/`, accessed 2026-10-21):
   - Jauzac et al. 2019, MNRAS 483, 3082, arXiv:1811.02505, DOI 10.1093/mnras/sty3312: Table 4 from
     https://arxiv.org/e-print/1811.02505 (`table4.tex`, sha256 `7e05be79da64fcfb62e71f081c1b18bebc249b6641e6f598930f01c6be53b4cc`).

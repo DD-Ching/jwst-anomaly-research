@@ -13,6 +13,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     gives no redshift.
   - #199's forced-photometry scripts were not kept.
 - **Paused lines unchanged.** Re-screen points are in TASKS.
+## 2026-10-24: Bullet Cluster reference-route input check: image list, JWST-era maps and reference all public
+- **Result** (`results/lens_consistency/bullet_inputs/RESULT.md`, `summary.json`): CANUCS Bullet DR1 (GO 4598,
+  Rihtaršič+2026) has the Lenstool gold list (135 images, 49 systems, 27 galaxies, all with a system z; equals the
+  full list's gold rows), best-fit deflection maps at 50 mas (≈ 0.2 GB each, not read) and a photometry catalogue whose
+  header carries every column of the frozen CANUCS DR1 mapping (20,138 rows, F200W in nJy). D-034 addendum x.
+- **Failed approach:** the paper's Dropbox link serves a 24.5 GB folder zip and ignored the range request; ≈ 5.0 GB
+  landed in the scratchpad before the time limit, then deleted. The CANFAR vault serves per-file URLs with ranges.
+- **Handoff:** next is a frozen-plan gate K on the Bullet best-fit maps (state the > 200 MB download reason) with a
+  frame check against the CANUCS catalogue, then gate C2 and the extra-image test.
 
 ## 2026-10-23: MACS0647 CLASH held-out test: LTM-Gauss reproduces the JWST-first systems at fitted z; no flag
 - **Plan:** `results/lens_consistency/macs0647_clash_heldout/PLAN.md`, frozen and pushed (031af83) before any model
