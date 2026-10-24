@@ -1,6 +1,8 @@
-# MACS J1931 counter-image route: proposal (not frozen)
+# MACS J1931 counter-image route: plan (stage V frozen and run; stage 3 a proposal)
 
-Status: **proposal, not frozen**. Nothing here has been run; no predicted position, map value or pixel was read for it.
+Status: **stage V frozen and run 2026-10-24**; V1 not valid (depth undefined), V2 amendment passes gate C2 at the
+threshold (28 / 35, arc 14 / 14; `../macs0417_ownref/RESULT.md`). Stage 3 stays a proposal until frozen; for stage 3 nothing has been run and no MACS J1931 predicted position, map
+value or pixel was read (stage V read MACS0417 pixels and frame tables only).
 Follows `../macs1931_gatek/RESULT.md` (gate K passes; spec-z systems 1, 5, 6, 7, 100, 101 have more predicted than
 catalogued images) and the footprint step (`RESULT.md` here).
 
@@ -28,6 +30,9 @@ images.
    frame tables with the WLS source, local noise on the same F200W mosaic (constants of `../bullet_extra/PLAN.md`
    rule 5), gate C2 (shared pairs), flags = predicted targets classed `absent` while C2 passes. Photo-z and mixed-z
    systems (8, 10, 11, 13, 15, 16, 17) stay out until their z is settled (`../macs1931_gatek/RESULT.md` reading).
+   Required addition before freezing (code review of stage V): a footprint rule, i.e. a target whose position is off
+   the section or on a masked pixel is classed `off_image` and is neither a control failure nor a flag (stage V
+   counted the off-footprint control 15.1 as `absent`).
 
 ## Hypothesis, ordinary explanations, what would change the plan
 - Question (science, stage 3): do the VENUS maps predict a magnified, unmatched counter-image of a spec-z system
@@ -38,3 +43,42 @@ images.
 - Stage V fails → try the other alternative (arc-aperture sums on `member_sub` residuals) as a new plan, or wait
   for a public VENUS catalogue (the VENUS HLSP on archive.stsci.edu could not be checked: TLS fails through the
   cloud proxy; a local session can check it).
+
+## Stage V: frozen rules (2026-10-24, before any run)
+Script `scripts/m1931_deblend.py` (builder + stage V driver); tests `tests/test_m1931_deblend.py`. All numbers are
+ASSUMPTIONs fixed here, not tuned on the result.
+1. **Image.** MACS0417 GO 1208 F200W level-3 mosaic `jw01208-o006_t003_nircam_clear-f200w_i2d.fits` (the mosaic
+   whose pipeline catalogue failed C2), SCI and ERR extensions read as one S3 byte-range section each (not stored).
+   Section: the bounding box of every control and predicted position of `../macs0417_frame` plus 15″ on each side,
+   clipped to the mosaic. Pixels that are non-finite or have ERR ≤ 0 are masked. Units MJy/sr → nJy / pixel (PIXAR_SR).
+2. **Background** (the change from the pipeline segments): photutils `Background2D`, box 64 px (2.0″ at 0.0312″),
+   filter 3 × 3, `SExtractorBackground`, sigma clip 3σ, coverage mask from rule 1. Subtracted from SCI.
+3. **Detection and deblending:** convolve with a normalised 2D Gaussian kernel, FWHM 2.0 px (size 5); `detect_sources`
+   at 3.0 × `background_rms` per pixel with npixels 25; `deblend_sources` nlevels 32, contrast 0.001, mode
+   exponential.
+4. **Measurement:** `SourceCatalog` on the background-subtracted SCI with the ERR map and the convolved image.
+   Mapping to the `m0417_arcref` catalogue form: `ra`/`dec` = `sky_centroid`; `a`/`b` = `semimajor_sigma` /
+   `semiminor_sigma` × the section's pixel scale; `pa` = the major-axis direction (`orientation`, CCW from +x) carried
+   through the WCS to East of North, mod 180°; `flux` = `kron_flux` (Jy); `snr` = `kron_flux / kron_fluxerr`;
+   `ell` = `ellipticity`; `ext` = `semimajor_sigma` > 1.5 px (F200W PSF σ ≈ 0.9 px); rows with non-finite or
+   non-positive Kron flux or error are dropped. `depth` = `m0417_canucsref.depth_mag` (median AB of rows with S/N 4–6).
+5. **Route:** `m0417_arcref.run` unchanged (frame tables, offset, rules 1–6 as frozen there), output
+   `../macs0417_ownref/`. Gate C2 with `m0417_arcref.gate_c2_shared` (D-034 addendum i) on its control table.
+6. **Stage V verdict:** passes when the shared-pair gate C2 passes (all ≥ 8 testable and ≥ 0.8; arc-referenced ≥ 3 and
+   ≥ 0.8). The MACS0417 predicted-target classes are written but **not read** (that field's flags belong to
+   `../macs0417_canucsref`). Fails → the builder is not used for MACS J1931; next is the arc-aperture alternative as
+   a new plan. A contact sheet of the controls with the deblended segments is looked at before the result is written.
+
+## Stage V2: amendment (frozen 2026-10-24 after the V1 run, before any V2 number)
+V1 (rules 1–6 above) ran and its depth is undefined: the own catalogue has no row at Kron S/N 4–6, so
+`depth_mag` is NaN and `m0417_arcref.classify` can return neither `absent` nor `undetectable` (every
+non-matching control becomes `ambiguous`). V1's gate C2 (28 / 35) is therefore **not a valid gate reading**
+(`../macs0417_ownref/RESULT.md`). Plan defect, not a builder result. V2 changes only these, rules 1–4 unchanged:
+- **V2-a depth:** `depth` = AB magnitude of 5 × the median `kron_fluxerr` of the kept rows (a 5σ Kron-total limit of
+  this catalogue; ASSUMPTION). Recorded with the minimum Kron S/N and the number of rows at S/N 4–6.
+- **V2-b chain = the stage 3 chain:** `m0417_arcref.run` with the MACS0417 frame offset (as every MACS0417 run) and the
+  containing-source rule **on**, then `m1423_canucsref.apply_local` on the background-subtracted section (nJy per
+  pixel, masked pixels NaN) with source positions = the kept rows of the own catalogue, constants and seed unchanged
+  (0.3″ apertures, 200 draws at 1.5–4″, 0.5″ exclusion, seed 20261022, 5σ / 10σ).
+- **V2-c verdict:** `gate_c2_shared` on `class_local`; passes as in rule 6. Predicted MACS0417 classes are written, not
+  read. Output `../macs0417_ownref_v2/`. Fails → the builder is not used for MACS J1931 (rule 6's fallback).

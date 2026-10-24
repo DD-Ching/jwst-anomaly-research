@@ -2458,6 +2458,17 @@ the frozen MACS0417 gate C2 (where CANUCS passes and pipeline segments fail). Al
 (addendum 2026-10-22); waiting for a VENUS HLSP catalogue (unknown; archive.stsci.edu unreachable from cloud).
 Revisit if: a public deblended MACS J1931 catalogue appears.
 
+**Addendum 2026-10-24ad (MACS J1931 stage V: own deblended reference).** `results/lens_consistency/macs0417_ownref/RESULT.md`.
+Reuse: photutils (`Background2D`, `detect_sources`, `deblend_sources`, `SourceCatalog`) builds the reference; it is
+the library the JWST pipeline's catalogue step uses, pip-installable (new `deblend` extra; also in `dev` for tests).
+Alternatives rejected: SEP (duplicates photutils, D-010); SourceXtractor++ (conda-only and heavy, D-010; this
+need is met without it); pipeline segments (addendum 2026-10-22). On MACS0417 the frozen V1 run had no defined depth
+(0 rows at Kron S/N 4–6), so its gate is not read; the V2 amendment (5σ median Kron error depth, containing rule,
+local noise) passes gate C2 with shared pairs at the threshold, 28 / 35, arc-referenced 14 / 14 (CANUCS 37 / 40,
+pipeline 10 / 27). Decision: the builder may be used for the MACS J1931 stage 3, with zero margin stated next to
+any flag. Revisit if: a public deblended MACS J1931 catalogue appears, or a second validation field fails C2 with
+this builder.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
