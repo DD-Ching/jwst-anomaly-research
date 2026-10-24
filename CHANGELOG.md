@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MARS MACS1149 map vs the Schuldt+2024 new images: gate H fails, MARS-specific (D-034 addendum at)
+- **Result** (`results/lens_consistency/mars_m1149_heldout/RESULT.md`): 18 post-2023 MUSE images (Schuldt+2024
+  Table 2) as a held-out list; none in the MARS catalogue, 7 outside the map; gate H fails (rms 2.51″, 70 % within
+  3″, 10 images). Post hoc, the CANUCS v1 maps (trained on them) give 0.849″, 17 / 17, so the families are
+  self-consistent. MARS passes gate H on 1 of 3 fields; no MARS two-model stage on MACS1149.
+- **Route found:** the CANUCS MACS1149 DR1 model has no public image list (readme: with v2); Schuldt+2024's new
+  images are in the arXiv HTML Table 2 only (VizieR J/A+A/689/A42 holds the MUSE catalogue, not the images).
+- **Handoff:** next, the same held-out test of the HST-era CATS v4.1 MACS1149 maps (pinned, D-035) on this list,
+  or the D115b Lenstool re-fit with 8515's σ free. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MACS0416 forced photometry at the MARS-only image: the flux is the catalogued D115a.1 / D115b.1 arc (D-034 addendum as)
 - **Result** (`results/lens_consistency/m0416_mars_only_phot/RESULT.md`): gate C2 at MARS positions passes (39 / 41);
   the MARS-only D115a image (|μ| 29.2) is `recovered`. Post hoc, the matching sources are the counterparts of

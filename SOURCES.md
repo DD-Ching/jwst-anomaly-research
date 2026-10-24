@@ -778,6 +778,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   arXiv:2301.08765 (not read; README and code in the record read); Zenodo record 10.5281/zenodo.7804575
   (https://zenodo.org/records/7804575, published 2023-04-06, CC-BY-4.0): `MARS_HFF_clusters_result.zip` (2,713,478 B,
   md5 2d87f9a36aadb430f7a7b937fe70b8c2; sha256 in `summary.json`).
+- Schuldt et al. 2024, MACS J1149.5+2223 VLT/MUSE spectroscopy and strong-lensing model, A&A 689, A42,
+  arXiv:2405.12287v2 (HTML Table 2 read and transcribed to `results/lens_consistency/mars_m1149_heldout/schuldt24_new_images.ecsv`,
+  accessed 2026-10-24); VizieR J/A+A/689/A42 (only the MUSE catalogue of the new pointing, tablea1). Exact title not
+  recorded.
 - SMACS 0723 Chow+2023 (`results/lens_consistency/smacs_chow23/`, accessed 2026-10-24): Chow et al. 2023, "A Lens
   Finder Map to check claimed High-z Galaxies behind SMACS J0723.3-7327", arXiv:2310.09790 (HTML read for the GLAFIC
   method, the five spectroscopic systems and the 0.492″ rms); Zenodo record 10.5281/zenodo.10158248
