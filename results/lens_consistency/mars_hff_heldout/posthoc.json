@@ -1,0 +1,40 @@
+{
+ "label": "post hoc (not in PLAN.md); computed from heldout_A370.ecsv",
+ "A370_within_3arcsec": {
+  "n": 36,
+  "rms_arcsec": 0.94857698151839,
+  "median_arcsec": 0.13789331350179873
+ },
+ "A370_median_all_arcsec": 0.17646869808502214,
+ "A370_over_3arcsec": [
+  {
+   "image_id": "3b.1",
+   "type": "M",
+   "z": 1.9553,
+   "dtheta_arcsec": 3.853,
+   "n_predicted": 5
+  },
+  {
+   "image_id": "5.3",
+   "type": "M",
+   "z": 1.2775,
+   "dtheta_arcsec": 5.764,
+   "n_predicted": 3
+  },
+  {
+   "image_id": "7.6",
+   "type": "N",
+   "z": 2.7512,
+   "dtheta_arcsec": 20.91,
+   "n_predicted": 7
+  },
+  {
+   "image_id": "24e.2",
+   "type": "M",
+   "z": 4.916,
+   "dtheta_arcsec": 90.855,
+   "n_predicted": 1
+  }
+ ],
+ "MACS0416_median_arcsec": 0.26143499116587177
+}

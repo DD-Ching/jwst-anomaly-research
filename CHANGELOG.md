@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MARS HFF maps on held-out JWST-era images: MACS0416 reproduces, Abell 370 fails on rms (D-034 addendum ap)
+- **Result** (`results/lens_consistency/mars_hff_heldout/RESULT.md`): first held-out test of a lens model on image
+  positions it was not fitted to. MACS0416: 77 CANUCS images absent from the MARS catalogue, rms 0.514″, 100 % within
+  3″ (gate H passes; training 0.513″). Abell 370: 40 images, rms 14.81″, 90 % within 3″ (fails; 4 images > 3″, two
+  large misses 7.6 and 24e.2, not flags). MACS0717 / MACS1149 have no JWST-era list here.
+- **Handoff:** next, Abell 370 7.6 / 24e.2 against BUFFALO model A under a frozen plan, or a MARS vs CANUCS
+  two-model extra-image comparison on MACS0416. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MARS HFF free-form maps: C / U pass on six fields, gate K passes on four (D-034 addendum ao)
 - **Search** (`results/lens_consistency/mars_hff_inputs/search.json`): Zenodo (12 queries) shows no JWST-era cluster
   map record not used or listed already; the unused HST-era Cha & Jee 2023 MARS record (six HFF clusters, 100 × 100
