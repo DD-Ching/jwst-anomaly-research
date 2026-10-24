@@ -5,9 +5,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 ## 2026-10-24: MACS0647 at DJA NIRSpec redshifts: control S3 fails; held-out families not decided (D-034 addendum ai)
 - **Result** (`results/lens_consistency/macs0647_specz/RESULT.md`): plan frozen in f537735, rules S1–S4 with tests in
   b91478c, both before the table was read. DJA v4.6 (same sha256 as the MACS1149 recheck) gives grade-3 z for 10
-  Meena+2023 images, 9 families (one image each). At those z the CLASH LTM-Gauss maps fail control S3: 11 / 19
+  Meena+2023 images, 9 families (one image each, 8 spectra: 6-1 and 6-2 share DJA source 3349). At those z the CLASH LTM-Gauss maps fail control S3: 11 / 19
   pre-JWST images within 3″ (rule ≥ 80 %); MACS0647-JD (z 10.17) and family 11 (z 2.59) miss by up to 10.9″ / 11.9″.
-  Held-out families 13 and 15 are `not decided`. The 31 / 31 match of addendum w relies on fitted z.
+  Held-out families 13 and 15 are `not decided`. Post hoc, each source once: 10 / 16, still fails. Under this model
+  the free z of addendum w hides these offsets; model error, a wrong spec-z match or a misidentified member are
+  not separated.
 - **Checked:** DJA has no table newer than v4.6 (v4.7, v4.8, v5.0, v5.1 HEAD 403, not stored), so MACS1149 system
   16 stays as recorded.
 - **Handoff:** MACS0647 waits for a JWST-era model with public maps. #374 waits for the 2026-10-26 weekly run.

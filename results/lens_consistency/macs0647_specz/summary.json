@@ -9,16 +9,7 @@
   "n_rows": 99478,
   "accessed": "2026-10-24"
  },
- "box_prefilter_deg": {
-  "ra": [
-   101.85,
-   102.1
-  ],
-  "dec": [
-   70.18,
-   70.32
-  ]
- },
+ "rows_read": 99478,
  "rules": {
   "MATCH_RADIUS_ARCSEC": 0.5,
   "SPEC_GRADE": 3,
@@ -707,6 +698,12 @@
    "images": []
   }
  },
+ "shared_sources": {
+  "3349": [
+   "6-1.2",
+   "6-2.2"
+  ]
+ },
  "model": "macs0647-clash-ltm",
  "model_sha256": "07fa67c98aec9efb7f511f4a1108ba4fd748c56531d5d387db92360a1e9fc29d",
  "grid_step": 0.25,
@@ -866,6 +863,19 @@
   "n_images": 19,
   "frac_within": 0.5789473684210527,
   "passes": false
+ },
+ "post_hoc_S3_sources_once": {
+  "n_images": 16,
+  "frac_within": 0.625,
+  "passes": false,
+  "families": [
+   "1",
+   "10",
+   "11",
+   "2",
+   "3",
+   "6-1"
+  ]
  },
  "S4": {
   "13.1": "not_decided",
