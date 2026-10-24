@@ -2485,6 +2485,16 @@ minimum after seeing 18 (tuning on the outcome). Revisit if: a public deblended 
 
 **Addendum 2026-10-24ai (MACS0647 at DJA NIRSpec redshifts).** `results/lens_consistency/macs0647_specz/RESULT.md`, plan frozen in f537735, rules and tests in b91478c. DJA v4.6 gives grade-3 redshifts for 9 Meena+2023 families (one image each; 8 spectra, 6-1 and 6-2 share one source). With each family at its spec-z, the CLASH LTM-Gauss maps fail the pre-JWST control S3 (11 / 19 within 3″ < 80 %; MACS0647-JD at z 10.17 and family 11 miss by up to 10.9″ / 11.9″), so the held-out families 13 and 15 are `not decided`. Post hoc, each source once: 10 / 16, still fails. Decision: the HST-era MACS0647 maps cannot test the redshift structure; their held-out match of addendum w was at fitted z (model error, a wrong spec-z match and a misidentified member are not separated). Alternatives rejected: reading families 13 / 15 anyway (the control failed); the PIEMD + eNFW maps (failed gate K0). Revisit if: a JWST-era MACS0647 model with public maps appears.
 
+**Addendum 2026-10-24aj (RXCJ2211-0350 input check).** `results/lens_consistency/rxcj2211_inputs/RESULT.md`, plan frozen in
+e9ccd27. The VENUS GLAFIC v0.91 release (Zenodo 10.5281/zenodo.20312327) has an image list with model deflections
+(146 rows, 43 systems; spec-z references for 3 systems) but only κ / γ maps (200″, header z_s 3). Deflections computed
+from κ by FFT fail check D (median 14.13″ vs ≤ 0.10″) and the cross-validated affine fallback (test median 2.66″);
+DJA v7 has no field for the cluster. Decision: no fitted-model route for RXCJ2211 from this release as frozen (only the header z_s reading was declared, so an input-convention cause is not excluded). Post hoc only: a
+single scale 0.763 ≈ D_ds / D_s(z_s 3) = 0.7575 leaves 1.71″, so the map may be normalised to D_ds / D_s = 1.
+Alternatives rejected: tuning the scale or a larger correction after seeing D (tuning on the outcome); lenstronomy's
+κ-to-α integral (not a dependency; a 10-line FFT kernel tested on a uniform disc does the same). Revisit if: VENUS
+releases RXCJ2211 deflection maps or a reference catalogue, or a new frozen plan with a scale term is justified.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

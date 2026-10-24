@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: RXCJ2211-0350 input check: no deflection maps; κ-derived deflections fail check D (D-034 addendum aj)
+- **Search:** Zenodo lens-model records (2026-10-24) found VENUS GLAFIC v0.91 for RXCJ2211-0350 (10.5281/zenodo.20312327,
+  CC0) and, not used, SPT-CL J0546 LTM, Abell S1063 WSLAP+ (1.0 GB) and CANUCS thesis image lists (SOURCES.md).
+- **Result** (`results/lens_consistency/rxcj2211_inputs/RESULT.md`): checks frozen in e9ccd27, functions and tests
+  before the run. Image list 146 rows / 43 systems (spec-z references for systems 1, 14, 32 only); maps κ, γ1, γ2 only.
+  S passes (CSV source = image − deflection, 0.00016″, x along −RA). D fails: α from the κ map by FFT vs the CSV
+  deflections, median 14.13″ (rule ≤ 0.10″); D-affine fails on the held-out half, 2.66″. No DJA v7 field. No gate-K
+  residual or prediction read.
+- **Post hoc:** one scale 0.763 ≈ D_ds / D_s(z_s 3) = 0.7575 leaves median 1.71″; the κ map may be normalised to
+  D_ds / D_s = 1 (hypothesis).
+- **Handoff:** RXCJ2211 map route stopped as frozen; only the header z_s reading was declared, so a retry that
+  declares both normalisations before its run (as MACS J1931 check U did) is justified, but gate C2 would still lack a
+  reference catalogue. Next: another field (e.g. SPT-CL J0546 LTM maps, input check
+  first). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MACS0647 at DJA NIRSpec redshifts: control S3 fails; held-out families not decided (D-034 addendum ai)
 - **Result** (`results/lens_consistency/macs0647_specz/RESULT.md`): plan frozen in f537735, rules S1–S4 with tests in
   b91478c, both before the table was read. DJA v4.6 (same sha256 as the MACS1149 recheck) gives grade-3 z for 10
