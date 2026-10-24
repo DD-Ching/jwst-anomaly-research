@@ -34,3 +34,28 @@ def test_off_image_is_not_testable():
     )
     assert g["passes"] is False  # no arc-referenced control
     assert g["all"]["n_testable"] == 8
+
+
+def test_rule2_stops_only_on_a_different_outcome():
+    assert s3.rule2_stops(True, False) and s3.rule2_stops(False, True)
+    assert not s3.rule2_stops(True, True) and not s3.rule2_stops(False, False)
+
+
+def test_section_positions_adds_images_only_under_3b():
+    from astropy.table import Table
+
+    a = Table({"ra": [1.0], "dec": [2.0], "x": [0]})
+    b = Table({"ra": [3.0], "dec": [4.0]})
+    im = Table({"ra": [5.0, 6.0], "dec": [7.0, 8.0], "image_id": ["1.1", "1.2"]})
+    assert len(s3.section_positions(a, b, im, False)) == 2
+    assert list(s3.section_positions(a, b, im, True)["ra"]) == [1.0, 3.0, 5.0, 6.0]
+
+
+def test_frame_check_f_min_n():
+    import bullet_extra as be
+
+    ra = 10.0 + np.arange(20) * 1e-3
+    dec = np.full(20, -20.0)
+    assert be.frame_check_f(ra, dec, ra, dec, 20)["passes"]
+    assert not be.frame_check_f(ra, dec, ra, dec, 21)["passes"]
+    assert be.frame_check_f(ra, dec, ra, dec)["rules"]["min_n"] == be.F_MIN_N
