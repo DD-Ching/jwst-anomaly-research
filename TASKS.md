@@ -75,13 +75,15 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   θ_E ≳ 3 mas and t_E ≈ 100 d (under the assumed per-transit σ). Next: wait for ESA's DR4 epoch-astrometry documentation (2 Dec 2026); develop only if it carries AL
   coordinates, scan angles and σ for those sources.
 
-- **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; owner decides, nothing reopened):
+- **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; **closed by the owner 2026-10-24**):
   - Sunrise n0153: no new epoch;
   - S1063 1316 / 1557: 116.28VK.001 releases 2026-11-20 to 2027-03-12;
-  - Abell 370 1565: unused GO 5890 F150W (37 ks) and F210M exist, but the estimated F150W/F200W precision is 0.14–0.21
-    now and 0.13–0.16 after 2027-01-28.
-  - Recommendation: none now. Re-screen points: S1063 after the releases; 1565 after 2027-01-28; Euclid DR1 (staged
-    from November 2026).
+  - Abell 370 1565: unused GO 5890 F150W (37 ks) and F210M exist. The estimated uncertainty of the F150W/F200W flux
+    ratio (not a magnitude error) is 0.14–0.21 now and 0.13–0.16 after 2027-01-28. Optimistic, includes an F210M →
+    F200W-equivalent exposure conversion, not measured: it does not establish the ≤ 0.15 reopen condition.
+  - Recommendation: none. The three lines stay paused. Do not re-query the same archives or redo #492; re-evaluate
+    only on substantive new data, a published measurement, or an explicit owner task. Dates when data become public
+    (no schedule): S1063 2026-11-20 to 2027-03-12; 1565 F200W by 2027-01-28; Euclid DR1 staged from November 2026.
 
 ## Now (owner direction 2026-10-09: System A/B hypothesis rounds, D-069; docs/hypotheses/)
 0. **E1 causal event network** (D-074; owner idea 4): GBM × ICECAT-1 × GWTC × CHIME Cat 2 pair counts by lag and

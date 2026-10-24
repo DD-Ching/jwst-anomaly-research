@@ -14,6 +14,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   mosaics / HLSP were again not checked.
 - **Handoff:** next is a counter-image test design for the six spec-z systems, which needs VENUS imaging (MAST, or a
   local session if archive.stsci.edu stays unreachable from cloud); #374 still waits for the 2026-10-26 weekly run.
+## 2026-10-24: New-data screening closed by the owner; Abell 370 1565 estimate labelled as a flux-ratio uncertainty
+- **Owner, 2026-10-24:** the screening round is closed. Sunrise n0153, S1063 1316 / 1557 and Abell 370 1565 stay
+  paused. Do not re-query the same archives or redo #492. Re-evaluate only on substantive new data, a published
+  measurement, or an explicit owner task.
+- **Wording fix (no new numbers):** the 1565 figures 0.14–0.21 (now) and 0.13–0.16 (after 2027-01-28) are
+  uncertainties of the F150W/F200W flux ratio, not magnitude errors. They assume F210M exposure counts as
+  F200W-equivalent time (assumed bandwidth ratio 2.259), and they are optimistic, unmeasured estimates that do not
+  establish the reopen condition. Stated in `SCREEN.md`, `estimates_a370_1565.json`, the screening entry below and
+  TASKS.
 
 ## 2026-10-24: MACS J1931 input check: image list and maps public, unit conflict, no reference catalogue (D-034 addendum aa)
 - **Survey** (research subagent; not stored): of PLCK G165.7+67.0, MACS J0138, SPT-CL J0615, Sunburst, Abell 1689 and
@@ -60,8 +69,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   2026-11-20 to 2027-03-12.
 - **Abell 370 1565:**
   - Unused public data exist: GO 5890 F150W (37,106 s), F210M (30,257 s) and NIRISS F090W WFSS (GO 3362).
-  - The estimated F150W/F200W precision is 0.14–0.21 (optimistic), against the ≤ 0.15 reopen condition; a colour
-    gives no redshift.
+  - The estimated uncertainty of the F150W/F200W flux ratio (not magnitudes) is 0.14–0.21. It is optimistic,
+    includes an F210M → F200W exposure conversion and is not measured, so it does not establish the ≤ 0.15 reopen
+    condition; a ratio gives no redshift.
   - #199's forced-photometry scripts were not kept.
 - **Paused lines unchanged.** Re-screen points are in TASKS.
 
