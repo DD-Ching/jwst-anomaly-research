@@ -7,9 +7,11 @@ catalogue flux is read here. Script `scripts/bullet_inputs.py`; numbers from `su
 
 | Input | Found | Status |
 |---|---|---|
-| Image list | CANUCS Bullet DR1 `lensing/bullet_gold_v4.dat` (Rihtaršič+2026, arXiv:2601.22245; the Lenstool constraints) | 135 images, 49 systems, 27 galaxies, 27 distinct z (0.897–6.64), as the paper states; the graded full list adds 22 silver and 42 bronze images, and its gold rows equal the Lenstool list (135 / 135 ids, max separation 0.0″, max Δz 0) |
-| JWST-era model maps | `lensing/best_fit_model/best_fit_maps/` (Lenstool fiducial, scaled to D_LS / D_S = 1 per the README) | deflection `dpl1` / `dpl2`, κ, γ, γ1, γ2 at 50 mas (gzip, 205–221 MB each, not read); ψ at 200 mas; 200 mas Bayesian sample maps in `sample_model/sample_maps/` (13.8 MB each; the first listing page has 35 entries, so the listing may be paginated) |
+| Image list | CANUCS Bullet DR1 `lensing/bullet_gold_v4.dat` (Rihtaršič+2026, arXiv:2601.22245; the Lenstool constraints) | 135 images, 49 systems, 27 galaxies, 27 distinct z (0.897–6.64), as the paper states; the graded full list adds 22 silver and 42 bronze images, and its gold rows equal the Lenstool list (135 / 135 ids, max separation 0.0″, max Δz 0; `gold_vs_full` passes, tolerance 0.01″ ASSUMPTION) |
+| JWST-era model maps | `lensing/best_fit_model/best_fit_maps/` (Lenstool fiducial, scaled to D_LS / D_S = 1 per the README) | deflection `dpl1` / `dpl2`, κ, γ, γ1, γ2 at 50 mas (gzip, 204.85–221.05 MB each as listed, not read; both deflection maps listed: `model_maps_check` passes); ψ at 200 mas; 200 mas Bayesian sample maps in `sample_model/sample_maps/` (13.8 MB each; the first listing page has 35 entries, so the listing may be paginated) |
 | Reference catalogue | `catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits` (51,721,920 B; header only, HTTP range) | 20,138 rows, 323 columns; every column of the frozen CANUCS DR1 mapping (`../macs0417_canucsref/PLAN.md`) present, `FLUX_KRON_TOTAL_F200W` in nJy: **passes** |
+
+**Review fixes (/code-review, before the PR):** a block-walking FITS header scan, gzip and short-read checks on the range read, computed `passes` flags for the list comparison and the map listing, duplicate-id and gold-z guards; the outputs are unchanged apart from the added flags.
 
 **Reading.** All three inputs of the fitted-model route exist for the Bullet Cluster, in the same CANUCS
 format as MACS0416 / MACS1149, where the route already ran (gate K, gate C2). Unlike MACS0647 (D-034 addendum v),

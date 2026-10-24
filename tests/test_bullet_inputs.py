@@ -49,15 +49,33 @@ def test_parse_multim_full_and_compare():
     assert list(full["grade"]) == ["gold", "gold", "gold", "bronze"]
     r = bi.gold_vs_full(bi.parse_lenstool_images(GOLD), full)
     assert (r["n_shared"], r["max_sep_arcsec"], r["max_abs_dz"]) == (3, 0.0, 0.0)
+    assert r["passes"]
+    moved = bi.parse_multim_full(FULL.replace("104.6 -55.95", "104.6001 -55.95"))
+    assert not bi.gold_vs_full(bi.parse_lenstool_images(GOLD), moved)["passes"]
     with pytest.raises(ValueError):
         bi.parse_multim_full("K1b.1 104.6 -55.9 3.24 platinum\n")
+    with pytest.raises(ValueError):
+        bi.parse_multim_full("K1b.1 104.6 -55.9 -1 gold\n")
+    assert len(bi.parse_multim_full("K1b.1 104.6 -55.9 -1 bronze\n")) == 1
+    with pytest.raises(ValueError):
+        bi.parse_lenstool_images(GOLD + GOLD.splitlines()[0] + "\n")
 
 
-def _blob(cols, unit="nJy"):
+def test_maps_check():
+    assert bi.maps_check(dict.fromkeys(bi.DEFLECTION_MAPS, "1 MB"))["passes"]
+    r = bi.maps_check({bi.DEFLECTION_MAPS[0]: "1 MB"})
+    assert r["deflection_maps_missing"] == [bi.DEFLECTION_MAPS[1]] and not r["passes"]
+
+
+def _blob(cols, unit="nJy", long_primary=False):
     t = fits.BinTableHDU.from_columns(
         [fits.Column(name=c, format="E", unit=unit if c.startswith("FLUX") else "") for c in cols]
     )
-    return (fits.PrimaryHDU().header.tostring() + t.header.tostring()).encode()
+    p = fits.PrimaryHDU()
+    if long_primary:  # a primary header over more than one 2880-byte block
+        for i in range(40):
+            p.header[f"KEY{i}"] = i
+    return (p.header.tostring() + t.header.tostring()).encode()
 
 
 def test_header_check():
@@ -65,6 +83,9 @@ def test_header_check():
     r = bi.header_check(_blob(bi.MAPPING_COLS[1:]))
     assert r["mapping_columns_missing"] == ["RA"] and not r["passes"]
     assert not bi.header_check(_blob(bi.MAPPING_COLS, unit="uJy"))["passes"]
+    assert bi.header_check(_blob(bi.MAPPING_COLS, long_primary=True))["passes"]
+    with pytest.raises(ValueError):
+        bi.header_check(fits.PrimaryHDU().header.tostring().encode())
 
 
 def test_committed_image_list():

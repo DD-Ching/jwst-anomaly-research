@@ -27,7 +27,8 @@
   "only_in_gold_list": [],
   "only_in_full_gold": [],
   "max_sep_arcsec": 0.0,
-  "max_abs_dz": 0.0
+  "max_abs_dz": 0.0,
+  "passes": true
  },
  "reference_catalogue": {
   "url": "https://www.canfar.net/storage/vault/file/canucs/BULLET_DR1/catalogs/hlsp_canucs_jwst-hst_multi_bullet-clu_multi_v1_photometry-cat.fits",
@@ -46,6 +47,10 @@
   "bulletclu-gamma2-best-50mas.fits.gz": "218.13 MB",
   "bulletclu-kappa-best-50mas.fits.gz": "208.87 MB",
   "bulletclu-psi-200mas_.fits.gz": "199.72 MB"
+ },
+ "model_maps_check": {
+  "deflection_maps_missing": [],
+  "passes": true
  },
  "model_sample_maps": {
   "listing_page_entries": 35,
