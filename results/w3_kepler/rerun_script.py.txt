@@ -1,0 +1,55 @@
+"""Re-run check after the EDGE_RULE fix (results/w3_kepler/RESULT.md, "Deviations from the plan").
+
+    JWST_ANOMALY_DATA=<data root> python results/w3_kepler/rerun_script.py.txt OUT_DIR
+
+Re-runs the uninjected screens, the dev and val injections and the search with the current
+scripts/w3_kepler.py into OUT_DIR (sample.json copied there), and compares every per-injection row
+and every real-data run with the stored files next to this script. Writes rerun_compare.json here.
+"""
+
+import json
+import shutil
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+import w3_kepler as wk  # noqa: E402
+
+out_dir = Path(sys.argv[1])
+out_dir.mkdir(parents=True, exist_ok=True)
+shutil.copy(HERE / "sample.json", out_dir / "sample.json")
+wk.OUT = out_dir
+
+
+class A:
+    cores = 4
+
+
+cmp = {"label": "derived (re-run comparison)"}
+for phase in ("dev", "val"):
+    a = A()
+    a.phase = phase
+    wk.stage_inject(a)
+    old = json.loads((HERE / f"injections_{phase}.json").read_text())
+    new = json.loads((out_dir / f"injections_{phase}.json").read_text())
+    diff = [i for i, (x, y) in enumerate(zip(old["rows"], new["rows"], strict=True)) if x != y]
+    cmp[phase] = {
+        "rows": len(new["rows"]),
+        "rows_differing": len(diff),
+        "first_differences": [[old["rows"][i], new["rows"][i]] for i in diff[:5]],
+        "summary_equal": old["summary"] == new["summary"],
+        "gate_old": old["gate"],
+        "gate_new": new["gate"],
+    }
+    ro = json.loads((HERE / f"real_{phase}.json").read_text())["stars"]
+    rn = json.loads((out_dir / f"real_{phase}.json").read_text())["stars"]
+    cmp[phase]["real_equal"] = ro == rn
+shutil.copy(out_dir / "gate.json", out_dir / "gate_rerun.json")
+wk.stage_search(None)
+so = json.loads((HERE / "search.json").read_text())
+sn = json.loads((out_dir / "search.json").read_text())
+cmp["search_equal"] = so == sn
+cmp["search_survivors_new"] = len(sn["survivors_in_order"])
+(HERE / "rerun_compare.json").write_text(json.dumps(cmp, indent=1) + "\n")
+print(json.dumps({k: (v if not isinstance(v, dict) else {kk: vv for kk, vv in v.items() if kk != "first_differences"}) for k, v in cmp.items()}, indent=1))

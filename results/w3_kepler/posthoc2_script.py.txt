@@ -1,0 +1,101 @@
+"""Post hoc diagnostics added after the independent review (not gating). Reads only the cached
+light curves and the stored JSON files; writes posthoc2.json next to this file.
+
+    JWST_ANOMALY_DATA=<data root> python results/w3_kepler/posthoc2_script.py.txt
+
+1. Uninjected real light curves (all 100 stars): good cadences that already meet the shoulder
+   criterion (rel >= 1 + SHOULDER_MIN and (rel - 1) / sigma >= SHOULDER_SNR), per star and quarter.
+   A single ordinary dip next to such a stretch would pass the shoulder test.
+2. Val fade controls: outcome counts from the stored rows (the edge class of control rows is not
+   stored).
+3. Val W3 non-recoveries: u0 and quarter of the "not flagged although covered" and "one-off fails"
+   rows, to put numbers behind the reason labels.
+"""
+
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+import w3_kepler as wk  # noqa: E402
+
+out = {"label": "derived (post hoc, after review; not gating)"}
+
+# 1. shoulder-like stretches in uninjected real SAP light curves
+per = {}
+sig_all = []
+for s in wk.sample_stars(["dev", "val", "search"]):
+    st = wk.load_star(s["kepid"])
+    g = wk.good_mask(st)
+    rel, sig = wk.normalise(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], g)
+    ok = np.isfinite(rel)
+    sig_all.append(np.median(sig[ok]))
+    hit = ok & (rel >= 1 + wk.SHOULDER_MIN) & ((rel - 1) / sig >= wk.SHOULDER_SNR)
+    if hit.any():
+        qs = sorted({int(q) for q in st["QUARTER"][hit]})
+        per[str(s["kepid"])] = {
+            "group": s["group"],
+            "cadences": int(hit.sum()),
+            "quarters": qs,
+            "max_rel": round(float(rel[hit].max()), 4),
+        }
+out["real_shoulder_like"] = {
+    "stars_with_any": len(per),
+    "cadences_total": sum(v["cadences"] for v in per.values()),
+    "by_group": {
+        g: sum(v["group"] == g for v in per.values()) for g in ("dev", "val", "search")
+    },
+    "per_star": per,
+    "median_over_stars_of_median_sigma_rel": round(float(np.median(sig_all)), 6),
+    "max_over_stars_of_median_sigma_rel": round(float(np.max(sig_all)), 6),
+}
+
+# 2. val fade controls
+rows = json.loads((HERE / "injections_val.json").read_text())["rows"]
+fade = [x for x in rows if x["kind"] == "ctl" and x["cell"] == "fade"]
+out["val_fade"] = {
+    "n": len(fade),
+    "flagged": sum(x["flagged"] for x in fade),
+    "passed": sum(x["pass"] for x in fade),
+    "insufficient": sum(x["insufficient"] for x in fade),
+    "flagged_other_fail_class_not_stored": sum(
+        x["flagged"] and not x["pass"] and not x["insufficient"] for x in fade
+    ),
+}
+
+# 3. val W3 non-recoveries: numbers behind the reason labels
+cache = {}
+nf_cov, oneoff = [], []
+for x in rows:
+    if x["kind"] != "w3" or x["pass"]:
+        continue
+    st = cache.setdefault(x["kepid"], wk.load_star(x["kepid"]))
+    g = wk.good_mask(st)
+    t = st["TIME"][g]
+    rho, blend, te = wk.CELLS[x["cell"]]
+    half = te * np.sqrt(4 - x["u0"] ** 2)
+    cover = ((t >= x["t0"] - half) & (t <= x["t0"] + half)).sum() / (2 * half / wk.CAD)
+    q = int(st["QUARTER"][g][np.argmin(np.abs(t - x["t0"]))])
+    edge_of_data = (x["t0"] - half < t.min() + 1.0) or (x["t0"] + half > t.max() - 1.0)
+    rec = {"u0": x["u0"], "quarter": q, "tE": te, "data_end": bool(edge_of_data)}
+    if not x["flagged"] and cover >= 0.5:
+        nf_cov.append(rec)
+    elif x["flagged"] and not x["insufficient"] and x.get("oneoff_ok") is False:
+        oneoff.append(rec)
+out["val_w3_not_flagged_covered"] = {
+    "n": len(nf_cov),
+    "u0_ge_1.9": sum(r["u0"] >= 1.9 for r in nf_cov),
+    "in_Q1_or_Q17": sum(r["quarter"] in (1, 17) for r in nf_cov),
+    "within_1d_of_data_start_or_end": sum(r["data_end"] for r in nf_cov),
+}
+out["val_w3_oneoff_fails"] = {
+    "n": len(oneoff),
+    "in_Q1_or_Q17": sum(r["quarter"] in (1, 17) for r in oneoff),
+    "tE_10": sum(r["tE"] == 10.0 for r in oneoff),
+}
+(HERE / "posthoc2.json").write_text(json.dumps(out, indent=1) + "\n")
+print(json.dumps({k: v for k, v in out.items() if k != "real_shoulder_like"}, indent=1))
+print(json.dumps({k: v for k, v in out["real_shoulder_like"].items()}, indent=1))

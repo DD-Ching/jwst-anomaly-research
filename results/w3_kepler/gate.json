@@ -1,0 +1,6 @@
+{
+ "label": "derived",
+ "all_cells_ge_0.50": true,
+ "all_controls_le_0.10": true,
+ "pass": true
+}

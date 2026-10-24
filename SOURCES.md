@@ -1840,3 +1840,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   Gaia DR3 positions via ESA Gaia TAP.
 - **Software** (isolated uv environment, offline from cache): photutils 3.1.1 (`GriddedPSFModel`, `PSFPhotometry`),
   astropy 8.0.2, numpy 2.5.4, scipy 1.18.1.
+
+## W3 / Kepler dense-cadence pilot (accessed 2026-10-24; `results/w3_kepler/`)
+- **Kepler DR25 long-cadence light curves** (SOC 9.3, `DATA_REL` 25; Q1–Q17), MAST:
+  https://archive.stsci.edu/missions/kepler/lightcurves/ (per-file sha256 in `files_<group>.json`).
+- **Kepler DR25 stellar properties:** NASA Exoplanet Archive TAP table `keplerstellar`, delivery
+  `q1_q17_dr25_stellar`, https://exoplanetarchive.ipac.caltech.edu/TAP/sync (query and sha256 in
+  `sample.json`).

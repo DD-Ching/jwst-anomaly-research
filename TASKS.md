@@ -75,6 +75,12 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   θ_E ≳ 3 mas and t_E ≈ 100 d (under the assumed per-transit σ). Next: wait for ESA's DR4 epoch-astrometry documentation (2 Dec 2026); develop only if it carries AL
   coordinates, scan angles and σ for those sources.
 
+- **W3 / Kepler pilot 2026-10-24** (`results/w3_kepler/RESULT.md`, D-107):
+  - Validation passed: 78–91 / 100 per cell, 0 control passes.
+  - The 60-star search has 0 flags.
+  - Next step only on an owner decision. Any larger Kepler search first needs a hardened shoulder
+    test (D-107 "Revisit if"); t_E ≥ 30 d needs another join. Nothing is queued.
+
 - **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; **closed by the owner 2026-10-24**):
   - Sunrise n0153: no new epoch;
   - S1063 1316 / 1557: 116.28VK.001 releases 2026-11-20 to 2027-03-12;

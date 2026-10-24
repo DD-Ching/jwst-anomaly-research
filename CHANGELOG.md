@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: W3 / Kepler dense-cadence pilot: validation passes; 60-star search has 0 flags (D-107)
+- **Scope:** owner-authorized pilot; `results/w3_kepler/` (frozen `PLAN.md` before any target flux;
+  `scripts/w3_kepler.py`, a thin interface to the W3 model and the ZTF chain).
+  - Data: Kepler DR25 long-cadence SAP light curves, 100 FGK dwarfs at Kp 12–14, split 20 dev,
+    20 val and 60 search. 766 MB through the ledger.
+- **Validation (gate passes):** the 20 W3 cells (t_E 0.1–10 d, ρ 0.01 / 0.1, blend 1 / 0.7) recover
+  78–91 / 100.
+  - Among recovered injections the median edge bound is 0.041 d (90th percentile 0.22–0.27 d,
+    post hoc).
+  - Six ordinary control families pass 0 / 100 each. Every family is rejected by a property of its
+    model, so this checks the chain; it does not test real ordinary events.
+- **The shoulder test** (the brightening just outside the umbra) is the only test that stops single
+  eclipses: without it they pass 85–91 / 100.
+  - At review, 4 of the 100 real SAP light curves already met the shoulder criterion within a
+    quarter (up to rel 1.17; `posthoc2.json`). A deep single dip there would pass.
+- **Search:** 0 flagged runs in 60 stars, so no survivors and nothing vetted.
+  - No star of the 100 has any cadence ≥ 1 mag dim. The real-data check met no deep ordinary
+    dimming.
+- **Limits:** efficiency is from the SAP product onward only; single band (achromatic not tested);
+  t_E ≥ 30 d excluded; no rate limit computed. The physical judgement is unchanged.
+- **Failed approach:** setting `w3_ztf.EDGE_RULE` at import leaked into `tests/test_w3_ztf.py`. It
+  was removed; outcomes are unchanged (`rerun_compare.json`).
 ## 2026-10-24: MACS J1931 stage 3 stops at frame check F (D-034 addendum ae)
 - **Result** (`results/lens_consistency/macs1931_stage3/RESULT.md`): rules frozen in 052ba6a before the run. Gate
   K-WLS repeats (rms 0.630″, 26 / 26). Own deblended F200W catalogue: 897 rows, depth 26.76 AB. Frame check F fails:

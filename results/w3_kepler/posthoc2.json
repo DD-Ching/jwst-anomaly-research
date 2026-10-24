@@ -1,0 +1,67 @@
+{
+ "label": "derived (post hoc, after review; not gating)",
+ "real_shoulder_like": {
+  "stars_with_any": 4,
+  "cadences_total": 1797,
+  "by_group": {
+   "dev": 1,
+   "val": 0,
+   "search": 3
+  },
+  "per_star": {
+   "9137992": {
+    "group": "dev",
+    "cadences": 79,
+    "quarters": [
+     1
+    ],
+    "max_rel": 1.1148
+   },
+   "2854411": {
+    "group": "search",
+    "cadences": 931,
+    "quarters": [
+     4,
+     8
+    ],
+    "max_rel": 1.1256
+   },
+   "2856758": {
+    "group": "search",
+    "cadences": 770,
+    "quarters": [
+     8
+    ],
+    "max_rel": 1.1727
+   },
+   "3834001": {
+    "group": "search",
+    "cadences": 17,
+    "quarters": [
+     8
+    ],
+    "max_rel": 1.103
+   }
+  },
+  "median_over_stars_of_median_sigma_rel": 0.000132,
+  "max_over_stars_of_median_sigma_rel": 0.000198
+ },
+ "val_fade": {
+  "n": 100,
+  "flagged": 75,
+  "passed": 0,
+  "insufficient": 27,
+  "flagged_other_fail_class_not_stored": 48
+ },
+ "val_w3_not_flagged_covered": {
+  "n": 54,
+  "u0_ge_1.9": 46,
+  "in_Q1_or_Q17": 8,
+  "within_1d_of_data_start_or_end": 6
+ },
+ "val_w3_oneoff_fails": {
+  "n": 10,
+  "in_Q1_or_Q17": 8,
+  "tE_10": 10
+ }
+}

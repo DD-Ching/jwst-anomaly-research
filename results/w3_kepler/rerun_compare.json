@@ -1,0 +1,39 @@
+{
+ "label": "derived (re-run comparison)",
+ "dev": {
+  "rows": 2600,
+  "rows_differing": 0,
+  "first_differences": [],
+  "summary_equal": true,
+  "gate_old": {
+   "all_cells_ge_0.50": true,
+   "all_controls_le_0.10": true,
+   "pass": true
+  },
+  "gate_new": {
+   "all_cells_ge_0.50": true,
+   "all_controls_le_0.10": true,
+   "pass": true
+  },
+  "real_equal": true
+ },
+ "val": {
+  "rows": 2600,
+  "rows_differing": 0,
+  "first_differences": [],
+  "summary_equal": true,
+  "gate_old": {
+   "all_cells_ge_0.50": true,
+   "all_controls_le_0.10": true,
+   "pass": true
+  },
+  "gate_new": {
+   "all_cells_ge_0.50": true,
+   "all_controls_le_0.10": true,
+   "pass": true
+  },
+  "real_equal": true
+ },
+ "search_equal": true,
+ "search_survivors_new": 0
+}
