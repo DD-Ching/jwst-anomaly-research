@@ -1,0 +1,62 @@
+{
+ "plan": "results/lens_consistency/macs1931_counter/PLAN.md (Stage 3)",
+ "inputs_sha256": {
+  "Alpha_x.fits.zip": "2325c8e4252bda15745aa7c421abd4be8963576ff2da7d8dd6a13563d5a4a476",
+  "Alpha_y.fits.zip": "533bb39435682840cccffb9c3bfd3ddbf06fa0f35be2db72a959a4115934492c",
+  "sourcepos.txt": "0f7e7cf20e2f4df8f275fe57abdf4d584c6fa38f94d4d0b62d7825a5ad964c2a",
+  "chires.txt": "f301e3fdef9005d462612312a4b4b967daa18d3c7e052f0259723ca6158a7908"
+ },
+ "n_images_used": 51,
+ "n_images_spec": 26,
+ "rule2_gate_K_wls": {
+  "n_images": 26,
+  "rms_arcsec": 0.6296973259434857,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "rule2_stored_passes": true,
+ "rule3_frame_tables": {
+  "unpredicted": [],
+  "pipeline_depth_mag": null,
+  "image_classes": {
+   "candidate": 9,
+   "faint": 1,
+   "no_flux_ref": 1,
+   "observed": 26
+  },
+  "grid_half_width_arcsec": 48.0,
+  "grid_step_arcsec": 0.25
+ },
+ "rule4_catalogue": {
+  "image": "s3://stpubdata/jwst/public/jw06882/L3/t/o038/jw06882-o038_t041_nircam_clear-f200w_i2d.fits",
+  "section_y0_y1_x0_x1": [
+   557,
+   3900,
+   833,
+   3456
+  ],
+  "n_segments_detected": 653,
+  "n_segments_deblended": 897,
+  "n_rows_kept": 897,
+  "pixel_scale_arcsec": 0.031225893511896287,
+  "masked_fraction": 3.193179733025085e-06,
+  "kron_snr_min": 6.243585228327828,
+  "n_rows_snr_4_6": 0,
+  "depth_mag_v2a": 26.764940206788978
+ },
+ "rule5_frame_F": {
+  "n_gold": 51,
+  "n_matched": 18,
+  "median_dx_arcsec": 0.045181726518712884,
+  "median_dy_arcsec": 0.004373871088956247,
+  "median_sep_arcsec": 0.10744028146440937,
+  "rules": {
+   "match_arcsec": 0.5,
+   "max_abs_median_arcsec": 0.1,
+   "min_n": 20
+  },
+  "passes": false,
+  "n_images_in_section": 48
+ },
+ "stopped": "frame check F failed (rule 5)"
+}

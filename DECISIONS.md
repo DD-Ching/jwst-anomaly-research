@@ -2469,6 +2469,14 @@ pipeline 10 / 27). Decision: the builder may be used for the MACS J1931 stage 3,
 any flag. Revisit if: a public deblended MACS J1931 catalogue appears, or a second validation field fails C2 with
 this builder.
 
+**Addendum 2026-10-24ae (MACS J1931 stage 3 stops at frame check F).** `results/lens_consistency/macs1931_stage3/RESULT.md`.
+Gate K-WLS repeats (0.630″, 26 / 26) but frame check F fails as frozen: 18 / 51 images have an own-catalogue row within
+0.5″ (rule ≥ 20; medians 0.045″ / 0.004″), and again under deviation 3b with every image inside the section (18 / 51). Post hoc only 15 / 51 positions lie inside any deblended segment; the
+contact sheet (not stored) shows faint or unsegmented images (systems 5, 6, 7, 100, 101; arcs 8.2, 9.1, 10.1, 12.2). Decision: no
+MACS J1931 counter-image reading from this builder; any retry is a new plan frozen before its run (e.g. a deeper or
+multi-band detection image, or arc-aperture sums), validated on MACS0417 first, with the rule 3 depth defined (the pipeline S/N 4–6 proxy is NaN here). Alternatives rejected: lowering F's
+minimum after seeing 18 (tuning on the outcome). Revisit if: a public deblended VENUS catalogue appears.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
