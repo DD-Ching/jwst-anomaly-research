@@ -2477,6 +2477,8 @@ MACS J1931 counter-image reading from this builder; any retry is a new plan froz
 multi-band detection image, or arc-aperture sums), validated on MACS0417 first, with the rule 3 depth defined (the pipeline S/N 4–6 proxy is NaN here). Alternatives rejected: lowering F's
 minimum after seeing 18 (tuning on the outcome). Revisit if: a public deblended VENUS catalogue appears.
 
+**Addendum 2026-10-24af (MACS J1931 stage 3c: wider background box; F fails again).** `results/lens_consistency/macs1931_stage3c/RESULT.md`, plan frozen in e1f21a8. The one builder change (background box 64 → 256 px, ≈ 8″) passes the MACS0417 gate (C2 shared 24 / 27, arc 10 / 10), but MACS J1931 frame check F fails: 17 / 51 within 0.5″ (rule ≥ 20), medians 0.033″ / −0.021″; the new chance control passes (mean shifted count 3.6). Contact sheet (not stored): about 20 of 51 positions show no visible F200W emission (by eye), and the wider box leaves cluster light as large segments. Decision: stop the single-band F200W own-reference route for MACS J1931; no counter-image reading. Alternatives rejected: further builder tuning against this F (each variant gave 17–18); lowering F's minimum. Revisit if: a frozen F restricted to images with a pre-declared continuum criterion (e.g. a pipeline row in any band) is validated on MACS0417, or a public deblended VENUS catalogue appears.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

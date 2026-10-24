@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: MACS J1931 stage 3c: wider background box; frame check F fails again (D-034 addendum af)
+- **Result** (`results/lens_consistency/macs1931_stage3c/RESULT.md`): plan frozen in e1f21a8 before any run. One builder
+  change, background box 64 → 256 px (≈ 8″). MACS0417 gate passes (C2 shared 24 / 27, arc 10 / 10). MACS J1931: gate
+  K-WLS repeats (0.630″); frame check F fails, 17 / 51 within 0.5″ (rule ≥ 20); new chance control passes (mean 3.6).
+  No gate C2, no flag reading: not a null.
+- **Failed approach:** a wider background box does not raise F (17 vs 18 with 2″). Contact sheet (not stored): about
+  20 / 51 positions show no visible F200W emission (13 of them spec-z, systems 5, 6, 7, 100, 101); the 8″ box leaves
+  cluster light as large segments.
+- **Handoff:** single-band F200W own reference stopped for MACS J1931. Next: an F restricted by a pre-declared continuum
+  criterion, frozen and validated on MACS0417 first, or another field with public JWST-era maps; #374 waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-24: W3 / Kepler dense-cadence pilot: validation passes; 60-star search has 0 flags (D-107)
 - **Scope:** owner-authorized pilot; `results/w3_kepler/` (frozen `PLAN.md` before any target flux;
   `scripts/w3_kepler.py`, a thin interface to the W3 model and the ZTF chain).
