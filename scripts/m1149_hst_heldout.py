@@ -1,4 +1,4 @@
-"""HST-era MACS1149 models (CATS v4.1, Sharon v4cor) vs the Schuldt et al. 2024 new images (held-out).
+"""HST-era MACS1149 models (CATS v4.1, Sharon v4cor) vs the Schuldt+2024 new images (held-out).
 
 Frozen plan: ``results/lens_consistency/m1149_hst_heldout/PLAN.md``. Rules 1-5 of the
 ``mars_hff_heldout`` stage, unchanged, per model, with that model's own catalogued images as

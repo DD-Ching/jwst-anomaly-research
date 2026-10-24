@@ -1,0 +1,29 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: type, datatype: string}
+# - {name: z, datatype: float64}
+# - {name: dtheta_arcsec, datatype: float64, format: .3f}
+# - {name: n_predicted, datatype: int64}
+# - {name: inside, datatype: bool}
+# schema: astropy-2.0
+image_id system type z dtheta_arcsec n_predicted inside
+201.1 201 N 2.95 0.8645070595508073 3 True
+201.2 201 N 2.95 0.6532424899689657 3 True
+201.3 201 N 2.95 0.5679313595247781 3 True
+202.1 202 N 4.384 0.8052958988212233 3 True
+202.2 202 N 4.384 0.6492834091639755 3 True
+203.1 203 N 4.497 1.4500024221907053 7 True
+203.2 203 N 4.497 1.2771334787810569 7 True
+203.3 203 N 4.497 0.5146030640884076 7 True
+204.1 204 N 5.806 1.0893486676877016 3 True
+204.2 204 N 5.806 2.0787666277877896 3 True
+301.1 301 N 3.447 0.6829867189557858 3 True
+301.2 301 N 3.447 0.48162696827139684 3 True
+301.3 301 N 3.447 2.397855648288681 3 True
+401.1 401 N 5.983 0.3824117478916924 5 True
+401.2 401 N 5.983 0.8807964966325731 5 True
+401.3 401 N 5.983 1.1278892838399392 5 True
+401.4 401 N 5.983 0.8875473452409105 5 True

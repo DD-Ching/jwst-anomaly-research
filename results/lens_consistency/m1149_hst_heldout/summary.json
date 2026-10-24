@@ -1,0 +1,70 @@
+{
+ "plan": "results/lens_consistency/m1149_hst_heldout/PLAN.md",
+ "images": "results/lens_consistency/mars_m1149_heldout/schuldt24_new_images.ecsv",
+ "provenance": "positions and z: observed (Schuldt+2024 Table 2; model image lists); residuals: model_prediction; thresholds: ASSUMPTION (mars_hff_heldout/PLAN.md)",
+ "models": {
+  "macs1149-cats": {
+   "files": {
+    "alpha_x": "a39dda08daef_hlsp_frontier_model_macs1149_cats_v4.1_x-arcsec-deflect.fits",
+    "alpha_y": "5b3257f22d6b_hlsp_frontier_model_macs1149_cats_v4.1_y-arcsec-deflect.fits",
+    "arcs.dat": "1a12c542fada_hlsp_frontier_model_macs1149_cats_v4.1_arcs.txt",
+    "params.txt": "37ccf2eccbd4_hlsp_frontier_model_macs1149_cats_v4.1_params.txt"
+   },
+   "seen_list_rows": 145,
+   "frame_offset": {
+    "n_pairs": 7,
+    "dx_arcsec": -0.03328057487079338,
+    "dy_arcsec": 0.0,
+    "applied": true
+   },
+   "seen": 7,
+   "held_out": 11,
+   "types": {
+    "E": 0,
+    "N": 11,
+    "M": 0
+   },
+   "outside_map": 0,
+   "gate_H": {
+    "n_tested": 11,
+    "rms_arcsec": 2.4627472394188206,
+    "matched_fraction": 0.8181818181818182,
+    "passes": false
+   },
+   "outcome": "does not reproduce",
+   "over_3arcsec": [
+    "401.1",
+    "401.3"
+   ]
+  },
+  "macs1149-sharon": {
+   "files": {
+    "alpha_x": "44f1d21a78ce_hlsp_frontier_model_macs1149_sharon_v4cor_x-arcsec-deflect.fits",
+    "alpha_y": "54508deb502d_hlsp_frontier_model_macs1149_sharon_v4cor_y-arcsec-deflect.fits"
+   },
+   "seen_list_rows": 23,
+   "frame_offset": {
+    "n_pairs": 0,
+    "dx_arcsec": 0.0,
+    "dy_arcsec": 0.0,
+    "applied": false
+   },
+   "seen": 0,
+   "held_out": 18,
+   "types": {
+    "E": 0,
+    "N": 17,
+    "M": 0
+   },
+   "outside_map": 0,
+   "gate_H": {
+    "n_tested": 17,
+    "rms_arcsec": 1.1246730762624892,
+    "matched_fraction": 1.0,
+    "passes": false
+   },
+   "outcome": "does not reproduce",
+   "over_3arcsec": []
+  }
+ }
+}

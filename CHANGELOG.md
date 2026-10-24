@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-24: HST-era MACS1149 models (CATS v4.1, Sharon v4cor) vs the Schuldt+2024 new images: both fail gate H, no shared miss (D-034 addendum au)
+- **Result** (`results/lens_consistency/m1149_hst_heldout/RESULT.md`): CATS v4.1 already lists 201, 301, SXa; on 11
+  held-out images rms 2.46″ (82 % within 3″), carried by family 401 (4.50″, 6.00″). Sharon v4cor: rms 1.12″, 17 / 17
+  within 3″ (fails on rms only). Post hoc, no image fails in two held-out models; the MARS miss is mainly
+  MARS-specific (2.51″ vs 0.88–1.10″ on the same families). No validated second model on MACS1149; no flag.
+- **Failed approach (again):** model fetches need `SSL_CERT_FILE` = proxy bundle + certifi (addendum aq note).
+- **Handoff:** next, a two-model extra-image check on another field with a held-out-validated second model, or the
+  D115b Lenstool re-fit with 8515's σ free. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: MARS MACS1149 map vs the Schuldt+2024 new images: gate H fails, MARS-specific (D-034 addendum at)
 - **Result** (`results/lens_consistency/mars_m1149_heldout/RESULT.md`): 18 post-2023 MUSE images (Schuldt+2024
   Table 2) as a held-out list; none in the MARS catalogue, 7 outside the map; gate H fails (rms 2.51″, 70 % within

@@ -1,7 +1,6 @@
 import sys
 from pathlib import Path
 
-import numpy as np
 from astropy.table import Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
