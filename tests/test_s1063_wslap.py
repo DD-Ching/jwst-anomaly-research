@@ -8,6 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import s1063_wslap as sw  # noqa: E402
+import spt0546_inputs as sp  # noqa: E402
 
 
 def _cd_record(name: bytes, crc, csize, usize, offset, zip64=False):
@@ -45,18 +46,21 @@ class _Resp:
     def raise_for_status(self):
         pass
 
+    def close(self):
+        pass
+
     def iter_content(self, n):
         for k in range(0, len(self.content), 7):
             yield self.content[k : k + 7]
 
 
 class _Session:
-    def __init__(self, blob):
-        self.blob = blob
+    def __init__(self, blob, status=206):
+        self.blob, self.status = blob, status
 
     def get(self, url, headers, **kw):
         a, b = headers["Range"].removeprefix("bytes=").split("-")
-        return _Resp(self.blob[int(a) : int(b) + 1])
+        return _Resp(self.blob[int(a) : int(b) + 1], self.status)
 
 
 def _zip_with(payload: bytes):
@@ -85,13 +89,53 @@ def test_fetch_member_inflates_and_checks_crc(tmp_path):
     assert not (tmp_path / "n.fits").exists()
 
 
+class _HeaderOk(_Session):
+    """Answers the 30-byte local-header read with 206 and the member stream with 200."""
+
+    def get(self, url, headers, **kw):
+        a, b = headers["Range"].removeprefix("bytes=").split("-")
+        return _Resp(self.blob[int(a) : int(b) + 1], 206 if int(b) - int(a) == 29 else 200)
+
+
+def test_fetch_member_refuses_a_non_range_answer(tmp_path):
+    blob, entry = _zip_with(b"abc" * 100)
+    with pytest.raises(RuntimeError):
+        sw.fetch_member(_HeaderOk(blob), entry, tmp_path / "m.fits")
+
+
+def test_eocd_location_plain_and_zip64():
+    plain = b"xx" + b"PK\x05\x06" + b"\0" * 8 + struct.pack("<IIH", 300, 1000, 0)
+    assert sw.eocd_location(plain) == (300, 1000)
+    loc = b"PK\x06\x07" + struct.pack("<IQI", 0, 123_456_789_012, 1)
+    z64 = b"yy" + loc + b"PK\x05\x06" + b"\0" * 8 + struct.pack("<IIH", 0xFFFFFFFF, 0xFFFFFFFF, 0)
+    assert sw.eocd_location(z64) == (None, 123_456_789_012)
+    with pytest.raises(ValueError):
+        sw.eocd_location(b"no record here")
+    with pytest.raises(ValueError):
+        sw.eocd_location(z64[22:])  # locator cut off
+
+
+@pytest.mark.network
+def test_zenodo_zip_directory_lists_the_alpha_members():
+    import requests
+
+    size, d = sw.zip_directory(requests.Session())
+    assert size == 1_016_075_135
+    for m, crc in zip(sw.MAPS, (0xCC397319, 0x87568E0D), strict=True):
+        e = d[sw.ZIP_DIR + m]
+        assert e["method"] == 8 and e["usize"] == 141_122_880 and e["crc"] == crc
+
+
 def test_unit_check_exactly_one_reading():
-    ok = sw.unit_check({"A_arcsec": {"1": 0.4, "2": 0.9}, "P_pixels": {"1": 30.0, "2": 40.0}})
+    def uc(v):
+        return sp.unit_check(v, sw.U_MAX_MEDIAN_ARCSEC)
+
+    ok = uc({"A_arcsec": {"1": 0.4, "2": 0.9}, "P_pixels": {"1": 30.0, "2": 40.0}})
     assert ok["passes"] and ok["reading"] == "A_arcsec"
     assert ok["median_arcsec"]["A_arcsec"] == pytest.approx(0.65)
-    both = sw.unit_check({"A_arcsec": {"1": 0.4}, "P_pixels": {"1": 1.0}})
+    both = uc({"A_arcsec": {"1": 0.4}, "P_pixels": {"1": 1.0}})
     assert not both["passes"] and both["reading"] is None
-    missing = sw.unit_check({"A_arcsec": {"1": 0.4, "2": None}, "P_pixels": {"1": 5.0}})
+    missing = uc({"A_arcsec": {"1": 0.4, "2": None}, "P_pixels": {"1": 5.0}})
     assert not missing["passes"] and np.isnan(missing["median_arcsec"]["A_arcsec"])
 
 
@@ -103,7 +147,7 @@ def test_spec_images_are_the_twelve_zspec_systems():
 
 def test_dja_check_matches_field_name():
     html = '<a href="abells1063-grizli-v7.5-fix">x</a><a href="macs0416-grizli-v7.0">y</a>'
-    r = sw.dja_check(html)
+    r = sp.dja_check(html, sw.DJA_NAMES)
     assert r["passes"] and r["matches"] == ["abells1063"] and r["fields_listed"] == 2
     with pytest.raises(ValueError):
-        sw.dja_check("<html></html>")
+        sp.dja_check("<html></html>", sw.DJA_NAMES)

@@ -17,10 +17,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import re
 import struct
 import warnings
 import zlib
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import a2744_uncover as au
@@ -91,14 +91,14 @@ def parse_central_directory(blob: bytes) -> dict[str, dict]:
         j = 0
         while j + 4 <= len(extra):
             hid, hlen = struct.unpack("<HH", extra[j : j + 4])
-            if hid == 1:  # ZIP64: present fields in order usize, csize, offset
-                vals = list(struct.unpack(f"<{hlen // 8}Q", extra[j + 4 : j + 4 + hlen]))
+            if hid == 1:  # ZIP64: only the saturated fields, in order usize, csize, offset
+                body, q = extra[j + 4 : j + 4 + hlen], 0
                 if usize == 0xFFFFFFFF:
-                    usize = vals.pop(0)
+                    usize, q = struct.unpack("<Q", body[q : q + 8])[0], q + 8
                 if csize == 0xFFFFFFFF:
-                    csize = vals.pop(0)
+                    csize, q = struct.unpack("<Q", body[q : q + 8])[0], q + 8
                 if offset == 0xFFFFFFFF:
-                    offset = vals.pop(0)
+                    offset = struct.unpack("<Q", body[q : q + 8])[0]
             j += 4 + hlen
         out[name] = {
             "method": method,
@@ -113,15 +113,29 @@ def parse_central_directory(blob: bytes) -> dict[str, dict]:
     return out
 
 
+def eocd_location(tail: bytes) -> tuple[int | None, int]:
+    """Central-directory (size, offset) from the end-of-central-directory record, or
+    (None, ZIP64 EOCD offset) when the record defers to ZIP64 through its locator at EOCD - 20."""
+    k = tail.rfind(b"PK\x05\x06")
+    if k < 0 or k + 22 > len(tail):
+        raise ValueError("no end-of-central-directory record in the tail")
+    cd_size, cd_off = struct.unpack("<II", tail[k + 12 : k + 20])
+    if cd_size != 0xFFFFFFFF and cd_off != 0xFFFFFFFF:
+        return cd_size, cd_off
+    if k < 20 or tail[k - 20 : k - 16] != b"PK\x06\x07":
+        raise ValueError("ZIP64 locator missing before the end-of-central-directory record")
+    return None, struct.unpack("<Q", tail[k - 12 : k - 4])[0]
+
+
 def zip_directory(session: requests.Session) -> tuple[int, dict[str, dict]]:
     size = int(session.head(ZIP_URL, allow_redirects=True, timeout=60).headers["Content-Length"])
     tail = _range(session, max(0, size - 65536), size - 1)
-    k = tail.rfind(b"PK\x06\x06")  # ZIP64 end of central directory
-    if k >= 0:
-        cd_size, cd_off = struct.unpack("<QQ", tail[k + 40 : k + 56])
-    else:
-        k = tail.rfind(b"PK\x05\x06")
-        cd_size, cd_off = struct.unpack("<II", tail[k + 12 : k + 20])
+    cd_size, cd_off = eocd_location(tail)
+    if cd_size is None:
+        rec = _range(session, cd_off, cd_off + 55)
+        if rec[:4] != b"PK\x06\x06":
+            raise ValueError("no ZIP64 end-of-central-directory record at the locator offset")
+        cd_size, cd_off = struct.unpack("<QQ", rec[40:56])
     return size, parse_central_directory(_range(session, cd_off, cd_off + cd_size - 1))
 
 
@@ -140,6 +154,9 @@ def fetch_member(session: requests.Session, entry: dict, dest: Path) -> str:
         timeout=300,
     )
     r.raise_for_status()
+    if r.status_code != 206:  # a server ignoring Range would send the whole archive
+        r.close()
+        raise RuntimeError(f"member range request answered {r.status_code}, not 206")
     dec, crc, n, sha = zlib.decompressobj(-15), 0, 0, hashlib.sha256()
     with dest.open("wb") as f:
         for chunk in r.iter_content(CHUNK):
@@ -169,37 +186,6 @@ def unit_values(model, images: Table) -> dict[str, float | None]:
         r = mi.rms_of(d[sysv == s])
         out[s] = r if np.isfinite(r) else None
     return out
-
-
-def unit_check(values: dict[str, dict[str, float | None]]) -> dict:
-    """PLAN.md rule 2: accepted when the median per-system rms is <= U_MAX_MEDIAN_ARCSEC (every
-    system finite); passes when exactly one reading is accepted."""
-    med = {}
-    for r, d in values.items():
-        v = np.array([np.nan if x is None else x for x in d.values()], float)
-        med[r] = float(np.median(v)) if v.size and np.all(np.isfinite(v)) else float("nan")
-    accepted = [r for r, v in med.items() if np.isfinite(v) and v <= U_MAX_MEDIAN_ARCSEC]
-    return {
-        "median_arcsec": med,
-        "accepted": accepted,
-        "passes": len(accepted) == 1,
-        "reading": accepted[0] if len(accepted) == 1 else None,
-    }
-
-
-def dja_check(index_html: str) -> dict:
-    """PLAN.md rule 5 (the ``spt0546_inputs.dja_check`` parser with this field's name)."""
-    names = sorted(set(re.findall(r"([a-z0-9][a-z0-9_-]*?)-grizli-v7", index_html.lower())))
-    if not names:
-        raise ValueError("no field parsed from the DJA index")
-    hits = [f for f in names if any(n in f for n in DJA_NAMES)]
-    return {
-        "index": m19.DJA_INDEX,
-        "fields_listed": len(names),
-        "names_searched": list(DJA_NAMES),
-        "matches": hits,
-        "passes": bool(hits),
-    }
 
 
 def build_model(ax, ay, header, scale: float, sha: str, name: str) -> lensmodel.MapLensModel:
@@ -247,9 +233,15 @@ def k_block(model, images: Table, grid_step: float) -> dict:
 
 def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     session = requests.Session()
+    check_r = sp.dja_check(m19._get(session, m19.DJA_INDEX).text, DJA_NAMES)
     size, directory = zip_directory(session)
     maps.mkdir(parents=True, exist_ok=True)
-    shas = {m: fetch_member(session, directory[ZIP_DIR + m], maps / m) for m in MAPS}
+    with ThreadPoolExecutor(len(MAPS)) as pool:  # two independent range reads
+        futs = {
+            m: pool.submit(fetch_member, requests.Session(), directory[ZIP_DIR + m], maps / m)
+            for m in MAPS
+        }
+        shas = {m: f.result() for m, f in futs.items()}
     images = spec_images()
     (ax, hx), (ay, _) = (_read(maps / m) for m in MAPS)
     model_sha = hashlib.sha256((shas[MAPS[0]] + shas[MAPS[1]]).encode()).hexdigest()
@@ -284,7 +276,7 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
     }
     if summary["check_C"]["passes"]:
         vals = {r: unit_values(m, images) for r, m in models.items()}
-        u = unit_check(vals)
+        u = sp.unit_check(vals, U_MAX_MEDIAN_ARCSEC)
         summary["check_U"] = {**u, "per_system": vals}
         if u["passes"]:
             k = k_block(models[u["reading"]], images, grid_step)
@@ -299,7 +291,7 @@ def run(maps: Path, out: Path = OUT, grid_step: float = GRID_STEP) -> dict:
                 "per_system_wls": k["per_system_wls"],
                 "cats_v41_rms_arcsec_d035b": CATS_V41_RMS_ARCSEC,
             }
-    summary["check_R"] = dja_check(m19._get(session, m19.DJA_INDEX).text)
+    summary["check_R"] = check_r
     out.mkdir(parents=True, exist_ok=True)
     (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     return summary

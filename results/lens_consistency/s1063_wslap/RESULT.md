@@ -36,9 +36,12 @@ images are not held out.
   backtrace rms of system 10 is also the largest under reading A (3.87″, `check_U.per_system`), and a different
   WSLAP+ identification of system 10 is not excluded (the BUFFALO list was not read).
 
-**Data:** only the two α members were fetched (one range request each over 131,270,062 / 131,129,129 deflated bytes,
-CRC-32 matched the zip directory, sha256 in `summary.json`), held in the session scratchpad and deleted after the run;
-the other 12 members (≈ 750 MB) were not fetched. Transfer ≈ 262 MB, reason stated in the plan.
+**Data:** only the two α members were fetched: per member a 30-byte local-header read and one range read over its
+131,270,062 / 131,129,129 deflated bytes (deviation in wording only: the plan says "one HTTP range request"), plus two
+directory reads; CRC-32 matched the zip directory, sha256 in `summary.json`. Held in the session scratchpad and deleted
+after the run; the other 12 members (≈ 750 MB) were not fetched. Transfer ≈ 262 MB, reason stated in the plan.
+After `/code-review`, the I/O code was revised (206 check on the member stream, ZIP64 locator, parallel member reads,
+DJA index first; no rule changed) and the run repeated: `summary.json` identical (not stored: the diff of the two runs).
 
 ## Next
 - A frozen plan that uses the WLS source as its gate, citing this K-WLS number (the Bullet precedent, D-034 addendum
