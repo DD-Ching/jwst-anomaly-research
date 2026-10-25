@@ -32,3 +32,10 @@ def test_stored_factors_cover_five_clusters():
     assert set(f) == {"rxc0232", "rxc2211", "macs0553", "cl0152", "a3192"}
     for c in f:
         assert f"{c}-relics-lenstool" in rz.lc.MODELS
+
+
+def test_h_c_verdict():
+    none = {"a": {"kappa_map": {"normalisation_like": []}, "alpha_x": {"normalisation_like": []}}}
+    assert rz.h_c_verdict(none) == "not_supported"
+    one = {"a": {"kappa_map": {"normalisation_like": [("ZSOURCE", "2.0", "")]}}}
+    assert rz.h_c_verdict(one) == "to_read"

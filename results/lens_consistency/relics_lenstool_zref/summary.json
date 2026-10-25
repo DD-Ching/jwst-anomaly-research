@@ -2368,6 +2368,7 @@
    }
   }
  },
+ "h_c_verdict": "not_supported",
  "posthoc_makers": {
   "a3192": {
    "url": "https://archive.stsci.edu/hlsps/relics/abell3192/models/lenstool/hlsp_relics_model_model_abell3192_lenstool_v1_x-arcsec-deflect.fits",

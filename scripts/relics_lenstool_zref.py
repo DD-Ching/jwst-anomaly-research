@@ -23,8 +23,6 @@ import slice_relics_macs0358 as m0358
 OUT = Path("results/lens_consistency/relics_lenstool_zref")
 Z_REF = 2.0946208510160416  # slice_relics_macs0358/posthoc.json amplitude_as_dls_ds_zref
 TOLERANCE = 0.10  # PLAN.md H_U rule (ASSUMPTION)
-MATCH = 0.05  # PLAN.md H_C rule (ASSUMPTION)
-OFFSET = ("macs0553", "a3192")
 HEADER_BYTES = 2880 * 10
 #: keywords whose name or comment may carry a source z or a D_LS/D_S normalisation
 NORM_PATTERN = re.compile(r"(^Z|ZS|ZSRC|ZSOURCE|DLS|DSL|DS|NORM|REDSH|SOURCE)", re.I)
@@ -97,11 +95,11 @@ def h_c(clusters) -> dict:
             url = files[key][0]
             hdr, status = read_header(url)
             cards = [
-                (k, str(v), hdr.comments[k])
-                for k, v in hdr.items()
-                if k not in ("", "COMMENT", "HISTORY")
+                (cd.keyword, str(cd.value), cd.comment)
+                for cd in hdr.cards
+                if cd.keyword not in ("", "COMMENT", "HISTORY")
             ]
-            notes = [str(v) for k, v in hdr.items() if k in ("COMMENT", "HISTORY")]
+            notes = [str(cd.value) for cd in hdr.cards if cd.keyword in ("COMMENT", "HISTORY")]
             norm = [cd for cd in cards if NORM_PATTERN.search(cd[0]) or NORM_PATTERN.search(cd[2])]
             out[c][key] = {
                 "url": url,
@@ -111,6 +109,13 @@ def h_c(clusters) -> dict:
                 "normalisation_like": norm,
             }
     return out
+
+
+def h_c_verdict(h_c_rows: dict) -> str:
+    """PLAN.md H_C: "not_supported" when no map header has a normalisation-like card; otherwise
+    "to_read", because the 0.05 match of an implied factor needs the card's meaning (by hand)."""
+    found = any(m["normalisation_like"] for maps in h_c_rows.values() for m in maps.values())
+    return "to_read" if found else "not_supported"
 
 
 #: post hoc (not in PLAN.md): SMACS 0723 Lenstool v1 (addendum aw: |alpha| 1.14-1.56 x GLAFIC's)
@@ -147,11 +152,12 @@ def main() -> None:
     args = ap.parse_args()
     factors = stored_factors()
     res = {"h_u": h_u(factors)}
-    if not args.offline:
+    if not args.offline:  # --offline prints H_U only and keeps the stored summary
         res["h_c"] = h_c(sorted(factors))
+        res["h_c_verdict"] = h_c_verdict(res["h_c"])
         res["posthoc_makers"] = posthoc_makers()
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "summary.json").write_text(json.dumps(res, indent=1, default=str) + "\n")
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / "summary.json").write_text(json.dumps(res, indent=1, default=str) + "\n")
     for c, r in res["h_u"]["rows"].items():
         print(
             f"{c:9s} z_l {r['z_lens']:.3f} f_obs {r['f_obs']:.3f} f_pred {r['f_pred']:.3f} "
