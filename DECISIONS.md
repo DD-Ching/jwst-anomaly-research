@@ -2632,6 +2632,18 @@ flag. Alternatives rejected: dropping family 80 to pass (post hoc; still 1.14″
 model with a published constraint list that leaves out part of the UNCOVER v2.0 systems (e.g. a later GLASS or MARS
 JWST release), or new spectroscopic z for 72 / 80 / 81.
 
+**Addendum 2026-10-25ay (El Gordo: Caminha+2023 vs the JWST-era Diego+2023 images).** `results/lens_consistency/elgordo_heldout/RESULT.md`,
+plan frozen in 64f923ef, parser, rule function and tests before the run; rules 1–5 of addendum ap, Caminha's 56
+images as "seen", Diego+23 Table `tab_arcs` (218 rows) as the list; primary gate on families with MUSE z_spec,
+geometric-z families reported only. All 56 seen; 162 held out (10 E, 150 N, 2 M). Primary: gate H fails on rms,
+1.64″ (93 % within 3″, 46 images); > 3″: 6c, 13c, 20c, each a third-image candidate first proposed from JWST.
+All held-out (reported): 8.98″, 88 %. Post hoc: the 7 tested candidates give 3.55″ (57 % within 3″), the other 39
+images 0.961″ (100 %); Caminha's own predicted images of 6, 13 and 20 have m_pred 28.5–29.2 (`undetectable`,
+elgordo_djaref). Decision: no held-out-validated second model on El Gordo; no flag. Whether the candidates are
+misidentified or the model's counter-image positions are off is not separated. Alternatives rejected: dropping the
+candidates to pass (post hoc). Revisit if: spectroscopic z for 6c / 13c / 20c, or a JWST-era El Gordo model whose
+maps are public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

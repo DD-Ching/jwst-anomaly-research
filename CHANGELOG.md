@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: El Gordo Caminha+2023 vs the JWST-era Diego+2023 images: gate H fails (D-034 addendum ay)
+- **Result** (`results/lens_consistency/elgordo_heldout/RESULT.md`): 218 Diego+23 image rows, all 56 Caminha images
+  seen, 162 held out. Primary (MUSE z_spec families, 46 images): rms 1.64″, 93 % within 3″, fails on rms; > 3″ are
+  6c, 13c, 20c. Post hoc: all three are JWST-proposed third-image candidates; the 7 tested candidates give 3.55″,
+  the other 39 images 0.961″. Caminha's own predictions there are m ≈ 29 (`undetectable`); faint sources sit at the
+  candidate positions (contact sheet). Misidentification vs model error not separated. No second model; no flag.
+- **Failed approach:** LaTeX footnote marks in the table's z columns broke the parser; fixed before the run.
+- **Handoff:** gate H now fails on SMACS 0723, Abell 370, MACS1149, Abell 2744 and El Gordo (passes only MARS on
+  MACS0416). Next: spectroscopic z for El Gordo 6c / 13c / 20c if published, a JWST-era model with public maps and
+  a held-out list (GLASS / MARS JWST releases), or the D115b Lenstool re-fit (owner machine). #374 waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-25: Abell 2744 Bergamini+23 and MARS vs UNCOVER v2.0-only images: both fail gate H (D-034 addendum ax)
 - **Result** (`results/lens_consistency/a2744_heldout/RESULT.md`): Bergamini+23 on 43 held-out UNCOVER spectroscopic
   images: rms 1.78″, 88 % within 3″, fails on rms; the 5 images > 3″ are all family 80 (z 3.67). MARS (reported

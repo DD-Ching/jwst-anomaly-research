@@ -545,6 +545,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       `obs_arcs.cat` sha256 `d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c`.
 - **El Gordo.**
   - Data: MAST 1176 `jw01176-o241_t012` (jwst 3.0.0, reprocessed 2026-10-01).
+  - Diego et al. 2023, A&A 672, A3, arXiv:2210.06514 (JWST PEARLS El Gordo lens model): Table `tab_arcs`
+    (`TableArcs_NEW3.tex` in the arXiv e-print source, 218 image rows, accessed 2026-10-25), parsed to
+    `results/lens_consistency/elgordo_heldout/diego23_images.ecsv`.
   - DJA v7.0: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix_phot.fits (17,170,560 B,
     sha256 `ac1cf7064edc3f1a907c1b95b7eacd864e19810ff559e7dc39b917081ed66e31`).
   - DJA v7.0 eazy photo-z (D-032): https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/elgordo-grizli-v7.0-fix.photoz.tar.gz

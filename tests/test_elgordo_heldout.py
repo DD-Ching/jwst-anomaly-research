@@ -36,3 +36,7 @@ def test_primary_gate_uses_spec_rows_only():
     p = eh.primary_gate(r, images)
     assert p["n_rows"] == 5
     assert p["outcome"] == "reproduces"
+
+
+def test_dag_ids():
+    assert eh.dag_ids(TEX) == {"1.1c"}

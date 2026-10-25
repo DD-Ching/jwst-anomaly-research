@@ -27,6 +27,7 @@ from m0417_canucsref_posthoc import _clean
 OUT = Path("results/lens_consistency/elgordo_heldout")
 MODEL = "elgordo-caminha23"
 SOURCE = "Diego et al. 2023, A&A 672, A3 (arXiv:2210.06514), Table tab_arcs (TableArcs_NEW3.tex)"
+DJAREF_PRED = Path("results/lens_consistency/elgordo_djaref/predicted_elgordo.ecsv")
 ROW = re.compile(r"^\s*([0-9]+(?:\.[0-9]+)?[a-z]+)\S*\s*&")
 
 
@@ -78,6 +79,54 @@ def primary_gate(r: Table, images: Table) -> dict:
     return {"gate_H": g, "outcome": mo.outcome(g), "n_rows": int(keep.sum())}
 
 
+def dag_ids(tex: str) -> set[str]:
+    """IDs marked ``\\dag``: third-image candidates first found in the JWST images (Diego+23)."""
+    return {
+        m.group(1)
+        for line in tex.splitlines()
+        if (m := ROW.match(line)) and "\\dag" in line.split("&")[0]
+    }
+
+
+def _stats(d: np.ndarray) -> dict:
+    g = mo.gate_h(Table({"dtheta_arcsec": d, "inside": np.ones(len(d), bool)}))
+    return {k: (round(v, 3) if isinstance(v, float) else v) for k, v in g.items()}
+
+
+def posthoc(tex: str, out: Path = OUT) -> dict:
+    """Post hoc (not in the plan): the primary set split by the JWST third-image candidates and
+    by anchor type, and Caminha's own predictions for the candidates' systems (elgordo_djaref)."""
+    r = Table.read(out / f"heldout_{MODEL}.ecsv")
+    im = Table.read(out / "diego23_images.ecsv")
+    spec = dict(zip(np.asarray(im["image_id"], str), np.asarray(im["z_spec"], bool), strict=True))
+    r = r[[spec[str(i)] for i in r["image_id"]]]
+    d = np.asarray(r["dtheta_arcsec"], float)
+    ids = np.asarray(r["image_id"], str)
+    dag = np.isin(ids, sorted(dag_ids(tex)))
+    typ = np.asarray(r["type"], str)
+    pred = Table.read(DJAREF_PRED)
+    over = [str(i) for i, x in zip(ids, d, strict=True) if x > 3.0]
+    fam = {str(i): str(s) for i, s in zip(r["image_id"], r["system"], strict=True)}
+    return {
+        "label": "post hoc; not in the frozen plan",
+        "dag_ids": sorted(ids[dag].tolist()),
+        "dag": _stats(d[dag]),
+        "without_dag": _stats(d[~dag]),
+        "type_E": _stats(d[typ == "E"]),
+        "type_N": _stats(d[typ == "N"]),
+        "djaref_targets_of_over_3arcsec_systems": [
+            {
+                "system": str(p["system"]),
+                "image_class": str(p["image_class"]),
+                "m_pred": round(float(p["m_pred"]), 2),
+                "class": str(p["class"]),
+            }
+            for p in pred
+            if str(p["system"]) in {fam[i] for i in over}
+        ],
+    }
+
+
 def run(tex: Path, out: Path = OUT) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     images = parse_table(tex.read_text())
@@ -103,6 +152,8 @@ def run(tex: Path, out: Path = OUT) -> dict:
         "all_heldout (reported only)": block,
     }
     (out / "summary.json").write_text(json.dumps(_clean(summary), indent=1, allow_nan=False) + "\n")
+    p = posthoc(tex.read_text(), out)
+    (out / "posthoc.json").write_text(json.dumps(_clean(p), indent=1, allow_nan=False) + "\n")
     return summary
 
 
