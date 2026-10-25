@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from astropy.table import Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -33,9 +34,21 @@ def test_parse_block_keeps_clump1_and_labels_z():
     assert list(t["paper_id"]) == ["1.1.1", "1.1.2", "2.1.1", "2.1.2"]
 
 
+def test_parse_block_raises_on_an_unparsed_row():
+    bad = _TEX.replace("2.1.2 &11.1 & -6.1", "2.1.2 & 11.1 & $-$6.1")
+    with pytest.raises(ValueError, match="unparsed Table 8 row"):
+        sr.parse_block(bad, r"X\,J0000")
+
+
 def test_stored_image_list_matches_the_frozen_families():
     t = Table.read(sr.IMAGES, format="ascii.ecsv")
-    for cluster, (_, _, held, spec) in sr.CLUSTERS.items():
+    # held-out and spectroscopic families as read from the SLICE text (PLAN.md table)
+    expect = {
+        "rxc0232": (set(), {"5", "7"}),
+        "rxc2211": ({str(i) for i in range(4, 11)}, set()),
+        "macs0553": ({str(i) for i in range(11, 22)}, {"1", "5", "10", "13"}),
+    }
+    for cluster, (held, spec) in expect.items():
         c = sr.load_cluster(t, cluster)
         fam = np.asarray(c["system"], str)
         assert set(fam[np.asarray(c["held_out"], bool)]) == set(held)

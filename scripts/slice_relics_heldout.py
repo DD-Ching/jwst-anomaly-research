@@ -49,6 +49,7 @@ CLUSTERS: dict[str, tuple[str, str, tuple[str, ...], tuple[str, ...]]] = {
 _ROW = re.compile(r"^\s*(\d+)\.(\d+)\.(\d+)\s*&\s*([-\d.]+)\s*&\s*([-\d.]+)\s*&(.*?)&")
 _ZSPEC = re.compile(r"^\s*(\d+\.\d+)\s*$")
 _ZMODEL = re.compile(r"\$\s*(\d+\.\d+)_")
+_ID = re.compile(r"^\s*c?\d+\.\d+\.\d+\b")  # any image-id-like row start
 
 
 def parse_block(tex: str, sidehead: str) -> Table:
@@ -60,6 +61,8 @@ def parse_block(tex: str, sidehead: str) -> Table:
     for line in tex[start:end].splitlines():
         m = _ROW.match(line)
         if not m:
+            if _ID.match(line):
+                raise ValueError(f"unparsed Table 8 row: {line!r}")
             continue
         src, clump, img, ra, dec, zcell = m.groups()
         key = (src, clump)
@@ -111,36 +114,46 @@ def load_cluster(images: Table, cluster: str) -> Table:
     t["held_out"] = np.asarray(t["new_in_jwst"], bool)
     held = CLUSTERS[cluster][2]
     if set(t["system"][t["held_out"]]) != set(held):
-        raise ValueError(f"{cluster}: new_in_jwst disagrees with the frozen held-out families")
+        raise ValueError(f"{cluster}: stale image list (new_in_jwst vs CLUSTERS); rebuild it")
     t["z_spec"] = np.asarray(t["use_spec"], bool)  # rule 5 rows (h29.run_model reads z_spec)
     t["a"] = np.ones(len(t))
     return t
 
 
-def posthoc_scale(summary: dict, z_lens: dict[str, float]) -> dict:
-    """Post hoc (not in PLAN.md): per spectroscopic family, D_LS/D_S at the fitted z over D_LS/D_S
-    at z_spec; one constant across families means one global map-amplitude factor."""
+def posthoc_scale(summary: dict, images: Table) -> dict:
+    """Post hoc (not in PLAN.md): per family, D_LS/D_S at the fitted z over D_LS/D_S at the SLICE z
+    (spectroscopic or SLICE model z); one constant across families means one global map-amplitude
+    factor. Families fitted at the lower z-grid edge are listed and get no factor."""
     from astropy.cosmology import FlatLambdaCDM
 
-    cosmo = FlatLambdaCDM(70.0, 0.3)
-
-    def ratio(zl: float, zs: float) -> float:
-        dls = cosmo.angular_diameter_distance(zl, zs)
-        return float(dls / cosmo.angular_diameter_distance(zs))
-
     out = {}
-    for cluster, zl in z_lens.items():
-        e = summary[cluster]
-        if not e.get("z_spec"):
-            continue
-        out[cluster] = {
-            f: {
-                "z_spec": zs,
-                "z_fit": e["z_fit"][f],
-                "scale": ratio(zl, e["z_fit"][f]) / ratio(zl, zs),
+    for cluster, (_, model, _, _) in CLUSTERS.items():
+        spec = lc.MODELS[model]
+        zl = spec["z_lens"]
+        cosmo = FlatLambdaCDM(*spec["cosmology"])
+        z_min = zl + ho.Z_MIN_OFFSET
+
+        def ratio(zs: float, zl: float = zl, cosmo=cosmo) -> float:
+            dls = cosmo.angular_diameter_distance(zl, zs)
+            return float(dls / cosmo.angular_diameter_distance(zs))
+
+        t = images[np.asarray(images["cluster"], str) == cluster]
+        fam = np.asarray(t["system"], str)
+        e, rows, edge = summary[cluster], {}, []
+        for f in dict.fromkeys(fam):
+            z_fit = e["z_fit"][f]
+            if z_fit <= z_min * (1 + 1e-9):
+                edge.append(f)
+                continue
+            sel = fam == f
+            z_cat = float(t["z"][sel][0])
+            rows[f] = {
+                "z_slice": z_cat,
+                "z_slice_spectroscopic": bool(t["z_spec"][sel][0]),
+                "z_fit": z_fit,
+                "scale": ratio(z_fit) / ratio(z_cat),
             }
-            for f, zs in e["z_spec"].items()
-        }
+        out[cluster] = {"families": rows, "at_grid_min": edge, "z_grid_min": z_min}
     return out
 
 
@@ -154,8 +167,8 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     if args.posthoc:
         summary = json.loads((OUT / "summary.json").read_text())
-        z_lens = {c: lc.MODELS[m]["z_lens"] for c, (_, m, _, _) in CLUSTERS.items()}
-        ph = {"note": "post hoc, not in PLAN.md", "scale": posthoc_scale(summary, z_lens)}
+        images = Table.read(IMAGES, format="ascii.ecsv")
+        ph = {"note": "post hoc, not in PLAN.md", "scale": posthoc_scale(summary, images)}
         (OUT / "posthoc.json").write_text(json.dumps(ph, indent=1) + "\n")
         print(json.dumps(ph, indent=1))
         return 0

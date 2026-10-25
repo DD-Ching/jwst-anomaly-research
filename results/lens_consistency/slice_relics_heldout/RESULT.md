@@ -20,26 +20,32 @@ Frozen labels: 11.1 `lensing_residual_input`; the seven reading-B rows `redshift
 not candidates.
 
 ## Post hoc (not in the plan)
-- **MACS J0553 reading B fits one global amplitude factor.** The fitted z of every MACS J0553 family is 0.71–1.18
-  (`summary.json` `z_fit`), each below that family's SLICE z (SLICE z 1.14–7.25). For the four spectroscopic families, D_LS/D_S at the
-  fitted z over D_LS/D_S at z_spec is 0.664, 0.663, 0.677, 0.637 (`posthoc.json`; z_spec 1.14–3.76), i.e. one
-  factor ≈ 0.66 for all redshifts. On RXC J0232 the same ratio is 1.005 and 0.982. A single factor across a
-  redshift range of 1.14–3.76 is what a map-amplitude or normalisation difference predicts, not a family-specific
-  lensing residual, so the seven reading-B flags are read as that ordinary effect. Its cause is not isolated: the
-  published κ and μ(z = 2) maps agree with our deflection-derived values (median ratio 1.000 / 1.006,
-  `validate/macs0553-relics-lenstool/validate.json`), so the released products are internally consistent and the
-  factor sits in the released model itself (its z_lens, cosmology or z reference) or in our D_LS/D_S = 1 reading of it.
-- **11.1 is not affected by that factor** (rule 1 fits z per family, which absorbs a global amplitude). It misses by
-  3.49″ while 11.2 / 11.3 match at 1.26″ / 0.77″ (`imageplane_macs0553.ecsv`). The threshold is 3″, the HST-era
-  model never had family 11, and the SLICE model rms is 0.66″ (paper text); an HST-era model missing one image of
-  a new family by 3.5″ is within the ordinary expectation in PLAN.md. Not vetted further here.
-- RXC J2211 fails F by 0.016″ on Dec. Reported only: its held-out families give rms 2.21″, 18 / 22 within 3″,
-  with 4.2, 5.1, 5.2, 6.2 beyond 3″ (`imageplane_rxc2211.ecsv`); family 5 fits z 9.79. Family 1 fits z 1.04, which
-  is closer to the Table 8 value 1.051 than to the text's 1.501 (not used: frozen out of reading B).
+- **MACS J0553 fits one global amplitude factor.** Its fitted z are 0.71–1.18 (`summary.json` `z_fit`), each below
+  that family's SLICE z (1.14–7.25). D_LS/D_S at the fitted z over D_LS/D_S at the SLICE z (`posthoc.json`; SLICE
+  spectroscopic or SLICE-model z) is 0.637–0.708 for all 21 families, and 0.637–0.677 for the four spectroscopic
+  ones (z_spec 1.14–3.76). For comparison RXC J0232 gives 0.974–1.027 (6 families) and RXC J2211 0.965–1.089 (10).
+  One factor ≈ 0.66 across z 1.14–7.25 is what a map-amplitude or normalisation difference predicts; a
+  family-specific lensing residual would not give it. The seven reading-B flags are consistent with that factor.
+  Its cause is not isolated: the published κ and μ(z = 2) maps agree with our deflection-derived values (median
+  ratio 1.000 / 1.006, `validate/macs0553-relics-lenstool/validate.json`), so the released products are internally
+  consistent; candidates are the released model's own z_lens, cosmology or z reference, or our D_LS/D_S = 1 reading.
+- **Gate K0 cannot see such a factor** (rule 1 fits z per family), so MACS J0553 counts as usable under the frozen
+  rules although its amplitude differs. Family 11's own factor is 0.708, inside the 0.637–0.708 spread of the other
+  families (`posthoc.json`), so its fitted z sits where the global factor puts it; 11.1 misses by 3.49″ while 11.2 /
+  11.3 match at 1.26″ / 0.77″ (`imageplane_macs0553.ecsv`). The HST-era model never had family 11, and the SLICE
+  model rms is 0.66″ (paper text, not stored). The flag stays an input; not vetted further here.
+- RXC J0232 family 2 fits z at the lower grid edge (z_lens + 0.2; `posthoc.json` `at_grid_min`; SLICE model z 5.76)
+  and predicts 1 image for 2 catalogued; its residuals count in K0 as frozen.
+- RXC J2211 fails F on Dec (−0.516″ against 0.5″, `summary.json`). Reported only: its held-out families give rms
+  2.21″, 18 / 22 within 3″, with 4.2, 5.1, 5.2, 6.2 beyond 3″ (`imageplane_rxc2211.ecsv`); family 5 fits z 9.79.
+  Family 1 fits z 1.04, closer to Table 8's 1.051 than to the text's 1.501 (frozen out of reading B).
 - Table 8 clump-1 rows give 33 RXC J2211 images where the text says 32 (not resolved).
+- PLAN.md gave the e-print tarball's sha256 as main.tex's (corrected there after the run; `slice_images.ecsv` meta
+  holds both).
 
 ## Reading
-- Two of three RELICS models are usable references on the SLICE lists; the one frozen held-out flag (MACS J0553
+- Two of three RELICS models pass the frozen gates on the SLICE lists (MACS J0553 with a global amplitude factor
+  ≈ 0.66 those gates cannot see); the one frozen held-out flag (MACS J0553
   11.1, 3.49″) is a lensing-residual input for the SLICE Lenstool model, not a candidate.
 - **Limit:** each cluster has one HST-era model, so "every usable model misses" is one model. The JWST-era SLICE
   Lenstool models (LAM atlas, closed on 2026-10-25) remain the reference to re-run 11.1 and the MACS J0553 scale

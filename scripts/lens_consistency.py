@@ -225,7 +225,8 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
-    # z_lens from SLICE (Cerny et al. 2026) Table 1
+    # z_lens from SLICE (Cerny et al. 2026) Table 1; the z_lens the RELICS models were built with
+    # is not documented with the maps (not checked; D-034 addendum bc)
     "rxc0232-relics-lenstool": {
         "files": lensmodel.RXC0232_RELICS_LENSTOOL,
         "kind": "maps",

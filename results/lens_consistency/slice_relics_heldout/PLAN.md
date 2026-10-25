@@ -16,7 +16,7 @@ parser functions tested in `tests/test_slice_relics_heldout.py` (next commit).
   Lenstool model (LAM atlas, closed on 2026-10-25) before any interpretation.
 
 ## Inputs (observed)
-SLICE (Cerny et al. 2026) Table 8 blocks, parsed from the e-print `main.tex` (sha256 f7120d94…a9a7) into
+SLICE (Cerny et al. 2026) Table 8 blocks, parsed from the e-print tarball (sha256 f7120d94…a9a7; corrected after the run: this is the tarball's hash, not main.tex's, which `slice_images.ecsv` records) into
 `slice_images.ecsv`. **Clump 1 only:** of each source, the rows `S.1.k` (one point per image; the extra clumps
 of a source are not independent constraints). Candidates (`c…`) are not in these blocks.
 

@@ -2679,8 +2679,8 @@ Lenstool maps are reachable (LAM atlas, closed 2026-10-25) or a JWST-era MACS J2
 list and tests in 47c7efd, before the run; rules as addendum bb (one model per cluster; clump 1 of each source).
 Outcome: RXC J0232 usable (K0 rms 0.69″, F passes; reading B 8 / 8 at z_spec), RXC J2211 not usable (F Dec −0.52″),
 MACS J0553 usable (K0 1.32″); reading A flags MACS J0553 11.1 (3.49″) as a lensing-residual input; reading B flags 7 / 11
-MACS J0553 spectroscopic images. Post hoc: one D_LS/D_S factor 0.64–0.68 across the four MACS J0553 spectroscopic families
-(z_spec 1.14–3.76) fits those seven misses (RXC J0232: 0.98–1.01), so they are read as a model-amplitude difference, cause
+MACS J0553 spectroscopic images. Post hoc: one D_LS/D_S factor 0.637–0.708 across all 21 MACS J0553 families
+(0.637–0.677 for the spectroscopic ones) fits those seven misses (RXC J0232 0.97–1.03, RXC J2211 0.97–1.09), so they are read as a model-amplitude difference, cause
 not isolated (the published κ and μ(z = 2) maps agree with the deflections). Decision: no candidate; 11.1 waits for the SLICE
 model. Alternatives rejected: rescaling the MACS J0553 maps post hoc. Revisit if: the SLICE Lenstool models are reachable,
 or the Ebeling+2017 MACS J0553 model's z_lens / cosmology / z reference is documented.
