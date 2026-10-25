@@ -430,6 +430,75 @@ MACS0417_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS Lenstool v1 maps of three SLICE clusters (HLSP DOI 10.17909/T9SP45, accessed 2026-10-25),
+#: deflection in arcsec at D_LS/D_S = 1: RXC J0232.2-4420, RXC J2211.7-0349, MACS J0553.4-3342.
+_RELICS_RXC0232 = (
+    "https://archive.stsci.edu/hlsps/relics/rxc0232m44/models/lenstool/"
+    "hlsp_relics_model_model_rxc0232m44_lenstool_v1"
+)
+RXC0232_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_RXC0232}_x-arcsec-deflect.fits",
+        "670e2f88db3db35623f4c1ab965fc3b5e828b0c9429b6a6bf24b6abbdd9eae28",
+    ),
+    "alpha_y": (
+        f"{_RELICS_RXC0232}_y-arcsec-deflect.fits",
+        "78f194e2fd17b595f7c17f05a67fe7559199cbc631efbf7c21cb5db49f7c40b1",
+    ),
+    "kappa_map": (
+        f"{_RELICS_RXC0232}_kappa.fits",
+        "569b0be64a74ebc2aa39488feb96cfb4b571cd19e286f7a01a8fac79162b1400",
+    ),
+    "mag_z2": (
+        f"{_RELICS_RXC0232}_z02-magnif.fits",
+        "50fb8e648f6c2039a9c56617214491c57c42262efa09ff5087b4fdab0dba2ce4",
+    ),
+}
+_RELICS_RXC2211 = (
+    "https://archive.stsci.edu/hlsps/relics/rxc2211m03/models/lenstool/"
+    "hlsp_relics_model_model_rxc2211m03_lenstool_v1"
+)
+RXC2211_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_RXC2211}_x-arcsec-deflect.fits",
+        "93fa6c82597dbe5050da68662009b0a6ffcb6d5820ab22b27b412ac9f9927ebf",
+    ),
+    "alpha_y": (
+        f"{_RELICS_RXC2211}_y-arcsec-deflect.fits",
+        "1cac8577ffa828da5f95a4216ff6ae3ea88098b34d97352b8e1e12114b21073a",
+    ),
+    "kappa_map": (
+        f"{_RELICS_RXC2211}_kappa.fits",
+        "c8a7d934cf01a71503d5a3782816584beff6d316175e6e4fedcde47d6f5d1b43",
+    ),
+    "mag_z2": (
+        f"{_RELICS_RXC2211}_z02-magnif.fits",
+        "340c0285443b654cac69cea433c2496790b91102e3da2d04e1b58d1c52f48a7f",
+    ),
+}
+_RELICS_MACS0553 = (
+    "https://archive.stsci.edu/hlsps/relics/macs0553m33/models/lenstool/"
+    "hlsp_relics_model_model_macs0553m33_lenstool_v1"
+)
+MACS0553_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_MACS0553}_x-arcsec-deflect.fits",
+        "407703059d26e681744cf3f282f01181cbbc7d8ff38510075c97db24244e3fac",
+    ),
+    "alpha_y": (
+        f"{_RELICS_MACS0553}_y-arcsec-deflect.fits",
+        "92052e3070137ebc705146e6ed651dd4ea0c4affefb5cd612195c5dfb5d11502",
+    ),
+    "kappa_map": (
+        f"{_RELICS_MACS0553}_kappa.fits",
+        "ec5f5f49a71e4b2109ffcebad25509e104792041eba508ccee18f2a95e4349ab",
+    ),
+    "mag_z2": (
+        f"{_RELICS_MACS0553}_z02-magnif.fits",
+        "8bfb8498fd2a5a30ef0745e9d7a8c46267484a3b1094d2aff645ff8f1950beb3",
+    ),
+}
+
 #: HFF Sharon & Johnson v4cor Lenstool maps of MACS J1149.5+2223 (readme
 #: ``hlsp_frontier_model_macs1149_sharon_v4cor_readme.pdf``, accessed 2026-10-20): best fit,
 #: 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second model for the
