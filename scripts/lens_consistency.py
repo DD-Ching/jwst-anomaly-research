@@ -317,6 +317,20 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    "macs2129-clash-nfw": {
+        "files": lensmodel.MACS2129_CLASH_NFW,
+        "kind": "maps",
+        "z_lens": 0.590,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "macs2129-clash-ltm": {
+        "files": lensmodel.MACS2129_CLASH_LTM,
+        "kind": "maps",
+        "z_lens": 0.590,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
 }
 
 # HFF CATS map models (D-035): "<cluster>-cats". The image list is used only where our

@@ -688,6 +688,51 @@ MACS0647_CLASH_LTM: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: CLASH Zitrin v2 maps of MACS J2129.4-0741 (readme last updated 2015-02-18; HLSP of CLASH, Postman
+#: et al. 2012; accessed 2026-10-25): PIEMD + eNFW ("nfw") and LTM-Gauss ("ltm-gauss") best fits,
+#: deflection in arcsec at D_LS/D_S = 1, 0.065" pixels, z_lens 0.590 (readme). archive.stsci.edu
+#: needs the certifi CA bundle from cloud sessions (CHANGELOG 2026-10-23).
+_CLASH_M2129 = (
+    "https://archive.stsci.edu/missions/hlsp/clash/macs2129/models/zitrin/{0}/v2/"
+    "hlsp_clash_model_macs2129_zitrin-{0}_v2_{1}.fits"
+)
+MACS2129_CLASH_NFW: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CLASH_M2129.format("nfw", "x-arcsec-deflect"),
+        "5b1bdacd570b731da764591e17fc1f4fabc4bcd79876880c182e65556871b9ae",
+    ),
+    "alpha_y": (
+        _CLASH_M2129.format("nfw", "y-arcsec-deflect"),
+        "7851571efe2e92fdb68b3f810580a5ce065ba747ee8a3033182a3d991863721e",
+    ),
+    "kappa_map": (
+        _CLASH_M2129.format("nfw", "kappa"),
+        "b68dbcbad334f62f512549a8f0761dc2b6e50099453dfe942a7aa8157949425b",
+    ),
+    "mag_z2": (
+        _CLASH_M2129.format("nfw", "z02-magnif"),
+        "842e4bf8b1d2500e870bbb3fe33614829f5e47250cf8e1727cee818fe0d72eda",
+    ),
+}
+MACS2129_CLASH_LTM: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        _CLASH_M2129.format("ltm-gauss", "x-arcsec-deflect"),
+        "b1253ccddcf0b1e860b2fb4e8af3365efeb24ef9b630e0ba1fd1457959c8c3ca",
+    ),
+    "alpha_y": (
+        _CLASH_M2129.format("ltm-gauss", "y-arcsec-deflect"),
+        "b2ce3716be91cf12084eb55cecc90f467b6d54618d964d6af25bf3a5cb05a3c6",
+    ),
+    "kappa_map": (
+        _CLASH_M2129.format("ltm-gauss", "kappa"),
+        "4989eec4ba79f7d18dc94cf669ebd47fb2d3aff762dbc28375475b784c621f63",
+    ),
+    "mag_z2": (
+        _CLASH_M2129.format("ltm-gauss", "z02-magnif"),
+        "98ecf44a179d724aa2f0071edffe5422f7f84109155617ff1e5a55d2503c1a55",
+    ),
+}
+
 #: HFF CATS Lenstool models (Jauzac, Richard, Mahler et al.; HLSP
 #: https://archive.stsci.edu/prepds/frontier/lensmodels/, accessed 2026-10-08): deflection maps
 #: (arcsec, D_LS/D_S = 1), κ, z = 2 magnification and the multiple-image list. cluster ->
