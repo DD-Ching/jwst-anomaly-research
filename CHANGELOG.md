@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SN Eos predicted images and delays from the VENUS AstroLensPy v2.1 maps: every extra image leads
+- **Result** (`results/transients/sneos/RESULT.md`; plan frozen in 89c06718, tool and tests committed before the run):
+  gate P (`Lens_pot` is the potential of α: s 1.0000004, median residual 7.0e-5), S (101.1 / 101.2 matched) and M
+  (|μ| / map 0.998, 1.000) pass. Five images at z 5.133; the three extra ones lead 101.1 by 1,238 d (μ −11.9),
+  1,321 d (μ 14.5) and 19,656 d (μ 2.2); 101.2 trails by 0.32 d. No extra image is a target in the three NIRCam epochs.
+- **Post hoc:** the leading pair sits by a member's galaxy-scale critical curve; no MACS J1931 NIRCam epoch precedes
+  2025-09-01. No Δt / μ uncertainty yet.
+- **Handoff:** next: 101.2 / 101.1 SN flux-ratio test across the three epochs (model ratio ≈ 1.16, independent of the
+  light curve; plan first). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: Two-epoch NIRCam inventory on 19 cluster fields: SN Eos follow-up epoch is new data
 - **Result** (`results/transients/epoch_inventory/RESULT.md`; plan frozen before the query, rule tested): 117 public
   or pending NIRCam epochs within 3′ of 19 cluster centres; 82 pairs pass the new-pair rule (Abell 2744 78, an upper
