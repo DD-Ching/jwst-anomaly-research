@@ -6475,4 +6475,3 @@ confining radiation at a throat is found.
   - #529 re-ran phase A and had two lint failures from files over 1 MB.
   - #500 and #542 waited on CI that did not start because the PR was "dirty".
 - **Revisit if:** the advisory report becomes too noisy to use, or the owner changes the review procedure.
-
