@@ -12,5 +12,26 @@
   "fast": 0,
   "slow": 86,
   "insufficient": 0
- }
+ },
+ "run_span_d_median": 0.0409,
+ "runs_with_span_le_0.05d": 85,
+ "pre_sides_slow": 79,
+ "post_sides_slow": 83,
+ "edge_L_median_d": 0.94,
+ "edge_U_median_d": 0.96,
+ "fast_sides_L_U_median_d": [
+  0.02,
+  0.041
+ ],
+ "run_start_phase_abs_max": 0.0246,
+ "secondary_phase_0.5_median_rel": 0.852,
+ "runs_longer_than_0.05d": [
+  {
+   "t_start": 1063.2013940664401,
+   "t_end": 1064.1412936398556,
+   "n": 3,
+   "quarter": 11,
+   "max_gap_d": 0.919
+  }
+ ]
 }

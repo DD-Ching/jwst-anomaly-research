@@ -38,6 +38,17 @@ def test_frac_loo_matches_pilot_frac_for():
         np.add.at(num, d, 1)
     for k, st in sts.items():
         assert we.frac_loo(den, num, st) == wk.frac_for(cf, k)
+    # a star missing some cadences: equal on its own cadences (the only ones the screen looks up)
+    short = _star(5, (100, 110))
+    short = {c: v[:600] for c, v in short.items()}
+    cf2 = wk.common_frac({**sts, 5: short})
+    den2, num2 = den.copy(), num.copy()
+    g, d = we.own_cadences(short)
+    np.add.at(den2, g, 1)
+    np.add.at(num2, d, 1)
+    own = set(short["CADENCENO"].astype(int).tolist())
+    ref = {c: v for c, v in wk.frac_for(cf2, 5).items() if c in own}
+    assert we.frac_loo(den2, num2, short) == ref
 
 
 def test_layers_order_and_reasons():

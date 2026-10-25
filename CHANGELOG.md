@@ -6,14 +6,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Scope:** owner-authorized exploratory search, `results/w3_kepler/expand/` (frozen `PLAN.md` before any new
   flux). The #529 rule is unchanged.
   - 500 never-used pool stars, all read (0 failures); 3.82 GB through the ledger.
-  - 495 / 500 are inside the validated range. #529's recovery was not re-measured on this batch.
+  - 495 / 500 are inside the PLAN §3 applicability proxy. #529's recovery was not re-measured on this batch.
 - **Layers:**
   - 1 star has cadences ≥ 1 mag dim: KIC 3954798, 2,848 cadences, 86 flagged runs.
   - All 86 runs fail the edge test ("slow"); they also fail one-off and the local shoulder test.
   - 0 survivors, so nothing vetted.
   - The other 499 stars have no cadence ≥ 1 mag dim.
-- **KIC 3954798:** a Kirk et al. 2016 EB, P 0.91848 d, eclipses to 1.66 mag (post hoc description). A real deep
-  dimming, ordinary.
+- **KIC 3954798:** a Kirk et al. 2016 EB, P 0.91848 d, eclipses to 1.66 mag (post hoc description; not vetted).
+  - Its edge rejection comes from the neighbouring eclipse falling inside the 1-d span window; its own edges are
+    fast.
+  - A similar EB with P ≳ 1.25 d would rest on the one-off and shoulder tests.
 - **Correction:** the "425 stars" in my chat answer after #529 was wrong. The earlier rounds read 372 distinct
   stars: 325 FGK pool stars (development 20, validation 45, search 260), 46 EB controls and 1 interface star.
 

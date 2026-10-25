@@ -1,0 +1,28 @@
+"""Applicability counts from screen_expand.json.gz (added after the review; no data access).
+
+    python results/w3_kepler/expand/applicability_script.py.txt
+"""
+
+import gzip
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+stars = json.loads(gzip.open(HERE / "screen_expand.json.gz", "rt").read())["stars"]
+app = [x for x in stars if x["applicable"]]
+out = {
+    "label": "derived",
+    "proxy": "PLAN section 3: 17 quarters and median sigma_rel <= 3.96e-4 (2 x the #500 maximum "
+    "1.98e-4, ../posthoc2.json); #529's validation stars have no stored sigma",
+    "read": len(stars),
+    "applicable": len(app),
+    "applicable_with_sigma_above_1.98e-4": sum(x["median_sigma_rel"] > 1.98e-4 for x in app),
+    "not_applicable": [
+        {"kepid": x["kepid"], "quarters": x["quarters"], "median_sigma_rel": x["median_sigma_rel"],
+         "n_runs": x["n_runs"]}
+        for x in stars
+        if not x["applicable"]
+    ],
+}
+(HERE / "applicability.json").write_text(json.dumps(out, indent=1) + "\n")
+print(json.dumps(out, indent=1))

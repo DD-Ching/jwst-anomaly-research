@@ -45,6 +45,39 @@ out = {
     "good_cadences_dm_ge_1": int((rel[ok] <= 10 ** -0.4).sum()),
     "edge_classes": {c: sum(x["edge_class"] == c for x in runs[str(kid)]) for c in ("fast", "slow", "insufficient")},
 }
+# added after the review: what makes the edges "slow", run start phases, secondary depth, gaps
+rr = runs[str(kid)]
+span = np.array([x["t_end"] - x["t_start"] for x in rr])
+fast_pre = [x for x in rr if x["edge_pre_class"] == "fast"]
+fast_post = [x for x in rr if x["edge_post_class"] == "fast"]
+start_ph = ((np.array([x["t_start"] for x in rr]) - tmin) / per + 0.5) % 1 - 0.5
+sec = ok & (np.abs(((t - tmin) / per) % 1 - 0.5) <= 0.02)
+long_runs = []
+for x in rr:
+    if x["t_end"] - x["t_start"] > 0.05:
+        m = ok & (t >= x["t_start"]) & (t <= x["t_end"])
+        tt = t[m]
+        long_runs.append(
+            {"t_start": x["t_start"], "t_end": x["t_end"], "n": x["n"],
+             "quarter": x["quarter_start"], "max_gap_d": round(float(np.diff(tt).max()), 3)}
+        )
+out.update(
+    {
+        "run_span_d_median": round(float(np.median(span)), 4),
+        "runs_with_span_le_0.05d": int((span <= 0.05).sum()),
+        "pre_sides_slow": sum(x["edge_pre_class"] == "slow" for x in rr),
+        "post_sides_slow": sum(x["edge_post_class"] == "slow" for x in rr),
+        "edge_L_median_d": round(float(np.median([x["edge_pre_d"] for x in rr] + [x["edge_post_d"] for x in rr])), 3),
+        "edge_U_median_d": round(float(np.median([v for x in rr for v in (x["edge_pre_max_d"], x["edge_post_max_d"]) if v is not None])), 3),
+        "fast_sides_L_U_median_d": [
+            round(float(np.median([x["edge_pre_d"] for x in fast_pre] + [x["edge_post_d"] for x in fast_post])), 3),
+            round(float(np.median([x["edge_pre_max_d"] for x in fast_pre] + [x["edge_post_max_d"] for x in fast_post])), 3),
+        ],
+        "run_start_phase_abs_max": round(float(np.abs(start_ph).max()), 4),
+        "secondary_phase_0.5_median_rel": round(float(np.median(rel[sec])), 3),
+        "runs_longer_than_0.05d": long_runs,
+    }
+)
 (HERE / "flagged_source.json").write_text(json.dumps(out, indent=1) + "\n")
 
 import matplotlib  # noqa: E402
