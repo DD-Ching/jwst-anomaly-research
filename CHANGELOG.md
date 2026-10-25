@@ -2,16 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-25: SN Eos 101.2 / 101.1 flux-ratio test: plan frozen, data route verified (in progress)
-- **Plan** (`results/transients/sneos_ratio/PLAN.md`, frozen before any pixel is read): difference-image aperture
-  ratio of the two SN images in three epochs × F277W / F356W / F444W vs R_model 1.162; gates D (S/N ≥ 5) and I
-  (empirical-PSF injections), decision floor 0.30 in ln R (ASSUMPTION).
-- **Data route:** all 9 `_i2d` mosaics (143–306 MB each) are listed and readable anonymously on `s3://stpubdata`;
-  stamps by byte range only. `reproject` is not installed; the plan uses `map_coordinates` resampling instead.
-- **Tool:** `scripts/sneos_ratio.py` holds rules 1–6 as functions (resampling, registration, aperture pair,
-  injection, combination, decision), tested on synthetic data in `tests/test_sneos_ratio.py`; no pixel read yet.
-- **Handoff:** next: the run driver (empirical-PSF star selection per rule 4, S3 stamps of the 9 mosaics, contact
-  sheet), run, look at the difference contact sheet, then the literature check. #374 waits for the 2026-10-26 weekly run.
+## 2026-10-25: SN Eos 101.2 / 101.1 flux ratio agrees with the VENUS model under the frozen rule
+- **Result** (`results/transients/sneos_ratio/RESULT.md`; plan frozen in a3665b33 / 8450e58f before any pixel was
+  read): difference-image aperture ratio R_obs 1.382 (σ_ln 0.083, 5 of 6 band × epoch pairs) vs R_model 1.162:
+  "agrees" (below the 0.30 floor, an ASSUMPTION; about 2σ above the model on statistics alone). Per-pair ratios
+  1.16–1.93 scatter beyond their errors (cause not tested).
+- **Deviation:** an injection edge crash fixed before any measurement was read. **Post hoc:** gate I is weak (tests
+  aperture linearity only); pairs share the early stamp.
+- **Hosts:** `s3://stpubdata` anonymous byte ranges work; VizieR (Gaia DR3) works.
+- **Handoff:** next: the literature check named in the plan (do Allingham et al. 2026 / the SN Eos discovery paper
+  report the image flux ratio or microlensing?), then the ±1σ maps for an R_model range. #374 waits for the
+  2026-10-26 weekly run.
 
 ## 2026-10-25: SN Eos predicted images and delays from the VENUS AstroLensPy v2.1 maps: every extra image leads
 - **Result** (`results/transients/sneos/RESULT.md`; plan frozen in 89c06718, tool and tests committed before the run):

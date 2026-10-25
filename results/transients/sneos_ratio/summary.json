@@ -1,0 +1,358 @@
+{
+ "plan": "results/transients/sneos_ratio/PLAN.md",
+ "r_model": 1.162,
+ "psf_star": {
+  "source_id": 6766145724110284544,
+  "ra": 292.9527049438,
+  "dec": -26.57478515645,
+  "gmag": 19.466372,
+  "dist_arcsec": 7.409647842481095
+ },
+ "rows": [
+  {
+   "band": "f277w",
+   "later": "jw09493-o001_t001",
+   "pix_arcsec": 0.06290160292417428,
+   "shift_arcsec": 0.005300642577652102,
+   "registered": true,
+   "f1": 0.34585078859276713,
+   "sf1": 0.08169532061387909,
+   "f2": 0.668064184754931,
+   "sf2": 0.08133235621406971,
+   "snr1": 4.233422257161827,
+   "snr2": 8.214002591988873,
+   "ratio": 1.9316543630656982,
+   "sratio": 0.5133231273272859,
+   "detected": false,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1630043818006681,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7009387283732441,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.152497896726099,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.6958084873524489,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1555098688639678,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.6934701966156893,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": false
+  },
+  {
+   "band": "f277w",
+   "later": "jw12299-o001_t001",
+   "pix_arcsec": 0.06290160292417428,
+   "shift_arcsec": 0.0044399235031532995,
+   "registered": true,
+   "f1": 0.8081984096510949,
+   "sf1": 0.056409434068657505,
+   "f2": 1.1812584359473752,
+   "sf2": 0.05658921751177498,
+   "snr1": 14.327362488115266,
+   "snr2": 20.874267005045283,
+   "ratio": 1.461594605781683,
+   "sratio": 0.12373178778380409,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1623871630717584,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7015275922761436,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1585421396655282,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.6976717184460043,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1610772090044834,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.703431012171537,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "band": "f356w",
+   "later": "jw09493-o001_t001",
+   "pix_arcsec": 0.06290126079573204,
+   "shift_arcsec": 0.006107569863264875,
+   "registered": true,
+   "f1": 0.6183956762715529,
+   "sf1": 0.07565067744981535,
+   "f2": 0.8478026487637849,
+   "sf2": 0.07722967740821587,
+   "snr1": 8.174357416452485,
+   "snr2": 10.97767952962592,
+   "ratio": 1.3709711779929936,
+   "sratio": 0.20910639657856855,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1550409705392026,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.6976697984452045,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.17909420112625,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.707870083510589,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1496559157898938,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.6919366373677246,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "band": "f356w",
+   "later": "jw12299-o001_t001",
+   "pix_arcsec": 0.06290126079573204,
+   "shift_arcsec": 0.00465980477814762,
+   "registered": true,
+   "f1": 1.4984406962762236,
+   "sf1": 0.07495821003361233,
+   "f2": 2.33058551894095,
+   "sf2": 0.0753515195883078,
+   "snr1": 19.990347896571986,
+   "snr2": 30.929509207968035,
+   "ratio": 1.5553405114614747,
+   "sratio": 0.09264068260029233,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1685048838546694,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7058389161481186,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1625071684002506,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.6992389962547335,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1610899960878247,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.7024700830407423,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "band": "f444w",
+   "later": "jw09493-o001_t001",
+   "pix_arcsec": 0.06290603379321949,
+   "shift_arcsec": 0.008171752294188274,
+   "registered": true,
+   "f1": 0.4876888786456072,
+   "sf1": 0.09124653944140396,
+   "f2": 0.9435449286637135,
+   "sf2": 0.09162331788303077,
+   "snr1": 5.344738349872301,
+   "snr2": 10.298087326069908,
+   "ratio": 1.934727179516773,
+   "sratio": 0.4078367843798147,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1660825833040913,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7000112309171245,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1529794461453506,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.6941477404977707,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1667470043555823,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.7023578871408335,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "band": "f444w",
+   "later": "jw12299-o001_t001",
+   "pix_arcsec": 0.06290603379321949,
+   "shift_arcsec": 0.00811537024573192,
+   "registered": true,
+   "f1": 2.189548493880591,
+   "sf1": 0.09789203515570186,
+   "f2": 2.549105364271648,
+   "sf2": 0.09982555166801123,
+   "snr1": 22.36697286350224,
+   "snr2": 25.535600071103843,
+   "ratio": 1.1642150751152378,
+   "sratio": 0.06919454073813257,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1575461787058816,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.6982237272982469,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1603843299833156,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.7000363176408273,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1579628971711449,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.6978019719037206,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  }
+ ],
+ "n_used": 5,
+ "ln_r_obs": 0.3232738923684817,
+ "sigma_ln": 0.08301579161479884,
+ "r_obs": 1.3816437207580334,
+ "decision": "agrees",
+ "provenance": {
+  "fluxes": "observed (difference images)",
+  "r_model": "model_prediction"
+ }
+}
