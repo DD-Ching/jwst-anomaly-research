@@ -126,3 +126,264 @@ def combine(ln_r: np.ndarray, sig: np.ndarray) -> tuple[float, float]:
     prop = float(1.0 / np.sqrt(np.sum(w)))
     scat = float(np.std(ln_r, ddof=1) / np.sqrt(ln_r.size)) if ln_r.size > 1 else 0.0
     return mean, max(prop, scat)
+
+
+# --- run driver -------------------------------------------------------------------------------
+
+EARLY = "jw06882-o038_t041"
+LATER = ("jw09493-o001_t001", "jw12299-o001_t001")
+BANDS = ("f277w", "f356w", "f444w")
+URI = "s3://stpubdata/jwst/public/jw{p}/L3/t/o{o}/{stem}_nircam_clear-{band}_i2d.fits"
+STAMP_HALF_ARCSEC = 3.0  # rule 1: 6" x 6"
+PSF_HALF_ARCSEC = 1.0
+INJ_RADIUS_ARCSEC = 1.8  # implementation of rule 4: 3 positions at 0/120/240 deg from the midpoint
+GAIA_RADIUS_ARCMIN = 2.0
+GAIA_ISOLATION_ARCSEC = 3.0  # implementation of rule 4 ("isolated")
+GAIA_PM_SNR = 3.0  # implementation of rule 4: a star has a significant parallax or proper motion
+OUT = "results/transients/sneos_ratio"
+IMAGES = "results/lens_consistency/macs1931_inputs/m1931_images.ecsv"
+
+
+def uri(stem: str, band: str) -> str:
+    p, o = stem[2:7], stem[9:12]
+    return URI.format(p=p, o=o, stem=stem, band=band)
+
+
+class Mosaic:
+    """SCI / ERR sections of one ``_i2d`` by S3 byte range."""
+
+    def __init__(self, path: str):
+        import warnings
+
+        import fsspec
+        from astropy.io import fits
+        from astropy.wcs import WCS, FITSFixedWarning
+
+        fs, p = fsspec.core.url_to_fs(path, anon=True)
+        self.fo = fs.open(p, "rb", block_size=2**20, cache_type="readahead")
+        self.hdul = fits.open(self.fo, lazy_load_hdus=True)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FITSFixedWarning)
+            self.wcs = WCS(self.hdul["SCI"].header)
+        self.pix = float(abs(self.wcs.proj_plane_pixel_scales()[0].to_value("arcsec")))
+
+    def section(self, ra: float, dec: float, half_arcsec: float):
+        """(sci, err, wcs of the section) centred on (ra, dec)."""
+        x, y = (int(round(float(v))) for v in self.wcs.world_to_pixel_values(ra, dec))
+        h = int(np.ceil(half_arcsec / self.pix))
+        sl = (slice(y - h, y + h + 1), slice(x - h, x + h + 1))
+        sci = np.asarray(self.hdul["SCI"].section[sl], float)
+        err = np.asarray(self.hdul["ERR"].section[sl], float)
+        return sci, err, self.wcs[sl]
+
+    def close(self):
+        self.hdul.close()
+        self.fo.close()
+
+
+def gaia_psf_star(ra: float, dec: float) -> dict:
+    """Rule 4 (implementation): nearest Gaia DR3 source with a > 3σ parallax or proper motion and no
+    other Gaia source within GAIA_ISOLATION_ARCSEC (VizieR I/355/gaiadr3)."""
+    import astropy.units as u
+    from astropy.coordinates import SkyCoord
+    from astroquery.vizier import Vizier
+
+    c = SkyCoord(ra, dec, unit="deg")
+    v = Vizier(
+        columns=[
+            "RA_ICRS",
+            "DE_ICRS",
+            "Source",
+            "Gmag",
+            "Plx",
+            "e_Plx",
+            "pmRA",
+            "e_pmRA",
+            "pmDE",
+            "e_pmDE",
+        ],
+        row_limit=-1,
+    )
+    t = v.query_region(c, radius=GAIA_RADIUS_ARCMIN * u.arcmin, catalog="I/355/gaiadr3")[0]
+    sc = SkyCoord(t["RA_ICRS"], t["DE_ICRS"], unit="deg")
+    sig = np.nan_to_num(np.abs(t["Plx"] / t["e_Plx"])) > GAIA_PM_SNR
+    sig |= np.nan_to_num(np.abs(t["pmRA"] / t["e_pmRA"])) > GAIA_PM_SNR
+    sig |= np.nan_to_num(np.abs(t["pmDE"] / t["e_pmDE"])) > GAIA_PM_SNR
+    order = np.argsort(sc.separation(c).arcsec)
+    for k in order:
+        if not sig[k]:
+            continue
+        sep = sc.separation(sc[k]).arcsec
+        if np.sum(sep < GAIA_ISOLATION_ARCSEC) == 1:
+            return {
+                "source_id": int(t["Source"][k]),
+                "ra": float(t["RA_ICRS"][k]),
+                "dec": float(t["DE_ICRS"][k]),
+                "gmag": float(t["Gmag"][k]),
+                "dist_arcsec": float(sc[k].separation(c).arcsec),
+            }
+    raise RuntimeError("no isolated Gaia star in the cone")
+
+
+def psf_stamp(m: Mosaic, star: dict) -> np.ndarray | None:
+    """Border-median-subtracted star stamp, or None when its core is not finite (saturated)."""
+    sci, _, _ = m.section(star["ra"], star["dec"], PSF_HALF_ARCSEC)
+    c = sci.shape[0] // 2
+    if not np.all(np.isfinite(sci[c - 2 : c + 3, c - 2 : c + 3])):
+        return None
+    border = np.concatenate([sci[0], sci[-1], sci[:, 0], sci[:, -1]])
+    s = np.nan_to_num(sci - np.nanmedian(border))
+    return s if s.sum() > 0 else None
+
+
+def injection_trials(diff, err, psf, p1, p2, f1, pix) -> list[dict]:
+    """Rule 4: both ratios at 3 positions INJ_RADIUS_ARCSEC from the pair midpoint."""
+    mid = ((p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2)
+    sep = (p2[0] - p1[0], p2[1] - p1[1])
+    r = INJ_RADIUS_ARCSEC / pix
+    out = []
+    for ang in (0.0, 120.0, 240.0):
+        q1 = (
+            mid[0] + r * np.cos(np.radians(ang)) - sep[0] / 2,
+            mid[1] + r * np.sin(np.radians(ang)) - sep[1] / 2,
+        )
+        q2 = (q1[0] + sep[0], q1[1] + sep[1])
+        for ratio in INJ_RATIOS:
+            img = inject_pair(diff, psf, q1, sep, f1, ratio)
+            base = aperture_pair(diff, err, q1, q2, pix)
+            got = aperture_pair(img, err, q1, q2, pix)
+            meas = (got["f2"] - base["f2"]) / (got["f1"] - base["f1"])
+            out.append(
+                {
+                    "angle_deg": ang,
+                    "injected": ratio,
+                    "measured": float(meas),
+                    "recovered": recovered(meas, ratio),
+                }
+            )
+    return out
+
+
+def run(out: str = OUT) -> dict:
+    import json
+    from pathlib import Path
+
+    from astropy.table import Table
+
+    t = Table.read(IMAGES, format="ascii.ecsv")
+    t = t[np.isin(np.asarray(t["image_id"], str), ["101.1", "101.2"])]
+    t.sort("image_id")
+    (ra1, ra2), (de1, de2) = list(map(float, t["ra"])), list(map(float, t["dec"]))
+    ram, dem = (ra1 + ra2) / 2, (de1 + de2) / 2
+    star = gaia_psf_star(ram, dem)
+    rows, sheets = [], {}
+    for band in BANDS:
+        e = Mosaic(uri(EARLY, band))
+        sci_e, err_e, w = e.section(ram, dem, STAMP_HALF_ARCSEC)
+        pix = e.pix
+        psf = psf_stamp(e, star)
+        e.close()
+        p1 = tuple(float(v) for v in w.world_to_pixel_values(ra1, de1))
+        p2 = tuple(float(v) for v in w.world_to_pixel_values(ra2, de2))
+        yy, xx = np.indices(sci_e.shape)
+        sn = (np.hypot(xx - p1[0], yy - p1[1]) <= SN_MASK_ARCSEC / pix) | (
+            np.hypot(xx - p2[0], yy - p2[1]) <= SN_MASK_ARCSEC / pix
+        )
+        for stem in LATER:
+            m = Mosaic(uri(stem, band))
+            sci_l, err_l, wl = m.section(ram, dem, STAMP_HALF_ARCSEC + 1.0)
+            m.close()
+            res = resample(sci_l, wl, w, sci_e.shape)
+            rerr = resample(err_l, wl, w, sci_e.shape)
+            dx, dy = register_offset(sci_e, res, sn)
+            shift = float(np.hypot(dx, dy) * pix)
+            diff = sci_e - res
+            derr = np.hypot(err_e, rerr)
+            row = {
+                "band": band,
+                "later": stem,
+                "pix_arcsec": pix,
+                "shift_arcsec": shift,
+                "registered": shift <= MAX_SHIFT_ARCSEC,
+            }
+            ph = aperture_pair(diff, derr, p1, p2, pix)
+            if ph["f1"] < 0 and ph["f2"] < 0:  # rule 1: sign taken from the data
+                diff = -diff
+                ph = aperture_pair(diff, derr, p1, p2, pix)
+                row["sign_flipped"] = True
+            row.update(ph)
+            if psf is not None and row["registered"]:
+                f_inj = ph["f1"] if ph["f1"] > 0 else MIN_SNR * ph["sf1"]
+                tr = injection_trials(diff, derr, psf, p1, p2, f_inj, pix)
+                row["injections"] = tr
+                row["gate_I"] = sum(x["recovered"] for x in tr) >= 5
+            else:
+                row["gate_I"] = False
+            row["used"] = bool(row["registered"] and row["detected"] and row["gate_I"])
+            rows.append(row)
+            sheets[(band, stem)] = (sci_e, res, diff)
+    used = [r for r in rows if r["used"] and r["ratio"] > 0]
+    ln_r = np.log([r["ratio"] for r in used]) if used else np.array([])
+    sig = np.array([r["sratio"] / r["ratio"] for r in used]) if used else np.array([])
+    mean, s = combine(ln_r, sig)
+    summary = {
+        "plan": f"{OUT}/PLAN.md",
+        "r_model": R_MODEL,
+        "psf_star": star,
+        "rows": rows,
+        "n_used": len(used),
+        "ln_r_obs": mean,
+        "sigma_ln": s,
+        "r_obs": float(np.exp(mean)) if np.isfinite(mean) else None,
+        "decision": decide(mean, s),
+        "provenance": {"fluxes": "observed (difference images)", "r_model": "model_prediction"},
+    }
+    Path(out).mkdir(parents=True, exist_ok=True)
+    Path(out, "summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
+    contact_sheet(sheets, p1, p2, Path(out, "contact_sheet.png"))
+    return summary
+
+
+def contact_sheet(sheets: dict, p1, p2, path) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, axes = plt.subplots(len(sheets), 3, figsize=(6, 2 * len(sheets)))
+    for row, ((band, stem), ims) in zip(np.atleast_2d(axes), sheets.items(), strict=True):
+        for ax, im, lab in zip(row, ims, ("6882 o038", stem[:8], "diff"), strict=True):
+            v = np.nanpercentile(np.abs(ims[2]), 99.5)
+            ax.imshow(im, origin="lower", cmap="gray", vmin=-v, vmax=v if lab == "diff" else 3 * v)
+            for p in (p1, p2):
+                ax.plot(*p, "o", mfc="none", mec="r", ms=8)
+            ax.set_title(f"{band} {lab}", fontsize=7)
+            ax.set_xticks([])
+            ax.set_yticks([])
+    fig.tight_layout()
+    fig.savefig(path, dpi=60)
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    import json as _json
+
+    s = run()
+    print(_json.dumps({k: s[k] for k in ("n_used", "r_obs", "sigma_ln", "decision")}))
+    for r in s["rows"]:
+        print(
+            {
+                k: r[k]
+                for k in (
+                    "band",
+                    "later",
+                    "shift_arcsec",
+                    "snr1",
+                    "snr2",
+                    "ratio",
+                    "sratio",
+                    "gate_I",
+                    "used",
+                )
+            }
+        )
