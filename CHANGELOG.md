@@ -2,8 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-25: (in progress) RELICS Lenstool v1 amplitude: z_ref normalisation hypothesis across five clusters
-- Claim: tests the D-034 addendum bh post hoc hypothesis on stored factors and the RELICS map headers/readmes.
+## 2026-10-25: RELICS Lenstool v1 amplitude offset is not one z_ref normalisation (D-034 addendum bi)
+- **Result** (`results/lens_consistency/relics_lenstool_zref/RESULT.md`; plan frozen in 909bd8dd): H_U (every
+  RELICS Lenstool v1 map at z_ref 2.09) rejected: RXC J0232, RXC J2211 and RX J0152 miss f_pred by +0.22 to +0.58;
+  the two offset clusters imply z_ref 1.73 (MACS J0553) and 2.09 (Abell 3192). H_C not supported: the 10 kappa /
+  deflection headers carry no source-z or D_LS/D_S keyword. No global correction; the addendum-bd per-cluster check stays.
+- **Post hoc:** MACS J0553, Abell 3192 and SMACS 0723 maps share one map maker (header `MAPMKR`) and dates
+  2017-12-03…06; the three near-1 maps have three other makers. An association, not a cause.
+- **Handoff:** next cheap test (H_K): RXC J0600 and MACS J0417 Lenstool v1 (same batch) should need 0.65–0.72 against
+  z_spec families or a second model; RXC J0018 / SPT0615 / WHL0137 should not. #374 waits for the 2026-10-26 weekly run.
 
 ## 2026-10-25: SLICE MACS J0358 vs RELICS Abell 3192 maps: no flag; Lenstool v1 amplitude 0.69 again (D-034 addendum bh)
 - **Result** (`results/lens_consistency/slice_relics_macs0358/RESULT.md`; plan frozen in 56a0b3bb): Lenstool v1 and

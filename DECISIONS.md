@@ -2744,6 +2744,17 @@ equals D_LS/D_S at z_ref 2.09, as a map normalised at z ≈ 2 would give. Altern
 maps globally (RX J0152, RXC J0232 need no factor). Revisit if: the z_ref hypothesis is tested on SMACS 0723 and
 MACS J0553, or the RELICS team documents the map normalisation.
 
+**Addendum 2026-10-25bi (RELICS Lenstool v1 amplitude: z_ref normalisation test).**
+`results/lens_consistency/relics_lenstool_zref/RESULT.md`; plan in 909bd8dd before any header was read. H_U (one
+z_ref 2.09 for every RELICS Lenstool v1 map; |f_obs − f_pred| ≤ 0.10, ASSUMPTION) is rejected on 3 of 5 clusters
+(RXC J0232 +0.22, RXC J2211 +0.31, RX J0152 +0.58); MACS J0553 implies z_ref 1.73. H_C: no normalisation keyword
+in any of the 10 kappa / deflection primary headers. Decision: no global correction of RELICS Lenstool v1 maps; the
+addendum-bd per-cluster amplitude check stays the rule; the offset is treated as a property of the released models
+(H_M, untested: constraint lists not public). Post hoc: the offset maps (MACS J0553, Abell 3192, SMACS 0723) share
+one `MAPMKR` and a 2017-12 date; the near-1 maps have other makers. Alternatives rejected: a map-maker-based correction
+(post hoc association, untested). Revisit if: RXC J0600 or MACS J0417 Lenstool v1 (same batch) is tested against
+z_spec families or a second model, or the RELICS team documents the normalisation.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
