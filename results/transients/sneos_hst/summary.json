@@ -1,0 +1,438 @@
+{
+ "plan": "results/transients/sneos_hst/PLAN.md",
+ "r_model": 1.162,
+ "r_table_s1": [
+  1.805,
+  0.039
+ ],
+ "r_jwst": [
+  1.382,
+  0.083
+ ],
+ "template": "ibt2a2020",
+ "templates": {
+  "ibt2a2020": {
+   "pix_arcsec": 0.12825000286102267,
+   "exptime": 1508.801514,
+   "photflam": 1.5324204e-20,
+   "date": "2012-04-10"
+  },
+  "ibt2a9030": {
+   "pix_arcsec": 0.12825000286102275,
+   "exptime": 1005.867676,
+   "photflam": 1.5327837e-20,
+   "date": "2012-06-21"
+  }
+ },
+ "psf_star": {
+  "source_id": 6766145724110284544,
+  "ra": 292.9527049438,
+  "dec": -26.57478515645,
+  "gmag": 19.466372,
+  "dist_arcsec": 7.409647842481095
+ },
+ "rows": [
+  {
+   "science": "ifaa53010",
+   "date": "2024-03-11",
+   "exptime": 608.809203,
+   "pix_arcsec": 0.12824999999999984,
+   "sigma_random": 4.889597549270603e-21,
+   "offset0_arcsec": 0.0036171680987649884,
+   "preshift_px": [
+    -0.021098622730814753,
+    -0.018716729881212757
+   ],
+   "shift_arcsec": 0.002532930010904955,
+   "registered": true,
+   "f1": 2.713857327931239e-20,
+   "f2": 5.85700198142384e-20,
+   "sf1": 4.959948968448585e-21,
+   "sf2": 5.0402017161033685e-21,
+   "snr1": 5.471542842869414,
+   "snr2": 11.620570586908865,
+   "ratio": 2.158183453913771,
+   "sratio": 0.43597416191736094,
+   "detected": true,
+   "template_check": {
+    "template": "ibt2a9030",
+    "f1": 3.3092578253210153e-20,
+    "f2": 6.593091104732989e-20,
+    "ratio": 1.9923171456407824,
+    "offset0_arcsec": 0.011308402960362252,
+    "preshift_px": [
+     -0.0775374278465577,
+     -0.04198478081759305
+    ],
+    "shift_arcsec": 0.007324592414717716,
+    "registered": true
+   },
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1845727020271508,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7123576041416149,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.2413241887152424,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.7469794894098719,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.176344635083585,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.7191037741906148,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "science": "ifaa52010",
+   "date": "2024-03-11",
+   "exptime": 458.806092,
+   "pix_arcsec": 0.12824999999999986,
+   "sigma_random": 6.847680545754848e-21,
+   "offset0_arcsec": 0.005695883041335954,
+   "preshift_px": [
+    -0.044108724031129753,
+    0.005184275342148936
+   ],
+   "shift_arcsec": 0.003153148468937824,
+   "registered": true,
+   "f1": 4.5250739033274454e-20,
+   "f2": 4.959559082895083e-20,
+   "sf1": 6.958725603493378e-21,
+   "sf2": 6.969294746575672e-21,
+   "snr1": 6.50273363423871,
+   "snr2": 7.1162998025473625,
+   "ratio": 1.0960172560382153,
+   "sratio": 0.2283172761800727,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1932224001243164,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7203298090241025,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1841045740586953,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.7126648046486084,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1620724541679328,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.7004799436165249,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "science": "ifaa50010",
+   "date": "2024-03-13",
+   "exptime": 608.809203,
+   "pix_arcsec": 0.12824999999999995,
+   "sigma_random": 5.438983143439004e-21,
+   "offset0_arcsec": 0.004335868617397019,
+   "preshift_px": [
+    0.0217679226718559,
+    0.025867634493657476
+   ],
+   "shift_arcsec": 0.0033038175309446686,
+   "registered": true,
+   "f1": 2.903427241226349e-20,
+   "f2": 5.778975551083845e-20,
+   "sf1": 5.5067118256428134e-21,
+   "sf2": 5.5729789383380376e-21,
+   "snr1": 5.2725243905194255,
+   "snr2": 10.369634651458489,
+   "ratio": 1.990397923194701,
+   "sratio": 0.42349962551273235,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1858433211236623,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7128423473147031,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.2156754628281492,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.7254972739451381,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1417952770173583,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.6864081723028864,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "science": "ifaa49010",
+   "date": "2024-03-15",
+   "exptime": 458.806092,
+   "pix_arcsec": 0.12824999999999975,
+   "sigma_random": 5.620512075657518e-21,
+   "offset0_arcsec": 0.004061188576937137,
+   "preshift_px": [
+    0.0316466375707769,
+    0.0011125538613150354
+   ],
+   "shift_arcsec": 0.0027424279131198453,
+   "registered": true,
+   "f1": 2.897102375679496e-20,
+   "f2": 4.517654476106204e-20,
+   "sf1": 5.7071649383819445e-21,
+   "sf2": 5.755066948487371e-21,
+   "snr1": 5.076254860264933,
+   "snr2": 7.849873018929169,
+   "ratio": 1.5593699808577246,
+   "sratio": 0.3658231465679502,
+   "detected": true,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1229266114987275,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.6742165347392262,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1484363665245376,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.6868849684950281,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.169192391358443,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.7062318692109615,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": true
+  },
+  {
+   "science": "ifaa51010",
+   "date": "2024-03-17",
+   "exptime": 305.870728,
+   "pix_arcsec": 0.12824999999999984,
+   "sigma_random": 8.582247641467161e-21,
+   "offset0_arcsec": 0.009572515935182173,
+   "preshift_px": [
+    0.07431586470153206,
+    0.006943146546326773
+   ],
+   "shift_arcsec": 0.006416926473369505,
+   "registered": true,
+   "f1": 2.6677237031523725e-20,
+   "f2": 4.561629460227787e-20,
+   "sf1": 8.66087596731924e-21,
+   "sf2": 8.716266319913079e-21,
+   "snr1": 3.080200794029037,
+   "snr2": 5.233467281519775,
+   "ratio": 1.7099332493981443,
+   "sratio": 0.6441504695651498,
+   "detected": false,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.1903476493849445,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.6957881858249292,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1835509087134664,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.7146766412992289,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.1623694885344258,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.6951464984308148,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": false
+  },
+  {
+   "science": "ifaa54010",
+   "date": "2024-03-18",
+   "exptime": 305.870728,
+   "pix_arcsec": 0.12824999999999975,
+   "sigma_random": 7.931940259608117e-21,
+   "offset0_arcsec": 0.001939385146927593,
+   "preshift_px": [
+    0.0066602004233438095,
+    0.01357622690734317
+   ],
+   "shift_arcsec": 0.0015279013393124919,
+   "registered": true,
+   "f1": 2.372476847733271e-20,
+   "f2": 5.881214785172528e-20,
+   "sf1": 8.007585557498341e-21,
+   "sf2": 8.118168022240802e-21,
+   "snr1": 2.962786761000227,
+   "snr2": 7.244509806966494,
+   "ratio": 2.4789345324029615,
+   "sratio": 0.9039570507357986,
+   "detected": false,
+   "injections": [
+    {
+     "angle_deg": 0.0,
+     "injected": 1.16,
+     "measured": 1.177078580629364,
+     "recovered": true
+    },
+    {
+     "angle_deg": 0.0,
+     "injected": 0.7,
+     "measured": 0.7095626412586645,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 1.16,
+     "measured": 1.1451064071410988,
+     "recovered": true
+    },
+    {
+     "angle_deg": 120.0,
+     "injected": 0.7,
+     "measured": 0.6881135481109161,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 1.16,
+     "measured": 1.2326815983326889,
+     "recovered": true
+    },
+    {
+     "angle_deg": 240.0,
+     "injected": 0.7,
+     "measured": 0.7149659013038234,
+     "recovered": true
+    }
+   ],
+   "gate_I": true,
+   "used": false
+  }
+ ],
+ "n_used": 4,
+ "ln_r_obs": 0.5038361862478148,
+ "sigma_ln": 0.15214892688944381,
+ "r_obs": 1.6550582196520975,
+ "q1_decision": "agrees",
+ "q2_compare": "both",
+ "provenance": {
+  "fluxes": "observed (difference images)",
+  "r_model": "model_prediction",
+  "r_table_s1": "derived (published photometry)"
+ }
+}
