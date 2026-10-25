@@ -89,16 +89,17 @@ def unshift(model, x, y, off: dict) -> tuple[np.ndarray, np.ndarray]:
     return ra, dec - off["dy_arcsec"] / 3600.0
 
 
-def solve(model, grid, t: Table, pred: Table, off: dict) -> tuple[dict, list[dict]]:
-    """Per family: observed images (CANUCS frame) with their paired MARS position / |mu|, and the
-    MARS-only targets (CANUCS frame)."""
+def solve(model, grid, t: Table, pred: Table, off: dict, systems=None) -> tuple[dict, list[dict]]:
+    """Per family (``systems``; default: the families with an extra prediction): observed images
+    (CANUCS frame) with their paired MARS position / |mu|, and the MARS-only targets (CANUCS
+    frame)."""
     bt = lensmodel.backtrace_images(model, t, {})
     sysv = np.asarray(t["system"], str)
     ox, oy = model.to_frame(np.asarray(t["ra"], float), np.asarray(t["dec"], float))
     ex, ey = model.to_frame(np.asarray(pred["ra"], float), np.asarray(pred["dec"], float))
     psys = np.asarray(pred["system"], str)
     fams, targets = {}, []
-    for s in dict.fromkeys(psys):
+    for s in dict.fromkeys(psys) if systems is None else systems:
         fam = np.flatnonzero(sysv == s)
         bx, by = np.asarray(bt["beta_x"])[fam], np.asarray(bt["beta_y"])[fam]
         if not len(fam) or not (np.isfinite(bx).all() and np.isfinite(by).all()):
