@@ -68,3 +68,9 @@ def test_decide_and_combine():
     assert sr.decide(float("nan"), 0.1) == "undetermined"
     m, s = sr.combine(np.array([0.1, 0.2]), np.array([0.1, 0.1]))
     assert np.isclose(m, 0.15) and s >= 0.1 / np.sqrt(2)
+
+
+def test_inject_pair_clips_at_edge():
+    psf = gauss((21, 21), 10.0, 10.0)
+    img = sr.inject_pair(np.zeros((40, 40)), psf, (2.0, 37.0), (3.0, 0.0), 100.0, 1.0)
+    assert 0 < img.sum() < 200.0

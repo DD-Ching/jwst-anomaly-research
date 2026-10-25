@@ -99,7 +99,10 @@ def inject_pair(
         fx, fy = x - ix, y - iy
         jj, ii = np.indices(k.shape, dtype=float)
         ks = map_coordinates(k, [jj - fy, ii - fx], order=1, cval=0.0)
-        out[iy - h0 : iy - h0 + k.shape[0], ix - h1 : ix - h1 + k.shape[1]] += f * ks
+        y0, x0 = iy - h0, ix - h1  # clip the PSF where it runs off the stamp
+        ya, xa = max(y0, 0), max(x0, 0)
+        yb, xb = min(y0 + k.shape[0], out.shape[0]), min(x0 + k.shape[1], out.shape[1])
+        out[ya:yb, xa:xb] += f * ks[ya - y0 : yb - y0, xa - x0 : xb - x0]
     return out
 
 
