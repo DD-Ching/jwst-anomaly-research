@@ -1,0 +1,66 @@
+{
+ "note": "post hoc, not in PLAN.md; dtheta and distances in arcsec; provenance model_prediction (separations: derived from observed positions)",
+ "models": {
+  "spt0615-relics-lenstool": {
+   "3b.1": 53.05,
+   "3b.2": 66.46,
+   "3b.3": 28.25,
+   "3b.4": 52.13,
+   "3b.5": 46.4,
+   "3b.6": 54.7,
+   "n_predicted": 1
+  },
+  "spt0615-relics-glafic": {
+   "3b.1": 0.19,
+   "3b.2": 0.27,
+   "3b.3": 0.04,
+   "3b.4": 0.04,
+   "3b.5": 0.09,
+   "3b.6": 0.15,
+   "n_predicted": 7
+  }
+ },
+ "secure_source": {
+  "spt0615-relics-lenstool": {
+   "z": 3.825,
+   "n_predicted": 5,
+   "nearest_arcsec": {
+    "3b.3": 36.32,
+    "3b.4": 7.37,
+    "3b.6": 2.67
+   }
+  },
+  "spt0615-relics-glafic": {
+   "z": 3.979,
+   "n_predicted": 7,
+   "nearest_arcsec": {
+    "3b.3": 0.27,
+    "3b.4": 0.28,
+    "3b.6": 0.47
+   }
+  }
+ },
+ "amplitude_spec_families": {
+  "spt0615-relics-lenstool": {
+   "factors": [
+    1.0258118274876034,
+    0.9844505111989669
+   ],
+   "median": 1.0051311693432852
+  },
+  "spt0615-relics-glafic": {
+   "factors": [
+    1.0258118274876034,
+    0.9972704678102292
+   ],
+   "median": 1.0115411476489162
+  }
+ },
+ "separation_3.3_arcsec": {
+  "3.1": 75.0,
+  "3.2": 91.4,
+  "3.4": 79.2,
+  "3.5": 71.6,
+  "3.6": 82.2
+ }
+}

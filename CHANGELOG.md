@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SPT0615 published images vs RELICS Lenstool v1 / GLAFIC v2: both near 1, no flag (D-034 addendum bl)
+- **Result** (`results/lens_consistency/spt0615_images/RESULT.md`; plan frozen in a6ba478c): Paterno-Mahler et al. 2018
+  Table 2. Both maps pass P, K0 (0.447″ / 0.283″) and F; at z_spec 0 misses; amplitude 0.987 / 0.997 (`near_1`): Q1
+  `H_none`. The less-secure 3.3 / 3.4 / 3.6 miss Lenstool v1 but match GLAFIC: no joint flag.
+- **Post hoc:** from the secure source Lenstool v1 predicts 5 system 3 images, GLAFIC 7; so addendum bk's SPT0615
+  "intermediate" is a shape difference, not an amplitude offset.
+- **Deviation:** the GLAFIC gate-P validate (κ / μ only) ran a minute before the plan commit was pushed.
+- **Handoff:** the RELICS Lenstool v1 amplitude line has no open test left (bk paused, bl answered). Next: LAM atlas
+  retry for SLICE Lenstool models, else the TASKS "Supporting" queue. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: SLICE Lenstool models: LAM atlas still closed, no other host found
 - **Hosts:** data.lam.fr/sl-cluster-atlas (page and the ANIS `server/search/sl-cluster-atlas/model` API, with the
   cookie) still redirects to lamwws.lam.fr/restricted.html at 17:10Z. Cerny et al. 2026 name only the LAM atlas as

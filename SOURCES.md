@@ -345,7 +345,8 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - RELICS SPT-CL J0615−5746 lens models (`glafic/v2`, `lenstool/v1`; maps at D_LS/D_S = 1) and BPZ catalogue
   `hlsp_relics_hst_acs-wfc3ir_spt0615m57_multi_v1_cat.txt` (Coe, 2017-07-06): https://archive.stsci.edu/hlsps/relics/spt0615m57/
   (accessed 2026-10-18; sha256 in `lensmodel.SPT0615_RELICS_*` and `results/arcs/spt0615-relics/summary.json`).
-- Paterno-Mahler et al. 2018, RELICS SPT-CLJ0615−5746 model, z_lens 0.972, ApJ 863, 154, arXiv:1805.09834 (abstract read 2026-10-18).
+- Paterno-Mahler et al. 2018, RELICS SPT-CLJ0615−5746 model, z_lens 0.972, ApJ 863, 154, arXiv:1805.09834 (abstract read 2026-10-18; Table 2 image list from the e-print, sha256 83c2bc6c…6cdb26,
+  accessed 2026-10-25, `scripts/spt0615_images.py`).
 - RELICS MACS J0308.9+2645 lens models (`glafic/v2`, `zitrin-ltm-gauss` v1; maps at D_LS/D_S = 1) and BPZ catalogue
   `hlsp_relics_hst_acs-wfc3ir_macs0308p26_multi_v1_cat.txt`: https://archive.stsci.edu/hlsps/relics/macs0308p26/
   (accessed 2026-10-18; sha256 in `lensmodel.MACS0308_RELICS_*` and `results/arcs/macs0308-relics/summary.json`).
