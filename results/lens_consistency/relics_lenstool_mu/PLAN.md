@@ -29,3 +29,9 @@ were seen (they were computed with the failed region); this plan does not depend
 - **What changes the plan:** supported → "check 2017-12 batch maps by default" enters the addendum-bd check; rejected
   → the per-cluster check stays the only rule and the batch line closes; undetermined → the batch line is paused
   (no third region variant).
+
+## Tool check (added 2026-10-25 before any map was read)
+- **Gate T (per reference model):** κ derived as ½ tr(∂α/∂θ) from the same differences must match the model's
+  published κ map (D_LS/D_S = 1, same native grid, edges excluded): median |κ_derived − κ_pub| ≤ 0.05 over pixels
+  with κ_pub ≥ 0.3 (ASSUMPTION). A reference failing T leaves its cluster **unmeasured** (an axis or unit convention
+  the Jacobian does not handle); a validation cluster unmeasured fails gate V.
