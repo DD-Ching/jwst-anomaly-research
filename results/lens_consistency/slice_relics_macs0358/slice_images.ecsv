@@ -1,0 +1,36 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: paper_id, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: z, datatype: float64}
+# - {name: z_spec, datatype: bool}
+# - {name: cluster, datatype: string}
+# - {name: new_in_jwst, datatype: bool}
+# - {name: use_spec, datatype: bool}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'Cerny et al. 2026, ApJ 1001, 60 (SLICE; arXiv:2503.17498v2), Table 8 block of MACS J0358.8-2955 (main.tex sha256 ebc6d0d8cffe51a9fbec8de272f6e1db9bdf99ed1267355e834dc02dfd53cc9e;
+#     e-print tarball sha256 f7120d94a5f1c302596838baa5353128ded977119923f53eddab5fa089dea9a7); clump 1 of each source only; z_spec True:
+#     spectroscopic, False: SLICE model-optimized; new_in_jwst and use_spec per the paper''s text (PLAN.md)'}
+# schema: astropy-2.0
+image_id system paper_id ra dec z z_spec cluster new_in_jwst use_spec
+1.1 1 1.1.1 59.718226 -29.923243 1.261 True macs0358 False True
+1.2 1 1.1.2 59.728497 -29.93204 1.261 True macs0358 False True
+1.3 1 1.1.3 59.723055 -29.927323 1.261 True macs0358 False True
+2.1 2 2.1.1 59.719442 -29.936392 3.07 True macs0358 False True
+2.2 2 2.1.2 59.720636 -29.936522 3.07 True macs0358 False True
+3.1 3 3.1.1 59.719362 -29.936607 3.07 True macs0358 False True
+3.2 3 3.1.2 59.720356 -29.936713 3.07 True macs0358 False True
+4.1 4 4.1.1 59.712972 -29.920461 2.44 False macs0358 True False
+4.2 4 4.1.2 59.727946 -29.930851 2.44 False macs0358 True False
+4.3 4 4.1.3 59.725841 -29.928688 2.44 False macs0358 True False
+5.1 5 5.1.1 59.716309 -29.92172 2.11 False macs0358 True False
+5.2 5 5.1.2 59.73013 -29.933371 2.11 False macs0358 True False
+5.3 5 5.1.3 59.72368 -29.926972 2.11 False macs0358 True False
+6.1 6 6.1.1 59.713908 -29.925562 1.57 False macs0358 True False
+6.2 6 6.1.2 59.726937 -29.935757 1.57 False macs0358 True False
+6.3 6 6.1.3 59.720272 -29.930026 1.57 False macs0358 True False

@@ -283,6 +283,20 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    "a3192-relics-lenstool": {
+        "files": lensmodel.A3192_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.425,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "a3192-relics-glafic": {
+        "files": lensmodel.A3192_RELICS_GLAFIC,
+        "kind": "maps",
+        "z_lens": 0.425,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     "macs0417-canucs-maps": {
         "files": lensmodel.MACS0417_CANUCS_MAPS,
         "kind": "maps",
