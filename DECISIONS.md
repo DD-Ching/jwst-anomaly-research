@@ -2764,6 +2764,18 @@ each overlap, so it is not the strong-lensing annulus. Decision: no batch rule; 
 Alternatives rejected: reading the test clusters despite the failed gate. Revisit if: a region tied to the critical
 curves or to catalogued images passes gate V on the same four clusters.
 
+**Addendum 2026-10-25bk (RELICS Lenstool v1 amplitude over the |μ| ≥ 10 region, H_K re-test).**
+`results/lens_consistency/relics_lenstool_mu/RESULT.md`; plan in 09620d66 / c3d60577 before any map was read. Region
+S: |μ_ref(z_s 2)| ≥ 10 (ASSUMPTION) from the reference's own deflection Jacobian; gate T (derived vs published κ)
+passes on all eight references (≤ 1.1e-5). Gate V passes: MACS J0553 1.635, Abell 3192 1.277 offset; RXC J2211 1.070,
+RX J0152 1.059 near 1; S ≤ 10 % of each overlap. Test: RXC J0600 1.384 and MACS J0417 1.375 offset, WHL0137 1.038 near
+1, SPT0615 0.772 intermediate, so H_K is undetermined (not rejected). Post hoc: 1/R sits 0.05–0.10 below f_obs; inside
+S the RXC J0600 / MACS J0417 ratios vary (16–84 % 0.98–2.32, 0.85–1.64), a shape difference as much as a
+normalisation. Decision: batch line paused; no batch rule; the addendum-bd per-cluster check stays, and RXC J0600 /
+MACS J0417 Lenstool v1 are not used without it. Alternatives rejected: a third region variant (plan). Revisit if: a
+SPT0615 image-position test shows which of its two maps is off, or a RELICS map-maker note documents the 2017-12
+normalisation.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

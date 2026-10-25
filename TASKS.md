@@ -429,8 +429,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        `results/lens_consistency/relics_lenstool_zref/RESULT.md`; no header keyword). Next (H_K, post hoc): the
        offset maps share one map maker and a 2017-12 date; ~~map-ratio test of RXC J0600 / MACS J0417 vs a second model~~
        done 2026-10-25 (D-034 addendum bj, `results/lens_consistency/relics_lenstool_batch/RESULT.md`: gate V fails,
-       Abell 3192 R 1.247 < 1.25; H_K undetermined; the |α| ≥ 0.5 max region covers 84–99 % of the maps). Next: re-frozen
-       statistic on a critical-curve region (|μ_ref(z = 2)| threshold) with gate V on the same four clusters;
+       Abell 3192 R 1.247 < 1.25; H_K undetermined; the |α| ≥ 0.5 max region covers 84–99 % of the maps). ~~re-frozen
+       statistic on a critical-curve region~~ done 2026-10-25 (D-034 addendum bk,
+       `results/lens_consistency/relics_lenstool_mu/RESULT.md`: |μ_ref| ≥ 10, gates T and V pass; RXC J0600 1.38 and
+       MACS J0417 1.38 offset, WHL0137 1.04, SPT0615 0.77 intermediate; H_K undetermined, batch line paused). Open, low
+       value: an SPT0615 image-position test of its Lenstool vs GLAFIC maps;
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows

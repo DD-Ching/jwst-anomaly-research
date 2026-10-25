@@ -1,0 +1,253 @@
+{
+  "plan": "results/lens_consistency/relics_lenstool_mu/PLAN.md",
+  "rows": {
+    "macs0553": {
+      "gate_t": {
+        "median_abs_dkappa": 6.432645008991322e-06,
+        "n_pix": 2454825,
+        "passed": true
+      },
+      "dls_ds_z2": 0.6924545303500338,
+      "overlap_core_arcsec2": 54756.0,
+      "sensitivity": {
+        "5.0": 1.6510490843030403,
+        "20.0": 1.630699397380227
+      },
+      "R": 1.6351638733233984,
+      "ratio_of_means": 1.712450535782646,
+      "q16_q84": [
+        1.2308301580762828,
+        2.181007402058432
+      ],
+      "region_arcsec2": 2529.0,
+      "region_fraction": 0.04618671926364234,
+      "class": "offset",
+      "role": "validation",
+      "lenstool": "macs0553-relics-lenstool",
+      "reference": "macs0553-relics-glafic"
+    },
+    "a3192": {
+      "gate_t": {
+        "median_abs_dkappa": 1.1324884276242564e-05,
+        "n_pix": 2611507,
+        "passed": true
+      },
+      "dls_ds_z2": 0.6838385173942573,
+      "overlap_core_arcsec2": 37636.0,
+      "sensitivity": {
+        "5.0": 1.2764288579742489,
+        "20.0": 1.2957819362295064
+      },
+      "R": 1.2771480968035251,
+      "ratio_of_means": 1.2232269729605156,
+      "q16_q84": [
+        1.064064293638777,
+        1.4160747575017216
+      ],
+      "region_arcsec2": 3140.0,
+      "region_fraction": 0.08343075778509937,
+      "class": "offset",
+      "role": "validation",
+      "lenstool": "a3192-relics-lenstool",
+      "reference": "a3192-relics-glafic"
+    },
+    "rxc2211": {
+      "gate_t": {
+        "median_abs_dkappa": 7.271765810945574e-06,
+        "n_pix": 2750149,
+        "passed": true
+      },
+      "dls_ds_z2": 0.7024772522524702,
+      "overlap_core_arcsec2": 37249.0,
+      "sensitivity": {
+        "5.0": 1.0771429462114575,
+        "20.0": 1.0693698072363305
+      },
+      "R": 1.0702390594602484,
+      "ratio_of_means": 1.0552785423413258,
+      "q16_q84": [
+        0.9538796003224395,
+        1.1505855861692538
+      ],
+      "region_arcsec2": 3557.0,
+      "region_fraction": 0.09549249644285752,
+      "class": "near_1",
+      "role": "validation",
+      "lenstool": "rxc2211-relics-lenstool",
+      "reference": "rxc2211-relics-glafic"
+    },
+    "cl0152": {
+      "gate_t": {
+        "median_abs_dkappa": 7.510185663223146e-06,
+        "n_pix": 1786996,
+        "passed": true
+      },
+      "dls_ds_z2": 0.447728030353824,
+      "overlap_core_arcsec2": 37635.0,
+      "sensitivity": {
+        "5.0": 1.0794616424397416,
+        "20.0": 1.0644333450703138
+      },
+      "R": 1.0592170310846283,
+      "ratio_of_means": 1.0639954263041735,
+      "q16_q84": [
+        0.8186561245912916,
+        1.3243746503383134
+      ],
+      "region_arcsec2": 319.0,
+      "region_fraction": 0.008476152517603294,
+      "class": "near_1",
+      "role": "validation",
+      "lenstool": "cl0152-relics-lenstool",
+      "reference": "cl0152-relics-glafic"
+    },
+    "rxc0600": {
+      "gate_t": {
+        "median_abs_dkappa": 9.1493129341369e-06,
+        "n_pix": 5545728,
+        "passed": true
+      },
+      "dls_ds_z2": 0.6805419961078453,
+      "overlap_core_arcsec2": 37635.0,
+      "sensitivity": {
+        "5.0": 1.311876617114882,
+        "20.0": 1.3662406806292615
+      },
+      "R": 1.383715731074082,
+      "ratio_of_means": 1.382463096433218,
+      "q16_q84": [
+        0.977570736305882,
+        2.3189474914117647
+      ],
+      "region_arcsec2": 7561.0,
+      "region_fraction": 0.20090341437491696,
+      "class": "offset",
+      "role": "test_batch",
+      "lenstool": "rxc0600-relics-lenstool",
+      "reference": "rxc0600-relics-glafic"
+    },
+    "macs0417": {
+      "gate_t": {
+        "median_abs_dkappa": 5.846977288337385e-06,
+        "n_pix": 3880137,
+        "passed": true
+      },
+      "dls_ds_z2": 0.6720159365752614,
+      "overlap_core_arcsec2": 37635.0,
+      "sensitivity": {
+        "5.0": 1.3360955827640897,
+        "20.0": 1.3973564507688696
+      },
+      "R": 1.3747810913195424,
+      "ratio_of_means": 1.2632500092318746,
+      "q16_q84": [
+        0.8454092118910255,
+        1.6377975764939878
+      ],
+      "region_arcsec2": 2941.0,
+      "region_fraction": 0.07814534343031752,
+      "class": "offset",
+      "role": "test_batch",
+      "lenstool": "macs0417-relics-lenstool",
+      "reference": "macs0417-canucs-maps"
+    },
+    "whl0137": {
+      "gate_t": {
+        "median_abs_dkappa": 2.384185274484363e-06,
+        "n_pix": 1289180,
+        "passed": true
+      },
+      "dls_ds_z2": 0.5944965282112591,
+      "overlap_core_arcsec2": 12996.0,
+      "sensitivity": {
+        "5.0": 1.0384592700776016,
+        "20.0": 1.0381013192191517
+      },
+      "R": 1.0377531220768677,
+      "ratio_of_means": 1.03512433068304,
+      "q16_q84": [
+        0.9953291839360368,
+        1.0758545434870364
+      ],
+      "region_arcsec2": 1533.0,
+      "region_fraction": 0.11795937211449677,
+      "class": "near_1",
+      "role": "test_other",
+      "lenstool": "whl0137-relics-lenstool",
+      "reference": "whl0137-relics-glafic"
+    },
+    "spt0615": {
+      "gate_t": {
+        "median_abs_dkappa": 1.1384487256127507e-05,
+        "n_pix": 5219200,
+        "passed": true
+      },
+      "dls_ds_z2": 0.37543452128940935,
+      "overlap_core_arcsec2": 37636.0,
+      "sensitivity": {
+        "5.0": 0.7442451028652413,
+        "20.0": 0.7811252709107888
+      },
+      "R": 0.7723721034022277,
+      "ratio_of_means": 0.7954523025639244,
+      "q16_q84": [
+        0.683962821904236,
+        0.9971771598632667
+      ],
+      "region_arcsec2": 2407.0,
+      "region_fraction": 0.06395472420023382,
+      "class": "intermediate",
+      "role": "test_other",
+      "lenstool": "spt0615-relics-lenstool",
+      "reference": "spt0615-relics-glafic"
+    }
+  },
+  "gate_v": {
+    "rows": {
+      "macs0553": {
+        "f_obs": 0.6653535557074881,
+        "inv_R": 0.6115594995182618,
+        "expected_class": "offset",
+        "class_ok": true,
+        "tol_ok": true,
+        "subregion_ok": true
+      },
+      "a3192": {
+        "f_obs": 0.6917935904140469,
+        "inv_R": 0.7829945505167508,
+        "expected_class": "offset",
+        "class_ok": true,
+        "tol_ok": true,
+        "subregion_ok": true
+      },
+      "rxc2211": {
+        "f_obs": 1.016685696058695,
+        "inv_R": 0.9343706821019296,
+        "expected_class": "near_1",
+        "class_ok": true,
+        "tol_ok": true,
+        "subregion_ok": true
+      },
+      "cl0152": {
+        "f_obs": 1.0454964042363546,
+        "inv_R": 0.9440935810633723,
+        "expected_class": "near_1",
+        "class_ok": true,
+        "tol_ok": true,
+        "subregion_ok": true
+      }
+    },
+    "passed": true
+  },
+  "h_k": {
+    "batch_classes": [
+      "offset",
+      "offset"
+    ],
+    "other_classes": [
+      "near_1",
+      "intermediate"
+    ],
+    "outcome": "undetermined (intermediate class)"
+  }
+}
