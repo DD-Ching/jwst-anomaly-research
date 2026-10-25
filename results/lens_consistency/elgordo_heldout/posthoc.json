@@ -1,0 +1,62 @@
+{
+ "label": "post hoc; not in the frozen plan",
+ "dag_ids": [
+  "13c",
+  "15c",
+  "18c",
+  "19c",
+  "20c",
+  "4c",
+  "6c"
+ ],
+ "dag": {
+  "n_tested": 7,
+  "rms_arcsec": 3.554,
+  "matched_fraction": 0.571,
+  "passes": false
+ },
+ "without_dag": {
+  "n_tested": 39,
+  "rms_arcsec": 0.961,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "type_E": {
+  "n_tested": 10,
+  "rms_arcsec": 3.107,
+  "matched_fraction": 0.7,
+  "passes": false
+ },
+ "type_N": {
+  "n_tested": 36,
+  "rms_arcsec": 0.88,
+  "matched_fraction": 1.0,
+  "passes": true
+ },
+ "djaref_targets_of_over_3arcsec_systems": [
+  {
+   "system": "6",
+   "image_class": "no_flux_ref",
+   "m_pred": 28.54,
+   "class": "undetectable"
+  },
+  {
+   "system": "6",
+   "image_class": "candidate",
+   "m_pred": 28.79,
+   "class": "undetectable"
+  },
+  {
+   "system": "13",
+   "image_class": "no_flux_ref",
+   "m_pred": 29.16,
+   "class": "undetectable"
+  },
+  {
+   "system": "20",
+   "image_class": "no_flux_ref",
+   "m_pred": 29.23,
+   "class": "undetectable"
+  }
+ ]
+}
