@@ -120,14 +120,17 @@ def load_cluster(images: Table, cluster: str) -> Table:
     return t
 
 
-def posthoc_scale(summary: dict, images: Table) -> dict:
+def posthoc_scale(summary: dict, images: Table, models: dict[str, str] | None = None) -> dict:
     """Post hoc (not in PLAN.md): per family, D_LS/D_S at the fitted z over D_LS/D_S at the SLICE z
     (spectroscopic or SLICE model z); one constant across families means one global map-amplitude
-    factor. Families fitted at the lower z-grid edge are listed and get no factor."""
+    factor. Families fitted at the lower z-grid edge are listed and get no factor. ``models``
+    (cluster -> model) defaults to every cluster's Lenstool model."""
     from astropy.cosmology import FlatLambdaCDM
 
     out = {}
-    for cluster, (_, model, _, _) in CLUSTERS.items():
+    if models is None:
+        models = {c: v[1] for c, v in CLUSTERS.items()}
+    for cluster, model in models.items():
         spec = lc.MODELS[model]
         zl = spec["z_lens"]
         cosmo = FlatLambdaCDM(*spec["cosmology"])

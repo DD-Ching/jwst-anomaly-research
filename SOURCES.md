@@ -334,6 +334,11 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   - Used 2026-10-14 (`scripts/smacs_s17_vet.py`): `glafic/v2` and `zitrin-ltm-gauss/v2` `{x,y}-arcsec-deflect.fits`, sha256 in the
     script (`lenstool/v1` lists no files); z_lens 0.39 and H0 70 / Ωm 0.3 assumed for the D_LS/D_S = 1 maps.
   - arXiv:2207.07102 (Pascale+22) Table 1: system 17 model z 1.72, photo-z 2.34 (accessed 2026-10-14).
+- RELICS lens-model readme v3 (`hlsp_relics_hst_multi_lens-models_multi_v3_readme.pdf`, sha256 318f4c03…652d074; every
+  deflection map "scaled to D_LS/D_S = 1"): https://archive.stsci.edu/hlsps/relics/docs/ (accessed 2026-10-25).
+- RELICS GLAFIC v2 maps of MACS J0553.4−3342 and RXC J2211.7−0349 (Oguri; best fit, D_LS/D_S = 1):
+  https://archive.stsci.edu/hlsps/relics/macs0553m33/models/glafic/v2/ and `.../rxc2211m03/models/glafic/v2/`
+  (accessed 2026-10-25; sha256 in `lensmodel.MACS0553_RELICS_GLAFIC`, `lensmodel.RXC2211_RELICS_GLAFIC`).
 - RELICS MACS J0417 lens models (`glafic/v3` incl. `range/` realisations, `lenstool/v2`; maps scaled to D_LS/D_S = 1;
   readme `hlsp_relics_hst_multi_lens-models_multi_v3_readme.pdf`): https://archive.stsci.edu/hlsps/relics/macs0417m11/models/
   (accessed 2026-10-17; used by `results/transients/batch_venus2/followup/macs0417_h002`).
