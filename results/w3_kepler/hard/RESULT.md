@@ -6,8 +6,8 @@
   bright cadence on each side of a dip.
 - **Local rule:** the frozen local shoulder rule passes none of them. Most of these 0 / 100 results
   follow from how the families were built (§2), so they are not a broad test of the new rule.
-- **Real deep EBs:** none of the 2,826 eclipse windows with bounded edges in 10 real deep EBs has a
-  shoulder under either rule.
+- **Real deep EBs:** none of the 2,892 eclipse windows in 10 real deep EBs has a shoulder under
+  either rule. 2,826 of them have bounded edges (post hoc).
 - **Cost:** on the unread val stars, W3 recovery falls from 1,671 to 1,494 of 2,000 injections. That
   is 177 injections, 8.9 points, or 10.6 % of the old rule's recoveries.
 - **Search:** validation passed, and the 200-star search found no flagged run.
@@ -47,8 +47,9 @@ Both rules were evaluated on the same injections, 100 per family on the 23 old_b
 - **Real deep EBs** (real ordinary events; `eb_deep`, the 14 stars with a DR25 TCE depth ≥ 0.6):
   - 10 stars have flagged windows: 2,892 windows.
   - Of these, 2,826 pass common mode with both edges "fast" (post hoc).
-  - Under both rules, **none** of the 2,892 windows has a shoulder, not even on one side (phase A:
-    0 single-window passes; post hoc: 137 of the 2,826 are local-insufficient).
+  - Under the old rule, no window has a shoulder on either side. Under the local rule, no window
+    has an "ok" side; 176 windows have an unevaluated ("insufficient") side
+    (`phaseA_runs.json.gz`; 137 of the 2,826 bounded windows are local-insufficient, post hoc).
   - So real deep eclipses do not produce shoulders here. This does not favour either rule.
   - The full chain passes 0 stars.
   - One window (KIC 5262664) passes the one-off test (post hoc). It is 1,543 cadences (31.5 d,
