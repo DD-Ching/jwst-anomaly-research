@@ -81,7 +81,7 @@ added noise. Every model control is exposure-averaged.
 - **Run:** passes the shoulder test only if both sides are "ok". The full rule is common mode +
   bounded fast edges (the #500 per-quarter rule) + one-off + local shoulder.
 
-### 3.1 Model check (no data, computed 10:50–11:00 UTC; not stored)
+### 3.1 Model check (no data, computed before this commit; not stored)
 - **Method:** noise-free, exposure-averaged W3 flux; 160 u0 values in [0, 1.995]; same windows.
 - **Result:** the share of u0 values whose two sides do not both reach 2 locally bright cadences is
   0–0.006 for ρ = 0.01 and 0–0.053 for ρ = 0.1 (grazing u0 ≳ 1.9).
