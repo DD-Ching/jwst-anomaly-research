@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: (in progress) RELICS Lenstool v1 amplitude: z_ref normalisation hypothesis across five clusters
+- Claim: tests the D-034 addendum bh post hoc hypothesis on stored factors and the RELICS map headers/readmes.
+
 ## 2026-10-25: SLICE MACS J0358 vs RELICS Abell 3192 maps: no flag; Lenstool v1 amplitude 0.69 again (D-034 addendum bh)
 - **Result** (`results/lens_consistency/slice_relics_macs0358/RESULT.md`; plan frozen in 56a0b3bb): Lenstool v1 and
   GLAFIC v2 both usable (P, K0 0.25″ / 0.96″, F). No image missed by both models in reading A (families 4–6,
