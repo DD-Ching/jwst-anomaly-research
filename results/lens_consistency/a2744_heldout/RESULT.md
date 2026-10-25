@@ -27,19 +27,28 @@ thresholds are ASSUMPTIONs (`../mars_hff_heldout/PLAN.md`). No image pixels were
 | Core (34, 84, 86) | 5 | 0.92″ | 100 % |
 | All without family 80 | 25 | 1.14″ | 100 % |
 
-- The misses depend on redshift at the same place. Families 72, 80 and 81 (z 3.48–3.75) lie within about 10″ of
-  67, 68, 70 and 74 (z 2.32–2.58), which Bergamini reproduces to ≤ 0.6″. UNCOVER v2.0, which was fitted to these
-  images, gives family 80 0.33–1.20″ under the WLS source (`../abell2744_uncoverref/imageplane_wls_abell2744_abell2744-uncover2-maps.ecsv`).
+- In the northern group the three z ≥ 3 families (72, 80, 81; z 3.48–3.75) have larger residuals (2.34″) than
+  the z < 3 families (0.27″), with the nearest pair of images 1.08″ apart (`min_sep_…`). The z ≥ 3 group is
+  mostly one source (18 of its 24 images are family 80's six knots) and the Dec cut was chosen after the run, so
+  this is a description, not a measured z dependence. UNCOVER v2.0, which was fitted to these images, gives family
+  80 0.33–1.20″ under the WLS source (`../abell2744_uncoverref/imageplane_wls_abell2744_abell2744-uncover2-maps.ecsv`).
   Ordinary explanations, not separated here: the NW-clump mass slope that Bergamini's lower-z constraints leave
   free (the distance-ratio lever arm), the UNCOVER z of 72 / 80 / 81, and the mean-source estimator on a six-knot
   source.
+
+## MARS vs Bergamini image by image (PLAN.md reading, from the stored tables; `posthoc.json`)
+Only family 86 is tested by both: 86a 1.08″ / 4.86″, 86b 0.45″ / 5.08″, 86c 0.40″ / 0.68″ (Bergamini / MARS).
+The other eight MARS-tested images (61, 62, 83, 53c) have no Bergamini row (seen by Bergamini), so the comparison
+has almost no overlap. Deviation (code, after the run): the comparison is written to `posthoc.json`, and the
+stored `summary.json` key `canucs_images` of the MARS block was renamed `reference_images` (the list is UNCOVER
+v2.0); no number changed.
 
 ## Reading (narrow)
 - Bergamini+23 does not pass gate H, so Abell 2744 has no held-out-validated second model; the early two-model
   comparison (`../abell2744-uncover2/crossmodel.json`) stays unvalidated. Held-out validation now passes on one
   field only (MARS, MACS0416).
-- No flag: the plan reads no flag. The z-dependent miss in the NW clump is a model-constraint question with
-  ordinary candidate causes (above); a model that saw the images reproduces them.
+- No flag: the plan reads no flag. The larger residuals of the z ≥ 3 NW families have ordinary candidate causes
+  (above), and a model that saw the images reproduces them.
 
 ## Not done / limits
 - 41 of 43 Bergamini held-out images are type N (the family's own images anchor its source), so gate H tests the

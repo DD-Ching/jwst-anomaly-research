@@ -8,7 +8,7 @@ by region.
 
     python scripts/a2744_heldout.py --zip DIR [--out DIR]
 
-``DIR`` receives the MARS zip (md5 checked); it is deleted after the run unless ``--keep``.
+``DIR`` receives the MARS zip (md5 checked); the zip is deleted after the run unless ``--keep``.
 """
 
 from __future__ import annotations
@@ -41,22 +41,54 @@ def shared_over_3(blocks: dict) -> list[str]:
 
 
 def _stats(d: np.ndarray) -> dict:
+    """rms over the matched images and the fraction within 3 arcsec; no prediction (inf) is a
+    miss, as in ``gate_h``."""
+    fin = d[np.isfinite(d)]
     return {
         "n": len(d),
-        "rms_arcsec": round(float(np.sqrt(np.mean(d**2))), 3) if len(d) else None,
-        "within_3arcsec": round(float(np.mean(d <= 3.0)), 3) if len(d) else None,
+        "rms_arcsec": round(float(np.sqrt(np.mean(fin**2))), 3) if len(fin) else None,
+        "within_3arcsec": round(float(np.mean(np.isfinite(d) & (d <= 3.0))), 3) if len(d) else None,
     }
+
+
+def _min_sep_arcsec(t: Table, a: np.ndarray, b: np.ndarray) -> float | None:
+    """Smallest separation (arcsec) between the images in mask ``a`` and those in mask ``b``."""
+    if not (a.any() and b.any()):
+        return None
+    _, _, d = mo._offsets_arcsec(t["ra"][a], t["dec"][a], t["ra"][b], t["dec"][b])
+    return round(float(d.min()), 2)
+
+
+def mars_vs_bergamini(out: Path) -> list[dict]:
+    """PLAN.md reading (from the stored tables): residuals of the images both models tested."""
+    rb = Table.read(out / f"heldout_{MODEL}.ecsv")
+    rm = Table.read(out / "heldout_A2744.ecsv")
+    b = dict(
+        zip(np.asarray(rb["image_id"], str), np.asarray(rb["dtheta_arcsec"], float), strict=True)
+    )
+    rows = []
+    for i, d, inside in zip(rm["image_id"], rm["dtheta_arcsec"], rm["inside"], strict=True):
+        if bool(inside) and str(i) in b:
+            rows.append(
+                {
+                    "image_id": str(i),
+                    "bergamini_arcsec": round(b[str(i)], 2),
+                    "mars_arcsec": round(float(d), 2),
+                }
+            )
+    return rows
 
 
 def posthoc(out: Path = OUT, images: Path = IMAGES) -> dict:
     """Post hoc (not in the plan): Bergamini held-out residuals split by region, by z within
     the northern group, and without family 80 (18 images of one source)."""
     r = Table.read(out / f"heldout_{MODEL}.ecsv")
-    r = r[np.asarray(r["inside"], bool) & np.isfinite(np.asarray(r["dtheta_arcsec"], float))]
+    r = r[np.asarray(r["inside"], bool)]
     t = Table.read(images)
-    dec = dict(zip(np.asarray(t["image_id"], str), np.asarray(t["dec"], float), strict=True))
+    row = {str(i): k for k, i in enumerate(t["image_id"])}
+    t = t[[row[str(i)] for i in r["image_id"]]]  # aligned with r
     d = np.asarray(r["dtheta_arcsec"], float)
-    north = np.array([dec[str(i)] > NORTH_DEC for i in r["image_id"]])
+    north = np.asarray(t["dec"], float) > NORTH_DEC
     top = np.array([str(s).split(".")[0] for s in r["system"]])
     hiz = np.asarray(r["z"], float) >= 3.0
     return {
@@ -69,6 +101,7 @@ def posthoc(out: Path = OUT, images: Path = IMAGES) -> dict:
         | {"systems": sorted({str(x) for x in top[north & hiz]})},
         "core": _stats(d[~north]) | {"systems": sorted({str(x) for x in top[~north]})},
         "without_system_80": _stats(d[top != "80"]),
+        "min_sep_north_z_ge_3_to_z_lt_3_arcsec": _min_sep_arcsec(t, north & hiz, north & ~hiz),
     }
 
 
@@ -83,6 +116,8 @@ def run(zdir: Path, out: Path = OUT) -> dict:
             zf, MARS_FIELD, cat, out, images=(IMAGES, MARS_GATE_K_RMS)
         )
     blocks["mars-A2744"]["role"] = "reported only (training gate K failed)"
+    # field_block names its input list after CANUCS; here it is UNCOVER v2.0
+    blocks["mars-A2744"]["reference_images"] = blocks["mars-A2744"].pop("canucs_images")
     summary = {
         "plan": str(out / "PLAN.md"),
         "images": str(IMAGES),
@@ -94,8 +129,8 @@ def run(zdir: Path, out: Path = OUT) -> dict:
         "over_3arcsec_in_both": shared_over_3(blocks),
     }
     (out / "summary.json").write_text(json.dumps(_clean(summary), indent=1, allow_nan=False) + "\n")
-    if out == OUT:
-        (out / "posthoc.json").write_text(json.dumps(posthoc(), indent=1) + "\n")
+    p = posthoc(out) | {"mars_vs_bergamini (PLAN.md reading)": mars_vs_bergamini(out)}
+    (out / "posthoc.json").write_text(json.dumps(p, indent=1) + "\n")
     return summary
 
 

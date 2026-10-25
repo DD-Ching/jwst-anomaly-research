@@ -177,7 +177,6 @@
    ]
   },
   "mars-A2744": {
-   "canucs_images": 172,
    "frame_offset": {
     "n_pairs": 94,
     "dx_arcsec": 0.0001064526887939732,
@@ -215,7 +214,8 @@
     "86a",
     "86b"
    ],
-   "role": "reported only (training gate K failed)"
+   "role": "reported only (training gate K failed)",
+   "reference_images": 172
   }
  },
  "over_3arcsec_in_both": []

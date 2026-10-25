@@ -2625,8 +2625,8 @@ plan frozen in f075f0e6, script and tests before the run; rules 1–5 of addendu
 catalogue as "seen", the 172 UNCOVER v2.0 spectroscopic images as the list. Bergamini+23 (149 own images): seen
 129, held-out 43 (2 E, 41 N), gate H fails on rms, 1.78″ (88 % within 3″); all 5 images > 3″ are family 80
 (z 3.67). MARS (reported only; gate K failed): 67 / 78 held-out images in families outside its map, 11 tested,
-23.97″. Post hoc: in the NW clump Bergamini reproduces the z < 3 families (0.27″, 14 images) but not the z ≥ 3
-ones (2.34″, 24 images: 72, 80, 81) at the same place; UNCOVER, fitted to them, gives family 80 ≤ 1.2″.
+23.97″. Post hoc: in the NW clump the z ≥ 3 families (72, 80, 81; 24 images, 18 of them family 80) have 2.34″ against
+0.27″ for the z < 3 ones (14 images); UNCOVER, fitted to them, gives family 80 ≤ 1.2″.
 Decision: no held-out-validated second model on Abell 2744; the early two-model comparison stays unvalidated; no
 flag. Alternatives rejected: dropping family 80 to pass (post hoc; still 1.14″). Revisit if: a JWST-era Abell 2744
 model with a published constraint list that leaves out part of the UNCOVER v2.0 systems (e.g. a later GLASS or MARS

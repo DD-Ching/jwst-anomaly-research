@@ -52,5 +52,23 @@
   "n": 25,
   "rms_arcsec": 1.138,
   "within_3arcsec": 1.0
- }
+ },
+ "min_sep_north_z_ge_3_to_z_lt_3_arcsec": 1.08,
+ "mars_vs_bergamini (PLAN.md reading)": [
+  {
+   "image_id": "86a",
+   "bergamini_arcsec": 1.08,
+   "mars_arcsec": 4.86
+  },
+  {
+   "image_id": "86b",
+   "bergamini_arcsec": 0.45,
+   "mars_arcsec": 5.08
+  },
+  {
+   "image_id": "86c",
+   "bergamini_arcsec": 0.4,
+   "mars_arcsec": 0.68
+  }
+ ]
 }
