@@ -49,17 +49,27 @@ def heldout_images() -> Table:
     images, z = lc.image_list(ICLV2, files, par)
     t = images.copy()
     fam = [lensmodel.image_family(i) for i in t["image_id"]]
-    t["z"] = [float(z.get(f, 0.0)) for f in fam]
+    listed = np.asarray(t["z"], float)
+    t["z"] = [zl if zl > 0 else float(z.get(f, 0.0)) for zl, f in zip(listed, fam, strict=True)]
     return t
+
+
+def fetch_maps(name: str) -> tuple[Path, Path]:
+    """The pinned x / y arcsec deflection maps of one RELICS model (checksummed downloads)."""
+    sub, sha_x, sha_y = MODELS[name]
+    base = f"{sv.RELICS_URL}{sub}hlsp_relics_model_model_smacs0723m73_{name}"
+    px = fetch_catalog(f"{base}_x-arcsec-deflect.fits", sha_x)
+    try:
+        return px, fetch_catalog(f"{base}_y-arcsec-deflect.fits", sha_y)
+    except Exception:
+        px.unlink(missing_ok=True)
+        raise
 
 
 def load_relics(name: str, centre: tuple[float, float], keep: bool = False):
     """One RELICS map model (as ``smacs_s17_vet.relics``, without its frame shift: rule 1 moves
     the image list into the RELICS frame instead)."""
-    sub, sha_x, sha_y = MODELS[name]
-    base = f"{sv.RELICS_URL}{sub}hlsp_relics_model_model_smacs0723m73_{name}"
-    px = fetch_catalog(f"{base}_x-arcsec-deflect.fits", sha_x)
-    py = fetch_catalog(f"{base}_y-arcsec-deflect.fits", sha_y)
+    px, py = fetch_maps(name)
     try:
         h0, om = sv.RELICS_COSMO
         return lensmodel.MapLensModel.from_fits(

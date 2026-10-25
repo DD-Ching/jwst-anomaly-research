@@ -40,3 +40,12 @@ def test_frame_offset_and_seen_split_on_the_golubchik_list():
     assert off["applied"]
     s = mo.split_seen(mo.shift(t, off), seen)
     assert s["seen"][:-1].all() and not s["seen"][-1]  # the new family is held out
+
+
+def test_heldout_images_keep_the_spectroscopic_z(monkeypatch):
+    arcs = Table(
+        {"image_id": ["1.1", "4.1"], "ra": [0.0, 0.0], "dec": [0.0, 0.0], "z": [1.449, 0.0]}
+    )
+    monkeypatch.setattr(sr.lc, "load_model", lambda name: (None, {}, None))
+    monkeypatch.setattr(sr.lc, "image_list", lambda name, f, p: (arcs, {"4": 2.17, "1": 9.9}))
+    assert list(sr.heldout_images()["z"]) == [1.449, 2.17]

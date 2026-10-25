@@ -329,6 +329,8 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   `muse.dat` (table A1, 78 rows, 4,914 B, sha256 `81868f29…`, accessed 2026-10-14) is pinned in
   `scripts/offplane_potentials.py` `MUSE` for `smacs0723-iclv2`; the model files were not read.
 - RELICS SMACS 0723 lens-model files (`glafic/v2`, `lenstool/v1`, `zitrin-ltm-gauss/v2`): https://archive.stsci.edu/hlsps/relics/smacs0723m73/models/
+  - Lenstool v1 best maps sit directly under `lenstool/` (not `lenstool/v1/`); x / y arcsec deflection sha256 pinned in `scripts/smacs_relics_heldout.py` (accessed 2026-10-25). zitrin-ltm-gauss v2 readme: Golubchik+22, "JWST-blind".
+  - Golubchik et al. 2022, arXiv:2207.05007, Table 1 (17 HST-era image rows of five families; PDF read 2026-10-25): `results/lens_consistency/smacs_relics_heldout/golubchik22_images.ecsv`.
   - Used 2026-10-14 (`scripts/smacs_s17_vet.py`): `glafic/v2` and `zitrin-ltm-gauss/v2` `{x,y}-arcsec-deflect.fits`, sha256 in the
     script (`lenstool/v1` lists no files); z_lens 0.39 and H0 70 / Ωm 0.3 assumed for the D_LS/D_S = 1 maps.
   - arXiv:2207.07102 (Pascale+22) Table 1: system 17 model z 1.72, photo-z 2.34 (accessed 2026-10-14).

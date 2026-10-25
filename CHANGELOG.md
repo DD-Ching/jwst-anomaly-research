@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: RELICS HST-era SMACS 0723 models vs the JWST-era images: all three fail gate H (D-034 addendum aw)
+- **Result** (`results/lens_consistency/smacs_relics_heldout/RESULT.md`): seen = Golubchik+22's five HST families,
+  held-out = 44 ICLv2 images of 16 JWST-era families. glafic v2 2.23″ (84 % within 3″), zitrin-ltm-gauss v2 2.73″
+  (73 %), lenstool v1 7.28″; their seen-family rms is as large (2.43″, 2.68″, 9.27″). No validated second model on
+  SMACS 0723; no flag.
+- **Failed approach:** the first run overwrote arcs.dat spectroscopic z with `best.par`'s free-z dict (0 for systems
+  1–5, 7); fixed and tested before any reading. Post hoc: the lenstool v1 arcsec map reads as about 1.25 × glafic;
+  at 0.8 × it fits the seen families (2.29″). Treat RELICS lenstool v1 SMACS maps as unnormalised until checked.
+- **Handoff:** held-out validation now fails on SMACS 0723, Abell 370 and MACS1149 (passes only MARS on MACS0416). Next:
+  a JWST-era model of another field with a public held-out list, or the D115b Lenstool re-fit (owner machine). #374
+  waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: MACS0416 MARS-only images in every CANUCS family: 2 absent, both ordinary; no candidate (D-034 addendum av)
 - **Result** (`results/lens_consistency/m0416_mars_only_all/RESULT.md`): addendum as extended to all 111 families;
   gate R (reproduces the D115a target) and gate C2 (195 / 205) pass. 71 new families give 6 MARS-only targets, 2 read
