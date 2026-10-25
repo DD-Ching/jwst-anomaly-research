@@ -2,6 +2,8 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25 (in progress): Abell 2744 held-out stage, Bergamini+23 and MARS vs UNCOVER v2.0-only images (claim)
+
 ## 2026-10-25: RELICS HST-era SMACS 0723 models vs the JWST-era images: all three fail gate H (D-034 addendum aw)
 - **Result** (`results/lens_consistency/smacs_relics_heldout/RESULT.md`): seen = Golubchik+22's five HST families,
   held-out = 44 ICLv2 images of 16 JWST-era families. glafic v2 2.23″ (84 % within 3″), zitrin-ltm-gauss v2 2.73″
