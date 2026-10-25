@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: RX J0152 family 4 revised forced photometry: gate V fails at the Lenstool position, undetermined; chance-level matches (D-034 addendum bg)
+- **Result** (`results/lens_consistency/rxj0152_fam4_photometry_v2/RESULT.md`; plan frozen in e566d3e): ten VENUS
+  bands, 0.3″ forced apertures, single-image injection. Gate V 27 / 30 overall but 2 / 3 at the predicted positions
+  (Lenstool missed); C 7 / 12; D fails (1.50 < 1.67); chance gate X: λ 2.27, observed 3, P 0.40. Outcome O3
+  undetermined; no flag. Had V passed: O1c (not distinguished from field sources).
+- **Failed approach:** a fixed 0.3 dex colour tolerance over nine bands rejects faint true injected copies (detected
+  at the right flux, colour failed; post hoc) and still admits λ ≈ 2 field sources per region.
+- **Handoff:** the line is paused; reopen only with photo-z / spec-z of segments 127 / 131 / 112 or family 4 (D-034
+  bg "Revisit if"). Still untested: SLICE MACS J0358 = RELICS `abell3192`. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: W3 / Kepler hard tests: simulated hard cases fool the #500 shoulder rule, real deep EBs fool neither; local rule adopted; 200-star search 0 flags (D-107 addendum)
 - **Scope:** owner-authorized follow-up to #500; `results/w3_kepler/hard/` (frozen `PLAN.md`
   before any new flux or comparison). 2.19 GB through the ledger.

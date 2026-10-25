@@ -1,0 +1,85 @@
+{
+ "note": "post hoc, not in PLAN.md",
+ "gate_V_misses_segments_within_1.5arcsec": {
+  "lenstool_0": [
+   {
+    "label": 122,
+    "sep_arcsec": 0.09625835236207847,
+    "f277w": 4.306551807204257,
+    "expected_f277w": 4.6963204650915955,
+    "in_flux_window": true,
+    "colour_match": false
+   }
+  ],
+  "lenstool_1": [
+   {
+    "label": 122,
+    "sep_arcsec": 0.11985965288157853,
+    "f277w": 4.279876160035367,
+    "expected_f277w": 4.6963204650915955,
+    "in_flux_window": true,
+    "colour_match": false
+   }
+  ],
+  "zitrin_8": [
+   {
+    "label": 121,
+    "sep_arcsec": 0.1247145303618572,
+    "f277w": 4.250307481121888,
+    "expected_f277w": 4.497345112587714,
+    "in_flux_window": true,
+    "colour_match": false
+   }
+  ]
+ },
+ "gate_C_colour_offsets": {
+  "2.1": {
+   "f277w": 0.8440077598816986,
+   "min_over_siblings_max_abs_dex": 9.43151821789428
+  },
+  "2.2": {
+   "f277w": 1.245584441913728,
+   "min_over_siblings_max_abs_dex": 1.6727805956940023
+  },
+  "2.3": {
+   "f277w": 0.8526387119265089,
+   "min_over_siblings_max_abs_dex": 0.15940931232204014
+  },
+  "3.1": {
+   "f277w": 4.590796623233409,
+   "min_over_siblings_max_abs_dex": 0.11491968247712159
+  },
+  "3.2": {
+   "f277w": 7.633210686293204,
+   "min_over_siblings_max_abs_dex": 0.10306498621841731
+  },
+  "3.3": {
+   "f277w": 4.582353105745592,
+   "min_over_siblings_max_abs_dex": 0.10306498621841731
+  },
+  "5.1": {
+   "f277w": 1.7412177762380596,
+   "min_over_siblings_max_abs_dex": 0.8566753916383449
+  },
+  "5.2": {
+   "f277w": 1.976267477665155,
+   "min_over_siblings_max_abs_dex": 0.35376622627019155
+  },
+  "5.3": {
+   "f277w": 1.0521794483250473,
+   "min_over_siblings_max_abs_dex": 0.35376622627019155
+  },
+  "6.1": {
+   "f277w": 2.7134119666552015,
+   "min_over_siblings_max_abs_dex": 0.13504214242015025
+  },
+  "6.2": {
+   "f277w": 3.9834950564478815,
+   "min_over_siblings_max_abs_dex": 0.13504214242015025
+  },
+  "6.3": {
+   "f277w": 2.1534908694390906,
+   "min_over_siblings_max_abs_dex": 0.27414974452062923
+  }
+ }
+}
