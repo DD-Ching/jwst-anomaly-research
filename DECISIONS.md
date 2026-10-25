@@ -2655,6 +2655,16 @@ held-out tests; quote the floors as the limit of the position-residual route on 
 promoting the post hoc El Gordo isolation to a flag. Revisit if: a second independent JWST-era model on a field with
 one primary model, or a finer MACS0416 model.
 
+**Addendum 2026-10-25ba (El Gordo third-image candidates at DJA NIRSpec redshifts).** `results/lens_consistency/elgordo_third_specz/RESULT.md`,
+plan, rule functions and tests frozen in 1a9e05e1 before the run. Rules: grade-3 DJA v4.6 rows within 0.5″; control gate Z
+(≥ 3 Diego+23 z_spec images, ≥ 80 % within 0.01 (1 + z) of the MUSE z); readings confirmed / z_differs / no_spectrum (all
+ASSUMPTION). No DJA row matches any of the 218 images, gate Z fails (0 controls), all seven candidates `not decided`.
+Post hoc: no DJA row within 10′ of the cluster; MAST holds only NIRCam imaging (programs 1176, 6882). Decision: the
+addendum-ay question (misidentification vs model error) cannot be decided from public spectra; no re-query until a
+NIRSpec / MUSE program on El Gordo is public. Alternatives rejected: photometric z at the candidates (would not
+separate a misidentification at a similar z). Revisit if: DJA or MAST lists El Gordo NIRSpec spectra, or a JWST-era El
+Gordo model with public maps.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

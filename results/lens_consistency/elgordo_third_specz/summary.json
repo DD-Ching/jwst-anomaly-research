@@ -1,0 +1,79 @@
+{
+ "plan": "results/lens_consistency/elgordo_third_specz/PLAN.md",
+ "table": {
+  "name": "dja_msaexp_emission_lines_v4.6.csv.gz",
+  "url": "https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.6.csv.gz",
+  "last_modified": "2026-09-15T13:01:52Z",
+  "bytes": 171878708,
+  "sha256": "ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3",
+  "n_rows": 99478,
+  "accessed": "2026-10-24"
+ },
+ "rows_read": 99478,
+ "rules": {
+  "MATCH_RADIUS_ARCSEC": 0.5,
+  "SPEC_GRADE": 3,
+  "Z_AGREE": 0.01,
+  "Z_MIN_IMAGES": 3,
+  "Z_MIN_AGREE": 0.8
+ },
+ "matches": {},
+ "S1": {},
+ "controls": {},
+ "gate_Z": {
+  "n_images": 0,
+  "frac_agree": 0.0,
+  "passes": false
+ },
+ "targets": {
+  "6c": {
+   "primary": true,
+   "status": "none",
+   "z_image": null,
+   "z_family": 4.1879,
+   "reading": "not_decided"
+  },
+  "13c": {
+   "primary": true,
+   "status": "none",
+   "z_image": null,
+   "z_family": 4.7528,
+   "reading": "not_decided"
+  },
+  "20c": {
+   "primary": true,
+   "status": "none",
+   "z_image": null,
+   "z_family": 5.4851,
+   "reading": "not_decided"
+  },
+  "4c": {
+   "primary": false,
+   "status": "none",
+   "z_image": null,
+   "z_family": 3.3339,
+   "reading": "not_decided"
+  },
+  "15c": {
+   "primary": false,
+   "status": "none",
+   "z_image": null,
+   "z_family": 4.977,
+   "reading": "not_decided"
+  },
+  "18c": {
+   "primary": false,
+   "status": "none",
+   "z_image": null,
+   "z_family": 5.1173,
+   "reading": "not_decided"
+  },
+  "19c": {
+   "primary": false,
+   "status": "none",
+   "z_image": null,
+   "z_family": 5.1196,
+   "reading": "not_decided"
+  }
+ }
+}
