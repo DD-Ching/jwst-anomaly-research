@@ -159,7 +159,9 @@ def difference(sci, w, tmpl: Drz, ra, dec, sn_mask, pix) -> tuple[np.ndarray, di
     dx, dy = sr.register_offset(sci, res, sn_mask)
     info = {"offset0_arcsec": float(np.hypot(dx, dy) * pix), "preshift_px": [dx, dy]}
     if info["offset0_arcsec"] <= MAX_PRESHIFT_ARCSEC:
-        res = nd_shift(np.nan_to_num(res), (-dy, -dx), order=1, cval=np.nan)
+        # deviation: edges take the nearest value; a NaN edge (cval=nan) biased the re-measured
+        # offset by up to 0.7 px
+        res = nd_shift(np.nan_to_num(res), (-dy, -dx), order=1, mode="nearest")
         dx2, dy2 = sr.register_offset(sci, res, sn_mask)
         info["shift_arcsec"] = float(np.hypot(dx2, dy2) * pix)
     else:
@@ -284,8 +286,10 @@ def contact_sheet(sheets: dict, path) -> None:
     for k, (obs, (sci, diff, p1, p2)) in enumerate(sheets.items()):
         for j, (img, lab) in enumerate(((sci, "2024"), (diff, "2024 − 2012"))):
             a = ax[j, k]
-            v = np.nanpercentile(np.abs(diff), 99.5)
-            a.imshow(img, origin="lower", cmap="gray", vmin=-v, vmax=v * (4 if j == 0 else 1))
+            d0 = diff - np.nanmedian(diff)  # display only: remove the sky pedestal
+            v = np.nanpercentile(np.abs(d0), 99.5)
+            shown = img - np.nanmedian(img)
+            a.imshow(shown, origin="lower", cmap="gray", vmin=-v, vmax=v * (4 if j == 0 else 1))
             for p in (p1, p2):
                 a.add_patch(plt.Circle(p, APER_ARCSEC / 0.128, fill=False, color="r", lw=0.6))
             a.set_title(f"{obs} {lab}", fontsize=6)

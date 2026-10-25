@@ -60,3 +60,31 @@ def test_injection_trials_recover_on_flat_image():
     tr = sh.injection_trials(img, psf, (30.0, 27.0), (32.0, 33.5), 50.0, PIX)
     assert len(tr) == 6
     assert sum(x["recovered"] for x in tr) >= 5
+
+
+def test_difference_registers_subpixel_offset():
+    from astropy.wcs import WCS
+
+    w = WCS(naxis=2)
+    w.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    w.wcs.crval = [292.955, -26.5747]
+    w.wcs.crpix = [24, 24]
+    w.wcs.cdelt = [-PIX / 3600.0, PIX / 3600.0]
+    rng = np.random.default_rng(3)
+    yy, xx = np.indices((47, 47), dtype=float)
+    blobs = rng.uniform([1, 5, 5], [5, 42, 42], (15, 3))
+
+    def sky(dx=0.0, dy=0.0):
+        return sum(
+            a * np.exp(-0.5 * ((xx - x - dx) ** 2 + (yy - y - dy) ** 2) / 1.5**2)
+            for a, x, y in blobs
+        )
+
+    class T:
+        def section(self, ra, dec, half):
+            return sky(0.2, -0.15) + 0.001 * rng.normal(size=xx.shape), None, w
+
+    sci = sky() + 0.001 * rng.normal(size=xx.shape)
+    _, info = sh.difference(sci, w, T(), 292.955, -26.5747, np.zeros(sci.shape, bool), PIX)
+    assert info["registered"]
+    assert info["shift_arcsec"] < 0.01
