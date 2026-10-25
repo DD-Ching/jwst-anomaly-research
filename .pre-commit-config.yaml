@@ -24,3 +24,13 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
+  - repo: local
+    hooks:
+      # docs/efficiency-rules.md 2.1-2.2: plain-text outputs under results/ <= 500 kB, no tracked
+      # raw download ledgers (files older than the rule are listed in the grandfather file).
+      - id: results-output-size
+        name: results output size and raw ledgers
+        entry: python scripts/check_results.py --sizes
+        language: python
+        pass_filenames: false
+        always_run: true

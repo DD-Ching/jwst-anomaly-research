@@ -32,6 +32,9 @@ Root CLAUDE.md applies. Per-search recipes and their failed-approach rules are d
 - Wait on a log line or an output file, never `pgrep -f` / `pkill -f` (they match the waiting shell itself).
 
 ## Before writing results (owner rule 2026-10-16)
+- Before the independent review, work through `docs/pre-review-checklist.md` (owner rule 2026-10-26) and run
+  `python scripts/check_results.py --review results/<dir> --md CHANGELOG.md DECISIONS.md`; the review and the
+  re-check use the same checklist.
 - **Frozen rules are computable conditions.**
   - State whether a rule applies per axis, per band, per item or combined, and spell out every "and" / "or".
   - Where a rule can be a function, write it and its unit test before the run, and let the function decide the
