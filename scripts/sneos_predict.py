@@ -47,7 +47,7 @@ def delay_days(phi_arcsec2: np.ndarray, z_l: float, z_s: float, cosmo: FlatLambd
     """Fermat potential (arcsec², reduced to the source plane) -> arrival time in days."""
     d_l = cosmo.angular_diameter_distance(z_l)
     d_s = cosmo.angular_diameter_distance(z_s)
-    d_ls = cosmo.angular_diameter_distance_z1z2(z_l, z_s)
+    d_ls = cosmo.angular_diameter_distance(z_l, z_s)
     d_dt = (1.0 + z_l) * d_l * d_s / d_ls
     t = (d_dt / const.c).to(u.day).value * RAD_PER_ARCSEC**2
     return t * np.asarray(phi_arcsec2, float)
