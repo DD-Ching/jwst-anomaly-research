@@ -1,0 +1,235 @@
+{
+ "note": "post hoc, not in PLAN.md; provenance model_prediction",
+ "models": {
+  "cl0152-relics-lenstool": {
+   "4": {
+    "z_fit": 2.677514933052449,
+    "n_catalogued": 2,
+    "n_predicted": 4,
+    "catalogued_abs_magnification": [
+     27.323682569112144,
+     26.238034473604824
+    ],
+    "unmatched": [
+     {
+      "ra": 28.17894873479369,
+      "dec": -13.952926865904491,
+      "magnification": 3.813394620589061,
+      "arcsec_to_nearest_catalogued": 19.21863793469655,
+      "arcsec_to_cluster_centre": 22.75585463348219,
+      "abs_mu_ratio_catalogued_over_this": [
+       7.165186215344115,
+       6.880492863744532
+      ]
+     },
+     {
+      "ra": 28.183246178254205,
+      "dec": -13.955446313363538,
+      "magnification": -2.586209367377268,
+      "arcsec_to_nearest_catalogued": 4.095030904998628,
+      "arcsec_to_cluster_centre": 23.619549706987527,
+      "abs_mu_ratio_catalogued_over_this": [
+       10.565147166264305,
+       10.14536363705673
+      ]
+     }
+    ]
+   },
+   "7": {
+    "z_fit": 3.4380072833137847,
+    "n_catalogued": 2,
+    "n_predicted": 4,
+    "catalogued_abs_magnification": [
+     6.7462992755813636,
+     8.487164120186307
+    ],
+    "unmatched": [
+     {
+      "ra": 28.164522626245393,
+      "dec": -13.96827344352362,
+      "magnification": -8.193184171764972,
+      "arcsec_to_nearest_catalogued": 0.7747606475592206,
+      "arcsec_to_cluster_centre": 56.45798889657557,
+      "abs_mu_ratio_catalogued_over_this": [
+       0.8234038359384369,
+       1.0358810374889944
+      ]
+     },
+     {
+      "ra": 28.16458968148388,
+      "dec": -13.968390245488392,
+      "magnification": 7.325313775383546,
+      "arcsec_to_nearest_catalogued": 0.7963689179222248,
+      "arcsec_to_cluster_centre": 56.51520381278948,
+      "abs_mu_ratio_catalogued_over_this": [
+       0.9209570378066343,
+       1.158607587391972
+      ]
+     }
+    ]
+   }
+  },
+  "cl0152-relics-glafic": {
+   "1": {
+    "z_fit": 3.895778332040073,
+    "n_catalogued": 4,
+    "n_predicted": 6,
+    "catalogued_abs_magnification": [
+     5.3338119186868305,
+     3.727788480224473,
+     4.69925960099997,
+     7.854198531255782
+    ],
+    "unmatched": [
+     {
+      "ra": 28.187581369300492,
+      "dec": -13.950963103737235,
+      "magnification": 0.1206106571575907,
+      "arcsec_to_nearest_catalogued": 1.0290281266836034,
+      "arcsec_to_cluster_centre": 45.46968645848579,
+      "abs_mu_ratio_catalogued_over_this": [
+       44.22338825098711,
+       30.9076210019627,
+       38.96222532690363,
+       65.12026977013676
+      ]
+     },
+     {
+      "ra": 28.187565685529684,
+      "dec": -13.950947536366826,
+      "magnification": 0.019172780863437523,
+      "arcsec_to_nearest_catalogued": 1.0994138885522682,
+      "arcsec_to_cluster_centre": 45.46411119714503,
+      "abs_mu_ratio_catalogued_over_this": [
+       278.1970939259211,
+       194.43128812541548,
+       245.10057432312567,
+       409.65359105698286
+      ]
+     }
+    ]
+   },
+   "4": {
+    "z_fit": 2.9102046607113956,
+    "n_catalogued": 2,
+    "n_predicted": 3,
+    "catalogued_abs_magnification": [
+     12.692280619703752,
+     11.22403002025213
+    ],
+    "unmatched": [
+     {
+      "ra": 28.178053657649052,
+      "dec": -13.952682029754305,
+      "magnification": 2.3835293386817757,
+      "arcsec_to_nearest_catalogued": 22.161285204961416,
+      "arcsec_to_cluster_centre": 23.220541709499535,
+      "abs_mu_ratio_catalogued_over_this": [
+       5.324994500266269,
+       4.708995957423223
+      ]
+     }
+    ]
+   }
+  },
+  "cl0152-relics-zitrin": {
+   "1": {
+    "z_fit": 3.5842856005012425,
+    "n_catalogued": 4,
+    "n_predicted": 5,
+    "catalogued_abs_magnification": [
+     7.834686426924556,
+     3.9624260584540925,
+     3.5782617514757202,
+     1.4591196523837422
+    ],
+    "unmatched": [
+     {
+      "ra": 28.187486880480556,
+      "dec": -13.950906081547652,
+      "magnification": 0.058173541806825546,
+      "arcsec_to_nearest_catalogued": 1.347405085916397,
+      "arcsec_to_cluster_centre": 45.35172316200045,
+      "abs_mu_ratio_catalogued_over_this": [
+       134.67783091050003,
+       68.11388709341362,
+       61.510123680588414,
+       25.082186971337933
+      ]
+     }
+    ]
+   },
+   "4": {
+    "z_fit": 2.0852446274659457,
+    "n_catalogued": 2,
+    "n_predicted": 5,
+    "catalogued_abs_magnification": [
+     17.857278242129343,
+     18.247622218945846
+    ],
+    "unmatched": [
+     {
+      "ra": 28.179453735042365,
+      "dec": -13.953434200729994,
+      "magnification": 2.386623882953216,
+      "arcsec_to_nearest_catalogued": 16.683741885550827,
+      "arcsec_to_cluster_centre": 21.4222692337526,
+      "abs_mu_ratio_catalogued_over_this": [
+       7.482233949671487,
+       7.645788827172122
+      ]
+     },
+     {
+      "ra": 28.18296574199938,
+      "dec": -13.955427400025744,
+      "magnification": -0.3221035623132222,
+      "arcsec_to_nearest_catalogued": 4.059861068490974,
+      "arcsec_to_cluster_centre": 22.853905799774935,
+      "abs_mu_ratio_catalogued_over_this": [
+       55.43955525944927,
+       56.65141387415444
+      ]
+     },
+     {
+      "ra": 28.18293471791725,
+      "dec": -13.955427880289916,
+      "magnification": 0.1607736087445313,
+      "arcsec_to_nearest_catalogued": 4.061282407843852,
+      "arcsec_to_cluster_centre": 22.764816335425042,
+      "abs_mu_ratio_catalogued_over_this": [
+       111.070954876086,
+       113.49886564990435
+      ]
+     }
+    ]
+   },
+   "7": {
+    "z_fit": 4.061533623284514,
+    "n_catalogued": 2,
+    "n_predicted": 3,
+    "catalogued_abs_magnification": [
+     3.6150105245152813,
+     1.7863209020896644
+    ],
+    "unmatched": [
+     {
+      "ra": 28.164384624437695,
+      "dec": -13.968453581917029,
+      "magnification": 0.9804221951594443,
+      "arcsec_to_nearest_catalogued": 0.4779273225457324,
+      "arcsec_to_cluster_centre": 57.22848819288136,
+      "abs_mu_ratio_catalogued_over_this": [
+       3.687197762722394,
+       1.821991496019894
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "family_4_brightest_positive_unmatched_separations_arcsec": {
+  "cl0152-relics-lenstool|cl0152-relics-glafic": 3.2490436589041827,
+  "cl0152-relics-lenstool|cl0152-relics-zitrin": 2.539431685452906,
+  "cl0152-relics-glafic|cl0152-relics-zitrin": 5.591029075034357
+ }
+}

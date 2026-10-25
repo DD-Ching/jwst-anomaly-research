@@ -40,3 +40,9 @@ def test_image_list():
     assert list(t["image_id"][t["held_out"]]) == ["7.1", "7.2"]
     assert list(t["image_id"][t["z_spec"]]) == ["1.1", "1.2", "1.3", "1.4"]
     assert np.all(np.asarray(t["z"])[t["z_spec"]] == 3.93)
+
+
+def test_unmatched_predictions():
+    pred = np.array([[0.0, 0.0], [1.0, 0.0], [10.0, 10.0]])
+    obs = np.array([[0.1, 0.0], [0.9, 0.1]])
+    assert list(sr.unmatched_predictions(pred, obs)) == [2]

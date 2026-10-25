@@ -1,0 +1,24 @@
+{
+ "model": "cl0152-relics-lenstool",
+ "model_sha256": "4dc4316069db46c67dbe92ab80382144ed93f132586bdca3b211e173e86c27a2",
+ "kappa_map": {
+  "map": "/home/user/jwst-anomaly-research/data/cache/external/bacfbd83b546_hlsp_relics_model_model_cl0152m13_lenstool_v1_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 2906,
+  "median_rel_diff": 2.4083978052341847e-05,
+  "p95_rel_diff": 0.0006440688533277484,
+  "median_ratio": 1.0000025381410276,
+  "parity_agree": null
+ },
+ "magnification_z2": {
+  "map": "/home/user/jwst-anomaly-research/data/cache/external/34a01a544625_hlsp_relics_model_model_cl0152m13_lenstool_v1_z02-magnif.fits",
+  "quantity": "mu",
+  "z_s": 2.0,
+  "n_points": 2887,
+  "median_rel_diff": 0.0015289220207340096,
+  "p95_rel_diff": 0.00901871948765719,
+  "median_ratio": 1.0015194822323723,
+  "parity_agree": null
+ }
+}

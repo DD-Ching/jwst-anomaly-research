@@ -6,9 +6,10 @@ Per model: gate P, K0 and F (rules 2-4), reading A on family 7 and reading B on 
 (rule 5, joint over usable models), multiplicity (rule 6) and the amplitude class (rule 7, Q1).
 
     python scripts/slice_relics_rxj0152.py --build-images main.tex   # once, from the e-print
-    python scripts/lens_consistency.py validate --model cl0152-relics-lenstool \
-        --out results/lens_consistency/slice_relics_rxj0152/validate/cl0152-relics-lenstool
+    python scripts/lens_consistency.py --model cl0152-relics-lenstool \
+        --out results/lens_consistency/slice_relics_rxj0152/validate validate
     python scripts/slice_relics_rxj0152.py [--grid-step 0.25]
+    python scripts/slice_relics_rxj0152.py --posthoc   # post hoc: unmatched predicted images
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ import json
 from pathlib import Path
 
 import lens_consistency as lc
+import m0417_images as mi
 import macs0647_clash_heldout as ho
 import macs2129_clash_heldout as h29
 import numpy as np
@@ -33,6 +35,7 @@ SIDEHEAD = "RX\\,J0152.7$-$1357"
 HELD = ("7",)  # rule 5 reading A: new in the JWST imaging (SLICE text)
 SPEC = ("1",)  # rule 5 reading B: z_spec 3.93 (Acebron et al. 2019)
 LENSTOOL = "cl0152-relics-lenstool"
+CENTRE = (28.17764473, -13.95911996)  # SLICE Table 1 (deg)
 MODELS = (LENSTOOL, "cl0152-relics-glafic", "cl0152-relics-zitrin")
 
 
@@ -55,6 +58,85 @@ def per_model_misses(ids: np.ndarray, d: np.ndarray) -> list[str]:
     d = np.asarray(d, float)
     miss = ~(np.isfinite(d) & (d <= ho.MATCH_ARCSEC))
     return [str(i) for i in np.asarray(ids, str)[miss]]
+
+
+def unmatched_predictions(pred_xy: np.ndarray, obs_xy: np.ndarray) -> np.ndarray:
+    """Indices of predicted images that are no catalogued image's nearest prediction."""
+    d = np.hypot(*(obs_xy[:, None, :] - pred_xy[None, :, :]).transpose(2, 0, 1))
+    return np.setdiff1d(np.arange(len(pred_xy)), np.argmin(d, axis=1))
+
+
+def posthoc(grid_step: float) -> dict:
+    """Post hoc (not in PLAN.md): sky positions of the predicted images that match no catalogued
+    image, for every family with extra predictions, at the run's fitted z."""
+    from jwst_anomaly import lensmodel
+
+    summary = json.loads((OUT / "summary.json").read_text())
+    t = load()
+    fam = np.asarray(t["system"], str)
+    out: dict = {"note": "post hoc, not in PLAN.md; provenance model_prediction", "models": {}}
+    for model in MODELS:
+        e = summary["models"][model]
+        solver = mi.Solver(model, t, grid_step)
+        rows = {}
+        for f in e["extra_predicted"]:
+            sub = t[fam == f]
+            sub["z"] = e["z_fit"][f]
+            bt = lensmodel.backtrace_images(solver.model, sub, {})
+            pred = lensmodel.find_images(
+                solver.model,
+                solver.grid,
+                float(np.mean(bt["beta_x"])),
+                float(np.mean(bt["beta_y"])),
+                float(bt["z_used"][0]),
+            )
+            ox, oy = solver.model.to_frame(
+                np.asarray(sub["ra"], float), np.asarray(sub["dec"], float)
+            )
+            pxy = np.column_stack([pred["x"], pred["y"]])
+            k = unmatched_predictions(pxy, np.column_stack([ox, oy]))
+            ra, dec = solver.model.to_sky(pxy[k, 0], pxy[k, 1])
+            mu = np.asarray(pred["magnification"], float)
+            near = np.argmin(np.hypot(ox[:, None] - pxy[:, 0], oy[:, None] - pxy[:, 1]), axis=1)
+            mu_cat = np.abs(mu[near])
+            rows[f] = {
+                "z_fit": e["z_fit"][f],
+                "n_catalogued": len(sub),
+                "n_predicted": len(pred),
+                "catalogued_abs_magnification": [float(m) for m in mu_cat],
+                "unmatched": [
+                    {
+                        "ra": float(r),
+                        "dec": float(d),
+                        "magnification": float(m),
+                        "arcsec_to_nearest_catalogued": float(
+                            np.min(np.hypot(ox - pxy[j, 0], oy - pxy[j, 1]))
+                        ),
+                        "arcsec_to_cluster_centre": _sep(r, d, *CENTRE),
+                        "abs_mu_ratio_catalogued_over_this": [float(c / abs(m)) for c in mu_cat],
+                    }
+                    for r, d, m, j in zip(ra, dec, mu[k], k, strict=True)
+                ],
+            }
+        out["models"][model] = rows
+    # spread across models of family 4's brightest positive-parity unmatched prediction
+    pts = {}
+    for m, r in out["models"].items():
+        pos = [u for u in r.get("4", {}).get("unmatched", []) if u["magnification"] > 0]
+        if pos:
+            u = max(pos, key=lambda u: u["magnification"])
+            pts[m] = (u["ra"], u["dec"])
+    names = list(pts)
+    out["family_4_brightest_positive_unmatched_separations_arcsec"] = {
+        f"{a}|{b}": _sep(*pts[a], *pts[b]) for i, a in enumerate(names) for b in names[i + 1 :]
+    }
+    return out
+
+
+def _sep(ra1: float, dec1: float, ra2: float, dec2: float) -> float:
+    from astropy.coordinates import SkyCoord
+
+    return float(SkyCoord(ra1, dec1, unit="deg").separation(SkyCoord(ra2, dec2, unit="deg")).arcsec)
 
 
 def build_images(tex_path: Path) -> Table:
@@ -92,7 +174,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--build-images", type=Path, help="SLICE e-print main.tex: write the image list"
     )
+    ap.add_argument("--posthoc", action="store_true", help="write posthoc.json from summary.json")
     args = ap.parse_args(argv)
+    if args.posthoc:
+        ph = posthoc(args.grid_step)
+        (OUT / "posthoc.json").write_text(json.dumps(ph, indent=1) + "\n")
+        print(json.dumps(ph, indent=1))
+        return 0
     if args.build_images:
         t = build_images(args.build_images)
         t.write(IMAGES, format="ascii.ecsv", overwrite=True)
