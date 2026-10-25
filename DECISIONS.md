@@ -2711,6 +2711,16 @@ spread) is not in SLICE Table 8; a lensing-residual input for imaging. Alternati
 tighter post hoc radius. Revisit if: the SLICE Lenstool models are reachable, or imaging of the family-4 positions
 shows a source at the expected flux.
 
+**Addendum 2026-10-25bf (forced photometry at RX J0152 family 4's predicted third image).**
+`results/lens_consistency/rxj0152_fam4_photometry/RESULT.md`, plan frozen in ad41f8a before any pixel was read (script
+committed after the run; deviation). VENUS NIRCam F115W / F150W / F277W / F444W cutouts; isophotal F277W segments,
+four-band colour rule (0.3 dex), injection gate V, known-case colour gate C, depth gate D. V fails 1 / 3 (C 11 / 12, D
+passes), so the outcome is O3 undetermined; three colour-matched region segments are not read. Post hoc: V failed
+because the injection copied the two-image pair and isophotal sums lose a faint source's flux; the chance control
+gives 1.53 expected vs 3 observed (P 0.20). Decision: no flag; family 4 stays a lensing-residual input. Alternatives
+rejected: reading the three segments post hoc. Revisit if: a re-frozen plan with single-image injection, aperture
+fluxes, ten bands and a frozen chance gate is run.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
