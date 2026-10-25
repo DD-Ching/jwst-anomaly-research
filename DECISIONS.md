@@ -2779,7 +2779,7 @@ normalisation.
 **Addendum 2026-10-25bl (SPT0615 published images vs RELICS Lenstool v1 / GLAFIC v2; answers bk's "Revisit if").**
 `results/lens_consistency/spt0615_images/RESULT.md`; plan before any map was read. Paterno-Mahler et al. 2018 Table 2
 (z_spec 1.358, 4.013). Both maps pass P, K0 (rms 0.447″ / 0.283″) and F; reading B at z_spec 0 misses (rms 0.472″ /
-0.197″); rule 7 median factor 0.987 / 0.997, both `near_1`: Q1 `H_none`. Reading A (3.3, 3.4, 3.6, less secure): Lenstool
+0.197″); rule 7 median factor 0.987 / 0.997, both `near_1` (post hoc on the z_spec families alone 1.005 / 1.012): Q1 `H_none`. Reading A (3.3, 3.4, 3.6, less secure): Lenstool
 v1 misses all three, GLAFIC none, so no joint flag. Post hoc: from the secure source Lenstool v1 predicts 5 system 3
 images, GLAFIC 7 (≤ 0.47″ from 3.3 / 3.4 / 3.6). Decision: SPT0615's bk "intermediate" is a model-shape difference, not an
 amplitude offset; both SPT0615 maps may be used at D_LS/D_S = 1 for families 1–3; Lenstool v1 is not used for system 3's

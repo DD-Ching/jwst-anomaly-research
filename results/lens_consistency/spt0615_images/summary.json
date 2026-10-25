@@ -221,6 +221,7 @@
  },
  "images": 14,
  "reading_A_images": 3,
+ "note_held_out_A": "per-model held_out_A statistics cover all six family-3b rows; reading A is misses_A over READ_A only (PLAN.md)",
  "spec_z_images": 6,
  "usable": [
   "spt0615-relics-lenstool",

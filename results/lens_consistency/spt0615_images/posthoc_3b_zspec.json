@@ -1,5 +1,5 @@
 {
- "note": "post hoc, not in PLAN.md: family 3b (all six system 3 images) at z_spec 4.013, no z fit; dtheta in arcsec; provenance model_prediction",
+ "note": "post hoc, not in PLAN.md; dtheta and distances in arcsec; provenance model_prediction (separations: derived from observed positions)",
  "models": {
   "spt0615-relics-lenstool": {
    "3b.1": 53.05,
@@ -21,7 +21,6 @@
   }
  },
  "secure_source": {
-  "note": "post hoc: images predicted from the mean back-traced source of the secure family 3 (3.1, 3.2, 3.5) at each model's fitted family-3 z; arcsec from 3.3 / 3.4 / 3.6 to the nearest predicted image",
   "spt0615-relics-lenstool": {
    "z": 3.825,
    "n_predicted": 5,
@@ -40,5 +39,28 @@
     "3b.6": 0.47
    }
   }
+ },
+ "amplitude_spec_families": {
+  "spt0615-relics-lenstool": {
+   "factors": [
+    1.0258118274876034,
+    0.9844505111989669
+   ],
+   "median": 1.0051311693432852
+  },
+  "spt0615-relics-glafic": {
+   "factors": [
+    1.0258118274876034,
+    0.9972704678102292
+   ],
+   "median": 1.0115411476489162
+  }
+ },
+ "separation_3.3_arcsec": {
+  "3.1": 75.0,
+  "3.2": 91.4,
+  "3.4": 79.2,
+  "3.5": 71.6,
+  "3.6": 82.2
  }
 }

@@ -1,8 +1,7 @@
 # SPT-CL J0615−5746 published images vs the RELICS Lenstool v1 and GLAFIC v2 maps (2026-10-25)
 
 Frozen plan `PLAN.md` (written before any map was read; pushed in a6ba478c, see Deviation). Numbers come from
-`summary.json` (frozen run) and `posthoc_3b_zspec.json` (post hoc), written by `scripts/spt0615_images.py` and
-(post hoc file) by session code built on the same `m0417_images.Solver` / `lensmodel` calls, not committed as a script. Image list: Paterno-Mahler et al. 2018 Table 2 (observed), `spt_images.ecsv`.
+`summary.json` (frozen run) and `posthoc_3b_zspec.json` (post hoc), written by `scripts/spt0615_images.py` (`--posthoc` for the second). Image list: Paterno-Mahler et al. 2018 Table 2 (observed), `spt_images.ecsv`.
 Maps are observed products; fitted z, offsets, factors and classes are derived (model_prediction).
 
 ## Frozen result
@@ -21,7 +20,11 @@ factor. **Q2: no joint flag** in reading B or A (GLAFIC v2 reproduces 3.3, 3.4, 
 
 ## Post hoc (not in the plan)
 - Family 3b at z_spec 4.013 without a z fit: GLAFIC all six images ≤ 0.27″ (7 predicted); Lenstool v1 ≥ 28″ (1
-  predicted: the mean source is pulled by 3.3, 60″ from the others).
+  predicted; 3.3 lies 71.6–91.4″ from the other five system 3 images, `separation_3.3_arcsec`).
+- Rule 7 circularity: family 2's reference z 2.43 is the paper's model 1 value, and the Lenstool median (0.987) is
+  family 2's factor. On the spectroscopic families 1 and 3 alone the medians are 1.005 (Lenstool v1) and 1.012
+  (GLAFIC), also inside [0.85, 1.15] (`amplitude_spec_families`); the class does not change.
+- `summary.json` `held_out_A` statistics cover all six 3b rows; reading A is `misses_A` over 3.3, 3.4, 3.6 only.
 - From the secure family-3 source at each model's fitted z: Lenstool v1 predicts 5 images, nearest to 3.3 / 3.4 / 3.6
   at 36.3″ / 7.4″ / 2.7″; GLAFIC 7 images at 0.27″ / 0.28″ / 0.47″. So the two maps differ in system 3's image
   configuration, consistent with the paper's model 1 omitting 3.3, 3.4, 3.6 (Table 2 note) while GLAFIC v2 matches

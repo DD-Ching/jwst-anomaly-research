@@ -39,3 +39,10 @@ def test_image_list():
     # 3.1 is 06 15 49.96, -57 46 53.5
     r = t[t["image_id"] == "3.1"][0]
     assert abs(r["ra"] - 93.958167) < 1e-5 and abs(r["dec"] + 57.781528) < 1e-5
+
+
+def test_build_matches_committed_list():
+    b, t = sp.build_images(), sp.load()
+    assert list(b["image_id"]) == list(t["image_id"])
+    assert np.allclose(b["ra"], t["ra"]) and np.allclose(b["dec"], t["dec"])
+    assert list(b["z"]) == list(t["z"]) and list(b["use_spec"]) == list(t["z_spec"])

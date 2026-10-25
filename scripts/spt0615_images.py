@@ -11,6 +11,7 @@ with ``slice_relics_macs0358``.
     python scripts/lens_consistency.py --model spt0615-relics-lenstool \
         --out results/lens_consistency/spt0615_images/validate validate   # and -glafic
     python scripts/spt0615_images.py [--grid-step 0.25]
+    python scripts/spt0615_images.py --posthoc   # post hoc: 3b at z_spec, secure-source images
 """
 
 from __future__ import annotations
@@ -74,6 +75,71 @@ def amplitude_median(families: dict[str, dict]) -> float | None:
     return float(np.median(f)) if f else None
 
 
+def posthoc(grid_step: float) -> dict:
+    """Post hoc (not in PLAN.md): family 3b at z_spec without a z fit; images predicted from the
+    secure family-3 source at each model's fitted z; spectroscopic-family amplitude median; the
+    observed separations of 3.3 from the other system 3 images."""
+    import m0417_images as mi
+
+    from jwst_anomaly import lensmodel
+
+    summary = json.loads((OUT / "summary.json").read_text())
+    t = load()
+    fam = np.asarray(t["system"], str)
+    ids = np.asarray(t["image_id"], str)
+    out: dict = {
+        "note": "post hoc, not in PLAN.md; dtheta and distances in arcsec; provenance "
+        "model_prediction (separations: derived from observed positions)",
+        "models": {},
+        "secure_source": {},
+        "amplitude_spec_families": {},
+    }
+    s3 = t[fam == "3b"]
+    s3["z_spec"] = True
+    for model in MODELS:
+        solver = mi.Solver(model, t, grid_step)
+        ip = solver.image_plane(s3)
+        out["models"][model] = {
+            **{
+                str(i): round(float(d), 2)
+                for i, d in zip(ip["image_id"], ip["dtheta_arcsec"], strict=True)
+            },
+            "n_predicted": int(np.max(ip["n_predicted"])),
+        }
+        sub = t[fam == "3"]
+        sub["z"] = summary["models"][model]["z_fit"]["3"]
+        bt = lensmodel.backtrace_images(solver.model, sub, {})
+        pred = lensmodel.find_images(
+            solver.model,
+            solver.grid,
+            float(np.mean(bt["beta_x"])),
+            float(np.mean(bt["beta_y"])),
+            float(bt["z_used"][0]),
+        )
+        o = t[np.isin(ids, READ_A)]
+        ox, oy = solver.model.to_frame(np.asarray(o["ra"], float), np.asarray(o["dec"], float))
+        out["secure_source"][model] = {
+            "z": round(float(sub["z"][0]), 3),
+            "n_predicted": len(pred),
+            "nearest_arcsec": {
+                str(i): round(float(np.min(np.hypot(x - pred["x"], y - pred["y"]))), 2)
+                for i, x, y in zip(o["image_id"], ox, oy, strict=True)
+            },
+        }
+        fams = summary["models"][model]["amplitude"]["families"]
+        f = [fams[k]["scale"] for k in ("1", "3") if k in fams]
+        out["amplitude_spec_families"][model] = {
+            "factors": f,
+            "median": float(np.median(f)) if f else None,
+        }
+    c = SkyCoord(*TABLE2["3.3"], unit=("hourangle", "deg"))
+    out["separation_3.3_arcsec"] = {
+        i: round(float(c.separation(SkyCoord(*TABLE2[i], unit=("hourangle", "deg"))).arcsec), 1)
+        for i in ("3.1", "3.2", "3.4", "3.5", "3.6")
+    }
+    return out
+
+
 def build_images() -> Table:
     rows = []
     for fam, (ids, z, spec) in FAMILIES.items():
@@ -110,13 +176,18 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--grid-step", type=float, default=0.25)
     ap.add_argument("--build-images", action="store_true", help="write the image list")
+    ap.add_argument("--posthoc", action="store_true", help="write posthoc_3b_zspec.json")
     args = ap.parse_args(argv)
+    if args.posthoc:
+        ph = posthoc(args.grid_step)
+        (OUT / "posthoc_3b_zspec.json").write_text(json.dumps(ph, indent=1) + "\n")
+        print(json.dumps(ph, indent=1))
+        return 0
     if args.build_images:
         build_images().write(IMAGES, format="ascii.ecsv", overwrite=True)
         print("->", IMAGES)
         return 0
     t = load()
-    images = Table.read(IMAGES, format="ascii.ecsv")
     ids = np.asarray(t["image_id"], str)
     read_a = np.isin(ids, READ_A)
     spec = np.asarray(t["z_spec"], bool)
@@ -146,7 +217,7 @@ def main(argv: list[str] | None = None) -> int:
         d_a[model], d_spec[model] = d[read_a], ds[spec]
         if ok:
             usable.append(model)
-        amp = srh.posthoc_scale({CLUSTER: entry}, images, {CLUSTER: model})[CLUSTER]
+        amp = srh.posthoc_scale({CLUSTER: entry}, t, {CLUSTER: model})[CLUSTER]
         med = amplitude_median(amp["families"])
         classes[model] = sg.amplitude_class(med) if ok and med is not None else None
         entry.update(
@@ -167,6 +238,8 @@ def main(argv: list[str] | None = None) -> int:
         {
             "images": len(t),
             "reading_A_images": int(read_a.sum()),
+            "note_held_out_A": "per-model held_out_A statistics cover all six family-3b rows; "
+            "reading A is misses_A over READ_A only (PLAN.md)",
             "spec_z_images": int(spec.sum()),
             "usable": usable,
             "flags_A": [str(i) for i, v in zip(ids[read_a], ra, strict=True) if v != "no_flag"],
