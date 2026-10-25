@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: El Gordo third-image candidates 6c / 13c / 20c at DJA NIRSpec redshifts (in progress)
+- Plan: test addendum ay's three isolated Caminha+23 misses against DJA grade-3 spectroscopic redshifts.
+
 ## 2026-10-25: Held-out residuals across fields and models: no flag; per-field floors (D-034 addendum az)
 - **Result** (`results/lens_consistency/heldout_synthesis/RESULT.md`): the 11 stored held-out tables (addenda ap–ay)
   under one frozen rule set. No image is missed by two primary models and isolated in its family (0 flags); no
