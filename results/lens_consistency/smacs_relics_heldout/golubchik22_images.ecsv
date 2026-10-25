@@ -6,7 +6,7 @@
 # - {name: dec, datatype: float64}
 # meta: !!omap
 # - {source: 'Golubchik et al. 2022 (arXiv:2207.05007, ApJ 938, 14) Table 1, HST-era (JWST-blind) multiple images of SMACS0723, read from
-#     the arXiv PDF 2026-10-25; 5.3 lists two candidates (5.3c, 5.3c_2)'}
+#     the arXiv PDF 2026-10-25; 5.3 lists two candidates (Table 1 "5.3c" twice; here 5.3a, 5.3b)'}
 # - {provenance: observed (as the authors list them)}
 # schema: astropy-2.0
 image_id ra dec
@@ -25,5 +25,5 @@ image_id ra dec
 4.3 110.8130858 -73.4487106
 5.1 110.8236488 -73.4518506
 5.2 110.8221821 -73.4527
-5.3c 110.8157458 -73.4602881
-5.3c_2 110.8207558 -73.460145
+5.3a 110.8157458 -73.4602881
+5.3b 110.8207558 -73.460145
