@@ -1,0 +1,21 @@
+{
+ "label": "post hoc; not in the frozen plan",
+ "seen_inclusive_isolated": {
+  "Abell 2744 / Bergamini+23": {
+   "n_seen": 129,
+   "isolated": {}
+  },
+  "El Gordo / Caminha+23": {
+   "n_seen": 56,
+   "isolated": {
+    "13c": 6.258141831248381,
+    "20c": 5.09583860669118,
+    "6c": 3.0494033031136247
+   }
+  },
+  "MACS1149 / CATS v4.1": {
+   "n_seen": 7,
+   "isolated": {}
+  }
+ }
+}

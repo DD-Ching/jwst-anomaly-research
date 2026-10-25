@@ -2644,6 +2644,17 @@ misidentified or the model's counter-image positions are off is not separated. A
 candidates to pass (post hoc). Revisit if: spectroscopic z for 6c / 13c / 20c, or a JWST-era El Gordo model whose
 maps are public.
 
+**Addendum 2026-10-25az (held-out residuals across fields and models).** `results/lens_consistency/heldout_synthesis/RESULT.md`,
+plan frozen in f9c48518, rule functions and tests before the run; inputs the 11 stored held-out tables of addenda
+ap–ay. Rules: isolated miss (> 3.0″ with ≥ 2 other tested family images ≤ 1.0″), shared miss (> 3.0″ in ≥ 2 primary
+models of a field), flag = shared and isolated, floor = P95 of the lowest-rms primary model (all ASSUMPTION). Outcome:
+0 flags, 0 isolated misses; shared misses only SMACS 6.1 / 7.1 / 17.1, family-wide. Floors: MACS0416 1.31″, MACS1149
+2.40″, SMACS 0723 3.39″, Abell 2744 4.07″, Abell 370 5.76″, El Gordo 7.36″. Post hoc, with seen siblings counted, El
+Gordo 6c / 13c / 20c are isolated (single model, no flag). Decision: no single-image position anomaly in the stored
+held-out tests; quote the floors as the limit of the position-residual route on these fields. Alternatives rejected:
+promoting the post hoc El Gordo isolation to a flag. Revisit if: a second independent JWST-era model on a field with
+one primary model, or a finer MACS0416 model.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

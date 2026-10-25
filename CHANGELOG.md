@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: Held-out residuals across fields and models: no flag; per-field floors (D-034 addendum az)
+- **Result** (`results/lens_consistency/heldout_synthesis/RESULT.md`): the 11 stored held-out tables (addenda ap–ay)
+  under one frozen rule set. No image is missed by two primary models and isolated in its family (0 flags); no
+  isolated miss in any table; the only shared misses (SMACS 6.1, 7.1, 17.1) are family-wide offsets. Floors (P95 of the
+  best primary model): MACS0416 1.31″, MACS1149 2.40″, SMACS 0723 3.39″, Abell 2744 4.07″, Abell 370 5.76″, El Gordo
+  7.36″. Post hoc, counting seen siblings, El Gordo 6c / 13c / 20c are isolated (single model; addendum ay).
+- **Handoff:** the image-position residual route on these six fields is limited by the floors above until finer or
+  second JWST-era models are public. Next: a JWST-era model of one of these fields fitted without part of a later
+  list, or the D115b Lenstool re-fit (owner machine). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: El Gordo Caminha+2023 vs the JWST-era Diego+2023 images: gate H fails (D-034 addendum ay)
 - **Result** (`results/lens_consistency/elgordo_heldout/RESULT.md`): 218 Diego+23 image rows, all 56 Caminha images
   seen, 162 held out. Primary (MUSE z_spec families, 46 images): rms 1.64″, 93 % within 3″, fails on rms; > 3″ are
