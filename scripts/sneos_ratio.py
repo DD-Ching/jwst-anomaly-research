@@ -174,6 +174,9 @@ class Mosaic:
         """(sci, err, wcs of the section) centred on (ra, dec)."""
         x, y = (int(round(float(v))) for v in self.wcs.world_to_pixel_values(ra, dec))
         h = int(np.ceil(half_arcsec / self.pix))
+        ny, nx = self.hdul["SCI"].header["NAXIS2"], self.hdul["SCI"].header["NAXIS1"]
+        if not (h <= x < nx - h and h <= y < ny - h):
+            raise ValueError(f"section at ({ra}, {dec}) runs off the mosaic")
         sl = (slice(y - h, y + h + 1), slice(x - h, x + h + 1))
         sci = np.asarray(self.hdul["SCI"].section[sl], float)
         err = np.asarray(self.hdul["ERR"].section[sl], float)
@@ -324,7 +327,7 @@ def run(out: str = OUT) -> dict:
                 row["gate_I"] = False
             row["used"] = bool(row["registered"] and row["detected"] and row["gate_I"])
             rows.append(row)
-            sheets[(band, stem)] = (sci_e, res, diff)
+            sheets[(band, stem)] = (sci_e, res, diff, p1, p2)
     used = [r for r in rows if r["used"] and r["ratio"] > 0]
     ln_r = np.log([r["ratio"] for r in used]) if used else np.array([])
     sig = np.array([r["sratio"] / r["ratio"] for r in used]) if used else np.array([])
@@ -343,18 +346,21 @@ def run(out: str = OUT) -> dict:
     }
     Path(out).mkdir(parents=True, exist_ok=True)
     Path(out, "summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
-    contact_sheet(sheets, p1, p2, Path(out, "contact_sheet.png"))
+    contact_sheet(sheets, Path(out, "contact_sheet.png"))
     return summary
 
 
-def contact_sheet(sheets: dict, p1, p2, path) -> None:
+def contact_sheet(sheets: dict, path) -> None:
+    """Early, resampled later and difference stamps per band and pair, SN apertures circled."""
     import matplotlib
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     fig, axes = plt.subplots(len(sheets), 3, figsize=(6, 2 * len(sheets)))
-    for row, ((band, stem), ims) in zip(np.atleast_2d(axes), sheets.items(), strict=True):
+    for row, ((band, stem), (*ims, p1, p2)) in zip(
+        np.atleast_2d(axes), sheets.items(), strict=True
+    ):
         for ax, im, lab in zip(row, ims, ("6882 o038", stem[:8], "diff"), strict=True):
             v = np.nanpercentile(np.abs(ims[2]), 99.5)
             ax.imshow(im, origin="lower", cmap="gray", vmin=-v, vmax=v if lab == "diff" else 3 * v)

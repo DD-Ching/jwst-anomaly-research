@@ -33,6 +33,8 @@ difference stamps in `contact_sheet.png`. Fluxes are observed (difference images
 - The plan's literature check (whether Allingham et al. 2026 or the SN Eos discovery paper report this ratio) was not
   done in this run.
 
+**Review fixes (/code-review, before merge):** a stamp that runs off a mosaic now raises; the contact sheet circles use each band's own positions. A re-run reproduces `summary.json` exactly.
+
 ## Limits
 One model, no macro-μ uncertainty, no microlensing model; aperture photometry only. Data: stamps read by byte range
 from 9 `_i2d` mosaics on `s3://stpubdata`; nothing stored.
