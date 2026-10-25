@@ -1,0 +1,103 @@
+"""Post hoc description of the only flagged source of the expansion search (not vetting: it is
+not a survivor; PLAN section 5 vets survivors only).
+
+    JWST_ANOMALY_DATA=<data root> python results/w3_kepler/expand/flagged_source_script.py.txt
+
+Writes flagged_source.json and flagged_source.png: Kirk et al. 2016 period and morphology, the
+phase of every flagged run at that period, the deepest relative flux, and two light-curve views.
+"""
+
+import csv
+import gzip
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[2] / "scripts"))
+import w3_kepler as wk  # noqa: E402
+import w3_kepler_expand as we  # noqa: E402
+
+we.configure()
+runs = json.loads(gzip.open(HERE / "runs_expand.json.gz", "rt").read())
+kid = int(next(iter(runs)))
+cat = {int(r["KIC"]): r for r in csv.DictReader(open(HERE / "inputs" / "kirk2016_catalog.csv"))}
+per, morph = float(cat[kid]["Per"]), float(cat[kid]["Morph"])
+st = wk.load_star(kid)
+g = wk.good_mask(st)
+rel, _ = wk.normalise(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], g)
+ok = np.isfinite(rel)
+t = st["TIME"]
+mid = np.array([(x["t_start"] + x["t_end"]) / 2 for x in runs[str(kid)]])
+tmin = t[ok][np.argmin(rel[ok])]
+ph = ((mid - tmin) / per + 0.5) % 1 - 0.5
+out = {
+    "label": "derived from observed light curves (post hoc description)",
+    "kepid": kid,
+    "kirk2016_period_d": per,
+    "kirk2016_morph": morph,
+    "flagged_runs": len(mid),
+    "run_phase_at_kirk_period_abs_max": round(float(np.abs(ph).max()), 4),
+    "run_phase_note": "run midpoints; the maximum comes from the one run that spans a 0.92-d gap",
+    "deepest_rel": round(float(rel[ok].min()), 4),
+    "deepest_mag": round(float(-2.5 * np.log10(rel[ok].min())), 3),
+    "good_cadences_dm_ge_1": int((rel[ok] <= 10 ** -0.4).sum()),
+    "edge_classes": {c: sum(x["edge_class"] == c for x in runs[str(kid)]) for c in ("fast", "slow", "insufficient")},
+}
+# added after the review: what makes the edges "slow", run start phases, secondary depth, gaps
+rr = runs[str(kid)]
+span = np.array([x["t_end"] - x["t_start"] for x in rr])
+fast_pre = [x for x in rr if x["edge_pre_class"] == "fast"]
+fast_post = [x for x in rr if x["edge_post_class"] == "fast"]
+start_ph = ((np.array([x["t_start"] for x in rr]) - tmin) / per + 0.5) % 1 - 0.5
+sec = ok & (np.abs(((t - tmin) / per) % 1 - 0.5) <= 0.02)
+long_runs = []
+for x in rr:
+    if x["t_end"] - x["t_start"] > 0.05:
+        m = ok & (t >= x["t_start"]) & (t <= x["t_end"])
+        tt = t[m]
+        long_runs.append(
+            {"t_start": x["t_start"], "t_end": x["t_end"], "n": x["n"],
+             "quarter": x["quarter_start"], "max_gap_d": round(float(np.diff(tt).max()), 3)}
+        )
+out.update(
+    {
+        "run_span_d_median": round(float(np.median(span)), 4),
+        "runs_with_span_le_0.05d": int((span <= 0.05).sum()),
+        "pre_sides_slow": sum(x["edge_pre_class"] == "slow" for x in rr),
+        "post_sides_slow": sum(x["edge_post_class"] == "slow" for x in rr),
+        "edge_L_median_d": round(float(np.median([x["edge_pre_d"] for x in rr] + [x["edge_post_d"] for x in rr])), 3),
+        "edge_U_median_d": round(float(np.median([v for x in rr for v in (x["edge_pre_max_d"], x["edge_post_max_d"]) if v is not None])), 3),
+        "fast_sides_L_U_median_d": [
+            round(float(np.median([x["edge_pre_d"] for x in fast_pre] + [x["edge_post_d"] for x in fast_post])), 3),
+            round(float(np.median([x["edge_pre_max_d"] for x in fast_pre] + [x["edge_post_max_d"] for x in fast_post])), 3),
+        ],
+        "run_start_phase_abs_max": round(float(np.abs(start_ph).max()), 4),
+        "secondary_phase_0.5_median_rel": round(float(np.median(rel[sec])), 3),
+        "runs_longer_than_0.05d": long_runs,
+    }
+)
+(HERE / "flagged_source.json").write_text(json.dumps(out, indent=1) + "\n")
+
+import matplotlib  # noqa: E402
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+
+fig, axs = plt.subplots(1, 2, figsize=(11, 3.6))
+m = ok & (np.abs(t - tmin) < 3 * per)
+axs[0].plot(t[m] - tmin, rel[m], ".", ms=2, color="k")
+axs[0].set_xlabel("t - t(deepest) (d)", fontsize=8)
+fp = ((t[ok] - tmin) / per + 0.5) % 1 - 0.5
+axs[1].plot(fp, rel[ok], ",", color="k", alpha=0.3)
+axs[1].set_xlabel(f"phase at the Kirk 2016 period {per} d", fontsize=8)
+for ax in axs:
+    ax.axhline(10**-0.4, color="tab:red", lw=0.6, ls="--")
+    ax.set_ylabel("SAP / quarter median", fontsize=8)
+    ax.tick_params(labelsize=7)
+fig.suptitle(f"KIC {kid}: the only flagged source of 500 (observed DR25 SAP); red: 1 mag", fontsize=9)
+fig.tight_layout()
+fig.savefig(HERE / "flagged_source.png", dpi=90)
+print(json.dumps(out, indent=1))

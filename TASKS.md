@@ -80,6 +80,13 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The 60-star search has 0 flags.
   - Next step only on an owner decision. Any larger Kepler search first needs a hardened shoulder
     test (D-107 "Revisit if"); t_E ≥ 30 d needs another join. Nothing is queued.
+- **W3 / Kepler expansion search 2026-10-25** (`results/w3_kepler/expand/RESULT.md`):
+  - 500 new stars, 1,732 star-years, 0 survivors.
+  - The only pre-screen trigger is the catalogued EB KIC 3954798.
+  - The Kepler W3 search total is now 760 stars.
+  - The edge test stops short-period EBs only through the 1-d span floor (P ≲ 1.1 d, estimated). Longer-period
+    EBs rest on the one-off and shoulder tests.
+  - Nothing is queued; the owner decides.
 - **W3 / Kepler hard tests 2026-10-25** (`results/w3_kepler/hard/RESULT.md`, D-107 addendum):
   - The local shoulder rule replaces the #500 shoulder test.
   - Validation passed; the 200-star search has 0 flags.

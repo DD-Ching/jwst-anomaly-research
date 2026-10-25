@@ -1,0 +1,39 @@
+{
+ "label": "derived",
+ "proxy": "PLAN section 3: 17 quarters and median sigma_rel <= 3.96e-4 (2 x the #500 maximum 1.98e-4, ../posthoc2.json); #529's validation stars have no stored sigma",
+ "read": 500,
+ "applicable": 495,
+ "applicable_with_sigma_above_1.98e-4": 12,
+ "not_applicable": [
+  {
+   "kepid": 8733269,
+   "quarters": 17,
+   "median_sigma_rel": 0.0005662592792423951,
+   "n_runs": 0
+  },
+  {
+   "kepid": 8004945,
+   "quarters": 17,
+   "median_sigma_rel": 0.0008795093735744242,
+   "n_runs": 0
+  },
+  {
+   "kepid": 10017664,
+   "quarters": 17,
+   "median_sigma_rel": 0.002003268873577093,
+   "n_runs": 0
+  },
+  {
+   "kepid": 8683235,
+   "quarters": 17,
+   "median_sigma_rel": 0.0005934618844425218,
+   "n_runs": 0
+  },
+  {
+   "kepid": 6593286,
+   "quarters": 17,
+   "median_sigma_rel": 0.0010965439137443885,
+   "n_runs": 0
+  }
+ ]
+}

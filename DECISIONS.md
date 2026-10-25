@@ -6453,3 +6453,8 @@ confining radiation at a throat is found.
     - the untested case appears (≥ 2 bright cadences confined to both shoulder windows, e.g.
       flares);
     - a real deep single eclipse becomes available.
+- **Addendum 2 2026-10-25 (`results/w3_kepler/expand/`):** the unchanged #529 rule was applied to 500 never-used pool
+  stars (1,732 star-years).
+  - One source triggered the pre-screen: KIC 3954798, a catalogued 0.918-d EB, rejected at the edge test.
+  - Zero survivors.
+  - No rule or threshold changed.

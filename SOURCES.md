@@ -1947,3 +1947,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   tce_depth ≥ 400,000 ppm (`inputs/tce_depth_ge_0.4.csv`).
 - **Light curves:** Kepler DR25 long cadence, as in "W3 / Kepler dense-cadence pilot" (per-file
   sha256 in `files_<group>.json`).
+
+## W3 / Kepler expansion search (accessed 2026-10-25; `results/w3_kepler/expand/`)
+- **Kepler Eclipsing Binary Catalog, third revision:** Kirk et al. 2016, AJ 151, 68; the full KIC list with period
+  and morphology from VizieR J/AJ/151/68/catalog (`inputs/kirk2016_catalog.csv`, 2,876 rows).
+- **Light curves:** Kepler DR25 long cadence from MAST, as in the pilot. Per-file sha256 in `files_expand.json.gz`.
