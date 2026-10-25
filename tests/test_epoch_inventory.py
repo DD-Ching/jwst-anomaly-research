@@ -47,3 +47,8 @@ def test_new_pair_rule():
 def test_used_epochs(tmp_path):
     (tmp_path / "a.md").write_text("pair jw01176-o211 vs jw01176213 and jw02282-o010_t001")
     assert ei.used_epochs(tmp_path) == {("01176", "211"), ("01176", "213"), ("02282", "010")}
+    out = tmp_path / "epoch_inventory"
+    out.mkdir()
+    (out / "inventory.json").write_text('{"e": "jw09999-o001"}')
+    assert ("09999", "001") in ei.used_epochs(tmp_path)
+    assert ("09999", "001") not in ei.used_epochs(tmp_path, exclude=out)

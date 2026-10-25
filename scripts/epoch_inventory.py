@@ -17,6 +17,8 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import numpy as np
+
 # MAST-resolvable names of the fields the transient line and the lens-consistency line have used.
 FIELDS = {
     "abell2744": "Abell 2744",
@@ -102,10 +104,17 @@ def new_pairs(
     return sorted(out, key=lambda p: (-p["t_late_mjd"], -p["dt_days"]))
 
 
-def used_epochs(root: Path) -> set[tuple[str, str]]:
-    """Every (proposal, observation) named in the D-027 transient results under ``root``."""
+def used_epochs(root: Path, exclude: Path | None = None) -> set[tuple[str, str]]:
+    """Every (proposal, observation) named in the D-027 transient results under ``root``.
+
+    ``exclude`` (this script's own output directory) is skipped, so a re-run does not count its
+    own inventory as used epochs.
+    """
+    skip = exclude.resolve() if exclude else None
     used = set()
     for path in root.rglob("*"):
+        if skip and path.resolve().is_relative_to(skip):
+            continue
         if path.is_file() and path.suffix in {".md", ".json", ".ecsv", ".csv", ".txt"}:
             used.update(EPOCH_RE.findall(path.read_text(errors="ignore")))
     return used
@@ -122,11 +131,20 @@ def query_field(name: str, radius: str) -> list[dict]:
         calib_level=3,
         dataproduct_type="image",
     )
-    cols = ("obs_id", "filters", "t_min", "t_obs_release", "dataRights")
-    return [
-        {c: (str(r[c]) if c in ("obs_id", "filters", "dataRights") else float(r[c])) for c in cols}
-        for r in tab
-    ]
+    rows = []
+    for r in tab:
+        if np.ma.is_masked(r["t_min"]) or np.ma.is_masked(r["t_obs_release"]):
+            print(f"{name}: {r['obs_id']} has no t_min / t_obs_release, skipped")
+            continue
+        rows.append(
+            {
+                "obs_id": str(r["obs_id"]),
+                "filters": str(r["filters"]),
+                "t_min": float(r["t_min"]),
+                "t_obs_release": float(r["t_obs_release"]),
+            }
+        )
+    return rows
 
 
 def main() -> None:
@@ -139,7 +157,7 @@ def main() -> None:
     from astropy.time import Time
 
     now = float(Time.now().mjd)
-    used = used_epochs(args.used_root)
+    used = used_epochs(args.used_root, exclude=args.out)
     with ThreadPoolExecutor(max_workers=8) as pool:
         rows = dict(
             zip(
@@ -178,7 +196,10 @@ def main() -> None:
     (args.out / "inventory.json").write_text(
         json.dumps({"meta": meta, "fields": summary}, indent=1) + "\n"
     )
-    (args.out / "upcoming.json").write_text(json.dumps(upcoming, indent=1) + "\n")
+    upcoming_sorted = {
+        f: sorted(v, key=lambda e: (e["release_mjd"], e["epoch"])) for f, v in upcoming.items()
+    }
+    (args.out / "upcoming.json").write_text(json.dumps(upcoming_sorted, indent=1) + "\n")
     for field, s in summary.items():
         unused = [k for k, e in s["epochs"].items() if e["public"] and not e["used"]]
         n_ep, n_pairs = len(s["epochs"]), len(s["new_pairs"])
