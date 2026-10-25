@@ -1,0 +1,242 @@
+{
+ "sources": [
+  "arXiv:2601.04156v2 Tables S1, S2",
+  "arXiv:2602.14074 Table 3"
+ ],
+ "provenance": {
+  "photometry": "observed (published)",
+  "magnifications": "model_prediction (published)",
+  "ratios": "derived"
+ },
+ "entries": [
+  {
+   "program": 17504,
+   "mjd": 60380.1,
+   "band": "F814W",
+   "r": 1.3427649611378643,
+   "sigma_ln": 0.1842068074395237
+  },
+  {
+   "program": 17504,
+   "mjd": 60380.1,
+   "band": "F110W",
+   "r": 1.9054607179632521,
+   "sigma_ln": 0.05897495367080698
+  },
+  {
+   "program": 17504,
+   "mjd": 60382.1,
+   "band": "F814W",
+   "r": 1.3304544179780895,
+   "sigma_ln": 0.3998815412244338
+  },
+  {
+   "program": 17504,
+   "mjd": 60382.1,
+   "band": "F110W",
+   "r": 1.6443717232149357,
+   "sigma_ln": 0.06641670895127241
+  },
+  {
+   "program": 17504,
+   "mjd": 60384.1,
+   "band": "F814W",
+   "r": 1.3427649611378643,
+   "sigma_ln": 0.2948747683540349
+  },
+  {
+   "program": 17504,
+   "mjd": 60384.1,
+   "band": "F110W",
+   "r": 1.6595869074375618,
+   "sigma_ln": 0.12795413774144743
+  },
+  {
+   "program": 17504,
+   "mjd": 60386.2,
+   "band": "F814W",
+   "r": 0.6854882264526615,
+   "sigma_ln": 0.40713455088704603
+  },
+  {
+   "program": 17504,
+   "mjd": 60386.2,
+   "band": "F110W",
+   "r": 1.9230917289101601,
+   "sigma_ln": 0.1611151549324341
+  },
+  {
+   "program": 17504,
+   "mjd": 60387.0,
+   "band": "F110W",
+   "r": 2.3768402866248795,
+   "sigma_ln": 0.18142266525947057
+  },
+  {
+   "program": 6882,
+   "mjd": 60919.1,
+   "band": "F277W",
+   "r": 1.1694993910198728,
+   "sigma_ln": 0.029125653600847207
+  },
+  {
+   "program": 6882,
+   "mjd": 60919.1,
+   "band": "F300M",
+   "r": 1.0185913880541164,
+   "sigma_ln": 0.029125653600847207
+  },
+  {
+   "program": 6882,
+   "mjd": 60919.1,
+   "band": "F356W",
+   "r": 1.1271974561755131,
+   "sigma_ln": 0.02059494716764945
+  },
+  {
+   "program": 6882,
+   "mjd": 60919.0,
+   "band": "F410M",
+   "r": 1.0092528860766825,
+   "sigma_ln": 0.013025388268121177
+  },
+  {
+   "program": 6882,
+   "mjd": 60919.1,
+   "band": "F444W",
+   "r": 1.1912420080273762,
+   "sigma_ln": 0.013025388268121177
+  },
+  {
+   "program": 9493,
+   "mjd": 60956.6,
+   "band": "F277W",
+   "r": 1.0964781961431864,
+   "sigma_ln": 0.046963705283538
+  },
+  {
+   "program": 9493,
+   "mjd": 60956.6,
+   "band": "F356W",
+   "r": 1.1271974561755094,
+   "sigma_ln": 0.029125653600847207
+  },
+  {
+   "program": 9493,
+   "mjd": 60956.6,
+   "band": "F444W",
+   "r": 1.1168632477805585,
+   "sigma_ln": 0.02059494716764945
+  }
+ ],
+ "combined": {
+  "HST F814W": {
+   "r": 1.2429496364269008,
+   "sigma_ln": 0.13702762165896298,
+   "chi2": 2.4099897390002245,
+   "dof": 3,
+   "sigma_ln_scaled": 0.13702762165896298
+  },
+  "HST F110W": {
+   "r": 1.8053278222965878,
+   "sigma_ln": 0.03939942827312883,
+   "chi2": 5.699477037571485,
+   "dof": 4,
+   "sigma_ln_scaled": 0.04703026526245243
+  },
+  "JWST 6882": {
+   "r": 1.1000908980657131,
+   "sigma_ln": 0.0077841583528735,
+   "chi2": 93.92142857143214,
+   "dof": 4,
+   "sigma_ln_scaled": 0.03771933360554762
+  },
+  "JWST 9493": {
+   "r": 1.1175648333199,
+   "sigma_ln": 0.015831461821462778,
+   "chi2": 0.2522727272726939,
+   "dof": 2,
+   "sigma_ln_scaled": 0.015831461821462778
+  }
+ },
+ "difference_ratio_6882_minus_9493": {
+  "F277W": {
+   "r": 1.3286513642668762,
+   "sigma_rel": 0.11875034056414027
+  },
+  "F356W": {
+   "r": 1.127197456175532,
+   "sigma_rel": 0.14470717599888214
+  },
+  "F444W": {
+   "r": 1.580166810763027,
+   "sigma_rel": 0.11007431702041393
+  }
+ },
+ "r_model": {
+  "Allingham+2026 Table 3": 1.0659170221015897,
+  "Coulter+2026 Table S2": 1.1736056559308718,
+  "pinned map": 1.162
+ },
+ "r_model_range": [
+  1.0659170221015897,
+  1.1736056559308718
+ ],
+ "offset_vs_model_range": {
+  "HST F814W": {
+   "ln_offset_from_nearest_model": 0.05740652681442779,
+   "beyond_floor": false
+  },
+  "HST F110W": {
+   "ln_offset_from_nearest_model": 0.43066142715963385,
+   "beyond_floor": true
+  },
+  "JWST 6882": {
+   "ln_offset_from_nearest_model": 0.0,
+   "beyond_floor": false
+  },
+  "JWST 9493": {
+   "ln_offset_from_nearest_model": 0.0,
+   "beyond_floor": false
+  }
+ },
+ "mu_systematic_fraction_per_image": 0.2,
+ "tau_published_days": {
+  "Allingham+2026 Table 3": {
+   "tau": -0.37,
+   "err_minus": 5.0,
+   "err_plus": 0.37
+  },
+  "Coulter+2026 Table S2": {
+   "tau": 0.99,
+   "err_minus": 0.33,
+   "err_plus": 0.33
+  }
+ },
+ "hst_f110w_slopes": {
+  "101.1": {
+   "mag_per_day": -0.004377421160737773,
+   "sigma": 0.01758064620233343
+  },
+  "101.2": {
+   "mag_per_day": -0.014231283137179994,
+   "sigma": 0.010519573832162012
+  }
+ },
+ "slope_bound_mag_per_day_2sigma": 0.03953871356540463,
+ "delay_times_slope": {
+  "Allingham+2026 Table 3": {
+   "max_abs_delay_d": 5.37,
+   "max_ln_change": 0.19555661026659996
+  },
+  "Coulter+2026 Table S2": {
+   "max_abs_delay_d": 1.32,
+   "max_ln_change": 0.04806978129458323
+  }
+ },
+ "ours_difference_images": {
+  "r": 1.3816437207580334,
+  "sigma_ln": 0.08301579161479884
+ },
+ "floor_ln_assumption": 0.3
+}

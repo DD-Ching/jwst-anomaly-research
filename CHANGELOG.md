@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SN Eos flux-ratio literature check: no published ratio; HST 2024 F110W ratio 1.81 from published photometry
+- **Result** (`results/transients/sneos_ratio/LITERATURE.md`, `literature.json`): neither Coulter et al. 2026
+  (arXiv:2601.04156v2) nor Allingham et al. 2026 (arXiv:2602.14074) states a 101.2 / 101.1 flux ratio or discusses
+  microlensing. Their |μ| give R_model 1.066 / 1.174 (pinned map 1.162), so #541's "agrees" stands.
+- **New (post hoc, not a candidate):** from Coulter et al. Table S1, HST F110W 2024 R = 1.805 (σ_ln 0.039, stat), 0.43
+  in ln above the model range; delay × light-curve slope gives ≤ 0.20. JWST 6882 / 9493 R = 1.100 / 1.118, inside it.
+  Our 9493 pairs agree with the table's flux-drop ratios within about 1σ (not stored). A time- or wavelength-dependent
+  ratio points first to microlensing; untested.
+- **Correction:** the SN Eos predicted-images entry below said 101.2 "trails" 101.1; in our map it leads by 0.32 d
+  (Δt −0.324 d), as in Allingham et al.; Coulter et al. Table S2 lists it 0.99 d after.
+- **Handoff:** next: own HST 17504 − 2012 difference-image ratio (frozen plan, injections). MAST lists 38 public
+  PID 17504 observations here (WFC3/IR F110W, WFC3/UVIS F814W, 2024-03) and 2012 CLASH templates (WFC3/IR F110W;
+  F814W only from ACS/WFC, a different camera); counts from a session query (not stored). #374 waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-25: SN Eos 101.2 / 101.1 flux ratio agrees with the VENUS model under the frozen rule
 - **Result** (`results/transients/sneos_ratio/RESULT.md`; plan frozen in a3665b33 / 8450e58f before any pixel was
   read): difference-image aperture ratio R_obs 1.382 (σ_ln 0.083, 5 of 6 band × epoch pairs) vs R_model 1.162:
@@ -18,7 +33,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`results/transients/sneos/RESULT.md`; plan frozen in 89c06718, tool and tests committed before the run):
   gate P (`Lens_pot` is the potential of α: s 1.0000004, median residual 7.0e-5), S (101.1 / 101.2 matched) and M
   (|μ| / map 0.998, 1.000) pass. Five images at z 5.133; the three extra ones lead 101.1 by 1,238 d (μ −11.9),
-  1,321 d (μ 14.5) and 19,656 d (μ 2.2); 101.2 trails by 0.32 d. No extra image is a target in the three NIRCam epochs.
+  1,321 d (μ 14.5) and 19,656 d (μ 2.2); 101.2 leads by 0.32 d (corrected from "trails"). No extra image is a target in the three NIRCam epochs.
 - **Post hoc:** the leading pair sits by a member's galaxy-scale critical curve; no MACS J1931 NIRCam epoch precedes
   2025-09-01. No Δt / μ uncertainty yet.
 - **Handoff:** next: 101.2 / 101.1 SN flux-ratio test across the three epochs (model ratio ≈ 1.16, independent of the
