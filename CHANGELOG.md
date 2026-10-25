@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: RELICS Lenstool maps vs SLICE images on three clusters: one held-out flag, MACS J0553 11.1 (D-034 addendum bc)
+- **Result** (`results/lens_consistency/slice_relics_heldout/RESULT.md`): frozen addendum-bb rules, one model per cluster.
+  RXC J0232 usable (K0 0.69″; z_spec families 8 / 8); RXC J2211 fails F (Dec −0.52″); MACS J0553 usable (K0 1.32″),
+  reading A 26 / 27 with 11.1 at 3.49″ (lensing-residual input), reading B 4 / 11 at z_spec.
+- **Post hoc:** the MACS J0553 z_spec misses fit one D_LS/D_S factor 0.64–0.68 over z_spec 1.14–3.76 (RXC J0232
+  0.98–1.01): a model-amplitude difference, cause not isolated; published κ and μ(z = 2) maps agree with the deflections.
+- **Handoff:** 11.1 and the MACS J0553 amplitude wait on the SLICE Lenstool models (LAM atlas still "Restricted access"
+  at 08:10Z). No other SLICE cluster has public HST-era deflection maps found on MAST (SMACS J2031: none).
+
 ## 2026-10-25: MACS J2129 CLASH HST-era maps vs the SLICE JWST-era images: both fail K0 and F (D-034 addendum bb)
 - **Result** (`results/lens_consistency/macs2129_clash_heldout/RESULT.md`): SLICE (Cerny+2026) Table 8 gives 53 images
   in 17 families (13 spectroscopic). Under the frozen MACS0647 rules both CLASH Zitrin v2 models fail gate K0 (rms 2.05″

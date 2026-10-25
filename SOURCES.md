@@ -770,6 +770,13 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - CLASH Zitrin v2 MACS2129 maps (PIEMD + eNFW, LTM-Gauss; readme 2015-02-18):
     https://archive.stsci.edu/missions/hlsp/clash/macs2129/models/zitrin/ (sha256 in `lensmodel.MACS2129_CLASH_*`;
     readme sha256 nfw 7ffa3f92…947d, ltm-gauss 3e1756ea…dae0da).
+- SLICE × RELICS (`results/lens_consistency/slice_relics_heldout/`, accessed 2026-10-25):
+  - SLICE Table 8 blocks of RXC J0232.2-4420, RXC J2211.7-0349, MACS J0553.4-3342 (same e-print as above; sha256 in
+    `slice_images.ecsv` meta).
+  - RELICS Lenstool v1 maps (Coe et al. 2019, ApJ 884, 85; HLSP DOI 10.17909/T9SP45):
+    https://archive.stsci.edu/hlsps/relics/{rxc0232m44,rxc2211m03,macs0553m33}/models/lenstool/ (sha256 in
+    `lensmodel.{RXC0232,RXC2211,MACS0553}_RELICS_LENSTOOL`). The glafic directories of macs0553m33 and rxc2211m03 list no
+    deflection maps; smacs2031m40 has no models.
 - MACS0647 JWST-era image lists (`results/lens_consistency/macs0647_inputs/`, accessed 2026-10-23):
   - Meena et al. 2023, ApJL 944, L6, arXiv:2211.13334, DOI 10.3847/2041-8213/acb645: `lensed_systems.tex` of the
     arXiv source (sha256 in `summary.json` `images.tex_sha256`), 72 images in 23 systems.

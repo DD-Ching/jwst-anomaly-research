@@ -9,6 +9,7 @@ their spectroscopic z (rule 5). Rule functions are those of ``macs0647_clash_hel
 
     python scripts/slice_relics_heldout.py --build-images main.tex   # once, from the e-print
     python scripts/slice_relics_heldout.py [--grid-step 0.25]
+    python scripts/slice_relics_heldout.py --posthoc   # post hoc scale factors
 """
 
 from __future__ import annotations
@@ -116,13 +117,48 @@ def load_cluster(images: Table, cluster: str) -> Table:
     return t
 
 
+def posthoc_scale(summary: dict, z_lens: dict[str, float]) -> dict:
+    """Post hoc (not in PLAN.md): per spectroscopic family, D_LS/D_S at the fitted z over D_LS/D_S
+    at z_spec; one constant across families means one global map-amplitude factor."""
+    from astropy.cosmology import FlatLambdaCDM
+
+    cosmo = FlatLambdaCDM(70.0, 0.3)
+
+    def ratio(zl: float, zs: float) -> float:
+        dls = cosmo.angular_diameter_distance(zl, zs)
+        return float(dls / cosmo.angular_diameter_distance(zs))
+
+    out = {}
+    for cluster, zl in z_lens.items():
+        e = summary[cluster]
+        if not e.get("z_spec"):
+            continue
+        out[cluster] = {
+            f: {
+                "z_spec": zs,
+                "z_fit": e["z_fit"][f],
+                "scale": ratio(zl, e["z_fit"][f]) / ratio(zl, zs),
+            }
+            for f, zs in e["z_spec"].items()
+        }
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--grid-step", type=float, default=0.25)
     ap.add_argument(
         "--build-images", type=Path, help="SLICE e-print main.tex: write the image list"
     )
+    ap.add_argument("--posthoc", action="store_true", help="write posthoc.json from summary.json")
     args = ap.parse_args(argv)
+    if args.posthoc:
+        summary = json.loads((OUT / "summary.json").read_text())
+        z_lens = {c: lc.MODELS[m]["z_lens"] for c, (_, m, _, _) in CLUSTERS.items()}
+        ph = {"note": "post hoc, not in PLAN.md", "scale": posthoc_scale(summary, z_lens)}
+        (OUT / "posthoc.json").write_text(json.dumps(ph, indent=1) + "\n")
+        print(json.dumps(ph, indent=1))
+        return 0
     if args.build_images:
         t = build_images(args.build_images)
         t.write(IMAGES, format="ascii.ecsv", overwrite=True)
