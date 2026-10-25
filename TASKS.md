@@ -435,6 +435,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        revisit only with a third model or deeper data for 33.1 / 62.1.
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
+     Third-image candidates 6c / 13c / 20c (D-034 addenda ay, az): no public spectrum (DJA v4.6 has no El Gordo rows,
+     MAST no NIRSpec; addendum ba); recheck when a DJA table newer than v4.6 or an El Gordo NIRSpec program is public;
    - Abell 2744: UNCOVER v2.0 maps (validated 2026-10-14, `scripts/a2744_uncover.py`);
    - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:

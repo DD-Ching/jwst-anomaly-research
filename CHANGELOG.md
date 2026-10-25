@@ -2,8 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-25: El Gordo third-image candidates 6c / 13c / 20c at DJA NIRSpec redshifts (in progress)
-- Plan: test addendum ay's three isolated Caminha+23 misses against DJA grade-3 spectroscopic redshifts.
+## 2026-10-25: El Gordo third-image candidates at DJA NIRSpec redshifts: no input (D-034 addendum ba)
+- **Result** (`results/lens_consistency/elgordo_third_specz/RESULT.md`): DJA v4.6 (all 99,478 rows) has no row within
+  0.5″ of any Diego+23 image, so the frozen control gate Z fails and 6c / 13c / 20c (and 4c, 15c, 18c, 19c) are
+  `not decided`. Post hoc: no DJA row within 10′ of El Gordo; MAST lists only NIRCam imaging there (1176, 6882).
+- **Handoff:** the El Gordo third-image question waits on a public NIRSpec / MUSE z at the candidates or a JWST-era
+  model with maps. The position-residual route stays floor-limited (addendum az). Next: the D115b Lenstool re-fit
+  (owner machine), or another lensing-consistency observable (flux ratios on new JWST-era image lists). #374 waits
+  for the 2026-10-26 weekly run.
 
 ## 2026-10-25: Held-out residuals across fields and models: no flag; per-field floors (D-034 addendum az)
 - **Result** (`results/lens_consistency/heldout_synthesis/RESULT.md`): the 11 stored held-out tables (addenda ap–ay)

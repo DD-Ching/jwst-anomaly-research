@@ -1,0 +1,13 @@
+{
+ "label": "post hoc; not in the frozen plan",
+ "dja_v46_rows_within_10arcmin_of_15.7300_-49.2620": 0,
+ "dja_v46_nearest_row_arcmin": 207.32,
+ "mast_query": {
+  "accessed": "2026-10-25",
+  "criteria": "obs_collection JWST, s_ra 15.68-15.78, s_dec -49.30 to -49.22",
+  "n_observations": 12,
+  "instruments": ["NIRCAM/IMAGE"],
+  "proposal_ids": ["1176", "6882"],
+  "n_nirspec": 0
+ }
+}
