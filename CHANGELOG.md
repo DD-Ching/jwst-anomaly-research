@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: W3 / Kepler fixed-rule expansion search: 500 new stars, 1,732 star-years, 0 survivors; one catalogued EB triggers the pre-screen (D-107 addendum 2)
+- **Scope:** owner-authorized exploratory search, `results/w3_kepler/expand/` (frozen `PLAN.md` before any new
+  flux). The #529 rule is unchanged.
+  - 500 never-used pool stars, all read (0 failures); 3.82 GB through the ledger.
+  - 495 / 500 are inside the validated range. #529's recovery was not re-measured on this batch.
+- **Layers:**
+  - 1 star has cadences ≥ 1 mag dim: KIC 3954798, 2,848 cadences, 86 flagged runs.
+  - All 86 runs fail the edge test ("slow"); they also fail one-off and the local shoulder test.
+  - 0 survivors, so nothing vetted.
+  - The other 499 stars have no cadence ≥ 1 mag dim.
+- **KIC 3954798:** a Kirk et al. 2016 EB, P 0.91848 d, eclipses to 1.66 mag (post hoc description). A real deep
+  dimming, ordinary.
+- **Correction:** the "425 stars" in my chat answer after #529 was wrong. The earlier rounds read 372 distinct
+  stars: 325 FGK pool stars (development 20, validation 45, search 260), 46 EB controls and 1 interface star.
+
 ## 2026-10-25: SN Eos 101.2 / 101.1 flux ratio agrees with the VENUS model under the frozen rule
 - **Result** (`results/transients/sneos_ratio/RESULT.md`; plan frozen in a3665b33 / 8450e58f before any pixel was
   read): difference-image aperture ratio R_obs 1.382 (σ_ln 0.083, 5 of 6 band × epoch pairs) vs R_model 1.162:

@@ -1,0 +1,26 @@
+{
+ "label": "observed (session clocks and ledger)",
+ "start_utc": "21:49:03Z (2026-10-25)",
+ "plan_commit_utc": "21:52:38Z (927a716)",
+ "stage_log_utc": [
+  [
+   "fetch",
+   "21:52:49Z"
+  ],
+  [
+   "screen",
+   "22:11:23Z"
+  ]
+ ],
+ "screen_end_utc": "22:11:54Z",
+ "cores": 4,
+ "ledger_bytes": 3818397533,
+ "ledger_cap_bytes": 6000000000,
+ "unused_bytes": 2181602467,
+ "fetch_errors": 0,
+ "stars_fetched": 500,
+ "llc_files": 8745,
+ "llc_bytes": 3738571200,
+ "note": "plain ledger JSONL untracked (> 1 MB); net_ledger.jsonl.gz is the snapshot. Includes the Kirk 2016 catalogue query before the plan commit.",
+ "cache": "column cache under the session data root, deleted after the review re-check (not stored)"
+}

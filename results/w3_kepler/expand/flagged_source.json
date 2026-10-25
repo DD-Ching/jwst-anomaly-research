@@ -1,0 +1,16 @@
+{
+ "label": "derived from observed light curves (post hoc description)",
+ "kepid": 3954798,
+ "kirk2016_period_d": 0.91848,
+ "kirk2016_morph": 0.58,
+ "flagged_runs": 86,
+ "run_phase_at_kirk_period_abs_max": 0.4903,
+ "deepest_rel": 0.2168,
+ "deepest_mag": 1.66,
+ "good_cadences_dm_ge_1": 2848,
+ "edge_classes": {
+  "fast": 0,
+  "slow": 86,
+  "insufficient": 0
+ }
+}
