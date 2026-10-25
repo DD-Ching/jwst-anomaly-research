@@ -1,0 +1,67 @@
+{"bytes": 42288, "ev": "reserve", "id": "f4e386917e98", "pid": 380, "t": 1792925009.055, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+column_name%2C+description%2C+unit+FROM+TAP_SCHEMA.columns+WHERE+table_name+LIKE+%27J%2FAJ%2F151%2F68%25%27 range=None attempt=0"}
+{"bytes": 31795, "ev": "extend", "id": "f4e386917e98", "pid": 380, "t": 1792925010.523}
+{"bytes": 29, "ev": "extend", "id": "f4e386917e98", "pid": 380, "t": 1792925010.527}
+{"counted": 8576, "ev": "done", "id": "f4e386917e98", "pid": 380, "status": "ok", "t": 1792925010.528}
+{"bytes": 52288, "ev": "reserve", "id": "2a9e0c59aa56", "pid": 386, "t": 1792925018.661, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+table_name%2C+description+FROM+TAP_SCHEMA.tables+WHERE+table_name+LIKE+%27%25151%2F68%25%27+OR+table_name+LIKE+%27%25142%2F160%25%27+OR+table_name+LIKE+%27%25141%2F83%25%27 range=None attempt=0"}
+{"bytes": 21795, "ev": "extend", "id": "2a9e0c59aa56", "pid": 386, "t": 1792925023.516}
+{"bytes": 2059, "ev": "extend", "id": "2a9e0c59aa56", "pid": 386, "t": 1792925023.517}
+{"counted": 10606, "ev": "done", "id": "2a9e0c59aa56", "pid": 386, "status": "ok", "t": 1792925023.518}
+{"bytes": 52288, "ev": "reserve", "id": "5af9bfb1acb9", "pid": 389, "t": 1792925033.631, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+column_name%2C+description%2C+unit+FROM+TAP_SCHEMA.columns+WHERE+table_name+%3D+%27J%2FAJ%2F151%2F68%2Fcatalog%27 range=None attempt=0"}
+{"bytes": 21795, "ev": "extend", "id": "5af9bfb1acb9", "pid": 389, "t": 1792925034.834}
+{"bytes": 29, "ev": "extend", "id": "5af9bfb1acb9", "pid": 389, "t": 1792925034.836}
+{"counted": 8576, "ev": "done", "id": "5af9bfb1acb9", "pid": 389, "status": "ok", "t": 1792925034.837}
+{"bytes": 52288, "ev": "reserve", "id": "839dd3d9ff1c", "pid": 389, "t": 1792925034.837, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+column_name%2C+description%2C+unit+FROM+TAP_SCHEMA.columns+WHERE+table_name+%3D+%27J%2FAJ%2F151%2F68%2Ftable9%27 range=None attempt=0"}
+{"bytes": 21795, "ev": "extend", "id": "839dd3d9ff1c", "pid": 389, "t": 1792925035.607}
+{"bytes": 29, "ev": "extend", "id": "839dd3d9ff1c", "pid": 389, "t": 1792925035.609}
+{"counted": 8576, "ev": "done", "id": "839dd3d9ff1c", "pid": 389, "status": "ok", "t": 1792925035.61}
+{"bytes": 52288, "ev": "reserve", "id": "473bf50855d5", "pid": 389, "t": 1792925035.61, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+column_name%2C+description%2C+unit+FROM+TAP_SCHEMA.columns+WHERE+table_name+%3D+%27J%2FAJ%2F151%2F68%2Ftable7%27 range=None attempt=0"}
+{"bytes": 21795, "ev": "extend", "id": "473bf50855d5", "pid": 389, "t": 1792925036.616}
+{"bytes": 29, "ev": "extend", "id": "473bf50855d5", "pid": 389, "t": 1792925036.618}
+{"counted": 8576, "ev": "done", "id": "473bf50855d5", "pid": 389, "status": "ok", "t": 1792925036.619}
+{"bytes": 52288, "ev": "reserve", "id": "408be9fb8ed4", "pid": 389, "t": 1792925036.619, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+TOP+5+%2A+FROM+%22J%2FAJ%2F151%2F68%2Ftable9%22 range=None attempt=0"}
+{"bytes": 21795, "ev": "extend", "id": "408be9fb8ed4", "pid": 389, "t": 1792925037.264}
+{"bytes": 252, "ev": "extend", "id": "408be9fb8ed4", "pid": 389, "t": 1792925037.265}
+{"counted": 8799, "ev": "done", "id": "408be9fb8ed4", "pid": 389, "status": "ok", "t": 1792925037.266}
+{"bytes": 52288, "ev": "reserve", "id": "de2041b624c8", "pid": 389, "t": 1792925037.267, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+COUNT%28%2A%29+FROM+%22J%2FAJ%2F151%2F68%2Ftable9%22 range=None attempt=0"}
+{"bytes": 21795, "ev": "extend", "id": "de2041b624c8", "pid": 389, "t": 1792925037.785}
+{"bytes": 13, "ev": "extend", "id": "de2041b624c8", "pid": 389, "t": 1792925037.786}
+{"counted": 8560, "ev": "done", "id": "de2041b624c8", "pid": 389, "status": "ok", "t": 1792925037.787}
+{"bytes": 72288, "ev": "reserve", "id": "cab50fc822e4", "pid": 396, "t": 1792925048.685, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+KIC%2C+Depth%2C+W%2C+BJD0+FROM+%22J%2FAJ%2F151%2F68%2Ftable9%22+ORDER+BY+Depth range=None attempt=0"}
+{"bytes": 1795, "ev": "extend", "id": "cab50fc822e4", "pid": 396, "t": 1792925049.39}
+{"bytes": 767, "ev": "extend", "id": "cab50fc822e4", "pid": 396, "t": 1792925049.392}
+{"counted": 9314, "ev": "done", "id": "cab50fc822e4", "pid": 396, "status": "ok", "t": 1792925049.392}
+{"bytes": 72288, "ev": "reserve", "id": "c9dacbaedaa1", "pid": 396, "t": 1792925049.393, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+TOP+3+%2A+FROM+%22J%2FAJ%2F151%2F68%2Fcatalog%22 range=None attempt=0"}
+{"bytes": 1795, "ev": "extend", "id": "c9dacbaedaa1", "pid": 396, "t": 1792925049.951}
+{"bytes": 470, "ev": "extend", "id": "c9dacbaedaa1", "pid": 396, "t": 1792925049.953}
+{"counted": 9017, "ev": "done", "id": "c9dacbaedaa1", "pid": 396, "status": "ok", "t": 1792925049.954}
+{"bytes": 72288, "ev": "reserve", "id": "64d96048d17e", "pid": 396, "t": 1792925049.955, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+COUNT%28%2A%29+FROM+%22J%2FAJ%2F151%2F68%2Fcatalog%22 range=None attempt=0"}
+{"bytes": 1795, "ev": "extend", "id": "64d96048d17e", "pid": 396, "t": 1792925050.591}
+{"bytes": 15, "ev": "extend", "id": "64d96048d17e", "pid": 396, "t": 1792925050.593}
+{"counted": 8562, "ev": "done", "id": "64d96048d17e", "pid": 396, "status": "ok", "t": 1792925050.593}
+{"bytes": 72288, "ev": "reserve", "id": "93b41ab818b1", "pid": 400, "t": 1792925068.969, "what": "GET https://cdsarc.cds.unistra.fr/ftp/J/AJ/151/68/ReadMe range=None attempt=0"}
+{"bytes": 1876, "ev": "extend", "id": "93b41ab818b1", "pid": 400, "t": 1792925069.879}
+{"bytes": 18464, "ev": "extend", "id": "93b41ab818b1", "pid": 400, "t": 1792925069.98}
+{"counted": 27092, "ev": "done", "id": "93b41ab818b1", "pid": 400, "status": "ok", "t": 1792925069.981}
+{"bytes": 72288, "ev": "reserve", "id": "848e22e1a968", "pid": 400, "t": 1792925069.982, "what": "GET https://keplerebs.villanova.edu/ range=None attempt=0"}
+{"bytes": 2201, "ev": "extend", "id": "848e22e1a968", "pid": 400, "t": 1792925070.76}
+{"bytes": 65536, "ev": "extend", "id": "848e22e1a968", "pid": 400, "t": 1792925070.811}
+{"bytes": 13516, "ev": "extend", "id": "848e22e1a968", "pid": 400, "t": 1792925070.813}
+{"counted": 88005, "ev": "done", "id": "848e22e1a968", "pid": 400, "status": "ok", "t": 1792925070.813}
+{"bytes": 102288, "ev": "reserve", "id": "d5f1d58f7aff", "pid": 406, "t": 1792925080.365, "what": "GET https://keplerebs.villanova.edu/ range=None attempt=0"}
+{"bytes": 37737, "ev": "extend", "id": "d5f1d58f7aff", "pid": 406, "t": 1792925081.081}
+{"bytes": 13516, "ev": "extend", "id": "d5f1d58f7aff", "pid": 406, "t": 1792925081.083}
+{"counted": 88005, "ev": "done", "id": "d5f1d58f7aff", "pid": 406, "status": "ok", "t": 1792925081.084}
+{"bytes": 72288, "ev": "reserve", "id": "fb09fb20d2c6", "pid": 413, "t": 1792925099.929, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+TOP+2+%2A+FROM+%22J%2FAJ%2F142%2F160%2Fv3%22 range=None attempt=0"}
+{"bytes": 1795, "ev": "extend", "id": "fb09fb20d2c6", "pid": 413, "t": 1792925101.231}
+{"bytes": 179, "ev": "extend", "id": "fb09fb20d2c6", "pid": 413, "t": 1792925101.233}
+{"counted": 8726, "ev": "done", "id": "fb09fb20d2c6", "pid": 413, "status": "ok", "t": 1792925101.233}
+{"bytes": 72288, "ev": "reserve", "id": "51463a5fbc87", "pid": 413, "t": 1792925101.234, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+TOP+2+%2A+FROM+%22J%2FAJ%2F142%2F160%2Ftable3%22 range=None attempt=0"}
+{"bytes": 1795, "ev": "extend", "id": "51463a5fbc87", "pid": 413, "t": 1792925101.848}
+{"bytes": 400, "ev": "extend", "id": "51463a5fbc87", "pid": 413, "t": 1792925101.849}
+{"counted": 8947, "ev": "done", "id": "51463a5fbc87", "pid": 413, "status": "ok", "t": 1792925101.85}
+{"bytes": 212288, "ev": "reserve", "id": "68100a2acb56", "pid": 417, "t": 1792925119.919, "what": "GET https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+kepid%2Ctce_plnt_num%2Ctce_period%2Ctce_depth%2Ctce_duration%2Ctce_max_mult_ev+from+q1_q17_dr25_tce+where+tce_depth%3E%3D400000&format=csv range=None attempt=0"}
+{"counted": 12584, "ev": "done", "id": "68100a2acb56", "pid": 417, "status": "ok", "t": 1792925121.699}
+{"bytes": 32288, "ev": "reserve", "id": "baf0a7576fc4", "pid": 495, "t": 1792925322.006, "what": "GET https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=csv&QUERY=SELECT+KIC%2C+Depth%2C+W%2C+BJD0+FROM+%22J%2FAJ%2F151%2F68%2Ftable9%22+ORDER+BY+KIC range=None attempt=0"}
+{"bytes": 41795, "ev": "extend", "id": "baf0a7576fc4", "pid": 495, "t": 1792925322.757}
+{"bytes": 767, "ev": "extend", "id": "baf0a7576fc4", "pid": 495, "t": 1792925322.759}
+{"counted": 9314, "ev": "done", "id": "baf0a7576fc4", "pid": 495, "status": "ok", "t": 1792925322.76}

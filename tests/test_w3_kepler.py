@@ -101,3 +101,57 @@ def test_gate_rule():
     assert not g["all_cells_ge_0.50"] and g["all_controls_le_0.10"] and not g["pass"]
     summ["w3"][1]["recovered"] = 50
     assert wk.gate_of(summ)["pass"]
+
+
+# --- local shoulder rule (results/w3_kepler/hard/PLAN.md) ----------------------------------------
+
+
+def _local(sap_mod):
+    st = _star(n_q=2, n=400)
+    sap = st["SAP_FLUX"].copy()
+    sap_mod(sap)
+    return wk.screen_star(st, sap, st["SAP_FLUX_ERR"], {}, local=True)
+
+
+def test_local_shoulder_true_shoulders_pass():
+    def mod(s):
+        s[150:170] = 100.0
+        s[146:150] = 1300.0
+        s[170:174] = 1300.0
+
+    r = _local(mod)[0]
+    assert r["local_pre"] == "ok" and r["local_post"] == "ok" and r["pass_local"] and r["pass"]
+
+
+def test_local_shoulder_rejects_dip_inside_bright_plateau():
+    def mod(s):
+        s[90:230] = 1150.0  # 15 % in-quarter brightening reaching past both baseline windows
+        s[150:170] = 100.0
+
+    r = _local(mod)[0]
+    assert r["shoulder_ok"] and r["pass"]  # the #500 rule is fooled
+    assert not r["local_ok"] and not r["pass_local"]
+
+
+def test_local_shoulder_rejects_single_cadence_outliers():
+    def mod(s):
+        s[150:170] = 100.0
+        s[148] = 1300.0
+        s[171] = 1300.0
+
+    r = _local(mod)[0]
+    assert r["pass"] and r["local_pre_n"] == 1 and not r["pass_local"]
+
+
+def test_local_shoulder_insufficient_baseline_at_quarter_start():
+    def mod(s):
+        s[403:430] = 100.0  # starts 3 cadences after the start of quarter 2
+        s[430:433] = 1300.0
+
+    res = _local(mod)
+    assert res and res[0]["local_pre"] == "insufficient" and not res[0]["pass_local"]
+
+
+def test_screen_star_default_has_no_local_keys():
+    r = _screen_with_dip(0.1)[0]
+    assert "pass_local" not in r and "window_old" not in r
