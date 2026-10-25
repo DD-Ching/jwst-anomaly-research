@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gzip
 import hashlib
 import io
 import json
@@ -429,8 +430,13 @@ def stage_phase_a(a) -> None:
         }
     out["eb_deep_screened"] = [k for k in group("eb_deep") if have(k)]
     out["decision"] = "old" if out["old"]["hard_gate"]["pass"] else "local"
-    out["eb_runs"] = {str(k): v for k, v in real_eb.items()}
-    out["old_bg_real_runs"] = {str(k): v for k, v in ctx["real"].items()}
+    runs = {
+        "label": "derived from observed light curves (uninjected screens)",
+        "eb_runs": {str(k): v for k, v in real_eb.items()},
+        "old_bg_real_runs": {str(k): v for k, v in ctx["real"].items()},
+    }
+    with gzip.open(OUT / "phaseA_runs.json.gz", "wt") as fh:  # every window; > 1 MB as plain JSON
+        fh.write(json.dumps(runs) + "\n")
     (OUT / "phaseA.json").write_text(json.dumps(out) + "\n")
     (OUT / "phaseA_rows.json").write_text(json.dumps({"label": "simulated", "rows": rows}) + "\n")
     (OUT / "decision.json").write_text(
