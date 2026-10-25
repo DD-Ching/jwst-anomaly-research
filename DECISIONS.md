@@ -6458,3 +6458,21 @@ confining radiation at a throat is found.
   - One source triggered the pre-screen: KIC 3954798, a catalogued 0.918-d EB, rejected at the edge test.
   - Zero survivors.
   - No rule or threshold changed.
+
+## D-108 Efficiency rules for every round: pre-review self-check, gzip outputs, sync before push (owner rule 2026-10-26)
+- **Decision:** every round follows `docs/efficiency-rules.md`. Before the independent review it runs the
+  self-check in `docs/pre-review-checklist.md`; the review and the re-check use the same list.
+  - Automated parts: the `results-output-size` pre-commit hook, the `net_ledger*.jsonl` ignore pattern,
+    `scripts/push_branch.sh`, and the advisory `scripts/check_results.py --review`.
+  - Process only: no method, threshold, review count or quality requirement changes.
+- **Alternatives rejected:**
+  - A hard-failing number check in pre-commit. The number matcher is heuristic (rounding, derived values),
+    so it stays advisory.
+  - Moving the rules into the guarded "Owner decisions" section of CLAUDE.md. That would block agent
+    merges; a pointer outside the section is used instead.
+- **Evidence:** the last three Kepler rounds (#500, #529, #542).
+  - Each needed review → wording fixes → re-check → more wording fixes.
+  - #529 re-ran phase A and had two lint failures from files over 1 MB.
+  - #500 and #542 waited on CI that did not start because the PR was "dirty".
+- **Revisit if:** the advisory report becomes too noisy to use, or the owner changes the review procedure.
+

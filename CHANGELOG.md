@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Efficiency rules for every round (owner rule; D-108)
+- **New:** `docs/efficiency-rules.md` and `docs/pre-review-checklist.md`. They change process only; no
+  method, threshold, review count or quality requirement changes.
+- **Automated:**
+  - the pre-commit hook `results-output-size` (`scripts/check_results.py --sizes`) fails on tracked plain
+    outputs under `results/` above 500 kB and on tracked raw ledgers (31 older files grandfathered);
+  - `.gitignore` covers `net_ledger*.jsonl`;
+  - `scripts/push_branch.sh` merges a moved `main` before pushing;
+  - `scripts/check_results.py --review` gives an advisory pre-review report (checklist items 1, 2, 3, 5,
+    6).
+- **Pointers:** root and `scripts/` CLAUDE.md now point to both files. The guarded "Owner decisions"
+  section is untouched.
+
 ## 2026-10-25: W3 / Kepler fixed-rule expansion search: 500 new stars, 1,732 star-years, 0 survivors; one catalogued EB triggers the pre-screen (D-107 addendum 2)
 - **Scope:** owner-authorized exploratory search, `results/w3_kepler/expand/` (frozen `PLAN.md` before any new
   flux). The #529 rule is unchanged.

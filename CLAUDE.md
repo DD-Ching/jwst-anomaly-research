@@ -32,7 +32,9 @@ and `docs/state/pending.md`. **WIP cap:** with ≥ 3 agent PRs awaiting merge (n
 draft claim and unit PRs are in-flight work), open no new feature PR; respond to reviews, update stale PRs by
 merging `origin/main` into their branch (never rebase or force-push a pushed branch), continue an authorized trial
 unit, do non-conflicting research, or stop with a summary. PRs awaiting owner review (`needs-human`) follow the
-backlog rule T2 in `docs/state/trial.md`; they do not block authorized units.
+backlog rule T2 in `docs/state/trial.md`; they do not block authorized units. Every round also follows
+`docs/efficiency-rules.md` (owner rule 2026-10-26: pre-review self-check, gzip outputs, state files last, sync with
+`main` before pushing, data reuse, test scope).
 
 ## Environment
 - Windows host with Git Bash and PowerShell; in Git Bash call `claude.exe`, not `claude`.
@@ -106,5 +108,6 @@ a handoff when usage limits near.
 - PR bodies go inline (`gh pr create --body "$(cat <<'EOF' ... EOF)"` with text you wrote);
   `--body-file` is denied so local files can't be posted to the public repo by accident.
 - Before writing conclusions about candidates, look at the run's contact sheet yourself.
-- Before committing: relevant tests pass, `pre-commit run --all-files` is clean (CI runs it), no file
-  >1 MB, no data, no secrets.
+- Before committing: relevant tests pass, `pre-commit run --all-files` is clean (CI runs it; its
+  `results-output-size` hook fails on plain outputs > 500 kB and tracked raw ledgers), no file >1 MB, no data, no
+  secrets. Push with `scripts/push_branch.sh` (merges a moved `main` first).

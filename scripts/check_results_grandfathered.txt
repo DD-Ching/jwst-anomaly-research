@@ -1,0 +1,31 @@
+# Plain-text outputs > 500 kB and raw ledgers tracked before the 2026-10-26 efficiency rule
+# (docs/efficiency-rules.md). Do not add new entries: write new outputs as .gz.
+results/dimming/persistence_run/abell2744/exposures_e2.ecsv
+results/dimming/persistence_run/macs0416/exposures_e2.ecsv
+results/s1_chime/profiles.json
+results/transients/a2744_grid_alt/arcdiff_tiles/vet/ctrl182arc/lightcurves.ecsv
+results/transients/confirm_r1/a370_h010/lightcurves.ecsv
+results/w3_kepler/hard/files_search.json
+results/w3_kepler/hard/phaseA_rows.json
+results/w3_kepler/hard/validation_rows.json
+results/w3_kepler/injections_dev.json
+results/w3_kepler/injections_val.json
+results/w3_kepler/net_ledger.jsonl
+results/w3_ztf/search_dev.json
+results/w3_ztf/search_dev_v2.json
+results/w3_ztf/v12/2382/sample.json
+results/w3_ztf/v12/dedupe.json
+results/w3_ztf/v13/2382dev/sample.json
+results/w3_ztf/v13/2382val/sample.json
+results/w3_ztf/v15/183/sample.json
+results/w3_ztf/v16/1624/sample.json
+results/w3_ztf/v16/1625/sample.json
+results/w3_ztf/v16/1626/sample.json
+results/w3_ztf/v16/1627/sample.json
+results/w3_ztf/v16/187/sample.json
+results/w3_ztf/v3/search_dev_v3.json
+results/w3_ztf/v4/search_all_v3rule_posthoc.json
+results/screening_2026_10_24/net_ledger.jsonl
+results/w2_j2244_stpsf/net_ledger.jsonl
+results/w2_j2244_stpsf/net_ledger_stoptest.jsonl
+results/w3_kepler/net_ledger.jsonl
