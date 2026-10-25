@@ -8,8 +8,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (empirical-PSF injections), decision floor 0.30 in ln R (ASSUMPTION).
 - **Data route:** all 9 `_i2d` mosaics (143–306 MB each) are listed and readable anonymously on `s3://stpubdata`;
   stamps by byte range only. `reproject` is not installed; the plan uses `map_coordinates` resampling instead.
-- **Handoff:** next: implement `scripts/sneos_ratio.py` + tests per the plan, run, look at the difference contact
-  sheet, then the literature check. #374 waits for the 2026-10-26 weekly run.
+- **Tool:** `scripts/sneos_ratio.py` holds rules 1–6 as functions (resampling, registration, aperture pair,
+  injection, combination, decision), tested on synthetic data in `tests/test_sneos_ratio.py`; no pixel read yet.
+- **Handoff:** next: the run driver (empirical-PSF star selection per rule 4, S3 stamps of the 9 mosaics, contact
+  sheet), run, look at the difference contact sheet, then the literature check. #374 waits for the 2026-10-26 weekly run.
 
 ## 2026-10-25: SN Eos predicted images and delays from the VENUS AstroLensPy v2.1 maps: every extra image leads
 - **Result** (`results/transients/sneos/RESULT.md`; plan frozen in 89c06718, tool and tests committed before the run):
