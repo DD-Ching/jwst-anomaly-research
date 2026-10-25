@@ -101,6 +101,23 @@ out["new_stars_real"] = {
     "stars_with_shoulder_like_cadences": len(bright),
     "shoulder_like_cadences": bright,
 }
+# 3b. real EB stars (added after the review): deepest relative flux per eb_single star, and the
+# one eb_deep window that passes the one-off test
+eb_min = {}
+for k in grp["eb_single"]:
+    st = wk.load_star(k)
+    g = wk.good_mask(st)
+    rel, _ = wk.normalise(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], g)
+    eb_min[str(k)] = round(float(np.nanmin(rel[np.isfinite(rel)])), 4)
+out["eb_single_min_rel"] = {"min_over_stars": min(eb_min.values()), "per_star": eb_min}
+oneoff = [
+    {"kepid": k, **{q: x[q] for q in ("t_start", "t_end", "n", "quarter_start", "edge_class",
+                                       "edge_post_class", "shoulder_ok", "local_pre", "local_post")}}
+    for k, v in runs.items()
+    for x in v
+    if x["oneoff_ok"]
+]
+out["eb_oneoff_windows"] = oneoff
 (HERE / "posthoc.json").write_text(json.dumps(out, indent=1) + "\n")
 
 # 4. figure

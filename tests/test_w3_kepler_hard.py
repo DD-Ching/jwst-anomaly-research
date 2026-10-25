@@ -57,3 +57,25 @@ def test_synth_bright_eclipse_has_plateau_and_dip():
 
 def test_does_not_mutate_pilot_settings_on_import():
     assert wk.OUT.name == "w3_kepler" and wk.LEDGER_CAP == 2_000_000_000
+
+
+def _fams(passed):
+    return {"a": {"passed": passed, "n": 100}}
+
+
+def _eb(windows=100, win_pass=0, stars=6, star_pass=0):
+    return {
+        "flagged_windows": windows,
+        "windows_passing_single_window": win_pass,
+        "stars_with_flagged_window": stars,
+        "stars_with_single_window_pass": star_pass,
+    }
+
+
+def test_hard_gate_rules():
+    assert wh.hard_gate(_fams(10), _eb(), 4)["pass"]
+    assert not wh.hard_gate(_fams(11), _eb(), 4)["pass"]
+    assert not wh.hard_gate(_fams(0), _eb(win_pass=11), 4)["pass"]
+    assert not wh.hard_gate(_fams(0), _eb(stars=4), 4)["pass"]  # fewer than 5 EB stars
+    assert not wh.hard_gate(_fams(0), _eb(), 2)["pass"]  # fewer than 3 brightening sources
+    assert not wh.hard_gate(_fams(0), _eb(windows=0, stars=0), 4)["pass"]

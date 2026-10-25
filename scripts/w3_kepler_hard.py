@@ -40,7 +40,7 @@ CACHE = Path(os.environ.get("JWST_ANOMALY_DATA", ROOT / "data")) / "cache" / "w3
 CAP = 3_000_000_000  # owner limit for this round, bytes
 SALT2 = "w3-kepler-hard-2026-10-25"
 OLD_BRIGHT = (9137992, 2854411, 2856758, 3834001)  # ../posthoc2.json real_shoulder_like
-EB_DEPTH_MIN = 600_000  # ppm: DR25 TCE depth >= 0.6 (dm >= 1 at the threshold)
+EB_DEPTH_MIN = 600_000  # ppm: DR25 TCE depth >= 0.6 (0.995 mag at the threshold)
 N_VAL, N_SEARCH = 25, 200
 N_INJ = 100
 N_BRIGHT_PER_STAR = 25

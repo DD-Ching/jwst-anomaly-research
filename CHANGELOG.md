@@ -2,25 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-25: W3 / Kepler hard tests: ordinary events fool the #500 shoulder rule; local rule adopted; 200-star search 0 flags (D-107 addendum)
+## 2026-10-25: W3 / Kepler hard tests: simulated hard cases fool the #500 shoulder rule, real deep EBs fool neither; local rule adopted; 200-star search 0 flags (D-107 addendum)
 - **Scope:** owner-authorized follow-up to #500; `results/w3_kepler/hard/` (frozen `PLAN.md`
   before any new flux or comparison). 2.19 GB through the ledger.
-- **Phase A** (seen backgrounds, same injections under both rules): the #500 rule passes, per 100:
-  - real in-quarter brightening + single eclipse: 56 (4 / 4 sources);
+- **Phase A** (seen backgrounds, same injections): the #500 rule passes, per 100:
+  - simulated eclipse inside a real in-quarter brightening: 56 (4 / 4 sources);
   - single unflagged bright cadences: 72;
   - synthetic 10–20 % brightening + eclipse: 86.
 
-  The frozen local shoulder rule passes 0 in every family.
-- **Real deep EBs** (10 stars, 2,892 windows): 0 single-window shoulder passes under either rule.
-  The 32 Kirk single events are all shallower than 1 mag and are never flagged.
+  The frozen local shoulder rule passes 0 in every family. Most of these 0s are guaranteed by the
+  family definitions; RESULT §2 names the untested case (≥ 2 bright cadences in both shoulder
+  windows, e.g. flares).
+- **Real deep EBs** (10 stars, 2,892 windows): no window has a shoulder under either rule. The 32
+  Kirk single events are all shallower than 1 mag (deepest 0.54 mag) and are never flagged.
 - **Validation** of the local rule on 25 unread stars passes:
   - W3 55–86 / 100 per cell (ρ 0.1 / blend 0.7 / t_E 10 d: 55, Wilson lower bound 0.45);
   - 10 families 0 / 100.
-- **Cost:** 177 / 2,000 val W3 recoveries lost (16–21 per cell at t_E 10 d); 141 of them are
-  local-insufficient.
+- **Cost:** 177 of 2,000 val W3 injections lost (10.6 % of the old rule's recoveries; 72 of them
+  at t_E 10 d); 141 are local-insufficient.
 - **Search:** 200 new stars, 0 flagged runs, 0 survivors.
-- **Real data:** no new star has any cadence ≥ 1 mag dim. 9 / 225 have real shoulder-like
-  brightenings.
 - **Failed approach:** a plain-JSON per-window dump (2.3 MB) and the ledger (2.4 MB) exceeded the
   1 MB rule. They are now stored as gzip.
 

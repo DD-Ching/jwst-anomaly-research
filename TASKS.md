@@ -84,7 +84,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The local shoulder rule replaces the #500 shoulder test.
   - Validation passed; the 200-star search has 0 flags.
   - Open before scaling up:
-    - t_E = 10 d loses 16–21 / 100 per cell to local-insufficient baselines;
+    - t_E = 10 d loses 16–21 / 100 per cell, 14–17 of them local-insufficient;
+    - the local rule was never tested against brightenings of ≥ 2 cadences confined to both
+      shoulder windows (e.g. flares);
     - untested ordinary families: flares next to dips, dippers, heartbeat stars, pixel-level
       artefacts;
     - no real deep single eclipse was available.
