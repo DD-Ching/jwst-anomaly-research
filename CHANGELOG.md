@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: Abell 2744 Bergamini+23 and MARS vs UNCOVER v2.0-only images: both fail gate H (D-034 addendum ax)
+- **Result** (`results/lens_consistency/a2744_heldout/RESULT.md`): Bergamini+23 on 43 held-out UNCOVER spectroscopic
+  images: rms 1.78″, 88 % within 3″, fails on rms; the 5 images > 3″ are all family 80 (z 3.67). MARS (reported
+  only): 67 / 78 held-out images off its map. Post hoc, in the NW clump the z ≥ 3 families 72 / 80 / 81 (mostly family 80) have
+  2.34″ against 0.27″ for the z < 3 ones; ordinary causes (mass slope, z, estimator) not separated.
+  No validated second model on Abell 2744; no flag.
+- **Handoff:** gate H passes only for MARS on MACS0416 (addenda ap, at, au, aw, ax). Next: a JWST-era model with a
+  published constraint list that leaves out part of a later image list (Abell 2744 GLASS / MARS-JWST, El Gordo,
+  Bullet), or the D115b Lenstool re-fit (owner machine). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: RELICS HST-era SMACS 0723 models vs the JWST-era images: all three fail gate H (D-034 addendum aw)
 - **Result** (`results/lens_consistency/smacs_relics_heldout/RESULT.md`): seen = Golubchik+22's five HST families,
   held-out = 44 ICLv2 images of 16 JWST-era families. glafic v2 2.23″ (84 % within 3″), zitrin-ltm-gauss v2 2.73″

@@ -1,0 +1,90 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: type, datatype: string}
+# - {name: z, datatype: float64}
+# - {name: dtheta_arcsec, datatype: float64, format: .3f}
+# - {name: n_predicted, datatype: int64}
+# - {name: inside, datatype: bool}
+# schema: astropy-2.0
+image_id system type z dtheta_arcsec n_predicted inside
+61.1a 61.1 N 2.9509 0.8927199517333343 3 True
+61.1b 61.1 N 2.9509 0.7963778145099993 3 True
+62.1a 62.1 N 4.1936 0.8465277980043138 3 True
+62.1b 62.1 N 4.1936 1.6677785279221191 3 True
+83a 83 N 9.76 51.73500818291682 1 True
+83b 83 N 9.76 59.84765224271709 1 True
+83c 83 N 9.76 1.586808518989324 1 True
+53c 53 E 7.04 1.8560796089453562 3 True
+86a 86 N 6.875 4.863948082990591 3 True
+86b 86 N 6.875 5.07973711289614 3 True
+86c 86 N 6.875 0.6794295777630225 3 True
+65.1a 65.1 N 3.5194 nan 0 False
+65.1b 65.1 N 3.5194 nan 0 False
+65.2a 65.2 N 3.5194 nan 0 False
+65.2b 65.2 N 3.5194 nan 0 False
+65.3a 65.3 N 3.5194 nan 0 False
+65.3b 65.3 N 3.5194 nan 0 False
+67.1a 67.1 N 2.322 nan 0 False
+67.1b 67.1 N 2.322 nan 0 False
+67.1c 67.1 N 2.322 nan 0 False
+67.2a 67.2 N 2.322 nan 0 False
+67.2b 67.2 N 2.322 nan 0 False
+67.3a 67.3 N 2.322 nan 0 False
+67.3b 67.3 N 2.322 nan 0 False
+68.1a 68.1 N 2.584 nan 0 False
+68.1b 68.1 N 2.584 nan 0 False
+68.1c 68.1 N 2.584 nan 0 False
+68.1d 68.1 N 2.584 nan 0 False
+68.2a 68.2 N 2.584 nan 0 False
+68.2b 68.2 N 2.584 nan 0 False
+68.2c 68.2 N 2.584 nan 0 False
+68.3a 68.3 N 2.584 nan 0 False
+68.3b 68.3 N 2.584 nan 0 False
+68.3c 68.3 N 2.584 nan 0 False
+68.4a 68.4 N 2.584 nan 0 False
+68.4b 68.4 N 2.584 nan 0 False
+68.4c 68.4 N 2.584 nan 0 False
+69a 69 N 2.4109 nan 0 False
+69b 69 N 2.4109 nan 0 False
+69c 69 N 2.4109 nan 0 False
+69d 69 N 2.4109 nan 0 False
+70a 70 N 2.3915 nan 0 False
+70b 70 N 2.3915 nan 0 False
+72a 72 N 3.7468 nan 0 False
+72b 72 N 3.7468 nan 0 False
+72c 72 N 3.7468 nan 0 False
+74a 74 N 2.3743 nan 0 False
+74b 74 N 2.3743 nan 0 False
+74c 74 N 2.3743 nan 0 False
+80.1a 80.1 N 3.67289 nan 0 False
+80.1b 80.1 N 3.67289 nan 0 False
+80.1c 80.1 N 3.67289 nan 0 False
+80.2a 80.2 N 3.67289 nan 0 False
+80.2b 80.2 N 3.67289 nan 0 False
+80.2c 80.2 N 3.67289 nan 0 False
+80.3a 80.3 N 3.67289 nan 0 False
+80.3b 80.3 N 3.67289 nan 0 False
+80.3c 80.3 N 3.67289 nan 0 False
+80.4a 80.4 N 3.67289 nan 0 False
+80.4b 80.4 N 3.67289 nan 0 False
+80.4c 80.4 N 3.67289 nan 0 False
+80.5a 80.5 N 3.67289 nan 0 False
+80.5b 80.5 N 3.67289 nan 0 False
+80.5c 80.5 N 3.67289 nan 0 False
+80.6a 80.6 N 3.67289 nan 0 False
+80.6b 80.6 N 3.67289 nan 0 False
+80.6c 80.6 N 3.67289 nan 0 False
+81a 81 N 3.4793 nan 0 False
+81b 81 N 3.4793 nan 0 False
+81c 81 N 3.4793 nan 0 False
+78.1a 78.1 N 2.3151 nan 0 False
+78.1b 78.1 N 2.3151 nan 0 False
+78.1c 78.1 N 2.3151 nan 0 False
+78.2a 78.2 N 2.3151 nan 0 False
+78.2b 78.2 N 2.3151 nan 0 False
+78.2c 78.2 N 2.3151 nan 0 False
+78.3a 78.3 N 2.3151 nan 0 False
+78.3b 78.3 N 2.3151 nan 0 False

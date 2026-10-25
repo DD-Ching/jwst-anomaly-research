@@ -2620,6 +2620,18 @@ Decision: no held-out-validated second model on SMACS 0723; no two-model extra-i
 Alternatives rejected: re-running gate H for lenstool at the post hoc 0.8 scale. Revisit if: a JWST-era SMACS 0723
 model fitted without part of the ICLv2 systems, or a documented lenstool v1 normalisation.
 
+**Addendum 2026-10-25ax (Abell 2744: Bergamini+2023 and MARS vs UNCOVER v2.0-only images).** `results/lens_consistency/a2744_heldout/RESULT.md`,
+plan frozen in f075f0e6, script and tests before the run; rules 1–5 of addendum ap per model, each model's own
+catalogue as "seen", the 172 UNCOVER v2.0 spectroscopic images as the list. Bergamini+23 (149 own images): seen
+129, held-out 43 (2 E, 41 N), gate H fails on rms, 1.78″ (88 % within 3″); all 5 images > 3″ are family 80
+(z 3.67). MARS (reported only; gate K failed): 67 / 78 held-out images in families outside its map, 11 tested,
+23.97″. Post hoc: in the NW clump the z ≥ 3 families (72, 80, 81; 24 images, 18 of them family 80) have 2.34″ against
+0.27″ for the z < 3 ones (14 images); UNCOVER, fitted to them, gives family 80 ≤ 1.2″.
+Decision: no held-out-validated second model on Abell 2744; the early two-model comparison stays unvalidated; no
+flag. Alternatives rejected: dropping family 80 to pass (post hoc; still 1.14″). Revisit if: a JWST-era Abell 2744
+model with a published constraint list that leaves out part of the UNCOVER v2.0 systems (e.g. a later GLASS or MARS
+JWST release), or new spectroscopic z for 72 / 80 / 81.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
