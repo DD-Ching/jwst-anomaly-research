@@ -5,6 +5,7 @@
  "kirk2016_morph": 0.58,
  "flagged_runs": 86,
  "run_phase_at_kirk_period_abs_max": 0.4903,
+ "run_phase_note": "run midpoints; the maximum comes from the one run that spans a 0.92-d gap",
  "deepest_rel": 0.2168,
  "deepest_mag": 1.66,
  "good_cadences_dm_ge_1": 2848,

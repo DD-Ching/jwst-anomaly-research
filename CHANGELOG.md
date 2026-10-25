@@ -15,7 +15,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **KIC 3954798:** a Kirk et al. 2016 EB, P 0.91848 d, eclipses to 1.66 mag (post hoc description; not vetted).
   - Its edge rejection comes from the neighbouring eclipse falling inside the 1-d span window; its own edges are
     fast.
-  - A similar EB with P ≳ 1.25 d would rest on the one-off and shoulder tests.
+  - A similar EB with P ≳ 1.1 d (estimated) would rest on the one-off and shoulder tests.
 - **Correction:** the "425 stars" in my chat answer after #529 was wrong. The earlier rounds read 372 distinct
   stars: 325 FGK pool stars (development 20, validation 45, search 260), 46 EB controls and 1 interface star.
 

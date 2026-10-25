@@ -13,9 +13,10 @@
 - **Inherited limits:**
   - some #529 controls were rejected by construction;
   - brightenings of ≥ 2 cadences in both shoulder windows (e.g. flares bracketing a dip) are untested.
-- **Deviations:** none.
+- **Deviations:** none. Notes:
   - `frac_loo` equals `w3_kepler.frac_for` on each star's own cadences, which are the only ones the screen looks
-    up. The test covers stars with shared cadences.
+    up. The test covers stars with shared cadences, and one star missing 200 cadences (where no other star is dim,
+    so the own-cadence filter is not stressed).
   - `vet_script.py.txt` was committed at 22:04, after the fetch began. It is not part of the frozen plan, and
     it never ran because there were no survivors.
   - `flagged_source.json` / `.png` are a post hoc description of the one flagged source. They are not
@@ -69,19 +70,23 @@
 - **Why it is rejected:** its 86 flagged runs all fail the edge test first ("slow"), and they also fail the
   one-off test (86 runs) and the local shoulder test (0 / 86).
 - **What "slow" means here** (`flagged_source.json`):
-  - 85 of the 86 runs span only 0.041 d, so the 1-d span floor sets the edge window (0.25 d of a 1-d span is
-    compared against intermediate points within one span).
-  - The farthest significant intermediate cadence is at the **neighbouring** primary eclipse: median L 0.94 d,
-    median U 0.96 d. That is the previous eclipse on the pre side and the next one on the post side
+  - All 86 runs are shorter than 1 d (85 span 0.041 d, one 0.94 d), so the 1-d span floor sets the edge window
+    for every run: intermediate cadences are searched within one span (1 d) of each edge, and "fast" needs
+    U ≤ 0.25 d.
+  - The farthest significant intermediate cadence (L) is at the **neighbouring** primary eclipse, and so is the
+    nearest normal cadence beyond it (U): median L 0.94 d, median U 0.96 d. That is the previous eclipse on the pre side and the next one on the post side
     (79 / 86 pre sides and 83 / 86 post sides are slow).
   - The eclipse's own edges are fast: on the fast sides, median L is 0.020 d and median U 0.041 d.
-  - So the edge rejection here depends on P = 0.918 d being below the 1-d floor. On this evidence, an EB like
-    this with a period above about 1.25 d would not be stopped by the edge test. It would rest on the one-off
-    and shoulder tests.
+  - So the edge rejection here depends on P = 0.918 d being below the 1-d floor. With L ≈ P + 0.02 d and the
+    eclipse's intermediate cadences starting about 0.07 d before its minimum, the neighbour would leave the
+    window at roughly P ≳ 1.1 d. This is an estimate, not tested. An EB like this with a longer period would not
+    be stopped by the edge test; it would rest on the one-off and shoulder tests.
 - **Run timing:**
   - Every run starts within 0.025 in phase of the primary minimum.
   - One run (Q11, n = 3) spans 0.94 d, because two of its dim cadences are separated by a 0.919-d data gap.
-  - The secondary eclipse at phase 0.5 reaches a median relative flux of 0.852.
+    Its midpoint falls about half a period after an eclipse; that is the 0.4903 stored as
+    `run_phase_at_kirk_period_abs_max`. Every other run's midpoint lies within 0.023 of the primary minimum.
+  - Cadences within ±0.02 in phase of the secondary (phase 0.5) have a median relative flux of 0.852.
 - **Status:** deep periodic dimming at the Kirk 2016 period of a catalogued eclipsing binary. Not vetted,
   because it is not a survivor. Not a W3 candidate.
 

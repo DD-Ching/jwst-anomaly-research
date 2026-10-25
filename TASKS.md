@@ -84,8 +84,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - 500 new stars, 1,732 star-years, 0 survivors.
   - The only pre-screen trigger is the catalogued EB KIC 3954798.
   - The Kepler W3 search total is now 760 stars.
-  - The edge test stops short-period EBs only through the 1-d span floor (P < 1 d); P ≳ 1.25 d EBs rest on the
-    one-off and shoulder tests.
+  - The edge test stops short-period EBs only through the 1-d span floor (P ≲ 1.1 d, estimated). Longer-period
+    EBs rest on the one-off and shoulder tests.
   - Nothing is queued; the owner decides.
 - **W3 / Kepler hard tests 2026-10-25** (`results/w3_kepler/hard/RESULT.md`, D-107 addendum):
   - The local shoulder rule replaces the #500 shoulder test.
