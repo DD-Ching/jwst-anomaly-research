@@ -1,0 +1,2440 @@
+{
+ "h_u": {
+  "z_ref": 2.0946208510160416,
+  "tolerance": 0.1,
+  "rows": {
+   "rxc0232": {
+    "z_lens": 0.2836,
+    "f_obs": 1.0015056503564717,
+    "f_pred": 0.7866077087560548,
+    "diff": 0.21489794160041686,
+    "z_ref_implied": null,
+    "consistent": false
+   },
+   "rxc2211": {
+    "z_lens": 0.397,
+    "f_obs": 1.016685696058695,
+    "f_pred": 0.7099633481673899,
+    "diff": 0.30672234789130504,
+    "z_ref_implied": null,
+    "consistent": false
+   },
+   "macs0553": {
+    "z_lens": 0.412,
+    "f_obs": 0.6653535557074881,
+    "f_pred": 0.7001928122173161,
+    "diff": -0.034839256509828,
+    "z_ref_implied": 1.727681578603223,
+    "consistent": true
+   },
+   "cl0152": {
+    "z_lens": 0.8269,
+    "f_obs": 1.0454964042363546,
+    "f_pred": 0.46162397937685895,
+    "diff": 0.5838724248594956,
+    "z_ref_implied": null,
+    "consistent": false
+   },
+   "a3192": {
+    "z_lens": 0.425,
+    "f_obs": 0.6917935904140469,
+    "f_pred": 0.6917935904140798,
+    "diff": -3.297362383136715e-14,
+    "z_ref_implied": 2.0946208510160416,
+    "consistent": true
+   }
+  },
+  "rejected": true
+ },
+ "h_c": {
+  "a3192": {
+   "kappa_map": {
+    "url": "https://archive.stsci.edu/hlsps/relics/abell3192/models/lenstool/hlsp_relics_model_model_abell3192_lenstool_v1_kappa.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "1000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "1000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "59.719446",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "500.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-5.56111667222778e-05",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-29.930547",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "500.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "5.56111667222778e-05",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2017-12-06T10:12:01",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-5.5611166722277e-05",
+      ""
+     ],
+     [
+      "CD2_2",
+      "5.56111667222778e-05",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "59.72112083333334",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-29.92909722222223",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "abell3192",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Guillaume",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Mahler",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "18.77651596069336",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "0.08232671767473221",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "18.77651596069336",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "0.08232671767473221",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   },
+   "alpha_x": {
+    "url": "https://archive.stsci.edu/hlsps/relics/abell3192/models/lenstool/hlsp_relics_model_model_abell3192_lenstool_v1_x-arcsec-deflect.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "1000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "1000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "59.719446",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "500.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-5.56111667222778e-05",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-29.930547",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "500.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "5.56111667222778e-05",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2017-12-06T10:11:45",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-5.5611166722277e-05",
+      ""
+     ],
+     [
+      "CD2_2",
+      "5.56111667222778e-05",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "59.72112083333334",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-29.92909722222223",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "abell3192",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Guillaume",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Mahler",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "63.64201354980469",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "-64.5502700805664",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "63.64201354980469",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "-64.5502700805664",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   }
+  },
+  "cl0152": {
+   "kappa_map": {
+    "url": "https://archive.stsci.edu/hlsps/relics/cl0152m13/models/lenstool/hlsp_relics_model_model_cl0152m13_lenstool_v1_kappa.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "2000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "2000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "28.182411",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "1000.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-2.77916736145851e-05",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-13.955144",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "1000.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "2.77916736145851e-05",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2018-01-04T12:11:42",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-2.7791673614585e-05",
+      ""
+     ],
+     [
+      "CD2_2",
+      "2.77916736145851e-05",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "28.17861",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-13.95861111111111",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "cl0152-13",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Traci",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Johnson",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "156.9854431152344",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "0.04304497689008713",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "156.9854431152344",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "0.04304497689008713",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   },
+   "alpha_x": {
+    "url": "https://archive.stsci.edu/hlsps/relics/cl0152m13/models/lenstool/hlsp_relics_model_model_cl0152m13_lenstool_v1_x-arcsec-deflect.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "2000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "2000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "28.182411",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "1000.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-2.77916736145851e-05",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-13.955144",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "1000.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "2.77916736145851e-05",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2018-01-04T12:08:50",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-2.7791673614585e-05",
+      ""
+     ],
+     [
+      "CD2_2",
+      "2.77916736145851e-05",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "28.17861",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-13.95861111111111",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "cl0152-13",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Traci",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Johnson",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "35.27182006835938",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "-36.09795379638672",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "35.27182006835938",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "-36.09795379638672",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   }
+  },
+  "macs0553": {
+   "kappa_map": {
+    "url": "https://archive.stsci.edu/hlsps/relics/macs0553m33/models/lenstool/hlsp_relics_model_model_macs0553m33_lenstool_v1_kappa.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "1000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "1000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "88.330692",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "500.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-0.000111222333444556",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-33.707542",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "500.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "0.000111222333444556",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2017-12-06T10:18:22",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-0.00011122233344455",
+      ""
+     ],
+     [
+      "CD2_2",
+      "0.000111222333444556",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "88.34619666666666",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-33.70830833333333",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "macs0553-33",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Guillaume",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Mahler",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "27.33488082885742",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "0.03624332323670387",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "27.33488082885742",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "0.03624332323670387",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   },
+   "alpha_x": {
+    "url": "https://archive.stsci.edu/hlsps/relics/macs0553m33/models/lenstool/hlsp_relics_model_model_macs0553m33_lenstool_v1_x-arcsec-deflect.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "1000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "1000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "88.330692",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "500.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-0.000111222333444556",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-33.707542",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "500.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "0.000111222333444556",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2017-12-06T10:17:39",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-0.00011122233344455",
+      ""
+     ],
+     [
+      "CD2_2",
+      "0.000111222333444556",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "88.34619666666666",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-33.70830833333333",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "macs0553-33",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Guillaume",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Mahler",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "81.99490356445312",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "-92.60894012451172",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "81.99490356445312",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "-92.60894012451172",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   }
+  },
+  "rxc0232": {
+   "kappa_map": {
+    "url": "https://archive.stsci.edu/hlsps/relics/rxc0232m44/models/lenstool/hlsp_relics_model_model_rxc0232m44_lenstool_v1_kappa.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "1000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "1000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "38.077317",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "500.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-5.56111667222778e-05",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-44.346666",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "500.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "5.56111667222778e-05",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2018-05-16T08:44:02",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-5.5611166722277e-05",
+      ""
+     ],
+     [
+      "CD2_2",
+      "5.56111667222778e-05",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "38.07550791666666",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-44.34580277777778",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "rxc0232-44",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Rachel",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Paterno-Mahler",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "16.22610473632812",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "0.09495440870523453",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "16.22610473632812",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "0.09495440870523453",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   },
+   "alpha_x": {
+    "url": "https://archive.stsci.edu/hlsps/relics/rxc0232m44/models/lenstool/hlsp_relics_model_model_rxc0232m44_lenstool_v1_x-arcsec-deflect.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "1000",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "1000",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "38.077317",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "500.5",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-5.56111667222778e-05",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-44.346666",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "500.5",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "5.56111667222778e-05",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2018-03-06T20:39:52",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-5.5611166722277e-05",
+      ""
+     ],
+     [
+      "CD2_2",
+      "5.56111667222778e-05",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "38.07550791666666",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-44.34580277777778",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "rxc0232-44",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Rachel",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Paterno-Mahler",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "41.85794830322266",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "-40.98801040649414",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "41.85794830322266",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "-40.98801040649414",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   }
+  },
+  "rxc2211": {
+   "kappa_map": {
+    "url": "https://archive.stsci.edu/hlsps/relics/rxc2211m03/models/lenstool/hlsp_relics_model_model_rxc2211m03_lenstool_v1_kappa.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "200",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "200",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "332.941368",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "100.0",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-0.000277777777777778",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-3.828952",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "100.0",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "0.000277777777777778",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2017-08-28T19:14:08",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-0.00027777777777777",
+      ""
+     ],
+     [
+      "CD2_2",
+      "0.000277777777777778",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "332.9413125",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-3.829091666666666",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "rxc2211-03",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Catherine",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Cerny",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "3.655219554901123",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "0.09808426350355148",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "3.655219554901123",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "0.09808426350355148",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   },
+   "alpha_x": {
+    "url": "https://archive.stsci.edu/hlsps/relics/rxc2211m03/models/lenstool/hlsp_relics_model_model_rxc2211m03_lenstool_v1_x-arcsec-deflect.fits",
+    "http": 206,
+    "cards": [
+     [
+      "SIMPLE",
+      "True",
+      "file does conform to FITS standard"
+     ],
+     [
+      "BITPIX",
+      "-32",
+      "number of bits per data pixel"
+     ],
+     [
+      "NAXIS",
+      "2",
+      "number of data axes"
+     ],
+     [
+      "NAXIS1",
+      "200",
+      "length of data axis 1"
+     ],
+     [
+      "NAXIS2",
+      "200",
+      "length of data axis 2"
+     ],
+     [
+      "EXTEND",
+      "False",
+      "FITS dataset may contain extensions"
+     ],
+     [
+      "BZERO",
+      "0.0",
+      "BZERO"
+     ],
+     [
+      "BSCALE",
+      "1.0",
+      "BSCALE"
+     ],
+     [
+      "EQUINOX",
+      "2000.0",
+      "EQUINOX"
+     ],
+     [
+      "CTYPE1",
+      "RA---TAN",
+      "CTYPE1"
+     ],
+     [
+      "CRVAL1",
+      "332.941368",
+      "CRVAL1"
+     ],
+     [
+      "CRPIX1",
+      "100.0",
+      "CRPIX1"
+     ],
+     [
+      "CDELT1",
+      "-0.000277777777777778",
+      "CDELT1"
+     ],
+     [
+      "CTYPE2",
+      "DEC--TAN",
+      "CTYPE2"
+     ],
+     [
+      "CRVAL2",
+      "-3.828952",
+      "CRVAL2"
+     ],
+     [
+      "CRPIX2",
+      "100.0",
+      "CRPIX2"
+     ],
+     [
+      "CDELT2",
+      "0.000277777777777778",
+      "CDELT2"
+     ],
+     [
+      "ORIGIN",
+      "JPK-SOFT",
+      "ORIGIN"
+     ],
+     [
+      "DATE",
+      "2017-08-28T19:14:12",
+      "file creation date (YYYY-MM-DDThh:mm:ss UT)"
+     ],
+     [
+      "RADESYS",
+      "FK5",
+      ""
+     ],
+     [
+      "CD1_1",
+      "-0.00027777777777777",
+      ""
+     ],
+     [
+      "CD2_2",
+      "0.000277777777777778",
+      ""
+     ],
+     [
+      "CD1_2",
+      "0.0",
+      ""
+     ],
+     [
+      "CD2_1",
+      "0.0",
+      ""
+     ],
+     [
+      "LTM1_1",
+      "1.0",
+      ""
+     ],
+     [
+      "LTM2_2",
+      "1.0",
+      ""
+     ],
+     [
+      "WCSDIM",
+      "2",
+      ""
+     ],
+     [
+      "WCSAXES",
+      "2",
+      ""
+     ],
+     [
+      "WAT0_001",
+      "system=image",
+      ""
+     ],
+     [
+      "WAT1_001",
+      "wtype=tan axtype=ra",
+      ""
+     ],
+     [
+      "WAT2_001",
+      "wtype=tan axtype=dec",
+      ""
+     ],
+     [
+      "RA_TARG",
+      "332.9413125",
+      ""
+     ],
+     [
+      "DEC_TARG",
+      "-3.829091666666666",
+      ""
+     ],
+     [
+      "TARGNAME",
+      "rxc2211-03",
+      ""
+     ],
+     [
+      "HLSPNAME",
+      "relics",
+      ""
+     ],
+     [
+      "PROPOSID",
+      "14096",
+      ""
+     ],
+     [
+      "PR_INV_F",
+      "Dan",
+      ""
+     ],
+     [
+      "PR_INV_L",
+      "Coe",
+      ""
+     ],
+     [
+      "MAPMKR_F",
+      "Catherine",
+      ""
+     ],
+     [
+      "MAPMKR_L",
+      "Cerny",
+      ""
+     ],
+     [
+      "DATAMAX",
+      "68.4737548828125",
+      ""
+     ],
+     [
+      "DATAMIN",
+      "-70.89114379882812",
+      ""
+     ],
+     [
+      "IRAF_MAX",
+      "68.4737548828125",
+      ""
+     ],
+     [
+      "IRAF_MIN",
+      "-70.89114379882812",
+      ""
+     ]
+    ],
+    "notes": [
+     "  FITS (Flexible Image Transport System) format is defined in 'Astronomy",
+     "  and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H"
+    ],
+    "normalisation_like": []
+   }
+  }
+ },
+ "h_c_verdict": "not_supported",
+ "posthoc_makers": {
+  "a3192": {
+   "url": "https://archive.stsci.edu/hlsps/relics/abell3192/models/lenstool/hlsp_relics_model_model_abell3192_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Guillaume Mahler",
+   "date": "2017-12-06T10:11:45",
+   "naxis1": 1000
+  },
+  "cl0152": {
+   "url": "https://archive.stsci.edu/hlsps/relics/cl0152m13/models/lenstool/hlsp_relics_model_model_cl0152m13_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Traci Johnson",
+   "date": "2018-01-04T12:08:50",
+   "naxis1": 2000
+  },
+  "macs0417": {
+   "url": "https://archive.stsci.edu/hlsps/relics/macs0417m11/models/lenstool/v1/hlsp_relics_model_model_macs0417m11_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Guillaume Mahler",
+   "date": "2017-12-06T07:26:42",
+   "naxis1": 1000
+  },
+  "macs0553": {
+   "url": "https://archive.stsci.edu/hlsps/relics/macs0553m33/models/lenstool/hlsp_relics_model_model_macs0553m33_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Guillaume Mahler",
+   "date": "2017-12-06T10:17:39",
+   "naxis1": 1000
+  },
+  "rxc0018": {
+   "url": "https://archive.stsci.edu/hlsps/relics/rxc0018p16/models/lenstool/v1/hlsp_relics_model_model_rxc0018p16_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Guillaume Mahler",
+   "date": "2020-07-06T15:09:50",
+   "naxis1": 6000
+  },
+  "rxc0232": {
+   "url": "https://archive.stsci.edu/hlsps/relics/rxc0232m44/models/lenstool/hlsp_relics_model_model_rxc0232m44_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Rachel Paterno-Mahler",
+   "date": "2018-03-06T20:39:52",
+   "naxis1": 1000
+  },
+  "rxc0600": {
+   "url": "https://archive.stsci.edu/hlsps/relics/rxc0600m20/models/lenstool/hlsp_relics_model_model_rxc0600m20_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Guillaume Mahler",
+   "date": "2017-12-05T23:09:23",
+   "naxis1": 1000
+  },
+  "rxc2211": {
+   "url": "https://archive.stsci.edu/hlsps/relics/rxc2211m03/models/lenstool/hlsp_relics_model_model_rxc2211m03_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Catherine Cerny",
+   "date": "2017-08-28T19:14:12",
+   "naxis1": 200
+  },
+  "smacs0723": {
+   "url": "https://archive.stsci.edu/hlsps/relics/smacs0723m73/models/lenstool/hlsp_relics_model_model_smacs0723m73_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Guillaume Mahler",
+   "date": "2017-12-03T10:01:03",
+   "naxis1": 1000
+  },
+  "spt0615": {
+   "url": "https://archive.stsci.edu/hlsps/relics/spt0615m57/models/lenstool/hlsp_relics_model_model_spt0615m57_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Rachel Paterno-Mahler",
+   "date": "2018-03-05T22:12:50",
+   "naxis1": 1000
+  },
+  "whl0137": {
+   "url": "https://archive.stsci.edu/hlsps/relics/whl0137m08/models/lenstool/v1/hlsp_relics_model_model_whl0137m08_lenstool_v1_x-arcsec-deflect.fits",
+   "map_maker": "Brian Welch",
+   "date": "2021-03-05T06:13:56",
+   "naxis1": 5000
+  }
+ }
+}
