@@ -40,3 +40,10 @@ def test_primary_gate_uses_spec_rows_only():
 
 def test_dag_ids():
     assert eh.dag_ids(TEX) == {"1.1c"}
+
+
+def test_num_marks_and_missing():
+    assert eh._num(r" 2.64\ddag ") == 2.64
+    assert eh._num(r"-1\ddag") is None
+    assert eh._num(r"\no\ddag") is None
+    assert eh._num(r" \no ") is None

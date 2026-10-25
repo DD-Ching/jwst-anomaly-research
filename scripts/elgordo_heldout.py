@@ -33,10 +33,10 @@ ROW = re.compile(r"^\s*([0-9]+(?:\.[0-9]+)?[a-z]+)\S*\s*&")
 
 def _num(s: str) -> float | None:
     """A table number; ``\\no`` and -1 are missing, footnote marks (``\\ddag``) are dropped."""
-    s = s.strip()
+    s = re.sub(r"\\(?!no\b)[A-Za-z]+", "", s).strip()
     if s in ("\\no", "-1", ""):
         return None
-    return float(re.sub(r"\\[A-Za-z]+", "", s))
+    return float(s)
 
 
 def parse_table(tex: str) -> Table:
@@ -52,7 +52,7 @@ def parse_table(tex: str) -> Table:
     fam_z: dict[str, tuple[float, bool]] = {}
     for iid, _, _, zs, zg in rows:
         f = re.match(r"[0-9]+", iid).group(0)
-        if zs is not None:
+        if zs is not None and not fam_z.get(f, (0.0, False))[1]:
             fam_z[f] = (zs, True)
         elif zg is not None and f not in fam_z:
             fam_z[f] = (zg, False)
