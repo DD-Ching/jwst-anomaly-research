@@ -843,6 +843,9 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Zenodo record 10.5281/zenodo.16534337 (https://zenodo.org/records/16534337, published 2025-07-11, CC-BY-4.0):
     `alpha_x/y_sptcl0546_z3p5_20250611_LTM_Gc.fits`, `actcl0546_mulfile_v1.mul`, `actcl0546_spec-z.cat` (md5 checked,
     sha256 in `summary.json`).
+- SN Eos follow-up epochs (`results/transients/epoch_inventory/`, MAST metadata accessed 2026-10-25): JWST programs
+  9493 o001 (2025-10-08) and 12299 o001 (2026-09-28), NIRCam, target `SN_Eos_Image_101.1`; SN Eos spectroscopy:
+  arXiv:2601.04156 (z 5.13; read from the search excerpt only, paper not opened).
 - MACS J1931.8-2635 inputs (`results/lens_consistency/macs1931_inputs/`, accessed 2026-10-24):
   - Allingham et al. 2026, "VENUS: Strong-lensing model of MACS J1931.8-2635 -- revealing the farthest multiply imaged
     supernova", arXiv:2602.14074.
