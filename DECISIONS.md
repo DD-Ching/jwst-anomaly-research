@@ -2755,6 +2755,15 @@ one `MAPMKR` and a 2017-12 date; the near-1 maps have other makers. Alternatives
 (post hoc association, untested). Revisit if: RXC J0600 or MACS J0417 Lenstool v1 (same batch) is tested against
 z_spec families or a second model, or the RELICS team documents the normalisation.
 
+**Addendum 2026-10-25bj (RELICS Lenstool v1 2017-12 batch: map-ratio test, H_K).**
+`results/lens_consistency/relics_lenstool_batch/RESULT.md`; plan in cf7ec7d8 before any map was read. Statistic: R =
+median |α_LT| / |α_ref| on a 1″ grid where |α_ref| ≥ 0.5 max (ASSUMPTION). Gate V (four clusters with stored rule-7
+factors) fails: Abell 3192 R 1.247 falls under the offset cut 1.25 (ASSUMPTION); MACS J0553 1.543, RXC J2211 1.036,
+RX J0152 0.889 pass. H_K undetermined; test-cluster numbers are stored, not read. Post hoc: the region covers 84–99 % of
+each overlap, so it is not the strong-lensing annulus. Decision: no batch rule; the addendum-bd per-cluster check stays.
+Alternatives rejected: reading the test clusters despite the failed gate. Revisit if: a region tied to the critical
+curves or to catalogued images passes gate V on the same four clusters.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
