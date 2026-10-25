@@ -571,9 +571,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - **Epoch inventory** (2026-10-25, `results/transients/epoch_inventory/RESULT.md`): new pairs only on Abell 2744
      (upper bound, no footprint check), MACS J1931 and MACS0647. ~~SN Eos predicted images and delays~~ done
      2026-10-25 (`results/transients/sneos/RESULT.md`: gates P / S / M pass; 5 images; the 3 extra ones lead 101.1 by
-     1,238–19,656 d, so no extra-image target in the three epochs). Next: **101.2 / 101.1 SN flux-ratio test**
-     (model Δt 0.32 d, so the ratio is |μ| ratio ≈ 1.16 across 6882 o038, 9493 o001, 12299 o001; forced photometry
-     with injections; plan first; needs archive.stsci.edu via the proxy bundle). Abell 370 epochs public 2026-12-29 to 2027-08-11 (`upcoming.json`);
+     1,238–19,656 d, so no extra-image target in the three epochs). ~~101.2 / 101.1 SN flux-ratio test~~ done
+     2026-10-25 (`results/transients/sneos_ratio/RESULT.md`: R_obs 1.38 vs 1.16, "agrees" under the 0.30 floor).
+     Next: literature check of a published SN Eos image flux ratio; R_model range from the ±1σ maps. Abell 370 epochs public 2026-12-29 to 2027-08-11 (`upcoming.json`);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
