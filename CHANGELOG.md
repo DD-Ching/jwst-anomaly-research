@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: RELICS Lenstool v1 2017-12 batch map-ratio test: gate V fails, H_K undetermined (D-034 addendum bj)
+- **Result** (`results/lens_consistency/relics_lenstool_batch/RESULT.md`; plan frozen in cf7ec7d8): R = median
+  |α_LT| / |α_ref| over |α_ref| ≥ 0.5 max on eight clusters. Gate V fails on Abell 3192 (R 1.247, offset cut 1.25);
+  MACS J0553 1.543, RXC J2211 1.036, RX J0152 0.889 in class. H_K undetermined; RXC J0600 1.016, MACS J0417 1.129,
+  WHL0137 1.037, SPT0615 0.605 stored, not read.
+- **Failed approach:** a peak-fraction |α| region covers 84–99 % of each map overlap (post hoc), not the multiple-image
+  region. Next statistic needs a critical-curve or image-position region.
+- **Hosts:** archive.stsci.edu again needs the proxy bundle + certifi concatenated in `SSL_CERT_FILE`. ~0.8 GB streamed
+  to memory, nothing stored.
+- **Handoff:** next: re-frozen statistic on |μ_ref(z = 2)| ≥ threshold, gate V on the same four clusters. #374 waits
+  for the 2026-10-26 weekly run.
+
 ## 2026-10-25: RELICS Lenstool v1 amplitude offset is not one z_ref normalisation (D-034 addendum bi)
 - **Result** (`results/lens_consistency/relics_lenstool_zref/RESULT.md`; plan frozen in 909bd8dd): H_U (every
   RELICS Lenstool v1 map at z_ref 2.09) rejected: RXC J0232, RXC J2211 and RX J0152 miss f_pred by +0.22 to +0.58;
