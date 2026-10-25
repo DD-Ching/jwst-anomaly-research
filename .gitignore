@@ -52,6 +52,5 @@ results/w3_ztf/v26/dedupe.json.gz
 results/w3_ztf/v25/*/sample.json
 results/w3_ztf/v26/*/sample.json
 results/x4/.s1*_*
-# W3 / Kepler hard-test ledger: plain JSONL > 1 MB; the gzip snapshot is tracked
-results/w3_kepler/hard/net_ledger.jsonl
-results/w3_kepler/expand/net_ledger.jsonl
+# Raw download ledgers (docs/efficiency-rules.md 2.2): commit only a .jsonl.gz snapshot
+net_ledger*.jsonl

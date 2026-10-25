@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Efficiency rules for every round (owner rule; D-108)
+- **New:** `docs/efficiency-rules.md` and `docs/pre-review-checklist.md`. They change process only; no
+  method, threshold, review count or quality requirement changes.
+- **Automated:**
+  - the pre-commit hook `results-output-size` (`scripts/check_results.py --sizes`) fails on tracked plain
+    outputs under `results/` above 500 kB and on tracked raw ledgers (28 older files grandfathered);
+  - `.gitignore` covers `net_ledger*.jsonl`;
+  - `scripts/push_branch.sh` merges a moved `main` before pushing;
+  - `scripts/check_results.py --review` gives an advisory pre-review report (checklist items 1, 2, 3, 5,
+    6).
+- **Pointers:** root and `scripts/` CLAUDE.md now point to both files. The guarded "Owner decisions"
+  section is untouched.
 ## 2026-10-25: SN Eos HST F110W 2024 − 2012 difference-image ratio: R_HST 1.66 (σ_ln 0.15), "agrees" with the model; cannot separate Table S1 1.81 from JWST 1.38
 - **Result** (`results/transients/sneos_hst/RESULT.md`, plan frozen before any pixel): 4 of 6 PID 17504 F110W visits
   minus CLASH 2012 pass registration, detection and injection gates. Q1 (`sneos_ratio.decide`): "agrees" with
