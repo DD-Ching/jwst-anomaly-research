@@ -3,7 +3,8 @@
 Frozen plan: ``results/lens_consistency/a2744_heldout/PLAN.md``. Rules 1-5 of the
 ``mars_hff_heldout`` stage, unchanged, per model, with that model's own catalogued images as
 the "seen" list. MARS is reported only (its training gate K failed). No flag, flux or
-extra-image reading.
+extra-image reading. ``posthoc.json`` (not in the plan) splits the Bergamini residuals
+by region.
 
     python scripts/a2744_heldout.py --zip DIR [--out DIR]
 
@@ -20,6 +21,7 @@ from pathlib import Path
 import m1149_hst_heldout as hh
 import mars_hff_heldout as mo
 import mars_hff_inputs as mh
+import numpy as np
 import requests
 from astropy.table import Table
 from m0417_canucsref_posthoc import _clean
@@ -29,12 +31,45 @@ IMAGES = Path("results/lens_consistency/abell2744_uncoverref/uncover2_images_spe
 MODEL = "abell2744-bergamini23"
 MARS_FIELD = "Abell 2744"
 MARS_GATE_K_RMS = 1.112  # D-034 addendum ao (fails; MARS is reported only)
+NORTH_DEC = -30.385  # post hoc: images north of this Dec are near the northern subcluster
 
 
 def shared_over_3(blocks: dict) -> list[str]:
     """PLAN.md readings: held-out images > 3 arcsec in every model."""
     sets = [set(b["over_3arcsec"]) for b in blocks.values()]
     return sorted(set.intersection(*sets)) if sets else []
+
+
+def _stats(d: np.ndarray) -> dict:
+    return {
+        "n": len(d),
+        "rms_arcsec": round(float(np.sqrt(np.mean(d**2))), 3) if len(d) else None,
+        "within_3arcsec": round(float(np.mean(d <= 3.0)), 3) if len(d) else None,
+    }
+
+
+def posthoc(out: Path = OUT, images: Path = IMAGES) -> dict:
+    """Post hoc (not in the plan): Bergamini held-out residuals split by region, by z within
+    the northern group, and without family 80 (18 images of one source)."""
+    r = Table.read(out / f"heldout_{MODEL}.ecsv")
+    r = r[np.asarray(r["inside"], bool) & np.isfinite(np.asarray(r["dtheta_arcsec"], float))]
+    t = Table.read(images)
+    dec = dict(zip(np.asarray(t["image_id"], str), np.asarray(t["dec"], float), strict=True))
+    d = np.asarray(r["dtheta_arcsec"], float)
+    north = np.array([dec[str(i)] > NORTH_DEC for i in r["image_id"]])
+    top = np.array([str(s).split(".")[0] for s in r["system"]])
+    hiz = np.asarray(r["z"], float) >= 3.0
+    return {
+        "label": "post hoc; not in the frozen plan",
+        "north_dec_cut": NORTH_DEC,
+        "north": _stats(d[north]) | {"systems": sorted({str(x) for x in top[north]})},
+        "north_z_lt_3": _stats(d[north & ~hiz])
+        | {"systems": sorted({str(x) for x in top[north & ~hiz]})},
+        "north_z_ge_3": _stats(d[north & hiz])
+        | {"systems": sorted({str(x) for x in top[north & hiz]})},
+        "core": _stats(d[~north]) | {"systems": sorted({str(x) for x in top[~north]})},
+        "without_system_80": _stats(d[top != "80"]),
+    }
 
 
 def run(zdir: Path, out: Path = OUT) -> dict:
@@ -59,6 +94,8 @@ def run(zdir: Path, out: Path = OUT) -> dict:
         "over_3arcsec_in_both": shared_over_3(blocks),
     }
     (out / "summary.json").write_text(json.dumps(_clean(summary), indent=1, allow_nan=False) + "\n")
+    if out == OUT:
+        (out / "posthoc.json").write_text(json.dumps(posthoc(), indent=1) + "\n")
     return summary
 
 
