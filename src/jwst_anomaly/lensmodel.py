@@ -499,6 +499,53 @@ MACS0553_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS GLAFIC v2 best-fit maps (Oguri), D_LS/D_S = 1 per the RELICS lens-model readme v3
+#: (accessed 2026-10-25); second HST-era model for the SLICE checks (D-034 addendum bd).
+_RELICS_MACS0553_GLAFIC = (
+    "https://archive.stsci.edu/hlsps/relics/macs0553m33/models/glafic/v2/"
+    "hlsp_relics_model_model_macs0553m33_glafic_v2"
+)
+MACS0553_RELICS_GLAFIC: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_MACS0553_GLAFIC}_x-arcsec-deflect.fits",
+        "05afdbca3c211140daa38632c74480224def22bd72b55241f4e08dac02124e6b",
+    ),
+    "alpha_y": (
+        f"{_RELICS_MACS0553_GLAFIC}_y-arcsec-deflect.fits",
+        "0dbc335ed123739b64002da52d17d09c8a1239ddc2df38a32dd2c8ce285109b2",
+    ),
+    "kappa_map": (
+        f"{_RELICS_MACS0553_GLAFIC}_kappa.fits",
+        "f39ad32b545a9efc8ccf23d404598db512df927ecc21573e0779efcf73c7910d",
+    ),
+    "mag_z2": (
+        f"{_RELICS_MACS0553_GLAFIC}_z02-magnif.fits",
+        "a73f1e5b626cc9a727b18f4e9b4bb2cac17d520186525bceb7837076ae709a5f",
+    ),
+}
+_RELICS_RXC2211_GLAFIC = (
+    "https://archive.stsci.edu/hlsps/relics/rxc2211m03/models/glafic/v2/"
+    "hlsp_relics_model_model_rxc2211m03_glafic_v2"
+)
+RXC2211_RELICS_GLAFIC: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_RXC2211_GLAFIC}_x-arcsec-deflect.fits",
+        "bf4d7b6d714a1393703623b29c1aeeaa7ebdb0895e27e2ff6982be14bb144519",
+    ),
+    "alpha_y": (
+        f"{_RELICS_RXC2211_GLAFIC}_y-arcsec-deflect.fits",
+        "1b29ab6721f1cb06dfeef1e62f8829c42b830f9224b4f0a770e033bcca9236e7",
+    ),
+    "kappa_map": (
+        f"{_RELICS_RXC2211_GLAFIC}_kappa.fits",
+        "944b02f1177ccf32ddb753b1b712d210ce4d7350f23bc08fbc1bb6ec18ce30ed",
+    ),
+    "mag_z2": (
+        f"{_RELICS_RXC2211_GLAFIC}_z02-magnif.fits",
+        "474d85c760dcc54cafb7ce34c55ed50dcd34b4f92297b598af2980df686c34a6",
+    ),
+}
+
 #: HFF Sharon & Johnson v4cor Lenstool maps of MACS J1149.5+2223 (readme
 #: ``hlsp_frontier_model_macs1149_sharon_v4cor_readme.pdf``, accessed 2026-10-20): best fit,
 #: 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second model for the
