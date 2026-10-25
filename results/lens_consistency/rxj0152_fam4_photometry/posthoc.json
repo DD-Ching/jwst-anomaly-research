@@ -1,0 +1,99 @@
+{
+ "note": "post hoc, not in PLAN.md",
+ "chance_control": {
+  "n_passing_segments_in_cutout": 62,
+  "cutout_area_arcsec2": 2501.341351697009,
+  "region_area_arcsec2": 61.549657452235806,
+  "expected_by_chance_in_region": 1.5256129514069086,
+  "observed_in_region": 3,
+  "poisson_p_ge_observed": 0.19760946990522835
+ },
+ "gate_V_diagnosis": {
+  "lenstool": {
+   "segments_within_1.5arcsec": [
+    {
+     "label": 121,
+     "sep_arcsec": 1.2272239036034789,
+     "f277w": 2.2734784130130383,
+     "in_flux_window": false,
+     "colour_match": true
+    },
+    {
+     "label": 124,
+     "sep_arcsec": 0.770020453443155,
+     "f277w": 1.5624452019665414,
+     "in_flux_window": false,
+     "colour_match": true
+    }
+   ],
+   "expected_injected_f277w": 13.523668436123836
+  },
+  "glafic": {
+   "segments_within_1.5arcsec": [
+    {
+     "label": 131,
+     "sep_arcsec": 0.9651374526080568,
+     "f277w": 12.556100558316855,
+     "in_flux_window": true,
+     "colour_match": true
+    },
+    {
+     "label": 132,
+     "sep_arcsec": 1.2039327871168766,
+     "f277w": 2.1101419292637056,
+     "in_flux_window": false,
+     "colour_match": true
+    },
+    {
+     "label": 138,
+     "sep_arcsec": 0.7808437272688928,
+     "f277w": 2.31867680229888,
+     "in_flux_window": false,
+     "colour_match": false
+    }
+   ],
+   "expected_injected_f277w": 13.523668436123836
+  },
+  "zitrin": {
+   "segments_within_1.5arcsec": [
+    {
+     "label": 116,
+     "sep_arcsec": 1.2292242338422674,
+     "f277w": 1.931188545874413,
+     "in_flux_window": false,
+     "colour_match": true
+    },
+    {
+     "label": 122,
+     "sep_arcsec": 0.8163406710117612,
+     "f277w": 1.7895386300931702,
+     "in_flux_window": false,
+     "colour_match": false
+    }
+   ],
+   "expected_injected_f277w": 13.523668436123836
+  }
+ },
+ "pair_segments": {
+  "203": {
+   "ra": 28.183428406525643,
+   "dec": -13.956781120071716,
+   "fluxes": {
+    "f115w": 166.45341610908508,
+    "f150w": 217.800337202847,
+    "f277w": 95.23752823472023,
+    "f444w": 92.8594736456871
+   }
+  },
+  "206": {
+   "ra": 28.182971950572306,
+   "dec": -13.956522660914572,
+   "fluxes": {
+    "f115w": 188.03070046007633,
+    "f150w": 225.52374520897865,
+    "f277w": 108.96986515074968,
+    "f444w": 97.45701229572296
+   }
+  }
+ }
+}

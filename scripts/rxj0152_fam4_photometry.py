@@ -274,7 +274,7 @@ def main() -> None:
     summary: dict = {"plan": "PLAN.md", "bands": list(BANDS), "pair_labels": res["pair_labels"]}
     if not res["pair_labels"]:
         summary["outcome"] = "stopped: pair not detected"
-        (OUT / "result.json").write_text(json.dumps(summary, indent=1))
+        (OUT / "result.json").write_text(json.dumps(summary, indent=1) + "\n")
         return
     # gate V
     v = {}
@@ -325,7 +325,7 @@ def main() -> None:
         outcome=oc,
         units="sums of i2d SCI pixels (MJy/sr x pixels); ratios only are used",
     )
-    (OUT / "result.json").write_text(json.dumps(summary, indent=1, default=float))
+    (OUT / "result.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
     np.save(cdir / "seg_ref.npy", seg_ref)
     print(
         json.dumps({k: summary[k] for k in ("gate_V", "gate_C_accepted", "gate_D_pass", "outcome")})
