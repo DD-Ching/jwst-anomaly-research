@@ -33,7 +33,9 @@ def load_images(path: Path = IMAGES) -> Table:
     t = Table.read(path, format="ascii.ecsv")
     t["image_id"] = np.asarray(t["image_id"], str)
     t["system"] = np.asarray(t["system"], str)
-    t["held_out"] = np.isin(t["system"], NEW_FAMILIES)
+    t["held_out"] = np.asarray(t["new_in_jwst"], bool)
+    if set(t["system"][t["held_out"]]) != set(NEW_FAMILIES):
+        raise ValueError("new_in_jwst disagrees with the frozen held-out families 16-18")
     t["a"] = np.ones(len(t))
     return t
 
@@ -41,6 +43,12 @@ def load_images(path: Path = IMAGES) -> Table:
 def label_b(r: np.ndarray) -> np.ndarray:
     """Rule 5 label: the rule-4 decision under its own name."""
     return np.where(np.asarray(r) == "lensing_residual_input", "redshift_residual_input", r)
+
+
+def reading_b(d_spec: dict[str, np.ndarray], spec: np.ndarray, usable: list[str]) -> np.ndarray:
+    """Rule 5: the rule-4 decision on the z_spec offsets of the spectroscopic rows only."""
+    spec = np.asarray(spec, bool)
+    return label_b(ho.readings({n: np.asarray(d, float)[spec] for n, d in d_spec.items()}, usable))
 
 
 def run_model(name: str, images: Table, grid_step: float) -> tuple[dict, Table, np.ndarray]:
@@ -119,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
         lc._write(ip, OUT / f"imageplane_{name}.ecsv")
     usable = [n for n in MODELS if summary[n]["usable"]]
     ra = ho.readings({n: d[held] for n, d in d_fit.items()}, usable)
-    rb = label_b(ho.readings({n: d[spec] for n, d in d_spec.items()}, usable))
+    rb = reading_b(d_spec, spec, usable)
     summary["usable_models"] = usable
     summary["flags_A"] = [
         str(i) for i, v in zip(images["image_id"][held], ra, strict=True) if v != "no_flag"

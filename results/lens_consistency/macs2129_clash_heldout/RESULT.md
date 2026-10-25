@@ -5,6 +5,8 @@ and its rule tests (`tests/test_macs2129_clash_heldout.py`; the rule functions a
 `macs0647_clash_heldout`, tested there) were pushed in 3bf8bec before the run. Numbers come from `summary.json`;
 per-image residuals are in `imageplane_<model>.ecsv` (provenance `model_prediction`; positions observed, SLICE
 Table 8). No imaging was read: this is a position test of published maps against a published image list.
+After review, rule 5 moved into the tested `reading_b` and `held_out` is read from `new_in_jwst` (deviation in code
+only); the re-run wrote byte-identical outputs.
 
 ## Frozen result
 | | CLASH PIEMD + eNFW | CLASH LTM-Gauss |
@@ -24,12 +26,12 @@ models miss gate K0 by less than 0.06″ in rms and miss check F on the Dec axis
 - Fitted z against z_spec (`z_fit`, `z_spec`): PIEMD + eNFW fits a lower z than the spectroscopic one for 12 of 13
   families (all but 12), so at z_spec its images are over-deflected; LTM-Gauss scatters both ways and its z_spec
   rms is dominated by families 3 and 9 (20.9–26.5″, z_spec 2.24).
-- The Dec offsets (+0.59″, +0.74″) are of the size of an HST-era vs JWST-era astrometric frame difference; that
-  cause is not tested here.
+- The cause of the Dec offsets (+0.59″, +0.74″) is not tested here (frame registration and model error are not
+  separated).
 
 ## Reading
 - The frozen test gives no lensing-residual input: neither 2015 CLASH model is a usable reference on the SLICE
   image list under the K0 / F gates frozen for MACS0647.
 - **Limit:** a frame correction or a looser K0 would be a post hoc change and is not applied. The question needs
-  the SLICE Lenstool model (rms 0.79″), which the LAM atlas holds; the atlas was closed on 2026-10-25 (security
+  the SLICE Lenstool model (best-fit rms 0.79″ as published, SLICE Table 5; not stored), which the LAM atlas holds; the atlas was closed on 2026-10-25 (security
   suspension, internal network only).

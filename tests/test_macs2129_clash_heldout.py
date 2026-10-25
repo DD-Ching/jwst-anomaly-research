@@ -31,3 +31,10 @@ def test_readings_reused_need_every_usable_model_to_miss():
         "no_flag",
         "redshift_residual_input",
     ]
+
+
+def test_reading_b_uses_only_spec_rows_of_the_zspec_offsets():
+    spec = np.array([True, False, True])
+    d = {"a": np.array([4.0, 9.0, 1.0]), "b": np.array([5.0, 9.0, 4.0])}
+    assert list(ho.reading_b(d, spec, ["a", "b"])) == ["redshift_residual_input", "no_flag"]
+    assert list(ho.reading_b(d, spec, [])) == ["no_flag", "no_flag"]

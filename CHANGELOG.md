@@ -9,8 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   by 4.9–6.7″ in both; PIEMD + eNFW fits z below z_spec for 12 / 13 families.
 - **Hosts:** the LAM SL Cluster Atlas (data.lam.fr, holds the 14 SLICE Lenstool models) answers "Restricted access"
   (security suspension). archive.stsci.edu still needs the certifi CA bundle (`SSL_CERT_FILE`).
-- **Handoff:** retry the LAM atlas for the SLICE models (14 JWST-era clusters with image lists in Table 8: SMACS
-  J2031 and MACS J2129 have 13 spectroscopic sources each, SLICE Table 5). #374 waits for the 2026-10-26 weekly run.
+- **Handoff:** retry the LAM atlas for the SLICE models (14 JWST-era clusters with image lists in SLICE Table 8;
+  only the MACS J2129 block is transcribed). #374 waits for the 2026-10-26 weekly run.
 
 ## 2026-10-25: MACS0717 MARS held-out stage: no held-out spectroscopic images exist (input check)
 - **Result:** the MARS MACS0717 catalogue (31 images, systems 1, 3, 4, 6, 12, 13, 14, 15, 19, 68;
