@@ -2699,6 +2699,18 @@ MACS J0553 disagree with GLAFIC in the same direction; the readme v3 documents D
 Alternatives rejected: rescaling Lenstool v1 post hoc and re-reading it. Revisit if: the SLICE Lenstool models are
 reachable (RXC J2211 families 4, 5, 8; MACS J0553 family 12), or the RELICS team documents the Lenstool v1 scaling.
 
+**Addendum 2026-10-25be (three RELICS maps vs SLICE images on RX J0152.7−1357).**
+`results/lens_consistency/slice_relics_rxj0152/RESULT.md`, plan, map pins, image list and rule tests in d72854c before
+any map was read; rules 1–6 of addendum bc, gate P and rule 7 of addendum bd, joint flag over all usable models, and a
+pre-declared Q1 test of addendum bd's Lenstool v1 rule (`q1_answer`). Lenstool v1, GLAFIC v2 and Zitrin LTM-Gauss v1
+all pass P, K0 and F; reading A (family 7; pre-declared uninformative, 1.45″ pair) and reading B (family 1 at z 3.93)
+give no flag; amplitude classes all `near_1` (1.045 / 1.028 / 1.045), so Q1 = H_none. Decision: no flag; the Lenstool
+v1 amplitude check of addendum bd remains a per-cluster prerequisite, not a global correction (offset on 2 of 5
+clusters). Post hoc: family 4's predicted positive-parity counter-image (all three models, μ 2.4–3.8, 2.5–5.6″ model
+spread) is not in SLICE Table 8; a lensing-residual input for imaging. Alternatives rejected: reading family 7 with a
+tighter post hoc radius. Revisit if: the SLICE Lenstool models are reachable, or imaging of the family-4 positions
+shows a source at the expected flux.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

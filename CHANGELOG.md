@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SLICE RX J0152 vs three RELICS maps: no flag; Lenstool v1 amplitude normal here (D-034 addendum be)
+- **Result** (`results/lens_consistency/slice_relics_rxj0152/RESULT.md`): RX J0152.7−1357 (RELICS `cl0152m13`) has three
+  HST-era map sets on MAST (Lenstool v1, GLAFIC v2, Zitrin LTM-Gauss v1), missed by the addendum-bc search. Frozen
+  addendum bc/bd rules: all three pass P, K0 (rms 1.22″ / 0.49″ / 0.63″) and F; family 7 (JWST-new) and family 1 at
+  z_spec 3.93 matched by all; no joint flag. Amplitude factors 1.045 / 1.028 / 1.045, all `near_1` (Q1 = H_none):
+  the Lenstool v1 offset is per-cluster (2 of 5 clusters), so addendum bd's check stays a per-cluster step.
+- **Post hoc input:** all three models predict an uncatalogued positive-parity image of family 4 (merging pair
+  4.1 / 4.2) 16.7–22.2″ from the pair, μ +2.4 to +3.8, model positions 2.5–5.6″ apart (`posthoc.json`). Not tested
+  against imaging; ordinary explanations listed in RESULT.md.
+- **Handoff:** next is a frozen plan for forced photometry at the three predicted family-4 positions in NIRCam
+  imaging (expected flux = pair flux / μ ratio 4.7–7.7). A MAST CAOM query (r = 0.001°; not stored) finds level-3
+  NIRCam images of GO 5594 (SLICE; F150W2, F322W2) and GO 6882 (VENUS; F090W–F444W, 10 filters) at all three
+  positions and at the pair. Also untested: SLICE's MACS J0358.8−2955 is RELICS `abell3192` (glafic/ and lenstool/
+  model directories on MAST). LAM atlas still "restricted" (10:10Z). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: RELICS GLAFIC v2 vs SLICE images: MACS J0553 Lenstool flags are Lenstool-specific (D-034 addendum bd)
 - **Result** (`results/lens_consistency/slice_relics_glafic/RESULT.md`): frozen addendum-bc rules with the second
   HST-era model. MACS J0553 GLAFIC passes P, K0 (0.88″) and F; 11.1 at 0.08″ (Lenstool v1 3.49″); z_spec families

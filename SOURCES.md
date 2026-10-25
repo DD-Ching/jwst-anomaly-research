@@ -775,6 +775,14 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - CLASH Zitrin v2 MACS2129 maps (PIEMD + eNFW, LTM-Gauss; readme 2015-02-18):
     https://archive.stsci.edu/missions/hlsp/clash/macs2129/models/zitrin/ (sha256 in `lensmodel.MACS2129_CLASH_*`;
     readme sha256 nfw 7ffa3f92…947d, ltm-gauss 3e1756ea…dae0da).
+- SLICE × RELICS RX J0152 (`results/lens_consistency/slice_relics_rxj0152/`, accessed 2026-10-25):
+  - SLICE Table 8 block of RX J0152.7−1357 (same e-print; sha256 in `slice_images.ecsv` meta).
+  - RELICS Lenstool v1, GLAFIC v2 and Zitrin LTM-Gauss v1 maps:
+    https://archive.stsci.edu/hlsps/relics/cl0152m13/models/ (HLSP DOI 10.17909/T9SP45; sha256 in
+    `lensmodel.CL0152_RELICS_{LENSTOOL,GLAFIC,ZITRIN}`).
+  - Acebron et al. 2019, "RELICS: High-resolution Constraints on the Inner Mass Distribution of the z = 0.83 Merging
+    Cluster RXJ0152.7-1357 from Strong Lensing", ApJ 874, 132, doi:10.3847/1538-4357/ab0adf, arXiv:1810.08122
+    (from the SLICE e-print bibliography).
 - SLICE × RELICS (`results/lens_consistency/slice_relics_heldout/`, accessed 2026-10-25):
   - SLICE Table 8 blocks of RXC J0232.2-4420, RXC J2211.7-0349, MACS J0553.4-3342 (same e-print as above; sha256 in
     `slice_images.ecsv` meta).
