@@ -7,8 +7,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (arXiv:2601.04156v2) nor Allingham et al. 2026 (arXiv:2602.14074) states a 101.2 / 101.1 flux ratio or discusses
   microlensing. Their |μ| give R_model 1.066 / 1.174 (pinned map 1.162), so #541's "agrees" stands.
 - **New (post hoc, not a candidate):** from Coulter et al. Table S1, HST F110W 2024 R = 1.805 (σ_ln 0.039, stat), 0.43
-  in ln above the model range; JWST 2025 R = 1.103 (χ² 95 / 7). Our 9493 pairs agree with the table's flux-drop ratios
-  within about 1σ. A time- or wavelength-dependent ratio points first to microlensing; untested.
+  in ln above the model range; delay × light-curve slope gives ≤ 0.20. JWST 6882 / 9493 R = 1.100 / 1.118, inside it.
+  Our 9493 pairs agree with the table's flux-drop ratios within about 1σ (not stored). A time- or wavelength-dependent
+  ratio points first to microlensing; untested.
 - **Correction:** the SN Eos predicted-images entry below said 101.2 "trails" 101.1; in our map it leads by 0.32 d
   (Δt −0.324 d), as in Allingham et al.; Coulter et al. Table S2 lists it 0.99 d after.
 - **Handoff:** next: own HST 17504 − 2012 difference-image ratio (frozen plan, injections). #374 waits for the

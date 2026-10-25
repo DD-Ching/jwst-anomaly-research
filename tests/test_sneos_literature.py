@@ -32,6 +32,16 @@ def test_difference_ratio_equals_mu_ratio_for_constant_ratio():
 def test_run_writes_summary(tmp_path):
     s = sl.run(tmp_path)
     assert (tmp_path / "literature.json").exists()
-    assert set(s["combined"]) == {"HST F814W", "HST F110W", "JWST 2025"}
+    assert set(s["combined"]) == {"HST F814W", "HST F110W", "JWST 6882", "JWST 9493"}
     lo, hi = s["r_model_range"]
-    assert lo < sl.R_PINNED_MAP <= hi
+    assert lo <= s["r_model"]["pinned map"] <= hi
+
+
+def test_scaled_sigma_grows_with_excess_scatter():
+    w = sl.weighted(np.log([1.0, 4.0]), np.array([0.01, 0.01]))
+    assert np.isclose(w["sigma_ln_scaled"], w["sigma_ln"] * np.sqrt(w["chi2"]))
+
+
+def test_slope():
+    b, _ = sl.slope_mag_per_day(np.arange(4.0), 25 + 0.1 * np.arange(4.0), np.full(4, 0.05))
+    assert np.isclose(b, 0.1)

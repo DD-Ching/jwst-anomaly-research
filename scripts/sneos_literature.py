@@ -39,8 +39,14 @@ MU_PUBLISHED = {
     "Allingham+2026 Table 3": (25.79, 27.49),
     "Coulter+2026 Table S2": (25.46, 29.88),
 }
-R_PINNED_MAP = 1.162  # our pinned AstroLensPy v2.1 maps (sneos/summary.json)
-R_OURS = (1.382, 0.083)  # R_obs, σ_ln from sneos_ratio/summary.json (difference images)
+MU_SYST_FRAC = 0.20  # per-image |μ| systematic quoted by both papers (model_prediction)
+# τ(101.2) − τ(101.1), days (model_prediction): (value, −err, +err); Allingham: 5 d systematic.
+TAU_PUBLISHED = {
+    "Allingham+2026 Table 3": (-0.37, 5.00, 0.37),
+    "Coulter+2026 Table S2": (0.99, 0.33, 0.33),
+}
+ROOT = Path(__file__).resolve().parents[1]
+PINNED = ROOT / "results" / "transients" / "sneos_ratio" / "summary.json"  # r_model, r_obs, σ_ln
 FLOOR_LN = 0.30  # ASSUMPTION, PLAN.md rule 6
 LN10_04 = 0.4 * np.log(10.0)
 
@@ -51,15 +57,28 @@ def ratio(m1: float, e1: float, m2: float, e2: float) -> tuple[float, float]:
 
 
 def weighted(ln_r: np.ndarray, s: np.ndarray) -> dict:
-    """Inverse-variance mean of ln R, its σ and χ² about the mean."""
+    """Inverse-variance mean of ln R, its σ, χ² and σ scaled by sqrt(max(1, χ²/dof))."""
     w = 1.0 / s**2
     mu = float((ln_r * w).sum() / w.sum())
+    sigma = float(w.sum() ** -0.5)
+    chi2 = float(((ln_r - mu) ** 2 * w).sum())
+    dof = int(len(ln_r) - 1)
+    scale = np.sqrt(max(1.0, chi2 / dof)) if dof > 0 else 1.0
     return {
         "r": float(np.exp(mu)),
-        "sigma_ln": float(w.sum() ** -0.5),
-        "chi2": float(((ln_r - mu) ** 2 * w).sum()),
-        "dof": int(len(ln_r) - 1),
+        "sigma_ln": sigma,
+        "chi2": chi2,
+        "dof": dof,
+        "sigma_ln_scaled": float(sigma * scale),
     }
+
+
+def slope_mag_per_day(t: np.ndarray, m: np.ndarray, e: np.ndarray) -> tuple[float, float]:
+    """Weighted least-squares slope dm/dt and its σ."""
+    w = 1.0 / e**2
+    tb = (w * t).sum() / w.sum()
+    sxx = (w * (t - tb) ** 2).sum()
+    return float((w * (t - tb) * m).sum() / sxx), float(sxx**-0.5)
 
 
 def difference_ratio(early: tuple, late: tuple) -> tuple[float, float]:
@@ -75,30 +94,50 @@ def difference_ratio(early: tuple, late: tuple) -> tuple[float, float]:
     return float(d2 / d1), float(np.hypot(s1 / d1, s2 / d2))
 
 
-def run(out: Path) -> dict:
+def run(out: Path, pinned: Path = PINNED) -> dict:
+    ref = json.loads(pinned.read_text())
     groups: dict[str, list] = {}
     entries = []
     for row in PHOT:
         r, s = ratio(*row[3:])
         entries.append({"program": row[0], "mjd": row[1], "band": row[2], "r": r, "sigma_ln": s})
-        key = f"HST {row[2]}" if row[0] == 17504 else "JWST 2025"
+        key = f"HST {row[2]}" if row[0] == 17504 else f"JWST {row[0]}"
         groups.setdefault(key, []).append((np.log(r), s))
     combined = {k: weighted(*map(np.array, zip(*v, strict=True))) for k, v in groups.items()}
-    by_band = {(r[0], r[2]): r for r in PHOT}
+
+    def row(program, band):
+        (hit,) = [r for r in PHOT if r[0] == program and r[2] == band]  # exactly one row
+        return hit
+
     diff = {}
     for band in ("F277W", "F356W", "F444W"):
-        r, s = difference_ratio(by_band[(6882, band)], by_band[(9493, band)])
+        r, s = difference_ratio(row(6882, band), row(9493, band))
         diff[band] = {"r": r, "sigma_rel": s}
     r_model = {k: v[1] / v[0] for k, v in MU_PUBLISHED.items()}
-    r_model["pinned map"] = R_PINNED_MAP
+    r_model["pinned map"] = ref["r_model"]
     lo, hi = min(r_model.values()), max(r_model.values())
-    offsets = {
-        k: {
-            "ln_offset_from_nearest_model": float(np.log(v["r"]) - np.log(np.clip(v["r"], lo, hi))),
-            "beyond_floor": bool(abs(np.log(v["r"]) - np.log(np.clip(v["r"], lo, hi))) > FLOOR_LN),
+    offsets = {}
+    for k, v in combined.items():
+        off = float(np.log(v["r"]) - np.log(np.clip(v["r"], lo, hi)))
+        offsets[k] = {
+            "ln_offset_from_nearest_model": off,
+            "beyond_floor": bool(abs(off) > FLOOR_LN),
         }
-        for k, v in combined.items()
-    }
+    # Could the 101.1 / 101.2 delay plus the in-week F110W light-curve slope make the 2024 offset?
+    hst = [r for r in PHOT if r[2] == "F110W"]
+    t = np.array([r[1] for r in hst])
+    slopes = {}
+    for name, im, ie in (("101.1", 3, 4), ("101.2", 5, 6)):
+        b, sb = slope_mag_per_day(t, np.array([r[im] for r in hst]), np.array([r[ie] for r in hst]))
+        slopes[name] = {"mag_per_day": b, "sigma": sb}
+    steep = max(abs(v["mag_per_day"]) + 2 * v["sigma"] for v in slopes.values())  # 2σ upper slope
+    delay_effect = {}
+    for k, (tau, lo_e, hi_e) in TAU_PUBLISHED.items():
+        dt_max = max(abs(tau - lo_e), abs(tau + hi_e))
+        delay_effect[k] = {
+            "max_abs_delay_d": dt_max,
+            "max_ln_change": float(LN10_04 * steep * dt_max),
+        }
     summary = {
         "sources": ["arXiv:2601.04156v2 Tables S1, S2", "arXiv:2602.14074 Table 3"],
         "provenance": {
@@ -112,7 +151,15 @@ def run(out: Path) -> dict:
         "r_model": r_model,
         "r_model_range": [lo, hi],
         "offset_vs_model_range": offsets,
-        "ours_difference_images": {"r": R_OURS[0], "sigma_ln": R_OURS[1]},
+        "mu_systematic_fraction_per_image": MU_SYST_FRAC,
+        "tau_published_days": {
+            k: dict(zip(("tau", "err_minus", "err_plus"), v, strict=True))
+            for k, v in TAU_PUBLISHED.items()
+        },
+        "hst_f110w_slopes": slopes,
+        "slope_bound_mag_per_day_2sigma": float(steep),
+        "delay_times_slope": delay_effect,
+        "ours_difference_images": {"r": ref["r_obs"], "sigma_ln": ref["sigma_ln"]},
         "floor_ln_assumption": FLOOR_LN,
     }
     out.mkdir(parents=True, exist_ok=True)
@@ -121,7 +168,7 @@ def run(out: Path) -> dict:
 
 
 if __name__ == "__main__":
-    s = run(Path(__file__).resolve().parents[1] / "results" / "transients" / "sneos_ratio")
+    s = run(ROOT / "results" / "transients" / "sneos_ratio")
     print(
         json.dumps(
             {"combined": s["combined"], "diff": s["difference_ratio_6882_minus_9493"]}, indent=1
