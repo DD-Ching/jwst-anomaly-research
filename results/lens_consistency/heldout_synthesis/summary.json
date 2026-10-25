@@ -1,0 +1,240 @@
+{
+ "plan": "results/lens_consistency/heldout_synthesis/PLAN.md",
+ "provenance": "offsets: model_prediction of observed positions; thresholds: ASSUMPTION",
+ "fields": {
+  "Abell 370": {
+   "models": {
+    "MARS": {
+     "table": "results/lens_consistency/mars_hff_heldout/heldout_A370.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 40,
+      "n_no_prediction": 0,
+      "rms_arcsec": 14.808995357143797,
+      "median_arcsec": 0.16547999362982552,
+      "p68_arcsec": 1.070761359263871,
+      "p95_arcsec": 5.763518080349379,
+      "frac_over_3": 0.1
+     },
+     "isolated_misses": []
+    }
+   },
+   "shared_misses": {},
+   "flags": [],
+   "floor": {
+    "model": "MARS",
+    "p95_arcsec": 5.763518080349379,
+    "rms_arcsec": 14.808995357143797
+   }
+  },
+  "MACS0416": {
+   "models": {
+    "MARS": {
+     "table": "results/lens_consistency/mars_hff_heldout/heldout_MACSJ0416.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 77,
+      "n_no_prediction": 0,
+      "rms_arcsec": 0.5144039102813955,
+      "median_arcsec": 0.26143499116587177,
+      "p68_arcsec": 0.46922101272869937,
+      "p95_arcsec": 1.3073905463733446,
+      "frac_over_3": 0.0
+     },
+     "isolated_misses": []
+    }
+   },
+   "shared_misses": {},
+   "flags": [],
+   "floor": {
+    "model": "MARS",
+    "p95_arcsec": 1.3073905463733446,
+    "rms_arcsec": 0.5144039102813955
+   }
+  },
+  "MACS1149": {
+   "models": {
+    "MARS": {
+     "table": "results/lens_consistency/mars_m1149_heldout/heldout_MACSJ1149.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 10,
+      "n_no_prediction": 0,
+      "rms_arcsec": 2.510663654070399,
+      "median_arcsec": 2.0347387309871876,
+      "p68_arcsec": 2.41343546858863,
+      "p95_arcsec": 3.7239682114031982,
+      "frac_over_3": 0.3
+     },
+     "isolated_misses": []
+    },
+    "CATS v4.1": {
+     "table": "results/lens_consistency/m1149_hst_heldout/heldout_macs1149-cats.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 11,
+      "n_no_prediction": 0,
+      "rms_arcsec": 2.4627472394188206,
+      "median_arcsec": 0.9967188419892731,
+      "p68_arcsec": 1.1798203552190414,
+      "p95_arcsec": 6.002017323416019,
+      "frac_over_3": 0.18181818181818182
+     },
+     "isolated_misses": []
+    },
+    "Sharon v4cor": {
+     "table": "results/lens_consistency/m1149_hst_heldout/heldout_macs1149-sharon.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 17,
+      "n_no_prediction": 0,
+      "rms_arcsec": 1.1246730762624892,
+      "median_arcsec": 0.8645070595508073,
+      "p68_arcsec": 1.0893486676877016,
+      "p95_arcsec": 2.397855648288681,
+      "frac_over_3": 0.0
+     },
+     "isolated_misses": []
+    }
+   },
+   "shared_misses": {},
+   "flags": [],
+   "floor": {
+    "model": "Sharon v4cor",
+    "p95_arcsec": 2.397855648288681,
+    "rms_arcsec": 1.1246730762624892
+   }
+  },
+  "SMACS 0723": {
+   "models": {
+    "glafic v2": {
+     "table": "results/lens_consistency/smacs_relics_heldout/heldout_glafic_v2.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 44,
+      "n_no_prediction": 0,
+      "rms_arcsec": 2.230529235461654,
+      "median_arcsec": 1.9815718878195276,
+      "p68_arcsec": 2.5203555374607376,
+      "p95_arcsec": 3.3905355364411394,
+      "frac_over_3": 0.1590909090909091
+     },
+     "isolated_misses": []
+    },
+    "zitrin-ltm-gauss v2": {
+     "table": "results/lens_consistency/smacs_relics_heldout/heldout_zitrin-ltm-gauss_v2.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 44,
+      "n_no_prediction": 0,
+      "rms_arcsec": 2.7331648928702434,
+      "median_arcsec": 1.7619958670416311,
+      "p68_arcsec": 2.855760311239571,
+      "p95_arcsec": 5.165067861495269,
+      "frac_over_3": 0.2727272727272727
+     },
+     "isolated_misses": []
+    },
+    "lenstool v1": {
+     "table": "results/lens_consistency/smacs_relics_heldout/heldout_lenstool_v1.ecsv",
+     "primary": false,
+     "stats": {
+      "n": 44,
+      "n_no_prediction": 0,
+      "rms_arcsec": 7.281434030918333,
+      "median_arcsec": 5.262669136639477,
+      "p68_arcsec": 9.434091597142617,
+      "p95_arcsec": 11.924952597424733,
+      "frac_over_3": 0.6590909090909091
+     },
+     "isolated_misses": []
+    }
+   },
+   "shared_misses": {
+    "17.1": [
+     "glafic v2",
+     "zitrin-ltm-gauss v2"
+    ],
+    "6.1": [
+     "glafic v2",
+     "zitrin-ltm-gauss v2"
+    ],
+    "7.1": [
+     "glafic v2",
+     "zitrin-ltm-gauss v2"
+    ]
+   },
+   "flags": [],
+   "floor": {
+    "model": "glafic v2",
+    "p95_arcsec": 3.3905355364411394,
+    "rms_arcsec": 2.230529235461654
+   }
+  },
+  "Abell 2744": {
+   "models": {
+    "Bergamini+23": {
+     "table": "results/lens_consistency/a2744_heldout/heldout_abell2744-bergamini23.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 43,
+      "n_no_prediction": 0,
+      "rms_arcsec": 1.7821740169944171,
+      "median_arcsec": 0.606236045977008,
+      "p68_arcsec": 1.8251466750415766,
+      "p95_arcsec": 4.070335731062782,
+      "frac_over_3": 0.11627906976744186
+     },
+     "isolated_misses": []
+    },
+    "MARS": {
+     "table": "results/lens_consistency/a2744_heldout/heldout_A2744.ecsv",
+     "primary": false,
+     "stats": {
+      "n": 11,
+      "n_no_prediction": 0,
+      "rms_arcsec": 23.96791064802784,
+      "median_arcsec": 1.6677785279221191,
+      "p68_arcsec": 4.863948082990591,
+      "p95_arcsec": 59.84765224271709,
+      "frac_over_3": 0.36363636363636365
+     },
+     "isolated_misses": []
+    }
+   },
+   "shared_misses": {},
+   "flags": [],
+   "floor": {
+    "model": "Bergamini+23",
+    "p95_arcsec": 4.070335731062782,
+    "rms_arcsec": 1.7821740169944171
+   }
+  },
+  "El Gordo": {
+   "models": {
+    "Caminha+23": {
+     "table": "results/lens_consistency/elgordo_heldout/heldout_elgordo-caminha23.ecsv",
+     "primary": true,
+     "stats": {
+      "n": 162,
+      "n_no_prediction": 0,
+      "rms_arcsec": 8.983478601885542,
+      "median_arcsec": 0.9376470134321714,
+      "p68_arcsec": 1.430420480204692,
+      "p95_arcsec": 7.3621493094169645,
+      "frac_over_3": 0.12345679012345678
+     },
+     "isolated_misses": []
+    }
+   },
+   "shared_misses": {},
+   "flags": [],
+   "floor": {
+    "model": "Caminha+23",
+    "p95_arcsec": 7.3621493094169645,
+    "rms_arcsec": 8.983478601885542
+   }
+  }
+ },
+ "flags": []
+}

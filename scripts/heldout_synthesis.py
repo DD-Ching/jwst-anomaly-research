@@ -156,6 +156,43 @@ def run(root: Path = ROOT) -> dict:
     }
 
 
+# Post hoc (not in the frozen plan): rule 2 with the model's *seen* images of the family counted as
+# members, where the stage stored their offsets (``seen_rows`` in its summary.json).
+SEEN = [
+    ("Abell 2744", "Bergamini+23", "a2744_heldout", ("models", "abell2744-bergamini23")),
+    ("El Gordo", "Caminha+23", "elgordo_heldout", ("all_heldout (reported only)",)),
+    ("MACS1149", "CATS v4.1", "m1149_hst_heldout", ("models", "macs1149-cats")),
+]
+
+
+def seen_inclusive_isolated(
+    off: dict[str, tuple[str, float]], seen: dict[str, float], family
+) -> list[str]:
+    """Post hoc rule 2 with seen images (offset = their stored fit residual) as family members."""
+    both = dict(off)
+    for iid, d in seen.items():
+        both.setdefault(iid, (family(iid), float(d)))
+    return sorted(i for i in isolated_misses(both) if i in off)
+
+
+def posthoc(root: Path = ROOT) -> dict:
+    from jwst_anomaly.lensmodel import image_family
+
+    rel = {(f, m): r for f, m, r, _ in TABLES}
+    out = {"label": "post hoc; not in the frozen plan", "seen_inclusive_isolated": {}}
+    for field, model, d, keys in SEEN:
+        node = json.loads((root / d / "summary.json").read_text())
+        for k in keys:
+            node = node[k]
+        off = offsets(Table.read(root / rel[(field, model)], format="ascii.ecsv"))
+        iso = seen_inclusive_isolated(off, node["seen_rows"], image_family)
+        out["seen_inclusive_isolated"][f"{field} / {model}"] = {
+            "n_seen": len(node["seen_rows"]),
+            "isolated": {i: off[i][1] for i in iso},
+        }
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
@@ -169,6 +206,9 @@ def main() -> None:
             s = v["stats"]
             print(f"  {m:22s} prim={v['primary']!s:5s} {s}  isolated={v['isolated_misses']}")
     print("FLAGS:", res["flags"])
+    ph = posthoc()
+    (a.out / "posthoc.json").write_text(json.dumps(_json(ph), indent=1) + "\n")
+    print("POST HOC:", ph)
 
 
 if __name__ == "__main__":

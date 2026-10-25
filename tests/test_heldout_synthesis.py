@@ -72,3 +72,10 @@ def test_field_floor_takes_lowest_rms_model():
 def test_stored_tables_exist():
     for _, _, rel, _ in hs.TABLES:
         assert (Path(__file__).resolve().parents[1] / hs.ROOT / rel).exists(), rel
+
+
+def test_seen_inclusive_isolated_uses_seen_members():
+    off = {"6c": ("6", 3.05), "7c": ("7", 4.0)}
+    seen = {"6a": 0.03, "6b": 0.05, "7a": 0.02}
+    fam = lambda i: i.rstrip("abc")  # noqa: E731
+    assert hs.seen_inclusive_isolated(off, seen, fam) == ["6c"]
