@@ -2609,6 +2609,17 @@ on MACS0416 is complete. Correction: the MACS0416 MARS pixel is 1.263″, not th
 Alternatives rejected: a larger pairing radius after the run. Revisit if: a finer-resolution
 independent MACS0416 model.
 
+**Addendum 2026-10-25aw (RELICS HST-era SMACS 0723 models vs the JWST-era Mahler+22 images).** `results/lens_consistency/smacs_relics_heldout/RESULT.md`,
+plan frozen in 33067681, script and tests before the run; rules 1–5 of addendum ap per model, Golubchik+22 Table 1
+(five HST-era families) as "seen", ICLv2 `arcs.dat` as the held-out list (non-spectroscopic z from `best.par`,
+ASSUMPTION). Seen 16, held-out 44 (all type N). Gate H fails for all three: glafic v2 2.23″ (84 % within 3″),
+zitrin-ltm-gauss v2 2.73″ (73 %), lenstool v1 7.28″ (34 %). The reported seen-family rms is as large (2.43″, 2.68″,
+9.27″), so the fails reflect these models' precision. Post hoc, lenstool v1 read at 0.8 × its arcsec map gives 2.29″
+on the seen families, so its map normalisation is probably not D_LS/D_S = 1 as read; its numbers are not a model test.
+Decision: no held-out-validated second model on SMACS 0723; no two-model extra-image stage there; no flag.
+Alternatives rejected: re-running gate H for lenstool at the post hoc 0.8 scale. Revisit if: a JWST-era SMACS 0723
+model fitted without part of the ICLv2 systems, or a documented lenstool v1 normalisation.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

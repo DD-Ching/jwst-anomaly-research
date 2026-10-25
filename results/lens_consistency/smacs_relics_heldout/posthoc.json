@@ -1,0 +1,137 @@
+{
+ "label": "post hoc; not in the frozen plan",
+ "models": {
+  "glafic_v2": {
+   "A": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 2.431934296763899,
+     "matched_fraction": 0.6875
+    },
+    "per_family": {
+     "1": 2.717567501366394,
+     "2": 2.517703801099542,
+     "3": 2.025159961786516,
+     "4": 1.7571707756728736,
+     "5": 3.043507583301085
+    }
+   },
+   "A_neg_x": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 7.880488587705349,
+     "matched_fraction": 0.0625
+    }
+   },
+   "A_neg_y": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 13.510637644874985,
+     "matched_fraction": 0.3125
+    }
+   },
+   "A_neg_xy": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 13.419706944879325,
+     "matched_fraction": 0.0
+    }
+   },
+   "A_x0.8": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 12.364715086509229,
+     "matched_fraction": 0.25
+    }
+   }
+  },
+  "zitrin-ltm-gauss_v2": {
+   "A": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 2.6829848697624645,
+     "matched_fraction": 0.6875
+    },
+    "per_family": {
+     "1": 1.8090412069818846,
+     "2": 1.9694209380163,
+     "3": 1.5494906411782527,
+     "4": 4.198974600480163,
+     "5": 3.226087937848454
+    }
+   },
+   "A_neg_x": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 7.535867076573695,
+     "matched_fraction": 0.1875
+    }
+   },
+   "A_neg_y": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 13.495386451790706,
+     "matched_fraction": 0.3125
+    }
+   },
+   "A_neg_xy": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 13.565795331447529,
+     "matched_fraction": 0.0
+    }
+   },
+   "A_x0.8": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 12.86813556925119,
+     "matched_fraction": 0.125
+    }
+   }
+  },
+  "lenstool_v1": {
+   "A": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 9.266659783462094,
+     "matched_fraction": 0.1875
+    },
+    "per_family": {
+     "1": 10.50433651235194,
+     "2": 9.885958714606812,
+     "3": 7.691228588457885,
+     "4": 10.84060120152736,
+     "5": 7.3152819228585155
+    }
+   },
+   "A_neg_x": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 8.87843689676133,
+     "matched_fraction": 0.0
+    }
+   },
+   "A_neg_y": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 13.778762951326039,
+     "matched_fraction": 0.1875
+    }
+   },
+   "A_neg_xy": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 13.43061513438626,
+     "matched_fraction": 0.0
+    }
+   },
+   "A_x0.8": {
+    "seen": {
+     "n": 16,
+     "rms_arcsec": 2.2897680308920716,
+     "matched_fraction": 0.75
+    }
+   }
+  }
+ }
+}

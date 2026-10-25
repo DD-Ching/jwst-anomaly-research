@@ -1,0 +1,211 @@
+{
+ "plan": "results/lens_consistency/smacs_relics_heldout/PLAN.md",
+ "held_out_list": "smacs0723-iclv2 arcs.dat (60 images)",
+ "seen_list": "results/lens_consistency/smacs_relics_heldout/golubchik22_images.ecsv (17 rows)",
+ "z_used": {
+  "1": 1.449,
+  "2": 1.3779,
+  "3": 1.9914,
+  "4": 2.174644,
+  "5": 1.425,
+  "6": 1.712766,
+  "7": 5.17,
+  "8": 11.758252,
+  "9": 2.805727,
+  "10": 1.427711,
+  "11": 1.647218,
+  "12": 1.764594,
+  "13": 2.996271,
+  "15": 1.97343,
+  "16": 1.096927,
+  "17": 2.048123,
+  "18": 1.386554,
+  "19": 1.356067,
+  "21": 2.500856,
+  "25": 3.42309,
+  "26": 4.583122
+ },
+ "provenance": "positions: observed (Mahler+22, Golubchik+22); z: observed (spec) or model value (ICLv2 best.par); residuals: model_prediction; thresholds: ASSUMPTION (mars_hff_heldout/PLAN.md)",
+ "models": {
+  "glafic_v2": {
+   "frame_offset": {
+    "n_pairs": 19,
+    "dx_arcsec": -0.18627043558262601,
+    "dy_arcsec": 0.25955999998927837,
+    "applied": true
+   },
+   "seen": 16,
+   "seen_systems": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+   ],
+   "held_out": 44,
+   "held_out_untested": [],
+   "types": {
+    "E": 0,
+    "N": 44,
+    "M": 0
+   },
+   "outside_map": 0,
+   "gate_H": {
+    "n_tested": 44,
+    "rms_arcsec": 2.230529235461654,
+    "matched_fraction": 0.8409090909090909,
+    "passes": false
+   },
+   "gate_H_type_E": {
+    "n_tested": 0,
+    "rms_arcsec": null,
+    "matched_fraction": 0.0,
+    "passes": false
+   },
+   "outcome": "does not reproduce",
+   "seen_rms_reported": {
+    "n": 16,
+    "rms_arcsec": 2.431934296763899,
+    "matched_fraction": 0.6875
+   },
+   "over_3arcsec": [
+    "6.1",
+    "7.1",
+    "10.2",
+    "13.1",
+    "17.1",
+    "17.3",
+    "21.1"
+   ]
+  },
+  "zitrin-ltm-gauss_v2": {
+   "frame_offset": {
+    "n_pairs": 19,
+    "dx_arcsec": -0.18627043558262601,
+    "dy_arcsec": 0.25955999998927837,
+    "applied": true
+   },
+   "seen": 16,
+   "seen_systems": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+   ],
+   "held_out": 44,
+   "held_out_untested": [],
+   "types": {
+    "E": 0,
+    "N": 44,
+    "M": 0
+   },
+   "outside_map": 0,
+   "gate_H": {
+    "n_tested": 44,
+    "rms_arcsec": 2.7331648928702434,
+    "matched_fraction": 0.7272727272727273,
+    "passes": false
+   },
+   "gate_H_type_E": {
+    "n_tested": 0,
+    "rms_arcsec": null,
+    "matched_fraction": 0.0,
+    "passes": false
+   },
+   "outcome": "does not reproduce",
+   "seen_rms_reported": {
+    "n": 16,
+    "rms_arcsec": 2.6829848697624645,
+    "matched_fraction": 0.6875
+   },
+   "over_3arcsec": [
+    "6.1",
+    "6.3",
+    "7.1",
+    "7.2",
+    "8.2",
+    "9.1",
+    "9.2",
+    "10.3",
+    "13.3",
+    "17.1",
+    "25.1",
+    "25.2"
+   ]
+  },
+  "lenstool_v1": {
+   "frame_offset": {
+    "n_pairs": 19,
+    "dx_arcsec": -0.18627043558262601,
+    "dy_arcsec": 0.25955999998927837,
+    "applied": true
+   },
+   "seen": 16,
+   "seen_systems": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+   ],
+   "held_out": 44,
+   "held_out_untested": [],
+   "types": {
+    "E": 0,
+    "N": 44,
+    "M": 0
+   },
+   "outside_map": 0,
+   "gate_H": {
+    "n_tested": 44,
+    "rms_arcsec": 7.281434030918333,
+    "matched_fraction": 0.3409090909090909,
+    "passes": false
+   },
+   "gate_H_type_E": {
+    "n_tested": 0,
+    "rms_arcsec": null,
+    "matched_fraction": 0.0,
+    "passes": false
+   },
+   "outcome": "does not reproduce",
+   "seen_rms_reported": {
+    "n": 16,
+    "rms_arcsec": 9.266659783462094,
+    "matched_fraction": 0.1875
+   },
+   "over_3arcsec": [
+    "6.1",
+    "6.2",
+    "6.3",
+    "7.2",
+    "8.1",
+    "9.1",
+    "9.2",
+    "10.1",
+    "10.2",
+    "10.3",
+    "12.1",
+    "12.3",
+    "13.1",
+    "13.2",
+    "13.3",
+    "13.4",
+    "15.1",
+    "15.3",
+    "17.1",
+    "17.2",
+    "17.3",
+    "18.1",
+    "18.3",
+    "19.1",
+    "19.3",
+    "21.1",
+    "21.3",
+    "25.1",
+    "25.2"
+   ]
+  }
+ }
+}
