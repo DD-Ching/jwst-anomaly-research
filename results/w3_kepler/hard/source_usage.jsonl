@@ -6,3 +6,4 @@
 {"t": 1792926222.6, "stage": "validate", "groups": ["old_bg", "val"]}
 {"t": 1792926543.6, "stage": "phaseA", "groups": ["eb_deep", "eb_single", "old_bg"]}
 {"t": 1792926543.7, "stage": "fetch search", "groups": ["search"]}
+{"t": 1792927207.2, "stage": "search", "groups": ["old_bg", "search", "val"]}

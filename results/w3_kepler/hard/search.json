@@ -1,0 +1,8 @@
+{
+ "label": "derived from observed light curves",
+ "rule": "local",
+ "stars": 200,
+ "missing": [],
+ "survivors_in_order": [],
+ "runs": {}
+}
