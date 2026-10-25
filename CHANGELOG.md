@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: MACS0416 MARS-only images in every CANUCS family: 2 absent, both ordinary; no candidate (D-034 addendum av)
+- **Result** (`results/lens_consistency/m0416_mars_only_all/RESULT.md`): addendum as extended to all 111 families;
+  gate R (reproduces the D115a target) and gate C2 (195 / 205) pass. 71 new families give 6 MARS-only targets, 2 read
+  `lensing_residual_input`. Post hoc: D34 is MARS's image of the unpaired catalogued D34.2 (3.12″ > 3.0″ radius); D15
+  is a MARS-only fold pair (critical curve 1.46″) the CANUCS model does not make; F200W shows nothing there. Vetting
+  records `docs/candidates/macs0416-mars-D15-extra.md`, `-D34-extra.md`. The MARS / CANUCS route on MACS0416 is done.
+- **Handoff:** no held-out-validated second model exists on another field yet (MARS fails gate H on Abell 370 and
+  MACS1149; addenda ap, at, au). Next: a MAST HLSP / Zenodo search for a JWST-era model of a field with a public
+  held-out image list, or the D115b Lenstool re-fit (owner machine). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-24: HST-era MACS1149 models (CATS v4.1, Sharon v4cor) vs the Schuldt+2024 new images: both fail gate H, no shared miss (D-034 addendum au)
 - **Result** (`results/lens_consistency/m1149_hst_heldout/RESULT.md`): CATS v4.1 already lists 201, 301, SXa; on 11
   held-out images rms 2.46″ (82 % within 3″), carried by family 401 (4.50″, 6.00″). Sharon v4cor: rms 1.12″, 17 / 17

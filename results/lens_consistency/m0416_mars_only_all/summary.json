@@ -1,0 +1,81 @@
+{
+ "plan": "results/lens_consistency/m0416_mars_only_all/PLAN.md",
+ "zip": {
+  "bytes": 2713478,
+  "md5": "2d87f9a36aadb430f7a7b937fe70b8c2",
+  "sha256": "0d4cc2c6342f597c4d418f1c416f9f355d72ab8ac9e55206bd6050dd60be8e14"
+ },
+ "canucs_cat_sha256": "339107a5c5041621d7bed4ecc8b4a51b5148a6913d4e513c3a5e783363f11bff",
+ "image_sha256": "c49bef71ecf218fdf6127c3bfaab481d521d21bbb53253aca4514f93cf21e371",
+ "frame_offset": {
+  "n_pairs": 242,
+  "dx_arcsec": -0.21782995465938992,
+  "dy_arcsec": 0.08230752422022647,
+  "applied": true
+ },
+ "n_families_old": 40,
+ "n_families_new": 71,
+ "gate_R": {
+  "passes": true,
+  "targets_old": [
+   {
+    "system": "D115a",
+    "ra": 64.0447423215326,
+    "dec": -24.06090060304654,
+    "mu": 29.188202952939257
+   }
+  ]
+ },
+ "depth_mag": 27.910098802027644,
+ "search_arcsec": 1.5,
+ "n_targets_new": 6,
+ "gate_C2": {
+  "all": {
+   "n_testable": 205,
+   "n_ok": 195,
+   "fraction": 0.9512195121951219
+  },
+  "arc_referenced": {
+   "n_testable": 63,
+   "n_ok": 60,
+   "fraction": 0.9523809523809523
+  },
+  "passes": true
+ },
+ "gate_C2_new_families_reported": {
+  "all": {
+   "n_testable": 164,
+   "n_ok": 156,
+   "fraction": 0.9512195121951219
+  },
+  "arc_referenced": {
+   "n_testable": 50,
+   "n_ok": 48,
+   "fraction": 0.96
+  },
+  "passes": true
+ },
+ "control_classes_local": {
+  "absent": 10,
+  "confused": 10,
+  "inconsistent_reference": 28,
+  "no_reference": 43,
+  "recovered": 147,
+  "undetectable": 9,
+  "undetectable_local": 38
+ },
+ "target_classes_local": {
+  "absent": 2,
+  "confused": 1,
+  "undetectable": 1,
+  "undetectable_local": 2
+ },
+ "target_readings": {
+  "lensing_residual_input": 2,
+  "no_reading": 4
+ },
+ "sheet": [
+  "D15 64.045460 -24.063220",
+  "D34 64.047690 -24.061432"
+ ]
+}

@@ -70,9 +70,8 @@ def sheet_rows(rows: list[dict], n: int = SHEET_MAX) -> list[dict]:
     return [r[i] for i in np.argsort(key, kind="stable")[::-1][:n]]
 
 
-def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
-    if file_sha256(cat_path) != mc.CAT_SHA or file_sha256(image) != mc.IMAGE_SHA:
-        raise ValueError("--cat / --image are not the pinned CANUCS DR1 MACS0416 files")
+def load(zdir: Path):
+    """The MARS model and the shifted CANUCS image / extra-prediction tables (addendum as)."""
     meta = mh.fetch_zip(requests.Session(), zdir)
     folder, tag, z_lens = mh.FIELDS[me.FIELD]
     base = f"{mh.ROOT}{folder}/deflection_angle_{tag}_"
@@ -88,6 +87,105 @@ def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
     t = mo.split_seen(mo.shift(canucs, off), mars)
     pred = mo.shift(Table.read(me.PREDICTED), off)
     grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, t), mh.GRID_STEP)
+    return meta, model, t, pred, off, grid
+
+
+def critical_distance(model, x: float, y: float, z: float, half=6.0, step=0.1) -> float:
+    """Distance (arcsec) from (x, y) to the nearest grid point where det A has the other sign."""
+    g = np.arange(-half, half + step / 2, step)
+    gx, gy = np.meshgrid(x + g, y + g)
+    a = model.lens_map(np.array([x, *gx.ravel()]), np.array([y, *gy.ravel()]), z)
+    det = a["a11"] * a["a22"] - a["a12"] * a["a21"]
+    other = np.sign(det[1:]) != np.sign(det[0])
+    if not other.any():
+        return float("inf")
+    return float(np.hypot(gx.ravel() - x, gy.ravel() - y)[other].min())
+
+
+def posthoc(zdir: Path, out: Path = OUT) -> dict:
+    """Post hoc (not a frozen rule), per ``lensing_residual_input`` target: the CANUCS extra
+    predictions of its family, the MARS critical-curve distance and the family's MARS images."""
+    _, model, t, pred, off, grid = load(zdir)
+    psys = np.asarray(pred["system"], str)
+    cm, _, _ = lc.load_model(mc.MODEL)  # the pinned CANUCS Lenstool model (D-044)
+    lc.apply_frame_offset(mc.MODEL, cm)
+    canucs = Table.read(mo.FIELDS[me.FIELD][0])  # observed images, CANUCS frame (targets' frame)
+    canucs["system"] = [lensmodel.image_family(str(i)) for i in canucs["image_id"]]
+    res = []
+    for tg in Table.read(out / "targets.ecsv"):
+        if tg["reading"] != "lensing_residual_input":
+            continue
+        s = str(tg["system"])
+        z = float(np.asarray(t["z"])[np.asarray(t["system"], str) == s][0])
+        fams, tgs = mp.solve(model, grid, t, pred, off, [s])
+        dec = float(tg["dec"]) + off["dy_arcsec"] / 3600.0  # ``mp.unshift`` inverse
+        ra = float(tg["ra"]) + off["dx_arcsec"] / 3600.0 / np.cos(np.deg2rad(dec))
+        x, y = (float(v) for v in model.to_frame(ra, dec))
+        fam = np.asarray(t["system"], str) == s
+        bt = lensmodel.backtrace_images(model, t[fam], {})
+        per_image = []
+        for i, (bx, by) in enumerate(zip(bt["beta_x"], bt["beta_y"], strict=True)):
+            p = lensmodel.find_images(model, grid, float(bx), float(by), z)
+            d = np.hypot(np.asarray(p["x"], float) - x, np.asarray(p["y"], float) - y)
+            per_image.append(
+                {
+                    "source_from": str(t["image_id"][fam][i]),
+                    "n_images": len(p),
+                    "nearest_to_target_arcsec": float(d.min()) if len(d) else float("inf"),
+                }
+            )
+        cx, cy = (float(v) for v in cm.to_frame(float(tg["ra"]), float(tg["dec"])))
+        res.append(
+            {
+                "system": s,
+                "canucs_critical_distance_arcsec": critical_distance(cm, cx, cy, z, half=10.0),
+                "source_per_image": per_image,
+                "z": z,
+                "abs_mu": float(tg["abs_mu"]),
+                "n_canucs_extra_predictions": int((psys == s).sum()),
+                "mars_critical_distance_arcsec": critical_distance(model, x, y, z),
+                "observed_images": [
+                    {
+                        "id": str(r["image_id"]),
+                        "paired_to_mars": str(r["image_id"])
+                        in {im["id"] for im in fams.get(s, [])},
+                        "d_to_target_arcsec": float(
+                            np.hypot(
+                                (r["ra"] - tg["ra"]) * np.cos(np.radians(tg["dec"])),
+                                r["dec"] - tg["dec"],
+                            )
+                            * 3600
+                        ),
+                    }
+                    for r in canucs[np.asarray(canucs["system"], str) == s]
+                ],
+                "mars_images_paired": [
+                    {"id": im["id"], "abs_mu": im["mu"]} for im in fams.get(s, [])
+                ],
+                "mars_only_images": [
+                    {
+                        "abs_mu": o["mu"],
+                        "d_to_target_arcsec": float(
+                            np.hypot(
+                                (o["ra"] - tg["ra"]) * np.cos(np.radians(tg["dec"])),
+                                o["dec"] - tg["dec"],
+                            )
+                            * 3600
+                        ),
+                    }
+                    for o in tgs
+                ],
+            }
+        )
+    p = {"label": "post hoc, not a frozen rule", "map_pixel_arcsec": 1.515, "targets": res}
+    (out / "posthoc.json").write_text(json.dumps(_clean(p), indent=1, allow_nan=False) + "\n")
+    return p
+
+
+def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
+    if file_sha256(cat_path) != mc.CAT_SHA or file_sha256(image) != mc.IMAGE_SHA:
+        raise ValueError("--cat / --image are not the pinned CANUCS DR1 MACS0416 files")
+    meta, model, t, pred, off, grid = load(zdir)
     bt = lensmodel.backtrace_images(model, t, {})
     tb = t.copy()
     tb["beta_x"], tb["beta_y"] = bt["beta_x"], bt["beta_y"]
@@ -157,10 +255,14 @@ def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--zip", type=Path, required=True, help="directory for the MARS zip")
-    ap.add_argument("--cat", type=Path, required=True)
-    ap.add_argument("--image", type=Path, required=True)
+    ap.add_argument("--cat", type=Path)
+    ap.add_argument("--image", type=Path)
+    ap.add_argument("--posthoc", action="store_true", help="only the post hoc table (after a run)")
     a = ap.parse_args(argv)
     try:
+        if a.posthoc:
+            print(json.dumps(posthoc(a.zip), indent=1))
+            return 0
         s = run(a.zip, a.cat, a.image)
     finally:
         (a.zip / mh.ZIP).unlink(missing_ok=True)

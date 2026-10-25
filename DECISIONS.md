@@ -2597,6 +2597,17 @@ second model on MACS1149 under the frozen rule; no two-model extra-image stage t
 promoting Sharon's near-pass post hoc. Revisit if: the CANUCS v2 input list, or a JWST-era MACS1149 model fitted
 without the Schuldt systems.
 
+**Addendum 2026-10-25av (MACS0416 MARS-only images in every CANUCS family).** `results/lens_consistency/m0416_mars_only_all/RESULT.md`,
+plan frozen in 8cb26331, rule functions and tests in 874e50ff, both before the run; addendum as rules unchanged, run on
+all 111 CANUCS families. Gate R (the 40 addendum-as families reproduce its one D115a target) passes; gate C2 passes
+(195 / 205, arc-referenced 60 / 63). The 71 new families give 6 MARS-only targets; 2 read `lensing_residual_input`
+(D15 |μ| 11.2, D34 |μ| 66.8). Post hoc vetting: D34's target is 3.12″ from the unpaired catalogued D34.2 (pairing
+radius); D15's is a robust MARS fold pair 1.46″ from the MARS critical curve that the CANUCS model (critical curve
+0.67″ away, 0 extra predictions) does not make, and F200W shows no flux (F_pred / σ 69.7). Decision: no candidate;
+both records closed (`docs/candidates/macs0416-mars-D15-extra.md`, `-D34-extra.md`); the MARS / CANUCS two-model route
+on MACS0416 is complete. Alternatives rejected: a larger pairing radius after the run. Revisit if: a finer-resolution
+independent MACS0416 model.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
