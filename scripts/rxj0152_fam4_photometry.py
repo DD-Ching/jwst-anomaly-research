@@ -283,11 +283,11 @@ def main() -> None:
         v[name] = any(
             SkyCoord(c["ra"], c["dec"], unit="deg").separation(SkyCoord(*p, unit="deg")).arcsec
             < 1.0
-            for c in r2["counterparts"]
+            for c in r2.get("counterparts", [])
         )
     v_pass = all(v.values())
     # gate C
-    accepted, details = 0, {}
+    accepted, n_images, details = 0, 0, {}
     seg_ref, fl = res["seg_ref"], res["fluxes"]
     for fam in ("2", "3", "5", "6"):
         ids = [i for i in res["pos"] if i.split(".")[0] == fam]
@@ -304,7 +304,8 @@ def main() -> None:
             )
             details[i] = {"labels": labs[i], "accepted": bool(ok)}
             accepted += int(ok)
-    c_pass = known_case_pass(accepted, 12)
+            n_images += 1
+    c_pass = known_case_pass(accepted, n_images)
     # gate D
     sigma = aperture_noise(images[REF][0], seg_ref, wcs_ref)
     lo, hi = res["window"]
