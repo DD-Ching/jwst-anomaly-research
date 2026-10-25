@@ -341,11 +341,49 @@ def shoulder(s, quarter, rel, sig, run, span) -> dict:
     return {"shoulder_pre": bool(pre.any()), "shoulder_post": bool(post.any()), "shoulder_ok": ok}
 
 
-def screen_star(st, sap, err, frac, frac_override=None) -> list[dict]:
+LOCAL_MIN = 0.10  # local shoulder (hard/PLAN.md): rel - b >= max(LOCAL_MIN * b, ...
+LOCAL_NSIG = 5.0  # ... LOCAL_NSIG * max(sigma, s_B)) ...
+LOCAL_NCAD = 2  # ... in at least LOCAL_NCAD cadences of the shoulder window, on each side
+LOCAL_MIN_B = 20  # fewer good cadences than this in the baseline window: side insufficient
+
+
+def shoulder_local(s, quarter, rel, sig, run, span) -> dict:
+    """Local shoulder rule (``results/w3_kepler/hard/PLAN.md`` section 3). Per side, in the run
+    edge's quarter: shoulder window S = (0, EDGE_FRAC * span] from the edge, baseline window
+    B = (EDGE_FRAC * span, EDGE_FRAC * span + max(1 d, span)] beyond it. b = median rel in B,
+    s_B = 1.4826 * MAD. A cadence of S is locally bright if rel - b >= max(LOCAL_MIN * b,
+    LOCAL_NSIG * max(sigma, s_B)). A side is "ok" with >= LOCAL_NCAD bright cadences, "insufficient"
+    if B has < LOCAL_MIN_B cadences or S none, else "no". Passes only if both sides are "ok"."""
+    i, j = run
+    t = np.array([x[0] for x in s])
+    ws = wz.EDGE_FRAC * span
+    wb = max(1.0, span)
+    out = {}
+    for side, k, sgn in (("pre", i, -1), ("post", j, 1)):
+        d = (t[k] - t) if sgn < 0 else (t - t[k])
+        same = quarter == quarter[k]
+        sw = same & (d > 0) & (d <= ws)
+        bw = same & (d > ws) & (d <= ws + wb)
+        if bw.sum() < LOCAL_MIN_B or not sw.any():
+            out[f"local_{side}"], out[f"local_{side}_n"] = "insufficient", 0
+            continue
+        b = float(np.median(rel[bw]))
+        s_b = 1.4826 * float(np.median(np.abs(rel[bw] - b)))
+        thr = np.maximum(LOCAL_MIN * b, LOCAL_NSIG * np.maximum(sig[sw], s_b))
+        n = int(((rel[sw] - b) >= thr).sum())
+        out[f"local_{side}"], out[f"local_{side}_n"] = ("ok" if n >= LOCAL_NCAD else "no"), n
+    out["local_ok"] = out["local_pre"] == "ok" and out["local_post"] == "ok"
+    out["local_insufficient"] = "insufficient" in (out["local_pre"], out["local_post"])
+    return out
+
+
+def screen_star(st, sap, err, frac, frac_override=None, local=False) -> list[dict]:
     """Quality mask, per-quarter normalisation, run finding and vetting of one (possibly injected)
     light curve. pass = common mode, bounded fast edges (Kepler quarter rule), one-off and W3
     shoulders. The achromatic test is not applicable (single band) and never counts as passed.
-    pass_no_shoulder: the same without the shoulder test (secondary)."""
+    pass_no_shoulder: the same without the shoulder test (secondary). local=True adds the local
+    shoulder rule (hard/PLAN.md): pass_local, and single-window outcomes without the one-off test
+    (window_old, window_local)."""
     good = good_mask(st)
     rel, sig = normalise(st, sap, err, good)
     fr = dict(frac)
@@ -383,6 +421,13 @@ def screen_star(st, sap, err, frac, frac_override=None) -> list[dict]:
         rec["insufficient"] = bool(
             e["edge_class"] == "insufficient" and rec["common_mode_ok"] and rec["oneoff_ok"]
         )
+        if local:
+            lo = shoulder_local(s, quarter, r_s, sg_s, run, span)
+            rec.update(lo)
+            rec["pass_local"] = bool(base_ok and lo["local_ok"])
+            win = rec["common_mode_ok"] and rec["sharp_ok"]
+            rec["window_old"] = bool(win and sh["shoulder_ok"])
+            rec["window_local"] = bool(win and lo["local_ok"])
         out.append(rec)
     return out
 

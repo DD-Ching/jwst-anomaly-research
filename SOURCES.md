@@ -1921,3 +1921,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - **Kepler DR25 stellar properties:** NASA Exoplanet Archive TAP table `keplerstellar`, delivery
   `q1_q17_dr25_stellar`, https://exoplanetarchive.ipac.caltech.edu/TAP/sync (query and sha256 in
   `sample.json`).
+
+## W3 / Kepler hard tests (accessed 2026-10-25; `results/w3_kepler/hard/`)
+- **Kepler Eclipsing Binary Catalog, third revision:** Kirk et al. 2016, AJ 151, 68,
+  DOI 10.3847/0004-6256/151/3/68; VizieR J/AJ/151/68 (table 9, systems with no repeating events,
+  `inputs/kirk2016_table9.csv`).
+- **Kepler DR25 TCEs:** NASA Exoplanet Archive TAP table `q1_q17_dr25_tce`, rows with
+  tce_depth ≥ 400,000 ppm (`inputs/tce_depth_ge_0.4.csv`).
+- **Light curves:** Kepler DR25 long cadence, as in "W3 / Kepler dense-cadence pilot" (per-file
+  sha256 in `files_<group>.json`).

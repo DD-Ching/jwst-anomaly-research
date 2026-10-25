@@ -1,0 +1,52 @@
+{
+ "label": "observed (session clocks and ledger)",
+ "start_utc": "10:42:29Z (2026-10-25)",
+ "plan_commit_utc": "10:53:04Z (db00218)",
+ "stage_log_utc": [
+  [
+   "fetch old_bg",
+   "10:53:21Z"
+  ],
+  [
+   "fetch eb_deep",
+   "10:53:51Z"
+  ],
+  [
+   "fetch eb_single",
+   "10:54:06Z"
+  ],
+  [
+   "phaseA",
+   "10:54:54Z"
+  ],
+  [
+   "fetch val",
+   "11:02:56Z"
+  ],
+  [
+   "validate",
+   "11:03:42Z"
+  ],
+  [
+   "phaseA",
+   "11:09:03Z"
+  ],
+  [
+   "fetch search",
+   "11:09:03Z"
+  ],
+  [
+   "search",
+   "11:20:07Z"
+  ]
+ ],
+ "phaseA_inject_elapsed_s_rerun": 326.4,
+ "validation_inject_elapsed_s": 271.4,
+ "cores": 4,
+ "ledger_bytes": 2186756696,
+ "ledger_cap_bytes": 3000000000,
+ "vetting_reserve_unused_bytes": 813243304,
+ "ledger_note": "plain JSONL kept out of git (> 1 MB); net_ledger.jsonl.gz is the snapshot. Includes VizieR, NExScI and Villanova metadata before the plan commit.",
+ "phaseA_note": "phase A ran twice (identical summary): the second run only moved per-window runs to phaseA_runs.json.gz",
+ "cache": "column cache under the session data root, deleted after the review re-check (not stored)"
+}

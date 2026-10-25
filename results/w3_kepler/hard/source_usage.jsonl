@@ -1,0 +1,9 @@
+{"t": 1792925601.1, "stage": "fetch old_bg", "groups": ["old_bg"]}
+{"t": 1792925631.1, "stage": "fetch eb_deep", "groups": ["eb_deep"]}
+{"t": 1792925646.8, "stage": "fetch eb_single", "groups": ["eb_single"]}
+{"t": 1792925694.0, "stage": "phaseA", "groups": ["eb_deep", "eb_single", "old_bg"]}
+{"t": 1792926176.8, "stage": "fetch val", "groups": ["val"]}
+{"t": 1792926222.6, "stage": "validate", "groups": ["old_bg", "val"]}
+{"t": 1792926543.6, "stage": "phaseA", "groups": ["eb_deep", "eb_single", "old_bg"]}
+{"t": 1792926543.7, "stage": "fetch search", "groups": ["search"]}
+{"t": 1792927207.2, "stage": "search", "groups": ["old_bg", "search", "val"]}

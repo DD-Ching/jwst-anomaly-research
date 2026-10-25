@@ -1,0 +1,145 @@
+{
+ "label": "simulated (model only, no data)",
+ "cells": [
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 0.1,
+   "u0_values": 157,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 0.3,
+   "u0_values": 159,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 1.0,
+   "u0_values": 159,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 3.0,
+   "u0_values": 159,
+   "fail_share": 0.006
+  },
+  {
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE": 10.0,
+   "u0_values": 159,
+   "fail_share": 0.006
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 0.1,
+   "u0_values": 152,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 0.3,
+   "u0_values": 153,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 1.0,
+   "u0_values": 153,
+   "fail_share": 0.052
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 3.0,
+   "u0_values": 153,
+   "fail_share": 0.046
+  },
+  {
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE": 10.0,
+   "u0_values": 153,
+   "fail_share": 0.046
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 0.1,
+   "u0_values": 157,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 0.3,
+   "u0_values": 159,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 1.0,
+   "u0_values": 159,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 3.0,
+   "u0_values": 159,
+   "fail_share": 0.006
+  },
+  {
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE": 10.0,
+   "u0_values": 159,
+   "fail_share": 0.006
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 0.1,
+   "u0_values": 150,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 0.3,
+   "u0_values": 152,
+   "fail_share": 0.0
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 1.0,
+   "u0_values": 152,
+   "fail_share": 0.053
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 3.0,
+   "u0_values": 152,
+   "fail_share": 0.053
+  },
+  {
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE": 10.0,
+   "u0_values": 152,
+   "fail_share": 0.053
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+ "label": "derived",
+ "rule": "local",
+ "common_le_0.10": true,
+ "eclipse_le_0.10": true,
+ "fade_le_0.10": true,
+ "long_dip_le_0.10": true,
+ "pspl_le_0.10": true,
+ "quarter_edge_le_0.10": true,
+ "quarter_step_le_0.10": true,
+ "single_eclipse_le_0.10": true,
+ "single_point_le_0.10": true,
+ "synth_bright_eclipse_le_0.10": true,
+ "real_bright_eclipse (phase A, seen backgrounds, conditional)_le_0.10": true,
+ "eb_windows_le_0.10": true,
+ "eb_stars_le_0.10": true,
+ "eb_min_stars": true,
+ "bright_min_sources": true,
+ "pass": true,
+ "all_cells_ge_0.50": true,
+ "val_stars_available": 25
+}
