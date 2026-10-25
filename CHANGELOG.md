@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SN Eos HST F110W 2024 − 2012 difference-image ratio: R_HST 1.66 (σ_ln 0.15), "agrees" with the model; cannot separate Table S1 1.81 from JWST 1.38
+- **Result** (`results/transients/sneos_hst/RESULT.md`, plan frozen before any pixel): 4 of 6 PID 17504 F110W visits
+  minus CLASH 2012 pass registration, detection and injection gates. Q1 (`sneos_ratio.decide`): "agrees" with
+  R_model 1.162 (Δ 0.354 < 3σ 0.456; not stored). Q2: consistent with both Table S1 1.805 and JWST 1.382.
+  101.1 is at S/N 3–6.5 per visit, which limits the precision.
+- **Deviation:** the template pre-shift used a NaN edge that biased re-registration (5 / 6 visits failed on the
+  first run); fixed to `mode="nearest"` and re-run. Synthetic test does not reproduce the edge bias.
+- **Post hoc:** random apertures kept 0.85″ (not 0.6″) from the SN: R 1.48, σ_ln 0.17, 3 visits, same decisions
+  (`posthoc_minsep085.json`); the central value depends on that choice.
+- **Hosts:** `s3://stpubdata/hst/public` byte ranges work; MAST and VizieR answer.
+- **Handoff:** next: a deeper HST ratio needs the visits stacked (one ratio per epoch-group) or a forced-PSF fit; a
+  ratio difference between HST F110W 2024 and JWST is not established by our pixels. #374 waits for the 2026-10-26
+  weekly run.
+
 ## 2026-10-25: W3 / Kepler fixed-rule expansion search: 500 new stars, 1,732 star-years, 0 survivors; one catalogued EB triggers the pre-screen (D-107 addendum 2)
 - **Scope:** owner-authorized exploratory search, `results/w3_kepler/expand/` (frozen `PLAN.md` before any new
   flux). The #529 rule is unchanged.
