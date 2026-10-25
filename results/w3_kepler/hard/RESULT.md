@@ -18,7 +18,9 @@
   before any new flux or comparison.
   - A wording-only fix of the §3.1 timing followed 15 s later, before any data.
   - The model check behind §3.1 is now stored (`local_model_check_script.py.txt` →
-    `local_model_check.json`, identical numbers).
+    `local_model_check.json`, identical numbers). Its shares are over the 150–159 u0 values per cell
+    that give ≥ 3 dim cadences. The script re-implements the rule's windows; it does not call
+    `shoulder_local`.
 - **Labels:** injections are simulated; light curves and their flags are observed; outcomes are
   derived.
   - Hard cases give **conditional** false passes, not sky rates.
@@ -52,8 +54,8 @@ Both rules were evaluated on the same injections, 100 per family on the 23 old_b
     (`phaseA_runs.json.gz`; 137 of the 2,826 bounded windows are local-insufficient, post hoc).
   - So real deep eclipses do not produce shoulders here. This does not favour either rule.
   - The full chain passes 0 stars.
-  - One window (KIC 5262664) passes the one-off test (post hoc). It is 1,543 cadences (31.5 d,
-    Q5) long, while the TCE duration is 15 h, so it is probably not an eclipse; it is unverified
+  - One window (KIC 5262664) passes the one-off test (post hoc). It has 1,543 cadences over a
+    span of 32.2 d (Q5), while the TCE duration is 15 h, so it is probably not an eclipse; it is unverified
     and possibly instrumental. Its edges are not bounded and it has no shoulder.
 - **Real single events** (Kirk et al. 2016 table 9, 32 stars): none is flagged.
   - Their deepest observed relative flux is 0.607, i.e. 0.54 mag (post hoc, `eb_single_min_rel`),
@@ -67,11 +69,13 @@ Both rules were evaluated on the same injections, 100 per family on the 23 old_b
 Most local-rule rejections are guaranteed by the family definitions:
 - **single_point** injects exactly one bright cadence per side; the rule needs ≥ 2.
 - **synth_bright_eclipse** has a 2–10 d plateau and an eclipse of ≤ 2 d, so the baseline window
-  lies inside the brightening on at least one side.
+  lies mostly inside the brightening on at least one side. This is a geometric argument; the
+  overlap was not counted.
 - **long_dip and quarter_edge** contain no brightening.
 - **real_bright_eclipse** uses the 4 already seen brightenings that motivated the rule (17–931
-  shoulder-like cadences per star, `../posthoc2.json`). The star with the shortest stretch
-  (3834001, 17 cadences) gave the old rule 1 pass in 25.
+  shoulder-like cadences per star in total, `../posthoc2.json`). For dips placed inside them, the
+  local baseline is usually part of the same brightening; this was not counted. The star with the
+  fewest such cadences (3834001, 17) gave the old rule 1 pass in 25.
 
 The case the local rule would pass is **≥ 2 cadences that are bright relative to the local
 baseline, confined to the shoulder window on both sides of a dip**. One example is two flares

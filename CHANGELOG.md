@@ -14,15 +14,16 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   family definitions; RESULT §2 names the untested case (≥ 2 bright cadences in both shoulder
   windows, e.g. flares).
 - **Real deep EBs** (10 stars, 2,892 windows): no window has a shoulder under either rule. The 32
-  Kirk single events are all shallower than 1 mag (deepest 0.54 mag) and are never flagged.
+  Kirk single events are all shallower than 1 mag (deepest 0.54 mag, post hoc) and are never
+  flagged.
 - **Validation** of the local rule on 25 unread stars passes:
   - W3 55–86 / 100 per cell (ρ 0.1 / blend 0.7 / t_E 10 d: 55, Wilson lower bound 0.45);
   - 10 families 0 / 100.
-- **Cost:** 177 of 2,000 val W3 injections lost (10.6 % of the old rule's recoveries; 72 of them
-  at t_E 10 d); 141 are local-insufficient.
+- **Cost:** 177 of 2,000 val W3 injections lost (10.6 % of the old rule's recoveries). Post hoc:
+  72 of them at t_E 10 d, and 141 local-insufficient.
 - **Search:** 200 new stars, 0 flagged runs, 0 survivors.
-- **Failed approach:** a plain-JSON per-window dump (2.3 MB) and the ledger (2.4 MB) exceeded the
-  1 MB rule. They are now stored as gzip.
+- **Failed approach:** a plain-JSON per-window dump and the ledger exceeded the 1 MB rule (about
+  2.3 and 2.4 MB, not stored). They are now stored as gzip.
 
 ## 2026-10-25: SLICE RX J0152 vs three RELICS maps: no flag; Lenstool v1 amplitude normal here (D-034 addendum be)
 - **Result** (`results/lens_consistency/slice_relics_rxj0152/RESULT.md`): RX J0152.7−1357 (RELICS `cl0152m13`) has three

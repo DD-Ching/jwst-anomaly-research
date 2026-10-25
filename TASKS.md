@@ -87,7 +87,7 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - t_E = 10 d loses 16–21 / 100 per cell, 14–17 of them local-insufficient;
     - the local rule was never tested against brightenings of ≥ 2 cadences confined to both
       shoulder windows (e.g. flares);
-    - untested ordinary families: flares next to dips, dippers, heartbeat stars, pixel-level
+    - untested ordinary families: dippers, heartbeat stars, spotted-star dips, pixel-level
       artefacts;
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.

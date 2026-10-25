@@ -499,7 +499,7 @@ def stage_search(a) -> None:
     if not gate["pass"]:
         raise SystemExit("validation gate not passed: the search group is not read")
     rule = gate["rule"]
-    usage("search", ["search", "val", "old_bg"])
+    usage("search", ["search", "val"])
     order = [k for k in group("search") if have(k)]
     frac = comparison_frac(order + group("val"), order)
     with ProcessPoolExecutor(a.cores) as ex:
