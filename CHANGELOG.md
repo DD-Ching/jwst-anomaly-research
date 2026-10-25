@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: MACS0717 MARS held-out stage: no held-out spectroscopic images exist (input check)
+- **Result:** the MARS MACS0717 catalogue (31 images, systems 1, 3, 4, 6, 12, 13, 14, 15, 19, 68;
+  `results/lens_consistency/mars_hff_inputs/imageplane_MACSJ0717.ecsv`) is exactly Limousin et al. 2016's ten
+  spectroscopic systems (A&A 588, A99, Tables 5–6), and all 26 stored Sharon v4cor gold images
+  (`macs0717_models/sharon_gold_images.ecsv`) are MARS images. So no spectroscopic image is held out from MARS on
+  MACS0717; the CATS list adds only model-z systems (not a held-out test: z is the other model's parameter). One web
+  search found no JWST-era MACS0717 image list (VENUS 6882 imaging only, D-041 inputs). MARS stays unvalidated on
+  MACS0717; no run, no flag.
+- **Handoff:** MACS0717 held-out route closed until a JWST-era spectroscopic image list is published. Next unchanged:
+  the D115b Lenstool re-fit (owner machine) or a newly public JWST-era list. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: El Gordo third-image candidates at DJA NIRSpec redshifts: no input (D-034 addendum ba)
 - **Result** (`results/lens_consistency/elgordo_third_specz/RESULT.md`): DJA v4.6 (all 99,478 rows) has no row within
   0.5″ of any Diego+23 image, so the frozen control gate Z fails and 6c / 13c / 20c (and 4c, 15c, 18c, 19c) are

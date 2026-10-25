@@ -778,6 +778,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Other Zenodo lens-model records seen in the same search, not used: SPT-CL J0546-5345 LTM (10.5281/zenodo.16534337),
     Abell S1063 WSLAP+ JWST 2025 (10.5281/zenodo.17726321, 1.0 GB zip), CANUCS thesis data with MACS0416 and Bullet
     image lists (10.5281/zenodo.22883437).
+- Limousin et al. 2016, "Strong-lensing analysis of MACS J0717.5+3745 from Hubble Frontier Fields observations: How
+  well can the mass distribution be constrained?", A&A 588, A99, arXiv:1510.08077v2 (ar5iv HTML Tables 5–6 read via a
+  summarising fetch, accessed 2026-10-25): ten spectroscopic systems 1, 3, 4, 6, 12, 13, 14, 15, 19, 68; used only to
+  show that no spectroscopic image is held out from the MARS MACS0717 catalogue (CHANGELOG 2026-10-25).
 - MARS HFF models (`results/lens_consistency/mars_hff_inputs/`, accessed 2026-10-24): Cha & Jee 2023, "Model-Independent
   Mass Reconstruction of the Hubble Frontier Field Clusters with MARS Based on Self-Consistent Strong Lensing Data",
   arXiv:2301.08765 (not read; README and code in the record read); Zenodo record 10.5281/zenodo.7804575
