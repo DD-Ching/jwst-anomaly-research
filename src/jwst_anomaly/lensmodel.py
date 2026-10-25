@@ -546,6 +546,71 @@ RXC2211_RELICS_GLAFIC: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS Lenstool v1, GLAFIC v2 and Zitrin LTM-Gauss v1 maps of RX J0152.7-1357 (CL0152; z_lens
+#: 0.8269 from SLICE Table 1; Acebron et al. 2019, ApJ 874, 132; HLSP DOI 10.17909/T9SP45, accessed
+#: 2026-10-25), deflection in arcsec at D_LS/D_S = 1 (RELICS readme v3); SLICE held-out check
+#: (results/lens_consistency/slice_relics_rxj0152/PLAN.md).
+_RELICS_CL0152 = "https://archive.stsci.edu/hlsps/relics/cl0152m13/models/"
+_RELICS_CL0152_LENSTOOL = f"{_RELICS_CL0152}lenstool/hlsp_relics_model_model_cl0152m13_lenstool_v1"
+_RELICS_CL0152_GLAFIC = f"{_RELICS_CL0152}glafic/v2/hlsp_relics_model_model_cl0152m13_glafic_v2"
+_RELICS_CL0152_ZITRIN = (
+    f"{_RELICS_CL0152}zitrin-ltm-gauss/v1/hlsp_relics_model_model_cl0152m13_zitrin-ltm-gauss_v1"
+)
+CL0152_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_CL0152_LENSTOOL}_x-arcsec-deflect.fits",
+        "12df92a1ef2446f981f9dcc62376c3e7f5bac40fe22787b7ccbd238ff22ef057",
+    ),
+    "alpha_y": (
+        f"{_RELICS_CL0152_LENSTOOL}_y-arcsec-deflect.fits",
+        "a6d3a1036f8490bb004bed18318cc00402c95506c45ff074bf712b9478f16ada",
+    ),
+    "kappa_map": (
+        f"{_RELICS_CL0152_LENSTOOL}_kappa.fits",
+        "bacfbd83b5460d3e3dae94cfdf6d86150459d4eb0d8d4f9be8393d854d5afbc6",
+    ),
+    "mag_z2": (
+        f"{_RELICS_CL0152_LENSTOOL}_z02-magnif.fits",
+        "34a01a544625631e8742c3cf2006662cf9eb92b1e4b6e10504e4d2b6b4c2d91c",
+    ),
+}
+CL0152_RELICS_GLAFIC: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_CL0152_GLAFIC}_x-arcsec-deflect.fits",
+        "4c9b4d79c9079e043bbb0e876ad720372ad715becaaa258a9ce14b50c353bf03",
+    ),
+    "alpha_y": (
+        f"{_RELICS_CL0152_GLAFIC}_y-arcsec-deflect.fits",
+        "ba9c4dcc610f1d6b15c2416fd6c7451ecbb2c4c8440296bd5d0e0befbae75f51",
+    ),
+    "kappa_map": (
+        f"{_RELICS_CL0152_GLAFIC}_kappa.fits",
+        "95135ada749ea5159cf1e2c305bb260e74d8d2753476dc229703694c35298f3e",
+    ),
+    "mag_z2": (
+        f"{_RELICS_CL0152_GLAFIC}_z02-magnif.fits",
+        "89edb8ce0659d971f8932835be506d2081c13c379baecabeb69d64847fb26b63",
+    ),
+}
+CL0152_RELICS_ZITRIN: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_CL0152_ZITRIN}_x-arcsec-deflect.fits",
+        "be51a3b355c65ad692b9203b3a94d00a49339b36ebc2777de8a5fad76b378433",
+    ),
+    "alpha_y": (
+        f"{_RELICS_CL0152_ZITRIN}_y-arcsec-deflect.fits",
+        "3072be46e2b90f93e456b86ef96bd16d24db206b85d021bad0697656960f2005",
+    ),
+    "kappa_map": (
+        f"{_RELICS_CL0152_ZITRIN}_kappa.fits",
+        "6e03fe031e06dbbddc03e04ab3dcafe84c574df1dca033159a96128ad17f9910",
+    ),
+    "mag_z2": (
+        f"{_RELICS_CL0152_ZITRIN}_z02-magnif.fits",
+        "ef7cb931c6e311b4da03c7105ec9d3e25274ae526a977f616177b7af5b784e95",
+    ),
+}
+
 #: HFF Sharon & Johnson v4cor Lenstool maps of MACS J1149.5+2223 (readme
 #: ``hlsp_frontier_model_macs1149_sharon_v4cor_readme.pdf``, accessed 2026-10-20): best fit,
 #: 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second model for the

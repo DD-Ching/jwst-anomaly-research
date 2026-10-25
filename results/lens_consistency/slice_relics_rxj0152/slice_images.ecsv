@@ -1,0 +1,40 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: paper_id, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: z, datatype: float64}
+# - {name: z_spec, datatype: bool}
+# - {name: cluster, datatype: string}
+# - {name: new_in_jwst, datatype: bool}
+# - {name: use_spec, datatype: bool}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'Cerny et al. 2026, ApJ 1001, 60 (SLICE; arXiv:2503.17498v2), Table 8 block of RX J0152.7-1357 (main.tex sha256 ebc6d0d8cffe51a9fbec8de272f6e1db9bdf99ed1267355e834dc02dfd53cc9e;
+#     e-print tarball sha256 f7120d94a5f1c302596838baa5353128ded977119923f53eddab5fa089dea9a7); clump 1 of each source only; z_spec True:
+#     spectroscopic, False: SLICE model-optimized; new_in_jwst and use_spec per the paper''s text (PLAN.md)'}
+# schema: astropy-2.0
+image_id system paper_id ra dec z z_spec cluster new_in_jwst use_spec
+1.1 1 1.1.1 28.189076 -13.952246 3.93 True rxj0152 False True
+1.2 1 1.1.2 28.188361 -13.951203 3.93 True rxj0152 False True
+1.3 1 1.1.3 28.185287 -13.948941 3.93 True rxj0152 False True
+1.4 1 1.1.4 28.187669 -13.951236 3.93 True rxj0152 False True
+2.1 2 2.1.1 28.187278 -13.954577 2.91 False rxj0152 False False
+2.2 2 2.1.2 28.185848 -13.952977 2.91 False rxj0152 False False
+2.3 2 2.1.3 28.183338 -13.950919 2.91 False rxj0152 False False
+3.1 3 3.1.1 28.184894 -13.956606 1.66 False rxj0152 False False
+3.2 3 3.1.2 28.183271 -13.954315 1.66 False rxj0152 False False
+3.3 3 3.1.3 28.18159 -13.953478 1.66 False rxj0152 False False
+4.1 4 4.1.1 28.183443 -13.956815 1.69 False rxj0152 False False
+4.2 4 4.1.2 28.182984 -13.956555 1.69 False rxj0152 False False
+5.1 5 5.1.1 28.182444 -13.959993 2.62 False rxj0152 False False
+5.2 5 5.1.2 28.179475 -13.958578 2.62 False rxj0152 False False
+5.3 5 5.1.3 28.17745 -13.956018 2.62 False rxj0152 False False
+6.1 6 6.1.1 28.181477 -13.953185 4.39 False rxj0152 False False
+6.2 6 6.1.2 28.183328 -13.954069 4.39 False rxj0152 False False
+6.3 6 6.1.3 28.185407 -13.956885 4.39 False rxj0152 False False
+7.1 7 7.1.1 28.16432 -13.968186 4.35 False rxj0152 True False
+7.2 7 7.1.2 28.164454 -13.968568 4.35 False rxj0152 True False
