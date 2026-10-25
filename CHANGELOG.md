@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: RELICS GLAFIC v2 vs SLICE images: MACS J0553 Lenstool flags are Lenstool-specific (D-034 addendum bd)
+- **Result** (`results/lens_consistency/slice_relics_glafic/RESULT.md`): frozen addendum-bc rules with the second
+  HST-era model. MACS J0553 GLAFIC passes P, K0 (0.88″) and F; 11.1 at 0.08″ (Lenstool v1 3.49″); z_spec families
+  11 / 11; amplitude factor 0.966 (0.83–1.05) vs Lenstool v1 0.64–0.71. RXC J2211 GLAFIC usable (Lenstool was not):
+  reading A 16 / 22, flags in families 4, 5, 8, all family-wide. No image missed by two usable models; no flag.
+- **Derived rule:** RELICS Lenstool v1 maps need an amplitude check against a second model before any reading
+  (SMACS 0723 and MACS J0553 both off in the same direction; readme v3 says D_LS/D_S = 1 for all).
+- **Hosts:** LAM atlas still redirects to "restricted" (09:10Z). archive.stsci.edu works with the proxy CA plus certifi
+  concatenated as `--cacert`.
+- **Handoff:** RXC J2211 families 4, 5, 8 and MACS J0553 12 wait on the SLICE Lenstool models. Next: another
+  lensing-consistency observable on a JWST-era list, or the D115b Lenstool re-fit (owner machine). #374 waits for the
+  2026-10-26 weekly run.
+
 ## 2026-10-25: RELICS Lenstool maps vs SLICE images on three clusters: one held-out flag, MACS J0553 11.1 (D-034 addendum bc)
 - **Result** (`results/lens_consistency/slice_relics_heldout/RESULT.md`): frozen addendum-bb rules, one model per cluster.
   RXC J0232 usable (K0 0.69″; z_spec families 8 / 8); RXC J2211 fails F (Dec −0.52″); MACS J0553 usable (K0 1.32″),

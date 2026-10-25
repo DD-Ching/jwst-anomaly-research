@@ -1,0 +1,24 @@
+{
+ "model": "rxc2211-relics-glafic",
+ "model_sha256": "9d27e975897637baa7b8545394075bcde1ea635993c5ba4d694c0b6b7fbede6d",
+ "kappa_map": {
+  "map": "/home/user/jwst-anomaly-research/data/cache/external/944b02f1177c_hlsp_relics_model_model_rxc2211m03_glafic_v2_kappa.fits",
+  "quantity": "kappa",
+  "z_s": null,
+  "n_points": 4170,
+  "median_rel_diff": 2.9422014490321775e-05,
+  "p95_rel_diff": 0.00014996644674896285,
+  "median_ratio": 0.9999751794332858,
+  "parity_agree": null
+ },
+ "magnification_z2": {
+  "map": "/home/user/jwst-anomaly-research/data/cache/external/474d85c760dc_hlsp_relics_model_model_rxc2211m03_glafic_v2_z02-magnif.fits",
+  "quantity": "mu",
+  "z_s": 2.0,
+  "n_points": 3970,
+  "median_rel_diff": 1.537243883064202e-05,
+  "p95_rel_diff": 4.741546560675391e-05,
+  "median_ratio": 0.9999885119596785,
+  "parity_agree": null
+ }
+}

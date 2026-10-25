@@ -2685,6 +2685,20 @@ not isolated (the published κ and μ(z = 2) maps agree with the deflections). D
 model. Alternatives rejected: rescaling the MACS J0553 maps post hoc. Revisit if: the SLICE Lenstool models are reachable,
 or the Ebeling+2017 MACS J0553 model's z_lens / cosmology / z reference is documented.
 
+**Addendum 2026-10-25bd (RELICS GLAFIC v2 maps vs SLICE images on MACS J0553, RXC J2211).**
+`results/lens_consistency/slice_relics_glafic/RESULT.md`, plan frozen in 43fade5; maps pinned, script and rule tests in
+f7bdcde, before the run; rules 1–6 of addendum bc with the GLAFIC model, plus a frozen amplitude factor (rule 7),
+product gate P (rule 8) and a two-model statement for 11.1 (rule 9). Both pass P, K0 and F (RXC J2211 had no usable
+Lenstool model). MACS J0553: 11.1 matched at 0.08″ (`lenstool_only`); reading B 11 / 11 at z_spec; factor 0.966
+(0.831–1.052, "near 1") against Lenstool v1's 0.637–0.708 on the same 21 families; reading A flags 12.2 (3.84″; family
+12 at the z-grid upper edge; Lenstool 0.49″). RXC J2211: reading A 16 / 22, flags in families 4, 5, 8, each with a
+sibling at 2.6–2.8″ (family-wide). Decision: the MACS J0553 Lenstool v1 flags (11.1 and the seven z_spec misses) are
+Lenstool-specific and closed; no image is missed by two usable models; no flag goes to vetting. A RELICS Lenstool v1
+map gives no reading alone: check its amplitude against a second model or z_spec families first (SMACS 0723 and
+MACS J0553 disagree with GLAFIC in the same direction; the readme v3 documents D_LS/D_S = 1 for all methods).
+Alternatives rejected: rescaling Lenstool v1 post hoc and re-reading it. Revisit if: the SLICE Lenstool models are
+reachable (RXC J2211 families 4, 5, 8; MACS J0553 family 12), or the RELICS team documents the Lenstool v1 scaling.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
