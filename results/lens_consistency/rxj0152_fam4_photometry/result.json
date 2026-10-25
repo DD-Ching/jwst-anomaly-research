@@ -1,0 +1,219 @@
+{
+ "plan": "PLAN.md",
+ "bands": [
+  "f115w",
+  "f150w",
+  "f277w",
+  "f444w"
+ ],
+ "pair_labels": [
+  203,
+  206
+ ],
+ "f_pair_MJy_sr_sum": {
+  "f115w": 354.4841165691614,
+  "f150w": 443.32408241182566,
+  "f277w": 204.2073933854699,
+  "f444w": 190.31648594141006
+ },
+ "window_ref": [
+  4.507889478707946,
+  60.957430861334295
+ ],
+ "sigma_ap_ref": 0.3352157535154923,
+ "gate_V": {
+  "lenstool": false,
+  "glafic": true,
+  "zitrin": false
+ },
+ "gate_V_pass": false,
+ "gate_C_accepted": 11,
+ "gate_C_detail": {
+  "2.1": {
+   "labels": [
+    11
+   ],
+   "accepted": true
+  },
+  "2.2": {
+   "labels": [
+    28
+   ],
+   "accepted": true
+  },
+  "2.3": {
+   "labels": [
+    71
+   ],
+   "accepted": true
+  },
+  "3.1": {
+   "labels": [
+    46
+   ],
+   "accepted": true
+  },
+  "3.2": {
+   "labels": [
+    205
+   ],
+   "accepted": true
+  },
+  "3.3": {
+   "labels": [
+    248,
+    250
+   ],
+   "accepted": true
+  },
+  "5.1": {
+   "labels": [
+    81
+   ],
+   "accepted": false
+  },
+  "5.2": {
+   "labels": [
+    262
+   ],
+   "accepted": true
+  },
+  "5.3": {
+   "labels": [
+    142
+   ],
+   "accepted": true
+  },
+  "6.1": {
+   "labels": [
+    249
+   ],
+   "accepted": true
+  },
+  "6.2": {
+   "labels": [
+    204,
+    205
+   ],
+   "accepted": true
+  },
+  "6.3": {
+   "labels": [
+    36
+   ],
+   "accepted": true
+  }
+ },
+ "gate_C_pass": true,
+ "gate_D_pass": true,
+ "region_segments": [
+  {
+   "label": 112,
+   "ra": 28.180164108108027,
+   "dec": -13.953050046231674,
+   "fluxes": {
+    "f115w": 4.1090362668037415,
+    "f150w": 4.374781712889671,
+    "f277w": 1.4215229079127312,
+    "f444w": 0.7454701364040375
+   },
+   "in_flux_window": false,
+   "colour_match": true
+  },
+  {
+   "label": 119,
+   "ra": 28.179473156164477,
+   "dec": -13.952466913302139,
+   "fluxes": {
+    "f115w": 80.87853294610977,
+    "f150w": 84.73653554916382,
+    "f277w": 25.640375390648842,
+    "f444w": 13.366515845060349
+   },
+   "in_flux_window": true,
+   "colour_match": true
+  },
+  {
+   "label": 123,
+   "ra": 28.178528743447217,
+   "dec": -13.953637800324321,
+   "fluxes": {
+    "f115w": 3.289937376976013,
+    "f150w": 3.5153061002492905,
+    "f277w": 1.115435242652893,
+    "f444w": 1.0668955445289612
+   },
+   "in_flux_window": false,
+   "colour_match": true
+  },
+  {
+   "label": 127,
+   "ra": 28.178360648499897,
+   "dec": -13.95318384759645,
+   "fluxes": {
+    "f115w": 47.07785664498806,
+    "f150w": 59.64303928613663,
+    "f277w": 15.122355237603188,
+    "f444w": 7.634995669126511
+   },
+   "in_flux_window": true,
+   "colour_match": true
+  },
+  {
+   "label": 131,
+   "ra": 28.178311734305787,
+   "dec": -13.952588879364622,
+   "fluxes": {
+    "f115w": 15.654526740312576,
+    "f150w": 36.94131478667259,
+    "f277w": 12.133598499000072,
+    "f444w": 11.93027126789093
+   },
+   "in_flux_window": true,
+   "colour_match": true
+  }
+ ],
+ "counterparts": [
+  {
+   "label": 119,
+   "ra": 28.179473156164477,
+   "dec": -13.952466913302139,
+   "fluxes": {
+    "f115w": 80.87853294610977,
+    "f150w": 84.73653554916382,
+    "f277w": 25.640375390648842,
+    "f444w": 13.366515845060349
+   },
+   "in_flux_window": true,
+   "colour_match": true
+  },
+  {
+   "label": 127,
+   "ra": 28.178360648499897,
+   "dec": -13.95318384759645,
+   "fluxes": {
+    "f115w": 47.07785664498806,
+    "f150w": 59.64303928613663,
+    "f277w": 15.122355237603188,
+    "f444w": 7.634995669126511
+   },
+   "in_flux_window": true,
+   "colour_match": true
+  },
+  {
+   "label": 131,
+   "ra": 28.178311734305787,
+   "dec": -13.952588879364622,
+   "fluxes": {
+    "f115w": 15.654526740312576,
+    "f150w": 36.94131478667259,
+    "f277w": 12.133598499000072,
+    "f444w": 11.93027126789093
+   },
+   "in_flux_window": true,
+   "colour_match": true
+  }
+ ],
+ "outcome": "O3_undetermined",
+ "units": "sums of i2d SCI pixels (MJy/sr x pixels); ratios only are used"
+}

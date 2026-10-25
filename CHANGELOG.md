@@ -24,6 +24,15 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Search:** 200 new stars, 0 flagged runs, 0 survivors.
 - **Failed approach:** a plain-JSON per-window dump and the ledger exceeded the 1 MB rule (about
   2.3 and 2.4 MB, not stored). They are now stored as gzip.
+## 2026-10-25: RX J0152 family 4 forced photometry: injection gate fails, undetermined (D-034 addendum bf)
+- **Result** (`results/lens_consistency/rxj0152_fam4_photometry/RESULT.md`): VENUS NIRCam (4 bands) at the three
+  predicted third-image positions of family 4. Gate V fails (1 / 3 injections recovered), C passes 11 / 12, D passes;
+  outcome O3 undetermined. Three colour-matched segments in the region are not read.
+- **Failed approach:** injecting the whole pair stamp and using isophotal segment sums; faint copies fragment to cores
+  (F277W 1.56–2.27 vs window floor 4.51). Post hoc chance control: 1.53 expected vs 3 observed (P 0.20) at 0.3 dex.
+- **Handoff:** next is a re-frozen plan: single-image injection (4.1 × μ3/|μ4.1|), 0.3–0.5″ aperture forced fluxes,
+  all ten VENUS bands, the chance control as a frozen gate. Also untested: SLICE MACS J0358 = RELICS `abell3192`.
+  #374 waits for the 2026-10-26 weekly run.
 
 ## 2026-10-25: SLICE RX J0152 vs three RELICS maps: no flag; Lenstool v1 amplitude normal here (D-034 addendum be)
 - **Result** (`results/lens_consistency/slice_relics_rxj0152/RESULT.md`): RX J0152.7−1357 (RELICS `cl0152m13`) has three
