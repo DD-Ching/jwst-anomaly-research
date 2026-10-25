@@ -24,7 +24,7 @@ Frozen 2026-10-25 before any prediction for this list is computed. Script `scrip
 3. Per family with a held-out image: source from the seen images (type E, ≥ 2 seen) or from all images (N / M).
    Family = `lensmodel.image_family` of the Diego ID (knots `1.1`, `1.2` are separate families).
 4. Gate H (ASSUMPTION): rms ≤ 1.0″ and ≥ 80 % within 3.0″ on tested held-out images inside the map;
-   at least 5 tested images (rule 5), else `insufficient`.
+   at least 5 tested images (rule 5), else `not testable`.
 5. **Primary gate:** held-out images in families with spectroscopic z (z_spec, MUSE). **Reported only:** the same
    numbers over all held-out images (geometric-z families included).
 
