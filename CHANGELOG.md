@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: MAST HLSP search for JWST-era cluster lens models: none new
+- **Result** (`results/lens_consistency/hlsp_search/RESULT.md`): HLSP cone queries at 18 lensing-cluster centres
+  find lens-model HLSPs only from BUFFALO, CANUCS, RELICS, CLASH and Frontier, all used already. JWST-ERO, GLASS-JWST,
+  TEQUILA and EVEREST hold mosaics, spectra or light curves. With the 2026-10-24 Zenodo search, the TASKS
+  "MAST HLSP / paper-data" item is closed.
+- **Hosts:** LAM atlas still redirects to `restricted.html` (19:09Z). archive.stsci.edu needs the proxy bundle +
+  certifi (unchanged).
+- **Handoff:** issue #465 closed (answered by D-034 addendum h and #468). Next: LAM atlas retry for SLICE Lenstool
+  models; otherwise the lens-consistency line has no queued input. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: SPT0615 published images vs RELICS Lenstool v1 / GLAFIC v2: both near 1, no flag (D-034 addendum bl)
 - **Result** (`results/lens_consistency/spt0615_images/RESULT.md`; plan frozen in a6ba478c): Paterno-Mahler et al. 2018
   Table 2. Both maps pass P, K0 (0.447″ / 0.283″) and F; at z_spec 0 misses; amplitude 0.987 / 0.997 (`near_1`): Q1
