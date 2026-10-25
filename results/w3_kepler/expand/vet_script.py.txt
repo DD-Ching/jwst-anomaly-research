@@ -1,0 +1,117 @@
+"""Vetting diagnostics for the survivors of the W3 / Kepler expansion search (PLAN section 5).
+
+    JWST_ANOMALY_DATA=<data root> python results/w3_kepler/expand/vet_script.py.txt
+
+Reads layers.json (vet list, at most 10 sources in the frozen order) and runs_expand.json.gz, and
+writes vet.json and vet.png next to this file. Existing data only: SAP_QUALITY, MOM_CENTR1/2,
+same-channel same-quarter stars of this batch, quarter boundaries, other dips, PDCSAP, and the
+shoulder profile (rise vs decay). Classification is done by reading these numbers; no new rule.
+"""
+
+import gzip
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[2] / "scripts"))
+import w3_kepler as wk  # noqa: E402
+import w3_kepler_expand as we  # noqa: E402
+
+we.configure()
+lay = json.loads((HERE / "layers.json").read_text())
+runs = json.loads(gzip.open(HERE / "runs_expand.json.gz", "rt").read())
+vet = lay["L4_vet_list"]
+read = [k for k in we.stars() if we.have(k)]
+
+
+def rel_of(st):
+    g = wk.good_mask(st)
+    rel, sig = wk.normalise(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], g)
+    return g, rel, sig
+
+
+def robust(x):
+    x = x[np.isfinite(x)]
+    if len(x) < 5:
+        return np.nan, np.nan
+    m = np.median(x)
+    return m, 1.4826 * np.median(np.abs(x - m))
+
+
+channel_of = {}
+for k in read:
+    st = wk.load_star(k)
+    channel_of[k] = {int(q): int(c) for q, c in zip(st["QUARTER"], st["CHANNEL"], strict=True)}
+
+out = {"label": "derived from observed light curves (vetting diagnostics)", "sources": []}
+for k in vet:
+    st = wk.load_star(k)
+    g, rel, sig = rel_of(st)
+    t = st["TIME"]
+    for x in [r for r in runs[str(k)] if r["pass_local"]]:
+        t0, t1 = x["t_start"], x["t_end"]
+        q = x["quarter_start"]
+        span = max(t1 - t0, 1.0)
+        inq = (st["QUARTER"] == q) & np.isfinite(t)
+        win = inq & (t >= t0 - 1) & (t <= t1 + 1)
+        qual = st["SAP_QUALITY"][win].astype(int)
+        bits = {int(b): int(((qual & b) > 0).sum()) for b in [2**i for i in range(20)] if ((qual & b) > 0).any()}
+        inrun = g & (t >= t0) & (t <= t1)
+        outside = g & inq & ((t < t0 - span) | (t > t1 + span))
+        cen = {}
+        for c in ("MOM_CENTR1", "MOM_CENTR2"):
+            m_out, s_out = robust(st[c][outside])
+            m_in, _ = robust(st[c][inrun])
+            cen[c] = {
+                "shift_px": None if np.isnan(m_in) else round(float(m_in - m_out), 4),
+                "shift_sigma": None if np.isnan(m_in) or not s_out else round(float((m_in - m_out) / s_out), 2),
+            }
+        same = [o for o in read if o != k and channel_of[o].get(q) == channel_of[k].get(q)]
+        comp = []
+        cad = set(st["CADENCENO"][inrun].astype(int).tolist())
+        for o in same:
+            so = wk.load_star(o)
+            go, ro, _ = rel_of(so)
+            m = go & np.isin(so["CADENCENO"].astype(int), list(cad))
+            if m.any():
+                comp.append({"kepid": o, "median_rel_in_run": round(float(np.median(ro[m])), 4)})
+        qt = t[inq]
+        other = [r for r in runs[str(k)] if (r["t_start"], r["t_end"]) != (t0, t1)]
+        shallow = rel <= 10 ** (-0.4 * 0.3)
+        sh_other = 0
+        for i, j in wk.wz.runs(shallow & g):
+            if j - i + 1 >= 3 and not (t0 - span <= t[i] <= t1 + span):
+                sh_other += 1
+        prof = {}
+        for side, edge, sgn in (("pre", t0, -1), ("post", t1, 1)):
+            d = (edge - t) if sgn < 0 else (t - edge)
+            sw = g & inq & (d > 0) & (d <= 0.25 * span)
+            if sw.any():
+                tt, rr = t[sw], rel[sw]
+                ip = int(np.argmax(rr))
+                prof[side] = {
+                    "n": int(sw.sum()),
+                    "peak_rel": round(float(rr[ip]), 4),
+                    "peak_offset_from_edge_d": round(float(abs(tt[ip] - edge)), 4),
+                    "rise_cadences": int(ip),
+                    "decay_cadences": int(len(rr) - 1 - ip),
+                }
+        out["sources"].append(
+            {
+                "kepid": k,
+                "run": {kk: x[kk] for kk in ("t_start", "t_end", "n", "quarter_start", "local_pre_n", "local_post_n", "pdc_rel_in_run")},
+                "quality_bits_within_1d": bits,
+                "centroid": cen,
+                "same_channel_quarter_stars": comp,
+                "edge_to_quarter_start_d": round(float(t0 - qt.min()), 3),
+                "edge_to_quarter_end_d": round(float(qt.max() - t1), 3),
+                "other_flagged_runs": len(other),
+                "other_dips_ge_0.3mag_runs": sh_other,
+                "shoulder_profiles": prof,
+            }
+        )
+(HERE / "vet.json").write_text(json.dumps(out, indent=1) + "\n")
+print(json.dumps(out, indent=1)[:4000])
