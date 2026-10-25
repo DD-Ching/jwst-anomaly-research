@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SLICE MACS J0358 vs RELICS Abell 3192 maps: no flag; Lenstool v1 amplitude 0.69 again (D-034 addendum bh)
+- **Result** (`results/lens_consistency/slice_relics_macs0358/RESULT.md`; plan frozen in 56a0b3bb): Lenstool v1 and
+  GLAFIC v2 both usable (P, K0 0.25″ / 0.96″, F). No image missed by both models in reading A (families 4–6,
+  exploratory) or B (families 1–3 at z_spec). Lenstool v1 needs one factor 0.674–0.721 in all six families
+  (GLAFIC 0.999): Q1 H_sys, the third such RELICS Lenstool v1 map out of 5 usable.
+- **Post hoc:** 0.692 = D_LS/D_S at z_ref 2.09 (hypothesis: map normalised at z ≈ 2, not at D_LS/D_S = 1).
+- **Hosts:** archive.stsci.edu again needs the proxy bundle + certifi (`SSL_CERT_FILE`); arXiv e-print served.
+- **Handoff:** next cheap test: the z_ref hypothesis on SMACS 0723 and MACS J0553 (their stored amplitude factors and
+  z_lens; no new data). Remaining SLICE clusters have no RELICS or CLASH maps on MAST. #374 waits for the 2026-10-26
+  weekly run.
+
 ## 2026-10-25: RX J0152 family 4 revised forced photometry: gate V fails at the Lenstool position, undetermined; chance-level matches (D-034 addendum bg)
 - **Result** (`results/lens_consistency/rxj0152_fam4_photometry_v2/RESULT.md`; plan frozen in e566d3e): ten VENUS
   bands, 0.3″ forced apertures, single-image injection. Gate V 27 / 30 overall but 2 / 3 at the predicted positions

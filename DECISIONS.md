@@ -2732,6 +2732,18 @@ Decision: no flag; aperture colours cannot decide this case; line paused. Altern
 colour tolerance post hoc (it would raise λ further). Revisit if: photometric or spectroscopic redshifts of segments
 127 / 131 / 112 (or family 4) become available, or SLICE publishes its own model of RX J0152.
 
+**Addendum 2026-10-25bh (two RELICS maps of Abell 3192 vs SLICE images of MACS J0358.8−2955).**
+`results/lens_consistency/slice_relics_macs0358/RESULT.md`; plan, map pins, image list and rule tests in 56a0b3bb
+before any map was read; rules of addendum be (K0 / F on the three Hsu et al. 2013 families, reading A on the three
+SLICE-added families, exploratory because the RELICS input lists are not published; reading B on families 1–3 at
+z_spec). Lenstool v1 and GLAFIC v2 pass P, K0 (0.25″, 0.96″) and F; no joint flag in A or B (Lenstool misses 1.1 / 1.2
+at z_spec only). Amplitude: Lenstool v1 0.692 (0.674–0.721, all six families) `lenstool_like`, GLAFIC 0.999
+`near_1`: Q1 = H_sys. Decision: no flag; the Lenstool v1 offset recurs on 3 of 5 clusters where it was usable, so the
+addendum-bd amplitude check stays mandatory before reading any RELICS Lenstool v1 map. Post hoc (hypothesis): 0.692
+equals D_LS/D_S at z_ref 2.09, as a map normalised at z ≈ 2 would give. Alternatives rejected: rescaling Lenstool v1
+maps globally (RX J0152, RXC J0232 need no factor). Revisit if: the z_ref hypothesis is tested on SMACS 0723 and
+MACS J0553, or the RELICS team documents the map normalisation.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

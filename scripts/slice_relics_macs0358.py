@@ -47,6 +47,24 @@ def q1_answer(classes: dict[str, str | None]) -> str:
     return base.q1_answer({(base.LENSTOOL if m == LENSTOOL else m): c for m, c in classes.items()})
 
 
+def zref_for_factor(factor: float, z_lens: float = 0.425) -> float | None:
+    """Post hoc: source z at which D_LS/D_S (flat 70, 0.3) equals ``factor``, i.e. the reference z
+    a map would be normalised at if its amplitude factor came from that normalisation."""
+    from astropy.cosmology import FlatLambdaCDM
+    from scipy.optimize import brentq
+
+    cosmo = FlatLambdaCDM(H0=70.0, Om0=0.3)
+
+    def ratio(z: float) -> float:
+        return float(
+            cosmo.angular_diameter_distance_z1z2(z_lens, z) / cosmo.angular_diameter_distance(z)
+        )
+
+    if not 0 < factor < ratio(1e3):
+        return None
+    return float(brentq(lambda z: ratio(z) - factor, z_lens + 1e-3, 1e3))
+
+
 def posthoc(grid_step: float) -> dict:
     """Post hoc (not in PLAN.md): sky positions of the predicted images that match no catalogued
     image, for every family with extra predictions, at the run's fitted z."""
@@ -55,7 +73,10 @@ def posthoc(grid_step: float) -> dict:
     summary = json.loads((OUT / "summary.json").read_text())
     t = load()
     fam = np.asarray(t["system"], str)
-    out: dict = {"note": "post hoc, not in PLAN.md; provenance model_prediction", "models": {}}
+    out: dict = {
+        "note": "post hoc, not in PLAN.md; provenance model_prediction (z_ref: derived)",
+        "models": {},
+    }
     for model in MODELS:
         e = summary["models"][model]
         solver = mi.Solver(model, t, grid_step)
@@ -100,6 +121,12 @@ def posthoc(grid_step: float) -> dict:
                 ],
             }
         out["models"][model] = rows
+        med = e["amplitude"]["median"]
+        if med is not None:
+            out.setdefault("amplitude_as_dls_ds_zref", {})[model] = {
+                "median_factor": med,
+                "z_ref": zref_for_factor(med),
+            }
     return out
 
 

@@ -35,3 +35,10 @@ def test_image_list():
     assert list(t["image_id"][t["z_spec"]]) == ["1.1", "1.2", "1.3", "2.1", "2.2", "3.1", "3.2"]
     z = np.asarray(t["z"])[t["z_spec"]]
     assert list(z) == [1.261] * 3 + [3.07] * 4
+
+
+def test_zref_for_factor():
+    assert sm.zref_for_factor(1.5) is None
+    z = sm.zref_for_factor(0.5)
+    assert 0.425 < z < 2.0
+    assert abs(sm.zref_for_factor(0.6918) - 2.09) < 0.02

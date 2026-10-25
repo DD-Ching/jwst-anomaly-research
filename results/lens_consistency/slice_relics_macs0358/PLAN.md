@@ -31,7 +31,7 @@ SLICE Table 1: z_lens 0.425, centre (59.7201370, −29.9298850).
     still says the RELICS map does not reproduce a SLICE image; a match does not test prediction.
   - Families 2 and 3 (same z_spec 3.07) lie 0.8–1.1″ apart, inside the 3″ match radius: a model can match one
     family's images with the other's predictions. K0 and reading B on them are weak; listed, not re-weighted.
-  - A foreground structure (Abell 3192 proper, reported at z ≈ 0.17 by Hsu et al. 2013; not checked here) lies along the line of sight; the maps are single-plane at
+  - Hsu et al. 2013 study the cluster's three-dimensional (multi-component) geometry; the maps are single-plane at
     D_LS/D_S = 1 and the fit uses z_lens 0.425 (ASSUMPTION, as RELICS and SLICE do).
 
 | Model | Map set (`abell3192`, HLSP DOI 10.17909/T9SP45) | Registry name |
