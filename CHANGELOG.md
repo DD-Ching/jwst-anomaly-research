@@ -11,9 +11,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Post hoc input:** all three models predict an uncatalogued positive-parity image of family 4 (merging pair
   4.1 / 4.2) 16.7–22.2″ from the pair, μ +2.4 to +3.8, model positions 2.5–5.6″ apart (`posthoc.json`). Not tested
   against imaging; ordinary explanations listed in RESULT.md.
-- **Handoff:** next is a frozen plan for forced photometry at the three predicted family-4 positions in the SLICE
-  NIRCam imaging (expected flux = pair flux / μ ratio 4.7–7.7). LAM atlas still "restricted" (10:10Z). #374 waits for
-  the 2026-10-26 weekly run.
+- **Handoff:** next is a frozen plan for forced photometry at the three predicted family-4 positions in NIRCam
+  imaging (expected flux = pair flux / μ ratio 4.7–7.7). A MAST CAOM query (r = 0.001°; not stored) finds level-3
+  NIRCam images of GO 5594 (SLICE; F150W2, F322W2) and GO 6882 (VENUS; F090W–F444W, 10 filters) at all three
+  positions and at the pair. Also untested: SLICE's MACS J0358.8−2955 is RELICS `abell3192` (glafic/ and lenstool/
+  model directories on MAST). LAM atlas still "restricted" (10:10Z). #374 waits for the 2026-10-26 weekly run.
 
 ## 2026-10-25: RELICS GLAFIC v2 vs SLICE images: MACS J0553 Lenstool flags are Lenstool-specific (D-034 addendum bd)
 - **Result** (`results/lens_consistency/slice_relics_glafic/RESULT.md`): frozen addendum-bc rules with the second

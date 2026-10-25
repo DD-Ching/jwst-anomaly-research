@@ -39,8 +39,9 @@ catalogued image (`posthoc.json`):
   (Zitrin). SLICE Table 8 lists no such image. Lenstool and Zitrin also predict fainter images 4.1″ from the pair
   (μ −2.59; −0.32 and +0.16), not read.
   Ordinary explanations not tested yet: below the imaging depth at that flux ratio, blended with a cluster member,
-  outside the SLICE footprint, model position scatter, or a pair that is not a multiple-image system. This is a
-  lensing-residual **input** for imaging, not a candidate.
+  model position scatter, or a pair that is not a multiple-image system. This is a
+  lensing-residual **input** for imaging, not a candidate. Footprint (post hoc MAST CAOM query, r = 0.001°, not
+  stored): level-3 NIRCam images of GO 5594 (F150W2, F322W2) and GO 6882 (10 filters) cover all three positions.
 - Family 1 (GLAFIC, Zitrin): the unmatched predictions are central demagnified images (listed in `posthoc.json`;
   not read). Family 7 (Lenstool, Zitrin): unmatched predictions next to the pair (galaxy-scale feature; not read).
 
