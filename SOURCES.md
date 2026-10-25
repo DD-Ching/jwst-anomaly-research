@@ -763,6 +763,13 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - CLASH Zitrin v2 maps (Zitrin et al. 2009, MNRAS 396, 1985; 2013, ApJ 762, L30; CLASH, Postman et al. 2012,
     ApJS 199, 25): https://archive.stsci.edu/missions/hlsp/clash/macs0647/models/zitrin/{nfw,ltm-gauss}/v2/
     (sha256 in `lensmodel.MACS0647_CLASH_NFW`, `MACS0647_CLASH_LTM`; readme 2015-02, z_lens 0.591).
+- MACS J2129.4-0741 (`results/lens_consistency/macs2129_clash_heldout/`, accessed 2026-10-25):
+  - Cerny et al. 2026, "Strong LensIng and Cluster Evolution (SLICE) with JWST", ApJ 1001, 60, doi:10.3847/1538-4357/ae41b0,
+    arXiv:2503.17498v2: e-print `main.tex` Table 8 (MACS J2129 block; e-print sha256 f7120d94…a9a7 in `slice_images.ecsv`
+    meta). Its models are said to be in the LAM atlas, which answered "Restricted access" (security suspension) on 2026-10-25.
+  - CLASH Zitrin v2 MACS2129 maps (PIEMD + eNFW, LTM-Gauss; readme 2015-02-18):
+    https://archive.stsci.edu/missions/hlsp/clash/macs2129/models/zitrin/ (sha256 in `lensmodel.MACS2129_CLASH_*`;
+    readme sha256 nfw 7ffa3f92…947d, ltm-gauss 3e1756ea…dae0da).
 - MACS0647 JWST-era image lists (`results/lens_consistency/macs0647_inputs/`, accessed 2026-10-23):
   - Meena et al. 2023, ApJL 944, L6, arXiv:2211.13334, DOI 10.3847/2041-8213/acb645: `lensed_systems.tex` of the
     arXiv source (sha256 in `summary.json` `images.tex_sha256`), 72 images in 23 systems.

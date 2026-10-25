@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: MACS J2129 CLASH HST-era maps vs the SLICE JWST-era images: both fail K0 and F (D-034 addendum bb)
+- **Result** (`results/lens_consistency/macs2129_clash_heldout/RESULT.md`): SLICE (Cerny+2026) Table 8 gives 53 images
+  in 17 families (13 spectroscopic). Under the frozen MACS0647 rules both CLASH Zitrin v2 models fail gate K0 (rms 2.05″
+  / 2.03″ > 2.0″) and frame check F (Dec +0.59″ / +0.74″ > 0.5″); no usable model, no reading. Post hoc: 18.1 / 18.2 miss
+  by 4.9–6.7″ in both; PIEMD + eNFW fits z below z_spec for 12 / 13 families.
+- **Hosts:** the LAM SL Cluster Atlas (data.lam.fr, holds the 14 SLICE Lenstool models) answers "Restricted access"
+  (security suspension). archive.stsci.edu still needs the certifi CA bundle (`SSL_CERT_FILE`).
+- **Handoff:** retry the LAM atlas for the SLICE models (14 JWST-era clusters with image lists in SLICE Table 8;
+  only the MACS J2129 block is transcribed). #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: MACS0717 MARS held-out stage: no held-out spectroscopic images exist (input check)
 - **Result:** the MARS MACS0717 catalogue (31 images, systems 1, 3, 4, 6, 12, 13, 14, 15, 19, 68;
   `results/lens_consistency/mars_hff_inputs/imageplane_MACSJ0717.ecsv`) is exactly Limousin et al. 2016's ten

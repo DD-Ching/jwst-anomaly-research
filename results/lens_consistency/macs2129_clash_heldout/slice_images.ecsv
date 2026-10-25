@@ -1,0 +1,71 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: image_id, datatype: string}
+# - {name: system, datatype: string}
+# - {name: paper_id, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: z, datatype: float64}
+# - {name: z_spec, datatype: bool}
+# - {name: new_in_jwst, datatype: bool}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'Cerny et al. 2026, ApJ 1001, 60 (SLICE; arXiv:2503.17498v2), Table 8 MACS J2129.4-0741 block (main.tex of the e-print, sha256
+#     f7120d94a5f1c302596838baa5353128ded977119923f53eddab5fa089dea9a7); z: spectroscopic (z_spec True; Zitrin+2015, Caminha+2019, Jauzac+2021)
+#     or SLICE model-optimized (z_spec False); new_in_jwst: sources 16-18 per the paper''s text'}
+# schema: astropy-2.0
+image_id system paper_id ra dec z z_spec new_in_jwst
+1.1 1 1.1.1 322.35797 -7.68588 1.36 True False
+1.2 1 1.1.2 322.359661 -7.690859 1.36 True False
+1.3 1 1.1.3 322.35925 -7.69095 1.36 True False
+1.4 1 1.1.4 322.35712 -7.69109 1.36 True False
+1.5 1 1.1.5 322.35764 -7.69115 1.36 True False
+1.6 1 1.1.6 322.35861 -7.69489 1.36 True False
+2.1 2 2.1.1 322.35483 -7.6907 1.048 True False
+2.2 2 2.1.2 322.35477 -7.6916 1.048 True False
+2.3 2 2.1.3 322.35538 -7.69332 1.048 True False
+3.1 3 3.1.1 322.35022 -7.68886 2.24 True False
+3.2 3 3.1.2 322.35004 -7.68982 2.24 True False
+3.3 3 3.1.3 322.35095 -7.69577 2.24 True False
+4.1 4 4.1.1 322.36642 -7.68674 2.24 True False
+4.2 4 4.1.2 322.36693 -7.68831 2.24 True False
+4.3 4 4.1.3 322.36679 -7.69497 2.24 True False
+5.1 5 5.1.1 322.36422 -7.69387 1.73 False False
+5.2 5 5.1.2 322.3646 -7.69137 1.73 False False
+5.3 5 5.1.3 322.36243 -7.68493 1.73 False False
+6.1 6 6.1.1 322.35094 -7.69333 6.85 True False
+6.2 6 6.1.2 322.35324 -7.69744 6.85 True False
+6.3 6 6.1.3 322.35394 -7.68164 6.85 True False
+7.1 7 7.1.1 322.35714 -7.69425 1.357 True False
+7.2 7 7.1.2 322.35625 -7.69172 1.357 True False
+7.3 7 7.1.3 322.3567 -7.68554 1.357 True False
+8.1 8 8.1.1 322.35698 -7.68924 4.41 True False
+8.2 8 8.1.2 322.36167 -7.68808 4.41 True False
+8.3 8 8.1.3 322.3586 -7.68491 4.41 True False
+8.4 8 8.1.4 322.36035 -7.70094 4.41 True False
+8.5 8 8.1.5 322.354186 -7.688763 4.41 True False
+9.1 9 9.1.1 322.36651 -7.68689 2.24 True False
+9.2 9 9.1.2 322.36695 -7.6882 2.24 True False
+9.3 9 9.1.3 322.36666 -7.69525 2.24 True False
+10.1 10 10.1.1 322.357618 -7.684709 4.41 True False
+10.3 10 10.1.3 322.354988 -7.68896 4.41 True False
+11.1 11 11.1.1 322.363338 -7.69707 3.1081 True False
+11.2 11 11.1.2 322.364905 -7.690096 3.1081 True False
+11.3 11 11.1.3 322.361673 -7.683623 3.1081 True False
+12.1 12 12.1.1 322.35455 -7.68518 3.897 True False
+12.2 12 12.1.2 322.35278 -7.688412 3.897 True False
+13.1 13 13.1.1 322.353304 -7.691134 1.3585 True False
+13.2 13 13.1.2 322.353912 -7.687584 1.3585 True False
+13.3 13 13.1.3 322.354428 -7.694413 1.3585 True False
+14.1 14 14.1.1 322.361311 -7.685896 1.451 True False
+14.3 14 14.1.3 322.362594 -7.693603 1.451 True False
+16.1 16 16.1.1 322.361637 -7.690945 1.08 False True
+16.2 16 16.1.2 322.361559 -7.692262 1.08 False True
+16.3 16 16.1.3 322.361128 -7.688382 1.08 False True
+17.1 17 17.1.1 322.355734 -7.694368 1.95 False True
+17.2 17 17.1.2 322.355149 -7.693848 1.95 False True
+17.3 17 17.1.3 322.355853 -7.683335 1.95 False True
+18.1 18 18.1.1 322.3513795 -7.6837914 5.53 False True
+18.2 18 18.1.2 322.3495315 -7.6864161 5.53 False True
+18.3 18 18.1.3 322.3507339 -7.698607 5.53 False True

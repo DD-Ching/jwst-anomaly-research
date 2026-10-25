@@ -2665,6 +2665,15 @@ NIRSpec / MUSE program on El Gordo is public. Alternatives rejected: photometric
 separate a misidentification at a similar z). Revisit if: DJA or MAST lists El Gordo NIRSpec spectra, or a JWST-era El
 Gordo model with public maps.
 
+**Addendum 2026-10-25bb (MACS J2129 CLASH maps vs SLICE images).** `results/lens_consistency/macs2129_clash_heldout/RESULT.md`,
+plan frozen in 834486b; maps pinned and script and rule tests in 3bf8bec, before the run; rules as addendum v (MACS0647)
+plus reading B (the 13 spectroscopic families at their z_spec). Inputs: SLICE (Cerny et al. 2026) Table 8, 53 images;
+CLASH Zitrin v2 PIEMD + eNFW and LTM-Gauss maps (`lensmodel.MACS2129_CLASH_*`). Outcome: both fail gate K0 (rms 2.05″ /
+2.03″ > 2.0″) and frame check F (Dec +0.59″ / +0.74″ > 0.5″); no usable model, no reading. Post hoc: 18.1 and 18.2 miss by
+4.9–6.7″ in both; PIEMD + eNFW fits z below z_spec for 12 / 13 families. Decision: the CLASH maps are not a usable
+reference on MACS J2129; no flag. Alternatives rejected: a post hoc frame shift or looser K0. Revisit if: the SLICE
+Lenstool maps are reachable (LAM atlas, closed 2026-10-25) or a JWST-era MACS J2129 model is published elsewhere.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
