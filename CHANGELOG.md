@@ -12,7 +12,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   ratio points first to microlensing; untested.
 - **Correction:** the SN Eos predicted-images entry below said 101.2 "trails" 101.1; in our map it leads by 0.32 d
   (Δt −0.324 d), as in Allingham et al.; Coulter et al. Table S2 lists it 0.99 d after.
-- **Handoff:** next: own HST 17504 − 2012 difference-image ratio (frozen plan, injections). #374 waits for the
+- **Handoff:** next: own HST 17504 − 2012 difference-image ratio (frozen plan, injections). MAST lists 38 public
+  PID 17504 observations here (WFC3/IR F110W, WFC3/UVIS F814W, 2024-03) and 2012 CLASH templates (WFC3/IR F110W;
+  F814W only from ACS/WFC, a different camera); counts from a session query (not stored). #374 waits for the
   2026-10-26 weekly run.
 
 ## 2026-10-25: SN Eos 101.2 / 101.1 flux ratio agrees with the VENUS model under the frozen rule
