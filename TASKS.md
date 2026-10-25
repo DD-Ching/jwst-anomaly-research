@@ -80,6 +80,15 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The 60-star search has 0 flags.
   - Next step only on an owner decision. Any larger Kepler search first needs a hardened shoulder
     test (D-107 "Revisit if"); t_E ≥ 30 d needs another join. Nothing is queued.
+- **W3 / Kepler hard tests 2026-10-25** (`results/w3_kepler/hard/RESULT.md`, D-107 addendum):
+  - The local shoulder rule replaces the #500 shoulder test.
+  - Validation passed; the 200-star search has 0 flags.
+  - Open before scaling up:
+    - t_E = 10 d loses 16–21 / 100 per cell to local-insufficient baselines;
+    - untested ordinary families: flares next to dips, dippers, heartbeat stars, pixel-level
+      artefacts;
+    - no real deep single eclipse was available.
+  - The owner decides; nothing is queued.
 
 - **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; **closed by the owner 2026-10-24**):
   - Sunrise n0153: no new epoch;

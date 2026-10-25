@@ -1,0 +1,177 @@
+"""Post hoc diagnostics for the W3 / Kepler hard tests (not gating; written after the search).
+
+    JWST_ANOMALY_DATA=<data root> python results/w3_kepler/hard/posthoc_script.py.txt
+
+Writes posthoc.json and cases.png next to this file:
+1. paired old vs local outcomes on the same injections (phase A and validation): W3 recovery lost,
+   false passes removed, and why lost W3 injections fail the local rule;
+2. real EB windows (phase A, uninjected): single-window outcome split into edges and shoulder;
+3. real light curves of the val and search stars: deepest dimming and shoulder-like stretches;
+4. example light curves (injections replayed with their stored seeds).
+"""
+
+import gzip
+import json
+import sys
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[2] / "scripts"))
+import w3_kepler as wk  # noqa: E402
+import w3_kepler_hard as wh  # noqa: E402
+
+wh.configure()
+out = {"label": "derived (post hoc, not gating)"}
+
+# 1. paired comparisons
+for phase, fname in (("phaseA", "phaseA_rows.json"), ("validation", "validation_rows.json")):
+    rows = json.loads((HERE / fname).read_text())["rows"]
+    w3 = [x for x in rows if x["kind"] == "w3"]
+    per_cell = []
+    for c, (rho, blend, te) in enumerate(wk.CELLS):
+        r = [x for x in w3 if x["cell"] == c]
+        per_cell.append(
+            {
+                "rho": rho,
+                "blend": blend,
+                "tE": te,
+                "old": sum(x["pass_old"] for x in r),
+                "local": sum(x["pass_local"] for x in r),
+                "lost": sum(x["pass_old"] and not x["pass_local"] for x in r),
+                "gained": sum(x["pass_local"] and not x["pass_old"] for x in r),
+                "lost_local_insufficient": sum(
+                    x["pass_old"] and not x["pass_local"] and x["local_insufficient"] for x in r
+                ),
+            }
+        )
+    fams = {}
+    for f in sorted({x["cell"] for x in rows if x["kind"] == "ctl"}):
+        r = [x for x in rows if x["kind"] == "ctl" and x["cell"] == f]
+        fams[f] = {
+            "n": len(r),
+            "old": sum(x["pass_old"] for x in r),
+            "local": sum(x["pass_local"] for x in r),
+        }
+    out[phase] = {
+        "w3_total_old": sum(c["old"] for c in per_cell),
+        "w3_total_local": sum(c["local"] for c in per_cell),
+        "w3_total_n": len(w3),
+        "w3_per_cell": per_cell,
+        "families": fams,
+    }
+
+# 2. real EB windows
+runs = json.loads(gzip.open(HERE / "phaseA_runs.json.gz", "rt").read())["eb_runs"]
+grp = json.loads((HERE / "sample_hard.json").read_text())["groups"]
+eb = {}
+for g in ("eb_deep", "eb_single"):
+    ks = [str(k) for k in grp[g] if str(k) in runs]
+    wins = [x for k in ks for x in runs[k]]
+    edge_ok = [x for x in wins if x["common_mode_ok"] and x["sharp_ok"]]
+    eb[g] = {
+        "stars_screened": len(ks),
+        "stars_with_flagged_window": sum(bool(runs[k]) for k in ks),
+        "flagged_windows": len(wins),
+        "windows_common_and_fast_edges": len(edge_ok),
+        "of_those_old_shoulder_ok": sum(x["shoulder_ok"] for x in edge_ok),
+        "of_those_local_ok": sum(x["local_ok"] for x in edge_ok),
+        "of_those_local_insufficient": sum(x["local_insufficient"] for x in edge_ok),
+        "windows_one_off_ok": sum(x["oneoff_ok"] for x in wins),
+        "per_star_windows": {k: len(runs[k]) for k in ks if runs[k]},
+    }
+out["eb_windows"] = eb
+
+# 3. real light curves of val and search stars
+deep, bright = [], {}
+for k in grp["val"] + grp["search"]:
+    st = wk.load_star(k)
+    g = wk.good_mask(st)
+    rel, sig = wk.normalise(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], g)
+    ok = np.isfinite(rel)
+    deep.append(float(np.nanmin(rel[ok])))
+    hit = ok & (rel >= 1 + wk.SHOULDER_MIN) & ((rel - 1) / sig >= wk.SHOULDER_SNR)
+    if hit.any():
+        bright[str(k)] = int(hit.sum())
+out["new_stars_real"] = {
+    "stars": len(deep),
+    "stars_with_rel_le_0.398": int(sum(d <= 10**-0.4 for d in deep)),
+    "min_rel": round(min(deep), 4),
+    "stars_with_shoulder_like_cadences": len(bright),
+    "shoulder_like_cadences": bright,
+}
+(HERE / "posthoc.json").write_text(json.dumps(out, indent=1) + "\n")
+
+# 4. figure
+import matplotlib  # noqa: E402
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+
+rowsA = json.loads((HERE / "phaseA_rows.json").read_text())["rows"]
+rowsV = json.loads((HERE / "validation_rows.json").read_text())["rows"]
+
+
+def first(rows, pred):
+    return next(x for x in rows if pred(x))
+
+
+fam_i = {f: i for i, f in enumerate(wh.FAMILIES)}
+
+
+def seed_of(x, phase):
+    s_w3, s_ctl = wh.SEEDS[phase][:2]
+    if x["kind"] == "w3":
+        return s_w3 + x["cell"]
+    if x["cell"] == "real_bright_eclipse":
+        return wh.SEEDS["A"][2] + list(wh.OLD_BRIGHT).index(x["kepid"])
+    return s_ctl + fam_i[x["cell"]]
+
+
+def replay(x, phase):
+    rng = np.random.default_rng([seed_of(x, phase), x["j"]])
+    st = wk.load_star(x["kepid"])
+    if x["cell"] != "real_bright_eclipse":
+        rng.integers(23 if phase == "A" else 25)  # the carrier draw
+    good = wk.good_mask(st)
+    tg = st["TIME"][good]
+    if x["kind"] == "w3":
+        rho, blend, te = wk.CELLS[x["cell"]]
+        t0, u0 = rng.uniform(tg.min(), tg.max()), rng.uniform(0, 2)
+        f = wk.w3_flux_avg(st["TIME"], t0, te, u0, rho, blend)
+        win = te * np.sqrt(4 - u0**2) * 2.2 + 1.0
+    else:
+        f, _ = wh.hard_flux(x["cell"], st, good, rng, wh.bright_times(st))
+        dim = np.isfinite(f) & (f < 0.5)
+        t0 = float(np.median(st["TIME"][dim])) if dim.any() else float(tg.mean())
+        win = 4.0
+    sap, err = wk.inject_sap(st["SAP_FLUX"], st["SAP_FLUX_ERR"], f, rng)
+    rel, _ = wk.normalise(st, sap, err, good)
+    return st["TIME"], rel, t0, win
+
+
+picks = [
+    ("real brightening + eclipse: old pass, local fail", "A", first(rowsA, lambda x: x["cell"] == "real_bright_eclipse" and x["pass_old"] and not x["pass_local"])),
+    ("single-point anomalies: old pass, local fail", "A", first(rowsA, lambda x: x["cell"] == "single_point" and x["pass_old"] and not x["pass_local"])),
+    ("synthetic brightening + eclipse: old pass, local fail", "val", first(rowsV, lambda x: x["cell"] == "synth_bright_eclipse" and x["pass_old"] and not x["pass_local"])),
+    ("W3 tE 10 d: old pass, local lost", "val", first(rowsV, lambda x: x["kind"] == "w3" and x["cell"] == 19 and x["pass_old"] and not x["pass_local"])),
+    ("W3 rho 0.1 blend 0.7 tE 1 d: both pass", "val", first(rowsV, lambda x: x["kind"] == "w3" and x["cell"] == 17 and x["pass_old"] and x["pass_local"])),
+    ("long dip (old and local fail)", "val", first(rowsV, lambda x: x["cell"] == "long_dip" and x["flagged"] and not x["pass_old"])),
+]
+fig, axs = plt.subplots(3, 2, figsize=(11, 9))
+for ax, (title, phase, x) in zip(axs.ravel(), picks, strict=True):
+    t, rel, t0, win = replay(x, phase)
+    m = np.isfinite(rel) & (np.abs(t - t0) <= win)
+    ax.plot(t[m] - t0, rel[m], ".", ms=2.5, color="k")
+    ax.axhline(10**-0.4, color="tab:red", lw=0.6, ls="--")
+    ax.axhline(1.10, color="tab:blue", lw=0.6, ls=":")
+    ax.set_title(f"{title}\nKIC {x['kepid']}", fontsize=8)
+    ax.set_xlabel("t - t_event (d)", fontsize=8)
+    ax.set_ylabel("SAP / quarter median", fontsize=8)
+    ax.tick_params(labelsize=7)
+fig.suptitle("Simulated injections on observed Kepler DR25 SAP light curves; red: 1 mag, blue: rel 1.10", fontsize=9)
+fig.tight_layout()
+fig.savefig(HERE / "cases.png", dpi=90)
+print(json.dumps({k: out[k] for k in ("eb_windows", "new_stars_real")}, indent=1)[:3000])
+print({p: (out[p]["w3_total_old"], out[p]["w3_total_local"], out[p]["w3_total_n"]) for p in ("phaseA", "validation")})

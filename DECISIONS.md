@@ -6360,3 +6360,16 @@ confining radiation at a throat is found.
   side, a local in-quarter baseline instead of the quarter median, and a control with real
   in-quarter brightenings and long dips. Also revisit if long t_E is needed (a different quarter
   join first), or if a second band or pixel-level injection becomes available.
+- **Addendum 2026-10-25 (`results/w3_kepler/hard/`):** on this route, the frozen **local shoulder
+  rule** (`w3_kepler.shoulder_local`) replaces the #500 shoulder test.
+  - The rule asks for ≥ 2 cadences per side at least max(10 %, 5σ, 5 s_B) above the median of a
+    same-quarter baseline window beyond the shoulder window.
+  - Evidence, on the same injections:
+    - the #500 rule passed 56 / 100 (real brightening + eclipse), 72 / 100 (single-point) and
+      86 / 100 (synthetic brightening + eclipse);
+    - the local rule passed 0 in all families, and 0 of 2,826 real deep EB windows with bounded
+      edges.
+  - Validation passed: W3 55–86 / 100 per cell, at a cost of 177 / 2,000 recoveries.
+  - Search: 0 flags in 200 new stars.
+  - Revisit if t_E ≥ 10 d matters (baseline windows past quarter ends), or if a real deep single
+    eclipse or another untested family becomes available.
