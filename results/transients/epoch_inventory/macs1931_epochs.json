@@ -1,0 +1,186 @@
+{
+ "label": "observed (MAST metadata), post hoc check",
+ "queried_utc": "2026-10-25 20:15:49",
+ "rows": [
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f090w",
+   "filters": "F090W",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 2061.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f115w",
+   "filters": "F115W",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 1674.9,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f150w",
+   "filters": "F150W",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 1245.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f200w",
+   "filters": "F200W",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 1245.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f210m",
+   "filters": "F210M",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 2061.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f277w",
+   "filters": "F277W",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 1245.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f300m",
+   "filters": "F300M",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 2061.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f356w",
+   "filters": "F356W",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 1245.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f410m",
+   "filters": "F410M",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 2061.5,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw06882-o038_t041_nircam_clear-f444w",
+   "filters": "F444W",
+   "s_ra": 292.95708,
+   "s_dec": -26.57611,
+   "t_exptime_s": 1674.9,
+   "target_name": "MACSJ1931-2635",
+   "t_min_iso": "2025-09-01",
+   "release_iso": "2025-09-02"
+  },
+  {
+   "obs_id": "jw09493-o001_t001_nircam_clear-f070w",
+   "filters": "F070W",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 2319.1,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2025-10-08",
+   "release_iso": "2025-10-09"
+  },
+  {
+   "obs_id": "jw09493-o001_t001_nircam_clear-f277w",
+   "filters": "F277W",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 773.0,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2025-10-08",
+   "release_iso": "2025-10-09"
+  },
+  {
+   "obs_id": "jw09493-o001_t001_nircam_clear-f356w",
+   "filters": "F356W",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 773.0,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2025-10-08",
+   "release_iso": "2025-10-09"
+  },
+  {
+   "obs_id": "jw09493-o001_t001_nircam_clear-f444w",
+   "filters": "F444W",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 773.0,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2025-10-08",
+   "release_iso": "2025-10-09"
+  },
+  {
+   "obs_id": "jw12299-o001_t001_nircam_clear-f150w2",
+   "filters": "F150W2",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 3221.0,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2026-09-28",
+   "release_iso": "2026-09-28"
+  },
+  {
+   "obs_id": "jw12299-o001_t001_nircam_clear-f277w",
+   "filters": "F277W",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 2104.4,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2026-09-28",
+   "release_iso": "2026-09-28"
+  },
+  {
+   "obs_id": "jw12299-o001_t001_nircam_clear-f356w",
+   "filters": "F356W",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 601.3,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2026-09-28",
+   "release_iso": "2026-09-28"
+  },
+  {
+   "obs_id": "jw12299-o001_t001_nircam_clear-f444w",
+   "filters": "F444W",
+   "s_ra": 292.95507,
+   "s_dec": -26.57485,
+   "t_exptime_s": 515.4,
+   "target_name": "SN_Eos_Image_101.1",
+   "t_min_iso": "2026-09-28",
+   "release_iso": "2026-09-28"
+  }
+ ]
+}

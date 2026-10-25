@@ -1,0 +1,2777 @@
+{
+ "meta": {
+  "queried_mjd": 61338.8429,
+  "radius": "3 arcmin",
+  "n_used_epochs": 96
+ },
+ "fields": {
+  "abell2744": {
+   "n_rows": 142,
+   "epochs": {
+    "01324-001": {
+     "t_min_mjd": 59758.92,
+     "release_mjd": 59774.54,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "02756-003": {
+     "t_min_mjd": 59872.52,
+     "release_mjd": 59872.93,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "02561-001": {
+     "t_min_mjd": 59885.35,
+     "release_mjd": 59890.89,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "01324-006": {
+     "t_min_mjd": 59893.57,
+     "release_mjd": 59894.37,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "02561-003": {
+     "t_min_mjd": 59898.42,
+     "release_mjd": 59899.81,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "02756-002": {
+     "t_min_mjd": 59919.38,
+     "release_mjd": 59919.67,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "01324-007": {
+     "t_min_mjd": 60132.25,
+     "release_mjd": 60133.62,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "02561-002": {
+     "t_min_mjd": 60156.33,
+     "release_mjd": 60171.99,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W",
+      "F480M"
+     ]
+    },
+    "01176-221": {
+     "t_min_mjd": 60159.58,
+     "release_mjd": 60526.03,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "03538-006": {
+     "t_min_mjd": 60242.18,
+     "release_mjd": 60242.98,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F335M"
+     ]
+    },
+    "03538-001": {
+     "t_min_mjd": 60242.28,
+     "release_mjd": 60247.21,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F300M"
+     ]
+    },
+    "03538-009": {
+     "t_min_mjd": 60242.36,
+     "release_mjd": 60255.77,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F460M"
+     ]
+    },
+    "03538-004": {
+     "t_min_mjd": 60242.49,
+     "release_mjd": 60247.67,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F300M"
+     ]
+    },
+    "03538-007": {
+     "t_min_mjd": 60243.22,
+     "release_mjd": 60258.21,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F410M"
+     ]
+    },
+    "02883-001": {
+     "t_min_mjd": 60245.87,
+     "release_mjd": 60249.73,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F360M"
+     ]
+    },
+    "03538-005": {
+     "t_min_mjd": 60246.89,
+     "release_mjd": 60247.2,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F335M"
+     ]
+    },
+    "02883-002": {
+     "t_min_mjd": 60249.14,
+     "release_mjd": 60249.65,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F480M"
+     ]
+    },
+    "03538-008": {
+     "t_min_mjd": 60249.34,
+     "release_mjd": 60249.64,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F410M"
+     ]
+    },
+    "03538-010": {
+     "t_min_mjd": 60249.71,
+     "release_mjd": 60255.13,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F460M"
+     ]
+    },
+    "03538-025": {
+     "t_min_mjd": 60252.13,
+     "release_mjd": 60252.88,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F300M"
+     ]
+    },
+    "04111-001": {
+     "t_min_mjd": 60259.64,
+     "release_mjd": 60262.93,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F070W",
+      "F090W",
+      "F140M",
+      "F150W2",
+      "F182M",
+      "F210M",
+      "F250M",
+      "F300M",
+      "F335M",
+      "F360M",
+      "F430M",
+      "F460M",
+      "F480M"
+     ]
+    },
+    "04111-002": {
+     "t_min_mjd": 60268.24,
+     "release_mjd": 60269.3,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F070W",
+      "F090W",
+      "F140M",
+      "F150W2",
+      "F182M",
+      "F210M",
+      "F250M",
+      "F300M",
+      "F335M",
+      "F360M",
+      "F430M",
+      "F460M",
+      "F480M"
+     ]
+    },
+    "03516-002": {
+     "t_min_mjd": 60275.0,
+     "release_mjd": 60284.35,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F070W",
+      "F090W",
+      "F356W"
+     ]
+    },
+    "03516-001": {
+     "t_min_mjd": 60284.42,
+     "release_mjd": 60290.19,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F070W",
+      "F090W",
+      "F356W"
+     ]
+    },
+    "03073-005": {
+     "t_min_mjd": 60494.07,
+     "release_mjd": 60859.29,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F277W"
+     ]
+    },
+    "03073-008": {
+     "t_min_mjd": 60494.7,
+     "release_mjd": 60859.86,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F200W",
+      "F444W"
+     ]
+    },
+    "03073-009": {
+     "t_min_mjd": 60494.82,
+     "release_mjd": 60860.04,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F150W",
+      "F356W"
+     ]
+    },
+    "02561-006": {
+     "t_min_mjd": 60521.92,
+     "release_mjd": 60525.12,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": [
+    {
+     "early": "01324-001",
+     "late": "02561-006",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60521.92,
+     "dt_days": 763.0,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02756-003",
+     "late": "02561-006",
+     "t_early_mjd": 59872.52,
+     "t_late_mjd": 60521.92,
+     "dt_days": 649.4,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02561-001",
+     "late": "02561-006",
+     "t_early_mjd": 59885.35,
+     "t_late_mjd": 60521.92,
+     "dt_days": 636.6,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-006",
+     "late": "02561-006",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60521.92,
+     "dt_days": 628.3,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-003",
+     "late": "02561-006",
+     "t_early_mjd": 59898.42,
+     "t_late_mjd": 60521.92,
+     "dt_days": 623.5,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02756-002",
+     "late": "02561-006",
+     "t_early_mjd": 59919.38,
+     "t_late_mjd": 60521.92,
+     "dt_days": 602.5,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-007",
+     "late": "02561-006",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60521.92,
+     "dt_days": 389.7,
+     "shared_filters": [
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-002",
+     "late": "02561-006",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60521.92,
+     "dt_days": 365.6,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "01176-221",
+     "late": "02561-006",
+     "t_early_mjd": 60159.58,
+     "t_late_mjd": 60521.92,
+     "dt_days": 362.3,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "03516-002",
+     "late": "02561-006",
+     "t_early_mjd": 60275.0,
+     "t_late_mjd": 60521.92,
+     "dt_days": 246.9,
+     "shared_filters": [
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "03516-001",
+     "late": "02561-006",
+     "t_early_mjd": 60284.42,
+     "t_late_mjd": 60521.92,
+     "dt_days": 237.5,
+     "shared_filters": [
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-001",
+     "late": "03073-009",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60494.82,
+     "dt_days": 735.9,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02756-003",
+     "late": "03073-009",
+     "t_early_mjd": 59872.52,
+     "t_late_mjd": 60494.82,
+     "dt_days": 622.3,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02561-001",
+     "late": "03073-009",
+     "t_early_mjd": 59885.35,
+     "t_late_mjd": 60494.82,
+     "dt_days": 609.5,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-006",
+     "late": "03073-009",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60494.82,
+     "dt_days": 601.2,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-003",
+     "late": "03073-009",
+     "t_early_mjd": 59898.42,
+     "t_late_mjd": 60494.82,
+     "dt_days": 596.4,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02756-002",
+     "late": "03073-009",
+     "t_early_mjd": 59919.38,
+     "t_late_mjd": 60494.82,
+     "dt_days": 575.4,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-007",
+     "late": "03073-009",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60494.82,
+     "dt_days": 362.6,
+     "shared_filters": [
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-002",
+     "late": "03073-009",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60494.82,
+     "dt_days": 338.5,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "01176-221",
+     "late": "03073-009",
+     "t_early_mjd": 60159.58,
+     "t_late_mjd": 60494.82,
+     "dt_days": 335.2,
+     "shared_filters": [
+      "F150W",
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "03516-002",
+     "late": "03073-009",
+     "t_early_mjd": 60275.0,
+     "t_late_mjd": 60494.82,
+     "dt_days": 219.8,
+     "shared_filters": [
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "03516-001",
+     "late": "03073-009",
+     "t_early_mjd": 60284.42,
+     "t_late_mjd": 60494.82,
+     "dt_days": 210.4,
+     "shared_filters": [
+      "F356W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-001",
+     "late": "03073-008",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60494.7,
+     "dt_days": 735.8,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02756-003",
+     "late": "03073-008",
+     "t_early_mjd": 59872.52,
+     "t_late_mjd": 60494.7,
+     "dt_days": 622.2,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02561-001",
+     "late": "03073-008",
+     "t_early_mjd": 59885.35,
+     "t_late_mjd": 60494.7,
+     "dt_days": 609.3,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-006",
+     "late": "03073-008",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60494.7,
+     "dt_days": 601.1,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-003",
+     "late": "03073-008",
+     "t_early_mjd": 59898.42,
+     "t_late_mjd": 60494.7,
+     "dt_days": 596.3,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02756-002",
+     "late": "03073-008",
+     "t_early_mjd": 59919.38,
+     "t_late_mjd": 60494.7,
+     "dt_days": 575.3,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-007",
+     "late": "03073-008",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60494.7,
+     "dt_days": 362.4,
+     "shared_filters": [
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-002",
+     "late": "03073-008",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60494.7,
+     "dt_days": 338.4,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "01176-221",
+     "late": "03073-008",
+     "t_early_mjd": 60159.58,
+     "t_late_mjd": 60494.7,
+     "dt_days": 335.1,
+     "shared_filters": [
+      "F200W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-001",
+     "late": "03073-005",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60494.07,
+     "dt_days": 735.2,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02756-003",
+     "late": "03073-005",
+     "t_early_mjd": 59872.52,
+     "t_late_mjd": 60494.07,
+     "dt_days": 621.6,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02561-001",
+     "late": "03073-005",
+     "t_early_mjd": 59885.35,
+     "t_late_mjd": 60494.07,
+     "dt_days": 608.7,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-006",
+     "late": "03073-005",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60494.07,
+     "dt_days": 600.5,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-003",
+     "late": "03073-005",
+     "t_early_mjd": 59898.42,
+     "t_late_mjd": 60494.07,
+     "dt_days": 595.7,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02756-002",
+     "late": "03073-005",
+     "t_early_mjd": 59919.38,
+     "t_late_mjd": 60494.07,
+     "dt_days": 574.7,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-007",
+     "late": "03073-005",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60494.07,
+     "dt_days": 361.8,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-002",
+     "late": "03073-005",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60494.07,
+     "dt_days": 337.7,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "01176-221",
+     "late": "03073-005",
+     "t_early_mjd": 60159.58,
+     "t_late_mjd": 60494.07,
+     "dt_days": 334.5,
+     "shared_filters": [
+      "F115W",
+      "F277W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-001",
+     "late": "03516-001",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60284.42,
+     "dt_days": 525.5,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-006",
+     "late": "03516-001",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60284.42,
+     "dt_days": 390.9,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-007",
+     "late": "03516-001",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60284.42,
+     "dt_days": 152.2,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "02561-002",
+     "late": "03516-001",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60284.42,
+     "dt_days": 128.1,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "03516-002",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60275.0,
+     "dt_days": 516.1,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-006",
+     "late": "03516-002",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60275.0,
+     "dt_days": 381.4,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-007",
+     "late": "03516-002",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60275.0,
+     "dt_days": 142.7,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "02561-002",
+     "late": "03516-002",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60275.0,
+     "dt_days": 118.7,
+     "shared_filters": [
+      "F090W",
+      "F356W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "04111-002",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60268.24,
+     "dt_days": 509.3,
+     "shared_filters": [
+      "F090W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-006",
+     "late": "04111-002",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60268.24,
+     "dt_days": 374.7,
+     "shared_filters": [
+      "F090W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-007",
+     "late": "04111-002",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60268.24,
+     "dt_days": 136.0,
+     "shared_filters": [
+      "F090W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "02561-002",
+     "late": "04111-002",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60268.24,
+     "dt_days": 111.9,
+     "shared_filters": [
+      "F090W",
+      "F480M"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "04111-001",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60259.64,
+     "dt_days": 500.7,
+     "shared_filters": [
+      "F090W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-006",
+     "late": "04111-001",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60259.64,
+     "dt_days": 366.1,
+     "shared_filters": [
+      "F090W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-007",
+     "late": "04111-001",
+     "t_early_mjd": 60132.25,
+     "t_late_mjd": 60259.64,
+     "dt_days": 127.4,
+     "shared_filters": [
+      "F090W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "02561-002",
+     "late": "04111-001",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60259.64,
+     "dt_days": 103.3,
+     "shared_filters": [
+      "F090W",
+      "F480M"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "02561-002",
+     "late": "03538-008",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60249.34,
+     "dt_days": 93.0,
+     "shared_filters": [
+      "F410M"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "02561-002",
+     "late": "02883-002",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60249.14,
+     "dt_days": 92.8,
+     "shared_filters": [
+      "F480M"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "02561-002",
+     "late": "03538-007",
+     "t_early_mjd": 60156.33,
+     "t_late_mjd": 60243.22,
+     "dt_days": 86.9,
+     "shared_filters": [
+      "F410M"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "01176-221",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60159.58,
+     "dt_days": 400.7,
+     "shared_filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-006",
+     "late": "01176-221",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60159.58,
+     "dt_days": 266.0,
+     "shared_filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "02561-002",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60156.33,
+     "dt_days": 397.4,
+     "shared_filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02756-003",
+     "late": "02561-002",
+     "t_early_mjd": 59872.52,
+     "t_late_mjd": 60156.33,
+     "dt_days": 283.8,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02561-001",
+     "late": "02561-002",
+     "t_early_mjd": 59885.35,
+     "t_late_mjd": 60156.33,
+     "dt_days": 271.0,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-006",
+     "late": "02561-002",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60156.33,
+     "dt_days": 262.8,
+     "shared_filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-003",
+     "late": "02561-002",
+     "t_early_mjd": 59898.42,
+     "t_late_mjd": 60156.33,
+     "dt_days": 257.9,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02756-002",
+     "late": "02561-002",
+     "t_early_mjd": 59919.38,
+     "t_late_mjd": 60156.33,
+     "dt_days": 237.0,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-001",
+     "late": "01324-007",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 60132.25,
+     "dt_days": 373.3,
+     "shared_filters": [
+      "F090W",
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02756-003",
+     "late": "01324-007",
+     "t_early_mjd": 59872.52,
+     "t_late_mjd": 60132.25,
+     "dt_days": 259.7,
+     "shared_filters": [
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02561-001",
+     "late": "01324-007",
+     "t_early_mjd": 59885.35,
+     "t_late_mjd": 60132.25,
+     "dt_days": 246.9,
+     "shared_filters": [
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-006",
+     "late": "01324-007",
+     "t_early_mjd": 59893.57,
+     "t_late_mjd": 60132.25,
+     "dt_days": 238.7,
+     "shared_filters": [
+      "F090W",
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "02561-003",
+     "late": "01324-007",
+     "t_early_mjd": 59898.42,
+     "t_late_mjd": 60132.25,
+     "dt_days": 233.8,
+     "shared_filters": [
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "02756-002",
+     "late": "01324-007",
+     "t_early_mjd": 59919.38,
+     "t_late_mjd": 60132.25,
+     "dt_days": 212.9,
+     "shared_filters": [
+      "F115W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": true,
+     "late_used": false
+    },
+    {
+     "early": "01324-001",
+     "late": "02756-002",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 59919.38,
+     "dt_days": 160.5,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "02561-003",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 59898.42,
+     "dt_days": 139.5,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "01324-006",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 59893.57,
+     "dt_days": 134.7,
+     "shared_filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "01324-001",
+     "late": "02561-001",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 59885.35,
+     "dt_days": 126.4,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": true
+    },
+    {
+     "early": "01324-001",
+     "late": "02756-003",
+     "t_early_mjd": 59758.92,
+     "t_late_mjd": 59872.52,
+     "dt_days": 113.6,
+     "shared_filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": true
+    }
+   ]
+  },
+  "abell370": {
+   "n_rows": 77,
+   "epochs": {
+    "01208-002": {
+     "t_min_mjd": 59942.26,
+     "release_mjd": 60307.75,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "03538-011": {
+     "t_min_mjd": 60297.34,
+     "release_mjd": 60297.84,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F300M"
+     ]
+    },
+    "03538-013": {
+     "t_min_mjd": 60297.44,
+     "release_mjd": 60297.91,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F335M"
+     ]
+    },
+    "03538-014": {
+     "t_min_mjd": 60297.54,
+     "release_mjd": 60298.79,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F335M"
+     ]
+    },
+    "03538-016": {
+     "t_min_mjd": 60297.68,
+     "release_mjd": 60298.79,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F410M"
+     ]
+    },
+    "03538-015": {
+     "t_min_mjd": 60298.52,
+     "release_mjd": 60298.67,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F410M"
+     ]
+    },
+    "03538-017": {
+     "t_min_mjd": 60298.96,
+     "release_mjd": 60299.66,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F460M"
+     ]
+    },
+    "03538-002": {
+     "t_min_mjd": 60300.72,
+     "release_mjd": 60301.31,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F460M"
+     ]
+    },
+    "03538-012": {
+     "t_min_mjd": 60300.81,
+     "release_mjd": 60301.34,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F300M"
+     ]
+    },
+    "02883-004": {
+     "t_min_mjd": 60515.97,
+     "release_mjd": 60524.57,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F480M"
+     ]
+    },
+    "02883-003": {
+     "t_min_mjd": 60522.46,
+     "release_mjd": 60524.22,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F360M"
+     ]
+    },
+    "05324-002": {
+     "t_min_mjd": 60562.59,
+     "release_mjd": 60743.86,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W"
+     ]
+    },
+    "05324-003": {
+     "t_min_mjd": 60661.48,
+     "release_mjd": 60843.96,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W"
+     ]
+    },
+    "05890-001": {
+     "t_min_mjd": 60668.49,
+     "release_mjd": 61034.2,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F360M",
+      "F430M",
+      "F460M",
+      "F480M"
+     ]
+    },
+    "09371-001": {
+     "t_min_mjd": 61033.51,
+     "release_mjd": 61403.81,
+     "public": false,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F200W",
+      "F322W2",
+      "F335M"
+     ]
+    },
+    "07345-101": {
+     "t_min_mjd": 61038.38,
+     "release_mjd": 61404.13,
+     "public": false,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F200W",
+      "F277W",
+      "F356W"
+     ]
+    },
+    "07345-102": {
+     "t_min_mjd": 61040.61,
+     "release_mjd": 61406.27,
+     "public": false,
+     "used": false,
+     "filters": [
+      "F200W",
+      "F277W"
+     ]
+    },
+    "07345-103": {
+     "t_min_mjd": 61048.96,
+     "release_mjd": 61414.84,
+     "public": false,
+     "used": false,
+     "filters": [
+      "F200W",
+      "F277W"
+     ]
+    },
+    "06882-053": {
+     "t_min_mjd": 61049.08,
+     "release_mjd": 61049.63,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    },
+    "05324-014": {
+     "t_min_mjd": 61067.1,
+     "release_mjd": 61248.38,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "07345-104": {
+     "t_min_mjd": 61067.48,
+     "release_mjd": 61433.18,
+     "public": false,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F200W",
+      "F277W",
+      "F356W"
+     ]
+    },
+    "07345-105": {
+     "t_min_mjd": 61262.54,
+     "release_mjd": 61628.36,
+     "public": false,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F200W",
+      "F277W",
+      "F356W"
+     ]
+    },
+    "05324-015": {
+     "t_min_mjd": 61266.63,
+     "release_mjd": 61451.01,
+     "public": false,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "abells1063": {
+   "n_rows": 19,
+   "epochs": {
+    "01840-010": {
+     "t_min_mjd": 59846.8,
+     "release_mjd": 60211.88,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F250M",
+      "F300M",
+      "F444W"
+     ]
+    },
+    "03293-001": {
+     "t_min_mjd": 60573.87,
+     "release_mjd": 60585.4,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W",
+      "F480M"
+     ]
+    },
+    "06882-059": {
+     "t_min_mjd": 60940.51,
+     "release_mjd": 60943.69,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "bullet": {
+   "n_rows": 12,
+   "epochs": {
+    "04598-001": {
+     "t_min_mjd": 60695.22,
+     "release_mjd": 60699.62,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "06882-049": {
+     "t_min_mjd": 61061.77,
+     "release_mjd": 61062.89,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "elgordo": {
+   "n_rows": 12,
+   "epochs": {
+    "01176-241": {
+     "t_min_mjd": 59789.79,
+     "release_mjd": 60155.23,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "06882-051": {
+     "t_min_mjd": 61257.07,
+     "release_mjd": 61257.26,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "macs0416": {
+   "n_rows": 69,
+   "epochs": {
+    "01176-211": {
+     "t_min_mjd": 59859.27,
+     "release_mjd": 60224.5,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "01176-212": {
+     "t_min_mjd": 59942.65,
+     "release_mjd": 60308.14,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "01208-004": {
+     "t_min_mjd": 59955.86,
+     "release_mjd": 60321.66,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "01176-213": {
+     "t_min_mjd": 59985.33,
+     "release_mjd": 60350.56,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "02883-006": {
+     "t_min_mjd": 60176.09,
+     "release_mjd": 60176.69,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F480M"
+     ]
+    },
+    "03538-003": {
+     "t_min_mjd": 60300.62,
+     "release_mjd": 60301.05,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F460M"
+     ]
+    },
+    "03538-022": {
+     "t_min_mjd": 60300.92,
+     "release_mjd": 60301.39,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F410M"
+     ]
+    },
+    "03538-023": {
+     "t_min_mjd": 60301.02,
+     "release_mjd": 60301.44,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F410M"
+     ]
+    },
+    "03538-024": {
+     "t_min_mjd": 60302.07,
+     "release_mjd": 60302.21,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F460M"
+     ]
+    },
+    "03538-020": {
+     "t_min_mjd": 60302.17,
+     "release_mjd": 60302.9,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F335M"
+     ]
+    },
+    "03538-021": {
+     "t_min_mjd": 60302.25,
+     "release_mjd": 60302.93,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F335M"
+     ]
+    },
+    "03538-018": {
+     "t_min_mjd": 60326.5,
+     "release_mjd": 60326.94,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F300M"
+     ]
+    },
+    "03538-019": {
+     "t_min_mjd": 60326.59,
+     "release_mjd": 60326.98,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F300M"
+     ]
+    },
+    "02883-005": {
+     "t_min_mjd": 60537.68,
+     "release_mjd": 60538.32,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F360M"
+     ]
+    },
+    "05890-002": {
+     "t_min_mjd": 60682.81,
+     "release_mjd": 61048.8,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F360M",
+      "F430M",
+      "F460M",
+      "F480M"
+     ]
+    },
+    "06882-054": {
+     "t_min_mjd": 61050.16,
+     "release_mjd": 61050.28,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "macs0417": {
+   "n_rows": 12,
+   "epochs": {
+    "01208-006": {
+     "t_min_mjd": 59865.58,
+     "release_mjd": 60231.06,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "06882-055": {
+     "t_min_mjd": 60954.25,
+     "release_mjd": 60954.66,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "macs0647": {
+   "n_rows": 8,
+   "epochs": {
+    "01433-010": {
+     "t_min_mjd": 59845.54,
+     "release_mjd": 59848.38,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "01433-020": {
+     "t_min_mjd": 59952.74,
+     "release_mjd": 59953.14,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F200W",
+      "F480M"
+     ]
+    }
+   },
+   "new_pairs": [
+    {
+     "early": "01433-010",
+     "late": "01433-020",
+     "t_early_mjd": 59845.54,
+     "t_late_mjd": 59952.74,
+     "dt_days": 107.2,
+     "shared_filters": [
+      "F200W"
+     ],
+     "early_used": false,
+     "late_used": false
+    }
+   ]
+  },
+  "macs0717": {
+   "n_rows": 10,
+   "epochs": {
+    "06882-029": {
+     "t_min_mjd": 60980.83,
+     "release_mjd": 60981.73,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F210M",
+      "F277W",
+      "F300M",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "macs1149": {
+   "n_rows": 35,
+   "epochs": {
+    "01208-008": {
+     "t_min_mjd": 60076.51,
+     "release_mjd": 60443.64,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "01199-005": {
+     "t_min_mjd": 60101.0,
+     "release_mjd": 60469.74,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "02883-008": {
+     "t_min_mjd": 60285.7,
+     "release_mjd": 60294.78,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F210M",
+      "F480M"
+     ]
+    },
+    "02883-007": {
+     "t_min_mjd": 60294.14,
+     "release_mjd": 60294.72,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F182M",
+      "F360M"
+     ]
+    },
+    "01176-231": {
+     "t_min_mjd": 60333.87,
+     "release_mjd": 60700.24,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "05890-003": {
+     "t_min_mjd": 60802.5,
+     "release_mjd": 61168.25,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F360M",
+      "F430M",
+      "F460M",
+      "F480M"
+     ]
+    },
+    "06882-058": {
+     "t_min_mjd": 61190.43,
+     "release_mjd": 61190.68,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "macs1423": {
+   "n_rows": 12,
+   "epochs": {
+    "01208-010": {
+     "t_min_mjd": 60001.52,
+     "release_mjd": 60367.14,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "06882-047": {
+     "t_min_mjd": 61104.71,
+     "release_mjd": 61105.0,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "macs1931": {
+   "n_rows": 18,
+   "epochs": {
+    "06882-038": {
+     "t_min_mjd": 60919.04,
+     "release_mjd": 60920.36,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F210M",
+      "F277W",
+      "F300M",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "09493-001": {
+     "t_min_mjd": 60956.55,
+     "release_mjd": 60957.43,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F070W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "12299-001": {
+     "t_min_mjd": 61311.65,
+     "release_mjd": 61311.89,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F150W2",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": [
+    {
+     "early": "06882-038",
+     "late": "12299-001",
+     "t_early_mjd": 60919.04,
+     "t_late_mjd": 61311.65,
+     "dt_days": 392.6,
+     "shared_filters": [
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "09493-001",
+     "late": "12299-001",
+     "t_early_mjd": 60956.55,
+     "t_late_mjd": 61311.65,
+     "dt_days": 355.1,
+     "shared_filters": [
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    },
+    {
+     "early": "06882-038",
+     "late": "09493-001",
+     "t_early_mjd": 60919.04,
+     "t_late_mjd": 60956.55,
+     "dt_days": 37.5,
+     "shared_filters": [
+      "F277W",
+      "F356W",
+      "F444W"
+     ],
+     "early_used": false,
+     "late_used": false
+    }
+   ]
+  },
+  "ms0451": {
+   "n_rows": 40,
+   "epochs": {
+    "05058-001": {
+     "t_min_mjd": 60698.81,
+     "release_mjd": 61065.64,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "05058-002": {
+     "t_min_mjd": 60702.92,
+     "release_mjd": 61068.29,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "05058-003": {
+     "t_min_mjd": 60706.68,
+     "release_mjd": 61071.96,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "05058-004": {
+     "t_min_mjd": 60710.24,
+     "release_mjd": 61075.74,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "05058-005": {
+     "t_min_mjd": 60713.23,
+     "release_mjd": 61078.61,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "06882-022": {
+     "t_min_mjd": 60930.08,
+     "release_mjd": 60931.63,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F210M",
+      "F277W",
+      "F300M",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "plckg165": {
+   "n_rows": 36,
+   "epochs": {
+    "01176-251": {
+     "t_min_mjd": 60033.18,
+     "release_mjd": 60399.7,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "04446-002": {
+     "t_min_mjd": 60056.95,
+     "release_mjd": 60057.36,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "04446-003": {
+     "t_min_mjd": 60073.56,
+     "release_mjd": 60074.75,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "04744-003": {
+     "t_min_mjd": 60773.11,
+     "release_mjd": 60773.67,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "04744-005": {
+     "t_min_mjd": 60815.48,
+     "release_mjd": 60816.09,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "06882-050": {
+     "t_min_mjd": 61125.34,
+     "release_mjd": 61125.82,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "rxcj0018": {
+   "n_rows": 16,
+   "epochs": {
+    "05594-081": {
+     "t_min_mjd": 60659.12,
+     "release_mjd": 60659.19,
+     "public": true,
+     "used": false,
+     "filters": [
+      "F150W2",
+      "F322W2"
+     ]
+    },
+    "06882-001": {
+     "t_min_mjd": 61224.22,
+     "release_mjd": 61224.75,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F210M",
+      "F277W",
+      "F300M",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "12782-001": {
+     "t_min_mjd": 61269.26,
+     "release_mjd": 61270.13,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F200W",
+      "F356W",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "rxj2129": {
+   "n_rows": 12,
+   "epochs": {
+    "02767-002": {
+     "t_min_mjd": 59858.4,
+     "release_mjd": 59859.71,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "06882-046": {
+     "t_min_mjd": 60977.11,
+     "release_mjd": 60977.67,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F150W",
+      "F210M",
+      "F300M",
+      "F410M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "smacs0723": {
+   "n_rows": 19,
+   "epochs": {
+    "02736-001": {
+     "t_min_mjd": 59737.02,
+     "release_mjd": 59773.62,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F444W"
+     ]
+    },
+    "04043-001": {
+     "t_min_mjd": 60441.72,
+     "release_mjd": 60442.81,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F444W"
+     ]
+    },
+    "06882-057": {
+     "t_min_mjd": 61196.91,
+     "release_mjd": 61197.3,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F182M",
+      "F210M",
+      "F300M",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "12774-002": {
+     "t_min_mjd": 61227.74,
+     "release_mjd": 61228.24,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F115W",
+      "F150W",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "spt0615": {
+   "n_rows": 12,
+   "epochs": {
+    "04212-001": {
+     "t_min_mjd": 60195.78,
+     "release_mjd": 60287.05,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "06882-056": {
+     "t_min_mjd": 61102.32,
+     "release_mjd": 61102.99,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  },
+  "sunrise": {
+   "n_rows": 16,
+   "epochs": {
+    "02282-010": {
+     "t_min_mjd": 59790.63,
+     "release_mjd": 59790.9,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F150W",
+      "F200W",
+      "F277W",
+      "F356W",
+      "F410M",
+      "F444W"
+     ]
+    },
+    "02282-120": {
+     "t_min_mjd": 59954.54,
+     "release_mjd": 59955.08,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F090W",
+      "F115W",
+      "F277W",
+      "F356W"
+     ]
+    },
+    "06882-052": {
+     "t_min_mjd": 60864.89,
+     "release_mjd": 60865.01,
+     "public": true,
+     "used": true,
+     "filters": [
+      "F150W",
+      "F210M",
+      "F300M",
+      "F444W"
+     ]
+    }
+   },
+   "new_pairs": []
+  }
+ }
+}

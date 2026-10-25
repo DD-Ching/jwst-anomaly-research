@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: Two-epoch NIRCam inventory on 19 cluster fields: SN Eos follow-up epoch is new data
+- **Result** (`results/transients/epoch_inventory/RESULT.md`; plan frozen before the query, rule tested): 117 public
+  or pending NIRCam epochs within 3′ of 19 cluster centres; 82 pairs pass the new-pair rule (Abell 2744 78, an upper
+  bound: no footprint check; MACS J1931 3; MACS0647 1); 14 fields have none.
+- **New input:** MACS J1931 programs 9493 (2025-10-08) and 12299 (2026-09-28) observe SN Eos (lensed system 101 of the
+  pinned AstroLensPy v2.1 model) in F277W / F356W / F444W, the same pointing as VENUS.
+- **Deviation:** the query ran before the tool was committed (lint stops); rule code unchanged.
+- **LAM atlas:** still `restricted.html` at 20:09Z.
+- **Handoff:** next: SN Eos lens-model test (predicted image positions and delays from the pinned maps, forced
+  photometry in the three epochs with injections; plan first). Abell 370 epochs 7345 / 9371 / 5324 o015 become
+  public 2026-12-29 to 2027-08-11. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: MAST HLSP search for JWST-era cluster lens models: none new
 - **Result** (`results/lens_consistency/hlsp_search/RESULT.md`): HLSP cone queries at 18 lensing-cluster centres
   find lens-model HLSPs only from BUFFALO, CANUCS, RELICS, CLASH and Frontier, all used already. JWST-ERO, GLASS-JWST,
