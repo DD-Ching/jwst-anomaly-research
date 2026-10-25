@@ -25,7 +25,7 @@ radius and the classify / local-noise thresholds are ASSUMPTIONs (PLAN.md).
 - The flux at the MARS-only position is the already-catalogued D115a.1 / D115b.1 arc, not an uncatalogued image.
   Two ordinary readings fit the stored numbers and are not separated here: the target is MARS's counterpart of
   D115a.2 displaced by 3.24″ (just beyond the pairing radius), or MARS splits the D115a.1 arc into a fold pair
-  that the catalogue lists as one image. Either way it is model geometry near a critical curve (1.515″ map pixels),
+  that the catalogue lists as one image. Either way it is model geometry near a critical curve (1.263″; corrected 2026-10-25 from 1.515″ map pixels),
   not a new image.
 - The D115 two-model route stops here as frozen (PLAN.md "what changes the plan"); the D115b record stays
   `inconclusive` (its open step is the Lenstool re-fit with 8515's σ free).

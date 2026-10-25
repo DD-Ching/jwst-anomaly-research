@@ -9,6 +9,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   is a MARS-only extra pair (critical curve 1.46″) the CANUCS model does not make (none within 10.89″); F200W shows
   nothing there. Vetting
   records `docs/candidates/macs0416-mars-D15-extra.md`, `-D34-extra.md`. The MARS / CANUCS route on MACS0416 is done.
+  Correction: the MACS0416 MARS pixel is 1.263″ (addenda ar / as wrote 1.515″).
 - **Handoff:** no held-out-validated second model exists on another field yet (MARS fails gate H on Abell 370 and
   MACS1149; addenda ap, at, au). Next: a MAST HLSP / Zenodo search for a JWST-era model of a field with a public
   held-out image list, or the D115b Lenstool re-fit (owner machine). #374 waits for the 2026-10-26 weekly run.

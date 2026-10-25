@@ -79,16 +79,19 @@ def _with_beta(model, t: Table) -> Table:
 
 def critical_distance(model, x: float, y: float, z: float, half=6.0, step=0.1) -> float:
     """Distance (arcsec) from (x, y) to the nearest grid point where det A is finite and has the
-    other sign (NaN when det A at (x, y) is not finite)."""
+    opposite sign (NaN when det A at (x, y) is not finite, or when none is found and part of the
+    window is not finite)."""
     g = np.arange(-half, half + step / 2, step)
     gx, gy = np.meshgrid(x + g, y + g)
     a = model.lens_map(np.array([x, *gx.ravel()]), np.array([y, *gy.ravel()]), z)
     det = a["a11"] * a["a22"] - a["a12"] * a["a21"]
     if not np.isfinite(det[0]):
         return float("nan")
-    other = np.isfinite(det[1:]) & (np.sign(det[1:]) != np.sign(det[0]))
-    if not other.any():
-        return float("inf")
+    if det[0] == 0:
+        return 0.0
+    other = np.isfinite(det[1:]) & (det[1:] * det[0] < 0)
+    if not other.any():  # unknown when part of the window is off the map, else none within it
+        return float("nan") if not np.isfinite(det[1:]).all() else float("inf")
     return float(np.hypot(gx.ravel() - x, gy.ravel() - y)[other].min())
 
 
@@ -172,7 +175,7 @@ def posthoc(zdir: Path, out: Path = OUT) -> dict:
                             * 3600
                         ),
                     }
-                    for r in canucs[np.asarray(canucs["system"], str) == s]
+                    for r in cfam
                     if str(r["image_id"]) in solved
                 ],
                 "mars_images_paired": [
@@ -195,7 +198,8 @@ def posthoc(zdir: Path, out: Path = OUT) -> dict:
         )
     p = {
         "label": "post hoc, not a frozen rule",
-        "map_pixel_arcsec": 1.515,
+        "map_pixel_arcsec": float(model.pixel_arcsec),
+        "near_arcsec": NEAR_ARCSEC,
         "canucs_grid_step_arcsec": mc.GRID_STEP_K,
         "families": {
             "total": len(all_fams),
@@ -226,6 +230,8 @@ def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
         "gate_R": {"passes": r_ok, "targets_old": tg_old},
     }
     out.mkdir(parents=True, exist_ok=True)
+    for name in ("controls.ecsv", "targets.ecsv", "targets.png", "posthoc.json"):
+        (out / name).unlink(missing_ok=True)  # no stale outputs from an earlier run
     if not r_ok:  # PLAN.md rule 3: stop, no reading
         txt = json.dumps(_clean(summary), indent=1, allow_nan=False)
         (out / "summary.json").write_text(txt + "\n")

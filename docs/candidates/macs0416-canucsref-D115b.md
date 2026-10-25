@@ -74,7 +74,7 @@ A model tension of a fixed-parameter Lenstool model, not evidence of anything un
 ### Independent model, 2026-10-24 (`results/lens_consistency/m0416_mars_extra/RESULT.md`, D-034 addendum ar)
 The MARS free-form maps (gate H passed on MACS0416) do not predict the flagged image: nearest free MARS D115b image
 7.29″ away (frozen radius 3.0″, ASSUMPTION). Adds a model-specific reading; verdict unchanged (`inconclusive`), since
-the 1.515″ MARS pixels are coarse at a galaxy-scale critical curve.
+the 1.263″ MARS pixels (corrected 2026-10-25 from 1.515″) are coarse at a galaxy-scale critical curve.
 
 ### Open questions (updated 2026-10-23)
 - **Only next step:** a Lenstool re-fit with 8515's σ and the other parameters free (owner machine).

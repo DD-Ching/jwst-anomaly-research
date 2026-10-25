@@ -1,6 +1,7 @@
 {
  "label": "post hoc, not a frozen rule",
- "map_pixel_arcsec": 1.515,
+ "map_pixel_arcsec": 1.262626262626248,
+ "near_arcsec": 6.0,
  "canucs_grid_step_arcsec": 0.25,
  "families": {
   "total": 111,

@@ -35,7 +35,7 @@ thresholds are ASSUMPTIONs (PLAN.md).
   (hypothesis, ordinary): it is MARS's image of D34.2, displaced just beyond the pairing radius, as the D115a target of
   addendum as was for D115a.2 (3.24″). Not a missing image.
 - **D15:** MARS predicts two extra images (|μ| 51.3 and 11.2, 4.43″ apart) for each of the three source choices
-  (table), the target 1.46″ from the MARS critical curve, about one map pixel (1.515″). The CANUCS model also has a
+  (table), the target 1.46″ from the MARS critical curve, about 1.2 map pixels (1.263″, `posthoc.json` `map_pixel_arcsec`). The CANUCS model also has a
   critical curve near the spot (0.67″; whether it is the same curve is not tested) but gives 3 images for each source,
   none within 10.89″. F200W shows no source within 1.5″ at F_pred / σ 69.7. Reading (hypothesis, ordinary): the
   extra pair is a MARS-specific prediction near its critical curve; the data agree with the CANUCS model there.
@@ -48,9 +48,11 @@ catalogue-`recovered` but `undetectable_local`; D34 |μ| 12.7 `undetectable`) ha
 not vetted. No candidate. The two-model MARS / CANUCS route on MACS0416 is complete.
 
 ## Limits
-- Single band (F200W); MARS |μ| near critical curves is coarse (1.515″ pixels), so F_pred there carries an
+- Single band (F200W); MARS |μ| near critical curves is coarse (1.263″ pixels), so F_pred there carries an
   uncertainty this stage does not quantify.
 - Rule 1 drops families whose images do not all back-trace; none was dropped here (`posthoc.json` `families`: 111
   total, 111 solved).
 - The D15 test shows only that the data agree with the CANUCS prediction there; it does not test the CANUCS model
   elsewhere.
+- **Correction (post hoc):** PLAN.md and addenda ar / as give the MACS0416 MARS pixel as 1.515″ (the Abell 370 /
+  S1063 value); the map's own value is 1.263″ (`posthoc.json`; `../mars_hff_inputs/RESULT.md`). No rule uses it.
