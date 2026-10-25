@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import shutil
 import tempfile
 from pathlib import Path
 
@@ -91,7 +92,11 @@ def colour_match(f: dict[str, float], ref: dict[str, float], sigma: dict[str, fl
 def chance_p(n_field: int, a_region: float, a_valid: float, n_obs: int) -> tuple[float, float]:
     """Gate X: expected chance count in the region and Poisson P(N >= n_obs)."""
     lam = n_field * a_region / (a_valid - a_region)
-    return lam, float(stats.poisson.sf(n_obs - 1, lam)) if n_obs > 0 else 1.0
+    if n_obs == 0:
+        return lam, 1.0
+    if lam == 0:  # no field rate measured: uninformative, never "significant" (post-run fix)
+        return lam, float("nan")
+    return lam, float(stats.poisson.sf(n_obs - 1, lam))
 
 
 def v_pass(at_prediction: list[bool], all_recovered: list[bool]) -> bool:
@@ -189,15 +194,16 @@ def in_region(p: tuple[float, float]) -> bool:
 
 
 def measure(images: dict, pos: dict, sigma: dict | None = None) -> dict:
-    """Rules 2-6 (and the gate X field count) on one set of background-subtracted images."""
+    """Rules 2-6 (and the gate X field count); segmaps and sigma are computed only without sigma."""
     sci_ref, wcs_ref = images[REF]
     seg_ref = v1.segment(sci_ref)
     cents = v1.seg_centroids(sci_ref, seg_ref, wcs_ref)
     near41 = v1.labels_near(seg_ref, wcs_ref, *pos["4.1"], EXCLUDE_RADIUS)
     near42 = v1.labels_near(seg_ref, wcs_ref, *pos["4.2"], EXCLUDE_RADIUS)
     excl = near41 | near42
-    segmaps = segmaps_for(images, seg_ref)
+    segmaps = None
     if sigma is None:
+        segmaps = segmaps_for(images, seg_ref)
         sigma = aperture_noise(images, segmaps)
     labs = [lab for lab in cents if lab not in excl]
     fl = forced(images, [cents[lab] for lab in labs] + [pos["4.1"]])
@@ -205,7 +211,9 @@ def measure(images: dict, pos: dict, sigma: dict | None = None) -> dict:
     lo, hi = flux_window(f41[REF])
     region, field = [], 0
     for lab, f in zip(labs, fl, strict=True):
-        ok = lo <= f[REF] <= hi and colour_match(f, f41, sigma)
+        in_flux = bool(lo <= f[REF] <= hi)
+        col = colour_match(f, f41, sigma)
+        ok = in_flux and col
         if in_region(cents[lab]):
             region.append(
                 {
@@ -213,8 +221,8 @@ def measure(images: dict, pos: dict, sigma: dict | None = None) -> dict:
                     "ra": cents[lab][0],
                     "dec": cents[lab][1],
                     "fluxes": f,
-                    "in_flux_window": bool(lo <= f[REF] <= hi),
-                    "colour_match": colour_match(f, f41, sigma),
+                    "in_flux_window": in_flux,
+                    "colour_match": col,
                     "passes": bool(ok),
                 }
             )
@@ -234,13 +242,13 @@ def measure(images: dict, pos: dict, sigma: dict | None = None) -> dict:
     }
 
 
-def inject(images: dict, segmaps: dict, labels41: list[int], target, scale: float) -> dict:
+def inject(images: dict, segmaps: dict, labels41: list[int], pos41, target, scale: float) -> dict:
     """Rule 7: add 4.1's own segment pixels / R_m, shifted to ``target``, in every band."""
     out = {}
     for b in BANDS:
         sci, wcs = images[b]
         ys, xs = np.nonzero(np.isin(segmaps[b], labels41))
-        x41, y41 = wcs.world_to_pixel(SkyCoord(*_POS41, unit="deg"))
+        x41, y41 = wcs.world_to_pixel(SkyCoord(*pos41, unit="deg"))
         tx, ty = wcs.world_to_pixel(SkyCoord(*target, unit="deg"))
         dx, dy = int(round(float(tx - x41))), int(round(float(ty - y41)))
         new = sci.copy()
@@ -251,20 +259,16 @@ def inject(images: dict, segmaps: dict, labels41: list[int], target, scale: floa
     return out
 
 
-_POS41: tuple[float, float] = (0.0, 0.0)
-
-
 def main() -> None:
-    global _POS41
     ap = argparse.ArgumentParser()
     ap.add_argument("--cutout-dir", type=Path, default=None)
     args = ap.parse_args()
+    # cloud disk rule: a default temporary cutout directory is deleted after the run
     cdir = args.cutout_dir or Path(tempfile.mkdtemp(prefix="fam4v2_"))
     raw = fetch(cdir)
     images = {b: (v1.background(s), w) for b, (s, w) in raw.items()}
     cat = Table.read(v1.IMAGES)
     pos = {str(r["image_id"]): (float(r["ra"]), float(r["dec"])) for r in cat}
-    _POS41 = pos["4.1"]
     res = measure(images, pos)
     summary: dict = {"plan": "PLAN.md", "bands": list(BANDS), "near41": res["near41"]}
     if not res["near41"] or set(res["near41"]) & set(res["near42"]):
@@ -278,7 +282,9 @@ def main() -> None:
     for name, p in PREDICTED.items():
         for k, t in enumerate([p, *offset_positions(p)]):
             r2 = measure(
-                inject(images, res["segmaps"], res["near41"], t, 1.0 / RATIO41[name]), pos, sigma
+                inject(images, res["segmaps"], res["near41"], pos["4.1"], t, 1.0 / RATIO41[name]),
+                pos,
+                sigma,
             )
             hit = any(_sep((c["ra"], c["dec"]), t) < RECOVER_RADIUS for c in r2["counterparts"])
             vdetail.append({"model": name, "k": k, "ra": t[0], "dec": t[1], "recovered": hit})
@@ -319,7 +325,9 @@ def main() -> None:
         c.update(
             nearest_model=near,
             sep_arcsec=_sep((c["ra"], c["dec"]), PREDICTED[near]),
-            within_factor3_of_model=bool(exp / 3 <= c["fluxes"][REF] <= 3 * exp),
+            within_factor3_of_model=bool(
+                exp / FLUX_FACTOR <= c["fluxes"][REF] <= FLUX_FACTOR * exp
+            ),
         )
     summary.update(
         f41=res["f41"],
@@ -346,7 +354,10 @@ def main() -> None:
         units="0.3 arcsec aperture sums of i2d SCI pixels (MJy/sr x pixels); ratios only are used",
     )
     (OUT / "result.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
-    np.save(cdir / "seg_ref.npy", seg_ref)
+    if args.cutout_dir:
+        np.save(cdir / "seg_ref.npy", seg_ref)
+    else:
+        shutil.rmtree(cdir, ignore_errors=True)
     keys = ("gate_V_at_prediction", "gate_V_recovered", "gate_C_accepted", "gate_D_pass", "gate_X")
     print(json.dumps({k: summary[k] for k in (*keys, "outcome")}, default=float))
     print("counterparts", n_obs, "region segments", len(res["region"]))

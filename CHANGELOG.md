@@ -8,7 +8,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (Lenstool missed); C 7 / 12; D fails (1.50 < 1.67); chance gate X: λ 2.27, observed 3, P 0.40. Outcome O3
   undetermined; no flag. Had V passed: O1c (not distinguished from field sources).
 - **Failed approach:** a fixed 0.3 dex colour tolerance over nine bands rejects faint true injected copies (detected
-  at the right flux, colour failed; post hoc) and still admits λ ≈ 2 field sources per region.
+  at the right flux, colour failed; post hoc) and still admits λ ≈ 2 field sources per region. Gate V credited a
+  recovery to a pre-existing match (GLAFIC; strict count 1 / 3 at the predictions): a recovery test must require a
+  counterpart absent without the injection.
 - **Handoff:** the line is paused; reopen only with photo-z / spec-z of segments 127 / 131 / 112 or family 4 (D-034
   bg "Revisit if"). Still untested: SLICE MACS J0358 = RELICS `abell3192`. #374 waits for the 2026-10-26 weekly run.
 

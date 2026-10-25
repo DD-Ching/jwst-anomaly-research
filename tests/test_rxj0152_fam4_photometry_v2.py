@@ -47,7 +47,8 @@ def test_chance_p():
     lam, p = m.chance_p(62, 61.5, 2501.3, 3)
     assert lam == pytest.approx(62 * 61.5 / (2501.3 - 61.5))
     assert 0 < p < 1
-    assert m.chance_p(0, 61.5, 2501.3, 1)[1] == 0.0
+    assert m.chance_p(0, 61.5, 2501.3, 1)[1] != m.chance_p(0, 61.5, 2501.3, 1)[1]  # nan
+    assert m.outcome(True, True, True, 1, float("nan")) == "O1c_chance_level"
     assert m.chance_p(10, 61.5, 2501.3, 0)[1] == 1.0
 
 
