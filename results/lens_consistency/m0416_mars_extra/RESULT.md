@@ -24,7 +24,7 @@ predicted positions and |μ| are model_prediction; the 3.0″ radius and the |μ
   that an independent model validated on 77 held-out MACS0416 images does not make. With the vetting record's
   finding (member 8515's σ makes it), the flag is best read as a model-specific prediction; the record stays
   `inconclusive` under its own frozen rule (the Lenstool re-fit has not run).
-- The MARS map pixel is 1.515″ (D-034 addendum ao), coarse next to galaxy-scale critical curves, so "MARS does not
+- The MARS map pixel is 1.263″ (D-034 addendum ao; corrected 2026-10-25 from 1.515″, addendum av), coarse next to galaxy-scale critical curves, so "MARS does not
   predict it" is not a test of whether such an image exists. Neither model alone settles the D115 region.
 - 38 of 49 extra predictions have a MARS counterpart within 3″; this stage reads no flux, so it says nothing
   about whether those images are seen.

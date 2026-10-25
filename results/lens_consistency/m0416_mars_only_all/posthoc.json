@@ -1,0 +1,239 @@
+{
+ "label": "post hoc, not a frozen rule",
+ "map_pixel_arcsec": 1.262626262626248,
+ "near_arcsec": 6.0,
+ "canucs_grid_step_arcsec": 0.25,
+ "families": {
+  "total": 111,
+  "solved": 111,
+  "dropped": []
+ },
+ "targets": [
+  {
+   "system": "D15",
+   "canucs_critical_distance_arcsec": 0.6708203932499505,
+   "canucs_source_per_image": [
+    {
+     "source_from": "D15.1",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 10.89330075259582
+    },
+    {
+     "source_from": "D15.2",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 12.32916244942704
+    },
+    {
+     "source_from": "D15.3",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 11.112161716463845
+    }
+   ],
+   "source_per_image": [
+    {
+     "source_from": "D15.1",
+     "n_images": 5,
+     "nearest_to_target_arcsec": 0.08635952418217566,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 3.8441288097897677,
+       "abs_mu": 43.754921514930274
+      },
+      {
+       "d_arcsec": 0.08635952418217566,
+       "abs_mu": 11.944345937319614
+      }
+     ]
+    },
+    {
+     "source_from": "D15.2",
+     "n_images": 5,
+     "nearest_to_target_arcsec": 0.04737929618520748,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 4.308075113909741,
+       "abs_mu": 49.82051307889207
+      },
+      {
+       "d_arcsec": 0.04737929618520748,
+       "abs_mu": 11.454175546627743
+      }
+     ]
+    },
+    {
+     "source_from": "D15.3",
+     "n_images": 5,
+     "nearest_to_target_arcsec": 0.1253472033301303,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 5.004266492161064,
+       "abs_mu": 64.00960337710113
+      },
+      {
+       "d_arcsec": 0.1253472033301303,
+       "abs_mu": 10.349477989582697
+      }
+     ]
+    }
+   ],
+   "z": 2.1067,
+   "abs_mu": 11.192223739698848,
+   "n_canucs_extra_predictions": 0,
+   "mars_critical_distance_arcsec": 1.4560219778561247,
+   "observed_images": [
+    {
+     "id": "D15.1",
+     "paired_to_mars": true,
+     "d_to_target_arcsec": 14.227599944653791
+    },
+    {
+     "id": "D15.2",
+     "paired_to_mars": true,
+     "d_to_target_arcsec": 12.329288013087988
+    },
+    {
+     "id": "D15.3",
+     "paired_to_mars": true,
+     "d_to_target_arcsec": 16.259166615920925
+    }
+   ],
+   "mars_images_paired": [
+    {
+     "id": "D15.1",
+     "abs_mu": 5.830997016029839
+    },
+    {
+     "id": "D15.2",
+     "abs_mu": 33.245602078129316
+    },
+    {
+     "id": "D15.3",
+     "abs_mu": 12.249860177461157
+    }
+   ],
+   "mars_only_images": [
+    {
+     "abs_mu": 51.3135736313246,
+     "d_to_target_arcsec": 4.430048984014912
+    },
+    {
+     "abs_mu": 11.192223739698848,
+     "d_to_target_arcsec": 0.0
+    }
+   ]
+  },
+  {
+   "system": "D34",
+   "canucs_critical_distance_arcsec": 0.6403124237432785,
+   "canucs_source_per_image": [
+    {
+     "source_from": "D34.1",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 0.7394562485884758
+    },
+    {
+     "source_from": "D34.2",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 3.1241050916851267
+    },
+    {
+     "source_from": "D34.3",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 1.3938306707720234
+    }
+   ],
+   "source_per_image": [
+    {
+     "source_from": "D34.1",
+     "n_images": 5,
+     "nearest_to_target_arcsec": 0.22214539615884168,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 2.626747337993633,
+       "abs_mu": 158.09406343767415
+      },
+      {
+       "d_arcsec": 0.22214539615884168,
+       "abs_mu": 80.42387945300212
+      },
+      {
+       "d_arcsec": 5.327218247900141,
+       "abs_mu": 55.77709955611124
+      }
+     ]
+    },
+    {
+     "source_from": "D34.2",
+     "n_images": 4,
+     "nearest_to_target_arcsec": 0.18496067066693553,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 5.110145454236574,
+       "abs_mu": 66.7733104538429
+      },
+      {
+       "d_arcsec": 0.18496067066693553,
+       "abs_mu": 58.514353645314706
+      }
+     ]
+    },
+    {
+     "source_from": "D34.3",
+     "n_images": 4,
+     "nearest_to_target_arcsec": 0.04574664858791219,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 0.04574664858791219,
+       "abs_mu": 64.70613772938827
+      },
+      {
+       "d_arcsec": 5.21632879728078,
+       "abs_mu": 61.28520159134457
+      }
+     ]
+    }
+   ],
+   "z": 3.2355,
+   "abs_mu": 66.84651379323509,
+   "n_canucs_extra_predictions": 0,
+   "mars_critical_distance_arcsec": 1.1401754250991056,
+   "observed_images": [
+    {
+     "id": "D34.1",
+     "paired_to_mars": true,
+     "d_to_target_arcsec": 5.327446765192999
+    },
+    {
+     "id": "D34.2",
+     "paired_to_mars": false,
+     "d_to_target_arcsec": 3.1241781707884386
+    },
+    {
+     "id": "D34.3",
+     "paired_to_mars": true,
+     "d_to_target_arcsec": 7.085306614751746
+    }
+   ],
+   "mars_images_paired": [
+    {
+     "id": "D34.1",
+     "abs_mu": 60.84675792196457
+    },
+    {
+     "id": "D34.3",
+     "abs_mu": 32.38644088904252
+    }
+   ],
+   "mars_only_images": [
+    {
+     "abs_mu": 66.84651379323509,
+     "d_to_target_arcsec": 0.0
+    },
+    {
+     "abs_mu": 12.699824308851044,
+     "d_to_target_arcsec": 9.86401354875608
+    }
+   ]
+  }
+ ]
+}

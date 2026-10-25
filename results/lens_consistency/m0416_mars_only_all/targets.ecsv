@@ -1,0 +1,29 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: system, datatype: string}
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: abs_mu, datatype: float64}
+# - {name: L_ref, datatype: float64}
+# - {name: ref_counterpart, datatype: int64}
+# - {name: arc_ref, datatype: bool}
+# - {name: f_pred, datatype: float64}
+# - {name: class, datatype: string}
+# - {name: n_sources, datatype: int64}
+# - {name: max_ratio, datatype: float64}
+# - {name: sigma_loc_njy, datatype: float64}
+# - {name: pred_over_sigma, datatype: float64}
+# - {name: class_local, datatype: string}
+# - {name: reading, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: results/lens_consistency/m0416_mars_only_all/PLAN.md; MARS maps (model_prediction) + CANUCS DR1 F200W}
+# schema: astropy-2.0
+system ra dec abs_mu L_ref ref_counterpart arc_ref f_pred class n_sources max_ratio sigma_loc_njy pred_over_sigma class_local reading
+D15 64.04629715060766 -24.06418460223081 51.3135736313246 5.3174547862713124e-08 3101227 True 2.728576077065724e-06 confused 4 7.882434787821826 9.657650814159368 282.52999922768777 confused no_reading
+D15 64.04546008057955 -24.06322018159186 11.192223739698848 5.3174547862713124e-08 3101227 True 5.951414369368105e-07 absent 3 0.05882479434562618 8.542566893515152 69.66775260356407 absent lensing_residual_input
+D31b 64.0324626485887 -24.074991076035616 4.527565108142535 2.4892923565764654e-08 3121101 True 1.127043321760151e-07 recovered 5 131.9192854547027 67.6084934574963 1.6670144002967524 undetectable_local no_reading
+D31c 64.03239508610203 -24.07484192689973 4.587786520811708 1.8567918133652798e-08 3119688 False 8.518564453310759e-08 recovered 5 174.5349823881527 51.75685515806682 1.6458813865902082 undetectable_local no_reading
+D34 64.04768960517528 -24.06143187236882 66.84651379323509 1.9088884236434965e-09 3112384 False 1.2760253634083178e-07 absent 2 0.09143202402214808 4.632273210642193 27.546418472830464 absent lensing_residual_input
+D34 64.04537604592605 -24.05968692774102 12.699824308851044 1.9088884236434965e-09 3112384 False 2.4242547605472027e-08 undetectable 7 3.6366564733978697 nan nan undetectable no_reading

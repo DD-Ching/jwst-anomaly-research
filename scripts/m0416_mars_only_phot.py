@@ -89,16 +89,17 @@ def unshift(model, x, y, off: dict) -> tuple[np.ndarray, np.ndarray]:
     return ra, dec - off["dy_arcsec"] / 3600.0
 
 
-def solve(model, grid, t: Table, pred: Table, off: dict) -> tuple[dict, list[dict]]:
-    """Per family: observed images (CANUCS frame) with their paired MARS position / |mu|, and the
-    MARS-only targets (CANUCS frame)."""
+def solve(model, grid, t: Table, pred: Table, off: dict, systems=None) -> tuple[dict, list[dict]]:
+    """Per family (``systems``; default: the families with an extra prediction): observed images
+    (CANUCS frame) with their paired MARS position / |mu|, and the MARS-only targets (CANUCS
+    frame)."""
     bt = lensmodel.backtrace_images(model, t, {})
     sysv = np.asarray(t["system"], str)
     ox, oy = model.to_frame(np.asarray(t["ra"], float), np.asarray(t["dec"], float))
     ex, ey = model.to_frame(np.asarray(pred["ra"], float), np.asarray(pred["dec"], float))
     psys = np.asarray(pred["system"], str)
     fams, targets = {}, []
-    for s in dict.fromkeys(psys):
+    for s in dict.fromkeys(psys) if systems is None else systems:
         fam = np.flatnonzero(sysv == s)
         bx, by = np.asarray(bt["beta_x"])[fam], np.asarray(bt["beta_y"])[fam]
         if not len(fam) or not (np.isfinite(bx).all() and np.isfinite(by).all()):
@@ -218,9 +219,8 @@ def cutout_png(d, w, rows: list[dict], fams: dict, path: Path, half: float = 4.0
     plt.close(fig)
 
 
-def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
-    if file_sha256(cat_path) != mc.CAT_SHA or file_sha256(image) != mc.IMAGE_SHA:
-        raise ValueError("--cat / --image are not the pinned CANUCS DR1 MACS0416 files")
+def load(zdir: Path):
+    """The MARS model and the shifted CANUCS image / extra-prediction tables (addendum as)."""
     meta = mh.fetch_zip(requests.Session(), zdir)
     folder, tag, z_lens = mh.FIELDS[me.FIELD]
     base = f"{mh.ROOT}{folder}/deflection_angle_{tag}_"
@@ -236,6 +236,13 @@ def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
     t = mo.split_seen(mo.shift(canucs, off), mars)
     pred = mo.shift(Table.read(me.PREDICTED), off)
     grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, t), mh.GRID_STEP)
+    return meta, model, t, pred, off, grid
+
+
+def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
+    if file_sha256(cat_path) != mc.CAT_SHA or file_sha256(image) != mc.IMAGE_SHA:
+        raise ValueError("--cat / --image are not the pinned CANUCS DR1 MACS0416 files")
+    meta, model, t, pred, off, grid = load(zdir)
     fams, targets = solve(model, grid, t, pred, off)
 
     tab = Table.read(cat_path)
