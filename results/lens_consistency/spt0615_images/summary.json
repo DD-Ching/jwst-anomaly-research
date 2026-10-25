@@ -1,0 +1,236 @@
+{
+ "plan": "results/lens_consistency/spt0615_images/PLAN.md",
+ "rules": {
+  "K0_MAX_RMS_ARCSEC": 2.0,
+  "K0_MIN_MATCHED": 0.8,
+  "MATCH_ARCSEC": 3.0,
+  "FRAME_MAX_ARCSEC": 0.5,
+  "z_grid": [
+   60,
+   0.2,
+   12.0
+  ],
+  "grid_step": 0.25,
+  "near_one": [
+   0.85,
+   1.15
+  ],
+  "lenstool_like_max": 0.75,
+  "p_ratio": [
+   0.95,
+   1.05
+  ],
+  "amplitude_families": [
+   "1",
+   "2",
+   "3"
+  ]
+ },
+ "models": {
+  "spt0615-relics-lenstool": {
+   "model_sha256": "dbea57f40d366d70d0fa4cc7e1c6f45fa68628ac66f67226f644ad6977665386",
+   "gate_K0": {
+    "n_images": 8,
+    "rms_arcsec": 0.4470653226105074,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "frame_F": {
+    "n": 8,
+    "median_dx": -0.22360192688723246,
+    "median_dy": 0.0876804396967058,
+    "passes": true
+   },
+   "held_out_A": {
+    "n_images": 6,
+    "rms_arcsec": 32.2280100121683,
+    "matched_fraction": 0.0
+   },
+   "spec_z_B": {
+    "n_images": 6,
+    "rms_arcsec": 0.4723396877866702,
+    "matched_fraction": 1.0
+   },
+   "spec_fitted_z": {
+    "n_images": 6,
+    "rms_arcsec": 0.4707751862042226,
+    "matched_fraction": 1.0
+   },
+   "z_fit": {
+    "1": 1.3722062197423024,
+    "2": 2.3830907715983476,
+    "3": 3.8248631431508775,
+    "3b": 1.172
+   },
+   "z_spec": {
+    "1": 1.358,
+    "3": 4.013
+   },
+   "extra_predicted": {
+    "2": [
+     2,
+     3
+    ],
+    "3": [
+     3,
+     5
+    ]
+   },
+   "fewer_predicted": {
+    "3b": [
+     6,
+     1
+    ]
+   },
+   "usable": true,
+   "gate_P": {
+    "passes": true,
+    "validate": "results/lens_consistency/spt0615_images/validate/spt0615-relics-lenstool"
+   },
+   "usable_with_P": true,
+   "misses_A": [
+    "3b.3",
+    "3b.4",
+    "3b.6"
+   ],
+   "misses_B": [],
+   "amplitude": {
+    "families": {
+     "1": {
+      "z_slice": 1.358,
+      "z_slice_spectroscopic": true,
+      "z_fit": 1.3722062197423024,
+      "scale": 1.0258118274876034
+     },
+     "2": {
+      "z_slice": 2.43,
+      "z_slice_spectroscopic": false,
+      "z_fit": 2.3830907715983476,
+      "scale": 0.987153522643303
+     },
+     "3": {
+      "z_slice": 4.013,
+      "z_slice_spectroscopic": true,
+      "z_fit": 3.8248631431508775,
+      "scale": 0.9844505111989669
+     }
+    },
+    "at_grid_min": [
+     "3b"
+    ],
+    "z_grid_min": 1.172,
+    "median": 0.987153522643303,
+    "class": "near_1"
+   }
+  },
+  "spt0615-relics-glafic": {
+   "model_sha256": "2ec43c83a7eb704d0970265e5dc93deccc8bafc77e23751b00753b83944fcbc0",
+   "gate_K0": {
+    "n_images": 8,
+    "rms_arcsec": 0.2826685150550132,
+    "matched_fraction": 1.0,
+    "passes": true
+   },
+   "frame_F": {
+    "n": 8,
+    "median_dx": -0.07434168844532074,
+    "median_dy": 0.047713669148129356,
+    "passes": true
+   },
+   "held_out_A": {
+    "n_images": 6,
+    "rms_arcsec": 0.34457340237654066,
+    "matched_fraction": 1.0
+   },
+   "spec_z_B": {
+    "n_images": 6,
+    "rms_arcsec": 0.19703304484464051,
+    "matched_fraction": 1.0
+   },
+   "spec_fitted_z": {
+    "n_images": 6,
+    "rms_arcsec": 0.2664952187743961,
+    "matched_fraction": 1.0
+   },
+   "z_fit": {
+    "1": 1.3722062197423024,
+    "2": 2.2023923961463443,
+    "3": 3.9786784653162153,
+    "3b": 3.9786784653162153
+   },
+   "z_spec": {
+    "1": 1.358,
+    "3": 4.013
+   },
+   "extra_predicted": {
+    "2": [
+     2,
+     3
+    ],
+    "3": [
+     3,
+     7
+    ],
+    "3b": [
+     6,
+     7
+    ]
+   },
+   "fewer_predicted": {},
+   "usable": true,
+   "gate_P": {
+    "passes": true,
+    "validate": "results/lens_consistency/spt0615_images/validate/spt0615-relics-glafic"
+   },
+   "usable_with_P": true,
+   "misses_A": [],
+   "misses_B": [],
+   "amplitude": {
+    "families": {
+     "1": {
+      "z_slice": 1.358,
+      "z_slice_spectroscopic": true,
+      "z_fit": 1.3722062197423024,
+      "scale": 1.0258118274876034
+     },
+     "2": {
+      "z_slice": 2.43,
+      "z_slice_spectroscopic": false,
+      "z_fit": 2.2023923961463443,
+      "scale": 0.9324963072320085
+     },
+     "3": {
+      "z_slice": 4.013,
+      "z_slice_spectroscopic": true,
+      "z_fit": 3.9786784653162153,
+      "scale": 0.9972704678102292
+     },
+     "3b": {
+      "z_slice": 4.013,
+      "z_slice_spectroscopic": false,
+      "z_fit": 3.9786784653162153,
+      "scale": 0.9972704678102292
+     }
+    },
+    "at_grid_min": [],
+    "z_grid_min": 1.172,
+    "median": 0.9972704678102292,
+    "class": "near_1"
+   }
+  }
+ },
+ "images": 14,
+ "reading_A_images": 3,
+ "spec_z_images": 6,
+ "usable": [
+  "spt0615-relics-lenstool",
+  "spt0615-relics-glafic"
+ ],
+ "flags_A": [],
+ "flags_B": [],
+ "amplitude_classes": {
+  "spt0615-relics-lenstool": "near_1",
+  "spt0615-relics-glafic": "near_1"
+ },
+ "q1_answer": "H_none"
+}
