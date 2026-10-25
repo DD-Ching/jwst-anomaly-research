@@ -9,9 +9,9 @@ class (rule 7, Q1). Rule helpers are shared with ``slice_relics_rxj0152``.
 
     python scripts/slice_relics_macs0358.py --build-images main.tex   # once, from the e-print
     python scripts/lens_consistency.py --model a3192-relics-lenstool \
-        --out results/lens_consistency/slice_relics_macs0358/validate validate
+        --out results/lens_consistency/slice_relics_macs0358/validate validate   # and -glafic
     python scripts/slice_relics_macs0358.py [--grid-step 0.25]
-    python scripts/slice_relics_rxj0152.py --posthoc   # post hoc: unmatched predicted images
+    python scripts/slice_relics_macs0358.py --posthoc   # post hoc: unmatched images, z_ref
 """
 
 from __future__ import annotations
