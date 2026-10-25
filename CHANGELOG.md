@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SN Eos literature check (in progress)
+- Plan: does the VENUS / SN Eos literature report the 101.2 / 101.1 flux ratio, microlensing or a macro-μ
+  uncertainty? Outcome feeds the ±1σ R_model range.
+
 ## 2026-10-25: SN Eos 101.2 / 101.1 flux ratio agrees with the VENUS model under the frozen rule
 - **Result** (`results/transients/sneos_ratio/RESULT.md`; plan frozen in a3665b33 / 8450e58f before any pixel was
   read): difference-image aperture ratio R_obs 1.382 (σ_ln 0.083, 5 of 6 band × epoch pairs) vs R_model 1.162:
