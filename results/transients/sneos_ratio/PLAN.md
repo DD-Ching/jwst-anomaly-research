@@ -20,7 +20,8 @@ whole file stored). Positions: catalogued 101.1 / 101.2 (`results/lens_consisten
 
 ## Rules (ASSUMPTIONs labelled; per band, then combined)
 1. **Difference.** For each band and each later epoch L ∈ {9493 o001, 12299 o001}: reproject the L stamp onto the
-   6882 o038 stamp grid (`reproject_interp`), D = E_6882 − E_L (the SN is brightest in the earliest epoch; if not,
+   6882 o038 stamp grid (bilinear resampling through both WCSs: `reproject` is not installed, and
+   `scipy.ndimage.map_coordinates` order 1 is used instead), D = E_6882 − E_L (the SN is brightest in the earliest epoch; if not,
    the sign is taken from the data and reported). Registration check on the 6882 grid: cross-correlation peak offset
    of the two stamps (6″ × 6″, SN pixels within 0.4″ masked) ≤ 0.03″ (ASSUMPTION), else that pair is skipped.
 2. **Photometry.** Circular apertures r = 0.20″ (ASSUMPTION; images are 0.9″ apart) at the catalogued positions
@@ -28,8 +29,8 @@ whole file stored). Positions: catalogued 101.1 / 101.2 (`results/lens_consisten
    R_band,L = F_101.2 / F_101.1, its σ by first-order propagation.
 3. **Gate D (detection).** Both images detected in D at S/N ≥ 5 (ASSUMPTION) in that band and pair; others are
    reported, not used.
-4. **Gate I (injection).** Two PSF copies (an isolated star in the same 6882 band stamp, or the WebbPSF-free
-   empirical fallback: the brighter SN image itself is not used) with ratio 1.16 and with ratio 0.70 injected at
+4. **Gate I (injection).** Two PSF copies (an empirical PSF: the nearest unsaturated isolated star in the same
+   6882 band mosaic; never the SN images themselves) with ratio 1.16 and with ratio 0.70 injected at
    3 positions on the host-free side of the pair, same 0.9″ separation and orientation, at the measured SN
    flux; R recovered within 10 % (ASSUMPTION) in ≥ 5 / 6 trials per band, else that band is not used.
 5. **Combination.** Inverse-variance mean of ln R over the bands and pairs that pass D and I; σ_ln from the scatter
