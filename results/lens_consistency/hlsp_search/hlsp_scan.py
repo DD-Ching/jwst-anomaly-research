@@ -1,6 +1,8 @@
 """List MAST HLSP provenance names around lensing-cluster centres (2026-10-25 search).
 
 Usage: python hlsp_scan.py out.json  (cloud sessions: SSL_CERT_FILE = proxy bundle + certifi).
+The output is the `provenance_names_by_field` block of search.json; the product checks there were
+made by hand with `Observations.get_product_list`. Exits 1 if any field query failed.
 """
 
 import json
@@ -47,4 +49,7 @@ if __name__ == "__main__":
         out = dict(ex.map(query, FIELDS.items()))
     with open(sys.argv[1], "w") as fh:
         json.dump(out, fh, indent=1)
-    print(sorted({p for v in out.values() for p in v}))
+    failed = [k for k, v in out.items() if any(p.startswith("ERR ") for p in v)]
+    print(sorted({p for v in out.values() for p in v if not p.startswith("ERR ")}))
+    if failed:
+        sys.exit(f"query failed for: {failed}")
