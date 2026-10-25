@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SN Eos 101.2 / 101.1 flux-ratio test: plan frozen, data route verified (in progress)
+- **Plan** (`results/transients/sneos_ratio/PLAN.md`, frozen before any pixel is read): difference-image aperture
+  ratio of the two SN images in three epochs × F277W / F356W / F444W vs R_model 1.162; gates D (S/N ≥ 5) and I
+  (empirical-PSF injections), decision floor 0.30 in ln R (ASSUMPTION).
+- **Data route:** all 9 `_i2d` mosaics (143–306 MB each) are listed and readable anonymously on `s3://stpubdata`;
+  stamps by byte range only. `reproject` is not installed; the plan uses `map_coordinates` resampling instead.
+- **Handoff:** next: implement `scripts/sneos_ratio.py` + tests per the plan, run, look at the difference contact
+  sheet, then the literature check. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: SN Eos predicted images and delays from the VENUS AstroLensPy v2.1 maps: every extra image leads
 - **Result** (`results/transients/sneos/RESULT.md`; plan frozen in 89c06718, tool and tests committed before the run):
   gate P (`Lens_pot` is the potential of α: s 1.0000004, median residual 7.0e-5), S (101.1 / 101.2 matched) and M
