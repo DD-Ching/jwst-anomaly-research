@@ -81,6 +81,8 @@ def test_difference_registers_subpixel_offset():
         )
 
     class T:
+        pix = PIX
+
         def section(self, ra, dec, half):
             return sky(0.2, -0.15) + 0.001 * rng.normal(size=xx.shape), None, w
 

@@ -9,6 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   101.1 is at S/N 3–6.5 per visit, which limits the precision.
 - **Deviation:** the template pre-shift used a NaN edge that biased re-registration (5 / 6 visits failed on the
   first run); fixed to `mode="nearest"` and re-run. Synthetic test does not reproduce the edge bias.
+- **Post hoc:** random apertures kept 0.85″ (not 0.6″) from the SN: R 1.48, σ_ln 0.17, 3 visits, same decisions
+  (`posthoc_minsep085.json`); the central value depends on that choice.
 - **Hosts:** `s3://stpubdata/hst/public` byte ranges work; MAST and VizieR answer.
 - **Handoff:** next: a deeper HST ratio needs the visits stacked (one ratio per epoch-group) or a forced-PSF fit; a
   ratio difference between HST F110W 2024 and JWST is not established by our pixels. #374 waits for the 2026-10-26

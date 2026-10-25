@@ -34,10 +34,17 @@ both committed before the run. Numbers from `summary.json`; stamps in `contact_s
   `ifaa52010` in a session check (not stored): after a 0.04 px pre-shift the re-measured offset was −0.71 px with a
   NaN edge and 0.006 px with `mode="nearest"`. The run uses `mode="nearest"`. A synthetic unit test did not
   reproduce the edge bias; it checks sub-pixel registration only.
+- **Post hoc (code review):** with the frozen 0.6″ exclusion a random aperture's 0.40–0.60″ annulus can include an
+  SN image. Re-run with 0.85″ (`posthoc_minsep085.json`; not the frozen result): 3 visits used (`ifaa53010` 101.1
+  S/N 4.68 fails gate D), R 1.478, σ_ln 0.173, Q1 "agrees", Q2 "both". The decisions do not change; R moves by about
+  1σ, so the central value depends on this choice.
+- **Deviation:** rule 3 names `sneos_ratio.aperture_pair`; the run uses `sneos_hst.aperture_fluxes`, the same
+  algorithm with this plan's radii and no error map (σ comes from rule 3's empirical term).
+- Template and science pixel scales are equal (0.12825″, `summary.json` "templates"); the run now raises otherwise.
 - **Display only:** the contact-sheet stretch removes each panel's median; `summary.json` is identical with and
   without it.
 - Rule 3's error has no pipeline ERR (drz files carry none); the empirical random-aperture σ replaces it, as planned.
 
 ## Limits
 One template epoch per visit (CLASH 2012), single-visit depth, aperture photometry only, one lens model, no
-microlensing model. Data: SCI sections by S3 byte range from 8 `_drz.fits` (12.7 MB each); nothing stored.
+microlensing model. Data: SCI sections by S3 byte range from 8 `_drz.fits` (about 12.7 MB each, not stored); nothing stored.

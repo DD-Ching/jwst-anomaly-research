@@ -68,11 +68,15 @@ def random_sigma(img: np.ndarray, p1, p2, pix: float, seed: int = 0) -> float:
     edge = ANNULUS_ARCSEC[1] / pix + 1
     ny, nx = img.shape
     sums = []
-    while len(sums) < N_RANDOM:
+    for _ in range(100 * N_RANDOM):
+        if len(sums) == N_RANDOM:
+            break
         x, y = rng.uniform(edge, nx - 1 - edge), rng.uniform(edge, ny - 1 - edge)
         if min(np.hypot(x - p[0], y - p[1]) for p in (p1, p2)) * pix < RANDOM_MIN_SEP_ARCSEC:
             continue
         sums.append(_single(img, (x, y), pix))
+    if len(sums) < N_RANDOM:
+        raise ValueError("no room for the random apertures")
     s = np.asarray(sums)
     return float(1.4826 * np.median(np.abs(s - np.median(s))))
 
@@ -87,6 +91,8 @@ def _single(img: np.ndarray, p, pix: float) -> float:
 
 
 def ratio_with_error(f1, f2, s1, s2) -> dict:
+    if f1 == 0 or s1 <= 0 or s2 <= 0:
+        raise ValueError(f"zero flux or error: f1 {f1}, s1 {s1}, s2 {s2}")
     ratio = f2 / f1
     return {
         "f1": f1,
@@ -140,6 +146,7 @@ class Drz(sr.Mosaic):
         self.photflam = float(h1.get("PHOTFLAM", h0.get("PHOTFLAM")))
         self.exptime = float(h0["EXPTIME"])
         self.date = str(h0.get("DATE-OBS"))
+        self.obs = obs
 
     def section(self, ra, dec, half_arcsec):
         x, y = (int(round(float(v))) for v in self.wcs.world_to_pixel_values(ra, dec))
@@ -154,6 +161,8 @@ class Drz(sr.Mosaic):
 
 def difference(sci, w, tmpl: Drz, ra, dec, sn_mask, pix) -> tuple[np.ndarray, dict]:
     """PLAN.md rule 2."""
+    if abs(tmpl.pix / pix - 1.0) > 0.01:  # resample assumes equal pixel areas (counts per pixel)
+        raise ValueError(f"template scale {tmpl.pix} != science {pix}")
     t_sci, _, tw = tmpl.section(ra, dec, sr.STAMP_HALF_ARCSEC + 1.0)
     res = sr.resample(t_sci, tw, w, sci.shape)
     dx, dy = sr.register_offset(sci, res, sn_mask)
@@ -182,20 +191,17 @@ def run(out: str = OUT) -> dict:
     ram, dem = (ra1 + ra2) / 2, (de1 + de2) / 2
     star = sr.gaia_psf_star(ram, dem)
     tmpl, tchk = Drz(TEMPLATE), Drz(TEMPLATE_CHECK)
+    templates = {
+        d.obs: {"pix_arcsec": d.pix, "exptime": d.exptime, "photflam": d.photflam, "date": d.date}
+        for d in (tmpl, tchk)
+    }
     rows, sheets = [], {}
     for obs in SCIENCE:
         m = Drz(obs)
         sci, _, w = m.section(ram, dem, sr.STAMP_HALF_ARCSEC)
         pix = m.pix
         try:
-            ps, _, _ = m.section(star["ra"], star["dec"], sr.PSF_HALF_ARCSEC)
-            c = ps.shape[0] // 2
-            border = np.concatenate([ps[0], ps[-1], ps[:, 0], ps[:, -1]])
-            psf = (
-                np.nan_to_num(ps - np.nanmedian(border))
-                if np.all(np.isfinite(ps[c - 2 : c + 3, c - 2 : c + 3]))
-                else None
-            )
+            psf = sr.psf_stamp(m, star)
         except ValueError:
             psf = None
         p1 = tuple(float(v) for v in w.world_to_pixel_values(ra1, de1))
@@ -230,7 +236,7 @@ def run(out: str = OUT) -> dict:
                 "ratio": g2 / g1,
                 **i2,
             }
-        if psf is not None and psf.sum() > 0 and info["registered"]:
+        if psf is not None and info["registered"]:
             f_inj = f1 if f1 > 0 else sr.MIN_SNR * ph["sf1"]
             tr = injection_trials(diff, psf, p1, p2, f_inj, pix)
             row["injections"] = tr
@@ -242,7 +248,7 @@ def run(out: str = OUT) -> dict:
             info["registered"] and ph["detected"] and row["gate_I"] and ph["ratio"] > 0
         )
         rows.append(row)
-        sheets[obs] = (sci, diff, p1, p2)
+        sheets[obs] = (sci, diff, p1, p2, pix)
         m.close()
     tmpl.close()
     tchk.close()
@@ -256,6 +262,7 @@ def run(out: str = OUT) -> dict:
         "r_table_s1": R_S1,
         "r_jwst": R_JWST,
         "template": TEMPLATE,
+        "templates": templates,
         "psf_star": star,
         "rows": rows,
         "n_used": len(used),
@@ -282,8 +289,8 @@ def contact_sheet(sheets: dict, path) -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    fig, ax = plt.subplots(2, len(sheets), figsize=(2.2 * len(sheets), 4.6))
-    for k, (obs, (sci, diff, p1, p2)) in enumerate(sheets.items()):
+    fig, ax = plt.subplots(2, len(sheets), figsize=(2.2 * len(sheets), 4.6), squeeze=False)
+    for k, (obs, (sci, diff, p1, p2, pix)) in enumerate(sheets.items()):
         for j, (img, lab) in enumerate(((sci, "2024"), (diff, "2024 − 2012"))):
             a = ax[j, k]
             d0 = diff - np.nanmedian(diff)  # display only: remove the sky pedestal
@@ -291,7 +298,7 @@ def contact_sheet(sheets: dict, path) -> None:
             shown = img - np.nanmedian(img)
             a.imshow(shown, origin="lower", cmap="gray", vmin=-v, vmax=v * (4 if j == 0 else 1))
             for p in (p1, p2):
-                a.add_patch(plt.Circle(p, APER_ARCSEC / 0.128, fill=False, color="r", lw=0.6))
+                a.add_patch(plt.Circle(p, APER_ARCSEC / pix, fill=False, color="r", lw=0.6))
             a.set_title(f"{obs} {lab}", fontsize=6)
             a.axis("off")
     fig.tight_layout()
