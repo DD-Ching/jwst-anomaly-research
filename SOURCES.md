@@ -846,6 +846,11 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - SN Eos follow-up epochs (`results/transients/epoch_inventory/`, MAST metadata accessed 2026-10-25): JWST programs
   9493 o001 (2025-10-08) and 12299 o001 (2026-09-28), NIRCam, target `SN_Eos_Image_101.1`; SN Eos spectroscopy:
   arXiv:2601.04156 (z 5.13; read from the search excerpt only, paper not opened).
+- SN Eos flux-ratio literature check (`results/transients/sneos_ratio/LITERATURE.md`, accessed 2026-10-25):
+  - Coulter et al. 2026, "A spectroscopically confirmed, strongly lensed, metal-poor Type II supernova at z = 5.13",
+    arXiv:2601.04156v2 (2026-01-20), HTML https://arxiv.org/html/2601.04156; Tables S1 (photometry) and S2 (|μ|, τ)
+    transcribed into `scripts/sneos_literature.py`. Names HST PID 17504 (2024-03) as the archival detection.
+  - Allingham et al. 2026 (arXiv:2602.14074, HTML as served 2026-10-25), Table 3 (|μ|, τ).
 - MACS J1931.8-2635 inputs (`results/lens_consistency/macs1931_inputs/`, accessed 2026-10-24):
   - Allingham et al. 2026, "VENUS: Strong-lensing model of MACS J1931.8-2635 -- revealing the farthest multiply imaged
     supernova", arXiv:2602.14074.

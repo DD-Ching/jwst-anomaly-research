@@ -580,7 +580,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      2026-10-25 (`results/transients/sneos/RESULT.md`: gates P / S / M pass; 5 images; the 3 extra ones lead 101.1 by
      1,238–19,656 d, so no extra-image target in the three epochs). ~~101.2 / 101.1 SN flux-ratio test~~ done
      2026-10-25 (`results/transients/sneos_ratio/RESULT.md`: R_obs 1.38 vs 1.16, "agrees" under the 0.30 floor).
-     Next: literature check of a published SN Eos image flux ratio; R_model range from the ±1σ maps. Abell 370 epochs public 2026-12-29 to 2027-08-11 (`upcoming.json`);
+     ~~Literature check~~ done 2026-10-25 (`results/transients/sneos_ratio/LITERATURE.md`: no published ratio; published μ give R_model 1.07–1.17; Coulter et al. Table S1 gives HST F110W 2024 R 1.81, 0.43 in ln above that range, JWST 2025 R 1.10). Next: own HST PID 17504 (2024) minus 2012 difference-image ratio, frozen plan with injections (microlensing first; plan only after checking the HST products on `s3://stpubdata`). Abell 370 epochs public 2026-12-29 to 2027-08-11 (`upcoming.json`);
    - vet `c0049`'s epoch-2 streak, if it recurs elsewhere (a satellite or asteroid trail, or scattered light).
 
 - **Speed** (owner focus, step 2): `find_images` is vectorised. Still open: evaluate published deflection maps
