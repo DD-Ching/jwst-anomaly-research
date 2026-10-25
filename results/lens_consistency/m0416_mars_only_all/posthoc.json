@@ -1,25 +1,78 @@
 {
  "label": "post hoc, not a frozen rule",
  "map_pixel_arcsec": 1.515,
+ "canucs_grid_step_arcsec": 0.25,
+ "families": {
+  "total": 111,
+  "solved": 111,
+  "dropped": []
+ },
  "targets": [
   {
    "system": "D15",
    "canucs_critical_distance_arcsec": 0.6708203932499505,
+   "canucs_source_per_image": [
+    {
+     "source_from": "D15.1",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 10.89330075259582
+    },
+    {
+     "source_from": "D15.2",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 12.32916244942704
+    },
+    {
+     "source_from": "D15.3",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 11.112161716463845
+    }
+   ],
    "source_per_image": [
     {
      "source_from": "D15.1",
      "n_images": 5,
-     "nearest_to_target_arcsec": 0.08635952418217566
+     "nearest_to_target_arcsec": 0.08635952418217566,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 3.8441288097897677,
+       "abs_mu": 43.754921514930274
+      },
+      {
+       "d_arcsec": 0.08635952418217566,
+       "abs_mu": 11.944345937319614
+      }
+     ]
     },
     {
      "source_from": "D15.2",
      "n_images": 5,
-     "nearest_to_target_arcsec": 0.04737929618520748
+     "nearest_to_target_arcsec": 0.04737929618520748,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 4.308075113909741,
+       "abs_mu": 49.82051307889207
+      },
+      {
+       "d_arcsec": 0.04737929618520748,
+       "abs_mu": 11.454175546627743
+      }
+     ]
     },
     {
      "source_from": "D15.3",
      "n_images": 5,
-     "nearest_to_target_arcsec": 0.1253472033301303
+     "nearest_to_target_arcsec": 0.1253472033301303,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 5.004266492161064,
+       "abs_mu": 64.00960337710113
+      },
+      {
+       "d_arcsec": 0.1253472033301303,
+       "abs_mu": 10.349477989582697
+      }
+     ]
     }
    ],
    "z": 2.1067,
@@ -71,21 +124,72 @@
   {
    "system": "D34",
    "canucs_critical_distance_arcsec": 0.6403124237432785,
+   "canucs_source_per_image": [
+    {
+     "source_from": "D34.1",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 0.7394562485884758
+    },
+    {
+     "source_from": "D34.2",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 3.1241050916851267
+    },
+    {
+     "source_from": "D34.3",
+     "n_images": 3,
+     "nearest_to_target_arcsec": 1.3938306707720234
+    }
+   ],
    "source_per_image": [
     {
      "source_from": "D34.1",
      "n_images": 5,
-     "nearest_to_target_arcsec": 0.22214539615884168
+     "nearest_to_target_arcsec": 0.22214539615884168,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 2.626747337993633,
+       "abs_mu": 158.09406343767415
+      },
+      {
+       "d_arcsec": 0.22214539615884168,
+       "abs_mu": 80.42387945300212
+      },
+      {
+       "d_arcsec": 5.327218247900141,
+       "abs_mu": 55.77709955611124
+      }
+     ]
     },
     {
      "source_from": "D34.2",
      "n_images": 4,
-     "nearest_to_target_arcsec": 0.18496067066693553
+     "nearest_to_target_arcsec": 0.18496067066693553,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 5.110145454236574,
+       "abs_mu": 66.7733104538429
+      },
+      {
+       "d_arcsec": 0.18496067066693553,
+       "abs_mu": 58.514353645314706
+      }
+     ]
     },
     {
      "source_from": "D34.3",
      "n_images": 4,
-     "nearest_to_target_arcsec": 0.04574664858791219
+     "nearest_to_target_arcsec": 0.04574664858791219,
+     "images_within_6arcsec": [
+      {
+       "d_arcsec": 0.04574664858791219,
+       "abs_mu": 64.70613772938827
+      },
+      {
+       "d_arcsec": 5.21632879728078,
+       "abs_mu": 61.28520159134457
+      }
+     ]
     }
    ],
    "z": 3.2355,

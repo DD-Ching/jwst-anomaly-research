@@ -24,28 +24,33 @@ thresholds are ASSUMPTIONs (PLAN.md).
 |---|---|---|
 | CANUCS extra predictions in the family | 0 | 0 |
 | Nearest observed image | D15.2, 12.33″ (all three paired to MARS) | **D34.2, 3.12″, not paired to MARS** |
-| MARS images per source (each observed image's own β) | 5, 5, 5; one within 0.05–0.13″ of the target | 5, 4, 4; one within 0.05–0.22″ |
+| MARS images per source (each observed image's own β) | 5, 5, 5; one 0.05–0.13″ from the target (\|μ\| 10.3–11.9) and one 3.84–5.00″ away (\|μ\| 43.8–64.0) | 5, 4, 4; one 0.05–0.22″ from the target |
+| CANUCS-model images per source (0.25″ grid) | 3, 3, 3; nearest to the target 10.89–12.33″ | 3, 3, 3; nearest 0.74″ (β of D34.1), 3.12″ (D34.2), 1.39″ (D34.3) |
 | Other MARS-only image of the family | \|μ\| 51.3, 4.43″ away (`confused`) | \|μ\| 12.7, 9.86″ (`undetectable`) |
 | MARS critical curve (sign change of det A) | 1.46″ | 1.14″ |
 | CANUCS-model critical curve | 0.67″ | 0.64″ |
 
-- **D34:** the target is 3.12″ from catalogued D34.2, the one D34 image MARS does not pair (radius 3.0″). Reading
+- **D34:** the target is 3.12″ from catalogued D34.2, the one D34 image MARS does not pair (radius 3.0″). The CANUCS
+  model's own image in this region moves 0.74–3.12″ from the target with the choice of source (table). Reading
   (hypothesis, ordinary): it is MARS's image of D34.2, displaced just beyond the pairing radius, as the D115a target of
   addendum as was for D115a.2 (3.24″). Not a missing image.
-- **D15:** MARS predicts a fold pair (|μ| 51.3 and 11.2, 4.43″ apart) for every choice of source position, about one
-  map pixel (1.515″) from its critical curve. The CANUCS model has a critical curve 0.67″ from the same spot but puts
-  no image there (the source lies outside its caustic). F200W shows no source within 1.5″ at F_pred / σ 69.7.
-  Reading (hypothesis, ordinary): the fold pair is a MARS-specific caustic placement; the data agree with the CANUCS
-  model. Vetting records: `docs/candidates/macs0416-mars-D15-extra.md`, `docs/candidates/macs0416-mars-D34-extra.md`.
+- **D15:** MARS predicts two extra images (|μ| 51.3 and 11.2, 4.43″ apart) for each of the three source choices
+  (table), the target 1.46″ from the MARS critical curve, about one map pixel (1.515″). The CANUCS model also has a
+  critical curve near the spot (0.67″; whether it is the same curve is not tested) but gives 3 images for each source,
+  none within 10.89″. F200W shows no source within 1.5″ at F_pred / σ 69.7. Reading (hypothesis, ordinary): the
+  extra pair is a MARS-specific prediction near its critical curve; the data agree with the CANUCS model there.
+  Vetting records: `docs/candidates/macs0416-mars-D15-extra.md`, `docs/candidates/macs0416-mars-D34-extra.md`.
 
 ## Reading (narrow)
-Over 111 MACS0416 families, MARS predicts no image at a position where the data show flux that neither catalogue nor
-CANUCS model accounts for; its two "absent" predictions are one pairing-radius case and one MARS-only fold pair that
-CANUCS does not make. No candidate. The two-model MARS / CANUCS route on MACS0416 is complete.
+Over 111 MACS0416 families, the two MARS-only predictions read `absent` are one pairing-radius case and one MARS-only
+extra pair that the CANUCS model does not make. The other four targets (D15 |μ| 51.3 `confused`; D31b, D31c
+catalogue-`recovered` but `undetectable_local`; D34 |μ| 12.7 `undetectable`) have no reading under rule 5 and were
+not vetted. No candidate. The two-model MARS / CANUCS route on MACS0416 is complete.
 
 ## Limits
-- Single band (F200W); MARS |μ| near critical curves is coarse (1.515″ pixels), so F_pred there is uncertain by more
-  than the classify thresholds assume.
-- Rule 1 drops families whose images do not all back-trace; none was dropped here (40 + 71 solved; the image list
-  has 111 families, count not stored).
-- The D15 test shows only that the data prefer CANUCS's caustic there; it does not test the CANUCS model elsewhere.
+- Single band (F200W); MARS |μ| near critical curves is coarse (1.515″ pixels), so F_pred there carries an
+  uncertainty this stage does not quantify.
+- Rule 1 drops families whose images do not all back-trace; none was dropped here (`posthoc.json` `families`: 111
+  total, 111 solved).
+- The D15 test shows only that the data agree with the CANUCS prediction there; it does not test the CANUCS model
+  elsewhere.

@@ -14,7 +14,7 @@
 | Pairing radius (a displaced image of a catalogued one) | B | **explains** | `posthoc.json`: catalogued D34.2 is 3.12″ from the target and is the one D34 image not paired to MARS (radius 3.0″, ASSUMPTION) | derived |
 | Source-position choice | C | image persists | MARS gives 5, 4, 4 images for the three observed β; one 0.05–0.22″ from the target each time | model_prediction |
 | Critical curve | C | near | MARS 1.14″, CANUCS 0.64″ from the target | model_prediction |
-| Second model | C | consistent | CANUCS: 0 extra predictions in D34 | model_prediction |
+| Second model | C | consistent | CANUCS: 0 extra predictions in D34; its image in this region lies 0.74″ (β of D34.1), 3.12″ (D34.2) and 1.39″ (D34.3) from the target, i.e. moves by ~2.4″ with the source choice | model_prediction |
 
 **Verdict:** `catalog effect: pairing radius` — the target is MARS's counterpart of catalogued D34.2, displaced 3.12″
 near the critical curve (`hypothesis`, supported by the distance and the unpaired D34.2), as the D115a target of

@@ -219,9 +219,8 @@ def cutout_png(d, w, rows: list[dict], fams: dict, path: Path, half: float = 4.0
     plt.close(fig)
 
 
-def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
-    if file_sha256(cat_path) != mc.CAT_SHA or file_sha256(image) != mc.IMAGE_SHA:
-        raise ValueError("--cat / --image are not the pinned CANUCS DR1 MACS0416 files")
+def load(zdir: Path):
+    """The MARS model and the shifted CANUCS image / extra-prediction tables (addendum as)."""
     meta = mh.fetch_zip(requests.Session(), zdir)
     folder, tag, z_lens = mh.FIELDS[me.FIELD]
     base = f"{mh.ROOT}{folder}/deflection_angle_{tag}_"
@@ -237,6 +236,13 @@ def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
     t = mo.split_seen(mo.shift(canucs, off), mars)
     pred = mo.shift(Table.read(me.PREDICTED), off)
     grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, t), mh.GRID_STEP)
+    return meta, model, t, pred, off, grid
+
+
+def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
+    if file_sha256(cat_path) != mc.CAT_SHA or file_sha256(image) != mc.IMAGE_SHA:
+        raise ValueError("--cat / --image are not the pinned CANUCS DR1 MACS0416 files")
+    meta, model, t, pred, off, grid = load(zdir)
     fams, targets = solve(model, grid, t, pred, off)
 
     tab = Table.read(cat_path)

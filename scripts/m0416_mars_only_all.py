@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import zipfile
 from pathlib import Path
 
 import lens_consistency as lc
@@ -25,7 +24,6 @@ import m1423_canucsref as m14
 import mars_hff_heldout as mo
 import mars_hff_inputs as mh
 import numpy as np
-import requests
 from astropy.coordinates import SkyCoord
 from astropy.io import fits
 from astropy.table import Table
@@ -39,6 +37,7 @@ OUT = Path("results/lens_consistency/m0416_mars_only_all")
 KNOWN = ("D115a", 64.044742, -24.060901)  # addendum as target (its summary.json)
 KNOWN_TOL_ARCSEC = 0.1  # PLAN.md rule 3
 SHEET_MAX = 12  # PLAN.md stop rules
+NEAR_ARCSEC = 6.0  # post hoc listing radius (not a rule)
 
 
 def split_families(t: Table, pred: Table) -> tuple[list[str], list[str]]:
@@ -67,36 +66,27 @@ def sheet_rows(rows: list[dict], n: int = SHEET_MAX) -> list[dict]:
     """PLAN.md stop rules: targets with a reading, at most ``n`` by largest F_pred / sigma_loc."""
     r = [x for x in rows if x["reading"] != "no_reading"]
     key = [float(x["pred_over_sigma"]) if np.isfinite(x["pred_over_sigma"]) else -np.inf for x in r]
-    return [r[i] for i in np.argsort(key, kind="stable")[::-1][:n]]
+    return [r[i] for i in np.argsort(-np.asarray(key), kind="stable")[:n]]
 
 
-def load(zdir: Path):
-    """The MARS model and the shifted CANUCS image / extra-prediction tables (addendum as)."""
-    meta = mh.fetch_zip(requests.Session(), zdir)
-    folder, tag, z_lens = mh.FIELDS[me.FIELD]
-    base = f"{mh.ROOT}{folder}/deflection_angle_{tag}_"
-    with zipfile.ZipFile(zdir / mh.ZIP) as zf:
-        mcat = mh.parse_catalogue(zf.read(mh.CATALOGUE).decode())
-        (ax, hx), (ay, _) = (mh._fits(zf, base + f"{c}_w_header.fits") for c in "xy")
-    model = mh.build_model(
-        ax, ay, hx, False, z_lens, "see mars_hff_inputs", f"mars-{tag} (A_arcsec)"
-    )
-    mars = mcat[np.asarray(mcat["field"]) == me.FIELD]
-    canucs = Table.read(mo.FIELDS[me.FIELD][0])
-    off = mo.frame_offset(canucs, mars)
-    t = mo.split_seen(mo.shift(canucs, off), mars)
-    pred = mo.shift(Table.read(me.PREDICTED), off)
-    grid = lensmodel.DeflectionGrid.compute(model, lc.grid_half_width(model, t), mh.GRID_STEP)
-    return meta, model, t, pred, off, grid
+def _with_beta(model, t: Table) -> Table:
+    """``t`` with its back-traced source columns (input of ``split_families``)."""
+    bt = lensmodel.backtrace_images(model, t, {})
+    tb = t.copy()
+    tb["beta_x"], tb["beta_y"] = bt["beta_x"], bt["beta_y"]
+    return tb
 
 
 def critical_distance(model, x: float, y: float, z: float, half=6.0, step=0.1) -> float:
-    """Distance (arcsec) from (x, y) to the nearest grid point where det A has the other sign."""
+    """Distance (arcsec) from (x, y) to the nearest grid point where det A is finite and has the
+    other sign (NaN when det A at (x, y) is not finite)."""
     g = np.arange(-half, half + step / 2, step)
     gx, gy = np.meshgrid(x + g, y + g)
     a = model.lens_map(np.array([x, *gx.ravel()]), np.array([y, *gy.ravel()]), z)
     det = a["a11"] * a["a22"] - a["a12"] * a["a21"]
-    other = np.sign(det[1:]) != np.sign(det[0])
+    if not np.isfinite(det[0]):
+        return float("nan")
+    other = np.isfinite(det[1:]) & (np.sign(det[1:]) != np.sign(det[0]))
     if not other.any():
         return float("inf")
     return float(np.hypot(gx.ravel() - x, gy.ravel() - y)[other].min())
@@ -105,12 +95,16 @@ def critical_distance(model, x: float, y: float, z: float, half=6.0, step=0.1) -
 def posthoc(zdir: Path, out: Path = OUT) -> dict:
     """Post hoc (not a frozen rule), per ``lensing_residual_input`` target: the CANUCS extra
     predictions of its family, the MARS critical-curve distance and the family's MARS images."""
-    _, model, t, pred, off, grid = load(zdir)
+    _, model, t, pred, off, grid = mp.load(zdir)
     psys = np.asarray(pred["system"], str)
     cm, _, _ = lc.load_model(mc.MODEL)  # the pinned CANUCS Lenstool model (D-044)
     lc.apply_frame_offset(mc.MODEL, cm)
     canucs = Table.read(mo.FIELDS[me.FIELD][0])  # observed images, CANUCS frame (targets' frame)
     canucs["system"] = [lensmodel.image_family(str(i)) for i in canucs["image_id"]]
+    solved = set(np.asarray(t["image_id"], str))  # images offered to the pairing (``split_seen``)
+    old, new = split_families(_with_beta(model, t), pred)
+    all_fams = list(dict.fromkeys(np.asarray(canucs["system"], str)))
+    cgrid = lensmodel.DeflectionGrid.compute(cm, lc.grid_half_width(cm, canucs), mc.GRID_STEP_K)
     res = []
     for tg in Table.read(out / "targets.ecsv"):
         if tg["reading"] != "lensing_residual_input":
@@ -127,18 +121,39 @@ def posthoc(zdir: Path, out: Path = OUT) -> dict:
         for i, (bx, by) in enumerate(zip(bt["beta_x"], bt["beta_y"], strict=True)):
             p = lensmodel.find_images(model, grid, float(bx), float(by), z)
             d = np.hypot(np.asarray(p["x"], float) - x, np.asarray(p["y"], float) - y)
+            near = d <= NEAR_ARCSEC
             per_image.append(
                 {
                     "source_from": str(t["image_id"][fam][i]),
                     "n_images": len(p),
                     "nearest_to_target_arcsec": float(d.min()) if len(d) else float("inf"),
+                    "images_within_6arcsec": [
+                        {"d_arcsec": float(dd), "abs_mu": float(abs(mm))}
+                        for dd, mm in zip(
+                            d[near], np.asarray(p["magnification"])[near], strict=True
+                        )
+                    ],
                 }
             )
         cx, cy = (float(v) for v in cm.to_frame(float(tg["ra"]), float(tg["dec"])))
+        cfam = canucs[np.asarray(canucs["system"], str) == s]
+        cbt = lensmodel.backtrace_images(cm, cfam, {})
+        canucs_per_image = []
+        for i, (bx, by) in enumerate(zip(cbt["beta_x"], cbt["beta_y"], strict=True)):
+            p = lensmodel.find_images(cm, cgrid, float(bx), float(by), z)
+            d = np.hypot(np.asarray(p["x"], float) - cx, np.asarray(p["y"], float) - cy)
+            canucs_per_image.append(
+                {
+                    "source_from": str(cfam["image_id"][i]),
+                    "n_images": len(p),
+                    "nearest_to_target_arcsec": float(d.min()) if len(d) else float("inf"),
+                }
+            )
         res.append(
             {
                 "system": s,
                 "canucs_critical_distance_arcsec": critical_distance(cm, cx, cy, z, half=10.0),
+                "canucs_source_per_image": canucs_per_image,
                 "source_per_image": per_image,
                 "z": z,
                 "abs_mu": float(tg["abs_mu"]),
@@ -158,6 +173,7 @@ def posthoc(zdir: Path, out: Path = OUT) -> dict:
                         ),
                     }
                     for r in canucs[np.asarray(canucs["system"], str) == s]
+                    if str(r["image_id"]) in solved
                 ],
                 "mars_images_paired": [
                     {"id": im["id"], "abs_mu": im["mu"]} for im in fams.get(s, [])
@@ -177,7 +193,17 @@ def posthoc(zdir: Path, out: Path = OUT) -> dict:
                 ],
             }
         )
-    p = {"label": "post hoc, not a frozen rule", "map_pixel_arcsec": 1.515, "targets": res}
+    p = {
+        "label": "post hoc, not a frozen rule",
+        "map_pixel_arcsec": 1.515,
+        "canucs_grid_step_arcsec": mc.GRID_STEP_K,
+        "families": {
+            "total": len(all_fams),
+            "solved": len(old) + len(new),
+            "dropped": [f for f in all_fams if f not in set(old) | set(new)],
+        },
+        "targets": res,
+    }
     (out / "posthoc.json").write_text(json.dumps(_clean(p), indent=1, allow_nan=False) + "\n")
     return p
 
@@ -185,11 +211,8 @@ def posthoc(zdir: Path, out: Path = OUT) -> dict:
 def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
     if file_sha256(cat_path) != mc.CAT_SHA or file_sha256(image) != mc.IMAGE_SHA:
         raise ValueError("--cat / --image are not the pinned CANUCS DR1 MACS0416 files")
-    meta, model, t, pred, off, grid = load(zdir)
-    bt = lensmodel.backtrace_images(model, t, {})
-    tb = t.copy()
-    tb["beta_x"], tb["beta_y"] = bt["beta_x"], bt["beta_y"]
-    old, new = split_families(tb, pred)
+    meta, model, t, pred, off, grid = mp.load(zdir)
+    old, new = split_families(_with_beta(model, t), pred)
     fams_old, tg_old = mp.solve(model, grid, t, pred, off, old)
     r_ok = gate_r(tg_old)
     summary = {
@@ -204,7 +227,8 @@ def run(zdir: Path, cat_path: Path, image: Path, out: Path = OUT) -> dict:
     }
     out.mkdir(parents=True, exist_ok=True)
     if not r_ok:  # PLAN.md rule 3: stop, no reading
-        (out / "summary.json").write_text(json.dumps(_clean(summary), indent=1) + "\n")
+        txt = json.dumps(_clean(summary), indent=1, allow_nan=False)
+        (out / "summary.json").write_text(txt + "\n")
         return summary
     fams_new, targets = mp.solve(model, grid, t, pred, off, new)
     fams = {**fams_old, **fams_new}
@@ -259,6 +283,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--image", type=Path)
     ap.add_argument("--posthoc", action="store_true", help="only the post hoc table (after a run)")
     a = ap.parse_args(argv)
+    if not a.posthoc and (a.cat is None or a.image is None):
+        ap.error("--cat and --image are required without --posthoc")
     try:
         if a.posthoc:
             print(json.dumps(posthoc(a.zip), indent=1))

@@ -6,7 +6,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`results/lens_consistency/m0416_mars_only_all/RESULT.md`): addendum as extended to all 111 families;
   gate R (reproduces the D115a target) and gate C2 (195 / 205) pass. 71 new families give 6 MARS-only targets, 2 read
   `lensing_residual_input`. Post hoc: D34 is MARS's image of the unpaired catalogued D34.2 (3.12″ > 3.0″ radius); D15
-  is a MARS-only fold pair (critical curve 1.46″) the CANUCS model does not make; F200W shows nothing there. Vetting
+  is a MARS-only extra pair (critical curve 1.46″) the CANUCS model does not make (none within 10.89″); F200W shows
+  nothing there. Vetting
   records `docs/candidates/macs0416-mars-D15-extra.md`, `-D34-extra.md`. The MARS / CANUCS route on MACS0416 is done.
 - **Handoff:** no held-out-validated second model exists on another field yet (MARS fails gate H on Abell 370 and
   MACS1149; addenda ap, at, au). Next: a MAST HLSP / Zenodo search for a JWST-era model of a field with a public
