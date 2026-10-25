@@ -53,9 +53,10 @@ def two_model_11(usable_glafic: bool, glafic_dtheta: float | None, lenstool_flag
     """Rule 9: the 11.1 statement from the GLAFIC run and the frozen Lenstool flag."""
     if not usable_glafic:
         return "glafic_not_usable"
-    if glafic_dtheta is not None and glafic_dtheta > ho.MATCH_ARCSEC and lenstool_flagged:
-        return "missed_by_both"
-    return "lenstool_only"
+    glafic_miss = glafic_dtheta is not None and glafic_dtheta > ho.MATCH_ARCSEC
+    if glafic_miss:
+        return "missed_by_both" if lenstool_flagged else "glafic_only"
+    return "lenstool_only" if lenstool_flagged else "neither"
 
 
 def main(argv: list[str] | None = None) -> int:

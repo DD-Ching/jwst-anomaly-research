@@ -29,7 +29,8 @@ def test_two_model_statement():
     assert sg.two_model_11(False, 5.0, True) == "glafic_not_usable"
     assert sg.two_model_11(True, 3.5, True) == "missed_by_both"
     assert sg.two_model_11(True, 2.9, True) == "lenstool_only"
-    assert sg.two_model_11(True, 3.5, False) == "lenstool_only"
+    assert sg.two_model_11(True, 3.5, False) == "glafic_only"
+    assert sg.two_model_11(True, 2.9, False) == "neither"
 
 
 def test_models_cover_srh_clusters():
