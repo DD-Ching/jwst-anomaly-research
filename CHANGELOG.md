@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: SLICE Lenstool models: LAM atlas still closed, no other host found
+- **Hosts:** data.lam.fr/sl-cluster-atlas (page and the ANIS `server/search/sl-cluster-atlas/model` API, with the
+  cookie) still redirects to lamwws.lam.fr/restricted.html at 17:10Z. Cerny et al. 2026 name only the LAM atlas as
+  the model host; a Zenodo API search (SLICE / "Strong LensIng and Cluster Evolution") and a web search find no
+  mirror. Do not repeat this search; retry only the LAM atlas.
+- **Handoff:** no authorized trial unit is open (X3, X4 wait on the owner) and the lens-consistency line waits on
+  the SLICE models, so this run did no new measurement. Next: LAM atlas retry, then the TASKS "Supporting" queue.
+  #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: RELICS Lenstool v1 amplitude over the |μ_ref| ≥ 10 region: gates pass, H_K undetermined (D-034 addendum bk)
 - **Result** (`results/lens_consistency/relics_lenstool_mu/RESULT.md`; plan frozen in 09620d66 / c3d60577): region
   |μ_ref(z 2)| ≥ 10 from each reference's deflection Jacobian (gate T: derived κ matches published κ, ≤ 1.1e-5).
