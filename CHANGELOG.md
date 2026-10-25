@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-25: RELICS Lenstool v1 amplitude over the |μ_ref| ≥ 10 region: gates pass, H_K undetermined (D-034 addendum bk)
+- **Result** (`results/lens_consistency/relics_lenstool_mu/RESULT.md`; plan frozen in 09620d66 / c3d60577): region
+  |μ_ref(z 2)| ≥ 10 from each reference's deflection Jacobian (gate T: derived κ matches published κ, ≤ 1.1e-5).
+  Gate V passes (MACS J0553 1.635, Abell 3192 1.277 offset; RXC J2211 1.070, RX J0152 1.059 near 1; S ≤ 10 % of the
+  overlap). Batch maps RXC J0600 1.384, MACS J0417 1.375 offset; WHL0137 1.038 near 1; SPT0615 0.772 intermediate →
+  H_K undetermined (not rejected); batch line paused per plan.
+- **Post hoc:** 1/R runs 0.05–0.10 below f_obs; inside S the RXC J0600 / MACS J0417 ratios vary (contact sheet), so
+  their offset is partly a shape difference.
+- **Handoff:** the per-cluster amplitude check (addendum bd) stays the rule. Next lens-consistency action: the SLICE
+  Lenstool maps when the LAM atlas reopens (retry), or the newest TASKS "Now" item. #374 waits for the 2026-10-26 weekly run.
+
 ## 2026-10-25: RELICS Lenstool v1 2017-12 batch map-ratio test: gate V fails, H_K undetermined (D-034 addendum bj)
 - **Result** (`results/lens_consistency/relics_lenstool_batch/RESULT.md`; plan frozen in cf7ec7d8): R = median
   |α_LT| / |α_ref| over |α_ref| ≥ 0.5 max on eight clusters. Gate V fails on Abell 3192 (R 1.247, offset cut 1.25);
