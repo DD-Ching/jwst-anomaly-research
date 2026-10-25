@@ -775,6 +775,14 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - CLASH Zitrin v2 MACS2129 maps (PIEMD + eNFW, LTM-Gauss; readme 2015-02-18):
     https://archive.stsci.edu/missions/hlsp/clash/macs2129/models/zitrin/ (sha256 in `lensmodel.MACS2129_CLASH_*`;
     readme sha256 nfw 7ffa3f92…947d, ltm-gauss 3e1756ea…dae0da).
+- SLICE × RELICS MACS J0358 (`results/lens_consistency/slice_relics_macs0358/`, accessed 2026-10-25):
+  - SLICE Table 8 block of MACS J0358.8−2955 (same e-print; sha256 in `slice_images.ecsv` meta).
+  - RELICS Lenstool v1 and GLAFIC v2 maps of Abell 3192:
+    https://archive.stsci.edu/hlsps/relics/abell3192/models/ (HLSP DOI 10.17909/T9SP45; sha256 in
+    `lensmodel.A3192_RELICS_{LENSTOOL,GLAFIC}`; no model readme or constraint list in those directories).
+  - Hsu, Ebeling & Richard 2013, "The three-dimensional geometry and merger history of the massive galaxy cluster
+    MACS J0358.8-2955", MNRAS 429, 833, doi:10.1093/mnras/sts379, arXiv:1209.2492 (from the SLICE e-print
+    bibliography).
 - SLICE × RELICS RX J0152 (`results/lens_consistency/slice_relics_rxj0152/`, accessed 2026-10-25):
   - SLICE Table 8 block of RX J0152.7−1357 (same e-print; sha256 in `slice_images.ecsv` meta).
   - RELICS Lenstool v1, GLAFIC v2 and Zitrin LTM-Gauss v1 maps:

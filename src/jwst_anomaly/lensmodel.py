@@ -611,6 +611,50 @@ CL0152_RELICS_ZITRIN: dict[str, tuple[str, str]] = {
     ),
 }
 
+#: RELICS Lenstool v1 and GLAFIC v2 maps of Abell 3192 (= MACS J0358.8-2955; z_lens 0.425 from
+#: SLICE Table 1; HLSP DOI 10.17909/T9SP45, accessed 2026-10-25; no model readme or constraint
+#: list in the model directories), deflection in arcsec at D_LS/D_S = 1 (RELICS readme v3); SLICE
+#: check (results/lens_consistency/slice_relics_macs0358/PLAN.md).
+_RELICS_A3192 = "https://archive.stsci.edu/hlsps/relics/abell3192/models/"
+_RELICS_A3192_LENSTOOL = f"{_RELICS_A3192}lenstool/hlsp_relics_model_model_abell3192_lenstool_v1"
+_RELICS_A3192_GLAFIC = f"{_RELICS_A3192}glafic/v2/hlsp_relics_model_model_abell3192_glafic_v2"
+A3192_RELICS_LENSTOOL: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_A3192_LENSTOOL}_x-arcsec-deflect.fits",
+        "2edd77f6dc0454cec8d9afbbb8421e091d503372561894bbdd29a67d7c0f552b",
+    ),
+    "alpha_y": (
+        f"{_RELICS_A3192_LENSTOOL}_y-arcsec-deflect.fits",
+        "d9e5e9ad99e7670b8b2b0039167b9edfc402e0f7a9ad45739b6c20ddbc2991f6",
+    ),
+    "kappa_map": (
+        f"{_RELICS_A3192_LENSTOOL}_kappa.fits",
+        "84949a19959dfc1f87015fdc3e609381fa9d9e5e5a628f2cfede3863ba0e2c22",
+    ),
+    "mag_z2": (
+        f"{_RELICS_A3192_LENSTOOL}_z02-magnif.fits",
+        "2717497f0809a788fd01a14422156ff3da28dfe81466f0d83e7e0f27b2f2edaf",
+    ),
+}
+A3192_RELICS_GLAFIC: dict[str, tuple[str, str]] = {
+    "alpha_x": (
+        f"{_RELICS_A3192_GLAFIC}_x-arcsec-deflect.fits",
+        "13e703ea486c042fa0f0ca4951628f16043edeb55892d35453bd4a35a20fdc9c",
+    ),
+    "alpha_y": (
+        f"{_RELICS_A3192_GLAFIC}_y-arcsec-deflect.fits",
+        "5a7ce15027ee0746436a02f43fb23d602a687d36ab74616cd3f1870f0f30dbb1",
+    ),
+    "kappa_map": (
+        f"{_RELICS_A3192_GLAFIC}_kappa.fits",
+        "71a26d4245003f93ec7161379c4afdf7dbbbfb515ffef3f8fc0297fd7a3b8bf3",
+    ),
+    "mag_z2": (
+        f"{_RELICS_A3192_GLAFIC}_z02-magnif.fits",
+        "448ff2a7ef50a0237b740f6c961ef432aba5141b2de93ab03e938568a26ceb28",
+    ),
+}
+
 #: HFF Sharon & Johnson v4cor Lenstool maps of MACS J1149.5+2223 (readme
 #: ``hlsp_frontier_model_macs1149_sharon_v4cor_readme.pdf``, accessed 2026-10-20): best fit,
 #: 4000 x 4000 px at 0.05", D_LS/D_S = 1, deflection in arcsec; 64 MB each. Second model for the
