@@ -2721,6 +2721,17 @@ gives 1.53 expected vs 3 observed (P 0.20). Decision: no flag; family 4 stays a 
 rejected: reading the three segments post hoc. Revisit if: a re-frozen plan with single-image injection, aperture
 fluxes, ten bands and a frozen chance gate is run.
 
+**Addendum 2026-10-25bg (revised forced photometry at RX J0152 family 4's predicted third image).**
+`results/lens_consistency/rxj0152_fam4_photometry_v2/RESULT.md`; plan, script and rule tests in e566d3e before any
+pixel was read (exploratory: bf saw the region). Ten VENUS bands, 0.3″ forced apertures, single-image injection of
+4.1 / R_m (30 positions), frozen chance gate X. V fails (27 / 30, but 2 / 3 at the predicted positions; Lenstool
+missed), C passes 7 / 12, D fails (1.50 < 5 σ_ap = 1.67), X gives λ 2.27 vs 3 observed (P 0.40): O3 undetermined;
+had V passed, O1c chance-level. Post hoc: missed copies are detected at the right flux but fail the 0.3 dex colour
+test, and the GLAFIC at-prediction recovery is credited only to a pre-existing match (strict count 1 / 3, 25 / 30).
+Decision: no flag; aperture colours cannot decide this case; line paused. Alternatives rejected: widening the
+colour tolerance post hoc (it would raise λ further). Revisit if: photometric or spectroscopic redshifts of segments
+127 / 131 / 112 (or family 4) become available, or SLICE publishes its own model of RX J0152.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
