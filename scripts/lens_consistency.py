@@ -225,6 +225,28 @@ MODELS = {
         "cosmology": (70.0, 0.3),
         "mag_maps": {2.0: "mag_z2"},
     },
+    # z_lens from SLICE (Cerny et al. 2026) Table 1
+    "rxc0232-relics-lenstool": {
+        "files": lensmodel.RXC0232_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.2836,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "rxc2211-relics-lenstool": {
+        "files": lensmodel.RXC2211_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.397,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
+    "macs0553-relics-lenstool": {
+        "files": lensmodel.MACS0553_RELICS_LENSTOOL,
+        "kind": "maps",
+        "z_lens": 0.412,
+        "cosmology": (70.0, 0.3),
+        "mag_maps": {2.0: "mag_z2"},
+    },
     "macs0417-canucs-maps": {
         "files": lensmodel.MACS0417_CANUCS_MAPS,
         "kind": "maps",
