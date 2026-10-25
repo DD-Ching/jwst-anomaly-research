@@ -32,7 +32,8 @@ are observed (as the authors list them); residuals are model predictions; thresh
 - No cutouts were looked at: this stage reads catalogue positions only (no image pixels).
 
 ## Not done / limits
-- MACS0717 and MACS1149: no JWST-era image list stored here; not tested.
+- MACS0717 and MACS1149: no JWST-era image list stored here; not tested. MACS0717 (2026-10-25): the MARS catalogue
+  already holds all ten Limousin+16 spectroscopic systems, so no spectroscopic held-out list exists (CHANGELOG).
 - Mean-source and bilinear interpolation as in addendum ao; no bicubic or WLS variant run (not in the plan).
 
 ## Next
