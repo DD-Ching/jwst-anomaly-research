@@ -7,10 +7,10 @@ Per model: gate P, K0 and F on families 1-3 (rules 2-4), reading A on families 4
 families 1-3 at z_spec (rule 5, joint over usable models), multiplicity (rule 6) and the amplitude
 class (rule 7, Q1). Rule helpers are shared with ``slice_relics_rxj0152``.
 
-    python scripts/slice_relics_rxj0152.py --build-images main.tex   # once, from the e-print
+    python scripts/slice_relics_macs0358.py --build-images main.tex   # once, from the e-print
     python scripts/lens_consistency.py --model a3192-relics-lenstool \
         --out results/lens_consistency/slice_relics_macs0358/validate validate
-    python scripts/slice_relics_rxj0152.py [--grid-step 0.25]
+    python scripts/slice_relics_macs0358.py [--grid-step 0.25]
     python scripts/slice_relics_rxj0152.py --posthoc   # post hoc: unmatched predicted images
 """
 
