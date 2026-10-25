@@ -34,7 +34,7 @@ DATA_SUFFIXES = (".json", ".jsonl", ".csv", ".ecsv", ".json.gz", ".jsonl.gz", ".
 NUM = re.compile(r"(?<![\w.#§/-])(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)(?![\w/])")
 SKIP_CONTEXT = re.compile(
     r"\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}(:\d{2})?|#\d+|§\s*\d+|D-\d+|\bQ\d+\b|\bv\d+(\.\d+)*\b|"
-    r"\b[0-9a-f]{7,40}\b|arXiv:\S+|DOI\s*\S+|10\.\d{4,}/\S+|KIC\s*\d+|\bkepid\b"
+    r"\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\b|arXiv:\S+|DOI\s*\S+|10\.\d{4,}/\S+|KIC\s*\d+|\bkepid\b"
 )
 CAUSAL = re.compile(
     r"\bbecause\b|\bdue to\b|\bdriven by\b|\bcaused by\b|\bmainly\b|\bmostly\b|\bcomes from\b|"
@@ -206,7 +206,7 @@ def review(d: Path, extra: list[Path]) -> list[str]:
                         findings.append(f"{msg}: {where}")
                 if re.search(r"Deviations:?\**:?\s*none\.?\s*$", line, re.I):
                     nxt = lines[i + 1] if i + 1 < len(lines) else ""
-                    if nxt.startswith("  -") and "notes" not in low:
+                    if nxt.startswith("  -"):
                         findings.append(f"item 6 'Deviations: none' followed by notes: {where}")
     return findings
 

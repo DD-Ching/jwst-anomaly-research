@@ -69,3 +69,8 @@ def test_md_sections_newest_entries(tmp_path):
     d = tmp_path / "DECISIONS.md"
     d.write_text("# D\n\n## D-001 one\n- x\n\n## D-002 two\n- y\n")
     assert cr.md_sections(d) == ["## D-002 two\n- y\n"]
+
+
+def test_hash_skip_keeps_plain_numbers():
+    toks = [t for t, _ in cr.numbers_in_line("commit 038fdd0 read 1234567 bytes")]
+    assert toks == ["1234567"]

@@ -28,4 +28,3 @@ results/w3_ztf/v4/search_all_v3rule_posthoc.json
 results/screening_2026_10_24/net_ledger.jsonl
 results/w2_j2244_stpsf/net_ledger.jsonl
 results/w2_j2244_stpsf/net_ledger_stoptest.jsonl
-results/w3_kepler/net_ledger.jsonl

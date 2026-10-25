@@ -7,7 +7,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   method, threshold, review count or quality requirement changes.
 - **Automated:**
   - the pre-commit hook `results-output-size` (`scripts/check_results.py --sizes`) fails on tracked plain
-    outputs under `results/` above 500 kB and on tracked raw ledgers (31 older files grandfathered);
+    outputs under `results/` above 500 kB and on tracked raw ledgers (28 older files grandfathered);
   - `.gitignore` covers `net_ledger*.jsonl`;
   - `scripts/push_branch.sh` merges a moved `main` before pushing;
   - `scripts/check_results.py --review` gives an advisory pre-review report (checklist items 1, 2, 3, 5,
