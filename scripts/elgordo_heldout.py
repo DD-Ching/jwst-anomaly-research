@@ -31,8 +31,11 @@ ROW = re.compile(r"^\s*([0-9]+(?:\.[0-9]+)?[a-z]+)\S*\s*&")
 
 
 def _num(s: str) -> float | None:
+    """A table number; ``\\no`` and -1 are missing, footnote marks (``\\ddag``) are dropped."""
     s = s.strip()
-    return None if s in ("\\no", "-1", "") else float(s)
+    if s in ("\\no", "-1", ""):
+        return None
+    return float(re.sub(r"\\[A-Za-z]+", "", s))
 
 
 def parse_table(tex: str) -> Table:
