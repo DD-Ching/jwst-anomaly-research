@@ -384,6 +384,8 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   arXiv:1803.00560 (Table 1 z_lens 0.356, read 2026-10-18).
 - JWST program 5293 o005 NIRCam F200W level-3 catalogue `jw05293-o005_t001_nircam_clear-f200w_cat.ecsv` (MAST, PUBLIC,
   accessed 2026-10-18; sha256 in `results/arcs/macs0308-relics/summary.json`).
+- Lenstool wiki, Image section (`forme`: "<0 image plane chi2. >=0 source plane chi2"; default −1):
+  https://projets.lam.fr/projects/lenstool/wiki/Image (accessed 2026-10-26; used by D115b stage VS).
 - LAM Strong Lensing Cluster Atlas (Lenstool model tarballs and maps; 17 models on 2026-10-18): https://data.lam.fr/sl-cluster-atlas
   (ANIS API `https://data.lam.fr/server/search/sl-cluster-atlas/model?a=1;2;3`; needs cookie `Yogsototh_opens_the_door=1`).
 - Mahler et al. 2019 (RELICS MACS J0417 lenstool model, system 1 images): arXiv:1810.13439 (abstract read 2026-10-17: "MACS J0417.5-1154 at z=0.443"; journal reference not checked).
