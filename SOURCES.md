@@ -824,6 +824,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - Acebron et al. 2019, "RELICS: High-resolution Constraints on the Inner Mass Distribution of the z = 0.83 Merging
     Cluster RXJ0152.7-1357 from Strong Lensing", ApJ 874, 132, doi:10.3847/1538-4357/ab0adf, arXiv:1810.08122
     (from the SLICE e-print bibliography).
+- RELICS RX J0152 BPZ catalogue (`results/lens_consistency/rxj0152_fam4_photoz/`, accessed 2026-10-26):
+  https://archive.stsci.edu/hlsps/relics/cl0152m13/catalogs/hlsp_relics_hst_acs-wfc3ir_cl0152m13_multi_v1_cat.txt
+  (HLSP DOI 10.17909/T9SP45; 13,052 rows; sha256 in `summary.json`). DJA v7 public index
+  (https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/index.html, read 2026-10-26): no RX J0152 field.
 - SLICE × RELICS (`results/lens_consistency/slice_relics_heldout/`, accessed 2026-10-25):
   - SLICE Table 8 blocks of RXC J0232.2-4420, RXC J2211.7-0349, MACS J0553.4-3342 (same e-print as above; sha256 in
     `slice_images.ecsv` meta).

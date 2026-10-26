@@ -2837,6 +2837,16 @@ hoc); every μ ratio agrees (|z| ≤ 2.32); all seven delays fall short of the m
 (post hoc). Decision: no lens-model anomaly; not a candidate. Alternatives rejected: rescaling delays to another H0
 (post hoc). Revisit if: errata change a blind table entry.
 
+**Addendum 2026-10-26br (RX J0152 family 4: RELICS BPZ photo-z of segments 112 / 127 / 131).**
+`results/lens_consistency/rxj0152_fam4_photoz/RESULT.md`; plan frozen in 11bd41f9 before any catalogue row was read.
+DJA v7 has no RX J0152 field, so the RELICS HST BPZ catalogue (`cl0152m13` v1) was the available photo-z. Gate P
+(SLICE families 1–6 as controls) fails: 5 / 14 matched images inside the 95 % interval (≥ 60 % needed); the
+spectroscopic family 1 fails too (1.1 at odds 1.0 excludes z 3.93). Outcome U. Family 4's own images get z_b 3.266 and
+0.209. Post hoc: with the median control offset (−0.238″, +0.277″) removed, 6 / 14, still failing. Decision: RELICS
+BPZ cannot decide the family-4 third image; line stays paused. Alternatives rejected: widening the interval or
+reading the segment classes after a failed gate. Revisit if: JWST-resolution photo-z or spectroscopy of RX J0152
+(a DJA / VENUS catalogue) or a SLICE model of RX J0152 becomes public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
