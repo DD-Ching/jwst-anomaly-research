@@ -475,6 +475,10 @@ def stage_summarize(_a) -> None:
         k = int(np.argmin([abs(math.log10(x / m)) for x in masses]))
         sname = "S1_halo_like_220" if v == 220.0 else "S2_disk_like_30"
         n1 = reach["products"]["tess_120"][sname]["N1_per_density"][k]
+        n0 = reach["products"]["tess_120"][sname]["N0_per_density"][k]
+        # weights check: the ideal share of drawn events should equal #561's Level-1 / Level-0
+        # (Level 0 counts u0 < 2; the draw uses u0 < U0_MAX)
+        rec["ideal_share_expected_from_561"] = float(f"{n1 / n0 * 2 / U0_MAX:.4g}") if n0 else None
         nb = reach["products"]["kepler_lc_baseline"][sname]["N1_per_density"][k]
         rec["reach_561"] = {
             "mass_msun": masses[k],
@@ -486,6 +490,19 @@ def stage_summarize(_a) -> None:
             "baseline_N1_per_density": nb,
         }
         out["scenarios"][name] = rec
+    # what a real search over TESS 120 s would read (PLAN section 5)
+    files = json.loads((OUT / "files.json").read_text())
+    smp = json.loads((OUT / "sample.json").read_text())
+    inv = json.loads((ws.OUT / "inventory.json").read_text())["tess_120"]
+    mean_b = float(np.mean([f["bytes"] for f in files.values()]))
+    n_all = inv["records_total"]
+    out["search_requirement"] = {
+        "records_all_tess120": n_all,
+        "mean_file_bytes": round(mean_b),
+        "bytes_all": float(f"{n_all * mean_b:.4g}"),
+        "share_of_crossing_weight_in_top_frac": smp["share_of_weight_in_top_frac"],
+        "note": "weight = span * D^1.5 (Level 0); the identifiable share is not in it",
+    }
     (OUT / "summary.json").write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps(out, indent=1))
 
