@@ -464,6 +464,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      - ~~SN Requiem delays vs the same seven models~~ done 2026-10-26 (D-034 addendum bp,
        `results/lens_consistency/requiem_dt/RESULT.md`: no flag; ratio z ≥ −1.97, Δt_2b,2a z ≥ −2.86; rerun at the 2d
        reappearance);
+     - ~~SN Refsdal SX delay and μ ratio vs the Treu et al. 2016 blind models~~ done 2026-10-26 (D-034 addendum bq,
+       `results/lens_consistency/refsdal_sx/RESULT.md`: outcome N, 5 / 7 within 3; Sharon flags = documented
+       redshift-entry error; μ ratio agrees in all);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows
