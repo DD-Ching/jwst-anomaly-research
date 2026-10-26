@@ -1,0 +1,48 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: origin, datatype: int64}
+# - {name: pos_id, datatype: string}
+# - {name: ra_cat, datatype: float64}
+# - {name: dec_cat, datatype: float64}
+# - {name: F277W_flux1, datatype: float64}
+# - {name: F277W_flux2, datatype: float64}
+# - {name: F277W_dmag, datatype: float64}
+# - {name: F277W_sigma, datatype: float64}
+# - {name: F277W_pass, datatype: int64}
+# - {name: F356W_flux1, datatype: float64}
+# - {name: F356W_flux2, datatype: float64}
+# - {name: F356W_dmag, datatype: float64}
+# - {name: F356W_sigma, datatype: float64}
+# - {name: F356W_pass, datatype: int64}
+# - {name: F444W_flux1, datatype: float64}
+# - {name: F444W_flux2, datatype: float64}
+# - {name: F444W_dmag, datatype: float64}
+# - {name: F444W_sigma, datatype: float64}
+# - {name: F444W_pass, datatype: int64}
+# - {name: n_pass_bright, datatype: int64}
+# - {name: n_pass_faint, datatype: int64}
+# - {name: hit, datatype: bool}
+# - {name: mixed, datatype: bool}
+# - {name: group, datatype: int64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: union of pipeline catalogs}
+# - {thresholds_are: ASSUMPTION}
+# - bands:
+#     F277W: {e1: jw01324-o001_t001_nircam_clear-f277w_i2d.fits, e2: jw01324-o007_t001_nircam_clear-f277w_i2d.fits, n_measured: 3335,
+#       n_pass: 14, noise_scale: 1.172460278300868, positions_per_s: 5164.115966193746, zero_point_mag: -0.026554855725013454}
+#     F356W: {e1: jw01324-o001_t001_nircam_clear-f356w_i2d.fits, e2: jw01324-o007_t001_nircam_clear-f356w_i2d.fits, n_measured: 3866,
+#       n_pass: 41, noise_scale: 1.3828097822164584, positions_per_s: 3872.268587642834, zero_point_mag: -0.026236018829874037}
+#     F444W: {e1: jw01324-o001_t001_nircam_clear-f444w_i2d.fits, e2: jw01324-o007_t001_nircam_clear-f444w_i2d.fits, n_measured: 4312,
+#       n_pass: 4, noise_scale: 1.162353579708345, positions_per_s: 2346.7846334955902, zero_point_mag: -0.003247061138556254}
+# - {n_merged_after_refinement: 93}
+# - {min_sigma: 5.0}
+# - {min_dmag: 0.3}
+# - {min_bands: 2}
+# - {recentre_in: origin}
+# - {same_sign: false}
+# schema: astropy-2.0
+ra dec origin pos_id ra_cat dec_cat F277W_flux1 F277W_flux2 F277W_dmag F277W_sigma F277W_pass F356W_flux1 F356W_flux2 F356W_dmag F356W_sigma F356W_pass F444W_flux1 F444W_flux2 F444W_dmag F444W_sigma F444W_pass n_pass_bright n_pass_faint hit mixed group
