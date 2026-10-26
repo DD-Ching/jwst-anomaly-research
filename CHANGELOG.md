@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: MACS J1931 two-epoch grid 6882 o038 → 9493 o001 (37 d, core): outcome N, 12 groups all star spikes / edges; SN Eos declines below 5σ
+- **Result** (`results/transients/macs1931_grid_9493/RESULT.md`; plan pushed before any pixel): 20 hits in 12 groups
+  among 902 positions; G1 0.942 at −0.75 mag, G2 noise 1.13–1.53. Every group sits on spikes or wings of the five
+  brightest stars (roll change 76.5° → 80.4°) or a mosaic edge. 0 candidates.
+- Known case: SN Eos 101.2 / 101.1 fade 0.31–0.62 / 0.14–0.39 mag at 1.9–4.4σ over 37 d (not hits).
+- With #571 the MACS J1931 core now has a 37 d and a 392.6 d null.
+- **Failed approach:** none. Deviation: a first run with `--epoch2-catalogs 3` was re-run with `3 4 5` before any hit
+  was read.
+- **Handoff:** the last MACS J1931 inventory pair (9493 o001 → 12299 o001, 355 d, both shallow) is not queued; it
+  overlaps #571's baseline. Next new two-epoch input: Abell 370 from 2026-12-29 (`upcoming.json`).
+
 ## 2026-10-26: RX J0152 family 4: RELICS BPZ photo-z cannot decide the three chance-level matches (gate P fails; D-034 addendum br)
 - **Result** (`results/lens_consistency/rxj0152_fam4_photoz/RESULT.md`; plan frozen before any catalogue row):
   gate P fails, 5 / 14 SLICE control images inside BPZ's 95 % interval; the spectroscopic family 1 fails too.
