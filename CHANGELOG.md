@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b stage VS (in progress): continuous objective, Lenstool source-plane χ² validated on `best.par`
+- Claimed 17:16Z; plan to be frozen before any run.
+
 ## 2026-10-26: D115b stage V3′: every small-step start is infeasible (gate `uninformative`); post hoc `best.par` sits on a χ² discontinuity in family D52b (+12.1) (D-109 addendum 6)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_V3P.md`; plan and tool frozen before the run):
   - Ladder of all-parameter starts at 0.1–2 % of each range: 8 / 8 infeasible, so no optimiser run; the hard-constraint
