@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 from astropy.table import MaskedColumn, Table
 
-from jwst_anomaly import query, schema
+from jwst_anomaly import acquire, query, schema
 
 NIRCAM_F200W = "jw02736-o001_t001_nircam_clear-f200w"
 
@@ -247,7 +247,7 @@ def test_live_program_2736_level3_images():
 
 
 @pytest.mark.network
-def test_live_list_products_excludes_level2_members():
+def test_live_list_products_excludes_level2_members(tmp_path):
     obs = query.query_observations(obs_id=NIRCAM_F200W)
     prods = query.list_products(obs, cloud_uris=True)
     # MAST lists 1,000+ rows for this observation, including 72 level-2 per-detector i2d files
@@ -260,4 +260,12 @@ def test_live_list_products_excludes_level2_members():
     s3fs = pytest.importorskip("s3fs")
     fs = s3fs.S3FileSystem(anon=True)
     cat = prods[prods["productSubGroupDescription"] == "CAT"][0]
-    assert fs.info(cat["cloud_uri"].removeprefix("s3://"))["size"] == cat["size"]
+    s3_key = cat["cloud_uri"].removeprefix("s3://")
+    if fs.info(s3_key)["size"] != cat["size"]:
+        # stale listing after a reprocessing (see test_acquire's live fetch test): accept the
+        # mismatch only when the S3 object records a different jwst version than MAST lists
+        local = tmp_path / cat["productFilename"]
+        fs.get(s3_key, str(local))
+        version = acquire.read_pipeline_version(local)
+        file_jwst = dict(p.split("=", 1) for p in version.split(";"))["jwst"]
+        assert file_jwst != str(cat["prvversion"]), "size differs but the version does not"

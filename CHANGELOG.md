@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Weekly network tests: accept MAST's stale listing size only when the file's jwst version differs (#374)
+- **Cause** (#374, run 40327757906): MAST serves reprocessed jw02736 level-3 products (jwst 3.0.0) while
+  the CAOM listing still shows prvversion 2.0.1 and the old sizes; `acquire` already warns and accepts that by design.
+- **Change** (tests only): `test_live_fetch_small_catalog_is_idempotent` and
+  `test_live_list_products_excludes_level2_members` keep strict size equality, and accept a mismatch only when the
+  file (or S3 object) records a jwst version different from the listed `prvversion`.
+- **Evidence:** both pass with `--run-network` from the cloud session (26 s), with both acquire warnings logged
+  (119,744 B listed vs 296,707 B served; jwst 3.0.0 vs 2.0.1); offline suite 2322 passed, 34 skipped.
+- **Note:** cached or manifested jw02736 files from earlier runs are 2.0.1 builds; re-fetches differ in sha256.
+- **Handoff:** #374 closes when the next weekly job is green. Science next is unchanged (D115b F2 local optimiser).
+
 ## 2026-10-26: D115b Lenstool stage F2-B: the smallest BayeSys budget writes 0 samples in 900 s; gate V2 undetermined, so F2 needs a local optimiser from best.par (D-109 addendum 4)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2.md`; plan frozen before the run, 8515 fixed):
   `inverse 3 0.5 20` with O1–O6 free (`nlens_opt 6`, `input.par`'s limits) hit the 900 s cap (ASSUMPTION) on 4 threads
