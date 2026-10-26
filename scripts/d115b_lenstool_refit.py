@@ -10,6 +10,8 @@ probe of Lenstool's optimiser; plan ``PLAN_F2.md`` (gate V2, frozen before the r
 Stage F2-L V3 (``--stage f2l-v3``): bounded Nelder-Mead over O1-O6 driving Lenstool
 ``inverse 0``, validated from a perturbed best.par at f 1.00; plan ``PLAN_F2L.md`` (gate V3).
 Stage V3' (``--stage v3p``): the same with a small-step start ladder; plan ``PLAN_V3P.md``.
+Stage VS (``--stage vs``): continuity of the source-plane chi2 (``forme 0``) at best.par under
+single-parameter offsets; plan ``PLAN_VS.md`` (gate VS, frozen before the run).
 
     python scripts/d115b_lenstool_refit.py --lenstool <prefix>/bin/lenstool --workdir <scratch dir>
 """
@@ -995,6 +997,100 @@ def posthoc_v3p(lt: Path, wd: Path, files: dict[str, Path]) -> dict:
     }
 
 
+VS_STEPS = (
+    3e-5,
+    1e-4,
+    3e-4,
+    1e-3,
+    3e-3,
+    1e-2,
+)  # ASSUMPTION (PLAN_VS.md): offsets, fraction of range
+VS_JUMP_ABS = 2.0  # ASSUMPTION (PLAN_VS.md): |delta chi2| floor of a jump
+VS_JUMP_RATIO = 0.6  # ASSUMPTION (PLAN_VS.md): |D_k| >= ratio * |D_k+1| marks a step
+
+
+def build_vs(vp: str) -> str:
+    """PLAN_VS.md: the stage V' run file with its one ``forme -1`` line set to ``forme 0``."""
+    lines = vp.split("\n")
+    hits = [i for i, ln in enumerate(lines) if ln.split()[:2] == ["forme", "-1"]]
+    if len(hits) != 1:
+        raise ValueError("need exactly one 'forme -1' line")
+    lines[hits[0]] = "    forme       0"
+    return "\n".join(lines)
+
+
+def series_vs(deltas: list[float | None]) -> str:
+    """One (parameter, sign) series of chi2 changes in increasing step order (PLAN_VS.md):
+    ``jump``, ``incomplete`` (a value missing, no jump) or ``smooth``."""
+    for k in range(min(4, len(deltas) - 1)):  # k <= 4, i.e. steps up to 1e-3
+        a, b = deltas[k], deltas[k + 1]
+        if a is None or b is None:
+            continue
+        if abs(a) > VS_JUMP_ABS and abs(a) >= VS_JUMP_RATIO * abs(b):
+            return "jump"
+    return "incomplete" if any(d is None for d in deltas) else "smooth"
+
+
+def gate_vs(
+    vs0: float | None, series: dict[tuple[str, int], list[float | None]], params: list[str]
+) -> str:
+    """Frozen gate VS (PLAN_VS.md). ``series`` maps (parameter, sign) to its six chi2 changes
+    (skipped signs are absent); ``params`` lists all free parameters."""
+    if vs0 is None:
+        return "undetermined"
+    kinds = [series_vs(d) for d in series.values()]
+    if "jump" in kinds:
+        return "fail"
+    covered = {p for p, _ in series}
+    if "incomplete" in kinds or any(p not in covered for p in params):
+        return "undetermined"
+    return "pass"
+
+
+def main_vs(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage VS (plan PLAN_VS.md): VS0 at best.par, then single offsets of every O1-O6 parameter."""
+    vp, free, lo, hi, u_best = _f2l_setup(files)
+    vs = build_vs(vp)
+    names = [f"{n}:{k}" for n, k, _, _ in free]
+    t0 = time.time()
+
+    def ev(u: np.ndarray, tag: str) -> float | None:
+        par = _par_at(vs, free, lo, hi, u)
+        try:  # chires.dat is optional here: the objective is the printed chi2
+            p, _ = run(lt, wd / "vs" / tag, par, files["arcs.dat"], F2L_RUN_TIMEOUT_S, False)
+            return read_chi2pos(p.stdout + p.stderr)
+        except (LenstoolError, subprocess.TimeoutExpired, ValueError):
+            return None
+
+    vs0 = ev(u_best, "vs0")
+    out = {
+        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_VS.md",
+        "provenance": "model_prediction",
+        "lenstool": version(lt),
+        "chi2_vs0": vs0,
+        "steps": list(VS_STEPS),
+    }
+    series: dict[tuple[str, int], list[float | None]] = {}
+    if vs0 is not None:
+        for j, nm in enumerate(names):
+            for s in (1, -1):
+                if not 0.0 <= u_best[j] + s * VS_STEPS[-1] <= 1.0:
+                    continue
+                vals = []
+                for d in VS_STEPS:
+                    u = u_best.copy()
+                    u[j] += s * d
+                    v = ev(u, "off")
+                    vals.append(None if v is None else round(v - vs0, 4))
+                series[(nm, s)] = vals
+    out["series"] = {f"{p}:{'+' if s > 0 else '-'}": v for (p, s), v in series.items()}
+    out["kind"] = {k: series_vs(v) for k, v in out["series"].items()}
+    out["runtime_s"] = round(time.time() - t0, 1)
+    out["gate_VS"] = gate_vs(vs0, series, names)
+    _write(out, "result_vs.json")
+    print(json.dumps(out, indent=1))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
@@ -1011,6 +1107,7 @@ def main() -> None:
             "f2l-v3-posthoc",
             "v3p",
             "v3p-posthoc",
+            "vs",
         ),
         default="v",
     )
@@ -1036,6 +1133,9 @@ def main() -> None:
         return
     if a.stage == "v3p-posthoc":
         _write(posthoc_v3p(lt, wd, files), "posthoc_v3p.json")
+        return
+    if a.stage == "vs":
+        main_vs(lt, wd, files)
         return
     if a.stage == "v3p":
         main_v3p(lt, wd, files)

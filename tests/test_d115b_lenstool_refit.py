@@ -369,3 +369,36 @@ def test_gate_v3p():
     falling = [400.0 - 0.02 * i for i in range(400)]
     assert m.gate_v3p(0.003, falling[-1], falling, True) == "undetermined"
     assert m.gate_v3p(0.003, 380.0, [380.0] * 400, False) == "fail"
+
+
+def test_build_vs_sets_forme_0_only():
+    vp = m.build_vprime(m.build_v0(BEST, INPUT), BEST, INPUT)
+    out = m.build_vs(vp)
+    diff = [(a, b) for a, b in zip(vp.splitlines(), out.splitlines(), strict=True) if a != b]
+    assert diff == [("    forme       -1", "    forme       0")]
+    with pytest.raises(ValueError):
+        m.build_vs(out)
+
+
+def test_series_vs():
+    assert m.series_vs([0.0, 0.01, 0.1, 0.9, 8.0, 80.0]) == "smooth"  # quadratic
+    assert m.series_vs([0.03, 0.1, 0.3, 1.0, 3.0, 10.0]) == "smooth"  # linear, ratio 0.3
+    assert m.series_vs([12.1, 12.1, 12.2, 12.5, 13.0, 15.0]) == "jump"  # V3' D52b-like
+    assert m.series_vs([0.0, 0.0, 0.0, 12.1, 12.3, 14.0]) == "jump"  # jump at 1e-3
+    assert m.series_vs([0.0, 0.0, 0.0, 0.1, 12.3, 14.0]) == "smooth"  # k = 5 is not tested
+    assert m.series_vs([1.9, 1.9, 1.9, 1.9, 1.9, 1.9]) == "smooth"  # under the floor
+    assert m.series_vs([0.0, None, 0.1, 0.3, 1.0, 3.0]) == "incomplete"
+    assert m.series_vs([5.0, None, 5.0, 5.0, 5.0, 5.0]) == "jump"
+
+
+def test_gate_vs():
+    ok = [0.0, 0.01, 0.1, 0.9, 8.0, 80.0]
+    params = ["O1:a", "O1:b"]
+    assert m.gate_vs(None, {("O1:a", 1): ok}, params) == "undetermined"
+    assert m.gate_vs(344.0, {("O1:a", 1): ok, ("O1:b", -1): ok}, params) == "pass"
+    assert m.gate_vs(344.0, {("O1:a", 1): ok}, params) == "undetermined"  # O1:b not covered
+    bad = [12.1] * 6
+    assert m.gate_vs(344.0, {("O1:a", 1): ok, ("O1:b", 1): bad}, params) == "fail"
+    inc = [0.0, None, 0.1, 0.3, 1.0, 3.0]
+    assert m.gate_vs(344.0, {("O1:a", 1): ok, ("O1:b", 1): inc}, params) == "undetermined"
+    assert m.gate_vs(344.0, {("O1:a", 1): bad, ("O1:b", 1): inc}, params) == "fail"
