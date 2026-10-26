@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Abell 2744 flanking pair 2561 o002 → o006: two-epoch grid, one real brightening (inconclusive)
+- **Result** (`results/transients/a2744_2561_flank/RESULT.md`; plan frozen before any pixel): gates pass (−0.75 mag
+  0.918, noise 1.29–1.45); 42 hit groups, 41 instrumental (33 spikes / wings, 3 star dipoles, 4 mosaic edges, 1
+  galaxy-core dipole; contact sheets looked at). Group 36 (g09725, RA 3.61170, Dec −30.45765) brightens by 1.0–1.5 mag
+  in F277W / F356W / F444W (6–9σ) between 2023-07-31 and 2024-07-30.
+- **Vetting** (`docs/candidates/a2744_2561_flank_g09725.md`): persistence `on_sky`, detected in all 18 LW exposures
+  at three dither positions, no SIMBAD / NED / Gaia match, no third NIRCam epoch. Verdict inconclusive: needs a third
+  epoch or spectroscopy (SN or AGN, hypothesis). Off-core: no lensing question.
+- **Data:** six LW `_i2d` (4.5 GB) streamed and deleted; `_cal` headers and apertures read from S3.
+- **Handoff:** open on the owner's call (needs-human): SW-band difference, DJA photo-z of the faint host, any later
+  epoch. #374 waits for today's 06:17Z weekly run.
+
 ## 2026-10-26: Abell 2744 GLASS flanking pair 1324 o001 → o007: two-epoch grid, 0 hits
 - **Result** (`results/transients/a2744_glass_flank/RESULT.md`; plan frozen before any pixel): outcome N, 0 hit
   groups among 4,795 catalogued positions (F277W / F356W / F444W, 373 d, outside the core). Injections −0.75 mag

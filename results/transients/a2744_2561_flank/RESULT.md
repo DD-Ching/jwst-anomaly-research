@@ -1,4 +1,4 @@
-# Abell 2744 flanking pair 2561 o002 → o006: D-027 two-epoch grid (result, 2026-10-26; vetting pending)
+# Abell 2744 flanking pair 2561 o002 → o006: D-027 two-epoch grid (result, 2026-10-26)
 
 Plan `PLAN.md` (pushed before any pixel was read; same rules and gates as #552). Tool `scripts/transient_grid.py`,
 unchanged. Numbers: `summary.json`, `hits.ecsv` (92 hits, 42 groups). Imaging (observed): 2561 o002_t001 and
@@ -9,7 +9,7 @@ after the run. Every number is derived; thresholds are the D-027 ASSUMPTIONs.
 - **G1 passes:** −0.75 mag injections recovered 0.918 (500; 0.989 where the fraction set the flux); −0.44 mag 0.402.
 - **G2 passes:** noise scales F277W 1.45, F356W 1.37, F444W 1.29.
 - 9,782 positions, 4,764 measured in ≥ 1 band, 4,465 in all three; **92 hits in 42 groups**.
-- **Outcome C (pending vetting):** 41 groups have an instrumental explanation; 1 does not (below).
+- **Outcome C:** 41 groups have an instrumental explanation; 1 does not (below).
 
 ## Hit groups (contact sheets looked at: e1, e2 resampled onto e1, difference, three bands, 3″; not stored)
 | Verdict (by eye) | Groups |
@@ -22,9 +22,10 @@ after the run. Every number is derived; thresholds are the D-027 ASSUMPTIONs.
 
 - **Group 36** (`g09725`, RA 3.61170, Dec −30.45765): a faint compact source in a clean area (no spike or edge in
   the 3″ stamps) that brightens in all three bands: F277W 6.0σ, Δm −1.03; F356W 8.7σ, −1.32; F444W 7.6σ, −1.52
-  (o002 → o006). It is an unvetted screen hit, not a candidate (trial rule T2). Next: `/vet-candidate` on it
-  (persistence and detector-fixed checks on the o006 exposures, other bands and epochs, catalogue and AGN / SN
-  host checks).
+  (o002 → o006). **Vetted** (`docs/candidates/a2744_2561_flank_g09725.md`): persistence `on_sky` (16 clean
+  exposures, 0 suspect), detected in every LW exposure at three dither positions, no SIMBAD / NED / Gaia match
+  within 3″, no third NIRCam epoch. Verdict `inconclusive: needs a third epoch or spectroscopy`; a supernova in a
+  faint host or AGN variability are the ordinary readings (hypothesis).
 
 ## Limits
 Only catalogued positions; LW bands only; recovery by the automatic thresholds. `grid.ecsv` (2.5 MB) is not kept,
