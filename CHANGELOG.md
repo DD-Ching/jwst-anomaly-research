@@ -2,6 +2,40 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: g09725 SW-band difference (2561 o002 → o006): outcome U (SW registration rule fails on empty stamps); post hoc a red-only change
+- **Result** (`results/transients/a2744_2561_flank/sw/RESULT.md`; plan frozen before any SW pixel): LW control gate
+  passes (F356W 16.4σ, F444W 11.1σ); F115W / F150W fail the 0.03″ registration rule (0.170″ / 0.138″), so the
+  frozen outcome is U. F200W registered, +1.35σ (5σ limit 0.0102 µJy vs F356W Δf 0.0255 µJy).
+- Post hoc: no SW band reaches 2σ as measured, every LW band does; contact sheet looked at. Verdict of g09725
+  unchanged (`inconclusive`), SN vs AGN not separated.
+- **Failed approach:** cross-correlation registration of 6″ near-empty stamps (the peak follows noise). A re-run
+  needs a larger stamp or the mosaics' WCS alignment as its registration test, fixed before the data.
+- **Data:** twelve 6–8″ S3 byte-range sections, nothing stored.
+- **Handoff:** #553 stays needs-human (TNS needs owner credentials; no later epoch). #374 waits for the next weekly
+  run. Two-epoch queue waits for Abell 370 (2026-12-29).
+
+## 2026-10-26: g09725 host redshift from UNCOVER DR3 / DR4: bimodal, verdict unchanged
+- **Result** (`docs/candidates/a2744_2561_flank_g09725.md`, second pass; plan written before the catalogues were read):
+  DR3 counterpart id 2548 at 0.15″ records the pre-brightening o002 state (independent grizli reduction; consistent
+  with the grid Δm within ≈ 0.04 mag). Host photo-z bimodal: EAZY z_phot 0.76 (16–84 % 0.73–4.53), Prospector-β z_50
+  0.92 (0.76–3.94), z_ml 4.35; log M* ≈ 7.35; galaxy fit preferred over stars (χ² 1.8 vs 10.2); no NIRSpec zspec
+  within 108″. The brightening is M ≈ −15 to −16 (rest near-IR, z ≈ 0.8) or ≈ −18.5 (rest optical, z 4.35): a
+  supernova stays the ordinary reading at both modes, AGN variability not excluded. Still inconclusive.
+- **Failed route:** TNS web search answers 403 from its own load balancer; a TNS check needs the owner's credentials.
+- **Data:** DR3 SUPER (84 MB, pinned sha256), DR4 SPS (66 MB) and zspec (0.1 MB) catalogues streamed, deleted.
+- **Handoff:** #553 stays needs-human (third epoch, spectroscopy or TNS). #556 g85 was under a live claim; not touched.
+
+## 2026-10-26: Abell 2744 flanking pair 2561 o002 → o006: two-epoch grid, one real brightening (inconclusive)
+- **Result** (`results/transients/a2744_2561_flank/RESULT.md`; plan frozen before any pixel): gates pass (−0.75 mag
+  0.918, noise 1.29–1.45); 42 hit groups, 41 instrumental (33 spikes / wings, 3 star dipoles, 4 mosaic edges, 1
+  galaxy-core dipole; contact sheets looked at). Group 36 (g09725, RA 3.61170, Dec −30.45765) brightens by 1.0–1.5 mag
+  in F277W / F356W / F444W (6–9σ) between 2023-07-31 and 2024-07-30.
+- **Vetting** (`docs/candidates/a2744_2561_flank_g09725.md`): persistence `on_sky`, detected in all 18 LW exposures
+  at three dither positions, no SIMBAD / NED / Gaia match, no third NIRCam epoch. Verdict inconclusive: needs a third
+  epoch or spectroscopy (SN or AGN, hypothesis). Off-core: no lensing question.
+- **Data:** six LW `_i2d` (4.5 GB) streamed and deleted; `_cal` headers and apertures read from S3.
+- **Handoff:** open on the owner's call (needs-human): SW-band difference, DJA photo-z of the faint host, any later
+  epoch. #374 waits for today's 06:17Z weekly run.
 ## 2026-10-26: MACS J1931 two-epoch grid 6882 o038 → 12299 o001 (392.6 d, core): outcome N, 12 groups all ordinary; SN Eos 101.2 recovered fading
 - **Result** (`results/transients/macs1931_grid/RESULT.md`; plan pushed before any pixel): 17 hits in 12 groups
   among 976 positions measured in ≥ 1 LW band; G1 0.94 at −0.75 mag, G2 noise 1.20–1.54.
