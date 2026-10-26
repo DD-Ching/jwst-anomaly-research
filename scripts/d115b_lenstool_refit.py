@@ -14,6 +14,8 @@ Stage VS (``--stage vs``): continuity of the source-plane chi2 (``forme 0``) at 
 single-parameter offsets; plan ``PLAN_VS.md`` (gate VS, frozen before the run).
 Stage F-S (``--stage fs``): Nelder-Mead over O1-O6 on the source-plane chi2 at f 1.00 (two starts)
 and f 0.80 / 0.75, image plane read at the end points; plan ``PLAN_FS.md`` (gate VFS, rule FS).
+Stage F-P (``--stage fp``): as F-S on the source-plane chi2 plus 100 per lost or merged image-plane
+image; plan ``PLAN_FP.md`` (gate VFP, rule FP).
 
     python scripts/d115b_lenstool_refit.py --lenstool <prefix>/bin/lenstool --workdir <scratch dir>
 """
@@ -1288,6 +1290,231 @@ def main_fs(lt: Path, wd: Path, files: dict[str, Path]) -> None:
     print(json.dumps(out, indent=1))
 
 
+FP_P = 100.0  # ASSUMPTION (PLAN_FP.md): objective penalty per lost or merged image
+FP_SIMPLEX = 0.003  # ASSUMPTION (PLAN_FP.md): initial simplex step in u
+FP_PERTURB = 0.003  # ASSUMPTION (PLAN_FP.md): run B's start offset, fraction of each range
+FP_MAXFEV = 1000  # ASSUMPTION (PLAN_FP.md)
+FP_WALL_S = 1080  # ASSUMPTION (PLAN_FP.md): wall cap per run
+FP_RUNS = {"A": (1.00, False), "B": (1.00, True), "C": (0.80, False), "D": (0.75, False)}
+
+
+def fp_lost(chires: str) -> int:
+    """PLAN_FP.md: L = summed warnings + proximity-penalty units in an image-plane chires.dat."""
+    _, _, nwarn = read_chires(chires)
+    return nwarn + int(round(read_penalty(chires) / PENALTY))
+
+
+def fp_objective(chi2s: float | None, lost: int | None) -> float:
+    """PLAN_FP.md: g = chi2_S + P * L; a missing value gives F2L_INFEASIBLE."""
+    if chi2s is None or lost is None:
+        return F2L_INFEASIBLE
+    return chi2s + FP_P * lost
+
+
+def gate_vfp(
+    start_b: float | None,
+    end_a: float | None,
+    end_b: float | None,
+    lost_a: int | None,
+    lost_b: int | None,
+    stopped_a: bool,
+    stopped_b: bool,
+) -> str:
+    """Frozen gate VFP (PLAN_FP.md): runs A and B at f 1.00 reach the same feasible objective."""
+    if end_a is None:
+        return "undetermined"
+    tol = max(FS_TOL_ABS, TOL_FRAC * end_a)
+    if start_b is None or start_b <= end_a + tol:
+        return "uninformative"
+    if lost_a == 0 and lost_b == 0 and end_b is not None and abs(end_b - end_a) <= tol:
+        return "pass"
+    return "undetermined" if (stopped_a or stopped_b) else "fail"
+
+
+def rule_fp(rows: dict[float, tuple[int | None, bool | None, float | None]], end_a: float) -> str:
+    """Frozen rule FP (PLAN_FP.md). ``rows`` maps f to (L_end, any flag image, end chi2_S);
+    ``end_a`` is run A's end chi2_S."""
+    clean = {f: lo == 0 and fl is False for f, (lo, fl, _) in rows.items()}
+    flagged = {f: lo == 0 and fl is True for f, (lo, fl, _) in rows.items()}
+    dc = {f: None if c is None else c - end_a for f, (_, _, c) in rows.items()}
+    if any(clean[f] and dc[f] is not None and dc[f] <= FS_DCHI2_MAX for f in rows):
+        return "cheap"
+    if rows and all(flagged.values()):
+        return "persists"
+    if rows and all(clean[f] and dc[f] is not None and dc[f] > FS_DCHI2_MAX for f in rows):
+        return "costly"
+    return "undetermined"
+
+
+def _fp_worker(args: tuple) -> dict:
+    """One F-P Nelder-Mead run on g = chi2_S + P * L (one Lenstool thread)."""
+    global _OMP
+    _OMP = "1"
+    from scipy.optimize import minimize
+
+    tag, f, perturb, lt, wd, files = args
+    vp, free, lo, hi, u_best = _f2l_setup(files)
+    vp_f = set_vdisp(vp, "8515", f * SIGMA_8515)
+    vs = build_vs(vp_f)
+    u0 = perturbed_start(u_best, FP_PERTURB) if perturb else u_best.copy()
+    hist: list[tuple[float, float | None, int | None, np.ndarray]] = []
+    cache: dict[bytes, float] = {}
+    t0 = time.time()
+
+    class _Wall(Exception):
+        pass
+
+    def fun(u: np.ndarray) -> float:
+        uc = np.clip(u, 0, 1)
+        key = uc.tobytes()
+        if key in cache:
+            return cache[key]
+        if time.time() - t0 > FP_WALL_S:
+            raise _Wall
+        chi2s = lost = None
+        try:
+            p, _ = run(
+                lt,
+                wd / f"fp_{tag}_s",
+                _par_at(vs, free, lo, hi, uc, FS_DECIMALS),
+                files["arcs.dat"],
+                F2L_RUN_TIMEOUT_S,
+                False,
+            )
+            chi2s = read_chi2pos(p.stdout + p.stderr)
+            _, chires = run(
+                lt,
+                wd / f"fp_{tag}_i",
+                _par_at(vp_f, free, lo, hi, uc, FS_DECIMALS),
+                files["arcs.dat"],
+                F2L_RUN_TIMEOUT_S,
+            )
+            lost = fp_lost(chires)
+        except (LenstoolError, subprocess.TimeoutExpired, ValueError, FileNotFoundError):
+            pass
+        g = fp_objective(chi2s, lost)
+        hist.append((g, chi2s, lost, uc))
+        cache[key] = g
+        return g
+
+    start = fun(u0)
+    sim = np.vstack(
+        [u0]
+        + [
+            u0 + FP_SIMPLEX * np.eye(len(u0))[i] * (1 if u0[i] < 0.9 else -1)
+            for i in range(len(u0))
+        ]
+    )
+    try:
+        r = minimize(
+            fun,
+            u0,
+            method="Nelder-Mead",
+            bounds=[(0.0, 1.0)] * len(u0),
+            options={"maxfev": FP_MAXFEV, "xatol": 1e-4, "fatol": 0.01, "initial_simplex": sim},
+        )
+        stopped, message = not r.success, str(r.message)
+    except _Wall:
+        stopped, message = True, "wall cap reached"
+    jbest = int(np.argmin([h[0] for h in hist]))
+    g_end, c_end, l_end, u_end = hist[jbest]
+    j = int(np.argmax(np.abs(u_end - u_best)))
+    out = {
+        "f": f,
+        "start": "perturbed" if perturb else "best.par",
+        "g_start": None if start >= F2L_INFEASIBLE else round(start, 6),
+        "chi2s_start": hist[0][1],
+        "lost_start": hist[0][2],
+        "g_end": None if g_end >= F2L_INFEASIBLE else round(g_end, 6),
+        "chi2s_end": c_end,
+        "lost_end": l_end,
+        "first_eval_with_lost_0": next((i for i, h in enumerate(hist) if h[2] == 0), None),
+        "n_evaluations": len(hist),
+        "n_no_value": sum(h[0] >= F2L_INFEASIBLE for h in hist),
+        "stopped_by_budget": stopped,
+        "optimizer_message": message,
+        "runtime_s": round(time.time() - t0, 1),
+        "max_abs_du_from_best_par": round(float(np.max(np.abs(u_end - u_best))), 6),
+        "max_abs_du_param": f"{free[j][0]}:{free[j][1]}",
+        "u_end": [round(float(x), 9) for x in u_end],
+    }
+    d = wd / f"fp_{tag}_img"
+    try:
+        p, chires = run(
+            lt,
+            d,
+            add_image_mode(_par_at(vp_f, free, lo, hi, u_end, FS_DECIMALS)),
+            files["arcs.dat"],
+            F2L_RUN_TIMEOUT_S,
+        )
+        chimul, _, nwarn = read_chires(chires)
+        flags = flag_images(d / "image.all")
+        img = {
+            "chimul": chimul,
+            "nwarn": nwarn,
+            "chipenalty": read_penalty(chires),
+            "penalty_images": penalty_images(p.stdout + p.stderr),
+            "flag_by_image": flags,
+            "any_flag": any(flags.values()),
+        }
+    except (LenstoolError, subprocess.TimeoutExpired, ValueError, FileNotFoundError) as e:
+        img = {"error": str(e)[:200], "chimul": None, "nwarn": None, "any_flag": None}
+    out["image_plane_end"] = img
+    return out
+
+
+def main_fp(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage F-P (plan PLAN_FP.md): runs A-D in parallel, gate VFP, then rule FP."""
+    from concurrent.futures import ProcessPoolExecutor
+
+    t0 = time.time()
+    with ProcessPoolExecutor(max_workers=len(FP_RUNS)) as ex:
+        res = dict(
+            zip(
+                FP_RUNS,
+                ex.map(_fp_worker, [(t, f, pt, lt, wd, files) for t, (f, pt) in FP_RUNS.items()]),
+                strict=True,
+            )
+        )
+    a, b = res["A"], res["B"]
+    out = {
+        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_FP.md",
+        "provenance": "model_prediction",
+        "lenstool": version(lt),
+        "sigma_8515_fiducial_kms": SIGMA_8515,
+        "penalty_per_image_assumption": FP_P,
+        "maxfev_assumption": FP_MAXFEV,
+        "wall_cap_s": FP_WALL_S,
+        "runs": res,
+        "runtime_s": round(time.time() - t0, 1),
+    }
+    out["gate_VFP"] = gate_vfp(
+        b["g_start"],
+        a["g_end"],
+        b["g_end"],
+        a["lost_end"],
+        b["lost_end"],
+        a["stopped_by_budget"],
+        b["stopped_by_budget"],
+    )
+    if out["gate_VFP"] == "pass":
+        rows = {
+            res[t]["f"]: (
+                res[t]["lost_end"],
+                res[t]["image_plane_end"]["any_flag"],
+                res[t]["chi2s_end"],
+            )
+            for t in "CD"
+        }
+        out["dchi2s"] = {
+            str(f): None if c is None else round(c - a["chi2s_end"], 4)
+            for f, (_, _, c) in rows.items()
+        }
+        out["rule_FP"] = rule_fp(rows, a["chi2s_end"])
+    _write(out, "result_fp.json")
+    print(json.dumps(out, indent=1))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
@@ -1306,6 +1533,7 @@ def main() -> None:
             "v3p-posthoc",
             "vs",
             "fs",
+            "fp",
         ),
         default="v",
     )
@@ -1337,6 +1565,9 @@ def main() -> None:
         return
     if a.stage == "fs":
         main_fs(lt, wd, files)
+        return
+    if a.stage == "fp":
+        main_fp(lt, wd, files)
         return
     if a.stage == "v3p":
         main_v3p(lt, wd, files)
