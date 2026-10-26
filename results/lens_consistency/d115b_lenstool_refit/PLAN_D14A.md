@@ -1,4 +1,4 @@
-# D115b Lenstool: D14a's family-row χ² term (plan, frozen 2026-10-26 12:40Z, before any run of this round)
+# D115b Lenstool: D14a's family-row χ² term (plan, frozen 2026-10-26 12:21Z (first stamp "12:40Z" was a typo, corrected before any run), before any run of this round)
 
 Continues `RESULT_VPRIME_F.md` (post hoc: at f ≤ 0.90 D14a's family row is ≈ 3748 above its image rows; cause not
 diagnosed). Tool `scripts/d115b_lenstool_refit.py --stage d14a`, rule `rule_p` tested in

@@ -3,6 +3,8 @@
 Stage V (default): nothing is freed; plan ``results/lens_consistency/d115b_lenstool_refit/PLAN.md``.
 Stage V' and F (``--stage vprime-f``): the full-precision reference, then a chi2 profile in member
 8515's sigma; plan ``PLAN_VPRIME_F.md`` (gates V' and rule F, frozen before the run).
+Stage D14a (``--stage d14a``): the stage F runs again, read for Lenstool's image-proximity penalty;
+plan ``PLAN_D14A.md`` (rule P, frozen before the run).
 
     python scripts/d115b_lenstool_refit.py --lenstool <prefix>/bin/lenstool --workdir <scratch dir>
 """
@@ -123,6 +125,10 @@ def gate_v(chi2: float) -> bool:
 SIGMA_8515 = 120.600977  # best.par "potentiel 8515" v_disp (km/s)
 F_GRID = (1.00, 0.90, 0.85, 0.80, 0.75, 0.70)  # plan PLAN_VPRIME_F.md
 DCHI2_MAX = 6.0  # ASSUMPTION (plan): system-51 precedent, as in the port scans
+# Lenstool 8.15.5 src/o_chires.c chi2_img: (chip_penalty_dist 30")^2 / sigma^2,
+# sigma = sigposArcsec 0.49
+PENALTY = (30.0 / 0.49) ** 2
+_PEN_WARN = re.compile(r"WARNING: chi2 penalty for image (\S+)")
 F2_WALL_S = 600  # plan: wall cap of the stage F2 cost probe
 
 
@@ -378,11 +384,74 @@ def posthoc_vprime_f(wd: Path) -> dict:
     return {"label": "post hoc (after rule F was applied)", "per_f": per_f}
 
 
+def read_penalty(chires: str) -> float:
+    """Total of Lenstool's ``chipenalty`` line (it prints one only when a penalty was added)."""
+    vals = [float(ln.split()[1]) for ln in chires.splitlines() if ln.split()[:1] == ["chipenalty"]]
+    if len(vals) > 1:
+        raise ValueError("more than one chipenalty line")
+    return vals[0] if vals else 0.0
+
+
+def penalty_images(log: str) -> list[str]:
+    """Image ids named in Lenstool's ``WARNING: chi2 penalty for image <id>`` lines."""
+    return _PEN_WARN.findall(log)
+
+
+def rule_p(rows: dict[float, dict]) -> tuple[str, list[str]]:
+    """Frozen rule P (PLAN_D14A.md): (outcome, reasons it failed). Each row holds ``penalty``,
+    ``penalty_images``, ``D14a_row`` and ``D14a_images``."""
+    bad = []
+    for f, r in sorted(rows.items(), reverse=True):
+        k = round(r["penalty"] / PENALTY)
+        if abs(r["penalty"] - k * PENALTY) > 0.02:
+            bad.append(f"f {f:.2f}: penalty {r['penalty']} is not a multiple of {PENALTY:.2f}")
+        n = sum(i.rsplit(".", 1)[0] == "D14a" for i in r["penalty_images"])
+        if abs(r["D14a_row"] - r["D14a_images"] - n * PENALTY) > 0.05:
+            ex = r["D14a_row"] - r["D14a_images"]
+            bad.append(f"f {f:.2f}: D14a row - images {ex:.2f} vs {n} penalties")
+    return ("rejected" if bad else "confirmed"), bad
+
+
+def main_d14a(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage D14a: the stage F runs, read for the proximity penalty (plan PLAN_D14A.md)."""
+    best, inp = files["best.par"].read_text(), files["input.par"].read_text()
+    vp = build_vprime(build_v0(best, inp), best, inp)
+    rows = {}
+    for f in F_GRID:
+        p, chires = run(
+            lt, wd / f"p{f:.2f}", set_vdisp(vp, "8515", f * SIGMA_8515), files["arcs.dat"]
+        )
+        row, img = _family_rows(chires, "D14a")
+        rows[f] = {
+            "chi2pos": read_chires(chires)[0],
+            "penalty": read_penalty(chires),
+            "penalty_images": penalty_images(p.stdout + p.stderr),
+            "D14a_row": row,
+            "D14a_images": img,
+        }
+    outcome, bad = rule_p(rows)
+    c0 = rows[1.0]["chi2pos"] - rows[1.0]["penalty"]
+    out = {
+        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_D14A.md",
+        "provenance": "model_prediction",
+        "lenstool": version(lt),
+        "penalty_unit": round(PENALTY, 4),
+        "profile": [
+            {"f": f, **r, "dchi2_no_penalty": round(r["chi2pos"] - r["penalty"] - c0, 2)}
+            for f, r in rows.items()
+        ],
+        "rule_P": outcome,
+        "rule_P_failures": bad,
+    }
+    _write(out, "result_d14a.json")
+    print(json.dumps(out, indent=1))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
     ap.add_argument("--workdir", required=True, type=Path)
-    ap.add_argument("--stage", choices=("v", "vprime-f"), default="v")
+    ap.add_argument("--stage", choices=("v", "vprime-f", "d14a"), default="v")
     a = ap.parse_args()
     lt, wd = a.lenstool.resolve(), a.workdir.resolve()
     files = lc.model_files(MODEL)
@@ -390,6 +459,9 @@ def main() -> None:
         raise ValueError("best.par #Chi2pos differs from REF_CHI2POS")
     if a.stage == "vprime-f":
         main_vprime_f(lt, wd, files)
+        return
+    if a.stage == "d14a":
+        main_d14a(lt, wd, files)
         return
     best, inp = files["best.par"].read_text(), files["input.par"].read_text()
     v0 = build_v0(best, inp)

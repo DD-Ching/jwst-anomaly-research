@@ -162,3 +162,42 @@ def test_family_rows():
     assert m._family_rows(CHIRES, "A") == (0.02, 0.02)
     with pytest.raises(ValueError):
         m._family_rows(CHIRES, "Z")
+
+
+def test_read_penalty_and_images():
+    assert m.read_penalty(CHIRES) == 0.0
+    assert m.read_penalty(CHIRES + "chipenalty 3748.44 355.70\n") == pytest.approx(3748.44)
+    log = "x\nWARNING: chi2 penalty for image D14a.2 = 3748.443149\nWARNING: other\n"
+    assert m.penalty_images(log) == ["D14a.2"]
+    assert m.PENALTY == pytest.approx(3748.44, abs=0.005)
+
+
+def test_rule_p():
+    P = m.PENALTY
+    ok = {
+        1.0: {"penalty": 0.0, "penalty_images": [], "D14a_row": 2.01, "D14a_images": 2.0},
+        0.9: {
+            "penalty": round(P, 2),
+            "penalty_images": ["D14a.1"],
+            "D14a_row": 3759.12,
+            "D14a_images": 10.68,
+        },
+    }
+    assert m.rule_p(ok) == ("confirmed", [])
+    # a penalty that is not a multiple of the unit
+    bad = {**ok, 0.8: {**ok[0.9], "penalty": 3000.0}}
+    assert m.rule_p(bad)[0] == "rejected"
+    # the D14a excess without a D14a penalty warning
+    bad = {**ok, 0.8: {**ok[0.9], "penalty_images": ["D52b.1"]}}
+    out, why = m.rule_p(bad)
+    assert out == "rejected" and why[0].startswith("f 0.80")
+    # two D14a penalties need twice the excess
+    two = {
+        0.9: {
+            "penalty": round(2 * P, 2),
+            "penalty_images": ["D14a.1", "D14a.3"],
+            "D14a_row": 10.68 + 2 * P,
+            "D14a_images": 10.68,
+        }
+    }
+    assert m.rule_p(two)[0] == "confirmed"
