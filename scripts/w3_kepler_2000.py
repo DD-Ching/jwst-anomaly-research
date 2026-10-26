@@ -492,7 +492,10 @@ def stage_limitcheck(_a) -> None:
     for x in s["cells"]:
         # every #546 window is 1,459.49 d (summary.json), so eps = recovered / events exactly
         g = joint_limit(x["sampling_star_years"], x["recovered"] / x["events"], x["n_eff"])
-        old = x["limit_product_level"]["rate95_per_star_year"]
+        old = (x["limit_product_level"] or {}).get("rate95_per_star_year")
+        if g is None or old is None:  # a cell without recoveries has no limit
+            rows.append({"cell": x["cell"], "limit_546": old, "limit_joint": None})
+            continue
         rows.append(
             {
                 "cell": x["cell"],
