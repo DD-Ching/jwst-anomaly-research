@@ -208,6 +208,23 @@ def detections_per_density(d_pc, t_yr, eps: float, te_d: float) -> float:
     )
 
 
+def tested_rho_share(r_sun: np.ndarray, te_d: float, v_kms: float, lo=0.01, hi=0.1) -> np.ndarray:
+    """Share of each star's optical depth from lenses whose rho = x R_* / (v t_E) lies in [lo, hi]
+    (single speed v): the x(1 - x) weight integrated over that x interval, over its full-sightline
+    value 1/6."""
+    r_e_scale = v_kms * 86400.0 / AU_KM * te_d / (np.asarray(r_sun) * R_SUN_AU)  # x per unit rho
+    x1 = np.clip(lo * r_e_scale, 0, 1)
+    x2 = np.clip(hi * r_e_scale, 0, 1)
+
+    def prim(x):
+        return x**2 / 2 - x**3 / 3
+
+    return (prim(x2) - prim(x1)) * 6.0
+
+
+POOL_UNREAD_AFTER_554 = 17740 - 1500  # sample_2000.json candidates minus the 1,500 read in #554
+
+
 def stage_population(_a) -> None:
     st = load_stellar()
     d = np.array([s["dist"] for s in st])
@@ -232,23 +249,63 @@ def stage_population(_a) -> None:
             }
         best = detections_per_density(d, t, max(eps), te)
         rec["star_factor_needed_vs_now"] = {
-            f"N{n}_at_{name}": float(f"{n / best / ref:.4g}")
-            for n in (1, 3)
+            f"N{label}_at_{name}": float(f"{n / best / ref:.4g}")
+            for label, n in ((1, 1.0), (3, 2.996))
             for name, ref in (("rho_dm_high_0.015", 0.015), ("rho_baryon_0.0914", 0.0914))
         }
+        # the floor that holds whatever happens outside the tested rho range: every umbra
+        # crossing along the whole sight line detected (eps = 1)
+        one = detections_per_density(d, t, 1.0, te)
+        pool = (2000 + POOL_UNREAD_AFTER_554) / 2000
+        rec["eps1_floor"] = {
+            "density_for_N1_now": float(f"{1 / one:.4g}"),
+            "density_for_N1_whole_pool": float(f"{1 / one / pool:.4g}"),
+            "density_for_N1_whole_pool_at_eps_max": float(f"{1 / best / pool:.4g}"),
+        }
+        # lenses restricted to the tested rho range (0.01-0.1), measured eps, single speed
+        r = np.array([x["radius"] for x in st])
+        rec["tested_rho_only"] = {}
+        for name, v in SPEEDS.items():
+            share = tested_rho_share(r, te, v)
+            w = (tau_per_density(d) * t * share).sum()
+            n_lo = min(eps) * 4 / math.pi * w / (te * DAY_YR)
+            n_hi = max(eps) * 4 / math.pi * w / (te * DAY_YR)
+            rec["tested_rho_only"][name] = {
+                "share_of_tau": float(f"{w / (tau_per_density(d) * t).sum():.4g}"),
+                "density_for_N1": [float(f"{1 / n_hi:.4g}"), float(f"{1 / n_lo:.4g}")]
+                if n_hi > 0
+                else None,
+            }
         rows.append(rec)
     out = {
         "label": "derived (scenario requirement, not an abundance or a limit)",
         "plan": "results/w3_kepler/physical/PLAN.md",
         "assumptions": [
             "uniform lens mass density |rho_neg| (M_sun/pc^3) between observer and each star",
-            "every event has the stated t_E and a rho inside the tested 0.01-0.1, u0 < 2",
+            "every event has the stated t_E, u0 < 2; rows: (a) the measured eps applied to lenses"
+            " at every distance (the rho of most of them is outside the tested 0.01-0.1, where"
+            " eps is not measured), (b) eps = 1 at every distance (a floor that holds whatever"
+            " eps is outside the tested range), (c) only lenses whose rho is in 0.01-0.1, one"
+            " speed",
             "efficiency between the lowest and highest measured cell at that t_E (2,000 stars)",
             "SAP-level efficiency applies to real events (sky-to-SAP response not verified)",
             "+500 / +5,000: zero result, similar efficiency and the same distance distribution",
         ],
         "stars": len(st),
         "stars_left_out_no_distance": len(load_stellar(False)) - len(st),
+        "pool_unread_after_554": POOL_UNREAD_AFTER_554,
+        # N per density scales as 1 / t_E: with eps = 1 and these 2,000 stars, the t_E at which one
+        # expected detection needs only the reference density, and the umbra length 4 t_E (u0 = 0)
+        # in 29.4-min cadences (efficiency below t_E 0.1 d is not measured)
+        "eps1_tE_needed_for_N1_at_reference": {
+            name: {
+                "tE_d": float(f"{0.1 * ref * detections_per_density(d, t, 1.0, 0.1):.4g}"),
+                "umbra_max_cadences": float(
+                    f"{4 * 0.1 * ref * detections_per_density(d, t, 1.0, 0.1) / wk.CAD:.3g}"
+                ),
+            }
+            for name, ref in (("rho_baryon_0.0914", 0.0914), ("rho_dm_high_0.015", 0.015))
+        },
         "sum_D_S2_T_pc2_yr": float(f"{(d**2 * t).sum():.4g}"),
         "references_msun_pc3": REF,
         "rows": rows,

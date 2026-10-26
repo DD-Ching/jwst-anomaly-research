@@ -34,8 +34,28 @@ def test_unreachable_cell_has_no_mass():
     assert m["x"] > 1 and "M_msun" not in m
 
 
-def test_detections_per_density_analytic():
+def test_detections_per_density_against_astropy_and_a_numerical_integral():
+    import numpy as np
+    from astropy import constants as const
+    from astropy import units as u
+
+    k = (
+        (4 * math.pi * const.G * const.M_sun / const.c**2).to(u.pc).value
+    )  # pc per (M_sun/pc^3 pc^2)
+    x = np.linspace(0, 1, 200001)
+    integral = np.trapezoid(x * (1 - x), x)  # = 1/6
+    tau = k * 1000.0**2 * integral  # uniform 1 M_sun/pc^3 to 1 kpc
     n = wp.detections_per_density([1000.0], [1.0], 1.0, 365.25)
-    tau = wp.FOUR_PI_G_C2 * 1000.0**2 / 6
-    assert abs(n / (4 / math.pi * tau) - 1) < 1e-9
+    assert abs(n / (4 / math.pi * tau) - 1) < 2e-3
     assert abs(wp.detections_per_density([1000.0], [1.0], 0.5, 36.525) / n - 5) < 1e-9
+
+
+def test_tested_rho_share():
+    # x per unit rho = v t_E / R_*; with v t_E = 10 R_*, rho 0.01-0.1 covers x 0.1-1
+    import numpy as np
+
+    r = np.array([1.0])
+    te = 10 * wp.R_SUN_AU * wp.AU_KM / (100.0 * 86400.0)  # days giving v t_E = 10 R_sun at 100 km/s
+    share = wp.tested_rho_share(r, te, 100.0)
+    expect = ((0.5 - 1 / 3) - (0.1**2 / 2 - 0.1**3 / 3)) * 6
+    assert abs(share[0] - expect) < 1e-9
