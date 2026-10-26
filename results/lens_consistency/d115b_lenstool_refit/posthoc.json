@@ -1,0 +1,51 @@
+{
+ "n_families": 111,
+ "n_image_rows": 303,
+ "sum_family_chi2": 356.64,
+ "top8_families_chi2": [
+  [
+   "D52a",
+   20.99
+  ],
+  [
+   "D52b",
+   19.84
+  ],
+  [
+   "D34",
+   16.37
+  ],
+  [
+   "D28",
+   13.1
+  ],
+  [
+   "D16",
+   12.86
+  ],
+  [
+   "D2",
+   12.34
+  ],
+  [
+   "D8a",
+   11.82
+  ],
+  [
+   "D24",
+   10.45
+  ]
+ ],
+ "posthoc_grid_nombre_256_512_chi2": 356.674111,
+ "note": "post hoc; family rows are chires.dat rows whose dx is N/A",
+ "posthoc_grid_nombre_tested": [
+  128,
+  256,
+  512
+ ],
+ "family_chi2_D115a_D115b": [
+  4.6,
+  0.5
+ ],
+ "n_warnings": 0
+}
