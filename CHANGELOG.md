@@ -64,8 +64,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - 10⁻⁷ and 10⁻⁸ M☉: 26 and 4 ideal events, insufficient.
   - Kept per step (220 km/s): gaps and edges 0.851, quality flags 0.839, real background 0.6684.
   - The background had 0 flags.
+  - Review: the retention averages about 0.585 for most draws and about 0.106 for faint distant dwarfs (TIC
+    R < 1 R☉, D > 1.5 kpc; 5 % of draws, 23 % of ideal events).
 - **Effect on #561:** one expected event at the best 220 km/s population needs about 0.183 M☉ pc⁻³ (was 0.08734,
-  ideal). A full TESS 120 s search reads about 3.3 TB.
+  ideal), and a 90 % null needs about 0.4215. A full TESS 120 s search reads about 3.3 TB. Carrying this to all
+  TESS stars needs the sample to be representative.
 - **Handoff:** no search is started. Not measured: SPOC upstream processing of a real event. Nothing is queued.
 
 ## 2026-10-26: W3 short-cadence reach: Kepler SC and TESS 20 s / 120 s pass the frozen investment gate only at |M| ≲ 2 × 10⁻⁵ M☉, where long cadence cannot resolve the shape; no product reaches 10× at the baseline's masses (D-107 addendum 6)

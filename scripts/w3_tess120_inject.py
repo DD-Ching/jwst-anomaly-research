@@ -549,6 +549,65 @@ def stage_diagnose(_a) -> None:
     out["bootstrap_over_star_sectors"] = {  # post hoc: draws of one record share its background
         name: list(boot_retention([p["scenarios"][name] for p in per], rng)) for name in SCENARIOS
     }
+    # review findings (post hoc): retention by star group, star-sectors that never give a dark
+    # run, finer t_E bins, the ideal share's spread over draws, what the low masses draw, and the
+    # density a 90 % null would need (2.303 expected events)
+    smp = {x["obs_id"]: x for x in json.loads((OUT / "sample.json").read_text())["star_sectors"]}
+    summ = json.loads((OUT / "summary.json").read_text())["scenarios"]
+    for name in SCENARIOS:
+        rec = out[name]
+        far_dwarf = {
+            o for o, x in smp.items() if x["radius"] < 1.0 and x["dist"] > 1500.0
+        }  # TIC R < 1 R_sun and D > 1.5 kpc
+        grp = {}
+        for label, keep in (("R_lt_1_and_D_gt_1500", True), ("other", False)):
+            rows = [
+                r
+                for p in per
+                if (p["obs_id"] in far_dwarf) == keep
+                for r in p["scenarios"][name]
+                if r["ideal"]
+            ]
+            grp[label] = {
+                "draws": sum(len(p["draws"]) for p in per if (p["obs_id"] in far_dwarf) == keep),
+                "ideal": len(rows),
+                "L2": sum(r["L2"] for r in rows),
+            }
+        rec["by_star_group"] = grp
+        rec["star_sectors_with_ideal_but_no_L2_dark_run"] = sum(
+            1
+            for p in per
+            if any(r["ideal"] for r in p["scenarios"][name])
+            and not any(r["L2_D_only"] for r in p["scenarios"][name] if r["ideal"])
+        )
+        rows_all = [r for p in per for r in p["scenarios"][name]]
+        fine = {}
+        for b0, b1 in ((0, 3), (3, 10), (10, 25), (25, 50), (50, 100), (100, 150), (150, 300)):
+            sub = [r for r in rows_all if b0 <= r["t_E_cad"] < b1 and r["ideal"]]
+            if sub:
+                fine[f"{b0}-{b1}"] = {"ideal": len(sub), "L2": sum(r["L2"] for r in sub)}
+        rec["by_tE_cadences_fine"] = fine
+        by_draw: dict[int, list] = {}
+        for r in rows_all:
+            by_draw.setdefault(r["draw"], []).append(r)
+        g = list(by_draw.values())
+        shares = []
+        for _ in range(N_BOOT):
+            ix = rng.integers(0, len(g), len(g))
+            ev = [r for i in ix for r in g[i]]
+            shares.append(sum(r["ideal"] for r in ev) / len(ev))
+        rec["ideal_share_p5_p95_over_draws"] = [
+            float(f"{q:.4g}") for q in np.percentile(shares, [5, 95])
+        ]
+        rho = np.array([r["rho"] for r in rows_all])
+        te = np.array([r["t_E_cad"] for r in rows_all])
+        rec["drawn_events"] = {
+            "share_rho_ge_2": float(f"{np.mean(rho >= 2):.4g}"),
+            "rho_median": float(f"{np.median(rho):.4g}"),
+            "share_tE_lt_3_cadences": float(f"{np.mean(te < 3):.4g}"),
+        }
+        n1r = summ[name]["reach_561"]["N1_per_density_x_retention"]
+        rec["density_for_90pct_null_x_retention"] = float(f"{2.303 / n1r:.4g}") if n1r else None
     fr = np.array([p["n_good"] / p["n_cadences"] for p in per])
     out["good_cadence_share_p5_50_95"] = [float(f"{q:.3g}") for q in np.percentile(fr, [5, 50, 95])]
     smp = json.loads((OUT / "sample.json").read_text())["star_sectors"]

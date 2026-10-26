@@ -24,7 +24,48 @@
     "L1b": 107,
     "L2": 86
    }
-  }
+  },
+  "by_star_group": {
+   "R_lt_1_and_D_gt_1500": {
+    "draws": 10,
+    "ideal": 188,
+    "L2": 20
+   },
+   "other": {
+    "draws": 190,
+    "ideal": 644,
+    "L2": 377
+   }
+  },
+  "star_sectors_with_ideal_but_no_L2_dark_run": 10,
+  "by_tE_cadences_fine": {
+   "0-3": {
+    "ideal": 4,
+    "L2": 4
+   },
+   "3-10": {
+    "ideal": 203,
+    "L2": 121
+   },
+   "10-25": {
+    "ideal": 394,
+    "L2": 233
+   },
+   "25-50": {
+    "ideal": 231,
+    "L2": 39
+   }
+  },
+  "ideal_share_p5_p95_over_draws": [
+   0.1143,
+   0.164
+  ],
+  "drawn_events": {
+   "share_rho_ge_2": 0.667,
+   "rho_median": 5.42,
+   "share_tE_lt_3_cadences": 0.006
+  },
+  "density_for_90pct_null_x_retention": 0.4215
  },
  "v220_M1e-7": {
   "lost_L1b_to_L2": 10,
@@ -45,7 +86,40 @@
     "L1b": 0,
     "L2": 0
    }
-  }
+  },
+  "by_star_group": {
+   "R_lt_1_and_D_gt_1500": {
+    "draws": 10,
+    "ideal": 14,
+    "L2": 0
+   },
+   "other": {
+    "draws": 190,
+    "ideal": 12,
+    "L2": 3
+   }
+  },
+  "star_sectors_with_ideal_but_no_L2_dark_run": 2,
+  "by_tE_cadences_fine": {
+   "0-3": {
+    "ideal": 18,
+    "L2": 3
+   },
+   "3-10": {
+    "ideal": 8,
+    "L2": 0
+   }
+  },
+  "ideal_share_p5_p95_over_draws": [
+   0.001167,
+   0.008333
+  ],
+  "drawn_events": {
+   "share_rho_ge_2": 0.9518,
+   "rho_median": 39.82,
+   "share_tE_lt_3_cadences": 0.6422
+  },
+  "density_for_90pct_null_x_retention": 6.043
  },
  "v30_M3.2e-6": {
   "lost_L1b_to_L2": 117,
@@ -71,7 +145,56 @@
     "L1b": 85,
     "L2": 67
    }
-  }
+  },
+  "by_star_group": {
+   "R_lt_1_and_D_gt_1500": {
+    "draws": 10,
+    "ideal": 175,
+    "L2": 20
+   },
+   "other": {
+    "draws": 190,
+    "ideal": 472,
+    "L2": 277
+   }
+  },
+  "star_sectors_with_ideal_but_no_L2_dark_run": 11,
+  "by_tE_cadences_fine": {
+   "3-10": {
+    "ideal": 1,
+    "L2": 1
+   },
+   "10-25": {
+    "ideal": 38,
+    "L2": 21
+   },
+   "25-50": {
+    "ideal": 100,
+    "L2": 61
+   },
+   "50-100": {
+    "ideal": 196,
+    "L2": 123
+   },
+   "100-150": {
+    "ideal": 154,
+    "L2": 61
+   },
+   "150-300": {
+    "ideal": 158,
+    "L2": 30
+   }
+  },
+  "ideal_share_p5_p95_over_draws": [
+   0.0855,
+   0.1295
+  ],
+  "drawn_events": {
+   "share_rho_ge_2": 0.7317,
+   "rho_median": 7.084,
+   "share_tE_lt_3_cadences": 0.0003333
+  },
+  "density_for_90pct_null_x_retention": 3.083
  },
  "v30_M1e-8": {
   "lost_L1b_to_L2": 2,
@@ -87,7 +210,36 @@
     "L1b": 1,
     "L2": 0
    }
-  }
+  },
+  "by_star_group": {
+   "R_lt_1_and_D_gt_1500": {
+    "draws": 10,
+    "ideal": 1,
+    "L2": 0
+   },
+   "other": {
+    "draws": 190,
+    "ideal": 3,
+    "L2": 0
+   }
+  },
+  "star_sectors_with_ideal_but_no_L2_dark_run": 0,
+  "by_tE_cadences_fine": {
+   "3-10": {
+    "ideal": 4,
+    "L2": 0
+   }
+  },
+  "ideal_share_p5_p95_over_draws": [
+   0.0,
+   0.001333
+  ],
+  "drawn_events": {
+   "share_rho_ge_2": 0.991,
+   "rho_median": 127.7,
+   "share_tE_lt_3_cadences": 0.1768
+  },
+  "density_for_90pct_null_x_retention": null
  },
  "bootstrap_over_star_sectors": {
   "v220_M5.6e-6": [
