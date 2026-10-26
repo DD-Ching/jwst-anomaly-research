@@ -24,6 +24,13 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Data:** six LW `_i2d` (4.5 GB) streamed and deleted; `_cal` headers and apertures read from S3.
 - **Handoff:** open on the owner's call (needs-human): SW-band difference, DJA photo-z of the faint host, any later
   epoch. #374 waits for today's 06:17Z weekly run.
+## 2026-10-26: SN Refsdal SX delay and μ ratio vs the seven blind models: no anomaly (D-034 addendum bq)
+- **Result** (`results/lens_consistency/refsdal_sx/RESULT.md`; plan frozen before the tables were read): outcome N.
+  Measured Δt_X1 376.0 +5.6 / −5.5 d (Kelly et al. 2023) vs Treu et al. 2016 blind models 224–361 d: 5 / 7 within 3σ;
+  Sha-g / Sha-a flag (z +5.84 / +4.76), explained by their documented redshift-entry error (recalculated z +2.06 /
+  +1.37, post hoc). μX/μ1 0.299 agrees with all seven (|z| ≤ 2.32). Every blind delay is short of the measurement
+  (the known H0 < 70 preference; post hoc).
+- **Handoff:** the lensed-SN blind-model series (H0pe, Encore, Requiem, Refsdal) is complete with no flag.
 
 ## 2026-10-26: Abell 2744 GLASS flanking pair 1324 o001 → o007: two-epoch grid, 0 hits
 - **Result** (`results/transients/a2744_glass_flank/RESULT.md`; plan frozen before any pixel): outcome N, 0 hit

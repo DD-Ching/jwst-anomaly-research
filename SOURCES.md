@@ -375,6 +375,11 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
     (`results/lens_consistency/requiem_dt/`).
   - Rodney et al. 2021, Nature Astronomy 5, 1118, arXiv:2106.08935v2 (sha256 eb10e253…d2ec01c1): Table 1 delays and
     positions.
+- SN Refsdal SX check (`results/lens_consistency/refsdal_sx/`, accessed 2026-10-26):
+  - Treu et al. 2016, ApJ 817, 60, arXiv:1510.05750 e-print source (sha256 4c2fd6b9…acb094494): Table
+    "tab:predictions" (blind Δt_X1, μX/μ1).
+  - Kelly et al. 2023, Science 380, eabh1322, arXiv:2305.06367 e-print source (sha256 1e4005f5…a0664b87eef2): Tables
+    "tab:measurements", "tab:mod_time_delays", "tab:mod_mag_ratios"; Sharon delay revision in the supplementary text.
 - Salmon et al. 2018, SPT0615-JD z ~ 10 arc, arXiv:1801.03103 (abstract read 2026-10-26: RELICS-model μ ~ 4–7,
   predicted counter-images).
 - RELICS MACS J0308.9+2645 lens models (`glafic/v2`, `zitrin-ltm-gauss` v1; maps at D_LS/D_S = 1) and BPZ catalogue
