@@ -360,6 +360,12 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
     Table 1 and Sect. 4 Δμ offsets.
   - Galan et al. 2026, A&A 708, A359, arXiv:2510.20561v2, and Grayling et al., arXiv:2510.11719v2: abstracts read
     (context: A_V ≈ 0.9 at the SN; BayeSN-TD μ).
+- SN Encore / MACS J0138.0−2155 (`results/lens_consistency/encore_mu/`; e-prints accessed 2026-10-26, sha256 of the
+  arXiv e-print tarballs):
+  - Suyu et al., A&A, doi:10.1051/0004-6361/202557235, arXiv:2509.12319 (e-print of 2026-03-03; sha256
+    3cfab090…22266e33ba): Table "tab:snencore", blind model μ and Δt.
+  - Pierel et al., arXiv:2509.12301 (sha256 3085083c…26c9e922ff): Tables "tab:final_delay_mag", "tab:systematics",
+    "tab:fitting", "tab:h0" and Sect. "Magnifications".
 - Salmon et al. 2018, SPT0615-JD z ~ 10 arc, arXiv:1801.03103 (abstract read 2026-10-26: RELICS-model μ ~ 4–7,
   predicted counter-images).
 - RELICS MACS J0308.9+2645 lens models (`glafic/v2`, `zitrin-ltm-gauss` v1; maps at D_LS/D_S = 1) and BPZ catalogue

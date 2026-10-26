@@ -1,0 +1,89 @@
+{
+  "rows": {
+    "glafic": {
+      "h0_mst_1sigma": [
+        52.987058491035064,
+        84.12758484170119
+      ],
+      "image_z_stat_plus_sys_quadrature": {
+        "1a": -0.5379282069412399,
+        "1b": -1.0589033020300203
+      },
+      "ratio_z_stat_plus_sys_quadrature": -0.2942594260120872,
+      "ratio_z_fitted_stat_only": -0.4208776746647926
+    },
+    "GLEE": {
+      "h0_mst_1sigma": [
+        57.986318848974975,
+        92.46140218732279
+      ],
+      "image_z_stat_plus_sys_quadrature": {
+        "1a": -0.5713506042865284,
+        "1b": -0.5340028020950485
+      },
+      "ratio_z_stat_plus_sys_quadrature": 0.06711962458889519,
+      "ratio_z_fitted_stat_only": 0.12130669088388972
+    },
+    "Lenstool I": {
+      "h0_mst_1sigma": [
+        44.73456372177226,
+        304.13395505589864
+      ],
+      "image_z_stat_plus_sys_quadrature": {
+        "1a": 0.2109099919799964,
+        "1b": 0.977599762929101
+      },
+      "ratio_z_stat_plus_sys_quadrature": 0.5196670580509923,
+      "ratio_z_fitted_stat_only": 0.7751826648369773
+    },
+    "Lenstool II": {
+      "h0_mst_1sigma": [
+        50.94459210514275,
+        83.4189855692957
+      ],
+      "image_z_stat_plus_sys_quadrature": {
+        "1a": -0.4013131393962613,
+        "1b": 0.046421640850748014
+      },
+      "ratio_z_stat_plus_sys_quadrature": 0.3296570444359208,
+      "ratio_z_fitted_stat_only": 0.4935264082822003
+    },
+    "MrMARTIAN": {
+      "h0_mst_1sigma": [
+        56.655045481235646,
+        100.30078847071611
+      ],
+      "image_z_stat_plus_sys_quadrature": {
+        "1a": -0.8624096046150457,
+        "1b": 0.3738686314449952
+      },
+      "ratio_z_stat_plus_sys_quadrature": 0.8752949022579438,
+      "ratio_z_fitted_stat_only": 1.2343267312743489
+    },
+    "WSLAP+": {
+      "h0_mst_1sigma": [
+        167.80721029068764,
+        357.19560497291513
+      ],
+      "image_z_stat_plus_sys_quadrature": {
+        "1a": -1.7652427483371793,
+        "1b": 0.04112044967869888
+      },
+      "ratio_z_stat_plus_sys_quadrature": 1.33754139288331,
+      "ratio_z_fitted_stat_only": 1.7503150566416332
+    },
+    "Zitrin-analytic": {
+      "h0_mst_1sigma": [
+        42.47988220493319,
+        81.03060398931073
+      ],
+      "image_z_stat_plus_sys_quadrature": {
+        "1a": 0.3570792578956174,
+        "1b": 1.362381564730731
+      },
+      "ratio_z_stat_plus_sys_quadrature": 0.6143356483696201,
+      "ratio_z_fitted_stat_only": 0.8451340256884914
+    }
+  },
+  "n_models_1sigma_reaching_h0_range": 6
+}

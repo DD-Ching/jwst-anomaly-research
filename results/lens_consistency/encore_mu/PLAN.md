@@ -1,6 +1,6 @@
 # SN Encore (MACS J0138.0−2155): measured image magnifications vs the seven blind lens models: plan
 
-Frozen before any published magnification or delay table is read in this session (2026-10-26, 03:25Z). Only the
+Frozen before any published magnification or delay table is read in this session (2026-10-26, 03:10Z). Only the
 search-engine abstract snippets have been seen (they quote two μ values; no per-model table, no errors).
 
 ## Question

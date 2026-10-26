@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: SN Encore measured magnifications vs the seven blind MACS J0138 lens models: no flag, low power (D-034 addendum bo)
+- **Result** (`results/lens_consistency/encore_mu/RESULT.md`; plan frozen before the tables were read): outcome N.
+  Image z −1.75 to +1.36, ratio |μ_1b/μ_1a| observed 1.486 vs models 0.60–1.76 (z −0.29 to +1.33). The errors are
+  dominated by simulated micro/millilensing: a flag needs a factor ≥ 2.90–3.62.
+- **H0pe question (bn):** pooled offset +0.086 mag, 5 / 7 models positive ("same sense" by the frozen rule, each
+  offset within about one σ_obs); Encore cannot test the 0.633 mag shared over-prediction. H0_MST in 64–80 for 4 / 7
+  (point estimates); post hoc 6 / 7 1σ intervals reach it (not WSLAP+).
+- **Deviation:** the rule tests were written after the first run (functions unchanged).
+- **Handoff:** rerun `scripts/encore_mu_check.py` when template photometry or the image 1d reappearance is published.
+  No other lensed-SN standard-candle table is queued. #374 waits for today's 06:17Z weekly run.
 ## 2026-10-26: SN H0pe measured magnifications vs the seven blind G165 lens models: no image or ratio flag; common offset (D-034 addendum bn)
 - **Result** (`results/lens_consistency/h0pe_mu/RESULT.md`; plan frozen before the tables were read): outcome N.
   No image has |z| > 3 in every model; all 14 model ratios μ_b/μ_a, μ_c/μ_a agree (|z| ≤ 0.96, shared
