@@ -354,9 +354,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   counter-image candidate and JWST-era predicted positions from the text, `scripts/spt0615_gems.py`).
 - SN H0pe / PLCK G165.7+67.0 (`results/lens_consistency/h0pe_mu/`; e-prints accessed 2026-10-26, sha256 of the
   arXiv e-print tarballs):
-  - Pascale et al. 2025, arXiv:2403.18902v2 (sha256 cdd4d3f2…a189144): Table 1, model μ and delays (unblinded).
-  - Pierel et al. 2024, doi:10.3847/1538-4357/ad3c43, arXiv:2403.18954v2 (sha256 6bb34189…62f8d4f6ab): Tables 3–4.
-  - Agrawal et al. 2026, ApJ 1002, 187, doi:10.3847/1538-4357/ae5f65, arXiv:2510.07637v2 (sha256 38ada1be…a5bfb19):
+  - Pascale et al. 2025, arXiv:2403.18902v2 (sha256 cdd4d3f2…ca189144): Table 1, model μ and delays (unblinded).
+  - Pierel et al. 2024, doi:10.3847/1538-4357/ad3c43, arXiv:2403.18954v2 (sha256 6bb34189…f8d4f6ab): Tables 3–4.
+  - Agrawal et al. 2026, ApJ 1002, 187, doi:10.3847/1538-4357/ae5f65, arXiv:2510.07637v2 (sha256 38ada1be…b02bfb19):
     Table 1 and Sect. 4 Δμ offsets.
   - Galan et al. 2026, A&A 708, A359, arXiv:2510.20561v2, and Grayling et al., arXiv:2510.11719v2: abstracts read
     (context: A_V ≈ 0.9 at the SN; BayeSN-TD μ).
