@@ -6669,3 +6669,9 @@ confining radiation at a throat is found.
   re-fit is validated against its own optimum (`results/lens_consistency/d115b_lenstool_refit/RESULT_VS.md`).
   Alternative not taken: image-plane χ² with D52b's image matching fixed (needs Lenstool source changes). Revisit
   if joint moves show source-plane jumps.
+- **Addendum 8 (2026-10-26, stage F-S):** do not use the unconstrained source-plane χ² (`forme 0`) as the objective
+  of a local re-fit of this model. Nelder–Mead over O1–O6 (2,000 evaluations) lowered it from 227.92 to 174.90.
+  The f 1.00 runs from two starts did not agree (174.90 / 193.80; gate VFS `undetermined`). Post hoc every end point
+  loses images and picks up proximity penalties in the image plane (`chipenalty` 7496.88–14993.75)
+  (`results/lens_consistency/d115b_lenstool_refit/RESULT_FS.md`). A re-fit objective must keep image-plane
+  feasibility.

@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b stage F-S: the source-plane re-fit is not validated (gate VFS `undetermined`); post hoc every end point loses images in the image plane (D-109 addendum 8)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_FS.md`; plan, gate and rule committed before the run):
+  - Nelder–Mead over the O1–O6 parameters on the `forme 0` χ², four runs in parallel, 2,000 evaluations each.
+  - At f 1.00 the run from `best.par` reached 174.900 and the run from the perturbed start reached 193.797. Both
+    ended on the budget and they disagree, so gate VFS is `undetermined` and rule FS is not applied.
+  - f 0.80 and f 0.75 reached 172.37 and 172.58.
+- Post hoc: no end point is clean in the image plane. Each has `nwarn` 6–9 and `chipenalty` 7496.88–14993.75 (image
+  plane `chimul` 7831–15335 against 344.42). Lowering the free source-plane χ² moves the model away from the
+  catalogued images.
+- **Failed approach:** an unconstrained source-plane χ² as the objective of a local re-fit of this model.
+- **Handoff:** next a frozen plan whose objective keeps image-plane feasibility: the source-plane χ² plus a
+  lost-image / penalty term, or the image-plane χ² with D52b's matching fixed (needs Lenstool source changes, addendum 7). Validate it at f 1.00 first. D115b
+  stays `inconclusive`.
+
 ## 2026-10-26: D115b stage VS: Lenstool's source-plane χ² is smooth at `best.par` (gate VS passes; D-109 addendum 7)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_VS.md`; plan, gate and tool committed before the run):
   - `forme 0` gives χ² 227.92 at `best.par`.

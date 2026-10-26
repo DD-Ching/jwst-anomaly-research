@@ -12,6 +12,8 @@ Stage F2-L V3 (``--stage f2l-v3``): bounded Nelder-Mead over O1-O6 driving Lenst
 Stage V3' (``--stage v3p``): the same with a small-step start ladder; plan ``PLAN_V3P.md``.
 Stage VS (``--stage vs``): continuity of the source-plane chi2 (``forme 0``) at best.par under
 single-parameter offsets; plan ``PLAN_VS.md`` (gate VS, frozen before the run).
+Stage F-S (``--stage fs``): Nelder-Mead over O1-O6 on the source-plane chi2 at f 1.00 (two starts)
+and f 0.80 / 0.75, image plane read at the end points; plan ``PLAN_FS.md`` (gate VFS, rule FS).
 
     python scripts/d115b_lenstool_refit.py --lenstool <prefix>/bin/lenstool --workdir <scratch dir>
 """
@@ -644,7 +646,7 @@ def get_param(par: str, name: str, key: str) -> float:
     return float(hits[0])
 
 
-def set_param(par: str, name: str, key: str, value: float) -> str:
+def set_param(par: str, name: str, key: str, value: float, decimals: int = 6) -> str:
     """Set ``key`` (input.par keyword) in ``potentiel <name>``; a ``<key>_kpc`` companion line is
     removed so the arcsec value is the only one Lenstool reads."""
     lines = par.split("\n")
@@ -653,7 +655,7 @@ def set_param(par: str, name: str, key: str, value: float) -> str:
     hits = [i for i in range(a + 1, b) if lines[i].split()[:1] == [k]]
     if len(hits) != 1:
         raise ValueError(f"potentiel {name}: need one {k} line")
-    lines[hits[0]] = f"\t{k}     {value:.6f}"
+    lines[hits[0]] = f"\t{k}     {value:.{decimals}f}"
     drop = {i for i in range(a + 1, b) if lines[i].split()[:1] == [k + "_kpc"]}
     return "\n".join(ln for i, ln in enumerate(lines) if i not in drop)
 
@@ -705,11 +707,13 @@ def _f2l_setup(files: dict[str, Path]) -> tuple[str, list, np.ndarray, np.ndarra
     return vp, free, lo, hi, (p_best - lo) / (hi - lo)
 
 
-def _par_at(vp: str, free: list, lo: np.ndarray, hi: np.ndarray, u: np.ndarray) -> str:
+def _par_at(
+    vp: str, free: list, lo: np.ndarray, hi: np.ndarray, u: np.ndarray, decimals: int = 6
+) -> str:
     """The run file with every free parameter at u (clipped to [0, 1])."""
     par = vp
     for (n, k, _, _), v in zip(free, lo + np.clip(u, 0, 1) * (hi - lo), strict=True):
-        par = set_param(par, n, k, float(v))
+        par = set_param(par, n, k, float(v), decimals)
     return par
 
 
@@ -1097,6 +1101,193 @@ def main_vs(lt: Path, wd: Path, files: dict[str, Path]) -> None:
     print(json.dumps(out, indent=1))
 
 
+FS_MAXFEV = 2000  # ASSUMPTION (PLAN_FS.md)
+FS_WALL_S = 900  # ASSUMPTION (PLAN_FS.md): wall cap per run
+FS_DECIMALS = 9  # PLAN_FS.md: parameter digits written (RESULT_VS.md review)
+FS_TOL_ABS = 2.0  # ASSUMPTION (PLAN_FS.md): VS jump floor
+FS_DCHI2_MAX = 6.0  # ASSUMPTION (PLAN_FS.md): rule F's threshold carried to the source plane
+FS_RUNS = {"A": (1.00, False), "B": (1.00, True), "C": (0.80, False), "D": (0.75, False)}
+
+
+def gate_vfs(
+    start_b: float | None,
+    end_a: float | None,
+    end_b: float | None,
+    stopped_a: bool,
+    stopped_b: bool,
+) -> str:
+    """Frozen gate VFS (PLAN_FS.md): runs A and B at f 1.00 reach the same source-plane chi2."""
+    if end_a is None:
+        return "undetermined"
+    tol = max(FS_TOL_ABS, TOL_FRAC * end_a)
+    if start_b is None or start_b <= end_a + tol:
+        return "uninformative"
+    if end_b is not None and abs(end_b - end_a) <= tol:
+        return "pass"
+    return "undetermined" if (stopped_a or stopped_b) else "fail"
+
+
+def fs_clean(nwarn: int | None, penalty: float | None, flags: dict[str, bool] | None) -> bool:
+    """PLAN_FS.md: an end point is clean iff no lost image, no proximity penalty, no flag image."""
+    if nwarn is None or penalty is None or flags is None:
+        return False
+    return nwarn == 0 and penalty == 0.0 and not any(flags.values())
+
+
+def rule_fs(rows: dict[float, tuple[bool, float | None]], end_a: float) -> str:
+    """Frozen rule FS (PLAN_FS.md). ``rows`` maps f to (clean, end source-plane chi2)."""
+    d = {f: (ok, None if c is None else c - end_a) for f, (ok, c) in rows.items()}
+    if any(ok and dc is not None and dc <= FS_DCHI2_MAX for ok, dc in d.values()):
+        return "cheap"
+    if d and all(ok and dc is not None and dc > FS_DCHI2_MAX for ok, dc in d.values()):
+        return "costly"
+    return "undetermined"
+
+
+def _fs_worker(args: tuple) -> dict:
+    """One F-S Nelder-Mead run on the source-plane chi2 (one Lenstool thread)."""
+    global _OMP
+    _OMP = "1"
+    from scipy.optimize import minimize
+
+    tag, f, perturb, lt, wd, files = args
+    vp, free, lo, hi, u_best = _f2l_setup(files)
+    vs = set_vdisp(build_vs(vp), "8515", f * SIGMA_8515)
+    u0 = perturbed_start(u_best) if perturb else u_best.copy()
+    hist: list[tuple[float, np.ndarray]] = []
+    cache: dict[bytes, float] = {}
+    t0 = time.time()
+
+    class _Wall(Exception):
+        pass
+
+    def fun(u: np.ndarray) -> float:
+        key = np.clip(u, 0, 1).tobytes()
+        if key in cache:
+            return cache[key]
+        if time.time() - t0 > FS_WALL_S:
+            raise _Wall
+        par = _par_at(vs, free, lo, hi, u, FS_DECIMALS)
+        try:
+            p, _ = run(lt, wd / f"fs_{tag}", par, files["arcs.dat"], F2L_RUN_TIMEOUT_S, False)
+            val = read_chi2pos(p.stdout + p.stderr)
+        except (LenstoolError, subprocess.TimeoutExpired, ValueError, FileNotFoundError):
+            val = F2L_INFEASIBLE
+        hist.append((val, np.clip(u, 0, 1)))
+        cache[key] = val
+        return val
+
+    start = fun(u0)
+    sim = np.vstack(
+        [u0]
+        + [
+            u0 + F2L_SIMPLEX * np.eye(len(u0))[i] * (1 if u0[i] < 0.9 else -1)
+            for i in range(len(u0))
+        ]
+    )
+    try:
+        r = minimize(
+            fun,
+            u0,
+            method="Nelder-Mead",
+            bounds=[(0.0, 1.0)] * len(u0),
+            options={"maxfev": FS_MAXFEV, "xatol": 1e-4, "fatol": 0.01, "initial_simplex": sim},
+        )
+        stopped, message = not r.success, str(r.message)
+    except _Wall:
+        stopped, message = True, "wall cap reached"
+    vals = [v for v, _ in hist]
+    jbest = int(np.argmin(vals))
+    end, u_end = vals[jbest], hist[jbest][1]
+    out = {
+        "f": f,
+        "start": "perturbed" if perturb else "best.par",
+        "chi2s_start": None if start >= F2L_INFEASIBLE else start,
+        "chi2s_end": None if end >= F2L_INFEASIBLE else end,
+        "n_evaluations": len(hist),
+        "n_no_value": sum(v >= F2L_INFEASIBLE for v in vals),
+        "stopped_by_budget": stopped,
+        "optimizer_message": message,
+        "runtime_s": round(time.time() - t0, 1),
+        "max_abs_du_from_best_par": round(float(np.max(np.abs(u_end - u_best))), 4),
+        "max_abs_du_param": f"{free[int(np.argmax(np.abs(u_end - u_best)))][0]}:"
+        f"{free[int(np.argmax(np.abs(u_end - u_best)))][1]}",
+        "u_end": [round(float(x), 9) for x in u_end],
+    }
+    # end-point image-plane check (stage V' file, forme -1, image mode)
+    par = add_image_mode(
+        set_vdisp(_par_at(vp, free, lo, hi, u_end, FS_DECIMALS), "8515", f * SIGMA_8515)
+    )
+    d = wd / f"fs_{tag}_img"
+    try:
+        p, chires = run(lt, d, par, files["arcs.dat"], F2L_RUN_TIMEOUT_S)
+        chimul, _, nwarn = read_chires(chires)
+        pen = read_penalty(chires)
+        flags = flag_images(d / "image.all")
+        img = {
+            "chimul": chimul,
+            "nwarn": nwarn,
+            "chipenalty": pen,
+            "penalty_images": penalty_images(p.stdout + p.stderr),
+            "flag_by_image": flags,
+        }
+    except (LenstoolError, subprocess.TimeoutExpired, ValueError, FileNotFoundError) as e:
+        img = {
+            "error": str(e)[:200],
+            "chimul": None,
+            "nwarn": None,
+            "chipenalty": None,
+            "flag_by_image": None,
+        }
+    img["clean"] = fs_clean(img["nwarn"], img["chipenalty"], img["flag_by_image"])
+    out["image_plane_end"] = img
+    return out
+
+
+def main_fs(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage F-S (plan PLAN_FS.md): runs A-D in parallel, gate VFS, then rule FS."""
+    from concurrent.futures import ProcessPoolExecutor
+
+    t0 = time.time()
+    with ProcessPoolExecutor(max_workers=len(FS_RUNS)) as ex:
+        res = dict(
+            zip(
+                FS_RUNS,
+                ex.map(_fs_worker, [(t, f, pt, lt, wd, files) for t, (f, pt) in FS_RUNS.items()]),
+                strict=True,
+            )
+        )
+    a, b = res["A"], res["B"]
+    out = {
+        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_FS.md",
+        "provenance": "model_prediction",
+        "lenstool": version(lt),
+        "sigma_8515_fiducial_kms": SIGMA_8515,
+        "maxfev_assumption": FS_MAXFEV,
+        "wall_cap_s": FS_WALL_S,
+        "runs": res,
+        "runtime_s": round(time.time() - t0, 1),
+    }
+    out["gate_VFS"] = gate_vfs(
+        b["chi2s_start"],
+        a["chi2s_end"],
+        b["chi2s_end"],
+        a["stopped_by_budget"],
+        b["stopped_by_budget"],
+    )
+    if out["gate_VFS"] == "pass":
+        rows = {
+            res[t]["f"]: (res[t]["image_plane_end"]["clean"], res[t]["chi2s_end"]) for t in "CD"
+        }
+        out["dchi2s"] = {
+            str(f): None if c is None else round(c - a["chi2s_end"], 4)
+            for f, (_, c) in rows.items()
+        }
+        out["rule_FS"] = rule_fs(rows, a["chi2s_end"])
+    _write(out, "result_fs.json")
+    print(json.dumps(out, indent=1))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
@@ -1114,6 +1305,7 @@ def main() -> None:
             "v3p",
             "v3p-posthoc",
             "vs",
+            "fs",
         ),
         default="v",
     )
@@ -1142,6 +1334,9 @@ def main() -> None:
         return
     if a.stage == "vs":
         main_vs(lt, wd, files)
+        return
+    if a.stage == "fs":
+        main_fs(lt, wd, files)
         return
     if a.stage == "v3p":
         main_v3p(lt, wd, files)
