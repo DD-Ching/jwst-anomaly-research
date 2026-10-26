@@ -935,13 +935,82 @@ def posthoc_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> dict:
     }
 
 
+V3P_POST_STEPS = (0.001, 0.0003, 0.0001, 0.00003)  # post hoc: offset sizes, fraction of range
+V3P_POST_PARAMS = ("O1:ellipticity", "O2:angle_pos", "O3:v_disp", "O5:cut_radius", "O6:v_disp")
+
+
+def posthoc_v3p(lt: Path, wd: Path, files: dict[str, Path]) -> dict:
+    """Post hoc (after gate V3' was ``uninformative``): the all-parameter start at 1e-4, single
+    +-0.001 offsets, and the family chi2 changes of + offsets shrinking to 3e-5 of the range."""
+    vp, free, lo, hi, u_best = _f2l_setup(files)
+    names = [f"{n}:{k}" for n, k, _, _ in free]
+
+    def ev(u: np.ndarray) -> dict:
+        p, chires = _f2l_eval(lt, wd / "v3p_post", _par_at(vp, free, lo, hi, u), files["arcs.dat"])
+        if p is None or "chimul" not in chires:
+            return {"feasible": False, "error": "lenstool failed or wrote no chimul"}
+        chimul, fam, nwarn = read_chires(chires)
+        return {
+            "feasible": objective(chires)[1],
+            "chimul": chimul,
+            "nwarn": nwarn,
+            "penalty": read_penalty(chires),
+            "fam": fam,
+        }
+
+    ref = ev(u_best)
+    fam0 = ref.pop("fam")
+    single = {}
+    for j, nm in enumerate(names):
+        for s in (1.0, -1.0):
+            u = u_best.copy()
+            u[j] = np.clip(u[j] + s * 0.001, 0.001, 0.999)
+            r = ev(u)
+            r.pop("fam", None)
+            single[f"{nm}:{'+' if s > 0 else '-'}"] = r
+    shrink = {}
+    for nm in V3P_POST_PARAMS:
+        for d in V3P_POST_STEPS:
+            u = u_best.copy()
+            u[names.index(nm)] += d
+            r = ev(u)
+            fam = r.pop("fam", {})
+            r["family_dchi2_gt1"] = {
+                k: round(v - fam0.get(k, 0.0), 2)
+                for k, v in fam.items()
+                if abs(v - fam0.get(k, 0.0)) > 1
+            }
+            shrink[f"{nm}:+{d}"] = r
+    start = ev(perturbed_start(u_best, 0.0001))
+    start.pop("fam", None)
+    return {
+        "label": "post hoc (after gate V3' was uninformative)",
+        "best_par": ref,
+        "start_frac_1e-4": start,
+        "single_offsets_0.001": single,
+        "n_single_feasible": sum(v["feasible"] for v in single.values()),
+        "n_single": len(single),
+        "shrinking_plus_offsets": shrink,
+    }
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
     ap.add_argument("--workdir", required=True, type=Path)
     ap.add_argument(
         "--stage",
-        choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc", "f2l-v3", "f2l-v3-posthoc", "v3p"),
+        choices=(
+            "v",
+            "vprime-f",
+            "d14a",
+            "f2b",
+            "f2b-posthoc",
+            "f2l-v3",
+            "f2l-v3-posthoc",
+            "v3p",
+            "v3p-posthoc",
+        ),
         default="v",
     )
     a = ap.parse_args()
@@ -963,6 +1032,9 @@ def main() -> None:
         return
     if a.stage == "f2l-v3":
         main_f2l_v3(lt, wd, files)
+        return
+    if a.stage == "v3p-posthoc":
+        _write(posthoc_v3p(lt, wd, files), "posthoc_v3p.json")
         return
     if a.stage == "v3p":
         main_v3p(lt, wd, files)

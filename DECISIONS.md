@@ -6656,3 +6656,9 @@ confining radiation at a throat is found.
   point in 299 evaluations (gate V3 `uninformative`). Post hoc, only 7 of 56 single ±3 % offsets are feasible, none
   in O1–O3. Local re-fits of this model need much smaller steps (proposed ASSUMPTION: of order 0.3 % of the range) or a softer constraint, validated first
   (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2L.md`).
+- **Addendum 6 (2026-10-26, stage V3′):** even 0.1 % of each range, on all 28 parameters at once, is infeasible (gate
+  V3′ `uninformative`), and the hard-constraint Nelder–Mead route is closed for this model. Post hoc, `best.par` lies on
+  a χ² discontinuity: offsets as small as 3 × 10⁻⁵ of a range switch family D52b's χ² by +12.1 (D52c +14.2). Do not
+  validate a local re-fit of this model with a χ² tolerance below that jump; use a continuous objective, validated
+  first (`results/lens_consistency/d115b_lenstool_refit/RESULT_V3P.md`). For archive.stsci.edu in cloud sessions, set
+  `SSL_CERT_FILE` to the proxy bundle plus certifi's roots (the system store lacks emSign Root CA - G1).
