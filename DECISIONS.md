@@ -2786,6 +2786,18 @@ amplitude offset; both SPT0615 maps may be used at D_LS/D_S = 1 for families 1�
 less-secure images. Alternatives rejected: an amplitude correction (none needed). Revisit if: a JWST-era SPT0615 image
 list (Cosmic Gems field) is public with spectroscopic redshifts.
 
+**Addendum 2026-10-26bm (Cosmic Gems arc vs the HST-era RELICS maps; addendum bl's "Revisit if", on a photo-z
+arc).** `results/lens_consistency/spt0615_gems/RESULT.md`; plan and rules before the arc was evaluated. Adamo et al.
+2024 clumps, Bradley et al. 2025 counter-image candidate; z 10.0 / 10.2 / 10.4 (photo-z, no z_spec). Neither map
+has a tangential critical-curve crossing between the mirror clumps A.1 and A.2 at any z (both clumps negative
+parity, |μ| 3.70–5.68): joint flag, read as pre-declared, an HST-era model limitation (JWST-era models put the curve
+through the arc). Lenstool v1's tangential curve is 7.89–7.98″ from the symmetry point and its counter-image
+2.141–2.526″ from the candidate; GLAFIC v2 has no curve within 15″ and its counter-image is 18.616–19.169″ away.
+Decision: neither SPT0615 RELICS map is used for magnification or parity near the arc; bl's use for families 1–3
+is unchanged. Not a candidate. Alternatives rejected: a z scan beyond the photo-z interval (the class did not change
+over it). Revisit if: a JWST-era SPT0615 lens model or image table is public (then test HST-era maps on its other
+families), or the arc gets a spectroscopic redshift outside 10.0–10.4.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

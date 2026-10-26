@@ -347,6 +347,13 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   (accessed 2026-10-18; sha256 in `lensmodel.SPT0615_RELICS_*` and `results/arcs/spt0615-relics/summary.json`).
 - Paterno-Mahler et al. 2018, RELICS SPT-CLJ0615−5746 model, z_lens 0.972, ApJ 863, 154, arXiv:1805.09834 (abstract read 2026-10-18; Table 2 image list from the e-print, sha256 83c2bc6c…6cdb26,
   accessed 2026-10-25, `scripts/spt0615_images.py`).
+- Adamo et al. 2024, Nature, "Bound star clusters observed in a lensed galaxy 460 Myr after the Big Bang",
+  arXiv:2401.03224v2 (HTML read 2026-10-26; Extended Data Table 3 Cosmic Gems clump positions, transcribed in
+  `scripts/spt0615_gems.py`).
+- Bradley et al. 2025, ApJ 991, 32, doi:10.3847/1538-4357/adf638, arXiv:2404.10770v2 (HTML read 2026-10-26;
+  counter-image candidate and JWST-era predicted positions from the text, `scripts/spt0615_gems.py`).
+- Salmon et al. 2018, SPT0615-JD z ~ 10 arc, arXiv:1801.03103 (abstract read 2026-10-26: RELICS-model μ ~ 4–7,
+  predicted counter-images).
 - RELICS MACS J0308.9+2645 lens models (`glafic/v2`, `zitrin-ltm-gauss` v1; maps at D_LS/D_S = 1) and BPZ catalogue
   `hlsp_relics_hst_acs-wfc3ir_macs0308p26_multi_v1_cat.txt`: https://archive.stsci.edu/hlsps/relics/macs0308p26/
   (accessed 2026-10-18; sha256 in `lensmodel.MACS0308_RELICS_*` and `results/arcs/macs0308-relics/summary.json`).

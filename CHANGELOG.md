@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Cosmic Gems arc (SPT0615) vs the HST-era RELICS maps: no curve between the mirror clumps (D-034 addendum bm)
+- **Result** (`results/lens_consistency/spt0615_gems/RESULT.md`; plan before the arc was evaluated): neither RELICS
+  Lenstool v1 nor GLAFIC v2 crosses the tangential critical curve between clumps A.1 and A.2 at z 10.0, 10.2 or
+  10.4 (both clumps negative parity, |μ| 3.70–5.68). Joint flag under the frozen rule, read as pre-declared: an
+  HST-era model limitation, not an anomaly (the JWST-era models put the curve through the arc).
+- Lenstool v1: curve 7.95″ from the symmetry point, counter-image 2.335″ from the JWST candidate (z 10.2, `offset`);
+  GLAFIC v2: no curve within 15″, counter-image 18.898″ away (`none`).
+- **Known-case check:** |μ| agrees in order with Salmon et al. 2018's RELICS μ ~ 4–7 for the same arc.
+- **Deviation:** the rule-and-test commit failed on lint and landed after the run (line breaks only; re-run gave the
+  same summary). The configured frame offset is 0 for both maps, so none was applied.
+- **Hosts:** archive.stsci.edu (proxy + certifi bundle in `SSL_CERT_FILE`) and arxiv.org answer.
+- **Handoff:** no SPT0615 follow-up queued (waits for a public JWST-era model or image table, or an arc z_spec).
+  #374 waits for today's weekly network run.
 ## 2026-10-26: W3 / Kepler effective search volume of the #542 sample: 1,249–1,620 effective star-years per cell (D-107 addendum 3)
 - **Result** (`results/w3_kepler/effsearch/RESULT.md`; plan frozen before restore and injection):
   - 20,000 injections on the 500 searched stars. The data were restored by list and sha256 (8,500 files; Q0 not
