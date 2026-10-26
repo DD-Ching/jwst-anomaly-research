@@ -467,11 +467,13 @@ def posthoc_d14a(wd: Path) -> dict:
                 x = -(ra - ra0) * np.cos(np.radians(dec0)) * 3600.0
                 y = (dec - dec0) * 3600.0
                 pred[r[1]] = (x - float(r[10]), y + float(r[11]))
-        a, b = pred["D14a.1"], pred["D14a.2"]
+        a, b = pred.get("D14a.1"), pred.get("D14a.2")
         out[f"{f:.2f}"] = {
-            "pred_D14a.1_xy_arcsec": [round(v, 3) for v in a],
-            "pred_D14a.2_xy_arcsec": [round(v, 3) for v in b],
-            "pred_separation_arcsec": round(float(np.hypot(a[0] - b[0], a[1] - b[1])), 3),
+            "pred_D14a.1_xy_arcsec": a and [round(v, 3) for v in a],
+            "pred_D14a.2_xy_arcsec": b and [round(v, 3) for v in b],
+            "pred_separation_arcsec": (
+                round(float(np.hypot(a[0] - b[0], a[1] - b[1])), 3) if a and b else None
+            ),
         }
     return {
         "label": "post hoc (after rule P); frame centred on observed D14a.1,"

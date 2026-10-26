@@ -221,3 +221,9 @@ def test_posthoc_d14a(tmp_path, monkeypatch):
     r = m.posthoc_d14a(tmp_path)["per_f"]["1.00"]
     assert r["pred_D14a.1_xy_arcsec"] == pytest.approx([-1.0, 0.5])
     assert r["pred_separation_arcsec"] == pytest.approx(0.0, abs=1e-3)
+    # an image row without offsets gives no separation, not an error
+    (tmp_path / "p1.00" / "chires.dat").write_text(
+        "29 D14a.1 2.095   1   1.0 0 0 0 0.1 1.1  N/A  N/A  0\n"
+    )
+    r = m.posthoc_d14a(tmp_path)["per_f"]["1.00"]
+    assert r["pred_D14a.1_xy_arcsec"] is None and r["pred_separation_arcsec"] is None
