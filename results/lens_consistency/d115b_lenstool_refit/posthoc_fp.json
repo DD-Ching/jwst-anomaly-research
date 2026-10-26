@@ -1,0 +1,49 @@
+{
+ "label": "post hoc (after gate VFP was read): end-point image-mode chires.dat of each F-P run",
+ "per_run": {
+  "A": {
+   "warn_families": {},
+   "chipenalty": 0.0,
+   "chimul": 356.97,
+   "family_chi2": {
+    "D115a": 5.12,
+    "D115b": 0.55,
+    "D14a": 2.09
+   }
+  },
+  "B": {
+   "warn_families": {},
+   "chipenalty": 7496.88,
+   "chimul": 8188.25,
+   "family_chi2": {
+    "D115a": 2.71,
+    "D115b": 1.55,
+    "D14a": 0.92
+   }
+  },
+  "C": {
+   "warn_families": {
+    "D115a": 2
+   },
+   "chipenalty": 0.0,
+   "chimul": 367.23,
+   "family_chi2": {
+    "D115a": 0.8,
+    "D115b": 0.58,
+    "D14a": 2.39
+   }
+  },
+  "D": {
+   "warn_families": {
+    "D115a": 2
+   },
+   "chipenalty": 0.0,
+   "chimul": 371.43,
+   "family_chi2": {
+    "D115a": 0.94,
+    "D115b": 0.69,
+    "D14a": 1.86
+   }
+  }
+ }
+}

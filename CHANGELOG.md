@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b stage F-P: the penalised source-plane re-fit is not validated (gate VFP `undetermined`); post hoc at f 0.80 / 0.75 the D14a merge is repaired but two D115a images stay lost (D-109 addendum 9)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`; plan, gate and rule committed before the run):
+  - Objective g = source-plane χ² + 100 × L (L = image-plane warnings + proximity-penalty units); Nelder–Mead over
+    O1–O6, four runs in parallel, 1,000 evaluations each, initial simplex 0.003.
+  - f 1.00: A stays feasible, 227.92 → 225.85; B (start 0.3 % off `best.par`) goes from L 3 to L 2 and never reaches
+    L 0, budget-ended. Gate VFP `undetermined`; rule FP not applied.
+  - f 0.80 / 0.75: L 4 → 2, χ²_S 218.29 / 218.25, no D115b flag image; D converged by its own tolerances.
+- Post hoc: both remaining warnings are D115a images; the D14a proximity penalty is gone at both end points.
+- **Failed approach:** a penalised local Nelder–Mead re-fit of this model in a cloud slot (does not recover
+  feasibility from a 0.3 % start). By the plan, the local derivative-free route is closed for cloud slots.
+- **Handoff:** D115b stays `inconclusive`. Reopen the re-fit only with a multi-hour owner-machine BayeSys run
+  (addendum 4) or a Lenstool build with D52b's matching fixed; owner's call. Nothing queued on D115b.
+
 ## 2026-10-26: D115b stage F-S: the source-plane re-fit is not validated (gate VFS `undetermined`); post hoc every end point loses images in the image plane (D-109 addendum 8)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_FS.md`; plan, gate and rule committed before the run):
   - Nelder–Mead over the O1–O6 parameters on the `forme 0` χ², four runs in parallel, 2,000 evaluations each.

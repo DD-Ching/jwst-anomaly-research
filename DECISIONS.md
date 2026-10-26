@@ -6675,3 +6675,9 @@ confining radiation at a throat is found.
   loses images and picks up proximity penalties in the image plane (`chipenalty` 7496.88–14993.75)
   (`results/lens_consistency/d115b_lenstool_refit/RESULT_FS.md`). A re-fit objective must keep image-plane
   feasibility.
+- **Addendum 9 (2026-10-26, stage F-P):** the local derivative-free re-fit route is closed for this model in cloud
+  slots. Nelder–Mead on the source-plane χ² plus 100 per lost or merged image (1,000 evaluations, initial simplex
+  0.003 in u) did not bring a start 0.3 % off `best.par` back to a feasible point (L 3 → 2; gate VFP `undetermined`).
+  Post hoc, at f 0.80 / 0.75 the run repairs the D14a merge but keeps two D115a images lost
+  (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`). Revisit with a multi-hour BayeSys run (addendum
+  4) or a Lenstool build with D52b's image matching fixed.
