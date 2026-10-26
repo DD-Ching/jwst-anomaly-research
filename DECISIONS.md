@@ -6611,4 +6611,5 @@ confining radiation at a throat is found.
 - **Addendum 3 (2026-10-26, D14a term):** the D14a excess is Lenstool's image-proximity penalty: `chi2_img` adds
   (30″)² / σ² (3748.44 at σ 0.49″) to a family whose predicted images coincide within 10⁻³″, and prints
   `chipenalty`. Read `chipenalty` and the stderr `chi2 penalty for image` lines with every Lenstool χ², and subtract
-  or count it explicitly (`results/lens_consistency/d115b_lenstool_refit/RESULT_D14A.md`).
+  or count it explicitly (`results/lens_consistency/d115b_lenstool_refit/RESULT_D14A.md`). In optimiser runs
+  (`inverse` > 2) a lost image makes `chi2_img` return −1 and BayeSys rejects the sample (source reading, not run).

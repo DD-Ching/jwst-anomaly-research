@@ -12,8 +12,11 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   the model loses D14a.1 before the D115b flag image goes (f_L* 0.80), priced in its own row only by distance.
 - **Failed approach:** Python urllib and curl with the proxy bundle alone fail on archive.stsci.edu; the proxy
   bundle plus certifi in `SSL_CERT_FILE` works (as in earlier runs).
+- **Source reading for F2 (not run):** in an optimiser run (`inverse` > 2) `chi2_img` returns −1 when any image is
+  lost, and `bayesapp.c` then rejects the sample; only the `chires` path scores a lost image at 0. So an `inverse 3`
+  F2 run never accepts a model that loses a D115a image; a merged D14a.1 costs the 3748.44 penalty instead.
 - **Handoff:** next is the frozen F2 plan (`nlens_opt`, 8515 moved forward, fixed-σ validation near 344.42) that
-  says how lost and merged images (D115a, D14a.1) are counted, e.g. Lenstool's own penalty or a port re-count.
+  says how lost and merged images (D115a, D14a.1) are counted, given the rejection rule above.
   #374: no weekly network run yet at 12:24Z.
 
 ## 2026-10-26: D115b Lenstool stages V′ and F: V′ passes (344.42); σ(8515) profile `costly` as frozen, post hoc not a usable cost (D-109 addendum 2)
