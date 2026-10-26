@@ -1,0 +1,39 @@
+{
+ "label": "MAST product metadata (size, bytes) of SPOC light-curve files; for the cost estimate",
+ "tess_120": [
+  {
+   "file": "tess2020186164531-s0027-0000000002377937-0189-s_lc.fits",
+   "size": 1785600
+  },
+  {
+   "file": "tess2020238165205-s0029-0000000038583537-0193-s_lc.fits",
+   "size": 1915200
+  },
+  {
+   "file": "tess2020294194027-s0031-0000000178272637-0198-s_lc.fits",
+   "size": 1860480
+  },
+  {
+   "file": "tess2020212050318-s0028-0000000259290237-0190-s_lc.fits",
+   "size": 1848960
+  }
+ ],
+ "tess_20": [
+  {
+   "file": "tess2020186164531-s0027-0000000141627237-0189-a_fast-lc.fits",
+   "size": 10558080
+  },
+  {
+   "file": "tess2020238165205-s0029-0000000116157537-0193-a_fast-lc.fits",
+   "size": 11350080
+  },
+  {
+   "file": "tess2020186164531-s0027-0000000260708537-0189-a_fast-lc.fits",
+   "size": 10558080
+  },
+  {
+   "file": "tess2020186164531-s0027-0000000100327437-0189-a_fast-lc.fits",
+   "size": 10558080
+  }
+ ]
+}

@@ -1,0 +1,149 @@
+{
+ "label": "observation metadata and catalogue values; T per star is an upper bound",
+ "kepler_lc_baseline": {
+  "cadence_s": 1765.463,
+  "stars_with_R_and_D": 1971,
+  "stars_in_table": 1971,
+  "scale_to_all_stars": 1.0,
+  "T_days_per_star_p5_50_95": [
+   1459.0,
+   1459.0,
+   1459.0
+  ],
+  "sum_T_star_years_used_x_scale": 7876.0,
+  "D_pc_p5_50_95": [
+   265.6,
+   587.9,
+   918.9
+  ],
+  "R_rsun_p5_50_95": [
+   0.7265,
+   1.08,
+   1.64
+  ],
+  "sum_T_D15_pc15_yr_x_scale": 118300000.0
+ },
+ "kepler_sc": {
+  "cadence_s": 58.849,
+  "stars_with_R_and_D": 5069,
+  "stars_in_table": 5337,
+  "scale_to_all_stars": 1.0,
+  "T_days_per_star_p5_50_95": [
+   35.0,
+   35.0,
+   875.0
+  ],
+  "sum_T_star_years_used_x_scale": 2210.0,
+  "D_pc_p5_50_95": [
+   127.1,
+   467.9,
+   1777.0
+  ],
+  "R_rsun_p5_50_95": [
+   0.7342,
+   1.739,
+   7.773
+  ],
+  "sum_T_D15_pc15_yr_x_scale": 156800000.0,
+  "months_per_star_p5_50_95": [
+   1.0,
+   1.0,
+   24.2
+  ],
+  "share_R_lt_0p6": 0.0233,
+  "share_R_gt_2": 0.4121
+ },
+ "tess_20": {
+  "cadence_s": 20.0,
+  "stars_with_R_and_D": 4049,
+  "stars_in_table": 6454,
+  "scale_to_all_stars": 9.9112,
+  "T_days_per_star_p5_50_95": [
+   25.21,
+   51.67,
+   199.0
+  ],
+  "sum_T_star_years_used_x_scale": 7889.0,
+  "D_pc_p5_50_95": [
+   24.36,
+   207.1,
+   1862.0
+  ],
+  "R_rsun_p5_50_95": [
+   0.18,
+   1.723,
+   60.39
+  ],
+  "sum_T_D15_pc15_yr_x_scale": 131500000.0,
+  "sectors_per_star_p5_50_95": [
+   1.0,
+   2.0,
+   7.0
+  ],
+  "share_R_lt_0p6": 0.1633,
+  "share_R_gt_2": 0.4609
+ },
+ "tess_120": {
+  "cadence_s": 120.0,
+  "stars_with_R_and_D": 4930,
+  "stars_in_table": 5812,
+  "scale_to_all_stars": 102.0138,
+  "T_days_per_star_p5_50_95": [
+   24.58,
+   28.8,
+   913.0
+  ],
+  "sum_T_star_years_used_x_scale": 309700.0,
+  "D_pc_p5_50_95": [
+   50.4,
+   196.6,
+   1023.0
+  ],
+  "R_rsun_p5_50_95": [
+   0.3027,
+   1.146,
+   17.5
+  ],
+  "sum_T_D15_pc15_yr_x_scale": 3309000000.0,
+  "sectors_per_star_p5_50_95": [
+   1.0,
+   2.0,
+   9.0
+  ],
+  "share_R_lt_0p6": 0.168,
+  "share_R_gt_2": 0.2379
+ },
+ "tess_note": {
+  "sector_numbers": "1-107 and one 2026 segment labelled 1751 (about 7 d)",
+  "totals": {
+   "tess_20": {
+    "records_total": 157309,
+    "stars_total": 63967,
+    "sectors": [
+     27,
+     1751
+    ],
+    "span_days_total_ub": 4281352.040824008,
+    "sample": "TIC ID ending in 7",
+    "sample_records": 16075,
+    "sample_stars": 6454,
+    "sample_duplicate_records": 0,
+    "tic_rows": 6454
+   },
+   "tess_120": {
+    "records_total": 1836854,
+    "stars_total": 592904,
+    "sectors": [
+     1,
+     1751
+    ],
+    "span_days_total_ub": 137466766.23263896,
+    "sample": "TIC ID ending in 37",
+    "sample_records": 18134,
+    "sample_stars": 5812,
+    "sample_duplicate_records": 500,
+    "tic_rows": 5812
+   }
+  }
+ }
+}
