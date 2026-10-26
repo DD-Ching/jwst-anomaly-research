@@ -2,6 +2,23 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: W3 TESS 120 s product-level injections: 0.477 and 0.459 of the ideally identifiable simulated events kept at the two #561 best masses; both intervals cross one half; low masses insufficient; a search is not worth starting now (D-107 addendum 7)
+- **Result** (`results/w3_kepler/tess120_inject/RESULT.md`; plan frozen before any flux; 362,291,257 B):
+  - Draws: 200 rate-weighted draws (184 SPOC 120 s star-sectors) × 4 frozen scenarios × 30 simulated events.
+  - Each event is paired: noise-free ideal, the file's cadences, our quality screen, and injection into PDCSAP
+    with a blind detector.
+  - Retention L2 / ideal: 0.4772 (0.4075–0.5499) at 220 km/s, 5.623 × 10⁻⁶ M☉; 0.459 (0.3762–0.5407) at 30 km/s,
+    3.162 × 10⁻⁶ M☉. Both intervals cross one half (not a robust pass).
+  - 10⁻⁷ and 10⁻⁸ M☉: 26 and 4 ideal events, insufficient.
+  - Kept per step (220 km/s): gaps and edges 0.851, quality flags 0.839, real background 0.6684.
+  - The background had 0 flags.
+  - Review: the retention averages about 0.585 for most draws and about 0.106 for faint distant dwarfs (TIC
+    R < 1 R☉, D > 1.5 kpc; 5 % of draws, 23 % of ideal events).
+- **Effect on #561:** one expected event at the best 220 km/s population needs about 0.183 M☉ pc⁻³ (was 0.08734,
+  ideal), and a 90 % null needs about 0.4215. A full TESS 120 s search reads about 3.3 TB. Carrying this to all
+  TESS stars needs the sample to be representative.
+- **Handoff:** no search is started. Not measured: SPOC upstream processing of a real event. Nothing is queued.
+
 ## 2026-10-26: Weekly network tests: accept MAST's stale listing size only when the file's jwst version differs (#374)
 - **Cause** (#374, run 40327757906): MAST serves reprocessed jw02736 level-3 products (jwst 3.0.0) while
   the CAOM listing still shows prvversion 2.0.1 and the old sizes; `acquire` already warns and accepts that by design.

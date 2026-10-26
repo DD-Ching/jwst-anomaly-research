@@ -2017,3 +2017,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - MAST API `Mast.Caom.Products`: product lists of 3 Kepler SC stars (month check) and the sizes of 8 TESS
   light-curve files (`lc_file_sizes.json`).
 - Kepler DR25 stellar table (NExScI `keplerstellar`): R_* and D_S of the Kepler SC stars (`inputs/kepler_sc.csv.gz`).
+
+## W3 TESS 120 s injection trial (accessed 2026-10-26; `results/w3_kepler/tess120_inject/`)
+- TESS SPOC 120 s light curves (`*-s_lc.fits`), MAST, read from MAST's public AWS copy
+  https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid/ (MAST `Download/file` redirects there). 184 files;
+  obs_id, sha256 and size in `files.json`; columns TIME, PDCSAP_FLUX, QUALITY; TIMEDEL from the header.
+- MAST CAOM TAP (`dbo.ObsPointing`): the 120 s records of the #561 TIC sample (`sample.json`).
