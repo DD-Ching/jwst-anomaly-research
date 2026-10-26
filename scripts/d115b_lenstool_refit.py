@@ -269,7 +269,8 @@ def main_f2b(lt: Path, wd: Path, files: dict[str, Path]) -> None:
     best, inp = files["best.par"].read_text(), files["input.par"].read_text()
     par = build_f2b(build_vprime(build_v0(best, inp), best, inp), best, inp)
     d = wd / "f2b"
-    (d / "bayes.dat").unlink(missing_ok=True)
+    for stale in ("bayes.dat", "burnin.dat"):
+        (d / stale).unlink(missing_ok=True)
     t0 = time.time()
     log, chires = "", ""
     try:
@@ -319,6 +320,7 @@ def posthoc_f2b(wd: Path) -> dict:
         g.write(text)
     rows = [ln.split() for ln in text.splitlines() if ln.strip() and not ln.startswith("#")]
     lnl = [float(r[1]) for r in rows]
+    runtime = json.loads((OUT / "result_f2b.json").read_text())["runtime_s"]
     return {
         "label": "post hoc",
         "n_burnin_lines": len(rows),
@@ -328,7 +330,7 @@ def posthoc_f2b(wd: Path) -> dict:
         "lnLhood_stage_v_info_line": float(
             re.findall(r"Lhood (\S+)", gzip.open(OUT / "lenstool_v0.log.gz", "rt").read())[-1]
         ),
-        "seconds_per_burnin_line": round(F2B_WALL_S / len(rows), 1) if rows else None,
+        "seconds_per_burnin_line": round(runtime / len(rows), 1) if rows else None,
     }
 
 

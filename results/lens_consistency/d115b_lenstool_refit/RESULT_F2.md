@@ -27,5 +27,6 @@ separately. Its cost per step is known: one fixed-parameter Lenstool χ² takes 
 
 ## Deviations
 - The post hoc writer (`posthoc_f2b`, `--stage f2b-posthoc`) and its test were added after the gate was read; it
-  only reads the stored burn-in file.
+  only reads the stored burn-in file. `/code-review` fixes (stale `burnin.dat` removed before a run; seconds per
+  line from the measured run time, not the cap) changed no stored number (re-run of the writer).
 - Lenstool's `inverse 1` / `2` (non-BayeSys) modes were not checked in this stage.
