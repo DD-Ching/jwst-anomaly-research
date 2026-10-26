@@ -1,4 +1,4 @@
-# D115b Lenstool stage F2-B: budget probe of Lenstool's optimiser (plan, frozen 2026-10-26 13:27Z, before any run)
+# D115b Lenstool stage F2-B: budget probe of Lenstool's optimiser (plan, frozen 2026-10-26 13:16Z, before any run; the first "13:27Z" stamp was a typo, corrected in the tool commit)
 
 ## Why a budget probe first
 Stage F2 asks whether a re-fit with the cluster-scale potentials free can keep every catalogued image while member

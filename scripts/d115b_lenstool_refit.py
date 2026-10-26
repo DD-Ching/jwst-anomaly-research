@@ -5,6 +5,8 @@ Stage V' and F (``--stage vprime-f``): the full-precision reference, then a chi2
 8515's sigma; plan ``PLAN_VPRIME_F.md`` (gates V' and rule F, frozen before the run).
 Stage D14a (``--stage d14a``): the stage F runs again, read for Lenstool's image-proximity penalty;
 plan ``PLAN_D14A.md`` (rule P, frozen before the run).
+Stage F2-B (``--stage f2b``): a short ``inverse 3`` run with O1-O6 free and 8515 fixed, a budget
+probe of Lenstool's optimiser; plan ``PLAN_F2.md`` (gate V2, frozen before the run).
 
     python scripts/d115b_lenstool_refit.py --lenstool <prefix>/bin/lenstool --workdir <scratch dir>
 """
@@ -130,6 +132,10 @@ DCHI2_MAX = 6.0  # ASSUMPTION (plan): system-51 precedent, as in the port scans
 PENALTY = (30.0 / 0.49) ** 2
 _PEN_WARN = re.compile(r"WARNING: chi2 penalty for image (\S+)")
 F2_WALL_S = 600  # plan: wall cap of the stage F2 cost probe
+F2B_INVERSE = "inverse 3 0.5 20"  # ASSUMPTION (PLAN_F2.md): smallest budget that writes bayes.dat
+F2B_NLENS_OPT = 6  # input.par's limit 1-6 = best.par's first six potentiels O1-O6
+F2B_WALL_S = 900  # ASSUMPTION (PLAN_F2.md): wall cap of the probe
+V2_REF = 344.42  # gate V' value (result_vprime_f.json chi2pos_vprime)
 
 
 def _ref_line(text: str) -> str:
@@ -213,6 +219,97 @@ def build_f2(vprime: str, best_par: str, input_par: str) -> str:
     if lines[-1].strip() not in ("fini", "finish"):
         raise ValueError("run file does not end with fini")
     return "\n".join(lines[:-1] + lim + lines[-1:]) + "\n"
+
+
+def build_f2b(vprime: str, best_par: str, input_par: str) -> str:
+    """Stage F2-B: ``F2B_INVERSE``, ``nlens_opt`` in ``grille``, ``input.par``'s ``limit 1``-``6``
+    appended unchanged; 8515 and the potfile stay fixed."""
+    names = [ln.split()[1] for ln in best_par.splitlines() if ln.split()[:1] == ["potentiel"]]
+    if names[:F2B_NLENS_OPT] != [f"O{i}" for i in range(1, F2B_NLENS_OPT + 1)]:
+        raise ValueError("best.par does not start with potentials O1-O6")
+    lim = []
+    for i in range(1, F2B_NLENS_OPT + 1):
+        _, body = _limit(input_par, i)
+        lim += [f"limit {i}", *[ln for ln in body if ln.strip()]]
+    if vprime.count("\tinverse 0\n") != 1:
+        raise ValueError("inverse line not found once")
+    par = vprime.replace("\tinverse 0\n", "\t" + F2B_INVERSE + "\n")
+    lines = par.rstrip("\n").split("\n")
+    g = [i for i, ln in enumerate(lines) if ln.strip() == "grille"]
+    if len(g) != 1:
+        raise ValueError("grille section not found once")
+    lines.insert(g[0] + 1, f"\tnlens_opt   {F2B_NLENS_OPT}")
+    if lines[-1].strip() not in ("fini", "finish"):
+        raise ValueError("run file does not end with fini")
+    return "\n".join(lines[:-1] + lim + lines[-1:]) + "\n"
+
+
+def read_bayes(text: str) -> tuple[int, float | None]:
+    """(number of samples, lowest chi2) from Lenstool's ``bayes.dat``: ``#`` header lines name the
+    columns in order; the chi2 column is the one named ``Chi2`` (case-insensitive)."""
+    cols = [ln[1:].strip() for ln in text.splitlines() if ln.startswith("#")]
+    rows = [ln.split() for ln in text.splitlines() if ln.strip() and not ln.startswith("#")]
+    idx = [i for i, c in enumerate(cols) if c.lower() == "chi2"]
+    if len(idx) != 1:
+        raise ValueError("bayes.dat: need one Chi2 column")
+    vals = [float(r[idx[0]]) for r in rows if len(r) == len(cols)]
+    return len(vals), (min(vals) if vals else None)
+
+
+def gate_v2(status: str, chi2_min: float | None) -> str:
+    """Frozen gate V2 (PLAN_F2.md): ``pass`` iff the run finished and its lowest chi2 is within 1 %
+    above the gate V' value; a run that did not finish (or wrote no sample) is ``undetermined``."""
+    if status != "finished" or chi2_min is None:
+        return "undetermined"
+    return "pass" if chi2_min <= V2_REF * (1.0 + TOL_FRAC) else "fail"
+
+
+def main_f2b(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage F2-B budget probe (plan PLAN_F2.md)."""
+    best, inp = files["best.par"].read_text(), files["input.par"].read_text()
+    par = build_f2b(build_vprime(build_v0(best, inp), best, inp), best, inp)
+    d = wd / "f2b"
+    (d / "bayes.dat").unlink(missing_ok=True)
+    t0 = time.time()
+    log, chires = "", ""
+    try:
+        p, chires = run(lt, d, par, files["arcs.dat"], F2B_WALL_S, False)
+        status, log = "finished", p.stdout + p.stderr
+    except subprocess.TimeoutExpired:
+        status = "wall cap reached"
+    except LenstoolError as e:
+        status, log = str(e), e.log
+    dt = time.time() - t0
+    bayes = d / "bayes.dat"
+    n, cmin = read_bayes(bayes.read_text()) if bayes.exists() else (0, None)
+    out = {
+        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_F2.md",
+        "provenance": "model_prediction",
+        "lenstool": version(lt),
+        "inverse": F2B_INVERSE,
+        "nlens_opt": F2B_NLENS_OPT,
+        "wall_cap_s": F2B_WALL_S,
+        "omp_threads": _OMP or str(os.cpu_count() or 1),
+        "status": status,
+        "runtime_s": round(dt, 1),
+        "lenstool_error_lines": [ln for ln in log.splitlines() if "ERROR" in ln],
+        "n_samples_bayes": n,
+        "chi2_min_bayes": cmin,
+        "chi2_ref_vprime": V2_REF,
+        "tol_frac_assumption": TOL_FRAC,
+        "gate_V2": gate_v2(status, cmin),
+    }
+    if chires:
+        out["chimul_final"] = read_chires(chires)[0]
+        out["chipenalty_final"] = read_penalty(chires)
+    if log:
+        with gzip.open(OUT / "lenstool_f2b.log.gz", "wt") as g:
+            g.write(log)
+    if bayes.exists():
+        with gzip.open(OUT / "bayes_f2b.dat.gz", "wt") as g:
+            g.write(bayes.read_text())
+    _write(out, "result_f2b.json")
+    print(json.dumps(out, indent=1))
 
 
 def _limit(text: str, i: int) -> tuple[str, list[str]]:
@@ -486,7 +583,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
     ap.add_argument("--workdir", required=True, type=Path)
-    ap.add_argument("--stage", choices=("v", "vprime-f", "d14a"), default="v")
+    ap.add_argument("--stage", choices=("v", "vprime-f", "d14a", "f2b"), default="v")
     a = ap.parse_args()
     lt, wd = a.lenstool.resolve(), a.workdir.resolve()
     files = lc.model_files(MODEL)
@@ -497,6 +594,9 @@ def main() -> None:
         return
     if a.stage == "d14a":
         main_d14a(lt, wd, files)
+        return
+    if a.stage == "f2b":
+        main_f2b(lt, wd, files)
         return
     best, inp = files["best.par"].read_text(), files["input.par"].read_text()
     v0 = build_v0(best, inp)

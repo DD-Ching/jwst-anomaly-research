@@ -227,3 +227,37 @@ def test_posthoc_d14a(tmp_path, monkeypatch):
     )
     r = m.posthoc_d14a(tmp_path)["per_f"]["1.00"]
     assert r["pred_D14a.1_xy_arcsec"] is None and r["pred_separation_arcsec"] is None
+
+
+def test_build_f2b_frees_o1_to_o6_only():
+    best = BEST2.replace("fini\n", "").replace(
+        "potentiel 8515",
+        "".join(f"potentiel O{i}\n\tend\n" for i in range(2, 7)) + "potentiel 8515",
+    )
+    best = best.replace("potentiel O1", "grille\n\tnombre      128\n\tend\npotentiel O1") + "fini\n"
+    inp = INPUT2.replace(
+        "finish\n",
+        "".join(f"limit {i}\n    v_disp      1 1. 2. 0.1\n    end\n" for i in range(2, 7))
+        + "finish\n",
+    )
+    vp = m.build_vprime(m.build_v0(best, inp), best, inp)
+    out = m.build_f2b(vp, best, inp)
+    lines = [ln.strip() for ln in out.splitlines()]
+    assert "inverse 3 0.5 20" in lines and "inverse 0" not in lines and "chi2 1" in lines
+    assert lines[lines.index("grille") + 1] == "nlens_opt   6"
+    assert [ln for ln in lines if ln.startswith("limit")] == [f"limit {i}" for i in range(1, 7)]
+    assert "60. 200." not in out and lines[-1] == "fini"
+    with pytest.raises(ValueError):
+        m.build_f2b(vp, BEST2, inp)  # fewer than six O potentials
+
+
+def test_read_bayes_and_gate_v2():
+    text = "#Nsample\n#ln(Lhood)\n#Chi2\n#O1 : v_disp\n1 -400 800.5 600\n2 -200 345.1 610\n3 -1\n"
+    assert m.read_bayes(text) == (2, 345.1)
+    assert m.read_bayes("#Nsample\n#Chi2\n") == (0, None)
+    with pytest.raises(ValueError):
+        m.read_bayes("#Nsample\n#Lhood\n1 2\n")
+    assert m.gate_v2("finished", 344.42 * 1.01) == "pass"
+    assert m.gate_v2("finished", 344.42 * 1.0101) == "fail"
+    assert m.gate_v2("wall cap reached", 300.0) == "undetermined"
+    assert m.gate_v2("finished", None) == "undetermined"
