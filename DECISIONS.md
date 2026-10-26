@@ -2798,6 +2798,18 @@ is unchanged. Not a candidate. Alternatives rejected: a z scan beyond the photo-
 over it). Revisit if: a JWST-era SPT0615 lens model or image table is public (then test HST-era maps on its other
 families), or the arc gets a spectroscopic redshift outside 10.0–10.4.
 
+**Addendum 2026-10-26bn (SN H0pe standard-candle magnifications vs the seven blind PLCK G165 models).**
+`results/lens_consistency/h0pe_mu/RESULT.md`; published tables only (Pascale et al. 2025 Table 1, Pierel et al.
+2024 photometry). Frozen outcome N: no image flag, no ratio flag (|z| ≤ 0.96 on μ_b/μ_a, μ_c/μ_a). All 7 models
+over-predict μ by a factor shared by the three images (+0.247 to +0.883 mag, WSLAP+ +1.714); Agrawal et al.'s
+1.073 mag pooled offset reads "method-dependent" against the tabulated 0.633 mag. One mass sheet needs H0 53.7–98.0
+(point estimates), but post hoc 1σ intervals reach 64–80 for every usable model. Decision: the H0pe magnification
+offset is recorded as a shared-factor model–data difference, not a flux-ratio anomaly and not a candidate; the
+image ratios agree with every model. Alternatives rejected: reading the offset as demagnification (a shared
+calibration or model-slope term gives the same tables). Revisit if: template-subtracted photometry (GO 4744) or the
+revised G165 models are public (rerun `scripts/h0pe_mu_check.py`), or a second cluster-lensed SN Ia gives
+standard-candle μ.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
