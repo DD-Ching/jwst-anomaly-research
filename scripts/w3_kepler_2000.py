@@ -248,6 +248,10 @@ def _screen_one(kepid: int) -> dict:
         "t_hi": hi,
         "quarters": len({int(q) for q in st["QUARTER"][ok]}),
         "median_sigma_rel": float(np.median(sig[ok])) if ok.any() else None,
+        # descriptive only, as #542: 17 quarters and median sigma_rel <= 3.96e-4
+        "applicable": len({int(q) for q in st["QUARTER"][ok]}) == 17
+        and ok.any()
+        and float(np.median(sig[ok])) <= we.SIGMA_MAX,
         "screened": int(ok.sum()) >= 2 * wk.MIN_BRACKET + wk.MIN_RUN,
         "dim_cadences": int((rel[ok] <= we.DIM_REL).sum()),
         "min_rel": round(float(np.nanmin(rel[ok])), 4) if ok.any() else None,
