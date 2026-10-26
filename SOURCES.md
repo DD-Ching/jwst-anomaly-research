@@ -2023,4 +2023,3 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid/ (MAST `Download/file` redirects there). 184 files;
   obs_id, sha256 and size in `files.json`; columns TIME, PDCSAP_FLUX, QUALITY; TIMEDEL from the header.
 - MAST CAOM TAP (`dbo.ObsPointing`): the 120 s records of the #561 TIC sample (`sample.json`).
-
