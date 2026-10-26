@@ -1,0 +1,96 @@
+{
+ "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_VPRIME_F.md",
+ "provenance": "model_prediction",
+ "lenstool": "lenstool 8.15.5 (py314h03d985e_1, conda-forge)",
+ "reference_input_par": [
+  "3",
+  "64.03821668520617",
+  "-24.06750122335985"
+ ],
+ "chi2pos_vprime": 344.42,
+ "chi2_info_line_vprime": 344.417333,
+ "rel_diff_vprime": 0.0003534493117520517,
+ "n_families": 111,
+ "n_warnings": 0,
+ "gate_Vprime": true,
+ "stage_F": {
+  "sigma_8515_fiducial_kms": 120.600977,
+  "dchi2_max_assumption": 6.0,
+  "profile": [
+   {
+    "f": 1.0,
+    "v_disp_kms": 120.601,
+    "chi2pos": 344.42,
+    "dchi2": 0.0,
+    "flag_by_image": {
+     "D115b.1": true,
+     "D115b.2": true
+    },
+    "flag": true
+   },
+   {
+    "f": 0.9,
+    "v_disp_kms": 108.5409,
+    "chi2pos": 4104.14,
+    "dchi2": 3759.72,
+    "flag_by_image": {
+     "D115b.1": true,
+     "D115b.2": true
+    },
+    "flag": true
+   },
+   {
+    "f": 0.85,
+    "v_disp_kms": 102.5108,
+    "chi2pos": 4100.14,
+    "dchi2": 3755.72,
+    "flag_by_image": {
+     "D115b.1": true,
+     "D115b.2": false
+    },
+    "flag": true
+   },
+   {
+    "f": 0.8,
+    "v_disp_kms": 96.4808,
+    "chi2pos": 4103.19,
+    "dchi2": 3758.77,
+    "flag_by_image": {
+     "D115b.1": false,
+     "D115b.2": false
+    },
+    "flag": false
+   },
+   {
+    "f": 0.75,
+    "v_disp_kms": 90.4507,
+    "chi2pos": 4107.9,
+    "dchi2": 3763.48,
+    "flag_by_image": {
+     "D115b.1": false,
+     "D115b.2": false
+    },
+    "flag": false
+   },
+   {
+    "f": 0.7,
+    "v_disp_kms": 84.4207,
+    "chi2pos": 4114.01,
+    "dchi2": 3769.59,
+    "flag_by_image": {
+     "D115b.1": false,
+     "D115b.2": false
+    },
+    "flag": false
+   }
+  ],
+  "f_L_star": 0.8,
+  "rule_F": "costly"
+ },
+ "stage_F2_probe": {
+  "label": "reported, not gated",
+  "wall_cap_s": 600,
+  "status": "lenstool exited -15",
+  "runtime_s": 0.0
+ }
+}

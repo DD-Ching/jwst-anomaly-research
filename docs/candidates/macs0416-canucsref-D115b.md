@@ -86,6 +86,12 @@ Gate V fails as frozen: Lenstool 8.15.5 gives χ²_pos 356.67 for `best.par` vs 
 cause is `best.par`'s 6-decimal reference; with `input.par`'s, Lenstool gives 344.42. No re-fit Δχ² is read yet.
 Verdict unchanged (`inconclusive`).
 
+### Lenstool stages V′ and F, 2026-10-26 (`results/lens_consistency/d115b_lenstool_refit/RESULT_VPRIME_F.md`, D-109 addendum 2)
+Gate V′ passes (344.42). In Lenstool's fixed-parameter χ² the flag image is gone from 8515 σ × 0.80 (port: 0.75);
+rule F gives `costly` (Δχ² +3758.77), but post hoc about 3748 of it is D14a's family row outside its image terms
+(not stored) and the lost D115a images score 0, so the profile does not price the lower σ. Verdict unchanged
+(`inconclusive`); next is an optimised Lenstool run (stage F2) with lost images counted.
+
 ### Regeneration
 Scratch scripts (not committed): `pert.py` (nearest potentials, ±30 % and removal for the three nearest, images of
 D115a / D115b at z 2.2999 by `a2744_s700.solve` on a 0.1″ grid, half-width 58″) and `pert_scan.py` (8515 σ × 0.8–0.95).

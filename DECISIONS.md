@@ -6575,3 +6575,10 @@ confining radiation at a throat is found.
 - **Revisit if:** the conda-forge package disappears or lags a Lenstool release that a model needs, or a re-fit
   needs the GPU/MPI builds.
 - **Addendum (2026-10-26, stage V of the D115b re-fit):** Lenstool 8.15.5 needs runmode `chi2 1` to print a χ² (`inverse 0` alone prints none). It reports χ² 0 without a warning when `multfile` names an absent file. Always build Lenstool run files with `input.par`'s full-precision `reference`. `best.par` rounds it to 6 decimals, which moved the CANUCS MACS0416 χ²_pos from 344.42 to 356.67 (header 344.298; post hoc, `results/lens_consistency/d115b_lenstool_refit/RESULT.md`).
+- **Addendum 2 (2026-10-26, stages V′ / F):** with the full-precision reference the gate passes (344.42). Lenstool's
+  fixed-parameter χ² (`inverse 0`, `forme -1`) gives lost images χ² 0 (with a warning), and D14a's family row can
+  exceed its image rows by thousands (3759.12 vs 10.68 at 8515 σ × 0.9; not diagnosed), so do not read a Δχ² from
+  it without checking warnings and family rows. An optimised run needs `grille nlens_opt` with the freed potentials
+  first (`results/lens_consistency/d115b_lenstool_refit/RESULT_VPRIME_F.md`). In the cloud, install micromamba from
+  its conda-forge package with a sha256 check (piping micro.mamba.pm into tar was refused by the session's
+  permission check).
