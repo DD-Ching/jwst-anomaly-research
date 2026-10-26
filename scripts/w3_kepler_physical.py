@@ -78,6 +78,9 @@ def stage_stellar(_a) -> None:
         )
         b = nl.fetch(TAP + "?query=" + urllib.parse.quote(q) + "&format=csv", lg, 200_000)
         rows += list(csv.DictReader(io.StringIO(b.decode())))
+    missing = set(kids) - {int(r["kepid"]) for r in rows}
+    if missing:  # a TAP error page or skipped kepids must not pass as a complete table
+        raise SystemExit(f"{len(missing)} searched stars missing from the DR25 response")
     rows.sort(key=lambda r: int(r["kepid"]))
     (OUT / "inputs").mkdir(parents=True, exist_ok=True)
     with gzip.open(OUT / "inputs" / "stellar_dr25.csv.gz", "wt", newline="") as fh:
@@ -131,6 +134,16 @@ def cell_map(r_sun: float, d_pc: float, rho: float, te_d: float, v_kms: float) -
     return out
 
 
+def theta_star_corners(s: dict) -> tuple[tuple[float, float], tuple[float, float]]:
+    """(R, D) giving the largest and the smallest theta_*: R high + D low, and the reverse.
+    Magnitudes of the errors are used: in DR25, dist_err2 is stored positive (all 1,971 stars)."""
+    r, d = s["radius"], s["dist"]
+    return (
+        (r + abs(s["radius_err1"]), d - abs(s["dist_err2"])),
+        (r - abs(s["radius_err2"]), d + abs(s["dist_err1"])),
+    )
+
+
 def _pct(a) -> list | None:
     a = np.asarray([v for v in a if v is not None and np.isfinite(v)])
     if not len(a):
@@ -149,22 +162,17 @@ def stage_map(_a) -> None:
         rec["mu_rel_mas_yr_p5_50_95"] = _pct([b["mu_rel_mas_yr"] for b in base])
         for name, v in SPEEDS.items():
             m = [cell_map(s["radius"], s["dist"], rho, te, v) for s in st]
-            # catalogue-error range of theta_* moves x and |M|: R high + D low, and the reverse
-            hi = [
-                cell_map(s["radius"] + s["radius_err1"], s["dist"] + s["dist_err2"], rho, te, v)
-                for s in st
-            ]
-            lo = [
-                cell_map(s["radius"] + s["radius_err2"], s["dist"] + s["dist_err1"], rho, te, v)
-                for s in st
-            ]
+            # catalogue-error range of theta_* moves x and |M| (theta_star_corners)
+            corners = [theta_star_corners(s) for s in st]
+            hi = [cell_map(*c[0], rho, te, v) for c in corners]
+            lo = [cell_map(*c[1], rho, te, v) for c in corners]
             rec[name] = {
                 "share_reachable_x_lt_1": round(sum("M_msun" in r for r in m) / len(m), 4),
                 "x_p5_50_95": _pct([r["x"] for r in m]),
                 "D_L_pc_p5_50_95": _pct([r.get("D_L_pc") for r in m]),
                 "M_msun_p5_50_95": _pct([r.get("M_msun") for r in m]),
-                "M_msun_median_theta_star_high": _pct([r.get("M_msun") for r in hi]),
-                "M_msun_median_theta_star_low": _pct([r.get("M_msun") for r in lo]),
+                "M_msun_p5_50_95_theta_star_high": _pct([r.get("M_msun") for r in hi]),
+                "M_msun_p5_50_95_theta_star_low": _pct([r.get("M_msun") for r in lo]),
             }
         cells.append(rec)
     out = {
@@ -225,12 +233,19 @@ def tested_rho_share(r_sun: np.ndarray, te_d: float, v_kms: float, lo=0.01, hi=0
 POOL_UNREAD_AFTER_554 = 17740 - 1500  # sample_2000.json candidates minus the 1,500 read in #554
 
 
+def _inv(n: float, per: float) -> float | None:
+    """Density giving n expected detections, or None when the rate is zero (eps 0 at some cell)."""
+    return float(f"{n / per:.4g}") if per > 0 else None
+
+
 def stage_population(_a) -> None:
     st = load_stellar()
     d = np.array([s["dist"] for s in st])
-    t = np.full(len(d), 1459.49 / 365.25)  # every searched star's window (combined.json windows)
     cmb = json.loads((ROOT / "results" / "w3_kepler" / "s2000" / "combined.json").read_text())
     cells = cmb["round_plus_546"]["cells"]
+    win = {c["sampling_star_years"] for c in cells}
+    assert len(win) == 1, win  # every searched star has the same window (1459.49 d)
+    t = np.full(len(d), win.pop() / cmb["round_plus_546"]["stars"])
     rows = []
     for te in sorted({c["tE_d"] for c in cells}):
         eps = [c["recovery_rate"] for c in cells if c["tE_d"] == te]
@@ -244,8 +259,8 @@ def stage_population(_a) -> None:
             per_hi = detections_per_density(d, t, max(eps), te) * scale
             rec[n_star] = {
                 "N_per_unit_density": [float(f"{per_lo:.4g}"), float(f"{per_hi:.4g}")],
-                "density_for_N1": [float(f"{1 / per_hi:.4g}"), float(f"{1 / per_lo:.4g}")],
-                "density_for_N3": [float(f"{2.996 / per_hi:.4g}"), float(f"{2.996 / per_lo:.4g}")],
+                "density_for_N1": [_inv(1.0, per_hi), _inv(1.0, per_lo)],
+                "density_for_N3": [_inv(2.996, per_hi), _inv(2.996, per_lo)],
             }
         best = detections_per_density(d, t, max(eps), te)
         rec["star_factor_needed_vs_now"] = {
@@ -272,9 +287,7 @@ def stage_population(_a) -> None:
             n_hi = max(eps) * 4 / math.pi * w / (te * DAY_YR)
             rec["tested_rho_only"][name] = {
                 "share_of_tau": float(f"{w / (tau_per_density(d) * t).sum():.4g}"),
-                "density_for_N1": [float(f"{1 / n_hi:.4g}"), float(f"{1 / n_lo:.4g}")]
-                if n_hi > 0
-                else None,
+                "density_for_N1": [_inv(1.0, n_hi), _inv(1.0, n_lo)] if n_hi > 0 else None,
             }
         rows.append(rec)
     out = {

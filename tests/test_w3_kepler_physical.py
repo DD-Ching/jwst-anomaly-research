@@ -29,6 +29,16 @@ def test_cell_map_is_consistent_with_the_model_einstein_radius():
     assert abs(v_check / v - 1) < 2e-3  # mu_rel * D_L = v
 
 
+def test_theta_star_corners_bracket_the_nominal_value():
+    # DR25 stores dist_err2 positive (e.g. KIC 1161620: 591.04 +70.85 +31.00)
+    s = {"radius": 1.022, "radius_err1": 0.12, "radius_err2": -0.046}
+    s |= {"dist": 591.04, "dist_err1": 70.85, "dist_err2": 31.0}
+    (r_hi, d_lo), (r_lo, d_hi) = wp.theta_star_corners(s)
+    assert d_lo < s["dist"] < d_hi and r_lo < s["radius"] < r_hi
+    nominal = wp.theta_star_uas(s["radius"], s["dist"])
+    assert wp.theta_star_uas(r_lo, d_hi) < nominal < wp.theta_star_uas(r_hi, d_lo)
+
+
 def test_unreachable_cell_has_no_mass():
     m = wp.cell_map(1.0, 600.0, 0.1, 10.0, 220.0)  # t_* = 1 d needs x = v t_* / R_* >> 1
     assert m["x"] > 1 and "M_msun" not in m

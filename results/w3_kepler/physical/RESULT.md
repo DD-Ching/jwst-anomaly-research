@@ -17,7 +17,10 @@
   - The `QMASK` comment in `scripts/w3_kepler.py` is corrected (section 3); the mask is unchanged.
   - After the independent review, `population.json` gained the ε = 1 floor, the tested-ρ restriction, the
     unread-pool count and the short-t_E numbers. One test was made independent of the code's constants (astropy and
-    a numerical integral). The mapping did not change.
+    a numerical integral).
+  - After `/code-review`, the θ_* error bracket in `mapping.json` was fixed: DR25 stores `dist_err2` positive, so
+    the old "D low" corner moved D up. Only the two bracket keys changed; the medians and ranges in the table did
+    not.
 
 ## 0. What already existed (checked first)
 - **Model:** `exotic_sim` (D-047):
@@ -72,7 +75,8 @@
     is 8 of the 20 measured cells.
   - At 30 km/s, only cell 9 is not reachable, and cell 8 only for 44 % of the stars.
   - Small t_* (ρ 0.01, t_E ≤ 0.3 d) needs nearby lenses: medians of 2–44 pc (5–95 %: 1.2–59 pc).
-  - The catalogue errors move θ_* and therefore |M| (`M_msun_median_theta_star_high/low`). The bracket ignores the
+  - The catalogue errors move θ_* and therefore |M| (`M_msun_p5_50_95_theta_star_high/low`). For cell 2 at
+    220 km/s, the median |M| of 0.01828 M☉ becomes 0.01287 (θ_* low) to 0.02641 (θ_* high). The bracket ignores the
     correlation between the DR25 R and D errors, so it is conservative.
 - **No efficiency between grid points:** the 20 cells are measured points.
 
@@ -112,7 +116,9 @@
     umbra lasts at most 2.58 long cadences.
   - At 0.015 M☉ pc⁻³ it needs t_E ≈ 0.00216 d, with an umbra shorter than one cadence (0.423)
     (`eps1_tE_needed_for_N1_at_reference`).
-  - The efficiency below t_E = 0.1 d is not measured, but the 1-mag, 3-cadence rule cannot follow umbras that short.
+  - The efficiency below t_E = 0.1 d is not measured. An umbra of 0.423 cadence cannot give three consecutive
+    1-mag cadences. At 2.58 cadences it could only at a favourable phase and small u0, and the local shoulder test
+    also needs 2 cadences on each side (`LOCAL_NCAD`).
 - **Reading, as reasoning and not a dynamical model built here:**
   - A negative-mass density of 0.69 M☉ pc⁻³ or more would have to be cancelled by an equally large unseen positive
     density to keep the local dynamical density.
@@ -127,8 +133,8 @@
      cadences that the local shoulder test needs.
    - An injection into SAP cannot reproduce this. The pipeline algorithm (Kepler Data Processing Handbook) was not
      read.
-2. **SPSD (bit 1024).** It is set by PDC on the last cadence before a detected sensitivity drop. A sharp umbra
-   ingress might trigger it and mask one cadence. Not verified.
+2. **SPSD (bit 1024).** "SPSD detected (last non-gapped cadence before the maximum positive change)", set by
+   PDC. A sharp umbra edge might trigger it and mask one cadence. Not verified.
 3. **Unmasked bits:** manual exclude (256), impulsive outlier (2048), mod/out Argabrightening (4096), collateral
    cosmic ray (8192) and not-in-fine-point (32768) cadences are not masked.
    - The #500 plan listed the masked bits by number but mislabelled kept bits: 2048 and 4096 as "straylight", 8192
@@ -159,8 +165,8 @@
   - Restricted to the tested ρ range with the measured ε, it needs 3.576 or more.
 - **Why not A (expand):**
   - +500 stars multiplies the requirement by 0.8, and +5,000 by 0.286.
-  - Even the whole unread pool (9.12×, not stored) stays at or above the baryonic scale, 0.07614–0.09535, and at least 5× the
-    dark-matter references.
+  - Even the whole unread pool (9.12×, not stored) stays at the baryonic scale (0.07614–0.09535, against 0.0914) and
+    at least 5× the dark-matter references.
 - **Why not B (fill a gap first):**
   - The efficiency questions (section 3) cannot move floor (b).
   - The only direction that lowers the requirement is shorter t_E. Reaching dark-matter-scale densities needs
@@ -183,7 +189,8 @@
      disk-like or halo-like speeds.
    - It is not an Ellis wormhole or wormholes in general.
 2. **What the data can reach:**
-   - Efficiency is measured at 20 points. At halo-like speeds, 8 of them cannot correspond to any real lens.
+   - Efficiency is measured at 20 points. At exactly 220 km/s, 8 of them cannot correspond to any real lens
+     (slower lenses can reach some of them).
    - The physically decisive quantity is how many such objects there are.
    - Even if every passage were caught, one expected event in these 2,000 stars needs the negative-mass objects to
      outweigh all ordinary matter near the Sun about 7.6-fold, assuming a uniform population and t_E ≥ 0.1 d.
