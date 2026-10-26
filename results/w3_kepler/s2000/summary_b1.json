@@ -1,0 +1,867 @@
+{
+ "label": "derived (simulated injections on observed light curves)",
+ "batch": 1,
+ "stars": 500,
+ "events": 20000,
+ "observing_star_years": 1731.3,
+ "sampling_star_years": 1997.9,
+ "cells": [
+  {
+   "cell": 0,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 0.1,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.801,
+   "effective_star_years": 1600.3,
+   "effective_mc95": [
+    1548.6,
+    1647.4
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.2007,
+   "per_star_se_yr": 0.0521,
+   "per_star_pop95_yr": [
+    3.0973,
+    3.3028
+   ],
+   "stars_k": [
+    25,
+    149,
+    326
+   ],
+   "limit_joint_per_star_year": 0.001875,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.001934,
+    "lambda_per_star": 0.00773,
+    "share_hosts_ge2": 0.00386
+   },
+   "stages": {
+    "edge:insufficient": 30,
+    "edge:slow": 2,
+    "gap": 76,
+    "quality": 10,
+    "recovered": 801,
+    "short": 15,
+    "shoulder:insufficient": 51,
+    "shoulder:no": 15
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 1,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 0.3,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.798,
+   "effective_star_years": 1594.3,
+   "effective_mc95": [
+    1542.4,
+    1641.7
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1887,
+   "per_star_se_yr": 0.0519,
+   "per_star_pop95_yr": [
+    3.0848,
+    3.2904
+   ],
+   "stars_k": [
+    24,
+    154,
+    322
+   ],
+   "limit_joint_per_star_year": 0.001882,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.001942,
+    "lambda_per_star": 0.007761,
+    "share_hosts_ge2": 0.003875
+   },
+   "stages": {
+    "edge:insufficient": 74,
+    "edge:slow": 4,
+    "gap": 49,
+    "not_flagged": 1,
+    "quality": 11,
+    "recovered": 798,
+    "short": 4,
+    "shoulder:insufficient": 54,
+    "shoulder:no": 5
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 2,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 1.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.788,
+   "effective_star_years": 1574.4,
+   "effective_mc95": [
+    1521.6,
+    1622.7
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1487,
+   "per_star_se_yr": 0.0534,
+   "per_star_pop95_yr": [
+    3.0432,
+    3.2534
+   ],
+   "stars_k": [
+    28,
+    156,
+    316
+   ],
+   "limit_joint_per_star_year": 0.001905,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.001969,
+    "lambda_per_star": 0.007867,
+    "share_hosts_ge2": 0.003928
+   },
+   "stages": {
+    "edge:insufficient": 110,
+    "edge:slow": 3,
+    "gap": 33,
+    "not_flagged": 4,
+    "quality": 3,
+    "recovered": 788,
+    "short": 11,
+    "shoulder:insufficient": 41,
+    "shoulder:no": 7
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 3,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 3.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.779,
+   "effective_star_years": 1556.4,
+   "effective_mc95": [
+    1502.9,
+    1605.6
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1128,
+   "per_star_se_yr": 0.0536,
+   "per_star_pop95_yr": [
+    3.0059,
+    3.2178
+   ],
+   "stars_k": [
+    28,
+    165,
+    307
+   ],
+   "limit_joint_per_star_year": 0.001928,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.001993,
+    "lambda_per_star": 0.007965,
+    "share_hosts_ge2": 0.003977
+   },
+   "stages": {
+    "edge:insufficient": 134,
+    "edge:slow": 5,
+    "gap": 13,
+    "not_flagged": 5,
+    "quality": 1,
+    "recovered": 779,
+    "short": 2,
+    "shoulder:insufficient": 52,
+    "shoulder:no": 9
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 4,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 10.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.671,
+   "effective_star_years": 1340.6,
+   "effective_mc95": [
+    1281.2,
+    1397.4
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.6812,
+   "per_star_se_yr": 0.0578,
+   "per_star_pop95_yr": [
+    2.5624,
+    2.7948
+   ],
+   "stars_k": [
+    48,
+    233,
+    219
+   ],
+   "limit_joint_per_star_year": 0.002238,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002338,
+    "lambda_per_star": 0.009343,
+    "share_hosts_ge2": 0.004664
+   },
+   "stages": {
+    "edge:insufficient": 85,
+    "edge:slow": 1,
+    "not_flagged": 3,
+    "oneoff": 69,
+    "quality": 2,
+    "recovered": 671,
+    "short": 2,
+    "shoulder:insufficient": 162,
+    "shoulder:no": 5
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 5,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 0.1,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.775,
+   "effective_star_years": 1548.4,
+   "effective_mc95": [
+    1494.6,
+    1597.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.0968,
+   "per_star_se_yr": 0.0524,
+   "per_star_pop95_yr": [
+    2.9893,
+    3.1995
+   ],
+   "stars_k": [
+    24,
+    177,
+    299
+   ],
+   "limit_joint_per_star_year": 0.001938,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002004,
+    "lambda_per_star": 0.008009,
+    "share_hosts_ge2": 0.003999
+   },
+   "stages": {
+    "edge:insufficient": 25,
+    "edge:slow": 2,
+    "gap": 71,
+    "not_flagged": 1,
+    "quality": 18,
+    "recovered": 775,
+    "short": 50,
+    "shoulder:insufficient": 44,
+    "shoulder:no": 14
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 6,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 0.3,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.771,
+   "effective_star_years": 1540.4,
+   "effective_mc95": [
+    1486.4,
+    1590.3
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.0808,
+   "per_star_se_yr": 0.0534,
+   "per_star_pop95_yr": [
+    2.9727,
+    3.1854
+   ],
+   "stars_k": [
+    27,
+    175,
+    298
+   ],
+   "limit_joint_per_star_year": 0.001948,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002015,
+    "lambda_per_star": 0.008053,
+    "share_hosts_ge2": 0.004021
+   },
+   "stages": {
+    "edge:insufficient": 72,
+    "edge:slow": 4,
+    "gap": 44,
+    "quality": 4,
+    "recovered": 771,
+    "short": 44,
+    "shoulder:insufficient": 57,
+    "shoulder:no": 4
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 7,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 1.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.743,
+   "effective_star_years": 1484.5,
+   "effective_mc95": [
+    1428.6,
+    1536.6
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.9689,
+   "per_star_se_yr": 0.0553,
+   "per_star_pop95_yr": [
+    2.8571,
+    3.0772
+   ],
+   "stars_k": [
+    33,
+    191,
+    276
+   ],
+   "limit_joint_per_star_year": 0.002021,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002097,
+    "lambda_per_star": 0.008379,
+    "share_hosts_ge2": 0.004184
+   },
+   "stages": {
+    "edge:insufficient": 97,
+    "edge:slow": 3,
+    "gap": 17,
+    "not_flagged": 2,
+    "quality": 4,
+    "recovered": 743,
+    "short": 44,
+    "shoulder:insufficient": 39,
+    "shoulder:no": 51
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 8,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 3.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.715,
+   "effective_star_years": 1428.5,
+   "effective_mc95": [
+    1371.1,
+    1482.7
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.857,
+   "per_star_se_yr": 0.0583,
+   "per_star_pop95_yr": [
+    2.7421,
+    2.9713
+   ],
+   "stars_k": [
+    45,
+    195,
+    260
+   ],
+   "limit_joint_per_star_year": 0.0021,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002185,
+    "lambda_per_star": 0.008731,
+    "share_hosts_ge2": 0.004359
+   },
+   "stages": {
+    "edge:insufficient": 110,
+    "edge:slow": 11,
+    "gap": 7,
+    "not_flagged": 6,
+    "recovered": 715,
+    "short": 44,
+    "shoulder:insufficient": 63,
+    "shoulder:no": 44
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 9,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 10.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.639,
+   "effective_star_years": 1276.7,
+   "effective_mc95": [
+    1216.2,
+    1335.0
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.5534,
+   "per_star_se_yr": 0.0618,
+   "per_star_pop95_yr": [
+    2.4323,
+    2.6744
+   ],
+   "stars_k": [
+    69,
+    223,
+    208
+   ],
+   "limit_joint_per_star_year": 0.002351,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002463,
+    "lambda_per_star": 0.009843,
+    "share_hosts_ge2": 0.004913
+   },
+   "stages": {
+    "edge:insufficient": 79,
+    "edge:slow": 16,
+    "not_flagged": 3,
+    "oneoff": 52,
+    "quality": 2,
+    "recovered": 639,
+    "short": 36,
+    "shoulder:insufficient": 135,
+    "shoulder:no": 38
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 10,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 0.1,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.782,
+   "effective_star_years": 1562.4,
+   "effective_mc95": [
+    1509.1,
+    1611.3
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1248,
+   "per_star_se_yr": 0.0529,
+   "per_star_pop95_yr": [
+    3.0183,
+    3.2285
+   ],
+   "stars_k": [
+    26,
+    166,
+    308
+   ],
+   "limit_joint_per_star_year": 0.00192,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.001985,
+    "lambda_per_star": 0.007932,
+    "share_hosts_ge2": 0.003961
+   },
+   "stages": {
+    "edge:insufficient": 32,
+    "edge:slow": 2,
+    "gap": 52,
+    "not_flagged": 1,
+    "oneoff": 1,
+    "quality": 19,
+    "recovered": 782,
+    "short": 22,
+    "shoulder:insufficient": 46,
+    "shoulder:no": 43
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 11,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 0.3,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.784,
+   "effective_star_years": 1566.4,
+   "effective_mc95": [
+    1513.3,
+    1615.1
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1328,
+   "per_star_se_yr": 0.0523,
+   "per_star_pop95_yr": [
+    3.0266,
+    3.2352
+   ],
+   "stars_k": [
+    24,
+    168,
+    308
+   ],
+   "limit_joint_per_star_year": 0.001915,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.00198,
+    "lambda_per_star": 0.00791,
+    "share_hosts_ge2": 0.00395
+   },
+   "stages": {
+    "edge:insufficient": 93,
+    "edge:slow": 4,
+    "gap": 48,
+    "not_flagged": 2,
+    "quality": 7,
+    "recovered": 784,
+    "short": 9,
+    "shoulder:insufficient": 48,
+    "shoulder:no": 5
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 12,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 1.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.803,
+   "effective_star_years": 1604.3,
+   "effective_mc95": [
+    1552.8,
+    1651.2
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.2087,
+   "per_star_se_yr": 0.0502,
+   "per_star_pop95_yr": [
+    3.1056,
+    3.307
+   ],
+   "stars_k": [
+    19,
+    159,
+    322
+   ],
+   "limit_joint_per_star_year": 0.00187,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.001929,
+    "lambda_per_star": 0.007709,
+    "share_hosts_ge2": 0.00385
+   },
+   "stages": {
+    "edge:insufficient": 118,
+    "edge:slow": 5,
+    "gap": 21,
+    "not_flagged": 3,
+    "oneoff": 1,
+    "quality": 2,
+    "recovered": 803,
+    "short": 8,
+    "shoulder:insufficient": 32,
+    "shoulder:no": 7
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 13,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 3.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.796,
+   "effective_star_years": 1590.4,
+   "effective_mc95": [
+    1538.2,
+    1637.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1807,
+   "per_star_se_yr": 0.0523,
+   "per_star_pop95_yr": [
+    3.0765,
+    3.2832
+   ],
+   "stars_k": [
+    25,
+    154,
+    321
+   ],
+   "limit_joint_per_star_year": 0.001886,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.001948,
+    "lambda_per_star": 0.007782,
+    "share_hosts_ge2": 0.003886
+   },
+   "stages": {
+    "edge:insufficient": 113,
+    "edge:slow": 7,
+    "gap": 10,
+    "not_flagged": 4,
+    "quality": 1,
+    "recovered": 796,
+    "short": 6,
+    "shoulder:insufficient": 52,
+    "shoulder:no": 11
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 14,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 10.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.696,
+   "effective_star_years": 1390.6,
+   "effective_mc95": [
+    1332.2,
+    1445.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.7811,
+   "per_star_se_yr": 0.055,
+   "per_star_pop95_yr": [
+    2.6644,
+    2.8919
+   ],
+   "stars_k": [
+    35,
+    234,
+    231
+   ],
+   "limit_joint_per_star_year": 0.002158,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002249,
+    "lambda_per_star": 0.008986,
+    "share_hosts_ge2": 0.004486
+   },
+   "stages": {
+    "edge:insufficient": 97,
+    "edge:slow": 5,
+    "not_flagged": 45,
+    "recovered": 696,
+    "short": 4,
+    "shoulder:insufficient": 146,
+    "shoulder:no": 7
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 15,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 0.1,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.74,
+   "effective_star_years": 1478.5,
+   "effective_mc95": [
+    1422.4,
+    1530.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.9569,
+   "per_star_se_yr": 0.0561,
+   "per_star_pop95_yr": [
+    2.8448,
+    3.0669
+   ],
+   "stars_k": [
+    36,
+    188,
+    276
+   ],
+   "limit_joint_per_star_year": 0.002029,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002106,
+    "lambda_per_star": 0.008416,
+    "share_hosts_ge2": 0.004202
+   },
+   "stages": {
+    "edge:insufficient": 23,
+    "edge:slow": 3,
+    "gap": 71,
+    "not_flagged": 3,
+    "quality": 17,
+    "recovered": 740,
+    "short": 46,
+    "shoulder:insufficient": 59,
+    "shoulder:no": 38
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 16,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 0.3,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.755,
+   "effective_star_years": 1508.4,
+   "effective_mc95": [
+    1453.3,
+    1559.7
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.0169,
+   "per_star_se_yr": 0.0541,
+   "per_star_pop95_yr": [
+    2.9066,
+    3.1229
+   ],
+   "stars_k": [
+    29,
+    187,
+    284
+   ],
+   "limit_joint_per_star_year": 0.001989,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002061,
+    "lambda_per_star": 0.008237,
+    "share_hosts_ge2": 0.004113
+   },
+   "stages": {
+    "edge:insufficient": 73,
+    "edge:slow": 3,
+    "gap": 42,
+    "not_flagged": 2,
+    "oneoff": 1,
+    "quality": 14,
+    "recovered": 755,
+    "short": 54,
+    "shoulder:insufficient": 50,
+    "shoulder:no": 6
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 17,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 1.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.738,
+   "effective_star_years": 1474.5,
+   "effective_mc95": [
+    1418.3,
+    1527.0
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.9489,
+   "per_star_se_yr": 0.0561,
+   "per_star_pop95_yr": [
+    2.8366,
+    3.0589
+   ],
+   "stars_k": [
+    36,
+    190,
+    274
+   ],
+   "limit_joint_per_star_year": 0.002035,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002112,
+    "lambda_per_star": 0.00844,
+    "share_hosts_ge2": 0.004214
+   },
+   "stages": {
+    "edge:insufficient": 96,
+    "edge:slow": 10,
+    "gap": 26,
+    "not_flagged": 1,
+    "quality": 3,
+    "recovered": 738,
+    "short": 38,
+    "shoulder:insufficient": 36,
+    "shoulder:no": 52
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 18,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 3.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.696,
+   "effective_star_years": 1390.6,
+   "effective_mc95": [
+    1332.2,
+    1445.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.7811,
+   "per_star_se_yr": 0.0589,
+   "per_star_pop95_yr": [
+    2.6644,
+    2.8967
+   ],
+   "stars_k": [
+    49,
+    206,
+    245
+   ],
+   "limit_joint_per_star_year": 0.002158,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002249,
+    "lambda_per_star": 0.008986,
+    "share_hosts_ge2": 0.004486
+   },
+   "stages": {
+    "edge:insufficient": 111,
+    "edge:slow": 19,
+    "gap": 8,
+    "not_flagged": 2,
+    "quality": 1,
+    "recovered": 696,
+    "short": 56,
+    "shoulder:insufficient": 60,
+    "shoulder:no": 47
+   },
+   "spurious_events": 0
+  },
+  {
+   "cell": 19,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 10.0,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.633,
+   "effective_star_years": 1264.7,
+   "effective_mc95": [
+    1204.1,
+    1323.3
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.5294,
+   "per_star_se_yr": 0.0632,
+   "per_star_pop95_yr": [
+    2.4055,
+    2.6532
+   ],
+   "stars_k": [
+    76,
+    215,
+    209
+   ],
+   "limit_joint_per_star_year": 0.002373,
+   "limit_546_style": {
+    "rate95_per_star_year": 0.002488,
+    "lambda_per_star": 0.009941,
+    "share_hosts_ge2": 0.004963
+   },
+   "stages": {
+    "edge:insufficient": 99,
+    "edge:slow": 21,
+    "gap": 1,
+    "not_flagged": 44,
+    "recovered": 633,
+    "short": 39,
+    "shoulder:insufficient": 131,
+    "shoulder:no": 32
+   },
+   "spurious_events": 0
+  }
+ ]
+}

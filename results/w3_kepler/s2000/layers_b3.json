@@ -1,0 +1,46 @@
+{
+ "label": "derived",
+ "batch": 3,
+ "L1_selected": 500,
+ "L1_read": 500,
+ "L1_screened": 500,
+ "L1_applicable": 493,
+ "L1_effective_days": 632472.3,
+ "L1_effective_star_years": 1731.6,
+ "L2a_stars_with_dim_cadence": 0,
+ "L2a_dim_cadences": 0,
+ "L2b_flagged_runs": 0,
+ "L2b_flagged_sources": 0,
+ "L3_sequential": {
+  "after_common_mode_ok": {
+   "runs": 0,
+   "sources": 0
+  },
+  "after_sharp_ok": {
+   "runs": 0,
+   "sources": 0
+  },
+  "after_oneoff_ok": {
+   "runs": 0,
+   "sources": 0
+  },
+  "after_local_ok": {
+   "runs": 0,
+   "sources": 0
+  }
+ },
+ "L3_individual": {
+  "common_mode_ok": 0,
+  "sharp_ok": 0,
+  "oneoff_ok": 0,
+  "local_ok": 0
+ },
+ "L4_survivor_runs": 0,
+ "L4_survivor_sources_in_order": [],
+ "L4_vet_list": [],
+ "L4_not_vetted": [],
+ "flagged_source_reasons": {},
+ "unread": [],
+ "survivors_in_vet_order": [],
+ "survivor_sources": []
+}
