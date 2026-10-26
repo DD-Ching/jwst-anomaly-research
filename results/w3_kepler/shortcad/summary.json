@@ -87,13 +87,13 @@
   "cadence_s": 120.0,
   "stars_with_R_and_D": 4930,
   "stars_in_table": 5812,
-  "scale_to_all_stars": 102.0138,
+  "scale_to_all_stars": 102.0114,
   "T_days_per_star_p5_50_95": [
    24.58,
    28.8,
-   913.0
+   229.9
   ],
-  "sum_T_star_years_used_x_scale": 309700.0,
+  "sum_T_star_years_used_x_scale": 106600.0,
   "D_pc_p5_50_95": [
    50.4,
    196.6,
@@ -104,7 +104,7 @@
    1.146,
    17.5
   ],
-  "sum_T_D15_pc15_yr_x_scale": 3309000000.0,
+  "sum_T_D15_pc15_yr_x_scale": 1036000000.0,
   "sectors_per_star_p5_50_95": [
    1.0,
    2.0,
@@ -128,21 +128,27 @@
     "sample_records": 16075,
     "sample_stars": 6454,
     "sample_duplicate_records": 0,
-    "tic_rows": 6454
+    "tic_rows": 6454,
+    "max_record_span_d": 57.40711339120753,
+    "sample_stars_without_cached_tic": 0,
+    "multi_sector_records": "excluded (obs_id with two sector tokens; review of #561)"
    },
    "tess_120": {
-    "records_total": 1836854,
-    "stars_total": 592904,
+    "records_total": 1737708,
+    "stars_total": 592890,
     "sectors": [
      1,
      1751
     ],
-    "span_days_total_ub": 137466766.23263896,
+    "span_days_total_ub": 46227101.80902078,
     "sample": "TIC ID ending in 37",
-    "sample_records": 18134,
+    "sample_records": 17152,
     "sample_stars": 5812,
-    "sample_duplicate_records": 500,
-    "tic_rows": 5812
+    "sample_duplicate_records": 0,
+    "tic_rows": 5812,
+    "max_record_span_d": 57.40618747685221,
+    "sample_stars_without_cached_tic": 0,
+    "multi_sector_records": "excluded (obs_id with two sector tokens; review of #561)"
    }
   }
  }

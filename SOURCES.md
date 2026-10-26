@@ -2007,3 +2007,13 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   km/s.
 - Kepler DR25 stellar properties (NExScI TAP `keplerstellar`, `q1_q17_dr25_stellar`): radius and distance with
   errors for the 2,000 searched stars (`inputs/stellar_dr25.csv.gz`).
+
+## W3 short-cadence reach (accessed 2026-10-26; `results/w3_kepler/shortcad/`)
+- MAST CAOM TAP, https://mast.stsci.edu/vo-tap/api/v0.1/caom (`dbo.ObsPointing`): Kepler SC records (one per star,
+  obs_id quarter string) and TESS SPOC 20 s / 120 s light-curve records (one per star and sector; multi-sector
+  records excluded). Queries are in `net_ledger.jsonl.gz`.
+- MAST TIC TAP, https://mast.stsci.edu/vo-tap/api/v0.1/tic (`dbo.CatalogRecord`, TIC v8.2): `rad`, `d` for the
+  sampled TESS stars (`inputs/tess_*.csv.gz`).
+- MAST API `Mast.Caom.Products`: product lists of 3 Kepler SC stars (month check) and the sizes of 8 TESS
+  light-curve files (`lc_file_sizes.json`).
+- Kepler DR25 stellar table (NExScI `keplerstellar`): R_* and D_S of the Kepler SC stars (`inputs/kepler_sc.csv.gz`).

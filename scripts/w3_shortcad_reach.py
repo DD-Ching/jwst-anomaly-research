@@ -31,7 +31,9 @@ import urllib.parse
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-import numpy as np
+os.environ.setdefault("OMP_NUM_THREADS", "1")  # before numpy: forked pool workers inherit it
+
+import numpy as np  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -142,8 +144,14 @@ def stage_inventory(_a) -> None:
         b = nl.fetch(wp.TAP + "?query=" + urllib.parse.quote(q) + "&format=csv", lg, 300_000)
         rows += list(csv.DictReader(io.StringIO(b.decode())))
     by_id = {int(r["kepid"]): r for r in rows if (r.get("kepid") or "").isdigit()}
+    best: dict[int, dict] = {}
+    for r in sc:  # one row per star: keep the record with the most SC months
+        k = int(r["target_name"].replace("kplr", ""))
+        if k not in best or r["months"] > best[k]["months"]:
+            best[k] = r
+    sc_star = list(best.values())
     out = []
-    for r in sc:
+    for r in sc_star:
         k = int(r["target_name"].replace("kplr", ""))
         s = by_id.get(k, {})
         out.append(
@@ -167,6 +175,7 @@ def stage_inventory(_a) -> None:
     base = (
         "FROM dbo.ObsPointing WHERE obs_collection='TESS' AND dataproduct_type='timeseries'"
         " AND provenance_name='SPOC' AND t_exptime={c}"
+        " AND obs_id NOT LIKE '%-s____-s____-%'"  # multi-sector records span many sectors (review)
     )
     for name, c in (("tess_20", 20), ("tess_120", 120)):
         where = f" AND target_name LIKE '%{SAMPLE_SUFFIX[name]}'"
@@ -282,7 +291,7 @@ def shape_for_rho(rho: float) -> tuple[np.ndarray, np.ndarray]:
 
 
 def stage_shape(a) -> None:
-    os.environ.setdefault("OMP_NUM_THREADS", "1")
+    OUT.mkdir(parents=True, exist_ok=True)
     with ProcessPoolExecutor(max_workers=a.workers) as ex:
         res = list(ex.map(shape_for_rho, RHO_GRID))
     out = {
@@ -313,10 +322,11 @@ def load_shape():
 
 
 def w_lookup(rho, tau, shape) -> np.ndarray:
-    """Bilinear in (log rho, log tau); 0 outside the rho grid or below the tau grid, the last tau
-    column above it (the shape no longer changes with finer sampling)."""
+    """Bilinear in (log rho, log tau); 0 above the rho grid or below the tau grid; the first rho row
+    below the grid (point-source limit: w no longer changes, see shape.json) and the last tau column
+    above it (the shape no longer changes with finer sampling)."""
     lr, lt, w = shape
-    x = np.log10(np.maximum(rho, 1e-30))
+    x = np.clip(np.log10(np.maximum(rho, 1e-30)), lr[0], None)
     y = np.clip(np.log10(np.maximum(tau, 1e-30)), None, lt[-1])
     ok = (x >= lr[0]) & (x <= lr[-1]) & (y >= lt[0])
     i = np.clip(np.searchsorted(lr, x) - 1, 0, len(lr) - 2)
@@ -365,7 +375,9 @@ def event_properties(d_pc, r_sun, t_yr, m_msun, v_kms, cadence_s, shape) -> dict
     t_e_s = r_e_pc * PC_KM / v_kms
     rho = x * np.asarray(r_sun, float)[:, None] * R_SUN_KM / (r_e_pc * PC_KM)
     w = w_lookup(rho, t_e_s / cadence_s, shape)
-    dx = np.gradient(X_GRID)[None, :]
+    dx = np.gradient(X_GRID)
+    dx[[0, -1]] /= 2  # trapezoid weights, as in events_per_density
+    dx = dx[None, :]
     wt = (np.asarray(t_yr)[:, None] * d * 2 * r_e_pc * w * dx).ravel()
     if not wt.sum() > 0:
         return None
@@ -435,59 +447,64 @@ def products():
         )
 
 
-def stage_reach(_a) -> None:
-    shape = load_shape()
-    prods = dict(products())
-    res = {}
+def _reach_one(item):
+    """One product: Level-0 / Level-1 reach on the mass grid, best mass, its events, bootstrap."""
+    name, p, shape = item
     rng = np.random.default_rng(559)
-    for name, p in prods.items():
-        rec = {
-            "stars_used": p["n_used"],
-            "stars_in_table": p.get("n_rows", p["n_used"]),
-            "scale": p["scale"],
+    rec = {
+        "stars_used": p["n_used"],
+        "stars_in_table": p.get("n_rows", p["n_used"]),
+        "scale": p["scale"],
+        "cadence_s": p["cad"],
+        "sum_T_yr_used": round(float(np.sum(p["t"])), 3),
+        "median_D_pc": round(float(np.median(p["d"])), 1),
+        "median_R_rsun": round(float(np.median(p["r"])), 3),
+    }
+    for sname, v in wp.SPEEDS.items():
+        l0 = [
+            p["scale"] * events_per_density(p["d"], p["r"], p["t"], m, v, p["cad"]) for m in MASSES
+        ]
+        l1 = [
+            p["scale"] * events_per_density(p["d"], p["r"], p["t"], m, v, p["cad"], shape)
+            for m in MASSES
+        ]
+        rec[sname] = {
+            "N0_per_density": [float(f"{x:.4g}") for x in l0],
+            "N1_per_density": [float(f"{x:.4g}") for x in l1],
         }
-        rec["cadence_s"] = p["cad"]
-        rec["sum_T_yr_used"] = round(float(np.sum(p["t"])), 3)
-        rec["median_D_pc"] = round(float(np.median(p["d"])), 1)
-        rec["median_R_rsun"] = round(float(np.median(p["r"])), 3)
-        for sname, v in wp.SPEEDS.items():
-            l0, l1 = [], []
-            for m in MASSES:
-                l0.append(p["scale"] * events_per_density(p["d"], p["r"], p["t"], m, v, p["cad"]))
-                l1.append(
-                    p["scale"] * events_per_density(p["d"], p["r"], p["t"], m, v, p["cad"], shape)
-                )
-            rec[sname] = {
-                "N0_per_density": [float(f"{x:.4g}") for x in l0],
-                "N1_per_density": [float(f"{x:.4g}") for x in l1],
-            }
-            k_best = int(np.argmax(l1))
-            rec[sname]["best_mass_msun"] = float(MASSES[k_best])
-            rec[sname]["events_at_best_mass"] = event_properties(
-                p["d"], p["r"], p["t"], MASSES[k_best], v, p["cad"], shape
-            )
-            if p["scale"] > 1:  # bootstrap over the sampled stars at the best Level-1 mass
-                k = int(np.argmax(l1))
-                n = len(p["d"])
-                bs = []
-                for _ in range(100):
-                    ix = rng.integers(0, n, n)
-                    bs.append(
-                        p["scale"]
-                        * events_per_density(
-                            np.take(p["d"], ix),
-                            np.take(p["r"], ix),
-                            np.take(p["t"], ix),
-                            MASSES[k],
-                            v,
-                            p["cad"],
-                            shape,
-                        )
+        k = int(np.argmax(l1))
+        rec[sname]["best_mass_msun"] = float(MASSES[k])
+        rec[sname]["events_at_best_mass"] = event_properties(
+            p["d"], p["r"], p["t"], MASSES[k], v, p["cad"], shape
+        )
+        if p["scale"] > 1:  # bootstrap over the sampled stars at the best Level-1 mass
+            n = len(p["d"])
+            bs = []
+            for _ in range(100):
+                ix = rng.integers(0, n, n)
+                bs.append(
+                    p["scale"]
+                    * events_per_density(
+                        np.take(p["d"], ix),
+                        np.take(p["r"], ix),
+                        np.take(p["t"], ix),
+                        MASSES[k],
+                        v,
+                        p["cad"],
+                        shape,
                     )
-                rec[sname]["N1_best_bootstrap_p5_p95"] = [
-                    float(f"{q:.4g}") for q in np.percentile(bs, [5, 95])
-                ]
-        res[name] = rec
+                )
+            rec[sname]["N1_best_bootstrap_p5_p95"] = [
+                float(f"{q:.4g}") for q in np.percentile(bs, [5, 95])
+            ]
+    return name, rec
+
+
+def stage_reach(a) -> None:
+    shape = load_shape()
+    items = [(n, p, shape) for n, p in products()]
+    with ProcessPoolExecutor(max_workers=a.workers) as ex:
+        res = dict(ex.map(_reach_one, items))
     base = res["kepler_lc_baseline"]
     for name in ("kepler_sc", "tess_20", "tess_120"):
         for sname in wp.SPEEDS:
@@ -503,7 +520,7 @@ def stage_reach(_a) -> None:
             res[name][sname]["ratio_vs_baseline_N1"] = [
                 None if r is None else float(f"{r:.4g}") for r in r1
             ]
-            res[name][sname]["ratio_vs_baseline_N0"] = [
+            res[name][sname]["ratio_N1_vs_baseline_N0"] = [
                 float(f"{n / b:.4g}") for n, b in zip(n1, b0, strict=True)
             ]
             g = gate(r1)
@@ -535,6 +552,67 @@ def stage_reach(_a) -> None:
                 1 / n1[k] if n1[k] else None,
                 rec[sname].get("gate"),
             )
+
+
+def stage_tess_fix(_a) -> None:
+    """Review fix: redo the TESS part of ``inventory`` without multi-sector CAOM records (obs_id
+    with two sector tokens), reusing the TIC values already fetched for the same sampled stars."""
+    lg = _ledger()
+    inv = json.loads((OUT / "inventory.json").read_text())
+    base = (
+        "FROM dbo.ObsPointing WHERE obs_collection='TESS' AND dataproduct_type='timeseries'"
+        " AND provenance_name='SPOC' AND t_exptime={c} AND obs_id NOT LIKE '%-s____-s____-%'"
+    )
+    for name, c in (("tess_20", 20), ("tess_120", 120)):
+        where = f" AND target_name LIKE '%{SAMPLE_SUFFIX[name]}'"
+        tot = tap(
+            CAOM,
+            "SELECT COUNT(*) AS records, COUNT(DISTINCT target_name) AS stars, MIN(sequence_number)"
+            " AS s_min, MAX(sequence_number) AS s_max, SUM(t_max - t_min) AS span_d,"
+            " MAX(t_max - t_min)"
+            " AS span_max " + base.format(c=c),
+            lg,
+        )[0]
+        recs = tap(
+            CAOM,
+            "SELECT target_name, sequence_number, t_min, t_max " + base.format(c=c) + where,
+            lg,
+            8_000_000,
+        )
+        per: dict[str, dict[int, float]] = {}
+        for r in recs:
+            d = per.setdefault(r["target_name"], {})
+            s_ = int(r["sequence_number"])
+            d[s_] = max(d.get(s_, 0.0), float(r["t_max"]) - float(r["t_min"]))
+        cat = {int(r["id"]): r for r in _read_csv(f"{name}.csv.gz")}
+        ids = sorted(int(t) for t in per)
+        missing = [k for k in ids if k not in cat]
+        rows_t = [
+            {
+                "id": k,
+                "sectors": len(per[str(k)]),
+                "T_days_ub": round(sum(per[str(k)].values()), 4),
+                "radius": cat.get(k, {}).get("radius", ""),
+                "dist": cat.get(k, {}).get("dist", ""),
+            }
+            for k in ids
+        ]
+        _write_csv(f"{name}.csv.gz", rows_t)
+        inv[name] |= {
+            "records_total": int(tot["records"]),
+            "stars_total": int(tot["stars"]),
+            "sectors": [int(tot["s_min"]), int(tot["s_max"])],
+            "span_days_total_ub": float(tot["span_d"]),
+            "max_record_span_d": float(tot["span_max"]),
+            "sample_records": len(recs),
+            "sample_stars": len(ids),
+            "sample_duplicate_records": len(recs) - sum(len(v) for v in per.values()),
+            "sample_stars_without_cached_tic": len(missing),
+            "multi_sector_records": "excluded (obs_id with two sector tokens; review of #561)",
+        }
+    inv["bytes_used_ledger"] = lg.used()
+    (OUT / "inventory.json").write_text(json.dumps(inv, indent=1) + "\n")
+    print(json.dumps({k: inv[k] for k in ("tess_20", "tess_120")}, indent=1))
 
 
 DL_MAX_PC = 1000.0  # post hoc sensitivity (RESULT section 3): uniform lens density only to 1 kpc
@@ -583,6 +661,39 @@ def stage_sensitivity(a) -> None:
             print(n, s, "best M", MASSES[::2][k], "N1", res[n][s][k])
 
 
+def stage_densities(_a) -> None:
+    """Densities for one expected event (1 / N) at each product's best mass, from reach.json and the
+    post hoc sensitivity file, and their ratios to the baseline's best (different masses)."""
+    r = json.loads((OUT / "reach.json").read_text())["products"]
+    sens = json.loads((OUT / "sensitivity_dl1kpc.json").read_text())["N1_per_density"]
+    out = {"label": "derived from reach.json and sensitivity_dl1kpc.json (post hoc column)"}
+    for name, rec in r.items():
+        out[name] = {}
+        for sname in wp.SPEEDS:
+            n1 = max(rec[sname]["N1_per_density"])
+            bs = rec[sname].get("N1_best_bootstrap_p5_p95")
+            out[name][sname] = {
+                "best_mass_msun": rec[sname]["best_mass_msun"],
+                "density_for_1": float(f"{1 / n1:.4g}"),
+                "density_for_1_bootstrap": [float(f"{1 / b:.4g}") for b in bs[::-1]]
+                if bs
+                else None,
+                "density_for_1_dl1kpc_post_hoc": float(f"{1 / max(sens[name][sname]):.4g}"),
+            }
+    for name in r:
+        for sname in wp.SPEEDS:
+            b = out["kepler_lc_baseline"][sname]
+            o = out[name][sname]
+            o["baseline_best_over_this_best"] = float(
+                f"{b['density_for_1'] / o['density_for_1']:.4g}"
+            )
+            o["baseline_best_over_this_best_dl1kpc_post_hoc"] = float(
+                f"{b['density_for_1_dl1kpc_post_hoc'] / o['density_for_1_dl1kpc_post_hoc']:.4g}"
+            )
+    (OUT / "densities.json").write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps(out, indent=1))
+
+
 def stage_summary(_a) -> None:
     """Per-product distributions for question 1 (stars, coverage per star, R_*, D_S)."""
     inv = json.loads((OUT / "inventory.json").read_text())
@@ -618,15 +729,20 @@ def stage_summary(_a) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=["inventory", "shape", "reach", "summary", "sensitivity"])
+    ap.add_argument(
+        "stage",
+        choices=["inventory", "tess_fix", "shape", "reach", "summary", "sensitivity", "densities"],
+    )
     ap.add_argument("--workers", type=int, default=2)
     a = ap.parse_args()
     {
         "inventory": stage_inventory,
+        "tess_fix": stage_tess_fix,
         "shape": stage_shape,
         "reach": stage_reach,
         "summary": stage_summary,
         "sensitivity": stage_sensitivity,
+        "densities": stage_densities,
     }[a.stage](a)
 
 

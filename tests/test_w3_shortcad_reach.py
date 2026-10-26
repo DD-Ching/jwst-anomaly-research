@@ -40,6 +40,7 @@ def test_level1_never_exceeds_level0_and_vanishes_for_huge_rho():
     assert 0 <= n1 <= n0
     assert ws.w_lookup(np.array([10.0]), np.array([100.0]), shape)[0] == 0.0
     assert ws.w_lookup(np.array([0.1]), np.array([1e6]), shape)[0] == 1.9  # clamped above the grid
+    assert ws.w_lookup(np.array([1e-6]), np.array([100.0]), shape)[0] == 1.9  # point-source limit
 
 
 def test_gate():

@@ -15,6 +15,22 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** next is a frozen F2 plan (`nlens_opt`, 8515 moved forward, fixed-σ validation near 344.42, lost images
   counted), after diagnosing D14a's family term. Lenstool install: conda-forge micromamba 2.9.0 package, sha256-checked.
 
+## 2026-10-26: W3 short-cadence reach: Kepler SC and TESS 20 s / 120 s pass the frozen investment gate only at |M| ≲ 2 × 10⁻⁵ M☉, where long cadence cannot resolve the shape; no product reaches 10× at the baseline's masses (D-107 addendum 6)
+- **Result** (`results/w3_kepler/shortcad/RESULT.md`; metadata, catalogues and noise-free models only, 19,938,373 B):
+  - Inventory: Kepler SC 5,337 stars (24,381 SC months); TESS 20 s 63,967 stars; TESS 120 s 592,890 stars
+    (1,737,708 single-sector records). Coverage per star is an upper bound; TESS was sampled by TIC ID.
+  - The shape (≥ 3 exposures ≥ 1 mag dark, ≥ 2 exposures ≥ 10 % bright per side) needs t_E ≳ 2.5 exposures and
+    ρ ≲ 1.1, with t_E and ρ tied to |M|, x, v and R_*.
+  - Best density for one expected event (220 km/s, ε = 1 inside the shape, uniform density): baseline 0.6684,
+    Kepler SC 0.1511, TESS 20 s 0.05005, TESS 120 s 0.08734 M☉ pc⁻³. With lenses only within 1 kpc (post hoc):
+    0.6959, 0.8977, 0.1177, 0.1155.
+  - The gate passes for all three, but only at masses the baseline cannot resolve. At the baseline's masses TESS
+    120 s reaches 4.69–8.748×, Kepler SC and TESS 20 s about 1×.
+- **Review:** multi-sector CAOM records had inflated TESS 120 s coverage about 2.9×. They are excluded, and the
+  first version's "TESS 120 s most robust" is withdrawn. Point-source lookup below ρ 0.001 was also fixed.
+- **Handoff:** one minimal plan, a noise-included injection test on 200 TESS 120 s star-sectors (about 370 MB), is
+  proposed and not run. It needs the owner's authorization. Nothing else is queued.
+
 ## 2026-10-26: W3 / Kepler physical mapping: for a uniform negative-mass population with t_E ≥ 0.1 d, one expected detection needs |ρ_neg| ≥ 0.69 M☉ pc⁻³ even with every umbra crossing detected (about 7.6× the local baryonic density); recommendation C, pause (D-107 addendum 5)
 - **Result** (`results/w3_kepler/physical/RESULT.md`; no light curve, image or injection):
   - The 20 tested cells map, through ρ · t_E = t_* = x R_*/v and the DR25 radii and distances of 1,971 of the 2,000

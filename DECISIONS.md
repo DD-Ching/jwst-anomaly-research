@@ -6572,6 +6572,20 @@ confining radiation at a throat is found.
     - a survey with far more source-years or a shorter cadence is considered;
     - the owner wants a W3 search for its exploratory value alone.
 
+- **Addendum 6 2026-10-26 (`results/w3_kepler/shortcad/`):** physical reach of existing short-cadence products.
+  - Same coupled population for every product: one |M|, one v, uniform |ρ_neg|; ε = 1 inside a noise-free shape
+    criterion; no recovery rate carried over.
+  - The frozen gate (≥ 3 contiguous 0.25-dex |M| points with ≥ 10× the long-cadence baseline's reach) passes for
+    Kepler SC, TESS 20 s and TESS 120 s, but only at |M| ≲ 2 × 10⁻⁵ M☉ (220 km/s), where LC exposures are too long.
+  - Where the baseline has reach, no product reaches 10× (TESS 120 s 4.69–8.748×).
+  - Decision (recommended to the owner): if anything, one noise-included injection test on 200 TESS 120 s
+    star-sectors (about 370 MB; chosen on cost) before any search. Not run; needs authorization.
+  - Rejected:
+    - a real-event short-cadence search now: the shape criterion is noise-free;
+    - Kepler SC: no best-density gain with lenses within 1 kpc;
+    - CAOM multi-sector records as coverage: they span many sectors.
+  - Revisit if: the injection test runs, or a population model fixes |M| and the spatial density.
+
 ## D-108 Efficiency rules for every round: pre-review self-check, gzip outputs, sync before push (owner rule 2026-10-26)
 - **Decision:** every round follows `docs/efficiency-rules.md`. Before the independent review it runs the
   self-check in `docs/pre-review-checklist.md`; the review and the re-check use the same list.

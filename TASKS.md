@@ -93,6 +93,10 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The largest loss stage is insufficient data in the edge or shoulder window (3,050 of 5,052 lost events, post hoc
     grouping).
   - Nothing is queued; any expansion is the owner's call.
+- **W3 short-cadence reach 2026-10-26** (`results/w3_kepler/shortcad/RESULT.md`, D-107 addendum 6):
+  - The gate passes only at |M| ≲ 2 × 10⁻⁵ M☉ for Kepler SC and TESS 20 s / 120 s; noise-free and uniform density.
+  - Proposed, not run: a noise-included injection test on 200 TESS 120 s star-sectors (about 370 MB). It needs owner
+    authorization.
 - **W3 / Kepler physical mapping 2026-10-26** (`results/w3_kepler/physical/RESULT.md`, D-107 addendum 5):
   - For a uniform population with t_E ≥ 0.1 d, one expected detection needs |ρ_neg| ≥ 0.6944 M☉ pc⁻³ even with
     ε = 1 (about 7.6× the local baryonic density).
