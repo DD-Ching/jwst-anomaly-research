@@ -405,3 +405,37 @@ def test_gate_vs():
     inc = [0.0, None, 0.1, 0.3, 1.0, 3.0]
     assert m.gate_vs(344.0, {("O1:a", 1): ok, ("O1:b", 1): inc}, params) == "undetermined"
     assert m.gate_vs(344.0, {("O1:a", 1): bad, ("O1:b", 1): inc}, params) == "fail"
+
+
+def test_set_param_decimals():
+    par = "potentiel O1\n\tv_disp     1.0\n\tend\n"
+    assert "v_disp     1.123456789" in m.set_param(par, "O1", "v_disp", 1.123456789, 9)
+    assert "v_disp     1.123457" in m.set_param(par, "O1", "v_disp", 1.123456789)
+
+
+def test_gate_vfs():
+    # tol = max(2, 1 % of A's end): 2.28 at 228
+    assert m.gate_vfs(None, 228.0, 229.0, False, False) == "uninformative"
+    assert m.gate_vfs(230.0, 228.0, 229.0, False, False) == "uninformative"
+    assert m.gate_vfs(400.0, 228.0, 230.2, False, False) == "pass"
+    assert m.gate_vfs(400.0, 228.0, 231.0, False, False) == "fail"
+    assert m.gate_vfs(400.0, 228.0, 231.0, False, True) == "undetermined"
+    assert m.gate_vfs(400.0, 228.0, None, True, False) == "undetermined"
+    assert m.gate_vfs(400.0, 228.0, None, False, False) == "fail"
+    assert m.gate_vfs(400.0, None, 228.0, False, False) == "undetermined"
+    assert m.gate_vfs(1000.0, 500.0, 504.9, False, False) == "pass"  # 1 % = 5 > 2
+
+
+def test_fs_clean():
+    assert m.fs_clean(0, 0.0, {"D115b.1": False, "D115b.2": False})
+    assert not m.fs_clean(1, 0.0, {"D115b.1": False})
+    assert not m.fs_clean(0, 3748.44, {"D115b.1": False})
+    assert not m.fs_clean(0, 0.0, {"D115b.1": True, "D115b.2": False})
+    assert not m.fs_clean(None, None, None)
+
+
+def test_rule_fs():
+    assert m.rule_fs({0.8: (True, 233.0), 0.75: (False, 300.0)}, 228.0) == "cheap"
+    assert m.rule_fs({0.8: (True, 235.0), 0.75: (True, 240.0)}, 228.0) == "costly"
+    assert m.rule_fs({0.8: (False, 229.0), 0.75: (True, 240.0)}, 228.0) == "undetermined"
+    assert m.rule_fs({0.8: (True, None), 0.75: (True, 240.0)}, 228.0) == "undetermined"
