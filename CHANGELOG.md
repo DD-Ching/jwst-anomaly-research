@@ -14,6 +14,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   writing output; re-run after storing V′ / F first (deviation).
 - **Handoff:** next is a frozen F2 plan (`nlens_opt`, 8515 moved forward, fixed-σ validation near 344.42, lost images
   counted), after diagnosing D14a's family term. Lenstool install: conda-forge micromamba 2.9.0 package, sha256-checked.
+
 ## 2026-10-26: W3 / Kepler physical mapping: for a uniform negative-mass population with t_E ≥ 0.1 d, one expected detection needs |ρ_neg| ≥ 0.69 M☉ pc⁻³ even with every umbra crossing detected (about 7.6× the local baryonic density); recommendation C, pause (D-107 addendum 5)
 - **Result** (`results/w3_kepler/physical/RESULT.md`; no light curve, image or injection):
   - The 20 tested cells map, through ρ · t_E = t_* = x R_*/v and the DR25 radii and distances of 1,971 of the 2,000
