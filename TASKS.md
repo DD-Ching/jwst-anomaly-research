@@ -124,6 +124,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.
 
+- **MACS J1931 two-epoch grids 2026-10-26** (`results/transients/macs1931_grid/`, `macs1931_grid_9493/`): 392.6 d and
+  37 d pairs over the core, both outcome N. 9493 o001 → 12299 o001 not queued.
 - **Abell 2744 GLASS flanking grid 2026-10-26** (`results/transients/a2744_glass_flank/RESULT.md`): 1324 o001 → o007,
   0 hits, recovery 0.956 at −0.75 mag. Next frozen flanking pair 2561 o002 → o006 (general rate, low value).
 
