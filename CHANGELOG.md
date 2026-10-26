@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b stage F2-L: the local optimiser's validation start is infeasible; gate V3 `uninformative`; post hoc only 7 of 56 single ±3 % parameter offsets keep every image (D-109 addendum 5)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2L.md`; plan frozen before any run):
+  - Bounded Nelder–Mead over the 28 O1–O6 parameters, each evaluation one Lenstool `inverse 0` χ²; infeasible = a
+    lost image (`nwarn`) or a proximity penalty.
+  - The validation start (3 % of each range, alternating sign) is infeasible, and so are all 299 distinct evaluations; gate V3
+    `uninformative`. The optimiser was not tested.
+  - Post hoc: the start has `chipenalty` 56226.57 and D33 loses images; 7 / 56 single offsets are feasible (none of
+    O1–O3).
+- **Handoff:** next a frozen V3′ plan with steps of order 0.3 % of the range (ASSUMPTION, not yet frozen; same gate), then F2-L at f 0.80 / 0.75 /
+  0.70 only if V3′ passes. D115b stays `inconclusive`. Lenstool: micromamba binary from micro.mamba.pm into the
+  scratchpad, then `micromamba create -p <scratch>/lt -c conda-forge lenstool` (worked this run).
+
 ## 2026-10-26: W3 TESS 120 s product-level injections: 0.477 and 0.459 of the ideally identifiable simulated events kept at the two #561 best masses; both intervals cross one half; low masses insufficient; a search is not worth starting now (D-107 addendum 7)
 - **Result** (`results/w3_kepler/tess120_inject/RESULT.md`; plan frozen before any flux; 362,291,257 B):
   - Draws: 200 rate-weighted draws (184 SPOC 120 s star-sectors) × 4 frozen scenarios × 30 simulated events.
