@@ -257,8 +257,5 @@
    "D14a_image_rows_chi2_sum": 11.12,
    "dchi2_without_D14a": 12.04
   }
- },
- "F2_probe_lenstool_error": [
-  "ERROR: number of clumps with optimized parameters = 5 but nlens_opt = 0"
- ]
+ }
 }

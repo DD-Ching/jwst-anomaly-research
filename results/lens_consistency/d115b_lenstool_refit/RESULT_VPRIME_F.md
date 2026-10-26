@@ -26,7 +26,8 @@ tested in `tests/test_d115b_lenstool_refit.py`, committed before the run. Number
 - Without D14a's row, Δχ² is +1.43 at f_L* 0.80, +6.03 at 0.75 and +12.04 at 0.70 (`dchi2_without_D14a`). This
   does not price the lost D115a images either, so it is not a cost estimate.
 - **F2 cost probe did not start.** Lenstool stopped at once: `ERROR: number of clumps with optimized parameters = 5
-  but nlens_opt = 0` (`F2_probe_lenstool_error`; status "lenstool exited -15", 0.0 s). An optimised run needs
+  but nlens_opt = 0` (`result_vprime_f.json` `stage_F2_probe`: `lenstool_error_lines`, status "lenstool stopped
+  (signal 15)", 0.0 s). An optimised run needs
   `grille nlens_opt` and the freed potentials among the first `nlens_opt` (8515 is the 31st `potentiel` of
   `best.par`).
 
@@ -40,6 +41,10 @@ Lenstool's f_L* (0.80) and the port's f* (0.75) agree within one grid step on wh
 - The first invocation (11:20Z) stopped at the F2 probe (Lenstool exit −15) before any output was written, so no
   number was read. The tool was changed to store V′ and F before the probe and to record a Lenstool exit (commit
   after the run of the plan, before the re-run), then the whole stage was re-run; only the re-run is reported.
+- `/code-review` fixes after the run (stale `image.all` removed before each run, Lenstool's error lines kept, the
+  post hoc writer and the `chires` copies made part of the tool, the caller's `OMP_NUM_THREADS` kept); the stage was
+  re-run from that commit. V′, F and the post hoc numbers are unchanged, and the `chires` copies are byte-identical
+  (not stored); only the probe's status text changed.
 - The plan freed potentials with `limit` blocks only; Lenstool also needs `nlens_opt` (post hoc, above).
 
 ## Next

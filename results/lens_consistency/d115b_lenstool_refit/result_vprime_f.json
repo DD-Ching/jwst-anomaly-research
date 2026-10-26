@@ -90,7 +90,10 @@
  "stage_F2_probe": {
   "label": "reported, not gated",
   "wall_cap_s": 600,
-  "status": "lenstool exited -15",
+  "status": "lenstool stopped (signal 15)",
+  "lenstool_error_lines": [
+   "ERROR: number of clumps with optimized parameters = 5 but nlens_opt = 0"
+  ],
   "runtime_s": 0.0
  }
 }
