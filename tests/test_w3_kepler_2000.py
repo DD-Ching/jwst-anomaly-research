@@ -76,3 +76,18 @@ def test_vet_class_needs_pixels_for_confirmation():
     assert s2.vet_class(d) == "undetermined"
     assert s2.vet_class(d, "on_target") == "real_dimming_confirmed_unexplained_by_V5_V7"
     assert s2.vet_class(d, "off_target") == "artifact_supported"
+
+
+def test_pixel_verdict_on_and_off_target():
+    n, ny, nx = 100, 7, 7
+    yy, xx = np.indices((ny, nx))
+    star = 1000 * np.exp(-((yy - 3) ** 2 + (xx - 3) ** 2) / 2.0)
+    cube = np.repeat(star[None], n, axis=0)
+    in_run = np.zeros(n, bool)
+    in_run[40:50] = True
+    on = cube.copy()
+    on[in_run] *= 0.2  # the target itself dims
+    assert s2.pixel_verdict(on, in_run, ~in_run)["verdict"] == "on_target"
+    off = cube.copy()
+    off[in_run, 0, 6] -= 500  # a corner pixel drops, the star does not
+    assert s2.pixel_verdict(off, in_run, ~in_run)["verdict"] == "off_target"

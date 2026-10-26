@@ -609,6 +609,55 @@ def _robust(x: np.ndarray) -> tuple[float, float]:
     return m, 1.4826 * float(np.median(np.abs(x - m)))
 
 
+def pixel_verdict(flux: np.ndarray, in_run: np.ndarray, out_run: np.ndarray) -> dict:
+    """PLAN section 6, V9 on a target pixel cube (cadence, y, x): mean in-run image minus mean
+    out-of-run image; 'on_target' if the most negative difference pixel is within 1 pixel of the
+    out-of-run flux-weighted centroid."""
+    img_in = np.nanmean(flux[in_run], axis=0)
+    img_out = np.nanmean(flux[out_run], axis=0)
+    diff = img_in - img_out
+    yy, xx = np.indices(img_out.shape)
+    w = np.clip(np.nan_to_num(img_out), 0, None)
+    cy, cx = float((w * yy).sum() / w.sum()), float((w * xx).sum() / w.sum())
+    iy, ix = np.unravel_index(int(np.nanargmin(diff)), diff.shape)
+    dist = float(np.hypot(iy - cy, ix - cx))
+    return {
+        "diff_min_pixel_yx": [int(iy), int(ix)],
+        "centroid_yx": [round(cy, 2), round(cx, 2)],
+        "distance_px": round(dist, 2),
+        "diff_sum_over_out_sum": round(float(np.nansum(diff) / np.nansum(img_out)), 4),
+        "verdict": "on_target" if dist <= 1.0 else "off_target",
+    }
+
+
+def pixel_check(kepid: int, run: dict, llc_name: str) -> dict:
+    """V9: fetch the run quarter's official target pixel file through the ledger and apply
+    ``pixel_verdict`` (in-run cadences vs the same quarter within one span + 1 d outside)."""
+    from astropy.io import fits
+
+    kid = f"{kepid:09d}"
+    stamp = llc_name.split("-")[1].split("_")[0]
+    url = (
+        "https://archive.stsci.edu/missions/kepler/target_pixel_files/"
+        f"{kid[:4]}/{kid}/kplr{kid}-{stamp}_lpd-targ.fits.gz"
+    )
+    lg = wk.nl.Ledger(OUT / "net_ledger.jsonl", CAP)
+    b = wk.nl.fetch(url, lg, est_bytes=8_000_000, retries=2)
+    with fits.open(io.BytesIO(gzip.decompress(b))) as h:
+        d = h[1].data
+        t, flux, qual = np.asarray(d["TIME"], float), np.asarray(d["FLUX"], float), d["QUALITY"]
+    ok = np.isfinite(t) & ((np.asarray(qual).astype(np.int64) & wk.QMASK) == 0)
+    t0, t1 = run["t_start"], run["t_end"]
+    span = max(t1 - t0, 1.0)
+    in_run = ok & (t >= t0) & (t <= t1)
+    out_run = ok & (np.abs(t - 0.5 * (t0 + t1)) <= 0.5 * (t1 - t0) + span + 1.0) & ~in_run
+    out_run &= (t < t0) | (t > t1)
+    res = pixel_verdict(flux, in_run, out_run)
+    res |= {"url": url, "bytes": len(b), "sha256": hashlib.sha256(b).hexdigest()}
+    res |= {"n_in": int(in_run.sum()), "n_out": int(out_run.sum())}
+    return res
+
+
 def vet_class(d: dict, pixel: str | None = None) -> str:
     """PLAN section 6 classification. pixel: None (not checked), 'on_target' or 'off_target'."""
     if d["V1_quality"] or d["V3_common"] or pixel == "off_target":
