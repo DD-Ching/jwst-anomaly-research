@@ -83,7 +83,8 @@
 - **The catch:** for one speed, ρ = x R_*/(v t_E) varies along the sight line. Most lenses have ρ outside the
   tested 0.01–0.1, where ε is not measured. At t_E = 0.1 d only 13.91 % of τ (220 km/s) and 0.3052 % (30 km/s)
   comes from lenses inside the tested ρ range (`tested_rho_only.share_of_tau`).
-- **Three bounds are reported** (density in M☉ pc⁻³ for N = 1, 2,000 stars):
+- **Three bounds are reported** (density in M☉ pc⁻³ for N = 1). The sums run over the 1,971 stars with a distance,
+  unscaled; scaling to all 2,000 would lower every number by about 1.5 % (not stored).
   - **(a)** the measured ε applied at every distance (an extrapolation);
   - **(b)** ε = 1 at every distance: a floor that holds whatever the efficiency is outside the tested range;
   - **(c)** only lenses inside the tested ρ range, with the measured ε.
