@@ -6664,8 +6664,8 @@ confining radiation at a throat is found.
   `SSL_CERT_FILE` to the proxy bundle plus certifi's roots (the system store lacks emSign Root CA - G1).
 - **Addendum 7 (2026-10-26, stage VS):** use Lenstool's source-plane χ² (`image` `forme 0`; Lenstool wiki, SOURCES.md)
   as the objective of local re-fits of this model. At `best.par` (χ² 227.92) all 56 single-parameter series up to 1 %
-  of each range are smooth under the frozen jump rule (gate VS `pass`), where the image-plane χ² jumped by +12.1 at
-  3 × 10⁻⁵. `best.par` is not the source-plane optimum (post hoc: the two signs differ at the smallest step), so a
+  of each range are `smooth` under the frozen rule (gate VS `pass`: no jump above |Δχ²| 2 at ≤ 10⁻³; smaller jumps
+  untested), where the image-plane χ² jumped by +12.1 at 3 × 10⁻⁵. `best.par` is not the source-plane optimum (post hoc: the two signs differ at the smallest step), so a
   re-fit is validated against its own optimum (`results/lens_consistency/d115b_lenstool_refit/RESULT_VS.md`).
   Alternative not taken: image-plane χ² with D52b's image matching fixed (needs Lenstool source changes). Revisit
   if joint moves show source-plane jumps.

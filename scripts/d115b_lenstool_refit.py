@@ -98,7 +98,8 @@ _CHI2 = re.compile(r"INFO: chi2 ([-+0-9.eE]+)")
 
 
 def read_chi2pos(log: str) -> float:
-    """Last ``INFO: chi2 <value>`` Lenstool printed (``forme -1``: image-plane position chi2)."""
+    """Last ``INFO: chi2 <value>`` Lenstool printed (image-plane position chi2 with ``forme -1``,
+    source-plane chi2 with ``forme 0``: stage VS, where it matched chires.dat's ``chitot``)."""
     vals = _CHI2.findall(log)
     if not vals:
         raise ValueError("no 'INFO: chi2' in the Lenstool output")
@@ -1015,6 +1016,9 @@ def build_vs(vp: str) -> str:
     hits = [i for i, ln in enumerate(lines) if ln.split()[:2] == ["forme", "-1"]]
     if len(hits) != 1:
         raise ValueError("need exactly one 'forme -1' line")
+    head = [ln for ln in lines[: hits[0]] if ln.strip() and not ln[0].isspace()][-1:]
+    if head != ["image"]:
+        raise ValueError("the 'forme -1' line is not in the image section")
     lines[hits[0]] = "    forme       0"
     return "\n".join(lines)
 
@@ -1028,7 +1032,9 @@ def series_vs(deltas: list[float | None]) -> str:
             continue
         if abs(a) > VS_JUMP_ABS and abs(a) >= VS_JUMP_RATIO * abs(b):
             return "jump"
-    return "incomplete" if any(d is None for d in deltas) else "smooth"
+    if len(deltas) != len(VS_STEPS) or any(d is None for d in deltas):
+        return "incomplete"
+    return "smooth"
 
 
 def gate_vs(

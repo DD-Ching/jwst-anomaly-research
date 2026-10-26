@@ -378,6 +378,8 @@ def test_build_vs_sets_forme_0_only():
     assert diff == [("    forme       -1", "    forme       0")]
     with pytest.raises(ValueError):
         m.build_vs(out)
+    with pytest.raises(ValueError):  # forme outside the image section (review fix)
+        m.build_vs("source\n    forme       -1\n    end\nimage\n    end\n")
 
 
 def test_series_vs():
@@ -389,6 +391,7 @@ def test_series_vs():
     assert m.series_vs([1.9, 1.9, 1.9, 1.9, 1.9, 1.9]) == "smooth"  # under the floor
     assert m.series_vs([0.0, None, 0.1, 0.3, 1.0, 3.0]) == "incomplete"
     assert m.series_vs([5.0, None, 5.0, 5.0, 5.0, 5.0]) == "jump"
+    assert m.series_vs([0.0, 0.01, 0.1]) == "incomplete"  # truncated series (review fix)
 
 
 def test_gate_vs():

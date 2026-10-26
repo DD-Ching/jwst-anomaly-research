@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_VS.md`; plan, gate and tool committed before the run):
   - `forme 0` gives χ² 227.92 at `best.par`.
   - All 56 single-parameter series (28 O1–O6 parameters × 2 signs, 6 steps from 3 × 10⁻⁵ to 10⁻² of the range) are
-    `smooth`, with no jump.
+    `smooth`: no jump above |Δχ²| 2 at offsets ≤ 10⁻³. Smaller jumps are not tested.
   - At 3 × 10⁻⁵ the changes are ±0.0001 to ±0.058 and scale about linearly. The image plane jumped by +12.1 at the
     same step.
 - Post hoc: `best.par` is not the source-plane optimum, so the re-fit validates against its own optimum.
