@@ -9,6 +9,7 @@ Stage F2-B (``--stage f2b``): a short ``inverse 3`` run with O1-O6 free and 8515
 probe of Lenstool's optimiser; plan ``PLAN_F2.md`` (gate V2, frozen before the run).
 Stage F2-L V3 (``--stage f2l-v3``): bounded Nelder-Mead over O1-O6 driving Lenstool
 ``inverse 0``, validated from a perturbed best.par at f 1.00; plan ``PLAN_F2L.md`` (gate V3).
+Stage V3' (``--stage v3p``): the same with a small-step start ladder; plan ``PLAN_V3P.md``.
 
     python scripts/d115b_lenstool_refit.py --lenstool <prefix>/bin/lenstool --workdir <scratch dir>
 """
@@ -719,11 +720,14 @@ def _f2l_eval(
         return None, ""
 
 
-def main_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> None:
-    """Stage F2-L gate V3 (plan PLAN_F2L.md): perturbed start at f 1.00."""
+def _nelder_mead(
+    lt: Path, wd: Path, files: dict[str, Path], u0: np.ndarray, step: float
+) -> tuple[float, bool, list, bool, str, float]:
+    """Bounded Nelder-Mead from u0 with initial simplex ``step`` (PLAN_F2L.md settings).
+    Returns (start objective, start feasible, history, stopped, message, t0)."""
     from scipy.optimize import minimize
 
-    vp, free, lo, hi, u_best = _f2l_setup(files)
+    vp, free, lo, hi, _ = _f2l_setup(files)
     hist: list[tuple[float, bool, np.ndarray]] = []
     cache: dict[bytes, float] = {}
     t0 = time.time()
@@ -746,15 +750,10 @@ def main_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> None:
         cache[key] = val
         return val
 
-    u0 = perturbed_start(u_best)
     start = f(u0)
     start_ok = hist[0][1]
     sim = np.vstack(
-        [u0]
-        + [
-            u0 + F2L_SIMPLEX * np.eye(len(u0))[i] * (1 if u0[i] < 0.9 else -1)
-            for i in range(len(u0))
-        ]
+        [u0] + [u0 + step * np.eye(len(u0))[i] * (1 if u0[i] < 0.9 else -1) for i in range(len(u0))]
     )
     stopped = False
     try:
@@ -769,40 +768,126 @@ def main_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> None:
         message = str(r.message)
     except _Wall:
         stopped, message = True, "wall cap reached"
+    return start, start_ok, hist, stopped, message, t0
+
+
+def _nm_summary(lt: Path, files: dict[str, Path], hist: list, u_best: np.ndarray) -> dict:
+    """Fields shared by the V3 and V3' result files."""
+    free = free_params(files["input.par"].read_text())
     vals = [v for v, _, _ in hist]
     trace = list(np.minimum.accumulate(vals))
     feas = [(v, u) for v, ok, u in hist if ok]
     bestv, xbest = min(feas, key=lambda vu: vu[0]) if feas else (None, None)
     out = {
-        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_F2L.md",
         "provenance": "model_prediction",
         "lenstool": version(lt),
         "omp_threads": _OMP or str(os.cpu_count() or 1),
         "n_free": len(free),
         "free_params": [f"{n}:{k}" for n, k, _, _ in free],
-        "perturb_frac_assumption": F2L_PERTURB,
         "maxfev_assumption": F2L_MAXFEV,
         "wall_cap_s": F2L_WALL_S,
         "run_timeout_s": F2L_RUN_TIMEOUT_S,
-        "chi2_start": start if start_ok else None,
-        "start_feasible": start_ok,
         "chi2_best_feasible": bestv,
         "chi2_ref_vprime": V2_REF,
         "tol_frac_assumption": TOL_FRAC,
         "n_evaluations": len(hist),
         "n_infeasible": sum(not ok for _, ok, _ in hist),
-        "optimizer_message": message,
-        "stopped_by_budget": stopped,
-        "runtime_s": round(time.time() - t0, 1),
         "running_best_every_100": [round(float(trace[i]), 3) for i in range(0, len(trace), 100)],
-        "gate_V3": gate_v3((start, start_ok), bestv, trace, stopped),
+        "_trace": trace,
     }
     if xbest is not None:  # only a feasible best point has a deviation worth reporting
         dev = np.abs(xbest - u_best)
         j = int(np.argmax(dev))
         out["max_abs_du_from_best_par"] = round(float(dev[j]), 4)
         out["max_abs_du_param"] = out["free_params"][j]
+    return out
+
+
+def main_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage F2-L gate V3 (plan PLAN_F2L.md): perturbed start at f 1.00."""
+    *_, u_best = _f2l_setup(files)
+    start, start_ok, hist, stopped, message, t0 = _nelder_mead(
+        lt, wd, files, perturbed_start(u_best), F2L_SIMPLEX
+    )
+    out = {"plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_F2L.md"}
+    out |= _nm_summary(lt, files, hist, u_best)
+    trace = out.pop("_trace")
+    out |= {
+        "perturb_frac_assumption": F2L_PERTURB,
+        "chi2_start": start if start_ok else None,
+        "start_feasible": start_ok,
+        "optimizer_message": message,
+        "stopped_by_budget": stopped,
+        "runtime_s": round(time.time() - t0, 1),
+        "gate_V3": gate_v3((start, start_ok), out["chi2_best_feasible"], trace, stopped),
+    }
     _write(out, "result_f2l_v3.json")
+    print(json.dumps(out, indent=1))
+
+
+V3P_LADDER = (0.001, 0.002, 0.003, 0.005, 0.0075, 0.01, 0.015, 0.02)  # ASSUMPTION (PLAN_V3P.md)
+
+
+def choose_start(ladder_rows: list[tuple[float, float, bool]]) -> float | None:
+    """PLAN_V3P.md: the first ladder frac whose start is feasible with chi2 above the tolerance.
+    ``ladder_rows`` = (frac, objective, feasible) in ladder order."""
+    lim = V2_REF * (1.0 + TOL_FRAC)
+    for frac, val, ok in ladder_rows:
+        if ok and val > lim:
+            return frac
+    return None
+
+
+def gate_v3p(chosen: float | None, best: float | None, trace: list[float], stopped: bool) -> str:
+    """Frozen gate V3' (PLAN_V3P.md): ``uninformative`` without a qualifying start, else the
+    PLAN_F2L.md rule on the optimiser run."""
+    if chosen is None:
+        return "uninformative"
+    # the chosen start is feasible and above the tolerance, so gate_v3's start test passes
+    return gate_v3((float("inf"), True), best, trace, stopped)
+
+
+def main_v3p(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage V3' (plan PLAN_V3P.md): start ladder, then Nelder-Mead with step = chosen frac."""
+    vp, free, lo, hi, u_best = _f2l_setup(files)
+    rows = []
+    for frac in V3P_LADDER:
+        _, chires = _f2l_eval(
+            lt,
+            wd / "v3p_ladder",
+            _par_at(vp, free, lo, hi, perturbed_start(u_best, frac)),
+            files["arcs.dat"],
+        )
+        try:
+            val, ok = objective(chires)
+        except ValueError:
+            val, ok = F2L_INFEASIBLE, False
+        rows.append((frac, val, ok))
+        if choose_start(rows) is not None:
+            break
+    chosen = choose_start(rows)
+    out = {
+        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_V3P.md",
+        "ladder": [{"frac": fr, "chi2": v if ok else None, "feasible": ok} for fr, v, ok in rows],
+        "chosen_frac": chosen,
+    }
+    if chosen is None:
+        out |= {"provenance": "model_prediction", "lenstool": version(lt)}
+        out["gate_V3p"] = "uninformative"
+    else:
+        start, _, hist, stopped, message, t0 = _nelder_mead(
+            lt, wd, files, perturbed_start(u_best, chosen), chosen
+        )
+        out |= _nm_summary(lt, files, hist, u_best)
+        trace = out.pop("_trace")
+        out |= {
+            "chi2_start": start,
+            "optimizer_message": message,
+            "stopped_by_budget": stopped,
+            "runtime_s": round(time.time() - t0, 1),
+            "gate_V3p": gate_v3p(chosen, out["chi2_best_feasible"], trace, stopped),
+        }
+    _write(out, "result_v3p.json")
     print(json.dumps(out, indent=1))
 
 
@@ -856,7 +941,7 @@ def main() -> None:
     ap.add_argument("--workdir", required=True, type=Path)
     ap.add_argument(
         "--stage",
-        choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc", "f2l-v3", "f2l-v3-posthoc"),
+        choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc", "f2l-v3", "f2l-v3-posthoc", "v3p"),
         default="v",
     )
     a = ap.parse_args()
@@ -878,6 +963,9 @@ def main() -> None:
         return
     if a.stage == "f2l-v3":
         main_f2l_v3(lt, wd, files)
+        return
+    if a.stage == "v3p":
+        main_v3p(lt, wd, files)
         return
     if a.stage == "f2b-posthoc":
         _write(posthoc_f2b(wd), "posthoc_f2b.json")

@@ -1,4 +1,4 @@
-# D115b stage V3′: gate V3 with small steps (plan, frozen 2026-10-26 16:25Z, before any V3′ run)
+# D115b stage V3′: gate V3 with small steps (plan, frozen 2026-10-26 16:13Z, before any V3′ run)
 
 ## Question and why this stage
 Gate V3 (PLAN_F2L.md) was `uninformative`: the 3 % start was infeasible, and post hoc only 7 / 56 single ±3 %
