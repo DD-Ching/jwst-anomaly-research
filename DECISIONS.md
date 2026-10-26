@@ -6546,6 +6546,25 @@ confining radiation at a throat is found.
     - events shallower than 1 mag in SAP matter (the pre-screen cannot see them);
     - download rates allow batch 4.
 
+- **Addendum 5 2026-10-26 (`results/w3_kepler/physical/`):** physical mapping of the tested grid and the value of a
+  larger search.
+  - ρ and t_E are tied through t_* = ρ t_E = x R_*/v. The grid means negative masses of about 2 × 10⁻⁵ to
+    0.15 M☉ at a few to about 600 pc (median stars).
+  - The expected detections, N = Σ ε (4/π) τ_i T_i / t_E, need a uniform |ρ_neg| ≥ 0.8696 M☉ pc⁻³ for N = 1 at the
+    best t_E (0.1 d). +500 stars multiplies that by 0.8, and +5,000 by 0.286. All are above the local baryonic
+    density (0.0914, Read 2014).
+  - Decision (recommended to the owner): pause the W3 / Kepler branch (C). The binding constraint is the rate per
+    density, not the pipeline. The unverified sky-to-SAP steps (bit-128 cosmic-ray correction, SPSD) can only
+    lower efficiency.
+  - Correction: the `QMASK` comment and the #500 plan's bit labels were shifted against the Kepler Archive Manual
+    Table 2-3. The numeric mask, and every result since #500, is unchanged.
+    - Excluded: 16 (reaction-wheel zero crossing), 64 (Argabrightening), 128 (cosmic ray), 1024 (SPSD).
+    - Not excluded: 256 (manual exclude), 2048 (impulsive outlier).
+  - Revisit if:
+    - a sourced population model puts a negative-mass density near the Sun within reach;
+    - a survey with far more source-years or a shorter cadence is considered;
+    - the owner wants a W3 search for its exploratory value alone.
+
 ## D-108 Efficiency rules for every round: pre-review self-check, gzip outputs, sync before push (owner rule 2026-10-26)
 - **Decision:** every round follows `docs/efficiency-rules.md`. Before the independent review it runs the
   self-check in `docs/pre-review-checklist.md`; the review and the re-check use the same list.

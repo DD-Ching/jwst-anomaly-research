@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: W3 / Kepler physical mapping: one expected detection needs a negative-mass density ≥ 0.87 M☉ pc⁻³ (about 10× the local baryonic density); recommendation C, pause (D-107 addendum 5)
+- **Result** (`results/w3_kepler/physical/RESULT.md`; no light curve, image or injection):
+  - The 20 tested cells map, through ρ · t_E = t_* = x R_*/v and the DR25 radii and distances of 1,971 of the 2,000
+    searched stars, to negative masses of about 2 × 10⁻⁵ to 0.15 M☉ at a few to about 600 pc (medians). With
+    halo-like speeds, cells with t_* ≥ 0.1 d are unreachable.
+  - For a uniform population whose events have a tested t_E, one expected detection needs |ρ_neg| ≥ 0.8696 M☉ pc⁻³
+    (t_E 0.1 d). That is about 9.5× the local baryonic density and 58× the highest dark-matter reference (Read
+    2014). +5,000 stars would lower it to 0.2485.
+- **Sky to SAP:** cosmic-ray correction (bit 128) may remove real caustic spikes and is masked; the SPSD flag may
+  mark an ingress. Neither is verified.
+  - The `QMASK` comment and the #500 plan labelled several bits wrongly. The comment is corrected (Kepler Archive
+    Manual Table 2-3); the mask and all results are unchanged.
+- **Handoff:** recommendation C (pause the W3 / Kepler branch); the owner decides. Nothing is queued, and no other
+  branch is opened.
+
 ## 2026-10-26: D115b Lenstool re-fit stage V: gate V fails as frozen (+3.6 %); post hoc the cause is best.par's rounded reference (D-109 addendum)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT.md`; plan frozen before any run): Lenstool 8.15.5
   (`inverse 0` + `chi2 1`) on `best.par` gives χ²_pos 356.67 vs the header's 344.298 (+3.59 % > 1 %, ASSUMPTION).
