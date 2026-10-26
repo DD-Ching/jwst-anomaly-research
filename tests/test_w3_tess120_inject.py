@@ -70,3 +70,12 @@ def test_verdict():
     assert wi.verdict(100, 0.7, 0.55, 0.8) == "retains at least half"
     assert wi.verdict(100, 0.3, 0.2, 0.45) == "retains less than half"
     assert wi.verdict(100, 0.55, 0.4, 0.7).startswith("interval crosses")
+
+
+def test_lc_url_matches_the_mast_redirect():
+    oid = "tess2024030031500-s0075-0000000298053137-0270-s"
+    assert wi.lc_url(oid) == (
+        "https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid/s0075/0000/0002/9805/3137/"
+        + oid
+        + "_lc.fits"
+    )

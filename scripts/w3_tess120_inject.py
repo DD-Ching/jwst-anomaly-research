@@ -45,7 +45,15 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "w3_kepler" / "tess120_inject"
 DATA = Path(os.environ.get("JWST_ANOMALY_DATA", ROOT / "data")) / "tess120_inject" / "raw"
 CAP = 1_000_000_000  # owner limit for this round, bytes
-DL_URL = "https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:TESS/product/{obs_id}_lc.fits"
+S3 = "https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid"  # MAST's public AWS copy
+
+
+def lc_url(obs_id: str) -> str:
+    """Direct URL of a SPOC light curve in MAST's public AWS bucket: MAST's Download/file answers
+    with a 302 to exactly this path, and the ledger does not follow redirects."""
+    _, sec, tid, _, _ = obs_id.split("-")
+    return f"{S3}/{sec}/{tid[0:4]}/{tid[4:8]}/{tid[8:12]}/{tid[12:16]}/{obs_id}_lc.fits"
+
 
 SEED = 564
 N_STAR_SECTORS = 200
@@ -364,7 +372,7 @@ def stage_run(a) -> None:
     todo = [s for s in sample if not (OUT / "per_ss" / f"{s['obs_id']}.json").exists()]
 
     def fetch(ss):
-        b = nl.fetch(DL_URL.format(obs_id=ss["obs_id"]), lg, 2_500_000)
+        b = nl.fetch(lc_url(ss["obs_id"]), lg, 2_500_000)
         p = DATA / f"{ss['obs_id']}_lc.fits"
         p.write_bytes(b)
         return ss, str(p), hashlib.sha256(b).hexdigest(), len(b)
