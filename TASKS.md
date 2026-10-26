@@ -93,6 +93,12 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The largest loss stage is insufficient data in the edge or shoulder window (3,050 of 5,052 lost events, post hoc
     grouping).
   - Nothing is queued; any expansion is the owner's call.
+- **W3 / Kepler physical mapping 2026-10-26** (`results/w3_kepler/physical/RESULT.md`, D-107 addendum 5):
+  - For a uniform population with t_E ≥ 0.1 d, one expected detection needs |ρ_neg| ≥ 0.6944 M☉ pc⁻³ even with
+    ε = 1 (about 7.6× the local baryonic density).
+  - Recommendation C: pause the W3 / Kepler branch. Owner decision pending; batch 4 stays unread.
+  - If the branch resumes: reconsider `QMASK` (it masks 128 cosmic-ray-corrected and 512 unused, keeps 256 manual
+    exclude and 2048 impulsive outlier), with a full re-injection before any new limit.
 - **W3 / Kepler 2,000-star search 2026-10-26** (`results/w3_kepler/s2000/RESULT.md`, D-107 addendum 4):
   - 1,500 of 2,000 stars read and searched; 0 reach the 1-mag pre-screen; 0 survivors.
   - With #546: 4,958.9–6,475.3 effective star-years per cell; joint limits 4.628–6.044 × 10⁻⁴ per star-year

@@ -48,10 +48,13 @@ POOL_SHA256 = "013b8a0d0f464a9574a3e4e8a1dce0c1b306116b468c18f638efe83fa13c60b0"
 GROUPS = {"dev": (0, 20), "val": (20, 40), "search": (40, 100)}
 ARCHIVE = "https://archive.stsci.edu/missions/kepler/lightcurves"
 
-# Quality: a cadence is excluded if any of these SAP_QUALITY bits is set: attitude tweak 1, safe
-# mode 2, coarse point 4, Earth point 8, Argabrightening 16, desaturation 32, aperture cosmic ray
-# 64, manual exclude 128, impulsive outlier 512, collateral cosmic ray 1024, bad calibration 16384,
-# no data 65536.
+# Quality: a cadence is excluded if any of these SAP_QUALITY bits is set. Meanings per the Kepler
+# Archive Manual (KDMC-10008-006, Table 2-3), corrected in #559; the numeric mask is unchanged since
+# #500: attitude tweak 1, safe mode 2, coarse point 4, Earth point 8, reaction-wheel zero crossing
+# 16, desaturation 32, Argabrightening on multiple channels 64, cosmic ray corrected in the optimal
+# aperture 128, (unused) 512, SPSD 1024, detector anomaly 16384, no data 65536. Not excluded:
+# manual exclude 256, impulsive outlier 2048, mod/out Argabrightening 4096, collateral cosmic ray
+# 8192, not in fine point 32768, rolling band 131072 / 262144.
 QMASK = 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 512 | 1024 | 16384 | 65536
 CAD = 0.02043359821692  # d, TIMEDEL of long cadence
 NSUB = 21  # sub-samples per cadence for the exposure average
