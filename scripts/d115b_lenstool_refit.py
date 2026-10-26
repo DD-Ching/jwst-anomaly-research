@@ -293,20 +293,27 @@ def main_vprime_f(lt: Path, wd: Path, files: dict[str, Path]) -> None:
             "f_L_star": f_star,
             "rule_F": outcome,
         }
+        _write(out)  # stage V' and F are stored before the probe runs
         t0 = time.time()
         try:
-            p2, _ = run(lt, wd / "f2", build_f2(vp, best, inp), files["arcs.dat"], F2_WALL_S)
-            done = True
+            run(lt, wd / "f2", build_f2(vp, best, inp), files["arcs.dat"], F2_WALL_S)
+            status = "finished"
         except subprocess.TimeoutExpired:
-            done = False
+            status = "wall cap reached"
+        except RuntimeError as e:  # a nonzero Lenstool exit
+            status = str(e).split(" in ")[0]
         out["stage_F2_probe"] = {
             "label": "reported, not gated",
             "wall_cap_s": F2_WALL_S,
-            "finished": done,
+            "status": status,
             "runtime_s": round(time.time() - t0, 1),
         }
-    (OUT / "result_vprime_f.json").write_text(json.dumps(out, indent=1) + "\n")
+    _write(out)
     print(json.dumps(out, indent=1))
+
+
+def _write(out: dict) -> None:
+    (OUT / "result_vprime_f.json").write_text(json.dumps(out, indent=1) + "\n")
 
 
 def main() -> None:
