@@ -1627,6 +1627,16 @@ field's arc pass needs a known-transient (or injected) control that fires under 
 shallower band misses it is reported as untrusted, not as a null; an "on an image" radius is checked on the
 known case before use (images are catalogued at knots, not at every arc pixel).
 
+**Addendum 2026-10-26 (MACS0647, 1433 o010 → o020, F200W only, 107 d).** First two-epoch test of the MACS0647
+core. The single-band catalogue grid fails G1 (0.802 < 0.85) and the single-band difference pass on the
+multiple-image region gives 9,154 hits under a 110° roll, so neither gives a null. One real change, g85: a point
+source in three o020 exposures (two detectors), absent in o010, not detected in HST F110W 2023-12 / 2024-03
+(5σ 25.41–26.36 AB, too shallow to show fading), 6.0″ from the nearest catalogued image (not stored); not vetted beyond `inconclusive` (needs TNS and the host
+redshift). `results/transients/macs0647_1433/RESULT.md`, `docs/candidates/macs0647-1433-g85.md`. **Decision:** a
+one-band pair with a large roll change is screened by eye only for point sources off the spike pattern; per-exposure
+(`_cal`) presence on different pixels is the cheapest first test for a single-band hit. Revisit if: a spike / rosette
+model or a second shared band makes a single-band pair vettable automatically.
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**

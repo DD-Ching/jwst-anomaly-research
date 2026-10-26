@@ -1,0 +1,147 @@
+{
+ "provenance": "derived (post hoc; not in PLAN.md)",
+ "position": [
+  101.99665,
+  70.250721
+ ],
+ "aperture_arcsec": 0.25,
+ "annulus_arcsec": [
+  0.4,
+  0.6
+ ],
+ "rows": [
+  {
+   "used": false,
+   "science": "ifaa27010",
+   "template": "ibffa2020",
+   "date": "2023-12-09",
+   "exptime": 305.870728,
+   "flux_flam": -2.177422693499549e-20,
+   "sigma_random_flam": 1.1695168444714718e-20,
+   "snr": -1.861813879631268,
+   "ab_mag_aperture": null,
+   "ab_mag_5sigma_aperture": 25.364624394978527,
+   "offset0_arcsec": 3.617066913862089,
+   "preshift_px": [
+    -17.1394007693189,
+    -22.397863657320556
+   ],
+   "shift_arcsec": 3.617066913862089,
+   "registered": false
+  },
+  {
+   "used": true,
+   "science": "ifaa29010",
+   "template": "ibffa2020",
+   "date": "2023-12-10",
+   "exptime": 608.809203,
+   "flux_flam": -2.568102727820079e-21,
+   "sigma_random_flam": 5.624390211760161e-21,
+   "snr": -0.4566010947196332,
+   "ab_mag_aperture": null,
+   "ab_mag_5sigma_aperture": 26.159451988846108,
+   "offset0_arcsec": 0.03137957969810014,
+   "preshift_px": [
+    -0.10237535203846448,
+    -0.22222777660211435
+   ],
+   "shift_arcsec": 0.00540002353255663,
+   "registered": true
+  },
+  {
+   "used": true,
+   "science": "ifaa26010",
+   "template": "ibffa2020",
+   "date": "2023-12-12",
+   "exptime": 608.809203,
+   "flux_flam": 1.34151454403153e-21,
+   "sigma_random_flam": 4.655381286891577e-21,
+   "snr": 0.288164268694577,
+   "ab_mag_aperture": 29.463077145484682,
+   "ab_mag_5sigma_aperture": 26.364752456904633,
+   "offset0_arcsec": 0.037105049732938,
+   "preshift_px": [
+    -0.1348797436457687,
+    -0.25595396679391413
+   ],
+   "shift_arcsec": 0.0041835367542855,
+   "registered": true
+  },
+  {
+   "used": true,
+   "science": "ifaa25010",
+   "template": "ibffa2020",
+   "date": "2023-12-12",
+   "exptime": 458.806092,
+   "flux_flam": 6.237220292580265e-21,
+   "sigma_random_flam": 6.292089139702552e-21,
+   "snr": 0.991279709186561,
+   "ab_mag_aperture": 27.794587901122433,
+   "ab_mag_5sigma_aperture": 26.037653431682763,
+   "offset0_arcsec": 0.03010881428100744,
+   "preshift_px": [
+    -0.05107732784183483,
+    -0.2291428705311347
+   ],
+   "shift_arcsec": 0.006976359071001892,
+   "registered": true
+  },
+  {
+   "used": true,
+   "science": "ifaa30010",
+   "template": "ibffa2020",
+   "date": "2024-03-18",
+   "exptime": 305.870728,
+   "flux_flam": -3.6048685813404625e-21,
+   "sigma_random_flam": 1.119580450605733e-20,
+   "snr": -0.32198388060367616,
+   "ab_mag_aperture": null,
+   "ab_mag_5sigma_aperture": 25.412002332015653,
+   "offset0_arcsec": 0.021336909623830405,
+   "preshift_px": [
+    0.1571262821608599,
+    -0.054682694828823486
+   ],
+   "shift_arcsec": 0.005114505060266065,
+   "registered": true
+  },
+  {
+   "used": true,
+   "science": "ifaa28010",
+   "template": "ibffa2020",
+   "date": "2024-03-21",
+   "exptime": 458.806092,
+   "flux_flam": -1.0287784617569393e-20,
+   "sigma_random_flam": 6.079531842542587e-21,
+   "snr": -1.692200137118918,
+   "ab_mag_aperture": null,
+   "ab_mag_5sigma_aperture": 26.074965254509372,
+   "offset0_arcsec": 0.028248151843006747,
+   "preshift_px": [
+    0.21379626632458226,
+    -0.0529618791387243
+   ],
+   "shift_arcsec": 0.014080668174653414,
+   "registered": true
+  },
+  {
+   "used": false,
+   "science": "ifaa27010",
+   "template": "ibffa9030",
+   "date": "2023-12-09",
+   "exptime": 305.870728,
+   "flux_flam": -2.958654273014569e-20,
+   "sigma_random_flam": 1.5967198874553364e-20,
+   "snr": -1.8529576140807784,
+   "ab_mag_aperture": null,
+   "ab_mag_5sigma_aperture": 25.026568761872575,
+   "offset0_arcsec": 3.912707896187869,
+   "preshift_px": [
+    -18.835209927939676,
+    -24.0
+   ],
+   "shift_arcsec": 3.912707896187869,
+   "registered": false
+  }
+ ]
+}

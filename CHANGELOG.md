@@ -2,6 +2,30 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: MACS0647 g85 host redshift from DJA catalogues: no host within 0.5″, verdict unchanged
+- **Result** (`results/transients/macs0647_1433/host/RESULT.md`; plan frozen before any row): outcome `no_host`. No
+  DJA v7.0 photo-z row within 0.5″ and no DJA NIRSpec v4.6 row within 1.0″. The only row within 1.5″ (id 5954, 1.079″)
+  has z500 0.616 (16–84 % 0.568–0.656), a cluster-member photo-z; post hoc, as host it would make g85 a faint
+  (M ≈ −16.0 at μ = 1, not stored) supernova in a member's outskirts, with no lens-model leverage.
+- **Data:** zout (7.7 MB, not stored) and the v4.6 csv streamed, sha256 matched the pins, deleted.
+- **Handoff:** #556 still needs the owner's credentialed TNS check. #374: no weekly network run listed for today yet
+  (08:15Z). #554 (W3 Kepler s2000) left alone: owner-authorized local/cloud session, commit 07:12Z.
+
+## 2026-10-26: MACS0647 1433 o010 → o020 F200W two-epoch pair: grid undetermined; one real transient g85, inconclusive
+- **Result** (`results/transients/macs0647_1433/RESULT.md`; plan frozen before any pixel, one box-size amendment
+  before any pixel): catalogue grid G1 fails (−0.75 mag recovery 0.802 < 0.85), outcome U; difference pass on the
+  ±55″ multiple-image box passes G3 (0.94) but has 9,154 single-band hits under a 110° roll, no null. Outcome C on
+  one group: **g85** (RA 101.99665, Dec +70.250721), a 39σ point source in o020 (2023-01-08), absent in o010
+  (2022-09-23).
+- **Vetting (post hoc, `docs/candidates/macs0647-1433-g85.md`):** seen in three `_cal` exposures on two detectors at
+  different pixels (S/N 9.3–10.2), no motion; 112 nJy in a 0.15″ aperture; F480M S/N 1.2; not detected in HST
+  F110W 2023-12 / 2024-03, whose 5σ limits (25.41–26.36 AB) are too shallow to show fading. Not on a catalogued multiple image (2.1 at 6.0″, not stored). Verdict
+  `inconclusive: needs a TNS check and the host redshift`; a supernova is the ordinary `hypothesis`.
+- **Contact sheets:** all 95 grid groups looked at; the rest are spikes, star cores, edges, scattered light and
+  low-exposure cosmic rays / snowballs (by eye, not stored as a table).
+- **Data:** 2.6 GB F200W `_i2d`, F480M `_i2d`, four `_cal`, eight HST `_drz` streamed and deleted.
+- **Handoff:** owner: TNS cone search (credentials) and the host redshift for g85. #374: the weekly network run
+  (cron 06:17Z Mondays) had not started by 06:30Z.
 ## 2026-10-26: SN Refsdal SX delay and μ ratio vs the seven blind models: no anomaly (D-034 addendum bq)
 - **Result** (`results/lens_consistency/refsdal_sx/RESULT.md`; plan frozen before the tables were read): outcome N.
   Measured Δt_X1 376.0 +5.6 / −5.5 d (Kelly et al. 2023) vs Treu et al. 2016 blind models 224–361 d: 5 / 7 within 3σ;
