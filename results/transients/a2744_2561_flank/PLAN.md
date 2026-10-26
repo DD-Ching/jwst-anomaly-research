@@ -1,7 +1,7 @@
 # Abell 2744 flanking pair 2561 o002 → o006: D-027 two-epoch grid (frozen plan, 2026-10-26; same rules and gates as #552)
 
 Written and pushed before any pixel was read. Second pair of the frozen #547 list (second-largest unused overlap, after #552;
-`results/transients/a2744_epoch_footprint/RESULT.md`): 2561 o002 (MegaScience) → o006 (2024), 365.6 d (5.817 arcmin² in F277W),
+`results/transients/a2744_epoch_footprint/RESULT.md`): 2561 o002 → o006, 365.6 d (5.817 arcmin² in F277W),
 outside the 1′ strong-lensing core (low magnification; a general two-epoch rate, not a lens-model test).
 
 ## Hypothesis and ordinary explanations
