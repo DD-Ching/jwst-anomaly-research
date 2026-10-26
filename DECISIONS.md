@@ -6653,6 +6653,6 @@ confining radiation at a throat is found.
   multi-hour owner-machine run is available.
 - **Addendum 5 (2026-10-26, stage F2-L gate V3):** with the hard feasibility rule (no lost image, no proximity
   penalty), a start 3 % of the `input.par` ranges away from `best.par` is infeasible and Nelder–Mead finds no feasible
-  point in 300 evaluations (gate V3 `uninformative`). Post hoc, only 7 of 56 single ±3 % offsets are feasible, none
+  point in 299 evaluations (gate V3 `uninformative`). Post hoc, only 7 of 56 single ±3 % offsets are feasible, none
   in O1–O3. Local re-fits of this model need much smaller steps (proposed ASSUMPTION: of order 0.3 % of the range) or a softer constraint, validated first
   (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2L.md`).

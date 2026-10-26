@@ -8,9 +8,10 @@ stays at its `best.par` σ (f 1.00), so this stage gives no D115b number.
 
 ## Result
 - **Gate V3: `uninformative`** (`gate_V3`). The perturbed start (each of the 28 O1–O6 parameters moved by 3 % of its
-  `input.par` range, alternating sign) is **infeasible** (`start_feasible` false), and so were all 300 evaluations
-  (`n_infeasible` 300 of `n_evaluations` 300). Nelder–Mead saw a flat objective (10⁶) and stopped after 300
-  evaluations in 125.5 s (`runtime_s`; message "Optimization terminated successfully.", not a convergence).
+  `input.par` range, alternating sign) is **infeasible** (`start_feasible` false), and so were all 299 distinct Lenstool
+  evaluations (`n_infeasible` 299 of `n_evaluations` 299). Nelder–Mead saw a flat objective (10⁶) and stopped in
+  104.6 s (`runtime_s`; its message "Optimization terminated successfully." is not a convergence,
+  `optimizer_message`).
 - The optimiser was therefore not tested; no D115b reading follows.
 - Tool check before the run (not gated, not stored): `best.par`'s own values written back through the tool (with
   the `_kpc` companion lines removed) give χ² 344.42, feasible, in 0.29 s.
@@ -36,4 +37,9 @@ stays at its `best.par` σ (f 1.00), so this stage gives no D115b number.
 ## Deviations
 - The post hoc writer (`--stage f2l-v3-posthoc`, `posthoc_f2l_v3`, `_warn_families`) and its test were added after
   gate V3 was read.
+- `/code-review` fixes after the first run, then both stages re-run (Lenstool is deterministic here): the start is
+  no longer evaluated twice (first run: 300 evaluations, 125.5 s, not stored), each Lenstool run has a 60 s timeout
+  counted as infeasible (`run_timeout_s`, deviation from the plan's between-evaluation wall check), the best-point
+  deviation is reported only for a feasible point (the first run stored the start's 0.03), post hoc Lenstool failures
+  are recorded instead of aborting. Gate outcome, start and all 56 single-offset rows are unchanged.
 - The plan's "Plan change" bullet did not cover an infeasible start; the follow-up above is chosen post hoc.

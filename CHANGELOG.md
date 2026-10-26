@@ -6,7 +6,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2L.md`; plan frozen before any run):
   - Bounded Nelder–Mead over the 28 O1–O6 parameters, each evaluation one Lenstool `inverse 0` χ²; infeasible = a
     lost image (`nwarn`) or a proximity penalty.
-  - The validation start (3 % of each range, alternating sign) is infeasible, and so are all 300 evaluations; gate V3
+  - The validation start (3 % of each range, alternating sign) is infeasible, and so are all 299 distinct evaluations; gate V3
     `uninformative`. The optimiser was not tested.
   - Post hoc: the start has `chipenalty` 56226.57 and D33 loses images; 7 / 56 single offsets are feasible (none of
     O1–O3).

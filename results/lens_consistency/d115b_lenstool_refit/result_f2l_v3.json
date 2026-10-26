@@ -37,22 +37,21 @@
  "perturb_frac_assumption": 0.03,
  "maxfev_assumption": 1500,
  "wall_cap_s": 1500,
+ "run_timeout_s": 60,
  "chi2_start": null,
  "start_feasible": false,
  "chi2_best_feasible": null,
  "chi2_ref_vprime": 344.42,
  "tol_frac_assumption": 0.01,
- "n_evaluations": 300,
- "n_infeasible": 300,
+ "n_evaluations": 299,
+ "n_infeasible": 299,
  "optimizer_message": "Optimization terminated successfully.",
  "stopped_by_budget": false,
- "runtime_s": 125.5,
+ "runtime_s": 104.6,
  "running_best_every_100": [
   1000000.0,
   1000000.0,
   1000000.0
  ],
- "gate_V3": "uninformative",
- "max_abs_du_from_best_par": 0.03,
- "max_abs_du_param": "O1:v_disp"
+ "gate_V3": "uninformative"
 }
