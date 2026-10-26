@@ -31,7 +31,7 @@ TEXT_SUFFIXES = {".json", ".jsonl", ".csv", ".ecsv", ".tsv", ".txt"}
 MAX_PLAIN = 500_000  # bytes
 DATA_SUFFIXES = (".json", ".jsonl", ".csv", ".ecsv", ".json.gz", ".jsonl.gz", ".csv.gz", ".ecsv.gz")
 
-NUM = re.compile(r"(?<![\w.#§/-])(\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?)(?![\w/])")
+NUM = re.compile(r"(?<![\w.#§/-])(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?![\w/])")
 SKIP_CONTEXT = re.compile(
     r"\d{4}-\d{2}-\d{2}|\d{1,2}:\d{2}(:\d{2})?|#\d+|§\s*\d+|D-\d+|\bQ\d+\b|\bv\d+(\.\d+)*\b|"
     r"\b(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\b|arXiv:\S+|DOI\s*\S+|10\.\d{4,}/\S+|KIC\s*\d+|\bkepid\b"

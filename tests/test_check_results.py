@@ -74,3 +74,8 @@ def test_md_sections_newest_entries(tmp_path):
 def test_hash_skip_keeps_plain_numbers():
     toks = [t for t, _ in cr.numbers_in_line("commit 038fdd0 read 1234567 bytes")]
     assert toks == ["1234567"]
+
+
+def test_comma_numbers_keep_their_decimals():
+    toks = [t for t, _ in cr.numbers_in_line("sampling 7,991.7 star-years")]
+    assert toks == ["7,991.7"]

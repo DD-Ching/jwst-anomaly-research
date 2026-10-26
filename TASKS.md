@@ -93,6 +93,12 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The largest loss stage is insufficient data in the edge or shoulder window (3,050 of 5,052 lost events, post hoc
     grouping).
   - Nothing is queued; any expansion is the owner's call.
+- **W3 / Kepler 2,000-star search 2026-10-26** (`results/w3_kepler/s2000/RESULT.md`, D-107 addendum 4):
+  - 1,500 of 2,000 stars read and searched; 0 reach the 1-mag pre-screen; 0 survivors.
+  - With #546: 4,958.9–6,475.3 effective star-years per cell; joint limits 4.628–6.044 × 10⁻⁴ per star-year
+    (conditional, product level).
+  - Batch 4 (500 listed stars, `sample_2000.json`) was not fetched because of the download rate. Fetching it, or a
+    further batch, is the owner's call.
 - **W3 / Kepler hard tests 2026-10-25** (`results/w3_kepler/hard/RESULT.md`, D-107 addendum):
   - The local shoulder rule replaces the #500 shoulder test.
   - Validation passed; the 200-star search has 0 flags.
