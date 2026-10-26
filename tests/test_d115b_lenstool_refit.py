@@ -342,3 +342,12 @@ def test_gate_v3():
     assert m.gate_v3((500.0, True), 400.0, falling, False) == "fail"
     flat = [500.0] * 50 + [400.0] * 350
     assert m.gate_v3((500.0, True), 400.0, flat, True) == "fail"
+
+
+def test_warn_families():
+    t = (
+        " 0 D1f.2 0.94 2 0.02 0 0 0 0.008 0.05 N/A N/A 0\n"
+        " 2 D1d.2 0.94 2 0.00 0 0 0 0.004 0.02 N/A N/A 1\n"
+        " 2 D1d.1 0.94 1 0.00 0 0 0 0.004 0.02 0.1 0.2 1\n"
+    )
+    assert m._warn_families(t) == {"D1d": 1}

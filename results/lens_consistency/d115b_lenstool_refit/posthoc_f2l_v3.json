@@ -1,0 +1,507 @@
+{
+ "label": "post hoc (after gate V3 was uninformative)",
+ "start": {
+  "feasible": false,
+  "chimul": 73229.24,
+  "penalty": 56226.57,
+  "penalty_images": [
+   "D1e.1",
+   "D1d.1",
+   "D1c.2",
+   "D1b.2",
+   "D6e.2",
+   "D8c.3",
+   "D8b.3",
+   "D8a.3",
+   "D14a.1",
+   "D17.1",
+   "D19.2",
+   "D115b.2",
+   "D115a.1",
+   "D34.1",
+   "D34.3"
+  ],
+  "warn_families": {
+   "D33": 3
+  }
+ },
+ "single_offsets": {
+  "O1:v_disp:+": {
+   "feasible": false,
+   "chimul": 31778.51,
+   "penalty": 29987.51,
+   "warn_families": {
+    "D33": 3
+   }
+  },
+  "O1:v_disp:-": {
+   "feasible": false,
+   "chimul": 36485.91,
+   "penalty": 33735.94,
+   "warn_families": {
+    "D2": 2,
+    "D6e": 2,
+    "D11": 2,
+    "D15": 2,
+    "D19": 1,
+    "D20": 1,
+    "D25": 1,
+    "D33": 2,
+    "D62b": 2
+   }
+  },
+  "O1:angle_pos:+": {
+   "feasible": false,
+   "chimul": 4376.87,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D12b": 1,
+    "D28": 1,
+    "D34": 2
+   }
+  },
+  "O1:angle_pos:-": {
+   "feasible": false,
+   "chimul": 11818.41,
+   "penalty": 11245.31,
+   "warn_families": {
+    "D1d": 1,
+    "D115a": 2,
+    "D34": 2
+   }
+  },
+  "O1:ellipticity:+": {
+   "feasible": false,
+   "chimul": 11668.71,
+   "penalty": 11245.31,
+   "warn_families": {}
+  },
+  "O1:ellipticity:-": {
+   "feasible": false,
+   "chimul": 4123.49,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D1d": 1,
+    "D34": 1,
+    "D73": 1
+   }
+  },
+  "O1:x_centre:+": {
+   "feasible": false,
+   "chimul": 23019.45,
+   "penalty": 22490.63,
+   "warn_families": {
+    "D6e": 2,
+    "D19": 1,
+    "D115a": 2,
+    "D34": 2
+   }
+  },
+  "O1:x_centre:-": {
+   "feasible": false,
+   "chimul": 23006.29,
+   "penalty": 22490.63,
+   "warn_families": {
+    "D2": 2,
+    "D34": 1
+   }
+  },
+  "O1:y_centre:+": {
+   "feasible": false,
+   "chimul": 30559.17,
+   "penalty": 29987.51,
+   "warn_families": {
+    "D14a": 1,
+    "D115a": 2
+   }
+  },
+  "O1:y_centre:-": {
+   "feasible": false,
+   "chimul": 26757.08,
+   "penalty": 26239.07,
+   "warn_families": {
+    "D34": 1,
+    "D41": 1
+   }
+  },
+  "O1:core_radius:+": {
+   "feasible": false,
+   "chimul": 15403.2,
+   "penalty": 14993.75,
+   "warn_families": {
+    "D2": 2,
+    "D115a": 2,
+    "D34": 1
+   }
+  },
+  "O1:core_radius:-": {
+   "feasible": false,
+   "chimul": 7960.16,
+   "penalty": 7496.88,
+   "warn_families": {}
+  },
+  "O2:v_disp:+": {
+   "feasible": false,
+   "chimul": 21269.68,
+   "penalty": 18742.19,
+   "warn_families": {
+    "D33": 3
+   }
+  },
+  "O2:v_disp:-": {
+   "feasible": false,
+   "chimul": 25992.28,
+   "penalty": 22490.63,
+   "warn_families": {
+    "D2": 2,
+    "D6e": 2,
+    "D8a": 2,
+    "D11": 2,
+    "D14b": 1,
+    "D14a": 3,
+    "D33": 2,
+    "D62b": 2
+   }
+  },
+  "O2:angle_pos:+": {
+   "feasible": false,
+   "chimul": 4223.67,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D1d": 1,
+    "D2": 2,
+    "D34": 2,
+    "D73": 1
+   }
+  },
+  "O2:angle_pos:-": {
+   "feasible": false,
+   "chimul": 12530.51,
+   "penalty": 11245.31,
+   "warn_families": {
+    "D115a": 1,
+    "D34": 2
+   }
+  },
+  "O2:ellipticity:+": {
+   "feasible": false,
+   "chimul": 19322.59,
+   "penalty": 18742.19,
+   "warn_families": {}
+  },
+  "O2:ellipticity:-": {
+   "feasible": false,
+   "chimul": 433.54,
+   "penalty": 0.0,
+   "warn_families": {
+    "D1d": 1,
+    "D115a": 2,
+    "D34": 1
+   }
+  },
+  "O2:x_centre:+": {
+   "feasible": false,
+   "chimul": 385.28,
+   "penalty": 0.0,
+   "warn_families": {
+    "D1d": 1,
+    "D115a": 2
+   }
+  },
+  "O2:x_centre:-": {
+   "feasible": false,
+   "chimul": 11731.67,
+   "penalty": 11245.31,
+   "warn_families": {
+    "D12b": 1
+   }
+  },
+  "O2:y_centre:+": {
+   "feasible": false,
+   "chimul": 4138.65,
+   "penalty": 3748.44,
+   "warn_families": {}
+  },
+  "O2:y_centre:-": {
+   "feasible": false,
+   "chimul": 7985.7,
+   "penalty": 7496.88,
+   "warn_families": {
+    "D12b": 1
+   }
+  },
+  "O2:core_radius:+": {
+   "feasible": false,
+   "chimul": 4160.49,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D1d": 1,
+    "D14a": 1,
+    "D115a": 2,
+    "D52a": 1
+   }
+  },
+  "O2:core_radius:-": {
+   "feasible": false,
+   "chimul": 437.91,
+   "penalty": 0.0,
+   "warn_families": {
+    "D1d": 1
+   }
+  },
+  "O3:v_disp:+": {
+   "feasible": false,
+   "chimul": 8767.83,
+   "penalty": 7496.88,
+   "warn_families": {
+    "D14a": 1,
+    "D73": 1
+   }
+  },
+  "O3:v_disp:-": {
+   "feasible": false,
+   "chimul": 28211.64,
+   "penalty": 26239.07,
+   "warn_families": {
+    "D6e": 2,
+    "D11": 2,
+    "D115a": 1,
+    "D33": 2
+   }
+  },
+  "O3:x_centre:+": {
+   "feasible": false,
+   "chimul": 4135.38,
+   "penalty": 3748.44,
+   "warn_families": {}
+  },
+  "O3:x_centre:-": {
+   "feasible": false,
+   "chimul": 7907.76,
+   "penalty": 7496.88,
+   "warn_families": {}
+  },
+  "O3:y_centre:+": {
+   "feasible": false,
+   "chimul": 4148.32,
+   "penalty": 3748.44,
+   "warn_families": {}
+  },
+  "O3:y_centre:-": {
+   "feasible": false,
+   "chimul": 4145.65,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D34": 2
+   }
+  },
+  "O3:core_radius:+": {
+   "feasible": false,
+   "chimul": 17592.39,
+   "penalty": 14993.75,
+   "warn_families": {
+    "D1d": 1,
+    "D6e": 2,
+    "D34": 1,
+    "D52c": 1,
+    "D73": 1
+   }
+  },
+  "O3:core_radius:-": {
+   "feasible": false,
+   "chimul": 4471.36,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D52c": 1
+   }
+  },
+  "O4:v_disp:+": {
+   "feasible": false,
+   "chimul": 21143.96,
+   "penalty": 18742.19,
+   "warn_families": {
+    "D19": 1,
+    "D33": 2
+   }
+  },
+  "O4:v_disp:-": {
+   "feasible": false,
+   "chimul": 22164.82,
+   "penalty": 18742.19,
+   "warn_families": {
+    "D1d": 1,
+    "D2": 2,
+    "D6e": 2,
+    "D11": 2,
+    "D14b": 1,
+    "D17": 1,
+    "D33": 2,
+    "D34": 1,
+    "D62b": 2,
+    "D73": 1
+   }
+  },
+  "O4:x_centre:+": {
+   "feasible": false,
+   "chimul": 8125.53,
+   "penalty": 7496.88,
+   "warn_families": {
+    "D115a": 2
+   }
+  },
+  "O4:x_centre:-": {
+   "feasible": false,
+   "chimul": 15590.5,
+   "penalty": 14993.75,
+   "warn_families": {
+    "D17": 1
+   }
+  },
+  "O4:y_centre:+": {
+   "feasible": false,
+   "chimul": 8094.31,
+   "penalty": 7496.88,
+   "warn_families": {
+    "D73": 1
+   }
+  },
+  "O4:y_centre:-": {
+   "feasible": false,
+   "chimul": 19256.15,
+   "penalty": 18742.19,
+   "warn_families": {
+    "D115a": 2
+   }
+  },
+  "O4:core_radius:+": {
+   "feasible": false,
+   "chimul": 11729.31,
+   "penalty": 11245.31,
+   "warn_families": {
+    "D115a": 2
+   }
+  },
+  "O4:core_radius:-": {
+   "feasible": true,
+   "chimul": 422.31,
+   "penalty": 0.0,
+   "warn_families": {}
+  },
+  "O4:angle_pos:+": {
+   "feasible": false,
+   "chimul": 15704.49,
+   "penalty": 14993.75,
+   "warn_families": {
+    "D1d": 1,
+    "D2": 2,
+    "D14b": 1,
+    "D14a": 1,
+    "D73": 1
+   }
+  },
+  "O4:angle_pos:-": {
+   "feasible": false,
+   "chimul": 13836.21,
+   "penalty": 11245.31,
+   "warn_families": {
+    "D6e": 2,
+    "D34": 2
+   }
+  },
+  "O4:ellipticity:+": {
+   "feasible": false,
+   "chimul": 4179.62,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D1d": 1
+   }
+  },
+  "O4:ellipticity:-": {
+   "feasible": false,
+   "chimul": 7869.93,
+   "penalty": 7496.88,
+   "warn_families": {
+    "D115a": 2,
+    "D52c": 1
+   }
+  },
+  "O5:v_disp:+": {
+   "feasible": true,
+   "chimul": 376.46,
+   "penalty": 0.0,
+   "warn_families": {}
+  },
+  "O5:v_disp:-": {
+   "feasible": false,
+   "chimul": 4128.86,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D1d": 1
+   }
+  },
+  "O5:cut_radius:+": {
+   "feasible": true,
+   "chimul": 357.42,
+   "penalty": 0.0,
+   "warn_families": {}
+  },
+  "O5:cut_radius:-": {
+   "feasible": false,
+   "chimul": 4127.34,
+   "penalty": 3748.44,
+   "warn_families": {}
+  },
+  "O6:v_disp:+": {
+   "feasible": false,
+   "chimul": 4112.36,
+   "penalty": 3748.44,
+   "warn_families": {
+    "D52c": 1
+   }
+  },
+  "O6:v_disp:-": {
+   "feasible": false,
+   "chimul": 7969.79,
+   "penalty": 7496.88,
+   "warn_families": {}
+  },
+  "O6:cut_radius:+": {
+   "feasible": true,
+   "chimul": 357.63,
+   "penalty": 0.0,
+   "warn_families": {}
+  },
+  "O6:cut_radius:-": {
+   "feasible": false,
+   "chimul": 4126.83,
+   "penalty": 3748.44,
+   "warn_families": {}
+  },
+  "O6:angle_pos:+": {
+   "feasible": false,
+   "chimul": 4101.24,
+   "penalty": 3748.44,
+   "warn_families": {}
+  },
+  "O6:angle_pos:-": {
+   "feasible": true,
+   "chimul": 357.72,
+   "penalty": 0.0,
+   "warn_families": {}
+  },
+  "O6:ellipticity:+": {
+   "feasible": true,
+   "chimul": 356.39,
+   "penalty": 0.0,
+   "warn_families": {}
+  },
+  "O6:ellipticity:-": {
+   "feasible": true,
+   "chimul": 344.57,
+   "penalty": 0.0,
+   "warn_families": {}
+  }
+ },
+ "n_single_feasible": 7,
+ "n_single": 56
+}

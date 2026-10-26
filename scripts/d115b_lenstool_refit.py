@@ -775,12 +775,68 @@ def main_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> None:
     print(json.dumps(out, indent=1))
 
 
+def _warn_families(chires: str) -> dict[str, int]:
+    """Family summary rows with nwarn > 0 (lost images)."""
+    out = {}
+    for r in (ln.split() for ln in chires.splitlines()):
+        if len(r) >= 13 and r[0].isdigit() and r[10] == "N/A" and int(r[12]) > 0:
+            out[r[1].rsplit(".", 1)[0]] = int(r[12])
+    return out
+
+
+def posthoc_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> dict:
+    """Post hoc (after gate V3 was ``uninformative``): why the perturbed start is infeasible, and
+    which single-parameter offsets of +-F2L_PERTURB from best.par stay feasible."""
+    best, inp = files["best.par"].read_text(), files["input.par"].read_text()
+    vp = build_vprime(build_v0(best, inp), best, inp)
+    free = free_params(inp)
+    lo = np.array([f[2] for f in free])
+    hi = np.array([f[3] for f in free])
+    u_best = (np.array([get_param(vp, n, k) for n, k, _, _ in free]) - lo) / (hi - lo)
+
+    def ev(u: np.ndarray) -> dict:
+        par = vp
+        for (n, k, _, _), v in zip(free, lo + u * (hi - lo), strict=True):
+            par = set_param(par, n, k, float(v))
+        p, chires = run(lt, wd / "f2l_post", par, files["arcs.dat"])
+        val, ok = objective(chires)
+        return {
+            "feasible": ok,
+            "chimul": read_chires(chires)[0],
+            "penalty": read_penalty(chires),
+            "penalty_images": penalty_images(p.stdout + p.stderr),
+            "warn_families": _warn_families(chires),
+        }
+
+    single = {}
+    for j, (n, k, _, _) in enumerate(free):
+        for s in (1.0, -1.0):
+            u = u_best.copy()
+            u[j] = np.clip(u[j] + s * F2L_PERTURB, 0.001, 0.999)
+            r = ev(u)
+            single[f"{n}:{k}:{'+' if s > 0 else '-'}"] = {
+                "feasible": r["feasible"],
+                "chimul": r["chimul"],
+                "penalty": r["penalty"],
+                "warn_families": r["warn_families"],
+            }
+    return {
+        "label": "post hoc (after gate V3 was uninformative)",
+        "start": ev(perturbed_start(u_best)),
+        "single_offsets": single,
+        "n_single_feasible": sum(v["feasible"] for v in single.values()),
+        "n_single": len(single),
+    }
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
     ap.add_argument("--workdir", required=True, type=Path)
     ap.add_argument(
-        "--stage", choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc", "f2l-v3"), default="v"
+        "--stage",
+        choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc", "f2l-v3", "f2l-v3-posthoc"),
+        default="v",
     )
     a = ap.parse_args()
     lt, wd = a.lenstool.resolve(), a.workdir.resolve()
@@ -795,6 +851,9 @@ def main() -> None:
         return
     if a.stage == "f2b":
         main_f2b(lt, wd, files)
+        return
+    if a.stage == "f2l-v3-posthoc":
+        _write(posthoc_f2l_v3(lt, wd, files), "posthoc_f2l_v3.json")
         return
     if a.stage == "f2l-v3":
         main_f2l_v3(lt, wd, files)
