@@ -2829,6 +2829,14 @@ Decision: no delay anomaly; the one-sided pattern stays below the flag and rests
 candidate. Alternatives rejected: reading Rodney et al.'s colour-only ages from their figure (T5). Revisit if: image
 2d reappears or the 2016 delays are re-measured with a covariance (rerun `scripts/requiem_dt_check.py`).
 
+**Addendum 2026-10-26bq (SN Refsdal SX delay and μ ratio vs the Treu et al. 2016 blind models).**
+`results/lens_consistency/refsdal_sx/RESULT.md`; Kelly et al. 2023 measured Δt_X1 376.0 +5.6 / −5.5 d and μX/μ1 0.299
+(0.272–0.354) vs the seven blind predictions. Frozen outcome N: 5 / 7 within |z| ≤ 3 on both; Sha-g / Sha-a flag on
+the delay (z +5.84 / +4.76), explained by the documented redshift-entry error (recalculated: z +2.06 / +1.37, post
+hoc); every μ ratio agrees (|z| ≤ 2.32); all seven delays fall short of the measurement, i.e. the H0 < 70 preference
+(post hoc). Decision: no lens-model anomaly; not a candidate. Alternatives rejected: rescaling delays to another H0
+(post hoc). Revisit if: errata change a blind table entry.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
