@@ -25,9 +25,9 @@ strong-lensing core of MACS J0647.7+7015, so this is the first two-epoch test on
 single-band Abell 2744 grid (D-027 addendum 2026-10-15j). Thresholds are the D-027 ASSUMPTIONs.
 
 ## Run 2: difference-image pass on the core (D-027 addendum 2026-10-15j requires it before an SN-on-host null)
-`scripts/arc_diff.py --band F200W <o010 s3 URI> <o020 s3 URI> --ra <ra> --dec <dec> --half-arcsec 30
+`scripts/arc_diff.py --band F200W <o010 i2d> <o020 i2d> --ra 101.96636 --dec 70.24716 --half-arcsec 55
 --min-bands 1 --kernel-px 4 --inject 300`, other options at their defaults, centred on the median position of the
-72 Meena+2023 images (computed from the table, printed in the result). The box holds the multiple-image region.
+72 Meena+2023 images. The box holds the multiple-image region (images span 101″ × 83″).
 
 ## Gates
 - **G1 (run 1):** recovery at −0.75 mag (frac 1.0) ≥ 0.85, else run 1 is undetermined (U).
@@ -44,4 +44,9 @@ single-band Abell 2744 grid (D-027 addendum 2026-10-15j). Thresholds are the D-0
 Two `_i2d.fits` (1.29 / 1.30 GB, 2.6 GB in all) streamed from MAST into the gitignored data root and deleted after
 the run (cloud-disk decision): the catalogue grid touches every row, and F200W is the only shared band. Reason
 logged here, as the cloud-disk decision asks. Catalogues: the pipeline `_cat.ecsv` (2.1 / 2.8 MB). Run 2 reads its
-box by S3 byte range.
+box from the same local mosaics.
+
+## Amendment (2026-10-26, before any pixel was read)
+The first version set `--half-arcsec 30` and S3 reads. Computing the box centre from the Meena+2023 table showed the
+images span 101″ × 83″, so a 60″ box would miss part of the multiple-image region: the half-width is now 55″, and
+run 2 reads the mosaics already streamed for run 1. No other change.
