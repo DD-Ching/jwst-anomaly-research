@@ -156,3 +156,9 @@ def test_flag_images(tmp_path):
         f"D115b.2 {fx + 0.8} {fy} 0\n"
     )
     assert m.flag_images(tmp_path / "image.all") == {"D115b.1": True, "D115b.2": False}
+
+
+def test_family_rows():
+    assert m._family_rows(CHIRES, "A") == (0.02, 0.02)
+    with pytest.raises(ValueError):
+        m._family_rows(CHIRES, "Z")

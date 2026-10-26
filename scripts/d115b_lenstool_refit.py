@@ -19,9 +19,11 @@ import subprocess
 import time
 from pathlib import Path
 
-import lens_consistency as lc
-import numpy as np
-from lenstool_cloud_check import FLAG, FLAG_IMAGES, near_flag, read_image_all
+_OMP = os.environ.get("OMP_NUM_THREADS")  # the caller's setting, before lenstool_cloud_check sets 1
+
+import lens_consistency as lc  # noqa: E402
+import numpy as np  # noqa: E402
+from lenstool_cloud_check import FLAG, FLAG_IMAGES, near_flag, read_image_all  # noqa: E402
 
 MODEL = "macs0416-canucs"
 REF_CHI2POS = (
@@ -214,15 +216,30 @@ def _limit(text: str, i: int) -> tuple[str, list[str]]:
     raise ValueError(f"no 'limit {i}' section")
 
 
+class LenstoolError(RuntimeError):
+    """A nonzero Lenstool exit; ``log`` holds its stdout + stderr."""
+
+    def __init__(self, msg: str, log: str):
+        super().__init__(msg)
+        self.log = log
+
+
 def run(
-    lenstool: Path, wd: Path, par: str, arcs: Path, timeout: float | None = None
+    lenstool: Path,
+    wd: Path,
+    par: str,
+    arcs: Path,
+    timeout: float | None = None,
+    need_chires: bool = True,
 ) -> tuple[subprocess.CompletedProcess, str]:
-    """Run Lenstool on ``par`` in ``wd`` (a nonzero exit raises); return the run and chires.dat."""
+    """Run Lenstool on ``par`` in ``wd`` (a nonzero exit raises LenstoolError); return the run and
+    chires.dat ("" only when ``need_chires`` is false and Lenstool wrote none)."""
     wd.mkdir(parents=True, exist_ok=True)
     shutil.copy(arcs, wd / "arcs.dat")
     (wd / "v.par").write_text(par)
-    (wd / "chires.dat").unlink(missing_ok=True)
-    env = {**os.environ, "OMP_NUM_THREADS": str(os.cpu_count() or 1)}  # undo the import's 1
+    for stale in ("chires.dat", "image.all"):
+        (wd / stale).unlink(missing_ok=True)
+    env = {**os.environ, "OMP_NUM_THREADS": _OMP or str(os.cpu_count() or 1)}
     p = subprocess.run(
         [str(lenstool), "v.par", "-n"],
         cwd=wd,
@@ -232,9 +249,12 @@ def run(
         env=env,
     )
     if p.returncode != 0:
-        raise RuntimeError(f"lenstool exited {p.returncode} in {wd}")
+        how = f"signal {-p.returncode}" if p.returncode < 0 else f"exit {p.returncode}"
+        raise LenstoolError(f"lenstool stopped ({how})", p.stdout + p.stderr)
     chires = wd / "chires.dat"
-    return p, chires.read_text() if chires.exists() else ""
+    if need_chires or chires.exists():
+        return p, chires.read_text()
+    return p, ""
 
 
 def version(lenstool: Path) -> str:
@@ -294,26 +314,68 @@ def main_vprime_f(lt: Path, wd: Path, files: dict[str, Path]) -> None:
             "rule_F": outcome,
         }
         _write(out)  # stage V' and F are stored before the probe runs
+        for f in (1.00, 0.90):  # the fiducial and the first factor of the post hoc reading
+            with gzip.open(OUT / f"chires_f{f:.2f}.dat.gz", "wt") as g:
+                g.write((wd / f"f{f:.2f}" / "chires.dat").read_text())
         t0 = time.time()
         try:
-            run(lt, wd / "f2", build_f2(vp, best, inp), files["arcs.dat"], F2_WALL_S)
-            status = "finished"
+            run(lt, wd / "f2", build_f2(vp, best, inp), files["arcs.dat"], F2_WALL_S, False)
+            status, errors = "finished", []
         except subprocess.TimeoutExpired:
-            status = "wall cap reached"
-        except RuntimeError as e:  # a nonzero Lenstool exit
-            status = str(e).split(" in ")[0]
+            status, errors = "wall cap reached", []
+        except LenstoolError as e:
+            status, errors = str(e), [ln for ln in e.log.splitlines() if "ERROR" in ln]
         out["stage_F2_probe"] = {
             "label": "reported, not gated",
             "wall_cap_s": F2_WALL_S,
             "status": status,
+            "lenstool_error_lines": errors,
             "runtime_s": round(time.time() - t0, 1),
         }
+        _write(posthoc_vprime_f(wd), "posthoc_vprime_f.json")
     _write(out)
     print(json.dumps(out, indent=1))
 
 
-def _write(out: dict) -> None:
-    (OUT / "result_vprime_f.json").write_text(json.dumps(out, indent=1) + "\n")
+def _write(out: dict, name: str = "result_vprime_f.json") -> None:
+    (OUT / name).write_text(json.dumps(out, indent=1) + "\n")
+
+
+def _family_rows(text: str, fam: str) -> tuple[float, float]:
+    """``chires.dat``: (family summary-row chi2, sum of the family's image-row chi2)."""
+    rows = [ln.split() for ln in text.splitlines()]
+    rows = [r for r in rows if len(r) >= 13 and r[0].isdigit() and r[1].rsplit(".", 1)[0] == fam]
+    summ = [float(r[4]) for r in rows if r[10] == "N/A"]
+    if len(summ) != 1:
+        raise ValueError(f"{fam}: need one summary row")
+    return summ[0], round(sum(float(r[4]) for r in rows if r[10] != "N/A"), 2)
+
+
+def posthoc_vprime_f(wd: Path) -> dict:
+    """Post hoc reading of the stage F runs (after rule F was applied): per-family chi2 changes,
+    families with warnings, and D14a's summary row against its image rows."""
+    texts = {f: (wd / f"f{f:.2f}" / "chires.dat").read_text() for f in F_GRID}
+    c0, base, _ = read_chires(texts[1.0])
+    per_f = {}
+    for f, t in texts.items():
+        c, fam, nwarn = read_chires(t)
+        d = {k: round(fam[k] - base.get(k, 0.0), 2) for k in fam}
+        warn = {}
+        for r in (ln.split() for ln in t.splitlines()):
+            if len(r) >= 13 and r[0].isdigit() and r[10] == "N/A" and int(r[12]) > 0:
+                warn[r[1].rsplit(".", 1)[0]] = int(r[12])
+        row, img = _family_rows(t, "D14a")
+        per_f[f"{f:.2f}"] = {
+            "chi2pos": c,
+            "n_warnings": nwarn,
+            "families_with_warnings": warn,
+            "largest_family_dchi2": sorted(d.items(), key=lambda kv: -kv[1])[:4],
+            "smallest_family_dchi2": sorted(d.items(), key=lambda kv: kv[1])[:3],
+            "D14a_family_row_chi2": row,
+            "D14a_image_rows_chi2_sum": img,
+            "dchi2_without_D14a": round(c - c0 - d["D14a"], 2),
+        }
+    return {"label": "post hoc (after rule F was applied)", "per_f": per_f}
 
 
 def main() -> None:
