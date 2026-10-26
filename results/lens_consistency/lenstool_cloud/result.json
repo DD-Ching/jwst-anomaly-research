@@ -1,0 +1,1545 @@
+{
+ "plan": "results/lens_consistency/lenstool_cloud/PLAN.md",
+ "provenance": "model_prediction",
+ "lenstool": "conda-forge lenstool 8.15.5 (linux-64), runmode image 1, pinned best.par",
+ "grid_step_arcsec": 0.1,
+ "match_arcsec_assumption": 0.1,
+ "frac_min_assumption": 0.95,
+ "n_catalogued_images": 303,
+ "n_images_missing_in_image_all": 0,
+ "images_missing_in_image_all": [],
+ "n_lenstool_predicted": 912,
+ "n_matched_within": 912,
+ "frac_matched_within": 1.0,
+ "n_lenstool_unmatched": 0,
+ "n_port_unmatched": 67,
+ "matched_dist_median_arcsec": 0.000926919685409398,
+ "matched_dist_p95_arcsec": 0.0051921268398790665,
+ "matched_dist_max_arcsec": 0.033469932662816906,
+ "flag_image_lenstool": {
+  "D115b.1": true,
+  "D115b.2": true
+ },
+ "flag_image_port": {
+  "D115b.1": true,
+  "D115b.2": true
+ },
+ "gate_R": true,
+ "per_image": {
+  "D1a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 5.9637625834845297e-05
+  },
+  "D1a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 4.651664809484329e-05
+  },
+  "D1b.1": {
+   "n_lenstool": 1,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00010622164212006979
+  },
+  "D1b.2": {
+   "n_lenstool": 2,
+   "n_port": 3,
+   "max_matched_arcsec": 7.000252518292732e-05
+  },
+  "D1c.1": {
+   "n_lenstool": 2,
+   "n_port": 3,
+   "max_matched_arcsec": 4.846620968868246e-05
+  },
+  "D1c.2": {
+   "n_lenstool": 2,
+   "n_port": 3,
+   "max_matched_arcsec": 7.7993426655079e-05
+  },
+  "D1d.1": {
+   "n_lenstool": 1,
+   "n_port": 2,
+   "max_matched_arcsec": 6.088691530144469e-05
+  },
+  "D1d.2": {
+   "n_lenstool": 1,
+   "n_port": 3,
+   "max_matched_arcsec": 8.955088522536055e-05
+  },
+  "D1e.1": {
+   "n_lenstool": 1,
+   "n_port": 3,
+   "max_matched_arcsec": 6.205652217606063e-05
+  },
+  "D1e.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00014707869977983995
+  },
+  "D1f.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 6.534960768528142e-05
+  },
+  "D1f.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 7.043211184476327e-05
+  },
+  "D2.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00010589329052196756
+  },
+  "D2.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0002025006730431066
+  },
+  "D2.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0003090165738443355
+  },
+  "D3.1": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.00027066764375623396
+  },
+  "D3.2": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.0003447200136643923
+  },
+  "D4.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003460148683887142
+  },
+  "D4.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002850439132909568
+  },
+  "D4.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008472962093477164
+  },
+  "D5.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0184365154105937
+  },
+  "D5.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0035851785245953273
+  },
+  "D5.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002420996340460563
+  },
+  "D6a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0004220240843687829
+  },
+  "D6a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006545693081004944
+  },
+  "D6a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001110954392567112
+  },
+  "D6b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0004301204214980207
+  },
+  "D6b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006605269202416597
+  },
+  "D6b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0010444771836472658
+  },
+  "D6c.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00048337078141519
+  },
+  "D6c.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006351722802837785
+  },
+  "D6c.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0011034904772060632
+  },
+  "D6d.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005129823860356308
+  },
+  "D6d.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.000772667517005941
+  },
+  "D6d.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001101467845740536
+  },
+  "D6e.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001156092473539408
+  },
+  "D6e.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007348818933566385
+  },
+  "D6e.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006229651858025154
+  },
+  "D7.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.01147852897940327
+  },
+  "D7.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.008175060614554792
+  },
+  "D7.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.024447113693184225
+  },
+  "D8a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015542626974617397
+  },
+  "D8a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00026488964831438853
+  },
+  "D8a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 7.891909597167435e-05
+  },
+  "D8b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00012062326637452163
+  },
+  "D8b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00019541908832230718
+  },
+  "D8c.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 8.302870455669313e-05
+  },
+  "D8c.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0002005593404332795
+  },
+  "D9.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0078056171558194476
+  },
+  "D9.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00657186777718158
+  },
+  "D9.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0035423525722258985
+  },
+  "D10.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006363330985650001
+  },
+  "D10.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00034826954959134694
+  },
+  "D10.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008700563273059014
+  },
+  "D11.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00015503084265926405
+  },
+  "D11.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0002603098657658072
+  },
+  "D11.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002931275402499684
+  },
+  "D12a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 8.484738862126502e-05
+  },
+  "D12a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00013223467750804214
+  },
+  "D12b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00021448100577204247
+  },
+  "D12b.2": {
+   "n_lenstool": 1,
+   "n_port": 3,
+   "max_matched_arcsec": 4.618874013345634e-05
+  },
+  "D13.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.000451859108415674
+  },
+  "D13.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00012089057594267477
+  },
+  "D13.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0011229574059306838
+  },
+  "D14a.1": {
+   "n_lenstool": 3,
+   "n_port": 6,
+   "max_matched_arcsec": 0.003945941300252745
+  },
+  "D14a.2": {
+   "n_lenstool": 4,
+   "n_port": 6,
+   "max_matched_arcsec": 0.0038436919634565335
+  },
+  "D14a.3": {
+   "n_lenstool": 3,
+   "n_port": 6,
+   "max_matched_arcsec": 0.003644520591702795
+  },
+  "D14a.4": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.014531920768652437
+  },
+  "D14b.1": {
+   "n_lenstool": 3,
+   "n_port": 6,
+   "max_matched_arcsec": 0.003971812553068347
+  },
+  "D14b.2": {
+   "n_lenstool": 3,
+   "n_port": 6,
+   "max_matched_arcsec": 0.0038301806742906453
+  },
+  "D14b.3": {
+   "n_lenstool": 3,
+   "n_port": 6,
+   "max_matched_arcsec": 0.003658378641996917
+  },
+  "D15.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008732721174328382
+  },
+  "D15.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0009673986465265089
+  },
+  "D15.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0027769973613891914
+  },
+  "D16.1": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.009713697430942376
+  },
+  "D16.2": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.033469932662816906
+  },
+  "D16.3": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.0040779342650500115
+  },
+  "D17.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.009812955093809582
+  },
+  "D17.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.008514819313261807
+  },
+  "D18.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0026154593245478227
+  },
+  "D18.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005618159117910557
+  },
+  "D18.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 6.692567476513202e-05
+  },
+  "D19.1": {
+   "n_lenstool": 2,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00022818644018656316
+  },
+  "D19.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0004025036092734186
+  },
+  "D20.1": {
+   "n_lenstool": 2,
+   "n_port": 4,
+   "max_matched_arcsec": 0.0023205198496583073
+  },
+  "D20.2": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.00316855619499065
+  },
+  "D20.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00017417638046349925
+  },
+  "D21.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007361751949904602
+  },
+  "D21.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00016673363174287003
+  },
+  "D21.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015319305845102318
+  },
+  "D22a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00352775947996464
+  },
+  "D22a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005373996483695021
+  },
+  "D22a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008646516509445978
+  },
+  "D22b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0034315776272690226
+  },
+  "D22b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0054481294507105595
+  },
+  "D22b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007886533565673739
+  },
+  "D23.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0027967569441748317
+  },
+  "D23.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005826286784062631
+  },
+  "D23.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 6.882036443726842e-05
+  },
+  "D24.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.006354897957998957
+  },
+  "D24.2": {
+   "n_lenstool": 3,
+   "n_port": 5,
+   "max_matched_arcsec": 0.0016172098319618684
+  },
+  "D24.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001354934657160739
+  },
+  "D25.1": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.0005112036145117244
+  },
+  "D25.3": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.0014656751958526783
+  },
+  "D26.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0030926981351723317
+  },
+  "D26.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005410665059695294
+  },
+  "D26.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 3.5441701690918445e-05
+  },
+  "D28.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0021293825643546307
+  },
+  "D28.2": {
+   "n_lenstool": 1,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0003070275799530467
+  },
+  "D29.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0028198101697474204
+  },
+  "D29.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003294626161967556
+  },
+  "D29.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00015710966495885496
+  },
+  "D30.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002742819875230488
+  },
+  "D30.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003922274886517779
+  },
+  "D30.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 5.7701636728854336e-05
+  },
+  "D31a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0019508325811289108
+  },
+  "D31a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003154560277491468
+  },
+  "D31a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0009798759518991735
+  },
+  "D31b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0018353937646757655
+  },
+  "D31b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008271251352194212
+  },
+  "D31c.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001829100644721563
+  },
+  "D31c.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008799075305077317
+  },
+  "D31d.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0019735351311122406
+  },
+  "D31d.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002967343455668823
+  },
+  "D31d.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0011324785772782269
+  },
+  "D31e.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0019814064116012347
+  },
+  "D31e.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0029340243515974815
+  },
+  "D31e.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0011482412455986277
+  },
+  "D31f.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0019493865861718363
+  },
+  "D31f.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0028488290808766073
+  },
+  "D31f.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0012613917792393117
+  },
+  "D32.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0016881570860023576
+  },
+  "D32.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008075961273732354
+  },
+  "D32.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0004565945627358208
+  },
+  "D33.1": {
+   "n_lenstool": 5,
+   "n_port": 7,
+   "max_matched_arcsec": 0.00020532141324362534
+  },
+  "D33.2": {
+   "n_lenstool": 5,
+   "n_port": 8,
+   "max_matched_arcsec": 0.0006369730443263024
+  },
+  "D33.3": {
+   "n_lenstool": 5,
+   "n_port": 6,
+   "max_matched_arcsec": 0.000516594137386093
+  },
+  "D33.4": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004072637626382248
+  },
+  "D33.5": {
+   "n_lenstool": 4,
+   "n_port": 7,
+   "max_matched_arcsec": 0.0006521335813162698
+  },
+  "D33.6": {
+   "n_lenstool": 5,
+   "n_port": 7,
+   "max_matched_arcsec": 0.0003279709233588138
+  },
+  "D34.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001714331234601041
+  },
+  "D34.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002661389709712325
+  },
+  "D34.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002036003175323648
+  },
+  "D35.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0001602412992575532
+  },
+  "D35.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003223744665720737
+  },
+  "D35.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005366229990541381
+  },
+  "D36.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0001195593302358854
+  },
+  "D36.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001672876260497095
+  },
+  "D37.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005030880496713867
+  },
+  "D37.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0021313542008406356
+  },
+  "D38.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0026386615376780918
+  },
+  "D38.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0011435527233940239
+  },
+  "D38.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0068372354544890615
+  },
+  "D39.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004124621597566156
+  },
+  "D39.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0031399323262627545
+  },
+  "D39.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0010081420867796057
+  },
+  "D40.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0028785415125561105
+  },
+  "D40.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003854738921243956
+  },
+  "D41.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004300523658005808
+  },
+  "D41.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00023457508356902572
+  },
+  "D41.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 8.221406946438652e-05
+  },
+  "D42.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.007824549349417722
+  },
+  "D42.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0031416721488224573
+  },
+  "D42.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00180261096215691
+  },
+  "D43.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0032728632684325925
+  },
+  "D43.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0041877828848913504
+  },
+  "D43.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0002904674099035006
+  },
+  "D44.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00015196002202652706
+  },
+  "D44.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005642272990235913
+  },
+  "D44.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0016977091025064156
+  },
+  "D45.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004227870222763322
+  },
+  "D45.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002885075907229836
+  },
+  "D46.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0016600662880878457
+  },
+  "D46.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001138080894033502
+  },
+  "D46.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007022762511396114
+  },
+  "D47.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.008775956433966515
+  },
+  "D47.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00459137145879693
+  },
+  "D49a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015205736465524634
+  },
+  "D49a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005926742210706574
+  },
+  "D49a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006275853305962344
+  },
+  "D49b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0014701467990115606
+  },
+  "D49b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006573861649141374
+  },
+  "D49b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006727231608871723
+  },
+  "D50.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008314462920857746
+  },
+  "D50.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 8.456357099572524e-05
+  },
+  "D50.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0014771823211734577
+  },
+  "D52a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0018045387944646228
+  },
+  "D52a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015044400172406305
+  },
+  "D52a.3": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.001080078793545998
+  },
+  "D52b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0017990307975548027
+  },
+  "D52b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015199050945939668
+  },
+  "D52b.3": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.0010696767147128738
+  },
+  "D52c.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0017950024303900322
+  },
+  "D52c.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001311061535246316
+  },
+  "D52c.3": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.0010513343230175894
+  },
+  "D53.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00012206178750813296
+  },
+  "D53.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.000507485948976611
+  },
+  "D53.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002290958022259916
+  },
+  "D54.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00023141526132188512
+  },
+  "D54.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007203087526443605
+  },
+  "D54.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015329901740213463
+  },
+  "D55a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00456453752205861
+  },
+  "D55a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0039212442655864625
+  },
+  "D55a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0012783523429633487
+  },
+  "D55b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0046107506442771996
+  },
+  "D55b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0038633776194349377
+  },
+  "D55b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0012768750605192478
+  },
+  "D57.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00015883907343700477
+  },
+  "D57.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0001761381710035873
+  },
+  "D62a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015949841991553509
+  },
+  "D62a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0013640991484474268
+  },
+  "D62b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001612397603667365
+  },
+  "D62b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0014331409076100605
+  },
+  "D62b.3": {
+   "n_lenstool": 1,
+   "n_port": 1,
+   "max_matched_arcsec": 0.0014967814366834982
+  },
+  "D63.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0017987455850514834
+  },
+  "D63.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007310495880870301
+  },
+  "D63.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005686981348161939
+  },
+  "D64a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.006366138735425718
+  },
+  "D64a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004549931146978589
+  },
+  "D64a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0018977516913648495
+  },
+  "D64b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.006760019805785271
+  },
+  "D64b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004510723997016336
+  },
+  "D64b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0018894663844888008
+  },
+  "D65.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.006430715495740818
+  },
+  "D65.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0062522991173338555
+  },
+  "D65.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00208289899975092
+  },
+  "D66.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003087623056461359
+  },
+  "D66.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0026939644592591646
+  },
+  "D67.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00013482290230666088
+  },
+  "D67.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0018535484012884062
+  },
+  "D68.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00024388190553375615
+  },
+  "D68.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0002994695901887015
+  },
+  "D68.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.003929591613878197
+  },
+  "D69.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002165135459993912
+  },
+  "D69.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0017341899181901434
+  },
+  "D69.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005734843177535343
+  },
+  "D70.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00581615971865416
+  },
+  "D70.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0028770041869554163
+  },
+  "D70.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0017094426452276936
+  },
+  "D71.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00013741435006528016
+  },
+  "D71.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006741138733712803
+  },
+  "D71.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0026447757794519546
+  },
+  "D72a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0016930547712655532
+  },
+  "D72a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0017892031273810487
+  },
+  "D72b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005019234775722438
+  },
+  "D72b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0016929387951944569
+  },
+  "D72b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0018245665431121734
+  },
+  "D73.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0004245050919098433
+  },
+  "D73.2": {
+   "n_lenstool": 3,
+   "n_port": 4,
+   "max_matched_arcsec": 0.00023347733303878934
+  },
+  "D74.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004093212817234322
+  },
+  "D74.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00183296833683084
+  },
+  "D76a.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0069553692781023245
+  },
+  "D76a.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004635577209879542
+  },
+  "D76a.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0054897116826045506
+  },
+  "D76b.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.006610810168104852
+  },
+  "D76b.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00464043704015383
+  },
+  "D76b.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005691360781935402
+  },
+  "D77.1": {
+   "n_lenstool": 5,
+   "n_port": 7,
+   "max_matched_arcsec": 0.0004620366296885141
+  },
+  "D77.2": {
+   "n_lenstool": 5,
+   "n_port": 7,
+   "max_matched_arcsec": 0.00020988151443301233
+  },
+  "D77.3": {
+   "n_lenstool": 5,
+   "n_port": 6,
+   "max_matched_arcsec": 0.0005011994361629185
+  },
+  "D82.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005174875911698079
+  },
+  "D82.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.005790295983817558
+  },
+  "D87.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002257228648418823
+  },
+  "D87.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006920731561836946
+  },
+  "D87.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005589756244952886
+  },
+  "D89.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015293933839628808
+  },
+  "D89.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001230344202987349
+  },
+  "D89.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008635914884340771
+  },
+  "D90.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0014378824897586552
+  },
+  "D90.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0012015744797103222
+  },
+  "D90.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008902337802064226
+  },
+  "D91.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.001579004056637164
+  },
+  "D91.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0012861181907984508
+  },
+  "D91.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007540264327859054
+  },
+  "D95.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0001205683465661352
+  },
+  "D95.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0002771770856716226
+  },
+  "D95.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0019098944249124278
+  },
+  "D98.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005365189747323572
+  },
+  "D98.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0006668434326050584
+  },
+  "D98.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0016598168670815777
+  },
+  "D99.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0005164651364671901
+  },
+  "D99.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00039379721555532016
+  },
+  "D100.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0008350806886680998
+  },
+  "D100.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0007613834871656058
+  },
+  "D100.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0015586493958687068
+  },
+  "D106.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00020438675107009244
+  },
+  "D106.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00010483452465916608
+  },
+  "D106.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00314169643645997
+  },
+  "D109.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004231071632177288
+  },
+  "D109.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.008674391130437891
+  },
+  "D115a.1": {
+   "n_lenstool": 5,
+   "n_port": 6,
+   "max_matched_arcsec": 0.0012338220161191274
+  },
+  "D115a.2": {
+   "n_lenstool": 5,
+   "n_port": 6,
+   "max_matched_arcsec": 0.0017374267617432293
+  },
+  "D115a.3": {
+   "n_lenstool": 1,
+   "n_port": 1,
+   "max_matched_arcsec": 0.0015494749026827039
+  },
+  "D115b.1": {
+   "n_lenstool": 5,
+   "n_port": 6,
+   "max_matched_arcsec": 0.0012054275928208814
+  },
+  "D115b.2": {
+   "n_lenstool": 5,
+   "n_port": 5,
+   "max_matched_arcsec": 0.002991520470320282
+  },
+  "C1.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0029783972266770186
+  },
+  "C1.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.004063242809843449
+  },
+  "C2.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00036484159895448787
+  },
+  "C2.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002921889923713288
+  },
+  "C2.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.002818813141545561
+  },
+  "C3.1": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0003386468675890657
+  },
+  "C3.2": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.00031649836657463563
+  },
+  "C3.3": {
+   "n_lenstool": 3,
+   "n_port": 3,
+   "max_matched_arcsec": 0.0013599011259962037
+  }
+ }
+}

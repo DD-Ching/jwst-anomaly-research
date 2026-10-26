@@ -77,7 +77,9 @@ The MARS free-form maps (gate H passed on MACS0416) do not predict the flagged i
 the 1.263″ MARS pixels (corrected 2026-10-25 from 1.515″) are coarse at a galaxy-scale critical curve.
 
 ### Open questions (updated 2026-10-23)
-- **Only next step:** a Lenstool re-fit with 8515's σ and the other parameters free (owner machine).
+- **Only next step:** a Lenstool re-fit with 8515's σ and the other parameters free. Since 2026-10-26 it can run in a
+  cloud session (D-109; `results/lens_consistency/lenstool_cloud/RESULT.md`: Lenstool 8.15.5 reproduces the port and
+  predicts the flagged image too).
 
 ### Regeneration
 Scratch scripts (not committed): `pert.py` (nearest potentials, ±30 % and removal for the three nearest, images of

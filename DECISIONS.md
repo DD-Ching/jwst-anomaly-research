@@ -6546,3 +6546,15 @@ confining radiation at a throat is found.
   - #529 re-ran phase A and had two lint failures from files over 1 MB.
   - #500 and #542 waited on CI that did not start because the PR was "dirty".
 - **Revisit if:** the advisory report becomes too noisy to use, or the owner changes the review procedure.
+
+## D-109 Lenstool from conda-forge in cloud sessions; the port matches it on CANUCS MACS0416 (2026-10-26)
+- **Decision:** when a task needs Lenstool itself (an optimiser re-fit, not only model evaluation), install the
+  conda-forge build (`lenstool` 8.15.5, linux-64) with micromamba into the session scratchpad; do not add it to the
+  Python dependencies. The numpy port (D-024) stays the evaluator for every model check.
+- **Alternatives rejected:** compiling from source (projets.lam.fr; git.lam.fr does not answer here; needs cfitsio,
+  wcslib, gsl); keeping re-fits on the owner machine only (the D115b record waited on that since 2026-10-22).
+- **Evidence:** `results/lens_consistency/lenstool_cloud/RESULT.md`: install 53 s (not stored); gate R passes, 912 /
+  912 Lenstool images within 0.1″ of the port (median 0.00093″, maximum 0.033″); the D115b extra image is predicted
+  by both codes.
+- **Revisit if:** the conda-forge package disappears or lags a Lenstool release that a model needs, or a re-fit
+  needs the GPU/MPI builds.

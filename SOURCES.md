@@ -1982,3 +1982,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - **Kepler Eclipsing Binary Catalog, third revision:** Kirk et al. 2016, AJ 151, 68; the full KIC list with period
   and morphology from VizieR J/AJ/151/68/catalog (`inputs/kirk2016_catalog.csv`, 2,876 rows).
 - **Light curves:** Kepler DR25 long cadence from MAST, as in the pilot. Per-file sha256 in `files_expand.json.gz`.
+
+## Lenstool in the cloud (accessed 2026-10-26; `results/lens_consistency/lenstool_cloud/`)
+- **Lenstool 8.15.5**, conda-forge package `lenstool` (build `py314h03d985e_1`): https://anaconda.org/conda-forge/lenstool;
+  project page https://projets.lam.fr/projects/lenstool (Jullo et al. 2007, NJPh 9, 447, doi:10.1088/1367-2630/9/12/447).
+- **micromamba 2.9.0**: https://micro.mamba.pm/api/micromamba/linux-64/latest.
+- **Model:** the pinned CANUCS DR1 MACS0416 Lenstool files (sha256 in `lensmodel.MACS0416_CANUCS`, D-044).

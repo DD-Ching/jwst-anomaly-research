@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Lenstool 8.15.5 runs in the cloud; it matches the port on CANUCS MACS0416 and predicts the D115b image too (D-109)
+- **Result** (`results/lens_consistency/lenstool_cloud/RESULT.md`; plan frozen before the run, gate R amended
+  before the port comparison): conda-forge `lenstool` installs with micromamba into the scratchpad; `lenstool best.par`
+  runs the pinned model unchanged. Gate R passes: 912 / 912 Lenstool-predicted images within 0.1″ of the port
+  (median 0.00093″, max 0.033″); both codes predict the D115b extra image. The port finds 67 images Lenstool's
+  `image.all` lacks (not diagnosed).
+- **Deviation:** gate R re-stated after a look at `image.all` (per-image like-for-like reference); the first tool run
+  failed at its output path and was re-run.
+- **Handoff:** the D115b re-fit (8515 σ free) is no longer owner-machine-only: next, a frozen plan for a restricted
+  `runmode inverse`, validated by a no-free-parameter run against `best.par`. #374: no weekly network run yet today
+  at 09:26Z (the scheduled runs so far started 2026-10-12 15:29Z and 2026-10-19 13:20Z).
 ## 2026-10-26: SN Refsdal SX delay and μ ratio vs the seven blind models: no anomaly (D-034 addendum bq)
 - **Result** (`results/lens_consistency/refsdal_sx/RESULT.md`; plan frozen before the tables were read): outcome N.
   Measured Δt_X1 376.0 +5.6 / −5.5 d (Kelly et al. 2023) vs Treu et al. 2016 blind models 224–361 d: 5 / 7 within 3σ;
