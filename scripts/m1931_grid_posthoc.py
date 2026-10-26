@@ -102,12 +102,16 @@ def mosaic_level(data: Path, hits: Table, grid: Table) -> dict:
             ref = np.array([v for v in ref if v is not None])
         out[b.upper()] = {
             "hits": rows,
-            "reference": {
-                "n": int(ref.size),
-                "p50": round(float(np.median(ref)), 3),
-                "p99": round(float(np.percentile(ref, 99)), 3),
-                "max": round(float(ref.max()), 3),
-            },
+            "reference": (
+                {
+                    "n": int(ref.size),
+                    "p50": round(float(np.median(ref)), 3),
+                    "p99": round(float(np.percentile(ref, 99)), 3),
+                    "max": round(float(ref.max()), 3),
+                }
+                if ref.size
+                else {"n": 0}
+            ),
         }
     return out
 
