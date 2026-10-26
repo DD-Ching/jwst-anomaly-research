@@ -2810,6 +2810,17 @@ calibration or model-slope term gives the same tables). Revisit if: template-sub
 revised G165 models are public (rerun `scripts/h0pe_mu_check.py`), or a second cluster-lensed SN Ia gives
 standard-candle μ.
 
+**Addendum 2026-10-26bo (SN Encore standard-candle magnifications vs the seven blind MACS J0138 models).**
+`results/lens_consistency/encore_mu/RESULT.md`; published tables only (Suyu et al. arXiv:2509.12319 model table,
+Pierel et al. arXiv:2509.12301 final μ and Δt_1b,1a). Frozen outcome N: image z −1.75 to +1.36, ratio z −0.29 to
++1.33 (observed |μ_1b/μ_1a| 1.486, models 0.60–1.76). Power: a flag needs a factor ≥ 2.90–3.62 (micro/millilensing
+dominate the errors). Offset pooled +0.086 mag, 5 / 7 positive ("same sense as H0pe" by the frozen rule, but each
+offset is within about one σ_obs); H0_MST in 64–80 for 4 / 7 models (point estimates). Decision: SN Encore gives no
+flux-ratio or magnification anomaly and cannot test bn's shared over-prediction at the 0.633 mag level. Not a
+candidate. Alternatives rejected: pooling H0pe and Encore offsets (Encore's errors carry no weight at that level).
+Revisit if: template-subtracted SN Encore photometry or the image 1d reappearance is published (rerun
+`scripts/encore_mu_check.py`).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
