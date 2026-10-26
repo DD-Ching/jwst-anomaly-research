@@ -28,16 +28,17 @@ roll; `g85_vet.json`). Numbers: `grid/summary.json`, `grid/hits.ecsv`, `core/sum
 
 ## g85 vetting (post hoc; `docs/candidates/macs0647-1433-g85.md`)
 - Seen in three o020 `_cal` exposures, on two detectors and at different pixels (peak S/N 10.2, 9.9, 9.3; ≤ 1 px from
-  the predicted position); the fourth falls off the detector. Not a cosmic ray, hot pixel or persistence; no
+  the predicted position); the fourth falls off the detector. The first lies 4 px from its detector edge, the
+  other two 56 and 62 px. Not a cosmic ray, hot pixel or persistence; no
   motion within the 30 min visit (≤ 1 px of 0.031″), so not a Solar System object.
 - Post hoc: aperture (0.15″) difference flux 112 nJy, 26.28 AB without aperture correction; o010 4 exposures, o020 3.
   Same-visit F480M: peak S/N 1.2 (not detected).
-- Post hoc: HST F110W PID 17504 minus CLASH 2011 (2023-12-09 to 2024-03-21): no detection in the five registered visits
-  (S/N −1.7 to +1.0; aperture 5σ 25.41–26.36 AB); `ifaa27010` fails registration (3.6″).
+- Post hoc: HST F110W PID 17504 minus CLASH 2011 (2023-12-09 to 2024-03-21): not detected in the five registered visits (S/N −1.7 to +1.0); their aperture 5σ limits, 25.41–26.36 AB (0.25″, F110W), are no deeper than the JWST F200W brightness (26.28 AB in 0.15″, no aperture correction), so they do not show that it faded; `ifaa27010` fails
+  registration (3.6″) and is not used.
 - Post hoc: NED (5″): two catalogued galaxies, [CDK2017] 07064 at 0.02′ and [CDK2017] 07127 at 0.082′, no redshift. SIMBAD 5″
   and Gaia 3″: none.
-- **Verdict: inconclusive: needs a TNS check and the host redshift.** A real transient that appeared between
-  2022-09-23 and 2023-01-08 and was not seen at the HST limits 11–14 months later. The ordinary reading, a
+- **Verdict: inconclusive: needs a TNS check and the host redshift.** A real source that appeared between
+  2022-09-23 and 2023-01-08; whether it faded is not established (HST limits too shallow). The ordinary reading, a
   supernova in a field galaxy or cluster member, is a `hypothesis`; it is not tested here.
 
 ## Limits and deviations

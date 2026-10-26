@@ -99,6 +99,7 @@
    "expstart_mjd": 59952.76179200231,
    "x": 1615.6347985111577,
    "y": 2048.31105191756,
+   "edge_distance_px": -1,
    "n_finite_box": 0,
    "peak_snr": null,
    "peak_offset_px": null

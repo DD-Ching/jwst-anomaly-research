@@ -22,7 +22,7 @@ import sneos_ratio as sr  # noqa: E402
 RA, DEC = 101.99665, 70.250721  # arc_diff h1023 (results/transients/macs0647_1433/core/hits.ecsv)
 TEMPLATE, TEMPLATE_CHECK = "ibffa2020", "ibffa9030"  # CLASH F110W 2011-10 / 2011-11
 SCIENCE = ("ifaa27010", "ifaa29010", "ifaa26010", "ifaa25010", "ifaa30010", "ifaa28010")
-OUT = Path("results/transients/macs0647_1433/g85_hst.json")
+OUT = Path(__file__).resolve().parents[1] / "results/transients/macs0647_1433/g85_hst.json"
 C_AA = 2.99792458e18  # speed of light, Å/s
 
 
@@ -45,6 +45,7 @@ def measure(obs: str, tmpl: sh.Drz) -> dict:
     s = sh.random_sigma(diff, p, p, m.pix)
     photplam = float(m.hdul["SCI"].header.get("PHOTPLAM", m.hdul[0].header.get("PHOTPLAM")))
     return {
+        "used": bool(info["registered"]),  # unregistered rows are reported, never used
         "science": obs,
         "template": tmpl.obs,
         "date": m.date,
@@ -69,11 +70,15 @@ def main() -> int:
         "annulus_arcsec": list(sh.ANNULUS_ARCSEC),
         "rows": rows,
     }
-    OUT.write_text(json.dumps(out, indent=1) + "\n")
+    for r in rows:  # strict JSON: NaN -> null
+        for k, v in r.items():
+            if isinstance(v, float) and not np.isfinite(v):
+                r[k] = None
+    OUT.write_text(json.dumps(out, indent=1, allow_nan=False) + "\n")
     for r in rows:
         print(
             r["science"], r["template"], r["date"], f"S/N {r['snr']:+.1f}",
-            f"m {r['ab_mag_aperture']:.2f} lim5 {r['ab_mag_5sigma_aperture']:.2f}",
+            f"m {r['ab_mag_aperture']} lim5 {r['ab_mag_5sigma_aperture']:.2f}",
             f"reg {r['registered']} {r['shift_arcsec']:.3f}",
         )  # fmt: skip
     return 0

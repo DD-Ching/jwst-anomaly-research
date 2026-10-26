@@ -9,8 +9,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   one group: **g85** (RA 101.99665, Dec +70.250721), a 39σ point source in o020 (2023-01-08), absent in o010
   (2022-09-23).
 - **Vetting (post hoc, `docs/candidates/macs0647-1433-g85.md`):** seen in three `_cal` exposures on two detectors at
-  different pixels (S/N 9.3–10.2), no motion; 112 nJy in a 0.15″ aperture; F480M S/N 1.2; not in HST F110W
-  2023-12 / 2024-03 (5σ 25.41–26.36 AB). Not on a catalogued multiple image (2.1 at 6.0″, not stored). Verdict
+  different pixels (S/N 9.3–10.2), no motion; 112 nJy in a 0.15″ aperture; F480M S/N 1.2; not detected in HST
+  F110W 2023-12 / 2024-03, whose 5σ limits (25.41–26.36 AB) are too shallow to show fading. Not on a catalogued multiple image (2.1 at 6.0″, not stored). Verdict
   `inconclusive: needs a TNS check and the host redshift`; a supernova is the ordinary `hypothesis`.
 - **Contact sheets:** all 95 grid groups looked at; the rest are spikes, star cores, edges, scattered light and
   low-exposure cosmic rays / snowballs (by eye, not stored as a table).

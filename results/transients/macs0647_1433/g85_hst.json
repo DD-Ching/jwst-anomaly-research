@@ -11,6 +11,7 @@
  ],
  "rows": [
   {
+   "used": false,
    "science": "ifaa27010",
    "template": "ibffa2020",
    "date": "2023-12-09",
@@ -18,7 +19,7 @@
    "flux_flam": -2.177422693499549e-20,
    "sigma_random_flam": 1.1695168444714718e-20,
    "snr": -1.861813879631268,
-   "ab_mag_aperture": NaN,
+   "ab_mag_aperture": null,
    "ab_mag_5sigma_aperture": 25.364624394978527,
    "offset0_arcsec": 3.617066913862089,
    "preshift_px": [
@@ -29,6 +30,7 @@
    "registered": false
   },
   {
+   "used": true,
    "science": "ifaa29010",
    "template": "ibffa2020",
    "date": "2023-12-10",
@@ -36,7 +38,7 @@
    "flux_flam": -2.568102727820079e-21,
    "sigma_random_flam": 5.624390211760161e-21,
    "snr": -0.4566010947196332,
-   "ab_mag_aperture": NaN,
+   "ab_mag_aperture": null,
    "ab_mag_5sigma_aperture": 26.159451988846108,
    "offset0_arcsec": 0.03137957969810014,
    "preshift_px": [
@@ -47,6 +49,7 @@
    "registered": true
   },
   {
+   "used": true,
    "science": "ifaa26010",
    "template": "ibffa2020",
    "date": "2023-12-12",
@@ -65,6 +68,7 @@
    "registered": true
   },
   {
+   "used": true,
    "science": "ifaa25010",
    "template": "ibffa2020",
    "date": "2023-12-12",
@@ -83,6 +87,7 @@
    "registered": true
   },
   {
+   "used": true,
    "science": "ifaa30010",
    "template": "ibffa2020",
    "date": "2024-03-18",
@@ -90,7 +95,7 @@
    "flux_flam": -3.6048685813404625e-21,
    "sigma_random_flam": 1.119580450605733e-20,
    "snr": -0.32198388060367616,
-   "ab_mag_aperture": NaN,
+   "ab_mag_aperture": null,
    "ab_mag_5sigma_aperture": 25.412002332015653,
    "offset0_arcsec": 0.021336909623830405,
    "preshift_px": [
@@ -101,6 +106,7 @@
    "registered": true
   },
   {
+   "used": true,
    "science": "ifaa28010",
    "template": "ibffa2020",
    "date": "2024-03-21",
@@ -108,7 +114,7 @@
    "flux_flam": -1.0287784617569393e-20,
    "sigma_random_flam": 6.079531842542587e-21,
    "snr": -1.692200137118918,
-   "ab_mag_aperture": NaN,
+   "ab_mag_aperture": null,
    "ab_mag_5sigma_aperture": 26.074965254509372,
    "offset0_arcsec": 0.028248151843006747,
    "preshift_px": [
@@ -119,6 +125,7 @@
    "registered": true
   },
   {
+   "used": false,
    "science": "ifaa27010",
    "template": "ibffa9030",
    "date": "2023-12-09",
@@ -126,7 +133,7 @@
    "flux_flam": -2.958654273014569e-20,
    "sigma_random_flam": 1.5967198874553364e-20,
    "snr": -1.8529576140807784,
-   "ab_mag_aperture": NaN,
+   "ab_mag_aperture": null,
    "ab_mag_5sigma_aperture": 25.026568761872575,
    "offset0_arcsec": 3.912707896187869,
    "preshift_px": [

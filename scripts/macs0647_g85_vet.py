@@ -3,8 +3,10 @@ evidence for the F200W brightening between 1433 o010 and o020.
 
 Not part of the frozen plan (``results/transients/macs0647_1433/PLAN.md``). Reads the local
 ``_i2d`` / ``_cal`` files under ``$JWST_ANOMALY_DATA/m0647_1433`` (streamed from MAST, deleted
-after use). The ``_cal`` positions use the FITS SIP approximation in their SCI headers. Every
-number is derived from observed pixels; thresholds are ASSUMPTIONs.
+after use). The SIMBAD / NED / Gaia cross-match is not re-queried: ``CROSSMATCH`` is the
+session's astroquery result, copied with its query time. The ``_cal`` positions use the FITS
+SIP approximation in their SCI headers. Every number is derived from observed pixels;
+thresholds are ASSUMPTIONs.
 
     python scripts/macs0647_g85_vet.py
 """
@@ -23,7 +25,7 @@ from jwst_anomaly import paths
 
 RA, DEC = 101.99665, 70.250721  # arc_diff h1023 (results/transients/macs0647_1433/core/hits.ecsv)
 APER_ARCSEC, ANNULUS_ARCSEC = 0.15, (0.35, 0.60)  # ASSUMPTION
-OUT = Path("results/transients/macs0647_1433/g85_vet.json")
+OUT = paths.repo_root() / "results/transients/macs0647_1433/g85_vet.json"
 CROSSMATCH = {  # observed; astroquery calls of 2026-10-26T06:28:03Z, copied from the session
     "queried_utc": "2026-10-26T06:28:03Z",
     "calls": "Simbad.query_region / Ned.query_region (5 arcsec), Gaia.cone_search (3 arcsec)",
@@ -52,23 +54,22 @@ def peak_snr(sci: np.ndarray, x: float, y: float, box: int = 3, bg: int = 40) ->
     """Peak within ±box px of (x, y) over the robust rms of a ±bg px stamp (median removed)."""
     xi, yi = int(round(x)), int(round(y))
     ny, nx = sci.shape
+    edge = min(xi, yi, nx - 1 - xi, ny - 1 - yi)  # negative: outside the array
+    out = {"x": x, "y": y, "edge_distance_px": int(edge), "n_finite_box": 0, "peak_snr": None}
+    out["peak_offset_px"] = None
+    if edge < 0:
+        return out
+    small = np.asarray(sci[max(yi - box, 0) : yi + box + 1, max(xi - box, 0) : xi + box + 1], float)
+    out["n_finite_box"] = n_ok = int(np.isfinite(small).sum())
+    if n_ok == 0:
+        return out
     big = np.asarray(sci[max(yi - bg, 0) : yi + bg + 1, max(xi - bg, 0) : xi + bg + 1], float)
     med, rms = float(np.nanmedian(big)), robust_rms(big)
-    small = np.asarray(sci[max(yi - box, 0) : yi + box + 1, max(xi - box, 0) : xi + box + 1], float)
-    n_ok = int(np.isfinite(small).sum())
-    if n_ok == 0 or not (0 <= xi < nx and 0 <= yi < ny):
-        return {"x": x, "y": y, "n_finite_box": n_ok, "peak_snr": None, "peak_offset_px": None}
     k = np.unravel_index(np.nanargmax(small), small.shape)
     oy, ox = k[0] + max(yi - box, 0) - yi, k[1] + max(xi - box, 0) - xi
-    edge = min(xi, yi, nx - 1 - xi, ny - 1 - yi)
-    return {
-        "x": x,
-        "y": y,
-        "edge_distance_px": int(edge),
-        "n_finite_box": n_ok,
-        "peak_snr": float((small[k] - med) / rms),
-        "peak_offset_px": [int(ox), int(oy)],
-    }
+    out["peak_snr"] = float((small[k] - med) / rms)
+    out["peak_offset_px"] = [int(ox), int(oy)]
+    return out
 
 
 def aperture_njy(path: Path) -> dict:
@@ -77,6 +78,9 @@ def aperture_njy(path: Path) -> dict:
         x, y = (float(v) for v in w.world_to_pixel_values(RA, DEC))
         pix = float(np.sqrt(h["SCI"].header["PIXAR_A2"]))
         n = int(ANNULUS_ARCSEC[1] / pix) + 2
+        ny, nx = h["SCI"].shape
+        if not (n <= int(x) < nx - n and n <= int(y) < ny - n):
+            raise ValueError(f"aperture at ({x:.1f}, {y:.1f}) runs off {path.name}")
         yy, xx = np.mgrid[int(y) - n : int(y) + n + 1, int(x) - n : int(x) + n + 1]
         s = np.asarray(h["SCI"].data[yy, xx], float)
         rr = np.hypot(xx - x, yy - y) * pix
@@ -99,9 +103,8 @@ def main() -> int:
     d = out["f200w_o020"]["flux_njy_aperture"] - out["f200w_o010"]["flux_njy_aperture"]
     out["f200w_difference_njy_aperture"] = d
     out["f200w_difference_abmag_aperture"] = float(-2.5 * np.log10(d * 1e-9 / 3631.0))
-    out["roll_difference_deg"] = abs(
-        out["f200w_o010"]["pa_aper_deg"] - out["f200w_o020"]["pa_aper_deg"]
-    )
+    dpa = (out["f200w_o010"]["pa_aper_deg"] - out["f200w_o020"]["pa_aper_deg"]) % 360.0
+    out["roll_difference_deg"] = min(dpa, 360.0 - dpa)
     out["f480m_o020"] = aperture_njy(root / "cal" / "jw01433-o020_t001_nircam_clear-f480m_i2d.fits")
     rows = []
     for name in CAL:
