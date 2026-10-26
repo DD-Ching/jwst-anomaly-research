@@ -972,7 +972,8 @@ def posthoc_v3p(lt: Path, wd: Path, files: dict[str, Path]) -> dict:
     for nm in V3P_POST_PARAMS:
         for d in V3P_POST_STEPS:
             u = u_best.copy()
-            u[names.index(nm)] += d
+            j = names.index(nm)
+            u[j] = np.clip(u[j] + d, 0.001, 0.999)
             r = ev(u)
             fam = r.pop("fam", {})
             r["family_dchi2_gt1"] = {
