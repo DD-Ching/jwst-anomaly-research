@@ -1,0 +1,51 @@
+{
+  "n_positions": 5082,
+  "n_merged_after_refinement": 49,
+  "n_measured_any_band": 1731,
+  "n_measured_all_bands": 1731,
+  "n_hits": 224,
+  "n_hit_groups": 95,
+  "n_hits_mixed": 0,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F200W": {
+      "e1": "jw01433-o010_t001_nircam_clear-f200w_i2d.fits",
+      "e2": "jw01433-o020_t001_nircam_clear-f200w_i2d.fits",
+      "noise_scale": 1.4747165607195225,
+      "zero_point_mag": 0.020223178304905248,
+      "n_measured": 1731,
+      "n_pass": 224,
+      "positions_per_s": 3315.3181627761487
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.802,
+        "n_nominal": 387,
+        "recovered_frac_nominal": 0.8397932816537468,
+        "per_band_pass_frac": {
+          "F200W": 0.802
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.27,
+        "n_nominal": 313,
+        "recovered_frac_nominal": 0.16932907348242812,
+        "per_band_pass_frac": {
+          "F200W": 0.27
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; injections sit at the measured (recentred or refined) position, so recentring is not tested; a brightening injected in every band is recovered alike under the same-sign and mixed-sign rules"
+  }
+}

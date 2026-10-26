@@ -1,0 +1,128 @@
+{
+ "provenance": "derived (post hoc; not in PLAN.md)",
+ "position": [
+  101.99665,
+  70.250721
+ ],
+ "aperture_arcsec": 0.15,
+ "annulus_arcsec": [
+  0.35,
+  0.6
+ ],
+ "f200w_o010": {
+  "flux_njy_aperture": 33.62733000414367,
+  "n_exposures": 4,
+  "pa_aper_deg": 280.7610985376491,
+  "x": 1772.038523995348,
+  "y": 845.2039440595313,
+  "edge_distance_px": 845,
+  "n_finite_box": 25,
+  "peak_snr": 0.8492450843064945,
+  "peak_offset_px": [
+   2,
+   0
+  ]
+ },
+ "f200w_o020": {
+  "flux_njy_aperture": 145.80333559536902,
+  "n_exposures": 3,
+  "pa_aper_deg": 170.35332633309895,
+  "x": 3799.2650267087306,
+  "y": 2272.799276797935,
+  "edge_distance_px": 2273,
+  "n_finite_box": 25,
+  "peak_snr": 8.041931612680408,
+  "peak_offset_px": [
+   0,
+   -1
+  ]
+ },
+ "f200w_difference_njy_aperture": 112.17600559122535,
+ "f200w_difference_abmag_aperture": 26.275315693745988,
+ "roll_difference_deg": 110.40777220455016,
+ "f480m_o020": {
+  "flux_njy_aperture": 28.732084570338134,
+  "n_exposures": 4,
+  "pa_aper_deg": 170.87242756458107,
+  "x": 1865.035580249859,
+  "y": 1095.4968483249716,
+  "edge_distance_px": 1095,
+  "n_finite_box": 25,
+  "peak_snr": 1.2055754704678936,
+  "peak_offset_px": [
+   -2,
+   1
+  ]
+ },
+ "cal_exposures": [
+  {
+   "file": "jw01433020001_02101_00001_nrca3_cal.fits",
+   "expstart_mjd": 59952.74054165509,
+   "x": 1422.8188501944094,
+   "y": 2043.2738542478985,
+   "edge_distance_px": 4,
+   "n_finite_box": 28,
+   "peak_snr": 10.212676469788102,
+   "peak_offset_px": [
+    0,
+    0
+   ]
+  },
+  {
+   "file": "jw01433020001_02101_00002_nrca4_cal.fits",
+   "expstart_mjd": 59952.74762534722,
+   "x": 1423.7814554950562,
+   "y": 55.70828150266419,
+   "edge_distance_px": 56,
+   "n_finite_box": 49,
+   "peak_snr": 9.898009453824885,
+   "peak_offset_px": [
+    0,
+    -1
+   ]
+  },
+  {
+   "file": "jw01433020001_02101_00003_nrca4_cal.fits",
+   "expstart_mjd": 59952.754709050925,
+   "x": 1616.7069440030164,
+   "y": 61.705713295745085,
+   "edge_distance_px": 62,
+   "n_finite_box": 49,
+   "peak_snr": 9.257550191763254,
+   "peak_offset_px": [
+    0,
+    -1
+   ]
+  },
+  {
+   "file": "jw01433020001_02101_00004_nrca3_cal.fits",
+   "expstart_mjd": 59952.76179200231,
+   "x": 1615.6347985111577,
+   "y": 2048.31105191756,
+   "n_finite_box": 0,
+   "peak_snr": null,
+   "peak_offset_px": null
+  }
+ ],
+ "crossmatch": {
+  "queried_utc": "2026-10-26T06:28:03Z",
+  "calls": "Simbad.query_region / Ned.query_region (5 arcsec), Gaia.cone_search (3 arcsec)",
+  "simbad_5arcsec": [],
+  "gaia_dr3_3arcsec": 0,
+  "ned_5arcsec": [
+   {
+    "name": "[CDK2017] 07064",
+    "type": "G",
+    "redshift": null,
+    "sep_arcmin": 0.02
+   },
+   {
+    "name": "[CDK2017] 07127",
+    "type": "G",
+    "redshift": null,
+    "sep_arcmin": 0.082
+   }
+  ],
+  "provenance": "observed (catalogue query)"
+ }
+}
