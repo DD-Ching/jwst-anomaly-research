@@ -1,0 +1,317 @@
+{
+ "plan": "PLAN.md",
+ "catalogue": "hlsp_relics_hst_acs-wfc3ir_cl0152m13_multi_v1_cat.txt",
+ "catalogue_sha256": "8f015a78ca59c1ff71a0db2c2c3817016e2cd8699169de9f8c0c574f4dbaeabb",
+ "n_rows": 13052,
+ "z_fam4": 1.69,
+ "gate_P": {
+  "n_images": 18,
+  "n_matched": 14,
+  "n_contain": 5,
+  "frac": 0.35714285714285715,
+  "pass": false
+ },
+ "controls": [
+  {
+   "image": "1.1",
+   "z": 3.93,
+   "match": {
+    "relics_id": 12665,
+    "sep_arcsec": 0.483,
+    "dra_arcsec": -0.31444103530916917,
+    "ddec_arcsec": 0.36648000000454317,
+    "zb": 3.785,
+    "zbmin": 3.697,
+    "zbmax": 3.868,
+    "odds": 1.0
+   }
+  },
+  {
+   "image": "1.2",
+   "z": 3.93,
+   "match": null
+  },
+  {
+   "image": "1.3",
+   "z": 3.93,
+   "match": {
+    "relics_id": 13563,
+    "sep_arcsec": 0.205,
+    "dra_arcsec": 0.05450389378226211,
+    "ddec_arcsec": -0.19764000000108695,
+    "zb": 0.369,
+    "zbmin": 0.273,
+    "zbmax": 3.693,
+    "odds": 0.094
+   }
+  },
+  {
+   "image": "1.4",
+   "z": 3.93,
+   "match": null
+  },
+  {
+   "image": "2.1",
+   "z": 2.91,
+   "match": null
+  },
+  {
+   "image": "2.2",
+   "z": 2.91,
+   "match": {
+    "relics_id": 12386,
+    "sep_arcsec": 0.076,
+    "dra_arcsec": -0.02131204706093075,
+    "ddec_arcsec": 0.07308000000350034,
+    "zb": 3.253,
+    "zbmin": 2.956,
+    "zbmax": 3.524,
+    "odds": 0.749
+   }
+  },
+  {
+   "image": "2.3",
+   "z": 2.91,
+   "match": {
+    "relics_id": 13075,
+    "sep_arcsec": 0.525,
+    "dra_arcsec": -0.3476340336760146,
+    "ddec_arcsec": 0.39348000000032357,
+    "zb": 0.66,
+    "zbmin": 0.224,
+    "zbmax": 3.129,
+    "odds": 0.393
+   }
+  },
+  {
+   "image": "3.1",
+   "z": 1.66,
+   "match": {
+    "relics_id": 11411,
+    "sep_arcsec": 0.56,
+    "dra_arcsec": -0.5254559721204287,
+    "ddec_arcsec": 0.1936799999995742,
+    "zb": 1.799,
+    "zbmin": 1.535,
+    "zbmax": 1.977,
+    "odds": 0.814
+   }
+  },
+  {
+   "image": "3.2",
+   "z": 1.66,
+   "match": {
+    "relics_id": 13355,
+    "sep_arcsec": 0.399,
+    "dra_arcsec": -0.22604613836857249,
+    "ddec_arcsec": -0.32868000000405573,
+    "zb": 1.064,
+    "zbmin": 1.002,
+    "zbmax": 1.117,
+    "odds": 0.995
+   }
+  },
+  {
+   "image": "3.3",
+   "z": 1.66,
+   "match": {
+    "relics_id": 12260,
+    "sep_arcsec": 0.289,
+    "dra_arcsec": 0.015372590716770548,
+    "ddec_arcsec": 0.28835999999969886,
+    "zb": 1.257,
+    "zbmin": 1.191,
+    "zbmax": 1.317,
+    "odds": 0.966
+   }
+  },
+  {
+   "image": "4.1",
+   "z": 1.69,
+   "match": {
+    "relics_id": 11540,
+    "sep_arcsec": 0.383,
+    "dra_arcsec": -0.15686803031540175,
+    "ddec_arcsec": 0.34992000000286794,
+    "zb": 3.266,
+    "zbmin": 3.163,
+    "zbmax": 3.345,
+    "odds": 0.999
+   }
+  },
+  {
+   "image": "4.2",
+   "z": 1.69,
+   "match": {
+    "relics_id": 11729,
+    "sep_arcsec": 0.519,
+    "dra_arcsec": -0.2896297189265176,
+    "ddec_arcsec": 0.430919999996604,
+    "zb": 0.209,
+    "zbmin": 0.164,
+    "zbmax": 0.503,
+    "odds": 0.56
+   }
+  },
+  {
+   "image": "5.1",
+   "z": 2.62,
+   "match": {
+    "relics_id": 10494,
+    "sep_arcsec": 0.17,
+    "dra_arcsec": -0.01921519537111132,
+    "ddec_arcsec": -0.16883999999706134,
+    "zb": 0.246,
+    "zbmin": 0.132,
+    "zbmax": 3.931,
+    "odds": 0.158
+   }
+  },
+  {
+   "image": "5.2",
+   "z": 2.62,
+   "match": {
+    "relics_id": 10915,
+    "sep_arcsec": 0.365,
+    "dra_arcsec": -0.2501484426161442,
+    "ddec_arcsec": 0.26639999999886754,
+    "zb": 3.108,
+    "zbmin": 2.492,
+    "zbmax": 3.375,
+    "odds": 0.634
+   }
+  },
+  {
+   "image": "5.3",
+   "z": 2.62,
+   "match": {
+    "relics_id": 11587,
+    "sep_arcsec": 0.404,
+    "dra_arcsec": -0.26447552219626463,
+    "ddec_arcsec": 0.3049200000013741,
+    "zb": 2.782,
+    "zbmin": 2.335,
+    "zbmax": 3.09,
+    "odds": 0.656
+   }
+  },
+  {
+   "image": "6.1",
+   "z": 4.39,
+   "match": {
+    "relics_id": 12339,
+    "sep_arcsec": 0.304,
+    "dra_arcsec": -0.15197921490573407,
+    "ddec_arcsec": 0.2631599999993739,
+    "zb": 2.086,
+    "zbmin": 1.455,
+    "zbmax": 2.448,
+    "odds": 0.463
+   }
+  },
+  {
+   "image": "6.2",
+   "z": 4.39,
+   "match": null
+  },
+  {
+   "image": "6.3",
+   "z": 4.39,
+   "match": {
+    "relics_id": 11345,
+    "sep_arcsec": 0.481,
+    "dra_arcsec": -0.35181750238047116,
+    "ddec_arcsec": 0.32831999999984873,
+    "zb": 1.906,
+    "zbmin": 1.482,
+    "zbmax": 2.38,
+    "odds": 0.526
+   }
+  }
+ ],
+ "control_median_offset_arcsec": [
+  -0.23809729049235834,
+  0.2773799999992832
+ ],
+ "family4": [
+  {
+   "image": "4.1",
+   "z": 1.69,
+   "match": {
+    "relics_id": 11540,
+    "sep_arcsec": 0.383,
+    "dra_arcsec": -0.15686803031540175,
+    "ddec_arcsec": 0.34992000000286794,
+    "zb": 3.266,
+    "zbmin": 3.163,
+    "zbmax": 3.345,
+    "odds": 0.999
+   }
+  },
+  {
+   "image": "4.2",
+   "z": 1.69,
+   "match": {
+    "relics_id": 11729,
+    "sep_arcsec": 0.519,
+    "dra_arcsec": -0.2896297189265176,
+    "ddec_arcsec": 0.430919999996604,
+    "zb": 0.209,
+    "zbmin": 0.164,
+    "zbmax": 0.503,
+    "odds": 0.56
+   }
+  }
+ ],
+ "segments": [
+  {
+   "segment": 112,
+   "ra": 28.180164108108027,
+   "dec": -13.953050046231674,
+   "match": {
+    "relics_id": 12374,
+    "sep_arcsec": 0.34,
+    "dra_arcsec": -0.2229313066144062,
+    "ddec_arcsec": 0.2564864340243389,
+    "zb": 4.636,
+    "zbmin": 0.742,
+    "zbmax": 4.919,
+    "odds": 0.617
+   },
+   "class": "consistent"
+  },
+  {
+   "segment": 127,
+   "ra": 28.178360648499897,
+   "dec": -13.95318384759645,
+   "match": {
+    "relics_id": 12337,
+    "sep_arcsec": 0.397,
+    "dra_arcsec": -0.2733826584174854,
+    "ddec_arcsec": 0.2874513472178819,
+    "zb": 0.624,
+    "zbmin": 0.534,
+    "zbmax": 0.661,
+    "odds": 0.922
+   },
+   "class": "excluded"
+  },
+  {
+   "segment": 131,
+   "ra": 28.178311734305787,
+   "dec": -13.952588879364622,
+   "match": {
+    "relics_id": 12524,
+    "sep_arcsec": 0.364,
+    "dra_arcsec": -0.21079503743552475,
+    "ddec_arcsec": 0.2972857126422923,
+    "zb": 3.131,
+    "zbmin": 2.938,
+    "zbmax": 3.325,
+    "odds": 0.907
+   },
+   "class": "excluded"
+  }
+ ],
+ "outcome": "U"
+}

@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: RX J0152 family 4: RELICS BPZ photo-z cannot decide the three chance-level matches (gate P fails; D-034 addendum br)
+- **Result** (`results/lens_consistency/rxj0152_fam4_photoz/RESULT.md`; plan frozen before any catalogue row):
+  gate P fails, 5 / 14 SLICE control images inside BPZ's 95 % interval; the spectroscopic family 1 fails too.
+  Outcome U, no reading. Family 4's own images get z_b 3.266 (4.1) and 0.209 (4.2).
+- Post hoc: removing the median control offset (−0.238″, +0.277″) gives 6 / 14, still failing.
+- **Failed approach:** HST-resolution BPZ (RELICS v1) as the photo-z discriminant on RX J0152 arcs. DJA v7 has no RX
+  J0152 field (public index read 2026-10-26). The LAM atlas still answers with a JavaScript bot check (HTTP 418);
+  not bypassed.
+- **Handoff:** the family-4 line stays paused (addendum br "Revisit if"). #374 waits for the next weekly run.
+
 ## 2026-10-26: MACS J1931 two-epoch grid 6882 o038 → 12299 o001 (392.6 d, core): outcome N, 12 groups all ordinary; SN Eos 101.2 recovered fading
 - **Result** (`results/transients/macs1931_grid/RESULT.md`; plan pushed before any pixel): 17 hits in 12 groups
   among 976 positions measured in ≥ 1 LW band; G1 0.94 at −0.75 mag, G2 noise 1.20–1.54.
