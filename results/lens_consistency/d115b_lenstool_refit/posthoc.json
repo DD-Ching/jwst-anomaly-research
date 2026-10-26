@@ -1,7 +1,16 @@
 {
- "n_families": 111,
- "n_image_rows": 303,
- "sum_family_chi2": 356.64,
+ "label": "post hoc",
+ "chi2pos_by_grille_nombre": {
+  "128": 356.67,
+  "256": 356.67,
+  "512": 356.67
+ },
+ "reference_input_par": [
+  "3",
+  "64.03821668520617",
+  "-24.06750122335985"
+ ],
+ "chi2pos_input_par_reference": 344.42,
  "top8_families_chi2": [
   [
    "D52a",
@@ -36,16 +45,9 @@
    10.45
   ]
  ],
- "posthoc_grid_nombre_256_512_chi2": 356.674111,
- "note": "post hoc; family rows are chires.dat rows whose dx is N/A",
- "posthoc_grid_nombre_tested": [
-  128,
-  256,
-  512
- ],
  "family_chi2_D115a_D115b": [
   4.6,
   0.5
  ],
- "n_warnings": 0
+ "sum_family_chi2": 356.64
 }

@@ -82,8 +82,9 @@ the 1.263″ MARS pixels (corrected 2026-10-25 from 1.515″) are coarse at a ga
   predicts the flagged image too).
 
 ### Lenstool stage V, 2026-10-26 (`results/lens_consistency/d115b_lenstool_refit/RESULT.md`, D-109 addendum)
-Lenstool 8.15.5's χ²_pos of the pinned `best.par` is 356.674 vs the header's 344.298: gate V fails (1 %), so no
-Lenstool re-fit Δχ² is read yet. Verdict unchanged (`inconclusive`).
+Gate V fails as frozen: Lenstool 8.15.5 gives χ²_pos 356.67 for `best.par` vs the header's 344.298. Post hoc, the
+cause is `best.par`'s 6-decimal reference; with `input.par`'s, Lenstool gives 344.42. No re-fit Δχ² is read yet.
+Verdict unchanged (`inconclusive`).
 
 ### Regeneration
 Scratch scripts (not committed): `pert.py` (nearest potentials, ±30 % and removal for the three nearest, images of

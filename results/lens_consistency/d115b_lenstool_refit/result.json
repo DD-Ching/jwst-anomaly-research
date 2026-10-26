@@ -1,12 +1,15 @@
 {
  "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN.md",
  "provenance": "model_prediction",
- "lenstool": "conda-forge lenstool 8.15.5 (linux-64), runmode inverse 0, pinned best.par",
- "returncode": 0,
+ "lenstool": "lenstool 8.15.5 (py314h03d985e_1, conda-forge)",
+ "runmode": "inverse 0, chi2 1 (image plane, forme -1, sigposArcsec 0.49)",
  "runtime_s": 0.5,
- "chi2pos_lenstool": 356.674111,
+ "chi2_info_line": 356.674111,
+ "chi2pos_lenstool": 356.67,
  "chi2pos_best_par_header": 344.298308,
- "rel_diff": 0.035945000926347746,
+ "rel_diff": 0.03593306069921202,
  "tol_frac_assumption": 0.01,
+ "n_families": 111,
+ "n_warnings": 0,
  "gate_V": false
 }

@@ -6574,4 +6574,4 @@ confining radiation at a throat is found.
   by both codes.
 - **Revisit if:** the conda-forge package disappears or lags a Lenstool release that a model needs, or a re-fit
   needs the GPU/MPI builds.
-- **Addendum (2026-10-26, stage V of the D115b re-fit):** Lenstool 8.15.5 needs runmode `chi2 1` to print a χ² (`inverse 0` alone prints none), and it reports χ² 0 without a warning when `multfile` names an absent file. Its χ²_pos of the pinned `best.par` is 356.674 vs the header's 344.298 (+3.59 %), so gate V (1 %, ASSUMPTION) fails and no Lenstool Δχ² is read until the difference is located (`results/lens_consistency/d115b_lenstool_refit/RESULT.md`).
+- **Addendum (2026-10-26, stage V of the D115b re-fit):** Lenstool 8.15.5 needs runmode `chi2 1` to print a χ² (`inverse 0` alone prints none). It reports χ² 0 without a warning when `multfile` names an absent file. Always build Lenstool run files with `input.par`'s full-precision `reference`. `best.par` rounds it to 6 decimals, which moved the CANUCS MACS0416 χ²_pos from 344.42 to 356.67 (header 344.298; post hoc, `results/lens_consistency/d115b_lenstool_refit/RESULT.md`).

@@ -2,16 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-26: D115b Lenstool re-fit stage V: Lenstool's χ² of the pinned model misses the published value by 3.6 %; no re-fit read (D-109 addendum)
-- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT.md`; plan frozen before any run): gate V fails.
-  Lenstool 8.15.5 `inverse 0` + `chi2 1` on the pinned `best.par` gives χ²_pos 356.674 vs the header's 344.298
-  (+3.59 % > 1 %, ASSUMPTION); 303 images, 0 warnings. Post hoc: grid size 128 / 256 / 512 does not change it; the
-  largest terms are D52a, D52b, D34 and D28.
-- **Deviations:** the first run kept `input.par`'s unpublished `multfile` name and printed no χ²; the builder was
-  fixed (`multfile 1 arcs.dat`, as planned, plus `chi2 1`) before the reported run. The tool and tests were
-  committed only after the runs (a lint failure stopped the earlier commits); the plan was committed before.
-- **Handoff:** the D115b re-fit (stage F) waits on locating the χ² difference: Lenstool per-family `chires` vs the
-  port's 330.81 fiducial, family by family. #374: the weekly network run had not started by 10:25Z.
+## 2026-10-26: D115b Lenstool re-fit stage V: gate V fails as frozen (+3.6 %); post hoc the cause is best.par's rounded reference (D-109 addendum)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT.md`; plan frozen before any run): Lenstool 8.15.5
+  (`inverse 0` + `chi2 1`) on `best.par` gives χ²_pos 356.67 vs the header's 344.298 (+3.59 % > 1 %, ASSUMPTION).
+- **Post hoc:** with `input.par`'s full-precision reference (best.par rounds it to 6 decimals), Lenstool gives 344.42,
+  within 0.04 % (not stored). Grid size does not matter. The 1.3 mas reference shift costs Δχ² 12.25 on this model (not stored).
+- **Deviations:** the tool and tests were committed only after the first runs (a lint failure stopped the
+  commits); the reported numbers are a re-run of the committed tool. The first run kept `input.par`'s unpublished
+  `multfile` name and printed no χ².
+- **Handoff:** next is stage V′ (the same gate with the full-precision reference, frozen as a deviation), then a frozen
+  stage F plan (8515 σ free, Δχ² against V′). #374: the weekly network run had not started by 10:30Z.
 
 ## 2026-10-26: Lenstool 8.15.5 runs in the cloud; it matches the port on CANUCS MACS0416 and predicts the D115b image too (D-109)
 - **Result** (`results/lens_consistency/lenstool_cloud/RESULT.md`; plan frozen before the run, gate R amended
