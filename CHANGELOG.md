@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Abell 2744 GLASS flanking pair 1324 o001 → o007: two-epoch grid, 0 hits
+- **Result** (`results/transients/a2744_glass_flank/RESULT.md`; plan frozen before any pixel): outcome N, 0 hit
+  groups among 4,795 catalogued positions (F277W / F356W / F444W, 373 d, outside the core). Injections −0.75 mag
+  0.956, −0.44 mag 0.65; noise scales 1.16–1.38. Single-band passes are pixel blocks and one star dipole (contact
+  sheet looked at, post hoc). A general two-epoch null at low magnification, not a lens-model test.
+- **Deviation:** first invocation had `--epoch2-catalogs 3` (not `3 4 5`); re-run, only the corrected run reported.
+- **Data:** six `_i2d` (1.9 GB) streamed from MAST and deleted.
+- **Handoff:** the other frozen candidate is 2561 o002 → o006 (5.8 arcmin², 366 d). Abell 2744 core still waits for
+  a new epoch; Abell 370 epochs from 2026-12-29. #374 waits for today's 06:17Z weekly run.
+
 ## 2026-10-26: SN Requiem measured delays vs the seven blind MACS J0138 lens models: no flag (D-034 addendum bp)
 - **Result** (`results/lens_consistency/requiem_dt/RESULT.md`; plan frozen before the tables were read): outcome N.
   H0-free ratio Δt_2c,2a / Δt_2b,2a measured 1.148 (σ_ln 0.146) vs models 1.12–2.37 (z +0.02 to −1.97);

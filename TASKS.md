@@ -105,6 +105,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.
 
+- **Abell 2744 GLASS flanking grid 2026-10-26** (`results/transients/a2744_glass_flank/RESULT.md`): 1324 o001 → o007,
+  0 hits, recovery 0.956 at −0.75 mag. Next frozen flanking pair 2561 o002 → o006 (general rate, low value).
+
 - **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; **closed by the owner 2026-10-24**):
   - Sunrise n0153: no new epoch;
   - S1063 1316 / 1557: 116.28VK.001 releases 2026-11-20 to 2027-03-12;
