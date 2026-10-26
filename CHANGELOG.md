@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: g09725 host redshift from UNCOVER DR3 / DR4: bimodal, verdict unchanged
+- **Result** (`docs/candidates/a2744_2561_flank_g09725.md`, second pass; plan written before the catalogues were read):
+  DR3 counterpart id 2548 at 0.15″ records the pre-brightening o002 state (independent grizli reduction; consistent
+  with the grid Δm within ≈ 0.04 mag). Host photo-z bimodal: EAZY z_phot 0.76 (16–84 % 0.73–4.53), Prospector-β z_50
+  0.92 (0.76–3.94), z_ml 4.35; log M* ≈ 7.35; galaxy fit preferred over stars (χ² 1.8 vs 10.2); no NIRSpec zspec
+  within 108″. The brightening is M ≈ −15 to −16 (rest near-IR, z ≈ 0.8) or ≈ −18.5 (rest optical, z 4.35): a
+  supernova stays the ordinary reading at both modes, AGN variability not excluded. Still inconclusive.
+- **Failed route:** TNS web search answers 403 from its own load balancer; a TNS check needs the owner's credentials.
+- **Data:** DR3 SUPER (84 MB, pinned sha256), DR4 SPS (66 MB) and zspec (0.1 MB) catalogues streamed, deleted.
+- **Handoff:** #553 stays needs-human (third epoch, spectroscopy or TNS). #556 g85 was under a live claim; not touched.
+
 ## 2026-10-26: Abell 2744 flanking pair 2561 o002 → o006: two-epoch grid, one real brightening (inconclusive)
 - **Result** (`results/transients/a2744_2561_flank/RESULT.md`; plan frozen before any pixel): gates pass (−0.75 mag
   0.918, noise 1.29–1.45); 42 hit groups, 41 instrumental (33 spikes / wings, 3 star dipoles, 4 mosaic edges, 1

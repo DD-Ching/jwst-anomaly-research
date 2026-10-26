@@ -315,6 +315,11 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   - GLASS-JWST, DOI 10.17909/kw3c-n857: https://archive.stsci.edu/hlsp/glass-jwst
 - COSMOS2025 catalog v1.1: https://cosmos2025.iap.fr/
 - UNCOVER DR4: https://jwst-uncover.github.io/
+  - DR4 Prospector-β SPS catalogue (Wang et al. 2024), Drive id 1AE1g_5m9PYnu2LtDEAgXOgxkguImy7jv, 65,905,920 bytes,
+    sha256 7008e1d1b30c9f9a6f8f5ecdab98d0addc77ed597830ef40eb72a093cbd3d1ce; DR4.1 NIRSpec zspec catalogue (Price et al.
+    2024, arXiv:2408.03920), id 10E5tGzATWGz-3y7G0g9LfUPBHGxgqSjJ, 129,600 bytes, 668 rows, sha256
+    fda69a46757baba7a1de4c061867af3235cba96aa88d23f871be30d1bb6993f2; spectroscopy README id 10Vu1M7p7LPr9Ol146EYE6Qk2fSlHKk7-.
+    Linked from https://jwst-uncover.github.io/DR4.html, accessed 2026-10-26 (g09725 host redshift).
 - UNCOVER DR3 photometry (Weaver et al. 2024, ApJS 270, 7): https://jwst-uncover.github.io/DR3.html; LW SUPER catalogue
   `UNCOVER_DR3_LW_SUPER_catalog.fits` (Drive id 19Jd3Xg5BTrHX5icb81txSn_P0LqxmLsz, 83,684,160 bytes), segmentation map
   (1s7DnoX8G73sOLiMiDttlsyZLjwSB2WlX), bCG-subtracted F200W mosaic v5.2.0 (1CPjv4mJUj-4Qn8nwWS0FEPEdBfhDxzV_,
