@@ -1,0 +1,512 @@
+{
+ "label": "post hoc diagnostics (derived from the simulated injections; no outcome changed)",
+ "definitions": {
+  "near_edges": "the window t0 +- (h + 0.25 span + max(1 d, span)), span = max(2h, 1 d), reaches the start or end of the good data, a quarter boundary or a gap >= 0.5 d between consecutive good cadences",
+  "quarter_dim_ge_0.5": "the noiseless model is >= 1 mag dim on at least half of the good cadences of some quarter (that quarter's median is then set by the event)",
+  "grazing_u0_ge_2_minus_rho": "u0 >= 2 - rho: the source never lies wholly in the umbra"
+ },
+ "per_stage": {
+  "edge:insufficient": {
+   "events": 1648,
+   "near_edges": 1589,
+   "quarter_dim_ge_0.5": 33
+  },
+  "edge:insufficient|tE=0.1": {
+   "events": 102,
+   "near_edges": 81,
+   "quarter_dim_ge_0.5": 0
+  },
+  "edge:insufficient|tE=0.3": {
+   "events": 307,
+   "near_edges": 276,
+   "quarter_dim_ge_0.5": 0
+  },
+  "edge:insufficient|tE=1.0": {
+   "events": 456,
+   "near_edges": 449,
+   "quarter_dim_ge_0.5": 0
+  },
+  "edge:insufficient|tE=10.0": {
+   "events": 348,
+   "near_edges": 348,
+   "quarter_dim_ge_0.5": 33
+  },
+  "edge:insufficient|tE=3.0": {
+   "events": 435,
+   "near_edges": 435,
+   "quarter_dim_ge_0.5": 0
+  },
+  "edge:slow": {
+   "events": 136,
+   "near_edges": 85,
+   "quarter_dim_ge_0.5": 2
+  },
+  "edge:slow|tE=0.1": {
+   "events": 20,
+   "near_edges": 6,
+   "quarter_dim_ge_0.5": 0
+  },
+  "edge:slow|tE=0.3": {
+   "events": 19,
+   "near_edges": 4,
+   "quarter_dim_ge_0.5": 0
+  },
+  "edge:slow|tE=1.0": {
+   "events": 18,
+   "near_edges": 8,
+   "quarter_dim_ge_0.5": 0
+  },
+  "edge:slow|tE=10.0": {
+   "events": 39,
+   "near_edges": 39,
+   "quarter_dim_ge_0.5": 2
+  },
+  "edge:slow|tE=3.0": {
+   "events": 40,
+   "near_edges": 28,
+   "quarter_dim_ge_0.5": 0
+  },
+  "gap": {
+   "events": 560,
+   "near_edges": 559,
+   "quarter_dim_ge_0.5": 0
+  },
+  "gap|tE=0.1": {
+   "events": 261,
+   "near_edges": 260,
+   "quarter_dim_ge_0.5": 0
+  },
+  "gap|tE=0.3": {
+   "events": 174,
+   "near_edges": 174,
+   "quarter_dim_ge_0.5": 0
+  },
+  "gap|tE=1.0": {
+   "events": 94,
+   "near_edges": 94,
+   "quarter_dim_ge_0.5": 0
+  },
+  "gap|tE=10.0": {
+   "events": 2,
+   "near_edges": 2,
+   "quarter_dim_ge_0.5": 0
+  },
+  "gap|tE=3.0": {
+   "events": 29,
+   "near_edges": 29,
+   "quarter_dim_ge_0.5": 0
+  },
+  "not_flagged": {
+   "events": 140,
+   "near_edges": 139,
+   "quarter_dim_ge_0.5": 82
+  },
+  "not_flagged|tE=0.1": {
+   "events": 5,
+   "near_edges": 4,
+   "quarter_dim_ge_0.5": 0
+  },
+  "not_flagged|tE=0.3": {
+   "events": 4,
+   "near_edges": 4,
+   "quarter_dim_ge_0.5": 0
+  },
+  "not_flagged|tE=1.0": {
+   "events": 14,
+   "near_edges": 14,
+   "quarter_dim_ge_0.5": 0
+  },
+  "not_flagged|tE=10.0": {
+   "events": 94,
+   "near_edges": 94,
+   "quarter_dim_ge_0.5": 82
+  },
+  "not_flagged|tE=3.0": {
+   "events": 23,
+   "near_edges": 23,
+   "quarter_dim_ge_0.5": 0
+  },
+  "oneoff": {
+   "events": 117,
+   "near_edges": 117,
+   "quarter_dim_ge_0.5": 115
+  },
+  "oneoff|tE=10.0": {
+   "events": 117,
+   "near_edges": 117,
+   "quarter_dim_ge_0.5": 115
+  },
+  "quality": {
+   "events": 121,
+   "near_edges": 102,
+   "quarter_dim_ge_0.5": 4
+  },
+  "quality|tE=0.1": {
+   "events": 75,
+   "near_edges": 57,
+   "quarter_dim_ge_0.5": 0
+  },
+  "quality|tE=0.3": {
+   "events": 35,
+   "near_edges": 34,
+   "quarter_dim_ge_0.5": 0
+  },
+  "quality|tE=1.0": {
+   "events": 7,
+   "near_edges": 7,
+   "quarter_dim_ge_0.5": 0
+  },
+  "quality|tE=10.0": {
+   "events": 4,
+   "near_edges": 4,
+   "quarter_dim_ge_0.5": 4
+  },
+  "recovered": {
+   "events": 14948,
+   "near_edges": 6967,
+   "quarter_dim_ge_0.5": 1
+  },
+  "recovered|tE=0.1": {
+   "events": 3081,
+   "near_edges": 205,
+   "quarter_dim_ge_0.5": 0
+  },
+  "recovered|tE=0.3": {
+   "events": 3152,
+   "near_edges": 263,
+   "quarter_dim_ge_0.5": 0
+  },
+  "recovered|tE=1.0": {
+   "events": 3077,
+   "near_edges": 1095,
+   "quarter_dim_ge_0.5": 0
+  },
+  "recovered|tE=10.0": {
+   "events": 2636,
+   "near_edges": 2633,
+   "quarter_dim_ge_0.5": 1
+  },
+  "recovered|tE=3.0": {
+   "events": 3002,
+   "near_edges": 2771,
+   "quarter_dim_ge_0.5": 0
+  },
+  "short": {
+   "events": 483,
+   "near_edges": 160,
+   "quarter_dim_ge_0.5": 0
+  },
+  "short|rho=0.01": {
+   "events": 75,
+   "grazing_u0_ge_2_minus_rho": 49
+  },
+  "short|rho=0.1": {
+   "events": 408,
+   "grazing_u0_ge_2_minus_rho": 403
+  },
+  "short|tE=0.1": {
+   "events": 126,
+   "near_edges": 28,
+   "quarter_dim_ge_0.5": 0
+  },
+  "short|tE=0.3": {
+   "events": 90,
+   "near_edges": 16,
+   "quarter_dim_ge_0.5": 0
+  },
+  "short|tE=1.0": {
+   "events": 92,
+   "near_edges": 19,
+   "quarter_dim_ge_0.5": 0
+  },
+  "short|tE=10.0": {
+   "events": 76,
+   "near_edges": 60,
+   "quarter_dim_ge_0.5": 0
+  },
+  "short|tE=3.0": {
+   "events": 99,
+   "near_edges": 37,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:insufficient": {
+   "events": 1402,
+   "near_edges": 1376,
+   "quarter_dim_ge_0.5": 2
+  },
+  "shoulder:insufficient|tE=0.1": {
+   "events": 225,
+   "near_edges": 214,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:insufficient|tE=0.3": {
+   "events": 202,
+   "near_edges": 187,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:insufficient|tE=1.0": {
+   "events": 128,
+   "near_edges": 128,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:insufficient|tE=10.0": {
+   "events": 609,
+   "near_edges": 609,
+   "quarter_dim_ge_0.5": 2
+  },
+  "shoulder:insufficient|tE=3.0": {
+   "events": 238,
+   "near_edges": 238,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:no": {
+   "events": 445,
+   "near_edges": 194,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:no|tE=0.1": {
+   "events": 105,
+   "near_edges": 6,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:no|tE=0.3": {
+   "events": 17,
+   "near_edges": 2,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:no|tE=1.0": {
+   "events": 114,
+   "near_edges": 38,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:no|tE=10.0": {
+   "events": 75,
+   "near_edges": 72,
+   "quarter_dim_ge_0.5": 0
+  },
+  "shoulder:no|tE=3.0": {
+   "events": 134,
+   "near_edges": 76,
+   "quarter_dim_ge_0.5": 0
+  }
+ },
+ "loss_groups": {
+  "coverage": [
+   "gap",
+   "quality"
+  ],
+  "tests_reach_data_edge": [
+   "edge:insufficient",
+   "shoulder:insufficient"
+  ],
+  "short_or_grazing": [
+   "short"
+  ],
+  "shape_tests": [
+   "edge:slow",
+   "shoulder:no"
+  ],
+  "oneoff": [
+   "oneoff"
+  ],
+  "not_flagged": [
+   "not_flagged"
+  ]
+ },
+ "grouped_losses": {
+  "0": {
+   "coverage": 86,
+   "tests_reach_data_edge": 79,
+   "short_or_grazing": 15,
+   "shape_tests": 22,
+   "oneoff": 0,
+   "not_flagged": 1
+  },
+  "1": {
+   "coverage": 61,
+   "tests_reach_data_edge": 140,
+   "short_or_grazing": 2,
+   "shape_tests": 6,
+   "oneoff": 0,
+   "not_flagged": 2
+  },
+  "2": {
+   "coverage": 22,
+   "tests_reach_data_edge": 151,
+   "short_or_grazing": 7,
+   "shape_tests": 7,
+   "oneoff": 0,
+   "not_flagged": 2
+  },
+  "3": {
+   "coverage": 7,
+   "tests_reach_data_edge": 181,
+   "short_or_grazing": 3,
+   "shape_tests": 17,
+   "oneoff": 0,
+   "not_flagged": 10
+  },
+  "4": {
+   "coverage": 3,
+   "tests_reach_data_edge": 234,
+   "short_or_grazing": 6,
+   "shape_tests": 14,
+   "oneoff": 57,
+   "not_flagged": 7
+  },
+  "5": {
+   "coverage": 80,
+   "tests_reach_data_edge": 86,
+   "short_or_grazing": 48,
+   "shape_tests": 22,
+   "oneoff": 0,
+   "not_flagged": 2
+  },
+  "6": {
+   "coverage": 48,
+   "tests_reach_data_edge": 116,
+   "short_or_grazing": 44,
+   "shape_tests": 9,
+   "oneoff": 0,
+   "not_flagged": 0
+  },
+  "7": {
+   "coverage": 34,
+   "tests_reach_data_edge": 140,
+   "short_or_grazing": 42,
+   "shape_tests": 57,
+   "oneoff": 0,
+   "not_flagged": 4
+  },
+  "8": {
+   "coverage": 3,
+   "tests_reach_data_edge": 150,
+   "short_or_grazing": 39,
+   "shape_tests": 69,
+   "oneoff": 0,
+   "not_flagged": 4
+  },
+  "9": {
+   "coverage": 1,
+   "tests_reach_data_edge": 229,
+   "short_or_grazing": 26,
+   "shape_tests": 44,
+   "oneoff": 58,
+   "not_flagged": 3
+  },
+  "10": {
+   "coverage": 85,
+   "tests_reach_data_edge": 83,
+   "short_or_grazing": 20,
+   "shape_tests": 41,
+   "oneoff": 0,
+   "not_flagged": 1
+  },
+  "11": {
+   "coverage": 53,
+   "tests_reach_data_edge": 123,
+   "short_or_grazing": 7,
+   "shape_tests": 11,
+   "oneoff": 0,
+   "not_flagged": 1
+  },
+  "12": {
+   "coverage": 24,
+   "tests_reach_data_edge": 145,
+   "short_or_grazing": 1,
+   "shape_tests": 17,
+   "oneoff": 0,
+   "not_flagged": 4
+  },
+  "13": {
+   "coverage": 8,
+   "tests_reach_data_edge": 179,
+   "short_or_grazing": 8,
+   "shape_tests": 16,
+   "oneoff": 0,
+   "not_flagged": 6
+  },
+  "14": {
+   "coverage": 1,
+   "tests_reach_data_edge": 241,
+   "short_or_grazing": 6,
+   "shape_tests": 10,
+   "oneoff": 0,
+   "not_flagged": 49
+  },
+  "15": {
+   "coverage": 85,
+   "tests_reach_data_edge": 79,
+   "short_or_grazing": 43,
+   "shape_tests": 40,
+   "oneoff": 0,
+   "not_flagged": 1
+  },
+  "16": {
+   "coverage": 47,
+   "tests_reach_data_edge": 130,
+   "short_or_grazing": 37,
+   "shape_tests": 10,
+   "oneoff": 0,
+   "not_flagged": 1
+  },
+  "17": {
+   "coverage": 21,
+   "tests_reach_data_edge": 148,
+   "short_or_grazing": 42,
+   "shape_tests": 51,
+   "oneoff": 0,
+   "not_flagged": 4
+  },
+  "18": {
+   "coverage": 11,
+   "tests_reach_data_edge": 163,
+   "short_or_grazing": 49,
+   "shape_tests": 72,
+   "oneoff": 0,
+   "not_flagged": 3
+  },
+  "19": {
+   "coverage": 1,
+   "tests_reach_data_edge": 253,
+   "short_or_grazing": 38,
+   "shape_tests": 46,
+   "oneoff": 2,
+   "not_flagged": 35
+  },
+  "all_cells": {
+   "coverage": 681,
+   "tests_reach_data_edge": 3050,
+   "short_or_grazing": 483,
+   "shape_tests": 581,
+   "oneoff": 117,
+   "not_flagged": 140,
+   "lost": 5052
+  }
+ },
+ "ratios": {
+  "effective_over_observing_1732": {
+   "0": 0.919,
+   "1": 0.91,
+   "2": 0.935,
+   "3": 0.902,
+   "4": 0.783,
+   "5": 0.879,
+   "6": 0.903,
+   "7": 0.834,
+   "8": 0.848,
+   "9": 0.737,
+   "10": 0.888,
+   "11": 0.928,
+   "12": 0.933,
+   "13": 0.903,
+   "14": 0.799,
+   "15": 0.867,
+   "16": 0.894,
+   "17": 0.847,
+   "18": 0.81,
+   "19": 0.721
+  },
+  "naive_2.996_over_observing_not_used": 0.001729
+ }
+}

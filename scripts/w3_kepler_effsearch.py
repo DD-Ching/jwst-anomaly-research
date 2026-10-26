@@ -514,6 +514,125 @@ EB_STARS = (
     10334122,
 )  # the 500 stars in expand/inputs/kirk2016_catalog.csv
 
+GAP_D = 0.5  # post hoc: a gap is >= 0.5 d between consecutive good cadences
+LOSS_GROUPS = {  # post hoc grouping of the frozen loss stages
+    "coverage": ("gap", "quality"),
+    "tests_reach_data_edge": ("edge:insufficient", "shoulder:insufficient"),
+    "short_or_grazing": ("short",),
+    "shape_tests": ("edge:slow", "shoulder:no"),
+    "oneoff": ("oneoff",),
+    "not_flagged": ("not_flagged",),
+}
+
+
+def near_edges(t_good, q_good, lo_n, hi_n) -> bool:
+    """Post hoc: does [lo_n, hi_n] reach the start or end of the good data, a quarter boundary or
+    a gap of >= GAP_D between consecutive good cadences?"""
+    if lo_n <= t_good[0] or hi_n >= t_good[-1]:
+        return True
+    i, j = np.searchsorted(t_good, [lo_n, hi_n])
+    seg_t = t_good[max(i - 1, 0) : j + 1]
+    seg_q = q_good[max(i - 1, 0) : j + 1]
+    return bool((np.diff(seg_t) >= GAP_D).any() or (np.diff(seg_q) != 0).any())
+
+
+def _posthoc_star(arg) -> list[list]:
+    rank, kepid, evs = arg
+    st = wk.load_star(kepid)
+    good = wk.good_mask(st)
+    rel, _ = wk.normalise(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], good)
+    g = np.isfinite(rel)
+    t_good, q_good = st["TIME"][g], st["QUARTER"][g]
+    out = []
+    for c, rep, t0, u0, h in evs:
+        rho, blend, te = wk.CELLS[c]
+        span = max(2 * h, 1.0)
+        w = wk.wz.EDGE_FRAC * span + max(1.0, span)  # the farthest reach of the local shoulder
+        near = near_edges(t_good, q_good, t0 - h - w, t0 + h + w)
+        f = wk.w3_flux_avg(st["TIME"], t0, te, u0, rho, blend)
+        dim = (f <= DIM_REL) & g
+        qfrac = max(
+            (dim & (st["QUARTER"] == q)).sum() / (g & (st["QUARTER"] == q)).sum()
+            for q in np.unique(q_good)
+        )
+        out.append([rank, c, rep, near, round(float(qfrac), 4), bool(u0 >= 2 - rho)])
+    return out
+
+
+def stage_posthoc(a) -> None:
+    """Post hoc diagnostics of the loss stages (labelled post hoc; no outcome is changed)."""
+    ev = json.loads(gzip.open(OUT / "events.json.gz", "rt").read())
+    cols = {c: i for i, c in enumerate(ev["columns"])}
+    rows = ev["rows"]
+    by_star: dict[int, list] = {}
+    for r in rows:
+        by_star.setdefault(r[cols["rank"]], []).append(r)
+    order = stars()
+    jobs = [
+        (
+            rk,
+            order[rk],
+            [[r[cols[k]] for k in ("cell", "rep", "t0", "u0", "h")] for r in rs],
+        )
+        for rk, rs in sorted(by_star.items())
+    ]
+    with ProcessPoolExecutor(a.cores, initializer=_init, initargs=(None, None)) as ex:
+        diag = [x for part in ex.map(_posthoc_star, jobs, chunksize=4) for x in part]
+    key = {(d[0], d[1], d[2]): d for d in diag}
+    per_stage: dict[str, dict] = {}
+    for r in rows:
+        d = key[(r[cols["rank"]], r[cols["cell"]], r[cols["rep"]])]
+        stage = r[cols["stage"]] + (f":{r[cols['sub']]}" if r[cols["sub"]] else "")
+        te = wk.CELLS[r[cols["cell"]]][2]
+        for grp in (stage, f"{stage}|tE={te}"):
+            s = per_stage.setdefault(grp, {"events": 0, "near_edges": 0, "quarter_dim_ge_0.5": 0})
+            s["events"] += 1
+            s["near_edges"] += d[3]
+            s["quarter_dim_ge_0.5"] += d[4] >= 0.5
+        if stage == "short":
+            rho = wk.CELLS[r[cols["cell"]]][0]
+            s = per_stage.setdefault(
+                f"short|rho={rho}", {"events": 0, "grazing_u0_ge_2_minus_rho": 0}
+            )
+            s["events"] += 1
+            s["grazing_u0_ge_2_minus_rho"] += d[5]
+    out = {
+        "label": "post hoc diagnostics (derived from the simulated injections; no outcome changed)",
+        "definitions": {
+            "near_edges": "the window t0 +- (h + 0.25 span + max(1 d, span)), span = max(2h, 1 d), "
+            "reaches the start or end of the good data, a quarter boundary or a gap >= 0.5 d "
+            "between consecutive good cadences",
+            "quarter_dim_ge_0.5": "the noiseless model is >= 1 mag dim on at least half of the "
+            "good cadences of some quarter (that quarter's median is then set by the event)",
+            "grazing_u0_ge_2_minus_rho": "u0 >= 2 - rho: the source never lies wholly in the umbra",
+        },
+        "per_stage": dict(sorted(per_stage.items())),
+        "loss_groups": {k: list(v) for k, v in LOSS_GROUPS.items()},
+    }
+    grouped = {}
+    for c in range(len(wk.CELLS)):
+        rc = [r for r in rows if r[cols["cell"]] == c]
+        st_c = [r[cols["stage"]] + (f":{r[cols['sub']]}" if r[cols["sub"]] else "") for r in rc]
+        grouped[str(c)] = {g: sum(s in v for s in st_c) for g, v in LOSS_GROUPS.items()}
+    all_st = [r[cols["stage"]] + (f":{r[cols['sub']]}" if r[cols["sub"]] else "") for r in rows]
+    grouped["all_cells"] = {g: sum(s in v for s in all_st) for g, v in LOSS_GROUPS.items()}
+    grouped["all_cells"]["lost"] = sum(s != "recovered" for s in all_st)
+    out["grouped_losses"] = grouped
+    summ = json.loads((OUT / "summary.json").read_text())
+    t_obs = summ["observing_star_years"]
+    out["ratios"] = {
+        "effective_over_observing_1732": {
+            str(x["cell"]): round(x["effective_star_years"] / t_obs, 3) for x in summ["cells"]
+        },
+        "naive_2.996_over_observing_not_used": float(f"{POISSON95 / t_obs:.4g}"),
+    }
+    (OUT / "posthoc.json").write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps(grouped["all_cells"]), json.dumps(out["ratios"]))
+    for k, v in sorted(per_stage.items()):
+        if "|" not in k or k.startswith("short|"):
+            print(k, v)
+
+
 EXAMPLE_STAGES = ("recovered", "edge:slow", "edge:insufficient", "shoulder:insufficient")
 EXAMPLE_STAGES += ("shoulder:no", "oneoff", "not_flagged", "gap")
 
@@ -584,6 +703,9 @@ def main(argv=None) -> int:
     p.set_defaults(fn=stage_summarise)
     p = sub.add_parser("examples")
     p.set_defaults(fn=stage_examples)
+    p = sub.add_parser("posthoc")
+    p.add_argument("--cores", type=int, default=4)
+    p.set_defaults(fn=stage_posthoc)
     a = ap.parse_args(argv)
     configure()
     a.fn(a)
