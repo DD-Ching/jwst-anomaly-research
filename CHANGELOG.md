@@ -22,6 +22,18 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   limit to 0.091.
 - **Handoff:** nothing is queued. A larger batch, or work on the edge losses, is the owner's call. The cache is
   deleted after the review re-check.
+## 2026-10-26: Abell 2744 unused NIRCam epochs: footprint check, no unused pair through the core
+- **Result** (`results/transients/a2744_epoch_footprint/RESULT.md`; plan and tested tool pushed before the one MAST
+  query): outcome O. Of the 78 inventory pairs (#539, an upper bound), 0 are `core`, 28 `overlap` (outside the 1′
+  core), 50 `none`. No unused epoch covers more than 0.315 arcmin² of the core disc. Largest off-core overlaps:
+  1324 o001 → o007 (6.327 arcmin², 373.3 d) and 2561 o002 → o006 (5.817 arcmin², 365.6 d).
+- **Post hoc control:** the used core epochs (2561 o001, 2883 o002, 3516, 3538 o007 / o008, 4111 o001) cover
+  3.04–3.14 arcmin² of the core in their best filter, so the projection finds the core where it is imaged.
+- **SN Eos note (no run):** a stacked HST ratio cannot settle Q2 of #544: separating R_HST 1.655 from JWST 1.382 at
+  3σ needs σ_ln < 0.06 (not stored; ln(1.655 / 1.382) / 3), against 0.152 now. Not queued.
+- **Hosts:** LAM atlas still `restricted.html` (00:10Z). MAST answers.
+- **Handoff:** the Abell 2744 core waits for a new epoch (none in `upcoming.json`). Next two-epoch input: Abell 370
+  epochs from 2026-12-29. #374 waits for today's 06:17Z weekly run.
 
 ## 2026-10-26: Efficiency rules for every round (owner rule; D-108)
 - **New:** `docs/efficiency-rules.md` and `docs/pre-review-checklist.md`. They change process only; no
