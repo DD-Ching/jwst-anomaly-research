@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: SN H0pe measured magnifications vs the seven blind G165 lens models: no image or ratio flag; common offset (D-034 addendum bn)
+- **Result** (`results/lens_consistency/h0pe_mu/RESULT.md`; plan frozen before the tables were read): outcome N.
+  No image has |z| > 3 in every model; all 14 model ratios μ_b/μ_a, μ_c/μ_a agree (|z| ≤ 0.86).
+- **Common offset:** all 7 models over-predict μ by +0.247 to +0.883 mag (WSLAP+ +1.714); pooled 0.633 mag (0.453
+  without WSLAP+, post hoc). Agrawal et al.'s 1.073 mag is "method-dependent" under the frozen rule: the tabulated μ
+  give about 0.4 mag less.
+- **Mass sheet:** H0_MST 53.7–98.0 km/s/Mpc for the six usable models, 0 / 7 point estimates in 64–80 (frozen); post
+  hoc every usable 1σ interval reaches 64–80, so no power to reject a sheet.
+- **Reading:** a factor shared by all images (calibration, model slope or sheet, or uniform demagnification) cannot be
+  separated on these tables. Not a candidate.
+- **Other checks this run:** DJA has no NIRSpec table newer than v4.6 (v4.7–v5.1 keys absent), so the MACS1149 16 and
+  El Gordo third-image rechecks still wait. The LAM atlas still redirects to `restricted.html` (02:10Z).
+- **Handoff:** rerun `scripts/h0pe_mu_check.py` when the GO 4744 template photometry or the revised G165 models are
+  public. #374 waits for today's 06:17Z weekly run.
 ## 2026-10-26: Cosmic Gems arc (SPT0615) vs the HST-era RELICS maps: no curve between the mirror clumps (D-034 addendum bm)
 - **Result** (`results/lens_consistency/spt0615_gems/RESULT.md`; plan before the arc was evaluated): neither RELICS
   Lenstool v1 nor GLAFIC v2 crosses the tangential critical curve between clumps A.1 and A.2 at z 10.0, 10.2 or

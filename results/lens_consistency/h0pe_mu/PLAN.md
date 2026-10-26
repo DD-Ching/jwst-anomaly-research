@@ -38,3 +38,6 @@ fitted (A_V 1.21 ± 0.11; Pierel et al. Table 3), so they are the reference.
    ab and cb (fiducial H0 70). One mass sheet explains both iff H0_MST,m = 70 λ_μ,m / λ_t,m lies in 64–80 km/s/Mpc
    (ASSUMPTION: Planck to SH0ES ± ~3σ). Report per model; model 6 (WSLAP+, Δt_cb sign opposite) is reported but
    not interpreted.
+
+## Deviations
+- Post hoc (after the run): the pooled offset without WSLAP+ and 1σ intervals on H0_MST; labelled in RESULT.md.
