@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -90,3 +91,74 @@ def test_read_chires():
     assert nwarn == 1
     with pytest.raises(ValueError):
         m.read_chires("chitot 1.0\n")
+
+
+BEST2 = BEST.replace(
+    "fini\n", "potentiel 8515\n\tprofil       81\n\tv_disp     120.600977\n\tend\nfini\n"
+)
+INPUT2 = INPUT.replace("finish\n", "limit 1\n    v_disp      1 350. 1000. 0.1\n    end\nfinish\n")
+
+
+def test_build_vprime_swaps_only_the_reference():
+    v0 = m.build_v0(BEST, INPUT)
+    vp = m.build_vprime(v0, BEST, INPUT)
+    assert "reference 3 64.0 -24.0" in vp and "64.038217" not in vp
+    assert vp.replace("    reference 3 64.0 -24.0", "\treference     3 64.038217 -24.067501") == v0
+
+
+def test_set_vdisp_and_image_mode():
+    v0 = m.build_v0(BEST2, INPUT)
+    par = m.add_image_mode(m.set_vdisp(v0, "8515", 0.75 * m.SIGMA_8515))
+    lines = [ln.strip() for ln in par.splitlines()]
+    assert "v_disp     90.450733" in lines and "v_disp     574.4" in lines
+    assert lines[lines.index("inverse 0") + 1] == "image 1 arcs.dat"
+    with pytest.raises(ValueError):
+        m.set_vdisp(v0, "9999", 1.0)
+
+
+def test_rule_f():
+    fs = m.F_GRID
+    flag = {f: f >= 0.80 for f in fs}
+    d = {f: 0.0 for f in fs}
+    assert m.rule_f({**d, 0.75: 6.0}, flag) == ("cheap", 0.75)
+    assert m.rule_f({**d, 0.75: 6.01}, flag) == ("costly", 0.75)
+    assert m.rule_f(d, {f: True for f in fs}) == ("undetermined", None)
+    assert m.rule_f(d, {**flag, 1.0: False}) == ("undetermined", None)
+    # f_L* is the largest flag-free factor, even if the flag returns below it
+    assert m.rule_f({**d, 0.85: 9.0}, {**flag, 0.85: False}) == ("costly", 0.85)
+
+
+def test_build_f2_frees_halos_and_8515():
+    best = BEST2.replace("fini\n", "").replace(
+        "potentiel 8515",
+        "potentiel O2\n\tend\npotentiel O3\n\tend\npotentiel O4\n\tend\npotentiel 8515",
+    )
+    best += "fini\n"
+    inp = INPUT2.replace(
+        "finish\n",
+        "".join(f"limit {i}\n    v_disp      1 1. 2. 0.1\n    end\n" for i in (2, 3, 4))
+        + "finish\n",
+    )
+    vp = m.build_vprime(m.build_v0(best, inp), best, inp)
+    out = m.build_f2(vp, best, inp)
+    lines = [ln.strip() for ln in out.splitlines()]
+    assert "inverse   3 0.015 10000" in lines and "inverse 0" not in lines
+    assert [ln for ln in lines if ln.startswith("limit")] == [f"limit {i}" for i in (1, 2, 3, 4, 5)]
+    assert lines[lines.index("limit 5") + 1] == "v_disp      1 60. 200. 0.1" and lines[-1] == "fini"
+
+
+def test_flag_images(tmp_path):
+    ra0, dec0 = 64.03821668520617, -24.06750122335985
+    fx = -(64.048551 - ra0) * np.cos(np.radians(dec0)) * 3600
+    fy = (-24.064825 - dec0) * 3600
+    (tmp_path / "image.all").write_text(
+        f"#REFERENCE 3 {ra0} {dec0}\nD115b.1 {fx + 0.6} {fy} 0\nD115b.1 0 0 0\n"
+        f"D115b.2 {fx + 0.8} {fy} 0\n"
+    )
+    assert m.flag_images(tmp_path / "image.all") == {"D115b.1": True, "D115b.2": False}
+
+
+def test_family_rows():
+    assert m._family_rows(CHIRES, "A") == (0.02, 0.02)
+    with pytest.raises(ValueError):
+        m._family_rows(CHIRES, "Z")

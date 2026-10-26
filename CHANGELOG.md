@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b Lenstool stages V′ and F: V′ passes (344.42); σ(8515) profile `costly` as frozen, post hoc not a usable cost (D-109 addendum 2)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_VPRIME_F.md`; plan frozen before any run): gate V′
+  passes, χ²_pos 344.42 vs header 344.298308 with `input.par`'s reference. Rule F: the flag image is gone from
+  f 0.80 (96.48 km/s; the port's all-sources scan: f* 0.75), Δχ²(0.80) +3758.77 > 6 (ASSUMPTION) → `costly`.
+- **Post hoc:** about 3748 of that is D14a's family row outside its image terms (row 3759.12 vs image rows 10.68 at
+  f 0.90; not diagnosed), and lost D115a images score χ² 0 (2 warnings). So Lenstool's fixed-parameter barycentre χ²
+  does not price this question; D115b stays `inconclusive`.
+- **Failed approach:** the F2 cost probe (`inverse 3`, `limit` blocks only) stops at once: Lenstool needs
+  `grille nlens_opt` with the freed potentials first (8515 is the 31st). The first invocation stopped there before
+  writing output; re-run after storing V′ / F first (deviation).
+- **Handoff:** next is a frozen F2 plan (`nlens_opt`, 8515 moved forward, fixed-σ validation near 344.42, lost images
+  counted), after diagnosing D14a's family term. Lenstool install: conda-forge micromamba 2.9.0 package, sha256-checked.
+
 ## 2026-10-26: W3 / Kepler physical mapping: for a uniform negative-mass population with t_E ≥ 0.1 d, one expected detection needs |ρ_neg| ≥ 0.69 M☉ pc⁻³ even with every umbra crossing detected (about 7.6× the local baryonic density); recommendation C, pause (D-107 addendum 5)
 - **Result** (`results/w3_kepler/physical/RESULT.md`; no light curve, image or injection):
   - The 20 tested cells map, through ρ · t_E = t_* = x R_*/v and the DR25 radii and distances of 1,971 of the 2,000
