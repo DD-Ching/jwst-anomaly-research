@@ -1,0 +1,253 @@
+{
+ "plan": "results/lens_consistency/spt0615_gems/PLAN.md",
+ "provenance": "positions observed; crossings, magnifications, predicted images model_prediction; classes derived; thresholds ASSUMPTION",
+ "rules": {
+  "Z_GRID": [
+   10.0,
+   10.2,
+   10.4
+  ],
+  "N_SAMPLES": 401,
+  "COUNTER_MIN_ARCSEC": 5.0,
+  "CONSISTENT_ARCSEC": 2.2,
+  "OFFSET_ARCSEC": 5.0,
+  "TCC_HALF_ARCSEC": 15.0,
+  "TCC_STEP_ARCSEC": 0.1,
+  "grid_step_arcsec": 0.25
+ },
+ "candidate": [
+  93.95000245,
+  -57.77021846
+ ],
+ "models": {
+  "spt0615-relics-lenstool": {
+   "usable": true,
+   "gates_from": "results/lens_consistency/spt0615_images/summary.json",
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "segment_arcsec": 1.447,
+   "per_z": {
+    "10.0": {
+     "n_crossings_A1_A2": 0,
+     "crossing_offset_from_symmetry_arcsec": [],
+     "crossing": "miss",
+     "mu_A1": -5.68,
+     "mu_A2": -5.14,
+     "parity_split": false,
+     "nearest_tcc_from_symmetry_arcsec": 7.89,
+     "sources": {
+      "A.1": {
+       "n_images": 4,
+       "n_counter": 3,
+       "d_candidate_arcsec": 2.526,
+       "counter_ra": 93.95103280020373,
+       "counter_dec": -57.76978184415881,
+       "counter_mu": 2.494,
+       "d_lenstool_a_arcsec": 4.049,
+       "d_glafic_arcsec": 1.142
+      },
+      "A.2": {
+       "n_images": 6,
+       "n_counter": 5,
+       "d_candidate_arcsec": 2.539,
+       "counter_ra": 93.95114776977044,
+       "counter_dec": -57.769865830667065,
+       "counter_mu": 2.526,
+       "d_lenstool_a_arcsec": 4.164,
+       "d_glafic_arcsec": 1.477
+      }
+     },
+     "d_candidate_min_arcsec": 2.526,
+     "counter": "offset"
+    },
+    "10.2": {
+     "n_crossings_A1_A2": 0,
+     "crossing_offset_from_symmetry_arcsec": [],
+     "crossing": "miss",
+     "mu_A1": -5.61,
+     "mu_A2": -5.09,
+     "parity_split": false,
+     "nearest_tcc_from_symmetry_arcsec": 7.95,
+     "sources": {
+      "A.1": {
+       "n_images": 6,
+       "n_counter": 5,
+       "d_candidate_arcsec": 2.339,
+       "counter_ra": 93.95092273409917,
+       "counter_dec": -57.769792669958,
+       "counter_mu": 2.49,
+       "d_lenstool_a_arcsec": 3.838,
+       "d_glafic_arcsec": 0.971
+      },
+      "A.2": {
+       "n_images": 4,
+       "n_counter": 3,
+       "d_candidate_arcsec": 2.335,
+       "counter_ra": 93.95103788510288,
+       "counter_dec": -57.76987783296831,
+       "counter_mu": 2.521,
+       "d_lenstool_a_arcsec": 3.949,
+       "d_glafic_arcsec": 1.326
+      }
+     },
+     "d_candidate_min_arcsec": 2.335,
+     "counter": "offset"
+    },
+    "10.4": {
+     "n_crossings_A1_A2": 0,
+     "crossing_offset_from_symmetry_arcsec": [],
+     "crossing": "miss",
+     "mu_A1": -5.54,
+     "mu_A2": -5.03,
+     "parity_split": false,
+     "nearest_tcc_from_symmetry_arcsec": 7.98,
+     "sources": {
+      "A.1": {
+       "n_images": 4,
+       "n_counter": 3,
+       "d_candidate_arcsec": 2.163,
+       "counter_ra": 93.95081679044016,
+       "counter_dec": -57.7698033164788,
+       "counter_mu": 2.485,
+       "d_lenstool_a_arcsec": 3.635,
+       "d_glafic_arcsec": 0.827
+      },
+      "A.2": {
+       "n_images": 4,
+       "n_counter": 3,
+       "d_candidate_arcsec": 2.141,
+       "counter_ra": 93.95093213925493,
+       "counter_dec": -57.76988961353762,
+       "counter_mu": 2.516,
+       "d_lenstool_a_arcsec": 3.743,
+       "d_glafic_arcsec": 1.2
+      }
+     },
+     "d_candidate_min_arcsec": 2.141,
+     "counter": "consistent"
+    }
+   },
+   "inner_t": [
+    0.462,
+    0.7315
+   ]
+  },
+  "spt0615-relics-glafic": {
+   "usable": true,
+   "gates_from": "results/lens_consistency/spt0615_images/summary.json",
+   "frame_offset_arcsec": [
+    0.0,
+    0.0
+   ],
+   "segment_arcsec": 1.447,
+   "per_z": {
+    "10.0": {
+     "n_crossings_A1_A2": 0,
+     "crossing_offset_from_symmetry_arcsec": [],
+     "crossing": "miss",
+     "mu_A1": -4.03,
+     "mu_A2": -3.74,
+     "parity_split": false,
+     "nearest_tcc_from_symmetry_arcsec": null,
+     "sources": {
+      "A.1": {
+       "n_images": 5,
+       "n_counter": 4,
+       "d_candidate_arcsec": 19.113,
+       "counter_ra": 93.94008596435738,
+       "counter_dec": -57.77070269452296,
+       "counter_mu": 3.26,
+       "d_lenstool_a_arcsec": 17.328,
+       "d_glafic_arcsec": 20.315
+      },
+      "A.2": {
+       "n_images": 5,
+       "n_counter": 4,
+       "d_candidate_arcsec": 18.616,
+       "counter_ra": 93.94038527092788,
+       "counter_dec": -57.7708878017154,
+       "counter_mu": 3.398,
+       "d_lenstool_a_arcsec": 16.845,
+       "d_glafic_arcsec": 19.889
+      }
+     },
+     "d_candidate_min_arcsec": 18.616,
+     "counter": "none"
+    },
+    "10.2": {
+     "n_crossings_A1_A2": 0,
+     "crossing_offset_from_symmetry_arcsec": [],
+     "crossing": "miss",
+     "mu_A1": -4.01,
+     "mu_A2": -3.72,
+     "parity_split": false,
+     "nearest_tcc_from_symmetry_arcsec": null,
+     "sources": {
+      "A.1": {
+       "n_images": 5,
+       "n_counter": 4,
+       "d_candidate_arcsec": 19.402,
+       "counter_ra": 93.93993846918893,
+       "counter_dec": -57.77072394612143,
+       "counter_mu": 3.205,
+       "d_lenstool_a_arcsec": 17.618,
+       "d_glafic_arcsec": 20.608
+      },
+      "A.2": {
+       "n_images": 5,
+       "n_counter": 4,
+       "d_candidate_arcsec": 18.898,
+       "counter_ra": 93.94024229800725,
+       "counter_dec": -57.77090810806067,
+       "counter_mu": 3.299,
+       "d_lenstool_a_arcsec": 17.127,
+       "d_glafic_arcsec": 20.173
+      }
+     },
+     "d_candidate_min_arcsec": 18.898,
+     "counter": "none"
+    },
+    "10.4": {
+     "n_crossings_A1_A2": 0,
+     "crossing_offset_from_symmetry_arcsec": [],
+     "crossing": "miss",
+     "mu_A1": -3.99,
+     "mu_A2": -3.7,
+     "parity_split": false,
+     "nearest_tcc_from_symmetry_arcsec": null,
+     "sources": {
+      "A.1": {
+       "n_images": 5,
+       "n_counter": 4,
+       "d_candidate_arcsec": 19.68,
+       "counter_ra": 93.93979684824288,
+       "counter_dec": -57.77074371312745,
+       "counter_mu": 3.166,
+       "d_lenstool_a_arcsec": 17.896,
+       "d_glafic_arcsec": 20.888
+      },
+      "A.2": {
+       "n_images": 5,
+       "n_counter": 4,
+       "d_candidate_arcsec": 19.169,
+       "counter_ra": 93.94010425572914,
+       "counter_dec": -57.77092751497148,
+       "counter_mu": 3.241,
+       "d_lenstool_a_arcsec": 17.4,
+       "d_glafic_arcsec": 20.447
+      }
+     },
+     "d_candidate_min_arcsec": 19.169,
+     "counter": "none"
+    }
+   },
+   "inner_t": [
+    0.462,
+    0.7315
+   ]
+  }
+ },
+ "joint_flag": true
+}

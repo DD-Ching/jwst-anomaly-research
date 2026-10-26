@@ -448,6 +448,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        MACS J0417 1.38 offset, WHL0137 1.04, SPT0615 0.77 intermediate; H_K undetermined, batch line paused). ~~SPT0615 image-position
        test~~ done 2026-10-25 (D-034 addendum bl, `results/lens_consistency/spt0615_images/RESULT.md`: both maps usable, factors
        0.987 / 0.997, H_none, no flag; bk's intermediate is a shape difference);
+       ~~Cosmic Gems arc vs the same maps~~ done 2026-10-26 (D-034 addendum bm,
+       `results/lens_consistency/spt0615_gems/RESULT.md`: no critical-curve crossing between the mirror clumps in
+       either map at z 10.0–10.4, joint flag = HST-era model limitation; Lenstool v1 counter-image 2.3″ from the JWST
+       candidate at z 10.2, GLAFIC v2 18.9″; neither map used near the arc);
      - second models as pinned `MapLensModel` entries: Sharon v4cor (MACS1149, done 2026-10-20); ~~MACS0717 Sharon v4cor and Keeton v4~~ done
        2026-10-21 (`results/lens_consistency/macs0717_models/RESULT.md`: Keeton pinned, both gates pass; Sharon G2 fails as
        written, 6.2 off the map, in-footprint use only). ~~the D-041 cross-model readings of the MACS0717 forced rows
