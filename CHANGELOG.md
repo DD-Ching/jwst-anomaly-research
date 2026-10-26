@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: MACS J1931 two-epoch grid 6882 o038 → 12299 o001 (392.6 d, core): outcome N, 12 groups all ordinary; SN Eos 101.2 recovered fading
+- **Result** (`results/transients/macs1931_grid/RESULT.md`; plan pushed before any pixel): 17 hits in 12 groups
+  among 969 positions measured in all three LW bands; G1 0.94 at −0.75 mag, G2 noise 1.20–1.54.
+- Known case: SN Eos 101.2 fades 1.65–2.31 mag at ≥ 9σ in all bands; 101.1 has no catalogued grid position (blind spot).
+- Other groups: star spikes after the roll change, a mosaic-edge star dipole, epoch-2 mosaic edge, and sharp
+  single-exposure dots (post hoc `sharp.json`: one contributing 12299 exposure; F277W peak fraction 0.33–0.70 vs
+  reference max 0.221). 0 candidates.
+- **Handoff:** MACS J1931's other inventory pairs (9493 o001, 773 s per band) are shallower and shorter; not queued.
+  Next new two-epoch input: Abell 370 epochs from 2026-12-29 (`upcoming.json`).
+
 ## 2026-10-26: D115b stage F-P: the penalised source-plane re-fit is not validated (gate VFP `undetermined`); post hoc at f 0.80 / 0.75 the D14a merge is repaired but two D115a images stay lost (D-109 addendum 9)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`; plan, gate and rule committed before the run):
   - Objective g = source-plane χ² + 100 × L (L = image-plane warnings + proximity-penalty units); Nelder–Mead over
