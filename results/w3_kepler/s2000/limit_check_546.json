@@ -1,0 +1,146 @@
+{
+ "label": "derived from the stored #546 summary (no injection re-run)",
+ "method": "joint_limit (flat prior on the rate, efficiency Beta posterior integrated)",
+ "cells": [
+  {
+   "cell": 0,
+   "limit_546": 0.001945,
+   "limit_joint": 0.001884,
+   "classical_at_E": 0.001881,
+   "ratio_546_over_joint": 1.0324
+  },
+  {
+   "cell": 1,
+   "limit_546": 0.001966,
+   "limit_joint": 0.001903,
+   "classical_at_E": 0.0019,
+   "ratio_546_over_joint": 1.0331
+  },
+  {
+   "cell": 2,
+   "limit_546": 0.001909,
+   "limit_joint": 0.001851,
+   "classical_at_E": 0.001849,
+   "ratio_546_over_joint": 1.0311
+  },
+  {
+   "cell": 3,
+   "limit_546": 0.001985,
+   "limit_joint": 0.00192,
+   "classical_at_E": 0.001917,
+   "ratio_546_over_joint": 1.0338
+  },
+  {
+   "cell": 4,
+   "limit_546": 0.002309,
+   "limit_joint": 0.002212,
+   "classical_at_E": 0.002208,
+   "ratio_546_over_joint": 1.0438
+  },
+  {
+   "cell": 5,
+   "limit_546": 0.002041,
+   "limit_joint": 0.001971,
+   "classical_at_E": 0.001968,
+   "ratio_546_over_joint": 1.0357
+  },
+  {
+   "cell": 6,
+   "limit_546": 0.001982,
+   "limit_joint": 0.001918,
+   "classical_at_E": 0.001915,
+   "ratio_546_over_joint": 1.0335
+  },
+  {
+   "cell": 7,
+   "limit_546": 0.002159,
+   "limit_joint": 0.002077,
+   "classical_at_E": 0.002074,
+   "ratio_546_over_joint": 1.0394
+  },
+  {
+   "cell": 8,
+   "limit_546": 0.002121,
+   "limit_joint": 0.002043,
+   "classical_at_E": 0.00204,
+   "ratio_546_over_joint": 1.0381
+  },
+  {
+   "cell": 9,
+   "limit_546": 0.002463,
+   "limit_joint": 0.002351,
+   "classical_at_E": 0.002346,
+   "ratio_546_over_joint": 1.0477
+  },
+  {
+   "cell": 10,
+   "limit_546": 0.002018,
+   "limit_joint": 0.00195,
+   "classical_at_E": 0.001947,
+   "ratio_546_over_joint": 1.0348
+  },
+  {
+   "cell": 11,
+   "limit_546": 0.001924,
+   "limit_joint": 0.001865,
+   "classical_at_E": 0.001863,
+   "ratio_546_over_joint": 1.0315
+  },
+  {
+   "cell": 12,
+   "limit_546": 0.001914,
+   "limit_joint": 0.001856,
+   "classical_at_E": 0.001853,
+   "ratio_546_over_joint": 1.0313
+  },
+  {
+   "cell": 13,
+   "limit_546": 0.001982,
+   "limit_joint": 0.001918,
+   "classical_at_E": 0.001915,
+   "ratio_546_over_joint": 1.0335
+  },
+  {
+   "cell": 14,
+   "limit_546": 0.002259,
+   "limit_joint": 0.002167,
+   "classical_at_E": 0.002164,
+   "ratio_546_over_joint": 1.0423
+  },
+  {
+   "cell": 15,
+   "limit_546": 0.00207,
+   "limit_joint": 0.001997,
+   "classical_at_E": 0.001994,
+   "ratio_546_over_joint": 1.0366
+  },
+  {
+   "cell": 16,
+   "limit_546": 0.002004,
+   "limit_joint": 0.001938,
+   "classical_at_E": 0.001935,
+   "ratio_546_over_joint": 1.0343
+  },
+  {
+   "cell": 17,
+   "limit_546": 0.002124,
+   "limit_joint": 0.002046,
+   "classical_at_E": 0.002043,
+   "ratio_546_over_joint": 1.0381
+  },
+  {
+   "cell": 18,
+   "limit_546": 0.002228,
+   "limit_joint": 0.002139,
+   "classical_at_E": 0.002136,
+   "ratio_546_over_joint": 1.0414
+  },
+  {
+   "cell": 19,
+   "limit_546": 0.002522,
+   "limit_joint": 0.002404,
+   "classical_at_E": 0.002399,
+   "ratio_546_over_joint": 1.0492
+  }
+ ]
+}

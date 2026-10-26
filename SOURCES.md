@@ -1983,6 +1983,16 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   and morphology from VizieR J/AJ/151/68/catalog (`inputs/kirk2016_catalog.csv`, 2,876 rows).
 - **Light curves:** Kepler DR25 long cadence from MAST, as in the pilot. Per-file sha256 in `files_expand.json.gz`.
 
+## W3 / Kepler 2,000-star search (accessed 2026-10-26; `results/w3_kepler/s2000/`)
+- Kepler DR25 long-cadence light curves (Q1–Q17), MAST archive
+  `https://archive.stsci.edu/missions/kepler/lightcurves/`; every file's name, size and sha256 per star in
+  `files_b<b>.json.gz`.
+- MAST AWS mirror `https://stpubdata.s3.amazonaws.com/kepler/public/lightcurves/`: one listing and one file fetched to
+  test speed (sha256 equal to the archive copy); not used for the search.
+- Cousins, R. D. & Highland, V. L. 1992, "Incorporating systematic uncertainties into an upper limit", Nucl. Instrum.
+  Meth. A 320, 331–335 (cited as such in Conrad et al. 2003, arXiv:hep-ex/0202013): averaging a zero-event limit over
+  the sensitivity's uncertainty, the idea behind `w3_kepler_2000.joint_limit` (which uses a flat rate prior instead).
+
 ## Lenstool in the cloud (accessed 2026-10-26; `results/lens_consistency/lenstool_cloud/`)
 - **Lenstool 8.15.5**, conda-forge package `lenstool` (build `py314h03d985e_1`): https://anaconda.org/conda-forge/lenstool;
   project page https://projets.lam.fr/projects/lenstool (Jullo et al. 2007, NJPh 9, 447, doi:10.1088/1367-2630/9/12/447).

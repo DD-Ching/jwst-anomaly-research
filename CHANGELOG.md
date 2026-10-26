@@ -13,6 +13,24 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** the D115b re-fit (8515 σ free) is no longer owner-machine-only: next, a frozen plan for a restricted
   `runmode inverse`, validated by a no-free-parameter run against `best.par`. #374: no weekly network run yet today
   at 09:26Z (the scheduled runs so far started 2026-10-12 15:29Z and 2026-10-19 13:20Z).
+
+## 2026-10-26: W3 / Kepler fixed-rule search of new stars: 1,500 of 2,000 read, 0 reach the 1-mag pre-screen, 0 survivors; 3,710–4,855 effective star-years per cell (D-107 addendum 4)
+- **Result** (`results/w3_kepler/s2000/RESULT.md`; list, batches, seeds, vetting order and stop rules frozen before
+  any flux):
+  - Batches 1–3 (1,500 stars, 0 download failures, 5,195.2 observing star-years) have no good cadence ≥ 1 mag below
+    the quarter median, so there was nothing to flag or vet.
+  - The #546 injection-recovery on each batch (3 × 20,000 events, 0 spurious) gives 3,710.2–4,855.0 effective
+    star-years per W3 cell, and 4,958.9–6,475.3 with the #546 batch (same definitions).
+- **Deviation:** batch 4 (500 stars) was not fetched. The download rate fell to 466,733 B/s, which projected
+  its end after the 6-h limit (`batch4_decision.json`); the stars are unread.
+- **Limits:** per-cell product-level joint limits (efficiency integrated, flat rate prior) are 4.628–6.044 × 10⁻⁴
+  per star-year with #546 (95 % credible). They are conditional and separate per cell, not physical rates.
+  #546's 2.996 / E_low stacked two 95 % steps and is 1.031–1.049 × the joint value, so it is relabelled
+  approximate and conservative.
+- **Fixed:** a screen crash before any output (missing descriptive field); `check_results.py` now keeps the decimals
+  of comma-grouped numbers.
+- **Handoff:** nothing is queued. Batch 4 or any further batch is the owner's call. No cache is left.
+
 ## 2026-10-26: SN Refsdal SX delay and μ ratio vs the seven blind models: no anomaly (D-034 addendum bq)
 - **Result** (`results/lens_consistency/refsdal_sx/RESULT.md`; plan frozen before the tables were read): outcome N.
   Measured Δt_X1 376.0 +5.6 / −5.5 d (Kelly et al. 2023) vs Treu et al. 2016 blind models 224–361 d: 5 / 7 within 3σ;
