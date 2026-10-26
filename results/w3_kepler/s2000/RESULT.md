@@ -15,11 +15,11 @@
     #542's definition (descriptive only) and the screen re-run.
   - **V9 code:** the pixel-check code (procedure fixed in PLAN §6) was committed at 04:56:08 (2980edc), 46 s after
     the batch-1 fetch began and before any vetting. It was never used.
-  - **Download connections:** batch 3 used 16 download connections instead of 8 (`scripts/CLAUDE.md` allows 8–16),
-    because files were latency-bound: the median per-file time was 3.1 s in batch 2 with 8 connections (ledger; not
-    stored). Throughput did not improve: the median was 10.5 s in batch 3 (not stored). The environment's download
-    rate fell from batch to batch: 1,771.6 s, 4,621.1 s and 7,369.4 s per batch for the same about 3.7 GB
-    (`cost.json`).
+  - **Download connections:** batch 3 used 16 download connections instead of 8 (`scripts/CLAUDE.md` allows 8–16).
+    This was chosen because single files took 3.1 s (median, batch 2, 8 connections), which suggested
+    latency-bound transfers. Batch 3's 10.5 s median does not support that: it points to a bandwidth limit (both
+    from the ledger; not stored). The download time per batch rose from 1,771.6 s to 4,621.1 s and 7,369.4 s for
+    the same about 3.7 GB (`cost.json`).
   - **Mirror test:** one file from the MAST AWS mirror was fetched to test its speed. Its sha256 equals the archive
     copy. It took 12.6 s, against about 8 s for archive files at the same time (ledger; not stored), and it was not
     used.
@@ -116,14 +116,15 @@ The 2 GB reserve was not used.
   4.6–6.0 per 10,000 star-years (95 % credible, flat rate prior, per cell).
 - **Does not support:**
   - a physical lens rate, wormhole or negative-mass abundance, or FTL statement;
-  - a limit for events shallower than 1 mag in SAP, t_E values other than the five tested (0.1, 0.3, 1, 3, 10 d), u0 ≥ 2, repeating events, other stars or
-    other surveys;
+  - a limit for events shallower than 1 mag in SAP, t_E values other than the five tested (0.1, 0.3, 1, 3,
+    10 d), u0 ≥ 2, repeating events, other stars or other surveys;
   - a joint limit across cells;
   - "W3 excluded".
 - **The unread batch 4:** if it were searched with similar efficiency and the result stayed zero, it would add about
   500 × the round's per-star means, 2.47–3.24 star-years each, to each cell (`combined.json` `per_star_mean_yr`).
-  That is about 1,240–1,620 effective star-years (not stored), and it would lower each joint limit combined with #546 by about a fifth (factor about 0.80; each round-only limit by about a quarter, 0.75)
-  (not stored).
+  That is about 1,240–1,620 effective star-years (not stored). It would lower each joint limit combined with
+  #546 by about a fifth (factor about 0.80), and each round-only limit by about a quarter (0.75); neither factor
+  is stored.
 
 ## 7. Answers
 | question | answer |

@@ -6534,12 +6534,13 @@ confining radiation at a throat is found.
   stars in three batches of 500. Deviation: batch 4 was not fetched, because its projected download end fell after
   the 6-h limit.
   - No star had a good cadence ≥ 1 mag below its quarter median: 0 flags, 0 survivors.
-  - The #546 measurement per batch gives recovery 0.61–0.84 per cell, against 0.625–0.811 in #546, with binomial-like
-    scatter. E is 3,710.2–4,855.0 star-years per cell, and 4,958.9–6,475.3
+  - The #546 measurement per batch gives recovery 0.61–0.84 per cell, against 0.625–0.811 in #546, with
+    binomial-like scatter (RESULT §3). E is 3,710.2–4,855.0 star-years per cell, and 4,958.9–6,475.3
     combined with #546. The criterion for combining is the same rule, event distribution, injection, recovery and
     common-mode definitions; the earlier 60 and 200 stars are not combined.
   - Limits now integrate the efficiency uncertainty (`w3_kepler_2000.joint_limit`): 4.628–6.044 × 10⁻⁴ per
-    star-year per cell (95 % credible, flat rate prior), conditional. #546's 2.996 / E_low is approximate and conservative (1.031–1.049 × joint).
+    star-year per cell (95 % credible, flat rate prior), conditional. #546's 2.996 / E_low is approximate and
+    conservative (1.031–1.049 × joint).
   - Revisit if:
     - an event-rate model sets a target rate;
     - events shallower than 1 mag in SAP matter (the pre-screen cannot see them);

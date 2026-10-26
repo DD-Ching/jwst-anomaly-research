@@ -12,8 +12,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Deviation:** batch 4 (500 stars) was not fetched. The download rate fell to 466,733 B/s, which projected
   its end after the 6-h limit (`batch4_decision.json`); the stars are unread.
 - **Limits:** per-cell product-level joint limits (efficiency integrated, flat rate prior) are 4.628–6.044 × 10⁻⁴
-  per star-year with #546 (95 % credible, flat rate prior). They are conditional and separate per cell, not physical rates. #546's 2.996 / E_low
-  stacked two 95 % steps and is 1.031–1.049 × the joint value, so it is relabelled approximate and conservative.
+  per star-year with #546 (95 % credible). They are conditional and separate per cell, not physical rates.
+  #546's 2.996 / E_low stacked two 95 % steps and is 1.031–1.049 × the joint value, so it is relabelled
+  approximate and conservative.
 - **Fixed:** a screen crash before any output (missing descriptive field); `check_results.py` now keeps the decimals
   of comma-grouped numbers.
 - **Handoff:** nothing is queued. Batch 4 or any further batch is the owner's call. No cache is left.
