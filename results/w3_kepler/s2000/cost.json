@@ -1,0 +1,90 @@
+{
+ "label": "observed (session clocks and ledger)",
+ "authorization_utc": "about 04:45Z (2026-10-26)",
+ "plan_commit_utc": "04:55:06Z (89d041f)",
+ "stage_log_utc": [
+  [
+   "fetch 1",
+   "04:55:22Z"
+  ],
+  [
+   "screen 1",
+   "05:24:54Z"
+  ],
+  [
+   "screen 1",
+   "05:26:16Z"
+  ],
+  [
+   "inject 1",
+   "05:27:14Z"
+  ],
+  [
+   "fetch 2",
+   "05:27:14Z"
+  ],
+  [
+   "screen 2",
+   "06:44:16Z"
+  ],
+  [
+   "inject 2",
+   "06:45:38Z"
+  ],
+  [
+   "fetch 3",
+   "06:45:39Z"
+  ],
+  [
+   "screen 3",
+   "08:48:30Z"
+  ],
+  [
+   "inject 3",
+   "08:49:36Z"
+  ]
+ ],
+ "ledger_bytes": 11391544013,
+ "ledger_cap_bytes": 18000000000,
+ "batch_guard_bytes": 16000000000,
+ "fetch_elapsed_s": {
+  "1": 1771.6,
+  "2": 4621.1,
+  "3": 7369.4
+ },
+ "fetch_threads": {
+  "1": 8,
+  "2": 8,
+  "3": 16
+ },
+ "injections": {
+  "1": {
+   "inject_wall_s": 1562.0,
+   "cores": 3,
+   "cpu_s_total": 4673.1
+  },
+  "2": {
+   "inject_wall_s": 1450.8,
+   "cores": 3,
+   "cpu_s_total": 4345.1
+  },
+  "3": {
+   "inject_wall_s": 1071.7,
+   "cores": 4,
+   "cpu_s_total": 4280.3
+  }
+ },
+ "mirror_test": "one listing and one 469,440-B file from stpubdata (sha256 equal to the archive copy), counted in the ledger",
+ "cache": "data/cache/w3_kepler_s2000: at most two batches on disk (about 2 GB); every batch deleted after its records; empty at the end",
+ "note": "plain ledger JSONL gitignored; the snapshot is split in two gzip parts (net_ledger.part1 + part2, concatenated = the ledger) to stay under 1 MB each",
+ "files_per_batch": {
+  "1": 8500,
+  "2": 8499,
+  "3": 8500
+ },
+ "file_bytes_per_batch": {
+  "1": 3719520000,
+  "2": 3719013120,
+  "3": 3719520000
+ }
+}

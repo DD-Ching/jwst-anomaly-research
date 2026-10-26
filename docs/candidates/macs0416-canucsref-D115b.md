@@ -77,7 +77,20 @@ The MARS free-form maps (gate H passed on MACS0416) do not predict the flagged i
 the 1.263″ MARS pixels (corrected 2026-10-25 from 1.515″) are coarse at a galaxy-scale critical curve.
 
 ### Open questions (updated 2026-10-23)
-- **Only next step:** a Lenstool re-fit with 8515's σ and the other parameters free (owner machine).
+- **Only next step:** a Lenstool re-fit with 8515's σ and the other parameters free. Since 2026-10-26 it can run in a
+  cloud session (D-109; `results/lens_consistency/lenstool_cloud/RESULT.md`: Lenstool 8.15.5 reproduces the port and
+  predicts the flagged image too).
+
+### Lenstool stage V, 2026-10-26 (`results/lens_consistency/d115b_lenstool_refit/RESULT.md`, D-109 addendum)
+Gate V fails as frozen: Lenstool 8.15.5 gives χ²_pos 356.67 for `best.par` vs the header's 344.298. Post hoc, the
+cause is `best.par`'s 6-decimal reference; with `input.par`'s, Lenstool gives 344.42. No re-fit Δχ² is read yet.
+Verdict unchanged (`inconclusive`).
+
+### Lenstool stages V′ and F, 2026-10-26 (`results/lens_consistency/d115b_lenstool_refit/RESULT_VPRIME_F.md`, D-109 addendum 2)
+Gate V′ passes (344.42). In Lenstool's fixed-parameter χ² the flag image is gone from 8515 σ × 0.80 (port: 0.75);
+rule F gives `costly` (Δχ² +3758.77), but post hoc about 3748 of it is D14a's family row outside its image terms
+(not stored) and the lost D115a images score 0, so the profile does not price the lower σ. Verdict unchanged
+(`inconclusive`); next is an optimised Lenstool run (stage F2) with lost images counted.
 
 ### Regeneration
 Scratch scripts (not committed): `pert.py` (nearest potentials, ±30 % and removal for the three nearest, images of

@@ -1,0 +1,74 @@
+{
+ "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_D14A.md",
+ "provenance": "model_prediction",
+ "lenstool": "lenstool 8.15.5 (py314h03d985e_1, conda-forge)",
+ "penalty_unit": 3748.4382,
+ "profile": [
+  {
+   "f": 1.0,
+   "chi2pos": 344.42,
+   "penalty": 0.0,
+   "penalty_images": [],
+   "D14a_row": 2.01,
+   "D14a_images": 2.0,
+   "dchi2_no_penalty": 0.0
+  },
+  {
+   "f": 0.9,
+   "chi2pos": 4104.14,
+   "penalty": 3748.44,
+   "penalty_images": [
+    "D14a.1"
+   ],
+   "D14a_row": 3759.12,
+   "D14a_images": 10.68,
+   "dchi2_no_penalty": 11.28
+  },
+  {
+   "f": 0.85,
+   "chi2pos": 4100.14,
+   "penalty": 3748.44,
+   "penalty_images": [
+    "D14a.2"
+   ],
+   "D14a_row": 3759.24,
+   "D14a_images": 10.8,
+   "dchi2_no_penalty": 7.28
+  },
+  {
+   "f": 0.8,
+   "chi2pos": 4103.19,
+   "penalty": 3748.44,
+   "penalty_images": [
+    "D14a.2"
+   ],
+   "D14a_row": 3759.35,
+   "D14a_images": 10.91,
+   "dchi2_no_penalty": 10.33
+  },
+  {
+   "f": 0.75,
+   "chi2pos": 4107.9,
+   "penalty": 3748.44,
+   "penalty_images": [
+    "D14a.1"
+   ],
+   "D14a_row": 3759.46,
+   "D14a_images": 11.01,
+   "dchi2_no_penalty": 15.04
+  },
+  {
+   "f": 0.7,
+   "chi2pos": 4114.01,
+   "penalty": 3748.44,
+   "penalty_images": [
+    "D14a.2"
+   ],
+   "D14a_row": 3759.56,
+   "D14a_images": 11.12,
+   "dchi2_no_penalty": 21.15
+  }
+ ],
+ "rule_P": "confirmed",
+ "rule_P_failures": []
+}

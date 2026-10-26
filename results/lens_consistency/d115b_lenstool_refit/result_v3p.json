@@ -1,0 +1,49 @@
+{
+ "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_V3P.md",
+ "ladder": [
+  {
+   "frac": 0.001,
+   "chi2": null,
+   "feasible": false
+  },
+  {
+   "frac": 0.002,
+   "chi2": null,
+   "feasible": false
+  },
+  {
+   "frac": 0.003,
+   "chi2": null,
+   "feasible": false
+  },
+  {
+   "frac": 0.005,
+   "chi2": null,
+   "feasible": false
+  },
+  {
+   "frac": 0.0075,
+   "chi2": null,
+   "feasible": false
+  },
+  {
+   "frac": 0.01,
+   "chi2": null,
+   "feasible": false
+  },
+  {
+   "frac": 0.015,
+   "chi2": null,
+   "feasible": false
+  },
+  {
+   "frac": 0.02,
+   "chi2": null,
+   "feasible": false
+  }
+ ],
+ "chosen_frac": null,
+ "provenance": "model_prediction",
+ "lenstool": "lenstool 8.15.5 (py314h03d985e_1, conda-forge)",
+ "gate_V3p": "uninformative"
+}

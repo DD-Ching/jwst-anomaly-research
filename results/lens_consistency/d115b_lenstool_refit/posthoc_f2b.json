@@ -1,0 +1,10 @@
+{
+ "label": "post hoc",
+ "n_burnin_lines": 40,
+ "n_columns": [
+  31
+ ],
+ "lnLhood_max_burnin": -89515.453056,
+ "lnLhood_stage_v_info_line": -302.923774,
+ "seconds_per_burnin_line": 22.5
+}

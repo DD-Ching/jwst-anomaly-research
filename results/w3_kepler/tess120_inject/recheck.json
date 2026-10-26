@@ -1,0 +1,16 @@
+{
+ "label": "re-computation check: 2 star-sectors re-downloaded and re-processed",
+ "checks": [
+  {
+   "obs_id": "tess2023209231226-s0068-0000000044577737-0262-s",
+   "sha256_matches": true,
+   "result_identical": true
+  },
+  {
+   "obs_id": "tess2019058134432-s0009-0000000048425737-0139-s",
+   "sha256_matches": true,
+   "result_identical": true
+  }
+ ],
+ "ledger_bytes": 362291257
+}

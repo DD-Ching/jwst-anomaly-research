@@ -452,7 +452,11 @@ def test_live_fetch_small_catalog_is_idempotent(tmp_path, monkeypatch):
     out = acquire.fetch_products(prods, data_root=tmp_path, manifest_path=manifest)
     row = out[0]
     assert row["status"] == "downloaded"
-    assert row["size"] == prods["size"][0]
+    if row["size"] != prods["size"][0]:
+        # MAST's listing can lag a reprocessing (jw02736 served as jwst 3.0.0 while listed as
+        # prvversion 2.0.1 on 2026-10-26); a size mismatch is accepted only with that evidence.
+        file_jwst = dict(p.split("=", 1) for p in row["pipeline_version"].split(";"))["jwst"]
+        assert file_jwst != str(prods["prvversion"][0]), "size differs but the version does not"
     assert row["sha256"] == acquire.sha256_file(tmp_path / row["local_path"])
     assert row["pipeline_version"].startswith("jwst=")
 

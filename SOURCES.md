@@ -389,6 +389,8 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   arXiv:1803.00560 (Table 1 z_lens 0.356, read 2026-10-18).
 - JWST program 5293 o005 NIRCam F200W level-3 catalogue `jw05293-o005_t001_nircam_clear-f200w_cat.ecsv` (MAST, PUBLIC,
   accessed 2026-10-18; sha256 in `results/arcs/macs0308-relics/summary.json`).
+- Lenstool wiki, Image section (`forme`: "<0 image plane chi2. >=0 source plane chi2"; default −1):
+  https://projets.lam.fr/projects/lenstool/wiki/Image (accessed 2026-10-26; used by D115b stage VS).
 - LAM Strong Lensing Cluster Atlas (Lenstool model tarballs and maps; 17 models on 2026-10-18): https://data.lam.fr/sl-cluster-atlas
   (ANIS API `https://data.lam.fr/server/search/sl-cluster-atlas/model?a=1;2;3`; needs cookie `Yogsototh_opens_the_door=1`).
 - Mahler et al. 2019 (RELICS MACS J0417 lenstool model, system 1 images): arXiv:1810.13439 (abstract read 2026-10-17: "MACS J0417.5-1154 at z=0.443"; journal reference not checked).
@@ -1987,3 +1989,44 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - **Kepler Eclipsing Binary Catalog, third revision:** Kirk et al. 2016, AJ 151, 68; the full KIC list with period
   and morphology from VizieR J/AJ/151/68/catalog (`inputs/kirk2016_catalog.csv`, 2,876 rows).
 - **Light curves:** Kepler DR25 long cadence from MAST, as in the pilot. Per-file sha256 in `files_expand.json.gz`.
+
+## W3 / Kepler 2,000-star search (accessed 2026-10-26; `results/w3_kepler/s2000/`)
+- Kepler DR25 long-cadence light curves (Q1–Q17), MAST archive
+  `https://archive.stsci.edu/missions/kepler/lightcurves/`; every file's name, size and sha256 per star in
+  `files_b<b>.json.gz`.
+- MAST AWS mirror `https://stpubdata.s3.amazonaws.com/kepler/public/lightcurves/`: one listing and one file fetched to
+  test speed (sha256 equal to the archive copy); not used for the search.
+- Cousins, R. D. & Highland, V. L. 1992, "Incorporating systematic uncertainties into an upper limit", Nucl. Instrum.
+  Meth. A 320, 331–335 (cited as such in Conrad et al. 2003, arXiv:hep-ex/0202013): averaging a zero-event limit over
+  the sensitivity's uncertainty, the idea behind `w3_kepler_2000.joint_limit` (which uses a flat rate prior instead).
+
+## Lenstool in the cloud (accessed 2026-10-26; `results/lens_consistency/lenstool_cloud/`)
+- **Lenstool 8.15.5**, conda-forge package `lenstool` (build `py314h03d985e_1`; versions in this section not stored in a results file): https://anaconda.org/conda-forge/lenstool;
+  project page https://projets.lam.fr/projects/lenstool (Jullo et al. 2007, NJPh 9, 447, doi:10.1088/1367-2630/9/12/447).
+- **micromamba 2.9.0**: https://micro.mamba.pm/api/micromamba/linux-64/latest.
+- **Model:** the pinned CANUCS DR1 MACS0416 Lenstool files (sha256 in `lensmodel.MACS0416_CANUCS`, D-044).
+
+## W3 / Kepler physical mapping (accessed 2026-10-26; `results/w3_kepler/physical/`)
+- Kepler Archive Manual, KDMC-10008-006 (MAST), Section 2.3.1.1 and Table 2-3 (quality bits); URL, size and sha256 in
+  `sources.json`.
+- Read, J. I. 2014, "The local dark matter density", J. Phys. G 41, 063101, arXiv:1404.1938 (LaTeX source read):
+  ρ_dm,ext = 0.005–0.015 M☉ pc⁻³ (0.2–0.56 GeV cm⁻³); ρ_b = 0.0914 ± 0.009 M☉ pc⁻³ (Flynn et al. 2006); v_c ~ 220
+  km/s.
+- Kepler DR25 stellar properties (NExScI TAP `keplerstellar`, `q1_q17_dr25_stellar`): radius and distance with
+  errors for the 2,000 searched stars (`inputs/stellar_dr25.csv.gz`).
+
+## W3 short-cadence reach (accessed 2026-10-26; `results/w3_kepler/shortcad/`)
+- MAST CAOM TAP, https://mast.stsci.edu/vo-tap/api/v0.1/caom (`dbo.ObsPointing`): Kepler SC records (one per star,
+  obs_id quarter string) and TESS SPOC 20 s / 120 s light-curve records (one per star and sector; multi-sector
+  records excluded). Queries are in `net_ledger.jsonl.gz`.
+- MAST TIC TAP, https://mast.stsci.edu/vo-tap/api/v0.1/tic (`dbo.CatalogRecord`, TIC v8.2): `rad`, `d` for the
+  sampled TESS stars (`inputs/tess_*.csv.gz`).
+- MAST API `Mast.Caom.Products`: product lists of 3 Kepler SC stars (month check) and the sizes of 8 TESS
+  light-curve files (`lc_file_sizes.json`).
+- Kepler DR25 stellar table (NExScI `keplerstellar`): R_* and D_S of the Kepler SC stars (`inputs/kepler_sc.csv.gz`).
+
+## W3 TESS 120 s injection trial (accessed 2026-10-26; `results/w3_kepler/tess120_inject/`)
+- TESS SPOC 120 s light curves (`*-s_lc.fits`), MAST, read from MAST's public AWS copy
+  https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid/ (MAST `Download/file` redirects there). 184 files;
+  obs_id, sha256 and size in `files.json`; columns TIME, PDCSAP_FLUX, QUALITY; TIMEDEL from the header.
+- MAST CAOM TAP (`dbo.ObsPointing`): the 120 s records of the #561 TIC sample (`sample.json`).

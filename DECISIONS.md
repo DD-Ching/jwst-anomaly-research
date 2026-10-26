@@ -6530,6 +6530,81 @@ confining radiation at a throat is found.
     - the per-quarter join changes;
     - the edge or shoulder tests change. Re-measure before quoting E.
 
+- **Addendum 4 2026-10-26 (`results/w3_kepler/s2000/`):** the fixed #529 rule was applied to 1,500 never-used pool
+  stars in three batches of 500. Deviation: batch 4 was not fetched, because its projected download end fell after
+  the 6-h limit.
+  - No star had a good cadence ≥ 1 mag below its quarter median: 0 flags, 0 survivors.
+  - The #546 measurement per batch gives recovery 0.61–0.84 per cell, against 0.625–0.811 in #546, with
+    binomial-like scatter (RESULT §3). E is 3,710.2–4,855.0 star-years per cell, and 4,958.9–6,475.3
+    combined with #546. The criterion for combining is the same rule, event distribution, injection, recovery and
+    common-mode definitions; the earlier 60 and 200 stars are not combined.
+  - Limits now integrate the efficiency uncertainty (`w3_kepler_2000.joint_limit`): 4.628–6.044 × 10⁻⁴ per
+    star-year per cell (95 % credible, flat rate prior), conditional. #546's 2.996 / E_low is approximate and
+    conservative (1.031–1.049 × joint).
+  - Revisit if:
+    - an event-rate model sets a target rate;
+    - events shallower than 1 mag in SAP matter (the pre-screen cannot see them);
+    - download rates allow batch 4.
+
+- **Addendum 5 2026-10-26 (`results/w3_kepler/physical/`):** physical mapping of the tested grid and the value of a
+  larger search.
+  - ρ and t_E are tied through t_* = ρ t_E = x R_*/v. The grid means negative masses of about 2 × 10⁻⁵ to
+    0.15 M☉ at a few to about 600 pc (median stars).
+  - The expected detections are N = Σ ε (4/π) τ_i T_i / t_E for a uniform |ρ_neg| along each sight line. For one
+    speed, ρ varies along the sight line, and most lenses lie outside the tested ρ, so the requirement is bounded.
+    For N = 1 at t_E 0.1 d (the best tested t_E):
+    - ε = 1 at all distances (a floor no efficiency question can undercut): 0.6944 M☉ pc⁻³;
+    - the measured ε applied at all distances: 0.8696–0.9277; +500 stars multiplies it by 0.8, +5,000 by 0.286;
+    - only lenses inside the tested ρ (one speed): 6.252–6.67 at 220 km/s; the lowest over t_E is 3.576 (0.3 d).
+    - The whole unread FGK pool (16,240 stars) would still need 0.07614 (floor) to 0.09535.
+    - Scale references, not population models: local baryonic density 0.0914 (Flynn et al. 2006 via Read 2014);
+      extrapolated local dark-matter density 0.005–0.015 (Read 2014).
+  - Decision (recommended to the owner): pause the W3 / Kepler branch (C). Under these assumptions (uniform density,
+    t_E ≥ 0.1 d), the binding constraint is the rate per density, not the pipeline. The unverified sky-to-SAP steps
+    (bit-128 cosmic-ray correction, SPSD) affect ε only, not the floor. Only shorter t_E lowers the requirement, and
+    dark-matter-scale densities need t_E ≈ 0.00216 d, an umbra under one long cadence.
+  - Correction: the `QMASK` comment and the #500 plan's bit labels did not match the Kepler Archive Manual
+    Table 2-3. The numeric mask, and every result since #500, is unchanged.
+    - Excluded: 16 (reaction-wheel zero crossing), 64 (Argabrightening), 128 (cosmic ray), 1024 (SPSD).
+    - Not excluded: 256 (manual exclude), 2048 (impulsive outlier).
+  - Revisit if:
+    - a sourced population model puts a negative-mass density near the Sun within reach;
+    - a survey with far more source-years or a shorter cadence is considered;
+    - the owner wants a W3 search for its exploratory value alone.
+
+- **Addendum 6 2026-10-26 (`results/w3_kepler/shortcad/`):** physical reach of existing short-cadence products.
+  - Same coupled population for every product: one |M|, one v, uniform |ρ_neg|; ε = 1 inside a noise-free shape
+    criterion; no recovery rate carried over.
+  - The frozen gate (≥ 3 contiguous 0.25-dex |M| points with ≥ 10× the long-cadence baseline's reach) passes for
+    Kepler SC, TESS 20 s and TESS 120 s, but only at |M| ≲ 2 × 10⁻⁵ M☉ (220 km/s), where LC exposures are too long.
+  - Where the baseline has reach, no product reaches 10× (TESS 120 s 4.69–8.748×).
+  - Decision (recommended to the owner): if anything, one noise-included injection test on 200 TESS 120 s
+    star-sectors (about 370 MB; chosen on cost) before any search. Not run; needs authorization.
+  - Rejected:
+    - a real-event short-cadence search now: the shape criterion is noise-free;
+    - Kepler SC: no best-density gain with lenses within 1 kpc;
+    - CAOM multi-sector records as coverage: they span many sectors.
+  - Revisit if: the injection test runs, or a population model fixes |M| and the spatial density.
+
+- **Addendum 7 2026-10-26 (`results/w3_kepler/tess120_inject/`):** TESS 120 s product-level injection trial.
+  - Paired simulated injections (ideal / file cadences / quality screen / PDCSAP background, one blind detector)
+    for 4 frozen populations drawn with #561's Level-0 weights.
+  - Retention 0.4772 (0.4075–0.5499) and 0.459 (0.3762–0.5407) at the two best masses: the frozen "retain at
+    least half" is not robustly shown. 10⁻⁷ and 10⁻⁸ M☉ are insufficient (26 and 4 ideal events).
+  - The retention averages about 0.585 (most draws) and about 0.106 (faint distant dwarfs, 5 % of draws) at
+    220 km/s; 0.587 / 0.114 at 30 km/s.
+  - Decision (recommended to the owner): do not start a TESS 120 s search.
+    - One expected event needs about 0.183 M☉ pc⁻³ at the best tested population.
+    - A 90 % null over about 3.3 TB would reach only about 0.42.
+    - Even at retention 1, one event needs 0.087, about the baryon reference.
+  - Rejected:
+    - extrapolating the retention to other masses;
+    - carrying it to all TESS stars without conditions (it needs a representative sample and the same mix of star
+      groups);
+    - a second detector or seed after seeing the results.
+  - Revisit if: a population model puts |ρ_neg| near or above 0.2 M☉ pc⁻³ at these masses, or upstream SPOC
+    processing of real events is to be tested.
+
 ## D-108 Efficiency rules for every round: pre-review self-check, gzip outputs, sync before push (owner rule 2026-10-26)
 - **Decision:** every round follows `docs/efficiency-rules.md`. Before the independent review it runs the
   self-check in `docs/pre-review-checklist.md`; the review and the re-check use the same list.
@@ -6546,3 +6621,63 @@ confining radiation at a throat is found.
   - #529 re-ran phase A and had two lint failures from files over 1 MB.
   - #500 and #542 waited on CI that did not start because the PR was "dirty".
 - **Revisit if:** the advisory report becomes too noisy to use, or the owner changes the review procedure.
+
+## D-109 Lenstool from conda-forge in cloud sessions; the port matches it on CANUCS MACS0416 (2026-10-26)
+- **Decision:** when a task needs Lenstool itself (an optimiser re-fit, not only model evaluation), install the
+  conda-forge build (`lenstool` 8.15.5, linux-64) with micromamba into the session scratchpad; do not add it to the
+  Python dependencies. The numpy port (D-024) stays the evaluator for every model check.
+- **Alternatives rejected:** compiling from source (projets.lam.fr; git.lam.fr does not answer here; needs cfitsio,
+  wcslib, gsl); keeping re-fits on the owner machine only (the D115b record waited on that since 2026-10-22).
+- **Evidence:** `results/lens_consistency/lenstool_cloud/RESULT.md`: install 53 s (not stored); gate R passes, 912 /
+  912 Lenstool images within 0.1″ of the port (median 0.00093″, maximum 0.033″); the D115b extra image is predicted
+  by both codes.
+- **Revisit if:** the conda-forge package disappears or lags a Lenstool release that a model needs, or a re-fit
+  needs the GPU/MPI builds.
+- **Addendum (2026-10-26, stage V of the D115b re-fit):** Lenstool 8.15.5 needs runmode `chi2 1` to print a χ² (`inverse 0` alone prints none). It reports χ² 0 without a warning when `multfile` names an absent file. Always build Lenstool run files with `input.par`'s full-precision `reference`. `best.par` rounds it to 6 decimals, which moved the CANUCS MACS0416 χ²_pos from 344.42 to 356.67 (header 344.298; post hoc, `results/lens_consistency/d115b_lenstool_refit/RESULT.md`).
+- **Addendum 2 (2026-10-26, stages V′ / F):** with the full-precision reference the gate passes (344.42). Lenstool's
+  fixed-parameter χ² (`inverse 0`, `forme -1`) gives lost images χ² 0 (with a warning), and D14a's family row can
+  exceed its image rows by thousands (3759.12 vs 10.68 at 8515 σ × 0.9; not diagnosed), so do not read a Δχ² from
+  it without checking warnings and family rows. An optimised run needs `grille nlens_opt` with the freed potentials
+  first (`results/lens_consistency/d115b_lenstool_refit/RESULT_VPRIME_F.md`). In the cloud, install micromamba from
+  its conda-forge package with a sha256 check (piping micro.mamba.pm into tar was refused by the session's
+  permission check).
+- **Addendum 3 (2026-10-26, D14a term):** the D14a excess is Lenstool's image-proximity penalty: `chi2_img` adds
+  (30″)² / σ² (3748.44 at σ 0.49″) to a family whose predicted images coincide within 10⁻³″, and prints
+  `chipenalty`. Read `chipenalty` and the stderr `chi2 penalty for image` lines with every Lenstool χ², and subtract
+  or count it explicitly (`results/lens_consistency/d115b_lenstool_refit/RESULT_D14A.md`). In optimiser runs
+  (`inverse` > 2) a lost image makes `chi2_img` return −1 and BayeSys rejects the sample (source reading, not run).
+- **Addendum 4 (2026-10-26, stage F2-B):** do not plan a BayeSys (`inverse 3`) re-fit of this model in a cloud routine
+  slot: even `inverse 3 0.5 20` with O1–O6 free wrote 0 samples in 900 s on 4 threads (burn-in still at prior
+  samples, best ln(Lhood) −89,515.45 vs −302.92; post hoc). Re-fits start from `best.par` with a local optimiser
+  around Lenstool `inverse 0` instead (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2.md`). Revisit if a
+  multi-hour owner-machine run is available.
+- **Addendum 5 (2026-10-26, stage F2-L gate V3):** with the hard feasibility rule (no lost image, no proximity
+  penalty), a start 3 % of the `input.par` ranges away from `best.par` is infeasible and Nelder–Mead finds no feasible
+  point in 299 evaluations (gate V3 `uninformative`). Post hoc, only 7 of 56 single ±3 % offsets are feasible, none
+  in O1–O3. Local re-fits of this model need much smaller steps (proposed ASSUMPTION: of order 0.3 % of the range) or a softer constraint, validated first
+  (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2L.md`).
+- **Addendum 6 (2026-10-26, stage V3′):** even 0.1 % of each range, on all 28 parameters at once, is infeasible (gate
+  V3′ `uninformative`), and the hard-constraint Nelder–Mead route is closed for this model. Post hoc, `best.par` lies on
+  a χ² discontinuity: offsets as small as 3 × 10⁻⁵ of a range switch family D52b's χ² by +12.1 (D52c +14.2). Do not
+  validate a local re-fit of this model with a χ² tolerance below that jump; use a continuous objective, validated
+  first (`results/lens_consistency/d115b_lenstool_refit/RESULT_V3P.md`). For archive.stsci.edu in cloud sessions, set
+  `SSL_CERT_FILE` to the proxy bundle plus certifi's roots (the system store lacks emSign Root CA - G1).
+- **Addendum 7 (2026-10-26, stage VS):** use Lenstool's source-plane χ² (`image` `forme 0`; Lenstool wiki, SOURCES.md)
+  as the objective of local re-fits of this model. At `best.par` (χ² 227.92) all 56 single-parameter series up to 1 %
+  of each range are `smooth` under the frozen rule (gate VS `pass`: no jump above |Δχ²| 2 at ≤ 10⁻³; smaller jumps
+  untested), where the image-plane χ² jumped by +12.1 at 3 × 10⁻⁵. `best.par` is not the source-plane optimum (post hoc: the two signs differ at the smallest step), so a
+  re-fit is validated against its own optimum (`results/lens_consistency/d115b_lenstool_refit/RESULT_VS.md`).
+  Alternative not taken: image-plane χ² with D52b's image matching fixed (needs Lenstool source changes). Revisit
+  if joint moves show source-plane jumps.
+- **Addendum 8 (2026-10-26, stage F-S):** do not use the unconstrained source-plane χ² (`forme 0`) as the objective
+  of a local re-fit of this model. Nelder–Mead over O1–O6 (2,000 evaluations) lowered it from 227.92 to 174.90.
+  The f 1.00 runs from two starts did not agree (174.90 / 193.80; gate VFS `undetermined`). Post hoc every end point
+  loses images and picks up proximity penalties in the image plane (`chipenalty` 7496.88–14993.75)
+  (`results/lens_consistency/d115b_lenstool_refit/RESULT_FS.md`). A re-fit objective must keep image-plane
+  feasibility.
+- **Addendum 9 (2026-10-26, stage F-P):** the local derivative-free re-fit route is closed for this model in cloud
+  slots. Nelder–Mead on the source-plane χ² plus 100 per lost or merged image (1,000 evaluations, initial simplex
+  0.003 in u) did not bring a start 0.3 % off `best.par` back to a feasible point (L 3 → 2; gate VFP `undetermined`).
+  Post hoc, at f 0.80 / 0.75 the run repairs the D14a merge but keeps two D115a images lost
+  (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`). Revisit with a multi-hour BayeSys run (addendum
+  4) or a Lenstool build with D52b's image matching fixed.

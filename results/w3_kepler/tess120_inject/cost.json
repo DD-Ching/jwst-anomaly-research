@@ -1,0 +1,10 @@
+{
+    "label": "resources of this round",
+    "ledger_bytes": 362291257,
+    "cap_bytes": 1000000000,
+    "start_utc": "2026-10-26T13:59Z",
+    "plan_commit": "9f7de1e",
+    "max_cores": 2,
+    "light_curves_downloaded": 184,
+    "raw_files_kept": 0
+}

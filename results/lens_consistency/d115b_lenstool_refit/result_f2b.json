@@ -1,0 +1,17 @@
+{
+ "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_F2.md",
+ "provenance": "model_prediction",
+ "lenstool": "lenstool 8.15.5 (py314h03d985e_1, conda-forge)",
+ "inverse": "inverse 3 0.5 20",
+ "nlens_opt": 6,
+ "wall_cap_s": 900,
+ "omp_threads": "4",
+ "status": "wall cap reached",
+ "runtime_s": 900.1,
+ "lenstool_error_lines": [],
+ "n_samples_bayes": 0,
+ "chi2_min_bayes": null,
+ "chi2_ref_vprime": 344.42,
+ "tol_frac_assumption": 0.01,
+ "gate_V2": "undetermined"
+}

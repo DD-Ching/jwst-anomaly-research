@@ -1,0 +1,55 @@
+{
+ "label": "observed (sources read this round, accessed 2026-10-26)",
+ "kepler_archive_manual": {
+  "id": "KDMC-10008-006",
+  "url": "https://archive.stsci.edu/files/live/sites/mast/files/home/missions-and-data/kepler/_documents/archive_manual.pdf",
+  "bytes": 4536336,
+  "sha256": "eec13cf6e8a326a0af5a2c0ba77beea0b6ad25332ff8c7234b921aee0e9d2ba5",
+  "used": "Section 2.3.1.1, Table 2-3 (quality bits)",
+  "table_2_3_bits": {
+   "1": "Attitude Tweak",
+   "2": "Safe Mode",
+   "4": "Coarse point",
+   "8": "Earth point",
+   "16": "Reaction wheel zero crossing",
+   "32": "Reaction wheel desaturation event",
+   "64": "Argabrightening detected across multiple channels",
+   "128": "Cosmic Ray was found and corrected in optimal aperture pixel",
+   "256": "Manual Exclude",
+   "512": "unused by Kepler",
+   "1024": "SPSD detected (last non-gapped cadence before the maximum positive change)",
+   "2048": "Impulsive outlier removed before cotrending",
+   "4096": "Argabrightening event on specified CCD mod/out",
+   "8192": "Cosmic Ray detected on collateral pixel row or column in optimal aperture",
+   "16384": "Detector anomaly flag",
+   "32768": "Spacecraft is not in fine point",
+   "65536": "No data collected",
+   "131072": "Rolling Band in optimal aperture",
+   "262144": "Rolling Band in full mask"
+  }
+ },
+ "read_2014": {
+  "arxiv": "1404.1938",
+  "journal": "J. Phys. G 41, 063101 (2014)",
+  "url": "https://export.arxiv.org/src/1404.1938",
+  "used": "conclusions: rho_dm,ext = 0.005-0.015 Msun/pc^3 (0.2-0.56 GeV/cm^3); rho_b = 0.0914 +- 0.009 Msun/pc^3 (Flynn et al. 2006); v_c ~ 220 km/s",
+  "tex_sha256": "2dcfd2bf9c086f9aef716976b179addaa3b19e0b004a9e4c9f559a969efec774"
+ },
+ "arxiv_abstracts_api": [
+  "1602.07702",
+  "1404.1938",
+  "astro-ph/9802106",
+  "gr-qc/0105070",
+  "1303.1301"
+ ],
+ "dr25_stellar": {
+  "service": "https://exoplanetarchive.ipac.caltech.edu/TAP/sync",
+  "table": "keplerstellar (st_delivname q1_q17_dr25_stellar)",
+  "columns": "kepid,radius,radius_err1,radius_err2,dist,dist_err1,dist_err2,mass,teff,logg,kepmag",
+  "rows": 2000,
+  "file": "inputs/stellar_dr25.csv.gz",
+  "sha256_uncompressed": "8ac47682b74f08cb2188f17343acbfa4ab4326b9cde33b88fea2416e92f95b05"
+ },
+ "ledger_bytes": 11118549,
+ "qmask_value": 83711
+}

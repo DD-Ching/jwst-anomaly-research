@@ -1,0 +1,16 @@
+{
+ "label": "derived (ledger and session clock)",
+ "batch3_fetch_end_utc": "08:48:28Z",
+ "rate_last_30min_of_batch3_bytes_per_s": 466733,
+ "batch_bytes_estimate": 3900000000,
+ "projected_batch4_fetch_s": 8356,
+ "projected_batch4_fetch_end_utc": "11:07:44Z",
+ "six_hour_limit_utc": "about 10:45Z (authorization about 04:45Z)",
+ "plan_rule": "no batch fetch starts after 09:15 UTC, to leave time for injections, vetting, review and merge within 6 h",
+ "decision": "batch 4 not fetched (deviation: the fetch could start before 09:15 but would end after the 6-h limit); its 500 stars are unread",
+ "batch_elapsed_s": {
+  "1": 1771.6,
+  "2": 4621.1,
+  "3": 7369.4
+ }
+}
