@@ -21,7 +21,7 @@
   - The plan did not fix the bootstrap size; 100 resamples were used.
 - **Review fixes** (independent review, `/code-review`):
   - Multi-sector CAOM records (an obs_id with two sector tokens, such as s0001–s0096 spanning 2,579 d) had entered
-    the TESS per-star spans and inflated TESS 120 s coverage by about 2.9×. They are excluded now (`tess_fix`).
+    the TESS per-star spans and inflated TESS 120 s coverage by about 2.9× (not stored). They are excluded now (`tess_fix`).
   - Below the ρ grid (ρ < 0.001), the lookup returned w = 0 instead of the point-source limit. It now uses the first
     ρ row. This changed only the high-|M| end; no best mass changed.
   - The first version's statement "TESS 120 s most robust" is withdrawn.
@@ -45,7 +45,7 @@
 - **TESS coverage:** T = Σ over distinct sectors of (t_max − t_min). That includes the orbit gaps, so it is an upper
   bound.
   - Multi-sector records are excluded: 1,836,854 − 1,737,708 = 99,146 at 120 s (difference not stored), none at 20 s.
-    After that, no star has two records for one sector.
+    After that, no sampled star has two records for one sector.
   - The longest remaining single-sector span is 57.4 d (`max_record_span_d`). Sectors 97 and 98 are 55–57 d long in
     CAOM.
   - Segment 1751 lies inside sector 99 (MJD 61055–61062, within 61045–61073; one CAOM query, not stored). A star in both has up to 7.23 d
@@ -160,7 +160,8 @@
 
 - **What the pass means:**
   - Every interval lies where the baseline resolves the shape rarely or never: negative masses from 10⁻⁹ to
-    about 2 × 10⁻⁵ M☉ (up to about 6 Earth masses, not stored), with t_E of minutes to about an hour. Short cadence
+    about 2 × 10⁻⁵ M☉ (up to about 6 Earth masses, not stored), with t_E from under a minute to several hours (not
+    stored; best-mass medians in `events_at_best_mass`). Short cadence
     opens these masses; it does not improve by 10× the masses the baseline already reaches.
 - **Which product:**
   - TESS 20 s gives the lowest best density (0.050 at 220 km/s). Within 1 kpc it matches TESS 120 s (0.118 against
@@ -176,7 +177,7 @@
 ### Minimal measurement plan (not run; needs a new authorization)
 - **Question:** with real noise and flags, what fraction of the noise-free Level-1 events stays identifiable in
   TESS 120 s SPOC light curves?
-  - 120 s is chosen on cost: 20 s reaches lower masses at about 6× the bytes per star and sector. The same plan can
+  - 120 s is chosen on cost: 20 s reaches lower masses at about 6× the bytes per star and sector (not stored). The same plan can
     run on 20 s at that cost.
 - **Sample:** 200 star-sectors drawn at random, with a frozen seed, from the 4,930 sampled 120 s stars that have R_*
   and D_S. There is no real-event search; the flux is used only as a carrier for injections.

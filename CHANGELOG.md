@@ -42,8 +42,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     Kepler SC 0.1511, TESS 20 s 0.05005, TESS 120 s 0.08734 M☉ pc⁻³. With lenses only within 1 kpc (post hoc):
     0.6959, 0.8977, 0.1177, 0.1155.
   - The gate passes for all three, but only at masses the baseline cannot resolve. At the baseline's masses TESS
-    120 s reaches 4.69–8.748×, Kepler SC and TESS 20 s about 1×.
-- **Review:** multi-sector CAOM records had inflated TESS 120 s coverage about 2.9×. They are excluded, and the
+    120 s reaches 4.69–8.748×, Kepler SC and TESS 20 s about 0.7–1.6×.
+- **Review:** multi-sector CAOM records had inflated TESS 120 s coverage about 2.9× (not stored). They are excluded, and the
   first version's "TESS 120 s most robust" is withdrawn. Point-source lookup below ρ 0.001 was also fixed.
 - **Handoff:** one minimal plan, a noise-included injection test on 200 TESS 120 s star-sectors (about 370 MB), is
   proposed and not run. It needs the owner's authorization. Nothing else is queued.
