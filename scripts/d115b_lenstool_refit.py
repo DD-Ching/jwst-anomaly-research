@@ -7,6 +7,8 @@ Stage D14a (``--stage d14a``): the stage F runs again, read for Lenstool's image
 plan ``PLAN_D14A.md`` (rule P, frozen before the run).
 Stage F2-B (``--stage f2b``): a short ``inverse 3`` run with O1-O6 free and 8515 fixed, a budget
 probe of Lenstool's optimiser; plan ``PLAN_F2.md`` (gate V2, frozen before the run).
+Stage F2-L V3 (``--stage f2l-v3``): bounded Nelder-Mead over O1-O6 driving Lenstool
+``inverse 0``, validated from a perturbed best.par at f 1.00; plan ``PLAN_F2L.md`` (gate V3).
 
     python scripts/d115b_lenstool_refit.py --lenstool <prefix>/bin/lenstool --workdir <scratch dir>
 """
@@ -601,11 +603,185 @@ def posthoc_d14a(wd: Path) -> dict:
     }
 
 
+F2L_NLENS = 6  # PLAN_F2L.md: O1-O6 = input.par's limit 1-6
+F2L_PERTURB = 0.03  # ASSUMPTION (plan): start offset, fraction of each parameter's range
+F2L_SIMPLEX = 0.05  # ASSUMPTION (plan): initial simplex step in u
+F2L_MAXFEV = 1500  # ASSUMPTION (plan)
+F2L_WALL_S = 1500  # ASSUMPTION (plan)
+F2L_INFEASIBLE = 1.0e6  # ASSUMPTION (plan): objective of an infeasible point
+_KEY_BEST = {"ellipticity": "ellipticite"}  # input.par limit keyword -> best.par keyword
+
+
+def free_params(input_par: str, n: int = F2L_NLENS) -> list[tuple[str, str, float, float]]:
+    """(potential name O<i>, keyword, lo, hi) for every line of ``limit 1``-``n``; type 1 only."""
+    out = []
+    for i in range(1, n + 1):
+        _, body = _limit(input_par, i)
+        for ln in body:
+            p = ln.split()
+            if not p or p[0] == "end" or p[0].startswith("#"):
+                continue
+            if p[1] != "1":
+                raise ValueError(f"limit {i} {p[0]}: only type 1 (uniform) is handled")
+            out.append((f"O{i}", p[0], float(p[2]), float(p[3])))
+    return out
+
+
+def get_param(par: str, name: str, key: str) -> float:
+    """Value of ``key`` (input.par keyword) in ``potentiel <name>``."""
+    lines = par.split("\n")
+    a, b = _pot_body(par, name)
+    k = _KEY_BEST.get(key, key)
+    hits = [lines[i].split()[1] for i in range(a + 1, b) if lines[i].split()[:1] == [k]]
+    if len(hits) != 1:
+        raise ValueError(f"potentiel {name}: need one {k} line")
+    return float(hits[0])
+
+
+def set_param(par: str, name: str, key: str, value: float) -> str:
+    """Set ``key`` (input.par keyword) in ``potentiel <name>``; a ``<key>_kpc`` companion line is
+    removed so the arcsec value is the only one Lenstool reads."""
+    lines = par.split("\n")
+    a, b = _pot_body(par, name)
+    k = _KEY_BEST.get(key, key)
+    hits = [i for i in range(a + 1, b) if lines[i].split()[:1] == [k]]
+    if len(hits) != 1:
+        raise ValueError(f"potentiel {name}: need one {k} line")
+    lines[hits[0]] = f"\t{k}     {value:.6f}"
+    drop = {i for i in range(a + 1, b) if lines[i].split()[:1] == [k + "_kpc"]}
+    return "\n".join(ln for i, ln in enumerate(lines) if i not in drop)
+
+
+def objective(chires: str) -> tuple[float, bool]:
+    """(objective, feasible): feasible iff no warning (lost image) and no proximity penalty."""
+    chimul, _, nwarn = read_chires(chires)
+    ok = nwarn == 0 and read_penalty(chires) == 0.0
+    return (chimul if ok else F2L_INFEASIBLE), ok
+
+
+def perturbed_start(u_best: np.ndarray, frac: float = F2L_PERTURB) -> np.ndarray:
+    """u_best + frac * (+1, -1, +1, ...), clipped to [0.001, 0.999] (PLAN_F2L.md)."""
+    s = np.where(np.arange(len(u_best)) % 2 == 0, 1.0, -1.0)
+    return np.clip(u_best + frac * s, 0.001, 0.999)
+
+
+def gate_v3(
+    start: tuple[float, bool], best: float | None, trace: list[float], stopped: bool
+) -> str:
+    """Frozen gate V3 (PLAN_F2L.md). ``start`` = (chi2, feasible) of the perturbed start, ``best``
+    the lowest feasible chi2 found, ``trace`` the running best objective per evaluation, ``stopped``
+    true when the budget or the wall cap ended the run."""
+    lim = V2_REF * (1.0 + TOL_FRAC)
+    if not start[1] or start[0] <= lim:
+        return "uninformative"
+    if best is not None and best <= lim:
+        return "pass"
+    if stopped and len(trace) > 300 and (trace[-301] - trace[-1]) > 3.0:
+        return "undetermined"
+    return "fail"
+
+
+def main_f2l_v3(lt: Path, wd: Path, files: dict[str, Path]) -> None:
+    """Stage F2-L gate V3 (plan PLAN_F2L.md): perturbed start at f 1.00."""
+    from scipy.optimize import minimize
+
+    best, inp = files["best.par"].read_text(), files["input.par"].read_text()
+    vp = build_vprime(build_v0(best, inp), best, inp)
+    free = free_params(inp)
+    lo = np.array([f[2] for f in free])
+    hi = np.array([f[3] for f in free])
+    p_best = np.array([get_param(vp, n, k) for n, k, _, _ in free])
+    if np.any(p_best < lo) or np.any(p_best > hi):
+        raise ValueError("best.par value outside its limit range")
+    u_best = (p_best - lo) / (hi - lo)
+    hist: list[tuple[float, bool]] = []
+    t0 = time.time()
+
+    class _Wall(Exception):
+        pass
+
+    def f(u: np.ndarray) -> float:
+        if time.time() - t0 > F2L_WALL_S:
+            raise _Wall
+        par = vp
+        for (n, k, _, _), v in zip(free, lo + np.clip(u, 0, 1) * (hi - lo), strict=True):
+            par = set_param(par, n, k, float(v))
+        try:
+            val, ok = objective(run(lt, wd / "f2l", par, files["arcs.dat"])[1])
+        except (LenstoolError, ValueError, FileNotFoundError):
+            val, ok = F2L_INFEASIBLE, False
+        hist.append((val, ok))
+        return val
+
+    u0 = perturbed_start(u_best)
+    start = f(u0)
+    start_ok = hist[0][1]
+    sim = np.vstack(
+        [u0]
+        + [
+            u0 + F2L_SIMPLEX * np.eye(len(u0))[i] * (1 if u0[i] < 0.9 else -1)
+            for i in range(len(u0))
+        ]
+    )
+    stopped, xbest = False, u0
+    try:
+        r = minimize(
+            f,
+            u0,
+            method="Nelder-Mead",
+            bounds=[(0.0, 1.0)] * len(u0),
+            options={"maxfev": F2L_MAXFEV, "xatol": 1e-4, "fatol": 0.01, "initial_simplex": sim},
+        )
+        xbest, stopped = r.x, not r.success
+        message = str(r.message)
+    except _Wall:
+        stopped, message = True, "wall cap reached"
+    vals = [v for v, _ in hist]
+    trace = list(np.minimum.accumulate(vals))
+    feas = [v for v, ok in hist if ok]
+    bestv = min(feas) if feas else None
+    if bestv is not None and message == "wall cap reached":
+        # the best point is the evaluation with the lowest feasible chi2 (Nelder-Mead's x is lost)
+        xbest = None
+    dev = np.abs(np.asarray(xbest) - u_best) if xbest is not None else None
+    out = {
+        "plan": "results/lens_consistency/d115b_lenstool_refit/PLAN_F2L.md",
+        "provenance": "model_prediction",
+        "lenstool": version(lt),
+        "omp_threads": _OMP or str(os.cpu_count() or 1),
+        "n_free": len(free),
+        "free_params": [f"{n}:{k}" for n, k, _, _ in free],
+        "perturb_frac_assumption": F2L_PERTURB,
+        "maxfev_assumption": F2L_MAXFEV,
+        "wall_cap_s": F2L_WALL_S,
+        "chi2_start": start if start_ok else None,
+        "start_feasible": start_ok,
+        "chi2_best_feasible": bestv,
+        "chi2_ref_vprime": V2_REF,
+        "tol_frac_assumption": TOL_FRAC,
+        "n_evaluations": len(hist),
+        "n_infeasible": sum(not ok for _, ok in hist),
+        "optimizer_message": message,
+        "stopped_by_budget": stopped,
+        "runtime_s": round(time.time() - t0, 1),
+        "running_best_every_100": [round(float(trace[i]), 3) for i in range(0, len(trace), 100)],
+        "gate_V3": gate_v3((start, start_ok), bestv, trace, stopped),
+    }
+    if dev is not None:
+        j = int(np.argmax(dev))
+        out["max_abs_du_from_best_par"] = round(float(dev[j]), 4)
+        out["max_abs_du_param"] = out["free_params"][j]
+    _write(out, "result_f2l_v3.json")
+    print(json.dumps(out, indent=1))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
     ap.add_argument("--workdir", required=True, type=Path)
-    ap.add_argument("--stage", choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc"), default="v")
+    ap.add_argument(
+        "--stage", choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc", "f2l-v3"), default="v"
+    )
     a = ap.parse_args()
     lt, wd = a.lenstool.resolve(), a.workdir.resolve()
     files = lc.model_files(MODEL)
@@ -619,6 +795,9 @@ def main() -> None:
         return
     if a.stage == "f2b":
         main_f2b(lt, wd, files)
+        return
+    if a.stage == "f2l-v3":
+        main_f2l_v3(lt, wd, files)
         return
     if a.stage == "f2b-posthoc":
         _write(posthoc_f2b(wd), "posthoc_f2b.json")

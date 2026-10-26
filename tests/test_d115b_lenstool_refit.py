@@ -278,3 +278,67 @@ def test_posthoc_f2b(tmp_path, monkeypatch):
         out["lnLhood_stage_v_info_line"] == -302.923774 and out["seconds_per_burnin_line"] == 300.0
     )
     assert (tmp_path / "burnin_f2b.dat.gz").exists()
+
+
+LIMITS = """limit 1
+    v_disp      1 350. 1000. 0.1
+    ellipticity 1 0.2 0.9 0.05
+    end
+
+limit 2
+    cut_radius  1 5. 100. 0.1
+    end
+"""
+POT = """potentiel O1
+\tellipticite     0.800814
+\tcore_radius         7.389947
+\tcore_radius_kpc     39.462830
+\tv_disp     574.453350
+\tend
+fini"""
+
+
+def test_free_params_reads_limit_blocks():
+    assert m.free_params(LIMITS, 2) == [
+        ("O1", "v_disp", 350.0, 1000.0),
+        ("O1", "ellipticity", 0.2, 0.9),
+        ("O2", "cut_radius", 5.0, 100.0),
+    ]
+    with pytest.raises(ValueError):
+        m.free_params(LIMITS.replace("cut_radius  1", "cut_radius  3"), 2)
+
+
+def test_get_set_param_maps_keyword_and_drops_kpc():
+    assert m.get_param(POT, "O1", "ellipticity") == 0.800814
+    out = m.set_param(POT, "O1", "core_radius", 5.0)
+    assert m.get_param(out, "O1", "core_radius") == 5.0
+    assert "core_radius_kpc" not in out
+    out = m.set_param(out, "O1", "ellipticity", 0.5)
+    assert m.get_param(out, "O1", "ellipticity") == 0.5
+    assert m.get_param(out, "O1", "v_disp") == 574.45335
+
+
+def test_objective_feasibility():
+    head = "chimul 344.42\n N ID z Narcs chip chix chiy chia rmss rmsi dx dy nwarn\n"
+    ok = head + " 0 D1f.2 0.94 2 0.02 0 0 0 0.008 0.05 N/A N/A 0\n"
+    assert m.objective(ok) == (344.42, True)
+    lost = head + " 2 D1d.2 0.94 2 0.00 0 0 0 0.004 0.02 N/A N/A 1\n"
+    assert m.objective(lost) == (m.F2L_INFEASIBLE, False)
+    assert m.objective(ok + "chipenalty 3748.44\n") == (m.F2L_INFEASIBLE, False)
+
+
+def test_perturbed_start_alternates_and_clips():
+    u = m.perturbed_start(np.array([0.5, 0.5, 0.99, 0.0]))
+    assert np.allclose(u, [0.53, 0.47, 0.999, 0.001])
+
+
+def test_gate_v3():
+    lim = m.V2_REF * 1.01
+    assert m.gate_v3((lim - 0.1, True), lim - 0.1, [lim], False) == "uninformative"
+    assert m.gate_v3((500.0, False), None, [m.F2L_INFEASIBLE], False) == "uninformative"
+    assert m.gate_v3((500.0, True), lim, [500.0, lim], False) == "pass"
+    falling = list(np.linspace(500, 400, 400))
+    assert m.gate_v3((500.0, True), 400.0, falling, True) == "undetermined"
+    assert m.gate_v3((500.0, True), 400.0, falling, False) == "fail"
+    flat = [500.0] * 50 + [400.0] * 350
+    assert m.gate_v3((500.0, True), 400.0, flat, True) == "fail"
