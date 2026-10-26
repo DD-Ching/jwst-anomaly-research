@@ -198,9 +198,10 @@ def stage_fetch(a) -> None:
         raise SystemExit(f"ledger {used} B: batch {a.batch} would pass the guard; not fetched")
     usage(f"fetch {a.batch}")
     t0 = time.time()
-    with ThreadPoolExecutor(8) as ex:
+    with ThreadPoolExecutor(a.threads) as ex:
         info = list(ex.map(fetch_star, [k for _, k in batch_stars(a.batch)]))
     out = {"label": "observed", "batch": a.batch, "elapsed_s": round(time.time() - t0, 1)}
+    out["threads"] = a.threads
     out["ledger_before"], out["ledger_after"] = used, lg.used()
     out["stars"] = info
     with gzip.open(OUT / f"files_b{a.batch}.json.gz", "wt") as fh:
@@ -717,10 +718,13 @@ def main(argv=None) -> int:
     p = sub.add_parser("sample")
     p.add_argument("--pool", required=True)
     p.set_defaults(fn=stage_sample)
-    for name, fn in (("fetch", stage_fetch), ("summarise", stage_summarise)):
-        p = sub.add_parser(name)
-        p.add_argument("--batch", type=int, required=True, choices=[1, 2, 3, 4])
-        p.set_defaults(fn=fn)
+    p = sub.add_parser("fetch")
+    p.add_argument("--batch", type=int, required=True, choices=[1, 2, 3, 4])
+    p.add_argument("--threads", type=int, default=8, help="concurrent HTTP connections (8-16)")
+    p.set_defaults(fn=stage_fetch)
+    p = sub.add_parser("summarise")
+    p.add_argument("--batch", type=int, required=True, choices=[1, 2, 3, 4])
+    p.set_defaults(fn=stage_summarise)
     for name, fn in (("screen", stage_screen), ("inject", stage_inject)):
         p = sub.add_parser(name)
         p.add_argument("--batch", type=int, required=True, choices=[1, 2, 3, 4])
