@@ -1,0 +1,2799 @@
+{
+ "centre": [
+  3.5875,
+  -30.3975
+ ],
+ "core_disc_arcmin2": 3.142,
+ "n_pairs": 78,
+ "class_counts": {
+  "core": 0,
+  "overlap": 28,
+  "none": 50
+ },
+ "outcome": "O",
+ "next_grid_pair": null,
+ "epoch_filter_area": {
+  "01176-221:F090W": {
+   "area": 10.559,
+   "core": 0.0
+  },
+  "01176-221:F115W": {
+   "area": 10.559,
+   "core": 0.0
+  },
+  "01176-221:F150W": {
+   "area": 10.559,
+   "core": 0.0
+  },
+  "01176-221:F200W": {
+   "area": 10.557,
+   "core": 0.0
+  },
+  "01176-221:F277W": {
+   "area": 10.213,
+   "core": 0.0
+  },
+  "01176-221:F356W": {
+   "area": 10.213,
+   "core": 0.0
+  },
+  "01176-221:F410M": {
+   "area": 10.214,
+   "core": 0.0
+  },
+  "01176-221:F444W": {
+   "area": 10.215,
+   "core": 0.0
+  },
+  "01324-001:F090W": {
+   "area": 5.759,
+   "core": 0.0
+  },
+  "01324-001:F115W": {
+   "area": 6.336,
+   "core": 0.0
+  },
+  "01324-001:F150W": {
+   "area": 6.733,
+   "core": 0.0
+  },
+  "01324-001:F200W": {
+   "area": 5.385,
+   "core": 0.0
+  },
+  "01324-001:F277W": {
+   "area": 5.532,
+   "core": 0.0
+  },
+  "01324-001:F356W": {
+   "area": 6.581,
+   "core": 0.0
+  },
+  "01324-001:F444W": {
+   "area": 6.174,
+   "core": 0.0
+  },
+  "01324-006:F090W": {
+   "area": 4.707,
+   "core": 0.0
+  },
+  "01324-006:F115W": {
+   "area": 4.708,
+   "core": 0.0
+  },
+  "01324-006:F150W": {
+   "area": 4.704,
+   "core": 0.0
+  },
+  "01324-006:F200W": {
+   "area": 4.705,
+   "core": 0.0
+  },
+  "01324-006:F277W": {
+   "area": 4.79,
+   "core": 0.0
+  },
+  "01324-006:F356W": {
+   "area": 4.789,
+   "core": 0.0
+  },
+  "01324-006:F444W": {
+   "area": 4.79,
+   "core": 0.0
+  },
+  "01324-007:F090W": {
+   "area": 5.757,
+   "core": 0.0
+  },
+  "01324-007:F115W": {
+   "area": 6.331,
+   "core": 0.0
+  },
+  "01324-007:F277W": {
+   "area": 5.964,
+   "core": 0.0
+  },
+  "01324-007:F356W": {
+   "area": 5.848,
+   "core": 0.0
+  },
+  "01324-007:F444W": {
+   "area": 6.162,
+   "core": 0.0
+  },
+  "02561-001:F115W": {
+   "area": 25.746,
+   "core": 3.109
+  },
+  "02561-001:F150W": {
+   "area": 25.745,
+   "core": 3.109
+  },
+  "02561-001:F200W": {
+   "area": 25.751,
+   "core": 3.109
+  },
+  "02561-001:F277W": {
+   "area": 25.279,
+   "core": 3.102
+  },
+  "02561-001:F356W": {
+   "area": 25.278,
+   "core": 3.101
+  },
+  "02561-001:F410M": {
+   "area": 25.278,
+   "core": 3.101
+  },
+  "02561-001:F444W": {
+   "area": 25.281,
+   "core": 3.101
+  },
+  "02561-002:F090W": {
+   "area": 4.612,
+   "core": 0.0
+  },
+  "02561-002:F115W": {
+   "area": 13.226,
+   "core": 0.0
+  },
+  "02561-002:F150W": {
+   "area": 12.693,
+   "core": 0.0
+  },
+  "02561-002:F200W": {
+   "area": 12.704,
+   "core": 0.0
+  },
+  "02561-002:F277W": {
+   "area": 13.207,
+   "core": 0.0
+  },
+  "02561-002:F356W": {
+   "area": 12.776,
+   "core": 0.0
+  },
+  "02561-002:F410M": {
+   "area": 4.698,
+   "core": 0.0
+  },
+  "02561-002:F444W": {
+   "area": 12.778,
+   "core": 0.0
+  },
+  "02561-002:F480M": {
+   "area": 4.698,
+   "core": 0.0
+  },
+  "02561-003:F115W": {
+   "area": 12.428,
+   "core": 0.927
+  },
+  "02561-003:F150W": {
+   "area": 12.429,
+   "core": 0.926
+  },
+  "02561-003:F200W": {
+   "area": 12.415,
+   "core": 0.93
+  },
+  "02561-003:F277W": {
+   "area": 12.033,
+   "core": 0.879
+  },
+  "02561-003:F356W": {
+   "area": 12.033,
+   "core": 0.878
+  },
+  "02561-003:F410M": {
+   "area": 12.031,
+   "core": 0.878
+  },
+  "02561-003:F444W": {
+   "area": 12.032,
+   "core": 0.879
+  },
+  "02561-006:F115W": {
+   "area": 6.057,
+   "core": 0.0
+  },
+  "02561-006:F150W": {
+   "area": 6.054,
+   "core": 0.0
+  },
+  "02561-006:F200W": {
+   "area": 6.06,
+   "core": 0.0
+  },
+  "02561-006:F277W": {
+   "area": 6.134,
+   "core": 0.0
+  },
+  "02561-006:F356W": {
+   "area": 6.135,
+   "core": 0.0
+  },
+  "02561-006:F444W": {
+   "area": 6.134,
+   "core": 0.0
+  },
+  "02756-002:F115W": {
+   "area": 10.558,
+   "core": 2.8
+  },
+  "02756-002:F150W": {
+   "area": 10.556,
+   "core": 2.8
+  },
+  "02756-002:F200W": {
+   "area": 10.554,
+   "core": 2.797
+  },
+  "02756-002:F277W": {
+   "area": 10.209,
+   "core": 2.763
+  },
+  "02756-002:F356W": {
+   "area": 10.209,
+   "core": 2.763
+  },
+  "02756-002:F444W": {
+   "area": 10.21,
+   "core": 2.764
+  },
+  "02756-003:F115W": {
+   "area": 10.555,
+   "core": 2.856
+  },
+  "02756-003:F150W": {
+   "area": 10.557,
+   "core": 2.856
+  },
+  "02756-003:F200W": {
+   "area": 10.554,
+   "core": 2.855
+  },
+  "02756-003:F277W": {
+   "area": 10.21,
+   "core": 2.823
+  },
+  "02756-003:F356W": {
+   "area": 10.209,
+   "core": 2.824
+  },
+  "02756-003:F444W": {
+   "area": 10.211,
+   "core": 2.824
+  },
+  "02883-002:F210M": {
+   "area": 18.713,
+   "core": 3.05
+  },
+  "02883-002:F480M": {
+   "area": 18.225,
+   "core": 3.018
+  },
+  "03073-005:F115W": {
+   "area": 9.202,
+   "core": 0.315
+  },
+  "03073-005:F277W": {
+   "area": 9.399,
+   "core": 0.296
+  },
+  "03073-008:F200W": {
+   "area": 9.201,
+   "core": 0.315
+  },
+  "03073-008:F444W": {
+   "area": 9.398,
+   "core": 0.293
+  },
+  "03073-009:F150W": {
+   "area": 9.185,
+   "core": 0.122
+  },
+  "03073-009:F356W": {
+   "area": 9.387,
+   "core": 0.1
+  },
+  "03516-001:F070W": {
+   "area": 30.289,
+   "core": 3.14
+  },
+  "03516-001:F090W": {
+   "area": 31.108,
+   "core": 3.14
+  },
+  "03516-001:F356W": {
+   "area": 29.843,
+   "core": 3.14
+  },
+  "03516-002:F070W": {
+   "area": 30.289,
+   "core": 3.14
+  },
+  "03516-002:F090W": {
+   "area": 31.111,
+   "core": 3.14
+  },
+  "03516-002:F356W": {
+   "area": 29.841,
+   "core": 3.14
+  },
+  "03538-007:F182M": {
+   "area": 17.419,
+   "core": 3.122
+  },
+  "03538-007:F410M": {
+   "area": 16.836,
+   "core": 3.101
+  },
+  "03538-008:F182M": {
+   "area": 15.105,
+   "core": 3.036
+  },
+  "03538-008:F410M": {
+   "area": 14.451,
+   "core": 2.949
+  },
+  "04111-001:F070W": {
+   "area": 25.866,
+   "core": 3.096
+  },
+  "04111-001:F090W": {
+   "area": 25.867,
+   "core": 3.096
+  },
+  "04111-001:F140M": {
+   "area": 25.865,
+   "core": 3.096
+  },
+  "04111-001:F150W2": {
+   "area": 25.867,
+   "core": 3.096
+  },
+  "04111-001:F182M": {
+   "area": 25.865,
+   "core": 3.096
+  },
+  "04111-001:F210M": {
+   "area": 25.866,
+   "core": 3.096
+  },
+  "04111-001:F250M": {
+   "area": 25.403,
+   "core": 3.086
+  },
+  "04111-001:F300M": {
+   "area": 25.401,
+   "core": 3.086
+  },
+  "04111-001:F335M": {
+   "area": 25.401,
+   "core": 3.086
+  },
+  "04111-001:F360M": {
+   "area": 25.4,
+   "core": 3.086
+  },
+  "04111-001:F430M": {
+   "area": 25.4,
+   "core": 3.086
+  },
+  "04111-001:F460M": {
+   "area": 25.403,
+   "core": 3.086
+  },
+  "04111-001:F480M": {
+   "area": 25.403,
+   "core": 3.086
+  },
+  "04111-002:F070W": {
+   "area": 12.405,
+   "core": 0.89
+  },
+  "04111-002:F090W": {
+   "area": 12.405,
+   "core": 0.89
+  },
+  "04111-002:F140M": {
+   "area": 12.4,
+   "core": 0.889
+  },
+  "04111-002:F150W2": {
+   "area": 12.403,
+   "core": 0.889
+  },
+  "04111-002:F182M": {
+   "area": 12.402,
+   "core": 0.889
+  },
+  "04111-002:F210M": {
+   "area": 12.401,
+   "core": 0.889
+  },
+  "04111-002:F250M": {
+   "area": 12.024,
+   "core": 0.841
+  },
+  "04111-002:F300M": {
+   "area": 12.024,
+   "core": 0.841
+  },
+  "04111-002:F335M": {
+   "area": 12.026,
+   "core": 0.841
+  },
+  "04111-002:F360M": {
+   "area": 12.025,
+   "core": 0.84
+  },
+  "04111-002:F430M": {
+   "area": 12.024,
+   "core": 0.84
+  },
+  "04111-002:F460M": {
+   "area": 12.026,
+   "core": 0.841
+  },
+  "04111-002:F480M": {
+   "area": 12.024,
+   "core": 0.841
+  }
+ },
+ "pairs": [
+  {
+   "early": "01324-001",
+   "late": "02561-006",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60521.92,
+   "dt_days": 763.0,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-003",
+   "late": "02561-006",
+   "t_early_mjd": 59872.52,
+   "t_late_mjd": 60521.92,
+   "dt_days": 649.4,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-001",
+   "late": "02561-006",
+   "t_early_mjd": 59885.35,
+   "t_late_mjd": 60521.92,
+   "dt_days": 636.6,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.27,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.27,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.275,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.231,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.232,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.232,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-006",
+   "late": "02561-006",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60521.92,
+   "dt_days": 628.3,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-003",
+   "late": "02561-006",
+   "t_early_mjd": 59898.42,
+   "t_late_mjd": 60521.92,
+   "dt_days": 623.5,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-002",
+   "late": "02561-006",
+   "t_early_mjd": 59919.38,
+   "t_late_mjd": 60521.92,
+   "dt_days": 602.5,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.906,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.906,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.917,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.814,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.813,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.814,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-007",
+   "late": "02561-006",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60521.92,
+   "dt_days": 389.7,
+   "shared_filters": [
+    "F115W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "02561-006",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60521.92,
+   "dt_days": 365.6,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 5.75,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 5.424,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 5.43,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 5.817,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 5.55,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 5.55,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01176-221",
+   "late": "02561-006",
+   "t_early_mjd": 60159.58,
+   "t_late_mjd": 60521.92,
+   "dt_days": 362.3,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "03516-002",
+   "late": "02561-006",
+   "t_early_mjd": 60275.0,
+   "t_late_mjd": 60521.92,
+   "dt_days": 246.9,
+   "shared_filters": [
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F356W": {
+     "a_ov": 0.688,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "03516-001",
+   "late": "02561-006",
+   "t_early_mjd": 60284.42,
+   "t_late_mjd": 60521.92,
+   "dt_days": 237.5,
+   "shared_filters": [
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F356W": {
+     "a_ov": 0.601,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "03073-009",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60494.82,
+   "dt_days": 735.9,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-003",
+   "late": "03073-009",
+   "t_early_mjd": 59872.52,
+   "t_late_mjd": 60494.82,
+   "dt_days": 622.3,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 0.108,
+     "a_core": 0.078
+    },
+    "F356W": {
+     "a_ov": 0.081,
+     "a_core": 0.057
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-001",
+   "late": "03073-009",
+   "t_early_mjd": 59885.35,
+   "t_late_mjd": 60494.82,
+   "dt_days": 609.5,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 2.356,
+     "a_core": 0.122
+    },
+    "F356W": {
+     "a_ov": 2.321,
+     "a_core": 0.1
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "03073-009",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60494.82,
+   "dt_days": 601.2,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-003",
+   "late": "03073-009",
+   "t_early_mjd": 59898.42,
+   "t_late_mjd": 60494.82,
+   "dt_days": 596.4,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-002",
+   "late": "03073-009",
+   "t_early_mjd": 59919.38,
+   "t_late_mjd": 60494.82,
+   "dt_days": 575.4,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-007",
+   "late": "03073-009",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60494.82,
+   "dt_days": 362.6,
+   "shared_filters": [
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "03073-009",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60494.82,
+   "dt_days": 338.5,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 2.457,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 2.32,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01176-221",
+   "late": "03073-009",
+   "t_early_mjd": 60159.58,
+   "t_late_mjd": 60494.82,
+   "dt_days": 335.2,
+   "shared_filters": [
+    "F150W",
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F150W": {
+     "a_ov": 1.079,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.042,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "03516-002",
+   "late": "03073-009",
+   "t_early_mjd": 60275.0,
+   "t_late_mjd": 60494.82,
+   "dt_days": 219.8,
+   "shared_filters": [
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F356W": {
+     "a_ov": 2.688,
+     "a_core": 0.1
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "03516-001",
+   "late": "03073-009",
+   "t_early_mjd": 60284.42,
+   "t_late_mjd": 60494.82,
+   "dt_days": 210.4,
+   "shared_filters": [
+    "F356W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F356W": {
+     "a_ov": 2.901,
+     "a_core": 0.1
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-001",
+   "late": "03073-008",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60494.7,
+   "dt_days": 735.8,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-003",
+   "late": "03073-008",
+   "t_early_mjd": 59872.52,
+   "t_late_mjd": 60494.7,
+   "dt_days": 622.2,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 0.231,
+     "a_core": 0.201
+    },
+    "F444W": {
+     "a_ov": 0.191,
+     "a_core": 0.167
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-001",
+   "late": "03073-008",
+   "t_early_mjd": 59885.35,
+   "t_late_mjd": 60494.7,
+   "dt_days": 609.3,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 2.703,
+     "a_core": 0.315
+    },
+    "F444W": {
+     "a_ov": 2.656,
+     "a_core": 0.293
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "03073-008",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60494.7,
+   "dt_days": 601.1,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-003",
+   "late": "03073-008",
+   "t_early_mjd": 59898.42,
+   "t_late_mjd": 60494.7,
+   "dt_days": 596.3,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-002",
+   "late": "03073-008",
+   "t_early_mjd": 59919.38,
+   "t_late_mjd": 60494.7,
+   "dt_days": 575.3,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 0.052,
+     "a_core": 0.045
+    },
+    "F444W": {
+     "a_ov": 0.02,
+     "a_core": 0.018
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-007",
+   "late": "03073-008",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60494.7,
+   "dt_days": 362.4,
+   "shared_filters": [
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "03073-008",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60494.7,
+   "dt_days": 338.4,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 3.058,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 2.951,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01176-221",
+   "late": "03073-008",
+   "t_early_mjd": 60159.58,
+   "t_late_mjd": 60494.7,
+   "dt_days": 335.1,
+   "shared_filters": [
+    "F200W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F200W": {
+     "a_ov": 0.978,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.946,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "03073-005",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60494.07,
+   "dt_days": 735.2,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-003",
+   "late": "03073-005",
+   "t_early_mjd": 59872.52,
+   "t_late_mjd": 60494.07,
+   "dt_days": 621.6,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.232,
+     "a_core": 0.203
+    },
+    "F277W": {
+     "a_ov": 0.191,
+     "a_core": 0.168
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-001",
+   "late": "03073-005",
+   "t_early_mjd": 59885.35,
+   "t_late_mjd": 60494.07,
+   "dt_days": 608.7,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 2.699,
+     "a_core": 0.315
+    },
+    "F277W": {
+     "a_ov": 2.661,
+     "a_core": 0.296
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "03073-005",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60494.07,
+   "dt_days": 600.5,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-003",
+   "late": "03073-005",
+   "t_early_mjd": 59898.42,
+   "t_late_mjd": 60494.07,
+   "dt_days": 595.7,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-002",
+   "late": "03073-005",
+   "t_early_mjd": 59919.38,
+   "t_late_mjd": 60494.07,
+   "dt_days": 574.7,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.054,
+     "a_core": 0.046
+    },
+    "F277W": {
+     "a_ov": 0.021,
+     "a_core": 0.018
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-007",
+   "late": "03073-005",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60494.07,
+   "dt_days": 361.8,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "03073-005",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60494.07,
+   "dt_days": 337.7,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 3.317,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 3.221,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01176-221",
+   "late": "03073-005",
+   "t_early_mjd": 60159.58,
+   "t_late_mjd": 60494.07,
+   "dt_days": 334.5,
+   "shared_filters": [
+    "F115W",
+    "F277W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.978,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.946,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "03516-001",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60284.42,
+   "dt_days": 525.5,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 1.944,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.979,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "03516-001",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60284.42,
+   "dt_days": 390.9,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 1.881,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.63,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-007",
+   "late": "03516-001",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60284.42,
+   "dt_days": 152.2,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 1.939,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.613,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "02561-002",
+   "late": "03516-001",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60284.42,
+   "dt_days": 128.1,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.149,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 2.798,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-001",
+   "late": "03516-002",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60275.0,
+   "dt_days": 516.1,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 2.085,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 2.2,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "03516-002",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60275.0,
+   "dt_days": 381.4,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 2.059,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.88,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-007",
+   "late": "03516-002",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60275.0,
+   "dt_days": 142.7,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 2.081,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.84,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "02561-002",
+   "late": "03516-002",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60275.0,
+   "dt_days": 118.7,
+   "shared_filters": [
+    "F090W",
+    "F356W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.226,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 2.728,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-001",
+   "late": "04111-002",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60268.24,
+   "dt_days": 509.3,
+   "shared_filters": [
+    "F090W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-006",
+   "late": "04111-002",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60268.24,
+   "dt_days": 374.7,
+   "shared_filters": [
+    "F090W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-007",
+   "late": "04111-002",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60268.24,
+   "dt_days": 136.0,
+   "shared_filters": [
+    "F090W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "04111-002",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60268.24,
+   "dt_days": 111.9,
+   "shared_filters": [
+    "F090W",
+    "F480M"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F480M": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "04111-001",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60259.64,
+   "dt_days": 500.7,
+   "shared_filters": [
+    "F090W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 1.683,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "04111-001",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60259.64,
+   "dt_days": 366.1,
+   "shared_filters": [
+    "F090W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 1.937,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-007",
+   "late": "04111-001",
+   "t_early_mjd": 60132.25,
+   "t_late_mjd": 60259.64,
+   "dt_days": 127.4,
+   "shared_filters": [
+    "F090W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 1.681,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "02561-002",
+   "late": "04111-001",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60259.64,
+   "dt_days": 103.3,
+   "shared_filters": [
+    "F090W",
+    "F480M"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.187,
+     "a_core": 0.0
+    },
+    "F480M": {
+     "a_ov": 0.145,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "03538-008",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60249.34,
+   "dt_days": 93.0,
+   "shared_filters": [
+    "F410M"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F410M": {
+     "a_ov": 0.023,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "02883-002",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60249.14,
+   "dt_days": 92.8,
+   "shared_filters": [
+    "F480M"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F480M": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-002",
+   "late": "03538-007",
+   "t_early_mjd": 60156.33,
+   "t_late_mjd": 60243.22,
+   "dt_days": 86.9,
+   "shared_filters": [
+    "F410M"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F410M": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "01176-221",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60159.58,
+   "dt_days": 400.7,
+   "shared_filters": [
+    "F090W",
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.527,
+     "a_core": 0.0
+    },
+    "F115W": {
+     "a_ov": 0.624,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.768,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.372,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.323,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.679,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.544,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-006",
+   "late": "01176-221",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60159.58,
+   "dt_days": 266.0,
+   "shared_filters": [
+    "F090W",
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.459,
+     "a_core": 0.0
+    },
+    "F115W": {
+     "a_ov": 0.459,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.458,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.455,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.412,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.413,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.412,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "02561-002",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60156.33,
+   "dt_days": 397.4,
+   "shared_filters": [
+    "F090W",
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-003",
+   "late": "02561-002",
+   "t_early_mjd": 59872.52,
+   "t_late_mjd": 60156.33,
+   "dt_days": 283.8,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.078,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.074,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.076,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.039,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.039,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.039,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-001",
+   "late": "02561-002",
+   "t_early_mjd": 59885.35,
+   "t_late_mjd": 60156.33,
+   "dt_days": 271.0,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F410M",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 1.97,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 1.95,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 1.961,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 1.857,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.86,
+     "a_core": 0.0
+    },
+    "F410M": {
+     "a_ov": 0.142,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 1.86,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "02561-002",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60156.33,
+   "dt_days": 262.8,
+   "shared_filters": [
+    "F090W",
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-003",
+   "late": "02561-002",
+   "t_early_mjd": 59898.42,
+   "t_late_mjd": 60156.33,
+   "dt_days": 257.9,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F410M",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F410M": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-002",
+   "late": "02561-002",
+   "t_early_mjd": 59919.38,
+   "t_late_mjd": 60156.33,
+   "dt_days": 237.0,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 2.588,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 2.378,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 2.391,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 2.393,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 2.224,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 2.228,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-001",
+   "late": "01324-007",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 60132.25,
+   "dt_days": 373.3,
+   "shared_filters": [
+    "F090W",
+    "F115W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 5.745,
+     "a_core": 0.0
+    },
+    "F115W": {
+     "a_ov": 6.327,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 5.177,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 5.815,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 6.16,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "02756-003",
+   "late": "01324-007",
+   "t_early_mjd": 59872.52,
+   "t_late_mjd": 60132.25,
+   "dt_days": 259.7,
+   "shared_filters": [
+    "F115W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02561-001",
+   "late": "01324-007",
+   "t_early_mjd": 59885.35,
+   "t_late_mjd": 60132.25,
+   "dt_days": 246.9,
+   "shared_filters": [
+    "F115W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 1.79,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 1.732,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.637,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 1.735,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-006",
+   "late": "01324-007",
+   "t_early_mjd": 59893.57,
+   "t_late_mjd": 60132.25,
+   "dt_days": 238.7,
+   "shared_filters": [
+    "F090W",
+    "F115W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 3.841,
+     "a_core": 0.0
+    },
+    "F115W": {
+     "a_ov": 4.18,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 4.227,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 4.174,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 4.297,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "02561-003",
+   "late": "01324-007",
+   "t_early_mjd": 59898.42,
+   "t_late_mjd": 60132.25,
+   "dt_days": 233.8,
+   "shared_filters": [
+    "F115W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "02756-002",
+   "late": "01324-007",
+   "t_early_mjd": 59919.38,
+   "t_late_mjd": 60132.25,
+   "dt_days": 212.9,
+   "shared_filters": [
+    "F115W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": true,
+   "late_used": false,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "02756-002",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 59919.38,
+   "dt_days": 160.5,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "02561-003",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 59898.42,
+   "dt_days": 139.5,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  },
+  {
+   "early": "01324-001",
+   "late": "01324-006",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 59893.57,
+   "dt_days": 134.7,
+   "shared_filters": [
+    "F090W",
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": false,
+   "per_filter": {
+    "F090W": {
+     "a_ov": 3.84,
+     "a_core": 0.0
+    },
+    "F115W": {
+     "a_ov": 4.181,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 4.294,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 3.672,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 4.068,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 4.436,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 4.303,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-001",
+   "late": "02561-001",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 59885.35,
+   "dt_days": 126.4,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 1.794,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 1.938,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 1.381,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 1.396,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 1.893,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 1.743,
+     "a_core": 0.0
+    }
+   },
+   "class": "overlap"
+  },
+  {
+   "early": "01324-001",
+   "late": "02756-003",
+   "t_early_mjd": 59758.92,
+   "t_late_mjd": 59872.52,
+   "dt_days": 113.6,
+   "shared_filters": [
+    "F115W",
+    "F150W",
+    "F200W",
+    "F277W",
+    "F356W",
+    "F444W"
+   ],
+   "early_used": false,
+   "late_used": true,
+   "per_filter": {
+    "F115W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F150W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F200W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F277W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F356W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    },
+    "F444W": {
+     "a_ov": 0.0,
+     "a_core": 0.0
+    }
+   },
+   "class": "none"
+  }
+ ]
+}
