@@ -2,6 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: W3 / Kepler physical mapping: for a uniform negative-mass population with t_E ≥ 0.1 d, one expected detection needs |ρ_neg| ≥ 0.69 M☉ pc⁻³ even with every umbra crossing detected (about 7.6× the local baryonic density); recommendation C, pause (D-107 addendum 5)
+- **Result** (`results/w3_kepler/physical/RESULT.md`; no light curve, image or injection):
+  - The 20 tested cells map, through ρ · t_E = t_* = x R_*/v and the DR25 radii and distances of 1,971 of the 2,000
+    searched stars, to negative masses of about 2 × 10⁻⁵ to 0.15 M☉ at a few to about 600 pc (medians). At 220 km/s,
+    cells with t_* ≥ 0.1 d (8 of 20) are unreachable.
+  - Expected detections N = Σ ε (4/π) τ_i T_i / t_E for a uniform |ρ_neg| along the sight lines. Most lenses there
+    have ρ outside the tested 0.01–0.1, so three bounds are given. For N = 1 at t_E 0.1 d: 0.6944 M☉ pc⁻³ with ε = 1
+    (a floor), 0.8696–0.9277 with the measured ε at all distances, 6.252–6.67 (220 km/s) with only tested-ρ lenses.
+  - The floor is about 7.6× the local baryonic density (0.0914, Flynn et al. 2006 via Read 2014; ratio not stored).
+    The whole unread pool (16,240 stars) would still need 0.07614–0.09535.
+- **Sky to SAP:** cosmic-ray correction (bit 128) may remove real caustic spikes and is masked; the SPSD flag may
+  mark an ingress. Neither is verified; neither can move the ε = 1 floor.
+  - The `QMASK` comment and the #500 plan labelled several bits wrongly. The comment is corrected (Kepler Archive
+    Manual Table 2-3); the mask and all results are unchanged.
+- **Review:** the independent review found the measured-ε requirement assumed ρ inside the tested range along the
+  whole sight line; bounds (b) and (c) were added and the headlines made conditional.
+- **Handoff:** recommendation C (pause the W3 / Kepler branch); the owner decides. Nothing is queued, and no other
+  branch is opened.
+
 ## 2026-10-26: D115b Lenstool re-fit stage V: gate V fails as frozen (+3.6 %); post hoc the cause is best.par's rounded reference (D-109 addendum)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT.md`; plan frozen before any run): Lenstool 8.15.5
   (`inverse 0` + `chi2 1`) on `best.par` gives χ²_pos 356.67 vs the header's 344.298 (+3.59 % > 1 %, ASSUMPTION).

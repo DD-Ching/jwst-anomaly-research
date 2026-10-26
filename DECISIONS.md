@@ -6546,6 +6546,32 @@ confining radiation at a throat is found.
     - events shallower than 1 mag in SAP matter (the pre-screen cannot see them);
     - download rates allow batch 4.
 
+- **Addendum 5 2026-10-26 (`results/w3_kepler/physical/`):** physical mapping of the tested grid and the value of a
+  larger search.
+  - ρ and t_E are tied through t_* = ρ t_E = x R_*/v. The grid means negative masses of about 2 × 10⁻⁵ to
+    0.15 M☉ at a few to about 600 pc (median stars).
+  - The expected detections are N = Σ ε (4/π) τ_i T_i / t_E for a uniform |ρ_neg| along each sight line. For one
+    speed, ρ varies along the sight line, and most lenses lie outside the tested ρ, so the requirement is bounded.
+    For N = 1 at t_E 0.1 d (the best tested t_E):
+    - ε = 1 at all distances (a floor no efficiency question can undercut): 0.6944 M☉ pc⁻³;
+    - the measured ε applied at all distances: 0.8696–0.9277; +500 stars multiplies it by 0.8, +5,000 by 0.286;
+    - only lenses inside the tested ρ (one speed): 6.252–6.67 at 220 km/s; the lowest over t_E is 3.576 (0.3 d).
+    - The whole unread FGK pool (16,240 stars) would still need 0.07614 (floor) to 0.09535.
+    - Scale references, not population models: local baryonic density 0.0914 (Flynn et al. 2006 via Read 2014);
+      extrapolated local dark-matter density 0.005–0.015 (Read 2014).
+  - Decision (recommended to the owner): pause the W3 / Kepler branch (C). Under these assumptions (uniform density,
+    t_E ≥ 0.1 d), the binding constraint is the rate per density, not the pipeline. The unverified sky-to-SAP steps
+    (bit-128 cosmic-ray correction, SPSD) affect ε only, not the floor. Only shorter t_E lowers the requirement, and
+    dark-matter-scale densities need t_E ≈ 0.00216 d, an umbra under one long cadence.
+  - Correction: the `QMASK` comment and the #500 plan's bit labels did not match the Kepler Archive Manual
+    Table 2-3. The numeric mask, and every result since #500, is unchanged.
+    - Excluded: 16 (reaction-wheel zero crossing), 64 (Argabrightening), 128 (cosmic ray), 1024 (SPSD).
+    - Not excluded: 256 (manual exclude), 2048 (impulsive outlier).
+  - Revisit if:
+    - a sourced population model puts a negative-mass density near the Sun within reach;
+    - a survey with far more source-years or a shorter cadence is considered;
+    - the owner wants a W3 search for its exploratory value alone.
+
 ## D-108 Efficiency rules for every round: pre-review self-check, gzip outputs, sync before push (owner rule 2026-10-26)
 - **Decision:** every round follows `docs/efficiency-rules.md`. Before the independent review it runs the
   self-check in `docs/pre-review-checklist.md`; the review and the re-check use the same list.

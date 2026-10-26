@@ -1,0 +1,404 @@
+{
+ "label": "derived (scenario requirement, not an abundance or a limit)",
+ "plan": "results/w3_kepler/physical/PLAN.md",
+ "assumptions": [
+  "uniform lens mass density |rho_neg| (M_sun/pc^3) between observer and each star",
+  "every event has the stated t_E, u0 < 2; rows: (a) the measured eps applied to lenses at every distance (the rho of most of them is outside the tested 0.01-0.1, where eps is not measured), (b) eps = 1 at every distance (a floor that holds whatever eps is outside the tested range), (c) only lenses whose rho is in 0.01-0.1, one speed",
+  "efficiency between the lowest and highest measured cell at that t_E (2,000 stars)",
+  "SAP-level efficiency applies to real events (sky-to-SAP response not verified)",
+  "+500 / +5,000: zero result, similar efficiency and the same distance distribution"
+ ],
+ "stars": 1971,
+ "stars_left_out_no_distance": 29,
+ "pool_unread_after_554": 16240,
+ "eps1_tE_needed_for_N1_at_reference": {
+  "rho_baryon_0.0914": {
+   "tE_d": 0.01316,
+   "umbra_max_cadences": 2.58
+  },
+  "rho_dm_high_0.015": {
+   "tE_d": 0.00216,
+   "umbra_max_cadences": 0.423
+  }
+ },
+ "sum_D_S2_T_pc2_yr": 3089000000.0,
+ "references_msun_pc3": {
+  "rho_dm_extrapolated_read2014": [
+   0.005,
+   0.015
+  ],
+  "rho_baryon_flynn2006_via_read2014": [
+   0.0914,
+   0.009
+  ]
+ },
+ "rows": [
+  {
+   "tE_d": 0.1,
+   "eps_min": 0.7485,
+   "eps_max": 0.7985,
+   "now_2000": {
+    "N_per_unit_density": [
+     1.078,
+     1.15
+    ],
+    "density_for_N1": [
+     0.8696,
+     0.9277
+    ],
+    "density_for_N3": [
+     2.605,
+     2.779
+    ]
+   },
+   "plus_500": {
+    "N_per_unit_density": [
+     1.347,
+     1.437
+    ],
+    "density_for_N1": [
+     0.6957,
+     0.7421
+    ],
+    "density_for_N3": [
+     2.084,
+     2.223
+    ]
+   },
+   "plus_5000": {
+    "N_per_unit_density": [
+     3.773,
+     4.025
+    ],
+    "density_for_N1": [
+     0.2485,
+     0.2651
+    ],
+    "density_for_N3": [
+     0.7444,
+     0.7941
+    ]
+   },
+   "star_factor_needed_vs_now": {
+    "N1_at_rho_dm_high_0.015": 57.97,
+    "N1_at_rho_baryon_0.0914": 9.514,
+    "N3_at_rho_dm_high_0.015": 173.7,
+    "N3_at_rho_baryon_0.0914": 28.5
+   },
+   "eps1_floor": {
+    "density_for_N1_now": 0.6944,
+    "density_for_N1_whole_pool": 0.07614,
+    "density_for_N1_whole_pool_at_eps_max": 0.09535
+   },
+   "tested_rho_only": {
+    "S1_halo_like_220": {
+     "share_of_tau": 0.1391,
+     "density_for_N1": [
+      6.252,
+      6.67
+     ]
+    },
+    "S2_disk_like_30": {
+     "share_of_tau": 0.003052,
+     "density_for_N1": [
+      284.9,
+      303.9
+     ]
+    }
+   }
+  },
+  {
+   "tE_d": 0.3,
+   "eps_min": 0.7573,
+   "eps_max": 0.796,
+   "now_2000": {
+    "N_per_unit_density": [
+     0.3635,
+     0.3821
+    ],
+    "density_for_N1": [
+     2.617,
+     2.751
+    ],
+    "density_for_N3": [
+     7.84,
+     8.241
+    ]
+   },
+   "plus_500": {
+    "N_per_unit_density": [
+     0.4544,
+     0.4777
+    ],
+    "density_for_N1": [
+     2.094,
+     2.201
+    ],
+    "density_for_N3": [
+     6.272,
+     6.593
+    ]
+   },
+   "plus_5000": {
+    "N_per_unit_density": [
+     1.272,
+     1.337
+    ],
+    "density_for_N1": [
+     0.7477,
+     0.7859
+    ],
+    "density_for_N3": [
+     2.24,
+     2.355
+    ]
+   },
+   "star_factor_needed_vs_now": {
+    "N1_at_rho_dm_high_0.015": 174.5,
+    "N1_at_rho_baryon_0.0914": 28.63,
+    "N3_at_rho_dm_high_0.015": 522.7,
+    "N3_at_rho_baryon_0.0914": 85.78
+   },
+   "eps1_floor": {
+    "density_for_N1_now": 2.083,
+    "density_for_N1_whole_pool": 0.2284,
+    "density_for_N1_whole_pool_at_eps_max": 0.2869
+   },
+   "tested_rho_only": {
+    "S1_halo_like_220": {
+     "share_of_tau": 0.7318,
+     "density_for_N1": [
+      3.576,
+      3.759
+     ]
+    },
+    "S2_disk_like_30": {
+     "share_of_tau": 0.02615,
+     "density_for_N1": [
+      100.1,
+      105.2
+     ]
+    }
+   }
+  },
+  {
+   "tE_d": 1.0,
+   "eps_min": 0.734,
+   "eps_max": 0.8103,
+   "now_2000": {
+    "N_per_unit_density": [
+     0.1057,
+     0.1167
+    ],
+    "density_for_N1": [
+     8.569,
+     9.46
+    ],
+    "density_for_N3": [
+     25.67,
+     28.34
+    ]
+   },
+   "plus_500": {
+    "N_per_unit_density": [
+     0.1321,
+     0.1459
+    ],
+    "density_for_N1": [
+     6.855,
+     7.568
+    ],
+    "density_for_N3": [
+     20.54,
+     22.67
+    ]
+   },
+   "plus_5000": {
+    "N_per_unit_density": [
+     0.37,
+     0.4084
+    ],
+    "density_for_N1": [
+     2.448,
+     2.703
+    ],
+    "density_for_N3": [
+     7.335,
+     8.098
+    ]
+   },
+   "star_factor_needed_vs_now": {
+    "N1_at_rho_dm_high_0.015": 571.3,
+    "N1_at_rho_baryon_0.0914": 93.76,
+    "N3_at_rho_dm_high_0.015": 1712.0,
+    "N3_at_rho_baryon_0.0914": 280.9
+   },
+   "eps1_floor": {
+    "density_for_N1_now": 6.944,
+    "density_for_N1_whole_pool": 0.7614,
+    "density_for_N1_whole_pool_at_eps_max": 0.9396
+   },
+   "tested_rho_only": {
+    "S1_halo_like_220": {
+     "share_of_tau": 0.8592,
+     "density_for_N1": [
+      9.973,
+      11.01
+     ]
+    },
+    "S2_disk_like_30": {
+     "share_of_tau": 0.239,
+     "density_for_N1": [
+      35.85,
+      39.58
+     ]
+    }
+   }
+  },
+  {
+   "tE_d": 3.0,
+   "eps_min": 0.7128,
+   "eps_max": 0.794,
+   "now_2000": {
+    "N_per_unit_density": [
+     0.03422,
+     0.03812
+    ],
+    "density_for_N1": [
+     26.24,
+     29.22
+    ],
+    "density_for_N3": [
+     78.6,
+     87.56
+    ]
+   },
+   "plus_500": {
+    "N_per_unit_density": [
+     0.04277,
+     0.04765
+    ],
+    "density_for_N1": [
+     20.99,
+     23.38
+    ],
+    "density_for_N3": [
+     62.88,
+     70.04
+    ]
+   },
+   "plus_5000": {
+    "N_per_unit_density": [
+     0.1198,
+     0.1334
+    ],
+    "density_for_N1": [
+     7.496,
+     8.35
+    ],
+    "density_for_N3": [
+     22.46,
+     25.02
+    ]
+   },
+   "star_factor_needed_vs_now": {
+    "N1_at_rho_dm_high_0.015": 1749.0,
+    "N1_at_rho_baryon_0.0914": 287.0,
+    "N3_at_rho_dm_high_0.015": 5240.0,
+    "N3_at_rho_baryon_0.0914": 860.0
+   },
+   "eps1_floor": {
+    "density_for_N1_now": 20.83,
+    "density_for_N1_whole_pool": 2.284,
+    "density_for_N1_whole_pool_at_eps_max": 2.877
+   },
+   "tested_rho_only": {
+    "S1_halo_like_220": {
+     "share_of_tau": 0.2537,
+     "density_for_N1": [
+      103.4,
+      115.2
+     ]
+    },
+    "S2_disk_like_30": {
+     "share_of_tau": 0.9027,
+     "density_for_N1": [
+      29.06,
+      32.38
+     ]
+    }
+   }
+  },
+  {
+   "tE_d": 10.0,
+   "eps_min": 0.6205,
+   "eps_max": 0.6885,
+   "now_2000": {
+    "N_per_unit_density": [
+     0.008936,
+     0.009916
+    ],
+    "density_for_N1": [
+     100.9,
+     111.9
+    ],
+    "density_for_N3": [
+     302.2,
+     335.3
+    ]
+   },
+   "plus_500": {
+    "N_per_unit_density": [
+     0.01117,
+     0.01239
+    ],
+    "density_for_N1": [
+     80.68,
+     89.52
+    ],
+    "density_for_N3": [
+     241.7,
+     268.2
+    ]
+   },
+   "plus_5000": {
+    "N_per_unit_density": [
+     0.03128,
+     0.0347
+    ],
+    "density_for_N1": [
+     28.81,
+     31.97
+    ],
+    "density_for_N3": [
+     86.33,
+     95.79
+    ]
+   },
+   "star_factor_needed_vs_now": {
+    "N1_at_rho_dm_high_0.015": 6723.0,
+    "N1_at_rho_baryon_0.0914": 1103.0,
+    "N3_at_rho_dm_high_0.015": 20140.0,
+    "N3_at_rho_baryon_0.0914": 3306.0
+   },
+   "eps1_floor": {
+    "density_for_N1_now": 69.44,
+    "density_for_N1_whole_pool": 7.614,
+    "density_for_N1_whole_pool_at_eps_max": 11.06
+   },
+   "tested_rho_only": {
+    "S1_halo_like_220": {
+     "share_of_tau": 0.0,
+     "density_for_N1": null
+    },
+    "S2_disk_like_30": {
+     "share_of_tau": 0.7579,
+     "density_for_N1": [
+      133.1,
+      147.6
+     ]
+    }
+   }
+  }
+ ]
+}

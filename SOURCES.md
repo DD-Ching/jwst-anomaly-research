@@ -1998,3 +1998,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   project page https://projets.lam.fr/projects/lenstool (Jullo et al. 2007, NJPh 9, 447, doi:10.1088/1367-2630/9/12/447).
 - **micromamba 2.9.0**: https://micro.mamba.pm/api/micromamba/linux-64/latest.
 - **Model:** the pinned CANUCS DR1 MACS0416 Lenstool files (sha256 in `lensmodel.MACS0416_CANUCS`, D-044).
+
+## W3 / Kepler physical mapping (accessed 2026-10-26; `results/w3_kepler/physical/`)
+- Kepler Archive Manual, KDMC-10008-006 (MAST), Section 2.3.1.1 and Table 2-3 (quality bits); URL, size and sha256 in
+  `sources.json`.
+- Read, J. I. 2014, "The local dark matter density", J. Phys. G 41, 063101, arXiv:1404.1938 (LaTeX source read):
+  ρ_dm,ext = 0.005–0.015 M☉ pc⁻³ (0.2–0.56 GeV cm⁻³); ρ_b = 0.0914 ± 0.009 M☉ pc⁻³ (Flynn et al. 2006); v_c ~ 220
+  km/s.
+- Kepler DR25 stellar properties (NExScI TAP `keplerstellar`, `q1_q17_dr25_stellar`): radius and distance with
+  errors for the 2,000 searched stars (`inputs/stellar_dr25.csv.gz`).
