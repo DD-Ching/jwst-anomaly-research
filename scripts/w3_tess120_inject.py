@@ -67,7 +67,7 @@ SCENARIOS = {  # (|M| in M_sun, v in km/s): #561 TESS 120 s best mass and one lo
 U0_MAX = 2.65  # the #561 shape grid's u0 range
 T_HALF = ws.T_HALF  # model window, +- t_E
 BASE_WINDOW_D = (
-    3.0  # running-median baseline window; the longest frozen-scenario dark phase is <= 1.2 d
+    3.0  # running-median baseline window; the longest frozen-scenario dark phase is <= 1.1 d
 )
 NSIG = 5.0  # D and S also need >= NSIG robust sigma (the Kepler LOCAL_NSIG)
 CONTIG = 1.5  # neighbouring cadences are contiguous if their spacing is <= CONTIG cadences

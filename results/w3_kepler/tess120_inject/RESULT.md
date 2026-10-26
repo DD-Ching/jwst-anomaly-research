@@ -45,6 +45,9 @@
   - It is 0.1387 against 0.1279 and 0.1078 against 0.09991 for the two best masses.
   - Resampling draws, the 5–95 % range is 0.1143–0.164 and 0.0855–0.1295 (`ideal_share_p5_p95_over_draws`). Both
     contain #561's value, so the difference fits the draw rather than a weighting error.
+  - At 10⁻⁸ M☉, #561's 0.001935 lies outside the range 0–0.001333. Only 3 draws have any ideal event there, and
+    #561's shape table applied to the same events predicts 3.5 ideal events against 4 found (review; not stored).
+    So the ideal check is not at fault.
 - **Paired levels for each event** (same x, u0 and t0; the exposure phase is the same up to the drift of BTJD stamps against a regular grid):
   - L0 ideal: the #561 noise-free criterion on a gap-free grid;
   - L1a: noise-free on the file's real cadence times;
@@ -76,9 +79,10 @@
 | all other draws | 190 | 644, 377 (0.585) | 472, 277 (0.587) |
 
   - The kept shares in brackets are divisions, not stored.
-  - The first group is 5 % of the draws but holds 23 % and 27 % of the ideal events (not stored). In 10 and 11 of
-    its star-sectors no ideal event gives a dark run at L2 (`star_sectors_with_ideal_but_no_L2_dark_run`). The
-    per-cadence scatter σ was not stored, so the cause is not shown.
+  - The first group is 5 % of the draws but holds 23 % and 27 % of the ideal events (not stored).
+  - In 10 and 11 star-sectors overall, no ideal event gives a dark run at L2
+    (`star_sectors_with_ideal_but_no_L2_dark_run`); 7 of each are in this group (not stored).
+  - The per-cadence scatter σ was not stored, so the cause is not shown.
 - **Kept per step** (`kept_per_step`, best masses, 220 / 30 km/s):
 
 | step | 220 km/s | 30 km/s |
@@ -104,8 +108,10 @@
 | ≥ 50 | no ideal event | 214 / 508 = 0.4213 |
 
   - Finer bins (`by_tE_cadences_fine`): at 220 km/s, 25–50 cadences keep 39 / 231. At 30 km/s, 150–300 keep
-    30 / 158. The long-t_E events come largely from the distant stars of the first group (t_E ∝ √D_S), so the t_E
-    trend and the group split are not separate findings.
+    30 / 158. The first group explains the t_E trend only partly (all not stored):
+    - 220 km/s, 25–50 cadences: 122 of the 231 ideal events come from it, and it keeps 1; the other draws keep
+      38 / 109;
+    - 30 km/s, 150–300 cadences: 87 of 158 come from it, and it keeps 1; the other draws keep 29 / 71.
   - **Low masses:** 26 and 4 ideally identifiable events of 6,000 (`drawn_events`).
     - At 10⁻⁷ M☉, 95.18 % of drawn events have ρ ≥ 2 (median ρ 39.82) and 64.22 % have t_E < 3 cadences.
     - At 10⁻⁸ M☉, 99.1 % have ρ ≥ 2 (median 127.7).

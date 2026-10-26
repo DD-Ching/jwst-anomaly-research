@@ -6591,13 +6591,17 @@ confining radiation at a throat is found.
     for 4 frozen populations drawn with #561's Level-0 weights.
   - Retention 0.4772 (0.4075–0.5499) and 0.459 (0.3762–0.5407) at the two best masses: the frozen "retain at
     least half" is not robustly shown. 10⁻⁷ and 10⁻⁸ M☉ are insufficient (26 and 4 ideal events).
-  - The retention averages about 0.585 (most draws) and about 0.106 (faint distant dwarfs, 5 % of draws).
+  - The retention averages about 0.585 (most draws) and about 0.106 (faint distant dwarfs, 5 % of draws) at
+    220 km/s; 0.587 / 0.114 at 30 km/s.
   - Decision (recommended to the owner): do not start a TESS 120 s search.
     - One expected event needs about 0.183 M☉ pc⁻³ at the best tested population.
     - A 90 % null over about 3.3 TB would reach only about 0.42.
     - Even at retention 1, one event needs 0.087, about the baryon reference.
-  - Rejected: extrapolating the retention to other masses or to all TESS stars; a second detector or seed after
-    seeing the results.
+  - Rejected:
+    - extrapolating the retention to other masses;
+    - carrying it to all TESS stars without conditions (it needs a representative sample and the same mix of star
+      groups);
+    - a second detector or seed after seeing the results.
   - Revisit if: a population model puts |ρ_neg| near or above 0.2 M☉ pc⁻³ at these masses, or upstream SPOC
     processing of real events is to be tested.
 
