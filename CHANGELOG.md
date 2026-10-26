@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: MACS0647 g85 host redshift from DJA catalogues: no host within 0.5″, verdict unchanged
+- **Result** (`results/transients/macs0647_1433/host/RESULT.md`; plan frozen before any row): outcome `no_host`. No
+  DJA v7.0 photo-z row within 0.5″ and no DJA NIRSpec v4.6 row within 1.0″. The only row within 1.5″ (id 5954, 1.079″)
+  has z500 0.616 (16–84 % 0.568–0.656), a cluster-member photo-z; post hoc, as host it would make g85 a faint
+  (M ≈ −16.0 at μ = 1, not stored) supernova in a member's outskirts, with no lens-model leverage.
+- **Data:** zout (7.7 MB, not stored) and the v4.6 csv streamed, sha256 matched the pins, deleted.
+- **Handoff:** #556 still needs the owner's credentialed TNS check. #374: no weekly network run listed for today yet
+  (08:15Z). #554 (W3 Kepler s2000) left alone: owner-authorized local/cloud session, commit 07:12Z.
+
 ## 2026-10-26: MACS0647 1433 o010 → o020 F200W two-epoch pair: grid undetermined; one real transient g85, inconclusive
 - **Result** (`results/transients/macs0647_1433/RESULT.md`; plan frozen before any pixel, one box-size amendment
   before any pixel): catalogue grid G1 fails (−0.75 mag recovery 0.802 < 0.85), outcome U; difference pass on the

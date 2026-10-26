@@ -1,0 +1,48 @@
+{
+  "g85": {
+    "ra": 101.99665,
+    "dec": 70.250721,
+    "m_obs_ab": 26.28
+  },
+  "inputs": {
+    "photoz": {
+      "url": "https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/macs0647-grizli-v7.0-fix.photoz.tar.gz",
+      "member": "macs0647-grizli-v7.0-fix.eazypy.zout.fits",
+      "member_sha256": "ceb199c61f1ca67df6afc34df6ed7ad61267f59ccaf27e9a2fd1e64c2662c04e"
+    },
+    "specz": {
+      "url": "https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.6.csv.gz",
+      "sha256_gz": "ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3"
+    },
+    "zout_rows": 7956
+  },
+  "rules": {
+    "host_radius_arcsec": 0.5,
+    "neighbour_radius_arcsec": 1.5,
+    "spec_radius_arcsec": 1.0,
+    "spec_grade": 3,
+    "z_cluster": 0.591,
+    "member_window_1pz": 0.1,
+    "unconstrained_width": 1.5
+  },
+  "host": null,
+  "neighbours": [
+    {
+      "id": 5954,
+      "ra": 101.99576322156855,
+      "dec": 70.25071532790793,
+      "z_phot": 0.6355463266372681,
+      "z160": 0.5679240822792053,
+      "z500": 0.6156647205352783,
+      "z840": 0.6556602716445923,
+      "z_spec": -1.0,
+      "sep_arcsec": 1.079
+    }
+  ],
+  "photoz_class": "no_host",
+  "specz_rows": [],
+  "specz_class": "none",
+  "z_spec": null,
+  "outcome": "no_host",
+  "abs_mag_at_z500_mu1_noK": null
+}
