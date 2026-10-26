@@ -377,26 +377,29 @@ def stage_run(a) -> None:
         p.write_bytes(b)
         return ss, str(p), hashlib.sha256(b).hexdigest(), len(b)
 
+    chunk = 12  # bounded: at most one chunk of raw files on disk at a time (review)
     with (
         ThreadPoolExecutor(max_workers=6) as io_pool,
         ProcessPoolExecutor(max_workers=a.workers) as cpu,
     ):
-        futs = []
-        for ss, path, sha, nb in io_pool.map(fetch, todo):
-            files[ss["obs_id"]] = {"sha256": sha, "bytes": nb}
-            futs.append(cpu.submit(_work, (ss, path)))
-        for fu in futs:
-            r = fu.result()
-            (OUT / "per_ss" / f"{r['obs_id']}.json").write_text(json.dumps(r) + "\n")
-    files_path.write_text(json.dumps(dict(sorted(files.items())), indent=1) + "\n")
-    print(len(todo), "processed; ledger bytes", lg.used())
+        for c0 in range(0, len(todo), chunk):
+            futs = []
+            for ss, path, sha, nb in io_pool.map(fetch, todo[c0 : c0 + chunk]):
+                files[ss["obs_id"]] = {"sha256": sha, "bytes": nb}
+                futs.append(cpu.submit(_work, (ss, path)))
+            for fu in futs:
+                r = fu.result()
+                (OUT / "per_ss" / f"{r['obs_id']}.json").write_text(json.dumps(r) + "\n")
+            files_path.write_text(json.dumps(dict(sorted(files.items())), indent=1) + "\n")
+            print(c0 + len(futs), "of", len(todo), "done; ledger bytes", lg.used(), flush=True)
 
 
 # ---------------------------------------------------------------------------------------- summary
 
 
 def verdict(n_ideal: int, ret: float, lo: float, hi: float, n_min: int = 30) -> str:
-    """Frozen rule (PLAN section 4): retention = recovered / ideal over the same events."""
+    """Frozen rule (PLAN section 5): only n_ideal and the 5-95 % bounds decide; ret is reported
+    beside it and does not enter the rule."""
     if n_ideal < n_min:
         return "insufficient"
     if lo >= 0.5:
@@ -420,7 +423,7 @@ def paired_counts(rows: list[dict]) -> dict:
 
 
 def boot_retention(groups: list[list[dict]], rng, n_boot: int = N_BOOT) -> tuple[float, float]:
-    """5-95 % of recovered/ideal over star-sectors resampled with replacement."""
+    """5-95 % of recovered/ideal over groups (the caller's unit) resampled with replacement."""
     num = np.array([sum(r["ideal"] and r["L2"] for r in g) for g in groups], float)
     den = np.array([sum(r["ideal"] for r in g) for g in groups], float)
     vals = []
@@ -456,7 +459,7 @@ def stage_summarize(_a) -> None:
             by_draw.setdefault(r["draw"], []).append(r)
         groups = list(by_draw.values())
         c = paired_counts(rows)
-        ret = c["L2"] / c["ideal"] if c["ideal"] else float("nan")
+        ret = c["L2"] / c["ideal"] if c["ideal"] else 0.0  # no ideal event: "insufficient"
         lo, hi = boot_retention(groups, rng)
         rec = c | {"retention": float(f"{ret:.4g}"), "retention_p5_p95": [lo, hi]}
         rec["verdict"] = verdict(c["ideal"], ret, lo, hi)
@@ -542,6 +545,10 @@ def stage_diagnose(_a) -> None:
                 }
         rec["by_rho"] = bins
         out[name] = rec
+    rng = np.random.default_rng(SEED)
+    out["bootstrap_over_star_sectors"] = {  # post hoc: draws of one record share its background
+        name: list(boot_retention([p["scenarios"][name] for p in per], rng)) for name in SCENARIOS
+    }
     fr = np.array([p["n_good"] / p["n_cadences"] for p in per])
     out["good_cadence_share_p5_50_95"] = [float(f"{q:.3g}") for q in np.percentile(fr, [5, 50, 95])]
     smp = json.loads((OUT / "sample.json").read_text())["star_sectors"]

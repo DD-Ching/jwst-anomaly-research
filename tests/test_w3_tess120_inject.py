@@ -79,3 +79,29 @@ def test_lc_url_matches_the_mast_redirect():
         + oid
         + "_lc.fits"
     )
+
+
+def test_process_on_a_flat_noise_free_light_curve_pairs_the_levels():
+    import io
+
+    from astropy.io import fits
+
+    n = int(10 / CAD)
+    cols = [
+        fits.Column(name="TIME", format="D", array=2000.0 + np.arange(n) * CAD),
+        fits.Column(name="PDCSAP_FLUX", format="E", array=np.full(n, 1000.0)),
+        fits.Column(name="QUALITY", format="J", array=np.zeros(n, int)),
+    ]
+    hdu = fits.BinTableHDU.from_columns(cols)
+    hdu.header["TIMEDEL"] = CAD
+    buf = io.BytesIO()
+    fits.HDUList([fits.PrimaryHDU(), hdu]).writeto(buf)
+    ss = {"obs_id": "synthetic", "draws": [0], "radius": 0.3, "dist": 50.0}
+    res = wi.process(ss, buf.getvalue())
+    assert res["background_D"] == 0 and res["n_good"] == n
+    rows = [r for v in res["scenarios"].values() for r in v]
+    assert len(rows) == wi.N_INJ * len(wi.SCENARIOS)
+    assert all(r["L1a"] == r["L1b"] for r in rows)  # no flags, no gaps
+    short = [r for r in rows if r["t_E_cad"] < 30]  # far wings inside the 3 d median window
+    assert short and all(r["L2"] == r["L1b"] for r in short)  # flat, noise-free: L2 = L1b
+    assert any(r["ideal"] for r in rows)

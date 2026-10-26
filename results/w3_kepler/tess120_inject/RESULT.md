@@ -21,6 +21,10 @@
     - the derived fields `kept_per_step`, `density_for_1_x_retention_p5_p95` and
       `ratio_to_baseline_same_mass_x_retention` in `summary.json` (bootstrap unchanged);
     - `recheck.json` (stage `recheck`): 2 star-sectors re-downloaded; sha256 and the re-processed results are identical.
+    - A bootstrap over the 184 star-sectors instead of the 200 draws (`bootstrap_over_star_sectors`; draws of one
+      record share its background): 0.4054–0.547 and 0.3779–0.5402. The verdicts are unchanged.
+  - The run downloaded all 184 files (about 358 MB) before most of them were processed; each was deleted after
+    use. The code now works in bounded chunks of 12 (review); the results do not depend on it.
 
 ## 1. Sample and method (`sample.json`, `PLAN.md`)
 - **Pool:** 14,301 single-sector 120 s records of the #561 TIC sample with R_* and D_S.
@@ -131,6 +135,8 @@
 - Whether SPOC would keep a real event: onboard cosmic-ray mitigation, PDC cotrending, and flags set because of the
   event itself.
 - Crowding and blends below 1, limb darkening, other masses and speeds, a population model.
+- The frozen shoulder window does not stop at a data gap, so bright cadences on the far side of a gap count. That
+  can only raise L1a, L1b and L2, and it applies to the background run too. Its size was not measured.
 - TESS 20 s and Kepler SC.
 - **Three separate questions:**
   - (i) The model produces this shape: yes, noise-free (#561).

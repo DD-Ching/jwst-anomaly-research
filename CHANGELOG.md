@@ -43,6 +43,20 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Handoff:** next is a frozen F2 plan (`nlens_opt`, 8515 moved forward, fixed-σ validation near 344.42, lost images
   counted), after diagnosing D14a's family term. Lenstool install: conda-forge micromamba 2.9.0 package, sha256-checked.
 
+## 2026-10-26: W3 TESS 120 s product-level injections: 0.477 and 0.459 of the ideally identifiable simulated events kept at the two #561 best masses; both intervals cross one half; low masses insufficient; a search is not worth starting now (D-107 addendum 7)
+- **Result** (`results/w3_kepler/tess120_inject/RESULT.md`; plan frozen before any flux; 362,291,257 B):
+  - Draws: 200 rate-weighted draws (184 SPOC 120 s star-sectors) × 4 frozen scenarios × 30 simulated events.
+  - Each event is paired: noise-free ideal, the file's cadences, our quality screen, and injection into PDCSAP
+    with a blind detector.
+  - Retention L2 / ideal: 0.4772 (0.4075–0.5499) at 220 km/s, 5.623 × 10⁻⁶ M☉; 0.459 (0.3762–0.5407) at 30 km/s,
+    3.162 × 10⁻⁶ M☉. Both intervals cross one half (not a robust pass).
+  - 10⁻⁷ and 10⁻⁸ M☉: 26 and 4 ideal events, insufficient.
+  - Kept per step (220 km/s): gaps and edges 0.851, quality flags 0.839, real background 0.6684.
+  - The background had 0 flags.
+- **Effect on #561:** one expected event at the best 220 km/s population needs about 0.183 M☉ pc⁻³ (was 0.08734,
+  ideal). A full TESS 120 s search reads about 3.3 TB.
+- **Handoff:** no search is started. Not measured: SPOC upstream processing of a real event. Nothing is queued.
+
 ## 2026-10-26: W3 short-cadence reach: Kepler SC and TESS 20 s / 120 s pass the frozen investment gate only at |M| ≲ 2 × 10⁻⁵ M☉, where long cadence cannot resolve the shape; no product reaches 10× at the baseline's masses (D-107 addendum 6)
 - **Result** (`results/w3_kepler/shortcad/RESULT.md`; metadata, catalogues and noise-free models only, 19,938,373 B):
   - Inventory: Kepler SC 5,337 stars (24,381 SC months); TESS 20 s 63,967 stars; TESS 120 s 592,890 stars

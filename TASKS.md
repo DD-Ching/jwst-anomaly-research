@@ -93,6 +93,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The largest loss stage is insufficient data in the edge or shoulder window (3,050 of 5,052 lost events, post hoc
     grouping).
   - Nothing is queued; any expansion is the owner's call.
+- **W3 TESS 120 s injection trial 2026-10-26** (`results/w3_kepler/tess120_inject/RESULT.md`, D-107 addendum 7):
+  - Retention 0.477 / 0.459 at the best masses; the intervals cross one half. Low masses are insufficient.
+  - Recommendation: no TESS 120 s search; the owner decides. Nothing queued.
 - **W3 short-cadence reach 2026-10-26** (`results/w3_kepler/shortcad/RESULT.md`, D-107 addendum 6):
   - The gate passes only at |M| ≲ 2 × 10⁻⁵ M☉ for Kepler SC and TESS 20 s / 120 s; noise-free and uniform density.
   - Proposed, not run: a noise-included injection test on 200 TESS 120 s star-sectors (about 370 MB). It needs owner
