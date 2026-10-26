@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b Lenstool stage F2-B: the smallest BayeSys budget writes 0 samples in 900 s; gate V2 undetermined, so F2 needs a local optimiser from best.par (D-109 addendum 4)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2.md`; plan frozen before the run, 8515 fixed):
+  `inverse 3 0.5 20` with O1–O6 free (`nlens_opt 6`, `input.par`'s limits) hit the 900 s cap (ASSUMPTION) on 4 threads
+  with 0 samples in `bayes.dat`, so gate V2 is `undetermined`. Lenstool's sampler is out of reach in routine slots.
+- **Post hoc:** 40 burn-in lines (22.5 s each), best ln(Lhood) −89,515.45 vs −302.92 for the fixed model: still
+  prior samples. No D115b number; D115b stays `inconclusive`.
+- **Handoff:** next is a frozen plan for a local optimiser started from `best.par` (e.g. SciPy Powell or Nelder–Mead
+  over O1–O6 wrapping Lenstool `inverse 0`, about 0.5 s per χ²; a lost image = infeasible, as BayeSys rejects it; the
+  proximity penalty counted), validated at f 1.00 from a perturbed start before f 0.80. Weekly network run
+  40327757906 was still running at 13:34Z (#374).
+
 ## 2026-10-26: D115b Lenstool: D14a's ≈ 3748 is Lenstool's image-proximity penalty (rule P confirmed); D14a.1 is traced onto D14a.2's image from 8515 σ × 0.9 (D-109 addendum 3)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_D14A.md`; plan frozen before the run, stating
   what the source code and the stored f 0.90 file already showed): at every f ≤ 0.90 Lenstool adds one

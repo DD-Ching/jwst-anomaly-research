@@ -6627,3 +6627,8 @@ confining radiation at a throat is found.
   `chipenalty`. Read `chipenalty` and the stderr `chi2 penalty for image` lines with every Lenstool χ², and subtract
   or count it explicitly (`results/lens_consistency/d115b_lenstool_refit/RESULT_D14A.md`). In optimiser runs
   (`inverse` > 2) a lost image makes `chi2_img` return −1 and BayeSys rejects the sample (source reading, not run).
+- **Addendum 4 (2026-10-26, stage F2-B):** do not plan a BayeSys (`inverse 3`) re-fit of this model in a cloud routine
+  slot: even `inverse 3 0.5 20` with O1–O6 free wrote 0 samples in 900 s on 4 threads (burn-in still at prior
+  samples, best ln(Lhood) −89,515.45 vs −302.92; post hoc). Re-fits start from `best.par` with a local optimiser
+  around Lenstool `inverse 0` instead (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2.md`). Revisit if a
+  multi-hour owner-machine run is available.
