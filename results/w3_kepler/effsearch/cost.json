@@ -31,7 +31,7 @@
  "fetch_errors": 0,
  "q0_files_not_fetched": 245,
  "q0_bytes_not_fetched_542": 19051200,
- "cache_bytes_on_disk": "989 MB (du), data/cache/w3_kepler_effsearch; deleted after the review re-check",
+ "cache_bytes_on_disk": "989 MB after the restore (du; 991 MB at deletion with the partial event log), data/cache/w3_kepler_effsearch; deleted at 00:47:26Z (2026-10-26), after the review re-check",
  "note": "plain ledger JSONL gitignored; net_ledger.jsonl.gz is the snapshot",
  "expansion_estimate": {
   "label": "derived: measured per-500 values scaled linearly (assumes the same archive rate, 4 cores, same pool); not measured at 5,000",

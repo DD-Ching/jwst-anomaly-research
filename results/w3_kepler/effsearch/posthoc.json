@@ -488,43 +488,114 @@
  "eb_stars": {
   "2717141": {
    "events": 40,
-   "recovered": 1
+   "recovered": 1,
+   "stages": {
+    "edge:slow": 34,
+    "gap": 1,
+    "not_flagged": 1,
+    "short": 1,
+    "shoulder:insufficient": 1,
+    "shoulder:no": 1
+   }
   },
   "3954798": {
    "events": 40,
-   "recovered": 0
+   "recovered": 0,
+   "stages": {
+    "edge:insufficient": 2,
+    "edge:slow": 35,
+    "gap": 1,
+    "quality": 1,
+    "short": 1
+   }
   },
   "4563150": {
    "events": 40,
-   "recovered": 24
+   "recovered": 24,
+   "stages": {
+    "edge:insufficient": 3,
+    "gap": 1,
+    "oneoff": 1,
+    "short": 2,
+    "shoulder:insufficient": 2,
+    "shoulder:no": 7
+   }
   },
   "6060580": {
    "events": 40,
-   "recovered": 34
+   "recovered": 34,
+   "stages": {
+    "edge:insufficient": 2,
+    "edge:slow": 1,
+    "quality": 1,
+    "short": 1,
+    "shoulder:no": 1
+   }
   },
   "6311637": {
    "events": 40,
-   "recovered": 29
+   "recovered": 29,
+   "stages": {
+    "edge:insufficient": 4,
+    "not_flagged": 2,
+    "oneoff": 1,
+    "quality": 1,
+    "shoulder:insufficient": 3
+   }
   },
   "6699562": {
    "events": 40,
-   "recovered": 33
+   "recovered": 33,
+   "stages": {
+    "edge:insufficient": 3,
+    "short": 4
+   }
   },
   "7877062": {
    "events": 40,
-   "recovered": 15
+   "recovered": 15,
+   "stages": {
+    "edge:insufficient": 3,
+    "edge:slow": 12,
+    "gap": 2,
+    "oneoff": 1,
+    "quality": 1,
+    "short": 1,
+    "shoulder:insufficient": 1,
+    "shoulder:no": 4
+   }
   },
   "8218274": {
    "events": 40,
-   "recovered": 33
+   "recovered": 33,
+   "stages": {
+    "edge:insufficient": 1,
+    "short": 3,
+    "shoulder:insufficient": 3
+   }
   },
   "9772642": {
    "events": 40,
-   "recovered": 23
+   "recovered": 23,
+   "stages": {
+    "edge:insufficient": 2,
+    "gap": 1,
+    "oneoff": 1,
+    "shoulder:insufficient": 2,
+    "shoulder:no": 11
+   }
   },
   "10334122": {
    "events": 40,
-   "recovered": 27
+   "recovered": 27,
+   "stages": {
+    "edge:insufficient": 6,
+    "gap": 1,
+    "quality": 1,
+    "short": 2,
+    "shoulder:insufficient": 2,
+    "shoulder:no": 1
+   }
   }
  },
  "eb_events_per_stage": {

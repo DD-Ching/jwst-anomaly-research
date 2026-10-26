@@ -625,6 +625,7 @@ def stage_posthoc(a) -> None:
     for k in EB_STARS:
         rs = [all_st[i] for i, r in enumerate(rows) if r[cols["kepid"]] == k]
         eb[str(k)] = {"events": len(rs), "recovered": rs.count("recovered")}
+        eb[str(k)]["stages"] = {x: rs.count(x) for x in sorted(set(rs)) if x != "recovered"}
     out["eb_stars"] = eb
     out["eb_events_per_stage"] = {
         s: sum(1 for i, r in enumerate(rows) if all_st[i] == s and r[cols["kepid"]] in EB_STARS)

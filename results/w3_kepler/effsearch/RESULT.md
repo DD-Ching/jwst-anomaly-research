@@ -64,7 +64,7 @@
   - "Per star ± SE" is the cluster (star-level) mean and standard error, used for extrapolation in section 4.
 - **Range:** E is 1,248.7–1,620.3 star-years, 0.721–0.935 of the 1,732.3 observing star-years (ratios in
   `posthoc.json`, post hoc). The weakest cells are t_E = 10 d (1,248.7–1,384.6). The ρ = 0.01 cells with
-  t_E ≤ 3 d lie at 1,538.4–1,620.3, within each other's MC intervals.
+  t_E ≤ 3 d lie at 1,538.4–1,620.3; their MC intervals overlap.
 - **No false recoveries:** a new passing run away from the injection occurred in 0 of 20,000 events.
 - **Per-star efficiencies are not measured:** with 2 draws per star and cell, 139–245 stars per cell have one of
   two recovered (`stars_k`).
@@ -110,8 +110,8 @@ frozen stages:
 - **Catalogued EB stars and shape tests:** 82 of the 136 `edge:slow` and 25 of the 445 `shoulder:no` losses are
   on the 10 catalogued EB stars (`eb_events_per_stage`), i.e. losses to the stars' own variability.
   - Per star (`eb_stars`): KIC 3954798 recovers 0 of 40, KIC 2717141 1 of 40, the other eight 15–34 of 40.
-- **By construction:** KIC 3954798 has 86 uninjected flagged runs (`check.json`), so the one-off test can never
-  pass for it.
+- **By construction:** KIC 3954798 has 86 uninjected flagged runs (`check.json` total; all on this star,
+  `expand/layers.json`), so the one-off test can never pass for it.
   - The cascade files its losses at the first failed test, which comes before the one-off test.
   - It is 2 of the 1,000 events in each cell.
 - **Short:** 452 of 483 (`short_grazing_total`) are grazing, with u0 ≥ 2 − ρ (the source never lies wholly in the
@@ -124,13 +124,14 @@ frozen stages:
   - The one-off losses are at t_E = 10 d (57–58 per 1,000 at blend 1.0).
   - In the look-at figure, the one-off example's normal cadences come out at relative flux ~10⁵ (read off the
     figure; not stored).
-  - The other 58 not-flagged events include events whose dim run reaches the end of the data (the look-at example).
+  - The other not-flagged events (140 − 82, not stored) include events whose dim run reaches the end of the data
+    (the look-at example).
 - **Summary (post hoc, from the counts above):**
   - The largest frozen loss stages are the two "insufficient" stages (3,050; post hoc grouping). At short t_E they track gaps and
     boundaries.
   - Direct coverage loss is 681.
-  - About 1 in 7 shape-test losses are on two catalogued EBs (KIC 3954798 and 2717141, from `eb_stars` and
-    `eb_events_per_stage`; the per-star stage counts are not stored).
+  - Two catalogued EBs alone hold 35 (KIC 3954798) and 34 (KIC 2717141) of the 136 `edge:slow` losses
+    (`eb_stars`).
   - The per-quarter normalisation is a by-construction limit for long, fully dark events.
 
 ## 3. What the zero result supports
@@ -154,6 +155,7 @@ frozen stages:
   `recovery_by_u0`, post hoc):
   - 0.743–0.790 for u0 < 1.9;
   - 0.345 for u0 in [1.9, 2) (0.02 at ρ = 0.1, where the source never lies wholly in the umbra).
+  - These are ratios of the stored counts; the ratios themselves are not stored.
   - A population weighted towards grazing events would have a smaller E.
 - **The 20 limits are separate statements,** one per hypothetical single-cell population. They are not
   simultaneous, and they are not a limit on any mixture of cells.
@@ -201,8 +203,9 @@ frozen stages:
    - **Largest: insufficient data around the event.** The edge or shoulder test finds too few cadences in its window
      (3,050 of 5,052 lost events; post hoc grouping). For events of up to a day, these losses sit near gaps and quarter boundaries
      much more often than the recovered events (post hoc).
-   - **Then:** events whose dim part falls in a gap or on flagged cadences (681); shape-test failures (581, of
-     which 107 are on the 10 catalogued EBs: the stars' own variability); grazing or too-short events (483).
+   - **Then:** events whose dim part falls on missing, flagged or left-out cadences (681); shape-test failures (581,
+     including 82 `edge:slow` and 25 `shoulder:no` on the 10 catalogued EBs: the stars' own variability); grazing or
+     too-short events (483).
    - **10-day dark events:** the per-quarter normalisation breaks (one-off 115 of 117, not flagged 82 of 140; post
      hoc).
    - **By construction:** one EB (KIC 3954798) can never pass the one-off test.

@@ -12,7 +12,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   - insufficient data in the edge or shoulder window 3,050 (at t_E ≤ 1 d mostly near gaps or quarter boundaries,
     post hoc);
   - coverage 681;
-  - shape tests 581 (107 of them on the 10 catalogued EBs);
+  - shape tests 581 (82 `edge:slow` and 25 `shoulder:no` on the 10 catalogued EBs);
   - grazing or short 483.
   - One EB (KIC 3954798) can never pass the one-off test.
 - **Zero result:** product-level per-cell Γ95 is 1.909–2.522 × 10⁻³ per star-year. These are separate,

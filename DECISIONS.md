@@ -6468,7 +6468,7 @@ confining radiation at a throat is found.
     - insufficient data in the edge or local-shoulder window: 3,050 (at t_E ≤ 1 d mostly near gaps or quarter
       boundaries);
     - direct coverage: 681;
-    - shape tests: 581 (107 on catalogued EBs);
+    - shape tests: 581 (82 `edge:slow` and 25 `shoulder:no` on catalogued EBs);
     - grazing or short: 483.
     - Long dark events break the per-quarter normalisation (one-off 115 of 117).
   - Product-level per-cell limits Γ95 = 2.996 / E_low: 1.909–2.522 × 10⁻³ per star-year. They are separate,
