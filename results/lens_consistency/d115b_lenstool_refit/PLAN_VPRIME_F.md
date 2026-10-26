@@ -1,4 +1,4 @@
-# D115b Lenstool re-fit: stages V′ and F (plan, frozen 2026-10-26 11:27Z, before any run of this round)
+# D115b Lenstool re-fit: stages V′ and F (plan, frozen 2026-10-26 11:19Z, before any run of this round)
 
 Continues `PLAN.md` / `RESULT.md` (stage V failed as frozen on `best.par`'s 6-decimal reference). Tool
 `scripts/d115b_lenstool_refit.py` (`--stage vprime-f`), rules tested in `tests/test_d115b_lenstool_refit.py`, both
