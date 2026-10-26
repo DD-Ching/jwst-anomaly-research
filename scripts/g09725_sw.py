@@ -123,18 +123,18 @@ def run(out: str = OUT) -> dict:
             "sigma_emp_ujy": r["sigma_emp"] * to_ujy,
             "n_bad_pix": r["n_bad_pix"],
         }
-        row["snr"] = row["df_ujy"] / row["sigma_ujy"]
+        row["snr"] = row["df_ujy"] / row["sigma_ujy"] if row["sigma_ujy"] > 0 else float("nan")
         row["class"] = classify(row["df_ujy"], row["sigma_ujy"], row["registered"])
         row["limit5_ujy"] = MIN_SNR * row["sigma_ujy"]
         rows[band] = row
         sheets[band] = (sci_e, res, diff, p, pix)
     ref = rows["f356w"]["df_ujy"]
     summary = {
-        "plan": f"{OUT}/PLAN.md",
+        "plan": f"{out}/PLAN.md",
         "position": {"ra": RA, "dec": DEC, "id": "g09725"},
         "epochs": {"early": EARLY, "late": LATE},
         "bands": rows,
-        "ratio_to_f356w": {b: rows[b]["df_ujy"] / ref for b in rows},
+        "ratio_to_f356w": {b: rows[b]["df_ujy"] / ref if ref else float("nan") for b in rows},
         "outcome": outcome({b: rows[b]["class"] for b in rows}),
         "provenance": {"fluxes": "observed (difference images)", "ratios": "derived"},
     }
