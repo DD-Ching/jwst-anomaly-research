@@ -1982,3 +1982,13 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - **Kepler Eclipsing Binary Catalog, third revision:** Kirk et al. 2016, AJ 151, 68; the full KIC list with period
   and morphology from VizieR J/AJ/151/68/catalog (`inputs/kirk2016_catalog.csv`, 2,876 rows).
 - **Light curves:** Kepler DR25 long cadence from MAST, as in the pilot. Per-file sha256 in `files_expand.json.gz`.
+
+## W3 / Kepler 2,000-star search (accessed 2026-10-26; `results/w3_kepler/s2000/`)
+- Kepler DR25 long-cadence light curves (Q1–Q17), MAST archive
+  `https://archive.stsci.edu/missions/kepler/lightcurves/`; every file's name, size and sha256 per star in
+  `files_b<b>.json.gz`.
+- MAST AWS mirror `https://stpubdata.s3.amazonaws.com/kepler/public/lightcurves/`: one listing and one file fetched to
+  test speed (sha256 equal to the archive copy); not used for the search.
+- Cousins, R. D. & Highland, V. L. 1992, "Incorporating systematic uncertainties into an upper limit", Nucl. Instrum.
+  Meth. A 320, 331–335 (cited as such in Conrad et al. 2003, arXiv:hep-ex/0202013): averaging a zero-event limit over
+  the sensitivity's uncertainty, the idea behind `w3_kepler_2000.joint_limit` (which uses a flat rate prior instead).
