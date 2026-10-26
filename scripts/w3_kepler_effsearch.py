@@ -618,6 +618,31 @@ def stage_posthoc(a) -> None:
     grouped["all_cells"] = {g: sum(s in v for s in all_st) for g, v in LOSS_GROUPS.items()}
     grouped["all_cells"]["lost"] = sum(s != "recovered" for s in all_st)
     out["grouped_losses"] = grouped
+    out["short_grazing_total"] = sum(
+        v["grazing_u0_ge_2_minus_rho"] for k, v in per_stage.items() if k.startswith("short|rho=")
+    )
+    eb = {}
+    for k in EB_STARS:
+        rs = [all_st[i] for i, r in enumerate(rows) if r[cols["kepid"]] == k]
+        eb[str(k)] = {"events": len(rs), "recovered": rs.count("recovered")}
+    out["eb_stars"] = eb
+    out["eb_events_per_stage"] = {
+        s: sum(1 for i, r in enumerate(rows) if all_st[i] == s and r[cols["kepid"]] in EB_STARS)
+        for s in sorted(set(all_st))
+    }
+    bins = [0.0, 0.5, 1.0, 1.5, 1.9, 2.0]
+    rec_u0 = {}
+    for rho in (0.01, 0.1, None):
+        for lo_b, hi_b in zip(bins[:-1], bins[1:], strict=True):
+            sel = [
+                r
+                for r in rows
+                if lo_b <= r[cols["u0"]] < hi_b
+                and (rho is None or wk.CELLS[r[cols["cell"]]][0] == rho)
+            ]
+            name = f"{'all' if rho is None else f'rho={rho}'}|u0=[{lo_b},{hi_b})"
+            rec_u0[name] = {"events": len(sel), "recovered": sum(r[cols["recovered"]] for r in sel)}
+    out["recovery_by_u0"] = rec_u0
     summ = json.loads((OUT / "summary.json").read_text())
     t_obs = summ["observing_star_years"]
     out["ratios"] = {

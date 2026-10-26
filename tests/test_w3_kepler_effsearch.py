@@ -110,3 +110,38 @@ def test_limit_and_multi_event_share():
     assert abs(lim["lambda_per_star"] - 0.012) < 1e-4
     assert 0.005 < lim["share_hosts_ge2"] < 0.007  # about lambda / 2
     assert es.limit(0.0, 4.0) is None
+
+
+def test_lengthened_existing_run_is_not_matched():
+    st = _star()
+    t = st["TIME"]
+    box = (t >= 3.0) & (t < 4.2)
+    st["SAP_FLUX"] = np.where(box, 100.0, 1000.0)  # an existing deep dip of ~59 cadences
+    base_runs = wk.screen_star(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], {}, local=True)
+    base = {(x["t_start"], x["t_end"]) for x in base_runs}
+    te, u0 = 0.1, 1.0
+    h = te * np.sqrt(4 - u0**2)
+    ev, res = _event(st, 4.1 + h, te, u0, base=base)  # the umbra starts 0.1 d before the dip ends
+    new = [x for x in res if (x["t_start"], x["t_end"]) not in base]
+    assert len(new) == 1 and new[0]["t_start"] < 3.1 and new[0]["t_end"] > 4.2  # one merged run
+    assert ev["n_matched"] == 0 and not ev["recovered"]
+
+
+def test_box_dip_stops_at_the_shoulder_test():
+    st = _star()
+    t = st["TIME"]
+    f = np.where((t >= 4.0) & (t < 4.6), 0.1, 1.0)  # fast edges, no shoulders
+    sap, err = wk.inject_sap(st["SAP_FLUX"], st["SAP_FLUX_ERR"], f, np.random.default_rng(2))
+    res = wk.screen_star(st, sap, err, {}, local=True)
+    ev = es.classify(st, sap, err, res, set(), f, 4.3, 0.3, 30)
+    assert ev["n_matched"] == 1 and ev["stage"] == "shoulder" and ev["sub"] == "no"
+
+
+def test_unmatched_passing_run_is_spurious():
+    st = _star()
+    f = np.ones(len(st["TIME"]))
+    fake = {"t_start": 104.0, "t_end": 104.5, "pass_local": True}
+    for k in es.ORDER:
+        fake[k] = True
+    ev = es.classify(st, st["SAP_FLUX"], st["SAP_FLUX_ERR"], [fake], set(), f, 4.0, 0.3, 30)
+    assert ev["spurious"] and not ev["recovered"] and ev["n_matched"] == 0

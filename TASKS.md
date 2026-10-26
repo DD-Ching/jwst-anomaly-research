@@ -90,7 +90,8 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 - **W3 / Kepler effective search volume 2026-10-26** (`results/w3_kepler/effsearch/RESULT.md`, D-107 addendum 3):
   - The 1,732 observing star-years of #542 are worth 1,249–1,620 effective star-years per W3 cell.
   - Product-level per-cell limits are 1.9–2.5 × 10⁻³ per star-year (conditional).
-  - Most losses are test windows that reach a gap or quarter boundary.
+  - The largest loss stage is insufficient data in the edge or shoulder window (3,050 of 5,052 lost events, post hoc
+    grouping).
   - Nothing is queued; any expansion is the owner's call.
 - **W3 / Kepler hard tests 2026-10-25** (`results/w3_kepler/hard/RESULT.md`, D-107 addendum):
   - The local shoulder rule replaces the #500 shoulder test.

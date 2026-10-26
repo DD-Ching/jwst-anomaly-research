@@ -12,6 +12,8 @@
 - **Deviations:** none. Notes:
   - `examples.png` / `examples.json` (a look-at figure) and `posthoc.json` (loss diagnostics) were added after the
     run. They are **post hoc** and change no outcome.
+  - After the independent review, `posthoc.json` gained the EB, grazing and u0 blocks (post hoc). Three unit tests
+    were added: the match condition (c), the cascade after flagging, and the spurious flag. No stored event changed.
   - The figure was looked at. One `not_flagged` example looked findable. Checked: its dim run reaches the last
     cadence of Q17, so the 20-cadence bracket after it is empty. The classification is correct; it is not a code
     error.
@@ -60,8 +62,9 @@
 - **Column notes:**
   - "Covered" means ≥ 3 good cadences at least 1 mag dim in the noiseless model.
   - "Per star ± SE" is the cluster (star-level) mean and standard error, used for extrapolation in section 4.
-- **Range:** E is 1,248.7–1,620.3 star-years, 0.721–0.935 of the 1,732.3 observing star-years
-  (`posthoc.json` `ratios`). The weakest cells are t_E = 10 d; the strongest are ρ = 0.01 with t_E 0.3–1 d.
+- **Range:** E is 1,248.7–1,620.3 star-years, 0.721–0.935 of the 1,732.3 observing star-years (ratios in
+  `posthoc.json`, post hoc). The weakest cells are t_E = 10 d (1,248.7–1,384.6). The ρ = 0.01 cells with
+  t_E ≤ 3 d lie at 1,538.4–1,620.3, within each other's MC intervals.
 - **No false recoveries:** a new passing run away from the injection occurred in 0 of 20,000 events.
 - **Per-star efficiencies are not measured:** with 2 draws per star and cell, 139–245 stars per cell have one of
   two recovered (`stars_k`).
@@ -73,41 +76,62 @@
   last good cadence and used the overlap-only match, so the numbers are not directly comparable.
 
 ## 2. Where events are lost (frozen loss stages, `summary.json` `stages`; post hoc groups, `posthoc.json`)
-**Losses over all 20 cells:** 5,052 of 20,000 events are lost (post hoc grouping of the frozen stages):
+**Losses over all 20 cells:** 5,052 of 20,000 events are lost. The groups below are a post hoc grouping of the
+frozen stages:
 
-| group (stages) | events lost | per cell (of 1,000) |
+| group (frozen stages) | events lost | per cell (of 1,000) |
 |---|---|---|
-| tests reach a data edge (`edge:insufficient`, `shoulder:insufficient`; post hoc group) | 3,050 | 79–253 |
-| coverage (`gap`, `quality`): the dim part falls on missing or flagged cadences | 681 | 1–86 |
+| insufficient data in a test window (`edge:insufficient`, `shoulder:insufficient`) | 3,050 | 79–253 |
+| coverage (`gap`, `quality`): the dim part falls on missing, flagged or left-out cadences | 681 | 1–86 |
 | shape tests (`edge:slow`, `shoulder:no`) | 581 | 6–72 |
 | short or grazing (`short`): < 3 cadences ≥ 1 mag dim even without gaps | 483 | 1–49 |
 | not flagged (covered, but no matched run) | 140 | 0–49 |
 | one-off | 117 | 0–58 |
 
-**Post hoc diagnostics** (`posthoc.json` `per_stage`). "Near a data edge" means the farthest window any test uses
-reaches the data start or end, a quarter boundary, or a ≥ 0.5-d gap:
+**Post hoc diagnostics** (`posthoc.json`):
+- **"Near a data edge":** the farthest window any test uses reaches the data start or end, a quarter boundary or a
+  ≥ 0.5-d gap.
+  - At t_E ≥ 3 d almost every event is near an edge, recovered or not. The diagnostic separates the groups only at
+    t_E ≤ 1 d.
+  - Per t_E (near an edge / events, `per_stage`):
 
-| stage | events | near a data edge |
-|---|---|---|
-| `edge:insufficient` | 1,648 | 1,589 |
-| `shoulder:insufficient` | 1,402 | 1,376 |
-| `not_flagged` | 140 | 139 |
-| recovered events, for comparison (post hoc) | 14,948 | 6,967 |
+| t_E (d) | `edge:insufficient` | `shoulder:insufficient` | recovered |
+|---|---|---|---|
+| 0.1 | 81 / 102 | 214 / 225 | 205 / 3,081 |
+| 0.3 | 276 / 307 | 187 / 202 | 263 / 3,152 |
+| 1 | 449 / 456 | 128 / 128 | 1,095 / 3,077 |
+| 3 | 435 / 435 | 238 / 238 | 2,771 / 3,002 |
+| 10 | 348 / 348 | 609 / 609 | 2,633 / 2,636 |
 
-- `shoulder:no`: 194 of 445 are near an edge, a share like the recovered events'. These are shoulder failures
-  that are not tied to gaps.
-- `short`: 452 of 483 are grazing (u0 ≥ 2 − ρ: the source never lies wholly in the umbra): 403 of 408 at ρ = 0.1,
-  and 49 of 75 at ρ = 0.01. So ρ = 0.1 cells lose 26–49 per 1,000 here.
-- `oneoff` (115 of 117) and `not_flagged` (82 of 140): in these events the model is ≥ 1 mag dim on at least half
-  the good cadences of some quarter. That quarter's median is then set by the event, which breaks the per-quarter
-  normalisation.
-  - In the look-at figure, the one-off example's normal cadences come out at relative flux ~10⁵ (read off
-    the figure; not stored).
-  - These losses occur at t_E = 10 d (oneoff 57–58 per 1,000 at blend 1.0).
-- **Mechanism summary:** most losses come from the tests needing clean data around the event. The edge test and
-  the local shoulder rule mark a side "insufficient" when their window meets a gap or quarter boundary. Direct
-  coverage loss is smaller (681). The per-quarter normalisation is a by-construction limit for long, fully dark
-  events. This summary rests on the counts above; the "near a data edge" definition was chosen after the run.
+- **Insufficient losses:** at t_E ≤ 1 d, the "insufficient" losses lie near a gap, a quarter boundary or the data
+  end much more often than the recovered events. At longer t_E the test windows are long enough that nearly every
+  event meets one, so the diagnostic cannot tell them apart there.
+  - By definition, "insufficient" means the edge or shoulder window has too few cadences in the run edge's quarter.
+- **Catalogued EB stars and shape tests:** 82 of the 136 `edge:slow` and 25 of the 445 `shoulder:no` losses are
+  on the 10 catalogued EB stars (`eb_events_per_stage`), i.e. losses to the stars' own variability.
+  - Per star (`eb_stars`): KIC 3954798 recovers 0 of 40, KIC 2717141 1 of 40, the other eight 15–34 of 40.
+- **By construction:** KIC 3954798 has 86 uninjected flagged runs (`check.json`), so the one-off test can never
+  pass for it.
+  - The cascade files its losses at the first failed test, which comes before the one-off test.
+  - It is 2 of the 1,000 events in each cell.
+- **Short:** 452 of 483 (`short_grazing_total`) are grazing, with u0 ≥ 2 − ρ (the source never lies wholly in the
+  umbra).
+  - By ρ: 403 of 408 at ρ = 0.1 and 49 of 75 at ρ = 0.01.
+  - So ρ = 0.1 cells lose 26–49 per 1,000 here.
+- **Normalisation break (one-off 115 of 117, not flagged 82 of 140; post hoc):** in these events the model is
+  ≥ 1 mag dim on at least half the good cadences of some quarter. That quarter's median is then set by the event,
+  which breaks the per-quarter normalisation.
+  - The one-off losses are at t_E = 10 d (57–58 per 1,000 at blend 1.0).
+  - In the look-at figure, the one-off example's normal cadences come out at relative flux ~10⁵ (read off the
+    figure; not stored).
+  - The other 58 not-flagged events include events whose dim run reaches the end of the data (the look-at example).
+- **Summary (post hoc, from the counts above):**
+  - The largest frozen loss stages are the two "insufficient" stages (3,050; post hoc grouping). At short t_E they track gaps and
+    boundaries.
+  - Direct coverage loss is 681.
+  - About 1 in 7 shape-test losses are on two catalogued EBs (KIC 3954798 and 2717141, from `eb_stars` and
+    `eb_events_per_stage`; the per-star stage counts are not stored).
+  - The per-quarter normalisation is a by-construction limit for long, fully dark events.
 
 ## 3. What the zero result supports
 - **Premise:** #542 found 0 survivors in these 500 stars (`expand/layers.json`).
@@ -116,20 +140,26 @@ reaches the data start or end, a quarter boundary, or a ≥ 0.5-d gap:
   `limit_product_level`).
   - Units: W3 signatures with that cell's ρ, blend and t_E, with t0 uniform in time and u0 uniform on [0, 2), as
     they would appear in the Kepler SAP product of these 500 stars.
-  - Naive comparison: 2.996 / 1,732.3 = 1.729 × 10⁻³ (`posthoc.json`). It is **not used**: it ignores the losses.
-    The measured limits are higher.
+  - Naive comparison (post hoc, `posthoc.json` `ratios`): 2.996 / 1,732.3 = 1.729 × 10⁻³. It is **not used**: it
+    ignores the losses, and the measured limits are higher.
 - **Conditions:**
   - events independent and Poisson, at one constant rate over stars and time;
   - all events in that one cell;
   - the measured efficiency;
-  - at most one event per star. At the limit, λ per star is 0.0076–0.0101, and the share of event-hosting stars
-    with ≥ 2 events is 0.38–0.50 %. The one-off rule therefore removes almost nothing at these rates. Repeating or
-    periodic events are outside the model.
+  - rare events. At the limit, λ per star is 0.0076–0.0101. The share of events that share their star with another
+    event is about λ, so ≤ 1.0 %, and the share of event-hosting stars with ≥ 2 events is 0.38–0.50 %. So the
+    one-off rule removes at most about 1 % of events at these rates.
+  - Repeating or periodic events are outside the model.
+- **Event distribution:** u0 uniform on [0, 2) is a choice. Recovery depends on u0 (`posthoc.json`
+  `recovery_by_u0`, post hoc):
+  - 0.743–0.790 for u0 < 1.9;
+  - 0.345 for u0 in [1.9, 2) (0.02 at ρ = 0.1, where the source never lies wholly in the umbra).
+  - A population weighted towards grazing events would have a smaller E.
 - **The 20 limits are separate statements,** one per hypothetical single-cell population. They are not
   simultaneous, and they are not a limit on any mixture of cells.
 - **What the zero does not support:**
-  - a physical lens rate, wormhole number or abundance. No event-rate model maps physical lenses to (ρ, blend,
-    t_E, u0);
+  - a physical lens rate, wormhole number or abundance. No event-rate model mapping physical lenses to (ρ, blend,
+    t_E, u0) is adopted here;
   - any statement about the sky-to-SAP response. Aperture photometry of a real event, crowding beyond the blend
     parameter, saturation and background are untested. So is whether the archive's quality flags would have masked
     real dim cadences: the impulsive-outlier bit is set from the data, and an injection cannot set it;
@@ -139,10 +169,10 @@ reaches the data start or end, a quarter boundary, or a ≥ 0.5-d gap:
 
 ## 4. Would more of the same data help? (`summary.json` `expansion`; `cost.json` `expansion_estimate`)
 - **Assumptions:** new stars drawn from the same pool by the same hash rule (17,740 unused after #542), with the
-  same distribution of noise, variability and gaps. Per-star gain is the cluster mean above.
-- **Gain:**
-  - **+500 stars:** +1,248.7 to +1,620.3 effective star-years per cell (95 % intervals in `summary.json`). If the
-    result stays zero, each per-cell limit halves (factor 0.5).
+  same distribution of noise, variability and gaps. The expected per-star gain is the cluster mean above.
+- **Gain** (expected gains; a real batch scatters around them by roughly sd(e_i) √N, not stored):
+  - **+500 stars:** +1,248.7 to +1,620.3 effective star-years per cell (95 % intervals of the expectation in
+    `summary.json`). If the result stays zero, each per-cell limit halves (factor 0.5).
   - **+5,000 stars:** +12,487 to +16,203 effective star-years per cell. Each limit falls to 0.091 of today's value.
 - **Cost per 500 (measured):**
   - download about 3.8 GB (3,791,889,000 B this round; 3,818,397,533 B in #542 with listings and Q0);
@@ -150,27 +180,38 @@ reaches the data start or end, a quarter boundary, or a ≥ 0.5-d gap:
   - screen 31 s;
   - injection 508.8 s wall on 4 cores;
   - cache 989 MB.
-- **Cost for +5,000 (linear scaling, not measured):** about 38.2 GB streamed, about 3.3 h of fetching, 84.8 min of
-  injections, and 9.9 GB of cache if kept at once. The cache would need batch-wise deletion in a cloud session.
-- **What it buys:** the gain is predictable and linear. It buys a smaller product-level number, not evidence.
+- **Cost for +5,000** (linear scaling of the per-500 values, not measured):
+  - about 38.2 GB streamed;
+  - about 3.3 h of fetching;
+  - 84.8 min of injections;
+  - 9.9 GB of cache if kept at once. The cache would need batch-wise deletion in a cloud session.
+  - Note: the 38.2 GB uses #542's bytes, with directory listings and Q0. PLAN §8 said "minus Q0"; new stars need the
+    listings, so the larger figure is kept.
+- **What it buys:** under the assumptions above, the expected gain scales with the number of stars. It buys a
+  smaller product-level number, not evidence.
   - Without an event-rate model, no probability of finding an event can be given.
   - Nothing here says fainter or more crowded stars would do better: the per-star efficiency was measured only on
     this FGK sample.
 
 ## 5. Plain answers
-1. **What the 1,732 star-years are worth:** 1,249–1,620 effective star-years, depending on the W3 type. Short and
-   medium events on a small source keep the most (about 1,540–1,620). 10-day events keep the least (about
-   1,250–1,385).
-2. **Where the losses are:** mostly where the tests need clean data around the event and a gap or quarter boundary
-   is close (3,050 of 5,052 lost events; post hoc grouping). Next come events whose dim part falls in a gap or on flagged cadences
-   (681), real shape-test failures (581), and grazing or too-short events (483). For 10-day dark events, the
-   per-quarter normalisation also breaks (one-off 117, not flagged 140).
+1. **What the 1,732 star-years are worth:** 1,249–1,620 effective star-years, depending on the W3 type.
+   - Events of up to 3 days on a small source keep the most (about 1,540–1,620).
+   - 10-day events keep the least (about 1,250–1,385).
+2. **Where the losses are:**
+   - **Largest: insufficient data around the event.** The edge or shoulder test finds too few cadences in its window
+     (3,050 of 5,052 lost events; post hoc grouping). For events of up to a day, these losses sit near gaps and quarter boundaries
+     much more often than the recovered events (post hoc).
+   - **Then:** events whose dim part falls in a gap or on flagged cadences (681); shape-test failures (581, of
+     which 107 are on the 10 catalogued EBs: the stars' own variability); grazing or too-short events (483).
+   - **10-day dark events:** the per-quarter normalisation breaks (one-off 115 of 117, not flagged 82 of 140; post
+     hoc).
+   - **By construction:** one EB (KIC 3954798) can never pass the one-off test.
 3. **What the zero supports:** per W3 type, and only under the stated assumptions, fewer than about 1.9–2.5 SAP-level
    signals per 1,000 star-years (95 %). That is a product-level sensitivity. It is not a physical rate, not a joint
    limit across types, and not an exclusion of wormholes or negative masses.
 4. **Is another batch worth it:**
-   - Another 500 stars would double the effective volume and halve each limit. That costs about 3.8 GB and about half
-     an hour of machine time (fetch, screen and injections; the sum is not stored).
+   - Another 500 stars would double the expected effective volume and halve each limit. That costs about 3.8 GB and
+     about half an hour of machine time (fetch, screen and injections; the sum is not stored).
    - 5,000 stars would cut the limits about elevenfold.
-   - Whether that is worth doing depends on having a rate model that says which rate matters. None exists, so the
-     expansion would sharpen a number, not test a prediction.
+   - Whether that is worth doing depends on a rate model that says which rate matters, and none is adopted here. So
+     the expansion would sharpen a number, not test a prediction.

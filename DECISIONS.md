@@ -6465,14 +6465,15 @@ confining radiation at a throat is found.
   - Effective search volume E = Σ window × recovered share: 1,248.7–1,620.3 star-years per cell, against 1,732.3
     observing and 1,997.9 sampling star-years. The weakest cells are t_E = 10 d.
   - Losses (post hoc grouping of the frozen stages, 5,052 events):
-    - edge or local-shoulder windows reach a gap or quarter boundary: 3,050;
+    - insufficient data in the edge or local-shoulder window: 3,050 (at t_E ≤ 1 d mostly near gaps or quarter
+      boundaries);
     - direct coverage: 681;
-    - shape tests: 581;
+    - shape tests: 581 (107 on catalogued EBs);
     - grazing or short: 483.
-    - Long dark events break the per-quarter normalisation (one-off 117).
+    - Long dark events break the per-quarter normalisation (one-off 115 of 117).
   - Product-level per-cell limits Γ95 = 2.996 / E_low: 1.909–2.522 × 10⁻³ per star-year. They are separate,
     conditional statements, not physical rates; the sky-to-SAP response is untested.
-  - Expansion is linear: +500 stars halves each limit, +5,000 cuts it to 0.091.
+  - Expansion, assuming the same pool and per-star gain: +500 stars halves each limit, +5,000 cuts it to 0.091.
   - Revisit if:
     - an event-rate model makes a target rate meaningful;
     - the per-quarter join changes;

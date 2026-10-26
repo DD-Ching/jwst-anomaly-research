@@ -484,6 +484,123 @@
    "lost": 5052
   }
  },
+ "short_grazing_total": 452,
+ "eb_stars": {
+  "2717141": {
+   "events": 40,
+   "recovered": 1
+  },
+  "3954798": {
+   "events": 40,
+   "recovered": 0
+  },
+  "4563150": {
+   "events": 40,
+   "recovered": 24
+  },
+  "6060580": {
+   "events": 40,
+   "recovered": 34
+  },
+  "6311637": {
+   "events": 40,
+   "recovered": 29
+  },
+  "6699562": {
+   "events": 40,
+   "recovered": 33
+  },
+  "7877062": {
+   "events": 40,
+   "recovered": 15
+  },
+  "8218274": {
+   "events": 40,
+   "recovered": 33
+  },
+  "9772642": {
+   "events": 40,
+   "recovered": 23
+  },
+  "10334122": {
+   "events": 40,
+   "recovered": 27
+  }
+ },
+ "eb_events_per_stage": {
+  "edge:insufficient": 26,
+  "edge:slow": 82,
+  "gap": 7,
+  "not_flagged": 3,
+  "oneoff": 4,
+  "quality": 5,
+  "recovered": 219,
+  "short": 15,
+  "shoulder:insufficient": 14,
+  "shoulder:no": 25
+ },
+ "recovery_by_u0": {
+  "rho=0.01|u0=[0.0,0.5)": {
+   "events": 2494,
+   "recovered": 1901
+  },
+  "rho=0.01|u0=[0.5,1.0)": {
+   "events": 2467,
+   "recovered": 1893
+  },
+  "rho=0.01|u0=[1.0,1.5)": {
+   "events": 2575,
+   "recovered": 2030
+  },
+  "rho=0.01|u0=[1.5,1.9)": {
+   "events": 1948,
+   "recovered": 1566
+  },
+  "rho=0.01|u0=[1.9,2.0)": {
+   "events": 516,
+   "recovered": 328
+  },
+  "rho=0.1|u0=[0.0,0.5)": {
+   "events": 2548,
+   "recovered": 1958
+  },
+  "rho=0.1|u0=[0.5,1.0)": {
+   "events": 2512,
+   "recovered": 1933
+  },
+  "rho=0.1|u0=[1.0,1.5)": {
+   "events": 2502,
+   "recovered": 1979
+  },
+  "rho=0.1|u0=[1.5,1.9)": {
+   "events": 1977,
+   "recovered": 1351
+  },
+  "rho=0.1|u0=[1.9,2.0)": {
+   "events": 461,
+   "recovered": 9
+  },
+  "all|u0=[0.0,0.5)": {
+   "events": 5042,
+   "recovered": 3859
+  },
+  "all|u0=[0.5,1.0)": {
+   "events": 4979,
+   "recovered": 3826
+  },
+  "all|u0=[1.0,1.5)": {
+   "events": 5077,
+   "recovered": 4009
+  },
+  "all|u0=[1.5,1.9)": {
+   "events": 3925,
+   "recovered": 2917
+  },
+  "all|u0=[1.9,2.0)": {
+   "events": 977,
+   "recovered": 337
+  }
+ },
  "ratios": {
   "effective_over_observing_1732": {
    "0": 0.919,

@@ -8,11 +8,17 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
     fetched), and the uninjected re-screen equals #542.
   - E = 1,248.7–1,620.3 effective star-years per W3 cell (recovery 0.625–0.811 of 1,997.9 sampling star-years);
     0 spurious passes.
-- **Losses** (post hoc grouping, 5,052): test windows reaching a gap or quarter boundary 3,050; coverage 681; shape
-  tests 581; grazing or short 483.
+- **Losses** (post hoc grouping of the frozen stages, 5,052):
+  - insufficient data in the edge or shoulder window 3,050 (at t_E ≤ 1 d mostly near gaps or quarter boundaries,
+    post hoc);
+  - coverage 681;
+  - shape tests 581 (107 of them on the 10 catalogued EBs);
+  - grazing or short 483.
+  - One EB (KIC 3954798) can never pass the one-off test.
 - **Zero result:** product-level per-cell Γ95 is 1.909–2.522 × 10⁻³ per star-year. These are separate,
   conditional statements, not physical rates, and not an exclusion.
-- **Expansion:** +500 stars halves each limit (about 3.8 GB, about half an hour of machine time); +5,000 cuts each
+- **Expansion:** +500 stars halves each limit (about 3.8 GB, about half an hour of machine time, not
+  stored); +5,000 cuts each
   limit to 0.091.
 - **Handoff:** nothing is queued. A larger batch, or work on the edge losses, is the owner's call. The cache is
   deleted after the review re-check.
