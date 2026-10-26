@@ -24,8 +24,11 @@ import rxj0152_fam4_photoz as f  # noqa: E402
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--bpz", type=Path, required=True)
+    ap.add_argument(
+        "--out", type=Path, default=f.OUT, help="directory of the frozen run's summary.json"
+    )
     args = ap.parse_args(argv)
-    summary = json.loads((f.OUT / "summary.json").read_text())
+    summary = json.loads((args.out / "summary.json").read_text())
     dra, ddec = summary["control_median_offset_arcsec"]
     cat = f.read_bpz(args.bpz)
     cat["Dec"] = np.asarray(cat["Dec"], float) - ddec / 3600
@@ -49,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         "segments": segs,
         "outcome_if_frozen_rules": f.outcome(gp["pass"], [s["class"] for s in segs]),
     }
-    (f.OUT / "posthoc.json").write_text(json.dumps(out, indent=1) + "\n")
+    (args.out / "posthoc.json").write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps({"gate_P": gp, "classes": [s["class"] for s in segs]}))
     return 0
 
