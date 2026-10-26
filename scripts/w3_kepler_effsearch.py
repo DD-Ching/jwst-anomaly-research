@@ -286,8 +286,9 @@ EVENT_COLS = ("rank", "kepid", "cell", "rep", "t0", "u0", "h", "n_ideal", "n_exi
 EVENT_COLS += ("n_new", "n_matched", "recovered", "spurious", "stage", "sub")
 
 
-def inject_star(rank: int, kepid: int) -> list[list]:
-    """All 40 injections of one star, each from the original SAP series (PLAN section 3)."""
+def inject_star(rank: int, kepid: int, seed: int = SEED) -> list[list]:
+    """All 40 injections of one star, each from the original SAP series (PLAN section 3). seed:
+    the first element of the rng key (#554 uses its own)."""
     st = wk.load_star(kepid)
     frac = we.frac_loo(_CC["den"], _CC["num"], st)
     base = {(x["t_start"], x["t_end"]) for x in uninjected(st)}
@@ -297,7 +298,7 @@ def inject_star(rank: int, kepid: int) -> list[list]:
     rows = []
     for c, (rho, blend, te) in enumerate(wk.CELLS):
         for rep in range(N_REP):
-            rng = np.random.default_rng([SEED, rank, c, rep])
+            rng = np.random.default_rng([seed, rank, c, rep])
             t0, u0 = rng.uniform(lo, hi), rng.uniform(0, 2)
             h = te * np.sqrt(4 - u0**2)
             f = wk.w3_flux_avg(t, t0, te, u0, rho, blend)
