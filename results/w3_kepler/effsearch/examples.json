@@ -1,0 +1,61 @@
+{
+ "label": "simulated injections on observed light curves (look-at figure)",
+ "rows": [
+  {
+   "stage": "recovered",
+   "rank": 0,
+   "kepid": 10064130,
+   "cell": 0,
+   "rep": 0
+  },
+  {
+   "stage": "edge:slow",
+   "rank": 1,
+   "kepid": 12167015,
+   "cell": 9,
+   "rep": 0
+  },
+  {
+   "stage": "edge:insufficient",
+   "rank": 0,
+   "kepid": 10064130,
+   "cell": 2,
+   "rep": 1
+  },
+  {
+   "stage": "shoulder:insufficient",
+   "rank": 0,
+   "kepid": 10064130,
+   "cell": 1,
+   "rep": 0
+  },
+  {
+   "stage": "shoulder:no",
+   "rank": 0,
+   "kepid": 10064130,
+   "cell": 18,
+   "rep": 1
+  },
+  {
+   "stage": "oneoff",
+   "rank": 4,
+   "kepid": 7184169,
+   "cell": 4,
+   "rep": 0
+  },
+  {
+   "stage": "not_flagged",
+   "rank": 1,
+   "kepid": 12167015,
+   "cell": 3,
+   "rep": 0
+  },
+  {
+   "stage": "gap",
+   "rank": 1,
+   "kepid": 12167015,
+   "cell": 0,
+   "rep": 1
+  }
+ ]
+}

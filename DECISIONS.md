@@ -6459,6 +6459,26 @@ confining radiation at a throat is found.
   - Zero survivors.
   - No rule or threshold changed.
 
+- **Addendum 3 2026-10-26 (`results/w3_kepler/effsearch/`):** search efficiency of the #542 sample, measured by
+  injection-recovery. 20,000 events: 2 per star and cell, each from the original SAP series, with centres uniform
+  over each star's 1,459.49-d window (gaps included). Not blind: these stars had been searched.
+  - Effective search volume E = Σ window × recovered share: 1,248.7–1,620.3 star-years per cell, against 1,732.3
+    observing and 1,997.9 sampling star-years. The weakest cells are t_E = 10 d.
+  - Losses (post hoc grouping of the frozen stages, 5,052 events):
+    - insufficient data in the edge or local-shoulder window: 3,050 (at t_E ≤ 1 d mostly near gaps or quarter
+      boundaries);
+    - direct coverage: 681;
+    - shape tests: 581 (82 `edge:slow` and 25 `shoulder:no` on catalogued EBs);
+    - grazing or short: 483.
+    - Long dark events break the per-quarter normalisation (one-off 115 of 117).
+  - Product-level per-cell limits Γ95 = 2.996 / E_low: 1.909–2.522 × 10⁻³ per star-year. They are separate,
+    conditional statements, not physical rates; the sky-to-SAP response is untested.
+  - Expansion, assuming the same pool and per-star gain: +500 stars halves each limit, +5,000 cuts it to 0.091.
+  - Revisit if:
+    - an event-rate model makes a target rate meaningful;
+    - the per-quarter join changes;
+    - the edge or shoulder tests change. Re-measure before quoting E.
+
 ## D-108 Efficiency rules for every round: pre-review self-check, gzip outputs, sync before push (owner rule 2026-10-26)
 - **Decision:** every round follows `docs/efficiency-rules.md`. Before the independent review it runs the
   self-check in `docs/pre-review-checklist.md`; the review and the re-check use the same list.

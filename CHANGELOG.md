@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: W3 / Kepler effective search volume of the #542 sample: 1,249–1,620 effective star-years per cell (D-107 addendum 3)
+- **Result** (`results/w3_kepler/effsearch/RESULT.md`; plan frozen before restore and injection):
+  - 20,000 injections on the 500 searched stars. The data were restored by list and sha256 (8,500 files; Q0 not
+    fetched), and the uninjected re-screen equals #542.
+  - E = 1,248.7–1,620.3 effective star-years per W3 cell (recovery 0.625–0.811 of 1,997.9 sampling star-years);
+    0 spurious passes.
+- **Losses** (post hoc grouping of the frozen stages, 5,052):
+  - insufficient data in the edge or shoulder window 3,050 (at t_E ≤ 1 d mostly near gaps or quarter boundaries,
+    post hoc);
+  - coverage 681;
+  - shape tests 581 (82 `edge:slow` and 25 `shoulder:no` on the 10 catalogued EBs);
+  - grazing or short 483.
+  - One EB (KIC 3954798) can never pass the one-off test.
+- **Zero result:** product-level per-cell Γ95 is 1.909–2.522 × 10⁻³ per star-year. These are separate,
+  conditional statements, not physical rates, and not an exclusion.
+- **Expansion:** +500 stars halves each limit (about 3.8 GB, about half an hour of machine time, not
+  stored); +5,000 cuts each
+  limit to 0.091.
+- **Handoff:** nothing is queued. A larger batch, or work on the edge losses, is the owner's call. The cache is
+  deleted after the review re-check.
 ## 2026-10-26: Abell 2744 unused NIRCam epochs: footprint check, no unused pair through the core
 - **Result** (`results/transients/a2744_epoch_footprint/RESULT.md`; plan and tested tool pushed before the one MAST
   query): outcome O. Of the 78 inventory pairs (#539, an upper bound), 0 are `core`, 28 `overlap` (outside the 1′

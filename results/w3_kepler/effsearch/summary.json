@@ -1,0 +1,1489 @@
+{
+ "label": "derived (simulated injections on observed light curves)",
+ "plan": "results/w3_kepler/effsearch/PLAN.md",
+ "stars": 500,
+ "events": 20000,
+ "observing_star_years": 1732.3,
+ "sampling_star_years": 1997.9,
+ "sampling_window_days_min_max": [
+  1459.49,
+  1459.49
+ ],
+ "pool_unused_after_542": 17740,
+ "poisson95_zero_events": 2.9957,
+ "cells": [
+  {
+   "cell": 0,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 0.1,
+   "events": 1000,
+   "recovered": 797,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.797,
+   "effective_star_years": 1592.4,
+   "effective_mc95": [
+    1540.3,
+    1639.8
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1847,
+   "per_star_se_yr": 0.0522,
+   "per_star_pop95_yr": [
+    3.0806,
+    3.2871
+   ],
+   "stars_k": [
+    25,
+    153,
+    322
+   ],
+   "covered_events": 899,
+   "recovered_given_covered": 0.8865,
+   "stages": {
+    "edge:insufficient": 16,
+    "edge:slow": 4,
+    "gap": 61,
+    "not_flagged": 1,
+    "quality": 25,
+    "recovered": 797,
+    "short": 15,
+    "shoulder:insufficient": 63,
+    "shoulder:no": 18
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 8
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 8
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001945,
+    "lambda_per_star": 0.007772,
+    "share_hosts_ge2": 0.003881
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1592.3,
+     "gain95": [
+      1540.3,
+      1643.5
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15923.5,
+     "gain95": [
+      15403.0,
+      16435.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 1,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 0.3,
+   "events": 1000,
+   "recovered": 789,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.789,
+   "effective_star_years": 1576.4,
+   "effective_mc95": [
+    1523.7,
+    1624.6
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1527,
+   "per_star_se_yr": 0.0543,
+   "per_star_pop95_yr": [
+    3.0464,
+    3.2591
+   ],
+   "stars_k": [
+    31,
+    149,
+    320
+   ],
+   "covered_events": 937,
+   "recovered_given_covered": 0.842,
+   "stages": {
+    "edge:insufficient": 92,
+    "edge:slow": 4,
+    "gap": 52,
+    "not_flagged": 2,
+    "quality": 9,
+    "recovered": 789,
+    "short": 2,
+    "shoulder:insufficient": 48,
+    "shoulder:no": 2
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 5
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 10
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001966,
+    "lambda_per_star": 0.007856,
+    "share_hosts_ge2": 0.003923
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1576.3,
+     "gain95": [
+      1523.2,
+      1629.5
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15763.5,
+     "gain95": [
+      15232.0,
+      16295.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 2,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 1.0,
+   "events": 1000,
+   "recovered": 811,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.811,
+   "effective_star_years": 1620.3,
+   "effective_mc95": [
+    1569.5,
+    1666.4
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.2406,
+   "per_star_se_yr": 0.0489,
+   "per_star_pop95_yr": [
+    3.139,
+    3.3365
+   ],
+   "stars_k": [
+    16,
+    157,
+    327
+   ],
+   "covered_events": 971,
+   "recovered_given_covered": 0.8352,
+   "stages": {
+    "edge:insufficient": 115,
+    "edge:slow": 3,
+    "gap": 22,
+    "not_flagged": 2,
+    "recovered": 811,
+    "short": 7,
+    "shoulder:insufficient": 36,
+    "shoulder:no": 4
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 8
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 13
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001909,
+    "lambda_per_star": 0.007627,
+    "share_hosts_ge2": 0.003809
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1620.3,
+     "gain95": [
+      1569.5,
+      1668.2
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 16203.0,
+     "gain95": [
+      15695.0,
+      16682.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 3,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 3.0,
+   "events": 1000,
+   "recovered": 782,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.782,
+   "effective_star_years": 1562.4,
+   "effective_mc95": [
+    1509.1,
+    1611.3
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1248,
+   "per_star_se_yr": 0.0541,
+   "per_star_pop95_yr": [
+    3.0183,
+    3.2308
+   ],
+   "stars_k": [
+    30,
+    158,
+    312
+   ],
+   "covered_events": 990,
+   "recovered_given_covered": 0.7899,
+   "stages": {
+    "edge:insufficient": 113,
+    "edge:slow": 4,
+    "gap": 7,
+    "not_flagged": 10,
+    "recovered": 782,
+    "short": 3,
+    "shoulder:insufficient": 68,
+    "shoulder:no": 13
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 6
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 13
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001985,
+    "lambda_per_star": 0.007932,
+    "share_hosts_ge2": 0.003961
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1562.4,
+     "gain95": [
+      1509.2,
+      1615.4
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15624.0,
+     "gain95": [
+      15091.5,
+      16154.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 4,
+   "rho": 0.01,
+   "blend": 1.0,
+   "tE_d": 10.0,
+   "events": 1000,
+   "recovered": 679,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.679,
+   "effective_star_years": 1356.6,
+   "effective_mc95": [
+    1297.5,
+    1412.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.7132,
+   "per_star_se_yr": 0.0595,
+   "per_star_pop95_yr": [
+    2.595,
+    2.8297
+   ],
+   "stars_k": [
+    53,
+    215,
+    232
+   ],
+   "covered_events": 991,
+   "recovered_given_covered": 0.6852,
+   "stages": {
+    "edge:insufficient": 70,
+    "edge:slow": 4,
+    "not_flagged": 7,
+    "oneoff": 57,
+    "quality": 3,
+    "recovered": 679,
+    "short": 6,
+    "shoulder:insufficient": 164,
+    "shoulder:no": 10
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 8
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 14
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002309,
+    "lambda_per_star": 0.009226,
+    "share_hosts_ge2": 0.004606
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1356.6,
+     "gain95": [
+      1297.5,
+      1414.8
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 13566.0,
+     "gain95": [
+      12975.0,
+      14148.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 5,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 0.1,
+   "events": 1000,
+   "recovered": 762,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.762,
+   "effective_star_years": 1522.4,
+   "effective_mc95": [
+    1467.7,
+    1573.1
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.0448,
+   "per_star_se_yr": 0.0558,
+   "per_star_pop95_yr": [
+    2.9355,
+    3.1542
+   ],
+   "stars_k": [
+    35,
+    168,
+    297
+   ],
+   "covered_events": 872,
+   "recovered_given_covered": 0.8739,
+   "stages": {
+    "edge:insufficient": 32,
+    "edge:slow": 6,
+    "gap": 63,
+    "not_flagged": 2,
+    "quality": 17,
+    "recovered": 762,
+    "short": 48,
+    "shoulder:insufficient": 54,
+    "shoulder:no": 16
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 9
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 8
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002041,
+    "lambda_per_star": 0.008156,
+    "share_hosts_ge2": 0.004072
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1522.4,
+     "gain95": [
+      1467.8,
+      1577.1
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15224.0,
+     "gain95": [
+      14677.5,
+      15771.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 6,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 0.3,
+   "events": 1000,
+   "recovered": 783,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.783,
+   "effective_star_years": 1564.4,
+   "effective_mc95": [
+    1511.2,
+    1613.2
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1288,
+   "per_star_se_yr": 0.0507,
+   "per_star_pop95_yr": [
+    3.0224,
+    3.2282
+   ],
+   "stars_k": [
+    19,
+    179,
+    302
+   ],
+   "covered_events": 908,
+   "recovered_given_covered": 0.8623,
+   "stages": {
+    "edge:insufficient": 71,
+    "edge:slow": 4,
+    "gap": 40,
+    "quality": 8,
+    "recovered": 783,
+    "short": 44,
+    "shoulder:insufficient": 45,
+    "shoulder:no": 5
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 9
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 12
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001982,
+    "lambda_per_star": 0.007921,
+    "share_hosts_ge2": 0.003955
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1564.4,
+     "gain95": [
+      1511.2,
+      1614.1
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15644.0,
+     "gain95": [
+      15112.0,
+      16141.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 7,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 1.0,
+   "events": 1000,
+   "recovered": 723,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.723,
+   "effective_star_years": 1444.5,
+   "effective_mc95": [
+    1387.5,
+    1498.1
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.889,
+   "per_star_se_yr": 0.0576,
+   "per_star_pop95_yr": [
+    2.7749,
+    3.002
+   ],
+   "stars_k": [
+    42,
+    193,
+    265
+   ],
+   "covered_events": 924,
+   "recovered_given_covered": 0.7825,
+   "stages": {
+    "edge:insufficient": 115,
+    "edge:slow": 5,
+    "gap": 29,
+    "not_flagged": 4,
+    "quality": 5,
+    "recovered": 723,
+    "short": 42,
+    "shoulder:insufficient": 25,
+    "shoulder:no": 52
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 4
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 13
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002159,
+    "lambda_per_star": 0.008627,
+    "share_hosts_ge2": 0.004308
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1444.5,
+     "gain95": [
+      1387.5,
+      1501.0
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 14445.0,
+     "gain95": [
+      13874.5,
+      15010.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 8,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 3.0,
+   "events": 1000,
+   "recovered": 735,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.735,
+   "effective_star_years": 1468.5,
+   "effective_mc95": [
+    1412.1,
+    1521.3
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.937,
+   "per_star_se_yr": 0.0558,
+   "per_star_pop95_yr": [
+    2.8242,
+    3.0463
+   ],
+   "stars_k": [
+    35,
+    195,
+    270
+   ],
+   "covered_events": 958,
+   "recovered_given_covered": 0.7672,
+   "stages": {
+    "edge:insufficient": 95,
+    "edge:slow": 15,
+    "gap": 3,
+    "not_flagged": 4,
+    "recovered": 735,
+    "short": 39,
+    "shoulder:insufficient": 55,
+    "shoulder:no": 54
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 9
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 12
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002121,
+    "lambda_per_star": 0.008477,
+    "share_hosts_ge2": 0.004233
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1468.5,
+     "gain95": [
+      1412.1,
+      1523.2
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 14685.0,
+     "gain95": [
+      14121.0,
+      15231.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 9,
+   "rho": 0.1,
+   "blend": 1.0,
+   "tE_d": 10.0,
+   "events": 1000,
+   "recovered": 639,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.639,
+   "effective_star_years": 1276.7,
+   "effective_mc95": [
+    1216.2,
+    1335.0
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.5534,
+   "per_star_se_yr": 0.062,
+   "per_star_pop95_yr": [
+    2.4318,
+    2.6749
+   ],
+   "stars_k": [
+    70,
+    221,
+    209
+   ],
+   "covered_events": 973,
+   "recovered_given_covered": 0.6567,
+   "stages": {
+    "edge:insufficient": 81,
+    "edge:slow": 17,
+    "not_flagged": 3,
+    "oneoff": 58,
+    "quality": 1,
+    "recovered": 639,
+    "short": 26,
+    "shoulder:insufficient": 148,
+    "shoulder:no": 27
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 6
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 12
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002463,
+    "lambda_per_star": 0.009843,
+    "share_hosts_ge2": 0.004913
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1276.7,
+     "gain95": [
+      1215.9,
+      1337.5
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 12767.0,
+     "gain95": [
+      12159.0,
+      13374.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 10,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 0.1,
+   "events": 1000,
+   "recovered": 770,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.77,
+   "effective_star_years": 1538.4,
+   "effective_mc95": [
+    1484.3,
+    1588.4
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.0768,
+   "per_star_se_yr": 0.0537,
+   "per_star_pop95_yr": [
+    2.9686,
+    3.1821
+   ],
+   "stars_k": [
+    28,
+    174,
+    298
+   ],
+   "covered_events": 895,
+   "recovered_given_covered": 0.8603,
+   "stages": {
+    "edge:insufficient": 31,
+    "edge:slow": 5,
+    "gap": 62,
+    "not_flagged": 1,
+    "quality": 23,
+    "recovered": 770,
+    "short": 20,
+    "shoulder:insufficient": 52,
+    "shoulder:no": 36
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 9
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 8
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002018,
+    "lambda_per_star": 0.008065,
+    "share_hosts_ge2": 0.004027
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1538.4,
+     "gain95": [
+      1484.3,
+      1591.1
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15384.0,
+     "gain95": [
+      14843.0,
+      15910.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 11,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 0.3,
+   "events": 1000,
+   "recovered": 805,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.805,
+   "effective_star_years": 1608.3,
+   "effective_mc95": [
+    1557.0,
+    1655.0
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.2167,
+   "per_star_se_yr": 0.0529,
+   "per_star_pop95_yr": [
+    3.113,
+    3.3204
+   ],
+   "stars_k": [
+    28,
+    139,
+    333
+   ],
+   "covered_events": 940,
+   "recovered_given_covered": 0.8564,
+   "stages": {
+    "edge:insufficient": 74,
+    "edge:slow": 6,
+    "gap": 45,
+    "not_flagged": 1,
+    "quality": 8,
+    "recovered": 805,
+    "short": 7,
+    "shoulder:insufficient": 49,
+    "shoulder:no": 5
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 6
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 10
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001924,
+    "lambda_per_star": 0.007688,
+    "share_hosts_ge2": 0.003839
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1608.3,
+     "gain95": [
+      1556.5,
+      1660.2
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 16083.5,
+     "gain95": [
+      15565.0,
+      16602.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 12,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 1.0,
+   "events": 1000,
+   "recovered": 809,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.809,
+   "effective_star_years": 1616.3,
+   "effective_mc95": [
+    1565.3,
+    1662.6
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.2327,
+   "per_star_se_yr": 0.0512,
+   "per_star_pop95_yr": [
+    3.1306,
+    3.3331
+   ],
+   "stars_k": [
+    23,
+    145,
+    332
+   ],
+   "covered_events": 975,
+   "recovered_given_covered": 0.8297,
+   "stages": {
+    "edge:insufficient": 111,
+    "edge:slow": 8,
+    "gap": 23,
+    "not_flagged": 4,
+    "quality": 1,
+    "recovered": 809,
+    "short": 1,
+    "shoulder:insufficient": 34,
+    "shoulder:no": 9
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 6
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 11
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001914,
+    "lambda_per_star": 0.007647,
+    "share_hosts_ge2": 0.003819
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1616.3,
+     "gain95": [
+      1565.3,
+      1666.5
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 16163.5,
+     "gain95": [
+      15653.0,
+      16665.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 13,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 3.0,
+   "events": 1000,
+   "recovered": 783,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.783,
+   "effective_star_years": 1564.4,
+   "effective_mc95": [
+    1511.2,
+    1613.2
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.1288,
+   "per_star_se_yr": 0.0541,
+   "per_star_pop95_yr": [
+    3.0224,
+    3.2348
+   ],
+   "stars_k": [
+    30,
+    157,
+    313
+   ],
+   "covered_events": 984,
+   "recovered_given_covered": 0.7957,
+   "stages": {
+    "edge:insufficient": 117,
+    "edge:slow": 5,
+    "gap": 8,
+    "not_flagged": 6,
+    "recovered": 783,
+    "short": 8,
+    "shoulder:insufficient": 62,
+    "shoulder:no": 11
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 7
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 13
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.001982,
+    "lambda_per_star": 0.007921,
+    "share_hosts_ge2": 0.003955
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1564.4,
+     "gain95": [
+      1511.2,
+      1617.4
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15644.0,
+     "gain95": [
+      15112.0,
+      16174.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 14,
+   "rho": 0.01,
+   "blend": 0.7,
+   "tE_d": 10.0,
+   "events": 1000,
+   "recovered": 693,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.693,
+   "effective_star_years": 1384.6,
+   "effective_mc95": [
+    1326.1,
+    1440.1
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.7691,
+   "per_star_se_yr": 0.0569,
+   "per_star_pop95_yr": [
+    2.6521,
+    2.8807
+   ],
+   "stars_k": [
+    42,
+    223,
+    235
+   ],
+   "covered_events": 993,
+   "recovered_given_covered": 0.6979,
+   "stages": {
+    "edge:insufficient": 89,
+    "edge:slow": 4,
+    "gap": 1,
+    "not_flagged": 49,
+    "recovered": 693,
+    "short": 6,
+    "shoulder:insufficient": 152,
+    "shoulder:no": 6
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 7
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 12
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002259,
+    "lambda_per_star": 0.009027,
+    "share_hosts_ge2": 0.004507
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1384.5,
+     "gain95": [
+      1326.0,
+      1440.3
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 13845.5,
+     "gain95": [
+      13260.5,
+      14403.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 15,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 0.1,
+   "events": 1000,
+   "recovered": 752,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.752,
+   "effective_star_years": 1502.4,
+   "effective_mc95": [
+    1447.1,
+    1553.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.0049,
+   "per_star_se_yr": 0.057,
+   "per_star_pop95_yr": [
+    2.8932,
+    3.1166
+   ],
+   "stars_k": [
+    39,
+    170,
+    291
+   ],
+   "covered_events": 872,
+   "recovered_given_covered": 0.8624,
+   "stages": {
+    "edge:insufficient": 23,
+    "edge:slow": 5,
+    "gap": 75,
+    "not_flagged": 1,
+    "quality": 10,
+    "recovered": 752,
+    "short": 43,
+    "shoulder:insufficient": 56,
+    "shoulder:no": 35
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 6
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 7
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.00207,
+    "lambda_per_star": 0.008272,
+    "share_hosts_ge2": 0.00413
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1502.5,
+     "gain95": [
+      1446.6,
+      1558.3
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15024.5,
+     "gain95": [
+      14466.0,
+      15583.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 16,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 0.3,
+   "events": 1000,
+   "recovered": 775,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.775,
+   "effective_star_years": 1548.4,
+   "effective_mc95": [
+    1494.6,
+    1597.9
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 3.0968,
+   "per_star_se_yr": 0.0539,
+   "per_star_pop95_yr": [
+    2.9893,
+    3.2025
+   ],
+   "stars_k": [
+    29,
+    167,
+    304
+   ],
+   "covered_events": 916,
+   "recovered_given_covered": 0.8461,
+   "stages": {
+    "edge:insufficient": 70,
+    "edge:slow": 5,
+    "gap": 37,
+    "not_flagged": 1,
+    "quality": 10,
+    "recovered": 775,
+    "short": 37,
+    "shoulder:insufficient": 60,
+    "shoulder:no": 5
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 7
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 11
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002004,
+    "lambda_per_star": 0.008009,
+    "share_hosts_ge2": 0.003999
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1548.4,
+     "gain95": [
+      1494.7,
+      1601.2
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 15484.0,
+     "gain95": [
+      14946.5,
+      16012.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 17,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 1.0,
+   "events": 1000,
+   "recovered": 734,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.734,
+   "effective_star_years": 1466.5,
+   "effective_mc95": [
+    1410.1,
+    1519.3
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.933,
+   "per_star_se_yr": 0.0566,
+   "per_star_pop95_yr": [
+    2.8201,
+    3.044
+   ],
+   "stars_k": [
+    38,
+    190,
+    272
+   ],
+   "covered_events": 937,
+   "recovered_given_covered": 0.7834,
+   "stages": {
+    "edge:insufficient": 115,
+    "edge:slow": 2,
+    "gap": 20,
+    "not_flagged": 4,
+    "quality": 1,
+    "recovered": 734,
+    "short": 42,
+    "shoulder:insufficient": 33,
+    "shoulder:no": 49
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 7
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 15
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002124,
+    "lambda_per_star": 0.008489,
+    "share_hosts_ge2": 0.004239
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1466.5,
+     "gain95": [
+      1410.0,
+      1522.0
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 14665.0,
+     "gain95": [
+      14100.5,
+      15220.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 18,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 3.0,
+   "events": 1000,
+   "recovered": 702,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.702,
+   "effective_star_years": 1402.5,
+   "effective_mc95": [
+    1344.5,
+    1457.6
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.8051,
+   "per_star_se_yr": 0.0602,
+   "per_star_pop95_yr": [
+    2.6871,
+    2.9231
+   ],
+   "stars_k": [
+    53,
+    192,
+    255
+   ],
+   "covered_events": 940,
+   "recovered_given_covered": 0.7468,
+   "stages": {
+    "edge:insufficient": 110,
+    "edge:slow": 16,
+    "gap": 11,
+    "not_flagged": 3,
+    "recovered": 702,
+    "short": 49,
+    "shoulder:insufficient": 53,
+    "shoulder:no": 56
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 9
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 9
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002228,
+    "lambda_per_star": 0.008903,
+    "share_hosts_ge2": 0.004445
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1402.5,
+     "gain95": [
+      1343.5,
+      1461.5
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 14025.5,
+     "gain95": [
+      13435.5,
+      14615.5
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  },
+  {
+   "cell": 19,
+   "rho": 0.1,
+   "blend": 0.7,
+   "tE_d": 10.0,
+   "events": 1000,
+   "recovered": 625,
+   "sampling_star_years": 1997.93,
+   "recovery_rate": 0.625,
+   "effective_star_years": 1248.7,
+   "effective_mc95": [
+    1187.9,
+    1307.6
+   ],
+   "n_eff": 1000.0,
+   "per_star_mean_yr": 2.4974,
+   "per_star_se_yr": 0.0598,
+   "per_star_pop95_yr": [
+    2.3758,
+    2.6152
+   ],
+   "stars_k": [
+    65,
+    245,
+    190
+   ],
+   "covered_events": 961,
+   "recovered_given_covered": 0.6504,
+   "stages": {
+    "edge:insufficient": 108,
+    "edge:slow": 14,
+    "gap": 1,
+    "not_flagged": 35,
+    "oneoff": 2,
+    "recovered": 625,
+    "short": 38,
+    "shoulder:insufficient": 145,
+    "shoulder:no": 32
+   },
+   "spurious_events": 0,
+   "subgroups_descriptive": {
+    "outside_range": {
+     "events": 10,
+     "recovered": 7
+    },
+    "kirk_eb": {
+     "events": 20,
+     "recovered": 8
+    }
+   },
+   "limit_product_level": {
+    "rate95_per_star_year": 0.002522,
+    "lambda_per_star": 0.01008,
+    "share_hosts_ge2": 0.00503
+   },
+   "expansion": {
+    "500": {
+     "gain_star_years": 1248.7,
+     "gain95": [
+      1187.9,
+      1307.6
+     ],
+     "limit_factor": 0.5
+    },
+    "5000": {
+     "gain_star_years": 12487.0,
+     "gain95": [
+      11879.0,
+      13076.0
+     ],
+     "limit_factor": 0.091
+    }
+   }
+  }
+ ]
+}

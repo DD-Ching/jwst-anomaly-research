@@ -1,0 +1,56 @@
+{
+ "label": "observed (session clocks and ledger)",
+ "authorization_utc": "about 23:41Z (2026-10-25)",
+ "plan_commit_utc": "23:48:53Z (6e864af)",
+ "code_commit_utc": "23:52:58Z (fde145c), before the injection run",
+ "stage_log_utc": [
+  [
+   "fetch",
+   "23:49:03Z"
+  ],
+  [
+   "check",
+   "00:09:19Z (2026-10-26)"
+  ],
+  [
+   "inject",
+   "00:09:56Z"
+  ]
+ ],
+ "inject_end_utc": "00:18:45Z",
+ "fetch_elapsed_s": 1201.3,
+ "inject_elapsed_s": 508.8,
+ "inject_cpu_s_per_star_mean": 4.0,
+ "inject_cpu_s_total": 2000.6,
+ "cores": 4,
+ "ledger_bytes": 3791889000,
+ "ledger_cap_bytes": 6000000000,
+ "files_fetched": 8500,
+ "file_bytes": 3719520000,
+ "sha256_all_match": true,
+ "fetch_errors": 0,
+ "q0_files_not_fetched": 245,
+ "q0_bytes_not_fetched_542": 19051200,
+ "cache_bytes_on_disk": "989 MB after the restore (du; 991 MB at deletion with the partial event log), data/cache/w3_kepler_effsearch; deleted at 00:47:26Z (2026-10-26), after the review re-check",
+ "note": "plain ledger JSONL gitignored; net_ledger.jsonl.gz is the snapshot",
+ "expansion_estimate": {
+  "label": "derived: measured per-500 values scaled linearly (assumes the same archive rate, 4 cores, same pool); not measured at 5,000",
+  "per_500_measured": {
+   "download_bytes_this_round": 3791889000,
+   "download_bytes_542_with_listings_and_q0": 3818397533,
+   "fetch_s_this_round": 1201.3,
+   "fetch_s_542": 1114.0,
+   "screen_s_542": 31,
+   "inject_wall_s_this_round": 508.8,
+   "inject_cpu_s_this_round": 2000.6,
+   "cache_mb_on_disk": 989
+  },
+  "5000_scaled": {
+   "download_gb": 38.2,
+   "fetch_h": 3.3,
+   "screen_min": 5.2,
+   "inject_wall_min": 84.8,
+   "cache_gb_if_kept_at_once": 9.9
+  }
+ }
+}
