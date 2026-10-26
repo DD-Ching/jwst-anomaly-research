@@ -28,7 +28,7 @@ F200W (test) and F277W, F356W, F444W (control), from `s3://stpubdata/jwst/public
    g09725, background = median of D in a 0.35–0.60″ annulus; Δf in µJy = aperture sum × PIXAR_SR × 10¹².
 3. **Noise.** σ = max(σ_prop, σ_emp): σ_prop from the ERR arrays (quadrature, both epochs); σ_emp = 1.4826 ×
    MAD of the same aperture measurement at 16 positions on a 1.6″ ring around g09725 (a robust empirical scale).
-4. **Per band:** `brighter` if Δf / σ ≥ 5, `fainter` if ≤ −5, else `none` with a 5σ limit 5σ. Applied per band.
+4. **Per band:** `brighter` if Δf / σ ≥ 5, `fainter` if ≤ −5, else `none` with the 5σ limit 5 × σ. Applied per band.
 5. **Control gate C:** ≥ 2 of the 3 LW bands registered and `brighter`. If C fails, the outcome is U (the stamp
    method does not reproduce the known LW change).
 6. **Outcome** (C passed): `SW_detected` if ≥ 1 SW band is `brighter`; `SW_none` if all three SW bands are
