@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: g09725 SW-band difference (2561 o002 → o006): outcome U (SW registration rule fails on empty stamps); post hoc a red-only change
+- **Result** (`results/transients/a2744_2561_flank/sw/RESULT.md`; plan frozen before any SW pixel): LW control gate
+  passes (F356W 16.4σ, F444W 11.1σ); F115W / F150W fail the 0.03″ registration rule (0.170″ / 0.138″), so the
+  frozen outcome is U. F200W registered, +1.35σ (5σ limit 0.0102 µJy vs F356W Δf 0.0255 µJy).
+- Post hoc: no SW band reaches 2σ as measured, every LW band does; contact sheet looked at. Verdict of g09725
+  unchanged (`inconclusive`), SN vs AGN not separated.
+- **Failed approach:** cross-correlation registration of 6″ near-empty stamps (the peak follows noise). A re-run
+  needs a larger stamp or the mosaics' WCS alignment as its registration test, fixed before the data.
+- **Data:** twelve 6–8″ S3 byte-range sections, nothing stored.
+- **Handoff:** #553 stays needs-human (TNS needs owner credentials; no later epoch). #374 waits for the next weekly
+  run. Two-epoch queue waits for Abell 370 (2026-12-29).
+
 ## 2026-10-26: g09725 host redshift from UNCOVER DR3 / DR4: bimodal, verdict unchanged
 - **Result** (`docs/candidates/a2744_2561_flank_g09725.md`, second pass; plan written before the catalogues were read):
   DR3 counterpart id 2548 at 0.15″ records the pre-brightening o002 state (independent grizli reduction; consistent

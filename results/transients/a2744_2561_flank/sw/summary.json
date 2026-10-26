@@ -1,0 +1,105 @@
+{
+ "plan": "results/transients/a2744_2561_flank/sw/PLAN.md",
+ "position": {
+  "ra": 3.6117000138645383,
+  "dec": -30.457647789409304,
+  "id": "g09725"
+ },
+ "epochs": {
+  "early": "jw02561-o002_t001",
+  "late": "jw02561-o006_t007"
+ },
+ "bands": {
+  "f115w": {
+   "pix_arcsec": 0.031228616751634793,
+   "shift_arcsec": 0.17048165029161227,
+   "registered": false,
+   "df_ujy": -0.0005753442628904217,
+   "sigma_ujy": 0.003851496472274771,
+   "sigma_prop_ujy": 0.00283253578846214,
+   "sigma_emp_ujy": 0.003851496472274771,
+   "n_bad_pix": 0,
+   "snr": -0.14938200437987464,
+   "class": "unregistered",
+   "limit5_ujy": 0.019257482361373857
+  },
+  "f150w": {
+   "pix_arcsec": 0.031228593573694827,
+   "shift_arcsec": 0.1376234042501384,
+   "registered": false,
+   "df_ujy": 0.004816879131811277,
+   "sigma_ujy": 0.002532716311049306,
+   "sigma_prop_ujy": 0.002532716311049306,
+   "sigma_emp_ujy": 0.002490449906704456,
+   "n_bad_pix": 0,
+   "snr": 1.901862877732106,
+   "class": "unregistered",
+   "limit5_ujy": 0.01266358155524653
+  },
+  "f200w": {
+   "pix_arcsec": 0.031230026182486766,
+   "shift_arcsec": 0.022376505451298698,
+   "registered": true,
+   "df_ujy": 0.0027602839441533485,
+   "sigma_ujy": 0.0020411449338718817,
+   "sigma_prop_ujy": 0.0020411449338718817,
+   "sigma_emp_ujy": 0.0015503471874790478,
+   "n_bad_pix": 0,
+   "snr": 1.3523213850950409,
+   "class": "none",
+   "limit5_ujy": 0.010205724669359408
+  },
+  "f277w": {
+   "pix_arcsec": 0.06290993217383568,
+   "shift_arcsec": 0.043726819085537674,
+   "registered": false,
+   "df_ujy": 0.015286301559942612,
+   "sigma_ujy": 0.00197330911479104,
+   "sigma_prop_ujy": 0.0015664623168684887,
+   "sigma_emp_ujy": 0.00197330911479104,
+   "n_bad_pix": 0,
+   "snr": 7.746531673807896,
+   "class": "unregistered",
+   "limit5_ujy": 0.0098665455739552
+  },
+  "f356w": {
+   "pix_arcsec": 0.06290958538303955,
+   "shift_arcsec": 0.0006538838977295646,
+   "registered": true,
+   "df_ujy": 0.025526813465540366,
+   "sigma_ujy": 0.00155734679273575,
+   "sigma_prop_ujy": 0.001467746774252305,
+   "sigma_emp_ujy": 0.00155734679273575,
+   "n_bad_pix": 0,
+   "snr": 16.39121972357749,
+   "class": "brighter",
+   "limit5_ujy": 0.007786733963678749
+  },
+  "f444w": {
+   "pix_arcsec": 0.06291435405286512,
+   "shift_arcsec": 0.02937322513411828,
+   "registered": true,
+   "df_ujy": 0.02548752233219898,
+   "sigma_ujy": 0.002287343073680726,
+   "sigma_prop_ujy": 0.002053404452994698,
+   "sigma_emp_ujy": 0.002287343073680726,
+   "n_bad_pix": 0,
+   "snr": 11.142850683603488,
+   "class": "brighter",
+   "limit5_ujy": 0.011436715368403629
+  }
+ },
+ "ratio_to_f356w": {
+  "f115w": -0.02253882035323763,
+  "f150w": 0.18869880246955886,
+  "f200w": 0.1081327267063538,
+  "f277w": 0.598833128176307,
+  "f356w": 1.0,
+  "f444w": 0.9984607897341191
+ },
+ "outcome": "U",
+ "provenance": {
+  "fluxes": "observed (difference images)",
+  "ratios": "derived"
+ }
+}
