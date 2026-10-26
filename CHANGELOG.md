@@ -4,11 +4,14 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-26: MACS J1931 two-epoch grid 6882 o038 → 12299 o001 (392.6 d, core): outcome N, 12 groups all ordinary; SN Eos 101.2 recovered fading
 - **Result** (`results/transients/macs1931_grid/RESULT.md`; plan pushed before any pixel): 17 hits in 12 groups
-  among 969 positions measured in all three LW bands; G1 0.94 at −0.75 mag, G2 noise 1.20–1.54.
-- Known case: SN Eos 101.2 fades 1.65–2.31 mag at ≥ 9σ in all bands; 101.1 has no catalogued grid position (blind spot).
-- Other groups: star spikes after the roll change, a mosaic-edge star dipole, epoch-2 mosaic edge, and sharp
-  single-exposure dots (post hoc `sharp.json`: one contributing 12299 exposure; F277W peak fraction 0.33–0.70 vs
-  reference max 0.221). 0 candidates.
+  among 976 positions measured in ≥ 1 LW band; G1 0.94 at −0.75 mag, G2 noise 1.20–1.54.
+- Known case: SN Eos 101.2 fades 1.65–2.31 mag at ≥ 9σ in all bands; 101.1 has no position of its own (nearest row
+  0.43″, not a hit).
+- Other groups: star spikes after the roll change, a mosaic-edge star dipole, and six detector-fixed pixels (post hoc
+  `posthoc.json`: the same NRCBLONG pixel in all three filters' `_cal` exposures, DQ JUMP_DET, single-exposure
+  coverage). 0 candidates.
+- **Failed approach (first reading, corrected before review closed):** "cosmic rays" for the three-band dots; one
+  cosmic ray cannot hit three filter exposures, the detector-pixel test replaced it.
 - **Handoff:** MACS J1931's other inventory pairs (9493 o001, 773 s per band) are shallower and shorter; not queued.
   Next new two-epoch input: Abell 370 epochs from 2026-12-29 (`upcoming.json`).
 
