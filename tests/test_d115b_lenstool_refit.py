@@ -261,3 +261,19 @@ def test_read_bayes_and_gate_v2():
     assert m.gate_v2("finished", 344.42 * 1.0101) == "fail"
     assert m.gate_v2("wall cap reached", 300.0) == "undetermined"
     assert m.gate_v2("finished", None) == "undetermined"
+
+
+def test_posthoc_f2b(tmp_path, monkeypatch):
+    import gzip
+
+    monkeypatch.setattr(m, "OUT", tmp_path)
+    (tmp_path / "f2b").mkdir()
+    (tmp_path / "f2b" / "burnin.dat").write_text("#Nsample\n1 -900.5 3\n1 -100.25 4\n")
+    with gzip.open(tmp_path / "lenstool_v0.log.gz", "wt") as g:
+        g.write("INFO: chi2 356.674111  Lhood -302.923774\n")
+    out = m.posthoc_f2b(tmp_path)
+    assert out["n_burnin_lines"] == 2 and out["lnLhood_max_burnin"] == -100.25
+    assert (
+        out["lnLhood_stage_v_info_line"] == -302.923774 and out["seconds_per_burnin_line"] == 450.0
+    )
+    assert (tmp_path / "burnin_f2b.dat.gz").exists()

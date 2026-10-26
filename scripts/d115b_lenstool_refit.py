@@ -312,6 +312,26 @@ def main_f2b(lt: Path, wd: Path, files: dict[str, Path]) -> None:
     print(json.dumps(out, indent=1))
 
 
+def posthoc_f2b(wd: Path) -> dict:
+    """Post hoc (after gate V2 was undetermined): BayeSys burn-in lines and their best ln(Lhood)."""
+    text = (wd / "f2b" / "burnin.dat").read_text()
+    with gzip.open(OUT / "burnin_f2b.dat.gz", "wt") as g:
+        g.write(text)
+    rows = [ln.split() for ln in text.splitlines() if ln.strip() and not ln.startswith("#")]
+    lnl = [float(r[1]) for r in rows]
+    return {
+        "label": "post hoc",
+        "n_burnin_lines": len(rows),
+        "n_columns": sorted({len(r) for r in rows}),
+        "lnLhood_max_burnin": max(lnl) if lnl else None,
+        # for scale only: stage V's INFO line (chi2 356.67, rounded reference)
+        "lnLhood_stage_v_info_line": float(
+            re.findall(r"Lhood (\S+)", gzip.open(OUT / "lenstool_v0.log.gz", "rt").read())[-1]
+        ),
+        "seconds_per_burnin_line": round(F2B_WALL_S / len(rows), 1) if rows else None,
+    }
+
+
 def _limit(text: str, i: int) -> tuple[str, list[str]]:
     for head, body in _sections(text):
         if head.split()[:2] == ["limit", str(i)]:
@@ -583,7 +603,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--lenstool", required=True, type=Path)
     ap.add_argument("--workdir", required=True, type=Path)
-    ap.add_argument("--stage", choices=("v", "vprime-f", "d14a", "f2b"), default="v")
+    ap.add_argument("--stage", choices=("v", "vprime-f", "d14a", "f2b", "f2b-posthoc"), default="v")
     a = ap.parse_args()
     lt, wd = a.lenstool.resolve(), a.workdir.resolve()
     files = lc.model_files(MODEL)
@@ -597,6 +617,9 @@ def main() -> None:
         return
     if a.stage == "f2b":
         main_f2b(lt, wd, files)
+        return
+    if a.stage == "f2b-posthoc":
+        _write(posthoc_f2b(wd), "posthoc_f2b.json")
         return
     best, inp = files["best.par"].read_text(), files["input.par"].read_text()
     v0 = build_v0(best, inp)
