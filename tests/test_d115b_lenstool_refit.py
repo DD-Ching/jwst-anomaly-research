@@ -351,3 +351,21 @@ def test_warn_families():
         " 2 D1d.1 0.94 1 0.00 0 0 0 0.004 0.02 0.1 0.2 1\n"
     )
     assert m._warn_families(t) == {"D1d": 1}
+
+
+def test_choose_start_first_feasible_above_tolerance():
+    lim = m.V2_REF * (1 + m.TOL_FRAC)
+    rows = [(0.001, lim - 1, True), (0.002, m.F2L_INFEASIBLE, False), (0.003, lim + 5, True)]
+    assert m.choose_start(rows) == 0.003
+    assert m.choose_start(rows[:2]) is None
+    assert m.choose_start([]) is None
+    assert m.V3P_LADDER == tuple(sorted(m.V3P_LADDER))
+
+
+def test_gate_v3p():
+    lim = m.V2_REF * (1 + m.TOL_FRAC)
+    assert m.gate_v3p(None, None, [], False) == "uninformative"
+    assert m.gate_v3p(0.003, lim, [400.0, lim], False) == "pass"
+    falling = [400.0 - 0.02 * i for i in range(400)]
+    assert m.gate_v3p(0.003, falling[-1], falling, True) == "undetermined"
+    assert m.gate_v3p(0.003, 380.0, [380.0] * 400, False) == "fail"

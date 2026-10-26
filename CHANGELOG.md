@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b stage V3′: every small-step start is infeasible (gate `uninformative`); post hoc `best.par` sits on a χ² discontinuity in family D52b (+12.1) (D-109 addendum 6)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_V3P.md`; plan and tool frozen before the run):
+  - Ladder of all-parameter starts at 0.1–2 % of each range: 8 / 8 infeasible, so no optimiser run; the hard-constraint
+    local route is closed as the plan said.
+  - Post hoc: single offsets of 3 × 10⁻⁵ of a range already switch D52b's χ² by +12.1 (D52c +14.2); 33 / 56 single
+    ±0.1 % offsets feasible, 12 / 56 within 1 of 344.42; the 10⁻⁴ all-parameter start is feasible at 357.66.
+- **Failed approach:** a χ²-tolerance gate (1 %, 3.44) around a published optimum that lies on a discontinuity.
+- **Environment:** archive.stsci.edu's chain now ends at emSign Root CA - G1, missing from the container store; use
+  `SSL_CERT_FILE` = `/root/.ccr/ca-bundle.crt` + certifi's `cacert.pem` (concatenated in the scratchpad).
+- **Handoff:** next a frozen plan for a continuous objective (Lenstool source-plane χ², or image-plane χ² with D52b's
+  matching fixed), validated on `best.par` first; F2-L at f 0.80 / 0.75 / 0.70 only after that. D115b stays `inconclusive`.
+
 ## 2026-10-26: D115b stage F2-L: the local optimiser's validation start is infeasible; gate V3 `uninformative`; post hoc only 7 of 56 single ±3 % parameter offsets keep every image (D-109 addendum 5)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_F2L.md`; plan frozen before any run):
   - Bounded Nelder–Mead over the 28 O1–O6 parameters, each evaluation one Lenstool `inverse 0` χ²; infeasible = a

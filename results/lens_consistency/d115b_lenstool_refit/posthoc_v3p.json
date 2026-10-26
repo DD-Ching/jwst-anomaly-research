@@ -1,0 +1,525 @@
+{
+ "label": "post hoc (after gate V3' was uninformative)",
+ "best_par": {
+  "feasible": true,
+  "chimul": 344.42,
+  "nwarn": 0,
+  "penalty": 0.0
+ },
+ "start_frac_1e-4": {
+  "feasible": true,
+  "chimul": 357.66,
+  "nwarn": 0,
+  "penalty": 0.0
+ },
+ "single_offsets_0.001": {
+  "O1:v_disp:+": {
+   "feasible": false,
+   "chimul": 355.09,
+   "nwarn": 2,
+   "penalty": 0.0
+  },
+  "O1:v_disp:-": {
+   "feasible": false,
+   "chimul": 15491.71,
+   "nwarn": 0,
+   "penalty": 14993.75
+  },
+  "O1:angle_pos:+": {
+   "feasible": false,
+   "chimul": 371.17,
+   "nwarn": 1,
+   "penalty": 0.0
+  },
+  "O1:angle_pos:-": {
+   "feasible": false,
+   "chimul": 4113.96,
+   "nwarn": 1,
+   "penalty": 3748.44
+  },
+  "O1:ellipticity:+": {
+   "feasible": true,
+   "chimul": 355.88,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O1:ellipticity:-": {
+   "feasible": true,
+   "chimul": 345.17,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O1:x_centre:+": {
+   "feasible": false,
+   "chimul": 4109.94,
+   "nwarn": 1,
+   "penalty": 3748.44
+  },
+  "O1:x_centre:-": {
+   "feasible": true,
+   "chimul": 355.71,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O1:y_centre:+": {
+   "feasible": false,
+   "chimul": 356.99,
+   "nwarn": 1,
+   "penalty": 0.0
+  },
+  "O1:y_centre:-": {
+   "feasible": true,
+   "chimul": 370.9,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O1:core_radius:+": {
+   "feasible": false,
+   "chimul": 4113.47,
+   "nwarn": 0,
+   "penalty": 3748.44
+  },
+  "O1:core_radius:-": {
+   "feasible": true,
+   "chimul": 357.11,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O2:v_disp:+": {
+   "feasible": false,
+   "chimul": 355.82,
+   "nwarn": 2,
+   "penalty": 0.0
+  },
+  "O2:v_disp:-": {
+   "feasible": false,
+   "chimul": 7891.42,
+   "nwarn": 0,
+   "penalty": 7496.88
+  },
+  "O2:angle_pos:+": {
+   "feasible": true,
+   "chimul": 370.4,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O2:angle_pos:-": {
+   "feasible": true,
+   "chimul": 371.42,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O2:ellipticity:+": {
+   "feasible": false,
+   "chimul": 4126.96,
+   "nwarn": 0,
+   "penalty": 3748.44
+  },
+  "O2:ellipticity:-": {
+   "feasible": true,
+   "chimul": 357.51,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O2:x_centre:+": {
+   "feasible": true,
+   "chimul": 356.54,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O2:x_centre:-": {
+   "feasible": false,
+   "chimul": 356.58,
+   "nwarn": 1,
+   "penalty": 0.0
+  },
+  "O2:y_centre:+": {
+   "feasible": true,
+   "chimul": 370.63,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O2:y_centre:-": {
+   "feasible": false,
+   "chimul": 356.74,
+   "nwarn": 1,
+   "penalty": 0.0
+  },
+  "O2:core_radius:+": {
+   "feasible": false,
+   "chimul": 4109.47,
+   "nwarn": 1,
+   "penalty": 3748.44
+  },
+  "O2:core_radius:-": {
+   "feasible": false,
+   "chimul": 370.91,
+   "nwarn": 1,
+   "penalty": 0.0
+  },
+  "O3:v_disp:+": {
+   "feasible": true,
+   "chimul": 372.42,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O3:v_disp:-": {
+   "feasible": false,
+   "chimul": 7873.62,
+   "nwarn": 1,
+   "penalty": 7496.88
+  },
+  "O3:x_centre:+": {
+   "feasible": false,
+   "chimul": 356.39,
+   "nwarn": 1,
+   "penalty": 0.0
+  },
+  "O3:x_centre:-": {
+   "feasible": true,
+   "chimul": 344.6,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O3:y_centre:+": {
+   "feasible": true,
+   "chimul": 344.23,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O3:y_centre:-": {
+   "feasible": true,
+   "chimul": 356.78,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O3:core_radius:+": {
+   "feasible": false,
+   "chimul": 4109.47,
+   "nwarn": 0,
+   "penalty": 3748.44
+  },
+  "O3:core_radius:-": {
+   "feasible": true,
+   "chimul": 356.92,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O4:v_disp:+": {
+   "feasible": false,
+   "chimul": 355.56,
+   "nwarn": 2,
+   "penalty": 0.0
+  },
+  "O4:v_disp:-": {
+   "feasible": false,
+   "chimul": 7891.68,
+   "nwarn": 0,
+   "penalty": 7496.88
+  },
+  "O4:x_centre:+": {
+   "feasible": true,
+   "chimul": 357.6,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O4:x_centre:-": {
+   "feasible": false,
+   "chimul": 351.05,
+   "nwarn": 1,
+   "penalty": 0.0
+  },
+  "O4:y_centre:+": {
+   "feasible": true,
+   "chimul": 371.48,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O4:y_centre:-": {
+   "feasible": false,
+   "chimul": 4107.95,
+   "nwarn": 1,
+   "penalty": 3748.44
+  },
+  "O4:core_radius:+": {
+   "feasible": true,
+   "chimul": 344.29,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O4:core_radius:-": {
+   "feasible": true,
+   "chimul": 356.94,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O4:angle_pos:+": {
+   "feasible": false,
+   "chimul": 361.64,
+   "nwarn": 2,
+   "penalty": 0.0
+  },
+  "O4:angle_pos:-": {
+   "feasible": false,
+   "chimul": 4127.73,
+   "nwarn": 0,
+   "penalty": 3748.44
+  },
+  "O4:ellipticity:+": {
+   "feasible": true,
+   "chimul": 344.32,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O4:ellipticity:-": {
+   "feasible": true,
+   "chimul": 356.72,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O5:v_disp:+": {
+   "feasible": true,
+   "chimul": 356.62,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O5:v_disp:-": {
+   "feasible": true,
+   "chimul": 344.36,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O5:cut_radius:+": {
+   "feasible": true,
+   "chimul": 356.55,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O5:cut_radius:-": {
+   "feasible": true,
+   "chimul": 344.41,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:v_disp:+": {
+   "feasible": true,
+   "chimul": 356.64,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:v_disp:-": {
+   "feasible": true,
+   "chimul": 344.32,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:cut_radius:+": {
+   "feasible": true,
+   "chimul": 356.56,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:cut_radius:-": {
+   "feasible": true,
+   "chimul": 344.39,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:angle_pos:+": {
+   "feasible": true,
+   "chimul": 344.4,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:angle_pos:-": {
+   "feasible": true,
+   "chimul": 344.44,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:ellipticity:+": {
+   "feasible": true,
+   "chimul": 344.41,
+   "nwarn": 0,
+   "penalty": 0.0
+  },
+  "O6:ellipticity:-": {
+   "feasible": true,
+   "chimul": 344.42,
+   "nwarn": 0,
+   "penalty": 0.0
+  }
+ },
+ "n_single_feasible": 33,
+ "n_single": 56,
+ "shrinking_plus_offsets": {
+  "O1:ellipticity:+0.001": {
+   "feasible": true,
+   "chimul": 355.88,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.09
+   }
+  },
+  "O1:ellipticity:+0.0003": {
+   "feasible": true,
+   "chimul": 356.32,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.11
+   }
+  },
+  "O1:ellipticity:+0.0001": {
+   "feasible": true,
+   "chimul": 344.34,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  },
+  "O1:ellipticity:+3e-05": {
+   "feasible": true,
+   "chimul": 344.39,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  },
+  "O2:angle_pos:+0.001": {
+   "feasible": true,
+   "chimul": 370.4,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52c": 14.16,
+    "D52b": 12.15
+   }
+  },
+  "O2:angle_pos:+0.0003": {
+   "feasible": true,
+   "chimul": 356.33,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.13
+   }
+  },
+  "O2:angle_pos:+0.0001": {
+   "feasible": true,
+   "chimul": 356.46,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.13
+   }
+  },
+  "O2:angle_pos:+3e-05": {
+   "feasible": true,
+   "chimul": 356.52,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.12
+   }
+  },
+  "O3:v_disp:+0.001": {
+   "feasible": true,
+   "chimul": 372.42,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D115a": -1.78,
+    "D52c": 14.2,
+    "D52b": 12.4
+   }
+  },
+  "O3:v_disp:+0.0003": {
+   "feasible": false,
+   "chimul": 347.01,
+   "nwarn": 1,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D34": -10.02,
+    "D52b": 12.21
+   }
+  },
+  "O3:v_disp:+0.0001": {
+   "feasible": false,
+   "chimul": 356.53,
+   "nwarn": 1,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.15
+   }
+  },
+  "O3:v_disp:+3e-05": {
+   "feasible": true,
+   "chimul": 356.54,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.13
+   }
+  },
+  "O5:cut_radius:+0.001": {
+   "feasible": true,
+   "chimul": 356.55,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.13
+   }
+  },
+  "O5:cut_radius:+0.0003": {
+   "feasible": true,
+   "chimul": 344.41,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  },
+  "O5:cut_radius:+0.0001": {
+   "feasible": true,
+   "chimul": 344.41,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  },
+  "O5:cut_radius:+3e-05": {
+   "feasible": true,
+   "chimul": 344.42,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  },
+  "O6:v_disp:+0.001": {
+   "feasible": true,
+   "chimul": 356.64,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {
+    "D52b": 12.14
+   }
+  },
+  "O6:v_disp:+0.0003": {
+   "feasible": true,
+   "chimul": 344.44,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  },
+  "O6:v_disp:+0.0001": {
+   "feasible": true,
+   "chimul": 344.42,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  },
+  "O6:v_disp:+3e-05": {
+   "feasible": true,
+   "chimul": 344.43,
+   "nwarn": 0,
+   "penalty": 0.0,
+   "family_dchi2_gt1": {}
+  }
+ }
+}
