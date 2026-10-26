@@ -1,0 +1,87 @@
+{
+ "label": "derived from reach.json and sensitivity_dl1kpc.json (post hoc column)",
+ "kepler_lc_baseline": {
+  "S1_halo_like_220": {
+   "best_mass_msun": 5.623413251903491e-05,
+   "density_for_1": 0.6684,
+   "density_for_1_bootstrap": null,
+   "density_for_1_dl1kpc_post_hoc": 0.6959,
+   "baseline_best_over_this_best": 1.0,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 1.0
+  },
+  "S2_disk_like_30": {
+   "best_mass_msun": 5.623413251903491e-06,
+   "density_for_1": 1.958,
+   "density_for_1_bootstrap": null,
+   "density_for_1_dl1kpc_post_hoc": 2.026,
+   "baseline_best_over_this_best": 1.0,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 1.0
+  }
+ },
+ "kepler_sc": {
+  "S1_halo_like_220": {
+   "best_mass_msun": 1.7782794100389227e-06,
+   "density_for_1": 0.1511,
+   "density_for_1_bootstrap": null,
+   "density_for_1_dl1kpc_post_hoc": 0.8977,
+   "baseline_best_over_this_best": 4.424,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 0.7752
+  },
+  "S2_disk_like_30": {
+   "best_mass_msun": 1.7782794100389227e-06,
+   "density_for_1": 1.107,
+   "density_for_1_bootstrap": null,
+   "density_for_1_dl1kpc_post_hoc": 6.365,
+   "baseline_best_over_this_best": 1.769,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 0.3183
+  }
+ },
+ "tess_20": {
+  "S1_halo_like_220": {
+   "best_mass_msun": 3.162277660168379e-08,
+   "density_for_1": 0.05005,
+   "density_for_1_bootstrap": [
+    0.03492,
+    0.07133
+   ],
+   "density_for_1_dl1kpc_post_hoc": 0.1177,
+   "baseline_best_over_this_best": 13.35,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 5.912
+  },
+  "S2_disk_like_30": {
+   "best_mass_msun": 1.7782794100389228e-08,
+   "density_for_1": 0.3579,
+   "density_for_1_bootstrap": [
+    0.2628,
+    0.5485
+   ],
+   "density_for_1_dl1kpc_post_hoc": 0.7616,
+   "baseline_best_over_this_best": 5.471,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 2.66
+  }
+ },
+ "tess_120": {
+  "S1_halo_like_220": {
+   "best_mass_msun": 5.623413251903491e-06,
+   "density_for_1": 0.08734,
+   "density_for_1_bootstrap": [
+    0.07605,
+    0.1
+   ],
+   "density_for_1_dl1kpc_post_hoc": 0.1155,
+   "baseline_best_over_this_best": 7.653,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 6.025
+  },
+  "S2_disk_like_30": {
+   "best_mass_msun": 3.162277660168379e-06,
+   "density_for_1": 0.6146,
+   "density_for_1_bootstrap": [
+    0.5456,
+    0.7067
+   ],
+   "density_for_1_dl1kpc_post_hoc": 0.8299,
+   "baseline_best_over_this_best": 3.186,
+   "baseline_best_over_this_best_dl1kpc_post_hoc": 2.441
+  }
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "label": "resources of this round",
+ "ledger_bytes": 19938373,
+ "cap_bytes": 150000000,
+ "start_utc": "2026-10-26T11:43Z",
+ "plan_commit": "a985360",
+ "max_cores": 2,
+ "first_inventory_run": "stopped by hand when TIC lookups of every 20 s star proved too slow; its bytes are in the ledger",
+ "review_fix": "tess_fix re-query (multi-sector records excluded), TIC values reused"
+}
