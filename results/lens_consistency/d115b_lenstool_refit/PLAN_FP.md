@@ -1,4 +1,4 @@
-# D115b stage F-P: local re-fit on the source-plane χ² plus an image-plane feasibility penalty (plan, frozen 2026-10-26 19:35Z, before any F-P run)
+# D115b stage F-P: local re-fit on the source-plane χ² plus an image-plane feasibility penalty (plan, frozen 2026-10-26 19:11Z, before any F-P run)
 
 ## Question and why this stage
 Stage F asks whether lowering member 8515's σ, which removes the D115b extra image, can be absorbed by re-fitting

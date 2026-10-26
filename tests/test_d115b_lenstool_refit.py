@@ -439,3 +439,39 @@ def test_rule_fs():
     assert m.rule_fs({0.8: (True, 235.0), 0.75: (True, 240.0)}, 228.0) == "costly"
     assert m.rule_fs({0.8: (False, 229.0), 0.75: (True, 240.0)}, 228.0) == "undetermined"
     assert m.rule_fs({0.8: (True, None), 0.75: (True, 240.0)}, 228.0) == "undetermined"
+
+
+def test_fp_lost_counts_warnings_and_penalty_units():
+    head = "chimul 344.42\n"
+    row = "1 D14a.1 1 1 2.5 0 0 0 0 0 0.1 0 {w}\n"
+    assert m.fp_lost(head + row.format(w=0)) == 0
+    assert m.fp_lost(head + row.format(w=2)) == 2
+    assert m.fp_lost(head + row.format(w=1) + "chipenalty 7496.88\n") == 3
+
+
+def test_fp_objective():
+    assert m.fp_objective(200.0, 0) == 200.0
+    assert m.fp_objective(200.0, 2) == 400.0
+    assert m.fp_objective(None, 0) == m.F2L_INFEASIBLE
+    assert m.fp_objective(200.0, None) == m.F2L_INFEASIBLE
+
+
+def test_gate_vfp():
+    assert m.gate_vfp(400.0, None, 228.0, 0, 0, False, False) == "undetermined"
+    assert m.gate_vfp(None, 228.0, 229.0, 0, 0, False, False) == "uninformative"
+    assert m.gate_vfp(230.0, 228.0, 229.0, 0, 0, False, False) == "uninformative"
+    assert m.gate_vfp(400.0, 228.0, 230.2, 0, 0, False, False) == "pass"
+    assert m.gate_vfp(400.0, 228.0, 230.2, 0, 1, False, False) == "fail"
+    assert m.gate_vfp(400.0, 228.0, 230.2, 1, 0, True, False) == "undetermined"
+    assert m.gate_vfp(400.0, 228.0, 231.0, 0, 0, False, False) == "fail"
+    assert m.gate_vfp(400.0, 228.0, 231.0, 0, 0, False, True) == "undetermined"
+    assert m.gate_vfp(1000.0, 500.0, 504.9, 0, 0, False, False) == "pass"  # 1 % = 5 > 2
+
+
+def test_rule_fp():
+    assert m.rule_fp({0.8: (0, False, 233.0), 0.75: (2, None, 300.0)}, 228.0) == "cheap"
+    assert m.rule_fp({0.8: (0, True, 229.0), 0.75: (0, True, 240.0)}, 228.0) == "persists"
+    assert m.rule_fp({0.8: (0, False, 235.0), 0.75: (0, False, 240.0)}, 228.0) == "costly"
+    assert m.rule_fp({0.8: (0, True, 229.0), 0.75: (0, False, 240.0)}, 228.0) == "undetermined"
+    assert m.rule_fp({0.8: (1, False, 229.0), 0.75: (0, False, 240.0)}, 228.0) == "undetermined"
+    assert m.rule_fp({0.8: (0, False, None), 0.75: (0, False, 240.0)}, 228.0) == "undetermined"
