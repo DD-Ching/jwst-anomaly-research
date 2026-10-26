@@ -87,6 +87,11 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
   - The edge test stops short-period EBs only through the 1-d span floor (P ≲ 1.1 d, estimated). Longer-period
     EBs rest on the one-off and shoulder tests.
   - Nothing is queued; the owner decides.
+- **W3 / Kepler effective search volume 2026-10-26** (`results/w3_kepler/effsearch/RESULT.md`, D-107 addendum 3):
+  - The 1,732 observing star-years of #542 are worth 1,249–1,620 effective star-years per W3 cell.
+  - Product-level per-cell limits are 1.9–2.5 × 10⁻³ per star-year (conditional).
+  - Most losses are test windows that reach a gap or quarter boundary.
+  - Nothing is queued; any expansion is the owner's call.
 - **W3 / Kepler hard tests 2026-10-25** (`results/w3_kepler/hard/RESULT.md`, D-107 addendum):
   - The local shoulder rule replaces the #500 shoulder test.
   - Validation passed; the 200-star search has 0 flags.
