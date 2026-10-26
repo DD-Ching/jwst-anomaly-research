@@ -25,3 +25,16 @@ Published tables only (arXiv e-prints, sha256 recorded). No images are read in t
 
 ## What would change the plan
 F: vet (microlensing amplitude, dust, model spread); N: record and close; U: record the missing input.
+
+## Addendum A (2026-10-26, written after reading the abstracts and Pascale et al. 2025 Table 1, before any computation)
+Inputs fixed: Pascale et al. 2025 (arXiv:2403.18902v2) Table 1, unblinded rows (models 1–7, photometry). The
+photometric μ of Pierel et al. 2024 are standard-candle magnifications under a fiducial cosmology, with host dust
+fitted (A_V 1.21 ± 0.11; Pierel et al. Table 3), so they are the reference.
+1. Offset O_m = mean over images of 2.5 log10(μ_m,i / μ_phot,i) (mag; derived). Compare with Agrawal et al.
+   (arXiv:2510.07637v2) per-model Δμ 0.62–2.39 mag (SALT, Pantheon+) and pooled ≈ 1.07 mag. Rule (ASSUMPTION): the
+   table-level offset "reproduces" the paper if |O_m − Δμ_m| ≤ 0.3 mag for the pooled value; otherwise
+   "method-dependent" (the > 1 mag figure depends on that paper's light-curve re-fit, not on the tabulated μ).
+2. Mass-sheet test (derived): λ_μ,m = sqrt(exp(mean_i ln(μ_m,i / μ_phot,i))), λ_t,m = mean of Δt_obs / Δt_m over
+   ab and cb (fiducial H0 70). One mass sheet explains both iff H0_MST,m = 70 λ_μ,m / λ_t,m lies in 64–80 km/s/Mpc
+   (ASSUMPTION: Planck to SH0ES ± ~3σ). Report per model; model 6 (WSLAP+, Δt_cb sign opposite) is reported but
+   not interpreted.
