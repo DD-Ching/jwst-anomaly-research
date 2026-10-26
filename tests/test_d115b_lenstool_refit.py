@@ -162,3 +162,68 @@ def test_family_rows():
     assert m._family_rows(CHIRES, "A") == (0.02, 0.02)
     with pytest.raises(ValueError):
         m._family_rows(CHIRES, "Z")
+
+
+def test_read_penalty_and_images():
+    assert m.read_penalty(CHIRES) == 0.0
+    assert m.read_penalty(CHIRES + "chipenalty 3748.44 355.70\n") == pytest.approx(3748.44)
+    log = "x\nWARNING: chi2 penalty for image D14a.2 = 3748.443149\nWARNING: other\n"
+    assert m.penalty_images(log) == ["D14a.2"]
+    assert m.PENALTY == pytest.approx(3748.44, abs=0.005)
+
+
+def test_rule_p():
+    P = m.PENALTY
+    ok = {
+        1.0: {"penalty": 0.0, "penalty_images": [], "D14a_row": 2.01, "D14a_images": 2.0},
+        0.9: {
+            "penalty": round(P, 2),
+            "penalty_images": ["D14a.1"],
+            "D14a_row": 3759.12,
+            "D14a_images": 10.68,
+        },
+    }
+    assert m.rule_p(ok) == ("confirmed", [])
+    # a penalty that is not a multiple of the unit
+    bad = {**ok, 0.8: {**ok[0.9], "penalty": 3000.0}}
+    assert m.rule_p(bad)[0] == "rejected"
+    # the D14a excess without a D14a penalty warning
+    bad = {**ok, 0.8: {**ok[0.9], "penalty_images": ["D52b.1"]}}
+    out, why = m.rule_p(bad)
+    assert out == "rejected" and why[0].startswith("f 0.80")
+    # two D14a penalties need twice the excess
+    two = {
+        0.9: {
+            "penalty": round(2 * P, 2),
+            "penalty_images": ["D14a.1", "D14a.3"],
+            "D14a_row": 10.68 + 2 * P,
+            "D14a_images": 10.68,
+        }
+    }
+    assert m.rule_p(two)[0] == "confirmed"
+
+
+def test_posthoc_d14a(tmp_path, monkeypatch):
+    monkeypatch.setattr(m, "F_GRID", (1.0,))
+    d = tmp_path / "p1.00"
+    d.mkdir()
+    dec = -24.0
+    dra = 1.0 / 3600.0 / np.cos(np.radians(dec))  # D14a.2 1" east of D14a.1 -> x = -1
+    (d / "arcs.dat").write_text(
+        f"#REFERENCE 0\nD14a.1 64.0 {dec} 0.3 0.3 0 2.09 25\n"
+        f"D14a.2 {64.0 + dra} {dec} 0.3 0.3 0 2.09 25\n"
+    )
+    # chires prints -dx and dy; D14a.1 predicted at (-1, 0.5), D14a.2 at (-1, 0.5)
+    (d / "chires.dat").write_text(
+        "29 D14a.1 2.095   1   1.0 0 0 0 0.1 1.1  1.00  0.50  0\n"
+        "29 D14a.2 2.095   1   1.0 0 0 0 0.1 0.5  0.00  0.50  0\n"
+    )
+    r = m.posthoc_d14a(tmp_path)["per_f"]["1.00"]
+    assert r["pred_D14a.1_xy_arcsec"] == pytest.approx([-1.0, 0.5])
+    assert r["pred_separation_arcsec"] == pytest.approx(0.0, abs=1e-3)
+    # an image row without offsets gives no separation, not an error
+    (tmp_path / "p1.00" / "chires.dat").write_text(
+        "29 D14a.1 2.095   1   1.0 0 0 0 0.1 1.1  N/A  N/A  0\n"
+    )
+    r = m.posthoc_d14a(tmp_path)["per_f"]["1.00"]
+    assert r["pred_D14a.1_xy_arcsec"] is None and r["pred_separation_arcsec"] is None

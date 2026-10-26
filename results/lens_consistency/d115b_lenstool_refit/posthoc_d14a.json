@@ -1,0 +1,71 @@
+{
+ "label": "post hoc (after rule P); frame centred on observed D14a.1, x = -dRA cos(dec), y = dDec; offsets are chires' 2-decimal values",
+ "per_f": {
+  "1.00": {
+   "pred_D14a.1_xy_arcsec": [
+    0.02,
+    -0.27
+   ],
+   "pred_D14a.2_xy_arcsec": [
+    -0.876,
+    -1.154
+   ],
+   "pred_separation_arcsec": 1.259
+  },
+  "0.90": {
+   "pred_D14a.1_xy_arcsec": [
+    -0.88,
+    -1.16
+   ],
+   "pred_D14a.2_xy_arcsec": [
+    -0.876,
+    -1.164
+   ],
+   "pred_separation_arcsec": 0.006
+  },
+  "0.85": {
+   "pred_D14a.1_xy_arcsec": [
+    -0.88,
+    -1.17
+   ],
+   "pred_D14a.2_xy_arcsec": [
+    -0.886,
+    -1.174
+   ],
+   "pred_separation_arcsec": 0.007
+  },
+  "0.80": {
+   "pred_D14a.1_xy_arcsec": [
+    -0.89,
+    -1.17
+   ],
+   "pred_D14a.2_xy_arcsec": [
+    -0.886,
+    -1.174
+   ],
+   "pred_separation_arcsec": 0.006
+  },
+  "0.75": {
+   "pred_D14a.1_xy_arcsec": [
+    -0.89,
+    -1.18
+   ],
+   "pred_D14a.2_xy_arcsec": [
+    -0.896,
+    -1.174
+   ],
+   "pred_separation_arcsec": 0.008
+  },
+  "0.70": {
+   "pred_D14a.1_xy_arcsec": [
+    -0.9,
+    -1.18
+   ],
+   "pred_D14a.2_xy_arcsec": [
+    -0.896,
+    -1.184
+   ],
+   "pred_separation_arcsec": 0.006
+  }
+ }
+}
