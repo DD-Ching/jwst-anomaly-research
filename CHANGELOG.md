@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: Lenstool 8.15.5 runs in the cloud; it matches the port on CANUCS MACS0416 and predicts the D115b image too (D-109)
+- **Result** (`results/lens_consistency/lenstool_cloud/RESULT.md`; plan frozen before the run, gate R amended
+  before the port comparison): conda-forge `lenstool` installs with micromamba into the scratchpad; `lenstool best.par`
+  runs the pinned model unchanged. Gate R passes: 912 / 912 Lenstool-predicted images within 0.1″ of the port
+  (median 0.00093″, max 0.033″); both codes predict the D115b extra image. The port finds 67 images Lenstool's
+  `image.all` lacks (not diagnosed).
+- **Deviation:** gate R re-stated after a look at `image.all` (per-image like-for-like reference); the first tool run
+  failed at its output path and was re-run.
+- **Handoff:** the D115b re-fit (8515 σ free) is no longer owner-machine-only: next, a frozen plan for a restricted
+  `runmode inverse`, validated by a no-free-parameter run against `best.par`. #374: no weekly network run yet today
+  at 09:26Z (the scheduled runs so far started 2026-10-12 15:29Z and 2026-10-19 13:20Z).
+
 ## 2026-10-26: W3 / Kepler fixed-rule search of new stars: 1,500 of 2,000 read, 0 reach the 1-mag pre-screen, 0 survivors; 3,710–4,855 effective star-years per cell (D-107 addendum 4)
 - **Result** (`results/w3_kepler/s2000/RESULT.md`; list, batches, seeds, vetting order and stop rules frozen before
   any flux):

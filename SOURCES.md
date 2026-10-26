@@ -1992,3 +1992,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - Cousins, R. D. & Highland, V. L. 1992, "Incorporating systematic uncertainties into an upper limit", Nucl. Instrum.
   Meth. A 320, 331–335 (cited as such in Conrad et al. 2003, arXiv:hep-ex/0202013): averaging a zero-event limit over
   the sensitivity's uncertainty, the idea behind `w3_kepler_2000.joint_limit` (which uses a flat rate prior instead).
+
+## Lenstool in the cloud (accessed 2026-10-26; `results/lens_consistency/lenstool_cloud/`)
+- **Lenstool 8.15.5**, conda-forge package `lenstool` (build `py314h03d985e_1`; versions in this section not stored in a results file): https://anaconda.org/conda-forge/lenstool;
+  project page https://projets.lam.fr/projects/lenstool (Jullo et al. 2007, NJPh 9, 447, doi:10.1088/1367-2630/9/12/447).
+- **micromamba 2.9.0**: https://micro.mamba.pm/api/micromamba/linux-64/latest.
+- **Model:** the pinned CANUCS DR1 MACS0416 Lenstool files (sha256 in `lensmodel.MACS0416_CANUCS`, D-044).

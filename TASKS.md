@@ -438,7 +438,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        ~~MACS0416 with this reference + rule~~ done 2026-10-22 (#458, `results/lens_consistency/macs0416_canucsref/RESULT.md`):
        gates K and C2 pass, one flag D115b, vetted `inconclusive` (member 8515 makes the extra images; removing them costs
        Δχ² +12.6 > 6 with only D115a / D115b sources refitted, `d115_refit/result.json`). Next: a re-fit with 8515's σ free
-       (Lenstool, owner machine) or a σ × 0.75–0.85 scan with fitted sources; ~~then Abell 370 (gate K first)~~ done 2026-10-22 (D-034 addendum g,
+       (Lenstool; runs in the cloud since 2026-10-26, D-109, `results/lens_consistency/lenstool_cloud/RESULT.md`: gate R passes; the σ scan is done, `sigma_scan/`): frozen plan first, validate a no-free-parameter run against `best.par`; ~~then Abell 370 (gate K first)~~ done 2026-10-22 (D-034 addendum g,
        `results/lens_consistency/abell370_canucsref/RESULT.md`: gate K fails, rms 2.34″; no prediction read; line stopped; ~~next: pin BUFFALO Niemiec+2023 model A maps and run gate K~~ done 2026-10-22 (D-034 addendum h,
       `results/lens_consistency/abell370_buffalo/RESULT.md`: gate L passes; K1 on Lagattuta+2019 fails, rms 7.70″; K2 on
       the model's own gold list passes, rms 0.910″); next: pin the CANUCS DR1 Abell 370 catalogue and mosaic and run the
