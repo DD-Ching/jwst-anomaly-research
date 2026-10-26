@@ -514,6 +514,59 @@ EB_STARS = (
     10334122,
 )  # the 500 stars in expand/inputs/kirk2016_catalog.csv
 
+EXAMPLE_STAGES = ("recovered", "edge:slow", "edge:insufficient", "shoulder:insufficient")
+EXAMPLE_STAGES += ("shoulder:no", "oneoff", "not_flagged", "gap")
+
+
+def stage_examples(_a) -> None:
+    """Look-at figure (not part of the measurement): for each stage in EXAMPLE_STAGES, the first
+    event in file order (rank, cell, rep) is injected again with its own seed and plotted."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    ev = json.loads(gzip.open(OUT / "events.json.gz", "rt").read())
+    cols = {c: i for i, c in enumerate(ev["columns"])}
+    pick = {}
+    for r in ev["rows"]:
+        key = r[cols["stage"]] + (f":{r[cols['sub']]}" if r[cols["sub"]] else "")
+        if key in EXAMPLE_STAGES and key not in pick:
+            pick[key] = r
+    den, num = counts(stars())
+    _CC["den"], _CC["num"] = den, num
+    fig, axes = plt.subplots(len(pick), 1, figsize=(9, 2.2 * len(pick)))
+    meta = []
+    for ax, key in zip(np.atleast_1d(axes), [k for k in EXAMPLE_STAGES if k in pick], strict=True):
+        r = pick[key]
+        rank, kepid, c, rep = (r[cols[x]] for x in ("rank", "kepid", "cell", "rep"))
+        rho, blend, te = wk.CELLS[c]
+        st = wk.load_star(kepid)
+        lo, hi = window(st)
+        rng = np.random.default_rng([SEED, rank, c, rep])
+        t0, u0 = rng.uniform(lo, hi), rng.uniform(0, 2)
+        f = wk.w3_flux_avg(st["TIME"], t0, te, u0, rho, blend)
+        sap, err = wk.inject_sap(st["SAP_FLUX"], st["SAP_FLUX_ERR"], f, rng)
+        rel, _ = wk.normalise(st, sap, err, wk.good_mask(st))
+        h = te * np.sqrt(4 - u0**2)
+        w = 3 * max(h, 1.0)
+        m = np.isfinite(rel) & (np.abs(st["TIME"] - t0) <= w)
+        ax.plot(st["TIME"][m] - t0, rel[m], ".", ms=2, color="k")
+        ax.axvspan(-h, h, color="tab:blue", alpha=0.15)
+        ax.axhline(DIM_REL, color="tab:red", lw=0.6)
+        ax.set_xlim(-w, w)
+        ax.set_title(
+            f"{key}: KIC {kepid}, rho {rho}, blend {blend}, tE {te} d, u0 {u0:.2f}, rep {rep}",
+            fontsize=8,
+        )
+        ax.tick_params(labelsize=7)
+        meta.append({"stage": key, "rank": rank, "kepid": kepid, "cell": c, "rep": rep})
+    np.atleast_1d(axes)[-1].set_xlabel("t - t0 (d); shaded: umbra |t - t0| < h", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(OUT / "examples.png", dpi=90)
+    out = {"label": "simulated injections on observed light curves (look-at figure)", "rows": meta}
+    (OUT / "examples.json").write_text(json.dumps(out, indent=1) + "\n")
+
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
@@ -529,6 +582,8 @@ def main(argv=None) -> int:
     p.set_defaults(fn=stage_inject)
     p = sub.add_parser("summarise")
     p.set_defaults(fn=stage_summarise)
+    p = sub.add_parser("examples")
+    p.set_defaults(fn=stage_examples)
     a = ap.parse_args(argv)
     configure()
     a.fn(a)
