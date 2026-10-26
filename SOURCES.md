@@ -366,6 +366,10 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
     3cfab090…22266e33ba): Table "tab:snencore", blind model μ and Δt.
   - Pierel et al., arXiv:2509.12301 (sha256 3085083c…26c9e922ff): Tables "tab:final_delay_mag", "tab:systematics",
     "tab:fitting", "tab:h0" and Sect. "Magnifications".
+  - Suyu et al. (same e-print) Table "tab:snrequiem": blind model delays of SN Requiem
+    (`results/lens_consistency/requiem_dt/`).
+  - Rodney et al. 2021, Nature Astronomy 5, 1118, arXiv:2106.08935v2 (sha256 eb10e253…d2ec01c1): Table 1 delays and
+    positions.
 - Salmon et al. 2018, SPT0615-JD z ~ 10 arc, arXiv:1801.03103 (abstract read 2026-10-26: RELICS-model μ ~ 4–7,
   predicted counter-images).
 - RELICS MACS J0308.9+2645 lens models (`glafic/v2`, `zitrin-ltm-gauss` v1; maps at D_LS/D_S = 1) and BPZ catalogue

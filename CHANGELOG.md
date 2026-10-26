@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: SN Requiem measured delays vs the seven blind MACS J0138 lens models: no flag (D-034 addendum bp)
+- **Result** (`results/lens_consistency/requiem_dt/RESULT.md`; plan frozen before the tables were read): outcome N.
+  H0-free ratio Δt_2c,2a / Δt_2b,2a measured 1.148 (σ_ln 0.146) vs models 1.12–2.37 (z +0.02 to −1.97);
+  Δt_2b,2a is longer than every model at H0 70 (z −0.65 to −2.86), below the flag.
+- **Deviation:** Rodney et al. give delays relative to SN1 (= 2b); they were combined by independent draws (no
+  covariance published). Their colour-only ages are figure-only and not used.
+- **Handoff:** the MACS J0138 SN line waits on the Encore template photometry and the 1d / 2d reappearances.
+  #374 waits for today's 06:17Z weekly run.
 ## 2026-10-26: SN Encore measured magnifications vs the seven blind MACS J0138 lens models: no flag, low power (D-034 addendum bo)
 - **Result** (`results/lens_consistency/encore_mu/RESULT.md`; plan frozen before the tables were read): outcome N.
   Image z −1.75 to +1.36, ratio |μ_1b/μ_1a| observed 1.486 vs models 0.60–1.76 (z −0.29 to +1.33). The errors are

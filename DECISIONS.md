@@ -2821,6 +2821,14 @@ candidate. Alternatives rejected: pooling H0pe and Encore offsets (Encore's erro
 Revisit if: template-subtracted SN Encore photometry or the image 1d reappearance is published (rerun
 `scripts/encore_mu_check.py`).
 
+**Addendum 2026-10-26bp (SN Requiem measured delays vs the same seven blind models).**
+`results/lens_consistency/requiem_dt/RESULT.md`; Rodney et al. 2021 Table 1 delays (with their own magnification
+prior) vs Suyu et al. Table "tab:snrequiem". Frozen outcome N: H0-free ratio Δt_2c,2a / Δt_2b,2a measured 1.148
+(σ_ln 0.146) vs models 1.12–2.37, z +0.02 to −1.97; Δt_2b,2a longer than every model (z −0.65 to −2.86).
+Decision: no delay anomaly; the one-sided pattern stays below the flag and rests on single-epoch photometry. Not a
+candidate. Alternatives rejected: reading Rodney et al.'s colour-only ages from their figure (T5). Revisit if: image
+2d reappears or the 2016 delays are re-measured with a covariance (rerun `scripts/requiem_dt_check.py`).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
