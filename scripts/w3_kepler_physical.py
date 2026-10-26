@@ -78,7 +78,7 @@ def stage_stellar(_a) -> None:
         )
         b = nl.fetch(TAP + "?query=" + urllib.parse.quote(q) + "&format=csv", lg, 200_000)
         rows += list(csv.DictReader(io.StringIO(b.decode())))
-    missing = set(kids) - {int(r["kepid"]) for r in rows}
+    missing = set(kids) - {int(r["kepid"]) for r in rows if (r.get("kepid") or "").isdigit()}
     if missing:  # a TAP error page or skipped kepids must not pass as a complete table
         raise SystemExit(f"{len(missing)} searched stars missing from the DR25 response")
     rows.sort(key=lambda r: int(r["kepid"]))
