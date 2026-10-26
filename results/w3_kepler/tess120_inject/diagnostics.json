@@ -1,0 +1,103 @@
+{
+ "label": "post hoc diagnostics of the simulation (not frozen in PLAN.md)",
+ "v220_M5.6e-6": {
+  "lost_L1b_to_L2": 199,
+  "of_which_dark_run_found": 87,
+  "by_rho": {
+   "rho_0-0.3": {
+    "ideal": 227,
+    "L1b": 177,
+    "L2": 109
+   },
+   "rho_0.3-0.6": {
+    "ideal": 244,
+    "L1b": 182,
+    "L2": 111
+   },
+   "rho_0.6-0.9": {
+    "ideal": 181,
+    "L1b": 128,
+    "L2": 91
+   },
+   "rho_0.9-2": {
+    "ideal": 180,
+    "L1b": 107,
+    "L2": 86
+   }
+  }
+ },
+ "v220_M1e-7": {
+  "lost_L1b_to_L2": 10,
+  "of_which_dark_run_found": 9,
+  "by_rho": {
+   "rho_0.3-0.6": {
+    "ideal": 14,
+    "L1b": 9,
+    "L2": 3
+   },
+   "rho_0.6-0.9": {
+    "ideal": 10,
+    "L1b": 4,
+    "L2": 0
+   },
+   "rho_0.9-2": {
+    "ideal": 2,
+    "L1b": 0,
+    "L2": 0
+   }
+  }
+ },
+ "v30_M3.2e-6": {
+  "lost_L1b_to_L2": 117,
+  "of_which_dark_run_found": 31,
+  "by_rho": {
+   "rho_0-0.3": {
+    "ideal": 165,
+    "L1b": 113,
+    "L2": 80
+   },
+   "rho_0.3-0.6": {
+    "ideal": 175,
+    "L1b": 113,
+    "L2": 68
+   },
+   "rho_0.6-0.9": {
+    "ideal": 152,
+    "L1b": 101,
+    "L2": 82
+   },
+   "rho_0.9-2": {
+    "ideal": 155,
+    "L1b": 85,
+    "L2": 67
+   }
+  }
+ },
+ "v30_M1e-8": {
+  "lost_L1b_to_L2": 2,
+  "of_which_dark_run_found": 2,
+  "by_rho": {
+   "rho_0.6-0.9": {
+    "ideal": 3,
+    "L1b": 1,
+    "L2": 0
+   },
+   "rho_0.9-2": {
+    "ideal": 1,
+    "L1b": 1,
+    "L2": 0
+   }
+  }
+ },
+ "good_cadence_share_p5_50_95": [
+  0.656,
+  0.899,
+  0.999
+ ],
+ "sample_per_draw": {
+  "D_pc_median": 1265.1,
+  "R_rsun_median": 10.178,
+  "share_R_gt_2": 0.685,
+  "stars": 149
+ }
+}

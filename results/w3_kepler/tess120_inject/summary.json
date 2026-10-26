@@ -1,0 +1,350 @@
+{
+ "label": "simulation (injections) into observed TESS 120 s PDCSAP curves; product level",
+ "plan": "results/w3_kepler/tess120_inject/PLAN.md",
+ "star_sectors": 184,
+ "draws": 200,
+ "background": {
+  "D_runs_total": 0,
+  "DS_flags_total": 0,
+  "star_sectors_with_DS_flag": 0
+ },
+ "scenarios": {
+  "v220_M5.6e-6": {
+   "events": 6000,
+   "ideal": 832,
+   "L1a": 708,
+   "L1b": 594,
+   "L2": 397,
+   "L2_not_ideal": 1,
+   "bg_overlap_in_ideal": 0,
+   "retention": 0.4772,
+   "retention_p5_p95": [
+    0.4075,
+    0.5499
+   ],
+   "verdict": "interval crosses one half (not a robust pass)",
+   "ideal_share_of_events": 0.1387,
+   "kept_per_step": {
+    "L1a/ideal": 0.851,
+    "L1b/L1a": 0.839,
+    "L2/L1b": 0.6684
+   },
+   "by_tE_cadences": {
+    "tE_cad_0-2.5": {
+     "events": 20,
+     "ideal": 1,
+     "L1a": 1,
+     "L1b": 1,
+     "L2": 1,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": 1.0
+    },
+    "tE_cad_2.5-5": {
+     "events": 181,
+     "ideal": 44,
+     "L1a": 36,
+     "L1b": 29,
+     "L2": 28,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.6364
+    },
+    "tE_cad_5-15": {
+     "events": 2231,
+     "ideal": 315,
+     "L1a": 253,
+     "L1b": 210,
+     "L2": 191,
+     "L2_not_ideal": 1,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.6063
+    },
+    "tE_cad_15-50": {
+     "events": 3137,
+     "ideal": 472,
+     "L1a": 418,
+     "L1b": 354,
+     "L2": 177,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.375
+    },
+    "tE_cad_50-inf": {
+     "events": 431,
+     "ideal": 0,
+     "L1a": 0,
+     "L1b": 0,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": null
+    }
+   },
+   "ideal_share_expected_from_561": 0.1279,
+   "reach_561": {
+    "mass_msun": 5.623e-06,
+    "N1_per_density_ideal": 11.45,
+    "N1_per_density_x_retention": 5.464,
+    "N1_x_retention_p5_p95": [
+     4.666,
+     6.296
+    ],
+    "density_for_1_ideal": 0.08734,
+    "density_for_1_x_retention": 0.183,
+    "baseline_N1_per_density": 0.001979,
+    "density_for_1_x_retention_p5_p95": [
+     0.1588,
+     0.2143
+    ],
+    "ratio_to_baseline_same_mass_x_retention": 2761.0
+   }
+  },
+  "v220_M1e-7": {
+   "events": 6000,
+   "ideal": 26,
+   "L1a": 14,
+   "L1b": 13,
+   "L2": 3,
+   "L2_not_ideal": 1,
+   "bg_overlap_in_ideal": 0,
+   "retention": 0.1154,
+   "retention_p5_p95": [
+    0.0,
+    0.3
+   ],
+   "verdict": "insufficient",
+   "ideal_share_of_events": 0.004333,
+   "kept_per_step": {
+    "L1a/ideal": 0.5385,
+    "L1b/L1a": 0.9286,
+    "L2/L1b": 0.2308
+   },
+   "by_tE_cadences": {
+    "tE_cad_0-2.5": {
+     "events": 3252,
+     "ideal": 4,
+     "L1a": 4,
+     "L1b": 4,
+     "L2": 3,
+     "L2_not_ideal": 1,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.75
+    },
+    "tE_cad_2.5-5": {
+     "events": 2117,
+     "ideal": 22,
+     "L1a": 10,
+     "L1b": 9,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.0
+    },
+    "tE_cad_5-15": {
+     "events": 631,
+     "ideal": 0,
+     "L1a": 0,
+     "L1b": 0,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": null
+    }
+   },
+   "ideal_share_expected_from_561": 0.00492,
+   "reach_561": {
+    "mass_msun": 1e-07,
+    "N1_per_density_ideal": 3.303,
+    "N1_per_density_x_retention": 0.3811,
+    "N1_x_retention_p5_p95": [
+     0.0,
+     0.9909
+    ],
+    "density_for_1_ideal": 0.3028,
+    "density_for_1_x_retention": 2.624,
+    "baseline_N1_per_density": 0.0,
+    "density_for_1_x_retention_p5_p95": [
+     1.009,
+     null
+    ],
+    "ratio_to_baseline_same_mass_x_retention": null
+   }
+  },
+  "v30_M3.2e-6": {
+   "events": 6000,
+   "ideal": 647,
+   "L1a": 536,
+   "L1b": 412,
+   "L2": 297,
+   "L2_not_ideal": 5,
+   "bg_overlap_in_ideal": 0,
+   "retention": 0.459,
+   "retention_p5_p95": [
+    0.3762,
+    0.5407
+   ],
+   "verdict": "interval crosses one half (not a robust pass)",
+   "ideal_share_of_events": 0.1078,
+   "kept_per_step": {
+    "L1a/ideal": 0.8284,
+    "L1b/L1a": 0.7687,
+    "L2/L1b": 0.7209
+   },
+   "by_tE_cadences": {
+    "tE_cad_0-2.5": {
+     "events": 2,
+     "ideal": 0,
+     "L1a": 0,
+     "L1b": 0,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": null
+    },
+    "tE_cad_5-15": {
+     "events": 24,
+     "ideal": 1,
+     "L1a": 1,
+     "L1b": 1,
+     "L2": 1,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": 1.0
+    },
+    "tE_cad_15-50": {
+     "events": 942,
+     "ideal": 138,
+     "L1a": 110,
+     "L1b": 87,
+     "L2": 82,
+     "L2_not_ideal": 1,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.5942
+    },
+    "tE_cad_50-inf": {
+     "events": 5032,
+     "ideal": 508,
+     "L1a": 425,
+     "L1b": 324,
+     "L2": 214,
+     "L2_not_ideal": 4,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.4213
+    }
+   },
+   "ideal_share_expected_from_561": 0.09991,
+   "reach_561": {
+    "mass_msun": 3.162e-06,
+    "N1_per_density_ideal": 1.627,
+    "N1_per_density_x_retention": 0.7469,
+    "N1_x_retention_p5_p95": [
+     0.6121,
+     0.8797
+    ],
+    "density_for_1_ideal": 0.6146,
+    "density_for_1_x_retention": 1.339,
+    "baseline_N1_per_density": 0.3902,
+    "density_for_1_x_retention_p5_p95": [
+     1.137,
+     1.634
+    ],
+    "ratio_to_baseline_same_mass_x_retention": 1.914
+   }
+  },
+  "v30_M1e-8": {
+   "events": 6000,
+   "ideal": 4,
+   "L1a": 2,
+   "L1b": 2,
+   "L2": 0,
+   "L2_not_ideal": 0,
+   "bg_overlap_in_ideal": 0,
+   "retention": 0.0,
+   "retention_p5_p95": [
+    0.0,
+    0.0
+   ],
+   "verdict": "insufficient",
+   "ideal_share_of_events": 0.0006667,
+   "kept_per_step": {
+    "L1a/ideal": 0.5,
+    "L1b/L1a": 1.0,
+    "L2/L1b": 0.0
+   },
+   "by_tE_cadences": {
+    "tE_cad_0-2.5": {
+     "events": 700,
+     "ideal": 0,
+     "L1a": 0,
+     "L1b": 0,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": null
+    },
+    "tE_cad_2.5-5": {
+     "events": 1983,
+     "ideal": 4,
+     "L1a": 2,
+     "L1b": 2,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": 0.0
+    },
+    "tE_cad_5-15": {
+     "events": 2858,
+     "ideal": 0,
+     "L1a": 0,
+     "L1b": 0,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": null
+    },
+    "tE_cad_15-50": {
+     "events": 459,
+     "ideal": 0,
+     "L1a": 0,
+     "L1b": 0,
+     "L2": 0,
+     "L2_not_ideal": 0,
+     "bg_overlap_in_ideal": 0,
+     "retention": null
+    }
+   },
+   "ideal_share_expected_from_561": 0.001935,
+   "reach_561": {
+    "mass_msun": 1e-08,
+    "N1_per_density_ideal": 0.5603,
+    "N1_per_density_x_retention": 0.0,
+    "N1_x_retention_p5_p95": [
+     0.0,
+     0.0
+    ],
+    "density_for_1_ideal": 1.785,
+    "density_for_1_x_retention": null,
+    "baseline_N1_per_density": 0.0,
+    "density_for_1_x_retention_p5_p95": [
+     null,
+     null
+    ],
+    "ratio_to_baseline_same_mass_x_retention": null
+   }
+  }
+ },
+ "search_requirement": {
+  "records_all_tess120": 1737708,
+  "mean_file_bytes": 1920741,
+  "bytes_all": 3338000000000.0,
+  "share_of_crossing_weight_in_top_frac": {
+   "0.01": 0.3052,
+   "0.05": 0.5541,
+   "0.1": 0.6791,
+   "0.25": 0.8427,
+   "0.5": 0.94
+  },
+  "note": "weight = span * D^1.5 (Level 0); the identifiable share is not in it"
+ }
+}

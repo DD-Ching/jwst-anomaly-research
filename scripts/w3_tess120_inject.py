@@ -463,6 +463,10 @@ def stage_summarize(_a) -> None:
         rec["ideal_share_of_events"] = (
             float(f"{c['ideal'] / c['events']:.4g}") if c["events"] else None
         )
+        steps = (("L1a/ideal", "L1a", "ideal"), ("L1b/L1a", "L1b", "L1a"), ("L2/L1b", "L2", "L1b"))
+        rec["kept_per_step"] = {  # L0 -> L1a gaps/edges/window, -> L1b flags, -> L2 background
+            k: (float(f"{c[n] / c[d]:.4g}") if c[d] else None) for k, n, d in steps
+        }
         bins = {}
         for b0, b1 in zip(TE_BINS[:-1], TE_BINS[1:], strict=True):
             sub = [r for r in rows if b0 <= r["t_E_cad"] < b1]
@@ -488,6 +492,13 @@ def stage_summarize(_a) -> None:
             "density_for_1_ideal": float(f"{1 / n1:.4g}") if n1 else None,
             "density_for_1_x_retention": float(f"{1 / (n1 * ret):.4g}") if n1 and ret > 0 else None,
             "baseline_N1_per_density": nb,
+            "density_for_1_x_retention_p5_p95": [
+                float(f"{1 / (n1 * hi):.4g}") if n1 and hi > 0 else None,
+                float(f"{1 / (n1 * lo):.4g}") if n1 and lo > 0 else None,
+            ],
+            "ratio_to_baseline_same_mass_x_retention": float(f"{n1 * ret / nb:.4g}")
+            if nb
+            else None,
         }
         out["scenarios"][name] = rec
     # what a real search over TESS 120 s would read (PLAN section 5)
@@ -507,12 +518,80 @@ def stage_summarize(_a) -> None:
     print(json.dumps(out, indent=1))
 
 
+def stage_diagnose(_a) -> None:
+    """Post hoc (not in PLAN.md): where the L1b -> L2 loss sits. Among ideal events kept at L1b
+    and lost at L2, the share whose dark run was still found (so S, the shoulders, failed); and
+    retention per rho bin."""
+    per = [json.loads(p.read_text()) for p in sorted((OUT / "per_ss").glob("*.json"))]
+    out = {"label": "post hoc diagnostics of the simulation (not frozen in PLAN.md)"}
+    for name in SCENARIOS:
+        rows = [r for p in per for r in p["scenarios"][name] if r["ideal"]]
+        lost = [r for r in rows if r["L1b"] and not r["L2"]]
+        rec = {
+            "lost_L1b_to_L2": len(lost),
+            "of_which_dark_run_found": sum(r["L2_D_only"] for r in lost),
+        }
+        bins = {}
+        for b0, b1 in ((0, 0.3), (0.3, 0.6), (0.6, 0.9), (0.9, 2.0)):
+            sub = [r for r in rows if b0 <= r["rho"] < b1]
+            if sub:
+                bins[f"rho_{b0:g}-{b1:g}"] = {
+                    "ideal": len(sub),
+                    "L1b": sum(r["L1b"] for r in sub),
+                    "L2": sum(r["L2"] for r in sub),
+                }
+        rec["by_rho"] = bins
+        out[name] = rec
+    fr = np.array([p["n_good"] / p["n_cadences"] for p in per])
+    out["good_cadence_share_p5_50_95"] = [float(f"{q:.3g}") for q in np.percentile(fr, [5, 50, 95])]
+    smp = json.loads((OUT / "sample.json").read_text())["star_sectors"]
+    d = [x["dist"] for x in smp for _ in x["draws"]]
+    r = [x["radius"] for x in smp for _ in x["draws"]]
+    out["sample_per_draw"] = {
+        "D_pc_median": round(float(np.median(d)), 1),
+        "R_rsun_median": round(float(np.median(r)), 3),
+        "share_R_gt_2": round(float(np.mean(np.array(r) > 2)), 3),
+        "stars": len({x["tic"] for x in smp}),
+    }
+    (OUT / "diagnostics.json").write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps(out, indent=1))
+
+
+def stage_recheck(_a) -> None:
+    """Re-computation check: re-download two drawn star-sectors, compare the sha256 with
+    files.json and the re-processed result with per_ss (``recheck.json``)."""
+    smp = json.loads((OUT / "sample.json").read_text())["star_sectors"]
+    files = json.loads((OUT / "files.json").read_text())
+    lg = nl.Ledger(OUT / "net_ledger.jsonl", CAP)
+    checks = []
+    for ss in (smp[0], smp[100]):
+        b = nl.fetch(lc_url(ss["obs_id"]), lg, 2_500_000)
+        stored = json.loads((OUT / "per_ss" / f"{ss['obs_id']}.json").read_text())
+        checks.append(
+            {
+                "obs_id": ss["obs_id"],
+                "sha256_matches": hashlib.sha256(b).hexdigest() == files[ss["obs_id"]]["sha256"],
+                "result_identical": process(ss, b) == stored,
+            }
+        )
+    res = {"label": "re-computation check: 2 star-sectors re-downloaded and re-processed"}
+    res |= {"checks": checks, "ledger_bytes": lg.used()}
+    (OUT / "recheck.json").write_text(json.dumps(res, indent=1) + "\n")
+    print(json.dumps(res, indent=1))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=["select", "run", "summarize"])
+    ap.add_argument("stage", choices=["select", "run", "summarize", "diagnose", "recheck"])
     ap.add_argument("--workers", type=int, default=2)
     a = ap.parse_args()
-    {"select": stage_select, "run": stage_run, "summarize": stage_summarize}[a.stage](a)
+    {
+        "select": stage_select,
+        "run": stage_run,
+        "summarize": stage_summarize,
+        "diagnose": stage_diagnose,
+        "recheck": stage_recheck,
+    }[a.stage](a)
 
 
 if __name__ == "__main__":
