@@ -7,12 +7,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   any flux):
   - Batches 1–3 (1,500 stars, 0 download failures, 5,195.2 observing star-years) have no good cadence ≥ 1 mag below
     the quarter median, so there was nothing to flag or vet.
-  - The #546 injection-recovery on each batch (60,000 events, 0 spurious) gives 3,710.2–4,855.0 effective
+  - The #546 injection-recovery on each batch (3 × 20,000 events, 0 spurious) gives 3,710.2–4,855.0 effective
     star-years per W3 cell, and 4,958.9–6,475.3 with the #546 batch (same definitions).
-- **Deviation:** batch 4 (500 stars) was not fetched. The download rate fell to about 0.47 MB/s, which projected
+- **Deviation:** batch 4 (500 stars) was not fetched. The download rate fell to 466,733 B/s, which projected
   its end after the 6-h limit (`batch4_decision.json`); the stars are unread.
 - **Limits:** per-cell product-level joint limits (efficiency integrated, flat rate prior) are 4.628–6.044 × 10⁻⁴
-  per star-year with #546. They are conditional and separate per cell, not physical rates. #546's 2.996 / E_low
+  per star-year with #546 (95 % credible, flat rate prior). They are conditional and separate per cell, not physical rates. #546's 2.996 / E_low
   stacked two 95 % steps and is 1.031–1.049 × the joint value, so it is relabelled approximate and conservative.
 - **Fixed:** a screen crash before any output (missing descriptive field); `check_results.py` now keeps the decimals
   of comma-grouped numbers.

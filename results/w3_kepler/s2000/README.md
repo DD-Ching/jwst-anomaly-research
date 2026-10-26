@@ -5,3 +5,5 @@ pool stars in four batches of 500, each with the #546 injection-recovery measure
 sources, one research unit. Limits: 6 h, 18 GB total through `scripts/net_ledger.py` (at least 2 GB kept for vetting
 and repairs), 4 cores, large cache ≤ 3 GB. The full list, batches, seeds, vetting order and stop rules (`PLAN.md`,
 `sample_2000.json`) are committed before any new flux is read.
+
+Result: `RESULT.md` (#554).

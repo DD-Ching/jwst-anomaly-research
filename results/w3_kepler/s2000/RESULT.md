@@ -13,14 +13,16 @@
   - **Implementation error, fixed:** the first batch-1 screen call crashed before writing anything. The shared
     `w3_kepler_expand.layers` reads an `applicable` field that the new screen rows lacked. The field was added with
     #542's definition (descriptive only) and the screen re-run.
-  - **V9 code:** the pixel-check code (procedure fixed in PLAN §6) was committed after the plan and before any
-    vetting. It was never used.
+  - **V9 code:** the pixel-check code (procedure fixed in PLAN §6) was committed at 04:56:08 (2980edc), 46 s after
+    the batch-1 fetch began and before any vetting. It was never used.
   - **Download connections:** batch 3 used 16 download connections instead of 8 (`scripts/CLAUDE.md` allows 8–16),
-    because single files took about 3 s and the CPU idled. Throughput did not improve. The environment's download
+    because files were latency-bound: the median per-file time was 3.1 s in batch 2 with 8 connections (ledger; not
+    stored). Throughput did not improve: the median was 10.5 s in batch 3 (not stored). The environment's download
     rate fell from batch to batch: 1,771.6 s, 4,621.1 s and 7,369.4 s per batch for the same about 3.7 GB
     (`cost.json`).
   - **Mirror test:** one file from the MAST AWS mirror was fetched to test its speed. Its sha256 equals the archive
-    copy, but it was just as slow, and it was not used.
+    copy. It took 12.6 s, against about 8 s for archive files at the same time (ledger; not stored), and it was not
+    used.
   - **Ledger snapshot:** the ledger snapshot is split in two gzip parts (`net_ledger.part1/2.jsonl.gz`) to keep each
     file under 1 MB.
 
@@ -40,8 +42,8 @@
     to vet. The contact sheet is empty.
 - **Files:** every read star has all 17 quarters, except KIC 6350306 (16 quarters; its listing has one file fewer).
   It was screened like the others.
-- **EBs:** the Kirk 2016 EBs in the sample (36 of the 2,000 selected, `sample_2000.json`) were kept. None reached
-  1 mag in a good cadence.
+- **EBs:** the Kirk 2016 EBs in the sample were kept: 36 of the 2,000 selected (`sample_2000.json`), 31 of them in
+  batches 1–3 (from the `batch` field; not stored). None of the 31 read ones reached 1 mag in a good cadence.
 - **Downloads:** 0 failures. Per batch, 8,500, 8,499 and 8,500 Q1–Q17 files (3,719,520,000, 3,719,013,120 and
   3,719,520,000 B; `files_b<b>.json.gz`). Ledger total: 11,391,544,013 B of the 18 GB cap.
 
@@ -62,11 +64,13 @@ The 2 GB reserve was not used.
 | 2 | 500 | 20,000 | 0.61–0.811 | 1,218.7–1,620.3 | 0 |
 | 3 | 500 | 20,000 | 0.61–0.84 | 1,218.7–1,678.3 | 0 |
 
-- **Comparison with #546:** the batches match #546 (0.625–0.811 per cell on its 500 stars). The weakest cells are
-  again t_E = 10 d.
-  - Batch 3's 0.84 is cell 2 (ρ 0.01, blend 1, t_E 1 d). Batches 1 and 2 have 0.796 and 0.806 there.
-  - Each batch has 1,000 events per cell, so this is within the batch-to-batch scatter of a binomial share near
-    0.8 (σ ≈ 0.013; not stored). No cell was dropped and no seed was changed.
+- **Comparison with #546:** per-batch recovery ranges are 0.61–0.84, against 0.625–0.811 for #546 on its 500 stars.
+  The weakest cells are again t_E = 10 d.
+  - The highest value, batch 3's 0.84, is cell 2 (ρ 0.01, blend 1, t_E 1 d). Batches 1 and 2 have 0.788 and 0.802
+    there, and #546 has 0.811.
+  - Against the mean of the other three, that is 2.7σ (binomial, 1,000 events each). Over all 80 cell × batch values
+    (3 batches + #546), χ²/dof ≈ 0.79 and the largest deviation from a cell mean is 2.4σ (not stored).
+  - So the batches scatter about as binomial counts would. No cell was dropped and no seed was changed.
 
 ## 4. Round totals (`combined.json`)
 - **This round:** 1,500 stars; observing 5,195.2 star-years (good cadences × 29.4 min); sampling 5,993.8
@@ -109,16 +113,16 @@ The 2 GB reserve was not used.
 ## 6. What the zero supports
 - **Supports:** in 2,000 FGK Kepler stars (1,500 here + 500 in #542 / #546), no good cadence in this round's 1,500
   dims by ≥ 1 mag. Under the conditions above, W3 signals of any one tested shape occur in SAP at fewer than about
-  4.6–6.0 per 10,000 star-years (95 %, per cell).
+  4.6–6.0 per 10,000 star-years (95 % credible, flat rate prior, per cell).
 - **Does not support:**
   - a physical lens rate, wormhole or negative-mass abundance, or FTL statement;
-  - a limit for events shallower than 1 mag in SAP, t_E outside 0.1–10 d, u0 ≥ 2, repeating events, other stars or
+  - a limit for events shallower than 1 mag in SAP, t_E values other than the five tested (0.1, 0.3, 1, 3, 10 d), u0 ≥ 2, repeating events, other stars or
     other surveys;
   - a joint limit across cells;
   - "W3 excluded".
 - **The unread batch 4:** if it were searched with similar efficiency and the result stayed zero, it would add about
   500 × the round's per-star means, 2.47–3.24 star-years each, to each cell (`combined.json` `per_star_mean_yr`).
-  That is about 1,240–1,620 effective star-years (not stored), and it would lower each joint limit by about a fifth
+  That is about 1,240–1,620 effective star-years (not stored), and it would lower each joint limit combined with #546 by about a fifth (factor about 0.80; each round-only limit by about a quarter, 0.75)
   (not stored).
 
 ## 7. Answers
@@ -128,4 +132,4 @@ The 2 GB reserve was not used.
 | 2. pre-screen sources / survivors / confirmed real dimming / artifacts / undetermined | 0 / 0 / 0 / 0 / 0 (no star reached the 1-mag pre-screen) |
 | 3. effective search volume added | 3,710–4,855 effective star-years per W3 cell (5,195 observing, 5,994 sampling star-years); with #546, 4,959–6,475 |
 | 4. new observation unexplained by ordinary astrophysics? | No. None of the 1,500 light curves has a good cadence ≥ 1 mag below its quarter median, so nothing reached the shape tests or vetting |
-| 5. what the zero supports / does not | Supports per-cell, product-level, conditional limits of about 4.6–6.0 × 10⁻⁴ per star-year (joint 95 %, with #546). Does not support a physical rate, abundance, a joint limit across cells, or an exclusion |
+| 5. what the zero supports / does not | Supports per-cell, product-level, conditional limits of about 4.6–6.0 × 10⁻⁴ per star-year (95 % credible, flat rate prior, efficiency uncertainty included; with #546). Does not support a physical rate, abundance, a joint limit across cells, or an exclusion |
