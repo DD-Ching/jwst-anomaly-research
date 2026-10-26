@@ -11,8 +11,8 @@ from __future__ import annotations
 
 import argparse
 import json
-import multiprocessing as mp
 import os
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 os.environ.setdefault("OMP_NUM_THREADS", "1")
@@ -30,7 +30,7 @@ FRAC_MIN = 0.95  # ASSUMPTION (plan)
 FLAG = (64.048551, -24.064825)  # D115b extra image (#458)
 FLAG_RADIUS = 0.7
 FLAG_IMAGES = ("D115b.1", "D115b.2")
-OUT = Path("results/lens_consistency/lenstool_cloud/result.json")
+OUT = Path(__file__).resolve().parents[1] / "results/lens_consistency/lenstool_cloud/result.json"
 
 
 def read_image_all(path: str | Path) -> tuple[tuple[float, float], dict[str, np.ndarray]]:
@@ -53,26 +53,57 @@ def read_image_all(path: str | Path) -> tuple[tuple[float, float], dict[str, np.
 
 
 def match_pairs(ref_xy: np.ndarray, port_xy: np.ndarray) -> np.ndarray:
-    """One-to-one (Hungarian) reference-to-port distances; NaN for unmatched reference images."""
+    """One-to-one reference-to-port distances; NaN for reference images without a port image within
+    MATCH_ARCSEC. Pairs beyond MATCH_ARCSEC are priced out of the assignment, so it maximises the
+    number of pairs within the threshold."""
     out = np.full(len(ref_xy), np.nan)
     if len(ref_xy) == 0 or len(port_xy) == 0:
         return out
     d = np.hypot(ref_xy[:, None, 0] - port_xy[None, :, 0], ref_xy[:, None, 1] - port_xy[None, :, 1])
-    r, c = linear_sum_assignment(d)
-    out[r] = d[r, c]
+    r, c = linear_sum_assignment(np.where(d <= MATCH_ARCSEC, d, 1e6))
+    ok = d[r, c] <= MATCH_ARCSEC
+    out[r[ok]] = d[r[ok], c[ok]]
     return out
 
 
-def gate_r(matched_dist: np.ndarray, flag_lenstool: dict, flag_port: dict) -> bool:
+def near_flag(xy: np.ndarray, fx: float, fy: float) -> bool:
+    """Any image (model frame, arcsec) within FLAG_RADIUS of the flag position."""
+    xy = np.asarray(xy, float).reshape(-1, 2)
+    return bool((np.hypot(xy[:, 0] - fx, xy[:, 1] - fy) <= FLAG_RADIUS).any())
+
+
+def gate_r(
+    matched_dist: np.ndarray, flag_lenstool: dict, flag_port: dict, n_missing: int = 0
+) -> bool:
     """Frozen gate R: (a) >= FRAC_MIN of Lenstool images matched within MATCH_ARCSEC, and (b) every
-    FLAG_IMAGES id has a flag image in both codes."""
+    FLAG_IMAGES id has a flag image in both codes. Review fix (2026-10-26): a catalogued image that
+    is absent from ``image.all`` or has no finite back-trace (``n_missing``) fails the gate."""
     d = np.asarray(matched_dist, float)
     frac = float(np.mean(np.isfinite(d) & (d <= MATCH_ARCSEC))) if d.size else 0.0
     flags = all(flag_lenstool.get(i, False) and flag_port.get(i, False) for i in FLAG_IMAGES)
-    return frac >= FRAC_MIN and flags
+    return n_missing == 0 and frac >= FRAC_MIN and flags
 
 
 _STATE: dict = {}
+
+
+def _setup() -> tuple[dict, lensmodel.LensModel, object, object]:
+    files = lc.model_files(MODEL)
+    par = lensmodel.parse_lenstool_par(files["best.par"])
+    model = lensmodel.LensModel.from_par(par)
+    images = lensmodel.load_lenstool_images(files["arcs.dat"])
+    half = lc.grid_half_width(model, images)
+    grid = lensmodel.DeflectionGrid.cached(
+        model, lc.grid_cache_path(model, half, GRID_STEP), half, GRID_STEP
+    )
+    bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
+    return par, model, grid, bt
+
+
+def _init() -> None:
+    """Pool initializer: every worker loads the model and the cached grid itself (spawn-safe)."""
+    _, model, grid, bt = _setup()
+    _STATE.update(bt=bt, model=model, grid=grid)
 
 
 def _solve(i: int) -> tuple[int, np.ndarray]:
@@ -91,20 +122,16 @@ def main() -> None:
     args = ap.parse_args()
 
     ref, lt = read_image_all(args.image_all)
-    files = lc.model_files(MODEL)
-    par = lensmodel.parse_lenstool_par(files["best.par"])
-    model = lensmodel.LensModel.from_par(par)
+    _, model, _, bt = _setup()  # builds and caches the grid once before the workers start
     if abs(model.ra0 - ref[0]) > 1e-7 or abs(model.dec0 - ref[1]) > 1e-7:
         raise SystemExit(f"frame mismatch: port {model.ra0, model.dec0} vs Lenstool {ref}")
-    images = lensmodel.load_lenstool_images(files["arcs.dat"])
-    half = lc.grid_half_width(model, images)
-    grid = lensmodel.DeflectionGrid.cached(
-        model, lc.grid_cache_path(model, half, GRID_STEP), half, GRID_STEP
-    )
-    bt = lensmodel.backtrace_images(model, images, par["z_m_limit"])
-    _STATE.update(bt=bt, model=model, grid=grid)
-    with mp.get_context("fork").Pool(args.workers) as pool:
-        port = dict(pool.map(_solve, range(len(bt))))
+    finite = [
+        i
+        for i in range(len(bt))
+        if np.isfinite([bt[i]["beta_x"], bt[i]["beta_y"], bt[i]["z_used"]]).all()
+    ]
+    with ProcessPoolExecutor(args.workers, initializer=_init) as pool:
+        port = dict(pool.map(_solve, finite))
 
     fx, fy = model.to_frame(np.array([FLAG[0]]), np.array([FLAG[1]]))
     ids = [str(v) for v in bt["image_id"]]
@@ -112,6 +139,9 @@ def main() -> None:
     n_port_unmatched = 0
     flag_lt, flag_port = {}, {}
     for i, iid in enumerate(ids):
+        if i not in port:
+            missing_in_lenstool.append(iid)  # no finite back-trace: counted against the gate
+            continue
         p = port[i]
         if iid not in lt:
             missing_in_lenstool.append(iid)
@@ -119,19 +149,15 @@ def main() -> None:
         ref_xy = lt[iid]
         d = match_pairs(ref_xy, p)
         dists.extend(d.tolist())
-        n_port_unmatched += max(len(p) - int(np.isfinite(d).sum()), 0)
+        n_port_unmatched += len(p) - int(np.isfinite(d).sum())
         per_image[iid] = {
             "n_lenstool": len(ref_xy),
             "n_port": len(p),
             "max_matched_arcsec": float(np.nanmax(d)) if np.isfinite(d).any() else None,
         }
         if iid in FLAG_IMAGES:
-            flag_lt[iid] = bool(
-                (np.hypot(ref_xy[:, 0] - fx[0], ref_xy[:, 1] - fy[0]) <= FLAG_RADIUS).any()
-            )
-            flag_port[iid] = bool(
-                len(p) and (np.hypot(p[:, 0] - fx[0], p[:, 1] - fy[0]) <= FLAG_RADIUS).any()
-            )
+            flag_lt[iid] = near_flag(ref_xy, fx[0], fy[0])
+            flag_port[iid] = near_flag(p, fx[0], fy[0])
     d = np.asarray(dists, float)
     ok = np.isfinite(d)
     out = {
@@ -154,7 +180,7 @@ def main() -> None:
         "matched_dist_max_arcsec": float(d[ok].max()) if ok.any() else None,
         "flag_image_lenstool": flag_lt,
         "flag_image_port": flag_port,
-        "gate_R": gate_r(d, flag_lt, flag_port),
+        "gate_R": gate_r(d, flag_lt, flag_port, len(missing_in_lenstool)),
         "per_image": per_image,
     }
     OUT.write_text(json.dumps(out, indent=1) + "\n")

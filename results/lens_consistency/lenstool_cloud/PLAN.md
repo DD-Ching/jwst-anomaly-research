@@ -1,4 +1,4 @@
-# Lenstool in the cloud: install and reproduce the port on CANUCS MACS0416 (plan, 2026-10-26 09:25Z)
+# Lenstool in the cloud: install and reproduce the port on CANUCS MACS0416 (plan, committed 2026-10-26 09:12Z)
 
 Why: the D115b record (`docs/candidates/macs0416-canucsref-D115b.md`) waits on a Lenstool re-fit with member 8515's
 σ free, so far listed as "owner machine only" because Lenstool was not installable here (DECISIONS.md D-024 era note:
@@ -13,7 +13,7 @@ sources) for the D115a / D115b families agree with the port's `predicted_macs041
 (ASSUMPTION; the port's 0.1″ solver grid). Pass → a restricted re-fit (8515 σ and its neighbours free, cluster halos
 fixed) becomes a cloud step. Fail → record the cause; the re-fit stays on the owner machine.
 
-## Amendment (2026-10-26 09:20Z, before any port value of this comparison was computed)
+## Amendment (committed 2026-10-26 09:18Z, before any port value of this comparison was computed)
 Deviation, post hoc with respect to the Lenstool output: the install (micromamba, conda-forge `lenstool` 8.15.5,
 53 s) and one Lenstool run of the pinned `best.par` (its own `runmode image 1`, 7 s) were done first, and `image.all`
 was looked at (it predicts, for each catalogued image, the images of that image's own back-traced source). The port's
