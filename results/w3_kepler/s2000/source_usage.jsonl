@@ -4,3 +4,5 @@
 {"t": 1792992434.2, "stage": "inject 1"}
 {"t": 1792992434.3, "stage": "fetch 2"}
 {"t": 1792997056.5, "stage": "screen 2"}
+{"t": 1792997138.8, "stage": "inject 2"}
+{"t": 1792997139.2, "stage": "fetch 3"}
