@@ -69,3 +69,24 @@ def test_gate_v():
     assert m.gate_v(344.298308 * 1.0099)
     assert not m.gate_v(344.298308 * 1.0101)
     assert not m.gate_v(330.81)
+
+
+CHIRES = """chi multiples
+ N    ID    z   Narcs    chip    chix    chiy    chia   rmss     rmsi    dx      dy    nwarn
+ 0  A.2 0.940   1      0.01    0.00    0.00    0.00   0.008    0.04   -0.02    0.04  0
+ 0  A.1 0.940   1      0.01    0.00    0.00    0.00   0.008    0.05   -0.04    0.03  1
+ 0  A.2 0.940   2      0.02    0.00    0.00    0.00   0.008    0.05    N/A     N/A   0
+ 1  D115a.1 2.300   1      0.99    0.00    0.00    0.00   0.044    0.49    0.38   -0.30  0
+ 1  D115a.3 2.300   1      4.60    0.00    0.00    0.00   0.060    0.61    N/A     N/A   0
+chimul                 4.62    0.00    0.00    0.00   0.211    0.53    N/A     N/A   0
+chitot           9.99
+"""
+
+
+def test_read_chires():
+    chimul, fam, nwarn = m.read_chires(CHIRES)
+    assert chimul == pytest.approx(4.62)
+    assert fam == {"A": pytest.approx(0.02), "D115a": pytest.approx(4.60)}
+    assert nwarn == 1
+    with pytest.raises(ValueError):
+        m.read_chires("chitot 1.0\n")
