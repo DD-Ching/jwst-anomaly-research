@@ -444,7 +444,40 @@ def main_d14a(lt: Path, wd: Path, files: dict[str, Path]) -> None:
         "rule_P_failures": bad,
     }
     _write(out, "result_d14a.json")
+    _write(posthoc_d14a(wd), "posthoc_d14a.json")
     print(json.dumps(out, indent=1))
+
+
+def posthoc_d14a(wd: Path) -> dict:
+    """Post hoc (after rule P): Lenstool-predicted positions of D14a.1 and D14a.2 per f, from the
+    observed positions in ``arcs.dat`` plus the chires offsets (chires prints -dx and dy)."""
+    out = {}
+    for f in F_GRID:
+        d = wd / f"p{f:.2f}"
+        obs = {}
+        for ln in (d / "arcs.dat").read_text().splitlines():
+            p = ln.split()
+            if p[:1] and p[0] in ("D14a.1", "D14a.2"):
+                obs[p[0]] = (float(p[1]), float(p[2]))
+        ra0, dec0 = obs["D14a.1"]
+        pred = {}
+        for r in (ln.split() for ln in (d / "chires.dat").read_text().splitlines()):
+            if len(r) >= 13 and r[1] in obs and r[10] != "N/A":
+                ra, dec = obs[r[1]]
+                x = -(ra - ra0) * np.cos(np.radians(dec0)) * 3600.0
+                y = (dec - dec0) * 3600.0
+                pred[r[1]] = (x - float(r[10]), y + float(r[11]))
+        a, b = pred["D14a.1"], pred["D14a.2"]
+        out[f"{f:.2f}"] = {
+            "pred_D14a.1_xy_arcsec": [round(v, 3) for v in a],
+            "pred_D14a.2_xy_arcsec": [round(v, 3) for v in b],
+            "pred_separation_arcsec": round(float(np.hypot(a[0] - b[0], a[1] - b[1])), 3),
+        }
+    return {
+        "label": "post hoc (after rule P); frame centred on observed D14a.1,"
+        " x = -dRA cos(dec), y = dDec; offsets are chires' 2-decimal values",
+        "per_f": out,
+    }
 
 
 def main() -> None:

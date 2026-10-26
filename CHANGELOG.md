@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-26: D115b Lenstool: D14a's ≈ 3748 is Lenstool's image-proximity penalty (rule P confirmed); D14a.1 is traced onto D14a.2's image from 8515 σ × 0.9 (D-109 addendum 3)
+- **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_D14A.md`; plan frozen before the run, stating
+  what the source code and the stored f 0.90 file already showed): at every f ≤ 0.90 Lenstool adds one
+  `chipenalty` of (30″ / 0.49″)² = 3748.44 to D14a, its rule for two predicted images of a family that coincide
+  within 10⁻³″ (`src/o_chires.c`). Without it, Δχ² is +7.28 to +21.15 over f 0.90–0.70; that still scores lost
+  D115a images at 0, so it is not a cost, and D115b stays `inconclusive`.
+- **Post hoc:** from f 0.90, D14a.1 and D14a.2 back-trace to one image (0.006–0.008″ apart vs 1.259″ at f 1.00), so
+  the model loses D14a.1 before the D115b flag image goes (f_L* 0.80), priced in its own row only by distance.
+- **Failed approach:** Python urllib and curl with the proxy bundle alone fail on archive.stsci.edu; the proxy
+  bundle plus certifi in `SSL_CERT_FILE` works (as in earlier runs).
+- **Handoff:** next is the frozen F2 plan (`nlens_opt`, 8515 moved forward, fixed-σ validation near 344.42) that
+  says how lost and merged images (D115a, D14a.1) are counted, e.g. Lenstool's own penalty or a port re-count.
+  #374: no weekly network run yet at 12:24Z.
+
 ## 2026-10-26: D115b Lenstool stages V′ and F: V′ passes (344.42); σ(8515) profile `costly` as frozen, post hoc not a usable cost (D-109 addendum 2)
 - **Result** (`results/lens_consistency/d115b_lenstool_refit/RESULT_VPRIME_F.md`; plan frozen before any run): gate V′
   passes, χ²_pos 344.42 vs header 344.298308 with `input.par`'s reference. Rule F: the flag image is gone from
