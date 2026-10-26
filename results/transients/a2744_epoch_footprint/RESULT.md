@@ -6,7 +6,7 @@ MAST `s_region` metadata (`observed`); areas are `derived`. No pixel was read.
 
 ## Result (frozen rules)
 - **Outcome O (overlap only).** Of the 78 inventory pairs, 0 are `core`, 28 `overlap`, 50 `none`.
-  Every pair had footprints in at least one shared filter; rule 5 dropped no whole pair.
+  Every shared filter of every pair had both footprints (`n_pairs_with_missing_filters` 0), so rule 5 dropped nothing.
 - No unused epoch reaches the 1′ core disc (π arcmin²) by more than 0.315 arcmin² (3073 o005 / o008); 1324 o001 /
   o006 / o007, 2561 o002 / o006 and 1176 o221 have 0 core area in every filter.
 - Largest overlaps (best filter, all outside the core):
@@ -33,3 +33,8 @@ MAST `s_region` metadata (`observed`); areas are `derived`. No pixel was read.
 ## Limits
 `s_region` is the mosaic outline: chip gaps and masked regions inside it count as covered, so overlaps are upper
 bounds. One centre, one core radius (ASSUMPTION 1′). The inventory's 3′ cone still bounds which epochs were seen.
+
+## Deviations
+- After `/code-review`, the tool records shared filters without a footprint (`missing_filters`,
+  `n_pairs_with_missing_filters`) instead of dropping them silently, and was re-run once (one more MAST query).
+  Areas, classes and the outcome are unchanged; only those two fields were added to `footprints.json`.

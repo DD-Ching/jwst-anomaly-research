@@ -143,17 +143,18 @@ def main() -> None:
 
     pairs = []
     for p in pairs_in:
-        per = {}
+        per, missing = {}, []
         for f in p["shared_filters"]:
             a, b = masks.get((p["early"], f)), masks.get((p["late"], f))
             if a is None or b is None:
-                continue  # rule 5
+                missing.append(f)  # rule 5; recorded so a "none" cannot hide a missing footprint
+                continue
             ov = a & b
             per[f] = {
                 "a_ov": round(float(ov.sum() * cell), 3),
                 "a_core": round(float((ov & core).sum() * cell), 3),
             }
-        pairs.append({**p, "per_filter": per, "class": classify(per)})
+        pairs.append({**p, "per_filter": per, "missing_filters": missing, "class": classify(per)})
 
     code, best = outcome(pairs)
     epoch_area = {
@@ -172,6 +173,7 @@ def main() -> None:
                 "core_disc_arcmin2": round(np.pi * CORE_RADIUS_ARCMIN**2, 3),
                 "n_pairs": len(pairs),
                 "class_counts": counts,
+                "n_pairs_with_missing_filters": sum(bool(p["missing_filters"]) for p in pairs),
                 "outcome": code,
                 "next_grid_pair": None
                 if best is None
