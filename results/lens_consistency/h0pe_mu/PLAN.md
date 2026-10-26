@@ -40,4 +40,8 @@ fitted (A_V 1.21 ± 0.11; Pierel et al. Table 3), so they are the reference.
    not interpreted.
 
 ## Deviations
-- Post hoc (after the run): the pooled offset without WSLAP+ and 1σ intervals on H0_MST; labelled in RESULT.md.
+- Post hoc (after the run): the pooled offset without WSLAP+ and 1σ intervals on H0_MST (`posthoc.json`).
+- Deviation (after the review, before reading any changed outcome): the first run kept the 0.15 mag placeholder
+  although Pierel et al. Table 4 publishes microlensing; the rule now uses Table 4 as written above. The first
+  ratio errors added the shared calibration twice; it now cancels as the ratio rule intends. Both first-run
+  variants stay in `posthoc.json`; the outcome (N) is the same in each.
