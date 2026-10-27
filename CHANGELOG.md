@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: MACS J0308 two-epoch grid 5293 o005 → 6882 o015 (200 d, core): outcome U, G1 fails 0.518; SN Ares not a hit
+- **Result** (`results/transients/macs0308_grid/RESULT.md`; plan pushed before any pixel was read): F300M / F410M
+  (the only shared LW bands), tool unchanged. G1 fails: −0.75 mag injections recovered 0.518 (< 0.85); G2 passes
+  (1.57 / 1.50). 27 hit groups, all read as instrumental: star wings (5), single-exposure epoch-1 coverage (19),
+  and a fixed-offset star image (3). SN Ares (programme 9478 target list) has no grid row within 0.5″; the nearest
+  row is at +3.5σ / +4.4σ, so it is not a hit and the run has no positive control.
+- **Post hoc artefact family:** groups 1, 3, 4 are compact epoch-1-only sources at the same sky offset from three
+  bright stars (8.32–8.35″, PA 120.0–120.2° at `PA_APER` 75.12°). Groups 1 and 3 are present only in dithers 2–3 of
+  the `_cal` exposures in both filters, while steady control rows are seen in every dither; group 4 is on a detector
+  in dither 3 only. On another pair, rotate the vector by the `PA_APER` change before using it.
+- **Failed approach:** a two-medium-band grid on this pair (both bands must pass) is too insensitive for the frozen G1.
+  The G1 failure is not diagnosed.
+- **Handoff:** next two-epoch input is MACS J2129 4903 o004 → 6882 o040 (four filters incl. F277W / F444W, 392 d;
+  plan first). A MACS J0308 retry would need SW bands (≈ 1.7 GB per mosaic) or a three-band pair with 9478 o002 (F444W
+  only shared with VENUS). #374 waits for the next weekly run.
+
 ## 2026-10-27: Two-epoch NIRCam inventory on 15 further lensing clusters: 8 public pairs through a core on 4 clusters
 - **Result** (`results/transients/epoch_inventory_ext/RESULT.md`; plan and tool committed before the query): 15 / 15
   fields resolved, 29 public epochs, 8 `core` pairs (> 1 arcmin² of both footprints inside a 1′ disc), 2 `overlap`.
