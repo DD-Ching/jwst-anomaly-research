@@ -7,7 +7,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   fields resolved, 29 public epochs, 8 `core` pairs (> 1 arcmin² of both footprints inside a 1′ disc), 2 `overlap`.
   Core pairs: MACS J0308 ×3 (5293 o005 → 6882 o015: full disc in five filters, 200.2 d), Abell 1689 ×3 (5782 o001 →
   6882 o048, 342.9 d), MACS J2129.4-0741 ×1 (4903 o004 → 6882 o040, 392.1 d, four filters), MACS J0138 ×1 (52.0 d).
-- Metadata only; none of the four clusters has a pinned, validated lens model here except via the MACS J0138 SN
+- Deviation: a separate script (same rules) instead of `--field-set ext` on the first tool. Metadata only; none of the four clusters has a pinned, validated lens model here except via the MACS J0138 SN
   work, so a grid there is a core transient search, not a lens-model test.
 - **Failed approach:** none.
 - **Handoff:** next two-epoch input (plan first, D-027 grid): MACS J0308 5293 o005 → 6882 o015 or MACS J2129 4903

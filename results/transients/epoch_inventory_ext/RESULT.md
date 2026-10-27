@@ -45,3 +45,15 @@ with per-filter overlap and core areas), `upcoming.json`. Every row is MAST meta
 centre per field (the MAST name resolution, `centre_deg`), one core radius (ASSUMPTION 1′), 2″ grid cells. "Used"
 counts only epochs named under `results/transients`; epochs used by lens-consistency runs elsewhere count as unused.
 The 3′ cone bounds which epochs were seen.
+
+## Deviations
+- The plan names `scripts/epoch_inventory.py --field-set ext`; the run used a separate script,
+  `scripts/epoch_inventory_ext.py`, that imports that script's epoch and pair functions unchanged and adds the core
+  test, so the tested 19-field tool stays as it was. Query, rules and thresholds are as frozen. Unlike the first
+  inventory, it queries by the resolved centre (`coordinates=`) rather than `objectname=`, so the centre used for the
+  cone and for the core disc is the same.
+
+## Post hoc
+- On five clusters (RX J0152, MACS J0358, RXC J2211, MACS J1206, MACS J0329), a VENUS epoch (6882) has an
+  earlier 5594 epoch over the core, but 5594 used only the wide F150W2 / F322W2 filters, so rule (b) excludes the pair.
+  A cross-filter difference would need a colour term; it is not part of this plan.
