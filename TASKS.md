@@ -124,6 +124,11 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.
 
+- **Abell 1689 grid 2026-10-27** (`results/transients/a1689_grid/RESULT.md`): 1840 o019 → 5782 o001, F277W / F356W,
+  outcome U (G1 0.42); 12 groups instrumental (11 star spikes, 1 mosaic edge). Post hoc, recovery is 0.939 where an
+  injection's expected σ is ≥ 5 in both bands, so the G1 failures track faint catalogue positions. Next grid only
+  after the owner rules on a G1 amendment (D-027: score injections with expected σ ≥ 5, or a σ-based floor);
+  three consecutive pairs (#576, #577, this run) have failed G1.
 - **Grid G1 diagnosis 2026-10-27** (`results/transients/grid_g1_coverage/RESULT.md`): outcome U (single-exposure
   subsets < 100). Recovery on ≥ 2 epoch-1 exposures is 0.806 (J2129) and 0.540 (J0308), so single-exposure strips
   alone do not account for the G1 failures. Post

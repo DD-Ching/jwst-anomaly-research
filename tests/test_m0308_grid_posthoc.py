@@ -22,6 +22,11 @@ def test_n_bits_and_all_con_planes():
     assert n_exposures(con, 0, 0) == 3
 
 
+def test_n_bits_counts_bit_31_of_int32():
+    assert n_bits(np.int32(-1)) == 32  # all 32 exposures of a plane
+    assert n_bits(np.int32(-1431658496)) == 10  # an Abell 1689 F356W CON plane
+
+
 def test_star_wings():
     assert classify({"0": COV_OK}, _star(1.5, 120.1)) == {"0": ["star_wings"]}
 
