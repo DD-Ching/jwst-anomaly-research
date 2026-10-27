@@ -5685,6 +5685,19 @@ alone cannot separate a correct setup from a lucky window.
 **Revisit if** a new SkyLLH release changes the PDFs (re-run the benchmark), or a test needs multi-season
 time-dependent fits (SkyLLH single-dataset limit).
 
+**Addendum (2026-10-27): benchmark 2, time-integrated fits on all DR2 seasons.** `scripts/nf_ti_benchmark.py` fits
+n_s and γ for the four sources of arXiv:2605.19040 Table 8 (Table 4 positions) with SkyLLH 26.1.0 on IC40, IC59,
+IC79 and IC86_I-XI. Frozen before the fits: agreement |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1 (ASSUMPTIONs;
+`agrees`, unit-tested). With the Dataverse 1.0 IRFs all four agree (n_s / γ): NGC 1068 80.09 / 3.21 (paper 80.1 /
+3.2), PKS 1424+240 75.62 / 3.59 (75.6 / 3.6), TXS 0506+056 8.80 / 1.97 (8.8 / 2.0), GB6 J1542+6129 49.64 / 3.84
+(49.6 / 3.8). With the 3.1 IRFs three agree and GB6 J1542+6129 misses in γ (48.09 / 3.64). Evidence:
+`results/nf/ti_skyllh_benchmark.json`, pins in `data/manifests/nf_skyllh_dr2_all.ecsv`. **Decision:** SkyLLH's
+multi-season time-integrated likelihood on DR2, including the IC40/IC59/IC79 IRFs, is benchmarked; a result meant to
+match the paper uses the 1.0 IRFs, and a new analysis states which IRF version it uses (the GB6 shift shows the
+choice can move γ by 0.2 at high declination; the cause is not isolated). This is the first SkyLLH check with no
+free window choice. Dataverse now answers 403 to python-requests' default User-Agent, so both benchmark scripts send
+an explicit one. **Revisit if** a new SkyLLH or DR2 release changes the PDFs or IRFs.
+
 ## D-082 W3 short-event (t_E = 3 d) recovery study: frozen sample, loss diagnosis on dev only (2026-10-11)
 
 **Decision.** Owner directive V2.1, priority 1. The production chain (CHAIN_VERSION 2026-10-10.1, unchanged) runs

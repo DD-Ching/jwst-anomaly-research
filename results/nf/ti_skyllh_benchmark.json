@@ -1,0 +1,161 @@
+{
+ "assumptions": {
+  "gamma_tolerance": 0.1,
+  "ns_tolerance": "max(1, 0.05 n_s)"
+ },
+ "fits": {
+  "v1": {
+   "GB6 J1542+6129": {
+    "agrees_with_paper_dr2": true,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 3.838,
+    "ns": 49.637,
+    "p_wilks_half_chi2_2dof": 0.0015176685907652967,
+    "seconds": 27.1,
+    "ts": 11.595
+   },
+   "NGC 1068": {
+    "agrees_with_paper_dr2": true,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 3.209,
+    "ns": 80.094,
+    "p_wilks_half_chi2_2dof": 2.3354155823927066e-07,
+    "seconds": 34.5,
+    "ts": 29.154
+   },
+   "PKS 1424+240": {
+    "agrees_with_paper_dr2": true,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 3.587,
+    "ns": 75.617,
+    "p_wilks_half_chi2_2dof": 2.643160329523963e-05,
+    "seconds": 30.4,
+    "ts": 19.696
+   },
+   "TXS 0506+056": {
+    "agrees_with_paper_dr2": true,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 1.97,
+    "ns": 8.802,
+    "p_wilks_half_chi2_2dof": 0.0037782702408362986,
+    "seconds": 27.9,
+    "ts": 9.771
+   }
+  },
+  "v2": {
+   "GB6 J1542+6129": {
+    "agrees_with_paper_dr2": false,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 3.641,
+    "ns": 48.091,
+    "p_wilks_half_chi2_2dof": 0.002006492274777929,
+    "seconds": 38.6,
+    "ts": 11.036
+   },
+   "NGC 1068": {
+    "agrees_with_paper_dr2": true,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 3.202,
+    "ns": 79.547,
+    "p_wilks_half_chi2_2dof": 2.833093508195199e-07,
+    "seconds": 47.6,
+    "ts": 28.767
+   },
+   "PKS 1424+240": {
+    "agrees_with_paper_dr2": true,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 3.62,
+    "ns": 75.231,
+    "p_wilks_half_chi2_2dof": 3.0236710482305573e-05,
+    "seconds": 43.0,
+    "ts": 19.427
+   },
+   "TXS 0506+056": {
+    "agrees_with_paper_dr2": true,
+    "datasets": [
+     "IC40",
+     "IC59",
+     "IC79",
+     "IC86_I-XI"
+    ],
+    "gamma": 1.978,
+    "ns": 8.879,
+    "p_wilks_half_chi2_2dof": 0.0038663609571451254,
+    "seconds": 40.5,
+    "ts": 9.725
+   }
+  }
+ },
+ "paper": {
+  "ref": "arXiv:2605.19040 Table 4 (positions) and Table 8 (DR2 fits)",
+  "sources": {
+   "GB6 J1542+6129": {
+    "dec": 61.5,
+    "gamma": 3.8,
+    "ns": 49.6,
+    "p_pre": 0.002,
+    "ra": 235.75
+   },
+   "NGC 1068": {
+    "dec": -0.01,
+    "gamma": 3.2,
+    "ns": 80.1,
+    "p_pre": 1.3e-07,
+    "ra": 40.67
+   },
+   "PKS 1424+240": {
+    "dec": 23.8,
+    "gamma": 3.6,
+    "ns": 75.6,
+    "p_pre": 8e-05,
+    "ra": 216.76
+   },
+   "TXS 0506+056": {
+    "dec": 5.7,
+    "gamma": 2.0,
+    "ns": 8.8,
+    "p_pre": 0.005,
+    "ra": 77.35
+   }
+  }
+ },
+ "provenance": "derived (observed IceTracks-DR2 events; IRFs are model_prediction)",
+ "seconds": 181.3,
+ "skyllh_version": "26.1.0",
+ "test": "Neutrino Frontier benchmark 2: time-integrated SkyLLH fits, all IceTracks-DR2 seasons"
+}
