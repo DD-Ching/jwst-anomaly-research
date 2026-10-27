@@ -50,6 +50,10 @@ from jwst_anomaly.neutrino_frontier import DR2_COLUMNS  # noqa: E402
 OUT = ROOT / "results" / "nf" / "txs_skyllh_benchmark.json"
 MANIFEST = ROOT / "data" / "manifests" / "nf_skyllh_dr2.ecsv"
 URL = "https://dataverse.harvard.edu/api/access/datafile/{}?format=original"
+#: Dataverse answers 403 to python-requests' default User-Agent (seen 2026-10-27)
+HEADERS = {
+    "User-Agent": "jwst-anomaly-research (+https://github.com/DD-Ching/jwst-anomaly-research)"
+}
 #: SkyLLH sample name and sub-directory per IRF version (Dataverse 1.0 vs >= 2.0 IRF binning)
 SAMPLES = {
     "v1": ("IceTracks-DR2-v1", "icecube_14year_ps"),
@@ -119,7 +123,7 @@ def _sha256_stream(url: str, dest: Path, tries: int = 5) -> str:
     retry = (requests.ConnectionError, requests.Timeout, requests.exceptions.ChunkedEncodingError)
     for k in range(tries):
         try:
-            with requests.get(url, stream=True, timeout=900) as r:
+            with requests.get(url, stream=True, timeout=900, headers=HEADERS) as r:
                 if r.status_code != 429 and r.status_code < 500:
                     r.raise_for_status()
                     h = hashlib.sha256()

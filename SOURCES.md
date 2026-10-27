@@ -1576,6 +1576,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - IceTracks-DR2 IC86 IRFs and IC86_IV files for the TXS benchmark (D-080): Dataverse version 1.0 IRFs (file ids
   13597927, 13597978) and version 3.1 IRFs (14153506, 14153513), original CSVs; ids and md5 in
   `data/manifests/nf_skyllh_dr2.ecsv` (accessed 2026-10-10). Benchmark values: arXiv:2605.19040 Table 6 and section 5.
+- IceTracks-DR2 all seasons (IC40–IC86_XI events, uptime and IRFs) for benchmark 2 (D-080 addendum 2026-10-27):
+  Dataverse versions 1.0 and 3.1, original CSVs; ids, md5 and sha256 in `data/manifests/nf_skyllh_dr2_all.ecsv`
+  (accessed 2026-10-27). Targets: arXiv:2605.19040 Table 4 (positions) and Table 8 (DR2 fits), read 2026-10-27.
 - IceCube IceTracks-DR1 (10-yr PS), doi:10.7910/DVN/VKL316 (v2.0) / data DOI 10.21234/CPKQ-K003, arXiv:2101.09836;
   same events as HEASARC TAP table `icecubepsc` (1,134,450 rows).
 - IceCube HESE 12-yr DirectFit, doi:10.7910/DVN/PZNO2T (v2.0; `data.tab`, 164 events), PoS(ICRC2023)1030.

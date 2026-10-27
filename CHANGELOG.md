@@ -2,12 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-10-27: [in progress] Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all IceTracks-DR2 seasons
-- **Plan, written before any fit:** fit TXS 0506+056 and NGC 1068 time-integrated (n_s, γ free) with SkyLLH on all
-  DR2 seasons (IC40–IC86, v1 IRFs as in the paper, v2 if time allows). Targets (arXiv:2605.19040 Table 8, to be
-  re-read from the paper): TXS 8.8 / 2.0, NGC 1068 80.1 / 3.2. Agreement: |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1
-  (ASSUMPTION). A miss means our multi-season handling (IC40/IC59/IC79 IRFs, season merge) is wrong, and no
-  multi-season SkyLLH result is trusted until it is explained. Raw IRFs streamed, sha256-pinned, deleted after use.
+## 2026-10-27: Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all DR2 seasons reproduce Table 8
+- **Plan, written before any fit** (first commit of this PR): fit the arXiv:2605.19040 Table 8 sources
+  time-integrated with SkyLLH on every DR2 season; agreement |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1 (ASSUMPTION).
+  The plan named TXS and NGC 1068; after reading Table 8 the other two sources (PKS 1424+240, GB6 J1542+6129) were
+  added before any fit, and v2 was run after v1 (both as allowed by the plan).
+- **Result** (`results/nf/ti_skyllh_benchmark.json`, D-080 addendum): Dataverse 1.0 IRFs, all four agree (n_s / γ):
+  NGC 1068 80.09 / 3.21 vs 80.1 / 3.2; PKS 1424+240 75.62 / 3.59 vs 75.6 / 3.6; TXS 0506+056 8.80 / 1.97 vs 8.8 / 2.0;
+  GB6 J1542+6129 49.64 / 3.84 vs 49.6 / 3.8. With the 3.1 IRFs GB6 J1542+6129 misses in γ (48.09 / 3.64); the
+  other three agree. Wilks half-χ²₂ p (an approximation; the paper's p come from trials) are in the JSON.
+- **Fix:** Dataverse answers 403 to python-requests' default User-Agent (curl works); both benchmark scripts now send
+  an explicit User-Agent.
+- Disk: 2.61 GB (1.0) and 3.65 GB (3.1) of events, uptime and IRFs streamed (sums of the manifest sizes), md5-checked, sha256-pinned in
+  `data/manifests/nf_skyllh_dr2_all.ecsv` and deleted.
+- **Handoff:** multi-season SkyLLH time-integrated fits on DR2 are benchmarked; Neutrino Frontier item 2 is done.
+  The lensing grid line still waits on the owner's G1 ruling (D-027) and D115b on its reopen (D-109 addendum 9).
 
 ## 2026-10-27: Queue blocked on owner calls (no science run this cycle)
 - **Handoff:** the two-epoch grid line waits on the owner's G1 ruling (D-027; four consecutive pairs fail G1: #576, #577, #579, #580),
