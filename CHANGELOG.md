@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: MACS J2129 two-epoch grid 4903 o004 → 6882 o040 (392 d, core): outcome U, G1 fails 0.78; 13 groups star spikes / single exposure
+- **Result** (`results/transients/macs2129_grid/RESULT.md`; plan pushed before any pixel was read): F277W / F444W,
+  tool unchanged. G1 fails: −0.75 mag injections recovered 0.78 (< 0.85; F277W 0.878, F444W 0.824); G2 passes
+  (1.47 / 1.25). 16 hits in 13 groups, all read as instrumental: spikes / wings of two bright stars 2.54–2.84″ away
+  (7) and compact epoch-1-only spots on single-exposure epoch-1 coverage in both bands (6). No positive control.
+- Post hoc: the #576 fixed-offset star vector rotated to this roll (8.33″, 122.14°) matches no group; 124 / 121 of
+  the grid rows with epoch-1 flux lie on single-exposure epoch-1 coverage (`posthoc.json` `grid_e1_n_exp`).
+- **Failed approach:** two consecutive VENUS pairs against a shallower GO epoch 1 fail G1 (0.518, 0.78). The tool
+  does not store injection positions, so whether single-exposure rows carry the misses is not counted.
+- **Handoff:** next is either a tool change (store injection positions in `transient_grid.py`, report G1 by epoch-1
+  exposure count; new plan, then re-score MACS J0308 / J2129) or the Abell 1689 core pair 5782 o001 → 6882 o048
+  (343 d; plan first). #374 waits for the next weekly run.
+
 ## 2026-10-27: MACS J0308 two-epoch grid 5293 o005 → 6882 o015 (200 d, core): outcome U, G1 fails 0.518; SN Ares not a hit
 - **Result** (`results/transients/macs0308_grid/RESULT.md`; plan pushed before any pixel was read): F300M / F410M
   (the only shared LW bands), tool unchanged. G1 fails: −0.75 mag injections recovered 0.518 (< 0.85); G2 passes
