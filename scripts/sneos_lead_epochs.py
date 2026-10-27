@@ -66,6 +66,12 @@ def rule_band(filt: str, z: float = Z_SN) -> bool:
     return PIVOT_A[filt] > LYA_A * (1.0 + z)
 
 
+def parse_filters(field: str) -> list[str]:
+    """Science filters in a MAST `filters` value (CLEAR and detection dropped)."""
+    toks = [t.strip().upper() for t in field.split(";")]
+    return [t for t in toks if t and t not in ("DETECTION", "--", "CLEAR")]
+
+
 def rule_phase(
     t: date, dt_days: float, window: tuple[date, date] = WINDOW, allowance: float = DT_ALLOWANCE
 ) -> bool:
@@ -81,7 +87,8 @@ def rule_reference(filt: str) -> bool:
 
 
 def classify(t: date, filt: str, dt_days: float) -> dict:
-    t1 = rule_band(filt)
+    """Rule T for one row. A filter with no tabulated pivot fails T1 (it cannot pass T3)."""
+    t1 = rule_band(filt) if filt in PIVOT_A else False
     t2 = rule_phase(t, dt_days)
     t3 = rule_reference(filt)
     return {
@@ -89,6 +96,7 @@ def classify(t: date, filt: str, dt_days: float) -> dict:
         "phase": t2,
         "reference": t3,
         "pass": t1 and t2 and t3,
+        "band_known": filt in PIVOT_A,
         "phase_ext": rule_phase(t, dt_days, WINDOW_EXT),
     }
 
@@ -112,11 +120,12 @@ def _query(ra: float, dec: float) -> list[tuple[date, str, str, str]]:
     for r in t:
         if str(r["obs_collection"]) not in ("HST", "JWST") or not np.isfinite(float(r["t_min"])):
             continue
-        filt = str(r["filters"]).split(";")[-1].upper()
-        if filt in ("DETECTION", "--", "CLEAR"):
+        filts = parse_filters(str(r["filters"]))
+        if not filts:
             continue
         d = date.fromisoformat(Time(float(r["t_min"]), format="mjd").iso[:10])
-        out.add((d, str(r["obs_collection"]), str(r["instrument_name"]), filt))
+        for filt in filts:
+            out.add((d, str(r["obs_collection"]), str(r["instrument_name"]), filt))
     return sorted(out)
 
 
@@ -152,6 +161,7 @@ def main() -> None:
         "lya_obs_A": LYA_A * (1 + Z_SN),
         "n_rows": len(rows),
         "n_pass": sum(r["pass"] for r in rows),
+        "n_unknown_filter": sum(not r["band_known"] for r in rows),
         "n_pass_ext": sum(r["band"] and r["reference"] and r["phase_ext"] for r in rows),
         "outcome": outcome(rows),
         "rows": rows,

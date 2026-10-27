@@ -26,4 +26,7 @@ images' positions, μ and Δt are model_predictions of the VENUS AstroLensPy v2.
   ran on the uncommitted tool. Rule functions and tests were unchanged; the tool was then committed and re-run. Only
   the committed run's `epochs.json` is reported, and its counts equal the first run's (not stored).
 - One model; no Δt uncertainty from the model itself. Ground-based or non-MAST imaging was not searched.
+- **Review fix (post hoc):** the tool first kept only the last `;`-separated MAST filter token; it now keeps every
+  science token and fails T1 for filters with no tabulated pivot (`n_unknown_filter`). Re-run: same 138 rows,
+  0 unknown filters, outcome U.
 - The rows include HAP skycell and HLA mosaic products, so the 138 rows are not independent epochs.

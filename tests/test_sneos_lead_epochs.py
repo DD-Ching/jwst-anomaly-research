@@ -36,3 +36,12 @@ def test_reference_and_classify():
     assert r["band"] and r["phase"] and not r["reference"] and not r["pass"]
     assert m.outcome([r]) == "U"
     assert m.outcome([r, m.classify(date(2022, 1, 1), "F110W", -1000.0)]) == "P"
+
+
+def test_parse_filters_and_unknown_filter():
+    assert m.parse_filters("F110W;CLEAR") == ["F110W"]
+    assert m.parse_filters("CLEAR;F444W") == ["F444W"]
+    assert m.parse_filters("F444W;F405N") == ["F444W", "F405N"]
+    assert m.parse_filters("detection") == []
+    r = m.classify(date(2022, 1, 1), "F405N", -1000.0)
+    assert not r["band_known"] and not r["band"] and not r["pass"]
