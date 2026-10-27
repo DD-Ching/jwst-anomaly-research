@@ -3,8 +3,10 @@
 Reads each run's ``injections.ecsv`` and ``summary.json`` (``transient_grid.py --coverage``) and
 the local mosaics, and writes ``posthoc.json``: recovery at one fraction split by whether the
 fraction or the floor set the injected flux and by the smallest epoch-1 exposure count, and per
-band the median aperture errors and the calibrated significance a floor-sized injection reaches
-at those medians (no systematic floor). Every number is derived; not in the frozen plan.
+band the run's floor flux (the smallest injected flux, which the floor sets), the median aperture
+errors (epoch 1 on the epoch-2 zero point, as ``band_pass`` does) and the calibrated significance a
+floor-sized injection reaches at those medians (no systematic floor). The aperture radius is the
+grid default (0.15″) used by both runs. Every number is derived; not in the frozen plan.
 
     python scripts/grid_g1_coverage_posthoc.py --data data/grid_g1 --runs <dir with m2129/, m0308/>
 """
@@ -43,13 +45,9 @@ def split_recovery(inj: Table, frac: float) -> dict:
     return out
 
 
-def floor_significance(
-    e1: np.ndarray, e2: np.ndarray, noise_scale: float, floor: float = 10.0
-) -> float:
-    """Calibrated significance of an injection of ``floor`` × median(e2) at median errors."""
-    return float(
-        floor * np.nanmedian(e2) / np.hypot(np.nanmedian(e1), np.nanmedian(e2)) / noise_scale
-    )
+def floor_significance(e1: np.ndarray, e2: np.ndarray, noise_scale: float, floor: float) -> float:
+    """Calibrated significance of an injected flux ``floor`` at median errors."""
+    return float(floor / np.hypot(np.nanmedian(e1), np.nanmedian(e2)) / noise_scale)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -66,21 +64,23 @@ def main(argv: list[str] | None = None) -> int:
         summary = json.loads((run / "summary.json").read_text())
         grid = Table.read(run / "grid.ecsv")
         ra, dec = np.asarray(grid["ra"]), np.asarray(grid["dec"])
-        rec = {
-            "split_frac_1.0": split_recovery(Table.read(run / "injections.ecsv"), 1.0),
-            "bands": {},
-        }
+        inj = Table.read(run / "injections.ecsv")
+        rec = {"split_frac_1.0": split_recovery(inj, 1.0), "bands": {}}
         for b in bands:
             p1, p2 = (a.data / name / f"{s}_nircam_clear-{b.lower()}_i2d.fits" for s in stems)
             with tg._open(str(p1)) as i1, tg._open(str(p2)) as i2:
                 m = tg.measure_band(i1, i2, ra, dec, np.zeros(len(ra), bool), 0.15, None)
             scale = summary["bands"][b]["noise_scale"]
+            zp = summary["bands"][b]["zero_point_mag"]
             ok = np.isfinite(m["e1"] + m["e2"])
+            e1 = m["e1"][ok] * 10 ** (-0.4 * zp)  # epoch 1 on the epoch-2 scale, as band_pass
+            floor = float(np.min(inj[f"{b}_inj_flux"]))  # max(frac * f1, floor) >= floor
             rec["bands"][b] = {
-                "median_e1": float(np.median(m["e1"][ok])),
+                "floor_flux": floor,
+                "median_e1_zp": float(np.median(e1)),
                 "median_e2": float(np.median(m["e2"][ok])),
                 "noise_scale": scale,
-                "floor_sigma_at_median": floor_significance(m["e1"][ok], m["e2"][ok], scale),
+                "floor_sigma_at_median": floor_significance(e1, m["e2"][ok], scale, floor),
             }
         res[name] = rec
     a.out.write_text(json.dumps(res, indent=1) + "\n")

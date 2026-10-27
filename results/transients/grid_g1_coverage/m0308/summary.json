@@ -16,7 +16,7 @@
       "zero_point_mag": 0.000151936875642791,
       "n_measured": 2032,
       "n_pass": 52,
-      "positions_per_s": 3804.243704097425
+      "positions_per_s": 5052.303902015067
     },
     "F410M": {
       "e1": "jw05293-o005_t001_nircam_clear-f410m_i2d.fits",
@@ -25,7 +25,7 @@
       "zero_point_mag": 0.003646501172533975,
       "n_measured": 2033,
       "n_pass": 68,
-      "positions_per_s": 3973.6680464740107
+      "positions_per_s": 4422.618932050076
     }
   },
   "injection": {
@@ -44,6 +44,10 @@
           "F410M": 0.58
         },
         "by_e1_n_exp_min": {
+          "0": {
+            "n": 0,
+            "recovered_frac": null
+          },
           "1": {
             "n": 50,
             "recovered_frac": 0.32
@@ -66,6 +70,10 @@
           "F410M": 0.126
         },
         "by_e1_n_exp_min": {
+          "0": {
+            "n": 0,
+            "recovered_frac": null
+          },
           "1": {
             "n": 50,
             "recovered_frac": 0.02

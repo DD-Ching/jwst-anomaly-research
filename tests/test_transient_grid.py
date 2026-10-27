@@ -183,9 +183,20 @@ def test_main_writes_injections_and_splits_recovery_by_coverage(tmp_path):
     first = inj[inj["frac"] == 1.0]
     assert run["recovered_frac"] == pytest.approx(np.mean(first["recovered"]))
     split = run["by_e1_n_exp_min"]
-    assert split["1"]["n"] + split[">=2"]["n"] == 40
+    assert split["0"]["n"] + split["1"]["n"] + split[">=2"]["n"] == 40
     assert split["1"]["n"] == int((first["e1_n_exp_min"] == 1).sum())
     assert np.all(first["A_inj_flux"] > 0) and set(first["B_pass"]) <= {-1, 0, 1}
+
+
+def test_coverage_without_con_stops_before_measuring(tmp_path):
+    p = tmp_path / "a.fits"
+    _image(p, np.empty((0, 2)), np.empty(0), np.random.default_rng(0))
+    Table({"ra": [24.35], "dec": [-8.45]}).write(tmp_path / "c.ecsv", format="ascii.ecsv")
+    with pytest.raises(SystemExit, match="CON"):
+        tg.main(
+            ["--band", "A", str(p), str(p), "--catalog", str(tmp_path / "c.ecsv")]
+            + ["--epoch2-catalogs", "--out", str(tmp_path / "o"), "--coverage", "--procs", "1"]
+        )
 
 
 def _colour_change_field(tmp_path, recentre_in):

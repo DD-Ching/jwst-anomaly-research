@@ -16,7 +16,7 @@
       "zero_point_mag": -0.032752752924396236,
       "n_measured": 847,
       "n_pass": 28,
-      "positions_per_s": 8357.152708536532
+      "positions_per_s": 10163.633410677157
     },
     "F444W": {
       "e1": "jw04903-o004_t004_nircam_clear-f444w_i2d.fits",
@@ -25,7 +25,7 @@
       "zero_point_mag": 0.010930960989933264,
       "n_measured": 843,
       "n_pass": 27,
-      "positions_per_s": 7066.184106016855
+      "positions_per_s": 11993.865926402797
     }
   },
   "injection": {
@@ -44,6 +44,10 @@
           "F444W": 0.824
         },
         "by_e1_n_exp_min": {
+          "0": {
+            "n": 0,
+            "recovered_frac": null
+          },
           "1": {
             "n": 67,
             "recovered_frac": 0.6119402985074627
@@ -66,6 +70,10 @@
           "F444W": 0.558
         },
         "by_e1_n_exp_min": {
+          "0": {
+            "n": 0,
+            "recovered_frac": null
+          },
           "1": {
             "n": 67,
             "recovered_frac": 0.13432835820895522

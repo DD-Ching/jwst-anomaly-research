@@ -37,7 +37,7 @@ hoc split needs no re-run.
 
 ``--coverage`` stores the number of exposures (bits set in the mosaic ``CON`` context extension) at
 each position per band and epoch (``<band>_e1_n_exp``, ``<band>_e2_n_exp``) and splits the injection
-recovery by the smallest epoch-1 count over bands (1 or >= 2).
+recovery by the smallest epoch-1 count over bands (0, 1 or >= 2).
 
     python scripts/transient_grid.py \\
         --band F277W e1_f277w_i2d.fits e2_f277w_i2d.fits --band F356W ... \\
@@ -376,6 +376,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 8))
     args = ap.parse_args(argv)
+    if args.coverage:  # fail before the band pass, not after it
+        for p in (p for _, p1, p2 in args.band for p in (p1, p2)):
+            with fits.open(p, memmap=True) as h:
+                if "CON" not in h:
+                    raise SystemExit(f"--coverage needs a CON extension in {p}")
 
     cats = [Table.read(c, format="ascii.ecsv") for c in args.catalog]
     pos = union_positions(cats, args.dedup_arcsec)
@@ -498,7 +503,7 @@ def main(argv: list[str] | None = None) -> int:
                     e1n = np.min([pos[f"{b}_e1_n_exp"][inj_idx] for b in bands], axis=0)
                     rows["e1_n_exp_min"] = e1n
                     by_cov = {}
-                    for key, sel in (("1", e1n == 1), (">=2", e1n >= 2)):
+                    for key, sel in (("0", e1n == 0), ("1", e1n == 1), (">=2", e1n >= 2)):
                         by_cov[key] = {
                             "n": int(sel.sum()),
                             "recovered_frac": float(rec[sel].mean()) if sel.any() else None,

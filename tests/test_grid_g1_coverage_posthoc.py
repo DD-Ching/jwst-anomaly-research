@@ -31,5 +31,5 @@ def test_split_recovery_counts_each_cell():
 
 def test_floor_significance_at_equal_errors():
     e = np.full(10, 0.02)
-    assert gp.floor_significance(e, e, 1.0) == pytest.approx(10 / np.sqrt(2))
-    assert gp.floor_significance(e, e, 2.0) == pytest.approx(5 / np.sqrt(2))
+    assert gp.floor_significance(e, e, 1.0, 0.2) == pytest.approx(10 / np.sqrt(2))
+    assert gp.floor_significance(e, e, 2.0, 0.2) == pytest.approx(5 / np.sqrt(2))

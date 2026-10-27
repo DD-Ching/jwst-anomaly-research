@@ -124,8 +124,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.
 
-- **Grid G1 diagnosis 2026-10-27** (`results/transients/grid_g1_coverage/RESULT.md`): outcome R. Recovery on ≥ 2
-  epoch-1 exposures is 0.806 (J2129) and 0.540 (J0308), so single-exposure strips do not explain the G1 failures. Post
+- **Grid G1 diagnosis 2026-10-27** (`results/transients/grid_g1_coverage/RESULT.md`): outcome U (single-exposure
+  subsets < 100). Recovery on ≥ 2 epoch-1 exposures is 0.806 (J2129) and 0.540 (J0308), so single-exposure strips
+  alone do not account for the G1 failures. Post
   hoc, floor-set injections drive the J2129 miss (nominal, ≥ 2 exposures: 0.947). A G1 rule change (score nominal
   injections, or set the floor in calibrated σ) is a D-027 amendment and the owner's call. Next grid: Abell 1689
   5782 o001 → 6882 o048 (plan first), with `--coverage`.
