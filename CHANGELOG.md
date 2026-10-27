@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: Grid G1 failures on MACS J0308 / J2129: not single-exposure coverage (outcome R); floor-set injections sit at ≤ 5.6σ
+- **Tool:** `scripts/transient_grid.py` now writes `injections.ecsv` (one row per injection) and, with `--coverage`,
+  per-position `CON` exposure counts and a split of the recovery by the smallest epoch-1 count. Re-running both
+  frozen grids reproduces #576 / #577 exactly (0.518, 0.78; same hits).
+- **Result** (`results/transients/grid_g1_coverage/RESULT.md`; plan pushed first): recovery at −0.75 mag on ≥ 2
+  epoch-1 exposures is 0.806 (J2129) and 0.540 (J0308), both < 0.85, so H_cov is rejected and no rule changes.
+- **Post hoc:** the misses concentrate where the floor (10 × median epoch-2 error) set the flux: recovery 0.473 / 0.065
+  there against 0.947 / 0.785 for nominal injections on ≥ 2 exposures. At median errors a floor injection reaches only
+  5.6σ (J2129) and 3.7σ (J0308) after the noise scale. G1 mixes a −0.75 mag brightening with a fixed-flux floor test.
+- **Failed approach:** restricting G1 to multi-exposure coverage does not rescue either pair.
+- **Handoff:** a G1 amendment (score nominal injections only, or define the floor in calibrated σ) is the owner's call
+  (D-027); not adopted. Next grid: Abell 1689 5782 o001 → 6882 o048 with `--coverage` (plan first). #374 waits for
+  the next weekly run.
+
 ## 2026-10-27: MACS J2129 two-epoch grid 4903 o004 → 6882 o040 (392 d, core): outcome U, G1 fails 0.78; 13 groups star spikes / single exposure
 - **Result** (`results/transients/macs2129_grid/RESULT.md`; plan pushed before any pixel was read): F277W / F444W,
   tool unchanged. G1 fails: −0.75 mag injections recovered 0.78 (< 0.85; F277W 0.878, F444W 0.824); G2 passes

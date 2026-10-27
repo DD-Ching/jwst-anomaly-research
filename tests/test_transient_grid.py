@@ -32,13 +32,26 @@ def _wcs() -> WCS:
     return w
 
 
-def _image(path: Path, xy: np.ndarray, flux: np.ndarray, rng: np.random.Generator) -> None:
+def _con() -> np.ndarray:
+    """Context planes: one exposure on the left half, three on the right (bit 33 on plane 1)."""
+    con = np.zeros((2, N, N), "i4")
+    con[0, :, : N // 2] = 0b1
+    con[0, :, N // 2 :] = 0b11
+    con[1, :, N // 2 :] = 0b1
+    return con
+
+
+def _image(
+    path: Path, xy: np.ndarray, flux: np.ndarray, rng: np.random.Generator, con: bool = False
+) -> None:
     sci = rng.normal(0, 0.01, (N, N))
     for (x, y), f in zip(xy, flux, strict=True):
         sci += tg.gaussian((N, N), x, y, 1.5, f)
     hdus = [fits.PrimaryHDU()]
     hdus.append(fits.ImageHDU(sci.astype("f4"), header=_wcs().to_header(), name="SCI"))
     hdus.append(fits.ImageHDU(np.full((N, N), 0.01, "f4"), header=_wcs().to_header(), name="ERR"))
+    if con:
+        hdus.append(fits.ImageHDU(_con(), name="CON"))
     fits.HDUList(hdus).writeto(path)
 
 
@@ -132,6 +145,47 @@ def test_main_finds_the_brightened_source_and_recovers_injections(tmp_path):
     assert summary["n_hits"] == 1
     assert summary["n_hit_groups"] == 1
     assert summary["injection"]["runs"][0]["recovered_frac"] >= 0.9
+
+
+def test_n_exposures_counts_bits_over_every_plane(tmp_path):
+    p = tmp_path / "a.fits"
+    _image(p, np.empty((0, 2)), np.empty(0), np.random.default_rng(0), con=True)
+    w = _wcs()
+    ra, dec = w.pixel_to_world_values([50.0, 350.0, -100.0], [200.0, 200.0, 200.0])
+    assert list(tg.n_exposures(str(p), np.asarray(ra), np.asarray(dec))) == [1, 3, 0]
+
+
+def test_main_writes_injections_and_splits_recovery_by_coverage(tmp_path):
+    rng = np.random.default_rng(1)
+    xy = _field(rng)
+    flux = rng.uniform(2, 6, len(xy))
+    w = _wcs()
+    ra, dec = w.pixel_to_world_values(xy[:, 0], xy[:, 1])
+    args = []
+    for band in ("A", "B"):
+        p1, p2 = tmp_path / f"{band}1.fits", tmp_path / f"{band}2.fits"
+        _image(p1, xy, flux, rng, con=True)
+        _image(p2, xy, flux, rng, con=True)
+        args += ["--band", band, str(p1), str(p2)]
+    Table({"ra": ra, "dec": dec}).write(tmp_path / "cat_a.ecsv", format="ascii.ecsv")
+    out = tmp_path / "out"
+    tg.main(
+        args
+        + ["--catalog", str(tmp_path / "cat_a.ecsv"), "--epoch2-catalogs", "--out", str(out)]
+        + ["--inject", "40", "--inject-frac", "1.0", "0.5", "--procs", "1", "--coverage"]
+    )
+    grid = Table.read(out / "grid.ecsv")
+    left = np.asarray(grid["ra"]) > w.pixel_to_world_values(N / 2, N / 2)[0]  # RA grows leftwards
+    assert set(grid["A_e1_n_exp"][left]) == {1} and set(grid["B_e2_n_exp"][~left]) == {3}
+    inj = Table.read(out / "injections.ecsv")
+    assert len(inj) == 80 and set(inj["frac"]) == {1.0, 0.5}
+    run = json.loads((out / "summary.json").read_text())["injection"]["runs"][0]
+    first = inj[inj["frac"] == 1.0]
+    assert run["recovered_frac"] == pytest.approx(np.mean(first["recovered"]))
+    split = run["by_e1_n_exp_min"]
+    assert split["1"]["n"] + split[">=2"]["n"] == 40
+    assert split["1"]["n"] == int((first["e1_n_exp_min"] == 1).sum())
+    assert np.all(first["A_inj_flux"] > 0) and set(first["B_pass"]) <= {-1, 0, 1}
 
 
 def _colour_change_field(tmp_path, recentre_in):

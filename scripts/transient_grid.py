@@ -31,7 +31,13 @@ random positions per band, with a flux equal to ``--inject-frac`` times the posi
 aperture flux (or ``--inject-floor`` × the band's median aperture error when that is larger), and
 reports the fraction recovered as hits, overall and where the fraction (not the floor) set the
 flux. Injections are measured in a separate pass with the real grid's zero point and noise scale.
-Recovery counts the automatic thresholds only (no by-eye vetting).
+Recovery counts the automatic thresholds only (no by-eye vetting). Every injection is written to
+``injections.ecsv`` (position, fraction, injected flux and pass sign per band, recovered), so a post
+hoc split needs no re-run.
+
+``--coverage`` stores the number of exposures (bits set in the mosaic ``CON`` context extension) at
+each position per band and epoch (``<band>_e1_n_exp``, ``<band>_e2_n_exp``) and splits the injection
+recovery by the smallest epoch-1 count over bands (1 or >= 2).
 
     python scripts/transient_grid.py \\
         --band F277W e1_f277w_i2d.fits e2_f277w_i2d.fits --band F356W ... \\
@@ -119,6 +125,33 @@ def _stamp(img: np.ndarray, x: float, y: float, half: int) -> tuple[np.ndarray, 
         ix - half,
         iy - half,
     )
+
+
+def n_exposures(path: str, ra: np.ndarray, dec: np.ndarray) -> np.ndarray:
+    """Exposures contributing at each position: bits set over every plane of the mosaic's ``CON``
+    extension (32 exposures per plane); 0 off the image."""
+    with fits.open(path, memmap=True) as h:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", FITSFixedWarning)
+            wcs = WCS(h["SCI"].header)
+        con = h["CON"].data
+        if con.ndim == 2:
+            con = con[None]
+        x, y = wcs.world_to_pixel_values(ra, dec)
+        out = np.zeros(len(ra), int)
+        ok = np.isfinite(x) & np.isfinite(y)
+        ix, iy = np.round(x[ok]).astype(int), np.round(y[ok]).astype(int)
+        inside = (ix >= 0) & (iy >= 0) & (ix < con.shape[2]) & (iy < con.shape[1])
+        k = np.flatnonzero(ok)[inside]
+        vals = np.asarray(con[:, iy[inside], ix[inside]]).astype(np.uint32)  # planes x n
+        bits = np.unpackbits(vals.T.copy().view(np.uint8), axis=1).sum(axis=1)
+        out[k] = bits
+    return out
+
+
+def _count_job(job: tuple) -> tuple[str, str, np.ndarray]:
+    band, tag, path, ra, dec = job
+    return band, tag, n_exposures(path, ra, dec)
 
 
 def gaussian(
@@ -336,6 +369,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--inject-floor", type=float, default=10.0)
     ap.add_argument("--inject-fwhm-arcsec", type=float, default=0.1)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument(
+        "--coverage",
+        action="store_true",
+        help="store per-position exposure counts (CON) and split injection recovery by them",
+    )
     ap.add_argument("--procs", type=int, default=min(os.cpu_count() or 1, 8))
     args = ap.parse_args(argv)
 
@@ -396,7 +434,15 @@ def main(argv: list[str] | None = None) -> int:
                 f"{len(pos) / dt:.0f} positions/s",
                 flush=True,
             )
-        injections = []
+        if args.coverage:
+            cjobs = [
+                (b, tag, p, ra, dec)
+                for b, p1, p2 in args.band
+                for tag, p in (("e1", p1), ("e2", p2))
+            ]
+            for b, tag, n in pmap(_count_job, cjobs):
+                pos[f"{b}_{tag}_n_exp"] = n
+        injections, inj_rows = [], []
         if args.inject:  # only where every band was measured, so recovery is per testable position
             every = np.all([np.isfinite(v[0]["f1"] + v[0]["f2"]) for v in real.values()], axis=0)
             rng = np.random.default_rng(args.seed)
@@ -434,6 +480,30 @@ def main(argv: list[str] | None = None) -> int:
                 rec = (si > 0).sum(1) >= args.min_bands
                 # the floor makes faint positions brighten by more than frac; report both subsets
                 nominal = np.all([fluxes[b][1] for b in bands], axis=0)
+                rows = Table(
+                    {
+                        "pos_id": pos["pos_id"][inj_idx],
+                        "ra": ra[inj_idx],
+                        "dec": dec[inj_idx],
+                        "frac": np.full(len(inj_idx), frac),
+                        "recovered": rec,
+                        "nominal": nominal,
+                    }
+                )
+                for j, job in enumerate(jobs):  # jobs follow --band order, like si's columns
+                    rows[f"{job[0]}_inj_flux"] = job[8]
+                    rows[f"{job[0]}_pass"] = si[:, j]
+                by_cov = None
+                if args.coverage:
+                    e1n = np.min([pos[f"{b}_e1_n_exp"][inj_idx] for b in bands], axis=0)
+                    rows["e1_n_exp_min"] = e1n
+                    by_cov = {}
+                    for key, sel in (("1", e1n == 1), (">=2", e1n >= 2)):
+                        by_cov[key] = {
+                            "n": int(sel.sum()),
+                            "recovered_frac": float(rec[sel].mean()) if sel.any() else None,
+                        }
+                inj_rows.append(rows)
                 injections.append(
                     {
                         "frac": frac,
@@ -447,6 +517,7 @@ def main(argv: list[str] | None = None) -> int:
                         "per_band_pass_frac": {
                             b: float((si[:, j] > 0).mean()) for j, b in enumerate(bands)
                         },
+                        **({"by_e1_n_exp_min": by_cov} if by_cov is not None else {}),
                     }
                 )
     finally:
@@ -471,6 +542,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     pos.write(args.out / "grid.ecsv", format="ascii.ecsv", overwrite=True)
     pos[pos["hit"]].write(args.out / "hits.ecsv", format="ascii.ecsv", overwrite=True)
+    if inj_rows:
+        inj = vstack(inj_rows)
+        inj.meta = {"provenance": "derived", "note": "pass: +1 brighter, -1 fainter, 0 none"}
+        inj.write(args.out / "injections.ecsv", format="ascii.ecsv", overwrite=True)
     measured = [np.isfinite(pos[f"{b}_flux1"] + pos[f"{b}_flux2"]) for b in bands]
     summary = {
         "n_positions": len(pos),
