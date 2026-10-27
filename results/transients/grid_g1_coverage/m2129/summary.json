@@ -1,0 +1,90 @@
+{
+  "n_positions": 2524,
+  "n_merged_after_refinement": 22,
+  "n_measured_any_band": 847,
+  "n_measured_all_bands": 843,
+  "n_hits": 16,
+  "n_hit_groups": 13,
+  "n_hits_mixed": 0,
+  "recentre_in": "origin",
+  "same_sign": false,
+  "bands": {
+    "F277W": {
+      "e1": "jw04903-o004_t004_nircam_clear-f277w_i2d.fits",
+      "e2": "jw06882-o040_t043_nircam_clear-f277w_i2d.fits",
+      "noise_scale": 1.4657732924948448,
+      "zero_point_mag": -0.032752752924396236,
+      "n_measured": 847,
+      "n_pass": 28,
+      "positions_per_s": 10163.633410677157
+    },
+    "F444W": {
+      "e1": "jw04903-o004_t004_nircam_clear-f444w_i2d.fits",
+      "e2": "jw06882-o040_t043_nircam_clear-f444w_i2d.fits",
+      "noise_scale": 1.2475069831947292,
+      "zero_point_mag": 0.010930960989933264,
+      "n_measured": 843,
+      "n_pass": 27,
+      "positions_per_s": 11993.865926402797
+    }
+  },
+  "injection": {
+    "floor_x_median_error": 10.0,
+    "fwhm_arcsec": 0.1,
+    "runs": [
+      {
+        "frac": 1.0,
+        "nominal_dmag": -0.752574989159953,
+        "n": 500,
+        "recovered_frac": 0.78,
+        "n_nominal": 349,
+        "recovered_frac_nominal": 0.9283667621776505,
+        "per_band_pass_frac": {
+          "F277W": 0.878,
+          "F444W": 0.824
+        },
+        "by_e1_n_exp_min": {
+          "0": {
+            "n": 0,
+            "recovered_frac": null
+          },
+          "1": {
+            "n": 67,
+            "recovered_frac": 0.6119402985074627
+          },
+          ">=2": {
+            "n": 433,
+            "recovered_frac": 0.8060046189376443
+          }
+        }
+      },
+      {
+        "frac": 0.5,
+        "nominal_dmag": -0.4402281476392031,
+        "n": 500,
+        "recovered_frac": 0.208,
+        "n_nominal": 249,
+        "recovered_frac_nominal": 0.20481927710843373,
+        "per_band_pass_frac": {
+          "F277W": 0.274,
+          "F444W": 0.558
+        },
+        "by_e1_n_exp_min": {
+          "0": {
+            "n": 0,
+            "recovered_frac": null
+          },
+          "1": {
+            "n": 67,
+            "recovered_frac": 0.13432835820895522
+          },
+          ">=2": {
+            "n": 433,
+            "recovered_frac": 0.21939953810623555
+          }
+        }
+      }
+    ],
+    "note": "recovery by the automatic thresholds only; by-eye vetting is not emulated; injections sit at the measured (recentred or refined) position, so recentring is not tested; a brightening injected in every band is recovered alike under the same-sign and mixed-sign rules"
+  }
+}
