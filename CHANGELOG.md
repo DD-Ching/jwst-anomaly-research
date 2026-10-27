@@ -2,6 +2,12 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: Queue blocked on owner calls (no science run this cycle)
+- **Handoff:** the two-epoch grid line waits on the owner's G1 ruling (D-027; four consecutive pairs fail G1: #576, #577, #579, #580),
+  and D115b waits on a BayeSys / fixed-Lenstool reopen (D-109 addendum 9). The remaining inventory pairs (MACS J0308
+  6882 o015 → 9478 o002, Abell 1689 5782 o001 → 6882 o048) are not run before that ruling. #374 waits for the next
+  weekly job. Tally line in `docs/state/trial.md`.
+
 ## 2026-10-27: MACS J0138 two-epoch grid 2345 o005 → 6549 o003 (52 d, core): outcome U, G1 fails 0.50; SN Encore control not recovered
 - **Result** (`results/transients/macs0138_grid/RESULT.md`; plan pushed before any pixel was read): F150W / F444W,
   tool as on main with `--coverage`. G1 fails: −0.75 mag injections recovered 0.50 (< 0.85); G2 passes (1.52 /
