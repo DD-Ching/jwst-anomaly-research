@@ -34,9 +34,12 @@ import numpy as np
 from scipy import stats
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from nf_txs_benchmark import HEADERS, SAMPLES, URL, _sha256_stream  # noqa: E402
+
+from jwst_anomaly.acquire import sha256_file  # noqa: E402
 
 OUT = ROOT / "results" / "nf" / "ti_skyllh_benchmark.json"
 MANIFEST = ROOT / "data" / "manifests" / "nf_skyllh_dr2_all.ecsv"
@@ -88,14 +91,6 @@ def _md5(path: Path) -> str:
     return h.hexdigest()
 
 
-def _sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(1 << 22), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
 def fetch(base: Path, version: str) -> None:
     """Stream the files of ``version``; keep a file whose md5 matches; check / extend the pin."""
     from astropy.table import Table
@@ -109,13 +104,14 @@ def fetch(base: Path, version: str) -> None:
         dest = base / SAMPLES[version][1] / row["file"]
         dest.parent.mkdir(parents=True, exist_ok=True)
         t = time.time()
+        sha = None
         if not (dest.exists() and _md5(dest) == row["md5"]):
-            _sha256_stream(URL.format(row["id"]), dest)
+            sha = _sha256_stream(URL.format(row["id"]), dest)
             if _md5(dest) != row["md5"]:
                 dest.unlink()
                 raise SystemExit(f"{row['file']} ({version}): md5 differs from Dataverse's")
             print(f"{version} {row['file']}: {row['size'] / 1e6:.1f} MB, {time.time() - t:.0f} s")
-        sha = _sha256(dest)
+        sha = sha or sha256_file(dest)
         pinned = pins.get((version, row["file"]))
         if pinned is not None and pinned != sha:
             raise SystemExit(f"{row['file']} ({version}): sha256 {sha} != pinned {pinned}")
