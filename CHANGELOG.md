@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: MACS J0138 two-epoch grid 2345 o005 → 6549 o003 (52 d, core): outcome U, G1 fails 0.50; SN Encore control not recovered
+- **Result** (`results/transients/macs0138_grid/RESULT.md`; plan pushed before any pixel was read): F150W / F444W,
+  tool as on main with `--coverage`. G1 fails: −0.75 mag injections recovered 0.50 (< 0.85); G2 passes (1.52 /
+  1.31). 7 hits in 4 groups, all read as instrumental: spike residuals of two bright point sources at a 30.1° roll (not stored)
+  change (groups 0–2) and a registration dipole on a bright compact knot of the radial arc (group 3).
+- **Positive control:** SN Encore (discovered in epoch 1) is not a hit. By eye, its southern MRG-M0138 arc shows a
+  registration dipole in e2 − e1 in both bands, and no catalogue position on the arc passes.
+- **Post hoc:** recovery 0.831 where expected σ ≥ 5 in both bands (236 / 500); the 5–6σ bin is 0.556. So the
+  σ ≥ 5 G1 amendment of #579 would also fail on this pair.
+- **Failed approach:** a known lensed SN on a bright arc does not give the catalogue-position grid a positive control.
+- **Deviation from the #579 handoff** (next grid only after the owner's G1 ruling): this pair was run because it
+  was the only one with a known transient; it adds evidence for that ruling, and it changes no rule.
+- **Handoff:** the G1 amendment remains the owner's call (D-027); four consecutive pairs fail G1. #374 waits for the
+  next weekly run.
+
 ## 2026-10-27: Abell 1689 two-epoch grid 1840 o019 → 5782 o001 (870 d, core): outcome U, G1 fails 0.42; 12 groups instrumental
 - **Result** (`results/transients/a1689_grid/RESULT.md`; plan pushed before any pixel was read): F277W / F356W, tool
   as on main with `--coverage`. G1 fails: −0.75 mag injections recovered 0.42 (< 0.85; nominal 0.678); G2 passes
