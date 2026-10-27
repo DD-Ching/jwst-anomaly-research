@@ -57,7 +57,7 @@ MAST = "https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/"
 
 
 def n_bits(v: int) -> int:
-    return bin(int(v)).count("1")
+    return bin(int(v) & 0xFFFFFFFF).count("1")  # CON is int32: bit 31 makes it negative
 
 
 def n_exposures(con: np.ndarray, y: int, x: int) -> int:

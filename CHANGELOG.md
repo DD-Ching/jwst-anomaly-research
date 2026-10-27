@@ -2,6 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: Abell 1689 two-epoch grid 1840 o019 → 5782 o001 (870 d, core): outcome U, G1 fails 0.42; 12 groups instrumental
+- **Result** (`results/transients/a1689_grid/RESULT.md`; plan pushed before any pixel was read): F277W / F356W, tool
+  as on main with `--coverage`. G1 fails: −0.75 mag injections recovered 0.42 (< 0.85; nominal 0.678); G2 passes
+  (1.41 / 1.38). 15 hits in 12 groups, all instrumental: diffraction spikes / wings of bright stars after a 171.6°
+  roll change (11; one 3.11″ from the star, just outside the post hoc 3″ cut, read by eye) and the epoch-1 mosaic
+  edge (1). No positive control.
+- **Post hoc:** recovery follows each injection's expected calibrated σ (noise-free, the tool's error model):
+  0.010 / 0.000 / 0.219 / 0.794 / 0.988 below 3σ, 3–4σ, 4–5σ, 5–6σ, 6–8σ; 0.939 over the 214 injections ≥ 5σ in both
+  bands. Coverage is not the cause (495 / 500 on ≥ 2 epoch-1 exposures, recovery 0.420).
+- **Failed approach:** a GO-vs-GO pair with wide LW bands still fails G1; the gate counts positions where a −0.75 mag
+  brightening cannot reach 5σ.
+- **Fix:** `m0308_grid_posthoc.n_bits` miscounted a `CON` plane with bit 31 set (int32, negative); it now masks to 32
+  bits (test added). The stored #576 / #577 coverage counts are ≤ 4, and a negative plane with few exposures set reads far higher (inferred,
+  not re-run), so those results are unaffected. This run's post hoc uses `transient_grid.n_exposures`.
+- **Handoff:** a G1 amendment (score injections with expected σ ≥ 5 in every band, or a σ-based floor, #578) is the
+  owner's call (D-027); not adopted. Three consecutive pairs (#576, #577, this run) fail G1. #374 waits
+  for the next weekly run.
+
 ## 2026-10-27: Grid G1 failures on MACS J0308 / J2129: outcome U; ≥ 2-exposure recovery still < 0.85, floor-set injections sit near or below 5σ
 - **Tool:** `scripts/transient_grid.py` now writes `injections.ecsv` (one row per injection) and, with `--coverage`,
   per-position `CON` exposure counts and a split of the recovery by the smallest epoch-1 count. Re-running both
