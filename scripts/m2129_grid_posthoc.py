@@ -75,10 +75,11 @@ def grid_coverage(data: Path, grid: Table) -> dict:
         with fits.open(data / f"{E1}{b}_i2d.fits", memmap=True) as h:
             w, con = WCS(h["SCI"].header), h["CON"].data
             x, y = w.world_to_pixel_values(np.asarray(grid["ra"])[ok], np.asarray(grid["dec"])[ok])
-            n = [
-                n_exposures(con, int(round(float(yi))), int(round(float(xi))))
-                for xi, yi in zip(x, y, strict=True)
-            ]
+            n = []
+            for xi, yi in zip(x, y, strict=True):
+                xi, yi = int(round(float(xi))), int(round(float(yi)))
+                inside = 0 <= yi < con.shape[1] and 0 <= xi < con.shape[2]
+                n.append(n_exposures(con, yi, xi) if inside else 0)
         vals, counts = np.unique(n, return_counts=True)
         out[b] = {str(int(v)): int(c) for v, c in zip(vals, counts, strict=True)}
     return out
