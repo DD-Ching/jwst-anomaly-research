@@ -1,0 +1,211 @@
+{
+ "provenance": "derived",
+ "post_hoc": true,
+ "coverage": {
+  "0": {
+   "f150w_e1_n_exp": 2,
+   "f150w_e1_wht_rel": 0.514,
+   "f150w_e2_n_exp": 4,
+   "f150w_e2_wht_rel": 1.031,
+   "f444w_e1_n_exp": 2,
+   "f444w_e1_wht_rel": 0.509,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.026
+  },
+  "1": {
+   "f150w_e1_n_exp": 4,
+   "f150w_e1_wht_rel": 1.014,
+   "f150w_e2_n_exp": 4,
+   "f150w_e2_wht_rel": 1.015,
+   "f444w_e1_n_exp": 4,
+   "f444w_e1_wht_rel": 1.013,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.009
+  },
+  "2": {
+   "f150w_e1_n_exp": 2,
+   "f150w_e1_wht_rel": 0.514,
+   "f150w_e2_n_exp": 4,
+   "f150w_e2_wht_rel": 1.031,
+   "f444w_e1_n_exp": 2,
+   "f444w_e1_wht_rel": 0.509,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 0.995
+  },
+  "3": {
+   "f150w_e1_n_exp": 4,
+   "f150w_e1_wht_rel": 1.029,
+   "f150w_e2_n_exp": 2,
+   "f150w_e2_wht_rel": 0.51,
+   "f444w_e1_n_exp": 4,
+   "f444w_e1_wht_rel": 1.022,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.015
+  }
+ },
+ "bright_star": {
+  "band": "F444W",
+  "flux_cut": 404.88,
+  "n_stars": 6,
+  "groups": {
+   "0": {
+    "sep_arcsec": 31.92,
+    "pa_deg": 86.9
+   },
+   "1": {
+    "sep_arcsec": 1.35,
+    "pa_deg": 275.5
+   },
+   "2": {
+    "sep_arcsec": 33.25,
+    "pa_deg": 88.6
+   },
+   "3": {
+    "sep_arcsec": 0.43,
+    "pa_deg": 252.6
+   }
+  }
+ },
+ "pa_aper": {
+  "e1": 35.41,
+  "e2": 65.52
+ },
+ "ghost_pa_rotated_deg": 80.39,
+ "classification": {
+  "0": [
+   "unexplained"
+  ],
+  "1": [
+   "star_wings"
+  ],
+  "2": [
+   "unexplained"
+  ],
+  "3": [
+   "star_wings"
+  ]
+ },
+ "injection": {
+  "bands": {
+   "F150W": {
+    "floor_flux": 3.890002603937064,
+    "median_e1_zp": 0.34071177223755367,
+    "median_e2": 0.3853222237949164,
+    "floor_sigma_at_median": 4.982489930402171
+   },
+   "F444W": {
+    "floor_flux": 0.39112784039279536,
+    "median_e1_zp": 0.04689219416988038,
+    "median_e2": 0.03867363941494265,
+    "floor_sigma_at_median": 4.923504134252857
+   }
+  },
+  "remeasure_matches_grid_flux1": {
+   "F150W": true,
+   "F444W": true
+  },
+  "frac_1.0_n_z_min_nan": 0,
+  "frac_1.0_z_min_bins_all": [
+   {
+    "z_lo": 0.0,
+    "z_hi": 3.0,
+    "n": 3,
+    "recovered_frac": 0.3333333333333333
+   },
+   {
+    "z_lo": 3.0,
+    "z_hi": 4.0,
+    "n": 67,
+    "recovered_frac": 0.14925373134328357
+   },
+   {
+    "z_lo": 4.0,
+    "z_hi": 5.0,
+    "n": 194,
+    "recovered_frac": 0.22164948453608246
+   },
+   {
+    "z_lo": 5.0,
+    "z_hi": 6.0,
+    "n": 81,
+    "recovered_frac": 0.5555555555555556
+   },
+   {
+    "z_lo": 6.0,
+    "z_hi": 8.0,
+    "n": 153,
+    "recovered_frac": 0.9869281045751634
+   },
+   {
+    "z_lo": 8.0,
+    "z_hi": null,
+    "n": 2,
+    "recovered_frac": 0.0
+   }
+  ],
+  "frac_1.0_z_min_bins_nominal": [
+   {
+    "z_lo": 0.0,
+    "z_hi": 3.0,
+    "n": 0,
+    "recovered_frac": null
+   },
+   {
+    "z_lo": 3.0,
+    "z_hi": 4.0,
+    "n": 3,
+    "recovered_frac": 0.0
+   },
+   {
+    "z_lo": 4.0,
+    "z_hi": 5.0,
+    "n": 51,
+    "recovered_frac": 0.45098039215686275
+   },
+   {
+    "z_lo": 5.0,
+    "z_hi": 6.0,
+    "n": 54,
+    "recovered_frac": 0.7962962962962963
+   },
+   {
+    "z_lo": 6.0,
+    "z_hi": 8.0,
+    "n": 153,
+    "recovered_frac": 0.9869281045751634
+   },
+   {
+    "z_lo": 8.0,
+    "z_hi": null,
+    "n": 2,
+    "recovered_frac": 0.0
+   }
+  ],
+  "frac_1.0_n_z_min_ge_5": 236,
+  "frac_1.0_recovered_where_z_min_ge_5": 0.8305084745762712,
+  "split_frac_1.0": {
+   "nominal_e1n_1": {
+    "n": 10,
+    "recovered_frac": 0.7
+   },
+   "nominal_e1n_>=2": {
+    "n": 253,
+    "recovered_frac": 0.8300395256916996
+   },
+   "floor_e1n_1": {
+    "n": 1,
+    "recovered_frac": 0.0
+   },
+   "floor_e1n_>=2": {
+    "n": 236,
+    "recovered_frac": 0.13983050847457626
+   }
+  }
+ },
+ "mosaic_bytes": {
+  "jw02345-o005_t003_nircam_clear-f150w_i2d.fits": 1290248640,
+  "jw02345-o005_t003_nircam_clear-f444w_i2d.fits": 306515520,
+  "jw06549-o003_t001_nircam_clear-f150w_i2d.fits": 574591680,
+  "jw06549-o003_t001_nircam_clear-f444w_i2d.fits": 132125760
+ }
+}

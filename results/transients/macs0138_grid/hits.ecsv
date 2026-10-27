@@ -1,0 +1,52 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: ra, datatype: float64}
+# - {name: dec, datatype: float64}
+# - {name: origin, datatype: int64}
+# - {name: pos_id, datatype: string}
+# - {name: ra_cat, datatype: float64}
+# - {name: dec_cat, datatype: float64}
+# - {name: F150W_flux1, datatype: float64}
+# - {name: F150W_flux2, datatype: float64}
+# - {name: F150W_dmag, datatype: float64}
+# - {name: F150W_sigma, datatype: float64}
+# - {name: F150W_pass, datatype: int64}
+# - {name: F444W_flux1, datatype: float64}
+# - {name: F444W_flux2, datatype: float64}
+# - {name: F444W_dmag, datatype: float64}
+# - {name: F444W_sigma, datatype: float64}
+# - {name: F444W_pass, datatype: int64}
+# - {name: F150W_e1_n_exp, datatype: int64}
+# - {name: F150W_e2_n_exp, datatype: int64}
+# - {name: F444W_e1_n_exp, datatype: int64}
+# - {name: F444W_e2_n_exp, datatype: int64}
+# - {name: n_pass_bright, datatype: int64}
+# - {name: n_pass_faint, datatype: int64}
+# - {name: hit, datatype: bool}
+# - {name: mixed, datatype: bool}
+# - {name: group, datatype: int64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: union of pipeline catalogs}
+# - {thresholds_are: ASSUMPTION}
+# - bands:
+#     F150W: {e1: jw02345-o005_t003_nircam_clear-f150w_i2d.fits, e2: jw06549-o003_t001_nircam_clear-f150w_i2d.fits, n_measured: 871, n_pass: 8,
+#       noise_scale: 1.5179002634498442, positions_per_s: 5238.972655952613, zero_point_mag: -0.024120430755629127}
+#     F444W: {e1: jw02345-o005_t003_nircam_clear-f444w_i2d.fits, e2: jw06549-o003_t001_nircam_clear-f444w_i2d.fits, n_measured: 819, n_pass: 15,
+#       noise_scale: 1.3069679166402066, positions_per_s: 6306.530614066088, zero_point_mag: 0.004625184678128582}
+# - {n_merged_after_refinement: 37}
+# - {min_sigma: 5.0}
+# - {min_dmag: 0.3}
+# - {min_bands: 2}
+# - {recentre_in: origin}
+# - {same_sign: false}
+# schema: astropy-2.0
+ra dec origin pos_id ra_cat dec_cat F150W_flux1 F150W_flux2 F150W_dmag F150W_sigma F150W_pass F444W_flux1 F444W_flux2 F444W_dmag F444W_sigma F444W_pass F150W_e1_n_exp F150W_e2_n_exp F444W_e1_n_exp F444W_e2_n_exp n_pass_bright n_pass_faint hit mixed group
+24.527140081566163 -21.92286783331044 0 g01131 24.527142076294947 -21.9228653681827 4.377576634287834 -0.5961198210716248 nan -5.28827899379312 -1 -0.2601340264081955 0.3984133303165436 nan 7.002125133422777 1 2 4 2 4 1 1 True True 0
+24.535961542857656 -21.945130107737985 0 g01365 24.53595723607125 -21.945127939275363 14.904134213924408 -3.447428435087204 nan -14.447454103224137 -1 1.472230315208435 0.1219160407781601 2.700162079522187 -11.217640760690832 -1 4 4 4 4 0 2 True False 1
+24.527548855703003 -21.923120351022597 0 g01537 24.52755591083374 -21.923129288810454 7.1504121869802475 -0.45095156133174896 nan -7.4120497551547775 -1 -0.5253591239452362 0.8043338060379028 nan 12.576031424350896 1 2 4 2 4 1 1 True True 2
+24.51747196519582 -21.923387003118897 1 g01797 24.51747196519582 -21.9233870031189 36.94210892915726 21.443944931030273 0.6146629339789313 -5.578133812663341 -1 44.586989879608154 29.541675925254822 0.4423073753786668 -5.538076422959251 -1 4 2 4 4 0 2 True False 3
+24.536057706864643 -21.94496336078524 2 g02223 24.536059101566064 -21.944964735764895 7.083414793014526 16.4446841776371 -0.8903367270141733 6.6757415335872885 1 0.4169330298900604 1.3115461766719818 -1.2489183946327334 8.008825872050007 1 4 4 4 4 2 0 True False 1
+24.52747599456454 -21.922636932189523 2 g02229 24.5274758622152 -21.92263398682945 -2.506063684821129 6.516631931066513 nan 9.01890970427222 1 0.48056313395500183 -0.2494608461856842 nan -7.798330569009498 -1 2 4 2 4 1 1 True True 0
+24.53641525991432 -21.944738405506133 3 g02377 24.536427963462575 -21.944731981685955 -0.8848379105329514 11.698686957359314 nan 11.667184157462103 1 0.24675849080085754 0.8943291306495667 -1.4026883639347252 7.107364148892524 1 4 4 4 4 2 0 True False 1

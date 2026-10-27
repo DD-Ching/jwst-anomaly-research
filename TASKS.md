@@ -124,6 +124,12 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.
 
+- **MACS J0138 grid 2026-10-27** (`results/transients/macs0138_grid/RESULT.md`): 2345 o005 → 6549 o003, F150W / F444W,
+  outcome U (G1 0.50); 4 groups instrumental (star spikes, a registration dipole on a bright knot). The positive
+  control SN Encore is not recovered: its arc carries a registration dipole in e2 − e1 (by eye) and the SN is not at
+  a catalogue centroid. Post hoc, recovery where expected σ ≥ 5 is 0.831, so the σ ≥ 5 G1 amendment would also fail
+  here. Next grid only after the owner rules on G1 (D-027); a working positive control needs a transient away from
+  bright extended light, or registration-refined difference imaging.
 - **Abell 1689 grid 2026-10-27** (`results/transients/a1689_grid/RESULT.md`): 1840 o019 → 5782 o001, F277W / F356W,
   outcome U (G1 0.42); 12 groups instrumental (11 star spikes, 1 mosaic edge). Post hoc, recovery is 0.939 where an
   injection's expected σ is ≥ 5 in both bands, so the G1 failures track faint catalogue positions. Next grid only
