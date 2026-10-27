@@ -278,142 +278,279 @@
   "groups": {
    "0": {
     "sep_arcsec": 48.22,
-    "pa_deg": 220.4
+    "pa_deg": 220.4,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "1": {
     "sep_arcsec": 8.32,
-    "pa_deg": 120.0
+    "pa_deg": 120.0,
+    "star_ra": 47.222564,
+    "star_dec": 26.765523,
+    "star_f410m_e1_uJy": 8403.2
    },
    "2": {
     "sep_arcsec": 47.69,
-    "pa_deg": 102.9
+    "pa_deg": 102.9,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "3": {
     "sep_arcsec": 8.32,
-    "pa_deg": 120.1
+    "pa_deg": 120.1,
+    "star_ra": 47.237552,
+    "star_dec": 26.778646,
+    "star_f410m_e1_uJy": 11892.8
    },
    "4": {
     "sep_arcsec": 8.35,
-    "pa_deg": 120.2
+    "pa_deg": 120.2,
+    "star_ra": 47.24752,
+    "star_dec": 26.748747,
+    "star_f410m_e1_uJy": 6939.5
    },
    "5": {
     "sep_arcsec": 61.92,
-    "pa_deg": 15.4
+    "pa_deg": 15.4,
+    "star_ra": 47.237552,
+    "star_dec": 26.778646,
+    "star_f410m_e1_uJy": 11892.8
    },
    "6": {
     "sep_arcsec": 58.35,
-    "pa_deg": 75.4
+    "pa_deg": 75.4,
+    "star_ra": 47.221326,
+    "star_dec": 26.807977,
+    "star_f410m_e1_uJy": 3485.8
    },
    "7": {
     "sep_arcsec": 2.32,
-    "pa_deg": 316.4
+    "pa_deg": 316.4,
+    "star_ra": 47.226067,
+    "star_dec": 26.777832,
+    "star_f410m_e1_uJy": 5692.5
    },
    "8": {
     "sep_arcsec": 65.08,
-    "pa_deg": 283.1
+    "pa_deg": 283.1,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "9": {
     "sep_arcsec": 53.44,
-    "pa_deg": 319.2
+    "pa_deg": 319.2,
+    "star_ra": 47.218112,
+    "star_dec": 26.775707,
+    "star_f410m_e1_uJy": 2562.4
    },
    "10": {
     "sep_arcsec": 31.35,
-    "pa_deg": 207.7
+    "pa_deg": 207.7,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "11": {
     "sep_arcsec": 50.75,
-    "pa_deg": 242.9
+    "pa_deg": 242.9,
+    "star_ra": 47.24752,
+    "star_dec": 26.748747,
+    "star_f410m_e1_uJy": 6939.5
    },
    "12": {
     "sep_arcsec": 23.18,
-    "pa_deg": 175.4
+    "pa_deg": 175.4,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "13": {
     "sep_arcsec": 22.88,
-    "pa_deg": 153.4
+    "pa_deg": 153.4,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "14": {
     "sep_arcsec": 29.85,
-    "pa_deg": 134.2
+    "pa_deg": 134.2,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "15": {
     "sep_arcsec": 54.41,
-    "pa_deg": 99.7
+    "pa_deg": 99.7,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "16": {
     "sep_arcsec": 65.26,
-    "pa_deg": 14.3
+    "pa_deg": 14.3,
+    "star_ra": 47.237552,
+    "star_dec": 26.778646,
+    "star_f410m_e1_uJy": 11892.8
    },
    "17": {
     "sep_arcsec": 69.31,
-    "pa_deg": 106.3
+    "pa_deg": 106.3,
+    "star_ra": 47.221326,
+    "star_dec": 26.807977,
+    "star_f410m_e1_uJy": 3485.8
    },
    "18": {
     "sep_arcsec": 59.84,
-    "pa_deg": 82.6
+    "pa_deg": 82.6,
+    "star_ra": 47.221326,
+    "star_dec": 26.807977,
+    "star_f410m_e1_uJy": 3485.8
    },
    "19": {
     "sep_arcsec": 69.43,
-    "pa_deg": 103.8
+    "pa_deg": 103.8,
+    "star_ra": 47.221326,
+    "star_dec": 26.807977,
+    "star_f410m_e1_uJy": 3485.8
    },
    "20": {
     "sep_arcsec": 59.39,
-    "pa_deg": 142.9
+    "pa_deg": 142.9,
+    "star_ra": 47.227301,
+    "star_dec": 26.829659,
+    "star_f410m_e1_uJy": 1588.7
    },
    "21": {
     "sep_arcsec": 68.64,
-    "pa_deg": 101.8
+    "pa_deg": 101.8,
+    "star_ra": 47.221326,
+    "star_dec": 26.807977,
+    "star_f410m_e1_uJy": 3485.8
    },
    "22": {
     "sep_arcsec": 48.65,
-    "pa_deg": 222.6
+    "pa_deg": 222.6,
+    "star_ra": 47.219504,
+    "star_dec": 26.797101,
+    "star_f410m_e1_uJy": 808.7
    },
    "23": {
     "sep_arcsec": 1.49,
-    "pa_deg": 133.6
+    "pa_deg": 133.6,
+    "star_ra": 47.226067,
+    "star_dec": 26.777832,
+    "star_f410m_e1_uJy": 5692.5
    },
    "24": {
     "sep_arcsec": 1.94,
-    "pa_deg": 133.4
+    "pa_deg": 133.4,
+    "star_ra": 47.212198,
+    "star_dec": 26.757528,
+    "star_f410m_e1_uJy": 7056.2
    },
    "25": {
     "sep_arcsec": 1.47,
-    "pa_deg": 315.8
+    "pa_deg": 315.8,
+    "star_ra": 47.221326,
+    "star_dec": 26.807977,
+    "star_f410m_e1_uJy": 3485.8
    },
    "26": {
     "sep_arcsec": 1.41,
-    "pa_deg": 133.6
+    "pa_deg": 133.6,
+    "star_ra": 47.218112,
+    "star_dec": 26.775707,
+    "star_f410m_e1_uJy": 2562.4
    }
   }
  },
  "classification": {
-  "0": "single_exposure",
-  "1": "fixed_offset_star_image",
-  "2": "single_exposure",
-  "3": "fixed_offset_star_image",
-  "4": "fixed_offset_star_image",
-  "5": "single_exposure",
-  "6": "single_exposure",
-  "7": "star_wings",
-  "8": "single_exposure",
-  "9": "single_exposure",
-  "10": "single_exposure",
-  "11": "single_exposure",
-  "12": "single_exposure",
-  "13": "single_exposure",
-  "14": "single_exposure",
-  "15": "single_exposure",
-  "16": "single_exposure",
-  "17": "single_exposure",
-  "18": "single_exposure",
-  "19": "single_exposure",
-  "20": "single_exposure",
-  "21": "single_exposure",
-  "22": "single_exposure",
-  "23": "star_wings",
-  "24": "star_wings",
-  "25": "star_wings",
-  "26": "star_wings"
+  "0": [
+   "single_exposure"
+  ],
+  "1": [
+   "fixed_offset_star_image"
+  ],
+  "2": [
+   "single_exposure"
+  ],
+  "3": [
+   "fixed_offset_star_image"
+  ],
+  "4": [
+   "fixed_offset_star_image",
+   "single_exposure"
+  ],
+  "5": [
+   "single_exposure"
+  ],
+  "6": [
+   "single_exposure"
+  ],
+  "7": [
+   "star_wings"
+  ],
+  "8": [
+   "single_exposure"
+  ],
+  "9": [
+   "single_exposure"
+  ],
+  "10": [
+   "single_exposure"
+  ],
+  "11": [
+   "single_exposure"
+  ],
+  "12": [
+   "single_exposure"
+  ],
+  "13": [
+   "single_exposure"
+  ],
+  "14": [
+   "single_exposure"
+  ],
+  "15": [
+   "single_exposure"
+  ],
+  "16": [
+   "single_exposure"
+  ],
+  "17": [
+   "single_exposure"
+  ],
+  "18": [
+   "single_exposure"
+  ],
+  "19": [
+   "single_exposure"
+  ],
+  "20": [
+   "single_exposure"
+  ],
+  "21": [
+   "single_exposure"
+  ],
+  "22": [
+   "single_exposure"
+  ],
+  "23": [
+   "star_wings"
+  ],
+  "24": [
+   "star_wings",
+   "single_exposure"
+  ],
+  "25": [
+   "star_wings"
+  ],
+  "26": [
+   "star_wings"
+  ]
  },
  "known_case": {
   "Ares": {
@@ -1080,6 +1217,10 @@
    "dq_or": 4
   }
  ],
+ "pa_aper": {
+  "e1": 75.12,
+  "e2": 255.0
+ },
  "mosaic_bytes": {
   "jw05293-o005_t001_nircam_clear-f300m_i2d.fits": 324443520,
   "jw05293-o005_t001_nircam_clear-f410m_i2d.fits": 324443520,

@@ -8,10 +8,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (1.57 / 1.50). 27 hit groups, all read as instrumental: star wings (5), single-exposure epoch-1 coverage (19),
   and a fixed-offset star image (3). SN Ares (programme 9478 target list) has no grid row within 0.5″; the nearest
   row is at +3.5σ / +4.4σ, so it is not a hit and the run has no positive control.
-- **Post hoc artefact family:** groups 1, 3, 4 are compact epoch-1-only sources at the same offset from three bright
-  stars (8.32–8.35″, PA 120.0–120.2°), present only in dithers 2–3 of the `_cal` exposures in both filters. Steady
-  control rows are seen in every dither. Check this offset vector before reading a fading source near a bright star
-  in a large-roll-change pair.
+- **Post hoc artefact family:** groups 1, 3, 4 are compact epoch-1-only sources at the same sky offset from three
+  bright stars (8.32–8.35″, PA 120.0–120.2° at `PA_APER` 75.12°). Groups 1 and 3 are present only in dithers 2–3 of
+  the `_cal` exposures in both filters, while steady control rows are seen in every dither; group 4 is on a detector
+  in dither 3 only. On another pair, rotate the vector by the `PA_APER` change before using it.
 - **Failed approach:** a two-medium-band grid on this pair (both bands must pass) is too insensitive for the frozen G1.
   The G1 failure is not diagnosed.
 - **Handoff:** next two-epoch input is MACS J2129 4903 o004 → 6882 o040 (four filters incl. F277W / F444W, 392 d;

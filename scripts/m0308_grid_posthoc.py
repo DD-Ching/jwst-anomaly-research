@@ -35,7 +35,7 @@ from pathlib import Path
 import numpy as np
 from astropy.coordinates import SkyCoord
 from astropy.io import fits
-from astropy.table import Table
+from astropy.table import Table, vstack
 from astropy.wcs import WCS
 
 E1 = "jw05293-o005_t001_nircam_clear-"
@@ -50,15 +50,19 @@ ARES = {  # programme 9478 target list (www.stsci.edu/jwst-program-info/download
 STAR_PCT = 99.5  # ASSUMPTION: bright-star flux percentile
 APER_ARCSEC = 0.15  # the grid's aperture radius
 STAR_NEAR = 3.0  # ASSUMPTION: arcsec from a bright star where wings / spikes dominate
-GHOST_SEP, GHOST_PA = (
-    8.33,
-    120.1,
-)  # post hoc: offset of groups 1, 3, 4 from their nearest bright star
+# post hoc: sky-frame offset of groups 1, 3, 4 from their nearest bright star, measured at the
+# epoch-1 roll; an instrument-frame artefact moves with PA_APER (stored as ``pa_aper``)
+GHOST_SEP, GHOST_PA = 8.33, 120.1
 MAST = "https://mast.stsci.edu/api/v0.1/Download/file?uri=mast:JWST/product/"
 
 
 def n_bits(v: int) -> int:
     return bin(int(v)).count("1")
+
+
+def n_exposures(con: np.ndarray, y: int, x: int) -> int:
+    """Bits set over every CON context plane (32 exposures per plane)."""
+    return sum(n_bits(con[k, y, x]) for k in range(con.shape[0]))
 
 
 def coverage(data: Path, hits: Table) -> dict:
@@ -71,11 +75,15 @@ def coverage(data: Path, hits: Table) -> dict:
                 rows = wht[:: max(wht.shape[0] // 32, 1)]
                 ref = float(np.median(rows[rows > 0]))
                 x, y = w.world_to_pixel_values(np.asarray(hits["ra"]), np.asarray(hits["dec"]))
+                seen = set()
                 for g, xi, yi in zip(hits["group"], x, y, strict=True):
+                    if int(g) in seen:  # one row per group: its first member
+                        continue
+                    seen.add(int(g))
                     xi, yi = int(round(float(xi))), int(round(float(yi)))
                     inside = 0 <= yi < wht.shape[0] and 0 <= xi < wht.shape[1]
                     rec = out.setdefault(str(int(g)), {})
-                    rec[f"{b}_{tag}_n_exp"] = n_bits(con[0, yi, xi]) if inside else 0
+                    rec[f"{b}_{tag}_n_exp"] = n_exposures(con, yi, xi) if inside else 0
                     rec[f"{b}_{tag}_wht_rel"] = (
                         round(float(wht[yi, xi]) / ref, 3) if inside else 0.0
                     )
@@ -89,6 +97,8 @@ def bright_stars(grid: Table, hits: Table) -> dict:
     sc = SkyCoord(stars["ra"], stars["dec"], unit="deg")
     out = {"flux_cut_uJy": round(float(cut), 2), "n_stars": len(stars), "groups": {}}
     for r in hits:
+        if str(int(r["group"])) in out["groups"] or len(stars) == 0:
+            continue
         d = SkyCoord(r["ra"], r["dec"], unit="deg").separation(sc).arcsec
         d[d <= 0.05] = np.inf  # the hit itself when it is bright
         i = int(np.argmin(d))
@@ -96,23 +106,32 @@ def bright_stars(grid: Table, hits: Table) -> dict:
         out["groups"][str(int(r["group"]))] = {
             "sep_arcsec": round(float(d[i]), 2),
             "pa_deg": round(float(pa), 1),
+            "star_ra": round(float(stars["ra"][i]), 6),
+            "star_dec": round(float(stars["dec"][i]), 6),
+            "star_f410m_e1_uJy": round(float(stars["F410M_flux1"][i]), 1),
         }
     return out
 
 
 def classify(cov: dict, star: dict) -> dict:
-    """Post hoc reading of each group, first matching rule wins (thresholds are ASSUMPTIONs)."""
+    """Post hoc reading of each group: every matching label (thresholds are ASSUMPTIONs).
+
+    The fixed-offset rule is a sky-frame offset valid only at the epoch-1 roll (``pa_aper``).
+    """
     out = {}
     for g, c in cov.items():
-        s = star["groups"][g]
-        if s["sep_arcsec"] < STAR_NEAR:
-            out[g] = "star_wings"
-        elif abs(s["sep_arcsec"] - GHOST_SEP) < 0.2 and abs(s["pa_deg"] - GHOST_PA) < 1.0:
-            out[g] = "fixed_offset_star_image"
-        elif min(v for k, v in c.items() if k.endswith("_n_exp")) <= 1:
-            out[g] = "single_exposure"
-        else:
-            out[g] = "unexplained"
+        s = star["groups"].get(g)
+        n_exp = min(v for k, v in c.items() if k.endswith("_n_exp"))
+        labels = []
+        if n_exp == 0:
+            labels.append("off_footprint")
+        if s and s["sep_arcsec"] < STAR_NEAR:
+            labels.append("star_wings")
+        if s and abs(s["sep_arcsec"] - GHOST_SEP) < 0.2 and abs(s["pa_deg"] - GHOST_PA) < 1.0:
+            labels.append("fixed_offset_star_image")
+        if n_exp == 1:
+            labels.append("single_exposure")
+        out[g] = labels or ["unexplained"]
     return out
 
 
@@ -221,14 +240,25 @@ def controls(grid: Table, hits: Table, groups: list[int]) -> Table:
     f1, sig = np.asarray(grid["F300M_flux1"], float), np.asarray(grid["F300M_sigma"], float)
     rows = []
     for g in groups:
-        r = hits[hits["group"] == g][0]
+        m = hits[hits["group"] == g]
+        if len(m) == 0:
+            raise SystemExit(f"--sw-groups: group {g} not in hits")
+        r = m[0]
         s = c.separation(SkyCoord(r["ra"], r["dec"], unit="deg")).arcsec
         ok = (s > 2) & (s < 20) & (np.abs(sig) < 1) & (f1 > 1) & (f1 < 3)
         idx = np.where(ok)[0][np.argsort(s[ok])][:3]
         rows += [
             (100 * g + k, float(grid["ra"][i]), float(grid["dec"][i])) for k, i in enumerate(idx)
         ]
-    return Table(rows=rows, names=("group", "ra", "dec"))
+    return Table(rows=rows, names=("group", "ra", "dec"), dtype=(int, float, float))
+
+
+def pa_aper(data: Path) -> dict:
+    out = {}
+    for tag, stem in (("e1", E1), ("e2", E2)):
+        hdr = fits.getheader(data / f"{stem}f300m_i2d.fits", "SCI")
+        out[tag] = round(float(hdr["PA_APER"]), 2)
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -240,6 +270,15 @@ def main(argv: list[str] | None = None) -> int:
     hits = Table.read(a.data / "out" / "hits.ecsv")
     grid = Table.read(a.data / "out" / "grid.ecsv")
     cov, star = coverage(a.data, hits), bright_stars(grid, hits)
+    det: dict = {"hits": [], "controls": []}
+    if a.sw_groups:  # one pass over the remote _cal files for hits and controls
+        ctl = controls(grid, hits, a.sw_groups)
+        both = vstack([hits[np.isin(hits["group"], a.sw_groups)]["group", "ra", "dec"], ctl])
+        rows = detector_level(both, list(both["group"]))
+        det["hits"] = [r for r in rows if r["group"] in a.sw_groups]
+        det["controls"] = [r for r in rows if r["group"] not in a.sw_groups]
+        if not det["controls"]:
+            print("warning: no control rows measured")
     res = {
         "provenance": "derived",
         "coverage": cov,
@@ -247,15 +286,9 @@ def main(argv: list[str] | None = None) -> int:
         "classification": classify(cov, star),
         "known_case": known_case(grid),
         "sw_epoch1": sw_check(hits, a.sw_groups) if a.sw_groups else {},
-        "detector_level": detector_level(hits, a.sw_groups) if a.sw_groups else [],
-        "detector_level_controls": (
-            detector_level(
-                controls(grid, hits, a.sw_groups),
-                [100 * g + k for g in a.sw_groups for k in range(3)],
-            )
-            if a.sw_groups
-            else []
-        ),
+        "detector_level": det["hits"],
+        "detector_level_controls": det["controls"],
+        "pa_aper": pa_aper(a.data),
         "mosaic_bytes": {p.name: p.stat().st_size for p in sorted(a.data.glob("*_i2d.fits"))},
     }
     a.out.parent.mkdir(parents=True, exist_ok=True)
