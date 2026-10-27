@@ -1,0 +1,19 @@
+{
+ "n_fields": 15,
+ "n_unresolved": 0,
+ "n_epochs": 30,
+ "n_public_epochs": 29,
+ "n_used_epochs_in_fields": 0,
+ "class_counts": {
+  "core": 8,
+  "overlap": 2,
+  "none": 0
+ },
+ "fields_with_core_pair": [
+  "abell1689",
+  "macs0138",
+  "macs0308",
+  "macs2129"
+ ],
+ "n_fields_without_new_pair": 11
+}

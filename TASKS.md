@@ -124,6 +124,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.
 
+- **Two-epoch inventory, 15 more clusters 2026-10-27** (`results/transients/epoch_inventory_ext/RESULT.md`): 8 `core`
+  pairs on MACS J0308, Abell 1689, MACS J2129.4-0741, MACS J0138. Next grid: MACS J0308 5293 o005 → 6882 o015 or
+  MACS J2129 4903 o004 → 6882 o040 (plan first; known-transient check first).
 - **MACS J1931 two-epoch grids 2026-10-26** (`results/transients/macs1931_grid/`, `macs1931_grid_9493/`): 392.6 d and
   37 d pairs over the core, both outcome N. 9493 o001 → 12299 o001 not queued.
 - **Abell 2744 GLASS flanking grid 2026-10-26** (`results/transients/a2744_glass_flank/RESULT.md`): 1324 o001 → o007,

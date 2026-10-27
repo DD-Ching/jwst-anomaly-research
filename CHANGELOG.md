@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: Two-epoch NIRCam inventory on 15 further lensing clusters: 8 public pairs through a core on 4 clusters
+- **Result** (`results/transients/epoch_inventory_ext/RESULT.md`; plan and tool committed before the query): 15 / 15
+  fields resolved, 29 public epochs, 8 `core` pairs (> 1 arcmin² of both footprints inside a 1′ disc), 2 `overlap`.
+  Core pairs: MACS J0308 ×3 (5293 o005 → 6882 o015: full disc in five filters, 200.2 d), Abell 1689 ×3 (5782 o001 →
+  6882 o048, 342.9 d), MACS J2129.4-0741 ×1 (4903 o004 → 6882 o040, 392.1 d, four filters), MACS J0138 ×1 (52.0 d).
+- Metadata only; none of the four clusters has a pinned, validated lens model here except via the MACS J0138 SN
+  work, so a grid there is a core transient search, not a lens-model test.
+- **Failed approach:** none.
+- **Handoff:** next two-epoch input (plan first, D-027 grid): MACS J0308 5293 o005 → 6882 o015 or MACS J2129 4903
+  o004 → 6882 o040; check MACS J0308 9478 o002 / MACS J0138 6549 for a known transient (positive control) first.
+  #374 waits for the next weekly run.
+
 ## 2026-10-27: SN Eos leading pair: no public HST / JWST epoch can test the model's two leading images (outcome U)
 - **Result** (`results/transients/sneos_lead/RESULT.md`; plan committed before the run): 138 epoch × filter × image
   rows over both leading-image positions, 0 pass frozen rule T (band red of Lyα, 101.1-equivalent date inside the
