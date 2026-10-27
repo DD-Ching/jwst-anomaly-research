@@ -1,0 +1,296 @@
+{
+ "provenance": "derived",
+ "coverage": {
+  "0": {
+   "f277w_e1_n_exp": 3,
+   "f277w_e1_wht_rel": 1.003,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.983,
+   "f444w_e1_n_exp": 3,
+   "f444w_e1_wht_rel": 1.003,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 0.983
+  },
+  "1": {
+   "f277w_e1_n_exp": 3,
+   "f277w_e1_wht_rel": 0.685,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 1.004,
+   "f444w_e1_n_exp": 3,
+   "f444w_e1_wht_rel": 0.699,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.004
+  },
+  "2": {
+   "f277w_e1_n_exp": 1,
+   "f277w_e1_wht_rel": 0.331,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.996,
+   "f444w_e1_n_exp": 1,
+   "f444w_e1_wht_rel": 0.331,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 0.996
+  },
+  "3": {
+   "f277w_e1_n_exp": 1,
+   "f277w_e1_wht_rel": 0.336,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.955,
+   "f444w_e1_n_exp": 1,
+   "f444w_e1_wht_rel": 0.336,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.016
+  },
+  "4": {
+   "f277w_e1_n_exp": 1,
+   "f277w_e1_wht_rel": 0.343,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 1.028,
+   "f444w_e1_n_exp": 1,
+   "f444w_e1_wht_rel": 0.343,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.028
+  },
+  "5": {
+   "f277w_e1_n_exp": 1,
+   "f277w_e1_wht_rel": 0.343,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.953,
+   "f444w_e1_n_exp": 1,
+   "f444w_e1_wht_rel": 0.343,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.029
+  },
+  "6": {
+   "f277w_e1_n_exp": 1,
+   "f277w_e1_wht_rel": 0.341,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.819,
+   "f444w_e1_n_exp": 1,
+   "f444w_e1_wht_rel": 0.341,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 0.86
+  },
+  "7": {
+   "f277w_e1_n_exp": 3,
+   "f277w_e1_wht_rel": 1.003,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.983,
+   "f444w_e1_n_exp": 3,
+   "f444w_e1_wht_rel": 1.003,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 0.984
+  },
+  "8": {
+   "f277w_e1_n_exp": 3,
+   "f277w_e1_wht_rel": 1.005,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.984,
+   "f444w_e1_n_exp": 3,
+   "f444w_e1_wht_rel": 0.817,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 0.902
+  },
+  "9": {
+   "f277w_e1_n_exp": 3,
+   "f277w_e1_wht_rel": 1.005,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 1.004,
+   "f444w_e1_n_exp": 3,
+   "f444w_e1_wht_rel": 1.005,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.004
+  },
+  "10": {
+   "f277w_e1_n_exp": 3,
+   "f277w_e1_wht_rel": 1.006,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 1.005,
+   "f444w_e1_n_exp": 3,
+   "f444w_e1_wht_rel": 1.006,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.005
+  },
+  "11": {
+   "f277w_e1_n_exp": 3,
+   "f277w_e1_wht_rel": 0.818,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 1.005,
+   "f444w_e1_n_exp": 3,
+   "f444w_e1_wht_rel": 0.829,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.005
+  },
+  "12": {
+   "f277w_e1_n_exp": 1,
+   "f277w_e1_wht_rel": 0.342,
+   "f277w_e2_n_exp": 4,
+   "f277w_e2_wht_rel": 0.865,
+   "f444w_e1_n_exp": 1,
+   "f444w_e1_wht_rel": 0.342,
+   "f444w_e2_n_exp": 4,
+   "f444w_e2_wht_rel": 1.033
+  }
+ },
+ "bright_star": {
+  "flux_cut_uJy": 228.75,
+  "n_stars": 5,
+  "groups": {
+   "0": {
+    "sep_arcsec": 2.54,
+    "pa_deg": 317.1,
+    "star_ra": 322.33882,
+    "star_dec": -7.682134,
+    "star_f444w_e2_uJy": 1927.1
+   },
+   "1": {
+    "sep_arcsec": 2.67,
+    "pa_deg": 317.7,
+    "star_ra": 322.348234,
+    "star_dec": -7.69546,
+    "star_f444w_e2_uJy": 1641.6
+   },
+   "2": {
+    "sep_arcsec": 33.39,
+    "pa_deg": 192.2,
+    "star_ra": 322.348234,
+    "star_dec": -7.69546,
+    "star_f444w_e2_uJy": 1641.6
+   },
+   "3": {
+    "sep_arcsec": 38.07,
+    "pa_deg": 129.2,
+    "star_ra": 322.348234,
+    "star_dec": -7.69546,
+    "star_f444w_e2_uJy": 1641.6
+   },
+   "4": {
+    "sep_arcsec": 24.95,
+    "pa_deg": 338.3,
+    "star_ra": 322.36546,
+    "star_dec": -7.688515,
+    "star_f444w_e2_uJy": 1596.9
+   },
+   "5": {
+    "sep_arcsec": 16.12,
+    "pa_deg": 336.2,
+    "star_ra": 322.36546,
+    "star_dec": -7.688515,
+    "star_f444w_e2_uJy": 1596.9
+   },
+   "6": {
+    "sep_arcsec": 9.78,
+    "pa_deg": 175.7,
+    "star_ra": 322.36546,
+    "star_dec": -7.688515,
+    "star_f444w_e2_uJy": 1596.9
+   },
+   "7": {
+    "sep_arcsec": 2.84,
+    "pa_deg": 197.0,
+    "star_ra": 322.33882,
+    "star_dec": -7.682134,
+    "star_f444w_e2_uJy": 1927.1
+   },
+   "8": {
+    "sep_arcsec": 2.72,
+    "pa_deg": 17.1,
+    "star_ra": 322.33882,
+    "star_dec": -7.682134,
+    "star_f444w_e2_uJy": 1927.1
+   },
+   "9": {
+    "sep_arcsec": 2.73,
+    "pa_deg": 196.8,
+    "star_ra": 322.348234,
+    "star_dec": -7.69546,
+    "star_f444w_e2_uJy": 1641.6
+   },
+   "10": {
+    "sep_arcsec": 2.71,
+    "pa_deg": 137.6,
+    "star_ra": 322.348234,
+    "star_dec": -7.69546,
+    "star_f444w_e2_uJy": 1641.6
+   },
+   "11": {
+    "sep_arcsec": 2.72,
+    "pa_deg": 17.3,
+    "star_ra": 322.348234,
+    "star_dec": -7.69546,
+    "star_f444w_e2_uJy": 1641.6
+   },
+   "12": {
+    "sep_arcsec": 7.25,
+    "pa_deg": 175.4,
+    "star_ra": 322.36546,
+    "star_dec": -7.688515,
+    "star_f444w_e2_uJy": 1596.9
+   }
+  }
+ },
+ "pa_aper": {
+  "e1": 77.16,
+  "e2": 73.16
+ },
+ "ghost_pa_rotated_deg": 122.14,
+ "classification": {
+  "0": [
+   "star_wings"
+  ],
+  "1": [
+   "star_wings"
+  ],
+  "2": [
+   "single_exposure"
+  ],
+  "3": [
+   "single_exposure"
+  ],
+  "4": [
+   "single_exposure"
+  ],
+  "5": [
+   "single_exposure"
+  ],
+  "6": [
+   "single_exposure"
+  ],
+  "7": [
+   "star_wings"
+  ],
+  "8": [
+   "star_wings"
+  ],
+  "9": [
+   "star_wings"
+  ],
+  "10": [
+   "star_wings"
+  ],
+  "11": [
+   "star_wings"
+  ],
+  "12": [
+   "single_exposure"
+  ]
+ },
+ "grid_e1_n_exp": {
+  "f277w": {
+   "1": 124,
+   "2": 29,
+   "3": 806
+  },
+  "f444w": {
+   "1": 121,
+   "2": 31,
+   "3": 804
+  }
+ },
+ "mosaic_bytes": {
+  "jw04903-o004_t004_nircam_clear-f277w_i2d.fits": 131941440,
+  "jw04903-o004_t004_nircam_clear-f444w_i2d.fits": 131941440,
+  "jw06882-o040_t043_nircam_clear-f277w_i2d.fits": 306573120,
+  "jw06882-o040_t043_nircam_clear-f444w_i2d.fits": 306512640
+ }
+}

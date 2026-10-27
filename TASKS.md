@@ -124,6 +124,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
     - no real deep single eclipse was available.
   - The owner decides; nothing is queued.
 
+- **MACS J2129 grid 2026-10-27** (`results/transients/macs2129_grid/RESULT.md`): 4903 o004 → 6882 o040, F277W / F444W,
+  outcome U (G1 0.78); 13 groups instrumental. Next: store injection positions in the grid tool and score G1 by
+  epoch-1 exposure count (plan first), or the Abell 1689 pair 5782 o001 → 6882 o048.
 - **MACS J0308 grid 2026-10-27** (`results/transients/macs0308_grid/RESULT.md`): 5293 o005 → 6882 o015, F300M / F410M,
   outcome U (G1 0.518); SN Ares not a hit; 27 groups instrumental, incl. a fixed-offset bright-star image (8.3″,
   PA 120°). Next grid: MACS J2129 4903 o004 → 6882 o040 (plan first).
