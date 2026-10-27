@@ -13,7 +13,7 @@
 # - {provenance: observed}
 # - {source: 'IceCube IceTracks-DR2, Harvard Dataverse doi:10.7910/DVN/MMIIZA (CC0); v1 = dataset version 1.0, v2 = 3.1; md5 as listed
 #     by Dataverse, sha256 of the downloaded original file (the pin)'}
-# - {note: 'scripts/nf_ti_benchmark.py; raw files are deleted after use (cloud-disk decision); 4 smearing matrices of 0.6-0.8 GB each:
+# - {note: 'scripts/nf_ti_benchmark.py; raw files are deleted after use (cloud-disk decision); 4 smearing matrices of 0.6-1.04 GB each:
 #     the stated reason is benchmark 2 (TASKS Neutrino Frontier item 2), which needs every season''s IRFs'}
 # schema: astropy-2.0
 irf_version dataverse_file_id file md5 sha256 size retrieved_utc dataverse_version

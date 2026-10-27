@@ -144,7 +144,7 @@ def write_manifest(rows: list[dict]) -> None:
         "v1 = dataset version 1.0, v2 = 3.1; md5 as listed by Dataverse, "
         "sha256 of the downloaded original file (the pin)",
         "note": "scripts/nf_ti_benchmark.py; raw files are deleted after use (cloud-disk "
-        "decision); 4 smearing matrices of 0.6-0.8 GB each: the stated reason is benchmark 2 "
+        "decision); 4 smearing matrices of 0.6-1.04 GB each: the stated reason is benchmark 2 "
         "(TASKS Neutrino Frontier item 2), which needs every season's IRFs",
     }
     t.sort(["irf_version", "file"])
