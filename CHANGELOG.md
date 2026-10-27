@@ -3,7 +3,7 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-10-27: Queue blocked on owner calls (no science run this cycle)
-- **Handoff:** the two-epoch grid line waits on the owner's G1 ruling (D-027; four consecutive pairs fail G1, #577–#580),
+- **Handoff:** the two-epoch grid line waits on the owner's G1 ruling (D-027; four consecutive pairs fail G1: #576, #577, #579, #580),
   and D115b waits on a BayeSys / fixed-Lenstool reopen (D-109 addendum 9). The remaining inventory pairs (MACS J0308
   6882 o015 → 9478 o002, Abell 1689 5782 o001 → 6882 o048) are not run before that ruling. #374 waits for the next
   weekly job. Tally line in `docs/state/trial.md`.
