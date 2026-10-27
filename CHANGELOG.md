@@ -2,6 +2,13 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: [in progress] Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all IceTracks-DR2 seasons
+- **Plan, written before any fit:** fit TXS 0506+056 and NGC 1068 time-integrated (n_s, γ free) with SkyLLH on all
+  DR2 seasons (IC40–IC86, v1 IRFs as in the paper, v2 if time allows). Targets (arXiv:2605.19040 Table 8, to be
+  re-read from the paper): TXS 8.8 / 2.0, NGC 1068 80.1 / 3.2. Agreement: |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1
+  (ASSUMPTION). A miss means our multi-season handling (IC40/IC59/IC79 IRFs, season merge) is wrong, and no
+  multi-season SkyLLH result is trusted until it is explained. Raw IRFs streamed, sha256-pinned, deleted after use.
+
 ## 2026-10-27: Queue blocked on owner calls (no science run this cycle)
 - **Handoff:** the two-epoch grid line waits on the owner's G1 ruling (D-027; four consecutive pairs fail G1: #576, #577, #579, #580),
   and D115b waits on a BayeSys / fixed-Lenstool reopen (D-109 addendum 9). The remaining inventory pairs (MACS J0308
