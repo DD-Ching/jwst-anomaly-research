@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-27: SN Eos leading pair: no public HST / JWST epoch can test the model's two leading images (outcome U)
+- **Result** (`results/transients/sneos_lead/RESULT.md`; plan committed before the run): 138 epoch × filter × image
+  rows over both leading-image positions, 0 pass frozen rule T (band red of Lyα, 101.1-equivalent date inside the
+  window where 101.1 is known bright with a ±20 % Δt allowance, a 101.1 measurement in the same filter).
+- The only epochs between CLASH 2012 and HST 2024-03 are ACS FR505N (2019-10-01; blueward of Lyα) and MIRI F2100W
+  (2023-09-30; no 101.1 reference). This closes the open "other archival epoch" question of `sneos/RESULT.md`. Not a
+  lens-model residual.
+- **Deviation:** the first run used the uncommitted tool (lint stopped the commit chain); rules unchanged, re-run
+  after the commit, only that run reported.
+- **Handoff:** the SN Eos extra-image line is closed for public data; the 101.1 / 101.2 ratio line waits on new
+  epochs. #374 waits for the next weekly run. Next new two-epoch input: Abell 370 from 2026-12-29.
+
 ## 2026-10-26: MACS J1931 two-epoch grid 6882 o038 → 9493 o001 (37 d, core): outcome N, 12 groups all star spikes / edges; SN Eos declines below 5σ
 - **Result** (`results/transients/macs1931_grid_9493/RESULT.md`; plan pushed before any pixel): 20 hits in 12 groups
   among 902 positions; G1 0.942 at −0.75 mag, G2 noise 1.13–1.53. Every group sits on spikes or wings of the five
