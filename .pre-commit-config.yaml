@@ -3,7 +3,7 @@
 # CI (ci.yml) is authoritative: it runs the latest ruff, which can be newer than the pin below.
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.0
+    rev: v0.17.1
     hooks:
       # Same paths as CI's lint job; without `files`, the hooks would also rewrite notebooks and
       # python blocks inside markdown files.
