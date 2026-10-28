@@ -168,7 +168,7 @@ clock from χ₁'s emission to χ₂'s reception. The part of the emitted energy
 advances the event horizon. After a return sent at u₁ = 8.0 (n = 800), the last B time from which a later test ray
 still reaches A by τ_A = 12 is 7.556 (E_ret = 10⁻⁸), 7.514 (10⁻³), 7.217 (10⁻²), 6.202 (0.1), 5.632 (0.3) and 5.395
 (0.5), against the return's own emission at τ_B = 5.02–5.04. So a 0.5 x₀ return gets through, but anything B sends
-more than ≈ 0.37 x₀/c after it does not (`scan_n800.json`, `test_ray`).
+more than ≈ 0.37 x₀/c after it does not [der] (`scan_n800.json`, `test_ray`).
 
 **4.5 Does numerical error change the verdict?**
 - The boundary converges at about second order: the ratio of successive changes (400→800 over 800→1600) is
@@ -188,7 +188,7 @@ more than ≈ 0.37 x₀/c after it does not (`scan_n800.json`, `test_ray`).
   deadline A's track enters a strip within ≈ 0.1 in u of the event horizon where the uniform grid does not resolve
   the exponentially steepening u-gradients; there the residual reaches O(10⁵) for E_ret ≥ 0.3 (diagnosed on one
   n = 800 run; not stored). The energy received in that strip converges: the boundary change from τ_dead 11.5 to 12
-  is 0.058 / 0.055 (E_ret = 0.5, n = 800 / 1600).
+  is 0.058 / 0.055 (E_ret = 0.5, n = 800 / 1600) [der].
 - Unperturbed wormhole (no outbound pulse, `static_return.json`): transmitted 0.877, reflected 0.136, re-entering at
   A 0.025 of the emitted energy (n = 800); the balance closes to 1.2 % (0.9 % at n = 400). The residual does not
   shrink with resolution and is not explained here; it bounds the accounting at about 1 % of E_emit.
