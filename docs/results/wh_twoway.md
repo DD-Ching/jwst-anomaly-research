@@ -331,8 +331,8 @@ emission at B (§5).
    passed it (50 % limit τ_B = 6.98 in the test limit and 6.92 at 0.1 x₀ on the gross rule; 6.94 and 6.88 on the net
    one) [der]; these limits are supported, but only crossings up to τ_B ≈ 6.54 are certified (§7). The 50 % point
    of what A receives comes 3.49–3.71 x₀/c (finest resolution of each passing case) after the 50 % point of what
-   crosses B, on clocks synchronised in the
-   static era (light needs 3.46 through the static wormhole) [der]. For a 1 km throat, x₀/c ≈ 3.3 µs [der].
+   crosses B, on clocks synchronised in the static era (light needs 3.46 through the static wormhole) [der]. For a
+   1 km throat, x₀/c ≈ 3.3 µs [der].
 3. **What is missing.** For the certified cases, not numerical capability (≈ 0.03 x₀/c). For strong returns and the
    late, near-horizon part of every run it is missing: no refinement near the horizon and an over-inclusive stored
    constraint check. Model conditions are missing throughout: the ghost field is assumed, the model joins two
