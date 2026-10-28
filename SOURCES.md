@@ -2050,3 +2050,10 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (Fortsch. Phys. 65, 1700034, 2017); Hirano, Lei & van Leuven arXiv:1906.10715 (JHEP 09, 070, 2019); Freivogel,
   Galante & Nikolakopoulou arXiv:1907.13140 (JHEP 01, 050, 2020); Shirokov & Nachevsky arXiv:2610.13206 and
   arXiv:2610.29941 (2026).
+
+## Reply-after-receipt design round (accessed 2026-10-28; `docs/plans/2026-10-28-wh-reply-design.md`, D-111)
+- Search-result level only (two web searches; bodies not read): Novak, "Spherical neutron star collapse in
+  tensor-scalar theory of gravity", arXiv:gr-qc/9707041 (PRD 57, 4789, 1998) — matter–scalar coupling α(φ)T,
+  monopole scalar radiation, Cauchy code with shock-capturing hydrodynamics; arXiv:1703.07414 (Barrabès–Israel
+  null-shell matching used for null-dust shells); arXiv:gr-qc/9708012 (Hamiltonian thin null-dust shell);
+  arXiv:1508.05578 (double-null scalar collapse with a matter shell).
