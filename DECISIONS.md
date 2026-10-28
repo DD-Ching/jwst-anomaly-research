@@ -6720,3 +6720,18 @@ confining radiation at a throat is found.
 - **Revisit if:** a licensed public double-null wormhole code appears, a non-spherical or same-exterior evolution is
   needed, or near-horizon late-time accuracy matters (the uniform grid does not resolve the exponentially steepening
   u-gradients near the event horizon; adaptive refinement in u would be needed).
+
+## D-111 Reply chosen after receipt in the #592 wormhole model: only an idealised device is feasible; not run (2026-10-28)
+- **Decision:** verdict B (`docs/plans/2026-10-28-wh-reply-design.md`). A causally triggered, energy-paid reply with
+  a choice made at B after receipt can be modelled in the `scripts/wh_twoway.py` code only with an idealised device:
+  a rigid matter layer at r = 2 whose energy pays a phenomenological χ₂ source, with exact energy–momentum balance,
+  a trigger on the Misner–Sharp mass at its inner face, an external sign bit, and A reading the sign of χ₂. Not
+  implemented or run: its outcome is largely fixed by #592's window and the exact (χ₂, Q) → (−χ₂, −Q) symmetry.
+- **Alternatives rejected:** a pulse added at B after receipt without a device (not energy-consistent);
+  a Novak-type fluid coupled through α(φ)T (gr-qc/9707041; needs a hydro solver) or a boson-shell device (new static
+  solutions and couplings): a physically complete device is a new matter model and solver (C), not worth it now.
+- **Evidence:** design note §1–5; two targeted literature searches found no triggered emitter in any wormhole
+  evolution.
+- **Revisit if:** the owner wants the idealised demonstration on record (one ≈ 3–4 h round, single pre-declared
+  pair and stop conditions in the note), or a physically specified device (equation of state and Lagrangian
+  coupling) becomes the question.

@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-28: Reply chosen after receipt in the #592 model: feasibility only (no runs)
+- Owner-requested ≤ 60 min design round; no evolution or scan. Record: `docs/plans/2026-10-28-wh-reply-design.md`;
+  decision D-111. #592's conclusions are unchanged.
+- Verdict **B**: only an idealised device works in the existing code (rigid layer at B, phenomenological χ₂ source
+  paid from its rest energy with exact energy–momentum balance, trigger on the Misner–Sharp mass at its inner face,
+  external sign bit, A decides from the sign of ∫χ₂ dτ). A physically complete device needs a new matter model and
+  solver (C). No published wormhole evolution with a triggered emitter was found in this round's search.
+- One pre-declared pair (b = ±1, n = 400 / 800) with pass and stop conditions is in the note; not recommended now
+  because its outcome is largely set by #592's window and the exact sign symmetry.
+
 ## 2026-10-28: Finite-energy return pulses through a collapsing Ellis–Bronnikov wormhole (owner-requested round)
 - **Question** (owner, bounded round): after an outbound pulse has crossed, can a positive-energy return pulse that
   acts back on the geometry still reach the sender? Record: `docs/results/wh_twoway.md`; code
