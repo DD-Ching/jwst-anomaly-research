@@ -95,3 +95,31 @@ def test_constraint_residual_converges():
         cm = wt.evolve(p)["cons"]
         out.append(max(float(np.max(cm[c])) for c in ("u", "v")))
     assert out[1] < out[0] / 3.0
+
+
+def _fake_run(frac, tau90, cons11, passed=True):
+    return {
+        "return": {"fraction": frac, "pass": passed},
+        "A": {"chi2_out": {"tau90": tau90}},
+        "constraint_tauA_11": {"A": {"u": {"max": cons11}, "v": {"max": 0.0}}},
+        "constraint": {"A": {"u": {"max": cons11}, "v": {"max": 0.0}}},
+        "bookkeeping": {"A": 0.0},
+    }
+
+
+def test_certify_pass_rule():
+    ok = wt.certify_pass(_fake_run(0.70, 10.5, 1e-5), _fake_run(0.71, 10.5, 1e-5))
+    assert ok["class"] == "certified"
+    # constraint in A's causal past not small -> exploratory
+    assert wt.certify_pass(_fake_run(0.70, 10.5, 1e-1), _fake_run(0.71, 10.5, 1e-5))["class"] == (
+        "exploratory"
+    )
+    # verdict needs late energy: 0.9 * 0.55 < 0.5
+    assert wt.certify_pass(_fake_run(0.55, 10.5, 1e-5), _fake_run(0.55, 10.5, 1e-5))["class"] == (
+        "exploratory"
+    )
+    # more than 10 % of the energy arrives after tau_A = 11
+    assert wt.certify_pass(_fake_run(0.70, 11.2, 1e-5), _fake_run(0.70, 11.2, 1e-5))["class"] == (
+        "exploratory"
+    )
+    assert wt.certify_pass(_fake_run(0.40, 10.5, 1e-5, False), None)["class"] == "fail"

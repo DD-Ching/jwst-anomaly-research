@@ -1662,6 +1662,560 @@
    "tauB_boundary_pchip": 6.709692576
   }
  },
+ "boundary_net": {
+  "n400_E1e-08": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.041602576,
+    5.541512549,
+    6.041334699,
+    6.540861421,
+    6.790441035,
+    7.039865811,
+    7.289123863,
+    7.538206602,
+    8.035837379
+   ],
+   "fraction": [
+    0.8449911622,
+    0.8230650441,
+    0.7795433545,
+    0.6955526226,
+    0.6280619816,
+    0.5344228251,
+    0.4096356208,
+    0.2751798735,
+    0.0004475776106
+   ],
+   "tauB_boundary": 7.108624194,
+   "u1_boundary": 10.06896305,
+   "tauB_boundary_pchip": 7.114447601
+  },
+  "n400_E0.001": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.041579699,
+    5.541488022,
+    6.04130569,
+    6.540827903,
+    6.790404191,
+    7.039829045,
+    7.289085095,
+    7.538166491,
+    8.035802047
+   ],
+   "fraction": [
+    0.8448058864,
+    0.8227399087,
+    0.779167188,
+    0.6951716285,
+    0.6277262619,
+    0.5340767405,
+    0.4094517326,
+    0.2750729258,
+    0.0004475723631
+   ],
+   "tauB_boundary": 7.107984176,
+   "u1_boundary": 10.06835855,
+   "tauB_boundary_pchip": 7.113773294
+  },
+  "n400_E0.01": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.041369362,
+    5.541260562,
+    6.04104028,
+    6.540516077,
+    6.790073497,
+    7.039482821,
+    7.288734949,
+    7.537818976,
+    8.035467708
+   ],
+   "fraction": [
+    0.8424992724,
+    0.8196563558,
+    0.7757933452,
+    0.6920593645,
+    0.6248347531,
+    0.5315394139,
+    0.4077827652,
+    0.2740954658,
+    0.0004475632146
+   ],
+   "tauB_boundary": 7.10300479,
+   "u1_boundary": 10.06371256,
+   "tauB_boundary_pchip": 7.108621432
+  },
+  "n400_E0.1": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.038797865,
+    5.538475136,
+    6.037953387,
+    6.537139834,
+    6.786597394,
+    7.035952442,
+    7.285203501,
+    7.534333617,
+    8.032205584
+   ],
+   "fraction": [
+    0.80864845,
+    0.7859763256,
+    0.7435093428,
+    0.6627021623,
+    0.5975616644,
+    0.5069280645,
+    0.3921966363,
+    0.2644945844,
+    0.0004472403163
+   ],
+   "tauB_boundary": 7.051003483,
+   "u1_boundary": 10.01509627,
+   "tauB_boundary_pchip": 7.052780309
+  },
+  "n400_E0.3": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.031033625,
+    5.530535631,
+    6.029903974,
+    6.52910976,
+    6.778639111,
+    7.028113955,
+    7.27751999,
+    7.526851326,
+    8.025212653
+   ],
+   "fraction": [
+    0.7449791804,
+    0.7237315671,
+    0.6832267718,
+    0.6056954409,
+    0.5432514347,
+    0.4588274959,
+    0.3619242187,
+    0.245361317,
+    0.0004455463239
+   ],
+   "tauB_boundary": 6.906448179,
+   "u1_boundary": 9.878078112,
+   "tauB_boundary_pchip": 6.913034116
+  },
+  "n400_E0.5": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.022740357,
+    5.522359584,
+    6.021896247,
+    6.52132598,
+    6.770990215,
+    7.020608602,
+    7.270176102,
+    7.519678791,
+    8.018418182
+   ],
+   "fraction": [
+    0.6905030588,
+    0.6695177779,
+    0.6294064556,
+    0.5538476462,
+    0.4954588374,
+    0.4211043814,
+    0.3351623248,
+    0.228584972,
+    0.000442604169
+   ],
+   "tauB_boundary": 6.751572695,
+   "u1_boundary": 9.730556366,
+   "tauB_boundary_pchip": 6.75360404
+  },
+  "n800_E1e-08": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.041926243,
+    5.541842624,
+    6.041667029,
+    6.541183485,
+    6.790749899,
+    7.040155178,
+    7.289384031,
+    7.538427921,
+    8.035938804
+   ],
+   "fraction": [
+    0.8402042354,
+    0.8137864101,
+    0.7618889892,
+    0.6620656443,
+    0.5816362769,
+    0.4694044494,
+    0.3365348129,
+    0.1709917255,
+    7.073207734e-08
+   ],
+   "tauB_boundary": 6.972164733,
+   "u1_boundary": 9.931847428,
+   "tauB_boundary_pchip": 6.977110584
+  },
+  "n800_E0.001": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.041903205,
+    5.541817743,
+    6.041637422,
+    6.541148214,
+    6.790712101,
+    7.040115856,
+    7.289344456,
+    7.538387009,
+    8.035900047
+   ],
+   "fraction": [
+    0.8399847158,
+    0.8134483896,
+    0.7615122962,
+    0.6617387505,
+    0.5813412505,
+    0.4691180618,
+    0.3363915678,
+    0.1709460767,
+    7.073254312e-08
+   ],
+   "tauB_boundary": 6.971484128,
+   "u1_boundary": 9.931204196,
+   "tauB_boundary_pchip": 6.976455458
+  },
+  "n800_E0.01": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.041691588,
+    5.541587635,
+    6.041368544,
+    6.54083207,
+    6.790376903,
+    7.039767032,
+    7.288989449,
+    7.538033086,
+    8.035566147
+   ],
+   "fraction": [
+    0.8374931713,
+    0.8102600835,
+    0.7581561139,
+    0.6587039114,
+    0.5786001526,
+    0.4667672424,
+    0.335117779,
+    0.1705239883,
+    7.073116652e-08
+   ],
+   "tauB_boundary": 6.965657169,
+   "u1_boundary": 9.925708905,
+   "tauB_boundary_pchip": 6.970886817
+  },
+  "n800_E0.1": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.039109956,
+    5.538785373,
+    6.038257119,
+    6.537428007,
+    6.786872854,
+    7.03620971,
+    7.28543135,
+    7.534528361,
+    8.032286326
+   ],
+   "fraction": [
+    0.8036116782,
+    0.7767394211,
+    0.7264222054,
+    0.6303789914,
+    0.5526355075,
+    0.4441091426,
+    0.3229063406,
+    0.1662986026,
+    7.068935927e-08
+   ],
+   "tauB_boundary": 6.907801736,
+   "u1_boundary": 9.871250508,
+   "tauB_boundary_pchip": 6.914597602
+  },
+  "n800_E0.3": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.031339357,
+    5.530834943,
+    6.030193272,
+    6.529380801,
+    6.778896826,
+    7.028350603,
+    7.277730198,
+    7.527024957,
+    8.025276745
+   ],
+   "fraction": [
+    0.7402611163,
+    0.7150051142,
+    0.6669777658,
+    0.5748940107,
+    0.5005281234,
+    0.4038754489,
+    0.2982029205,
+    0.1574009948,
+    7.043386021e-08
+   ],
+   "tauB_boundary": 6.780259875,
+   "u1_boundary": 9.751366034,
+   "tauB_boundary_pchip": 6.7804619
+  },
+  "n800_E0.5": {
+   "monotone": true,
+   "u1": [
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    9.75,
+    10.0,
+    10.25,
+    10.5,
+    11.0
+   ],
+   "tauB_emit50": [
+    5.023041415,
+    5.522654967,
+    6.022181404,
+    6.521591406,
+    6.771239179,
+    7.020839143,
+    7.270379572,
+    7.519845035,
+    8.018474327
+   ],
+   "fraction": [
+    0.6861863038,
+    0.6611748219,
+    0.6137910832,
+    0.5248052313,
+    0.4567390956,
+    0.3721506287,
+    0.2762888924,
+    0.1491860337,
+    6.997735362e-08
+   ],
+   "tauB_boundary": 6.612570139,
+   "u1_boundary": 9.591107094,
+   "tauB_boundary_pchip": 6.622028222
+  },
+  "n1600_E1e-08": {
+   "monotone": true,
+   "u1": [
+    9.5,
+    9.75,
+    10.0
+   ],
+   "tauB_emit50": [
+    6.541341838,
+    6.790904849,
+    7.040305068
+   ],
+   "fraction": [
+    0.653634869,
+    0.5699134483,
+    0.4529080305
+   ],
+   "tauB_boundary": 6.939927259,
+   "u1_boundary": 9.899380793,
+   "tauB_boundary_pchip": 6.948686802
+  },
+  "n1600_E0.1": {
+   "monotone": true,
+   "u1": [
+    9.5,
+    9.75,
+    10.0
+   ],
+   "tauB_emit50": [
+    6.537578483,
+    6.787019804,
+    7.03635351
+   ],
+   "fraction": [
+    0.6222246285,
+    0.5412734923,
+    0.4286023229
+   ],
+   "tauB_boundary": 6.878355261,
+   "u1_boundary": 9.841579533,
+   "tauB_boundary_pchip": 6.887638699
+  },
+  "n1600_E0.3": {
+   "monotone": true,
+   "u1": [
+    9.5,
+    9.75,
+    10.0
+   ],
+   "tauB_emit50": [
+    6.529526684,
+    6.779038756,
+    7.028487304
+   ],
+   "fraction": [
+    0.5671305984,
+    0.4898163002,
+    0.3905306788
+   ],
+   "tauB_boundary": 6.746173476,
+   "u1_boundary": 9.717070451,
+   "tauB_boundary_pchip": 6.749474043
+  },
+  "n1600_E0.5": {
+   "monotone": true,
+   "u1": [
+    9.5,
+    9.75,
+    10.0
+   ],
+   "tauB_emit50": [
+    6.52173475,
+    6.771379384,
+    7.020974059
+   ],
+   "fraction": [
+    0.5175395142,
+    0.4471368037,
+    0.3601953088
+   ],
+   "tauB_boundary": 6.583929026,
+   "u1_boundary": 9.562282809,
+   "tauB_boundary_pchip": 6.589572407
+  }
+ },
  "richardson": {
   "dead_12_E1e-08": {
    "n400": 7.139006233,
@@ -1788,6 +2342,48 @@
    "ratio": 3.909593171,
    "extrap": 6.691656504,
    "last_change": 0.03384867395
+  },
+  "net_E1e-08": {
+   "n400": 7.108624194,
+   "n800": 6.972164733,
+   "n1600": 6.939927259,
+   "ratio": 4.232945089,
+   "extrap": 6.929181434,
+   "last_change": 0.03223747467
+  },
+  "net_E0.001": {
+   "n400": 7.107984176,
+   "n800": 6.971484128,
+   "n1600": null
+  },
+  "net_E0.01": {
+   "n400": 7.10300479,
+   "n800": 6.965657169,
+   "n1600": null
+  },
+  "net_E0.1": {
+   "n400": 7.051003483,
+   "n800": 6.907801736,
+   "n1600": 6.878355261,
+   "ratio": 4.863120278,
+   "extrap": 6.86853977,
+   "last_change": 0.02944647445
+  },
+  "net_E0.3": {
+   "n400": 6.906448179,
+   "n800": 6.780259875,
+   "n1600": 6.746173476,
+   "ratio": 3.702013332,
+   "extrap": 6.734811343,
+   "last_change": 0.03408639898
+  },
+  "net_E0.5": {
+   "n400": 6.751572695,
+   "n800": 6.612570139,
+   "n1600": 6.583929026,
+   "ratio": 4.853252665,
+   "extrap": 6.574381988,
+   "last_change": 0.02864111263
   }
  },
  "cases": [
@@ -2251,5 +2847,860 @@
    "test_ray_u_A_max": 11.00306095,
    "test_ray_tauB": 7.520177064
   }
- ]
+ ],
+ "evidence": {
+  "rule": {
+   "cons_ok": 0.001,
+   "cert_tau": 11.0,
+   "accounting_residual": 0.012
+  },
+  "cases": [
+   {
+    "e_ret": 1e-08,
+    "u1": 8.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.041926243,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.8402042354,
+    "tau90_A": 9.146389185,
+    "cons_A_tau11": 6.806948326e-07,
+    "cons_A_tau12": 3.267672245e-05,
+    "last_change": 0.0047104464,
+    "bookkeeping_A": 4.955720767e-07
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 8.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.541842624,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.8137864101,
+    "tau90_A": 9.70514082,
+    "cons_A_tau11": 6.85259171e-07,
+    "cons_A_tau12": 3.269629466e-05,
+    "last_change": 0.0091565837,
+    "bookkeeping_A": 4.959470407e-07
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 9.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.041667029,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.7618889892,
+    "tau90_A": 10.26286952,
+    "cons_A_tau11": 6.970479909e-07,
+    "cons_A_tau12": 3.261892778e-05,
+    "last_change": 0.0174899074,
+    "bookkeeping_A": 4.962752738e-07
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 9.5,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.541341838,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.653634869,
+    "tau90_A": 10.81984683,
+    "cons_A_tau11": 3.21046242e-06,
+    "cons_A_tau12": 6.479839247e-06,
+    "last_change": 0.0084202931,
+    "bookkeeping_A": 1.445873785e-07
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 9.75,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.790904849,
+    "class": "exploratory",
+    "reasons": [
+     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+    ],
+    "fraction": 0.5699134483,
+    "tau90_A": 10.86297198,
+    "cons_A_tau11": 3.137867649e-06,
+    "cons_A_tau12": 6.896530433e-06,
+    "last_change": 0.0117867415,
+    "bookkeeping_A": 1.446003957e-07
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 10.0,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.040305068,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 10.25,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.289384031,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 10.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.538427921,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 1e-08,
+    "u1": 11.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 8.035938804,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 8.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.041903205,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.8399847158,
+    "tau90_A": 9.148643171,
+    "cons_A_tau11": 7.974699931e-07,
+    "cons_A_tau12": 3.98583076e-05,
+    "last_change": 0.0047459985,
+    "bookkeeping_A": 6.011281067e-07
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 8.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.541817743,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.8134483896,
+    "tau90_A": 9.706098223,
+    "cons_A_tau11": 8.050183357e-07,
+    "cons_A_tau12": 6.265803649e-05,
+    "last_change": 0.0091714753,
+    "bookkeeping_A": 5.7771743e-07
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 9.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.041637422,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.7615122962,
+    "tau90_A": 10.26305735,
+    "cons_A_tau11": 6.822142304e-07,
+    "cons_A_tau12": 4.41001501e-05,
+    "last_change": 0.0174932542,
+    "bookkeeping_A": 5.237487332e-07
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 9.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.541148214,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.6617387505,
+    "tau90_A": 10.8081166,
+    "cons_A_tau11": 7.085374486e-07,
+    "cons_A_tau12": 3.688688715e-05,
+    "last_change": 0.0333509382,
+    "bookkeeping_A": 5.759264907e-07
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 9.75,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.790712101,
+    "class": "exploratory",
+    "reasons": [
+     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+    ],
+    "fraction": 0.5813412505,
+    "tau90_A": 10.85226145,
+    "cons_A_tau11": 6.233919049e-07,
+    "cons_A_tau12": 3.519154948e-05,
+    "last_change": 0.0465528211,
+    "bookkeeping_A": 4.886501312e-07
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 10.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.040115856,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 10.25,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.289344456,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 10.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.538387009,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.001,
+    "u1": 11.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 8.035900047,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 8.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.041691588,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.8374931713,
+    "tau90_A": 9.16373,
+    "cons_A_tau11": 2.64528383e-06,
+    "cons_A_tau12": 0.0004942548093,
+    "last_change": 0.0049416851,
+    "bookkeeping_A": 2.62958472e-06
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 8.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.541587635,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.8102600835,
+    "tau90_A": 9.712843563,
+    "cons_A_tau11": 1.46943597e-06,
+    "cons_A_tau12": 0.000128486835,
+    "last_change": 0.0092927614,
+    "bookkeeping_A": 1.355994651e-06
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 9.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.041368544,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.7581561139,
+    "tau90_A": 10.26480808,
+    "cons_A_tau11": 9.015659549e-07,
+    "cons_A_tau12": 6.829313913e-05,
+    "last_change": 0.0174988989,
+    "bookkeeping_A": 8.274770918e-07
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 9.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.54083207,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.6587039114,
+    "tau90_A": 10.8057771,
+    "cons_A_tau11": 9.372141227e-07,
+    "cons_A_tau12": 4.019484033e-05,
+    "last_change": 0.0333058056,
+    "bookkeeping_A": 6.055643914e-07
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 9.75,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.790376903,
+    "class": "exploratory",
+    "reasons": [
+     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+    ],
+    "fraction": 0.5786001526,
+    "tau90_A": 10.84918099,
+    "cons_A_tau11": 7.396588132e-07,
+    "cons_A_tau12": 7.261408686e-05,
+    "last_change": 0.0464351216,
+    "bookkeeping_A": 5.638710312e-07
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 10.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.039767032,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 10.25,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.288989449,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 10.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.538033086,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.01,
+    "u1": 11.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 8.035566147,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 8.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.039109956,
+    "class": "exploratory",
+    "reasons": [
+     "stored residual over A's rounded causal past to tau_A = 11 is 0.15"
+    ],
+    "fraction": 0.8036116782,
+    "tau90_A": 9.189550861,
+    "cons_A_tau11": 0.1522185683,
+    "cons_A_tau12": 31385.85411,
+    "last_change": 0.0050276808,
+    "bookkeeping_A": 0.0002019514829
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 8.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.538785373,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.7767394211,
+    "tau90_A": 9.7253675,
+    "cons_A_tau11": 0.0004126160698,
+    "cons_A_tau12": 28015.61145,
+    "last_change": 0.0092246748,
+    "bookkeeping_A": 5.642506395e-05
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 9.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.038257119,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.7264222054,
+    "tau90_A": 10.26822481,
+    "cons_A_tau11": 3.950257554e-05,
+    "cons_A_tau12": 153673.5329,
+    "last_change": 0.0170918472,
+    "bookkeeping_A": 1.678798642e-05
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 9.5,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.537578483,
+    "class": "certified",
+    "reasons": [],
+    "fraction": 0.6222246285,
+    "tau90_A": 10.59169047,
+    "cons_A_tau11": 3.6321507e-06,
+    "cons_A_tau12": 0.004368701535,
+    "last_change": 0.0082024824,
+    "bookkeeping_A": 1.363218076e-06
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 9.75,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.787019804,
+    "class": "exploratory",
+    "reasons": [
+     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+    ],
+    "fraction": 0.5412734923,
+    "tau90_A": 10.83702266,
+    "cons_A_tau11": 3.237294532e-06,
+    "cons_A_tau12": 0.0006973579625,
+    "last_change": 0.0114943745,
+    "bookkeeping_A": 8.252127672e-07
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 10.0,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.03635351,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 10.25,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.28543135,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 10.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.534528361,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.1,
+    "u1": 11.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 8.032286326,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 8.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.031339357,
+    "class": "exploratory",
+    "reasons": [
+     "stored residual over A's rounded causal past to tau_A = 11 is 1.7e+05"
+    ],
+    "fraction": 0.7402611163,
+    "tau90_A": 9.186349655,
+    "cons_A_tau11": 169076.0446,
+    "cons_A_tau12": 169076.0446,
+    "last_change": 0.004756487,
+    "bookkeeping_A": 0.003097747906
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 8.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.530834943,
+    "class": "exploratory",
+    "reasons": [
+     "stored residual over A's rounded causal past to tau_A = 11 is 7.7e+03"
+    ],
+    "fraction": 0.7150051142,
+    "tau90_A": 9.701714148,
+    "cons_A_tau11": 7670.397937,
+    "cons_A_tau12": 11499.99222,
+    "last_change": 0.0087980715,
+    "bookkeeping_A": 0.0007492584607
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 9.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.030193272,
+    "class": "exploratory",
+    "reasons": [
+     "stored residual over A's rounded causal past to tau_A = 11 is 0.03"
+    ],
+    "fraction": 0.6669777658,
+    "tau90_A": 10.00198878,
+    "cons_A_tau11": 0.03036644052,
+    "cons_A_tau12": 128948.9564,
+    "last_change": 0.0164017994,
+    "bookkeeping_A": 0.0001852487857
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 9.5,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.529526684,
+    "class": "exploratory",
+    "reasons": [
+     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+    ],
+    "fraction": 0.5671305984,
+    "tau90_A": 10.51508786,
+    "cons_A_tau11": 2.560933145e-05,
+    "cons_A_tau12": 78496.35065,
+    "last_change": 0.0078753966,
+    "bookkeeping_A": 1.034942952e-05
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 9.75,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.779038756,
+    "class": "exploratory",
+    "reasons": [
+     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+    ],
+    "fraction": 0.4898163002,
+    "tau90_A": 10.7962579,
+    "cons_A_tau11": 4.340788384e-06,
+    "cons_A_tau12": 17992.20213,
+    "last_change": 0.0109338069,
+    "bookkeeping_A": 4.866363355e-06
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 10.0,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.028487304,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 10.25,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.277730198,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 10.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.527024957,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.3,
+    "u1": 11.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 8.025276745,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 8.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.023041415,
+    "class": "exploratory",
+    "reasons": [
+     "stored residual over A's rounded causal past to tau_A = 11 is 1.3e+04"
+    ],
+    "fraction": 0.6861863038,
+    "tau90_A": 8.91053718,
+    "cons_A_tau11": 13331.19375,
+    "cons_A_tau12": 16004.35035,
+    "last_change": 0.0043827092,
+    "bookkeeping_A": 0.008330407575
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 8.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 5.522654967,
+    "class": "exploratory",
+    "reasons": [
+     "stored residual over A's rounded causal past to tau_A = 11 is 1.2e+05"
+    ],
+    "fraction": 0.6611748219,
+    "tau90_A": 9.420006038,
+    "cons_A_tau11": 118659.8756,
+    "cons_A_tau12": 118659.8756,
+    "last_change": 0.0084616236,
+    "bookkeeping_A": 0.002582901764
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 9.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.022181404,
+    "class": "exploratory",
+    "reasons": [
+     "stored residual over A's rounded causal past to tau_A = 11 is 1.2e+05"
+    ],
+    "fraction": 0.6137910832,
+    "tau90_A": 9.934021033,
+    "cons_A_tau11": 122786.1323,
+    "cons_A_tau12": 122786.1323,
+    "last_change": 0.0158547026,
+    "bookkeeping_A": 0.0006134006565
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 9.5,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": true,
+    "pass_all_n": true,
+    "tauB_emit50": 6.52173475,
+    "class": "exploratory",
+    "reasons": [
+     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+    ],
+    "fraction": 0.5175395142,
+    "tau90_A": 10.47715378,
+    "cons_A_tau11": 0.0009587116966,
+    "cons_A_tau12": 269565.9752,
+    "last_change": 0.007423163,
+    "bookkeeping_A": 3.106626998e-05
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 9.75,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 6.771379384,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 10.0,
+    "n_fine": 1600,
+    "n_coarse": 800,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.020974059,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 10.25,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.270379572,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 10.5,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 7.519845035,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   },
+   {
+    "e_ret": 0.5,
+    "u1": 11.0,
+    "n_fine": 800,
+    "n_coarse": 400,
+    "pass_by_rule": false,
+    "pass_all_n": false,
+    "tauB_emit50": 8.018474327,
+    "class": "fail",
+    "reasons": [
+     "received < 50 % by tau_A = 12"
+    ]
+   }
+  ]
+ }
 }

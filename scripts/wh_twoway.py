@@ -519,8 +519,8 @@ def constraint_in_past(res: dict, tau_dead: float) -> dict:
 
     A's past up to the deadline is the rectangle u <= u_A(tau_dead), v <= v_A(tau_dead) (the track
     is future-directed); B's is taken up to the end of its track. Blocks are out_h wide, so the
-    rectangle is
-    rounded outward by one block.
+    rectangle is rounded outward by one block; near the horizon that extra row can hold trapped
+    points beyond A's track (review item 1), so a large value is inconclusive.
     """
     cm, h = res["cons"], res["grid_h"]
     out = {}
@@ -693,7 +693,78 @@ def load_rows() -> list:
             rows = [
                 r for r in rows if (r["case"]["n"], r["case"]["e_ret"], r["case"]["u1"]) != key
             ] + [new]
+    for r in rows:  # derived (review item 3): net chi2 energy out of A's sphere by the deadline
+        e_in = r["B"]["chi2_in"]["E_kodama"]
+        net = r["A"]["chi2_out"]["E_kodama"] - r["A"]["chi2_in"]["E_kodama"]
+        r["return"]["fraction_net"] = net / e_in if e_in > 0 else None
     return rows
+
+
+# Evidence classes (post hoc, owner request 2026-10-28; computed only from stored run summaries)
+CONS_OK = 1e-3  # null-constraint residual allowed in A's causal past (terms are O(0.5-10))
+CERT_TAU = 11.0  # A proper time up to which the constraint in A's past is stored and checked
+ACCOUNTING_RESIDUAL = (
+    0.012  # energy-balance residual of the unperturbed run (n = 800), kept as margin
+)
+
+
+def _cons(r: dict, key: str, who: str = "A") -> float:
+    return max(r[key][who][c]["max"] for c in ("u", "v"))
+
+
+def certify_pass(fine: dict, coarse: dict | None) -> dict:
+    """Classify one passing case (`fine` = finest resolution run, `coarse` = next coarser one).
+
+    certified: (1) the null-constraint residual in A's causal past up to tau_A = 11 is <= CONS_OK;
+    (2) at least 90 % of the energy A receives by the deadline has arrived by tau_A = 11
+    (tau90 <= 11), and 0.9 x fraction - 0.5 exceeds the last resolution change of the fraction
+    plus the 1.2 % balance residual, so the verdict holds on the certified part. The fraction used
+    is the smaller of the gross (frozen rule) and the net (outflow minus inflow) one at A.
+    The stored residual covers A's causal past rounded outward by one 0.05 block, which can
+    include trapped points beyond A's track (review item 1): a small value certifies, a large one
+    is inconclusive, not a demonstrated violation in A's past.
+    Otherwise the pass is "exploratory" (verdict by the rule, evidence incomplete).
+    """
+    x = fine["return"]
+    frac = min(x["fraction"], x.get("fraction_net", x["fraction"]))  # gross and net must both clear
+    tau90 = fine["A"]["chi2_out"]["tau90"]
+    cons11 = _cons(fine, "constraint_tauA_11")
+    change = abs(x["fraction"] - coarse["return"]["fraction"]) if coarse else None
+    reasons = []
+    if not x["pass"]:
+        return {"class": "fail", "reasons": ["received < 50 % by tau_A = 12"]}
+    if cons11 > CONS_OK:
+        reasons.append(
+            f"stored residual over A's rounded causal past to tau_A = 11 is {cons11:.2g}"
+        )
+    if tau90 is None or tau90 > CERT_TAU:
+        reasons.append("more than 10 % of the received energy arrives after tau_A = 11")
+    if change is None:
+        reasons.append("no coarser run to measure convergence")
+    elif 0.9 * frac - PASS_FRACTION <= change + ACCOUNTING_RESIDUAL:
+        reasons.append("50 % verdict needs energy received after tau_A = 11 or is within the error")
+    return {"class": "certified" if not reasons else "exploratory", "reasons": reasons,
+            "fraction": frac, "tau90_A": tau90, "cons_A_tau11": cons11,
+            "cons_A_tau12": _cons(fine, "constraint"), "last_change": change,
+            "bookkeeping_A": fine["bookkeeping"]["A"]}  # fmt: skip
+
+
+def classify(rows: list) -> dict:
+    """Evidence class of every scanned (E_ret, u1) case at its finest resolution."""
+    by = {(r["case"]["n"], r["case"]["e_ret"], r["case"]["u1"]): r for r in rows if run_valid(r)}
+    out = []
+    for e, u1 in sorted({(k[1], k[2]) for k in by}):
+        ns = sorted(n for (n, ee, uu) in by if (ee, uu) == (e, u1))
+        fine = by[(ns[-1], e, u1)]
+        coarse = by[(ns[-2], e, u1)] if len(ns) > 1 else None
+        rec = {"e_ret": e, "u1": u1, "n_fine": ns[-1], "n_coarse": ns[-2] if len(ns) > 1 else None,
+               "pass_by_rule": fine["return"]["pass"],
+               "pass_all_n": all(by[(n, e, u1)]["return"]["pass"] for n in ns),
+               "tauB_emit50": fine["return"]["tauB_emit50"]}  # fmt: skip
+        rec.update(certify_pass(fine, coarse))
+        out.append(rec)
+    return {"rule": {"cons_ok": CONS_OK, "cert_tau": CERT_TAU,
+                     "accounting_residual": ACCOUNTING_RESIDUAL}, "cases": out}  # fmt: skip
 
 
 def richardson(res: dict) -> dict:
@@ -708,6 +779,7 @@ def richardson(res: dict) -> dict:
         ("dead_12", "boundary"),
         ("dead_11.5", "boundary_dead_11.5"),
         ("dead_12.5", "boundary_dead_12.5"),
+        ("net", "boundary_net"),
     ):
         for e in E_RET + E_RET_POST_HOC:
             b = {n: res[key].get(f"n{n}_E{e:g}", {}).get("tauB_boundary") for n in (400, 800, 1600)}
@@ -943,8 +1015,10 @@ def main(argv: list[str] | None = None) -> int:
         res = {"tau_dead": TAU_DEAD, "boundary": boundary(rows)}
         for td in TAU_DEAD_ALT:
             res[f"boundary_dead_{td:g}"] = boundary(rows, f"fraction_dead_{td:g}")
+        res["boundary_net"] = boundary(rows, "fraction_net")  # review item 3: net flux at A
         res["richardson"] = richardson(res)
         res["cases"] = case_table(rows)
+        res["evidence"] = classify(rows)
         write_json(OUT / "boundary.json", res)
         for k, v in res["boundary"].items():
             print(
