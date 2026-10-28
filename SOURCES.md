@@ -2032,3 +2032,21 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid/ (MAST `Download/file` redirects there). 184 files;
   obs_id, sha256 and size in `files.json`; columns TIME, PDCSAP_FLUX, QUALITY; TIMEDEL from the header.
 - MAST CAOM TAP (`dbo.ObsPointing`): the 120 s records of the #561 TIC sample (`sample.json`).
+
+## Two-way self-gravitating signals through an unstable wormhole (accessed 2026-10-28; `results/wh_twoway/`)
+- Kain, "Dynamical wormholes", arXiv:2602.18231v1, Class. Quantum Grav. 43, 045014 (2026). Body read (LaTeX source,
+  §§2–3 and the code-test appendix): double-null equations (eqs. 1–4, 31–33), predictor–corrector (§2.3), static
+  initial data and pulse (eqs. 34–35), Fig. 3_07 benchmark case. The equations were reimplemented; no code reused.
+- Calhoun, Fay & Kain, arXiv:2210.04905v2, PRD 106, 104054 (2022): the null-geodesic equation at the end of §II and §V
+  re-read for how the return light rays are computed.
+- Shinkai & Hayward gr-qc/0205041v2 and the S0-2026-10-16 list (above) were not re-read.
+- González, Guzmán & Sarbach, arXiv:0806.0608v2 (Table I, e-folding 0.846; their code 0.836): values taken from the
+  S0-2026-10-16 record, not re-read.
+- Citation check via the INSPIRE API (queries `refersto:recid:2164089 or …:3122144 or …:2898811 or …:2940525`, 14
+  hits; `refersto:recid:586606 and de > 2020`, 101 hits; full-text queries for "round trip", "two-way", "return
+  signal"). Read in the body or HTML: Kain arXiv:2507.00109 (PRD 111, 124057, 2025); Hayward, Kim & Lee
+  gr-qc/0110080 (PRD 65, 064003, 2002). Abstract level only: Kain arXiv:2305.11217 (PRD 108, 044019, 2023);
+  Fu, Grado-White & Marolf arXiv:1908.03273 (CQG 36, 245018, 2019); Maldacena, Stanford & Yang arXiv:1704.05333
+  (Fortsch. Phys. 65, 1700034, 2017); Hirano, Lei & van Leuven arXiv:1906.10715 (JHEP 09, 070, 2019); Freivogel,
+  Galante & Nikolakopoulou arXiv:1907.13140 (JHEP 01, 050, 2020); Shirokov & Nachevsky arXiv:2610.13206 and
+  arXiv:2610.29941 (2026).

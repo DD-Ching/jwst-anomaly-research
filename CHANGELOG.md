@@ -2,6 +2,32 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-28: Finite-energy return pulses through a collapsing Ellis–Bronnikov wormhole (owner-requested round)
+- **Question** (owner, bounded round): after an outbound pulse has crossed, can a positive-energy return pulse that
+  acts back on the geometry still reach the sender? Record: `docs/results/wh_twoway.md`; code
+  `scripts/wh_twoway.py`; data `results/wh_twoway/`.
+- **Not answered before**: published returns are test light rays only (CFK22 null geodesics on the evolved metric; Kain 2602.18231 one
+  ray by eye); INSPIRE citers of 2210.04905 / 2602.18231 / 2503.07610 / 2507.00109 and of gr-qc/0205041 since 2020
+  show no self-gravitating return pulse.
+- **Method**: minimal reimplementation of Kain 2602.18231's double-null equations and scheme (4D, spherical,
+  massless ghost scalar as an assumed source) with two ordinary scalars for the outbound and return legs, both
+  sourcing the geometry; stations at r = 2 x₀ on both sides; Kodama and local energies and proper times on their
+  worldlines. Checks: static wormhole second order; e-folding 0.840 vs GGS09 0.846; Kain's Fig. 9 case reproduced
+  (figure-read); constraints and bookkeeping converge; boundaries at n = 400 / 800 / 1600.
+- **Result [sim]** (E_out = 10⁻⁴ x₀; 50 % received-energy rule by A's τ = 12): every return energy tried
+  (10⁻⁸ … 0.5 x₀) reaches A if B sends it early; the last passing B emission time is 6.975 (test limit), 6.918
+  (0.1), 6.803 (0.3), 6.657 (0.5) at n = 1600, uncertainty ≈ 0.03. A test null ray still gets through until 7.533.
+  An energetic return closes the door behind it: after a 0.5 x₀ return, later rays from B fail beyond τ_B = 5.40.
+- **Numerical hazard**: truncation error of the unstable static wormhole seeds expansion; with a weak outbound
+  pulse launched from r = 2 the verdict flips with resolution (n ≤ 200 expand, n = 400 collapses). Hence E_out = 10⁻⁴
+  and n = 1600 checks.
+- **Deviations** (post hoc, labelled): deadline 14 → 12 after five test runs (bookkeeping fails later); E_ret 0.3,
+  0.5 and u₁ 9.75, 10.25 added; validity rule added after the independent review.
+- **Limits**: two-way propagation, not a reply (no trigger or energy source at B); no bit rate; two separate
+  universes, so no shortcut or FTL statement; one model and configuration only.
+- **Handoff**: no next round is queued (owner instruction). Reopen inputs: a same-exterior dynamical construction,
+  a physically modelled transmitter at B, or other station radii / outbound energies if the owner asks.
+
 ## 2026-10-27: Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all DR2 seasons reproduce Table 8
 - **Plan, written before any fit** (first commit of this PR): fit the arXiv:2605.19040 Table 8 sources
   time-integrated with SkyLLH on every DR2 season; agreement |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1 (ASSUMPTION).

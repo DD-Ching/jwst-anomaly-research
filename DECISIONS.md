@@ -6704,3 +6704,19 @@ confining radiation at a throat is found.
   Post hoc, at f 0.80 / 0.75 the run repairs the D14a merge but keeps two D115a images lost
   (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`). Revisit with a multi-hour BayeSys run (addendum
   4) or a Lenstool build with D52b's image matching fixed.
+
+## D-110 Two-way wormhole signals: reimplement Kain 2602.18231's double-null scheme with two signal fields (2026-10-28)
+- **Decision:** for the owner's bounded round on finite-energy return pulses (`docs/results/wh_twoway.md`), write a
+  minimal numpy implementation (`scripts/wh_twoway.py`) of Kain's published double-null equations and second-order
+  predictor–corrector (arXiv:2602.18231v1 §§2–3), marched by anti-diagonals, with the ordinary scalar split into an
+  outbound and a return field and constant-r stations measuring Kodama energy and proper time.
+- **Alternatives rejected:** Shinkai's `wh_dual` (public, no licence; not downloaded, S0-2026-10-16 §6); the CFK22,
+  Kain26 and Xu–Chew–Yeom codes (not stated public); a 3+1 code (needs singularity-avoiding gauges to follow the
+  collapse; in double-null coordinates radial null rays are coordinate lines, so test rays need no geodesic solver);
+  a general numerical-relativity framework (excluded by the owner's brief).
+- **Evidence:** static wormhole kept at second order; e-folding 0.840 vs GGS09's 0.846; Kain's Fig. 9 case
+  reproduced by eye; boundaries converge at about second order over n = 400 / 800 / 1600
+  (`results/wh_twoway/checks.json`, `boundary.json`).
+- **Revisit if:** a licensed public double-null wormhole code appears, a non-spherical or same-exterior evolution is
+  needed, or near-horizon late-time accuracy matters (the uniform grid does not resolve the exponentially steepening
+  u-gradients near the event horizon; adaptive refinement in u would be needed).
