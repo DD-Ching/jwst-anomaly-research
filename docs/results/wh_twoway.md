@@ -221,3 +221,21 @@ more than ≈ 0.37 x₀/c after it does not (`scan_n800.json`, `test_ray`).
   says it exists or could be made.
 - **The window is short and closes.** In this configuration the usable window at B is of order x₀/c and the
   wormhole then becomes a black hole; nothing here keeps it open.
+
+## 7. Plain answers
+
+1. **New physics answer.** In this model a positive-energy return pulse that gravitates *does* get back to the
+   sender after the outbound pulse has passed, as long as B sends it early enough; its own energy (up to 0.5 x₀)
+   shortens that window only by ≤ 0.32 x₀/c, but it shuts the wormhole for anything B sends afterwards.
+2. **When it arrives.** With E_out = 10⁻⁴ x₀ and stations at r = 2 x₀: B must emit within ≈ 1.9–2.3 x₀/c after the
+   outbound pulse has passed it (before τ_B ≈ 6.66–6.98, depending on E_ret ≤ 0.5) [der]. A then receives at
+   least half of the emitted Kodama energy (up to 86 % for an immediate test-limit reply, 71 % at E_ret = 0.5),
+   3.5–3.65 x₀/c later on clocks synchronised in the static era (light needs 3.46 through the static wormhole)
+   [der]. For a 1 km throat, x₀/c ≈ 3.3 µs [der].
+3. **What is missing.** Not numerical capability for this question (converged to ≈ 0.03 x₀/c). Missing are model
+   conditions: an assumed ghost field, two separate universes (no external path, so no shortcut can be defined), no
+   modelled transmitter or receiver, and only one configuration. No physical obstacle to the *return itself* was
+   found in this model; the obstacle found is that each signal hastens the collapse for the next one.
+4. **Enough for a next study?** Only for narrow follow-ups that the same code can answer (other station radii or
+   outbound energies, a train of several pulses, a reflecting B). It does not support a communication-channel claim:
+   that needs a same-exterior geometry, which no paper found evolves.
