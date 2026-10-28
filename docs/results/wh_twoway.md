@@ -161,12 +161,13 @@ uncertainty):
 | 0.3 (post hoc) | 6.962 | 6.830 | 6.803 | 6.794 | 0.028 | −0.179 / −0.173 |
 | 0.5 (post hoc) | 6.822 | 6.688 | 6.657 | 6.647 | 0.031 | −0.321 / −0.319 |
 
-- **By the 50 % rule, every energy tried passes when B sends early enough.** With E_ret ≤ 0.5 x₀ (up to 5 000 times
-  the outbound energy), a pulse sent right after reception (τ_B ≈ 5.0) delivers 71–86 % of its Kodama energy by
+- **By the 50 % rule, every energy tried passes when the pre-loaded return crosses B early enough.** With
+  E_ret ≤ 0.5 x₀ (up to 5 000 times the outbound energy), a return crossing B right after the outbound pulse
+  (τ_B ≈ 5.0) delivers 71–86 % of its Kodama energy by
   τ_A = 12 (n = 800, u₁ = 8.0). The evidence behind these passes differs by case (§7): certified for E_ret ≤ 10⁻²
   at u₁ ≤ 9.5 and for E_ret = 0.1 at u₁ = 8.5–9.5; every E_ret = 0.3 and 0.5 pass is exploratory. **Energies above 0.5 were not tested, so no upper energy limit is established or excluded.** With
-  stations at r = 2, E_ret ≳ 0.75 would put B's sphere inside the trapping radius of its own pulse (2m > R), so this
-  configuration cannot probe that range.
+  stations at r = 2, E_ret ≈ 0.86 would put B's sphere inside the trapping radius of its own pulse (2m > R needs a
+  Kodama inflow ≈ 0.75 at B, which is ≈ 0.87 × E_ret) [der], so this configuration cannot probe that range.
 - **Its own energy moves the 50 % limit earlier.** Measured from the outbound's 90 % point at B (τ_B = 4.711), the
   50 % range is 2.26 x₀/c in the test limit and 1.95 x₀/c at E_ret = 0.5 (n = 1600) [der]. The shift grows roughly
   in proportion to E_ret: −0.006 at 10⁻², −0.06 at 0.1, −0.32 at 0.5 [der]. The 0.3 and 0.5 limits are
@@ -271,7 +272,8 @@ E_ret ≤ 10⁻² are supported (stored residual ≤ 4.9 × 10⁻⁴ up to τ_A 
 The classification is a post-hoc rule written as a function (`certify_pass`, unit-tested) and applied only to stored
 runs (`boundary.json` → `evidence`); no run was added for it. A pass is **certified** when, at the finest resolution
 run for that case: the stored null-constraint residual over A's causal past up to τ_A = 11 is ≤ 10⁻³ (the stored
-region is over-inclusive, §4.6, so a small value is a valid certificate); at least 90 % of the energy A receives by
+region is over-inclusive, §4.6, so a small value is a valid certificate, but the monitor records only points with
+r > 0.5, so it certifies that part of the causal past); at least 90 % of the energy A receives by
 τ_A = 12 has arrived by τ_A = 11; and, for both the gross (frozen rule) and the net received fraction,
 0.9 × fraction − 0.5 exceeds the last resolution change of the fraction plus the 1.2 % balance residual. Otherwise
 a pass is **exploratory**: the 50 % rule is met, but the stored evidence does not establish it.
@@ -281,7 +283,7 @@ a pass is **exploratory**: the 50 % rule is met, but the stored evidence does no
 | E_ret | certified passes (u₁; finest n) | exploratory passes (reason) |
 |---|---|---|
 | 10⁻⁸ (test) | 8.0, 8.5, 9.0 (n = 800); 9.5 (n = 1600) | 9.75 (with the net flux the verdict needs energy received after τ_A = 11) |
-| 10⁻³, 10⁻² | 8.0, 8.5, 9.0, 9.5 (n = 800) | 9.75 (same reason) |
+| 10⁻³, 10⁻² | 8.0, 8.5, 9.0, 9.5 (n = 800) | 9.75 (finest run n = 800; the last resolution change, 0.046, exceeds the margin even on the gross flux) |
 | 0.1 | 8.5, 9.0 (n = 800); 9.5 (n = 1600) | 8.0 (stored residual 0.15: inconclusive); 9.75 (late energy) |
 | 0.3 | none | 8.0, 8.5, 9.0 (stored residuals 0.03–1.7 × 10⁵: inconclusive); 9.5, 9.75 (late energy or within the error) |
 | 0.5 | none | 8.0, 8.5, 9.0 (stored residuals ≥ 1.2 × 10⁴: inconclusive); 9.5 (late energy) |
@@ -296,8 +298,8 @@ No energy above 0.5 x₀ was tested; this establishes no upper energy limit and 
 - **All of them depend on the criterion.** Each boundary in §4.3 is where the fraction received **by τ_A = 12**
   equals **50 %**. It is not a horizon: moving the deadline by ±0.5 moves it by about ±0.05; counting the net
   instead of the gross flux moves it 0.036–0.073 earlier [der]; another threshold would move it along the curves of
-  `fig_fraction.png`. By construction a case at the boundary has more than 10 % of its received energy arriving
-  after τ_A = 11.
+  `fig_fraction.png`. A case exactly at the boundary cannot be certified by the §7 rule (0.9 × 0.5 < 0.5); the
+  nearest passing runs have τ90 = 10.80–10.86, so little of their received energy comes after τ_A = 11.
 - **Test limit (6.975) and E_ret = 0.1 (6.918), n = 1600**: the bracketing runs keep the stored residual over A's
   causal past ≤ 7 × 10⁻⁴ up to τ_A = 12, so the late period they depend on is covered. Uncertainty: ± 0.03
   (resolution) ± 0.01 (interpolation) ± 0.025 (balance residual), plus the definition shifts above.
@@ -320,14 +322,17 @@ emission at B (§5).
 ## 8. Plain answers
 
 1. **New physics answer.** In this model a positive-energy return pulse that gravitates can get back to the sender
-   after the outbound pulse has passed, if B sends it early enough: certified for E_ret ≤ 0.1 x₀ (§7.1),
+   after the outbound pulse has passed, if (pre-loaded) it crosses B early enough: certified for E_ret ≤ 0.1 x₀ when
+   it crosses B by τ_B ≈ 6.54 (u₁ ≤ 9.5; §7.1),
    exploratory at 0.3 and 0.5 x₀. Its own energy moves the 50 % limit earlier (by 0.06 x₀/c at 0.1 x₀ [der];
    ≈ 0.3 x₀/c at 0.5 x₀, exploratory) and shortens the time in which later signals still arrive by the deadline
    (exploratory for E_ret ≥ 0.1).
 2. **When it arrives.** With E_out = 10⁻⁴ x₀ and stations at r = 2 x₀, B has ≈ 2.2 x₀/c after the outbound pulse has
    passed it (50 % limit τ_B = 6.98 in the test limit and 6.92 at 0.1 x₀ on the gross rule; 6.94 and 6.88 on the net
-   one) [der]. A receives at least half of the emitted Kodama energy 3.5–3.65 x₀/c later on clocks synchronised in
-   the static era (light needs 3.46 through the static wormhole) [der]. For a 1 km throat, x₀/c ≈ 3.3 µs [der].
+   one) [der]; these limits are supported, but only crossings up to τ_B ≈ 6.54 are certified (§7). The 50 % point
+   of what A receives comes 3.49–3.71 x₀/c (finest resolution of each passing case) after the 50 % point of what
+   crosses B, on clocks synchronised in the
+   static era (light needs 3.46 through the static wormhole) [der]. For a 1 km throat, x₀/c ≈ 3.3 µs [der].
 3. **What is missing.** For the certified cases, not numerical capability (≈ 0.03 x₀/c). For strong returns and the
    late, near-horizon part of every run it is missing: no refinement near the horizon and an over-inclusive stored
    constraint check. Model conditions are missing throughout: the ghost field is assumed, the model joins two
