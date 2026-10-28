@@ -295,7 +295,7 @@ No energy above 0.5 x₀ was tested; this establishes no upper energy limit and 
 **7.2 Which "latest emission times" depend on the 50 % threshold, the deadline or the under-resolved late region.**
 - **All of them depend on the criterion.** Each boundary in §4.3 is where the fraction received **by τ_A = 12**
   equals **50 %**. It is not a horizon: moving the deadline by ±0.5 moves it by about ±0.05; counting the net
-  instead of the gross flux moves it 0.036–0.073 earlier; another threshold would move it along the curves of
+  instead of the gross flux moves it 0.036–0.073 earlier [der]; another threshold would move it along the curves of
   `fig_fraction.png`. By construction a case at the boundary has more than 10 % of its received energy arriving
   after τ_A = 11.
 - **Test limit (6.975) and E_ret = 0.1 (6.918), n = 1600**: the bracketing runs keep the stored residual over A's
