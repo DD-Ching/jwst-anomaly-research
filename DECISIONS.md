@@ -6704,3 +6704,51 @@ confining radiation at a throat is found.
   Post hoc, at f 0.80 / 0.75 the run repairs the D14a merge but keeps two D115a images lost
   (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`). Revisit with a multi-hour BayeSys run (addendum
   4) or a Lenstool build with D52b's image matching fixed.
+
+## D-110 Two-way wormhole signals: reimplement Kain 2602.18231's double-null scheme with two signal fields (2026-10-28)
+- **Decision:** for the owner's bounded round on finite-energy return pulses (`docs/results/wh_twoway.md`), write a
+  minimal numpy implementation (`scripts/wh_twoway.py`) of Kain's published double-null equations and second-order
+  predictor–corrector (arXiv:2602.18231v1 §§2–3), marched by anti-diagonals, with the ordinary scalar split into an
+  outbound and a return field and constant-r stations measuring Kodama energy and proper time.
+- **Alternatives rejected:** Shinkai's `wh_dual` (public, no licence; not downloaded, S0-2026-10-16 §6); the CFK22,
+  Kain26 and Xu–Chew–Yeom codes (not stated public); a 3+1 code (needs singularity-avoiding gauges to follow the
+  collapse; in double-null coordinates radial null rays are coordinate lines, so test rays need no geodesic solver);
+  a general numerical-relativity framework (excluded by the owner's brief).
+- **Evidence:** static wormhole kept at second order; e-folding 0.840 vs GGS09's 0.846; Kain's Fig. 9 case
+  reproduced by eye; boundaries converge at about second order over n = 400 / 800 / 1600
+  (`results/wh_twoway/checks.json`, `boundary.json`).
+- **Revisit if:** a licensed public double-null wormhole code appears, a non-spherical or same-exterior evolution is
+  needed, or near-horizon late-time accuracy matters (the uniform grid does not resolve the exponentially steepening
+  u-gradients near the event horizon; adaptive refinement in u would be needed).
+
+## D-111 Reply chosen after receipt in the #592 wormhole model: only an idealised device is feasible; not run (2026-10-28)
+- **Decision:** verdict B (`docs/plans/2026-10-28-wh-reply-design.md`). A causally triggered, energy-paid reply with
+  a choice made at B after receipt can be modelled in the `scripts/wh_twoway.py` code only with an idealised device:
+  a rigid matter layer at r = 2 whose energy pays a phenomenological χ₂ source, with exact energy–momentum balance,
+  a trigger on the Misner–Sharp mass at its inner face, an external sign bit, and A reading the sign of χ₂. Not
+  implemented or run: its outcome is largely fixed by #592's window and the exact (χ₂, Q) → (−χ₂, −Q) symmetry.
+- **Alternatives rejected:** a pulse added at B after receipt without a device (not energy-consistent);
+  a Novak-type fluid coupled through α(φ)T (gr-qc/9707041; needs a hydro solver) or a boson-shell device (new static
+  solutions and couplings): a physically complete device is a new matter model and solver (C), not worth it now.
+- **Evidence:** design note §1–5; two targeted literature searches found no triggered emitter in any wormhole
+  evolution.
+- **Revisit if:** the owner wants the idealised demonstration on record (one ≈ 3–4 h round, single pre-declared
+  pair and stop conditions in the note), or a physically specified device (equation of state and Lagrangian
+  coupling) becomes the question.
+
+## D-112 Wormhole support screen: no published support mechanism qualifies for a finite-signal load test; zero recommended (2026-10-29)
+- **Decision:** recommend no test (`docs/plans/2026-10-29-wh-support-screen.md`). Of three published support
+  methods, the GJW double-trace family needs a direct coupling between the two sides (itself a channel) and carries
+  ≲ g ≤ K quanta; the MMP / Maldacena–Milekhin family has the best basis (Casimir energy of charged massless
+  fermions) but assumes magnetically charged black-hole pairs, is sub-attometre with Standard Model fields, caps one
+  signal at ≈ 10⁻⁴ ħc/r_e [der] and is slower than the exterior path in its published solutions; Casimir-sourced static throats
+  (Garattini; Hochberg–Popov–Sushkov) are Planck-scale and static.
+- **Alternatives rejected:** a back-reacted load calculation on an MMP- or FGM-type throat, the open problem FGM
+  name (arXiv:1908.03273 fn 6): both possible answers leave the next step unchanged (no faster or independent
+  channel, objects still assumed). A GJW-family capacity study: needs a pre-existing coupling. A Casimir-throat
+  study: no dynamical model and Planck-scale throats.
+- **Evidence:** the note §0–3 (quotes re-checked against the arXiv sources); `results/wh_support_screen/scales.json`
+  (MMP signal cap, Standard Model size, Maldacena–Milekhin example, Casimir throat sizes).
+- **Revisit if:** a published self-consistent construction beats the exterior light time between the same events;
+  a support with an established basis links otherwise disconnected regions without a direct coupling; or a
+  formation route or evidence appears for magnetically charged black holes or new massless charged fields.

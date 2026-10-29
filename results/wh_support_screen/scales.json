@@ -1,0 +1,56 @@
+{
+ "units": "SI unless stated; energies in eV or kg (E / c^2)",
+ "entries": {
+  "mmp_max_signal_energy": {
+   "source": "Maldacena, Milekhin & Popov, arXiv:1807.04726: (2.3), (5.31); section 5.4: a signal above the throat binding energy makes a near-extremal black hole",
+   "formula": "E_max ~ |E_min| = G_N q^2/(256 r_e^3) with r_e^2 = pi q^2 l_p^2/g^2, so E_max r_e/(hbar c) = g^2/(256 pi) [der]",
+   "assumptions": "U(1) coupling g = 0.30 (electromagnetic) or 0.36 (hypercharge near the weak scale) [assumption]; MMP give the threshold only to order of magnitude",
+   "outputs": {
+    "E_max_r_e_over_hbar_c_g0.3": 0.0001119058193614889,
+    "E_max_r_e_over_hbar_c_g0.36": 0.00016114437988054401
+   },
+   "reading": "one signal may carry about 1e-4 of the energy of a single quantum whose wavelength is the mouth radius r_e"
+  },
+  "mmp_standard_model_size": {
+   "source": "arXiv:1807.04726 section 8: with Standard Model fields the distance d between the mouths must be below the electroweak scale (say 1/TeV), r_e much smaller",
+   "formula": "d_max = hbar c / (1 TeV) [der: unit conversion]",
+   "outputs": {
+    "d_max_m": 1.973269804e-19
+   },
+   "reading": "with Standard Model matter alone the wormhole is sub-attometre; larger ones need new massless charged fields"
+  },
+  "mm_humanly_traversable": {
+   "source": "Maldacena & Milekhin, arXiv:2008.06618: formulas after (3.26), numbers (3.27), orbit condition (B.32) d > 0.5 ly, information <= ~c2 quanta per l (section 2)",
+   "inputs": {
+    "r_e_m": 15000000.0,
+    "R5_m": 5e-05,
+    "d_min_ly": 0.5
+   },
+   "outputs": {
+    "c2": 7.0182209268603465e+72,
+    "ell_m": 2.9454181708103213e+19,
+    "ell_ly": 3113.309463097767,
+    "E_bin_kg": -5238603586.102093,
+    "outside_transit_pi_l_yr": 9780.750137619529,
+    "exterior_light_time_at_d_min_yr": 0.5,
+    "transit_over_exterior_at_d_min": 19561.500275239057,
+    "E_bin_J": 4.70822210235852e+26,
+    "mouth_mass_r_e_c2_over_G_kg": 2.0198863822501632e+34,
+    "mouth_mass_solar": 10158.299255436068
+   },
+   "assumptions": "a Randall-Sundrum II dark sector with a gauged dark U(1) (the authors call it science fiction); no formation mechanism; mouths kept apart by orbiting"
+  },
+  "casimir_static_throats": {
+   "source": "Garattini, arXiv:1907.03623: (29), (41)-(42), footnote 6 (omega = 3 gives r0 = 1.0166 l_P); Hochberg, Popov & Sushkov, gr-qc/9701064: numerical throat r(0) = 0.02 l_P and an analytic example r(0) = 67 l_P from their Eq. (8)",
+   "formula": "r0 [m] = (r0 / l_P) * l_P [der: unit conversion]",
+   "outputs": {
+    "garattini_r0_m": 1.643084833e-35,
+    "hps_r0_m_range": [
+     3.2325100000000003e-37,
+     1.08289085e-33
+    ]
+   },
+   "reading": "the static Casimir- or vacuum-polarisation-supported throats in these papers are Planck scale; neither paper treats dynamics or a signal"
+  }
+ }
+}

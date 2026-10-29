@@ -2,6 +2,68 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-29: Wormhole support mechanisms vs finite signal loads: screen, zero tests recommended (D-112)
+- Owner-requested ≤ 90 min literature screen; no solver, evolution or scan; #592 untouched. Record:
+  `docs/plans/2026-10-29-wh-support-screen.md`; estimates `results/wh_support_screen/scales.json`.
+- Already in the repository and cited, not redone: no published construction checked beats the exterior light
+  time (goal rounds 1, 5, 10); GJW needs a boundary coupling; quantum-inequality limits (rounds 5–7); EDM closed (round 10).
+- New: GJW family carries ≲ g ≤ K quanta in a Planckian window (MSY, FGNR); MMP caps one signal at
+  ≈ 10⁻⁴ ħc/r_e [der], is sub-attometre with Standard Model fields and, in its published solutions, slower than the exterior path;
+  Maldacena–Milekhin's human-size version needs a dark sector and takes ≈ 10⁴ yr from outside [der]; FGM's
+  traversability is negated by any exponentially small positive energy; Casimir-sourced static throats are
+  Planck-scale. A finite signal with back-reaction through a quantum-supported wormhole: not found in this search.
+- Recommendation: zero; the one open problem (FGM fn 6) has two answers that leave the next step unchanged.
+
+## 2026-10-28: Reply chosen after receipt in the #592 model: feasibility only (no runs)
+- Owner-requested ≤ 60 min design round; no evolution or scan. Record: `docs/plans/2026-10-28-wh-reply-design.md`;
+  decision D-111. #592's conclusions are unchanged.
+- Verdict **B**: only an idealised device works in the existing code (rigid layer at B, phenomenological χ₂ source
+  paid from its rest energy with exact energy–momentum balance, trigger on the Misner–Sharp mass at its inner face,
+  external sign bit, A decides from the sign of ∫χ₂ dτ). A physically complete device needs a new matter model and
+  solver (C). No published wormhole evolution with a triggered emitter was found in this round's search.
+- One pre-declared pair (b = ±1, n = 400 / 800) with pass and stop conditions is in the note; not recommended now
+  because its outcome is largely set by #592's window and the exact sign symmetry.
+
+## 2026-10-28: Finite-energy return pulses through a collapsing Ellis–Bronnikov wormhole (owner-requested round)
+- **Question** (owner, bounded round): after an outbound pulse has crossed, can a positive-energy return pulse that
+  acts back on the geometry still reach the sender? Record: `docs/results/wh_twoway.md`; code
+  `scripts/wh_twoway.py`; data `results/wh_twoway/`.
+- **Literature**: not found in this round's search (published returns are test light rays: CFK22 null geodesics on
+  the evolved metric; Kain 2602.18231 one ray by eye; INSPIRE citers of 2210.04905 / 2602.18231 / 2503.07610 /
+  2507.00109 and of gr-qc/0205041 since 2020).
+- **Method**: minimal reimplementation of Kain 2602.18231's double-null equations and scheme (4D, spherical,
+  massless ghost scalar as an assumed source) with two ordinary scalars for the outbound and return legs, both
+  sourcing the geometry; stations at r = 2 x₀ on both sides; Kodama and local energies and proper times on their
+  worldlines. Checks: static wormhole second order; e-folding 0.840 vs GGS09 0.846; Kain's Fig. 9 case reproduced
+  (figure-read); constraints and bookkeeping converge; boundaries at n = 400 / 800 / 1600.
+- **Result [sim]** (E_out = 10⁻⁴ x₀; ≥ 50 % of the emitted Kodama energy through A's sphere by A's τ = 12):
+  - certified arrivals (constraint and convergence evidence in A's causal past, gross and net flux) for
+    E_ret ≤ 0.1 x₀ when sent at u₁ = 8.5–9.5; no E_ret = 0.3 or 0.5 arrival is certified (the latest passing one
+    of each is undetermined, the rest exploratory); energies above 0.5 were not tested, so no upper limit is
+    established or excluded;
+  - 50 % limits at n = 1600: τ_B = 6.975 (test) and 6.918 (0.1), supported; 6.803 (0.3) and 6.657 (0.5),
+    exploratory; all depend on the 50 % rule, the deadline (±0.05 per ±0.5) and gross vs net flux (0.036–0.073);
+  - a test null ray reaches A by τ = 12 if sent before τ_B = 7.533; later rays are not shown to be trapped;
+  - an energetic return shortens the time in which later rays from B still reach A by the deadline
+    (exploratory for E_ret ≥ 0.1).
+- **Numerical hazard**: truncation error of the unstable static wormhole seeds expansion; with a weak outbound
+  pulse launched from r = 2 the verdict flips with resolution (n ≤ 200 expand, n = 400 collapses). Hence E_out = 10⁻⁴
+  and n = 1600 checks.
+- **Open accounting**: the unperturbed run's energy balance misses 1.2 % and does not shrink with resolution in the
+  stored runs (a reviewer check, not stored, attributes it to χ₂ energy still between the stations); kept as a
+  margin, and with the last resolution change it leaves four verdicts undetermined (E_ret = 0.3 at u₁ = 9.75, 0.5
+  at 9.5; 10⁻³ and 10⁻² at 10.0). The stored constraint maxima are over-inclusive near the horizon, so large
+  stored values are inconclusive.
+- **Deviations** (post hoc, labelled): deadline 14 → 12 after five test runs; E_ret 0.3, 0.5 and u₁ 9.75, 10.25
+  added; validity rule and evidence classification added after the review and the owner's request (the
+  undetermined class in a final consistency check, stored runs only).
+- **Limits**: two-way propagation, not a reply (no trigger or energy source at B); no bit rate; two separate
+  universes, so no shortcut or FTL statement; one model and configuration only. Independent review: no major
+  problem; minor items fixed.
+- **Handoff**: no next round is queued (owner instruction). Reopen inputs: a same-exterior dynamical construction,
+  a physically modelled transmitter at B, horizon refinement, or other station radii / outbound energies if the
+  owner asks.
+
 ## 2026-10-27: Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all DR2 seasons reproduce Table 8
 - **Plan, written before any fit** (first commit of this PR): fit the arXiv:2605.19040 Table 8 sources
   time-integrated with SkyLLH on every DR2 season; agreement |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1 (ASSUMPTION).

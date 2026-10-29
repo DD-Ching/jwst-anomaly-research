@@ -2032,3 +2032,52 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid/ (MAST `Download/file` redirects there). 184 files;
   obs_id, sha256 and size in `files.json`; columns TIME, PDCSAP_FLUX, QUALITY; TIMEDEL from the header.
 - MAST CAOM TAP (`dbo.ObsPointing`): the 120 s records of the #561 TIC sample (`sample.json`).
+
+## Two-way self-gravitating signals through an unstable wormhole (accessed 2026-10-28; `results/wh_twoway/`)
+- Kain, "Dynamical wormholes", arXiv:2602.18231v1, Class. Quantum Grav. 43, 045014 (2026). Body read (LaTeX source,
+  §§2–3 and the code-test appendix): double-null equations (eqs. 1–4, 31–33), predictor–corrector (§2.3), static
+  initial data and pulse (eqs. 34–35), Fig. 3_07 benchmark case. The equations were reimplemented; no code reused.
+- Calhoun, Fay & Kain, arXiv:2210.04905v2, PRD 106, 104054 (2022): the null-geodesic equation at the end of §II and §V
+  re-read for how the return light rays are computed.
+- Shinkai & Hayward gr-qc/0205041v2 and the S0-2026-10-16 list (above) were not re-read.
+- González, Guzmán & Sarbach, arXiv:0806.0608v2 (Table I, e-folding 0.846; their code 0.836): values taken from the
+  S0-2026-10-16 record, not re-read.
+- Citation check via the INSPIRE API (queries `refersto:recid:2164089 or …:3122144 or …:2898811 or …:2940525`, 14
+  hits; `refersto:recid:586606 and de > 2020`, 101 hits; full-text queries for "round trip", "two-way", "return
+  signal"). Read in the body or HTML: Kain arXiv:2507.00109 (PRD 111, 124057, 2025); Hayward, Kim & Lee
+  gr-qc/0110080 (PRD 65, 064003, 2002). Abstract level only: Kain arXiv:2305.11217 (PRD 108, 044019, 2023);
+  Fu, Grado-White & Marolf arXiv:1908.03273 (CQG 36, 245018, 2019); Maldacena, Stanford & Yang arXiv:1704.05333
+  (Fortsch. Phys. 65, 1700034, 2017); Hirano, Lei & van Leuven arXiv:1906.10715 (JHEP 09, 070, 2019); Freivogel,
+  Galante & Nikolakopoulou arXiv:1907.13140 (JHEP 01, 050, 2020); Shirokov & Nachevsky arXiv:2610.13206 and
+  arXiv:2610.29941 (2026).
+
+## Reply-after-receipt design round (accessed 2026-10-28; `docs/plans/2026-10-28-wh-reply-design.md`, D-111)
+- Search-result level only (two web searches; bodies not read): Novak, "Spherical neutron star collapse in
+  tensor-scalar theory of gravity", arXiv:gr-qc/9707041 (PRD 57, 4789, 1998) — matter–scalar coupling α(φ)T,
+  monopole scalar radiation, Cauchy code with shock-capturing hydrodynamics; arXiv:1703.07414 (Barrabès–Israel
+  null-shell matching used for null-dust shells); arXiv:gr-qc/9708012 (Hamiltonian thin null-dust shell);
+  arXiv:1508.05578 (double-null scalar collapse with a matter shell).
+
+## Wormhole support screen (accessed 2026-10-29; `docs/plans/2026-10-29-wh-support-screen.md`, D-112)
+- Maldacena, Milekhin & Popov, arXiv:1807.04726v3 (full text): (2.3), (5.21), (5.26), (5.31), (5.48)–(5.49), §5.4,
+  §5.6, (6.50)–(6.54), §8 (Standard Model embedding), §9.
+- Maldacena & Milekhin, arXiv:2008.06618v2 (full text): §2 (2.10)–(2.16), formulas after (3.26), (3.27), §3.4,
+  App. B (B.32), (B.34).
+- Fu, Grado-White & Marolf, arXiv:1908.03273v2 (CQG 36, 245018; full text): §1, §2, (3.17), §4 and footnotes 6–8.
+- Maldacena, Stanford & Yang, arXiv:1704.05333 (Fortsch. Phys. 65, 1700034; TeX and PDF): (2.2)–(2.3),
+  (2.14)–(2.25), App. E.
+- Freivogel, Galante, Nikolakopoulou & Rotundo, arXiv:1907.13140v2 (JHEP 01 (2020) 050): abstract, (2.27),
+  (3.13)–(3.26), (3.66)–(3.72), §4.
+- Maldacena & Qi, arXiv:1804.00491 (PDF equation numbers; ar5iv HTML shifts the §4 numbers): (2.11), §4.1
+  (4.25)–(4.45), (4.65), §6.
+- Bao, Chatwin-Davies, Pollack & Remmen, arXiv:1808.05963, §5.3 (51) (one line, not used further); Lu, Yang & Zheng,
+  arXiv:2603.26051 (abstract).
+- Garattini, arXiv:1907.03623 (EPJC 79, 951): (4), (26), (29), (41)–(42), footnotes 6 and 9. Butcher,
+  arXiv:1405.1283 (PRD 90, 024019): (59), (68), (84), (90), (99), (103). Hochberg, Popov & Sushkov, gr-qc/9701064
+  (PRL 78, 2050): abstract, the Eq. (8) example, the numerical solution (Figs. 1–2).
+- Follow-ups, abstracts only unless stated: Freivogel, Fumagalli & Tomašević arXiv:2606.12528 (abstract and §2);
+  Sadhukhan arXiv:2609.33511, 2610.09847; Mondal & Sadhukhan arXiv:2511.22671; Casimir-wormhole citers 2603.11724,
+  2610.06893, 2302.09141, 2602.13609.
+- INSPIRE searches on 2026-10-29: citers of 1807.04726 (216), 2008.06618 (117), 1908.03273 (43), 1907.03623 (170) and
+  1405.1283 (34), filtered for signal, back-reaction, stability, capacity, information, traversal and dynamics; title
+  search "traversable wormhole" since 2023 (93 records).
