@@ -130,14 +130,14 @@ ever later and more redshifted).
 **4.2 Reproducible pass/fail set** (`boundary.json` → `cases`; reproduce one row with
 `python scripts/wh_twoway.py scan --n 1600 --e-ret 0.5 --u1 9.5 10.0 --out x.json`):
 
-| n | E_ret | u₁ | τ_B emit | E_emit K / local | E_recv K / local | reflected K | received fraction | τ_A recv | round trip τ_A | ≥ 50 % by τ_A = 12? | evidence (§8) |
+| n | E_ret | u₁ | τ_B emit | E_emit K / local | E_recv K / local | reflected K | received fraction | τ_A recv | round trip τ_A | ≥ 50 % by τ_A = 12? | evidence (§7) |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 1600 | 10⁻⁸ | 9.5 | 6.541 | 8.50e-09 / 9.81e-09 | 5.72e-09 / 6.42e-09 | 5.4e-10 | 0.673 | 10.187 | 9.177 | yes | certified |
 | 800 | 10⁻⁸ | 10.5 | 7.538 | 8.39e-09 / 9.66e-09 | 1.45e-09 / 1.59e-09 | 4.9e-10 | 0.173 | 11.611 | 10.601 | no | — |
 | 1600 | 0.1 | 9.5 | 6.538 | 0.0851 / 0.101 | 0.0548 / 0.0604 | 0.0039 | 0.643 | 10.182 | 9.172 | yes | certified |
 | 800 | 0.1 | 10.5 | 7.535 | 0.0839 / 0.0994 | 0.0141 / 0.0154 | 0.0039 | 0.168 | 11.605 | 10.596 | no | — |
 | 800 | 0.5 | 8.0 | 5.023 | 0.434 / 0.604 | 0.309 / 0.327 | 0.0053 | 0.712 | 8.523 | 7.514 | yes | exploratory |
-| 1600 | 0.5 | 9.5 | 6.522 | 0.427 / 0.591 | 0.230 / 0.244 | 0.0051 | 0.540 | 10.161 | 9.151 | yes | exploratory |
+| 1600 | 0.5 | 9.5 | 6.522 | 0.427 / 0.591 | 0.230 / 0.244 | 0.0051 | 0.540 | 10.161 | 9.151 | yes | undetermined |
 | 1600 | 0.5 | 10.0 | 7.021 | 0.424 / 0.587 | 0.159 / 0.169 | 0.0050 | 0.375 | 10.807 | 9.797 | no | — |
 
 "No" means less than half of the emitted Kodama energy crossed A's sphere by τ_A = 12. It does **not** mean the
@@ -165,7 +165,8 @@ uncertainty):
   E_ret ≤ 0.5 x₀ (up to 5 000 times the outbound energy), a return crossing B right after the outbound pulse
   (τ_B ≈ 5.0) delivers 71–86 % of its Kodama energy by
   τ_A = 12 (n = 800, u₁ = 8.0). The evidence behind these passes differs by case (§7): certified for E_ret ≤ 10⁻²
-  at u₁ ≤ 9.5 and for E_ret = 0.1 at u₁ = 8.5–9.5; every E_ret = 0.3 and 0.5 pass is exploratory. **Energies above 0.5 were not tested, so no upper energy limit is established or excluded.** With
+  at u₁ ≤ 9.5 and for E_ret = 0.1 at u₁ = 8.5–9.5; every E_ret = 0.3 and 0.5 pass is exploratory or undetermined.
+  **Energies above 0.5 were not tested, so no upper energy limit is established or excluded.** With
   stations at r = 2, E_ret ≈ 0.86 would put B's sphere inside the trapping radius of its own pulse (2m > R needs a
   Kodama inflow ≈ 0.75 at B, which is ≈ 0.87 × E_ret) [der], so this configuration cannot probe that range.
 - **Its own energy moves the 50 % limit earlier.** Measured from the outbound's 90 % point at B (τ_B = 4.711), the
@@ -201,14 +202,16 @@ E_ret ≤ 10⁻² are supported (stored residual ≤ 4.9 × 10⁻⁴ up to τ_A 
   resolved. Below 10⁻² the shift (≤ 0.006) is within the uncertainty: no effect is claimed there.
 - **Five verdicts flip between n = 400 and the finer runs**, all from above to below 50 %: u₁ = 10.0 for
   E_ret = 10⁻⁸, 10⁻³, 10⁻², 0.1 (e.g. test limit 0.552 at n = 400, 0.469 at n = 1600) and u₁ = 9.75 for E_ret = 0.5
-  (0.516 → 0.466). u₁ ≤ 9.5 stays above and u₁ ≥ 10.5 below 50 % at every resolution; for E_ret ≥ 0.3, u₁ = 9.5 is
+  (0.516 → 0.466); the 10⁻³ and 10⁻² cases, run only up to n = 800, end within the error of 50 % (undetermined,
+  §7). u₁ ≤ 9.5 stays above and u₁ ≥ 10.5 below 50 % at every resolution; for E_ret ≥ 0.3, u₁ = 9.5 is
   only 0.13 x₀/c of emission time from the boundary. Keeping a verdict across resolutions is not the same as
   certified evidence: see §7.
 - **Unconverged balance residual.** The 1.2 % balance residual of the unperturbed run (§4.6) does not shrink with
   resolution in the stored runs. Near a boundary the fraction falls by ≈ 0.48 per x₀/c of emission time
   (0.589 → 0.469 over 0.25 at n = 1600, test limit [der]), so 1.2 % in the fraction moves a boundary by
   ≈ 0.025 x₀/c [der], about the size of the remaining numerical change. Until that residual is closed in a stored
-  check, any case whose fraction is within ≈ 0.02 of 0.5 is undetermined, and the margin is kept in §7.
+  check, a case whose gross or net fraction lies within its last resolution change plus 0.012 of 0.5 (≈ 0.02 at
+  n = 1600) is undetermined (`certify_pass`); four cases are (§7.1).
 - The dominant error is in the fixed outbound collapse, which the static wormhole's truncation error delays by
   seeding the expanding mode (§3): at n = 400 the boundary lies 0.175 x₀/c later than the extrapolation [der].
 
@@ -276,22 +279,27 @@ region is over-inclusive, §4.6, so a small value is a valid certificate, but th
 r > 0.5, so it certifies that part of the causal past); at least 90 % of the energy A receives by
 τ_A = 12 has arrived by τ_A = 11; and, for both the gross (frozen rule) and the net received fraction,
 0.9 × fraction − 0.5 exceeds the last resolution change of the fraction plus the 1.2 % balance residual. Otherwise
-a pass is **exploratory**: the 50 % rule is met, but the stored evidence does not establish it.
+a pass is **exploratory**: the 50 % rule is met, but the stored evidence does not establish it. A case, pass or
+fail by the rule, is **undetermined** when its gross or net fraction lies within its last resolution change plus the
+1.2 % residual of 0.5, or the two lie on opposite sides of it: the stored runs do not settle the verdict itself.
+This class was added in a final consistency check (2026-10-29, stored runs only); it moved four cases.
 
 **7.1 Finite-energy returns that arrived, with constraint and convergence evidence in the relevant causal region.**
 
-| E_ret | certified passes (u₁; finest n) | exploratory passes (reason) |
-|---|---|---|
-| 10⁻⁸ (test) | 8.0, 8.5, 9.0 (n = 800); 9.5 (n = 1600) | 9.75 (with the net flux the verdict needs energy received after τ_A = 11) |
-| 10⁻³, 10⁻² | 8.0, 8.5, 9.0, 9.5 (n = 800) | 9.75 (finest run n = 800; the last resolution change, 0.046, exceeds the margin even on the gross flux) |
-| 0.1 | 8.5, 9.0 (n = 800); 9.5 (n = 1600) | 8.0 (stored residual 0.15: inconclusive); 9.75 (late energy) |
-| 0.3 | none | 8.0, 8.5, 9.0 (stored residuals 0.03–1.7 × 10⁵: inconclusive); 9.5, 9.75 (late energy or within the error) |
-| 0.5 | none | 8.0, 8.5, 9.0 (stored residuals ≥ 1.2 × 10⁴: inconclusive); 9.5 (late energy) |
+| E_ret | certified passes (u₁; finest n) | exploratory passes (reason) | undetermined (u₁: gross / net fraction; finest n) |
+|---|---|---|---|
+| 10⁻⁸ (test) | 8.0, 8.5, 9.0 (n = 800); 9.5 (n = 1600) | 9.75 (with the net flux the verdict needs energy received after τ_A = 11) | — |
+| 10⁻³, 10⁻² | 8.0, 8.5, 9.0, 9.5 (n = 800) | 9.75 (finest run n = 800; the last resolution change, 0.046, exceeds the margin even on the gross flux) | 10.0: 0.485 / 0.469 and 0.483 / 0.467 (n = 800; fail by the rule) |
+| 0.1 | 8.5, 9.0 (n = 800); 9.5 (n = 1600) | 8.0 (stored residual 0.15: inconclusive); 9.75 (late energy) | — |
+| 0.3 | none | 8.0, 8.5, 9.0 (stored residuals 0.03–1.7 × 10⁵: inconclusive); 9.5 (late energy or within the error) | 9.75: 0.510 / 0.490 (n = 1600; pass by the rule) |
+| 0.5 | none | 8.0, 8.5, 9.0 (stored residuals ≥ 1.2 × 10⁴: inconclusive) | 9.5: 0.540 / 0.518 (n = 1600; pass by the rule) |
 
 So a gravitating return of up to 0.1 x₀ (1 000 × the outbound energy) has a certified arrival when sent at
-u₁ = 8.5–9.5 (and E_ret ≤ 10⁻² also from u₁ = 8.0). At 0.3 and 0.5 x₀ every arrival is exploratory: the fractions
-are above 50 % and stable across resolution (e.g. 0.716 / 0.712 at n = 400 / 800 for E_ret = 0.5, u₁ = 8.0), but the
-stored constraint data cannot certify the causal region, or the verdict leans on energy received after τ_A = 11.
+u₁ = 8.5–9.5 (and E_ret ≤ 10⁻² also from u₁ = 8.0). At 0.3 and 0.5 x₀ no arrival is certified. The earlier ones are
+exploratory: the fractions are above 50 % and stable across resolution (e.g. 0.716 / 0.712 at n = 400 / 800 for
+E_ret = 0.5, u₁ = 8.0), but the stored constraint data cannot certify the causal region, or the verdict leans on
+energy received after τ_A = 11. The latest passing one of each (0.3 at u₁ = 9.75, 0.5 at 9.5) is undetermined: its
+gross or net fraction is within the error of 50 %, so the stored runs decide neither pass nor fail.
 No energy above 0.5 x₀ was tested; this establishes no upper energy limit and excludes none.
 
 **7.2 Which "latest emission times" depend on the 50 % threshold, the deadline or the under-resolved late region.**
@@ -310,8 +318,11 @@ No energy above 0.5 x₀ was tested; this establishes no upper energy limit and 
 - **Test null-ray limit (7.533)**: the last ray that reaches A **by τ_A = 12**; a later ray is not shown to be
   trapped. Supported for the test runs (stored residual ≤ 7 × 10⁻⁶ up to τ_A = 12). The §4.4 limits are exploratory
   for E_ret ≥ 0.1.
-- **Energy balance not closed in a stored check**: the 1.2 % residual of §4.6 makes any case within ≈ 0.02 of the
-  50 % mark undetermined (§4.5).
+- **Energy balance not closed in a stored check**: the 1.2 % residual of §4.6 moves each 50 % limit by up to
+  ≈ 0.025 (§4.5), and with the last resolution change it leaves four verdicts undetermined (§7.1): E_ret = 0.3 at
+  u₁ = 9.75 and 0.5 at 9.5 (passes by the rule, next to these energies' 50 % limits) and E_ret = 10⁻³ and 10⁻² at
+  u₁ = 10.0 (fails at n = 800; the matching test-limit run falls from 0.486 to 0.469 between n = 800 and 1600, but
+  these two were not run at n = 1600). No certified case is affected: each clears its last change plus the residual.
 
 **7.3 Pre-loaded pulses support two-way propagation only.** The return pulse is part of the initial data outside B.
 Its crossing of B's sphere comes after the outbound pulse has passed B in every scanned case, so the timing would
@@ -323,10 +334,9 @@ emission at B (§5).
 
 1. **New physics answer.** In this model a positive-energy return pulse that gravitates can get back to the sender
    after the outbound pulse has passed, if (pre-loaded) it crosses B early enough: certified for E_ret ≤ 0.1 x₀ when
-   it crosses B by τ_B ≈ 6.54 (u₁ ≤ 9.5; §7.1),
-   exploratory at 0.3 and 0.5 x₀. Its own energy moves the 50 % limit earlier (by 0.06 x₀/c at 0.1 x₀ [der];
-   ≈ 0.3 x₀/c at 0.5 x₀, exploratory) and shortens the time in which later signals still arrive by the deadline
-   (exploratory for E_ret ≥ 0.1).
+   it crosses B by τ_B ≈ 6.54 (u₁ ≤ 9.5; §7.1), exploratory or undetermined at 0.3 and 0.5 x₀. Its own energy moves
+   the 50 % limit earlier (by 0.06 x₀/c at 0.1 x₀ [der]; ≈ 0.3 x₀/c at 0.5 x₀, exploratory) and shortens the time in
+   which later signals still arrive by the deadline (exploratory for E_ret ≥ 0.1).
 2. **When it arrives.** With E_out = 10⁻⁴ x₀ and stations at r = 2 x₀, B has ≈ 2.2 x₀/c after the outbound pulse has
    passed it (50 % limit τ_B = 6.98 in the test limit and 6.92 at 0.1 x₀ on the gross rule; 6.94 and 6.88 on the net
    one) [der]; these limits are supported, but only crossings up to τ_B ≈ 6.54 are certified (§7). The 50 % point

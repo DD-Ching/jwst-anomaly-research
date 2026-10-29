@@ -713,8 +713,11 @@ def _cons(r: dict, key: str, who: str = "A") -> float:
 
 
 def certify_pass(fine: dict, coarse: dict | None) -> dict:
-    """Classify one passing case (`fine` = finest resolution run, `coarse` = next coarser one).
+    """Classify one case (`fine` = finest resolution run, `coarse` = next coarser one).
 
+    undetermined (pass or fail by the rule): the gross or the net fraction lies within the last
+    resolution change plus the 1.2 % balance residual of 0.5, or the two lie on opposite sides of
+    it, so the stored runs do not settle the verdict itself (record §4.5).
     certified: (1) the null-constraint residual in A's causal past up to tau_A = 11 is <= CONS_OK;
     (2) at least 90 % of the energy A receives by the deadline has arrived by tau_A = 11
     (tau90 <= 11), and 0.9 x fraction - 0.5 exceeds the last resolution change of the fraction
@@ -726,10 +729,19 @@ def certify_pass(fine: dict, coarse: dict | None) -> dict:
     Otherwise the pass is "exploratory" (verdict by the rule, evidence incomplete).
     """
     x = fine["return"]
-    frac = min(x["fraction"], x.get("fraction_net", x["fraction"]))  # gross and net must both clear
+    gross, net = x["fraction"], x.get("fraction_net", x["fraction"])
+    frac = min(gross, net)  # gross and net must both clear
     tau90 = fine["A"]["chi2_out"]["tau90"]
     cons11 = _cons(fine, "constraint_tauA_11")
-    change = abs(x["fraction"] - coarse["return"]["fraction"]) if coarse else None
+    change = abs(gross - coarse["return"]["fraction"]) if coarse else None
+    near = change is not None and (
+        min(abs(gross - PASS_FRACTION), abs(net - PASS_FRACTION)) <= change + ACCOUNTING_RESIDUAL
+    )
+    if near or (gross >= PASS_FRACTION) != (net >= PASS_FRACTION):
+        return {"class": "undetermined",
+                "reasons": ["gross or net fraction within the last change plus the balance "
+                            "residual of 50 %, or on opposite sides of it"],
+                "fraction_gross": gross, "fraction_net": net, "last_change": change}  # fmt: skip
     reasons = []
     if not x["pass"]:
         return {"class": "fail", "reasons": ["received < 50 % by tau_A = 12"]}

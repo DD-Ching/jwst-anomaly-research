@@ -26,8 +26,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (figure-read); constraints and bookkeeping converge; boundaries at n = 400 / 800 / 1600.
 - **Result [sim]** (E_out = 10⁻⁴ x₀; ≥ 50 % of the emitted Kodama energy through A's sphere by A's τ = 12):
   - certified arrivals (constraint and convergence evidence in A's causal past, gross and net flux) for
-    E_ret ≤ 0.1 x₀ when sent at u₁ = 8.5–9.5; all E_ret = 0.3 and 0.5 arrivals are exploratory; energies above
-    0.5 were not tested, so no upper limit is established or excluded;
+    E_ret ≤ 0.1 x₀ when sent at u₁ = 8.5–9.5; no E_ret = 0.3 or 0.5 arrival is certified (the latest passing one
+    of each is undetermined, the rest exploratory); energies above 0.5 were not tested, so no upper limit is
+    established or excluded;
   - 50 % limits at n = 1600: τ_B = 6.975 (test) and 6.918 (0.1), supported; 6.803 (0.3) and 6.657 (0.5),
     exploratory; all depend on the 50 % rule, the deadline (±0.05 per ±0.5) and gross vs net flux (0.036–0.073);
   - a test null ray reaches A by τ = 12 if sent before τ_B = 7.533; later rays are not shown to be trapped;
@@ -38,9 +39,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   and n = 1600 checks.
 - **Open accounting**: the unperturbed run's energy balance misses 1.2 % and does not shrink with resolution in the
   stored runs (a reviewer check, not stored, attributes it to χ₂ energy still between the stations); kept as a
-  margin. The stored constraint maxima are over-inclusive near the horizon, so large stored values are inconclusive.
+  margin, and with the last resolution change it leaves four verdicts undetermined (E_ret = 0.3 at u₁ = 9.75, 0.5
+  at 9.5; 10⁻³ and 10⁻² at 10.0). The stored constraint maxima are over-inclusive near the horizon, so large
+  stored values are inconclusive.
 - **Deviations** (post hoc, labelled): deadline 14 → 12 after five test runs; E_ret 0.3, 0.5 and u₁ 9.75, 10.25
-  added; validity rule and evidence classification added after the review and the owner's request.
+  added; validity rule and evidence classification added after the review and the owner's request (the
+  undetermined class in a final consistency check, stored runs only).
 - **Limits**: two-way propagation, not a reply (no trigger or energy source at B); no bit rate; two separate
   universes, so no shortcut or FTL statement; one model and configuration only. Independent review: no major
   problem; minor items fixed.

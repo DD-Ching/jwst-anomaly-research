@@ -3089,10 +3089,13 @@
     "pass_by_rule": false,
     "pass_all_n": false,
     "tauB_emit50": 7.040115856,
-    "class": "fail",
+    "class": "undetermined",
     "reasons": [
-     "received < 50 % by tau_A = 12"
-    ]
+     "gross or net fraction within the last change plus the balance residual of 50 %, or on opposite sides of it"
+    ],
+    "fraction_gross": 0.4853510552,
+    "fraction_net": 0.4691180618,
+    "last_change": 0.0658676615
    },
    {
     "e_ret": 0.001,
@@ -3228,10 +3231,13 @@
     "pass_by_rule": false,
     "pass_all_n": false,
     "tauB_emit50": 7.039767032,
-    "class": "fail",
+    "class": "undetermined",
     "reasons": [
-     "received < 50 % by tau_A = 12"
-    ]
+     "gross or net fraction within the last change plus the balance residual of 50 %, or on opposite sides of it"
+    ],
+    "fraction_gross": 0.4830453909,
+    "fraction_net": 0.4667672424,
+    "last_change": 0.0657165822
    },
    {
     "e_ret": 0.01,
@@ -3497,16 +3503,13 @@
     "pass_by_rule": true,
     "pass_all_n": true,
     "tauB_emit50": 6.779038756,
-    "class": "exploratory",
+    "class": "undetermined",
     "reasons": [
-     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+     "gross or net fraction within the last change plus the balance residual of 50 %, or on opposite sides of it"
     ],
-    "fraction": 0.4898163002,
-    "tau90_A": 10.7962579,
-    "cons_A_tau11": 4.340788384e-06,
-    "cons_A_tau12": 17992.20213,
-    "last_change": 0.0109338069,
-    "bookkeeping_A": 4.866363355e-06
+    "fraction_gross": 0.5098393182,
+    "fraction_net": 0.4898163002,
+    "last_change": 0.0109338069
    },
    {
     "e_ret": 0.3,
@@ -3625,16 +3628,13 @@
     "pass_by_rule": true,
     "pass_all_n": true,
     "tauB_emit50": 6.52173475,
-    "class": "exploratory",
+    "class": "undetermined",
     "reasons": [
-     "50 % verdict needs energy received after tau_A = 11 or is within the error"
+     "gross or net fraction within the last change plus the balance residual of 50 %, or on opposite sides of it"
     ],
-    "fraction": 0.5175395142,
-    "tau90_A": 10.47715378,
-    "cons_A_tau11": 0.0009587116966,
-    "cons_A_tau12": 269565.9752,
-    "last_change": 0.007423163,
-    "bookkeeping_A": 3.106626998e-05
+    "fraction_gross": 0.5395561174,
+    "fraction_net": 0.5175395142,
+    "last_change": 0.007423163
    },
    {
     "e_ret": 0.5,

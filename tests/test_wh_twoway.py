@@ -97,9 +97,9 @@ def test_constraint_residual_converges():
     assert out[1] < out[0] / 3.0
 
 
-def _fake_run(frac, tau90, cons11, passed=True):
+def _fake_run(frac, tau90, cons11, passed=True, net=None):
     return {
-        "return": {"fraction": frac, "pass": passed},
+        "return": {"fraction": frac, "pass": passed, "fraction_net": frac if net is None else net},
         "A": {"chi2_out": {"tau90": tau90}},
         "constraint_tauA_11": {"A": {"u": {"max": cons11}, "v": {"max": 0.0}}},
         "constraint": {"A": {"u": {"max": cons11}, "v": {"max": 0.0}}},
@@ -123,3 +123,14 @@ def test_certify_pass_rule():
         "exploratory"
     )
     assert wt.certify_pass(_fake_run(0.40, 10.5, 1e-5, False), None)["class"] == "fail"
+    # within the last resolution change plus the 1.2 % residual of 50 %: undetermined, pass or fail
+    near_pass = wt.certify_pass(_fake_run(0.51, 10.5, 1e-5), _fake_run(0.52, 10.5, 1e-5))
+    near_fail = wt.certify_pass(_fake_run(0.49, 10.5, 1e-5, False), _fake_run(0.55, 10.5, 1e-5))
+    assert near_pass["class"] == near_fail["class"] == "undetermined"
+    # gross passes, net fails: the verdict depends on the flux definition
+    split = wt.certify_pass(_fake_run(0.70, 10.5, 1e-5, net=0.45), _fake_run(0.70, 10.5, 1e-5))
+    assert split["class"] == "undetermined"
+    far_fail = wt.certify_pass(
+        _fake_run(0.40, 10.5, 1e-5, False), _fake_run(0.41, 10.5, 1e-5, False)
+    )
+    assert far_fail["class"] == "fail"
