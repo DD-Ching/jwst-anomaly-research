@@ -6735,3 +6735,20 @@ confining radiation at a throat is found.
 - **Revisit if:** the owner wants the idealised demonstration on record (one ≈ 3–4 h round, single pre-declared
   pair and stop conditions in the note), or a physically specified device (equation of state and Lagrangian
   coupling) becomes the question.
+
+## D-112 Wormhole support screen: no published support mechanism qualifies for a finite-signal load test; zero recommended (2026-10-29)
+- **Decision:** recommend no test (`docs/plans/2026-10-29-wh-support-screen.md`). Of three published support
+  methods, the GJW double-trace family needs a direct coupling between the two sides (itself a channel) and carries
+  ≲ g ≤ K quanta; the MMP / Maldacena–Milekhin family has the best basis (Casimir energy of charged massless
+  fermions) but assumes magnetically charged black-hole pairs, is sub-attometre with Standard Model fields, caps one
+  signal at ≈ 10⁻⁴ ħc/r_e [der] and is slower than the exterior path in its published solutions; Casimir-sourced static throats
+  (Garattini; Hochberg–Popov–Sushkov) are Planck-scale and static.
+- **Alternatives rejected:** a back-reacted load calculation on an MMP- or FGM-type throat, the open problem FGM
+  name (arXiv:1908.03273 fn 6): both possible answers leave the next step unchanged (no faster or independent
+  channel, objects still assumed). A GJW-family capacity study: needs a pre-existing coupling. A Casimir-throat
+  study: no dynamical model and Planck-scale throats.
+- **Evidence:** the note §0–3 (quotes re-checked against the arXiv sources); `results/wh_support_screen/scales.json`
+  (MMP signal cap, Standard Model size, Maldacena–Milekhin example, Casimir throat sizes).
+- **Revisit if:** a published self-consistent construction beats the exterior light time between the same events;
+  a support with an established basis links otherwise disconnected regions without a direct coupling; or a
+  formation route or evidence appears for magnetically charged black holes or new massless charged fields.

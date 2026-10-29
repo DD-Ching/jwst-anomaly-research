@@ -2057,3 +2057,27 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   monopole scalar radiation, Cauchy code with shock-capturing hydrodynamics; arXiv:1703.07414 (Barrabès–Israel
   null-shell matching used for null-dust shells); arXiv:gr-qc/9708012 (Hamiltonian thin null-dust shell);
   arXiv:1508.05578 (double-null scalar collapse with a matter shell).
+
+## Wormhole support screen (accessed 2026-10-29; `docs/plans/2026-10-29-wh-support-screen.md`, D-112)
+- Maldacena, Milekhin & Popov, arXiv:1807.04726v3 (full text): (2.3), (5.21), (5.26), (5.31), (5.48)–(5.49), §5.4,
+  §5.6, (6.50)–(6.54), §8 (Standard Model embedding), §9.
+- Maldacena & Milekhin, arXiv:2008.06618v2 (full text): §2 (2.10)–(2.16), formulas after (3.26), (3.27), §3.4,
+  App. B (B.32), (B.34).
+- Fu, Grado-White & Marolf, arXiv:1908.03273v2 (CQG 36, 245018; full text): §1, §2, (3.17), §4 and footnotes 6–8.
+- Maldacena, Stanford & Yang, arXiv:1704.05333 (Fortsch. Phys. 65, 1700034; TeX and PDF): (2.2)–(2.3),
+  (2.14)–(2.25), App. E.
+- Freivogel, Galante, Nikolakopoulou & Rotundo, arXiv:1907.13140v2 (JHEP 01 (2020) 050): abstract, (2.27),
+  (3.13)–(3.26), (3.66)–(3.72), §4.
+- Maldacena & Qi, arXiv:1804.00491 (PDF equation numbers; ar5iv HTML shifts the §4 numbers): (2.11), §4.1
+  (4.25)–(4.45), (4.65), §6.
+- Bao, Chatwin-Davies, Pollack & Remmen, arXiv:1808.05963, §5.3 (51) (one line, not used further); Lu, Yang & Zheng,
+  arXiv:2603.26051 (abstract).
+- Garattini, arXiv:1907.03623 (EPJC 79, 951): (4), (26), (29), (41)–(42), footnotes 6 and 9. Butcher,
+  arXiv:1405.1283 (PRD 90, 024019): (59), (68), (84), (90), (99), (103). Hochberg, Popov & Sushkov, gr-qc/9701064
+  (PRL 78, 2050): abstract, the Eq. (8) example, the numerical solution (Figs. 1–2).
+- Follow-ups, abstracts only unless stated: Freivogel, Fumagalli & Tomašević arXiv:2606.12528 (abstract and §2);
+  Sadhukhan arXiv:2609.33511, 2610.09847; Mondal & Sadhukhan arXiv:2511.22671; Casimir-wormhole citers 2603.11724,
+  2610.06893, 2302.09141, 2602.13609.
+- INSPIRE searches on 2026-10-29: citers of 1807.04726 (216), 2008.06618 (117), 1908.03273 (43), 1907.03623 (170) and
+  1405.1283 (34), filtered for signal, back-reaction, stability, capacity, information, traversal and dynamics; title
+  search "traversable wormhole" since 2023 (93 records).

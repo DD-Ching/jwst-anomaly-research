@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-29: Wormhole support mechanisms vs finite signal loads: screen, zero tests recommended (D-112)
+- Owner-requested ≤ 90 min literature screen; no solver, evolution or scan; #592 untouched. Record:
+  `docs/plans/2026-10-29-wh-support-screen.md`; estimates `results/wh_support_screen/scales.json`.
+- Already in the repository and cited, not redone: no published construction checked beats the exterior light
+  time (goal rounds 1, 5, 10); GJW needs a boundary coupling; quantum-inequality limits (rounds 5–7); EDM closed (round 10).
+- New: GJW family carries ≲ g ≤ K quanta in a Planckian window (MSY, FGNR); MMP caps one signal at
+  ≈ 10⁻⁴ ħc/r_e [der], is sub-attometre with Standard Model fields and, in its published solutions, slower than the exterior path;
+  Maldacena–Milekhin's human-size version needs a dark sector and takes ≈ 10⁴ yr from outside [der]; FGM's
+  traversability is negated by any exponentially small positive energy; Casimir-sourced static throats are
+  Planck-scale. A finite signal with back-reaction through a quantum-supported wormhole: not found in this search.
+- Recommendation: zero; the one open problem (FGM fn 6) has two answers that leave the next step unchanged.
+
 ## 2026-10-28: Reply chosen after receipt in the #592 model: feasibility only (no runs)
 - Owner-requested ≤ 60 min design round; no evolution or scan. Record: `docs/plans/2026-10-28-wh-reply-design.md`;
   decision D-111. #592's conclusions are unchanged.
