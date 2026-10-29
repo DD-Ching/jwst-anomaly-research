@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-29: FGM wormhole window vs finite quantum wave packets: B for the frozen packets; no reply, no crossing exchange (D-113)
+- Owner-requested ≤ 90 min analytic round on Fu, Grado-White & Marolf (arXiv:1908.03273); frozen plan committed
+  before any computation (fb524cc). Record `docs/results/fgm_wavepacket_window.md`; numbers
+  `results/fgm_window/window.json`. Not found in this round's search: a wave-packet treatment of FGM's window.
+- Window [der]: entry before −19.0 ms, transit ≥ 38.0 ms against an exterior light time of 33.4 ms (r₊ = 1 km,
+  d = 10⁴ r₊). Positive energy entering the receiving mouth at the critical time must stay below 2.9 × 10⁻⁹⁷ eV.
+- Frozen packets: the broadband Gaussian fails (sub-barrier tail into the receiving mouth); the compact-spectrum
+  packet passes the frozen check but fails post hoc through its past tail. Verdict B for the frozen packets; a
+  narrow-band Gaussian passes post hoc only. The 4D self-coupling stays unknown (not zero).
+- Two-way [der, first order]: a reply after receipt misses the reverse window by ≈ 38 ms; a traversing quantum blocks
+  the reverse direction. No channel, bit, rate or faster-than-light claim.
+
 ## 2026-10-27: Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all DR2 seasons reproduce Table 8
 - **Plan, written before any fit** (first commit of this PR): fit the arXiv:2605.19040 Table 8 sources
   time-integrated with SkyLLH on every DR2 season; agreement |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1 (ASSUMPTION).

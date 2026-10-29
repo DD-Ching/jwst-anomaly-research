@@ -2032,3 +2032,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   https://stpubdata.s3.us-east-1.amazonaws.com/tess/public/tid/ (MAST `Download/file` redirects there). 184 files;
   obs_id, sha256 and size in `files.json`; columns TIME, PDCSAP_FLUX, QUALITY; TIMEDEL from the header.
 - MAST CAOM TAP (`dbo.ObsPointing`): the 120 s records of the #561 TIC sample (`sample.json`).
+
+## FGM wave-packet window (accessed 2026-10-29; `docs/results/fgm_wavepacket_window.md`, D-113)
+- Fu, Grado-White & Marolf, arXiv:1908.03273v2 (CQG 36, 245018), arXiv TeX source `bachweyl5.tex`: §1, §2
+  (2.13)–(2.21), §3 (3.1)–(3.17) including the Green's function (3.14)–(3.15), §4 and footnotes 6–8.
+- INSPIRE citers of 1908.03273 (43 records, titles); abstracts of 2606.12528, 2010.15023, 2304.07356, 2012.07821,
+  2103.01920 and 1908.03998 (2026-10-29).
