@@ -6704,3 +6704,30 @@ confining radiation at a throat is found.
   Post hoc, at f 0.80 / 0.75 the run repairs the D14a merge but keeps two D115a images lost
   (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`). Revisit with a multi-hour BayeSys run (addendum
   4) or a Lenstool build with D52b's image matching fixed.
+
+## D-113 FGM wormhole window vs finite quantum wave packets: B for the frozen packets; replies and crossing exchange excluded at first order (2026-10-29)
+Numbered D-113 because D-110–D-112 are taken on #592's unmerged branch.
+- **Decision:** at the frozen point (r₊ = 1 km, r₋ = 0.5 r₊, d = 10⁴ r₊, N = 10), both frozen one-quantum packets fail
+  a requirement that can be evaluated (`docs/results/fgm_wavepacket_window.md`): the broadband Gaussian through
+  its sub-barrier spectral tail reflected into the receiving mouth (5.3 × 10⁷⁰ over FGM's closure threshold), the
+  compact-spectrum packet through its past tail (post hoc; crossover 2.8 × 10⁴ r₊ earlier, inside the background's
+  lifetime). The frozen rule alone gave A through the compact-spectrum packet; that A is withdrawn, since the rule
+  checked only the packet centre. A narrow-band Gaussian (ω₀/σ_ω ≥ 20) passes post hoc, by ten orders.
+- **Two-way, first order [der]:** a reply after receipt misses the reverse window by 11,390 r₊ (≈ 38 ms); a
+  traversing quantum blocks the reverse direction by ≈ 10¹¹⁷⁵.
+- **Alternatives rejected:** treating the external closure condition as the signal's self-blocking condition (fn 6
+  separates them); setting the 4D counter-moving self-coupling to zero (kept unknown; closure would need a shape
+  factor > 5.5 × 10⁸³); ΔE·Δt as an energy floor.
+- **Evidence:** `results/fgm_window/window.json`; the unit tests reproduce FGM (3.17) from ΔV once H is read as H/r₊²
+  and check the Green's function against its harmonic sum.
+- **Revisit if:** the owner wants the one-way question settled — a pre-registered test-field calculation on fixed RN
+  for a narrow-band packet (reflected energy into the second mouth against δE_crit), or a published equation for
+  the 4D self-coupling of a signal in FGM-type wormholes.
+- **Addendum 2026-10-31 (owner-requested P1 bound, `docs/results/fgm_p1_reflection_bound.md`):** the frozen R6 failure
+  of P1 used f_geo = (r₊/d)², an s-wave scalar completion P1 does not specify. No physically grounded lower bound
+  exists for P1 as frozen: **C** in the mean-field sense. The gap is P1's angular content about the A–B axis, its
+  spin and its preparation time. In the s-wave setting the lower bound is ≥ 7.2 × 10⁴⁶ times the threshold. In a
+  single run P1 passes, because reflection into B and traversal are exclusive outcomes. P2 keeps frozen-rule A and
+  post-hoc B; the pair's post-hoc reading becomes C. Erratum: the narrow-band Gaussian's power-law tail crosses the
+  threshold at a lead of 154 r₊ (mean field). Rejected: treating the mean-field closure of a one-quantum branch as a
+  single-run outcome (relative fluctuation 5.7 × 10⁷).
