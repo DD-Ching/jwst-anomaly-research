@@ -2038,3 +2038,8 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   (2.13)–(2.21), §3 (3.1)–(3.17) including the Green's function (3.14)–(3.15), §4 and footnotes 6–8.
 - INSPIRE citers of 1908.03273 (43 records, titles); abstracts of 2606.12528, 2010.15023, 2304.07356, 2012.07821,
   2103.01920 and 1908.03998 (2026-10-29).
+- P1 reflection bound (accessed 2026-10-31; `docs/results/fgm_p1_reflection_bound.md`): Das, Gibbons & Mathur,
+  arXiv:hep-th/9609052 (PRL 78, 417 (1997), doi:10.1103/PhysRevLett.78.417): low-energy cross-section of minimally
+  coupled massless scalars equals the black-hole area. Kuo & Ford, arXiv:gr-qc/9304008 (PRD 47, 4510 (1993),
+  doi:10.1103/PhysRevD.47.4510): semiclassical gravity is a good approximation only when stress-tensor fluctuations
+  are small.

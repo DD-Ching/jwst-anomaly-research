@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-10-31: FGM P1 reflection bound: no grounded lower bound for P1 as frozen (C, mean field); P1 passes in single runs (D-113 addendum)
+- Owner-requested ≤ 90 min analytic follow-up on #619 (same parameters and P1 spectrum). Record
+  `docs/results/fgm_p1_reflection_bound.md`; numbers `results/fgm_p1_reflection/bound.json`. Reproduced the
+  critical fraction 1.90 × 10⁻⁷⁹ from `window.json`.
+- #619's f_geo = (r₊/d)² is an s-wave scalar completion (isotropic re-emission, horizon-area capture) that P1 does
+  not specify. With FGM's time weight (Jensen bound) and transverse kernel, that completion gives a mean-field lower
+  bound ≥ 7.2 × 10⁴⁶ times the threshold. A vortex about the A–B axis (|m| ≥ 13, estimate) falls below it at the
+  centre, because B sits on the axis node. Verdict for P1 as frozen: **C**. Gap: angular content, spin and preparation time.
+- Power-law early tails (spectrum cut at ω = 0) close the window in the mean-field sense for fixed-|m| ≤ 200
+  completions within the lifetime. Erratum to #619 §3.5: the narrow-band Gaussian's tail crosses at a lead of 154 r₊.
+- Single run: reflection into B and traversal are exclusive outcomes for one quantum, so P1's own reflection cannot
+  block its traversing run. The mean-field number has relative fluctuation 5.7 × 10⁷. P2's labels (frozen-rule A,
+  post-hoc B) are unchanged; the pair's post-hoc reading becomes C. No channel, bit, rate or faster-than-light claim.
+
 ## 2026-10-29: FGM wormhole window vs finite quantum wave packets: B for the frozen packets; no reply, no crossing exchange (D-113)
 - Owner-requested ≤ 90 min analytic round on Fu, Grado-White & Marolf (arXiv:1908.03273); frozen plan committed
   before any computation (fb524cc). Record `docs/results/fgm_wavepacket_window.md`; numbers

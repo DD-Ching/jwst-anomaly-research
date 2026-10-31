@@ -94,7 +94,9 @@ the edge). The packet energy is the mean of its spectrum; ΔE·Δt is not used a
 threshold is δE_crit = 1.5 × 10⁻⁸⁷ ħc/r₊ = 2.9 × 10⁻⁹⁷ eV; one quantum at the signal's own frequency exceeds it by
 3.4 × 10⁸⁹.
 - P1's sub-barrier tail (weight 1.5 × 10⁻⁸, energy 7.7 × 10⁻⁹ ħc/r₊) reaching B with f_geo = 10⁻⁸ exceeds the
-  threshold by 5.3 × 10⁷⁰: **P1 fails R6.**
+  threshold by 5.3 × 10⁷⁰: **P1 fails R6.** *Addendum 2026-10-31: this uses the frozen f_geo, i.e. an s-wave scalar
+  completion that P1 does not specify; no physically grounded lower bound exists for P1 as frozen (C in the mean-field
+  sense, pass in single runs; `fgm_p1_reflection_bound.md`).*
 - P2 has no sub-barrier weight. Its above-barrier reflection must stay below 2.9 × 10⁻⁸²; the standard estimate
   R ∼ e^{−πω/κ₊} gives ln R = −3770 at the band edge [assumption]. **P2 passes R6 as frozen** (centre only).
 
@@ -108,7 +110,9 @@ threshold is δE_crit = 1.5 × 10⁻⁸⁷ ħc/r₊ = 2.9 × 10⁻⁹⁷ eV; one
 - *A narrower Gaussian* (ω₀/σ_ω = 20, σ_v = 0.02 r₊, not frozen) puts 1.9 × 10⁻⁹⁷ ħc/r₊ into B, 1.3 × 10⁻¹⁰ of the
   threshold, and its Gaussian time tails fall faster than the threshold. It passes every evaluable condition here,
   by ten orders, which is comparable to the factors not counted (geometric fraction, angular kernel, the
-  O(ln d/r₊) offsets).
+  O(ln d/r₊) offsets). *Erratum 2026-10-31: the tails are not Gaussian. The cut at ω = 0 leaves power-law tails, and
+  in the s-wave completion the early tail crosses the threshold at a lead of 154 r₊ (`fgm_p1_reflection_bound.md`
+  §6); "passes by ten orders" holds at the packet centre only.*
 
 ## 4. Condition table
 
@@ -119,7 +123,7 @@ threshold is δE_crit = 1.5 × 10⁻⁸⁷ ħc/r₊ = 2.9 × 10⁻⁹⁷ eV; one
 | R3 | G⟨E⟩/r₊ ≤ 10⁻³ | FGM first order | pass (1.3 × 10⁻⁷³) | pass | — |
 | R4 | co-moving self stress | fn 6 | no condition | no condition | 1+1 statement |
 | R5 | counter-moving self stress, ΔV_self = αV | fn 6 + inference | closes only if shape factor > 5.5 × 10⁸³ | same | coefficient unknown, not set to zero |
-| R6 | energy into B below δE_crit, at the centre | fn 6, (2.20), (3.3) | **fail** (× 5.3 × 10⁷⁰) | pass; needs R < 2.9 × 10⁻⁸² | reflection, f_geo |
+| R6 | energy into B below δE_crit, at the centre | fn 6, (2.20), (3.3) | **fail** under the frozen f_geo (× 5.3 × 10⁷⁰); addendum 2026-10-31: C (mean field), pass (single run) | pass; needs R < 2.9 × 10⁻⁸² | reflection, f_geo |
 | R6′ | same, over the past tail (post hoc) | as R6 | pass (Gaussian tails) | **fail** (crossover 2.8 × 10⁴ r₊ earlier) | any nonzero reflection; lifetime 10⁶ r₊ |
 | R7 | receiver isolation | fn 7 | by design | by design | FGM criterion qualitative |
 | R8 | FGM validity | §2, §4 | pass | pass | d/r₊ = 10⁴, μr₊² = 3.8 × 10⁶⁸, Gμ = 10⁻⁷, NGμ = 10⁻⁶, κ₊d = 2500 |
@@ -133,6 +137,11 @@ threshold is δE_crit = 1.5 × 10⁻⁸⁷ ħc/r₊ = 2.9 × 10⁻⁹⁷ eV; one
   nonzero above-barrier reflection within the background's lifetime. With the tail counted, both frozen packets fail
   an evaluable requirement at this point: **B for the frozen packets** (P1 through its sub-barrier spectral tail,
   P2 through its past tail).
+- **Addendum 2026-10-31 (owner-requested, `fgm_p1_reflection_bound.md`):** P1's R6 failure rested on the frozen
+  f_geo. With the transfer to B left open by P1's specification, P1 is C in the mean-field sense (excluded only in the
+  added s-wave scalar setting, by ≥ 7.2 × 10⁴⁶) and passes in single runs, where its own reflection cannot block the
+  run in which it traverses. The pair's post-hoc reading is therefore C; the frozen-rule A through P2 and the post-hoc
+  B for P2 keep their labels.
 - **Not settled:** whether some other packet passes. A narrow-band Gaussian (ω₀/σ_ω ≥ 20) passes every evaluable
   condition, post hoc and by a margin comparable with the uncounted factors. It is a candidate for a pre-registered
   check, not a result.
@@ -149,7 +158,8 @@ threshold is δE_crit = 1.5 × 10⁻⁸⁷ ħc/r₊ = 2.9 × 10⁻⁹⁷ eV; one
 ## 7. What this round excludes and leaves
 
 - **Excluded (this point, first order):** broadband Gaussian packets; compact-spectrum packets with long past tails;
-  replies after receipt; crossing two-way exchange.
+  replies after receipt; crossing two-way exchange. *Addendum 2026-10-31: the first two are mean-field statements
+  under the frozen f_geo; for P1 the exclusion is not established (C), see `fgm_p1_reflection_bound.md`.*
 - **Left open:** narrow-band packets (post-hoc candidate); the 4D self-coupling coefficient α; the actual RN
   reflection and two-centre geometric fraction; apparatus and environment isolation (≈ 3 × 10⁻⁹⁷ eV into the
   receiving mouth at the critical time, smaller still earlier).

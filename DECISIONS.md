@@ -6723,3 +6723,11 @@ Numbered D-113 because D-110–D-112 are taken on #592's unmerged branch.
 - **Revisit if:** the owner wants the one-way question settled — a pre-registered test-field calculation on fixed RN
   for a narrow-band packet (reflected energy into the second mouth against δE_crit), or a published equation for
   the 4D self-coupling of a signal in FGM-type wormholes.
+- **Addendum 2026-10-31 (owner-requested P1 bound, `docs/results/fgm_p1_reflection_bound.md`):** the frozen R6 failure
+  of P1 used f_geo = (r₊/d)², an s-wave scalar completion P1 does not specify. No physically grounded lower bound
+  exists for P1 as frozen: **C** in the mean-field sense. The gap is P1's angular content about the A–B axis, its
+  spin and its preparation time. In the s-wave setting the lower bound is ≥ 7.2 × 10⁴⁶ times the threshold. In a
+  single run P1 passes, because reflection into B and traversal are exclusive outcomes. P2 keeps frozen-rule A and
+  post-hoc B; the pair's post-hoc reading becomes C. Erratum: the narrow-band Gaussian's power-law tail crosses the
+  threshold at a lead of 154 r₊ (mean field). Rejected: treating the mean-field closure of a one-quantum branch as a
+  single-run outcome (relative fluctuation 5.7 × 10⁷).
