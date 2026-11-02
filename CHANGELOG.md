@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-02: FGM S★ direct exclusion test: K ≥ 6.5 × 10³⁶ > 1.224, S★ excluded (D-113 addendum)
+- Owner-requested ≤ 90 min direct test. Record `docs/results/fgm_sstar_leak_bound.md`; numbers
+  `results/fgm_sstar_leak_bound/bound.json`. Thresholds reproduced: N_A ≥ 0.2554 and N_A K ≤ 0.3125, so K must
+  stay ≤ 1.2235.
+- Lower bound from one receiving mode and one early window:
+  - B's s-wave channel, with a uniform deposit (angular weight 1.60);
+  - reciprocity puts all paths into one overlap;
+  - RN null geodesics give the opposite-side path at b = 5.2 r₊; the first orbit arrives 18.8 r₊ later, which gates
+    out interference;
+  - the edge saddle of the bump aperture (q = 1079.5) matches 45-digit quadrature to 0.4 %.
+- K ≥ 6.5 × 10³⁶ with allowances. It would reach 1.224 only if the timing offsets exceeded the allowance by another
+  338 r₊. The isotropic estimate (10⁵³·⁹) is kept for comparison.
+- The 0.1 rad calibration requirement (6.9 × 10⁻¹⁶ in ln|ΔV|) is reported separately from the window's physical
+  fluctuations, which FGM do not compute. S★ goes to human review. No channel, bit-rate or faster-than-light claim.
+
 ## 2026-11-02: FGM one-way bit: the source's halo closes the window before B can read (D-113 addendum)
 - Owner-requested ≤ 90 min analytic round, a new model on #619's FGM point. Record `docs/results/fgm_oneway_bit.md`;
   numbers `results/fgm_oneway_bit/bound.json`.

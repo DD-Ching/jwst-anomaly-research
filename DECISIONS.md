@@ -6738,3 +6738,12 @@ Numbered D-113 because D-110–D-112 are taken on #592's unmerged branch.
   do not overlap (estimate). Missing coefficient: the halo-to-B transfer τ; a lower bound τ ≥ 10⁻⁶¹·⁴ settles it.
   Also needed: an in-situ phase reference (shift stable to 6.9 × 10⁻¹⁶). Rejected: crediting the external path
   to the wormhole (separated by time, frequency and direction).
+- **Addendum 2026-11-02 (owner-requested direct test, `docs/results/fgm_sstar_leak_bound.md`):** error-controlled
+  lower bound K ≥ 6.5 × 10³⁶ on S★'s FGM-weighted leak per emitted quantum, against the critical 1.224. Method:
+  - B's s-wave channel as the receiving mode;
+  - reciprocity of the static Green's function;
+  - RN null-geodesic optics for the opposite-side path;
+  - the bump's edge saddle, checked to 0.4 %;
+  - an 18.8 r₊ gate before the first orbit.
+  **S★ is excluded** under mean field, an ideal phase reference and η ≤ 1. Rejected: using the isotropic share as a
+  bound. It stays a comparison estimate.
