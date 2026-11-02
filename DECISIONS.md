@@ -6731,3 +6731,10 @@ Numbered D-113 because D-110–D-112 are taken on #592's unmerged branch.
   post-hoc B; the pair's post-hoc reading becomes C. Erratum: the narrow-band Gaussian's power-law tail crosses the
   threshold at a lead of 154 r₊ (mean field). Rejected: treating the mean-field closure of a one-quantum branch as a
   single-run outcome (relative fluctuation 5.7 × 10⁷).
+- **Addendum 2026-11-02 (owner-requested one-way bit, `docs/results/fgm_oneway_bit.md`):** a new model with a fixed
+  local scalar source S★ (bump-apodised aperture focused on A, ω₀r₊ = 500, coherent states |±α⟩). Reading the sign
+  at 10 % error needs ≥ 0.2554 photons (Helstrom; 1.61 with a pilot). FGM's weighted closure limit, with the halo
+  passing outside A's capture radius (1.2 × 10⁻²⁶) and an isotropic share into B, allows ≤ 10⁻⁵⁴·⁴. The intervals
+  do not overlap (estimate). Missing coefficient: the halo-to-B transfer τ; a lower bound τ ≥ 10⁻⁶¹·⁴ settles it.
+  Also needed: an in-situ phase reference (shift stable to 6.9 × 10⁻¹⁶). Rejected: crediting the external path
+  to the wormhole (separated by time, frequency and direction).

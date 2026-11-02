@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-02: FGM one-way bit: the source's halo closes the window before B can read (D-113 addendum)
+- Owner-requested ≤ 90 min analytic round, a new model on #619's FGM point. Record `docs/results/fgm_oneway_bit.md`;
+  numbers `results/fgm_oneway_bit/bound.json`.
+- Fixed source S★: a bump-apodised scalar aperture 10 r₊ behind A, focused on A, at ω₀r₊ = 500 with a 20 r₊ envelope.
+  The sign is set at send time, and the two choices are coherent states |±α⟩. Helstrom threshold reproduced:
+  0.2554 photons for 10 % error (1.61 with a pilot).
+- The wormhole image is separable from the external leak (1,490 r₊ later at B, blueshifted). The received phase
+  moves by 1.4 × 10¹⁴ rad per unit ln|ΔV|, so a reference needs the shift stable to 6.9 × 10⁻¹⁶.
+- Closure, with FGM's time and angle weights: the beam's halo outside A's capture radius (1.2 × 10⁻²⁶, paraxial)
+  with an isotropic share into B allows N_A ≤ 10⁻⁵⁴·⁴. **No overlap** (estimate). Missing coefficient: the halo-to-B
+  transfer τ; a lower bound τ ≥ 10⁻⁶¹·⁴ settles it. No channel, bit-rate or faster-than-light claim.
+
 ## 2026-10-31: FGM P1 reflection bound: no grounded lower bound for P1 as frozen (C, mean field); P1 passes in single runs (D-113 addendum)
 - Owner-requested ≤ 90 min analytic follow-up on #619 (same parameters and P1 spectrum). Record
   `docs/results/fgm_p1_reflection_bound.md`; numbers `results/fgm_p1_reflection/bound.json`. Reproduced the
