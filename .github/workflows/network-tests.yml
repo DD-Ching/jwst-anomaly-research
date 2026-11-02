@@ -20,7 +20,9 @@ jobs:
   network:
     name: network tests (ubuntu-latest, py3.12)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Normal runs take 5-12 min; CDS/MAST outages have stretched them past 30 min (2026-11-02),
+    # and a cut-off run prints no failure summary.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
         with:
@@ -28,13 +30,14 @@ jobs:
       - uses: astral-sh/setup-uv@v10.2.0
       - run: uv venv --python 3.12
       - run: uv pip install -e ".[dev,cloud]"
-      - run: uv run --no-sync python -m pytest -q --run-network
+      - run: uv run --no-sync python -m pytest -q --run-network -rf --durations=15
 
-  # A failed scheduled run opens (or comments on) one tracking issue, so it shows up in
-  # `gh issue list` during agent work cycles instead of only in an Actions email.
+  # A failed or timed-out scheduled run opens (or comments on) one tracking issue, so it shows
+  # up in `gh issue list` during agent work cycles instead of only in an Actions email. A job
+  # that hits timeout-minutes ends "cancelled", which failure() does not catch.
   report-failure:
     needs: network
-    if: failure() && github.event_name == 'schedule'
+    if: always() && needs.network.result != 'success' && github.event_name == 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -44,15 +47,16 @@ jobs:
       GH_REPO: ${{ github.repository }}
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
       TITLE: Weekly network tests failing
+      RESULT: ${{ needs.network.result }}
     steps:
       - name: Open or update the tracking issue
         run: |
           number=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number,title \
             --jq "map(select(.title == \"$TITLE\")) | .[0].number // empty")
           if [ -n "$number" ]; then
-            gh issue comment "$number" --body "Failed again: $RUN_URL"
+            gh issue comment "$number" --body "Failed again ($RESULT): $RUN_URL"
           else
-            gh issue create --title "$TITLE" --label infra --body "The scheduled live-network test run failed: $RUN_URL
+            gh issue create --title "$TITLE" --label infra --body "The scheduled live-network test run ended $RESULT: $RUN_URL
 
           Check whether an upstream service (MAST, CDS, ...) changed or was down before changing code. Close this issue when the job is green again."
           fi

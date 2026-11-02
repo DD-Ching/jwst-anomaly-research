@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-02: Weekly network job timed out silently; workflow now reports timeouts (#374)
+- **Observed:** scheduled run 41476680422 (main at cb48c2f) was cut off at `timeout-minutes: 30` at 38 % of the
+  tests, after one 22-minute stall (around the three live crossmatch tests). Six `F` were printed before the cut
+  (near tests/test_a370_buffalo, test_catalog, test_crossmatch ×3, test_exotic_screens), but a cut-off pytest prints
+  no failure summary, so the names are inferred from collection order. The job ended "cancelled", which
+  `failure()` does not catch, so `report-failure` was skipped and #374 got no comment.
+- **Cloud reproduction not possible:** from this session the CDS hosts (SIMBAD TAP, XMatch, VizieR) reset the
+  connection in the egress relay, and `archive.stsci.edu` fails TLS for urllib, so 15 / 26 live tests fail here for
+  environment reasons; the 11 MAST / S3 / Gaia / Zenodo / DJA tests pass. That cannot separate a CDS outage from
+  cloud egress.
+- **Fix (guarded file, needs-human):** `report-failure` runs whenever the network job is not `success`; the job
+  timeout is 45 min; pytest adds `-rf --durations=15` so the next log names the failures and the slow tests.
+- **Handoff:** after the owner merges, re-run the network job manually (cloud sessions cannot) and diagnose from
+  its `-rf` summary. The lensing grid line still waits on the owner's G1 ruling (D-027), D115b on its reopen.
+
 ## 2026-10-27: Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all DR2 seasons reproduce Table 8
 - **Plan, written before any fit** (first commit of this PR): fit the arXiv:2605.19040 Table 8 sources
   time-integrated with SkyLLH on every DR2 season; agreement |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1 (ASSUMPTION).
