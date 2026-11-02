@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=4", "numba>=0.60", "sympy>=1.12", "photutils>=2.0,<4", "scikit-image>=0.22"]  # sympy: X2 S5 radial derivation; photutils (+ scikit-image for deblending): m1931_deblend tests
+dev = ["pytest>=8", "pytest-timeout>=2.3", "ruff>=0.6", "pre-commit>=4", "numba>=0.60", "sympy>=1.12", "photutils>=2.0,<4", "scikit-image>=0.22"]  # sympy: X2 S5 radial derivation; photutils (+ scikit-image for deblending): m1931_deblend tests
 # Compiled hot loops (E1 GW-GW sky-map classes, S-2); every caller has a numpy fallback.
 fast = ["numba>=0.60"]
 # Own deblended reference catalogues on level-3 mosaics (scripts/m1931_deblend.py; D-034 addendum ad).

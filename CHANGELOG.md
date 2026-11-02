@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-02: Network tests get a 5-min per-test timeout (#374)
+- **Why:** the 2026-11-02 weekly run (41476680422) stalled 22 min on one line of live crossmatch tests, hit the 30-min
+  job timeout and ended cancelled with no test summary, so `report-failure` never fired.
+- **Change (no guarded file):** `pytest-timeout` joins the `dev` extra; `tests/conftest.py` gives every network test
+  a 300 s cap when network tests run (ASSUMPTION; `JWST_ANOMALY_NETWORK_TIMEOUT`, 0 disables). A hung service now
+  fails one named test with a traceback, so the job can end as a failure and comment on #374. Complements #676
+  (needs-human: 45-min cap, report on cancel, `-rf`).
+- **Evidence:** a synthetic hang fails in 2.1 s at a 2 s cap; offline suite 2393 passed; live MAST query/acquire
+  tests 3 passed (slowest 36 s).
+- **Handoff:** #374 stays open until a weekly or owner-started run is green; the lensing grid line still waits on the
+  owner's G1 ruling (D-027), D115b on its reopen (D-109 addendum 9).
+
 ## 2026-10-27: Neutrino Frontier benchmark 2: SkyLLH time-integrated fits on all DR2 seasons reproduce Table 8
 - **Plan, written before any fit** (first commit of this PR): fit the arXiv:2605.19040 Table 8 sources
   time-integrated with SkyLLH on every DR2 season; agreement |Δn_s| ≤ max(1, 0.05 n_s), |Δγ| ≤ 0.1 (ASSUMPTION).
