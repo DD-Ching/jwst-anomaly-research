@@ -1947,6 +1947,22 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - **Identity:** ESA Gaia TAP (https://gea.esac.esa.int/tap-server/tap/sync, `gaiadr3.gaia_source`); NOIRLab Data
   Lab TAP (`desi_dr1.zpix`, `ls_dr10.tractor`).
 
+## W2 J0740+2926 Gaia DR3 delay test (accessed 2026-11-03; `results/w2_j0740_gaia_delay/`)
+- **PyCS3 3.0.4** (PyPI `pycs3`; https://gitlab.com/cosmograil/PyCS3). Millon et al. 2020, JOSS 5, 2654
+  (doi:10.21105/joss.02654). The spline technique is from Tewes et al. 2013 (arXiv:1208.5598).
+- **Gaia DR3 epoch photometry:**
+  - DataLink https://gea.esac.esa.int/data-server/data, `EPOCH_PHOTOMETRY`, `DATAMODEL_STANDARD` CSV;
+  - source_ids 878723302007625344 and 878723302009111040, plus control pair 878708630399208960 and
+    878728730846385664;
+  - the control query (ESA Gaia TAP, `gaiadr3.vari_agn` joined with `gaia_source`) is stored in `result.json`;
+  - `vari_summary` and `vari_agn` rows read via the same TAP.
+- **Literature** (`literature.json`):
+  - Shajib et al. 2021 (arXiv:2011.01971, App. A, read on ar5iv);
+  - Lemon et al. 2018 (arXiv:1803.07601v2, Tables 2 and 5, §5.1.8);
+  - Gaia GraL X (arXiv:2603.12810v1, App. B Table 2);
+  - Kayo & Oguri 2012 (arXiv:1203.6410);
+  - Green et al. 2011 (arXiv:1109.1278).
+
 ## W2 J2244−0550 HST test (accessed 2026-10-23; `results/w2_j2244_hst/`)
 - **HST products:** pipeline drizzled products (calwf3 / calacs) read as byte-range cutouts from the public AWS copy
   `https://stpubdata.s3.amazonaws.com/hst/public/<ipppss>/<obs_id>/<obs_id>_{drz,drc}.fits`. ETags are in

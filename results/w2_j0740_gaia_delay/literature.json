@@ -1,0 +1,59 @@
+{
+ "label": "published classifications and catalogue rows (observed / catalogued); no time delay found",
+ "accessed": "2026-11-03",
+ "read_by": "research subagent in this session; the Shajib+2021 row was re-read from ar5iv by the main session",
+ "target": "SDSS J074013.42+292645.8 (J0740+2926), Gaia DR3 878723302007625344 (A) and 878723302009111040 (B)",
+ "measured_time_delay": {
+  "status": "not found",
+  "searched": [
+   "Gaia GraL X (arXiv:2603.12810v1) App. B Table 2, a compilation of 195 delays in 73 systems: J0740+2926 absent",
+   "TDCOSMO XVII (arXiv:2504.02932), COSMOGRAIL XIX (arXiv:2002.05736), TDCOSMO II (arXiv:2006.10066), LTDE I (arXiv:2504.16249), Carnerero+2022 section 8 'Lensed quasars' (arXiv:2207.06849): no mention",
+   "SIMBAD references of A, B and [LAM2018] J0740+2926 (30, 8 and 2 papers): none is a monitoring paper"
+  ]
+ },
+ "model_predicted_delay": {
+  "status": "not found",
+  "searched": [
+   "Shajib+2021 (arXiv:2011.01971v2): predictions only for its 20 confirmed lenses",
+   "Lemon+2018 (arXiv:1803.07601v2): models only its lenses (Tables 3-4)"
+  ],
+  "this_round": "sis.json is this round's own SIS illustration (model prediction), not a published value"
+ },
+ "classifications": [
+  {
+   "ref": "Shajib et al. 2021, MNRAS 503, 1557 (arXiv:2011.01971), App. A table of Keck NIRC2 follow-up (2017-2018)",
+   "entry": "J0740+2926 115.05603 29.44677 cont. P",
+   "definition": "Contaminants - labeled 'cont.' - are objects that are revealed as non-lenses (e.g., star and quasar, or point source and galaxy) either through our high-resolution imaging or spectroscopy.",
+   "limits": "no object-specific note: the paper does not say whether imaging or spectroscopy decided it",
+   "verified_by_main_session": true
+  },
+  {
+   "ref": "Lemon et al. 2018 (arXiv:1803.07601v2)",
+   "entry": "Table 2 class NIQ, z = 0.98; Table 5 ('nearly identical quasars and binaries') sep 2.59; section 5.1.8: 'also confirm this as a quasar pair at z=0.98 (Inada et al., 2010)'",
+   "definition": "NIQ: 'systems of quasars at the same redshift but without photometric detection of a lensing galaxy'",
+   "limits": "the SQLS row found is in Inada+2008 (arXiv:0708.0828) Table 3 'QSO pair', citing Hennawi 2006; not found in the arXiv text of Inada+2010"
+  },
+  {
+   "ref": "Kayo & Oguri 2012 (arXiv:1203.6410), Table 1",
+   "entry": "|dv| = 230 km/s; counted among SQLS pairs 'that are not gravitational lensing'",
+   "limits": "adopts the SQLS / Hennawi class"
+  },
+  {
+   "ref": "Green et al. 2011 (arXiv:1109.1278)",
+   "entry": "Chandra ObsID 10312; treated as a binary quasar, lensing not discussed"
+  },
+  {
+   "ref": "Hennawi et al. 2006 (astro-ph/0504535)",
+   "entry": "binary quasar on low-S/N APO spectra and a lens-galaxy non-detection (results/w2_desi_pairs/evidence/literature.json)"
+  }
+ ],
+ "not_accessed": [
+  "NASA ADS full text (token needed)",
+  "Semantic Scholar (HTTP 429)",
+  "VizieR (CDS and CfA mirrors failed)",
+  "NED reference lists (HTTP 503)",
+  "SLED (connection reset)",
+  "Lemon lensed-quasar database (HTTP 500)",
+  "Dawes+2023 and He+2023 entries named by NED (not seen)"
+ ]
+}
