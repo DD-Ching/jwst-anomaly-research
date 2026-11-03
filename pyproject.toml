@@ -48,6 +48,8 @@ nf = ["skyllh>=26.1"]
 streaks = ["acstools>=3.8", "scikit-image>=0.22", "photutils>=1.12"]
 # Image simulations of the W1 catalogue-shape responsivity (scripts/w1_r_sim.py).
 shearsim = ["galsim>=2.5", "photutils>=3.0"]  # photutils 3 API (n_pixels, semimajor_axis)
+# Curve-shifting time delays (PyCS3; scripts/w2_j0740_gaia_delay.py, D-064 addendum 2026-11-03).
+delays = ["pycs3>=3.0.4"]  # needs numpy>=2.3 and scikit-learn, so it stays out of `dev`
 
 [project.scripts]
 jwst-anomaly = "jwst_anomaly.cli:main"

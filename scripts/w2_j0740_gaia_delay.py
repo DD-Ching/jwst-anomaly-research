@@ -6,6 +6,7 @@ JOSS 5, 2654), regdiff as a cross-check on the target. Controls: simulated same-
 independent pairs on the actual Gaia epochs and errors (damped random walk, common per-transit
 errors, A->B crosstalk), and a real pair of unrelated Gaia DR3 AGN.
 
+    uv pip install -e ".[delays]"                  # PyCS3 3.0.4
     python scripts/w2_j0740_gaia_delay.py fetch   # TAP + DataLink, cached under $JWST_ANOMALY_DATA
     python scripts/w2_j0740_gaia_delay.py run     # controls, then the target; writes result.json
 """

@@ -39,6 +39,7 @@ def test_intervals():
 
 def test_sign_convention_recovers_injected_lag():
     """B repeating A 60 d later must come out as dt = +60 (PyCS3 spline, dense noiseless data)."""
+    pytest.importorskip("pycs3")  # optional extra `delays`; not installed in CI
     w._quiet()
     t = np.arange(0.0, 1000.0, 7.0)
 
