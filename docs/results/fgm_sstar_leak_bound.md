@@ -1,4 +1,4 @@
-# Direct exclusion test for S★: a lower bound on its weighted leak into B (2026-11-02)
+# Direct exclusion test for S★: a lower bound on its weighted leak into B under stated approximations (2026-11-02)
 
 Owner-requested direct test, at most 90 min, limited to existing equations, derivations and small integrals.
 
@@ -26,7 +26,8 @@ energy that the fixed source S★ sends into B's horizon, per unit mean emitted 
 
 1. **Receiving mode: B's s-wave channel.**
    - B's absorption is a sum of non-negative terms over its partial waves, so the s-wave share is a lower bound [der].
-   - It is absorbed uniformly over B's horizon, so FGM's angular weight is ⟨H⟩/H(π) = 1.60 [computed].
+   - If this share is deposited uniformly over B's horizon, FGM's angular weight is ⟨H⟩/H(π) = 1.60 [assumption:
+     uniform deposit; the kernel value is computed].
 2. **Early region of B's horizon.** Only a window of labels u is kept, ending before any orbiting path arrives.
    The flux into the horizon is non-negative, and e^{−κ₊(u−x*₀)} is at least its value at the window end [der].
 3. **All paths in one amplitude.** The static frequency-domain Green's function is symmetric (reciprocity; the radial
@@ -56,8 +57,10 @@ energy that the fixed source S★ sends into B's horizon, per unit mean emitted 
      smallest at the edge [computed, six radii].
    - The overlap is therefore the edge saddle of the bump:
      |∫x·bump(x)e^{iqx}dx| ≈ e^{−1/4}√π 2^{−1/4} q^{−3/4} e^{−√q}, with q = 1079.5 [der].
-   - Check against quadrature of the two-edge integral: ratios 1.011, 1.007 and 1.005 at q = 100, 300 and 600
-     (double precision), and 1.004 at q = 1079.5 (45-digit mpmath) [computed].
+   - Check on a simplified integral, the two-edge bump integral ∫_{−1}^{1} bump(x)e^{iqx}dx (not the full overlap
+     with Ψ): its envelope peaks agree with the formula to ratios 1.011, 1.007 and 1.005 at q = 100, 300 and 600
+     (double precision), and 1.004 (0.4 %) at q = 1079.5 (45-digit mpmath) [computed]. The full overlap was not
+     integrated directly.
 7. **Interference.**
    - Only families 1 and 2 are present in the window.
    - Family 1 is 7.7 × 10⁻⁶ of family 2 in amplitude (its edge parameter is q₁ = 2022). It can remove at most twice
@@ -77,12 +80,13 @@ energy that the fixed source S★ sends into B's horizon, per unit mean emitted 
 | window | 17.84 r₊ (the orbit gate minus 1 r₊); it holds 39 % of the envelope's energy | computed |
 | family-2 delay relative to #619's reference u_c = v_c + d | 15.0 r₊ | computed |
 | latest label in the window | u − x*₀ ≤ −682.3 r₊ (includes a 100 r₊ allowance) | allowance |
-| **K_low** | **6.5 × 10³⁶** (log₁₀ 36.81), above 1.224 by 10³⁶·⁷ | computed |
+| **K_low** | **6.5 × 10³⁶** (log₁₀ 36.81), above 1.224 by 10³⁶·⁷ | computed under the stated approximations |
 
 **Allowances** (each lowers the bound):
 - B's s-wave transmission at ωr₊ = 500: Γ₀ ≥ 0.9.
 - Curved-space source normalisation and coupling: ≥ 0.5 of the flat formula.
-- Edge-saddle amplitude error: 30 %, against 0.4 % measured.
+- Edge-saddle amplitude error: 30 %. The 0.4 % in §2 is the envelope-peak comparison on the simplified integral,
+  not a measured error of the full overlap.
 - Timing conventions: 100 r₊. This covers B's tortoise normalisation, the O(ln d/r₊) term of x*₀, the transmission
   delay into B, and the ≈ 1 r₊ forward smearing of the edge saddle.
 - ⟨1/cos θ⟩ ≤ 1.118 for the sheet's radiation.
@@ -96,15 +100,19 @@ keeps only B's s-wave channel, one path and an early window.
 
 ## 4. Verdict
 
-**S★ is excluded under these conditions:** mean field, #619's FGM point, ideal phase reference, η ≤ 1. The bound is
-K ≥ 6.5 × 10³⁶ > 1.224.
+**Final conclusion:** Under the specified geometric-optics, aperture and mean-field approximations, the calculation supports
+excluding the fixed source S★. A physical lower bound for the full two-mouth propagation remains to be verified.
+
+Within these approximations (and #619's FGM point, an ideal phase reference, η ≤ 1) the calculation gives
+K ≥ 6.5 × 10³⁶ against the critical 1.224.
 
 **Error control:**
 - Every factor is a lower bound or carries a stated allowance.
-- The two asymptotic steps are controlled expansions: geometric optics at kb ≥ 2600 away from caustics, and the edge
-  saddle. Their measured errors (≤ 1.1 %) lie far inside the allowances.
-- This is not a theorem. A full wave solution of the two-centre problem would replace both expansions. The margin
-  is 10³⁶·⁷ against any plausible accumulation of their errors.
+- The two asymptotic steps are approximations, not bounds: geometric optics at kb ≈ 2600 away from caustics, and the
+  edge saddle. The edge-saddle formula was checked only on the simplified integral (envelope peaks, ≤ 1.1 %);
+  neither step was checked against a full wave solution.
+- This is not a theorem and not a verified physical lower bound. That needs the full two-mouth wave propagation.
+  Within the approximations the margin is 10³⁶·⁷.
 
 **Labels kept from earlier rounds:** P1 is C (mean field); P2 is frozen-rule A and post-hoc B. This round concerns
 S★ only.
@@ -128,10 +136,10 @@ gravity, and arrives at B on the axis together with the rest of the converging r
 
 Even counting only B's s-wave channel, the energy reaching B is about 10⁻⁴⁰ of what S★ radiates. Its label lies at
 least 682 r₊ before x*₀, even after the timing allowance. FGM's weighting multiplies positive energy arriving that
-early by e^{κ₊·682} ≈ 10⁷⁴. The leak therefore exceeds the strings' negative energy by about 10³⁶ at the smallest strength
+early by e^{κ₊·682} ≈ 10⁷⁴. In this calculation the leak therefore exceeds the strings' negative energy by about 10³⁶ at the smallest strength
 B needs, and the window closes before B can read the sign.
 
-No completion or interference can rescue it in this geometry:
+Within these approximations, interference does not rescue it:
 - The leak is fixed by S★'s own aperture and timing.
 - The only paths that could cancel it arrive at least 17.8 r₊ later.
 

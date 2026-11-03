@@ -135,5 +135,5 @@
   "min_family2_sigma_over_omega": 0.43178803715324576,
   "earliest_orbit_minus_family2_edge": 18.83933537503799
  },
- "verdict": "excluded"
+ "verdict": "exclusion supported under stated approximations (physical two-mouth bound unverified)"
 }

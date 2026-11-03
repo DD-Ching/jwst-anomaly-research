@@ -1,4 +1,4 @@
-"""Direct exclusion test for S*: error-controlled lower bound on its weighted leak K (2026-11-02).
+"""Direct exclusion test for S*: lower bound on its weighted leak K under stated approximations.
 
 Record: docs/results/fgm_sstar_leak_bound.md. Same units (hbar = c = r+ = 1), FGM point, source S*
 and read window as scripts/fgm_oneway_bit.py. Closure: N_A K <= c kappa / 16 = 0.3125; read-out
@@ -6,8 +6,8 @@ and read window as scripts/fgm_oneway_bit.py. Closure: N_A K <= c kappa / 16 = 0
 
 Method (lower bound on K from one specified receiving mode and one early time window):
 1. Receiving mode: B's s-wave channel. Absorption by B is a sum over B's partial waves of
-   non-negative terms, so the s-wave share is a lower bound; it deposits uniformly on B's horizon
-   (FGM angular weight <H>/H(pi), computed).
+   non-negative terms, so the s-wave share is a lower bound. Assuming a uniform deposit on B's
+   horizon, its FGM angular weight is <H>/H(pi) (kernel value computed).
 2. Reciprocity of the static frequency-domain Green's function: the field at B's centre is
    e^{i w d}/(4 pi d) * int J Psi, with Psi the field of a point source at B seen at the aperture
    (B absent). All paths add coherently inside this one amplitude.
@@ -16,7 +16,8 @@ Method (lower bound on K from one specified receiving mode and one early time wi
    relativistic orbits (n >= 1).
 4. The overlap with the bump-apodised aperture has no stationary point; it is the edge saddle of
    the bump, |int_0^1 x bump(x) e^{iqx} dx| ~ e^{-1/4} sqrt(pi) 2^{-1/4} q^{-3/4} e^{-sqrt q},
-   q = sigma a with sigma the overlap phase gradient at the edge (checked against quadrature).
+   q = sigma a with sigma the overlap phase gradient at the edge (envelope peaks checked on a
+   simplified two-edge integral, not on the full overlap).
 5. Time gate: the first relativistic orbit reaches B 18.8 r+ after family 2; inside that window only
    families 1 and 2 contribute, and family 1 is bounded by its edge factor.
 
@@ -264,7 +265,11 @@ def run() -> dict:
     orbit_gap = min(x["orbit1_same_arrival"] for x in scan) - t2_edge
     res["aperture_scan"] = {"rows": scan, "min_family2_sigma_over_omega": sig_min,
                             "earliest_orbit_minus_family2_edge": orbit_gap}  # fmt: skip
-    res["verdict"] = "excluded" if k_lower > k_crit else "C"
+    res["verdict"] = (
+        "exclusion supported under stated approximations (physical two-mouth bound unverified)"
+        if k_lower > k_crit
+        else "C"
+    )
     return res
 
 

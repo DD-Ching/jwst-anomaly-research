@@ -43,4 +43,4 @@ def test_stored_bound_is_consistent():
     assert e["family1_over_family2_amplitude"] < 1e-4
     assert abs(e["envelope_ratio_mp_at_q2"] - 1) < 0.02
     b = STORED["bound"]
-    assert b["log10_K_lower"] > 30 and STORED["verdict"] == "excluded"
+    assert b["log10_K_lower"] > 30 and STORED["verdict"].startswith("exclusion supported")

@@ -2,22 +2,25 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-11-02: FGM S★ direct exclusion test: K ≥ 6.5 × 10³⁶ > 1.224, S★ excluded (D-113 addendum)
+## 2026-11-02: FGM S★ direct exclusion test: calculation supports excluding S★ under stated approximations (D-113 addendum)
 - Owner-requested ≤ 90 min direct test. Record `docs/results/fgm_sstar_leak_bound.md`; numbers
   `results/fgm_sstar_leak_bound/bound.json`. Thresholds reproduced: N_A ≥ 0.2554 and N_A K ≤ 0.3125, so K must
   stay ≤ 1.2235.
 - Lower bound from one receiving mode and one early window:
-  - B's s-wave channel, with a uniform deposit (angular weight 1.60);
+  - B's s-wave channel (angular weight 1.60 under the uniform-deposit assumption);
   - reciprocity puts all paths into one overlap;
   - RN null geodesics give the opposite-side path at b = 5.2 r₊; the first orbit arrives 18.8 r₊ later, which gates
     out interference;
-  - the edge saddle of the bump aperture (q = 1079.5) matches 45-digit quadrature to 0.4 %.
-- K ≥ 6.5 × 10³⁶ with allowances. It would reach 1.224 only if the timing offsets exceeded the allowance by another
+  - the edge-saddle formula (q = 1079.5) matches the envelope peaks of a simplified two-edge integral to 0.4 %
+    (45-digit mpmath); the full overlap was not integrated.
+- Within these approximations K ≥ 6.5 × 10³⁶ with allowances. It would reach 1.224 only if the timing offsets exceeded the allowance by another
   338 r₊. The isotropic estimate (10⁵³·⁹) is kept for comparison.
 - The 0.1 rad calibration requirement (6.9 × 10⁻¹⁶ in ln|ΔV|) is reported separately from the window's physical
-  fluctuations, which FGM do not compute. S★ goes to human review. No channel, bit-rate or faster-than-light claim.
+  fluctuations, which FGM do not compute. Final conclusion: under the specified geometric-optics, aperture and
+  mean-field approximations the calculation supports excluding S★; a physical lower bound for the full two-mouth
+  propagation remains to be verified. S★ goes to human review. No channel, bit-rate or faster-than-light claim.
 
-## 2026-11-02: FGM one-way bit: the source's halo closes the window before B can read (D-113 addendum)
+## 2026-11-02: FGM one-way bit: for the fixed source the halo estimate closes the window before B can read (D-113 addendum)
 - Owner-requested ≤ 90 min analytic round, a new model on #619's FGM point. Record `docs/results/fgm_oneway_bit.md`;
   numbers `results/fgm_oneway_bit/bound.json`.
 - Fixed source S★: a bump-apodised scalar aperture 10 r₊ behind A, focused on A, at ω₀r₊ = 500 with a 20 r₊ envelope.

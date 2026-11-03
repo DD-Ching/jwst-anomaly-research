@@ -8,7 +8,9 @@ wave problem or an observation.
 
 | File | Content | Produced by |
 |---|---|---|
-| `bound.json` | reproduced thresholds (0.2554, 0.3125, K_critical 1.2235); RN photon sphere and paths from the aperture edge to B (impact parameters, travel times, orbit gate); reciprocal field at the edge (phase mismatch, ray-tube amplitude, edge-saddle factor and its quadrature checks, family-1 ratio); the lower bound on K with allowances and break-even offset; aperture scan; isotropic comparison; verdict | `python scripts/fgm_sstar_leak_bound.py` |
+| `bound.json` | reproduced thresholds (0.2554, 0.3125, K_critical 1.2235); RN photon sphere and paths from the aperture edge to B (impact parameters, travel times, orbit gate); reciprocal field at the edge (phase mismatch, ray-tube amplitude, edge-saddle factor and its envelope-peak checks on a simplified two-edge integral, family-1 ratio); the lower bound on K under the stated approximations, with allowances and break-even offset; aperture scan; isotropic comparison; verdict | `python scripts/fgm_sstar_leak_bound.py` |
 
-Verdict: K ≥ 6.5 × 10³⁶ > 1.224, so S★ is excluded under these conditions (mean field, ideal phase reference,
-η ≤ 1). The isotropic estimate (10⁵³·⁹) is kept as a comparison only.
+Conclusion: Under the specified geometric-optics, aperture and mean-field approximations, the calculation supports
+excluding the fixed source S★. A physical lower bound for the full two-mouth propagation remains to be verified.
+Within these approximations K ≥ 6.5 × 10³⁶ against 1.224 (ideal phase reference, η ≤ 1). The isotropic estimate
+(10⁵³·⁹) is kept as a comparison only.
