@@ -1,0 +1,78 @@
+{
+ "inputs": {
+  "kappa": 0.25,
+  "d": 10000.0,
+  "c": 20,
+  "v_max_pi": -5695.125890887256,
+  "x0": 5000.0,
+  "closure_constant_c_kappa_over_16": 0.3125
+ },
+ "source": {
+  "omega0": 500.0,
+  "T_half": 20.0,
+  "margin": 100.0,
+  "L_src": 10.0,
+  "a_src": 5.0,
+  "b_c": 3.149,
+  "numerical_aperture_paraxial": 0.5
+ },
+ "readout": {
+  "helstrom_threshold": 0.2554128118829954,
+  "helstrom_error_at_threshold": 0.09999999999999998,
+  "pilot_threshold_per_pulse": 0.8047189562170501,
+  "pilot_threshold_total": 1.6094379124341003,
+  "error_without_phase_reference": 0.5,
+  "thermal_nbar_at_omega0_log10": -5457.505415367365,
+  "thermal_nbar_at_0p04": 0.5771161877998804,
+  "requirement_at_nbar_0p58": 0.55021854850132,
+  "bogoliubov_mixing_log10": -5457.505415367365
+ },
+ "paths": {
+  "v_c": -5795.125890887256,
+  "external_arrival_minus_x0": -795.125890887256,
+  "wormhole_emergence_min": 5695.125890887256,
+  "wormhole_minus_external_at_B": 1490.251781774512,
+  "emerging_frequency_range": [
+   242582597204.89514,
+   5343237290761731.0
+  ],
+  "emerging_duration": 8.244239965874594e-09,
+  "phase_sensitivity_rad_per_dln_dV": 144009798674771.75,
+  "dln_dV_needed_for_0p1_rad": 6.943971932482011e-16,
+  "dln_dV_from_O_ln_d_term": 2.302585092994046
+ },
+ "leakage": {
+  "Q_c": 787.25,
+  "aperture_norm": 0.018767130910245226,
+  "halo_fraction": 1.2358881684396464e-26,
+  "log10_halo_fraction": -25.908020825385446,
+  "log10_spectral_leak_below_focus": -85.98592049199256,
+  "tau_isotropic_estimate": 2.4790502500000002e-08,
+  "tau_upper_bound": 1.0,
+  "log10_reflection_at_A": -2728.7527076836823,
+  "halo_formula_check_ratio_at_Qc200": 0.9275161120357754
+ },
+ "weights": {
+  "W_centre_profile": 7.453543184468156e+86,
+  "log10_W": 86.87236277203142,
+  "log10_W_low": 84.70089036251517,
+  "a_min": 1.0,
+  "a_uniform": 1.5973926319129261
+ },
+ "intervals": {
+  "N_required_min": 0.2554128118829954,
+  "N_required_min_pilot": 1.6094379124341003,
+  "log10_N_allowed_max_tau1_strict": -64.3718736061888,
+  "log10_N_allowed_max_tau_iso": -54.39127484973076,
+  "log10_tau_critical": -61.40423219811059,
+  "log10_leak_share_critical": -87.31225302349604,
+  "radiated_energy_at_threshold": 127.7064059414977,
+  "log10_gap_tau_iso_over_critical": 53.79851752805572,
+  "log10_spectral_term_over_halo_term": -60.07789966660712,
+  "self_coupling_shape_factor_needed": 2.1583884189898273e+84
+ },
+ "crossover": {
+  "omega0_where_tau_iso_reaches_critical": 5144.011080358179,
+  "ratio_to_fixed_carrier": 10.288022160716359
+ }
+}

@@ -2,6 +2,61 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-02: FGM S★ direct exclusion test: calculation supports excluding S★ under stated approximations (D-113 addendum)
+- Owner-requested ≤ 90 min direct test. Record `docs/results/fgm_sstar_leak_bound.md`; numbers
+  `results/fgm_sstar_leak_bound/bound.json`. Thresholds reproduced: N_A ≥ 0.2554 and N_A K ≤ 0.3125, so K must
+  stay ≤ 1.2235.
+- Lower bound from one receiving mode and one early window:
+  - B's s-wave channel (angular weight 1.60 under the uniform-deposit assumption);
+  - reciprocity puts all paths into one overlap;
+  - RN null geodesics give the opposite-side path at b = 5.2 r₊; the first orbit arrives 18.8 r₊ later, which gates
+    out interference;
+  - the edge-saddle formula (q = 1079.5) matches the envelope peaks of a simplified two-edge integral to 0.4 %
+    (45-digit mpmath); the full overlap was not integrated.
+- Within these approximations K ≥ 6.5 × 10³⁶ with allowances. It would reach 1.224 only if the timing offsets exceeded the allowance by another
+  338 r₊. The isotropic estimate (10⁵³·⁹) is kept for comparison.
+- The 0.1 rad calibration requirement (6.9 × 10⁻¹⁶ in ln|ΔV|) is reported separately from the window's physical
+  fluctuations, which FGM do not compute. Final conclusion: under the specified geometric-optics, aperture and
+  mean-field approximations the calculation supports excluding S★; a physical lower bound for the full two-mouth
+  propagation remains to be verified. S★ goes to human review. No channel, bit-rate or faster-than-light claim.
+
+## 2026-11-02: FGM one-way bit: for the fixed source the halo estimate closes the window before B can read (D-113 addendum)
+- Owner-requested ≤ 90 min analytic round, a new model on #619's FGM point. Record `docs/results/fgm_oneway_bit.md`;
+  numbers `results/fgm_oneway_bit/bound.json`.
+- Fixed source S★: a bump-apodised scalar aperture 10 r₊ behind A, focused on A, at ω₀r₊ = 500 with a 20 r₊ envelope.
+  The sign is set at send time, and the two choices are coherent states |±α⟩. Helstrom threshold reproduced:
+  0.2554 photons for 10 % error (1.61 with a pilot).
+- The wormhole image is separable from the external leak (1,490 r₊ later at B, blueshifted). The received phase
+  moves by 1.4 × 10¹⁴ rad per unit ln|ΔV|, so a reference needs the shift stable to 6.9 × 10⁻¹⁶.
+- Closure, with FGM's time and angle weights: the beam's halo outside A's capture radius (1.2 × 10⁻²⁶, paraxial)
+  with an isotropic share into B allows N_A ≤ 10⁻⁵⁴·⁴. **No overlap** (estimate). Missing coefficient: the halo-to-B
+  transfer τ; a lower bound τ ≥ 10⁻⁶¹·⁴ settles it. No channel, bit-rate or faster-than-light claim.
+
+## 2026-10-31: FGM P1 reflection bound: no grounded lower bound for P1 as frozen (C, mean field); P1 passes in single runs (D-113 addendum)
+- Owner-requested ≤ 90 min analytic follow-up on #619 (same parameters and P1 spectrum). Record
+  `docs/results/fgm_p1_reflection_bound.md`; numbers `results/fgm_p1_reflection/bound.json`. Reproduced the
+  critical fraction 1.90 × 10⁻⁷⁹ from `window.json`.
+- #619's f_geo = (r₊/d)² is an s-wave scalar completion (isotropic re-emission, horizon-area capture) that P1 does
+  not specify. With FGM's time weight (Jensen bound) and transverse kernel, that completion gives a mean-field lower
+  bound ≥ 7.2 × 10⁴⁶ times the threshold. A vortex about the A–B axis (|m| ≥ 13, estimate) falls below it at the
+  centre, because B sits on the axis node. Verdict for P1 as frozen: **C**. Gap: angular content, spin and preparation time.
+- Power-law early tails (spectrum cut at ω = 0) close the window in the mean-field sense for fixed-|m| ≤ 200
+  completions within the lifetime. Erratum to #619 §3.5: the narrow-band Gaussian's tail crosses at a lead of 154 r₊.
+- Single run: reflection into B and traversal are exclusive outcomes for one quantum, so P1's own reflection cannot
+  block its traversing run. The mean-field number has relative fluctuation 5.7 × 10⁷. P2's labels (frozen-rule A,
+  post-hoc B) are unchanged; the pair's post-hoc reading becomes C. No channel, bit, rate or faster-than-light claim.
+
+## 2026-10-29: FGM wormhole window vs finite quantum wave packets: B for the frozen packets; no reply, no crossing exchange (D-113)
+- Owner-requested ≤ 90 min analytic round on Fu, Grado-White & Marolf (arXiv:1908.03273); frozen plan committed
+  before any computation (fb524cc). Record `docs/results/fgm_wavepacket_window.md`; numbers
+  `results/fgm_window/window.json`. Not found in this round's search: a wave-packet treatment of FGM's window.
+- Window [der]: entry before −19.0 ms, transit ≥ 38.0 ms against an exterior light time of 33.4 ms (r₊ = 1 km,
+  d = 10⁴ r₊). Positive energy entering the receiving mouth at the critical time must stay below 2.9 × 10⁻⁹⁷ eV.
+- Frozen packets: the broadband Gaussian fails (sub-barrier tail into the receiving mouth); the compact-spectrum
+  packet passes the frozen check but fails post hoc through its past tail. Verdict B for the frozen packets; a
+  narrow-band Gaussian passes post hoc only. The 4D self-coupling stays unknown (not zero).
+- Two-way [der, first order]: a reply after receipt misses the reverse window by ≈ 38 ms; a traversing quantum blocks
+  the reverse direction. No channel, bit, rate or faster-than-light claim.
 ## 2026-11-02: Network tests get a 5-min per-test timeout (#374)
 - **Why:** the 2026-11-02 weekly run (41476680422) stalled 22 min on one line of live crossmatch tests, hit the 30-min
   job timeout and ended cancelled with no test summary, so `report-failure` never fired.

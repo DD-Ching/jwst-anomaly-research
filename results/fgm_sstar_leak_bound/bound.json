@@ -1,0 +1,139 @@
+{
+ "thresholds": {
+  "N_th": 0.2554128118829954,
+  "closure": 0.3125,
+  "K_critical": 1.2235094931070107
+ },
+ "geometry": {
+  "r_ph": 1.6403882032022077,
+  "b_c": 3.148801294275037,
+  "r_edge": 11.180339887498949,
+  "paths": {
+   "family1_same_side": {
+    "b": 8.85398733163558,
+    "b_minus_bc": 5.7051860373605425,
+    "travel_time": 10022.806111665883,
+    "minus_family2": -6.304832760803038
+   },
+   "family2_opposite_side": {
+    "b": 5.195875792747685,
+    "b_minus_bc": 2.0470744984726483,
+    "travel_time": 10029.110944426686,
+    "minus_family2": 0.0
+   },
+   "orbit1_same_side": {
+    "b": 3.165539944565353,
+    "b_minus_bc": 0.01673865029031596,
+    "travel_time": 10047.950279801724,
+    "minus_family2": 18.83933537503799
+   },
+   "orbit1_opposite_side": {
+    "b": 3.1567788707503945,
+    "b_minus_bc": 0.007977576475357573,
+    "travel_time": 10050.881107028179,
+    "minus_family2": 21.77016260149321
+   },
+   "orbit2_same_side": {
+    "b": 3.1489148742851967,
+    "b_minus_bc": 0.00011358001015970842,
+    "travel_time": 10067.75563062571,
+    "minus_family2": 38.64468619902436
+   }
+  },
+  "first_orbit_after_family2": 18.83933537503799
+ },
+ "edge": {
+  "family2": {
+   "b": 5.195875792747685,
+   "sigma_over_omega": 0.43178803715324576,
+   "n_z": 0.6122075537754101,
+   "drho_db": -7.020898471560265,
+   "psi_amplitude": 0.4916982808669169,
+   "q": 1079.4700928831144,
+   "edge_factor": 3.318674276499516e-17
+  },
+  "family1": {
+   "b": 8.85398733163558,
+   "sigma_over_omega": 0.8089247405382651,
+   "n_z": 0.933290734492524,
+   "drho_db": 1.5580542682756329,
+   "psi_amplitude": 1.1035313580134423,
+   "q": 2022.311851345663,
+   "edge_factor": 1.135225112639566e-22
+  },
+  "family1_over_family2_amplitude": 7.677208746016169e-06,
+  "envelope_ratio_mp_at_q2": 1.0037703261313025,
+  "envelope_ratio_numeric": {
+   "100.0": 1.0109358997440743,
+   "300.0": 1.006842308013552,
+   "600.0": 1.004907451746738
+  }
+ },
+ "bound": {
+  "s_wave_energy_ratio_min": 1.74888945464445e-40,
+  "window_length": 17.83933537503799,
+  "window_energy_fraction": 0.3909940174188216,
+  "delta2_vs_619_reference": 15.008374874098081,
+  "u_end_minus_x0_max": -682.2781806381199,
+  "angular_weight_uniform": 1.5973926319129261,
+  "K_lower": 6.526935800905099e+36,
+  "log10_K_lower": 36.81470934098619,
+  "log10_margin_over_K_critical": 36.72710199763104,
+  "extra_offset_break_even_r_plus": 338.2691102744683,
+  "allowances": {
+   "Gamma0_min": 0.9,
+   "normalisation_min": 0.5,
+   "saddle_rel_err": 0.3,
+   "delta_conv": 100.0,
+   "gate_safety": 1.0,
+   "c_theta": 1.118033988749895
+  }
+ },
+ "comparison_isotropic": {
+  "log10_N_allowed_max_tau_iso": -54.39127484973076,
+  "log10_K_iso": 53.88612487141086
+ },
+ "aperture_scan": {
+  "rows": [
+   {
+    "rho": 0.5,
+    "family2_sigma_over_omega": 0.6158180763698712,
+    "family2_arrival": 10025.57925108155,
+    "orbit1_same_arrival": 10047.94582199856
+   },
+   {
+    "rho": 1.0,
+    "family2_sigma_over_omega": 0.5951176020786945,
+    "family2_arrival": 10025.881995326083,
+    "orbit1_same_arrival": 10047.7931216151
+   },
+   {
+    "rho": 2.0,
+    "family2_sigma_over_omega": 0.5532430326552871,
+    "family2_arrival": 10026.4562037399,
+    "orbit1_same_arrival": 10047.501557002735
+   },
+   {
+    "rho": 3.0,
+    "family2_sigma_over_omega": 0.5114874439015888,
+    "family2_arrival": 10026.988521036401,
+    "orbit1_same_arrival": 10047.232121723531
+   },
+   {
+    "rho": 4.0,
+    "family2_sigma_over_omega": 0.4707421276557243,
+    "family2_arrival": 10027.479516658803,
+    "orbit1_same_arrival": 10046.98780453277
+   },
+   {
+    "rho": 5.0,
+    "family2_sigma_over_omega": 0.43178803715324576,
+    "family2_arrival": 10027.930604539188,
+    "orbit1_same_arrival": 10046.769939914226
+   }
+  ],
+  "min_family2_sigma_over_omega": 0.43178803715324576,
+  "earliest_orbit_minus_family2_edge": 18.83933537503799
+ },
+ "verdict": "exclusion supported under stated approximations (physical two-mouth bound unverified)"
+}
