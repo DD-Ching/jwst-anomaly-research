@@ -1,0 +1,223 @@
+{
+ "label": "derived: HHMM±DDMM designation match (±1 in the last digit) against the repo's earlier W1/W2 records; D-056's decided systems are not stored as a list, only those named in DECISIONS.md",
+ "matches": {
+  "DESJ0029-3814": [],
+  "PS J0030-1525*": [],
+  "HE0047-1756": [],
+  "DES J0053-2012": [],
+  "Q0142-100": [],
+  "QJ0158-4325": [],
+  "WG0214-2105": [],
+  "B0218+357": [],
+  "HE0230-2130": [],
+  "SDSS0246-0825": [
+   [
+    "w12_niq (D-064)",
+    "J024634.09-082536.1",
+    "control/SQLS-DR3/SDSS Lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J024634.09-082536.1",
+    "control/SDSS Lens"
+   ]
+  ],
+  "WISEJ0259-1635": [],
+  "DESJ0407-5006": [],
+  "J0408-5354": [],
+  "J0420-4037": [],
+  "HE0435-1223": [],
+  "J050129.5-073309": [],
+  "DESJ0501-4118": [],
+  "J0602-4335": [],
+  "J0607-2152": [
+   [
+    "w2_desi_pairs",
+    "J0607-2152",
+    "control/quad"
+   ]
+  ],
+  "J0659+1629": [],
+  "SDSS0806+2006": [
+   [
+    "w12_niq (D-064)",
+    "J080623.70+200631.8",
+    "control/SQLS-DR5/SDSS lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J080623.70+200631.8",
+    "control/SDSS lens"
+   ]
+  ],
+  "HS0818+1227": [],
+  "APM08279+5255": [],
+  "SDSS J0832+0404": [
+   [
+    "w12_niq (D-064)",
+    "J083217.11+040403.8",
+    "control/SQLS-DR3/SDSS lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J083217.11+040403.8",
+    "control/SDSS lens"
+   ]
+  ],
+  "RXJ0911+0551": [],
+  "SBS0909+532": null,
+  "SDSS J0924+0219": [
+   [
+    "w12_niq (D-064)",
+    "J092455.79+021924.9",
+    "control/SQLS-DR3/SDSS lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J092455.79+021924.9",
+    "control/SDSS lens"
+   ]
+  ],
+  "FBQ0951+2635": [
+   [
+    "w12_niq (D-064)",
+    "J095122.57+263513.9",
+    "control/SQLS-DR7/known lens (FBQ0951+2635)"
+   ],
+   [
+    "w2_desi_pairs",
+    "J095122.57+263513.9",
+    "control/known lens (FBQ0951+2635)"
+   ]
+  ],
+  "Q0957+561": [],
+  "SDSS1001+5027": [
+   [
+    "w2_desi_pairs",
+    "J100128.35+502758.4",
+    "control/SDSS Lens"
+   ]
+  ],
+  "SDSS1004+4112": [],
+  "SDSS1029+2623": [],
+  "B1030+074": [],
+  "HE1104-1805": [],
+  "PG1115+080": [
+   [
+    "w12_niq (D-064)",
+    "J111816.95+074558.1",
+    "control/SQLS-DR5/Known lens (PG1115)"
+   ],
+   [
+    "w2_desi_pairs",
+    "J111816.95+074558.1",
+    "control/Known lens (PG1115)"
+   ]
+  ],
+  "GRALJ1131-4419*": [],
+  "RXJ1131-1231": [],
+  "2MASSJ1134-2103": [],
+  "SDSS1206+4332": [],
+  "SDSS1226-0006": [
+   [
+    "w12_niq (D-064)",
+    "J122608.02-000602.2",
+    "control/SQLS-DR3/SDSS Lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J122608.02-000602.2",
+    "control/SDSS Lens"
+   ]
+  ],
+  "2MJ1310-1714": [],
+  "SDSSJ1335+0118": [
+   [
+    "w12_niq (D-064)",
+    "J133534.79+011805.5",
+    "control/SQLS-DR3/SDSS Lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J133534.79+011805.5",
+    "control/SDSS Lens"
+   ]
+  ],
+  "SDSSJ1339+1310": [],
+  "Q1355-2257": [],
+  "H1413+117": [],
+  "B1422+231": [],
+  "SDSSJ1433+6007": [],
+  "SDSSJ1442+4055": [],
+  "SDSSJ1455+1447": [
+   [
+    "w12_niq (D-064)",
+    "J145501.91+144734.8",
+    "control/SQLS-DR7/SDSS lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J145501.91+144734.8",
+    "control/SDSS lens"
+   ]
+  ],
+  "SDSSJ1515+1511": [
+   [
+    "w12_niq (D-064)",
+    "J151538.59+151135.8",
+    "control/SQLS-DR7/SDSS lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J151538.59+151135.8",
+    "control/SDSS lens"
+   ]
+  ],
+  "SBS1520+530": [],
+  "J1537-3010": [],
+  "B1600+434": [],
+  "PS J1606-2333": [],
+  "B1608+656": [],
+  "SDSSJ1620+1203": [
+   [
+    "w12_niq (D-064)",
+    "J162026.28+120340.3",
+    "control/SQLS-DR7/SDSS lens"
+   ],
+   [
+    "w2_desi_pairs",
+    "J162026.28+120340.3",
+    "control/SDSS lens"
+   ]
+  ],
+  "SDSSJ1640+1932": [],
+  "SDSS1650+4251": [],
+  "GraLJ165105.3-041725": [],
+  "PKS1830-211": [],
+  "WGDJ2021-4115": [],
+  "WGDJ2026-4536*": [],
+  "WFI2033-4723": [],
+  "GraLJ203802-400815": [],
+  "WGJ2100-4452*": [],
+  "J2124+1632": [],
+  "Q2138-431": [],
+  "HE2149-2745": [],
+  "J2205-3727": [
+   [
+    "w12_niq (D-064)",
+    "J2205-3727",
+    "control/Lemon2023/quad"
+   ],
+   [
+    "w2_desi_pairs",
+    "J2205-3727",
+    "control/quad"
+   ]
+  ],
+  "HS2209+1914": [],
+  "SDSSJ2222+2745": [],
+  "J2305+3714": [],
+  "VDESJ2325-5229": []
+ },
+ "n_with_prior": 14
+}
