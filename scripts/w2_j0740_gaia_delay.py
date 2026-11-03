@@ -475,6 +475,57 @@ def run(procs: int = 4) -> dict:
     return res
 
 
+def post_hoc() -> dict:
+    """Post hoc (after the run, labelled): applies PREREG's zero-lag rule to the exclusion, counts
+    the C2 delay aliases and rescales the target's D for the error-scale uncertainty (Q2 used
+    14 dof). Uniform error rescaling by s'/s multiplies r2, hence D, by (s/s')^2; T99 is kept."""
+    from scipy.stats import chi2
+
+    r = json.loads((out_dir() / "result.json").read_text())
+    g = np.array(r["target"]["scan_grid"])
+    d = np.array(r["target"]["scan_D"])
+    t99 = r["thresholds"]["T99"]
+    lens = (g >= 20.0) & (g <= DT_MAX)
+    interp = np.abs(g) >= ZERO_LAG
+    q = r["error_scale"]
+    lo = q["chi2_nu"] * q["dof"] / chi2.ppf(0.975, q["dof"])
+    hi = q["chi2_nu"] * q["dof"] / chi2.ppf(0.025, q["dof"])
+    rows = {}
+    for name, s_new in (("adopted", q["s"]), ("s_95_low", np.sqrt(lo)), ("s_95_high", np.sqrt(hi))):
+        ex = (d * (q["s"] / s_new) ** 2 > t99) & interp
+        rows[name] = {
+            "s": float(s_new),
+            "excluded_intervals": intervals(ex, g),
+            "fraction_grid_excluded": float(ex[interp].mean()),
+            "fraction_R_lens_excluded": float(ex[lens].mean()),
+        }
+    h = np.array([x for x in r["C2"]["dt_hat"] if x is not None])
+    res = {
+        "label": "post hoc (computed after the frozen run; derived from result.json)",
+        "zero_lag_rule": "PREREG section 2: |dt| < 5 d is not interpreted; the run's exclusion "
+        "omitted this mask, so it is applied here",
+        "error_scale_sensitivity": rows,
+        "C2_dt_hat_counts": {
+            "abs_ge_200": int(np.sum(np.abs(h) >= 200)),
+            "abs_lt_100": int(np.sum(np.abs(h) < 100)),
+            "n": int(len(h)),
+        },
+        "C2_D_hat_max": float(np.max([x for x in r["C2"]["D_hat"] if x is not None])),
+        "C1_D_true_median": float(np.median(r["C1_D_true"])),
+    }
+    cur = json.loads((cache_dir() / "curves.json").read_text())
+    res["last_season_minus_earlier_median_mag"] = {
+        k: float(
+            np.median(np.array(cur[k]["m"])[np.array(cur[k]["t"]) > 2600.0])
+            - np.median(np.array(cur[k]["m"])[np.array(cur[k]["t"]) <= 2600.0])
+        )
+        for k in ("A", "B")
+    }
+    res["last_season_definition"] = "Gaia time > 2600 d (the last group of visits, 2638-2690)"
+    (out_dir() / "post_hoc.json").write_text(json.dumps(res, indent=1) + "\n")
+    return res
+
+
 def sis() -> dict:
     """[der] SIS delay for the observed configuration (model prediction, not a measurement).
 
@@ -568,7 +619,7 @@ def plot() -> Path:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument("cmd", choices=["fetch", "run", "sis", "plot"])
+    p.add_argument("cmd", choices=["fetch", "run", "sis", "plot", "post_hoc"])
     p.add_argument("--procs", type=int, default=4)
     args = p.parse_args(argv)
     if args.cmd == "fetch":
@@ -577,6 +628,8 @@ def main(argv=None) -> int:
         print(json.dumps(sis(), indent=1))
     elif args.cmd == "plot":
         print(plot())
+    elif args.cmd == "post_hoc":
+        print(json.dumps(post_hoc(), indent=1))
     else:
         res = run(args.procs)
         print(

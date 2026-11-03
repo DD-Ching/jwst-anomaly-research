@@ -2,6 +2,32 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-03: W2 J0740+2926: Gaia DR3 G epoch photometry cannot identify a delayed replay; only scattered delays excluded under assumptions (needs-human)
+- **Question (owner, one pair, ≤ 60 min):** can the two Gaia DR3 G light curves of J0740+2926 identify a delayed
+  replay of one source? Record: `results/w2_j0740_gaia_delay/RESULT.md`.
+- **Literature** (`literature.json`):
+  - No measured delay and no model-predicted delay was found.
+  - Shajib et al. 2021 list the pair as "cont." (non-lens after Keck follow-up, basis not stated).
+- **Pre-registration:** `PREREG.md`, frozen at commit 4ef8f8c before the light curves were fetched.
+  - Data: 22 and 25 epochs in 16–17 visits; error scale 1.73 from same-day groups.
+  - Estimator: PyCS3 3.0.4 spline.
+- **Controls** (simulated on the actual epochs and errors):
+  - C1 recovery within ±20 d was 0.20–0.375 at every injected delay, against a 68 % pass mark: fails.
+  - All 100 independent pairs passed the same-source acceptance: fails.
+  - The real unrelated AGN pair passed narrowly (35.54 against T95 35.47).
+- **Verdict (frozen rules): excludes the listed delay intervals.**
+  - Excluded under the stated assumptions: 40 % of the grid and 17 % of R_lens (+20 … +400 d).
+  - At the 95 % upper error scale (post hoc), only −240…−235, −220…−160 and +375 d remain.
+  - Neither named range is excluded, and there is no support for a same-source delay. The spline (+255 d) and regdiff
+    (−88 d) disagree.
+  - The exclusions assume no microlensing beyond a linear trend.
+  - Post hoc: A's last season is 0.21 mag fainter than earlier.
+- **Deviations** (labelled):
+  - PyCS3 bokeps 10 → 2 after the first run aborted;
+  - the zero-lag rule applied post hoc;
+  - error-scale sensitivity, alias counts and last-season changes added post hoc.
+- **Handoff:** PR stays draft with `needs-human`. No next round queued (owner).
+
 ## 2026-11-02: Network tests get a 5-min per-test timeout (#374)
 - **Why:** the 2026-11-02 weekly run (41476680422) stalled 22 min on one line of live crossmatch tests, hit the 30-min
   job timeout and ended cancelled with no test summary, so `report-failure` never fired.

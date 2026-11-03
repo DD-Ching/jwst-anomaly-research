@@ -1,0 +1,103 @@
+{
+ "label": "post hoc (computed after the frozen run; derived from result.json)",
+ "zero_lag_rule": "PREREG section 2: |dt| < 5 d is not interpreted; the run's exclusion omitted this mask, so it is applied here",
+ "error_scale_sensitivity": {
+  "adopted": {
+   "s": 1.7344328066434633,
+   "excluded_intervals": [
+    [
+     -400.0,
+     -350.0
+    ],
+    [
+     -330.0,
+     -330.0
+    ],
+    [
+     -250.0,
+     -135.0
+    ],
+    [
+     -105.0,
+     -65.0
+    ],
+    [
+     -20.0,
+     -5.0
+    ],
+    [
+     5.0,
+     10.0
+    ],
+    [
+     320.0,
+     380.0
+    ]
+   ],
+   "fraction_grid_excluded": 0.4,
+   "fraction_R_lens_excluded": 0.16883116883116883
+  },
+  "s_95_low": {
+   "s": 1.2698243671522333,
+   "excluded_intervals": [
+    [
+     -400.0,
+     -315.0
+    ],
+    [
+     -260.0,
+     -55.0
+    ],
+    [
+     -30.0,
+     -5.0
+    ],
+    [
+     5.0,
+     35.0
+    ],
+    [
+     180.0,
+     190.0
+    ],
+    [
+     320.0,
+     400.0
+    ]
+   ],
+   "fraction_grid_excluded": 0.58125,
+   "fraction_R_lens_excluded": 0.3116883116883117
+  },
+  "s_95_high": {
+   "s": 2.735372266310872,
+   "excluded_intervals": [
+    [
+     -240.0,
+     -235.0
+    ],
+    [
+     -220.0,
+     -160.0
+    ],
+    [
+     375.0,
+     375.0
+    ]
+   ],
+   "fraction_grid_excluded": 0.1,
+   "fraction_R_lens_excluded": 0.012987012987012988
+  }
+ },
+ "C2_dt_hat_counts": {
+  "abs_ge_200": 66,
+  "abs_lt_100": 15,
+  "n": 100
+ },
+ "C2_D_hat_max": 18.934167844345197,
+ "C1_D_true_median": 10.37547281977907,
+ "last_season_minus_earlier_median_mag": {
+  "A": 0.2081134235409614,
+  "B": -0.06680770898390165
+ },
+ "last_season_definition": "Gaia time > 2600 d (the last group of visits, 2638-2690)"
+}

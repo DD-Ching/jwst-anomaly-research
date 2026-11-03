@@ -4613,6 +4613,20 @@ spectra of both images can be compared (binary vs lens); or the LaTeX-only NIQ t
   - or the proposers publish those data;
   - or independent resolved spectra or a time delay appear for an open pair.
 
+**Addendum (2026-11-03, J0740+2926 Gaia DR3 delay test, `results/w2_j0740_gaia_delay/RESULT.md`).**
+- **Decision:**
+  - Gaia DR3 G epoch photometry is not used as a delay test for this pair. It cannot identify a delayed replay:
+    - C1 recovery within ±20 d was 0.20–0.375 at every injected delay;
+    - all 100 independent simulated pairs passed the same-source acceptance.
+  - It excludes only scattered delays, under the stated assumptions. R_lens (+20 … +400 d) is not excluded.
+- **Reuse:** PyCS3 3.0.4 (PyPI `pycs3`, owner-named) for curve shifting, with its spline and regdiff estimators;
+  nothing was re-implemented.
+- **Label found:** Shajib et al. 2021 (arXiv:2011.01971, App. A) list J0740+2926 as "cont.", a non-lens after Keck
+  follow-up, with no stated basis. No measured or model-predicted delay was found.
+- **Rejected:** reading the spline's best delay (+255 d) as a candidate delay, since C1 and C2 failed.
+- **Revisit if:** resolved light curves of both images, sampled far more densely than Gaia DR3's 16–17 visits (the
+  sampling needed was not computed), become available with microlensing modelled.
+
 ## D-065 W5 in Euclid Q1: no count screen; next is a radial-shear screen on Euclid Q1 shapes (2026-10-09)
 
 **Decision.** Do not port the D-063 count screen to Euclid Q1. Its S/N at θ_E ≤ 4′ is limited by galaxy clustering,
