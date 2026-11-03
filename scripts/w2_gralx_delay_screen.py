@@ -258,6 +258,29 @@ def assemble() -> dict:
         "not_curated": missing,
         "counts": counts,
         "qualifying": [x["name"] for x in rows if x["qualifies"]],
+        "seen_with_z_lens": sum(
+            1
+            for d in dfl.values()
+            if d["category"] == "galaxy_seen" and d.get("z_lens") is not None
+        ),
+        "seen_ground_only_without_z_lens": sorted(
+            n
+            for n, d in dfl.items()
+            if d["category"] == "galaxy_seen"
+            and not d.get("imaging_high_res")
+            and d.get("z_lens") is None
+        ),
+        "seen_automated_fit_only": sorted(
+            n
+            for n, d in dfl.items()
+            if "automated" in (d.get("note", "") + d.get("instrument", ""))
+        ),
+        "table2_delay_not_a_measurement": sorted(
+            n
+            for n, d in dfl.items()
+            if d.get("delay_check", {}).get("reliable_lens_delay") is False
+        ),
+        "delay_originals_read": sorted(n for n, d in dfl.items() if "delay_check" in d),
         "rows": rows,
     }
     _write("summary.json", res)

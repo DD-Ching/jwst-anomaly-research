@@ -4204,6 +4204,24 @@ orphan counts.
   consistent: a second pinned input set for no change); a hard-coded duplicate list; widening the 3″ catalogue merge
   (it would merge distinct close systems before any test).
 
+**Addendum (2026-11-03, systems with published delays, `results/w2_gralx_delay_screen/RESULT.md`).**
+- **Population:** the 73 lensed quasars of Gaia GraL X Table 2 (arXiv:2603.12810v1), transcribed from the LaTeX
+  source; the PDF prints only part of the table.
+- **Decision:** no system qualifies as "reliable delay plus high-resolution imaging without a detected deflector";
+  nothing is named for follow-up.
+  - 72 have a deflector seen (46 with a lens redshift).
+  - The one without, APM08279+5255, has no lens delay: its 900 d is a reverberation lag. Its data are blended.
+  - No system has a quantitative non-detection limit.
+- **Table 2 entries that are not lens-delay measurements:** APM08279+5255 (reverberation lag), SDSS J1640+1932 (SIE
+  prediction) and Q2138-431 (a 410 d model value; measured "around a year").
+- **Closest case:** GRAL J1131-4419.
+  - Reliable TDCOSMO XVII delays; Keck spectra show no lens.
+  - The lens light comes only from the automated STRIDES F160W fit.
+- **Dedup:** 14 of the 73 were already D-064 control lenses; none was tested there for a dark deflector.
+- **Rejected:** counting an automated lens-light fit, or a ground-only detection, as a non-detection.
+- **Revisit if:** a published, person-checked PSF-subtracted HST analysis states a lens-light limit for a system with
+  reliable delays. GRAL J1131-4419 is the first to check.
+
 ## D-057 W3 in OGLE-IV Mróz samples: one fitter for ordinary and exotic models; disk sample null (2026-10-08)
 
 **Decision.**

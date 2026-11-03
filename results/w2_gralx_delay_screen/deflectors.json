@@ -1,0 +1,714 @@
+{
+ "label": "published classes, curated by hand from the cited originals (research subagents and the main session, 2026-11-03); 'imaging_high_res' marks HST or AO data among the cited detections; delay_check only where the original delay was read",
+ "categories": {
+  "galaxy_seen": "deflector detected in imaging or spectroscopy",
+  "quantitative_limit": "published non-detection limit",
+  "shallow_or_blended": "no detection and no meaningful limit",
+  "catalogue_blank": "nothing found"
+ },
+ "systems": {
+  "DESJ0029-3814": {
+   "category": "galaxy_seen",
+   "instrument": "HST WFC3 F160W/F814W/F475X",
+   "z_lens": null,
+   "source": "Schmidt+2023 arXiv:2206.04696 sec. 2.2.1, Tables 2-3",
+   "quote": "I_e(F160W) = 22.75; 'deflector redshift needs deeper follow-up'",
+   "imaging_high_res": true,
+   "note": "automated lens-light fit (pipeline fits every system)",
+   "delay_reliable": null
+  },
+  "PS J0030-1525*": {
+   "category": "galaxy_seen",
+   "instrument": "VST r (0.42\") + HST",
+   "z_lens": null,
+   "source": "Lemon+2018 arXiv:1803.07601; Schmidt+2023 arXiv:2206.04696 sec. 2.2.2",
+   "quote": "'4PSFs+galaxy model'; 'two blue point sources offset from a galaxy'",
+   "imaging_high_res": true,
+   "note": "HST F160W/F814W surface brightness colour implausible in Schmidt+23 (subagent reading, not checked)",
+   "delay_reliable": null
+  },
+  "HE0047-1756": {
+   "category": "galaxy_seen",
+   "instrument": "HST F160W/F555W/F814W",
+   "z_lens": 0.407,
+   "source": "CASTLES; Millon+2020 arXiv:2002.05736 Table 1",
+   "quote": "G F160W 17.15 +- 0.16",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "DES J0053-2012": {
+   "category": "galaxy_seen",
+   "instrument": "DES grizY, SOAR; HST",
+   "z_lens": null,
+   "source": "arXiv:1912.09133 Table B1",
+   "quote": "G1 '23.53 21.65 21.22 20.25 20.12'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "Q0142-100": {
+   "category": "galaxy_seen",
+   "instrument": "HST F160W-F814W",
+   "z_lens": 0.491,
+   "source": "CASTLES; arXiv:2002.05736 Table 1",
+   "quote": "G F160W 16.63 +- 0.03",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "QJ0158-4325": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.317,
+   "source": "CASTLES; arXiv:2002.05736 sec. 4.3",
+   "quote": "G F160W 16.67 +- 0.13",
+   "imaging_high_res": true,
+   "note": "z_lens tentative",
+   "delay_reliable": null
+  },
+  "WG0214-2105": {
+   "category": "galaxy_seen",
+   "instrument": "HST WFC3",
+   "z_lens": null,
+   "source": "arXiv:2206.04696 sec. 2.2.4, Table 2",
+   "quote": "'too faint to obtain a secure spectroscopic redshift'",
+   "imaging_high_res": true,
+   "note": "photometric z 0.22 +- 0.09",
+   "delay_reliable": null
+  },
+  "B0218+357": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": null,
+   "source": "CASTLES",
+   "quote": "G F160W 17.50 +- 0.04",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "HE0230-2130": {
+   "category": "galaxy_seen",
+   "instrument": "HST F555W/F814W",
+   "z_lens": 0.523,
+   "source": "CASTLES; arXiv:2504.02932 Table 1",
+   "quote": "G F814W 20.39 +- 0.43 (G and G')",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSS0246-0825": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.723,
+   "source": "CASTLES; arXiv:2002.05736 Table 1",
+   "quote": "G F160W 18.42 +- 0.22",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "WISEJ0259-1635": {
+   "category": "galaxy_seen",
+   "instrument": "HST WFC3",
+   "z_lens": null,
+   "source": "arXiv:2206.04696 Tables 2-3",
+   "quote": "'main deflector's light profile centroid'",
+   "imaging_high_res": true,
+   "note": "automated lens-light fit",
+   "delay_reliable": null
+  },
+  "DESJ0407-5006": {
+   "category": "galaxy_seen",
+   "instrument": "HST WFC3, 3 bands",
+   "z_lens": null,
+   "source": "arXiv:2604.24908 Table 5, sec. 2.1.1",
+   "quote": "lens F160W 18.17; 'redshift of the lensing galaxy remains unmeasured'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "J0408-5354": {
+   "category": "galaxy_seen",
+   "instrument": "HST + spectroscopy",
+   "z_lens": 0.597,
+   "source": "arXiv:1910.06306 sec. 3.2",
+   "quote": "'central deflector G1 sits at the redshift zd = 0.597'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "J0420-4037": {
+   "category": "galaxy_seen",
+   "instrument": "HST WFC3",
+   "z_lens": null,
+   "source": "arXiv:2206.04696 Tables 2-3",
+   "quote": "lens Sersic fit and centroid",
+   "imaging_high_res": true,
+   "note": "automated lens-light fit",
+   "delay_reliable": null
+  },
+  "HE0435-1223": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.454,
+   "source": "CASTLES; arXiv:2002.05736 Table 1",
+   "quote": "G F160W 16.86 +- 0.04",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "J050129.5-073309": {
+   "category": "galaxy_seen",
+   "instrument": "Legacy Survey DR10 r/i/z (GALFIT)",
+   "z_lens": null,
+   "source": "arXiv:2304.02499 abstract, Table 2",
+   "quote": "'candidate lensing galaxy'; r 20.71, z 18.55; 'signal-to-noise ratio ... too low to determine a redshift for the lens'",
+   "imaging_high_res": false,
+   "note": "ground only; not detected in g; no HST found",
+   "delay_reliable": null
+  },
+  "DESJ0501-4118": {
+   "category": "galaxy_seen",
+   "instrument": "DES grizY, SOAR z",
+   "z_lens": null,
+   "source": "arXiv:1912.09133 Table B1",
+   "quote": "G1 '21.08 19.52 18.94 18.52 18.48'",
+   "imaging_high_res": false,
+   "note": "ground only; models assume z_lens 0.7",
+   "delay_reliable": null
+  },
+  "J0602-4335": {
+   "category": "galaxy_seen",
+   "instrument": "HST WFC3",
+   "z_lens": null,
+   "source": "arXiv:2604.24908 Table 5, sec. 2.1.2",
+   "quote": "lens F160W 17.33 (edge-on)",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "J0607-2152": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.555,
+   "source": "arXiv:2608.07470 (J0607 section)",
+   "quote": "'prominent Einstein ring around the primary lens'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "J0659+1629": {
+   "category": "galaxy_seen",
+   "instrument": "HST + spectroscopy",
+   "z_lens": 0.766,
+   "source": "arXiv:2206.04696 sec. 2.2.6",
+   "quote": "'the lens redshift is 0.766'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSS0806+2006": {
+   "category": "galaxy_seen",
+   "instrument": "ground V-H; HST WFC3",
+   "z_lens": 0.573,
+   "source": "CASTLES; arXiv:2604.24908 sec. 2.1.3",
+   "quote": "G H 17.90 +- 0.05",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "HS0818+1227": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.39,
+   "source": "CASTLES; arXiv:2002.05736 Table 1",
+   "quote": "G F160W 16.91 +- 0.06",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "APM08279+5255": {
+   "category": "shallow_or_blended",
+   "instrument": "HST NICMOS (Ibata+1999); Keck near/mid-IR high resolution (Egami+2000)",
+   "z_lens": null,
+   "source": "Ibata+1999 astro-ph/9908052; Egami+2000 astro-ph/0001200; Feruglio+2017 arXiv:1706.05527 (abstracts)",
+   "quote": "C is 'a third gravitationally lensed image of the quasar, rather than being the lensing galaxy' (Ibata+99); 'the lensing galaxy is likely to be a massive galaxy at z~3' (Egami+00); 'the, so far undetected, lens galaxy' (Feruglio+17)",
+   "imaging_high_res": true,
+   "note": "no quantitative limit in the abstracts read; compact, very bright quasar",
+   "delay_check": {
+    "table2": "AB 900 d, no error",
+    "source": "Saturni+2016 arXiv:1512.03195 (abstract)",
+    "finding": "not an inter-image lens delay: 'a reverberation-mapping time lag of ~900 rest-frame days for both Si IV and C IV emission lines'",
+    "reliable_lens_delay": false
+   },
+   "delay_reliable": false
+  },
+  "SDSS J0832+0404": {
+   "category": "galaxy_seen",
+   "instrument": "UH88 V/I, UKIRT K, EFOSC2 spectrum",
+   "z_lens": 0.659,
+   "source": "arXiv:0708.0871 Figs 2, 4",
+   "quote": "'here the lens galaxy is seen more clearly'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "RXJ0911+0551": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.769,
+   "source": "CASTLES; arXiv:2504.02932 Table 1",
+   "quote": "G F160W 17.93 +- 0.03 (G and G')",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SBS0909+532": {
+   "category": "galaxy_seen",
+   "instrument": "HST F160W/F555W/F814W",
+   "z_lens": null,
+   "source": "Lehar+2000 astro-ph/9909072; CASTLES",
+   "quote": "G F814W 18.85 +- 0.45 (large errors)",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSS J0924+0219": {
+   "category": "galaxy_seen",
+   "instrument": "VLT FORS2 spectrum",
+   "z_lens": 0.393,
+   "source": "astro-ph/0510465 Table 2",
+   "quote": "'SDSS0924+021 0.393'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "FBQ0951+2635": {
+   "category": "galaxy_seen",
+   "instrument": "VLT FORS1 spectrum",
+   "z_lens": 0.26,
+   "source": "astro-ph/0612419 sec. 3",
+   "quote": "'early-type lensing galaxy'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "Q0957+561": {
+   "category": "galaxy_seen",
+   "instrument": "HST F160W/F814W",
+   "z_lens": null,
+   "source": "CASTLES",
+   "quote": "G F814W 17.12 +- 0.02",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSS1001+5027": {
+   "category": "galaxy_seen",
+   "instrument": "UH88 R/I",
+   "z_lens": 0.415,
+   "source": "astro-ph/0411250 Fig. 3, Table 2",
+   "quote": "'two galaxies in the residual images'",
+   "imaging_high_res": false,
+   "note": "z_lens via Inada+2012 (cited, not opened)",
+   "delay_reliable": null
+  },
+  "SDSS1004+4112": {
+   "category": "galaxy_seen",
+   "instrument": "cluster member spectra",
+   "z_lens": 0.68,
+   "source": "astro-ph/0312429 abstract",
+   "quote": "'cluster at z=0.68 is responsible'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "SDSS1029+2623": {
+   "category": "galaxy_seen",
+   "instrument": "cluster members, arcs",
+   "z_lens": 0.6,
+   "source": "arXiv:0802.0002 abstract",
+   "quote": "'lens cluster at z~0.6'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "B1030+074": {
+   "category": "galaxy_seen",
+   "instrument": "Keck spectrum; HST F814W 20.02",
+   "z_lens": 0.599,
+   "source": "astro-ph/9711044 abstract",
+   "quote": "'unambiguous lens and source redshifts'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "HE1104-1805": {
+   "category": "galaxy_seen",
+   "instrument": "near-IR spectrum; HST F160W 17.52",
+   "z_lens": null,
+   "source": "astro-ph/0006168 abstract",
+   "quote": "'continuum of the lensing galaxy is revealed'",
+   "imaging_high_res": true,
+   "note": "z 0.8-1.2 'plausible' there",
+   "delay_reliable": null
+  },
+  "PG1115+080": {
+   "category": "galaxy_seen",
+   "instrument": "spectroscopy; HST F160W 16.66",
+   "z_lens": 0.311,
+   "source": "astro-ph/9706199 abstract",
+   "quote": "'a group at z=0.311'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "GRALJ1131-4419*": {
+   "category": "galaxy_seen",
+   "instrument": "HST WFC3 F475X/F814W/F160W (automated STRIDES lens-light fit only)",
+   "z_lens": null,
+   "source": "Schmidt+2023 arXiv:2206.04696 lens-light table (LaTeX source); Wertz+2019 arXiv:1810.02624 abstract",
+   "quote": "lens light n=4 (fixed), theta_e 0.29\", I_e(F160W) 18.31 +- 0.03, I_e(F814W) 24.28 mag/arcsec^2 (+ an n=1 component); Wertz+19: Keck/LRIS spectra 'show no evidence of the central lens galaxy'; Wertz+19 model lens position (-0.424, -0.744) arcsec from image A, theta_E 0.851 arcsec",
+   "imaging_high_res": true,
+   "note": "weakest detection in the population: automated fit only, F814W - F160W = 5.97 mag (strides_lenslight.json); no person-written detection statement found; z_lens unmeasured",
+   "delay_check": {
+    "table2": "BC 3.5 +- 0.7, BD -10.1 +- 0.8, CD -13.6 +- 2.6",
+    "source": "Dux+2025 TDCOSMO XVII arXiv:2504.02932 (LaTeX source, GRAL J1131-4419 paragraph and covariance table)",
+    "finding": "original pairs are (A+B)-C 3.5, (A+B)-D -10.1, C-D -13.6 d (A and B ~0.45\" apart, not deblended); covariance diagonal 0.5, 0.6, 0.7 d^2; best single delay 7 % (C-D), combined 4 %; Table 2 relabels A+B as B and gives 2.6 d for C-D",
+    "reliable_lens_delay": true
+   },
+   "delay_reliable": true
+  },
+  "RXJ1131-1231": {
+   "category": "galaxy_seen",
+   "instrument": "optical spectra; HST F160W 16.13",
+   "z_lens": 0.295,
+   "source": "astro-ph/0307345 abstract",
+   "quote": "'The lensing galaxy is clearly detected'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "2MASSJ1134-2103": {
+   "category": "galaxy_seen",
+   "instrument": "VHS Ks; HST WFC3 (automated fit, n at bound 6.0)",
+   "z_lens": null,
+   "source": "Rusu+2019 arXiv:1803.07175 sec. 3; arXiv:2206.04696",
+   "quote": "'can be convincingly identified in the near-infrared imaging (particularly Ks-band)'",
+   "imaging_high_res": true,
+   "note": "not seen in Pan-STARRS optical; Table 3 magnitudes flagged unreliable by the authors",
+   "delay_reliable": null
+  },
+  "SDSS1206+4332": {
+   "category": "galaxy_seen",
+   "instrument": "UH88 VRI",
+   "z_lens": 0.748,
+   "source": "astro-ph/0411250 sec. III.2",
+   "quote": "'clearly reveal the lensing galaxy G1'",
+   "imaging_high_res": false,
+   "note": "z from a Mg II absorber (assumed)",
+   "delay_reliable": null
+  },
+  "SDSS1226-0006": {
+   "category": "galaxy_seen",
+   "instrument": "HST/ACS archive; VLT FORS1",
+   "z_lens": 0.517,
+   "source": "astro-ph/0511026 sec. 3",
+   "quote": "'seen on archival HST/ACS images'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "2MJ1310-1714": {
+   "category": "galaxy_seen",
+   "instrument": "PS1 i; IMACS spectrum",
+   "z_lens": 0.293,
+   "source": "arXiv:1711.02674 sec. 4.1, Table 2",
+   "quote": "'a bright lens galaxy surrounded by four quasar images'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "SDSSJ1335+0118": {
+   "category": "galaxy_seen",
+   "instrument": "VLT FORS1 spectrum",
+   "z_lens": 0.44,
+   "source": "astro-ph/0511026 sec. 3",
+   "quote": "'zlens=0.440+-0.001'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "SDSSJ1339+1310": {
+   "category": "galaxy_seen",
+   "instrument": "UH88 I, ARC H; GTC spectrum",
+   "z_lens": 0.609,
+   "source": "arXiv:0809.0912 Table 5; A&A 568, A116",
+   "quote": "'we measured its redshift (0.609 +- 0.001)'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "Q1355-2257": {
+   "category": "galaxy_seen",
+   "instrument": "VLT FORS1 spectrum",
+   "z_lens": 0.702,
+   "source": "astro-ph/0612419 Table 2",
+   "quote": "'zlens = 0.702+-0.001'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "H1413+117": {
+   "category": "galaxy_seen",
+   "instrument": "HST NICMOS F160W/F180M (PSF subtraction; MCS deconvolution)",
+   "z_lens": null,
+   "source": "Kneib+1998 astro-ph/9804207 sec. 3, Table 2; Chantry & Magain 2007 astro-ph/0612094 Table 1, sec. 5",
+   "quote": "'the galaxy-lens, H1, is clearly detected even on the non-PSF subtracted image' (H = 20.5 +- 0.7); F160W 20.53 +- 0.04, F180M 22.18 +- 0.10",
+   "imaging_high_res": true,
+   "note": "faint; no spectroscopic z_lens; CASTLES lists 18.61 (unresolved discrepancy)",
+   "delay_reliable": null
+  },
+  "B1422+231": {
+   "category": "galaxy_seen",
+   "instrument": "spectroscopy; HST F160W 17.57",
+   "z_lens": 0.339,
+   "source": "astro-ph/9706199 abstract",
+   "quote": "'a group at z=0.339'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSSJ1433+6007": {
+   "category": "galaxy_seen",
+   "instrument": "Keck-ESI; HST WFC3",
+   "z_lens": 0.407,
+   "source": "arXiv:1702.03942 abstract; arXiv:2206.04696 Table 2",
+   "quote": "'zl=0.407 from follow-up Keck-ESI spectroscopy'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSSJ1442+4055": {
+   "category": "galaxy_seen",
+   "instrument": "LT r; GTC-OSIRIS",
+   "z_lens": 0.284,
+   "source": "arXiv:1903.06505 sec. II.2, Fig. 3",
+   "quote": "'accurately identify the primary lensing galaxy G1'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "SDSSJ1455+1447": {
+   "category": "galaxy_seen",
+   "instrument": "UH88 I 18.51; Subaru AO K' 16.05",
+   "z_lens": null,
+   "source": "arXiv:0912.1462 Table 4; arXiv:1506.05147 Table 3",
+   "quote": "'two PSFs and a galaxy'",
+   "imaging_high_res": true,
+   "note": "z_lens ~0.42 photometric",
+   "delay_reliable": null
+  },
+  "SDSSJ1515+1511": {
+   "category": "galaxy_seen",
+   "instrument": "Subaru AO K'",
+   "z_lens": 0.742,
+   "source": "arXiv:1701.04272 abstract and sec. 2",
+   "quote": "'G1 is an edge-on disk-like galaxy'",
+   "imaging_high_res": true,
+   "note": "z from a Mg II absorber ('putative'); Subaru account via Shalyapin & Goicoechea",
+   "delay_reliable": null
+  },
+  "SBS1520+530": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.71,
+   "source": "Faure+2002 astro-ph/0201057; CASTLES",
+   "quote": "'elongated lensing galaxy L appearing between the two quasar images'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "J1537-3010": {
+   "category": "galaxy_seen",
+   "instrument": "HST F160W/F814W/F475X",
+   "z_lens": null,
+   "source": "arXiv:2206.04696 Table 2; Stern+2021",
+   "quote": "'hints of a red lensing galaxy in the center'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "B1600+434": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.41,
+   "source": "CASTLES",
+   "quote": "G F160W 18.30 +- 0.13, F814W 20.78",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "PS J1606-2333": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": null,
+   "source": "Shajib+2019 arXiv:1807.09278 Table 5",
+   "quote": "F160W 19.5 +- 0.1; 'main deflector has a noticeable companion'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "B1608+656": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.63,
+   "source": "CASTLES",
+   "quote": "G F160W 16.76, G1 19.38 (two galaxies)",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSSJ1620+1203": {
+   "category": "galaxy_seen",
+   "instrument": "UH88/Subaru imaging; spectroscopy",
+   "z_lens": 0.398,
+   "source": "arXiv:0912.1462 (note on this system)",
+   "quote": "'Ca II H&K, Mg, and Na galactic absorption lines are observed'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "SDSSJ1640+1932": {
+   "category": "galaxy_seen",
+   "instrument": "CFHT MegaCam gri; SDSS spectrum",
+   "z_lens": 0.195,
+   "source": "Wang+2017 arXiv:1703.07495 abstract",
+   "quote": "'foreground elliptical galaxy' at z=0.195",
+   "imaging_high_res": false,
+   "delay_check": {
+    "table2": "AB -25.23, AC -23.54, AD -23.43 (no errors)",
+    "source": "Wang+2017 arXiv:1703.07495 abstract",
+    "finding": "SIE model prediction from CFHT imaging: 'the time delay relative to the leading image is determined to be 23.4-25.2 days'; not a light-curve measurement",
+    "reliable_lens_delay": false
+   },
+   "delay_reliable": false
+  },
+  "SDSS1650+4251": {
+   "category": "galaxy_seen",
+   "instrument": "WIYN I (0.3\" seeing)",
+   "z_lens": null,
+   "source": "astro-ph/0305036 abstract",
+   "quote": "'lensing galaxy is clearly detected in I-band' (G I = 20.5 +- 0.5)",
+   "imaging_high_res": false,
+   "note": "z 0.577 from a Mg II absorber",
+   "delay_reliable": null
+  },
+  "GraLJ165105.3-041725": {
+   "category": "galaxy_seen",
+   "instrument": "Keck/LRIS spectrum",
+   "z_lens": 0.591,
+   "source": "Stern+2021 arXiv:2012.10051 sec. 4",
+   "quote": "'lensing galaxy to be an early-type galaxy at z = 0.591'",
+   "imaging_high_res": false,
+   "note": "mass-model centre 0.15\" off the galaxy (line-of-sight structure, Stern+21 sec. 6.1)",
+   "delay_reliable": null
+  },
+  "PKS1830-211": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.89,
+   "source": "CASTLES",
+   "quote": "G F160W 18.58 +- 0.37, F814W 21.42",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "WGDJ2021-4115": {
+   "category": "galaxy_seen",
+   "instrument": "DES izY (blended with B); Magellan/IMACS spectrum",
+   "z_lens": 0.335,
+   "source": "arXiv:1711.03971",
+   "quote": "'round, faint, red galaxy'; 'higher-resolution imaging is needed to accurately separate the deflector and faint quasar image'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "WGDJ2026-4536*": {
+   "category": "galaxy_seen",
+   "instrument": "HST NIC2 F160W",
+   "z_lens": null,
+   "source": "arXiv:1007.3142 Table 2",
+   "quote": "G 18.94 +- 0.04; 'z_l unknown'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "WFI2033-4723": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.66,
+   "source": "CASTLES",
+   "quote": "G F160W 17.46, F814W 19.69",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "GraLJ203802-400815": {
+   "category": "galaxy_seen",
+   "instrument": "HST F160W; IMACS spectrum",
+   "z_lens": 0.23,
+   "source": "arXiv:1807.09278 Table 5; arXiv:1711.03971",
+   "quote": "F160W 16.4 +- 0.1; 'Absorption features, compatible with z_l=0.230'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "WGJ2100-4452*": {
+   "category": "galaxy_seen",
+   "instrument": "HST (Sersic fit)",
+   "z_lens": 0.203,
+   "source": "arXiv:2206.04696 Table 2 and sec. 2",
+   "quote": "'deflector redshift is 0.203'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "J2124+1632": {
+   "category": "galaxy_seen",
+   "instrument": "Pan-STARRS grizy (PSF-subtracted fit)",
+   "z_lens": null,
+   "source": "Lemon+2018 arXiv:1803.07601 appendix (Pan-STARRS astrometry and photometry)",
+   "quote": "G row 20.44 / 18.88 / 18.40 / 18.03 / 17.89",
+   "imaging_high_res": false,
+   "note": "ground only; no HST found; delay paper (Bekov+2024) not on arXiv",
+   "delay_reliable": null
+  },
+  "Q2138-431": {
+   "category": "galaxy_seen",
+   "instrument": "VISTA J (ground), deep survey frame",
+   "z_lens": null,
+   "source": "Hawkins+2021 arXiv:2104.02454 (abstract)",
+   "quote": "'a 5 sigma detection of a faint galaxy between the two quasar images on a deep J-band frame from the VISTA Science Archive, with apparent magnitude J = 20.68'; non-detection in I implies z > 0.6",
+   "imaging_high_res": false,
+   "note": "ground-based single-band 5 sigma detection; the classical 'dark lens' candidate",
+   "delay_check": {
+    "table2": "AB 410 d, no error",
+    "source": "Hawkins+2021 arXiv:2104.02454 (abstract)",
+    "finding": "'image B to lead image A by around a year, consistent with 410 days from the mass model' (25 yr of UK Schmidt plates); 410 d is the model value, no measurement error given",
+    "reliable_lens_delay": false
+   },
+   "delay_reliable": false
+  },
+  "HE2149-2745": {
+   "category": "galaxy_seen",
+   "instrument": "HST",
+   "z_lens": 0.603,
+   "source": "CASTLES; arXiv:2002.05736 (citing Eigenbrod+2006)",
+   "quote": "G F160W 17.61, F814W 19.56",
+   "imaging_high_res": true,
+   "note": "CASTLES gives z 0.50",
+   "delay_reliable": null
+  },
+  "J2205-3727": {
+   "category": "galaxy_seen",
+   "instrument": "HST (Sersic fit)",
+   "z_lens": null,
+   "source": "arXiv:2206.04696 Table 2",
+   "quote": "F160W I_e 20.84 mag/arcsec^2, theta_e 0.78\"",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "HS2209+1914": {
+   "category": "galaxy_seen",
+   "instrument": "HST NIC2 F160W",
+   "z_lens": null,
+   "source": "arXiv:1007.3142 Table 2",
+   "quote": "G 21.58 +- 0.2; 'A bulge is clearly observable'",
+   "imaging_high_res": true,
+   "delay_reliable": null
+  },
+  "SDSSJ2222+2745": {
+   "category": "galaxy_seen",
+   "instrument": "NOT/MOSCA gri; core-galaxy spectra (cluster)",
+   "z_lens": 0.49,
+   "source": "arXiv:1211.1091 abstract",
+   "quote": "'lensed by a foreground galaxy cluster'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "J2305+3714": {
+   "category": "galaxy_seen",
+   "instrument": "WHT long-slit spectrum; Pan-STARRS",
+   "z_lens": 0.473,
+   "source": "Burkhonov+2026 arXiv:2601.01230 abstract",
+   "quote": "'first measurement of the lens redshift, z_d = 0.473'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  },
+  "VDESJ2325-5229": {
+   "category": "galaxy_seen",
+   "instrument": "DES Sersic fit; AAT/NTT spectra",
+   "z_lens": 0.4,
+   "source": "arXiv:1607.01391 abstract",
+   "quote": "'lensed by a foreground z_l=0.40 elliptical galaxy'",
+   "imaging_high_res": false,
+   "delay_reliable": null
+  }
+ }
+}

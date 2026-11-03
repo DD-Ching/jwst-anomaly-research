@@ -2,6 +2,28 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-03: W2 GraL X delay screen: none of 73 lensed quasars with published delays lacks a seen deflector; zero candidates (needs-human)
+- **Question (owner, ≤ 60 min, published data only):** does any system have a reliable delay and deep high-resolution
+  imaging without a detected deflector? Record: `results/w2_gralx_delay_screen/RESULT.md`.
+- **Population:** Gaia GraL X Table 2 from the LaTeX source: 73 systems, with 183 delays that carry errors and 13 that do
+  not.
+- **Dedup:** 14 were D-064 control lenses.
+- **Classes** (one cited source per system, `deflectors.json`):
+  - galaxy seen 72 (46 with a lens redshift);
+  - quantitative limit 0;
+  - shallow or blended 1 (APM08279+5255);
+  - blank 0.
+- **Delay originals read for 4 systems:**
+  - APM08279+5255's 900 d is a reverberation lag;
+  - SDSS J1640+1932's delays are a model prediction;
+  - Q2138-431's 410 d is a model value;
+  - GRAL J1131-4419's delays are reliable (TDCOSMO XVII).
+- **Verdict:** zero qualifying systems.
+  - Closest case: GRAL J1131-4419. Its lens light comes only from the automated STRIDES F160W fit, and Keck spectra show
+    no lens.
+  - Not delivered.
+- **Handoff:** PR stays draft with `needs-human`. No next round queued (owner).
+
 ## 2026-11-02: Network tests get a 5-min per-test timeout (#374)
 - **Why:** the 2026-11-02 weekly run (41476680422) stalled 22 min on one line of live crossmatch tests, hit the 30-min
   job timeout and ended cancelled with no test summary, so `report-failure` never fired.

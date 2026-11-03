@@ -1947,6 +1947,23 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
 - **Identity:** ESA Gaia TAP (https://gea.esac.esa.int/tap-server/tap/sync, `gaiadr3.gaia_source`); NOIRLab Data
   Lab TAP (`desi_dr1.zpix`, `ls_dr10.tractor`).
 
+## W2 GraL X delay screen (accessed 2026-11-03; `results/w2_gralx_delay_screen/`)
+- **Gaia GraL X:** https://arxiv.org/src/2603.12810v1, sha256 270f955601361c71a4278df6b61c1eb3e0eb8efcd585b717fa857973c3cb187e.
+  Table 2 (`timedelay_table`) in `aa58049-25corr.tex`.
+- **STRIDES:** Schmidt et al. 2023 (arXiv:2206.04696), lens-light table from the LaTeX source.
+- **TDCOSMO XVII:** Dux et al. 2025 (arXiv:2504.02932, A&A 697, A139), GRAL J1131-4419 paragraph and covariance table.
+- **Abstracts read by the main session:**
+  - Saturni et al. 2016 (arXiv:1512.03195);
+  - Hawkins et al. 2021 (arXiv:2104.02454);
+  - Wang et al. 2017 (arXiv:1703.07495);
+  - Wertz et al. 2019 (arXiv:1810.02624);
+  - Ibata et al. 1999 (astro-ph/9908052);
+  - Egami et al. 2000 (astro-ph/0001200);
+  - Feruglio et al. 2017 (arXiv:1706.05527).
+- **Per-system deflector sources:** listed in `deflectors.json`. They include CASTLES
+  (https://lweb.cfa.harvard.edu/castles/) and the discovery and redshift papers.
+- **Positions:** SIMBAD Harvard mirror (https://simbad.cfa.harvard.edu/simbad/sim-id).
+
 ## W2 J2244−0550 HST test (accessed 2026-10-23; `results/w2_j2244_hst/`)
 - **HST products:** pipeline drizzled products (calwf3 / calacs) read as byte-range cutouts from the public AWS copy
   `https://stpubdata.s3.amazonaws.com/hst/public/<ipppss>/<obs_id>/<obs_id>_{drz,drc}.fits`. ETags are in
