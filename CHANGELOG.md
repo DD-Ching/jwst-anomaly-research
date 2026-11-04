@@ -2,6 +2,35 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-03 (revised 2026-11-04): W2 GraL X delay screen: among 73 lensed quasars with published delays, none has a reliable delay and a quantitative lens-light non-detection limit; zero candidates (needs-human)
+- **Question (owner, ≤ 60 min, published data only):** does any system have a reliable delay and deep high-resolution
+  imaging without a detected deflector? Record: `results/w2_gralx_delay_screen/RESULT.md`.
+- **Population:** Gaia GraL X Table 2 from the LaTeX source: 73 systems, with 183 delays that carry errors and 13 that do
+  not.
+- **Dedup:** 14 were D-064 control lenses.
+- **Classes** (one cited source per system, `deflectors.json`):
+  - galaxy seen 72 (47 with a lens redshift as cited; J1131's 0.472 is quoted from Keeley+2026 Table I, its original
+    spectrum unpublished);
+  - quantitative limit 0;
+  - shallow or blended 1 (APM08279+5255);
+  - blank 0.
+- **Delay originals read for 4 systems:**
+  - APM08279+5255's 900 d is a reverberation lag;
+  - SDSS J1640+1932's delays are a model prediction;
+  - Q2138-431's 410 d is a model value;
+  - GRAL J1131-4419's delays are reliable (TDCOSMO XVII).
+- **Verdict:** among these 73 systems, none was found with both a reliable inter-image delay and deep imaging that gives a
+  quantitative non-detection limit for an ordinary lens galaxy. Nothing is delivered.
+- **Correction (2026-11-04, owner review):** Keeley et al. 2026 (PRD 114, 043043) Table VI fits deflector light in
+  JWST/MIRI:
+  - for GRAL J1131-4419 in F560W and F1280W;
+  - for WISE J0259-1635 and 2M1134-2103 in F560W.
+  - The "automated STRIDES fit only" reading of these three, and the suggestion to redo J1131's HST analysis, are
+    withdrawn.
+  - Seven systems absent from that table had no mid-IR deflector detection, with no limit given; each is seen in other
+    data.
+- **Handoff:** PR stays draft with `needs-human`. No next round queued (owner).
+
 ## 2026-11-02: Network tests get a 5-min per-test timeout (#374)
 - **Why:** the 2026-11-02 weekly run (41476680422) stalled 22 min on one line of live crossmatch tests, hit the 30-min
   job timeout and ended cancelled with no test summary, so `report-failure` never fired.

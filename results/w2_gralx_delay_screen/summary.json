@@ -1,0 +1,660 @@
+{
+ "label": "derived from published classes (deflectors.json) and Table 2",
+ "n_systems": 73,
+ "not_curated": [],
+ "counts": {
+  "galaxy_seen": 72,
+  "quantitative_limit": 0,
+  "shallow_or_blended": 1,
+  "catalogue_blank": 0
+ },
+ "qualifying": [],
+ "seen_with_z_lens": 47,
+ "seen_ground_only_without_z_lens": [
+  "DESJ0501-4118",
+  "J050129.5-073309",
+  "J2124+1632",
+  "Q2138-431",
+  "SDSS1650+4251"
+ ],
+ "seen_automated_fit_only": [
+  "DESJ0029-3814",
+  "J0420-4037"
+ ],
+ "z_lens_quoted_original_unverified": [
+  "GRALJ1131-4419*"
+ ],
+ "keeley2026_table_I": [
+  "2MASSJ1134-2103",
+  "GRALJ1131-4419*",
+  "GraLJ203802-400815",
+  "H1413+117",
+  "HE0435-1223",
+  "J0607-2152",
+  "J0659+1629",
+  "J1537-3010",
+  "J2205-3727",
+  "PG1115+080",
+  "PS J1606-2333",
+  "RXJ1131-1231",
+  "SDSS J0924+0219",
+  "WFI2033-4723",
+  "WGDJ2026-4536*",
+  "WISEJ0259-1635"
+ ],
+ "keeley2026_table_VI_lens_light": [
+  "2MASSJ1134-2103",
+  "GRALJ1131-4419*",
+  "HE0435-1223",
+  "J2205-3727",
+  "PG1115+080",
+  "RXJ1131-1231",
+  "SDSS J0924+0219",
+  "WFI2033-4723",
+  "WISEJ0259-1635"
+ ],
+ "keeley2026_mid_ir_deflector_not_detected": [
+  "GraLJ203802-400815",
+  "H1413+117",
+  "J0607-2152",
+  "J0659+1629",
+  "J1537-3010",
+  "PS J1606-2333",
+  "WGDJ2026-4536*"
+ ],
+ "table2_delay_not_a_measurement": [
+  "APM08279+5255",
+  "Q2138-431",
+  "SDSSJ1640+1932"
+ ],
+ "delay_originals_read": [
+  "APM08279+5255",
+  "GRALJ1131-4419*",
+  "Q2138-431",
+  "SDSSJ1640+1932"
+ ],
+ "rows": [
+  {
+   "name": "DESJ0029-3814",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "PS J0030-1525*",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "HE0047-1756",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "DES J0053-2012",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "Q0142-100",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "QJ0158-4325",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "WG0214-2105",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "B0218+357",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "HE0230-2130",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS0246-0825",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J024634.09-082536.1",
+     "control/SQLS-DR3/SDSS Lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J024634.09-082536.1",
+     "control/SDSS Lens"
+    ]
+   ]
+  },
+  {
+   "name": "WISEJ0259-1635",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "DESJ0407-5006",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J0408-5354",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J0420-4037",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "HE0435-1223",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J050129.5-073309",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "DESJ0501-4118",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J0602-4335",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J0607-2152",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w2_desi_pairs",
+     "J0607-2152",
+     "control/quad"
+    ]
+   ]
+  },
+  {
+   "name": "J0659+1629",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS0806+2006",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J080623.70+200631.8",
+     "control/SQLS-DR5/SDSS lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J080623.70+200631.8",
+     "control/SDSS lens"
+    ]
+   ]
+  },
+  {
+   "name": "HS0818+1227",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "APM08279+5255",
+   "category": "shallow_or_blended",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS J0832+0404",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J083217.11+040403.8",
+     "control/SQLS-DR3/SDSS lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J083217.11+040403.8",
+     "control/SDSS lens"
+    ]
+   ]
+  },
+  {
+   "name": "RXJ0911+0551",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SBS0909+532",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS J0924+0219",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J092455.79+021924.9",
+     "control/SQLS-DR3/SDSS lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J092455.79+021924.9",
+     "control/SDSS lens"
+    ]
+   ]
+  },
+  {
+   "name": "FBQ0951+2635",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J095122.57+263513.9",
+     "control/SQLS-DR7/known lens (FBQ0951+2635)"
+    ],
+    [
+     "w2_desi_pairs",
+     "J095122.57+263513.9",
+     "control/known lens (FBQ0951+2635)"
+    ]
+   ]
+  },
+  {
+   "name": "Q0957+561",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS1001+5027",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w2_desi_pairs",
+     "J100128.35+502758.4",
+     "control/SDSS Lens"
+    ]
+   ]
+  },
+  {
+   "name": "SDSS1004+4112",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS1029+2623",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "B1030+074",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "HE1104-1805",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "PG1115+080",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J111816.95+074558.1",
+     "control/SQLS-DR5/Known lens (PG1115)"
+    ],
+    [
+     "w2_desi_pairs",
+     "J111816.95+074558.1",
+     "control/Known lens (PG1115)"
+    ]
+   ]
+  },
+  {
+   "name": "GRALJ1131-4419*",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "RXJ1131-1231",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "2MASSJ1134-2103",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS1206+4332",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS1226-0006",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J122608.02-000602.2",
+     "control/SQLS-DR3/SDSS Lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J122608.02-000602.2",
+     "control/SDSS Lens"
+    ]
+   ]
+  },
+  {
+   "name": "2MJ1310-1714",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSSJ1335+0118",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J133534.79+011805.5",
+     "control/SQLS-DR3/SDSS Lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J133534.79+011805.5",
+     "control/SDSS Lens"
+    ]
+   ]
+  },
+  {
+   "name": "SDSSJ1339+1310",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "Q1355-2257",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "H1413+117",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "B1422+231",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSSJ1433+6007",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSSJ1442+4055",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSSJ1455+1447",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J145501.91+144734.8",
+     "control/SQLS-DR7/SDSS lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J145501.91+144734.8",
+     "control/SDSS lens"
+    ]
+   ]
+  },
+  {
+   "name": "SDSSJ1515+1511",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J151538.59+151135.8",
+     "control/SQLS-DR7/SDSS lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J151538.59+151135.8",
+     "control/SDSS lens"
+    ]
+   ]
+  },
+  {
+   "name": "SBS1520+530",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J1537-3010",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "B1600+434",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "PS J1606-2333",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "B1608+656",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSSJ1620+1203",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J162026.28+120340.3",
+     "control/SQLS-DR7/SDSS lens"
+    ],
+    [
+     "w2_desi_pairs",
+     "J162026.28+120340.3",
+     "control/SDSS lens"
+    ]
+   ]
+  },
+  {
+   "name": "SDSSJ1640+1932",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSS1650+4251",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "GraLJ165105.3-041725",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "PKS1830-211",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "WGDJ2021-4115",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "WGDJ2026-4536*",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "WFI2033-4723",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "GraLJ203802-400815",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "WGJ2100-4452*",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J2124+1632",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "Q2138-431",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "HE2149-2745",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J2205-3727",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": [
+    [
+     "w12_niq (D-064)",
+     "J2205-3727",
+     "control/Lemon2023/quad"
+    ],
+    [
+     "w2_desi_pairs",
+     "J2205-3727",
+     "control/quad"
+    ]
+   ]
+  },
+  {
+   "name": "HS2209+1914",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "SDSSJ2222+2745",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "J2305+3714",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  },
+  {
+   "name": "VDESJ2325-5229",
+   "category": "galaxy_seen",
+   "qualifies": false,
+   "prior_repo": []
+  }
+ ]
+}
