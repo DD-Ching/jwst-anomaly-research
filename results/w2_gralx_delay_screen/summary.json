@@ -9,7 +9,7 @@
   "catalogue_blank": 0
  },
  "qualifying": [],
- "seen_with_z_lens": 46,
+ "seen_with_z_lens": 47,
  "seen_ground_only_without_z_lens": [
   "DESJ0501-4118",
   "J050129.5-073309",
@@ -18,11 +18,49 @@
   "SDSS1650+4251"
  ],
  "seen_automated_fit_only": [
-  "2MASSJ1134-2103",
   "DESJ0029-3814",
+  "J0420-4037"
+ ],
+ "z_lens_quoted_original_unverified": [
+  "GRALJ1131-4419*"
+ ],
+ "keeley2026_table_I": [
+  "2MASSJ1134-2103",
   "GRALJ1131-4419*",
-  "J0420-4037",
+  "GraLJ203802-400815",
+  "H1413+117",
+  "HE0435-1223",
+  "J0607-2152",
+  "J0659+1629",
+  "J1537-3010",
+  "J2205-3727",
+  "PG1115+080",
+  "PS J1606-2333",
+  "RXJ1131-1231",
+  "SDSS J0924+0219",
+  "WFI2033-4723",
+  "WGDJ2026-4536*",
   "WISEJ0259-1635"
+ ],
+ "keeley2026_table_VI_lens_light": [
+  "2MASSJ1134-2103",
+  "GRALJ1131-4419*",
+  "HE0435-1223",
+  "J2205-3727",
+  "PG1115+080",
+  "RXJ1131-1231",
+  "SDSS J0924+0219",
+  "WFI2033-4723",
+  "WISEJ0259-1635"
+ ],
+ "keeley2026_mid_ir_deflector_not_detected": [
+  "GraLJ203802-400815",
+  "H1413+117",
+  "J0607-2152",
+  "J0659+1629",
+  "J1537-3010",
+  "PS J1606-2333",
+  "WGDJ2026-4536*"
  ],
  "table2_delay_not_a_measurement": [
   "APM08279+5255",

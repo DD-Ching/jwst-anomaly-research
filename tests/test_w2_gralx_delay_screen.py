@@ -70,3 +70,10 @@ def test_stored_summary_is_consistent():
         and v.get("imaging_high_res") is True
     )
     assert sorted(s["qualifying"]) == want
+    # a deflector fitted in Keeley+2026 Table VI (JWST/MIRI) is never "automated fit only"
+    for n, v in d.items():
+        if v.get("keeley2026", {}).get("table_VI_filters"):
+            assert v["automated_fit_only"] is False, n
+    assert s["seen_automated_fit_only"] == sorted(
+        n for n, v in d.items() if v["automated_fit_only"]
+    )

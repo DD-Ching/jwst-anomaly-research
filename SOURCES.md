@@ -1952,6 +1952,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   Table 2 (`timedelay_table`) in `aa58049-25corr.tex`.
 - **STRIDES:** Schmidt et al. 2023 (arXiv:2206.04696), lens-light table from the LaTeX source.
 - **TDCOSMO XVII:** Dux et al. 2025 (arXiv:2504.02932, A&A 697, A139), GRAL J1131-4419 paragraph and covariance table.
+- **Keeley et al. 2026:** Phys. Rev. D 114, 043043, doi:10.1103/53tj-sjlg (metadata checked with Crossref,
+  2026-11-04). Tables I and VI were transcribed from the arXiv:2511.07765v3 LaTeX source (accessed 2026-11-04);
+  `results/w2_gralx_delay_screen/keeley2026_tables.json`.
 - **Abstracts read by the main session:**
   - Saturni et al. 2016 (arXiv:1512.03195);
   - Hawkins et al. 2021 (arXiv:2104.02454);

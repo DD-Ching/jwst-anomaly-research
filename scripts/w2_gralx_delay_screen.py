@@ -270,10 +270,18 @@ def assemble() -> dict:
             and not d.get("imaging_high_res")
             and d.get("z_lens") is None
         ),
-        "seen_automated_fit_only": sorted(
+        "seen_automated_fit_only": sorted(n for n, d in dfl.items() if d.get("automated_fit_only")),
+        "z_lens_quoted_original_unverified": sorted(
+            n for n, d in dfl.items() if "not verified" in d.get("z_lens_status", "")
+        ),
+        "keeley2026_table_I": sorted(n for n, d in dfl.items() if "keeley2026" in d),
+        "keeley2026_table_VI_lens_light": sorted(
+            n for n, d in dfl.items() if d.get("keeley2026", {}).get("table_VI_filters")
+        ),
+        "keeley2026_mid_ir_deflector_not_detected": sorted(
             n
             for n, d in dfl.items()
-            if "automated" in (d.get("note", "") + d.get("instrument", ""))
+            if "keeley2026" in d and not d["keeley2026"]["table_VI_filters"]
         ),
         "table2_delay_not_a_measurement": sorted(
             n

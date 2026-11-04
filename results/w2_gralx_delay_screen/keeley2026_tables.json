@@ -1,0 +1,505 @@
+{
+ "source": "Keeley et al. 2026, Phys. Rev. D 114, 043043 (doi:10.1103/53tj-sjlg); transcribed from arXiv:2511.07765v3 LaTeX source; table numbering checked against \\addtocounter use (Table I = tab:lens_sample, Table VI = tab:light)",
+ "table_VI_caption": "Best fitting deflector and satellite light parameters with positions given relative to the coordinate system in Table \\ref{tab:data_summary}. Deflector light centroids are constrained to be the same in all filters. S\\'ersic indices are held fixed to 4 for the deflector and satellite light. Luminous satellite positions are held fixed to the mass centroid given in Table \\ref{tab:macromodel}. Lenses not included in this table did not have detected deflectors or satellites.",
+ "table_VI_rows": [
+  {
+   "lens": "PSJ0147",
+   "filter": "F560W",
+   "R_s_arcsec": 0.51,
+   "q": 0.75,
+   "theta_deg": 342.0,
+   "dRA": 0.988,
+   "dDec": 0.681
+  },
+  {
+   "lens": "J0248",
+   "filter": "F560W",
+   "R_s_arcsec": 0.1,
+   "q": 0.22,
+   "theta_deg": 327.0,
+   "dRA": -0.359,
+   "dDec": 0.831
+  },
+  {
+   "lens": "J0259",
+   "filter": "F560W",
+   "R_s_arcsec": 0.08,
+   "q": 0.39,
+   "theta_deg": 311.0,
+   "dRA": 0.028,
+   "dDec": 0.687
+  },
+  {
+   "lens": "MG0414",
+   "filter": "F560W",
+   "R_s_arcsec": 0.26,
+   "q": 0.33,
+   "theta_deg": 68.0,
+   "dRA": -1.114,
+   "dDec": 0.671
+  },
+  {
+   "lens": "HE0435",
+   "filter": "F560W",
+   "R_s_arcsec": 0.74,
+   "q": 0.74,
+   "theta_deg": 361.0,
+   "dRA": -1.157,
+   "dDec": -0.571
+  },
+  {
+   "lens": "J0457",
+   "filter": "F560W",
+   "R_s_arcsec": 1.56,
+   "q": 0.74,
+   "theta_deg": 307.0,
+   "dRA": 2.225,
+   "dDec": -1.897
+  },
+  {
+   "lens": "J0457",
+   "filter": "F1280W",
+   "R_s_arcsec": 0.1,
+   "q": 0.62,
+   "theta_deg": 303.0,
+   "dRA": 2.225,
+   "dDec": -1.897
+  },
+  {
+   "lens": "J0803",
+   "filter": "F560W",
+   "R_s_arcsec": 1.41,
+   "q": 0.63,
+   "theta_deg": 83.0,
+   "dRA": -0.446,
+   "dDec": 0.106
+  },
+  {
+   "lens": "J0924",
+   "filter": "F560W",
+   "R_s_arcsec": 0.26,
+   "q": 0.8,
+   "theta_deg": 355.0,
+   "dRA": 0.357,
+   "dDec": -0.799
+  },
+  {
+   "lens": "J0924",
+   "filter": "F1280W",
+   "R_s_arcsec": 0.01,
+   "q": 0.41,
+   "theta_deg": 54.0,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "HE1113",
+   "filter": "F560W",
+   "R_s_arcsec": 0.94,
+   "q": 0.91,
+   "theta_deg": 266.0,
+   "dRA": -0.31,
+   "dDec": 0.262
+  },
+  {
+   "lens": "PG1115",
+   "filter": "F560W",
+   "R_s_arcsec": 0.96,
+   "q": 0.57,
+   "theta_deg": 126.0,
+   "dRA": 0.77,
+   "dDec": 0.588
+  },
+  {
+   "lens": "RXJ1131",
+   "filter": "F560W",
+   "R_s_arcsec": 1.29,
+   "q": 0.75,
+   "theta_deg": 300.0,
+   "dRA": -2.008,
+   "dDec": 0.587
+  },
+  {
+   "lens": "GRAL1131",
+   "filter": "F560W",
+   "R_s_arcsec": 0.43,
+   "q": 0.6,
+   "theta_deg": 173.0,
+   "dRA": -0.073,
+   "dDec": 0.774
+  },
+  {
+   "lens": "GRAL1131",
+   "filter": "F1280W",
+   "R_s_arcsec": 0.072,
+   "q": 0.4,
+   "theta_deg": 165.0,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "2M1134",
+   "filter": "F560W",
+   "R_s_arcsec": 0.94,
+   "q": 0.59,
+   "theta_deg": 237.0,
+   "dRA": 1.196,
+   "dDec": 1.555
+  },
+  {
+   "lens": "J1251",
+   "filter": "F560W",
+   "R_s_arcsec": 0.38,
+   "q": 0.67,
+   "theta_deg": 282.0,
+   "dRA": 1.066,
+   "dDec": -0.332
+  },
+  {
+   "lens": "J1251",
+   "filter": "F1280W",
+   "R_s_arcsec": 0.71,
+   "q": 0.5,
+   "theta_deg": 298.0,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "J1251",
+   "filter": "F1800W",
+   "R_s_arcsec": 0.077,
+   "q": 0.41,
+   "theta_deg": 218.0,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "J2017",
+   "filter": "F560W",
+   "R_s_arcsec": 1.57,
+   "q": 0.48,
+   "theta_deg": 336.0,
+   "dRA": 0.436,
+   "dDec": -0.109
+  },
+  {
+   "lens": "WFI2033",
+   "filter": "F560W",
+   "R_s_arcsec": 2.19,
+   "q": 0.86,
+   "theta_deg": 22.0,
+   "dRA": 0.752,
+   "dDec": -0.943
+  },
+  {
+   "lens": "WFI2033",
+   "filter": "F1280W",
+   "R_s_arcsec": 2.2,
+   "q": 0.7,
+   "theta_deg": 347.0,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "B2045",
+   "filter": "F560W",
+   "R_s_arcsec": 0.36,
+   "q": 1.0,
+   "theta_deg": null,
+   "dRA": 1.108,
+   "dDec": -0.804
+  },
+  {
+   "lens": "B2045",
+   "filter": "F1280W",
+   "R_s_arcsec": 0.45,
+   "q": 1.0,
+   "theta_deg": null,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "B2045",
+   "filter": "F1800W",
+   "R_s_arcsec": 0.07,
+   "q": 1.0,
+   "theta_deg": null,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "B2045",
+   "filter": "F2550W",
+   "R_s_arcsec": 0.59,
+   "q": 1.0,
+   "theta_deg": null,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "J2107",
+   "filter": "F560W",
+   "R_s_arcsec": 0.68,
+   "q": 0.52,
+   "theta_deg": 241.0,
+   "dRA": -1.947,
+   "dDec": -1.456
+  },
+  {
+   "lens": "J2205",
+   "filter": "F560W",
+   "R_s_arcsec": 0.8,
+   "q": 0.5,
+   "theta_deg": 23.0,
+   "dRA": -0.906,
+   "dDec": -0.131
+  },
+  {
+   "lens": "J2205",
+   "filter": "F1280W",
+   "R_s_arcsec": 0.23,
+   "q": 0.37,
+   "theta_deg": 328.0,
+   "dRA": null,
+   "dDec": null
+  },
+  {
+   "lens": "J2344",
+   "filter": "F560W",
+   "R_s_arcsec": 0.52,
+   "q": 0.73,
+   "theta_deg": 58.0,
+   "dRA": 0.428,
+   "dDec": -0.166
+  },
+  {
+   "lens": "J2344",
+   "filter": "F1280W",
+   "R_s_arcsec": 0.69,
+   "q": 0.64,
+   "theta_deg": 29.0,
+   "dRA": null,
+   "dDec": null
+  }
+ ],
+ "table_I_caption": "Information about the lens systems and observation details. ($a$) References are provided for deflector redshift measurements when the reference is different from the discovery paper. ($b$) The axis ratio of the deflector in optical HST imaging, used as a prior in the dark matter lens modeling as described in \\ref{sec:lens_modeling}. ( $c$) Deflector redshift is set to 0.5 when a spectroscopic redshift has not been measured. ($d$) (this paper; Appendix~\\ref{app:spectra}), ($e$) Sluse et al. (2025, in prep). ($f$) Because the axis ratio for the deflector of H1413 is not well measured, we adopt a uniform prior for this parameter during lens modeling for this system. ($g$) Langeroodi et al. (2025, in prep.) ($h$) K.C. Wong et al. (2025, in prep).}",
+ "table_I_rows": [
+  {
+   "name": "\\hline PS J014710.1+453044",
+   "abbrev": "PSJ0147",
+   "z_source": "2.38",
+   "z_lens_cell": "0.678 \\citep{Goicoechea_0147_deflector_z}",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "SDSS J024848.7+191331",
+   "abbrev": "J0248",
+   "z_source": "2.43",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "WISE J025942.9-163543",
+   "abbrev": "J0259",
+   "z_source": "2.16",
+   "z_lens_cell": "0.904",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "DES J040559.7-330851",
+   "abbrev": "J0405",
+   "z_source": "1.713",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "MG J041437.7+053443",
+   "abbrev": "MG0414",
+   "z_source": "2.64",
+   "z_lens_cell": "0.96\\cite{0414_spec_redshift}",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J043814.9-121714",
+   "abbrev": "HE0435",
+   "z_source": "1.69",
+   "z_lens_cell": "0.46",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J045723.6-782048",
+   "abbrev": "J0457",
+   "z_source": "3.15",
+   "z_lens_cell": "-",
+   "reason_for_exclusion": "Triple"
+  },
+  {
+   "name": "GRAL J060710.8-215217",
+   "abbrev": "J0607",
+   "z_source": "1.302",
+   "z_lens_cell": "0.55$^d$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "GRAL J060841.4+422937",
+   "abbrev": "J0608",
+   "z_source": "2.345",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "GRAL J065904.1+162909",
+   "abbrev": "J0659",
+   "z_source": "3.083",
+   "z_lens_cell": "0.766",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J080357.7+390823",
+   "abbrev": "J0803",
+   "z_source": "2.97",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "SDSS J092455.8-215217",
+   "abbrev": "J0924",
+   "z_source": "1.52",
+   "z_lens_cell": "0.39\\cite{7_spec_redshifts}",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "W2M J104222.1+164115",
+   "abbrev": "J1042",
+   "z_source": "2.517",
+   "z_lens_cell": "0.5985",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J111623.5-065739",
+   "abbrev": "HE1113",
+   "z_source": "1.24",
+   "z_lens_cell": "0.75",
+   "reason_for_exclusion": "Deflector not detected"
+  },
+  {
+   "name": "J111816.9-074558",
+   "abbrev": "PG1115",
+   "z_source": "1.74",
+   "z_lens_cell": "0.311\\cite{1115_spec_redshift}",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "GRAL J113100.0-442000",
+   "abbrev": "GRAL1131",
+   "z_source": "1.09",
+   "z_lens_cell": "0.472$^e$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "RX J113151.5-123158",
+   "abbrev": "RXJ1131",
+   "z_source": "0.659",
+   "z_lens_cell": "0.258",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "2M J113440.5-210322",
+   "abbrev": "2M1134",
+   "z_source": "2.77",
+   "z_lens_cell": "0.66",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "SDSS J125107.6+293540",
+   "abbrev": "J1251",
+   "z_source": "0.802",
+   "z_lens_cell": "0.410\\cite{1251_spec_redshift}",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J141546.2+112943",
+   "abbrev": "H1413",
+   "z_source": "2.56",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J153725.3-301017",
+   "abbrev": "J1537",
+   "z_source": "1.721",
+   "z_lens_cell": "0.592",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "PS J160600.2-233322",
+   "abbrev": "J1606",
+   "z_source": "1.696",
+   "z_lens_cell": "0.92$^g$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J201749.1+620443",
+   "abbrev": "J2017",
+   "z_source": "1.72",
+   "z_lens_cell": "0.201",
+   "reason_for_exclusion": "Spiral galaxy deflector"
+  },
+  {
+   "name": "WFI J202610.4-453627",
+   "abbrev": "J2026",
+   "z_source": "2.23",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "WFI J203342.2-472344",
+   "abbrev": "WFI2033",
+   "z_source": "1.66",
+   "z_lens_cell": "0.66\\citep{Eigenbrod_8lenses}",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "DES J203802.7-400814",
+   "abbrev": "J2038",
+   "z_source": "1.19",
+   "z_lens_cell": "0.230",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J204720.4+264401",
+   "abbrev": "B2045",
+   "z_source": "2.35",
+   "z_lens_cell": "0.87",
+   "reason_for_exclusion": "High image magnification"
+  },
+  {
+   "name": "J210752.4-161131",
+   "abbrev": "J2107",
+   "z_source": "2.67",
+   "z_lens_cell": "-",
+   "reason_for_exclusion": "Doubly imaged in MIRI"
+  },
+  {
+   "name": "J214505.1+634541",
+   "abbrev": "J2145",
+   "z_source": "1.56",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "J220544.2-372701",
+   "abbrev": "J2205",
+   "z_source": "1.85",
+   "z_lens_cell": "0.63$^h$",
+   "reason_for_exclusion": ""
+  },
+  {
+   "name": "WISE J234416.9-302526",
+   "abbrev": "J2344",
+   "z_source": "1.3",
+   "z_lens_cell": "0.5$^*$",
+   "reason_for_exclusion": ""
+  }
+ ]
+}
