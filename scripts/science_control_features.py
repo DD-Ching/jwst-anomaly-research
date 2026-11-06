@@ -1,9 +1,10 @@
 """Science (SMACS 0723) vs control (CEERS t021) ranked-galaxy feature distributions (D-022).
 
 Plan: ``results/science_control_features/PLAN.md`` (decision rule frozen there before any fetch).
-Reads one pipeline run directory, takes each sample's ranked galaxy stratum (the ``scores`` table
-of ``<sample>``: quality-gated, stars removed), joins its ``features`` rows and compares every shared
-feature overall and in ``ref_mag`` bins with the two-sample KS D and the k-sample Anderson-Darling p.
+Reads one pipeline run directory, takes each sample's ranked galaxy stratum (the ``scores``
+table of ``<sample>``: quality-gated, stars removed), joins its ``features`` rows and compares
+every shared feature overall and in ``ref_mag`` bins with the two-sample KS D and the k-sample
+Anderson-Darling p.
 Writes ``summary.json`` and ``feature_cdfs.png``.
 
 Provenance: catalog features are ``derived`` (from ``observed`` MAST/DJA catalogs); every statistic
