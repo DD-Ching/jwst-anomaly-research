@@ -669,8 +669,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    (a spike-geometry check), without dropping lensed arcs.
 7. **MIRI confirmation** (D-014 limitation): MIRI passes 103 of 530. Confirm MIRI detections with NIRCam
    counterparts. SMACS and CEERS now both have DJA confirmation.
-8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and 2.0.1
-   in SMACS, until 2736 is reprocessed. CEERS has no stellar locus (too few stars). DJA colours are still to be
+8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
+   since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). DJA colours are still to be
    validated against CEERS DR1.0. Then compare the science and control feature distributions.
 9. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
@@ -679,8 +679,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   - CEERS: done (D-022). Validation against CEERS DR1.0 is still open.
   - MIRI: evaluate fixed-aperture colours.
 - DJA photo-z as a ranking feature or stratifier (it is used for vetting since cycle 7).
-- Re-fetch program 2736 after MAST reprocesses it with jwst ≥ 3.0 (expected around mid to late October 2026).
-  Until then, compare only photometric columns across programs (D-010).
+- ~~Re-fetch program 2736 after MAST reprocesses it~~ done 2026-11-06 (jwst 3.0.0, `results/smacs_jwst3/RESULT.md`).
+  Open: a galaxy-stratum re-run once CDS (SIMBAD/XMatch) is reachable from the session.
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
   injection-recovery. Keep the evaluation fields out of any training data.
 - Crossmatch and classify: propagate Gaia positions to the JWST epoch, so fast-moving stars and brown

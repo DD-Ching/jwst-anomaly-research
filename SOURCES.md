@@ -102,6 +102,11 @@ Checked 2026-10-07. Used with astropy 8.0.1.
   | F356W | 1983 | `d284126a950c` |
   | F444W | 1877 | `bf128e859be8` |
 
+  **Reprocessed** (retrieved 2026-11-06, same URLs; jwst 3.0.0, photutils 3.0.0, astropy 8.0.0; MAST's listing still
+  shows 2.0.1 sizes, #374). Rows: F090W 3246, F150W 3672, F200W 4080, F277W 2272, F356W 2478, F444W 2339; sizes and
+  sha256 in `data/manifests/reference_sample.ecsv`. MIRI `jw02736-o002` catalogs were reprocessed too. Use:
+  `results/smacs_jwst3/RESULT.md`.
+
 - **Test fixtures** `tests/data/catalog_jw02736-o001_t001_nircam_clear-{f200w,f444w}_cat.ecsv`: the full
   header of the F200W and F444W files above plus only the rows within 5″ of RA 110.685719,
   Dec −73.470661 (10 and 8 rows).
