@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06 (WIP, draft #743): SMACS jwst 3.0.0 galaxy-stratum re-run blocked by slow catalog services
+- **Plan** (`results/smacs_jwst3/PLAN_galaxy_stratum.md`, pushed first): star separation from Gaia only while CDS
+  is unreachable, with the missing SIMBAD-galaxy override bounded by the `gaia_position` star count.
+- **Failed:** CDS (SIMBAD TAP, XMatch) still resets or answers 503. The ESA Gaia TAP fallback sends 69 requests of
+  100 OR'd cones for 6879 SMACS sources at 50–60 s each (60 s read timeouts and retries), so the run was stopped after
+  10 min at request 11. One 0.08° field cone returned 274 rows in 57 s, but 20 min later a 0.013° cone timed out at
+  120 s and the archive then answered 503: service latency, not query size, dominated.
+- **WIP code (not validated live):** `crossmatch` gains a Gaia `field` backend (one TAP cone enclosing all targets,
+  local association; refused above `FIELD_MAX_RADIUS_DEG` 0.25°, ASSUMPTION, so the per-target chain still applies),
+  chain `xmatch → field → tap`. Offline suite 2395 passed (2 new tests); no live fixture yet.
+- **Handoff:** when gea.esac.esa.int answers, record `tests/data/xmatch_raw_gaia_field.ecsv`
+  (`python tests/test_crossmatch.py --record`), check it reproduces the `tap` classification of the five targets, run
+  `--run-network`, then the galaxy-stratum re-run per the plan. G1 (D-027) and D115b still wait on the owner.
+
 ## 2026-11-06: SMACS 0723 on MAST's jwst 3.0.0 catalogs: six of nine candidate records reproduce
 - **Why:** TASKS "Next (M2)" re-fetch of program 2736; MAST has served jwst 3.0.0 builds since at least 10-26 (#374),
   while hourly runs since 11-04 only added tally lines. Plan pushed before any fetch (`results/smacs_jwst3/PLAN.md`).

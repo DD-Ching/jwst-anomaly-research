@@ -54,7 +54,7 @@ SERVICES = ("simbad", "ned", "gaia")
 DEFAULT_BACKENDS: dict[str, tuple[str, ...]] = {
     "simbad": ("xmatch", "tap"),
     "ned": ("tap", "cone"),
-    "gaia": ("xmatch", "tap"),
+    "gaia": ("xmatch", "field", "tap"),
 }
 
 # Exact catalog/service identifiers recorded in meta["catalog"] (see SOURCES.md, unit 5).
@@ -65,6 +65,10 @@ CATALOGS: dict[tuple[str, str], str] = {
     ("ned", "cone"): "NED object search, astroquery.ipac.ned Ned.query_region",
     ("gaia", "xmatch"): "CDS XMatch cat2='vizier:I/355/gaiadr3' (Gaia DR3, epoch J2016.0)",
     ("gaia", "tap"): "ESA Gaia archive TAP gaiadr3.gaia_source (Gaia DR3, epoch J2016.0)",
+    (
+        "gaia",
+        "field",
+    ): "ESA Gaia archive TAP gaiadr3.gaia_source, one field cone (Gaia DR3, J2016.0)",
 }
 
 NED_TAP_URL = "https://ned.ipac.caltech.edu/tap"
@@ -206,12 +210,18 @@ RAW_COLUMNS: dict[tuple[str, str], dict[str, str]] = {
         "pmra_pmdec_corr": "pmra_pmdec_corr",
     },
 }
-_ID_PREFIX = {("gaia", "tap"): "Gaia DR3 "}  # match the VizieR "DR3Name" form
+RAW_COLUMNS[("gaia", "field")] = RAW_COLUMNS[("gaia", "tap")]
+# match the VizieR "DR3Name" form
+_ID_PREFIX = {("gaia", "tap"): "Gaia DR3 ", ("gaia", "field"): "Gaia DR3 "}
 
 _ADQL_CHUNK = 100  # cones per OR'd ADQL request (~2 s per NED TAP chunk, measured 2026-10-07)
 # Targets per request; backends not listed send all targets in one request.
 _CHUNK_SIZE = {("ned", "tap"): _ADQL_CHUNK, ("gaia", "tap"): _ADQL_CHUNK, ("ned", "cone"): 1}
 _MAX_TARGETS = {("ned", "cone"): 100}  # cap for the per-target NED fallback
+# One cone enclosing all targets replaces per-target OR'd cones when the field is compact: on
+# 2026-11-06 a 0.08 deg Gaia field cone took 57 s from a cloud session, while 100-cone requests took
+# 50-60 s each (69 for SMACS 0723). Wider target sets fall back to the per-target chain.
+FIELD_MAX_RADIUS_DEG = 0.25  # ASSUMPTION: keeps a field query to a few thousand Gaia rows
 _TAP_MAXREC = 100_000  # explicit MAXREC for TAP queries so truncation is detectable
 _CACHE_FORMAT = 1
 
@@ -608,6 +618,43 @@ def _fetch_tap(url: str, table: str, key: tuple[str, str]) -> Callable[..., Tabl
     return fetch
 
 
+def field_circle(coords: SkyCoord, radius_arcsec: float) -> tuple[float, float, float]:
+    """Centre (deg) and radius (deg) of a cone holding every target's search cone."""
+    xyz = coords.cartesian.xyz.value.reshape(3, -1).mean(axis=1)
+    norm = float(np.linalg.norm(xyz))
+    if not norm > 0:
+        raise _PermanentError("targets have no defined mean direction")
+    centre = SkyCoord(*(xyz / norm), representation_type="cartesian", frame="icrs")
+    centre = SkyCoord(centre.spherical.lon, centre.spherical.lat, frame="icrs")
+    reach = float(np.max(centre.separation(coords).deg)) if len(coords) else 0.0
+    return float(centre.ra.deg), float(centre.dec.deg), reach + radius_arcsec / 3600.0
+
+
+def _fetch_field_tap(url: str, table: str, key: tuple[str, str]) -> Callable[..., Table]:
+    """One TAP cone around all targets; association stays local (:func:`_associate`)."""
+
+    def fetch(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
+        import pyvo
+        from pyvo.utils.http import create_session
+
+        ra, dec, r = field_circle(coords, radius_arcsec)
+        if r > FIELD_MAX_RADIUS_DEG:
+            raise _PermanentError(f"field radius {r:.3f} deg > {FIELD_MAX_RADIUS_DEG} deg")
+        cols = ", ".join(RAW_COLUMNS[key].values())
+        query = (
+            f"SELECT {cols} FROM {table} WHERE "
+            f"CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', {ra:.9f}, {dec:.9f}, {r:.9f})) = 1"
+        )
+        with _default_timeout(create_session(), opts.timeout_s) as session:
+            result = pyvo.dal.TAPService(url, session=session).run_sync(query, maxrec=_TAP_MAXREC)
+        out = result.to_table()
+        if len(out) >= _TAP_MAXREC or getattr(result, "query_status", None) == "OVERFLOW":
+            raise _PermanentError(f"{url} result truncated at {len(out)} rows")
+        return out
+
+    return fetch
+
+
 def _fetch_ned_cone(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
     from astroquery import cache_conf
     from astroquery.ipac.ned import Ned
@@ -632,6 +679,7 @@ _FETCHERS: dict[tuple[str, str], Callable[[SkyCoord, float, _Options], Table]] =
     ("ned", "cone"): _fetch_ned_cone,
     ("gaia", "xmatch"): _fetch_xmatch("vizier:I/355/gaiadr3"),
     ("gaia", "tap"): _fetch_tap(GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "tap")),
+    ("gaia", "field"): _fetch_field_tap(GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field")),
 }
 
 

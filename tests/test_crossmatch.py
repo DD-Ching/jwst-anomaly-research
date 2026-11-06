@@ -518,6 +518,28 @@ def test_live_simbad_otype_sets_are_current():
 # --- Fixture recording (manual) -------------------------------------------------------------
 
 
+def test_field_circle_holds_every_search_cone(targets):
+    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
+    ra, dec, r = xm.field_circle(coords, RADIUS)
+    sep = SkyCoord(ra, dec, unit="deg").separation(coords).deg
+    assert np.all(sep + RADIUS / 3600.0 <= r + 1e-12)
+    assert r < 0.05  # five SMACS positions: a compact field
+
+
+def test_wide_field_falls_back_to_per_target_cones(replay, targets):
+    """A field cone wider than FIELD_MAX_RADIUS_DEG is refused before any request."""
+    calls: list = []
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch", calls))
+    real_field = xm._fetch_field_tap(xm.GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field"))
+    replay(("gaia", "field"), real_field)
+    wide = targets.copy()
+    wide["dec"][0] = wide["dec"][0] + 2.0  # one target 2 deg away
+    matches = xm.query_matches(wide, RADIUS, services=("gaia",), cache=False)
+    assert matches.meta["services_failed"] == []
+    assert matches.meta["backend"]["gaia"] == "tap"
+    assert "field radius" in matches.meta["service_errors"]["gaia"]
+
+
 def record_fixtures() -> None:
     """Re-record tests/data/xmatch_raw_*.ecsv from the live services (network)."""
     from importlib.metadata import version
