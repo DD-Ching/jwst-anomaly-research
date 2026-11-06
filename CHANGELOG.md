@@ -2,6 +2,16 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: DJA v7.4 colours vs CEERS DR1.0: two LW colours carry a −0.05 to −0.07 mag PSF term
+- **Plan first** (`results/ceers_dr1_colours/PLAN.md`); TASKS "Then" 8 / M2 validation target (D-010, D-022).
+- **Result** (`results/ceers_dr1_colours/RESULT.md`, `scripts/ceers_dr1_colours.py`): 0.5″ colours on 19k–28k
+  matched sources: F115W−F150W +0.018, F150W−F200W −0.006, F277W−F356W −0.003 (pass); F200W−F277W −0.069 and
+  F356W−F444W −0.054 (fail the 0.05 mag ASSUMPTION gate). Size-dependent, magnitude-independent, LW bands fainter in
+  DJA: the missing PSF homogenisation. Catalogue errors under-state bright-source scatter ×4–5. `dja05` stays for
+  ranking (D-022 addendum). Both catalogs (454 MB) streamed to scratch and deleted.
+- **Handoff:** lensing grid line still waits on the owner's G1 ruling (D-027), D115b on its reopen. Next unblocked:
+  science vs control feature distributions (Then 8, incl. size); Zoobot/DINOv2 reuse check; CDS XMatch table names.
+
 ## 2026-11-06: SMACS jwst 3.0.0 star stratum vs NED: 3 / 139 galaxy-like matches, no star rule change
 - **Plan first** (`results/smacs_jwst3/star_ned/PLAN.md`), TASKS "Then" item 4 on jwst 3.0.0.
 - **Result** (`results/smacs_jwst3/star_ned/RESULT.md`, `scripts/smacs_star_ned.py`): NED galaxy-like match within

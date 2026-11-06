@@ -1164,6 +1164,15 @@ in the science field.
 - A newer DJA CEERS release appears.
 - Disk space becomes tight: delete the cached file and re-fetch it by its hash.
 
+**Addendum (2026-11-06): DJA colours checked against CEERS DR1.0** (`results/ceers_dr1_colours/RESULT.md`).
+On ~19k–28k matched sources (S/N ≥ 10), 0.5″ colours agree in F115W−F150W, F150W−F200W and F277W−F356W
+(|median| ≤ 0.018 mag) and are offset in F200W−F277W (−0.069) and F356W−F444W (−0.054), beyond the plan's 0.05 mag
+gate (ASSUMPTION). The band pattern (LW fainter, F444W most) and the fade for large sources match DJA's missing PSF
+homogenisation (D-010); offsets are magnitude independent. Decision: keep `dja05` for ranking (SMACS and CEERS
+share the recipe and PSFs, so a common offset moves colours, not ranks); apply these offsets or use PSF-matched
+photometry when interpreting absolute colours. The first "Revisit if" above has now held and been answered; revisit
+if a ranking depends on a colour difference ≲ 0.1 mag or the two fields' size distributions differ strongly.
+
 ## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
 
 **Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is

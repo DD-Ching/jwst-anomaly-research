@@ -671,13 +671,14 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 7. **MIRI confirmation** (D-014 limitation): MIRI passes 103 of 530. Confirm MIRI detections with NIRCam
    counterparts. SMACS and CEERS now both have DJA confirmation.
 8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
-   since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). DJA colours are still to be
-   validated against CEERS DR1.0. Then compare the science and control feature distributions.
+   since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). ~~DJA colours vs CEERS DR1.0~~
+   done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a
+   PSF term; ranking unaffected). Next: compare the science and control feature distributions, including size.
 9. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
-  - CEERS: done (D-022). Validation against CEERS DR1.0 is still open.
+  - CEERS: done (D-022); validated against CEERS DR1.0 2026-11-06 (D-022 addendum).
   - MIRI: evaluate fixed-aperture colours.
 - DJA photo-z as a ranking feature or stratifier (it is used for vetting since cycle 7).
 - ~~Re-fetch program 2736 after MAST reprocesses it~~ done 2026-11-06 (jwst 3.0.0, `results/smacs_jwst3/RESULT.md`).

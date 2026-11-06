@@ -314,6 +314,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   ; overview: https://dawn-cph.github.io/dja/
 - Multimodal Universe JWST subset, release v1.5: https://huggingface.co/datasets/MultimodalUniverse/jwst
 - CEERS DR1.0 catalog (October 2025): https://ceers.github.io/dr1.html
+  - `ceers_cat_v1.0.fits.gz` (203,963,363 bytes, sha256 `ce321809bec14afbdc48ce1aa97bda651f25ef36d26119a8fa8cf7f1904d3504`, 87,345 rows),
+    https://web.corral.tacc.utexas.edu/ceersdata/DR1/Catalog/ceers_cat_v1.0.fits.gz and its readme `ceers_cat.readme.md`;
+    accessed 2026-11-06 (`results/ceers_dr1_colours/`).
 - MAST HLSPs, each with its DOI:
   - RELICS, DOI 10.17909/T9SP45, includes the SMACS 0723 lens models: https://archive.stsci.edu/hlsp/relics
   - CEERS, DOI 10.17909/z7p0-8481: https://archive.stsci.edu/hlsp/ceers
