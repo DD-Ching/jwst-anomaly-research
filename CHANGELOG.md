@@ -8,7 +8,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Tool:** `crossmatch` gains a Gaia `field` backend (one TAP cone around all targets, local association; refused
   above `FIELD_MAX_RADIUS_DEG` 0.25°, ASSUMPTION), chain `xmatch → field → tap`. On the five fixture targets it
   matches the per-target `tap` backend live and recorded (`tests/data/xmatch_raw_gaia_field.ecsv`). SMACS classification took
-  48 s, against > 10 min unfinished for per-target cones earlier today.
+  48 s, against > 10 min unfinished for per-target cones earlier today. A fresh `tap` cache entry serves `field`
+  and vice versa (`_CACHE_EQUIVALENT`), so cached samples still re-run offline with `field` ahead of `tap`.
 - **Result** (`results/smacs_jwst3/galaxy_stratum/RESULT.md`, run `20261106T142054Z-68e24ff4`): galaxy ranks of the
   six records: 2804 6 (6), 1032 8 (8), 438 11 (11), 1243 15 (12), 829 7 (3), 2915 27 (21), with the old ranks in
   brackets. The ±3 hypothesis fails for 829 and 2915, but no record leaves the top 50. A paired re-score returning

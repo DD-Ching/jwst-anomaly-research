@@ -232,6 +232,11 @@ FIELD_MAX_RADIUS_DEG = (
 FIELD_MIN_TIMEOUT_S = (
     180.0  # ASSUMPTION: one field cone took 13-57 s on 2026-11-06; above the 60 s default
 )
+# Backends that query the same table and were validated to give the same matches (field vs
+# per-target tap: same best match, is_star, n_gaia and match type on the fixture targets,
+# 2026-11-06). A fresh cache entry of either serves the other, so placing ``field`` before
+# ``tap`` in the chain does not send an offline re-run of a ``tap``-cached sample to the network.
+_CACHE_EQUIVALENT = {("gaia", "field"): ("tap",), ("gaia", "tap"): ("field",)}
 _TAP_MAXREC = 100_000  # explicit MAXREC for TAP queries so truncation is detectable
 _CACHE_FORMAT = 1
 
@@ -326,8 +331,10 @@ def query_matches(
     ``cache`` reads/writes normalized results under ``cache_dir`` (default
     ``paths.cache_dir() / "crossmatch"``); a backend's cache entry is used if it is younger than
     ``cache_max_age_days`` (None: no expiry), otherwise that backend is queried, and a fallback's
-    cache entry is only consulted after the backends before it failed. ``refresh=True`` skips
-    cache reads. Each HTTP request gets ``timeout_s`` and up to ``retries`` retries after
+    cache entry is only consulted after the backends before it failed (except a validated
+    equivalent backend of the same table, ``_CACHE_EQUIVALENT``). ``refresh=True`` skips
+    cache reads. Each HTTP request gets ``timeout_s`` (the Gaia ``field`` cone at least
+    ``FIELD_MIN_TIMEOUT_S``) and up to ``retries`` retries after
     ``backoff_s * 2**k`` seconds.
     Raises :class:`CrossmatchError` if every requested service fails.
     """
@@ -500,15 +507,23 @@ def _run_service(
     """Walk the backend chain: fresh cache entry, else query; first success wins."""
     ra, dec = coords.ra.deg, coords.dec.deg
     result = _ServiceResult(objects=None)
+    checked: set[str] = set()
     for backend in chain:
         path = _cache_path(cache_dir, service, backend, ra, dec, radius_arcsec)
         if cache and not refresh:
-            hit = _cache_read(path, max_age_days)
-            if hit is not None:
-                log.info("%s: using cached %s result %s", service, backend, path.name)
-                result.objects, result.backend, result.from_cache = hit, backend, True
-                result.query_utc = hit.meta["query_utc"]
-                return result
+            # an equivalent backend's entry counts only if the caller's chain includes it
+            equivalent = [b for b in _CACHE_EQUIVALENT.get((service, backend), ()) if b in chain]
+            for cached in (backend, *equivalent):
+                if cached in checked:
+                    continue
+                checked.add(cached)
+                cpath = _cache_path(cache_dir, service, cached, ra, dec, radius_arcsec)
+                hit = _cache_read(cpath, max_age_days)
+                if hit is not None:
+                    log.info("%s: using cached %s result %s", service, cached, cpath.name)
+                    result.objects, result.backend, result.from_cache = hit, cached, True
+                    result.query_utc = hit.meta["query_utc"]
+                    return result
         query_utc = datetime.now(UTC).isoformat(timespec="seconds")
         t0 = time.perf_counter()
         try:

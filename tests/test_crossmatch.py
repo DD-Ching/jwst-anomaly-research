@@ -428,6 +428,22 @@ def test_fallback_cache_does_not_mask_healthy_primary(targets, replay, tmp_path)
     assert third.meta["backend"] == {"ned": "tap"} and third.meta["from_cache"] == {"ned": True}
 
 
+def test_equivalent_gaia_cache_serves_field_backend(targets, replay, tmp_path):
+    # A sample cached via per-target tap must re-run offline although field now precedes tap.
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch"))
+    first = xm.crossmatch(targets, RADIUS, ["gaia"], cache_dir=tmp_path, backends={"gaia": "tap"})
+    calls: list = []
+    for key in xm._FETCHERS:
+        replay(key, failing(*key, calls))
+    again = xm.crossmatch(targets, RADIUS, ["gaia"], cache_dir=tmp_path, retries=0)
+    assert again.meta["backend"] == {"gaia": "tap"} and again.meta["from_cache"] == {"gaia": True}
+    assert calls == [
+        ("gaia", "xmatch")
+    ]  # only the primary is tried; field is served by tap's cache
+    for col in ("n_gaia", "is_star"):
+        assert list(again[col]) == list(first[col]), col
+
+
 def test_corrupt_cache_entry_is_a_miss(targets, replay, tmp_path):
     xm.crossmatch(targets, RADIUS, ["gaia"], cache_dir=tmp_path)
     (entry,) = tmp_path.glob("gaia_xmatch_*.ecsv")
@@ -499,6 +515,35 @@ def test_backend_names_are_case_insensitive(targets, replay):
     assert out.meta["backend"] == {"gaia": "tap"}
 
 
+def test_field_circle_holds_every_search_cone(targets):
+    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
+    ra, dec, r = xm.field_circle(coords, RADIUS)
+    sep = SkyCoord(ra, dec, unit="deg").separation(coords).deg
+    assert np.all(sep + RADIUS / 3600.0 <= r + 1e-12)
+    assert r < 0.05  # five SMACS positions: a compact field
+
+
+def test_wide_field_falls_back_to_per_target_cones(replay, targets, monkeypatch):
+    """A field cone wider than FIELD_MAX_RADIUS_DEG is refused before any request."""
+    calls: list = []
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch", calls))
+    import pyvo
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("field guard must refuse before any TAP request")
+
+    monkeypatch.setattr(pyvo.dal, "TAPService", no_network)
+    real_field = xm._fetch_field_tap(xm.GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field"))
+    replay(("gaia", "field"), real_field)
+    wide = targets.copy()
+    wide["dec"][0] = wide["dec"][0] + 2.0  # one target 2 deg away
+    matches = xm.query_matches(wide, RADIUS, services=("gaia",), cache=False)
+    assert matches.meta["services_failed"] == []
+    assert matches.meta["backend"]["gaia"] == "tap"
+    assert "field radius" in matches.meta["service_errors"]["gaia"]
+    assert set(calls) == {("gaia", "xmatch")}  # retried; the field fetcher never ran a query
+
+
 # --- Live services ----------------------------------------------------------------------------
 
 
@@ -539,35 +584,6 @@ def test_live_simbad_otype_sets_are_current():
 
 
 # --- Fixture recording (manual) -------------------------------------------------------------
-
-
-def test_field_circle_holds_every_search_cone(targets):
-    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
-    ra, dec, r = xm.field_circle(coords, RADIUS)
-    sep = SkyCoord(ra, dec, unit="deg").separation(coords).deg
-    assert np.all(sep + RADIUS / 3600.0 <= r + 1e-12)
-    assert r < 0.05  # five SMACS positions: a compact field
-
-
-def test_wide_field_falls_back_to_per_target_cones(replay, targets, monkeypatch):
-    """A field cone wider than FIELD_MAX_RADIUS_DEG is refused before any request."""
-    calls: list = []
-    replay(("gaia", "xmatch"), failing("gaia", "xmatch", calls))
-    import pyvo
-
-    def no_network(*args, **kwargs):
-        raise AssertionError("field guard must refuse before any TAP request")
-
-    monkeypatch.setattr(pyvo.dal, "TAPService", no_network)
-    real_field = xm._fetch_field_tap(xm.GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field"))
-    replay(("gaia", "field"), real_field)
-    wide = targets.copy()
-    wide["dec"][0] = wide["dec"][0] + 2.0  # one target 2 deg away
-    matches = xm.query_matches(wide, RADIUS, services=("gaia",), cache=False)
-    assert matches.meta["services_failed"] == []
-    assert matches.meta["backend"]["gaia"] == "tap"
-    assert "field radius" in matches.meta["service_errors"]["gaia"]
-    assert set(calls) == {("gaia", "xmatch")}  # retried; the field fetcher never ran a query
 
 
 def record_fixtures() -> None:
