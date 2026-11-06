@@ -131,12 +131,14 @@ def main() -> None:
         "provenance": "derived (Gaia DR3 observed astrometry, linear propagation)",
     }
     args.out.mkdir(parents=True, exist_ok=True)
+    fast = args.out / "fast_movers.ecsv"
+    fast.unlink(missing_ok=True)  # never leave a stale table next to a new summary
     if rows:
         t = Table(rows=rows)
         t.meta.update(
             {"provenance": "derived", "source": "Gaia DR3 TAP cone; JWST pipeline catalogue"}
         )
-        t.write(args.out / "fast_movers.ecsv", overwrite=True)
+        t.write(fast, overwrite=True)
     (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps({k: v for k, v in summary.items() if k != "changed_outcome"}, indent=1))
     for r_ in rows:
