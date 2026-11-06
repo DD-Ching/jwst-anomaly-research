@@ -673,7 +673,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
    since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). ~~DJA colours vs CEERS DR1.0~~
    done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a
-   PSF term; ranking unaffected). Next: compare the science and control feature distributions, including size.
+   PSF term; ranking unaffected). ~~Science vs control feature distributions~~ done 2026-11-06
+   (`results/science_control_features/RESULT.md`, D-022 addendum 2: differ strongly, carried by SMACS z_phot cluster
+   members; background galaxies match at D ≤ 0.12 in most bins). Next: any science-vs-control top-k comparison uses
+   SMACS z_phot ≥ 0.8 in `ref_mag` bins; re-run CEERS with the star split once Gaia XMatch/TAP work.
 9. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)

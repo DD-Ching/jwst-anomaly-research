@@ -29,6 +29,11 @@ MIN_PER_BIN = 30  # ASSUMPTION: fewer sources in either field -> the bin is not 
 D_OK = 0.1  # ASSUMPTION (plan): comparable
 D_STRONG = 0.2  # ASSUMPTION (plan): "differ strongly"
 BRIGHT_BIN = 0  # index of the bin where H2 (cluster members) may explain a difference
+# Post hoc (deviation from the plan, added after the first pass): split SMACS by DJA v7.4 eazy
+# z_phot to separate H2 (cluster members) from H3 (processing). ASSUMPTION ranges and radius.
+Z_MEMBER = (0.25, 0.55)  # around the cluster z = 0.39
+Z_BACKGROUND_MIN = 0.8
+ZOUT_MATCH_ARCSEC = 0.2
 
 
 def verdict(max_d: float) -> str:
@@ -63,10 +68,36 @@ def compare(a: np.ndarray, b: np.ndarray) -> dict[str, float | int]:
     return out | {"ks_d": float(stats.ks_2samp(a, b).statistic), "ad_p": float(ad.pvalue)}
 
 
+def zphot_for(run_dir: Path, sample: str, uids: np.ndarray, zout_path: Path) -> np.ndarray:
+    """DJA z_phot (``z_phot``) of each ranked source, NaN beyond ZOUT_MATCH_ARCSEC."""
+    from astropy import units as u
+    from astropy.coordinates import SkyCoord
+
+    src = Table.read(run_dir / sample / "sources.ecsv")
+    src = src[np.isin(src["source_uid"], uids)]
+    order = {u_: i for i, u_ in enumerate(src["source_uid"])}
+    src = src[[order[x] for x in uids]]
+    z = Table.read(zout_path)
+    a = SkyCoord(np.asarray(src["ra"], float) * u.deg, np.asarray(src["dec"], float) * u.deg)
+    b = SkyCoord(np.asarray(z["ra"], float) * u.deg, np.asarray(z["dec"], float) * u.deg)
+    idx, sep, _ = a.match_to_catalog_sky(b)
+    zp = np.asarray(z["z_phot"], float)[idx]
+    return np.where(sep.arcsec <= ZOUT_MATCH_ARCSEC, zp, np.nan)
+
+
+def binned(a, ma, b, mb) -> list[dict]:
+    out = []
+    for lo, hi in MAG_BINS + [(28.0, np.inf)]:
+        sa, sb = (ma > lo) & (ma <= hi), (mb > lo) & (mb <= hi)
+        out.append({"ref_mag": [float(lo), float(hi)]} | compare(a[sa], b[sb]))
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("run_dir", type=Path)
     ap.add_argument("--out", type=Path, default=Path("results/science_control_features"))
+    ap.add_argument("--zout", type=Path, help="DJA SMACS eazy zout (post hoc split)")
     args = ap.parse_args()
     sci, ctl = ranked_features(args.run_dir, SCIENCE), ranked_features(args.run_dir, CONTROL)
     shared = [c for c in sci.colnames if c in ctl.colnames and c != "source_uid"]
@@ -75,6 +106,14 @@ def main() -> None:
         "run_dir": args.run_dir.name,
         "provenance": "derived",
         "n_ranked": {SCIENCE: len(sci), CONTROL: len(ctl)},
+        "ref_mag_coverage": {
+            name: {
+                "nan": int(np.isnan(m).sum()),
+                "gt_28": int((m > 28).sum()),
+                "in_plan_bins": int(sum(((m > lo) & (m <= hi)).sum() for lo, hi in MAG_BINS)),
+            }
+            for name, m in ((SCIENCE, msci), (CONTROL, mctl))
+        },
         "only_science": [c for c in sci.colnames if c not in ctl.colnames],
         "only_control": [c for c in ctl.colnames if c not in sci.colnames],
         "assumptions": {
@@ -105,6 +144,28 @@ def main() -> None:
             # H2 exemption (plan): a difference only in the bright bin does not count
             "verdict_excl_bright": verdict(max_faint),
         }
+    # Post hoc: the same comparison with an extra ref_mag > 28 bin (half of each sample is there).
+    result["post_hoc_faint_bin"] = {
+        col: binned(np.asarray(sci[col], float), msci, np.asarray(ctl[col], float), mctl)[-1]
+        for col in shared
+    }
+    if args.zout:
+        zp = zphot_for(args.run_dir, SCIENCE, np.asarray(sci["source_uid"]), args.zout)
+        groups = {
+            "member": (zp >= Z_MEMBER[0]) & (zp <= Z_MEMBER[1]),
+            "background": zp >= Z_BACKGROUND_MIN,
+        }
+        split: dict = {
+            "provenance": "derived (post hoc)",
+            "zout_sha256_pinned_in": "SOURCES.md (DJA v7.4 SMACS eazy photo-z)",
+            "n_matched": int(np.isfinite(zp).sum()),
+            "n": {k: int(v.sum()) for k, v in groups.items()},
+            "features": {},
+        }
+        for col in shared:
+            a, b = np.asarray(sci[col], float), np.asarray(ctl[col], float)
+            split["features"][col] = {k: binned(a[g], msci[g], b, mctl) for k, g in groups.items()}
+        result["post_hoc_zphot_split"] = split
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "summary.json").write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
     plot(sci, ctl, shared, args.out / "feature_cdfs.png")

@@ -1173,6 +1173,14 @@ share the recipe and PSFs, so a common offset moves colours, not ranks); apply t
 photometry when interpreting absolute colours. The first "Revisit if" above has now held and been answered; revisit
 if a ranking depends on a colour difference ≲ 0.1 mag or the two fields' size distributions differ strongly.
 
+**Addendum 2 (2026-11-06): science vs control feature distributions** (`results/science_control_features/RESULT.md`).
+On the ranked strata (SMACS 2938 galaxies, CEERS 3156 mixed), colours, size and morphology "differ strongly" by the
+frozen rule (max binned KS D > 0.2; ASSUMPTION), so the size condition above now holds. Post hoc, the difference is
+carried by SMACS z_phot cluster members (0.25–0.55; F277W−F356W D 0.79–0.86); SMACS background galaxies
+(z_phot ≥ 0.8) match CEERS at D ≤ 0.12 in most 24–28 bins. Decision: each field keeps its own ranking; no
+science-vs-control top-k statement without restricting SMACS to background galaxies (or weighting to the CEERS
+population) in `ref_mag` bins. Revisit if CEERS photo-z or a star-split CEERS run changes the background match.
+
 ## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
 
 **Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is

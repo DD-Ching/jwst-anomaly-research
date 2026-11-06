@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: SMACS vs CEERS t021 ranked features differ strongly, carried by z_phot cluster members
+- **Plan first** (`results/science_control_features/PLAN.md`, frozen rule as a tested function); TASKS "Then" 8.
+- **Result** (`results/science_control_features/RESULT.md`, `scripts/science_control_features.py`, run
+  `20261106T220924Z-df2b1117`): colours (max binned KS D 0.31–0.59), size (0.298) and CI / ellipticity "differ
+  strongly"; `ref_mag` intermediate (0.118). Post hoc: SMACS members (z_phot 0.25–0.55) carry it (F277W−F356W D
+  0.79–0.86); background (z_phot ≥ 0.8) matches CEERS at D ≤ 0.12 in most 24–28 bins. D-022 addendum 2.
+- **Deviation / failed:** CEERS `classify_sources` failed (Gaia XMatch `vizier:I/355/gaiadr3` refused; Gaia TAP 503
+  and timeouts), so CEERS was ranked unsplit. Taken over from the stale claim of an earlier session on #750.
+- **Handoff:** fix the Gaia XMatch table name (handoff item "CDS XMatch table names"); lensing grid line still waits
+  on the owner's G1 ruling (D-027). Next unblocked: Zoobot/DINOv2 reuse check; MIRI confirmation (Then 7).
+
 ## 2026-11-06: DJA v7.4 colours vs CEERS DR1.0: two LW colours carry a −0.05 to −0.07 mag PSF term
 - **Plan first** (`results/ceers_dr1_colours/PLAN.md`); TASKS "Then" 8 / M2 validation target (D-010, D-022).
 - **Result** (`results/ceers_dr1_colours/RESULT.md`, `scripts/ceers_dr1_colours.py`): 0.5″ colours on 19k–28k
