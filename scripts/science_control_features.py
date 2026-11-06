@@ -74,20 +74,23 @@ def zphot_for(run_dir: Path, sample: str, uids: np.ndarray, zout_path: Path) -> 
     from astropy.coordinates import SkyCoord
 
     src = Table.read(run_dir / sample / "sources.ecsv")
-    src = src[np.isin(src["source_uid"], uids)]
-    order = {u_: i for i, u_ in enumerate(src["source_uid"])}
-    src = src[[order[x] for x in uids]]
+    row = {u_: i for i, u_ in enumerate(src["source_uid"])}  # source_uid is unique per run
+    pos = np.array([row.get(x, -1) for x in uids])
+    ra = np.where(pos >= 0, np.asarray(src["ra"], float)[pos], np.nan)
+    dec = np.where(pos >= 0, np.asarray(src["dec"], float)[pos], np.nan)
+    if not np.all(pos >= 0):  # a ranked uid without a source row gets NaN
+        ra, dec = np.nan_to_num(ra), np.nan_to_num(dec)
     z = Table.read(zout_path)
-    a = SkyCoord(np.asarray(src["ra"], float) * u.deg, np.asarray(src["dec"], float) * u.deg)
+    a = SkyCoord(ra * u.deg, dec * u.deg)
     b = SkyCoord(np.asarray(z["ra"], float) * u.deg, np.asarray(z["dec"], float) * u.deg)
     idx, sep, _ = a.match_to_catalog_sky(b)
     zp = np.asarray(z["z_phot"], float)[idx]
-    return np.where(sep.arcsec <= ZOUT_MATCH_ARCSEC, zp, np.nan)
+    return np.where((sep.arcsec <= ZOUT_MATCH_ARCSEC) & (pos >= 0), zp, np.nan)
 
 
 def binned(a, ma, b, mb) -> list[dict]:
     out = []
-    for lo, hi in MAG_BINS + [(28.0, np.inf)]:
+    for lo, hi in MAG_BINS + [(MAG_BINS[-1][1], np.inf)]:  # last: post hoc ref_mag > 28
         sa, sb = (ma > lo) & (ma <= hi), (mb > lo) & (mb <= hi)
         out.append({"ref_mag": [float(lo), float(hi)]} | compare(a[sa], b[sb]))
     return out
@@ -126,10 +129,7 @@ def main() -> None:
     }
     for col in shared:
         a, b = np.asarray(sci[col], float), np.asarray(ctl[col], float)
-        bins = []
-        for lo, hi in MAG_BINS:
-            sa, sb = (msci > lo) & (msci <= hi), (mctl > lo) & (mctl <= hi)
-            bins.append({"ref_mag": [float(lo), float(hi)]} | compare(a[sa], b[sb]))
+        bins = binned(a, msci, b, mctl)[: len(MAG_BINS)]  # the plan's bins only
         ds = [x["ks_d"] for x in bins if np.isfinite(x["ks_d"])]
         faint = [
             x["ks_d"] for i, x in enumerate(bins) if i != BRIGHT_BIN and np.isfinite(x["ks_d"])
