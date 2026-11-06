@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: CDS XMatch "unknown table" is an unreachable host; CEERS star split (in progress)
+- Plan: XMatch rejection is astroquery parsing a 503 proxy body as the table list; raise the real cause, then re-run the CEERS star split via the Gaia field backend.
+
 ## 2026-11-06: SMACS vs CEERS t021 ranked features differ strongly, carried by z_phot cluster members
 - **Plan first** (`results/science_control_features/PLAN.md`, frozen rule as a tested function); TASKS "Then" 8.
 - **Result** (`results/science_control_features/RESULT.md`, `scripts/science_control_features.py`, run
