@@ -681,7 +681,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 - DJA photo-z as a ranking feature or stratifier (it is used for vetting since cycle 7).
 - ~~Re-fetch program 2736 after MAST reprocesses it~~ done 2026-11-06 (jwst 3.0.0, `results/smacs_jwst3/RESULT.md`).
   Galaxy-stratum re-run with Gaia-only star separation done 2026-11-06 (`results/smacs_jwst3/galaxy_stratum/RESULT.md`:
-  records stay in the top 31). Open: the SIMBAD star rule and lens flags once CDS is reachable from the session.
+  records stay in the top 31). ~~SIMBAD star rule and lens flags~~ done 2026-11-06 via the CfA mirror
+  (`results/smacs_jwst3/simbad_mirror/RESULT.md`: ranks identical, no new lens flag; D-006 addendum).
 - ~~Gaia `field` backend follow-ups (#743): row cap and a shared ADQL builder~~ done 2026-11-06 (`FIELD_MAX_ROWS`,
   `_run_tap`; CHANGELOG).
 - ~~Reproducibility hazard: `rank.feature_names` followed the ECSV-sorted `feature_spec` keys~~ fixed 2026-11-06

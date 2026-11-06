@@ -1,0 +1,12 @@
+{
+  "run_id": "20261106T171253Z-28af4751",
+  "match_radius_arcsec": 0.15,
+  "samples": {
+    "smacs0723_nircam": {
+      "n_merged": 6879,
+      "n_quality_ok": 3077,
+      "n_ranked": 2938,
+      "ref_sharpness_nan_frac_gated": 0.845
+    }
+  }
+}

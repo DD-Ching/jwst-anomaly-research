@@ -174,6 +174,8 @@ All links checked 2026-10-07. Exact catalog identifiers are as queried by `cross
 
 - **SIMBAD** (CDS), main type + all types per object. Wenger et al. 2000, doi:10.1051/aas:2000332.
   - TAP: https://simbad.cds.unistra.fr/simbad/sim-tap ; tables `basic`, `alltypes`, `otypedef`.
+  - CfA mirror TAP (same tables; used when CDS is unreachable, D-006 addendum 2026-11-06):
+    https://simbad.harvard.edu/simbad/sim-tap , accessed 2026-11-06.
   - Object types: https://simbad.cds.unistra.fr/guide/otypes.htx . The `otypedef.path` hierarchy
     was read on 2026-10-07: 226 types; star branch `*`; lensing branch `grv > gLS`.
 - **CDS XMatch**: https://cdsxmatch.cds.unistra.fr/ ; docs: https://cdsxmatch.cds.unistra.fr/xmatch/doc/ .

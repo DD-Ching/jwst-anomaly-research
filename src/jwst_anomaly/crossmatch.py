@@ -4,7 +4,8 @@ Primary backends are batched; a per-object loop is only the last-resort NED fall
 (timings and rejected alternatives: DECISIONS.md D-006):
 
 * ``simbad``: CDS XMatch against ``simbad`` (one request); fallback SIMBAD TAP via
-  ``Simbad.query_region``.
+  ``Simbad.query_region`` on CDS, then the same on the CfA SIMBAD mirror (``mirror``), which
+  answers when CDS is unreachable (cloud sessions, 2026-11-06).
 * ``ned``: NED TAP ``NEDTAP.objdir``, 100 OR'd ADQL cones per request; fallback
   ``Ned.query_region`` per target (at most 100 targets).
 * ``gaia``: CDS XMatch against VizieR ``I/355/gaiadr3`` (one request); fallback ESA Gaia archive
@@ -57,7 +58,7 @@ SERVICES = ("simbad", "ned", "gaia")
 
 # Backend chain per service: the first entry is the primary, later entries are fallbacks.
 DEFAULT_BACKENDS: dict[str, tuple[str, ...]] = {
-    "simbad": ("xmatch", "tap"),
+    "simbad": ("xmatch", "tap", "mirror"),
     "ned": ("tap", "cone"),
     "gaia": ("xmatch", "field", "tap"),
 }
@@ -66,6 +67,7 @@ DEFAULT_BACKENDS: dict[str, tuple[str, ...]] = {
 CATALOGS: dict[tuple[str, str], str] = {
     ("simbad", "xmatch"): "CDS XMatch cat2='simbad'",
     ("simbad", "tap"): "SIMBAD TAP basic + alltypes (simbad.cds.unistra.fr)",
+    ("simbad", "mirror"): "SIMBAD TAP basic + alltypes, CfA mirror (simbad.harvard.edu)",
     ("ned", "tap"): "NED TAP NEDTAP.objdir (ned.ipac.caltech.edu/tap)",
     ("ned", "cone"): "NED object search, astroquery.ipac.ned Ned.query_region",
     ("gaia", "xmatch"): "CDS XMatch cat2='vizier:I/355/gaiadr3' (Gaia DR3, epoch J2016.0)",
@@ -216,6 +218,7 @@ RAW_COLUMNS: dict[tuple[str, str], dict[str, str]] = {
     },
 }
 RAW_COLUMNS[("gaia", "field")] = RAW_COLUMNS[("gaia", "tap")]
+RAW_COLUMNS[("simbad", "mirror")] = RAW_COLUMNS[("simbad", "tap")]
 # match the VizieR "DR3Name" form
 _ID_PREFIX = {("gaia", "tap"): "Gaia DR3 ", ("gaia", "field"): "Gaia DR3 "}
 
@@ -241,7 +244,13 @@ FIELD_MIN_TIMEOUT_S = (
 # per-target tap: same best match, is_star, n_gaia and match type on the fixture targets,
 # 2026-11-06). A fresh cache entry of either serves the other, so placing ``field`` before
 # ``tap`` in the chain does not send an offline re-run of a ``tap``-cached sample to the network.
-_CACHE_EQUIVALENT = {("gaia", "field"): ("tap",), ("gaia", "tap"): ("field",)}
+# Backends that serve the same table, so a fresh cache entry of one serves the other.
+_CACHE_EQUIVALENT = {
+    ("gaia", "field"): ("tap",),
+    ("gaia", "tap"): ("field",),
+    ("simbad", "tap"): ("mirror",),
+    ("simbad", "mirror"): ("tap",),
+}
 _TAP_MAXREC = 100_000  # explicit MAXREC for TAP queries so truncation is detectable
 _CACHE_FORMAT = 1
 
@@ -613,10 +622,24 @@ def _fetch_xmatch(cat2: str) -> Callable[[SkyCoord, float, _Options], Table]:
     return fetch
 
 
-def _fetch_simbad_tap(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
+SIMBAD_CDS_SERVER = "simbad.cds.unistra.fr"
+SIMBAD_MIRROR_SERVER = "simbad.harvard.edu"  # astroquery's second entry in conf.servers_list
+
+
+def _fetch_simbad_tap(server: str) -> Callable[..., Table]:
+    """SIMBAD TAP on ``server`` (CDS or the CfA mirror, same tables)."""
+
+    def fetch(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
+        return _query_simbad(coords, radius_arcsec, opts, server)
+
+    return fetch
+
+
+def _query_simbad(coords: SkyCoord, radius_arcsec: float, opts: _Options, server: str) -> Table:
     from astroquery.simbad import SimbadClass
 
     simbad = SimbadClass()
+    simbad.server = server
     # SimbadClass(timeout=...) only bounds async execution; give its HTTP session a timeout.
     _default_timeout(simbad._session, opts.timeout_s)
     simbad.add_votable_fields("otype", "alltypes")
@@ -702,7 +725,8 @@ def _fetch_ned_cone(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> T
 
 _FETCHERS: dict[tuple[str, str], Callable[[SkyCoord, float, _Options], Table]] = {
     ("simbad", "xmatch"): _fetch_xmatch("simbad"),
-    ("simbad", "tap"): _fetch_simbad_tap,
+    ("simbad", "tap"): _fetch_simbad_tap(SIMBAD_CDS_SERVER),
+    ("simbad", "mirror"): _fetch_simbad_tap(SIMBAD_MIRROR_SERVER),
     ("ned", "tap"): _fetch_tap(NED_TAP_URL, "NEDTAP.objdir", ("ned", "tap")),
     ("ned", "cone"): _fetch_ned_cone,
     ("gaia", "xmatch"): _fetch_xmatch("vizier:I/355/gaiadr3"),
