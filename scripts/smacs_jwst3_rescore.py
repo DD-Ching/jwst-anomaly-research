@@ -3,9 +3,12 @@
 Plan: ``results/smacs_jwst3/PLAN_galaxy_stratum.md``. Re-scores the run's galaxy stratum from its
 saved ``features.ecsv`` twice, with the same procedure: as ranked (baseline) and with the
 quality-passing ``gaia_position`` stars returned to it. The paired difference bounds what the
-missing "a nearer SIMBAD galaxy wins" rule (D-012) can do to the record ranks. The baseline
-re-score does not reproduce the pipeline's ranks exactly (ECSV round trip and input order), so
-only the paired difference is used.
+missing "a nearer SIMBAD galaxy wins" rule (D-012) can do to the record ranks.
+
+The ECSV round trip sorts ``meta["feature_spec"]`` keys alphabetically, and ``rank.feature_names``
+follows that order, so the isolation forest and LOF see permuted features (2822 of 2938 ranks
+differed). The spec is therefore restored to column order (the in-memory order), and the script
+checks that the baseline reproduces the pipeline's ranks exactly before using it.
 
 Usage: python scripts/smacs_jwst3_rescore.py <run_dir>
 """
@@ -29,6 +32,8 @@ def main() -> None:
     ap.add_argument("run_dir", type=Path)
     d = ap.parse_args().run_dir / "smacs0723_nircam"
     feats = Table.read(d / "features.ecsv")
+    spec = feats.meta["feature_spec"]
+    feats.meta["feature_spec"] = {c: spec[c] for c in feats.colnames if c in spec}
     ok = {
         str(u): bool(v)
         for u, v in zip(
@@ -58,10 +63,11 @@ def main() -> None:
         )
     )
     diff = np.array([abs(r0[u] - ranked[u]) for u in ranked])
-    print(
-        f"baseline re-score vs pipeline: {int((diff > 0).sum())} of {len(diff)} ranks differ,",
-        f"max {int(diff.max())}",
-    )
+    if diff.any():
+        raise SystemExit(
+            f"baseline re-score differs from the pipeline: {int((diff > 0).sum())} ranks"
+        )
+    print(f"baseline re-score reproduces all {len(diff)} pipeline ranks")
     print(
         "returned gaia_position stars (rank with them):",
         sorted((r1[u], u.removeprefix(PREFIX)) for u in added),
@@ -69,6 +75,9 @@ def main() -> None:
     print("record  pipeline  baseline  with_returned")
     for rec in RECORDS:
         u = PREFIX + rec
+        if u not in ranked:
+            print(f"{rec}  not in the galaxy stratum")
+            continue
         print(f"{rec}  {ranked[u]}  {r0[u]}  {r1[u]}")
 
 

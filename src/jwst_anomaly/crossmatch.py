@@ -41,7 +41,12 @@ from typing import Any
 
 import astropy.units as u
 import numpy as np
-from astropy.coordinates import SkyCoord, search_around_sky
+from astropy.coordinates import (
+    CartesianRepresentation,
+    SkyCoord,
+    UnitSphericalRepresentation,
+    search_around_sky,
+)
 from astropy.table import Table, unique, vstack
 
 from jwst_anomaly import paths, schema
@@ -221,7 +226,12 @@ _MAX_TARGETS = {("ned", "cone"): 100}  # cap for the per-target NED fallback
 # One cone enclosing all targets replaces per-target OR'd cones when the field is compact: on
 # 2026-11-06 a 0.08 deg Gaia field cone took 57 s from a cloud session, while 100-cone requests took
 # 50-60 s each (69 for SMACS 0723). Wider target sets fall back to the per-target chain.
-FIELD_MAX_RADIUS_DEG = 0.25  # ASSUMPTION: keeps a field query to a few thousand Gaia rows
+FIELD_MAX_RADIUS_DEG = (
+    0.25  # ASSUMPTION: a few thousand Gaia rows at high latitude (not in the plane)
+)
+FIELD_MIN_TIMEOUT_S = (
+    180.0  # ASSUMPTION: one field cone took 13-57 s on 2026-11-06; above the 60 s default
+)
 _TAP_MAXREC = 100_000  # explicit MAXREC for TAP queries so truncation is detectable
 _CACHE_FORMAT = 1
 
@@ -622,11 +632,11 @@ def field_circle(coords: SkyCoord, radius_arcsec: float) -> tuple[float, float, 
     """Centre (deg) and radius (deg) of a cone holding every target's search cone."""
     xyz = coords.cartesian.xyz.value.reshape(3, -1).mean(axis=1)
     norm = float(np.linalg.norm(xyz))
-    if not norm > 0:
+    if not norm > 0:  # also catches empty targets (NaN mean)
         raise _PermanentError("targets have no defined mean direction")
-    centre = SkyCoord(*(xyz / norm), representation_type="cartesian", frame="icrs")
-    centre = SkyCoord(centre.spherical.lon, centre.spherical.lat, frame="icrs")
-    reach = float(np.max(centre.separation(coords).deg)) if len(coords) else 0.0
+    sph = CartesianRepresentation(*(xyz / norm)).represent_as(UnitSphericalRepresentation)
+    centre = SkyCoord(sph.lon, sph.lat, frame="icrs")
+    reach = float(np.max(centre.separation(coords).deg))
     return float(centre.ra.deg), float(centre.dec.deg), reach + radius_arcsec / 3600.0
 
 
@@ -645,7 +655,8 @@ def _fetch_field_tap(url: str, table: str, key: tuple[str, str]) -> Callable[...
             f"SELECT {cols} FROM {table} WHERE "
             f"CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', {ra:.9f}, {dec:.9f}, {r:.9f})) = 1"
         )
-        with _default_timeout(create_session(), opts.timeout_s) as session:
+        timeout = max(opts.timeout_s, FIELD_MIN_TIMEOUT_S)
+        with _default_timeout(create_session(), timeout) as session:
             result = pyvo.dal.TAPService(url, session=session).run_sync(query, maxrec=_TAP_MAXREC)
         out = result.to_table()
         if len(out) >= _TAP_MAXREC or getattr(result, "query_status", None) == "OVERFLOW":

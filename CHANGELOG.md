@@ -12,12 +12,12 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`results/smacs_jwst3/galaxy_stratum/RESULT.md`, run `20261106T142054Z-68e24ff4`): galaxy ranks of the
   six records: 2804 6 (6), 1032 8 (8), 438 11 (11), 1243 15 (12), 829 7 (3), 2915 27 (21), with the old ranks in
   brackets. The ±3 hypothesis fails for 829 and 2915, but no record leaves the top 50. A paired re-score returning
-  the 6 Gaia-position-only stars moves the records by +0 to +4; four of those stars would rank 9–23. No verdict
+  the 6 Gaia-position-only stars moves the records by −1 to +2; four of those stars would rank 9–21 (bound post hoc). No verdict
   changes. Of 15 top-25 entries not among the records (contact sheet seen), f200w_3177 sits in a bright star's
   spike and halo (likely artefact); none is vetted.
 - **Failed:** CDS (SIMBAD, XMatch) still drops connections from the cloud session. Re-scoring from saved
-  `features.ecsv` does not reproduce the pipeline ranks (2822 of 2938 differ, max 239; records ±1), so only paired
-  re-scores are compared.
+  `features.ecsv` first missed 2822 of 2938 pipeline ranks: the ECSV round trip sorts `feature_spec` keys, which
+  permutes the isolation-forest and LOF inputs. The script restores column order and now reproduces every rank.
 - **Handoff:** SIMBAD-based star rule and lens flags when CDS is reachable (it would settle the four Gaia-position
   stars). The lensing grid line still waits on the owner's G1 ruling (D-027), D115b on its reopen (D-109 addendum 9).
 

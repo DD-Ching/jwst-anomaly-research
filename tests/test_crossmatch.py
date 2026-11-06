@@ -549,10 +549,16 @@ def test_field_circle_holds_every_search_cone(targets):
     assert r < 0.05  # five SMACS positions: a compact field
 
 
-def test_wide_field_falls_back_to_per_target_cones(replay, targets):
+def test_wide_field_falls_back_to_per_target_cones(replay, targets, monkeypatch):
     """A field cone wider than FIELD_MAX_RADIUS_DEG is refused before any request."""
     calls: list = []
     replay(("gaia", "xmatch"), failing("gaia", "xmatch", calls))
+    import pyvo
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("field guard must refuse before any TAP request")
+
+    monkeypatch.setattr(pyvo.dal, "TAPService", no_network)
     real_field = xm._fetch_field_tap(xm.GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field"))
     replay(("gaia", "field"), real_field)
     wide = targets.copy()
@@ -561,6 +567,7 @@ def test_wide_field_falls_back_to_per_target_cones(replay, targets):
     assert matches.meta["services_failed"] == []
     assert matches.meta["backend"]["gaia"] == "tap"
     assert "field radius" in matches.meta["service_errors"]["gaia"]
+    assert set(calls) == {("gaia", "xmatch")}  # retried; the field fetcher never ran a query
 
 
 def record_fixtures() -> None:
