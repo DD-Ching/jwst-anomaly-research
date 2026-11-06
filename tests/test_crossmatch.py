@@ -128,6 +128,40 @@ def test_recorded_fallback_backends_agree(targets, replay):
     assert len(calls) == 4
 
 
+def test_recorded_simbad_mirror_when_cds_is_down(targets, replay):
+    """With both CDS backends down, the CfA mirror serves SIMBAD with the same summary."""
+    reference = xm.crossmatch(
+        targets, RADIUS, services=("simbad",), cache=False, backends={"simbad": "tap"}
+    )
+    for backend in ("xmatch", "tap"):
+        replay(("simbad", backend), failing("simbad", backend))
+    summary = xm.crossmatch(targets, RADIUS, services=("simbad",), cache=False, retries=0)
+    assert summary.meta["backend"] == {"simbad": "mirror"}
+    for name in ("source_uid", "n_simbad", "best_match_id", "is_star", "is_lens_related"):
+        assert list(summary[name]) == list(reference[name]), name
+
+
+def test_simbad_mirror_queries_the_cfa_server(targets, monkeypatch):
+    from astroquery.simbad import SimbadClass
+
+    servers: list = []
+    monkeypatch.setattr(SimbadClass, "add_votable_fields", lambda self, *a: None)
+    monkeypatch.setattr(
+        SimbadClass, "query_region", lambda self, *a, **k: servers.append(self.server) or Table()
+    )
+    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
+    opts = xm._Options(timeout_s=1.0, retries=0, backoff_s=0.0)
+    for backend in ("tap", "mirror"):
+        xm._FETCHERS[("simbad", backend)](coords, RADIUS, opts)
+    assert servers == [xm.SIMBAD_CDS_SERVER, xm.SIMBAD_MIRROR_SERVER]
+
+
+def test_simbad_servers_are_astroquery_servers():
+    from astroquery.simbad import conf
+
+    assert {xm.SIMBAD_CDS_SERVER, xm.SIMBAD_MIRROR_SERVER} <= set(conf.servers_list)
+
+
 def test_recorded_gaia_field_matches_per_target_tap(targets, replay):
     """The field cone (one query, local association) reproduces the per-target Gaia TAP rows."""
     replay(("gaia", "xmatch"), failing("gaia", "xmatch"))
@@ -626,6 +660,17 @@ def test_live_fallback_backends(targets):
 
 
 @pytest.mark.network
+def test_live_simbad_mirror_backend(targets):
+    mirror = xm.crossmatch(
+        targets, RADIUS, services=("simbad",), cache=False, backends={"simbad": "mirror"}
+    )
+    assert mirror.meta["backend"] == {"simbad": "mirror"}, mirror.meta["service_errors"]
+    rows = by_uid(mirror)
+    assert rows[CLUSTER]["best_match_id"] == "SMACS J0723.3-7327"
+    assert rows[LENSED]["is_lens_related"] and "simbad:LeG" in rows[LENSED]["lens_types"]
+
+
+@pytest.mark.network
 def test_live_gaia_field_backend(targets):
     field = xm.crossmatch(
         targets, RADIUS, services=("gaia",), cache=False, backends={"gaia": "field"}
@@ -657,7 +702,11 @@ def record_fixtures() -> None:
     coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
     opts = xm._Options(timeout_s=60.0, retries=2, backoff_s=2.0)
     for (service, backend), fetch in xm._FETCHERS.items():
-        raw = fetch(coords, RADIUS, opts)
+        try:
+            raw = fetch(coords, RADIUS, opts)
+        except Exception as e:  # e.g. CDS unreachable from cloud sessions: record the others
+            print(f"{service}/{backend}: not recorded ({type(e).__name__}: {e})")
+            continue
         keep = [c for c in ("xm_idx", "angDist") if c in raw.colnames]
         raw = raw[keep + list(xm.RAW_COLUMNS[(service, backend)].values())]
         raw.meta.clear()

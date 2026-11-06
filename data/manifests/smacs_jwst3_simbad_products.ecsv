@@ -1,0 +1,32 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: dataURI, datatype: string}
+# - {name: sample_id, datatype: string}
+# - {name: obs_id, datatype: string}
+# - {name: obsID, datatype: string}
+# - {name: productFilename, datatype: string}
+# - {name: productSubGroupDescription, datatype: string}
+# - {name: calib_level, datatype: int64}
+# - {name: size, datatype: int64}
+# - {name: dataRights, datatype: string}
+# - {name: prvversion, datatype: string}
+# - {name: cloud_uri, datatype: string}
+# meta: !!omap
+# - {provenance: observed}
+# - {source: 'MAST level-3 product lists for the observations in smacs_jwst3_simbad.yaml (calib_level=3, subgroups=[''CAT'', ''I2D''],
+#     PUBLIC; level-2 members excluded); cloud_uri from MAST path_lookup'}
+# schema: astropy-2.0
+dataURI sample_id obs_id obsID productFilename productSubGroupDescription calib_level size dataRights prvversion cloud_uri
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f090w_cat.ecsv smacs0723_nircam jw02736-o001_t001_nircam_clear-f090w 87602474 jw02736-o001_t001_nircam_clear-f090w_cat.ecsv CAT 3 3540244 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f090w_cat.ecsv
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f090w_i2d.fits smacs0723_nircam jw02736-o001_t001_nircam_clear-f090w 87602474 jw02736-o001_t001_nircam_clear-f090w_i2d.fits I2D 3 1758879360 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f090w_i2d.fits
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f150w_cat.ecsv smacs0723_nircam jw02736-o001_t001_nircam_clear-f150w 87602570 jw02736-o001_t001_nircam_clear-f150w_cat.ecsv CAT 3 4012009 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f150w_cat.ecsv
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f150w_i2d.fits smacs0723_nircam jw02736-o001_t001_nircam_clear-f150w 87602570 jw02736-o001_t001_nircam_clear-f150w_i2d.fits I2D 3 1759423680 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f150w_i2d.fits
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv smacs0723_nircam jw02736-o001_t001_nircam_clear-f200w 87602476 jw02736-o001_t001_nircam_clear-f200w_cat.ecsv CAT 3 4464908 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_cat.ecsv
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f200w_i2d.fits smacs0723_nircam jw02736-o001_t001_nircam_clear-f200w 87602476 jw02736-o001_t001_nircam_clear-f200w_i2d.fits I2D 3 1762329600 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f277w_cat.ecsv smacs0723_nircam jw02736-o001_t001_nircam_clear-f277w 87602470 jw02736-o001_t001_nircam_clear-f277w_cat.ecsv CAT 3 2503485 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f277w_cat.ecsv
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f277w_i2d.fits smacs0723_nircam jw02736-o001_t001_nircam_clear-f277w 87602470 jw02736-o001_t001_nircam_clear-f277w_i2d.fits I2D 3 326433600 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f277w_i2d.fits
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f356w_cat.ecsv smacs0723_nircam jw02736-o001_t001_nircam_clear-f356w 87602571 jw02736-o001_t001_nircam_clear-f356w_cat.ecsv CAT 3 2729342 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f356w_cat.ecsv
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f356w_i2d.fits smacs0723_nircam jw02736-o001_t001_nircam_clear-f356w 87602571 jw02736-o001_t001_nircam_clear-f356w_i2d.fits I2D 3 326433600 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f356w_i2d.fits
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f444w_cat.ecsv smacs0723_nircam jw02736-o001_t001_nircam_clear-f444w 87602481 jw02736-o001_t001_nircam_clear-f444w_cat.ecsv CAT 3 2572397 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f444w_cat.ecsv
+mast:JWST/product/jw02736-o001_t001_nircam_clear-f444w_i2d.fits smacs0723_nircam jw02736-o001_t001_nircam_clear-f444w 87602481 jw02736-o001_t001_nircam_clear-f444w_i2d.fits I2D 3 326373120 PUBLIC 3.0.0 s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f444w_i2d.fits

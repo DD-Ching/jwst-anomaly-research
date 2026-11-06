@@ -411,6 +411,15 @@ E2E run: 55 real targets (5 in `tests/data/xmatch_targets.ecsv` plus 50 F200W-ca
 - Gaia DR4 replaces `I/355`.
 - Extended sources need a size-dependent radius.
 
+**Addendum (2026-11-06): SIMBAD `mirror` backend.** CDS (`simbad.cds.unistra.fr`, `cdsxmatch.u-strasbg.fr`)
+resets every connection from cloud sessions since at least 11-06, while the CfA SIMBAD mirror
+(`simbad.harvard.edu`, astroquery's second `conf.servers_list` entry) answers. The SIMBAD chain is now
+`xmatch → tap → mirror`; `mirror` is the same `Simbad.query_region` on the mirror server and may reuse a fresh CDS
+`tap` cache entry (never the reverse). Evidence: on the five fixture targets the mirror returns the same three main_ids and otypes as the CDS
+recording of 2026-10-07 (`tests/data/xmatch_raw_simbad_mirror.ecsv`), live and offline tests pass. Rejected: an
+ad-hoc proxy workaround (not allowed) and waiting on CDS (blocked SMACS for a day). Revisit if the mirror lags CDS in
+content (compare `basic` row counts) or astroquery drops it from `servers_list`.
+
 ## D-007 Candidate store and run provenance (unit 6)
 
 **Decision.**

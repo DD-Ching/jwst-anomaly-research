@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: SIMBAD via the CfA mirror; SMACS jwst 3.0.0 star rule changes no rank
+- **Tool:** `crossmatch` SIMBAD chain `xmatch → tap → mirror` (`simbad.harvard.edu`, same TAP tables; D-006
+  addendum). CDS still resets connections from cloud sessions; the mirror matches the CDS fixture recording on all
+  three objects. New offline tests (mirror fallback, server routing) and `test_live_simbad_mirror_backend`.
+- **Result** (`results/smacs_jwst3/simbad_mirror/RESULT.md`, run `20261106T171253Z-28af4751`): with SIMBAD in
+  `classify` and `crossmatch`, star counts and all 2938 galaxy ranks equal #743's; records 2804 6, 829 7, 1032 8,
+  438 11, 1243 15, 2915 27. None of the six Gaia-position-only stars has a SIMBAD object within 2″; their Gaia DR3
+  DSC star probabilities are ≥ 0.9993 (post hoc). SIMBAD adds no lens type to the top 20. No verdict changes.
+- **Handoff:** SMACS jwst 3.0.0 re-run is closed. The lensing grid line still waits on the owner's G1 ruling
+  (D-027), D115b on its reopen (D-109 addendum 9). Other cloud CDS uses (VizieR, XMatch) can try
+  `vizier.cfa.harvard.edu` (answers, untested in code).
+
 ## 2026-11-06: Gaia `field` backend: row cap and one shared TAP runner (#743 follow-ups)
 - **Change:** a field cone now runs with MAXREC `FIELD_MAX_ROWS` = 20,000 (ASSUMPTION, ~1 MB); reaching it (or
   OVERFLOW) is refused, so a dense low-latitude field falls back to per-target cones instead of a large download.
