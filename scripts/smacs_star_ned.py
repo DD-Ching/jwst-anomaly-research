@@ -96,7 +96,7 @@ def main() -> None:
                     "ned_redshift": "",
                 }
             )
-    rows.sort(key=lambda d: (d["star_rank"], d["sep_arcsec"]))
+    rows.sort(key=lambda d: (d["star_rank"], float(d["sep_arcsec"] or "inf")))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=list(rows[0]))
@@ -114,7 +114,7 @@ def main() -> None:
         }
         summary[b] = {
             "n_stars": len(us),
-            "n_ned_galaxy_0p5": len(gal),
+            "n_ned_galaxy_radius": len(gal),
             "n_ned_galaxy_0p3": len(gal03),
         }
     out = {

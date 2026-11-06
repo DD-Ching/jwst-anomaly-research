@@ -8,17 +8,17 @@
   "by_basis": {
     "gaia_position": {
       "n_stars": 6,
-      "n_ned_galaxy_0p5": 0,
+      "n_ned_galaxy_radius": 0,
       "n_ned_galaxy_0p3": 0
     },
     "simbad_or_gaia_astrometry": {
       "n_stars": 36,
-      "n_ned_galaxy_0p5": 1,
+      "n_ned_galaxy_radius": 1,
       "n_ned_galaxy_0p3": 1
     },
     "stellar_locus": {
       "n_stars": 97,
-      "n_ned_galaxy_0p5": 2,
+      "n_ned_galaxy_radius": 2,
       "n_ned_galaxy_0p3": 1
     }
   }
