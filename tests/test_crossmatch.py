@@ -437,9 +437,15 @@ def test_equivalent_gaia_cache_serves_field_backend(targets, replay, tmp_path):
         replay(key, failing(*key, calls))
     again = xm.crossmatch(targets, RADIUS, ["gaia"], cache_dir=tmp_path, retries=0)
     assert again.meta["backend"] == {"gaia": "tap"} and again.meta["from_cache"] == {"gaia": True}
-    assert calls == [
-        ("gaia", "xmatch")
-    ]  # only the primary is tried; field is served by tap's cache
+    # only the primary is tried; field is served by tap's cache
+    assert calls == [("gaia", "xmatch")]
+    # an explicitly pinned backend never takes the equivalent's entry
+    replay(("gaia", "field"), recorded("gaia", "field"))
+    pinned = xm.crossmatch(
+        targets, RADIUS, ["gaia"], cache_dir=tmp_path, retries=0, backends={"gaia": "field"}
+    )
+    assert pinned.meta["backend"] == {"gaia": "field"}
+    assert pinned.meta["from_cache"] == {"gaia": False}
     for col in ("n_gaia", "is_star"):
         assert list(again[col]) == list(first[col]), col
 
