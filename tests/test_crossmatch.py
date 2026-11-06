@@ -550,6 +550,63 @@ def test_wide_field_falls_back_to_per_target_cones(replay, targets, monkeypatch)
     assert set(calls) == {("gaia", "xmatch")}  # retried; the field fetcher never ran a query
 
 
+class _FakeTAP:
+    """Stands in for ``pyvo.dal.TAPService``: records queries, returns ``n_rows`` raw Gaia rows."""
+
+    def __init__(self, n_rows: int, queries: list):
+        self.n_rows, self.queries = n_rows, queries
+
+    def __call__(self, url, session=None):
+        return self
+
+    def run_sync(self, query, maxrec):
+        self.queries.append((query, maxrec))
+        names = list(xm.RAW_COLUMNS[("gaia", "field")].values())
+        n = min(self.n_rows, maxrec)  # the server stops at MAXREC
+
+        class Result:
+            query_status = "OVERFLOW" if self.n_rows > maxrec else "OK"
+
+            def to_table(_self):
+                return Table([np.zeros(n)] * len(names), names=names)
+
+        return Result()
+
+
+def test_dense_field_falls_back_to_per_target_cones(replay, targets, monkeypatch):
+    """A field cone reaching FIELD_MAX_ROWS is refused; the chain moves on to per-target cones."""
+    import pyvo
+
+    queries: list = []
+    monkeypatch.setattr(pyvo.dal, "TAPService", _FakeTAP(10 * xm.FIELD_MAX_ROWS, queries))
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch"))
+    real_field = xm._fetch_field_tap(xm.GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field"))
+    replay(("gaia", "field"), real_field)
+    matches = xm.query_matches(targets, RADIUS, services=("gaia",), cache=False)
+    assert matches.meta["backend"]["gaia"] == "tap"
+    assert "cap 20000" in matches.meta["service_errors"]["gaia"]
+    assert queries and all(maxrec == xm.FIELD_MAX_ROWS for _, maxrec in queries)  # bounded download
+
+
+def test_tap_queries_share_one_cone_builder(targets, monkeypatch):
+    """Field and per-target queries select the same columns with the same CONTAINS form."""
+    import pyvo
+
+    queries: list = []
+    monkeypatch.setattr(pyvo.dal, "TAPService", _FakeTAP(3, queries))
+    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
+    opts = xm._Options(timeout_s=1.0, retries=0, backoff_s=0.0)
+    for backend in ("field", "tap"):
+        out = xm._FETCHERS[("gaia", backend)](coords, RADIUS, opts)
+        assert len(out) == 3
+    (field_q, field_max), (tap_q, tap_max) = queries
+    assert (field_max, tap_max) == (xm.FIELD_MAX_ROWS, xm._TAP_MAXREC)
+    assert field_q.split(" WHERE ")[0] == tap_q.split(" WHERE ")[0]
+    ra, dec, r = xm.field_circle(coords, RADIUS)
+    assert field_q.endswith(xm._adql_cone(ra, dec, r))
+    assert tap_q.count("CONTAINS(") == len(targets)
+
+
 # --- Live services ----------------------------------------------------------------------------
 
 

@@ -3,9 +3,15 @@
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
 ## 2026-11-06: Gaia `field` backend: row cap and one shared TAP runner (#743 follow-ups)
-- **Plan:** bound the field cone's row count (not only its radius) so a dense low-latitude field falls back to
-  per-target cones instead of downloading a large slab; share one ADQL builder and TAP runner between `field` and
-  `tap`. Offline tests for both; no science result changes (SMACS field ≈ 10² Gaia rows).
+- **Change:** a field cone now runs with MAXREC `FIELD_MAX_ROWS` = 20,000 (ASSUMPTION, ~1 MB); reaching it (or
+  OVERFLOW) is refused, so a dense low-latitude field falls back to per-target cones instead of a large download.
+  `field` and `tap` share `_run_tap` and one `_adql_cone` builder; per-target queries are unchanged text.
+- **Evidence:** offline suite 2400 passed; two new tests (dense-field fallback with a bounded MAXREC; same SELECT and
+  CONTAINS form for both backends). Live: `test_live_gaia_field_backend` passed twice (88 s, 25 s; one Gaia 503
+  retried); `test_live_fallback_backends` fails only on SIMBAD TAP (CDS unreachable from the cloud session, as in
+  the earlier 11-06 runs).
+- **Handoff:** SIMBAD star rule and lens flags for SMACS still wait on CDS; lensing grid line on the owner's G1
+  ruling (D-027), D115b on its reopen (D-109 addendum 9).
 
 ## 2026-11-06: Saved features re-score exactly: `rank.feature_names` follows column order
 - **Why:** #743 found that an ECSV round trip sorts `meta["feature_spec"]` keys and `feature_names` followed them,
