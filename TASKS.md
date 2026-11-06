@@ -684,9 +684,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   records stay in the top 31). Open: the SIMBAD star rule and lens flags once CDS is reachable from the session.
 - Gaia `field` backend follow-ups (#743): bound the row count, not only the radius, before low-latitude fields
   (`FIELD_MAX_RADIUS_DEG`); share one ADQL WHERE builder between `_fetch_field_tap` and `_fetch_tap`.
-- Reproducibility hazard (2026-11-06): `rank.feature_names` follows `meta["feature_spec"]` key order, which an ECSV
-  round trip sorts, so re-scoring saved `features.ecsv` permutes isolation-forest and LOF inputs (2822 / 2938 SMACS
-  ranks changed). Fix by ordering feature names by column, after checking that pipeline ranks are unchanged.
+- ~~Reproducibility hazard: `rank.feature_names` followed the ECSV-sorted `feature_spec` keys~~ fixed 2026-11-06
+  (names follow column order; CHANGELOG).
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
   injection-recovery. Keep the evaluation fields out of any training data.
 - Crossmatch and classify: propagate Gaia positions to the JWST epoch, so fast-moving stars and brown

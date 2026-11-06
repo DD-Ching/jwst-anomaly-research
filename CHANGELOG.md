@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: Saved features re-score exactly: `rank.feature_names` follows column order
+- **Why:** #743 found that an ECSV round trip sorts `meta["feature_spec"]` keys and `feature_names` followed them,
+  so re-scoring a saved `features.ecsv` permuted the isolation-forest and LOF inputs (2822 / 2938 SMACS ranks moved).
+- **Change:** names are the spec's columns in table order. `build_features` writes spec keys in column order, so
+  in-memory pipeline ranks are unchanged (offline suite: 2394 passed); re-loaded tables now
+  score identically (`test_ecsv_round_trip_keeps_scores` fails before the fix, passes after).
+- **Handoff:** the SIMBAD star rule and lens flags for SMACS wait on CDS reachability; the lensing grid line on the
+  owner's G1 ruling (D-027), D115b on its reopen (D-109 addendum 9).
+
 ## 2026-11-06: SMACS jwst 3.0.0 galaxy stratum with Gaia-only star separation: six records stay in the top 31
 - **Plan** (`results/smacs_jwst3/PLAN_galaxy_stratum.md`, pushed first): star separation from Gaia only while CDS
   is unreachable, with the missing SIMBAD-galaxy override bounded.

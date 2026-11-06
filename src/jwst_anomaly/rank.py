@@ -31,10 +31,15 @@ ENSEMBLE = "ensemble"
 
 
 def feature_names(features: Table) -> list[str]:
-    """Feature columns: ``meta["feature_spec"]`` keys if present, else numeric non-ID columns."""
+    """Feature columns: ``meta["feature_spec"]`` keys if present, else numeric non-ID columns.
+
+    Names follow the table's column order, not the spec's key order: an ECSV round trip sorts
+    the ``meta`` mapping keys, which would otherwise permute the feature matrix and change the
+    isolation-forest and LOF scores of a re-loaded ``features.ecsv`` (2026-11-06, #743).
+    """
     spec = features.meta.get("feature_spec")
     if spec:
-        return [n for n in spec if n in features.colnames]
+        return [c for c in features.colnames if c in spec]
     skip = set(schema.FEATURE_ID_COLUMNS)
     return [c for c in features.colnames if c not in skip and features[c].dtype.kind in "fiu"]
 
