@@ -229,6 +229,11 @@ _MAX_TARGETS = {("ned", "cone"): 100}  # cap for the per-target NED fallback
 FIELD_MAX_RADIUS_DEG = (
     0.25  # ASSUMPTION: a few thousand Gaia rows at high latitude (not in the plane)
 )
+# Row cap for one field cone, sent as MAXREC so the server stops there: a cone reaching it is
+# refused and the chain falls back to per-target cones (small even in dense low-latitude fields).
+FIELD_MAX_ROWS = (
+    20_000  # ASSUMPTION: ~1 MB of raw columns; SMACS 0723's 0.08 deg cone returns ~10^2 rows
+)
 FIELD_MIN_TIMEOUT_S = (
     180.0  # ASSUMPTION: one field cone took 13-57 s on 2026-11-06; above the 60 s default
 )
@@ -623,22 +628,31 @@ def _fetch_simbad_tap(coords: SkyCoord, radius_arcsec: float, opts: _Options) ->
         simbad._session.close()
 
 
+def _run_tap(
+    url: str, table: str, key: tuple[str, str], where: str, timeout_s: float, maxrec: int
+) -> Table:
+    """One synchronous pyvo TAP query of ``RAW_COLUMNS[key]`` (pyvo rather than astroquery.gaia's
+    TapPlus, whose connections cannot be given a timeout). A result reaching ``maxrec`` rows or
+    flagged OVERFLOW is refused as truncated."""
+    import pyvo
+    from pyvo.utils.http import create_session
+
+    cols = ", ".join(RAW_COLUMNS[key].values())
+    query = f"SELECT {cols} FROM {table} WHERE {where}"
+    with _default_timeout(create_session(), timeout_s) as session:
+        result = pyvo.dal.TAPService(url, session=session).run_sync(query, maxrec=maxrec)
+    out = result.to_table()
+    if len(out) >= maxrec or getattr(result, "query_status", None) == "OVERFLOW":
+        raise _PermanentError(f"{url} result truncated at {len(out)} rows (cap {maxrec})")
+    return out
+
+
 def _fetch_tap(url: str, table: str, key: tuple[str, str]) -> Callable[..., Table]:
-    """Synchronous pyvo TAP query with OR'd cones (pyvo rather than astroquery.gaia's TapPlus,
-    whose connections cannot be given a timeout)."""
+    """OR'd per-target cones in one TAP query."""
 
     def fetch(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
-        import pyvo
-        from pyvo.utils.http import create_session
-
-        cols = ", ".join(RAW_COLUMNS[key].values())
-        query = f"SELECT {cols} FROM {table} WHERE {_adql_cones(coords, radius_arcsec)}"
-        with _default_timeout(create_session(), opts.timeout_s) as session:
-            result = pyvo.dal.TAPService(url, session=session).run_sync(query, maxrec=_TAP_MAXREC)
-        out = result.to_table()
-        if len(out) >= _TAP_MAXREC or getattr(result, "query_status", None) == "OVERFLOW":
-            raise _PermanentError(f"{url} result truncated at {len(out)} rows")
-        return out
+        where = _adql_cones(coords, radius_arcsec)
+        return _run_tap(url, table, key, where, opts.timeout_s, _TAP_MAXREC)
 
     return fetch
 
@@ -656,27 +670,15 @@ def field_circle(coords: SkyCoord, radius_arcsec: float) -> tuple[float, float, 
 
 
 def _fetch_field_tap(url: str, table: str, key: tuple[str, str]) -> Callable[..., Table]:
-    """One TAP cone around all targets; association stays local (:func:`_associate`)."""
+    """One TAP cone around all targets, refused above ``FIELD_MAX_RADIUS_DEG`` (before any request)
+    or ``FIELD_MAX_ROWS``; association stays local (:func:`_associate`)."""
 
     def fetch(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
-        import pyvo
-        from pyvo.utils.http import create_session
-
         ra, dec, r = field_circle(coords, radius_arcsec)
         if r > FIELD_MAX_RADIUS_DEG:
             raise _PermanentError(f"field radius {r:.3f} deg > {FIELD_MAX_RADIUS_DEG} deg")
-        cols = ", ".join(RAW_COLUMNS[key].values())
-        query = (
-            f"SELECT {cols} FROM {table} WHERE "
-            f"CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', {ra:.9f}, {dec:.9f}, {r:.9f})) = 1"
-        )
         timeout = max(opts.timeout_s, FIELD_MIN_TIMEOUT_S)
-        with _default_timeout(create_session(), timeout) as session:
-            result = pyvo.dal.TAPService(url, session=session).run_sync(query, maxrec=_TAP_MAXREC)
-        out = result.to_table()
-        if len(out) >= _TAP_MAXREC or getattr(result, "query_status", None) == "OVERFLOW":
-            raise _PermanentError(f"{url} result truncated at {len(out)} rows")
-        return out
+        return _run_tap(url, table, key, _adql_cone(ra, dec, r), timeout, FIELD_MAX_ROWS)
 
     return fetch
 
@@ -725,12 +727,19 @@ def _chunks(coords: SkyCoord, size: int) -> list[SkyCoord]:
     return [coords[k : k + size] for k in range(0, len(coords), max(size, 1))]
 
 
+def _adql_cone(ra_deg: float, dec_deg: float, radius_deg: float) -> str:
+    """One ADQL ``CONTAINS`` cone on columns ``ra``/``dec``."""
+    return (
+        f"CONTAINS(POINT('ICRS', ra, dec), "
+        f"CIRCLE('ICRS', {ra_deg:.9f}, {dec_deg:.9f}, {radius_deg:.9f})) = 1"
+    )
+
+
 def _adql_cones(coords: SkyCoord, radius_arcsec: float) -> str:
     """OR'd ADQL ``CONTAINS`` cones (one per position) on columns ``ra``/``dec``."""
     r = radius_arcsec / 3600.0
     return " OR ".join(
-        f"CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', {a:.9f}, {d:.9f}, {r:.9f})) = 1"
-        for a, d in zip(coords.ra.deg, coords.dec.deg, strict=True)
+        _adql_cone(a, d, r) for a, d in zip(coords.ra.deg, coords.dec.deg, strict=True)
     )
 
 

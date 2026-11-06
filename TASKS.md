@@ -682,8 +682,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 - ~~Re-fetch program 2736 after MAST reprocesses it~~ done 2026-11-06 (jwst 3.0.0, `results/smacs_jwst3/RESULT.md`).
   Galaxy-stratum re-run with Gaia-only star separation done 2026-11-06 (`results/smacs_jwst3/galaxy_stratum/RESULT.md`:
   records stay in the top 31). Open: the SIMBAD star rule and lens flags once CDS is reachable from the session.
-- Gaia `field` backend follow-ups (#743): bound the row count, not only the radius, before low-latitude fields
-  (`FIELD_MAX_RADIUS_DEG`); share one ADQL WHERE builder between `_fetch_field_tap` and `_fetch_tap`.
+- ~~Gaia `field` backend follow-ups (#743): row cap and a shared ADQL builder~~ done 2026-11-06 (`FIELD_MAX_ROWS`,
+  `_run_tap`; CHANGELOG).
 - ~~Reproducibility hazard: `rank.feature_names` followed the ECSV-sorted `feature_spec` keys~~ fixed 2026-11-06
   (names follow column order; CHANGELOG).
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
