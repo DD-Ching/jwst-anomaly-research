@@ -22,7 +22,7 @@ from astropy.coordinates import SkyCoord
 from astropy.table import Table
 
 REPO = Path(__file__).resolve().parents[1]
-POS = re.compile(r"RA ([0-9]+\.[0-9]+), Dec [−-]([0-9]+\.[0-9]+)")
+POS = re.compile(r"RA ([0-9]+\.[0-9]+), Dec ([−+-]?)([0-9]+\.[0-9]+)")
 FEATURES = ("ref_mag", "ref_sharpness", "ref_roundness", "color_f150w_f200w", "color_f200w_f277w")
 RANK = re.compile(r"rank (\d+), ensemble ([0-9]+\.[0-9]+)")
 
@@ -34,12 +34,13 @@ def read_records(folder: Path) -> list[dict]:
         text = path.read_text(encoding="utf-8")
         pos, rank = POS.search(text), RANK.search(text)
         if pos is None:
+            print(f"warning: no position in {path.name}; skipped")
             continue
         out.append(
             {
                 "record": path.stem,
                 "ra": float(pos.group(1)),
-                "dec": -float(pos.group(2)),
+                "dec": (-1.0 if pos.group(2) in ("−", "-") else 1.0) * float(pos.group(3)),
                 "old_rank": int(rank.group(1)) if rank else None,
                 "old_score": float(rank.group(2)) if rank else None,
             }
@@ -102,8 +103,9 @@ def main() -> None:
     for sdir in sorted(p for p in args.run_dir.iterdir() if (p / "sources.ecsv").exists()):
         q = Table.read(sdir / "quality.ecsv")
         f = Table.read(sdir / "features.ecsv")
-        ok = np.asarray(q["quality_ok"], dtype=bool)
-        entry = {"n_merged": len(q), "n_quality_ok": int(ok.sum())}
+        q_ok = {str(u): bool(v) for u, v in zip(q["source_uid"], q["quality_ok"], strict=True)}
+        ok = np.array([q_ok[str(u)] for u in f["source_uid"]], dtype=bool)
+        entry = {"n_merged": len(q), "n_quality_ok": int(sum(q_ok.values()))}
         if (sdir / "scores.ecsv").exists():
             entry["n_ranked"] = len(Table.read(sdir / "scores.ecsv"))
         if "ref_sharpness" in f.colnames:
