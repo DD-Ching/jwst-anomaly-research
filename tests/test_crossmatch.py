@@ -156,6 +156,51 @@ def test_simbad_mirror_queries_the_cfa_server(targets, monkeypatch):
     assert servers == [xm.SIMBAD_CDS_SERVER, xm.SIMBAD_MIRROR_SERVER]
 
 
+def _fake_xmatch(monkeypatch, lines):
+    from astroquery.xmatch import XMatchClass
+
+    calls = {"lists": 0, "queries": 0}
+
+    def tables(self, *, cache=True):
+        calls["lists"] += 1
+        assert cache is False
+        return lines
+
+    def query(self, **kw):
+        calls["queries"] += 1
+        if not self.is_table_available(kw["cat2"]):  # astroquery's own check, on our list
+            raise ValueError(f"'{kw['cat2']}' is not available on the XMatch server.")
+        return Table()
+
+    monkeypatch.setattr(XMatchClass, "get_available_tables", tables)
+    monkeypatch.setattr(XMatchClass, "query", query)
+    return calls
+
+
+def test_xmatch_error_body_is_a_connection_error(targets, monkeypatch):
+    """A proxy 503 body parsed as the table list is an outage (retried), not a bad table name."""
+    calls = _fake_xmatch(monkeypatch, ["upstream connect error or disconnect/reset before headers"])
+    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
+    opts = xm._Options(timeout_s=1.0, retries=0, backoff_s=0.0)
+    with pytest.raises(ConnectionError, match="upstream connect error"):
+        xm._FETCHERS[("gaia", "xmatch")](coords, RADIUS, opts)
+    assert calls == {"lists": 1, "queries": 0}
+
+
+def test_xmatch_checked_table_list_is_reused(targets, monkeypatch):
+    names = [f"I/{k}/x" for k in range(xm.XMATCH_MIN_TABLES)]
+    calls = _fake_xmatch(monkeypatch, [*names, "simbad", "I/355/gaiadr3"])
+    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
+    opts = xm._Options(timeout_s=1.0, retries=0, backoff_s=0.0)
+    for service in ("simbad", "gaia"):
+        xm._FETCHERS[(service, "xmatch")](coords, RADIUS, opts)
+    assert calls == {"lists": 2, "queries": 2}  # one uncached list per request, none from query
+    # a genuinely unknown table in a full list stays astroquery's ValueError (not retried)
+    calls = _fake_xmatch(monkeypatch, names)
+    with pytest.raises(ValueError, match="not available"):
+        xm._FETCHERS[("gaia", "xmatch")](coords, RADIUS, opts)
+
+
 def test_simbad_servers_are_astroquery_servers():
     from astroquery.simbad import conf
 

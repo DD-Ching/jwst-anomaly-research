@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: CDS XMatch "unknown table" rejections were an unreachable host
+- **Diagnosis:** astroquery 0.4.11 `XMatch.get_available_tables` has no status check (and caches), so the agent
+  proxy's 503 body ("upstream connect error ... connection timeout", both CDS XMatch hosts, http and https) became
+  the table list and every `cat2` "not available", a ValueError that the chain never retried. The names
+  `simbad` and `vizier:I/355/gaiadr3` are correct.
+- **Fix:** `_fetch_xmatch` checks the uncached list (`XMATCH_MIN_TABLES`, ASSUMPTION) and raises `ConnectionError`
+  with the body, then reuses the checked list (D-006 addendum). 2 new offline tests; live call now reports the cause.
+- **Tests:** offline 2409 passed. `--run-network` crossmatch: 49 passed, 2 failed, both on CDS SIMBAD TAP being
+  unreachable (`test_live_fallback_backends`, `test_live_simbad_otype_sets_are_current`); not this change.
+- **Handoff:** CDS (XMatch, SIMBAD TAP) unreachable from cloud sessions on 2026-11-06; ESA Gaia TAP answers
+  intermittently (2 / 3 probes), so the CEERS star split re-run (TASKS Then 8) can use the default chain: XMatch now
+  fails as a retried `ConnectionError` and falls through to `field` (the pipeline exposes no backend override). Next: that re-run; Zoobot/DINOv2 reuse check; MIRI confirmation (Then 7).
+
 ## 2026-11-06: SMACS vs CEERS t021 ranked features differ strongly, carried by z_phot cluster members
 - **Plan first** (`results/science_control_features/PLAN.md`, frozen rule as a tested function); TASKS "Then" 8.
 - **Result** (`results/science_control_features/RESULT.md`, `scripts/science_control_features.py`, run

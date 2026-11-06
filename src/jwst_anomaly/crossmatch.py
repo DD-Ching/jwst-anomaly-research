@@ -611,6 +611,8 @@ def _fetch_xmatch(cat2: str) -> Callable[[SkyCoord, float, _Options], Table]:
         )
         xmatch = XMatchClass()
         xmatch.TIMEOUT = opts.timeout_s
+        tables = _xmatch_tables(xmatch, cat2)
+        xmatch.get_available_tables = lambda cache=True: tables  # reuse the checked list
         return xmatch.query(
             cat1=upload,
             cat2=cat2,
@@ -621,6 +623,24 @@ def _fetch_xmatch(cat2: str) -> Callable[[SkyCoord, float, _Options], Table]:
         )
 
     return fetch
+
+
+# ASSUMPTION: the real XMatch table list has thousands of names; a short one is an error body.
+XMATCH_MIN_TABLES = 100
+
+
+def _xmatch_tables(xmatch, cat2: str) -> list[str]:
+    """Fetch the XMatch table list uncached and check it before astroquery uses it.
+
+    astroquery reads the list without a status check (and caches it), so an unreachable host
+    (e.g. a proxy's 503 body) became "'<cat2>' is not available on the XMatch server", a
+    ValueError that is neither retried nor diagnosable. Raise ConnectionError with the body then.
+    """
+    tables = xmatch.get_available_tables(cache=False)
+    if cat2.removeprefix("vizier:") not in tables and len(tables) < XMATCH_MIN_TABLES:
+        body = " ".join(tables)[:200]
+        raise ConnectionError(f"CDS XMatch table list unavailable ({len(tables)} lines): {body}")
+    return tables
 
 
 SIMBAD_CDS_SERVER = "simbad.cds.unistra.fr"

@@ -420,6 +420,14 @@ recording of 2026-10-07 (`tests/data/xmatch_raw_simbad_mirror.ecsv`), live and o
 ad-hoc proxy workaround (not allowed) and waiting on CDS (blocked SMACS for a day). Revisit if the mirror lags CDS in
 content (compare `basic` row counts) or astroquery drops it from `servers_list`.
 
+**Addendum (2026-11-06, XMatch outage diagnosis).** Decision: `_fetch_xmatch` fetches the XMatch table list
+uncached itself, raises `ConnectionError` (retried, then the next backend) when the list is shorter than
+`XMATCH_MIN_TABLES` (ASSUMPTION 100) and lacks `cat2`, and hands the checked list to astroquery. Evidence: the
+"`simbad` / `vizier:I/355/gaiadr3` is not available on the XMatch server" rejections of 2026-11-06 were astroquery 0.4.11
+parsing the agent proxy's 503 body ("upstream connect error ... connection timeout") as the table list
+(`get_available_tables` has no status check and caches); the same 503 on http and https for both CDS XMatch hosts.
+The table names are correct. Rejected: renaming tables (not the cause). Revisit if astroquery checks the status itself.
+
 ## D-007 Candidate store and run provenance (unit 6)
 
 **Decision.**
