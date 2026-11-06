@@ -1,0 +1,24 @@
+{
+  "run_id": "20261106T121217Z-c191b5fb",
+  "match_radius_arcsec": 0.15,
+  "samples": {
+    "ceers_t021": {
+      "n_merged": 7582,
+      "n_quality_ok": 3156,
+      "n_ranked": 3156,
+      "ref_sharpness_nan_frac_gated": 0.916
+    },
+    "smacs0723_miri": {
+      "n_merged": 908,
+      "n_quality_ok": 113,
+      "n_ranked": 113,
+      "ref_sharpness_nan_frac_gated": 0.717
+    },
+    "smacs0723_nircam": {
+      "n_merged": 6879,
+      "n_quality_ok": 3077,
+      "n_ranked": 3077,
+      "ref_sharpness_nan_frac_gated": 0.845
+    }
+  }
+}

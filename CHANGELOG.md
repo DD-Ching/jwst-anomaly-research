@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: SMACS 0723 on MAST's jwst 3.0.0 catalogs: six of nine candidate records reproduce
+- **Why:** TASKS "Next (M2)" re-fetch of program 2736; MAST has served jwst 3.0.0 builds since at least 10-26 (#374),
+  while hourly runs since 11-04 only added tally lines. Plan pushed before any fetch (`results/smacs_jwst3/PLAN.md`).
+- **Result** (`results/smacs_jwst3/RESULT.md`): 2736 NIRCam rows per band +22–30 %; merged sources 5254 → 6879
+  (MIRI 530 → 908), while byte-identical CEERS still merges to 7582. The six records with an astrophysical or open
+  verdict (2804, 829, 1032, 1243, 438, 2915) reproduce at ≤ 0.004″ with ranks ±1; the three "catalog effect"
+  records drop out (1096, 2559: sharpness NaN by the later D-013 gate; 2925: no counterpart within 0.15″).
+- **Failed / blocked:** CDS (SIMBAD TAP, XMatch) reset every connection from the cloud session, so star separation
+  (D-012) and spike screening (D-019) did not run; the mixed top 20 is not a candidate list.
+- **Handoff:** galaxy-stratum re-run when CDS is reachable; the lensing grid line still waits on the owner's G1 ruling
+  (D-027), D115b on its reopen (D-109 addendum 9).
+
 ## 2026-11-02: Network tests get a 5-min per-test timeout (#374)
 - **Why:** the 2026-11-02 weekly run (41476680422) stalled 22 min on one line of live crossmatch tests, hit the 30-min
   job timeout and ended cancelled with no test summary, so `report-failure` never fired.
