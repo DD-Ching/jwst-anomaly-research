@@ -52,6 +52,21 @@ def test_contract():
     assert s.meta["feature_names"] == [f"x{j}" for j in range(5)]
 
 
+def test_ecsv_round_trip_keeps_scores(tmp_path):
+    """Saved features re-score exactly: names follow columns, not the (sorted) meta keys."""
+    f = make_features(p=4)
+    f.rename_columns(["x0", "x1", "x2", "x3"], ["zeta", "alpha", "mu", "beta"])
+    f.meta["feature_spec"] = {c: "normal" for c in ("zeta", "alpha", "mu", "beta")}
+    path = tmp_path / "features.ecsv"
+    f.write(path)
+    g = Table.read(path)
+    assert list(g.meta["feature_spec"]) != ["zeta", "alpha", "mu", "beta"]  # the hazard is real
+    assert feature_names(g) == feature_names(f) == ["zeta", "alpha", "mu", "beta"]
+    a, b = score_anomalies(f, random_state=0), score_anomalies(g, random_state=0)
+    assert list(a["source_uid"]) == list(b["source_uid"])
+    assert np.allclose(a["score"], b["score"])
+
+
 def test_planted_outlier_ranks_at_the_top():
     f = make_features()
     f["x2"][17] = 12.0
