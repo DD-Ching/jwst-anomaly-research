@@ -1,0 +1,9 @@
+baseline re-score vs pipeline: 2822 of 2938 ranks differ, max 239
+returned gaia_position stars (rank with them): [(9, 'f200w_3209'), (10, 'f200w_3999'), (11, 'f200w_3469'), (23, 'f200w_3794'), (34, 'f200w_3141'), (1720, 'f277w_816')]
+record  pipeline  baseline  with_returned
+f200w_921  8  7  8
+f200w_2490  6  5  5
+f277w_743  7  6  7
+f356w_1098  15  15  17
+f200w_389  11  11  13
+f200w_2586  27  27  31

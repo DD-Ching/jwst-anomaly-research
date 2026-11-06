@@ -117,14 +117,26 @@ def test_recorded_primary_backends(targets, replay):
 
 def test_recorded_fallback_backends_agree(targets, replay):
     calls: list = []
-    for svc, backend in (("simbad", "xmatch"), ("ned", "tap"), ("gaia", "xmatch")):
+    failed = (("simbad", "xmatch"), ("ned", "tap"), ("gaia", "xmatch"), ("gaia", "field"))
+    for svc, backend in failed:
         replay((svc, backend), failing(svc, backend, calls))
     summary = xm.crossmatch(targets, RADIUS, cache=False, retries=0)
     check_smacs0723_summary(summary)
     assert summary.meta["backend"] == {"simbad": "tap", "ned": "cone", "gaia": "tap"}
     assert set(summary.meta["service_errors"]) == {"simbad", "ned", "gaia"}
     assert "ConnectionError" in summary.meta["service_errors"]["gaia"]
-    assert len(calls) == 3
+    assert len(calls) == 4
+
+
+def test_recorded_gaia_field_matches_per_target_tap(targets, replay):
+    """The field cone (one query, local association) reproduces the per-target Gaia TAP rows."""
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch"))
+    field = xm.crossmatch(targets, RADIUS, services=("gaia",), cache=False, retries=0)
+    assert field.meta["backend"] == {"gaia": "field"}
+    tap = xm.crossmatch(targets, RADIUS, services=("gaia",), cache=False, backends={"gaia": "tap"})
+    for col in ("best_match_id", "is_star", "n_gaia", "best_match_type"):
+        assert list(field[col]) == list(tap[col]), col
+    assert by_uid(field)[GAIA_STAR]["is_star"] and by_uid(field)[GAIA_STAR_CAT]["is_star"]
 
 
 def test_query_matches_long_format(targets, replay):
@@ -503,6 +515,17 @@ def test_live_fallback_backends(targets):
     summary = xm.crossmatch(targets, RADIUS, cache=False, backends=backends)
     assert summary.meta["backend"] == backends, summary.meta["service_errors"]
     check_smacs0723_summary(summary)
+
+
+@pytest.mark.network
+def test_live_gaia_field_backend(targets):
+    field = xm.crossmatch(
+        targets, RADIUS, services=("gaia",), cache=False, backends={"gaia": "field"}
+    )
+    assert field.meta["backend"] == {"gaia": "field"}, field.meta["service_errors"]
+    rows = by_uid(field)
+    for uid in (GAIA_STAR, GAIA_STAR_CAT):
+        assert rows[uid]["is_star"] and rows[uid]["n_gaia"] >= 1, uid
 
 
 @pytest.mark.network

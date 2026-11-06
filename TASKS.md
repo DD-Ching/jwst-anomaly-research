@@ -680,7 +680,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   - MIRI: evaluate fixed-aperture colours.
 - DJA photo-z as a ranking feature or stratifier (it is used for vetting since cycle 7).
 - ~~Re-fetch program 2736 after MAST reprocesses it~~ done 2026-11-06 (jwst 3.0.0, `results/smacs_jwst3/RESULT.md`).
-  Open: a galaxy-stratum re-run once CDS (SIMBAD/XMatch) is reachable from the session.
+  Galaxy-stratum re-run with Gaia-only star separation done 2026-11-06 (`results/smacs_jwst3/galaxy_stratum/RESULT.md`:
+  records stay in the top 31). Open: the SIMBAD star rule and lens flags once CDS is reachable from the session.
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
   injection-recovery. Keep the evaluation fields out of any training data.
 - Crossmatch and classify: propagate Gaia positions to the JWST epoch, so fast-moving stars and brown

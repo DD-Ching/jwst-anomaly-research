@@ -1,0 +1,18 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: source_uid, datatype: string}
+# - {name: rank, datatype: int64}
+# - {name: reason, datatype: string}
+# - {name: spike_s6, datatype: float64}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: sources screened out of the top 20 on cutout evidence; see 'reason'}
+# schema: astropy-2.0
+source_uid rank reason spike_s6
+jw02736-o001_t001_nircam_f200w_3255 1 "spikes, no host light (D-020)" 10.44039228840248
+jw02736-o001_t001_nircam_f200w_1395 3 "spikes, stellar colours (D-019)" 5.554396614651562
+jw02736-o001_t001_nircam_f200w_2693 5 "low cutout weight (D-021)" 0.5344654056036323
+jw02736-o001_t001_nircam_f200w_3188 12 "spikes, no host light (D-020)" 21.493599631771538
+jw02736-o001_t001_nircam_f200w_3884 13 "spikes, stellar colours (D-019)" 6.7739352078525545
+jw02736-o001_t001_nircam_f200w_3213 28 "spikes, no host light (D-020)" 22.38952628372734

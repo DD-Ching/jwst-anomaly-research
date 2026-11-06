@@ -2,19 +2,24 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-11-06 (WIP, draft #743): SMACS jwst 3.0.0 galaxy-stratum re-run blocked by slow catalog services
+## 2026-11-06: SMACS jwst 3.0.0 galaxy stratum with Gaia-only star separation: six records stay in the top 31
 - **Plan** (`results/smacs_jwst3/PLAN_galaxy_stratum.md`, pushed first): star separation from Gaia only while CDS
-  is unreachable, with the missing SIMBAD-galaxy override bounded by the `gaia_position` star count.
-- **Failed:** CDS (SIMBAD TAP, XMatch) still resets or answers 503. The ESA Gaia TAP fallback sends 69 requests of
-  100 OR'd cones for 6879 SMACS sources at 50–60 s each (60 s read timeouts and retries), so the run was stopped after
-  10 min at request 11. One 0.08° field cone returned 274 rows in 57 s, but 20 min later a 0.013° cone timed out at
-  120 s and the archive then answered 503: service latency, not query size, dominated.
-- **WIP code (not validated live):** `crossmatch` gains a Gaia `field` backend (one TAP cone enclosing all targets,
-  local association; refused above `FIELD_MAX_RADIUS_DEG` 0.25°, ASSUMPTION, so the per-target chain still applies),
-  chain `xmatch → field → tap`. Offline suite 2395 passed (2 new tests); no live fixture yet.
-- **Handoff:** when gea.esac.esa.int answers, record `tests/data/xmatch_raw_gaia_field.ecsv`
-  (`python tests/test_crossmatch.py --record`), check it reproduces the `tap` classification of the five targets, run
-  `--run-network`, then the galaxy-stratum re-run per the plan. G1 (D-027) and D115b still wait on the owner.
+  is unreachable, with the missing SIMBAD-galaxy override bounded.
+- **Tool:** `crossmatch` gains a Gaia `field` backend (one TAP cone around all targets, local association; refused
+  above `FIELD_MAX_RADIUS_DEG` 0.25°, ASSUMPTION), chain `xmatch → field → tap`. On the five fixture targets it
+  matches the per-target `tap` backend live and recorded (`tests/data/xmatch_raw_gaia_field.ecsv`). SMACS classification took
+  48 s, against > 10 min unfinished for per-target cones earlier today.
+- **Result** (`results/smacs_jwst3/galaxy_stratum/RESULT.md`, run `20261106T142054Z-68e24ff4`): galaxy ranks of the
+  six records: 2804 6 (6), 1032 8 (8), 438 11 (11), 1243 15 (12), 829 7 (3), 2915 27 (21), with the old ranks in
+  brackets. The ±3 hypothesis fails for 829 and 2915, but no record leaves the top 50. A paired re-score returning
+  the 6 Gaia-position-only stars moves the records by +0 to +4; four of those stars would rank 9–23. No verdict
+  changes. Of 15 top-25 entries not among the records (contact sheet seen), f200w_3177 sits in a bright star's
+  spike and halo (likely artefact); none is vetted.
+- **Failed:** CDS (SIMBAD, XMatch) still drops connections from the cloud session. Re-scoring from saved
+  `features.ecsv` does not reproduce the pipeline ranks (2822 of 2938 differ, max 239; records ±1), so only paired
+  re-scores are compared.
+- **Handoff:** SIMBAD-based star rule and lens flags when CDS is reachable (it would settle the four Gaia-position
+  stars). The lensing grid line still waits on the owner's G1 ruling (D-027), D115b on its reopen (D-109 addendum 9).
 
 ## 2026-11-06: SMACS 0723 on MAST's jwst 3.0.0 catalogs: six of nine candidate records reproduce
 - **Why:** TASKS "Next (M2)" re-fetch of program 2736; MAST has served jwst 3.0.0 builds since at least 10-26 (#374),
