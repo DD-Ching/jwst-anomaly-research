@@ -156,6 +156,12 @@ def test_simbad_mirror_queries_the_cfa_server(targets, monkeypatch):
     assert servers == [xm.SIMBAD_CDS_SERVER, xm.SIMBAD_MIRROR_SERVER]
 
 
+def test_simbad_servers_are_astroquery_servers():
+    from astroquery.simbad import conf
+
+    assert {xm.SIMBAD_CDS_SERVER, xm.SIMBAD_MIRROR_SERVER} <= set(conf.servers_list)
+
+
 def test_recorded_gaia_field_matches_per_target_tap(targets, replay):
     """The field cone (one query, local association) reproduces the per-target Gaia TAP rows."""
     replay(("gaia", "xmatch"), failing("gaia", "xmatch"))
@@ -696,7 +702,11 @@ def record_fixtures() -> None:
     coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
     opts = xm._Options(timeout_s=60.0, retries=2, backoff_s=2.0)
     for (service, backend), fetch in xm._FETCHERS.items():
-        raw = fetch(coords, RADIUS, opts)
+        try:
+            raw = fetch(coords, RADIUS, opts)
+        except Exception as e:  # e.g. CDS unreachable from cloud sessions: record the others
+            print(f"{service}/{backend}: not recorded ({type(e).__name__}: {e})")
+            continue
         keep = [c for c in ("xm_idx", "angDist") if c in raw.colnames]
         raw = raw[keep + list(xm.RAW_COLUMNS[(service, backend)].values())]
         raw.meta.clear()

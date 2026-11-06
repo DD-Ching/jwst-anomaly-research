@@ -17,9 +17,9 @@ Plan: `PLAN.md` (pushed before the run). Run `20261106T171253Z-28af4751`, `confi
   2925 no counterpart. **Hypothesis (records within ±3 of #743): holds, with Δ = 0 for all six.**
 - **Why nothing moves:** none of the six Gaia-position-only stars (f200w_3141, 3209, 3469, 3794, 3999; f277w_816)
   has any SIMBAD object within 2″ (mirror query, observed), so the "nearer SIMBAD galaxy wins" rule cannot apply.
-  Post hoc ordinary check: their five Gaia DR3 sources (G 20.6–21.0) all have
+  Post hoc ordinary check: their five distinct Gaia DR3 sources (f200w_3469 and f277w_816 share one) (G 20.6–21.0) all have
   `classprob_dsc_combmod_star` ≥ 0.9993 and are not in `in_galaxy_candidates` (observed catalogue values; DSC is
-  less reliable at G ≳ 20, so this supports, not proves, "star"). #743's bound on the galaxy top 25 (at most these four
+  less reliable at G ≳ 20, so this supports, not proves, "star"). #743's bound on the galaxy top 25 (at most four of these six
   entering at ranks 9–21) is therefore no longer needed: they stay stars under both available rules.
 - **Lens flags on the galaxy top 20:** SIMBAD adds no lens-related type. NED `G_Lens` flags the records 829
   (f277w_743) and 1032 (f200w_921), as before. New SIMBAD identifications: 1243 = `[RBI2023] 18` (G, 0.06″) and

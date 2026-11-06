@@ -244,11 +244,12 @@ FIELD_MIN_TIMEOUT_S = (
 # per-target tap: same best match, is_star, n_gaia and match type on the fixture targets,
 # 2026-11-06). A fresh cache entry of either serves the other, so placing ``field`` before
 # ``tap`` in the chain does not send an offline re-run of a ``tap``-cached sample to the network.
-# Backends that serve the same table, so a fresh cache entry of one serves the other.
+# SIMBAD is one-way: a fresh CDS ``tap`` entry serves ``mirror`` (same tables, identical objects on
+# the 3-object fixture, D-006 addendum 2026-11-06), but a mirror entry never stands in for CDS,
+# whose content the mirror may lag.
 _CACHE_EQUIVALENT = {
     ("gaia", "field"): ("tap",),
     ("gaia", "tap"): ("field",),
-    ("simbad", "tap"): ("mirror",),
     ("simbad", "mirror"): ("tap",),
 }
 _TAP_MAXREC = 100_000  # explicit MAXREC for TAP queries so truncation is detectable
