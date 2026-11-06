@@ -41,7 +41,12 @@ from typing import Any
 
 import astropy.units as u
 import numpy as np
-from astropy.coordinates import SkyCoord, search_around_sky
+from astropy.coordinates import (
+    CartesianRepresentation,
+    SkyCoord,
+    UnitSphericalRepresentation,
+    search_around_sky,
+)
 from astropy.table import Table, unique, vstack
 
 from jwst_anomaly import paths, schema
@@ -54,7 +59,7 @@ SERVICES = ("simbad", "ned", "gaia")
 DEFAULT_BACKENDS: dict[str, tuple[str, ...]] = {
     "simbad": ("xmatch", "tap"),
     "ned": ("tap", "cone"),
-    "gaia": ("xmatch", "tap"),
+    "gaia": ("xmatch", "field", "tap"),
 }
 
 # Exact catalog/service identifiers recorded in meta["catalog"] (see SOURCES.md, unit 5).
@@ -65,6 +70,10 @@ CATALOGS: dict[tuple[str, str], str] = {
     ("ned", "cone"): "NED object search, astroquery.ipac.ned Ned.query_region",
     ("gaia", "xmatch"): "CDS XMatch cat2='vizier:I/355/gaiadr3' (Gaia DR3, epoch J2016.0)",
     ("gaia", "tap"): "ESA Gaia archive TAP gaiadr3.gaia_source (Gaia DR3, epoch J2016.0)",
+    (
+        "gaia",
+        "field",
+    ): "ESA Gaia archive TAP gaiadr3.gaia_source, one field cone (Gaia DR3, J2016.0)",
 }
 
 NED_TAP_URL = "https://ned.ipac.caltech.edu/tap"
@@ -206,12 +215,28 @@ RAW_COLUMNS: dict[tuple[str, str], dict[str, str]] = {
         "pmra_pmdec_corr": "pmra_pmdec_corr",
     },
 }
-_ID_PREFIX = {("gaia", "tap"): "Gaia DR3 "}  # match the VizieR "DR3Name" form
+RAW_COLUMNS[("gaia", "field")] = RAW_COLUMNS[("gaia", "tap")]
+# match the VizieR "DR3Name" form
+_ID_PREFIX = {("gaia", "tap"): "Gaia DR3 ", ("gaia", "field"): "Gaia DR3 "}
 
 _ADQL_CHUNK = 100  # cones per OR'd ADQL request (~2 s per NED TAP chunk, measured 2026-10-07)
 # Targets per request; backends not listed send all targets in one request.
 _CHUNK_SIZE = {("ned", "tap"): _ADQL_CHUNK, ("gaia", "tap"): _ADQL_CHUNK, ("ned", "cone"): 1}
 _MAX_TARGETS = {("ned", "cone"): 100}  # cap for the per-target NED fallback
+# One cone enclosing all targets replaces per-target OR'd cones when the field is compact: on
+# 2026-11-06 a 0.08 deg Gaia field cone took 57 s from a cloud session, while 100-cone requests took
+# 50-60 s each (69 for SMACS 0723). Wider target sets fall back to the per-target chain.
+FIELD_MAX_RADIUS_DEG = (
+    0.25  # ASSUMPTION: a few thousand Gaia rows at high latitude (not in the plane)
+)
+FIELD_MIN_TIMEOUT_S = (
+    180.0  # ASSUMPTION: one field cone took 13-57 s on 2026-11-06; above the 60 s default
+)
+# Backends that query the same table and were validated to give the same matches (field vs
+# per-target tap: same best match, is_star, n_gaia and match type on the fixture targets,
+# 2026-11-06). A fresh cache entry of either serves the other, so placing ``field`` before
+# ``tap`` in the chain does not send an offline re-run of a ``tap``-cached sample to the network.
+_CACHE_EQUIVALENT = {("gaia", "field"): ("tap",), ("gaia", "tap"): ("field",)}
 _TAP_MAXREC = 100_000  # explicit MAXREC for TAP queries so truncation is detectable
 _CACHE_FORMAT = 1
 
@@ -306,8 +331,10 @@ def query_matches(
     ``cache`` reads/writes normalized results under ``cache_dir`` (default
     ``paths.cache_dir() / "crossmatch"``); a backend's cache entry is used if it is younger than
     ``cache_max_age_days`` (None: no expiry), otherwise that backend is queried, and a fallback's
-    cache entry is only consulted after the backends before it failed. ``refresh=True`` skips
-    cache reads. Each HTTP request gets ``timeout_s`` and up to ``retries`` retries after
+    cache entry is only consulted after the backends before it failed (except a validated
+    equivalent backend of the same table, ``_CACHE_EQUIVALENT``). ``refresh=True`` skips
+    cache reads. Each HTTP request gets ``timeout_s`` (the Gaia ``field`` cone at least
+    ``FIELD_MIN_TIMEOUT_S``) and up to ``retries`` retries after
     ``backoff_s * 2**k`` seconds.
     Raises :class:`CrossmatchError` if every requested service fails.
     """
@@ -480,15 +507,23 @@ def _run_service(
     """Walk the backend chain: fresh cache entry, else query; first success wins."""
     ra, dec = coords.ra.deg, coords.dec.deg
     result = _ServiceResult(objects=None)
+    checked: set[str] = set()
     for backend in chain:
         path = _cache_path(cache_dir, service, backend, ra, dec, radius_arcsec)
         if cache and not refresh:
-            hit = _cache_read(path, max_age_days)
-            if hit is not None:
-                log.info("%s: using cached %s result %s", service, backend, path.name)
-                result.objects, result.backend, result.from_cache = hit, backend, True
-                result.query_utc = hit.meta["query_utc"]
-                return result
+            # an equivalent backend's entry counts only if the caller's chain includes it
+            equivalent = [b for b in _CACHE_EQUIVALENT.get((service, backend), ()) if b in chain]
+            for cached in (backend, *equivalent):
+                if cached in checked:
+                    continue
+                checked.add(cached)
+                cpath = _cache_path(cache_dir, service, cached, ra, dec, radius_arcsec)
+                hit = _cache_read(cpath, max_age_days)
+                if hit is not None:
+                    log.info("%s: using cached %s result %s", service, cached, cpath.name)
+                    result.objects, result.backend, result.from_cache = hit, cached, True
+                    result.query_utc = hit.meta["query_utc"]
+                    return result
         query_utc = datetime.now(UTC).isoformat(timespec="seconds")
         t0 = time.perf_counter()
         try:
@@ -608,6 +643,44 @@ def _fetch_tap(url: str, table: str, key: tuple[str, str]) -> Callable[..., Tabl
     return fetch
 
 
+def field_circle(coords: SkyCoord, radius_arcsec: float) -> tuple[float, float, float]:
+    """Centre (deg) and radius (deg) of a cone holding every target's search cone."""
+    xyz = coords.cartesian.xyz.value.reshape(3, -1).mean(axis=1)
+    norm = float(np.linalg.norm(xyz))
+    if not norm > 0:  # also catches empty targets (NaN mean)
+        raise _PermanentError("targets have no defined mean direction")
+    sph = CartesianRepresentation(*(xyz / norm)).represent_as(UnitSphericalRepresentation)
+    centre = SkyCoord(sph.lon, sph.lat, frame="icrs")
+    reach = float(np.max(centre.separation(coords).deg))
+    return float(centre.ra.deg), float(centre.dec.deg), reach + radius_arcsec / 3600.0
+
+
+def _fetch_field_tap(url: str, table: str, key: tuple[str, str]) -> Callable[..., Table]:
+    """One TAP cone around all targets; association stays local (:func:`_associate`)."""
+
+    def fetch(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
+        import pyvo
+        from pyvo.utils.http import create_session
+
+        ra, dec, r = field_circle(coords, radius_arcsec)
+        if r > FIELD_MAX_RADIUS_DEG:
+            raise _PermanentError(f"field radius {r:.3f} deg > {FIELD_MAX_RADIUS_DEG} deg")
+        cols = ", ".join(RAW_COLUMNS[key].values())
+        query = (
+            f"SELECT {cols} FROM {table} WHERE "
+            f"CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', {ra:.9f}, {dec:.9f}, {r:.9f})) = 1"
+        )
+        timeout = max(opts.timeout_s, FIELD_MIN_TIMEOUT_S)
+        with _default_timeout(create_session(), timeout) as session:
+            result = pyvo.dal.TAPService(url, session=session).run_sync(query, maxrec=_TAP_MAXREC)
+        out = result.to_table()
+        if len(out) >= _TAP_MAXREC or getattr(result, "query_status", None) == "OVERFLOW":
+            raise _PermanentError(f"{url} result truncated at {len(out)} rows")
+        return out
+
+    return fetch
+
+
 def _fetch_ned_cone(coords: SkyCoord, radius_arcsec: float, opts: _Options) -> Table:
     from astroquery import cache_conf
     from astroquery.ipac.ned import Ned
@@ -632,6 +705,7 @@ _FETCHERS: dict[tuple[str, str], Callable[[SkyCoord, float, _Options], Table]] =
     ("ned", "cone"): _fetch_ned_cone,
     ("gaia", "xmatch"): _fetch_xmatch("vizier:I/355/gaiadr3"),
     ("gaia", "tap"): _fetch_tap(GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "tap")),
+    ("gaia", "field"): _fetch_field_tap(GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field")),
 }
 
 

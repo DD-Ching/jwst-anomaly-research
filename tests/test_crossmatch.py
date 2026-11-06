@@ -117,14 +117,26 @@ def test_recorded_primary_backends(targets, replay):
 
 def test_recorded_fallback_backends_agree(targets, replay):
     calls: list = []
-    for svc, backend in (("simbad", "xmatch"), ("ned", "tap"), ("gaia", "xmatch")):
+    failed = (("simbad", "xmatch"), ("ned", "tap"), ("gaia", "xmatch"), ("gaia", "field"))
+    for svc, backend in failed:
         replay((svc, backend), failing(svc, backend, calls))
     summary = xm.crossmatch(targets, RADIUS, cache=False, retries=0)
     check_smacs0723_summary(summary)
     assert summary.meta["backend"] == {"simbad": "tap", "ned": "cone", "gaia": "tap"}
     assert set(summary.meta["service_errors"]) == {"simbad", "ned", "gaia"}
     assert "ConnectionError" in summary.meta["service_errors"]["gaia"]
-    assert len(calls) == 3
+    assert len(calls) == 4
+
+
+def test_recorded_gaia_field_matches_per_target_tap(targets, replay):
+    """The field cone (one query, local association) reproduces the per-target Gaia TAP rows."""
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch"))
+    field = xm.crossmatch(targets, RADIUS, services=("gaia",), cache=False, retries=0)
+    assert field.meta["backend"] == {"gaia": "field"}
+    tap = xm.crossmatch(targets, RADIUS, services=("gaia",), cache=False, backends={"gaia": "tap"})
+    for col in ("best_match_id", "is_star", "n_gaia", "best_match_type"):
+        assert list(field[col]) == list(tap[col]), col
+    assert by_uid(field)[GAIA_STAR]["is_star"] and by_uid(field)[GAIA_STAR_CAT]["is_star"]
 
 
 def test_query_matches_long_format(targets, replay):
@@ -416,6 +428,28 @@ def test_fallback_cache_does_not_mask_healthy_primary(targets, replay, tmp_path)
     assert third.meta["backend"] == {"ned": "tap"} and third.meta["from_cache"] == {"ned": True}
 
 
+def test_equivalent_gaia_cache_serves_field_backend(targets, replay, tmp_path):
+    # A sample cached via per-target tap must re-run offline although field now precedes tap.
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch"))
+    first = xm.crossmatch(targets, RADIUS, ["gaia"], cache_dir=tmp_path, backends={"gaia": "tap"})
+    calls: list = []
+    for key in xm._FETCHERS:
+        replay(key, failing(*key, calls))
+    again = xm.crossmatch(targets, RADIUS, ["gaia"], cache_dir=tmp_path, retries=0)
+    assert again.meta["backend"] == {"gaia": "tap"} and again.meta["from_cache"] == {"gaia": True}
+    # only the primary is tried; field is served by tap's cache
+    assert calls == [("gaia", "xmatch")]
+    # an explicitly pinned backend never takes the equivalent's entry
+    replay(("gaia", "field"), recorded("gaia", "field"))
+    pinned = xm.crossmatch(
+        targets, RADIUS, ["gaia"], cache_dir=tmp_path, retries=0, backends={"gaia": "field"}
+    )
+    assert pinned.meta["backend"] == {"gaia": "field"}
+    assert pinned.meta["from_cache"] == {"gaia": False}
+    for col in ("n_gaia", "is_star"):
+        assert list(again[col]) == list(first[col]), col
+
+
 def test_corrupt_cache_entry_is_a_miss(targets, replay, tmp_path):
     xm.crossmatch(targets, RADIUS, ["gaia"], cache_dir=tmp_path)
     (entry,) = tmp_path.glob("gaia_xmatch_*.ecsv")
@@ -487,6 +521,35 @@ def test_backend_names_are_case_insensitive(targets, replay):
     assert out.meta["backend"] == {"gaia": "tap"}
 
 
+def test_field_circle_holds_every_search_cone(targets):
+    coords = SkyCoord(targets["ra"], targets["dec"], unit="deg")
+    ra, dec, r = xm.field_circle(coords, RADIUS)
+    sep = SkyCoord(ra, dec, unit="deg").separation(coords).deg
+    assert np.all(sep + RADIUS / 3600.0 <= r + 1e-12)
+    assert r < 0.05  # five SMACS positions: a compact field
+
+
+def test_wide_field_falls_back_to_per_target_cones(replay, targets, monkeypatch):
+    """A field cone wider than FIELD_MAX_RADIUS_DEG is refused before any request."""
+    calls: list = []
+    replay(("gaia", "xmatch"), failing("gaia", "xmatch", calls))
+    import pyvo
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("field guard must refuse before any TAP request")
+
+    monkeypatch.setattr(pyvo.dal, "TAPService", no_network)
+    real_field = xm._fetch_field_tap(xm.GAIA_TAP_URL, "gaiadr3.gaia_source", ("gaia", "field"))
+    replay(("gaia", "field"), real_field)
+    wide = targets.copy()
+    wide["dec"][0] = wide["dec"][0] + 2.0  # one target 2 deg away
+    matches = xm.query_matches(wide, RADIUS, services=("gaia",), cache=False)
+    assert matches.meta["services_failed"] == []
+    assert matches.meta["backend"]["gaia"] == "tap"
+    assert "field radius" in matches.meta["service_errors"]["gaia"]
+    assert set(calls) == {("gaia", "xmatch")}  # retried; the field fetcher never ran a query
+
+
 # --- Live services ----------------------------------------------------------------------------
 
 
@@ -503,6 +566,17 @@ def test_live_fallback_backends(targets):
     summary = xm.crossmatch(targets, RADIUS, cache=False, backends=backends)
     assert summary.meta["backend"] == backends, summary.meta["service_errors"]
     check_smacs0723_summary(summary)
+
+
+@pytest.mark.network
+def test_live_gaia_field_backend(targets):
+    field = xm.crossmatch(
+        targets, RADIUS, services=("gaia",), cache=False, backends={"gaia": "field"}
+    )
+    assert field.meta["backend"] == {"gaia": "field"}, field.meta["service_errors"]
+    rows = by_uid(field)
+    for uid in (GAIA_STAR, GAIA_STAR_CAT):
+        assert rows[uid]["is_star"] and rows[uid]["n_gaia"] >= 1, uid
 
 
 @pytest.mark.network

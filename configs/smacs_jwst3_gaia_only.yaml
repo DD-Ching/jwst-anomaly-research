@@ -1,0 +1,103 @@
+# SMACS 0723 NIRCam galaxy-stratum re-run on jwst 3.0.0 catalogs without CDS (plan:
+# results/smacs_jwst3/PLAN_galaxy_stratum.md). Generated from configs/reference_sample.yaml with:
+# samples = smacs0723_nircam only; classify.services [gaia] (SIMBAD unreachable, so the
+# "nearer SIMBAD galaxy wins" rule cannot apply); crossmatch.services [ned, gaia].
+name: smacs_jwst3_gaia_only
+archive:
+  collection: JWST
+  calib_level: 3
+  data_rights: PUBLIC
+  product_subgroups:
+  - CAT
+  - I2D
+samples:
+- id: smacs0723_nircam
+  role: science
+  description: JWST ERO SMACS J0723.3-7327 lensing cluster, NIRCam imaging (program 2736)
+  proposal_id: '2736'
+  instrument_name: NIRCAM/IMAGE
+  ref_band: F200W
+  obs_ids:
+  - jw02736-o001_t001_nircam_clear-f090w
+  - jw02736-o001_t001_nircam_clear-f150w
+  - jw02736-o001_t001_nircam_clear-f200w
+  - jw02736-o001_t001_nircam_clear-f277w
+  - jw02736-o001_t001_nircam_clear-f356w
+  - jw02736-o001_t001_nircam_clear-f444w
+  matched_photometry:
+    url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix_phot.fits
+    sha256: 361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166
+    aperture: 1
+    label: dja05
+    radius_arcsec: 0.2
+cloud:
+  s3_bucket: stpubdata
+  l3_key_pattern: jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}
+stages:
+  catalog:
+    merge_radius_arcsec: 0.1
+  quality:
+    grid_arcsec: 1.0
+    min_rel_weight: 0.5
+    min_edge_arcsec: 1.0
+    max_artifact_ci: 1.45
+    min_ranked: 20
+    min_detection_snr: 5
+    require_multiband: true
+  classify:
+    services:
+    - gaia
+    radius_arcsec: 0.5
+    gaia_radius_arcsec: 0.3
+    star_top_k: 10
+    min_stars: 5
+    extended_veto: true
+    stellar_locus:
+      calib_mag_range:
+      - 20.0
+      - 22.5
+      r50_tolerance: 0.2
+      r50_floor: 0.5
+      mag_max: 24.0
+      colours:
+      - - f150w
+        - f444w
+      - - f200w
+        - f356w
+      colour_pad: 0.3
+      min_ref_stars: 10
+  features:
+    daofind_max_ci: 1.8
+  rank:
+    methods:
+    - robust_z
+    - isolation_forest
+    - lof
+    random_state: 0
+  cutouts:
+    top_k: 20
+    size_arcsec: 3.0
+    bands:
+    - F200W
+    screen_low_weight: true
+    spike:
+      radii_arcsec:
+      - 0.2
+      - 0.8
+      search_arcsec: 0.3
+      threshold: 3.0
+      screen: true
+      host_annulus_arcsec:
+      - 0.3
+      - 0.6
+      host_ratio_max: 0.004
+      host_exempt_colour:
+      - f150w
+      - f444w
+      - 1.0
+  crossmatch:
+    top_k: 20
+    radius_arcsec: 1.0
+    services:
+    - ned
+    - gaia

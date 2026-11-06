@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: SMACS jwst 3.0.0 galaxy stratum with Gaia-only star separation: six records stay in the top 31
+- **Plan** (`results/smacs_jwst3/PLAN_galaxy_stratum.md`, pushed first): star separation from Gaia only while CDS
+  is unreachable, with the missing SIMBAD-galaxy override bounded.
+- **Tool:** `crossmatch` gains a Gaia `field` backend (one TAP cone around all targets, local association; refused
+  above `FIELD_MAX_RADIUS_DEG` 0.25°, ASSUMPTION), chain `xmatch → field → tap`. On the five fixture targets it
+  matches the per-target `tap` backend live and recorded (`tests/data/xmatch_raw_gaia_field.ecsv`). SMACS classification took
+  48 s, against > 10 min unfinished for per-target cones earlier today. A fresh `tap` cache entry serves `field`
+  and vice versa (`_CACHE_EQUIVALENT`), so cached samples still re-run offline with `field` ahead of `tap`.
+- **Result** (`results/smacs_jwst3/galaxy_stratum/RESULT.md`, run `20261106T142054Z-68e24ff4`): galaxy ranks of the
+  six records: 2804 6 (6), 1032 8 (8), 438 11 (11), 1243 15 (12), 829 7 (3), 2915 27 (21), with the old ranks in
+  brackets. The ±3 hypothesis fails for 829 and 2915, but no record leaves the top 50. A paired re-score returning
+  the 6 Gaia-position-only stars moves the records by −1 to +2; four of those stars would rank 9–21 (bound post hoc). No verdict
+  changes. Of 15 top-25 entries not among the records (contact sheet seen), f200w_3177 sits in a bright star's
+  spike and halo (likely artefact); none is vetted.
+- **Failed:** CDS (SIMBAD, XMatch) still drops connections from the cloud session. Re-scoring from saved
+  `features.ecsv` first missed 2822 of 2938 pipeline ranks: the ECSV round trip sorts `feature_spec` keys, which
+  permutes the isolation-forest and LOF inputs. The script restores column order and now reproduces every rank.
+- **Handoff:** SIMBAD-based star rule and lens flags when CDS is reachable (it would settle the four Gaia-position
+  stars). The lensing grid line still waits on the owner's G1 ruling (D-027), D115b on its reopen (D-109 addendum 9).
+
 ## 2026-11-06: SMACS 0723 on MAST's jwst 3.0.0 catalogs: six of nine candidate records reproduce
 - **Why:** TASKS "Next (M2)" re-fetch of program 2736; MAST has served jwst 3.0.0 builds since at least 10-26 (#374),
   while hourly runs since 11-04 only added tally lines. Plan pushed before any fetch (`results/smacs_jwst3/PLAN.md`).
