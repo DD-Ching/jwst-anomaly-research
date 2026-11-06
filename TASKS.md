@@ -689,8 +689,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   (names follow column order; CHANGELOG).
 - Image embeddings (Zoobot via `timm`, DINOv2) on cutouts, evaluated against the baseline with
   injection-recovery. Keep the evaluation fields out of any training data.
-- Crossmatch and classify: propagate Gaia positions to the JWST epoch, so fast-moving stars and brown
-  dwarfs land in the star stratum (D-012). Identify lenses by name or literature, not only by otype.
+- ~~Crossmatch and classify: propagate Gaia positions to the JWST epoch (D-012)~~ checked 2026-11-06 on SMACS
+  (`results/gaia_pm_epoch/RESULT.md`): one star shifts > 0.3″ and keeps its label via astrometry; none
+  > 0.5″; not built. Revisit for low-latitude fields or epochs > 10 yr after J2016. Identify lenses by name or literature, not only by otype.
 - Cutouts: north-up panels and an option for shared brightness scaling across panels.
 - Second epochs and medium bands: check the galaxy top k against VENUS (6882) and other later programs
   with `scripts/epoch_compare.py` (D-017). Moving sources are stars; variable ones are AGN or transients.
