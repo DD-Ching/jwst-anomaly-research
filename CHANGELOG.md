@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: SMACS jwst 3.0.0 star stratum vs NED: 3 / 139 galaxy-like matches, no star rule change
+- **Plan first** (`results/smacs_jwst3/star_ned/PLAN.md`), TASKS "Then" item 4 on jwst 3.0.0.
+- **Result** (`results/smacs_jwst3/star_ned/RESULT.md`, `scripts/smacs_star_ned.py`): NED galaxy-like match within
+  0.5″ for 1 / 36 astrometric stars (f200w_3588: Gaia parallax 15.7 σ, a star; NED "G" is a WISE label) and 2 / 97
+  locus stars: f090w_1561 = `[NDA2023] 00713` at 0.03″, NED z 0.3828, compact non-PSF profile (likely cluster
+  member mislabelled by the locus, hypothesis); f200w_3670 0.369″ from `[MJR2023] 002.3` (neighbour). Below the
+  plan's re-rank threshold; no candidate.
+- **Failed / blocked:** ESA Gaia TAP mostly 503 (two runs failed classify; Gaia fetched in a retry loop and read from
+  the cache). CDS XMatch answers but rejects `simbad` and `vizier:I/355/gaiadr3` as unknown tables; not investigated.
+- **Handoff:** lensing grid line still waits on the owner's G1 ruling (D-027), D115b on its reopen. Next unblocked:
+  DJA colours vs CEERS DR1.0; the XMatch table-name rejection; Zoobot/DINOv2 reuse check.
+
 ## 2026-11-06: SMACS 0723 Gaia proper-motion check: no star label changes, propagation not built
 - **Plan first** (`results/gaia_pm_epoch/PLAN.md`): would J2016 → 2022.43 motion cost D-012 star labels?
 - **Result** (`results/gaia_pm_epoch/RESULT.md`, `scripts/gaia_pm_epoch.py`): of 96 Gaia sources with proper

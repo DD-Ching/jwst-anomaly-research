@@ -658,7 +658,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   (UNCOVER v2.0, RELICS, HFF) for fields without a Lenstool `best.par`.
 
 ## Then (M1 follow-through, after the M3 items)
-4. **Star-stratum sources with NED galaxy matches** (run `20261007T162133Z-2511977c`). Check their classification and photometry.
+4. ~~**Star-stratum sources with NED galaxy matches**~~ done 2026-11-06 on jwst 3.0.0 (`results/smacs_jwst3/star_ned/RESULT.md`:
+   3 / 139, no rule change; f090w_1561 likely a compact cluster member in the locus). Open: view f200w_3670 (spikes, adjacent arc). Original (run `20261007T162133Z-2511977c`):
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
      arc lies next to it.

@@ -1,0 +1,7 @@
+{
+  "note": "observed catalogue values for the three star-stratum sources with a NED galaxy-like match, copied from the session's crossmatch.query_matches output (services simbad mirror + gaia field, radius 0.5 arcsec, 2026-11-06 ~19:33Z) and the run's sources.ecsv",
+  "run_id": "20261106T192505Z-3470b4cf",
+  "jw02736-o001_t001_nircam_f200w_3588": {"star_basis": "simbad_or_gaia_astrometry", "f200w_aper_total_abmag": 16.278, "gaia_id": "Gaia DR3 5262899924900824448", "gaia_sep_arcsec": 0.052, "parallax_mas": 0.6055, "parallax_error_mas": 0.0386, "parallax_over_error_derived": 15.7, "pmra_mas_yr": -6.841, "pmra_rounded": -6.84, "pmra_error_mas_yr": 0.048, "simbad_within_0p5": 0},
+  "jw02736-o001_t001_nircam_f090w_1561": {"star_basis": "stellar_locus", "f200w_aper_total_abmag": null, "gaia_within_0p5": 0, "simbad_within_0p5": 0, "star_rank": 2, "contact_sheet": "seen (stars top 10, panel #2)"},
+  "jw02736-o001_t001_nircam_f200w_3670": {"star_basis": "stellar_locus", "f200w_aper_total_abmag": 22.511, "gaia_within_0p5": 0, "simbad_within_0p5": 0, "star_rank": 24, "contact_sheet": "not viewed (outside the top 10)"}
+}

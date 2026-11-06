@@ -1,0 +1,141 @@
+source_uid,star_rank,star_basis,ra,dec,ned_name,ned_type,galaxy_like,sep_arcsec,ned_redshift
+jw02736-o001_t001_nircam_f200w_3220,1,simbad_or_gaia_astrometry,110.845114,-73.455415,SMACS J0723-7327:[CSM2022] 14,*,False,0.172,0.0
+jw02736-o001_t001_nircam_f090w_1561,2,stellar_locus,110.850333,-73.453783,SMACS J0723:[NDA2023] 00713,G,True,0.030,0.3828
+jw02736-o001_t001_nircam_f200w_3196,3,stellar_locus,110.816625,-73.455212,SMACS J0723-7327:[CSM2022] 13,*,False,0.343,0.0
+jw02736-o001_t001_nircam_f200w_3417,4,stellar_locus,110.714321,-73.478233,,,False,,
+jw02736-o001_t001_nircam_f200w_3209,5,gaia_position,110.840617,-73.453411,SMACS J0723-7327:[CSM2022] 12,*,False,0.419,0.0
+jw02736-o001_t001_nircam_f200w_3746,6,simbad_or_gaia_astrometry,110.701262,-73.490641,WISEA J072248.34-732926.2,,False,0.195,nan
+jw02736-o001_t001_nircam_f277w_1851,7,simbad_or_gaia_astrometry,110.845135,-73.455443,SMACS J0723-7327:[CSM2022] 14,*,False,0.271,0.0
+jw02736-o001_t001_nircam_f200w_3011,8,stellar_locus,110.612746,-73.480097,,,False,,
+jw02736-o001_t001_nircam_f090w_2694,9,simbad_or_gaia_astrometry,110.845014,-73.455425,SMACS J0723-7327:[CSM2022] 14,*,False,0.182,0.0
+jw02736-o001_t001_nircam_f200w_4030,10,stellar_locus,110.835932,-73.473219,,,False,,
+jw02736-o001_t001_nircam_f200w_585,11,stellar_locus,110.804294,-73.444161,SMACS J0723-7327:[ICR2022] 377,,False,0.354,0.0
+jw02736-o001_t001_nircam_f200w_2969,12,simbad_or_gaia_astrometry,110.694350,-73.459470,,,False,,
+jw02736-o001_t001_nircam_f200w_3089,13,stellar_locus,110.779758,-73.449183,,,False,,
+jw02736-o001_t001_nircam_f200w_899,14,stellar_locus,110.856556,-73.439482,,,False,,
+jw02736-o001_t001_nircam_f200w_3560,15,stellar_locus,110.724023,-73.477941,,,False,,
+jw02736-o001_t001_nircam_f200w_2442,16,stellar_locus,110.877599,-73.461883,SMACS J0723-7327:[ICR2022] 141,,False,0.474,0.0
+jw02736-o001_t001_nircam_f200w_3204,17,stellar_locus,110.835537,-73.453099,SMACS J0723-7327:[CSM2022] 11,*,False,0.391,0.0
+jw02736-o001_t001_nircam_f277w_816,18,gaia_position,110.643821,-73.488951,,,False,,
+jw02736-o001_t001_nircam_f200w_3270,19,stellar_locus,110.667317,-73.477844,,,False,,
+jw02736-o001_t001_nircam_f200w_3303,20,stellar_locus,110.777881,-73.458524,,,False,,
+jw02736-o001_t001_nircam_f200w_3468,21,stellar_locus,110.644015,-73.488843,,,False,,
+jw02736-o001_t001_nircam_f200w_3088,22,stellar_locus,110.779961,-73.449061,,,False,,
+jw02736-o001_t001_nircam_f200w_2379,23,stellar_locus,110.836875,-73.468712,SMACS J0723-7327:[ICR2022] 040,,False,0.342,0.0
+jw02736-o001_t001_nircam_f200w_3670,24,stellar_locus,110.836848,-73.458635,SMACS J0723-7327:[CSM2022] 19,*,False,0.316,0.0
+jw02736-o001_t001_nircam_f200w_3670,24,stellar_locus,110.836848,-73.458635,SMACS J0723-73:[MJR2023] 002.3,G_Lens,True,0.369,1.3715
+jw02736-o001_t001_nircam_f200w_3162,25,stellar_locus,110.695501,-73.469431,,,False,,
+jw02736-o001_t001_nircam_f200w_712,26,stellar_locus,110.765084,-73.454727,,,False,,
+jw02736-o001_t001_nircam_f200w_783,27,stellar_locus,110.833494,-73.442222,SMACS J0723-7327:[ICR2022] 410,,False,0.441,0.5
+jw02736-o001_t001_nircam_f200w_3164,28,stellar_locus,110.703451,-73.467151,,,False,,
+jw02736-o001_t001_nircam_f200w_2987,29,stellar_locus,110.633879,-73.472692,,,False,,
+jw02736-o001_t001_nircam_f090w_1054,30,stellar_locus,110.811832,-73.453297,SMACS J0723-7327:[CSM2022] 10,*,False,0.313,0.0
+jw02736-o001_t001_nircam_f090w_2689,31,stellar_locus,110.835558,-73.455792,SMACS J0723-7327:[CSM2022] 15,*,False,0.339,0.0
+jw02736-o001_t001_nircam_f200w_364,32,stellar_locus,110.783998,-73.444352,SMACS J0723-7327:[ICR2022] 376,,False,0.309,0.0
+jw02736-o001_t001_nircam_f200w_686,33,stellar_locus,110.850523,-73.436851,,,False,,
+jw02736-o001_t001_nircam_f200w_257,34,stellar_locus,110.770307,-73.445257,,,False,,
+jw02736-o001_t001_nircam_f200w_1161,35,stellar_locus,110.856654,-73.443880,,,False,,
+jw02736-o001_t001_nircam_f200w_3532,36,simbad_or_gaia_astrometry,110.868857,-73.447838,WISEA J072328.61-732652.2,,False,0.402,nan
+jw02736-o001_t001_nircam_f200w_494,37,stellar_locus,110.625353,-73.478798,,,False,,
+jw02736-o001_t001_nircam_f200w_3899,38,stellar_locus,110.868130,-73.462583,SMACS J0723-7327:[ICR2022] 135,,False,0.431,1.85
+jw02736-o001_t001_nircam_f200w_3646,39,simbad_or_gaia_astrometry,110.645975,-73.495830,,,False,,
+jw02736-o001_t001_nircam_f200w_3937,40,simbad_or_gaia_astrometry,110.899649,-73.458812,WISEA J072335.91-732731.8,,False,0.177,nan
+jw02736-o001_t001_nircam_f200w_3565,41,stellar_locus,110.671345,-73.490117,,,False,,
+jw02736-o001_t001_nircam_f200w_308,42,stellar_locus,110.746575,-73.450939,,,False,,
+jw02736-o001_t001_nircam_f200w_3353,43,stellar_locus,110.804211,-73.458244,,,False,,
+jw02736-o001_t001_nircam_f200w_3999,44,gaia_position,110.828891,-73.473604,,,False,,
+jw02736-o001_t001_nircam_f200w_1881,45,stellar_locus,110.793434,-73.468289,SMACS J0723-7327:[ICR2022] 044,,False,0.207,0.0
+jw02736-o001_t001_nircam_f200w_322,46,stellar_locus,110.674645,-73.465776,,,False,,
+jw02736-o001_t001_nircam_f200w_337,47,stellar_locus,110.813881,-73.437931,SMACS J0723:[NDA2023] s10444,*,False,0.020,0.0
+jw02736-o001_t001_nircam_f200w_3881,48,simbad_or_gaia_astrometry,110.858017,-73.464252,WISEA J072325.90-732751.2,,False,0.130,nan
+jw02736-o001_t001_nircam_f200w_413,49,stellar_locus,110.819547,-73.438207,SMACS J0723-7327:[ICR2022] 444,,False,0.458,0.0
+jw02736-o001_t001_nircam_f200w_3745,50,simbad_or_gaia_astrometry,110.702272,-73.489791,,,False,,
+jw02736-o001_t001_nircam_f200w_3139,51,stellar_locus,110.766297,-73.453684,,,False,,
+jw02736-o001_t001_nircam_f200w_3055,52,simbad_or_gaia_astrometry,110.685785,-73.467636,,,False,,
+jw02736-o001_t001_nircam_f200w_3092,53,simbad_or_gaia_astrometry,110.783340,-73.448773,,,False,,
+jw02736-o001_t001_nircam_f200w_3062,54,simbad_or_gaia_astrometry,110.634966,-73.480835,,,False,,
+jw02736-o001_t001_nircam_f200w_358,55,stellar_locus,110.669322,-73.467448,,,False,,
+jw02736-o001_t001_nircam_f200w_595,56,stellar_locus,110.657752,-73.474044,,,False,,
+jw02736-o001_t001_nircam_f200w_969,57,stellar_locus,110.624349,-73.487565,,,False,,
+jw02736-o001_t001_nircam_f200w_3829,58,stellar_locus,110.718371,-73.489729,,,False,,
+jw02736-o001_t001_nircam_f200w_2266,59,stellar_locus,110.736286,-73.486830,,,False,,
+jw02736-o001_t001_nircam_f200w_420,60,stellar_locus,110.635664,-73.475540,,,False,,
+jw02736-o001_t001_nircam_f200w_3178,61,simbad_or_gaia_astrometry,110.826267,-73.448673,WISEA J072318.32-732655.3,*,False,0.177,0.0
+jw02736-o001_t001_nircam_f200w_2165,62,stellar_locus,110.711394,-73.490134,,,False,,
+jw02736-o001_t001_nircam_f200w_2921,63,simbad_or_gaia_astrometry,110.839155,-73.430992,,,False,,
+jw02736-o001_t001_nircam_f200w_3409,64,stellar_locus,110.853275,-73.444945,SMACS J0723-7327:[ICR2022] 368,,False,0.465,6.1
+jw02736-o001_t001_nircam_f200w_3693,65,stellar_locus,110.865221,-73.454725,SMACS J0723-7327:[ICR2022] 254,,False,0.457,0.0
+jw02736-o001_t001_nircam_f200w_3866,66,simbad_or_gaia_astrometry,110.754033,-73.484713,WISEA J072301.06-732905.0,,False,0.410,nan
+jw02736-o001_t001_nircam_f200w_316,67,stellar_locus,110.822647,-73.435689,,,False,,
+jw02736-o001_t001_nircam_f200w_3588,68,simbad_or_gaia_astrometry,110.796251,-73.466028,WISEA J072311.11-732757.7,G,True,0.064,0.24
+jw02736-o001_t001_nircam_f200w_3783,69,stellar_locus,110.714206,-73.488965,,,False,,
+jw02736-o001_t001_nircam_f200w_235,70,stellar_locus,110.759894,-73.446792,,,False,,
+jw02736-o001_t001_nircam_f200w_3309,71,simbad_or_gaia_astrometry,110.806818,-73.451714,SMACS J0723-7327:[CSM2022] 09,*,False,0.324,0.0
+jw02736-o001_t001_nircam_f200w_2087,72,stellar_locus,110.678751,-73.495220,,,False,,
+jw02736-o001_t001_nircam_f200w_3794,73,gaia_position,110.879737,-73.456656,,,False,,
+jw02736-o001_t001_nircam_f200w_3699,74,stellar_locus,110.685024,-73.492896,,,False,,
+jw02736-o001_t001_nircam_f200w_4031,75,stellar_locus,110.836223,-73.473174,,,False,,
+jw02736-o001_t001_nircam_f200w_2552,76,stellar_locus,110.824768,-73.474399,,,False,,
+jw02736-o001_t001_nircam_f200w_3254,77,stellar_locus,110.679604,-73.474501,,,False,,
+jw02736-o001_t001_nircam_f200w_3584,78,stellar_locus,110.795026,-73.464432,,,False,,
+jw02736-o001_t001_nircam_f200w_2125,79,stellar_locus,110.694366,-73.492965,,,False,,
+jw02736-o001_t001_nircam_f200w_3850,80,stellar_locus,110.687291,-73.497109,,,False,,
+jw02736-o001_t001_nircam_f200w_3050,81,stellar_locus,110.618899,-73.480931,,,False,,
+jw02736-o001_t001_nircam_f200w_2976,82,stellar_locus,110.644181,-73.469959,,,False,,
+jw02736-o001_t001_nircam_f200w_1874,83,stellar_locus,110.661799,-73.494641,,,False,,
+jw02736-o001_t001_nircam_f200w_3473,84,stellar_locus,110.673887,-73.483176,,,False,,
+jw02736-o001_t001_nircam_f200w_3790,85,simbad_or_gaia_astrometry,110.879760,-73.455956,,,False,,
+jw02736-o001_t001_nircam_f200w_3159,86,simbad_or_gaia_astrometry,110.694622,-73.469272,,,False,,
+jw02736-o001_t001_nircam_f200w_3892,87,stellar_locus,110.740310,-73.487545,,,False,,
+jw02736-o001_t001_nircam_f200w_3688,88,stellar_locus,110.882187,-73.450680,,,False,,
+jw02736-o001_t001_nircam_f200w_3469,89,gaia_position,110.643774,-73.488976,,,False,,
+jw02736-o001_t001_nircam_f200w_2255,90,stellar_locus,110.894579,-73.454602,,,False,,
+jw02736-o001_t001_nircam_f200w_1921,91,stellar_locus,110.871786,-73.453087,,,False,,
+jw02736-o001_t001_nircam_f200w_1192,92,stellar_locus,110.721205,-73.471845,,,False,,
+jw02736-o001_t001_nircam_f200w_3033,93,simbad_or_gaia_astrometry,110.700074,-73.464294,,,False,,
+jw02736-o001_t001_nircam_f200w_3045,94,simbad_or_gaia_astrometry,110.776444,-73.449318,,,False,,
+jw02736-o001_t001_nircam_f200w_1826,95,stellar_locus,110.716397,-73.482992,,,False,,
+jw02736-o001_t001_nircam_f200w_3127,96,simbad_or_gaia_astrometry,110.621301,-73.482651,,,False,,
+jw02736-o001_t001_nircam_f200w_3808,97,simbad_or_gaia_astrometry,110.894044,-73.453486,,,False,,
+jw02736-o001_t001_nircam_f200w_3917,98,simbad_or_gaia_astrometry,110.873655,-73.462258,,,False,,
+jw02736-o001_t001_nircam_f200w_553,99,stellar_locus,110.845384,-73.435356,,,False,,
+jw02736-o001_t001_nircam_f200w_2384,100,stellar_locus,110.838946,-73.468348,SMACS J0723-7327:[ICR2022] 045,,False,0.347,0.0
+jw02736-o001_t001_nircam_f200w_753,101,stellar_locus,110.808205,-73.446719,SMACS J0723-7327:[CSM2022] 04,*,False,0.323,0.0
+jw02736-o001_t001_nircam_f200w_3580,102,simbad_or_gaia_astrometry,110.739449,-73.475596,,,False,,
+jw02736-o001_t001_nircam_f200w_3511,103,stellar_locus,110.668367,-73.486170,,,False,,
+jw02736-o001_t001_nircam_f200w_3149,104,simbad_or_gaia_astrometry,110.688312,-73.470598,,,False,,
+jw02736-o001_t001_nircam_f200w_3010,105,simbad_or_gaia_astrometry,110.613699,-73.479948,WISEA J072227.37-732847.8,,False,0.384,nan
+jw02736-o001_t001_nircam_f200w_3859,106,stellar_locus,110.893493,-73.455934,,,False,,
+jw02736-o001_t001_nircam_f200w_874,107,stellar_locus,110.621948,-73.486610,,,False,,
+jw02736-o001_t001_nircam_f200w_3603,108,stellar_locus,110.681391,-73.487558,,,False,,
+jw02736-o001_t001_nircam_f200w_3776,109,stellar_locus,110.838731,-73.463249,,,False,,
+jw02736-o001_t001_nircam_f200w_3141,110,gaia_position,110.765962,-73.453979,,,False,,
+jw02736-o001_t001_nircam_f200w_336,111,stellar_locus,110.704534,-73.460109,,,False,,
+jw02736-o001_t001_nircam_f200w_3365,112,stellar_locus,110.774331,-73.460086,,,False,,
+jw02736-o001_t001_nircam_f200w_3113,113,stellar_locus,110.716099,-73.462367,,,False,,
+jw02736-o001_t001_nircam_f200w_209,114,stellar_locus,110.625050,-73.473521,,,False,,
+jw02736-o001_t001_nircam_f200w_760,115,stellar_locus,110.807709,-73.447043,SMACS J0723-7327:[CSM2022] 05,*,False,0.344,0.0
+jw02736-o001_t001_nircam_f200w_3283,116,simbad_or_gaia_astrometry,110.675088,-73.477001,,,False,,
+jw02736-o001_t001_nircam_f200w_3241,117,simbad_or_gaia_astrometry,110.674938,-73.474996,,,False,,
+jw02736-o001_t001_nircam_f200w_3628,118,stellar_locus,110.823180,-73.459461,SMACS J0723-7327:[CSM2022] 18,*,False,0.315,0.0
+jw02736-o001_t001_nircam_f200w_3066,119,simbad_or_gaia_astrometry,110.639561,-73.483929,WISEA J072233.54-732902.2,,False,0.238,nan
+jw02736-o001_t001_nircam_f200w_2360,120,stellar_locus,110.691075,-73.497801,,,False,,
+jw02736-o001_t001_nircam_f200w_3779,121,stellar_locus,110.848042,-73.461697,SMACS J0723-7327:[CSM2022] 02,*,False,0.370,0.0
+jw02736-o001_t001_nircam_f200w_2085,122,stellar_locus,110.878106,-73.454799,,,False,,
+jw02736-o001_t001_nircam_f200w_3921,123,stellar_locus,110.695694,-73.498360,,,False,,
+jw02736-o001_t001_nircam_f200w_501,124,stellar_locus,110.786489,-73.446464,SMACS J0723-7327:[ICR2022] 353,,False,0.300,0.0
+jw02736-o001_t001_nircam_f200w_3506,125,stellar_locus,110.729877,-73.473479,,,False,,
+jw02736-o001_t001_nircam_f200w_3665,126,stellar_locus,110.818205,-73.462668,,,False,,
+jw02736-o001_t001_nircam_f200w_3537,127,simbad_or_gaia_astrometry,110.723701,-73.477080,,,False,,
+jw02736-o001_t001_nircam_f200w_3963,128,stellar_locus,110.834664,-73.471433,,,False,,
+jw02736-o001_t001_nircam_f200w_3716,129,simbad_or_gaia_astrometry,110.848809,-73.459408,SMACS J0723-7327:[CSM2022] 20,*,False,0.299,0.0
+jw02736-o001_t001_nircam_f200w_3792,130,stellar_locus,110.879204,-73.456386,,,False,,
+jw02736-o001_t001_nircam_f200w_3672,131,stellar_locus,110.748546,-73.476731,,,False,,
+jw02736-o001_t001_nircam_f200w_3811,132,stellar_locus,110.894502,-73.453806,,,False,,
+jw02736-o001_t001_nircam_f200w_2980,133,stellar_locus,110.830865,-73.432353,,,False,,
+jw02736-o001_t001_nircam_f200w_3040,134,simbad_or_gaia_astrometry,110.840592,-73.436021,,,False,,
+jw02736-o001_t001_nircam_f200w_3687,135,stellar_locus,110.687010,-73.490210,,,False,,
+jw02736-o001_t001_nircam_f200w_2950,136,stellar_locus,110.611674,-73.475344,WISEA J072226.75-732831.2,,False,0.215,nan
+jw02736-o001_t001_nircam_f444w_1905,137,stellar_locus,110.833789,-73.448473,SMACS J0723-7327:[CSM2022] 03,*,False,0.491,0.0
+jw02736-o001_t001_nircam_f200w_3421,138,simbad_or_gaia_astrometry,110.712333,-73.479303,WISEA J072250.96-732845.5,,False,0.053,nan
+jw02736-o001_t001_nircam_f200w_3842,139,simbad_or_gaia_astrometry,110.808030,-73.476320,WISEA J072313.92-732834.7,,False,0.051,nan
