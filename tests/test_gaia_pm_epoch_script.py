@@ -17,7 +17,8 @@ def test_propagate_moves_by_pm_times_dt():
 
 
 def test_label_at_radii():
-    assert g.label_at(0.3) == "position"
-    assert g.label_at(0.31) == "astrometry_only"
-    assert g.label_at(0.5) == "astrometry_only"
-    assert g.label_at(0.51) == "missed"
+    assert g.label_at(0.3, False) == "position"
+    assert g.label_at(0.31, True) == "astrometry_only"
+    assert g.label_at(0.31, False) == "missed"
+    assert g.label_at(0.5, True) == "astrometry_only"
+    assert g.label_at(0.51, True) == "missed"

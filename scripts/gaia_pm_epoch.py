@@ -38,12 +38,12 @@ def propagate(
     return np.asarray(ra_deg, float) + dra, np.asarray(dec_deg, float) + ddec
 
 
-def label_at(sep_arcsec: float) -> str:
+def label_at(sep_arcsec: float, astrometric: bool) -> str:
     """Outcome of the Gaia-only D-012 rule for a Gaia source at this separation from its nearest
-    JWST source (astrometric stars count within the query radius, position-only within 0.3″)."""
+    JWST source (any Gaia source within 0.3″; an astrometric star within the query radius)."""
     if sep_arcsec <= GAIA_RADIUS_ARCSEC:
         return "position"
-    if sep_arcsec <= QUERY_RADIUS_ARCSEC:
+    if astrometric and sep_arcsec <= QUERY_RADIUS_ARCSEC:
         return "astrometry_only"
     return "missed"
 
@@ -84,6 +84,7 @@ def main() -> None:
             )
         )
     )
+    astro = pm_snr >= crossmatch.GAIA_MIN_PM_SNR
     shift = np.hypot(pmra, pmdec) * dt / 1000.0
     ra1, dec1 = propagate(gaia["ra"], gaia["dec"], pmra, pmdec, dt)
     g0 = SkyCoord(gaia["ra"], gaia["dec"], unit="deg")
@@ -101,16 +102,17 @@ def main() -> None:
                 "G": float(gaia["phot_g_mean_mag"][k]),
                 "pm_masyr": float(np.hypot(pmra[k], pmdec[k])),
                 "pm_snr": float(pm_snr[k]),
-                "astrometric_star": bool(pm_snr[k] >= crossmatch.GAIA_MIN_PM_SNR),
+                "astrometric_star": bool(astro[k]),
                 "shift_arcsec": float(shift[k]),
                 "jwst_id_j2016": int(cat["label"][i0[k]]),
                 "sep_j2016": float(s0[k]),
                 "jwst_id_prop": int(cat["label"][i1[k]]),
                 "sep_prop": float(s1[k]),
-                "rule_j2016": label_at(s0[k]),
-                "rule_prop": label_at(s1[k]),
+                "rule_j2016": label_at(s0[k], astro[k]),
+                "rule_prop": label_at(s1[k], astro[k]),
             }
         )
+    rows.sort(key=lambda r: r["source_id"])  # TAP row order varies between runs
     slow = has_pm & (shift < 0.05) & (s0 < QUERY_RADIUS_ARCSEC)
     summary = {
         "catalog": args.catalog.name,
@@ -120,7 +122,7 @@ def main() -> None:
         "field_circle_deg": [ra_c, dec_c, r],
         "n_gaia": int(len(gaia)),
         "n_with_pm": int(has_pm.sum()),
-        "n_shift_gt_0.15": int((has_pm & (shift > 0.15)).sum()),
+        f"n_shift_gt_{REPORT_SHIFT_ARCSEC}": int((has_pm & (shift > REPORT_SHIFT_ARCSEC)).sum()),
         "n_shift_gt_0.3": int((has_pm & (shift > GAIA_RADIUS_ARCSEC)).sum()),
         "n_shift_gt_0.5": int((has_pm & (shift > QUERY_RADIUS_ARCSEC)).sum()),
         "slow_matched_n": int(slow.sum()),
