@@ -2,6 +2,11 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: Gaia `field` backend: row cap and one shared TAP runner (#743 follow-ups)
+- **Plan:** bound the field cone's row count (not only its radius) so a dense low-latitude field falls back to
+  per-target cones instead of downloading a large slab; share one ADQL builder and TAP runner between `field` and
+  `tap`. Offline tests for both; no science result changes (SMACS field ≈ 10² Gaia rows).
+
 ## 2026-11-06: Saved features re-score exactly: `rank.feature_names` follows column order
 - **Why:** #743 found that an ECSV round trip sorts `meta["feature_spec"]` keys and `feature_names` followed them,
   so re-scoring a saved `features.ecsv` permuted the isolation-forest and LOF inputs (2822 / 2938 SMACS ranks moved).
