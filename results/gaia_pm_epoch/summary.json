@@ -1,0 +1,35 @@
+{
+ "catalog": "f200w_cat.ecsv",
+ "catalog_sha256": "0fc883f863d9af4ffe91812ee2bd9fa96ebec271f56a6d10e4190bcb6bd896aa",
+ "jwst_epoch": 2022.43,
+ "dt_yr": 6.430000000000064,
+ "field_circle_deg": [
+  110.75358716430416,
+  -73.46829396496237,
+  0.049487338973847134
+ ],
+ "n_gaia": 103,
+ "n_with_pm": 96,
+ "n_shift_gt_0.15": 4,
+ "n_shift_gt_0.3": 1,
+ "n_shift_gt_0.5": 0,
+ "slow_matched_n": 22,
+ "slow_matched_median_sep_arcsec": 0.028258034892676684,
+ "changed_outcome": [
+  {
+   "source_id": 5262899199049945728,
+   "G": 17.850465774536133,
+   "pm_masyr": 54.47683027271511,
+   "pm_snr": 480.4060371564324,
+   "astrometric_star": true,
+   "shift_arcsec": 0.3502860186535617,
+   "jwst_id_j2016": 4025,
+   "sep_j2016": 0.3433493378870322,
+   "jwst_id_prop": 4025,
+   "sep_prop": 0.0094790475440467,
+   "rule_j2016": "astrometry_only",
+   "rule_prop": "position"
+  }
+ ],
+ "provenance": "derived (Gaia DR3 observed astrometry, linear propagation)"
+}

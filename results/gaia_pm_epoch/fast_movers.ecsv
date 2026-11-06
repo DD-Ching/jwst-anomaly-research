@@ -1,0 +1,24 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: source_id, datatype: int64}
+# - {name: G, datatype: float64}
+# - {name: pm_masyr, datatype: float64}
+# - {name: pm_snr, datatype: float64}
+# - {name: astrometric_star, datatype: bool}
+# - {name: shift_arcsec, datatype: float64}
+# - {name: jwst_id_j2016, datatype: int64}
+# - {name: sep_j2016, datatype: float64}
+# - {name: jwst_id_prop, datatype: int64}
+# - {name: sep_prop, datatype: float64}
+# - {name: rule_j2016, datatype: string}
+# - {name: rule_prop, datatype: string}
+# meta: !!omap
+# - {provenance: derived}
+# - {source: Gaia DR3 TAP cone; JWST pipeline catalogue}
+# schema: astropy-2.0
+source_id G pm_masyr pm_snr astrometric_star shift_arcsec jwst_id_j2016 sep_j2016 jwst_id_prop sep_prop rule_j2016 rule_prop
+5262899031545964672 19.83426856994629 29.960019826201577 73.50304372302467 True 0.19264292748247805 2778 64.33554545129192 2778 64.14810945254618 missed missed
+5262899199049945728 17.850465774536133 54.47683027271511 480.4060371564324 True 0.3502860186535617 4025 0.3433493378870322 4025 0.0094790475440467 astrometry_only position
+5262899714446024064 19.358638763427734 25.622180030918607 96.59178368329063 True 0.16475061759880827 3033 0.14950086614423003 3033 0.018575368328652742 position position
+5262900126762894336 19.385581970214844 29.69504937838217 111.10622867570848 True 0.19093916750299922 3092 0.18307605064048965 3092 0.008657770652318566 position position

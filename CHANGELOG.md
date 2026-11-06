@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-06: SMACS 0723 Gaia proper-motion check: no star label changes, propagation not built
+- **Plan first** (`results/gaia_pm_epoch/PLAN.md`): would J2016 → 2022.43 motion cost D-012 star labels?
+- **Result** (`results/gaia_pm_epoch/RESULT.md`, `scripts/gaia_pm_epoch.py`): of 96 Gaia sources with proper
+  motions, 1 shifts > 0.3″ (0.350″, PM S/N 480, still a star via astrometry inside the 0.5″ query radius) and
+  0 shift > 0.5″. Propagation brings the fast stars from 0.15–0.34″ to 0.009–0.019″; slow stars sit at a
+  median 0.028″. TASKS M2 item closed for SMACS; SIMBAD near source 4025 not checked (post hoc caveat).
+- **Handoff:** lensing grid line still waits on the owner's G1 ruling (D-027), D115b on its reopen (D-109
+  addendum 9). Remaining unblocked M2 items: DJA colours vs CEERS DR1.0, Zoobot/DINOv2 embeddings (reuse check).
+
 ## 2026-11-06: SIMBAD via the CfA mirror; SMACS jwst 3.0.0 star rule changes no rank
 - **Tool:** `crossmatch` SIMBAD chain `xmatch → tap → mirror` (`simbad.harvard.edu`, same TAP tables; D-006
   addendum). CDS still resets connections from cloud sessions; the mirror matches the CDS fixture recording on all
