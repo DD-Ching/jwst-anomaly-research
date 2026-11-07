@@ -22,7 +22,7 @@ S3 = "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clea
 # Frozen plan settings (ASSUMPTIONs).
 SIZE = 64
 EDGE = 40
-MAG_RANGE = (21.0, 25.0)
+MAG_RANGE = (20.0, 27.0)  # amended before any embedding (PLAN.md deviation)
 N_CLEAN = 1000
 N_INJ = 50
 HOST_SEED = 0
@@ -100,10 +100,8 @@ def select_hosts(cat: Any, shape: tuple[int, int]) -> np.ndarray:
     x = np.asarray(cat["xcentroid"], float)
     y = np.asarray(cat["ycentroid"], float)
     mag = np.asarray(np.ma.filled(cat["isophotal_abmag"], np.nan), float)
-    ext = np.asarray(np.ma.filled(cat["is_extended"], False), bool)
     ok = (
-        ext
-        & np.isfinite(mag)
+        np.isfinite(mag)
         & (mag >= MAG_RANGE[0])
         & (mag <= MAG_RANGE[1])
         & (x >= EDGE)

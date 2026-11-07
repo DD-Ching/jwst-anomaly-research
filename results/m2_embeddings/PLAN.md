@@ -16,7 +16,7 @@ injection-recovery"). Script: `scripts/m2_embeddings.py`; outcome function `deci
 ## Data (observed)
 - `jw02736-o001_t001_nircam_clear-f200w_i2d.fits` SCI (10277 × 4762 float32, 196 MB) streamed into memory from
   `s3://stpubdata` (anonymous); not stored on disk (cloud disk rule). Hosts from the matching pipeline `_cat.ecsv`.
-- **Hosts (ASSUMPTION):** `is_extended` sources with 21 ≤ `isophotal_abmag` ≤ 25, 64 × 64 px cutout fully finite,
+- **Hosts (ASSUMPTION):** sources with 20 ≤ `isophotal_abmag` ≤ 27 (any `is_extended`), 64 × 64 px cutout fully finite,
   centre ≥ 40 px from the image edge; 1050 drawn with `numpy` seed 0: 1000 clean + 50 injection hosts (disjoint).
 
 ## Injection (simulated)
@@ -40,3 +40,8 @@ injection-recovery"). Script: `scripts/m2_embeddings.py`; outcome function `deci
 - `beats`: mean recall@50 over the 3 seeds ≥ baseline mean + 0.10 **and** recall ≥ baseline in each seed.
 - `worse`: mean ≤ baseline mean − 0.10.  Otherwise `tie`.
 - **H-emb supported** for an encoder only if it `beats` at both strengths.
+
+## Deviation (pre-run, before any embedding or ranking was computed)
+- The first host rule (`is_extended`, 21–25 mag) left 471 eligible / 450 finite cutouts, fewer than the 1050 the
+  plan needs (the script failed on an empty injection set). Amended to any source with 20–27 mag; everything else
+  unchanged. The sample now includes point sources.
