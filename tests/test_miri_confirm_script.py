@@ -34,3 +34,9 @@ def test_match_fraction_real_and_shifted():
     assert not hit[0] and abs(sep[0] - 5.0) < 1e-3
     hit, sep = m.match_fraction(np.array([]), np.array([]), ref, 0.3)
     assert hit.size == 0
+
+
+def test_band_verdict_needs_min_n_then_follows_gate():
+    assert m.band_verdict(14, 0.7, 0.0) == "not tested: n < 15"
+    assert m.band_verdict(15, 0.7, 0.05) == "adopt"
+    assert m.band_verdict(42, 0.071, 0.069) == "not adopted: chance rate too high"

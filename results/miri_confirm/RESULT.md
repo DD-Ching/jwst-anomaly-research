@@ -36,3 +36,23 @@ The unmatched F770W singles in the sheet are spike or halo detections, which the
 position-only join for MIRI: with about 8 expected chance confirmations, mostly in F1500W/F1800W, a band
 restriction (e.g. F770W/F1000W only) looks better, but that is post hoc and needs its own frozen rule. Ranking
 therefore is unchanged.
+
+## Per-band gate (2026-11-07, `PLAN_bands.md`)
+
+Re-run `20261107T011004Z-0662e572` (same catalogs, checksums as the manifest; classify, cutouts and cross-match
+off): 908 sources, 113 pass, and every group's matched source list equals the first run's. Numbers:
+`summary_bands.json` (`scripts/miri_confirm.py`, now with per-band chance rates and `band_verdict`).
+
+| Detection band (single-band-only) | n | matched | real rate | chance rate (± std over 10 shifts) | frozen verdict |
+|---|---|---|---|---|---|
+| F770W | 66 | 45 | 0.682 | 0.046 ± 0.019 | adopt |
+| F1000W | 20 | 10 | 0.500 | 0.020 ± 0.033 | adopt |
+| F1500W | 42 | 3 | 0.071 | 0.069 ± 0.027 | not adopted |
+| F1800W | 35 | 3 | 0.086 | 0.057 ± 0.034 | not adopted |
+
+**Reading (derived).** The plan's hypothesis holds: F770W and F1000W single-band detections are confirmed at
+10–25× the chance rate (55 confirmed, about 3.4 expected by chance), while F1500W and F1800W matches are at the
+chance level (6 matched vs about 4.9 expected). A pipeline confirmation join for MIRI is therefore restricted to
+F770W and F1000W detections. F1000W rests on 20 sources; its chance rate is 0.4 expected matches. Not yet wired:
+the existing confirmation path (`confirm_column`) comes from the matched-aperture join, which would also replace
+the MIRI colours, so wiring needs a position-only join plus a `confirm_bands` restriction in the quality gate.

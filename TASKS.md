@@ -670,7 +670,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    (a spike-geometry check), without dropping lensed arcs.
 7. **MIRI confirmation** (D-014 limitation): measured 2026-11-07 (`results/miri_confirm/RESULT.md`, D-014 addendum):
    61 / 163 single-band-only MIRI sources have a DJA NIRCam counterpart (chance 0.051; F770W 45 / 66, F1500W/F1800W
-   near chance). Next: freeze a band-restricted (F770W/F1000W) position-only confirmation join, then re-rank MIRI.
+   near chance). Per-band gate done 2026-11-07 (D-014 addendum 2): F770W and F1000W pass, F1500W/F1800W fail. Next:
+   a position-only DJA join for MIRI (no colour replacement) plus `confirm_bands` [F770W, F1000W] in
+   `quality.assess_sources`, then re-rank MIRI and compare the top 20.
 8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
    since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). ~~DJA colours vs CEERS DR1.0~~
    done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a

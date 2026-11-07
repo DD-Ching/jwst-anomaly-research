@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: MIRI per-band confirmation gate: F770W and F1000W pass, F1500W and F1800W are at chance
+- **Plan first** (`results/miri_confirm/PLAN_bands.md`): the #752 gate per detection band, n ≥ 15.
+- **Result** (`results/miri_confirm/RESULT.md` § Per-band gate, `summary_bands.json`): re-run reproduces #752's
+  matched lists exactly. F770W 45 / 66 vs chance 0.046, F1000W 10 / 20 vs 0.020 (adopt); F1500W 3 / 42 vs 0.069,
+  F1800W 3 / 35 vs 0.057 (not adopted). D-014 addendum 2. Ranking unchanged.
+- **Handoff:** #751 still waits for CDS (connection reset again 01:08Z). Next: position-only DJA join for MIRI plus
+  `confirm_bands` in the quality gate, then MIRI re-rank (TASKS Then 7).
+
 ## 2026-11-07: SMACS MIRI single-band detections: 61 / 163 have a NIRCam counterpart, F770W real, F1500W/F1800W near chance
 - **Plan first** (`results/miri_confirm/PLAN.md`); TASKS "Then" 7, D-014 "Revisit if".
 - **Result** (`results/miri_confirm/RESULT.md`, `scripts/miri_confirm.py`): jwst 3.0.0 MIRI run (908 sources, 113
