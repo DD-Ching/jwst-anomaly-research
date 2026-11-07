@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS `f200w_1816` / `f200w_384` two-epoch check (2736 → VENUS 6882): undetermined (TASKS Next M2, D-017 addendum)
+- **Plan first** (`results/smacs_jwst3/epochs_1816_384/PLAN.md`); `scripts/smacs_epochs_1816_384.py` (`decide`
+  encodes the frozen rule, unit-tested); CATs and cutouts from S3 (MAST portal API "Request failed").
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): frozen rule `undetermined` for both, since no
+  F444W catalog pair exists, yet a compact source is visible at both positions in all four F444W cutouts (post hoc, not
+  stored). F150W
+  only: residual 6.89 / 20.95 mas (D-017 significance 5.18 / 17.41), Δm +0.015 / +0.092. Post hoc, 8 peers of
+  similar magnitude and size (same tie) scatter by a median of 12.97 / 11.41 mas; the targets exceed 2 / 8 and 7 / 8
+  of them (not significant with n = 8). The D-017 error model (1.33 / 1.20 mas) is ~10× too small for faint
+  compact sources (D-017 addendum).
+- **Failed approach:** catalog-only two-epoch vetting for ~26 mag compact sources (no F444W rows; error model not
+  calibrated there).
+- **Services:** CDS (SIMBAD, XMatch) still unreachable (18:10Z, connection reset); #751 still waits. S3 worked.
+- **Handoff:** next: image-level F444W centroids with a peer-calibrated tie (new plan), or retire the two
+  records as "compact, unresolved; needs spectroscopy"; image embeddings (TASKS Next M2).
+
 ## 2026-11-07: Cutouts: north-up panels and shared brightness scaling (TASKS Next M2, D-005 addendum)
 - `viz.north_up` (local sky Jacobian of the cutout WCS; NaN-aware bilinear); `contact_sheet(north_up=,
   scale="panel"|"band"|"all")`, `cutout_png(north_up=)`. Default orientation and scale unchanged; the sheet

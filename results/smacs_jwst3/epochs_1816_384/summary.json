@@ -1,0 +1,168 @@
+{
+ "plan": "results/smacs_jwst3/epochs_1816_384/PLAN.md",
+ "targets": {
+  "f200w_1816": {
+   "ra": 110.64806517613874,
+   "dec": -73.49647165976755,
+   "f200w_aper50_abmag": 25.897462416466816,
+   "bands": {
+    "f150w": {
+     "epoch1_nearest_arcsec": 0.004920925963269132,
+     "epoch1_nearest_aper50_abmag": 25.68032720432373,
+     "epoch2_nearest_arcsec": 0.029445577546870532,
+     "epoch2_nearest_aper50_abmag": 25.6185280922738,
+     "compare": {
+      "n_references": 109,
+      "frame_offset_mas": [
+       12.375843252461566,
+       18.43965473744453
+      ],
+      "reference_sigma_mas": [
+       9.363002158257807,
+       11.435420264758209
+      ],
+      "target_residual_mas": [
+       6.877059273495712,
+       -0.3721910672630493
+      ],
+      "target_residual_total_mas": 6.88712352450018,
+      "frame_tie_error_mas": [
+       1.1239756797302136,
+       1.3727578022340088
+      ],
+      "target_centroid_error_mas": [
+       0.3640477728354834,
+       0.6094786569817293
+      ],
+      "target_residual_significance": 5.178640207261343,
+      "target_residual_over_reference_sigma": 0.7352137415024679,
+      "fraction_of_references_with_larger_residual": 0.7339449541284404,
+      "target_dmag": 0.015143329101150016,
+      "reference_dmag_sigma": 0.07171244868687666,
+      "target_snr": [
+       155.54184743788318,
+       76.83846657083646
+      ],
+      "label": "derived"
+     },
+     "target_aper50_abmag": [
+      25.68032720432373,
+      25.6185280922738
+     ],
+     "derived": {
+      "tool_error_mas": 1.3299096382180113,
+      "dmag_over_reference_sigma": 0.2111673688242253
+     },
+     "empirical_null": {
+      "n_peers": 8,
+      "target_residual_mas": 6.88712352450018,
+      "peer_residual_median_mas": 12.972817737355816,
+      "peer_residual_p95_mas": 19.099506986413374,
+      "fraction_of_peers_with_larger_residual": 0.75,
+      "n_peers_with_larger_residual": 6,
+      "label": "derived (post hoc)",
+      "p95_motion_mas_per_yr": 4.7748767466033435
+     }
+    },
+    "f444w": {
+     "epoch1_nearest_arcsec": 0.016855342868124686,
+     "epoch1_nearest_aper50_abmag": 26.99456972208462,
+     "epoch2_nearest_arcsec": 2.2816074759931704,
+     "epoch2_nearest_aper50_abmag": 26.152441320723007,
+     "not_measured": "target not within 0.3 arcsec in epoch2"
+    }
+   },
+   "decision": {
+    "motion": "undetermined",
+    "variability": "undetermined"
+   }
+  },
+  "f200w_384": {
+   "ra": 110.64578376567073,
+   "dec": -73.47261236663392,
+   "f200w_aper50_abmag": 26.304522354686846,
+   "bands": {
+    "f150w": {
+     "epoch1_nearest_arcsec": 0.00446331586350926,
+     "epoch1_nearest_aper50_abmag": 25.75531710630724,
+     "epoch2_nearest_arcsec": 0.02798907561255629,
+     "epoch2_nearest_aper50_abmag": 25.77045604504952,
+     "compare": {
+      "n_references": 115,
+      "frame_offset_mas": [
+       9.608282933240444,
+       15.785092184381417
+      ],
+      "reference_sigma_mas": [
+       8.854390442473514,
+       12.706201850269231
+      ],
+      "target_residual_mas": [
+       -19.98384890498825,
+       6.291255559263435
+      ],
+      "target_residual_total_mas": 20.9507544868762,
+      "frame_tie_error_mas": [
+       1.0348199390537964,
+       1.4849843261065536
+      ],
+      "target_centroid_error_mas": [
+       0.23626677522672798,
+       0.5124225091932844
+      ],
+      "target_residual_significance": 17.411034088679354,
+      "target_residual_over_reference_sigma": 2.3106157604614452,
+      "fraction_of_references_with_larger_residual": 0.30434782608695654,
+      "target_dmag": 0.0918278408366291,
+      "reference_dmag_sigma": 0.06773809028701663,
+      "target_snr": [
+       190.8762907006734,
+       75.82462950130898
+      ],
+      "label": "derived"
+     },
+     "target_aper50_abmag": [
+      25.75531710630724,
+      25.77045604504952
+     ],
+     "derived": {
+      "tool_error_mas": 1.203303283433255,
+      "dmag_over_reference_sigma": 1.3556307898191478
+     },
+     "empirical_null": {
+      "n_peers": 8,
+      "target_residual_mas": 20.9507544868762,
+      "peer_residual_median_mas": 11.405668261170643,
+      "peer_residual_p95_mas": 22.789288853175968,
+      "fraction_of_peers_with_larger_residual": 0.125,
+      "n_peers_with_larger_residual": 1,
+      "label": "derived (post hoc)",
+      "p95_motion_mas_per_yr": 5.697322213293992
+     }
+    },
+    "f444w": {
+     "epoch1_nearest_arcsec": 5.233027331265086,
+     "epoch1_nearest_aper50_abmag": 28.099061740104112,
+     "epoch2_nearest_arcsec": 6.175402203042535,
+     "epoch2_nearest_aper50_abmag": 27.211058269134718,
+     "not_measured": "target not within 0.3 arcsec in epoch1"
+    }
+   },
+   "decision": {
+    "motion": "undetermined",
+    "variability": "undetermined"
+   }
+  }
+ },
+ "assumptions": {
+  "motion_sig": 3.0,
+  "no_motion_sig": 2.0,
+  "no_motion_bound_mas": 15.0,
+  "angle_deg": 45.0,
+  "var_factor": 5.0,
+  "null_dmag": 0.5,
+  "null_size_frac": 0.3,
+  "null_radius_arcsec": 60.0,
+  "baseline_yr": 4.0
+ }
+}

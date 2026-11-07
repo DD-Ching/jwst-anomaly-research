@@ -1,0 +1,19 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: source_uid, datatype: string}
+# - {name: epoch, datatype: string}
+# - {name: band, datatype: string}
+# - {name: quality_flag, datatype: string}
+# - {name: frac_nan, datatype: float64}
+# - {name: wht_rel, datatype: float64}
+# schema: astropy-2.0
+source_uid epoch band quality_flag frac_nan wht_rel
+"2022 f200w_1816" 2022 F150W ok 0.0 0.6998874262597652
+"2022 f200w_384" 2022 F150W ok 0.0 1.0143463885856288
+"2022 f200w_1816" 2022 F444W ok 0.0 0.6853802546088738
+"2022 f200w_384" 2022 F444W ok 0.0 0.9965148139348597
+"2026 f200w_1816" 2026 F150W ok 0.0 1.0318388516394528
+"2026 f200w_384" 2026 F150W ok 0.0 0.9961527000075673
+"2026 f200w_1816" 2026 F444W ok 0.0 1.0324550851091268
+"2026 f200w_384" 2026 F444W ok 0.0 0.9997900379281818
