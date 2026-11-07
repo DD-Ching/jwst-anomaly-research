@@ -19,11 +19,12 @@ Gaia TAP route classified stars, as in the earlier runs today. 160 sources ranke
 0.10 floor in F770W−F1000W, so there is no D-013-type bias for fixed apertures to remove; the ranking keeps the
 pipeline colours.
 
-**Reported either way.** Top-20 Jaccard vs the baseline 0.60: new `f770w_193`, `_109`, `_177`, `_231`, `_161`;
+**Reported either way.** Top-20 (post-screen `targets.ecsv`) Jaccard vs the baseline 0.60: new `f770w_193`, `_109`, `_177`, `_231`, `_161`;
 dropped `f770w_78`, `_136`, `_246`, `_156`, `_38` (`summary.json`).
 
 **Post hoc (not in the plan's rules).**
-- F1000W−F1500W (47 rows): ρ −0.335 (p 0.021) `aper50`, −0.367 (p 0.011) `dja07`, −0.254 isophotal. A fixed aperture
+- F1000W−F1500W (47 rows; deviation: S/N cut on F1000W `aper50`, area still F770W, so neither the plan's
+  selection nor `feature_size_bias.py`'s): ρ −0.335 (p 0.021) `aper50`, −0.367 (p 0.011) `dja07`, −0.254 isophotal. A fixed aperture
   does not reduce it. The compact-quartile offset (`dja07` − `aper50`) is −0.292 here (MAD 0.041), i.e. the 0.7″
   aperture is not PSF-matched between F1000W and F1500W. The size trend's cause is not tested (hypothesis: a real
   population trend; a PSF-size effect would make compact sources bluer, i.e. ρ > 0, the opposite sign).

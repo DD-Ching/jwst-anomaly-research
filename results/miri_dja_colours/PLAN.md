@@ -1,4 +1,4 @@
-# SMACS MIRI colours from DJA fixed apertures: plan (frozen 2026-11-07 15:20Z, before measuring)
+# SMACS MIRI colours from DJA fixed apertures: plan (frozen 2026-11-07, committed 15:10Z before the runs started at 15:11Z; header time corrected in review)
 
 TASKS Next M2 "MIRI: evaluate fixed-aperture colours". D-013 moved NIRCam colours to DJA 0.5″ fixed apertures because
 the pipeline encircled-energy (EE) apertures have different angular sizes per band. MIRI colours in the ranking still

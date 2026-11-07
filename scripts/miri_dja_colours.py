@@ -54,10 +54,12 @@ def rule_b(rho_aper50: float, rho_dja: float) -> str:
 
     Otherwise (or with a non-finite ρ) 'fail'.
     """
-    if not (np.isfinite(rho_aper50) and np.isfinite(rho_dja)):
+    if not np.isfinite(rho_aper50):
         return "fail"
     if abs(rho_aper50) < B_MIN_RHO:
         return "no_bias"
+    if not np.isfinite(rho_dja):
+        return "fail"
     return "pass" if abs(rho_dja) <= abs(rho_aper50) - B_MIN_DROP else "fail"
 
 
@@ -124,7 +126,10 @@ def ranked(run_dir: Path) -> Table:
 
 
 def top20(run_dir: Path) -> list[str]:
-    return [str(u) for u in ranked(run_dir)["source_uid"][:20]]
+    """The run's reported top 20 after the cutout screens (D-019 to D-021): ``targets.ecsv``."""
+    t = Table.read(run_dir / SAMPLE / "targets.ecsv")
+    t.sort("rank")
+    return [str(u) for u in t["source_uid"][:20]]
 
 
 def main(argv: list[str] | None = None) -> int:

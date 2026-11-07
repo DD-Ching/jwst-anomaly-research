@@ -28,6 +28,8 @@ def test_rule_b():
     assert m.rule_b(-0.30, 0.19) == "pass"
     assert m.rule_b(0.30, -0.25) == "fail"
     assert m.rule_b(np.nan, 0.0) == "fail"
+    assert m.rule_b(0.02, np.nan) == "no_bias"
+    assert m.rule_b(0.30, np.nan) == "fail"
 
 
 def test_decide_and_jaccard():

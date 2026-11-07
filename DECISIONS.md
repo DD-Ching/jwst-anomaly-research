@@ -843,9 +843,9 @@ Nearest-neighbour matching would have given 191 duplicate assignments.
 (DJA v7.4 aperture 2, 0.7″; rules V / C / B as functions in `scripts/miri_dja_colours.py`). Run
 `20261107T151133Z-675b4a49` vs baseline `20261107T151133Z-0490f84e`. V passes (compact-quartile MAD 0.058 ≤ 0.15),
 C passes (134 / 160 ranked, 0.8375), B = no bias: Spearman(log F770W area, F770W−F1000W) is +0.067 (p 0.46) for
-`aper50` and +0.053 for `dja07` on 124 rows, below the 0.10 floor, so the D-013 size bias is not present in MIRI and
+`aper50` and +0.053 for `dja07` on 124 rows, below the 0.10 floor, so no D-013-type size bias is found in F770W−F1000W and
 `dja07` is not adopted. Post hoc: F1000W−F1500W keeps ρ −0.335 (`aper50`) and −0.367 (`dja07`) on 47 rows, so a
-fixed aperture does not remove it. Revisit if a PSF-matched MIRI catalogue appears or another field shows |ρ| ≥ 0.10.
+fixed aperture does not remove it (selection: F1000W S/N, F770W area; deviation). Revisit if a PSF-matched MIRI catalogue appears or another field shows |ρ| ≥ 0.10.
 
 ## D-014 Rank only confirmed detections: best-band S/N floor and multi-band confirmation (2026-10-07)
 
