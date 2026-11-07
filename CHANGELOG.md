@@ -2,6 +2,10 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: Program 4043 F444W grism: reuse and coverage check (TASKS Next M2) — in progress
+- Plan: list the public 4043 WFSS products and a grism reuse route (pipeline x1d vs grizli/DJA), then count SMACS
+  top-k sources inside the grism footprint before any spectrum is read.
+
 ## 2026-11-07: SMACS MIRI colours from DJA fixed apertures: not adopted (TASKS Next M2, D-013 addendum)
 - **Plan first** (`results/miri_dja_colours/PLAN.md`, DJA v7.4 0.7″ aperture); runs `20261107T151133Z-675b4a49`
   (`configs/smacs_jwst3_miri_dja.yaml`) vs `20261107T151133Z-0490f84e`; rules V / C / B as tested functions in
