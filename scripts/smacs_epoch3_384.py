@@ -178,8 +178,8 @@ def main(argv: list[str] | None = None) -> int:
         out["post_hoc_6882_12774"][b] = ph or {"not_measured": f"{len(three)} peers in all epochs"}
     out["decision"] = decide(per_band, prev_vec) if valid else "not evaluated: validation failed"
     args.out.mkdir(parents=True, exist_ok=True)
-    sheet(args.out / "contact_sheet.png", files, cents)
     (args.out / "summary.json").write_text(json.dumps(out, indent=1) + "\n")
+    sheet(args.out / "contact_sheet.png", files, cents)
     print(json.dumps({"decision": out["decision"], "validation": out["validation"]}))
     return 0
 
@@ -196,7 +196,13 @@ def sheet(path: Path, files: dict, cents: dict) -> None:
     for r, b in enumerate(BANDS):
         for c, ep in enumerate(("e1", "e2", "e3")):
             ax = axs[r, c]
-            data, wcs = _read(files[(b, ep)][NAME])
+            ax.set_xticks([])
+            ax.set_yticks([])
+            p = files[(b, ep)].get(NAME)
+            if not p:
+                ax.set_title(f"{NAME} {b} {ep}: no cutout", fontsize=7)
+                continue
+            data, wcs = _read(p)
             lo, hi = np.nanpercentile(data, [5, 99.5])
             ax.imshow(data, origin="lower", cmap="gray", vmin=lo, vmax=hi)
             sky = cents[(b, ep)].get(NAME)
@@ -209,8 +215,6 @@ def sheet(path: Path, files: dict, cents: dict) -> None:
             ax.set_xlim(cx - half, cx + half)
             ax.set_ylim(cy - half, cy + half)
             ax.set_title(f"{NAME} {b} {ep} (stored orientation)", fontsize=7)
-            ax.set_xticks([])
-            ax.set_yticks([])
     fig.tight_layout()
     fig.savefig(path, dpi=80)
     plt.close(fig)
