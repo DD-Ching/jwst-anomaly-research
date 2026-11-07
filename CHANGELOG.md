@@ -2,6 +2,11 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: Cutouts: north-up panels and shared brightness scaling (TASKS Next M2) — in progress
+- Plan: `viz.north_up` resamples a cutout so north is up and east left (from its own WCS); `contact_sheet` and
+  `cutout_png` get `north_up` and `scale` ("panel" / "band" / "all"). Validated on synthetic rotated and flipped
+  WCS before use on real cutouts.
+
 ## 2026-11-07: Program 4043 F444W grism: pipeline c1d not adopted; covers no record that needs a spectrum (TASKS Next M2, D-110)
 - **Plan first** (`results/grism_4043/PLAN.md`); scripts `grism_4043_coverage.py`, `grism_4043_lines.py` (frozen
   rule, unit-tested before the run but committed with the result), `grism_4043_fluxcheck.py` (post hoc).
