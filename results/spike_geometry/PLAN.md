@@ -29,3 +29,19 @@ condition 4 should spare arcs.
 **What changes the plan.** If the positive is missed, or arcs are flagged, the rule is not adopted and the spike
 line stays at D-014's confirmation gate. If it passes, it is reported as a quality flag (ranks unchanged) and a
 wiring proposal, not wired in this PR.
+
+## Addendum B (frozen 2026-11-07 ~08:20Z, after the rule above failed and after viewing the positive's cutout)
+The 16″ cutout shows `f200w_2842` on a straight line crossing the whole cutout in F200W (fainter in F356W) that does
+not pass through the 19.3 mag source 4.6″ away. New hypothesis: single-band streak detections lie on long linear
+features (off-field spikes or trails), which a trail finder sees regardless of any neighbour.
+
+**Tool (reuse, no new code path):** `scripts/w1_streak_mask.py` functions with the W1 settings unchanged
+(`stream_binned`, `normalise`, `find_trails`, status-2 trails, `VETO_ARCSEC` 1″; results/w1_streak_veto/PLAN.md),
+run on the CEERS t021 and SMACS F200W `_i2d` (streamed, not stored). Arm 2: the same plus the row/column-segment
+stripe mask at `--seg-len` 64 (results/w1_row_veto/PLAN.md; ASSUMPTION).
+
+**Adopt an arm as a proposed quality flag `on_streak` only if all hold (computed by `streak_verdict`):**
+1. the positive `f200w_2842` lies within 1″ of the mask;
+2. ≤ 1 of the matched ICLv2 SMACS images lies within 1″ of the mask;
+3. in each field with ≥ 1 masked single-band source, the in-mask fraction of single-band sources is ≥ 3× that of
+   sources detected in ≥ 3 bands (enrichment; a mask that hits everything equally is not a streak flag).

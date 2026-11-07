@@ -150,7 +150,7 @@ def arcs_negative(smacs_sample: Path) -> dict:
     idx, sep, _ = ci.match_to_catalog_sky(cs)
     ok = sep.arcsec <= MATCH_ARCSEC
     rows = idx[ok]
-    ref = str(t["ref_band"][0]) if "ref_band" in t.colnames else "f200w"
+    ref = str(t["ref_band"][0]).lower() if "ref_band" in t.colnames else "f200w"
     # Shape band: the single detected band if n_bands == 1, else the reference band (or the anchor).
     sb = detected_band(t, bands)
     shape_band = []
@@ -160,7 +160,7 @@ def arcs_negative(smacs_sample: Path) -> dict:
         elif bool(t[f"{ref}_detected"][i]):
             shape_band.append(ref)
         else:
-            shape_band.append(str(t["anchor_band"][i]))
+            shape_band.append(str(t["anchor_band"][i]).lower())
     full = spike_flags(t, rows, np.array(shape_band, dtype=object))
     geom = spike_flags(t, rows, np.array(shape_band, dtype=object), require_single=False)
     ids = np.asarray(images["image_id"])[ok]
