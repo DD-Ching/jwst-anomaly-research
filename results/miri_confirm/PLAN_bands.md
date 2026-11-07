@@ -1,6 +1,6 @@
 # Band-restricted MIRI confirmation (follow-up to `RESULT.md`)
 
-Status: plan, written before measurement (2026-11-07, 01:15Z).
+Status: plan, written before measurement (2026-11-07, about 01:08Z; see the claim commit).
 
 - **Question.** `RESULT.md` adopted NIRCam confirmation for the 163 single-band-only MIRI sources as a group
   (61 matched, chance 0.051), but the F1500W/F1800W match rates (0.071, 0.086) sit near the group's chance rate,
