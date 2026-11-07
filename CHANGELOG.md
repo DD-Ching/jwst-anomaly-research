@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: M2 image-embedding pilot on SMACS F200W: H-emb not supported; embeddings not adopted (TASKS Next M2, D-010 addendum)
+- **Plan first** (`results/m2_embeddings/PLAN.md`, frozen; one pre-run host-rule deviation: too few `is_extended`
+  hosts, widened to 20–27 mag before any embedding). `scripts/m2_embeddings.py`; `decide` unit-tested before the run.
+- **Test:** 50 noiseless arc injections (f = 0.3, 1.0 of host flux; 3 seeds) into 1000 + 50 F200W cutouts streamed
+  from S3; pooled features → PCA 50 → Isolation Forest; recall@50 (random 0.048).
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at: arcs visible): mean recall pixel 0.033 / 0.08,
+  Zoobot 0.173 / 0.173, DINOv2 0.047 / 0.06. Zoobot beats only at f = 0.3; DINOv2 ties. H-emb not supported.
+  Post hoc: scaling injected cutouts by the host's clean range leaves Zoobot at 0.16 / 0.16 (not a rescaling artefact).
+- **Failed approach:** DINOv2 in timm defaults to 518 px input; `img_size=224` is required.
+- **Services:** CDS still unreachable (21:08Z, no HTTP response); #751 still waits. S3 and the Hugging Face Hub worked.
+- **Handoff:** unsupervised global embeddings closed for M2 ranking; a lens finder needs labelled JWST lenses
+  (D-010 M3 bullet). Next: TASKS Next M2 / Later items; #751 when CDS is reachable.
+
 ## 2026-11-07: SMACS `f200w_384` third epoch (12774): frozen rule undetermined; 2026 position reproduced post hoc (TASKS Next M2, D-017 addendum 3)
 - **Plan first** (`results/smacs_jwst3/epoch3_384/PLAN.md`); `scripts/smacs_epoch3_384.py` reuses the image-level
   centroid functions; `decide` unit-tested. New data: program 12774 o002 (SN Atalanta follow-up, 2026-07-06).

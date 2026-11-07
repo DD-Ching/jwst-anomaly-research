@@ -700,6 +700,13 @@ and the MAST `s_region` of `jw01345-o001_t021_nircam_clear-f200w` (queried with 
 - docs/landscape.md is more than 6 months old when a milestone starts.
 - The link checker needs more than small fixes (then switch to lychee).
 
+**Addendum (2026-11-07): M2 embedding pilot, H-emb not supported** (`results/m2_embeddings/RESULT.md`). Zoobot
+`convnext_nano` and DINOv2 ViT-S/14 via `timm`, pooled features → PCA 50 → Isolation Forest, against a pixel
+PCA baseline on 50 noiseless arc injections into 1000 + 50 SMACS F200W cutouts (3 seeds, 2 strengths). Mean recall@50:
+pixel 0.033 / 0.08, Zoobot 0.173 / 0.173, DINOv2 0.047 / 0.06 (random 0.048). Frozen rule: Zoobot beats at f = 0.3,
+ties at f = 1.0; DINOv2 ties at both. Unsupervised global embeddings are not adopted for M2 ranking. Revisit if a
+JWST-trained encoder or a labelled JWST lens set appears (then fine-tune, per this decision's M3 bullet).
+
 ## D-011 Source-level quality gate before ranking (2026-10-07)
 
 **Decision.**

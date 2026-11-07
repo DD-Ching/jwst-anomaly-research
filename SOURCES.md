@@ -274,6 +274,7 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - AstroPT v2.0.9: https://github.com/Smith42/astroPT ; weights (CC-BY-SA-4.0): https://huggingface.co/Smith42/astroPT_v2.0
 - AION-1 v0.0.2: https://github.com/PolymathicAI/AION
 - timm v1.0.30: https://github.com/huggingface/pytorch-image-models
+  - Used 2026-11-07 (M2 embedding pilot): timm 1.0.31, torch 2.15.0+cpu; weights `hf_hub:mwalmsley/zoobot-encoder-convnext_nano` and timm `vit_small_patch14_dinov2.lvd142m` (Hugging Face Hub, accessed 2026-11-07).
 - PyOD v3.6.6: https://github.com/yzhao062/pyod
 - coniferest v0.2.1: https://github.com/snad-space/coniferest
 - Astronomaly v2.0: https://github.com/MichelleLochner/astronomaly
