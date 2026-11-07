@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: DJA z_phot as a SMACS ranking stratifier: not adopted (TASKS Next M2, D-022 addendum 4)
+- **Plan first** (`results/smacs_jwst3/zphot_stratify/PLAN.md`). Run `20261107T111137Z-3978d5de` of
+  `configs/smacs_jwst3_gaia_only.yaml`; `scripts/smacs_zphot_stratify.py` (baseline reproduces all 2938 ranks).
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): members 614 / 2938 ranked but 2 / 20 of the top
+  20, so H0 (minority-population effect) fails the frozen rule; background-only top 9 holds 7 of the overall top 20.
+  ICLv2 images in the background stratum: the plan's raw median-rank trigger is met (2.323 > 2) but equals the
+  list-length ratio (2.306); as percentiles 0.4835 vs 0.48, so its consequence is not taken (deviation, in the PR).
+- **Post hoc:** eazy `z_phot = -1` rows are 4 / 20 of the top 20 vs 156 / 2938 ranked; 2 are screened spiked stars.
+- **Services:** CDS XMatch still refuses Gaia (11:15Z); #751 still waits for CDS.
+- **Handoff:** next unblocked: the `z_phot = -1` point-source test (TASKS Next M2), or MIRI fixed-aperture colours.
+
 ## 2026-11-07: CEERS t021 with stars split: no verdict changes, background match unchanged (TASKS Then 8, D-022 addendum 3)
 - **Plan first** (`results/ceers_star_split/PLAN.md`). Run `20261107T101020Z-c9a64ce3` of `configs/reference_sample.yaml`.
 - **Result** (`results/ceers_star_split/RESULT.md`, `summary.json`, plot looked at): 6 catalogued stars (ref_mag ≤ 21.1)

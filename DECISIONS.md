@@ -1246,6 +1246,14 @@ stars, a hypothesis; the stellar locus needs 10 reference stars). Decision: the 
 `ref_mag` bins 24–28; the ≤ 24 bin is not used for control statements. Revisit if CEERS photo-z are used or a CEERS
 point-source rule without catalogue stars is adopted.
 
+**Addendum 4 (2026-11-07): DJA z_phot as a SMACS ranking stratifier** (`results/smacs_jwst3/zphot_stratify/RESULT.md`).
+Re-scoring the SMACS galaxy stratum within z_phot strata (member 0.25–0.55, background ≥ 0.8): members are 2 / 20 of
+the top 20 against 0.209 of the stratum (frozen rule: ≥ 4 and ≥ 2× needed), and the background-only top 9 holds 7 of
+the overall top 20. The plan's raw image-rank trigger is met (2.323) only through the list-length ratio (2.306;
+percentiles 0.4835 vs 0.48; deviation). Decision: no z_phot stratification of SMACS rankings; the addendum 2 control rule is unchanged.
+Post hoc: eazy `z_phot = -1` rows are 4 / 20 of the top 20 vs 156 / 2938 ranked (2 already screened as spiked stars).
+Revisit if a point-source rule uses the eazy no-fit flag, or a cluster field with a larger member share is ranked.
+
 ## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
 
 **Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is
