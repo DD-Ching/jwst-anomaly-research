@@ -323,6 +323,13 @@ latency; top-k grows to thousands (share strips between nearby targets, or `cat_
 astrocut gains multi-position FITS cutouts with lighter dependencies; injection tests show the flag
 thresholds are badly calibrated; multi-band comparison needs a common north-up grid (`reproject`).
 
+**Addendum (2026-11-07): north-up display.** `viz.north_up` rotates each cutout on its own WCS with
+`scipy.ndimage.affine_transform` (Jacobian from `SkyCoord.spherical_offsets_to`), NaN-aware bilinear.
+Rejected: `reproject` (a new dependency for a display-only rotation of 5″ cutouts; it stays the choice when
+multi-band measurement needs one common pixel grid); nearest neighbour (drops isolated pixels at general
+angles). Evidence: `results/viz_north_up/RESULT.md`. Revisit if panels are used for measurement or a common
+multi-band grid is needed.
+
 ## D-006 External catalog cross-checking (unit 5) (2026-10-07)
 
 **Decision.**

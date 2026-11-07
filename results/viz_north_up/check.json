@@ -1,0 +1,234 @@
+{
+ "provenance": "derived (observed pixels and pipeline catalogue positions)",
+ "source": "jw02736-o001_t001_nircam_clear-f200w i2d + cat.ecsv (s3://stpubdata)",
+ "params_assumption": {
+  "target_mag": [
+   20.0,
+   23.0
+  ],
+  "neighbour_mag_max": 24.0,
+  "sep_arcsec": [
+   0.8,
+   2.2
+  ],
+  "n_max_pairs": 12,
+  "half_px": 5,
+  "match_px": 4.0
+ },
+ "n_pairs": 11,
+ "n_match": 10,
+ "offset_px_median": 1.75,
+ "offset_px_max_matched": 3.47,
+ "stored_ratio_max": 0.199,
+ "rows": [
+  {
+   "uid": "c752",
+   "sep_arcsec": 1.27,
+   "pred_rc": [
+    42.7,
+    96.3
+   ],
+   "peak_rc": [
+    43,
+    96
+   ],
+   "offset_px": 0.46,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.004,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c2942",
+   "sep_arcsec": 1.1,
+   "pred_rc": [
+    58.5,
+    52.0
+   ],
+   "peak_rc": [
+    58,
+    50
+   ],
+   "offset_px": 2.06,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.069,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3046",
+   "sep_arcsec": 1.88,
+   "pred_rc": [
+    42.7,
+    32.6
+   ],
+   "peak_rc": [
+    38,
+    33
+   ],
+   "offset_px": 4.71,
+   "peak_on_window_edge": true,
+   "match": false,
+   "stored_ratio": 0.006,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3138",
+   "sep_arcsec": 1.12,
+   "pred_rc": [
+    46.0,
+    91.0
+   ],
+   "peak_rc": [
+    47,
+    91
+   ],
+   "offset_px": 0.98,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.001,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3214",
+   "sep_arcsec": 1.56,
+   "pred_rc": [
+    36.7,
+    105.1
+   ],
+   "peak_rc": [
+    40,
+    104
+   ],
+   "offset_px": 3.47,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.013,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3217",
+   "sep_arcsec": 1.42,
+   "pred_rc": [
+    38.9,
+    99.8
+   ],
+   "peak_rc": [
+    40,
+    99
+   ],
+   "offset_px": 1.32,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.199,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3253",
+   "sep_arcsec": 1.08,
+   "pred_rc": [
+    45.5,
+    82.8
+   ],
+   "peak_rc": [
+    45,
+    83
+   ],
+   "offset_px": 0.52,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.002,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3316",
+   "sep_arcsec": 1.88,
+   "pred_rc": [
+    59.0,
+    136.5
+   ],
+   "peak_rc": [
+    60,
+    138
+   ],
+   "offset_px": 1.75,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.063,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3329",
+   "sep_arcsec": 1.41,
+   "pred_rc": [
+    36.4,
+    67.9
+   ],
+   "peak_rc": [
+    38,
+    69
+   ],
+   "offset_px": 1.99,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.027,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3517",
+   "sep_arcsec": 1.48,
+   "pred_rc": [
+    64.9,
+    35.0
+   ],
+   "peak_rc": [
+    64,
+    38
+   ],
+   "offset_px": 3.12,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.01,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  },
+  {
+   "uid": "c3545",
+   "sep_arcsec": 2.01,
+   "pred_rc": [
+    31.2,
+    122.1
+   ],
+   "peak_rc": [
+    31,
+    121
+   ],
+   "offset_px": 1.09,
+   "peak_on_window_edge": false,
+   "match": true,
+   "stored_ratio": 0.006,
+   "pc1_1": 0.81525658963588,
+   "pc2_1": 0.5790998990289,
+   "rotation_deg": 35.39
+  }
+ ]
+}

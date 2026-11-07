@@ -724,7 +724,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 - ~~Crossmatch and classify: propagate Gaia positions to the JWST epoch (D-012)~~ checked 2026-11-06 on SMACS
   (`results/gaia_pm_epoch/RESULT.md`): one star shifts > 0.3″ and keeps its label via astrometry; none
   > 0.5″; not built. Revisit for low-latitude fields or epochs > 10 yr after J2016. Identify lenses by name or literature, not only by otype.
-- Cutouts: north-up panels and an option for shared brightness scaling across panels.
+- ~~Cutouts: north-up panels and an option for shared brightness scaling across panels~~ done 2026-11-07 in `viz`
+  (`results/viz_north_up/RESULT.md`, D-005 addendum); pipeline configs do not expose them yet (defaults unchanged).
 - Second epochs and medium bands: check the galaxy top k against VENUS (6882) and other later programs
   with `scripts/epoch_compare.py` (D-017). Moving sources are stars; variable ones are AGN or transients.
 - ~~NIRCam F444W grism spectra of program 4043~~ done 2026-11-07 (`results/grism_4043/RESULT.md`, D-110): only
