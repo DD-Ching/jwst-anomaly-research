@@ -24,3 +24,10 @@ Written 2026-11-07 before any fetch or measurement. Follows `results/smacs_jwst3
 
 ## What changes the plan
 H-star would add a compactness check to the D-019–D-021 screen before SMACS top-k vetting.
+
+## Definitions fixed before the measurement (added 12:25Z, before any ranked-source number was seen)
+- Size: DJA phot `flux_radius` (detection image, pixels) at the 0.2″ zout/phot match (same `id`).
+- "Compact": `flux_radius` ≤ the 90th percentile of the run's star-stratum sources (Gaia-only split) matched the
+  same way (ASSUMPTION). If fewer than 5 stars match, compactness is undetermined.
+- Usable filters: zout `nusefilt`. Already seen at catalogue level (all 13,554 rows, not the ranked stratum):
+  no-fit rows span nusefilt 0–20, fitted rows 2–20, so the coverage cut is not sharp in the full catalogue.
