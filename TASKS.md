@@ -702,8 +702,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   D-022 addendum 4: members 2 / 20 of the top 20, not adopted). Open (post hoc): eazy `z_phot = -1` rows are 4 / 20 of
   the top 20 vs 156 / 2938 ranked; ~~test whether the no-fit flag marks uncatalogued stars or compact non-galaxies~~
   done 2026-11-07 (`results/smacs_jwst3/zphot_nofit/RESULT.md`, D-022 addendum 5: compact; coverage criterion not met).
-- SMACS point-source screen before top-k vetting: DJA `flux_radius` against the stellar locus. Validate first on the
-  Gaia stars (recovery) and the ICLv2 multiple images (must not be removed); then apply to `f200w_1816`, `f200w_384`.
+- ~~SMACS point-source screen (DJA `flux_radius` vs stellar locus)~~ done 2026-11-07, not validated
+  (`results/smacs_jwst3/point_source/RESULT.md`, D-022 addendum 6: V1 star recovery 0.733 / 0.906 < 0.90; V2 0 / 19
+  ICLv2 images removed). Open: a newly frozen plan with the locus window from ref_mag 20 (post hoc: 9 / 14 locus
+  outliers are < 20 mag) or a saturation flag; `f200w_1816`, `f200w_384` stay for normal vetting.
 - ~~Re-fetch program 2736 after MAST reprocesses it~~ done 2026-11-06 (jwst 3.0.0, `results/smacs_jwst3/RESULT.md`).
   Galaxy-stratum re-run with Gaia-only star separation done 2026-11-06 (`results/smacs_jwst3/galaxy_stratum/RESULT.md`:
   records stay in the top 31). ~~SIMBAD star rule and lens flags~~ done 2026-11-06 via the CfA mirror

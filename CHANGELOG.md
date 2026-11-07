@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS point-source screen on DJA `flux_radius`: not validated (TASKS Next M2, D-022 addendum 6)
+- **Plan first** (`results/smacs_jwst3/point_source/PLAN.md`); run `20261107T131039Z-cd7a1929` (ranks reproduce #765);
+  `scripts/smacs_point_source.py` (rule functions unit-tested before the run).
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): locus cut 2.9605 px from 113 Gaia-split stars;
+  V1 held-out star recovery 0.7333 / 0.9057 fails (≥ 0.90 both ways); V2 passes (0 / 19 ICLv2 images below the cut).
+  No screen; `f200w_1816`, `f200w_384` stay for normal vetting. Post hoc: 9 / 14 locus outliers are brighter than 20 mag.
+- **Services:** CDS XMatch still refuses Gaia (13:11Z); the Gaia `field` fallback carried the star split; #751 still waits.
+- **Handoff:** next: re-freeze the screen with a 20–24 mag locus window or a saturation flag, or MIRI fixed-aperture colours.
+
 ## 2026-11-07: SMACS eazy `z_phot = -1` rows are compact; coverage criterion not met (TASKS Next M2, D-022 addendum 5)
 - **Plan first** (`results/smacs_jwst3/zphot_nofit/PLAN.md`); run `20261107T121058Z-86f3f464`;
   `scripts/smacs_zphot_nofit.py` (rule unit-tested before the run).

@@ -1262,6 +1262,14 @@ below the fitted 10th percentile (3.105 px) and near the star median (2.222 px),
 Gaia-only split misses). Decision: no screen adopted yet; a point-source screen is a TASKS item that must first be
 validated on Gaia stars and catalogued multiple images. Revisit if that screen is built or DJA documents the flag.
 
+**Addendum 6 (2026-11-07): SMACS point-source screen on DJA `flux_radius`: not validated**
+(`results/smacs_jwst3/point_source/RESULT.md`). Locus from 113 Gaia-split stars at ref_mag 19–24: cut 2.96 px
+(median 2.156 + 3 × 0.268). V1 (held-out star recovery ≥ 0.90 both ways) fails, 0.733 / 0.906; V2 passes (0 / 19
+matched ICLv2 images below the cut). Decision: no point-source screen; `f200w_1816` (2.276 px) and `f200w_384`
+(1.906 px) stay for normal vetting. Post hoc: 9 of the 14 locus stars above the cut have ref_mag < 20 (saturation
+onset fainter than the plan assumed; hypothesis). Revisit with a newly frozen plan whose locus window starts at 20 mag
+or that excludes saturated stars by a pipeline flag.
+
 ## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
 
 **Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is
