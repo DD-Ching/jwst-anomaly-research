@@ -9,6 +9,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   from S3; pooled features → PCA 50 → Isolation Forest; recall@50 (random 0.048).
 - **Result** (`RESULT.md`, `summary.json`, contact sheet looked at: arcs visible): mean recall pixel 0.033 / 0.08,
   Zoobot 0.173 / 0.173, DINOv2 0.047 / 0.06. Zoobot beats only at f = 0.3; DINOv2 ties. H-emb not supported.
+  Post hoc: scaling injected cutouts by the host's clean range leaves Zoobot at 0.16 / 0.16 (not a rescaling artefact).
 - **Failed approach:** DINOv2 in timm defaults to 518 px input; `img_size=224` is required.
 - **Services:** CDS still unreachable (21:08Z, no HTTP response); #751 still waits. S3 and the Hugging Face Hub worked.
 - **Handoff:** unsupervised global embeddings closed for M2 ranking; a lens finder needs labelled JWST lenses

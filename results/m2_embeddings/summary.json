@@ -107,10 +107,49 @@
   "zoobot": false,
   "dinov2": false
  },
+ "posthoc_host_scaled": {
+  "note": "post hoc, not part of the frozen rule: injected cutouts min-max scaled with their host's clean-cutout range instead of their own",
+  "recall_at_k": {
+   "zoobot": {
+    "0.3": [
+     0.14,
+     0.18,
+     0.16
+    ],
+    "1.0": [
+     0.14,
+     0.18,
+     0.16
+    ]
+   },
+   "dinov2": {
+    "0.3": [
+     0.04,
+     0.04,
+     0.06
+    ],
+    "1.0": [
+     0.1,
+     0.08,
+     0.06
+    ]
+   }
+  },
+  "mean_recall_at_k": {
+   "zoobot": {
+    "0.3": 0.16,
+    "1.0": 0.16
+   },
+   "dinov2": {
+    "0.3": 0.04666666666666667,
+    "1.0": 0.08
+   }
+  }
+ },
  "timing_s": {
-  "io": 11.693845510482788,
-  "zoobot": 35.41797423362732,
-  "dinov2": 52.6070032119751
+  "io_catalog_and_full_sci": 12.1789870262146,
+  "zoobot": 36.06633472442627,
+  "dinov2": 57.80301904678345
  },
  "versions": {
   "torch": "2.15.0+cpu",
