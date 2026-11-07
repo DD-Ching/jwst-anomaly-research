@@ -163,7 +163,7 @@ def arcs_negative(smacs_sample: Path) -> dict:
     ci = SkyCoord(images["ra"], images["dec"], unit="deg")
     idx, sep, _ = ci.match_to_catalog_sky(cs)
     ok = sep.arcsec <= MATCH_ARCSEC
-    rows = idx[ok]
+    rows, first = np.unique(idx[ok], return_index=True)  # one evaluation per merged source
     ref = str(t["ref_band"][0]).lower() if "ref_band" in t.colnames else "f200w"
     # Shape band: the single detected band if n_bands == 1, else the reference band (or the anchor).
     sb = detected_band(t, bands)
@@ -177,10 +177,11 @@ def arcs_negative(smacs_sample: Path) -> dict:
             shape_band.append(str(t["anchor_band"][i]).lower())
     full = spike_flags(t, rows, np.array(shape_band, dtype=object))
     geom = spike_flags(t, rows, np.array(shape_band, dtype=object), require_single=False)
-    ids = np.asarray(images["image_id"])[ok]
+    ids = np.asarray(images["image_id"])[ok][first]
     return {
         "n_images": len(images),
         "n_matched": int(ok.sum()),
+        "n_matched_sources": int(rows.size),
         "n_single_band": int(sum(int(t["n_bands"][i]) == 1 for i in rows)),
         "n_flagged_full_rule": int(sum(r["flag"] for r in full)),
         # Post hoc (not in the plan): the geometry conditions 2-4 alone, on every matched image.
@@ -241,6 +242,10 @@ def streak_run(run_samples: dict[str, Path], positive_uid: str, out: Path, proce
         "ceers_t021": "jw01345-o001_t021_nircam_clear-f200w",
         "smacs0723_nircam": "jw02736-o001_t001_nircam_clear-f200w",
     }
+    import lens_consistency as lc
+
+    _, files, par = lc.load_model("smacs0723-iclv2")
+    images = lc.image_list("smacs0723-iclv2", files, par)[0]
     arms: dict[str, dict] = {"trail": {}, "trail_seg64": {}}
     pos_in = {"trail": False, "trail_seg64": False}
     img_in = {"trail": 0, "trail_seg64": 0}
@@ -269,9 +274,17 @@ def streak_run(run_samples: dict[str, Path], positive_uid: str, out: Path, proce
                 ip = find_uid(t, positive_uid)
                 pos_in[arm] = bool(ip is not None and inm[ip])
             if name == "smacs0723_nircam":
-                _, files, par = __import__("lens_consistency").load_model("smacs0723-iclv2")
-                images = __import__("lens_consistency").image_list("smacs0723-iclv2", files, par)[0]
-                img_in[arm] = int(wm.veto_rows(images["ra"], images["dec"], mask, wz).sum())
+                # Plan condition 2: the ICLv2 images matched to the merged catalog (within
+                # MATCH_ARCSEC), as in rule A's arcs test, one per merged source.
+                cs = SkyCoord(t["ra"], t["dec"], unit="deg")
+                ci = SkyCoord(images["ra"], images["dec"], unit="deg")
+                idx, sep, _ = ci.match_to_catalog_sky(cs)
+                matched = np.unique(idx[sep.arcsec <= MATCH_ARCSEC])
+                img_in[arm] = int(inm[matched].sum())
+                rec["n_iclv2_matched_sources"] = int(matched.size)
+                rec["n_iclv2_images_all_in_mask"] = int(
+                    wm.veto_rows(images["ra"], images["dec"], mask, wz).sum()
+                )
                 rec["n_iclv2_images_in_mask"] = img_in[arm]
             arms[arm][name] = rec
             wm._sheet(out / f"{name}_{arm}_mask.png", img, mask, f"{name} {arm}")
@@ -315,10 +328,24 @@ def main(argv=None) -> dict:
         uid = str(tc["source_uid"][ip])
         hit = [r for r in ceers["flagged"] if r["source_uid"] == uid]
         rec = spike_flags(tc, np.array([ip]), detected_band(tc, bands_in(tc))[[ip]])[0]
+        cc = SkyCoord(tc["ra"], tc["dec"], unit="deg")
+        sep = cc[ip].separation(cc).arcsec
+        mag = band_mag(tc, "f200w")
+        pa = float(tc["f200w_sky_orientation"][ip])
+        near = [
+            {
+                "source_uid": str(tc["source_uid"][j]),
+                "sep_arcsec": float(sep[j]),
+                "f200w_mag": float(mag[j]),
+                "dtheta": float(axis_diff(pa, cc[ip].position_angle(cc[j]).deg)),
+            }
+            for j in np.flatnonzero((sep > 0) & (sep <= R_MAX) & (mag <= mag[ip] - DMAG))
+        ]
         pos = {
             "source_uid": uid,
             "flagged": bool(hit),
             "record": rec,
+            "bright_neighbours": near,
             "ra": float(tc["ra"][ip]),
             "dec": float(tc["dec"][ip]),
         }
@@ -336,7 +363,6 @@ def main(argv=None) -> dict:
         "ceers": ceers,
         "smacs": smacs,
     }
-    a.out.mkdir(parents=True, exist_ok=True)
     (a.out / "summary.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
     return summary
 

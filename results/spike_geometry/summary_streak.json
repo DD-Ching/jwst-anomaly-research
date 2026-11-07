@@ -23,6 +23,8 @@
      "single_n": 3314,
      "multi_in": 315,
      "multi_n": 2687,
+     "n_iclv2_matched_sources": 36,
+     "n_iclv2_images_all_in_mask": 0,
      "n_iclv2_images_in_mask": 0
     }
    },
@@ -53,7 +55,9 @@
      "single_n": 3314,
      "multi_in": 1315,
      "multi_n": 2687,
-     "n_iclv2_images_in_mask": 40
+     "n_iclv2_matched_sources": 36,
+     "n_iclv2_images_all_in_mask": 40,
+     "n_iclv2_images_in_mask": 24
     }
    },
    "positive_in_mask": true,

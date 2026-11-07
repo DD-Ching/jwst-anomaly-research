@@ -17,6 +17,7 @@ from astropy.io import fits
 from astropy.table import Table
 
 from jwst_anomaly.cutouts import make_cutouts
+from jwst_anomaly.pipeline import l3_image_uri
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
@@ -26,8 +27,14 @@ out = sys.argv[2]
 summ = json.load(open("results/spike_geometry/summary.json"))
 
 
+CLOUD = {
+    "s3_bucket": "stpubdata",
+    "l3_key_pattern": "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}",
+}
+
+
 def uri(obs):
-    return f"s3://stpubdata/jwst/public/jw{obs[2:7]}/L3/t/o{obs[9:12]}/{obs}_i2d.fits"
+    return l3_image_uri(CLOUD, obs)
 
 
 def row(sample, uid):

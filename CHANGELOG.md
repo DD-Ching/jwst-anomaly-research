@@ -8,7 +8,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Rule A** (radial alignment, ≥ 3 mag brighter neighbour ≤ 10″): misses the positive `f200w_2842` (13.8° > 10°), flags
   at chance (CEERS 31 vs 28 rotated; SMACS 200 vs 93), and flags an arc segment (`f444w_1970`, looked at).
 - **Addendum B** (W1 `findsat_mrt` mask reused, F200W streamed): trail arm misses the positive, enrichment 2.5× / 1.1×
-  (< 3×); trail + row-segment arm catches it but covers 47 % / 75 % of single-band rows and 40 ICLv2 images.
+  (< 3×); trail + row-segment arm catches it but covers 47 % / 75 % of single-band rows and 24 / 36 matched ICLv2 images.
 - **Looked at:** `f200w_2842` lies on a straight line crossing the 16″ cutout (F200W, fainter F356W) that misses the
   4.6″ bright source; the 2026-10-08 "spike from the bright source" reading is replaced (visual).
 - **Services:** CDS XMatch still refuses Gaia/SIMBAD tables 08:11Z; #751 still waits.

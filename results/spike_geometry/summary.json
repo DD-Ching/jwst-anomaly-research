@@ -22,12 +22,45 @@
    "neighbour_sep": 6.184671290087803,
    "neighbour_mag": 22.806078788990206
   },
+  "bright_neighbours": [
+   {
+    "source_uid": "jw01345-o001_t021_nircam_f200w_91",
+    "sep_arcsec": 7.499966551596695,
+    "f200w_mag": 24.761707100837825,
+    "dtheta": 58.48928650976268
+   },
+   {
+    "source_uid": "jw01345-o001_t021_nircam_f200w_112",
+    "sep_arcsec": 5.9243512050436395,
+    "f200w_mag": 24.903313146913227,
+    "dtheta": 63.8768621619393
+   },
+   {
+    "source_uid": "jw01345-o001_t021_nircam_f200w_2834",
+    "sep_arcsec": 6.184671290087803,
+    "f200w_mag": 22.806078788990206,
+    "dtheta": 13.846005975625246
+   },
+   {
+    "source_uid": "jw01345-o001_t021_nircam_f200w_2879",
+    "sep_arcsec": 4.626362080943168,
+    "f200w_mag": 19.303963765061813,
+    "dtheta": 32.67334036560828
+   },
+   {
+    "source_uid": "jw01345-o001_t021_nircam_f200w_2889",
+    "sep_arcsec": 6.677958623362084,
+    "f200w_mag": 24.567307773447446,
+    "dtheta": 39.842793866574254
+   }
+  ],
   "ra": 215.00665677067204,
   "dec": 53.01875684844241
  },
  "arcs_negative": {
   "n_images": 60,
   "n_matched": 36,
+  "n_matched_sources": 36,
   "n_single_band": 11,
   "n_flagged_full_rule": 0,
   "n_flagged_geometry_only": 0,

@@ -937,7 +937,7 @@ all MIRI bands) becomes available or is built for another reason.
 `RESULT.md`, `summary.json`, `summary_streak.json`, `scripts/spike_geometry.py`). Single-band elongated rows (the third
 "Revisit if" above): radial alignment to a ≥ 3 mag brighter neighbour misses the known streak `f200w_2842` and flags at
 chance (31 vs 28 rotated in CEERS); the W1 `findsat_mrt` trail mask misses it and enriches single-band rows < 3×;
-adding row segments catches it but covers 47–75 % of single-band rows and 40 ICLv2 images. No flag is adopted; D-014's
+adding row segments catches it but covers 47–75 % of single-band rows and 24 / 36 matched ICLv2 images. No flag is adopted; D-014's
 confirmation gate stays the spike control and single-band elongated top-k rows get a visual check. Revisit if a
 per-observation spike-angle model (V3 position angle) is built.
 
