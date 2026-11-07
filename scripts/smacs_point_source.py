@@ -182,7 +182,7 @@ def main() -> None:
             return {
                 "rank": k + 1,
                 "source_uid": str(gal["source_uid"][k]),
-                "ref_mag": round(float(g_mag[k]), 3),
+                "ref_mag": round(float(g_mag[k]), 3) if np.isfinite(g_mag[k]) else None,
                 "flux_radius_pix": round(float(g_rad[k]), 3) if fin else None,
                 "point_like": bool(g_rad[k] <= cut) if fin else None,
             }
@@ -250,7 +250,8 @@ def main() -> None:
         "v2_max_point": V2_MAX_POINT,
     }
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+    text = json.dumps(summary, indent=1, allow_nan=False)  # strict JSON: no bare NaN
+    (args.out / "summary.json").write_text(text + "\n")
     print(json.dumps({k: v for k, v in summary.items() if k not in ("top20",)}, indent=1))
 
 

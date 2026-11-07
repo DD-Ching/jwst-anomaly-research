@@ -193,7 +193,7 @@
   {
    "rank": 7,
    "source_uid": "jw02736-o001_t001_nircam_f277w_743",
-   "ref_mag": NaN,
+   "ref_mag": null,
    "flux_radius_pix": 7.686,
    "point_like": false
   },
@@ -249,7 +249,7 @@
   {
    "rank": 15,
    "source_uid": "jw02736-o001_t001_nircam_f356w_1098",
-   "ref_mag": NaN,
+   "ref_mag": null,
    "flux_radius_pix": 2.343,
    "point_like": true
   },
