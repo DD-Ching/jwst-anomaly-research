@@ -243,6 +243,24 @@ def main() -> None:
                 "v3_n_faint_stars": n_faint,
                 "v3_point_fraction": None if faint_frac is None else round(faint_frac, 4),
                 "v3_is_gate": n_faint >= V3_MIN_STARS,
+                # Post hoc (deviation, added after V1a and V1b failed): locus radius by ref_mag and
+                # where the outliers sit in the V1b halves.
+                "post_hoc_locus_by_ref_mag": [
+                    {
+                        "ref_mag": [lo, hi],
+                        "n": int(b.sum()),
+                        "median_radius_pix": round(float(np.median(s_rad[b])), 3)
+                        if b.any()
+                        else None,
+                        "above_cut": int(np.sum(s_rad[b] > cut)),
+                    }
+                    for lo, hi in ((20.0, 20.7), (20.7, 22.0), (22.0, 24.0))
+                    for b in [lm & (s_mag >= lo) & (s_mag < hi if hi < 24.0 else s_mag <= hi)]
+                ],
+                "post_hoc_outliers_east_west": [
+                    int(np.sum((s_rad[lm] > cut) & spatial_groups(s_ra[lm]))),
+                    int(np.sum((s_rad[lm] > cut) & ~spatial_groups(s_ra[lm]))),
+                ],
                 "v3_faint_stars": [
                     {"ref_mag": round(float(m), 3), "flux_radius_pix": round(float(r), 3)}
                     for m, r in sorted(zip(s_mag[fm], s_rad[fm], strict=True))

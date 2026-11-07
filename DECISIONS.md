@@ -1270,6 +1270,15 @@ matched ICLv2 images below the cut). Decision: no point-source screen; `f200w_18
 onset fainter than the plan assumed; hypothesis). Revisit with a newly frozen plan whose locus window starts at 20 mag
 or that excludes saturated stars by a pipeline flag.
 
+**Addendum 7 (2026-11-07): point-source screen v2 (locus 20–24 mag): not validated**
+(`results/smacs_jwst3/point_source_v2/RESULT.md`). 101 locus stars; cut 2.7257 px (median 2.1293 + 3 × 0.1988). V1a
+parity recovery 0.6909 / 0.9348 and V1b spatial recovery 0.9608 / 0.76 fail (≥ 0.90 both ways); V2 passes (0 / 19).
+Only 5 matched stars lie in (24, 27], so no size label can be validated at the targets' 25.9 / 26.3 mag on this field.
+Decision: the constant-width `flux_radius` locus is closed for SMACS (no third post-hoc window on the same stars);
+`f200w_1816` and `f200w_384` stay for normal vetting by another route. Post hoc: locus median 2.649 px at 20–20.7 vs
+2.032–2.162 px fainter. Revisit if a magnitude-dependent locus is frozen and validated on another field's stars, or a
+pipeline saturation flag is tested.
+
 ## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
 
 **Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is
