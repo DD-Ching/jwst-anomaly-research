@@ -23,7 +23,7 @@ samples:
   # D-014 addendum 2: single-band detections in F770W/F1000W count as confirmed when a DJA
   # v7.4 source with S/N >= 5 in a NIRCam band (0.5" aperture) lies within 0.3" (ASSUMPTIONs,
   # results/miri_confirm/PLAN_bands.md). Positions only; the colours come from
-  # the matched_photometry block above.
+  # the matched_photometry block below.
   # 0.7" diameter (aperture 2): 0.5" is smaller than the F1800W PSF FWHM (ASSUMPTION, PLAN.md).
   matched_photometry:
     url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix_phot.fits
