@@ -335,7 +335,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   1Xbfkl2ZxIm-XnGj1ResBSKWCDjkgULqc) sha256 93cfa19494b077a60541a34fc17db6125c5667f3a17a9dcd2c10d2915828c397. The
   mosaic is not pinned.
 - Mahler+2022 SMACS 0723 lens model, release v2 (2022-12-27): https://github.com/guillaumemahler/SMACS0723-mahler2022
-- Noirot+2023 SMACS 0723 redshifts: https://niriss.github.io/smacs0723
+- Noirot+2023 SMACS 0723 redshifts: https://niriss.github.io/smacs0723 (paper arXiv:2212.07366v2).
+  `smacs0723/redshift_catalog.txt` (190 rows, 34,283 B, sha256 `c1218230…`, accessed 2026-11-07) is pinned in
+  `scripts/smacs_niriss_miri_coverage.py`; Q_FLAG 1 = multiple features, 2 = single feature (Table B1).
 - Caminha+2022 SMACS 0723 model and MUSE redshifts, CDS catalogue J/A+A/666/L9: https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/666/L9.
   `muse.dat` (table A1, 78 rows, 4,914 B, sha256 `81868f29…`, accessed 2026-10-14) is pinned in
   `scripts/offplane_potentials.py` `MUSE` for `smacs0723-iclv2`; the model files were not read.

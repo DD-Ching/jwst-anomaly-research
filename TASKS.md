@@ -759,4 +759,6 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 - A weekly scheduled link check of the state files (`scripts/check_links.py`).
 - Switch Dependabot from pip to uv once a `uv.lock` exists. Keep the version in `pyproject.toml`,
   `__init__.py` and `CITATION.cff` in sync on release.
-- NIRISS imaging of program 2736 (F115W, F200W).
+- ~~NIRISS imaging of program 2736 (F115W, F200W)~~ coverage checked 2026-11-07
+  (`results/smacs_niriss_miri_coverage/RESULT.md`): 5 / 11 open records inside (not `384`, `1816`; no second 2022
+  instrument covers `384`); NED z of `1096` and `2925` are Noirot+2023 single-feature grism redshifts.
