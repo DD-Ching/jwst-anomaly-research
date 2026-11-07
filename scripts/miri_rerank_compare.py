@@ -1,4 +1,4 @@
-"""Compare the top k of two pipeline runs of one sample (MIRI re-rank, ``results/miri_confirm/PLAN_rerank.md``).
+"""Compare the top k of two pipeline runs of one sample (``results/miri_confirm/PLAN_rerank.md``).
 
 Reads ``quality.ecsv``, ``scores.ecsv`` and ``sources.ecsv`` of ``<run>/<sample>`` for a run with
 the band-restricted NIRCam confirmation (``new``) and one without (``base``), and writes the gate
@@ -44,11 +44,14 @@ def main(argv=None) -> int:
     new_scores = Table.read(new_dir / "scores.ecsv")
     tn, tb = top_uids(new_scores), top_uids(Table.read(base_dir / "scores.ecsv"))
     src = Table.read(new_dir / "sources.ecsv")
-    n_bands = dict(zip(np.asarray(src["source_uid"]).astype(str), np.asarray(src["n_bands"])))
+    n_bands = dict(
+        zip(np.asarray(src["source_uid"]).astype(str), np.asarray(src["n_bands"]), strict=True)
+    )
     feats = dict(
         zip(
             np.asarray(new_scores["source_uid"]).astype(str),
             np.asarray(new_scores["top_features"]).astype(str),
+            strict=True,
         )
     )
     out["jaccard"] = round(jaccard(tn, tb), 3)
