@@ -1466,6 +1466,12 @@ of addendum 5. The other 13 curved arcs have predicted bends < 3σ, so their mea
 untestable. Null. Limitation: a round source gives short model images (0.8–5.6″); intrinsic source shape is not
 modelled.
 
+**Addendum 7 2026-11-07 (weak-shear single source, `scripts/smacs_1096_shear.py`).** For one source outside the
+g ≥ 0.2 selection (`f200w_1096`, r 46.96″, NED z 1.3618) the same shape-noise model gives P(offset ≥ observed),
+frozen rule `inconsistent` below 0.01 and `no_power` for g < 0.05 (ASSUMPTIONs). Result: g 0.132, offset 25.39°,
+P 0.4661, `consistent` (`results/smacs_1096_shear/RESULT.md`). At g ≈ 0.13 the test has little power (P 0.7176 at
+g = 0); single-source orientation checks are informative only for g ≳ 0.2, as the selection assumes.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

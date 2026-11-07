@@ -753,8 +753,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 ## Later
 - Reuse `classify`'s full-catalog SIMBAD/Gaia matches for the top-k cross-match (re-query only NED).
 - M3: published SMACS 0723 lens models (Mahler+2022, RELICS, Caminha+2022); AnomalyMatch for lens finding.
-  Evaluate model shear and magnification at candidate positions (open question in
-  `docs/candidates/jw02736-o001_t001_nircam_f200w_1096.md`).
+  ~~Evaluate model shear and magnification at candidate positions (open question in
+  `docs/candidates/jw02736-o001_t001_nircam_f200w_1096.md`)~~ done 2026-11-07 for 1096
+  (`results/smacs_1096_shear/RESULT.md`, D-024 addendum 7: g 0.132, μ 1.515, orientation consistent).
 - A weekly scheduled link check of the state files (`scripts/check_links.py`).
 - Switch Dependabot from pip to uv once a `uv.lock` exists. Keep the version in `pyproject.toml`,
   `__init__.py` and `CITATION.cff` in sync on release.

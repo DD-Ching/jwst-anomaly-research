@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS `f200w_1096` ICLv2 shear and magnification: orientation consistent, weak shear (TASKS Later M3, D-024 addendum 7)
+- **Plan first** (`results/smacs_1096_shear/PLAN.md`); `scripts/smacs_1096_shear.py` reuses `lens_consistency`
+  (`load_model`, `load_shapes`, `anti_probability`); `decide` unit-tested.
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): at the NED z 1.3618, g 0.132, μ 1.515
+  (best model); F200W / F444W major axis 25.39° from the predicted stretch, P 0.4661 under shape noise:
+  `consistent`. The record's open question is closed; verdict unchanged. Post hoc: the F150W segment is one
+  deblended part of the galaxy (e 0.388), not its overall shape.
+- **Deviation:** no posterior (ICLv2 has no pinned `bayes.dat`).
+- **Services:** CDS still unreachable (22:08Z, connection reset); #751 still waits. S3 worked.
+- **Handoff:** next: TASKS Next M2 / Later items; #751 when CDS is reachable.
+
 ## 2026-11-07: M2 image-embedding pilot on SMACS F200W: H-emb not supported; embeddings not adopted (TASKS Next M2, D-010 addendum)
 - **Plan first** (`results/m2_embeddings/PLAN.md`, frozen; one pre-run host-rule deviation: too few `is_extended`
   hosts, widened to 20–27 mag before any embedding). `scripts/m2_embeddings.py`; `decide` unit-tested before the run.
