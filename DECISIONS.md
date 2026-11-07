@@ -1238,6 +1238,14 @@ carried by SMACS z_phot cluster members (0.25–0.55; F277W−F356W D 0.79–0.8
 science-vs-control top-k statement without restricting SMACS to background galaxies (or weighting to the CEERS
 population) in `ref_mag` bins. Revisit if CEERS photo-z or a star-split CEERS run changes the background match.
 
+**Addendum 3 (2026-11-07): star-split CEERS** (`results/ceers_star_split/RESULT.md`). With the Gaia `field` and CfA
+SIMBAD fallbacks, CEERS splits 6 catalogued stars (all `ref_mag` ≤ 21.1) off its 3156 ranked rows. No feature changes
+verdict; the largest move is `ref_log_ci_70_50` ≤ 24 (D 0.363 → 0.308); every D outside the ≤ 24 bin and the SMACS
+background match move by ≤ 0.010. Post hoc, 11 / 49 bright CEERS rows still look point-like and blue (uncatalogued
+stars, a hypothesis; the stellar locus needs 10 reference stars). Decision: the addendum 2 rule stands, restricted to
+`ref_mag` bins 24–28; the ≤ 24 bin is not used for control statements. Revisit if CEERS photo-z are used or a CEERS
+point-source rule without catalogue stars is adopted.
+
 ## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
 
 **Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is
