@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import smacs_point_source as ps  # noqa: E402
@@ -62,4 +63,13 @@ def test_decide_v2_gates_and_reach():
     assert ps.decide_v2(ok, ok, 19, 0.0, 9, 1.0) == "validated to ref_mag 24 only"  # V3 descriptive
     assert ps.decide_v2(ok, [0.95, 0.85], 19, 0.0, 12, 0.9) == "not validated (V1b fail)"
     assert ps.decide_v2([0.8, 0.9], ok, 5, 0.0, 12, 0.9) == "not validated (V1a, V2 fail)"
-    assert ps.decide_v2([], ok, 19, 0.0, 12, 0.9) == "undetermined (V1 could not be split)"
+    assert ps.decide_v2([], ok, 19, 0.0, 12, 0.9) == "undetermined (V1a could not be split)"
+
+
+def test_decide_v2_failure_wins_over_unsplit_and_ra_wrap_guard():
+    ok = [0.95, 0.92]
+    assert ps.decide_v2([0.6, 0.95], [], 19, 0.0, 12, 0.9) == "not validated (V1a fail)"
+    assert ps.decide_v2(ok, [], 19, 0.5, 12, 0.9) == "not validated (V2 fail)"
+    assert ps.decide_v2(ok, [], 19, 0.0, 12, 0.9) == "undetermined (V1b could not be split)"
+    with pytest.raises(ValueError):
+        ps.spatial_groups(np.array([359.9, 0.1, 0.2]))

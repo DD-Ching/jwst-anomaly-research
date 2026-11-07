@@ -16,8 +16,12 @@ sha256-checked). Contact sheet of the run looked at.
 - **V3 descriptive** (5 matched stars with ref_mag in (24, 27], fewer than 10): 0.8 point-like; no gate.
 - Verdict (`decide_v2`): "not validated (V1a, V1b fail)"; `targets_labelled` false. By the plan, `f200w_1816`
   (2.276 px, ref_mag 25.897) and `f200w_384` (1.906 px, 26.305) stay for normal vetting.
-- Descriptive: point-like galaxy-stratum rows by ref_mag 0 / 13 (18–22), 2 / 90 (22–24), 59 / 213 (24–26),
-  44 / 256 (26–27), 61 / 438 (27–28), 68 / 1024 (28–31) (`galaxy_point_like_by_ref_mag`).
+- Descriptive: galaxy-stratum rows below the cut by ref_mag 0 / 13 (18–22), 2 / 90 (22–24), 59 / 213 (24–26),
+  44 / 256 (26–27), 61 / 438 (27–28), 68 / 1024 (28–31) (`galaxy_point_like_by_ref_mag`). Target and top-20 rows carry `below_cut`, not a label.
+
+## Plan erratum
+The plan quotes v1's in-window outliers as "3 at 20.4–20.7"; the stored values are 20.387, 20.557 and 20.668
+(`../point_source/summary.json`), i.e. 20.39–20.67. The gates are unaffected.
 
 ## Pre-run expectation that was wrong
 The plan expected V1a to pass because only 5 of v1's outliers lay in [20, 24]. Dropping the brighter stars

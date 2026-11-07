@@ -14,6 +14,7 @@
   0.76
  ],
  "v1b_split_ra_deg": 110.770329,
+ "v3_duplicate_dja_ids": 0,
  "v3_n_faint_stars": 5,
  "v3_point_fraction": 0.8,
  "v3_is_gate": false,
@@ -206,140 +207,140 @@
    "source_uid": "jw02736-o001_t001_nircam_f200w_3255",
    "ref_mag": 21.358,
    "flux_radius_pix": 3.267,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 2,
    "source_uid": "jw02736-o001_t001_nircam_f200w_2063",
    "ref_mag": 27.382,
    "flux_radius_pix": 1.691,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 3,
    "source_uid": "jw02736-o001_t001_nircam_f200w_1395",
    "ref_mag": 25.187,
    "flux_radius_pix": 4.483,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 4,
    "source_uid": "jw02736-o001_t001_nircam_f200w_318",
    "ref_mag": 28.048,
    "flux_radius_pix": 2.157,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 5,
    "source_uid": "jw02736-o001_t001_nircam_f200w_2693",
    "ref_mag": 29.876,
    "flux_radius_pix": null,
-   "point_like": null
+   "below_cut": null
   },
   {
    "rank": 6,
    "source_uid": "jw02736-o001_t001_nircam_f200w_2490",
    "ref_mag": 26.847,
    "flux_radius_pix": 2.131,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 7,
    "source_uid": "jw02736-o001_t001_nircam_f277w_743",
    "ref_mag": null,
    "flux_radius_pix": 7.686,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 8,
    "source_uid": "jw02736-o001_t001_nircam_f200w_921",
    "ref_mag": 28.284,
    "flux_radius_pix": 3.252,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 9,
    "source_uid": "jw02736-o001_t001_nircam_f200w_3446",
    "ref_mag": 30.226,
    "flux_radius_pix": 4.365,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 10,
    "source_uid": "jw02736-o001_t001_nircam_f200w_3177",
    "ref_mag": 27.62,
    "flux_radius_pix": null,
-   "point_like": null
+   "below_cut": null
   },
   {
    "rank": 11,
    "source_uid": "jw02736-o001_t001_nircam_f200w_389",
    "ref_mag": 29.165,
    "flux_radius_pix": 3.262,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 12,
    "source_uid": "jw02736-o001_t001_nircam_f200w_3188",
    "ref_mag": 25.514,
    "flux_radius_pix": 2.556,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 13,
    "source_uid": "jw02736-o001_t001_nircam_f200w_3884",
    "ref_mag": 25.095,
    "flux_radius_pix": 11.734,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 14,
    "source_uid": "jw02736-o001_t001_nircam_f200w_1816",
    "ref_mag": 25.897,
    "flux_radius_pix": 2.276,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 15,
    "source_uid": "jw02736-o001_t001_nircam_f356w_1098",
    "ref_mag": null,
    "flux_radius_pix": 2.343,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 16,
    "source_uid": "jw02736-o001_t001_nircam_f200w_3774",
    "ref_mag": 29.414,
    "flux_radius_pix": 7.131,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 17,
    "source_uid": "jw02736-o001_t001_nircam_f200w_1552",
    "ref_mag": 29.345,
    "flux_radius_pix": 0.611,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 18,
    "source_uid": "jw02736-o001_t001_nircam_f200w_1788",
    "ref_mag": 30.157,
    "flux_radius_pix": 4.166,
-   "point_like": false
+   "below_cut": false
   },
   {
    "rank": 19,
    "source_uid": "jw02736-o001_t001_nircam_f200w_384",
    "ref_mag": 26.305,
    "flux_radius_pix": 1.906,
-   "point_like": true
+   "below_cut": true
   },
   {
    "rank": 20,
    "source_uid": "jw02736-o001_t001_nircam_f200w_429",
    "ref_mag": 28.547,
    "flux_radius_pix": 6.534,
-   "point_like": false
+   "below_cut": false
   }
  ],
  "targets": {
@@ -348,14 +349,14 @@
    "source_uid": "jw02736-o001_t001_nircam_f200w_1816",
    "ref_mag": 25.897,
    "flux_radius_pix": 2.276,
-   "point_like": true
+   "below_cut": true
   },
   "jw02736-o001_t001_nircam_f200w_384": {
    "rank": 19,
    "source_uid": "jw02736-o001_t001_nircam_f200w_384",
    "ref_mag": 26.305,
    "flux_radius_pix": 1.906,
-   "point_like": true
+   "below_cut": true
   }
  },
  "assumptions": {

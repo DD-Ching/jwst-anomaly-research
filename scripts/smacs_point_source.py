@@ -65,9 +65,14 @@ def locus_cut(radius: np.ndarray) -> tuple[float, float, float]:
     return med, s, med + N_SIGMA * s
 
 
-def locus_mask(mag: np.ndarray, radius: np.ndarray) -> tuple[np.ndarray, list[float] | None]:
-    """Locus stars in the plan window (fallback window if too few); None = undetermined."""
-    for lo, hi in (LOCUS_MAG, LOCUS_MAG_FALLBACK):
+def locus_mask(
+    mag: np.ndarray,
+    radius: np.ndarray,
+    windows: tuple[tuple[float, float], ...] = (LOCUS_MAG, LOCUS_MAG_FALLBACK),
+) -> tuple[np.ndarray, list[float] | None]:
+    """Locus stars in the first window with enough stars (v1: plan window, then fallback);
+    None = undetermined."""
+    for lo, hi in windows:
         m = (mag >= lo) & (mag <= hi) & np.isfinite(radius)
         if m.sum() >= MIN_LOCUS:
             return m, [lo, hi]
@@ -75,15 +80,8 @@ def locus_mask(mag: np.ndarray, radius: np.ndarray) -> tuple[np.ndarray, list[fl
 
 
 def held_out_recovery(ids: np.ndarray, radius: np.ndarray) -> list[float]:
-    """V1: cut from one ``id``-parity half, recovery fraction on the other, both directions."""
-    out = []
-    for train in (0, 1):
-        a, b = ids % 2 == train, ids % 2 != train
-        if a.sum() < 2 or b.sum() < 1:
-            return []
-        cut = locus_cut(radius[a])[2]
-        out.append(float(np.mean(radius[b] <= cut)))
-    return out
+    """V1 / V1a: cut from one `id`-parity half (even first), recovery on the other, both ways."""
+    return held_out_by_group(ids % 2 == 0, radius)
 
 
 def held_out_by_group(group: np.ndarray, radius: np.ndarray) -> list[float]:
@@ -100,8 +98,20 @@ def held_out_by_group(group: np.ndarray, radius: np.ndarray) -> list[float]:
 
 
 def spatial_groups(ra: np.ndarray) -> np.ndarray:
-    """V1b halves: True = east (``ra`` above the locus median ``ra``)."""
+    """V1b halves: True = east (``ra`` above the locus median ``ra``). Raw RA: refuses a field that
+    straddles RA 0 / 360 (span > 180 deg), where the median is not an east / west split."""
+    if np.ptp(ra) > 180.0:
+        raise ValueError("locus straddles RA 0/360; spatial_groups needs unwrapped RA")
     return ra > np.median(ra)
+
+
+def _v2_gate(n_images: int, image_point_frac: float | None) -> bool:
+    """V2 (both plans): enough matched catalogued images and few of them point-like."""
+    return (
+        n_images >= V2_MIN_IMAGES
+        and image_point_frac is not None
+        and image_point_frac <= V2_MAX_POINT
+    )
 
 
 def decide_v2(
@@ -112,22 +122,20 @@ def decide_v2(
     n_faint: int,
     faint_point_frac: float | None,
 ) -> str:
-    """Frozen v2 plan rule: V1a, V1b, V2 combined with "and"; V3 sets the magnitude reach."""
-    if len(rec_parity) != 2 or len(rec_spatial) != 2:
-        return "undetermined (V1 could not be split)"
-    fails = []
-    if min(rec_parity) < V1_MIN_RECOVERY:
-        fails.append("V1a")
-    if min(rec_spatial) < V1_MIN_RECOVERY:
-        fails.append("V1b")
-    if not (
-        n_images >= V2_MIN_IMAGES
-        and image_point_frac is not None
-        and image_point_frac <= V2_MAX_POINT
-    ):
+    """Frozen v2 plan rule: V1a, V1b, V2 combined with "and"; V3 sets the magnitude reach. A gate
+    that fails decides "not validated" even when another split could not be made."""
+    fails, unsplit = [], []
+    for name, rec in (("V1a", rec_parity), ("V1b", rec_spatial)):
+        if len(rec) != 2:
+            unsplit.append(name)
+        elif min(rec) < V1_MIN_RECOVERY:
+            fails.append(name)
+    if not _v2_gate(n_images, image_point_frac):
         fails.append("V2")
     if fails:
         return "not validated (" + ", ".join(fails) + " fail)"
+    if unsplit:
+        return "undetermined (" + ", ".join(unsplit) + " could not be split)"
     v3 = (
         n_faint >= V3_MIN_STARS
         and faint_point_frac is not None
@@ -142,11 +150,7 @@ def decide(recovery: list[float], n_images: int, image_point_frac: float | None)
     if len(recovery) != 2:
         return "undetermined (V1 could not be split)"
     v1 = min(recovery) >= V1_MIN_RECOVERY
-    v2 = (
-        n_images >= V2_MIN_IMAGES
-        and image_point_frac is not None
-        and image_point_frac <= V2_MAX_POINT
-    )
+    v2 = _v2_gate(n_images, image_point_frac)
     if v1 and v2:
         return "validated"
     return "not validated" + ("" if v1 else " (V1 fails)") + ("" if v2 else " (V2 fails)")
@@ -197,12 +201,7 @@ def main() -> None:
     s = stars[stars["ok"]]
     s_rad, s_mag, s_ids = rad[s["dja"]], np.asarray(s["ref_mag"], float), ids[s["dja"]]
     s_ra = np.asarray(p["ra"], float)[s["dja"]]
-    if v2:  # no fallback window
-        lo, hi = LOCUS_MAG_V2
-        lm = (s_mag >= lo) & (s_mag <= hi) & np.isfinite(s_rad)
-        window = [lo, hi] if lm.sum() >= MIN_LOCUS else None
-    else:
-        lm, window = locus_mask(s_mag, s_rad)
+    lm, window = locus_mask(s_mag, s_rad, (LOCUS_MAG_V2,)) if v2 else locus_mask(s_mag, s_rad)
     summary: dict = {
         "plan": args.plan,
         "run": args.run_dir.name,
@@ -232,7 +231,11 @@ def main() -> None:
         n_img = int(i_ok.sum())
         frac = float(np.mean(i_point)) if n_img else None
         if v2:
-            rec_sp = held_out_by_group(spatial_groups(s_ra[lm]), s_rad[lm])
+            east = spatial_groups(
+                s_ra[lm]
+            )  # V1b halves (locus duplicates: locus_duplicate_dja_ids)
+            out_l = s_rad[lm] > cut
+            rec_sp = held_out_by_group(east, s_rad[lm])
             fm = (s_mag > V3_MAG[0]) & (s_mag <= V3_MAG[1]) & np.isfinite(s_rad)
             n_faint = int(fm.sum())
             faint_frac = float(np.mean(s_rad[fm] <= cut)) if n_faint else None
@@ -240,6 +243,7 @@ def main() -> None:
             summary |= {
                 "v1b_recovery_spatial": [round(x, 4) for x in rec_sp],
                 "v1b_split_ra_deg": round(float(np.median(s_ra[lm])), 6),
+                "v3_duplicate_dja_ids": int(n_faint - np.unique(s_ids[fm]).size),
                 "v3_n_faint_stars": n_faint,
                 "v3_point_fraction": None if faint_frac is None else round(faint_frac, 4),
                 "v3_is_gate": n_faint >= V3_MIN_STARS,
@@ -254,12 +258,13 @@ def main() -> None:
                         else None,
                         "above_cut": int(np.sum(s_rad[b] > cut)),
                     }
+                    # half-open bins; the last one closes at the window's 24.0
                     for lo, hi in ((20.0, 20.7), (20.7, 22.0), (22.0, 24.0))
-                    for b in [lm & (s_mag >= lo) & (s_mag < hi if hi < 24.0 else s_mag <= hi)]
+                    for b in [lm & (s_mag >= lo) & ((s_mag < hi) | (hi == LOCUS_MAG_V2[1]))]
                 ],
                 "post_hoc_outliers_east_west": [
-                    int(np.sum((s_rad[lm] > cut) & spatial_groups(s_ra[lm]))),
-                    int(np.sum((s_rad[lm] > cut) & ~spatial_groups(s_ra[lm]))),
+                    int(np.sum(out_l & east)),
+                    int(np.sum(out_l & ~east)),
                 ],
                 "v3_faint_stars": [
                     {"ref_mag": round(float(m), 3), "flux_radius_pix": round(float(r), 3)}
@@ -283,21 +288,27 @@ def main() -> None:
                 }
             )
 
-        def top_row(k: int) -> dict:
+        # v2 plan: targets (ref_mag > 24) are labelled only with the 27 mag reach; otherwise the
+        # rows carry "below_cut" (descriptive), never a "point_like" label.
+        labelled = verdict == "validated to ref_mag 27"
+        flag = "below_cut" if v2 else "point_like"
+
+        def top_row(k: int, key: str = flag) -> dict:
             fin = bool(g_ok[k] and np.isfinite(g_rad[k]))
             return {
                 "rank": k + 1,
                 "source_uid": str(gal["source_uid"][k]),
                 "ref_mag": round(float(g_mag[k]), 3) if np.isfinite(g_mag[k]) else None,
                 "flux_radius_pix": round(float(g_rad[k]), 3) if fin else None,
-                "point_like": bool(g_rad[k] <= cut) if fin else None,
+                key: bool(g_rad[k] <= cut) if fin else None,
             }
 
         top = [top_row(k) for k in range(min(TOP_K, len(gal)))]
         pos = {x: k for k, x in enumerate(gal["source_uid"])}
-        targets = {t: top_row(pos[t]) if t in pos else None for t in TARGETS}
-        if v2:  # v2 plan: targets (ref_mag > 24) are labelled only with the 27 mag reach
-            summary["targets_labelled"] = verdict == "validated to ref_mag 27"
+        t_key = "point_like" if (labelled or not v2) else "below_cut"
+        targets = {t: top_row(pos[t], t_key) if t in pos else None for t in TARGETS}
+        if v2:
+            summary["targets_labelled"] = labelled
         point_images = [
             {
                 "id": str(images["id"][j]) if "id" in images.colnames else int(j),

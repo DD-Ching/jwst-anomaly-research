@@ -9,7 +9,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
 - **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): cut 2.7257 px from 101 stars; V1a 0.6909 / 0.9348
   and V1b (spatial halves) 0.9608 / 0.76 fail; V2 0 / 19. The plan's expectation that V1a would pass was wrong (the
   MAD narrowed). Only 5 stars at 24–27 mag, so no size label is possible at the targets' magnitude here.
-- **Failed approach:** constant-width `flux_radius` locus on SMACS, closed (post hoc: median 2.649 px at 20–20.7 mag).
+- **Failed approach:** constant-width `flux_radius` locus on SMACS, closed (post hoc: median 2.649 px at 20–20.7 mag);
+  a magnitude-dependent locus or a saturation flag stays open. `/code-review` fixes: a failed gate wins over an
+  unsplit one, RA-wrap guard, unlabelled target rows carry `below_cut`.
 - **Services:** CDS XMatch still refuses Gaia (14:19Z; host resets at 14:08Z); #751 still waits.
 - **Handoff:** next: MIRI fixed-aperture colours (TASKS Next M2), which could also place `f200w_1816` / `f200w_384`.
 
