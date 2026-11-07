@@ -884,6 +884,13 @@ comparisons are therefore biased by sample construction until every sample has c
 - A MIRI-specific confirmation becomes available, e.g. a NIRCam counterpart.
 - Spike or stripe detections that are multi-band appear: then add the spike-geometry mask.
 
+**Addendum (2026-11-07): NIRCam counterparts for MIRI single-band detections** (`results/miri_confirm/RESULT.md`).
+On jwst 3.0.0 MIRI catalogs (908 sources, 113 pass), 61 / 163 sources failing only `single_band` have a DJA v7.4
+NIRCam source (S/N ≥ 5) within 0.3″ against a 0.051 chance rate: the frozen rule says adopt. The rate depends on
+the detection band (F770W 45 / 66, F1000W 10 / 20, F1500W 3 / 42, F1800W 3 / 35), and unmatched F770W singles in
+the contact sheet sit on star spikes or halos. Not wired yet: a band-restricted, position-only confirmation join
+needs its own frozen rule (post hoc idea). Ranking unchanged.
+
 ## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
 
 **Decision.** After the catalogue classification (D-012), `classify.stellar_locus` adds sources that are

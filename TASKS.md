@@ -668,8 +668,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    `f200w_2842` (#4) is detected in F200W only, with ellipticity 0.95 and area 376 px. A bright source lies 4.6″
    away, and a DJA object sits 0.04″ off. Test single-band, highly elongated detections near bright sources
    (a spike-geometry check), without dropping lensed arcs.
-7. **MIRI confirmation** (D-014 limitation): MIRI passes 103 of 530. Confirm MIRI detections with NIRCam
-   counterparts. SMACS and CEERS now both have DJA confirmation.
+7. **MIRI confirmation** (D-014 limitation): measured 2026-11-07 (`results/miri_confirm/RESULT.md`, D-014 addendum):
+   61 / 163 single-band-only MIRI sources have a DJA NIRCam counterpart (chance 0.051; F770W 45 / 66, F1500W/F1800W
+   near chance). Next: freeze a band-restricted (F770W/F1000W) position-only confirmation join, then re-rank MIRI.
 8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
    since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). ~~DJA colours vs CEERS DR1.0~~
    done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a
