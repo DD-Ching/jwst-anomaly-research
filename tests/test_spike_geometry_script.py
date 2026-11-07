@@ -27,7 +27,9 @@ def _table(pa_streak: float, ell: float = 0.95, n_bands: int = 1, dmag: float = 
 
 
 def _flag(t: Table, rotate: float = 0.0) -> bool:
-    return sg.spike_flags(t, np.array([1]), np.array(["f200w"], dtype=object), rotate=rotate)[0]["flag"]
+    return sg.spike_flags(t, np.array([1]), np.array(["f200w"], dtype=object), rotate=rotate)[0][
+        "flag"
+    ]
 
 
 def test_axis_diff_is_mod_180():

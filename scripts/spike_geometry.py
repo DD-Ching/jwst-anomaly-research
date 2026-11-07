@@ -56,13 +56,18 @@ def detected_band(t: Table, bands: list[str]) -> np.ndarray:
     return out
 
 
-def spike_flags(t: Table, rows: np.ndarray, bands_of: np.ndarray, rotate: float = 0.0,
-                require_single: bool = True) -> list[dict]:
+def spike_flags(
+    t: Table,
+    rows: np.ndarray,
+    bands_of: np.ndarray,
+    rotate: float = 0.0,
+    require_single: bool = True,
+) -> list[dict]:
     """Evaluate the rule on ``rows``; ``bands_of[i]`` is the band whose shape is tested."""
     coords = SkyCoord(t["ra"], t["dec"], unit="deg")
     mags = {}
     out = []
-    for i, b in zip(rows, bands_of):
+    for i, b in zip(rows, bands_of, strict=True):
         rec = {"row": int(i), "source_uid": str(t["source_uid"][i]), "band": b, "flag": False}
         if not b or (require_single and int(t["n_bands"][i]) != 1):
             out.append(rec)
@@ -82,10 +87,17 @@ def spike_flags(t: Table, rows: np.ndarray, bands_of: np.ndarray, rotate: float 
             if best is None or d < best[1]:
                 best = (int(j), d, float(sep[j]), float(m[j]))
         if best is not None:
-            rec.update(neighbour=str(t["source_uid"][best[0]]), dtheta=best[1],
-                       neighbour_sep=best[2], neighbour_mag=best[3])
+            rec.update(
+                neighbour=str(t["source_uid"][best[0]]),
+                dtheta=best[1],
+                neighbour_sep=best[2],
+                neighbour_mag=best[3],
+            )
         rec["flag"] = bool(
-            np.isfinite(ell) and ell >= E_MIN and best is not None and best[1] <= DTHETA
+            np.isfinite(ell)
+            and ell >= E_MIN
+            and best is not None
+            and best[1] <= DTHETA
             and np.isfinite(m[i])
         )
         out.append(rec)
@@ -104,7 +116,7 @@ def gate_pass(run_sample: Path) -> set[str] | None:
     col = "quality_ok" if "quality_ok" in qt.colnames else None
     if col is None:
         return None
-    return {str(u) for u, p in zip(qt["source_uid"], qt[col]) if bool(p)}
+    return {str(u) for u, p in zip(qt["source_uid"], qt[col], strict=True) if bool(p)}
 
 
 def screen(run_sample: Path) -> dict:
@@ -127,7 +139,9 @@ def screen(run_sample: Path) -> dict:
         "n_flagged": len(flagged),
         "n_flagged_rotated": int(n_rot),
         "useful": bool(len(flagged) > 3 * n_rot),
-        "n_flagged_gate_pass": None if passed is None else sum(bool(r["gate_pass"]) for r in flagged),
+        "n_flagged_gate_pass": None
+        if passed is None
+        else sum(bool(r["gate_pass"]) for r in flagged),
         "flagged": flagged,
     }
 
@@ -173,9 +187,21 @@ def arcs_negative(smacs_sample: Path) -> dict:
         "n_flagged_geometry_only": int(sum(r["flag"] for r in geom)),
         "flagged_full_rule": [str(ids[k]) for k, r in enumerate(full) if r["flag"]],
         "flagged_geometry_only": [
-            {"image": str(ids[k]), **{c: r.get(c) for c in ("source_uid", "ellipticity", "dtheta",
-                                                         "neighbour_sep", "neighbour_mag")}}
-            for k, r in enumerate(geom) if r["flag"]
+            {
+                "image": str(ids[k]),
+                **{
+                    c: r.get(c)
+                    for c in (
+                        "source_uid",
+                        "ellipticity",
+                        "dtheta",
+                        "neighbour_sep",
+                        "neighbour_mag",
+                    )
+                },
+            }
+            for k, r in enumerate(geom)
+            if r["flag"]
         ],
     }
 
@@ -189,7 +215,7 @@ def streak_verdict(positive_in_mask: bool, n_images_in_mask: int, fields: list[d
 
     ``fields``: per field ``{"single_in": k, "single_n": n, "multi_in": k3, "multi_n": n3}``
     (multi = detected in >= 3 bands). Condition 3 is judged only in fields with ``single_in`` >= 1
-    and requires single_in/single_n >= ENRICH * multi_in/multi_n there (and at least one such field).
+    and requires single_in/single_n >= ENRICH * multi_in/multi_n there (at least one such field).
     """
     judged = [f for f in fields if f["single_in"] >= 1]
     c3 = bool(judged) and all(
@@ -204,12 +230,17 @@ def streak_run(run_samples: dict[str, Path], positive_uid: str, out: Path, proce
     """Addendum B: W1 trail masks (arm 1) and trail + segment stripes (arm 2) per field."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import w1_streak_mask as wm
+
     from jwst_anomaly.pipeline import l3_image_uri
 
-    cloud = {"s3_bucket": "stpubdata",
-             "l3_key_pattern": "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"}
-    obs = {"ceers_t021": "jw01345-o001_t021_nircam_clear-f200w",
-           "smacs0723_nircam": "jw02736-o001_t001_nircam_clear-f200w"}
+    cloud = {
+        "s3_bucket": "stpubdata",
+        "l3_key_pattern": "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}",
+    }
+    obs = {
+        "ceers_t021": "jw01345-o001_t021_nircam_clear-f200w",
+        "smacs0723_nircam": "jw02736-o001_t001_nircam_clear-f200w",
+    }
     arms: dict[str, dict] = {"trail": {}, "trail_seg64": {}}
     pos_in = {"trail": False, "trail_seg64": False}
     img_in = {"trail": 0, "trail_seg64": 0}
@@ -223,10 +254,17 @@ def streak_run(run_samples: dict[str, Path], positive_uid: str, out: Path, proce
         nb = np.asarray(t["n_bands"])
         for arm, mask in (("trail", trail), ("trail_seg64", seg)):
             inm = wm.veto_rows(t["ra"], t["dec"], mask, wz)
-            rec = {"i2d": uri, "mask_pixels": int(mask.sum()),
-                   "n_trails_status2": 0 if cat is None else int((cat["status"] == wm.KEEP_STATUS).sum()),
-                   "single_in": int((inm & (nb == 1)).sum()), "single_n": int((nb == 1).sum()),
-                   "multi_in": int((inm & (nb >= 3)).sum()), "multi_n": int((nb >= 3).sum())}
+            rec = {
+                "i2d": uri,
+                "mask_pixels": int(mask.sum()),
+                "n_trails_status2": 0
+                if cat is None
+                else int((cat["status"] == wm.KEEP_STATUS).sum()),
+                "single_in": int((inm & (nb == 1)).sum()),
+                "single_n": int((nb == 1).sum()),
+                "multi_in": int((inm & (nb >= 3)).sum()),
+                "multi_n": int((nb >= 3).sum()),
+            }
             if name == "ceers_t021":
                 ip = find_uid(t, positive_uid)
                 pos_in[arm] = bool(ip is not None and inm[ip])
@@ -237,11 +275,19 @@ def streak_run(run_samples: dict[str, Path], positive_uid: str, out: Path, proce
                 rec["n_iclv2_images_in_mask"] = img_in[arm]
             arms[arm][name] = rec
             wm._sheet(out / f"{name}_{arm}_mask.png", img, mask, f"{name} {arm}")
-    res = {"plan": "results/spike_geometry/PLAN.md addendum B", "veto_arcsec": wm.VETO_ARCSEC,
-           "seg_len": SEG_LEN, "enrich": ENRICH, "arms": {}}
+    res = {
+        "plan": "results/spike_geometry/PLAN.md addendum B",
+        "veto_arcsec": wm.VETO_ARCSEC,
+        "seg_len": SEG_LEN,
+        "enrich": ENRICH,
+        "arms": {},
+    }
     for arm in arms:
-        res["arms"][arm] = {"fields": arms[arm], "positive_in_mask": pos_in[arm],
-                            "verdict": streak_verdict(pos_in[arm], img_in[arm], list(arms[arm].values()))}
+        res["arms"][arm] = {
+            "fields": arms[arm],
+            "positive_in_mask": pos_in[arm],
+            "verdict": streak_verdict(pos_in[arm], img_in[arm], list(arms[arm].values())),
+        }
     (out / "summary_streak.json").write_text(json.dumps(res, indent=1) + "\n")
     return res
 
@@ -257,8 +303,9 @@ def main(argv=None) -> dict:
     a = p.parse_args(argv)
     a.out.mkdir(parents=True, exist_ok=True)
     if a.streak:
-        return streak_run({"ceers_t021": a.ceers, "smacs0723_nircam": a.smacs}, a.positive, a.out,
-                          a.processes)
+        return streak_run(
+            {"ceers_t021": a.ceers, "smacs0723_nircam": a.smacs}, a.positive, a.out, a.processes
+        )
     ceers = screen(a.ceers)
     smacs = screen(a.smacs)
     tc = Table.read(a.ceers / "sources.ecsv")
@@ -268,12 +315,22 @@ def main(argv=None) -> dict:
         uid = str(tc["source_uid"][ip])
         hit = [r for r in ceers["flagged"] if r["source_uid"] == uid]
         rec = spike_flags(tc, np.array([ip]), detected_band(tc, bands_in(tc))[[ip]])[0]
-        pos = {"source_uid": uid, "flagged": bool(hit), "record": rec,
-               "ra": float(tc["ra"][ip]), "dec": float(tc["dec"][ip])}
+        pos = {
+            "source_uid": uid,
+            "flagged": bool(hit),
+            "record": rec,
+            "ra": float(tc["ra"][ip]),
+            "dec": float(tc["dec"][ip]),
+        }
     summary = {
         "plan": "results/spike_geometry/PLAN.md",
-        "thresholds": {"E_MIN": E_MIN, "DMAG": DMAG, "R_MAX": R_MAX, "DTHETA": DTHETA,
-                       "MATCH_ARCSEC": MATCH_ARCSEC},
+        "thresholds": {
+            "E_MIN": E_MIN,
+            "DMAG": DMAG,
+            "R_MAX": R_MAX,
+            "DTHETA": DTHETA,
+            "MATCH_ARCSEC": MATCH_ARCSEC,
+        },
         "positive": pos,
         "arcs_negative": arcs_negative(a.smacs),
         "ceers": ceers,
@@ -289,7 +346,10 @@ if __name__ == "__main__":
     if "arms" in s:
         print(json.dumps(s, indent=1))
         sys.exit(0)
-    print(json.dumps({k: v for k, v in s.items() if k not in ("ceers", "smacs")}, indent=1,
-                     default=float)[:3000])
+    print(
+        json.dumps(
+            {k: v for k, v in s.items() if k not in ("ceers", "smacs")}, indent=1, default=float
+        )[:3000]
+    )
     for k in ("ceers", "smacs"):
         print(k, {x: s[k][x] for x in s[k] if x != "flagged"})

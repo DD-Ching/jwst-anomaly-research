@@ -666,10 +666,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 5. ~~**Vet MIRI's known `G_Lens` object**~~ done 2026-11-07 (`results/miri_confirm/RESULT.md` § MIRI `G_Lens`): the only
    top-20 `G_Lens` row is the vetted `f770w_118` (system 3); MIRI flux ratios of ICLv2 systems 1, 3, 4: no anomaly
    (F1000W 4.2/4.3 flags chromatic, isophote truncation).
-6. **Spike streaks confirmed by a coincident DJA object** (D-014 "Revisit if"; run `20261007T202419Z-65728e80`): CEERS
-   `f200w_2842` (#4) is detected in F200W only, with ellipticity 0.95 and area 376 px. A bright source lies 4.6″
-   away, and a DJA object sits 0.04″ off. Test single-band, highly elongated detections near bright sources
-   (a spike-geometry check), without dropping lensed arcs.
+6. ~~**Spike streaks confirmed by a coincident DJA object**~~ done 2026-11-07 (`results/spike_geometry/RESULT.md`, D-014
+   addendum 7): neither radial alignment to a bright neighbour (chance level, misses `f200w_2842`) nor the W1
+   `findsat_mrt` streak mask (misses it, or covers 47–75 % of single-band rows) passes its frozen rule; `f200w_2842` lies
+   on a long horizontal linear feature, not the 4.6″ neighbour's spike. No flag; single-band elongated top-k rows get a
+   visual check. Revisit with a per-observation spike-angle model.
 7. **MIRI confirmation** (D-014 limitation): measured 2026-11-07 (`results/miri_confirm/RESULT.md`, D-014 addendum):
    61 / 163 single-band-only MIRI sources have a DJA NIRCam counterpart (chance 0.051; F770W 45 / 66, F1500W/F1800W
    near chance). Per-band gate done 2026-11-07 (D-014 addendum 2): F770W and F1000W pass, F1500W/F1800W fail.

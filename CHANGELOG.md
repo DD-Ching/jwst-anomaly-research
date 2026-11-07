@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: Spike-geometry check for single-band streaks: no rule adopted (TASKS Then 6, D-014 addendum 7)
+- **Plan first** (`results/spike_geometry/PLAN.md`, rule A and addendum B frozen before each run; rules as functions with
+  unit tests). Runs `20261107T081028Z-c5afef2f` (CEERS) and `-369d1097` (SMACS), jwst 3.0.0 catalogs.
+- **Rule A** (radial alignment, ≥ 3 mag brighter neighbour ≤ 10″): misses the positive `f200w_2842` (13.8° > 10°), flags
+  at chance (CEERS 31 vs 28 rotated; SMACS 200 vs 93), and flags an arc segment (`f444w_1970`, looked at).
+- **Addendum B** (W1 `findsat_mrt` mask reused, F200W streamed): trail arm misses the positive, enrichment 2.5× / 1.1×
+  (< 3×); trail + row-segment arm catches it but covers 47 % / 75 % of single-band rows and 40 ICLv2 images.
+- **Looked at:** `f200w_2842` lies on a straight line crossing the 16″ cutout (F200W, fainter F356W) that misses the
+  4.6″ bright source; the 2026-10-08 "spike from the bright source" reading is replaced (visual).
+- **Services:** CDS XMatch still refuses Gaia/SIMBAD tables 08:11Z; #751 still waits.
+- **Handoff:** Then 4 (view f200w_3670), Then 8 (control comparability), or Next (M2) items.
+
 ## 2026-11-07: MIRI `G_Lens` object is the vetted system-3 image; MIRI flux ratios of ICLv2 images: no anomaly
 - **Plan first** (`results/miri_confirm/PLAN_glens.md`, rules frozen before reading fluxes); TASKS Then 5 closed.
 - **Result** (`results/miri_confirm/RESULT.md` § MIRI `G_Lens`, `scripts/miri_fluxratio.py`, run

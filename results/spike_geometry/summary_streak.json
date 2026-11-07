@@ -1,0 +1,68 @@
+{
+ "plan": "results/spike_geometry/PLAN.md addendum B",
+ "veto_arcsec": 1.0,
+ "seg_len": 64,
+ "enrich": 3.0,
+ "arms": {
+  "trail": {
+   "fields": {
+    "ceers_t021": {
+     "i2d": "s3://stpubdata/jwst/public/jw01345/L3/t/o001/jw01345-o001_t021_nircam_clear-f200w_i2d.fits",
+     "mask_pixels": 24747,
+     "n_trails_status2": 3,
+     "single_in": 505,
+     "single_n": 4392,
+     "multi_in": 111,
+     "multi_n": 2457
+    },
+    "smacs0723_nircam": {
+     "i2d": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits",
+     "mask_pixels": 59510,
+     "n_trails_status2": 3,
+     "single_in": 441,
+     "single_n": 3314,
+     "multi_in": 315,
+     "multi_n": 2687,
+     "n_iclv2_images_in_mask": 0
+    }
+   },
+   "positive_in_mask": false,
+   "verdict": {
+    "positive": false,
+    "arcs": true,
+    "enrichment": false,
+    "adopt": false
+   }
+  },
+  "trail_seg64": {
+   "fields": {
+    "ceers_t021": {
+     "i2d": "s3://stpubdata/jwst/public/jw01345/L3/t/o001/jw01345-o001_t021_nircam_clear-f200w_i2d.fits",
+     "mask_pixels": 43622,
+     "n_trails_status2": 3,
+     "single_in": 2050,
+     "single_n": 4392,
+     "multi_in": 556,
+     "multi_n": 2457
+    },
+    "smacs0723_nircam": {
+     "i2d": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits",
+     "mask_pixels": 126584,
+     "n_trails_status2": 3,
+     "single_in": 2494,
+     "single_n": 3314,
+     "multi_in": 1315,
+     "multi_n": 2687,
+     "n_iclv2_images_in_mask": 40
+    }
+   },
+   "positive_in_mask": true,
+   "verdict": {
+    "positive": true,
+    "arcs": false,
+    "enrichment": false,
+    "adopt": false
+   }
+  }
+ }
+}

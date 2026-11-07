@@ -933,6 +933,13 @@ branch). Limitation: "single band" MIRI rows of extended or blended sources are 
 footprints (as `docs/candidates/smacs_miri_f770w_top20_singles.md` did). Alternatives rejected: segment overlap (chance
 too high), size-scaled radius (addendum 5). Revisit if a PSF-matched multi-band detection image (one segmentation for
 all MIRI bands) becomes available or is built for another reason.
+**Addendum 7 (2026-11-07): spike-geometry and streak-mask flags not adopted** (`results/spike_geometry/PLAN.md`,
+`RESULT.md`, `summary.json`, `summary_streak.json`, `scripts/spike_geometry.py`). Single-band elongated rows (the third
+"Revisit if" above): radial alignment to a ≥ 3 mag brighter neighbour misses the known streak `f200w_2842` and flags at
+chance (31 vs 28 rotated in CEERS); the W1 `findsat_mrt` trail mask misses it and enriches single-band rows < 3×;
+adding row segments catches it but covers 47–75 % of single-band rows and 40 ICLv2 images. No flag is adopted; D-014's
+confirmation gate stays the spike control and single-band elongated top-k rows get a visual check. Revisit if a
+per-observation spike-angle model (V3 position angle) is built.
 
 ## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
 
