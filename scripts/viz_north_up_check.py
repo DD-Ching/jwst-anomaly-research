@@ -2,7 +2,8 @@
 
 Picks catalogued 20-23 mag sources whose nearest catalogued neighbour (< 24 mag) is 0.8-2.2"
 away, cuts 5" cutouts from the S3 i2d, resamples them north-up and finds the brightest pixel
-within +-3 px of the neighbour position predicted from its east/north sky offset. The control
+within +-5 px of the neighbour position predicted from its east/north sky offset (a peak on the
+window edge does not count; ``PARAMS``). The control
 (``stored_ratio``) is the same window in the stored, unrotated cutout. Also renders contact
 sheets (stored; north-up with one shared scale) for looking.
 
