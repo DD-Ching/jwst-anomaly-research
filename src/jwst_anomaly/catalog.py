@@ -101,6 +101,7 @@ def merge_bands(
     include_unmatched: bool = True,
     field_id: str | None = None,
     columns: Sequence[str] | None = None,
+    size_factor: float = 0.0,
 ) -> Table:
     """Positionally merge single-band catalogs ``{band: table}`` into one source table.
 
@@ -116,6 +117,12 @@ def merge_bands(
     (default) detections without a counterpart start new rows, so the table is the union of all
     bands (e.g. F444W-only sources); with ``False`` only reference-band sources are kept.
     The ``ref_band`` column is the merge's reference band on every row.
+
+    ``size_factor`` (α, default 0: fixed radius) makes the radius size-aware: a pair is accepted
+    when its separation is at most ``max(radius_arcsec, α * r_eq)``, with
+    ``r_eq = sqrt(A / π) * meta["pixel_scale_arcsec"]`` and ``A`` the smaller ``isophotal_area``
+    (pixels) of the row's anchoring detection and the candidate. It needs ``isophotal_area`` and a
+    finite pixel scale in every catalog (D-014 addendum 5, results/miri_confirm/PLAN_sizemerge.md).
 
     ``source_uid`` is ``<field_id>_<anchor band>_<anchor label>``, e.g.
     ``jw02736-o001_t001_nircam_f200w_42``; ``field_id`` defaults to the reference catalog's
@@ -136,6 +143,8 @@ def merge_bands(
         raise ValueError(f"radius_arcsec must be positive, got {radius_arcsec!r}")
     if isinstance(columns, str):
         raise TypeError("columns must be a sequence of column names, not a string")
+    if not np.isfinite(size_factor) or size_factor < 0:
+        raise ValueError(f"size_factor must be >= 0, got {size_factor!r}")
     cats, n_dropped = _check_catalogs(catalogs)
     ref = _normalize_band(ref_band)
     if ref not in cats:
@@ -147,9 +156,9 @@ def merge_bands(
     field = field_id or _default_field_id(cats[ref])
     if not _FIELD_ID.fullmatch(field):
         raise ValueError(f"field_id {field!r} must match {_FIELD_ID.pattern}")
+    req = {b: _equivalent_radius_arcsec(c, b) for b, c in cats.items()} if size_factor else {}
     bands = sorted(cats, key=_band_sort_key)  # output column order
     order = [ref] + [b for b in bands if b != ref]  # matching order
-    radius = radius_arcsec * u.arcsec
 
     ref_cat = cats[ref]
     n_ref = len(ref_cat)
@@ -157,6 +166,7 @@ def merge_bands(
     row_dec = np.asarray(ref_cat["dec"], dtype=float)
     row_band = [ref] * n_ref
     row_label = [int(v) for v in ref_cat["label"]]
+    row_req = req[ref].copy() if size_factor else None  # anchor r_eq per merged row (arcsec)
     assign = {ref: np.arange(n_ref)}  # band -> catalog row index per merged row (-1: none)
     seps = {ref: np.zeros(n_ref)}
     self_median = 0.0 if n_ref else float("nan")
@@ -177,7 +187,15 @@ def merge_bands(
         cat = cats[band]
         cat_coord = SkyCoord(cat["ra"], cat["dec"], unit=u.deg)
         row_coord = SkyCoord(row_ra, row_dec, unit=u.deg)
-        rows, idx, sep, n_contested = _match_one_to_one(row_coord, cat_coord, radius)
+        reach = radius_arcsec  # largest accepted separation for this band
+        limits = None
+        if size_factor:  # per-pair limit <= alpha * this band's r_eq, so this reach suffices
+            limits = (row_req, req[band], radius_arcsec, size_factor)
+            finite = req[band][np.isfinite(req[band])]
+            reach = max(radius_arcsec, size_factor * float(finite.max(initial=0.0)))
+        rows, idx, sep, n_contested = _match_one_to_one(
+            row_coord, cat_coord, reach * u.arcsec, limits=limits
+        )
         a = np.full(len(row_ra), -1)
         a[rows] = idx
         s = np.full(len(row_ra), np.nan)
@@ -194,10 +212,12 @@ def merge_bands(
             row_dec = np.concatenate([row_dec, np.asarray(cat["dec"], dtype=float)[unmatched]])
             row_band += [band] * len(unmatched)
             row_label += [int(v) for v in cat["label"][unmatched]]
+            if size_factor:
+                row_req = np.concatenate([row_req, req[band][unmatched]])
             a = np.concatenate([a, unmatched])
             s = np.concatenate([s, np.zeros(len(unmatched))])
         assign[band], seps[band] = a, s
-        _warn_if_poor_match(band, ref, stats[band], n_ref, radius_arcsec)
+        _warn_if_poor_match(band, ref, stats[band], n_ref, reach)
     for band in order:
         stats[band]["n_no_position"] = n_dropped[band]
 
@@ -238,6 +258,7 @@ def merge_bands(
         match={
             "method": "one-to-one, greedy by separation (astropy search_around_sky)",
             "radius_arcsec": float(radius_arcsec),
+            "size_factor": float(size_factor),
             "band_order": order,
             "include_unmatched": bool(include_unmatched),
             "offset_correction": "none (median offsets reported in match_stats)",
@@ -349,18 +370,31 @@ def _default_field_id(ref_cat: Table) -> str:
 
 
 def _match_one_to_one(
-    rows: SkyCoord, cat: SkyCoord, radius: u.Quantity
+    rows: SkyCoord,
+    cat: SkyCoord,
+    radius: u.Quantity,
+    *,
+    limits: tuple[np.ndarray, np.ndarray, float, float] | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, int]:
     """Greedy one-to-one pairs within ``radius``, closest first; ties broken by index.
 
+    ``limits = (row_req, cat_req, r0, alpha)`` keeps only pairs with separation
+    ``<= max(r0, alpha * min(row_req, cat_req))`` (arcsec; a NaN r_eq on either side gives
+    ``r0``, so a missing area never loosens the match).
     Returns matched row indices, catalog indices, separations (arcsec) and the number of
-    contested matches (the row or the detection had another candidate within ``radius``).
+    contested matches (the row or the detection had another accepted candidate).
     """
     empty = np.array([], dtype=int)
     if len(rows) == 0 or len(cat) == 0:
         return empty, empty, np.array([]), 0
     i_row, i_cat, d2d, _ = search_around_sky(rows, cat, radius)
     sep = d2d.arcsec
+    if limits is not None:
+        row_req, cat_req, r0, alpha = limits
+        r_eq = np.minimum(row_req[i_row], cat_req[i_cat])  # NaN if either side is NaN
+        lim = np.where(np.isfinite(r_eq), np.maximum(r0, alpha * r_eq), r0)
+        ok = sep <= lim
+        i_row, i_cat, sep = i_row[ok], i_cat[ok], sep[ok]
     taken_row = np.zeros(len(rows), dtype=bool)
     taken_cat = np.zeros(len(cat), dtype=bool)
     keep = []
@@ -372,6 +406,19 @@ def _match_one_to_one(
     n_row = np.bincount(i_row, minlength=len(rows))[i_row[keep]]
     n_cat = np.bincount(i_cat, minlength=len(cat))[i_cat[keep]]
     return i_row[keep], i_cat[keep], sep[keep], int(np.sum((n_row > 1) | (n_cat > 1)))
+
+
+def _equivalent_radius_arcsec(cat: Table, band: str) -> np.ndarray:
+    """``sqrt(isophotal_area / π)`` in arcsec per detection (derived), for ``size_factor``."""
+    if "isophotal_area" not in cat.colnames:
+        raise ValueError(f"{band}: size_factor needs an isophotal_area column")
+    scale = float(cat.meta.get("pixel_scale_arcsec", float("nan")))
+    if not np.isfinite(scale) or scale <= 0:
+        raise ValueError(f"{band}: size_factor needs a finite meta['pixel_scale_arcsec']")
+    area = cat["isophotal_area"]
+    area = area.filled(np.nan) if isinstance(area, MaskedColumn) else area
+    area = np.asarray(getattr(area, "value", area), dtype=float)
+    return np.sqrt(np.where(area > 0, area, np.nan) / np.pi) * scale
 
 
 def _ref_match_stats(

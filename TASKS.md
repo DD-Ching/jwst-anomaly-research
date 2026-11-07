@@ -676,8 +676,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    2026-11-07 (D-014 addendum 4): frozen mechanism not supported, only `_240` is bright-adjacent; 4 / 5 sit at the
    CI flat-profile ceiling (post hoc). Vetted 2026-11-07 (`docs/candidates/smacs_miri_f770w_top20_singles.md`): none
    unexplained; `_239` BCG, `_240` cluster member, `_118` lensed image 3.1, `_221` z 1.16 galaxy, `_176` z_phot 0.34;
-   4 / 5 are "single band" only because other-band centroids lie 0.18–0.66″ away (0.1″ merge radius). Next: a
-   size-aware MIRI band association (segment overlap or radius scaled to the footprint), plan first, then re-rank.
+   4 / 5 are "single band" only because other-band centroids lie 0.18–0.66″ away (0.1″ merge radius). Size-scaled
+   radius done 2026-11-07 (D-014 addendum 5): α 0.25 passes the chance rule but merges 1 / 4 of those; not the MIRI
+   default. Next: segment-overlap association (shared footprint pixels across bands), plan first, then re-rank.
 8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
    since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). ~~DJA colours vs CEERS DR1.0~~
    done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a

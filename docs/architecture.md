@@ -6,7 +6,7 @@
 MAST (CAOM metadata)            query.py      query_observations / list_products
   → reproducible acquisition    acquire.py    fetch_products → data/manifests/*
   → science-ready products      level-3 _cat.ecsv (photometry/shape) + _i2d.fits (images)
-  → source representation       catalog.py    load_pipeline_catalog / merge_bands
+  → source representation       catalog.py    load_pipeline_catalog / merge_bands (fixed radius, or size-aware via size_factor, D-014 addendum 5)
   → matched-aperture colours    photometry.py join_matched_photometry (DJA, per sample, D-013)
                                               join_position_confirmation (positions only, MIRI, D-014 add. 3)
   → derived features            features.py   build_features

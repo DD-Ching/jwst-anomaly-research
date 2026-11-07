@@ -913,6 +913,16 @@ per tertile); bright-adjacency 0 / 97 baseline, 1 / 45 admitted, 1 / 5 new top 2
 have footprints larger than the background annulus' inner radius (hypothesis: annulus contamination). Revisit if a
 vetting step needs a CI feature for extended footprints.
 
+**Addendum 5 (2026-11-07): size-aware band association** (`results/miri_confirm/PLAN_sizemerge.md`, `RESULT.md` §
+Size-aware band association, `summary_sizemerge.json`). `catalog.merge_bands(size_factor=α)` accepts a pair at
+`sep ≤ max(r0, α · r_eq)` (`r_eq` from the smaller isophotal area); config key `stages.catalog.merge_size_factor`
+(default 0, unchanged behaviour). Frozen rule (largest α with chance share of added pairs ≤ 0.10) adopts α = 0.25
+(31 added pairs, chance 0.040; α = 0.5 gives 0.115). It merges only 1 / 4 vetted singles (plan needs 3 / 4), so the
+size-scaled radius does not explain them. MIRI default stays the fixed 0.1″: the α = 0.25 re-rank (Jaccard 0.739)
+adds two F1500W `blue_dropout` rows that look like split or diffuse segments (contact sheet, unvetted).
+Alternatives rejected: a larger fixed radius (chance share 0.115 at 0.3″, post hoc). Revisit if a segment-overlap
+association is measured, or a field needs α > 0 under the same chance rule.
+
 ## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
 
 **Decision.** After the catalogue classification (D-012), `classify.stellar_locus` adds sources that are

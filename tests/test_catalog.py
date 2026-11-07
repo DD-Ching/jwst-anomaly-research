@@ -510,3 +510,53 @@ def test_merge_live_mast_catalogs(tmp_path):
     assert s["median_sep_arcsec"] < 0.03
     assert abs(s["median_dra_arcsec"]) < 0.01 and abs(s["median_ddec_arcsec"]) < 0.01
     assert len(set(m["source_uid"])) == len(m)
+
+
+def _sized(band: str, offsets, areas, labels=None) -> Table:
+    t = _band(band, offsets, labels)
+    t["isophotal_area"] = np.asarray(areas, dtype=float)
+    t.meta["pixel_scale_arcsec"] = 0.1
+    return t
+
+
+def test_merge_size_factor_accepts_extended_pairs_only():
+    # r_eq = sqrt(A / pi) * 0.1": area 314.16 px -> 1.0"; area 3.1416 px -> 0.1".
+    cats = {
+        "F770W": _sized("F770W", [(0.0, 0.0), (5.0, 0.0)], [314.16, 3.1416]),
+        "F1000W": _sized("F1000W", [(0.4, 0.0), (5.4, 0.0)], [314.16, 314.16], labels=[7, 8]),
+    }
+    fixed = catalog.merge_bands(cats, "F770W", radius_arcsec=0.1)
+    assert list(fixed["n_bands"]) == [1, 1, 1, 1]
+    sized = catalog.merge_bands(cats, "F770W", radius_arcsec=0.1, size_factor=0.5)
+    # extended pair: 0.4" <= 0.5 * 1.0"; compact source: min r_eq 0.1" -> limit 0.1" < 0.4".
+    assert list(sized["n_bands"]) == [2, 1, 1]
+    assert sized["f1000w_label"][0] == 7
+    assert sized.meta["match"]["size_factor"] == 0.5
+    # alpha = 0 is the fixed-radius merge.
+    zero = catalog.merge_bands(cats, "F770W", radius_arcsec=0.1, size_factor=0.0)
+    assert list(zero["source_uid"]) == list(fixed["source_uid"])
+
+
+def test_merge_size_factor_needs_area_and_scale():
+    cats = {
+        "F770W": _band("F770W", [(0.0, 0.0)]),
+        "F1000W": _band("F1000W", [(0.0, 0.0)]),
+    }
+    with pytest.raises(ValueError, match="isophotal_area"):
+        catalog.merge_bands(cats, "F770W", size_factor=0.5)
+    cats = {b: _sized(b, [(0.0, 0.0)], [10.0]) for b in ("F770W", "F1000W")}
+    cats["F1000W"].meta["pixel_scale_arcsec"] = float("nan")
+    with pytest.raises(ValueError, match="pixel_scale"):
+        catalog.merge_bands(cats, "F770W", size_factor=0.5)
+    with pytest.raises(ValueError, match="size_factor"):
+        catalog.merge_bands(cats, "F770W", size_factor=-1.0)
+
+
+def test_merge_size_factor_missing_area_falls_back_to_r0():
+    # The candidate has no usable area: the pair limit is r0, not alpha * the anchor's r_eq.
+    cats = {
+        "F770W": _sized("F770W", [(0.0, 0.0)], [314.16]),
+        "F1000W": _sized("F1000W", [(0.4, 0.0)], [0.0]),
+    }
+    m = catalog.merge_bands(cats, "F770W", radius_arcsec=0.1, size_factor=0.5)
+    assert list(m["n_bands"]) == [1, 1]

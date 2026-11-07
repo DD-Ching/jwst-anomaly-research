@@ -109,3 +109,47 @@ brighter knot; #4 (`_239`) is the core of a large galaxy; #18 (`_240`) a faint k
 **Reading.** The addendum 3 "deblend fragment" hypothesis is not supported as a group description: only `_240` is
 a child next to a much brighter segment. Two of the high-CI entries are themselves large extended segments. None
 is vetted; none is an anomaly claim.
+
+## Size-aware band association (2026-11-07)
+
+**Plan** `PLAN_sizemerge.md` (frozen before measuring). **Data:** MAST L3 `jw02736-o002_t001_miri_{f770w,f1000w,
+f1500w,f1800w}_cat.ecsv` (S3 `stpubdata`, jwst 3.0.0, pixel scale 0.1109″; sha256 in the JSON), streamed to scratch
+and deleted. Script `scripts/miri_sizemerge.py` → `summary_sizemerge.json`; option `catalog.merge_bands(...,
+size_factor=α)` (pair accepted at `sep ≤ max(0.1″, α · r_eq)`, `r_eq` from the smaller isophotal area of the pair).
+
+**Frozen rule outcome (derived).**
+
+| α | pairs | added over α = 0 | chance (mean of 4 shifts) | chance fraction | passes (≤ 0.10) |
+|---|---|---|---|---|---|
+| 0 | 238 | 0 | 0 | — | — |
+| 0.25 | 269 | 31 | 1.25 | 0.040 | yes |
+| 0.5 | 312 | 74 | 8.5 | 0.115 | no |
+| 0.75 | 353 | 115 | 19.5 | 0.170 | no |
+| 1.0 | 399 | 161 | 31.5 | 0.196 | no |
+
+Adopted α = 0.25. Vetted check: 1 / 4 expected merges at α = 0.25 (`_239` gains F1000W); `_176` stays single as
+expected. That is below the plan's 3 / 4, so **a size-scaled radius that passes the chance rule does not explain
+the vetted "single band" rows**. At α = 0.5 all four merge, but its chance fraction is 0.115.
+
+**Re-rank** (`configs/smacs_jwst3_miri_sizemerge.yaml`, run `20261107T051243Z-b065bb6d` vs a same-session re-run of
+the fixed-radius config `20261107T051306Z-bfc1921b`, which reproduces #754's gate 168 and the five new entries' ranks
+2/4/13/16/18 of `summary_rerank.json`; `scripts/
+miri_rerank_compare.py` → `summary_sizemerge_rerank.json`): rows 908 → 877, gate 168 → 168, top-20 Jaccard 0.739.
+New: `f1500w_173` (#2), `f770w_220` (#8), `f1500w_207` (#10); dropped: `f1500w_117`, `f1500w_119`, `f770w_156`.
+Contact sheet viewed (not tracked; F770W cutouts): #10 has an F770W galaxy about 0.5″ from the F1500W marker (by
+eye: another split row), #2 shows no F770W source at the marker; both new F1500W rows are large F1500W/F1800W
+segments (F1500W 691 and 1474 px, `post_hoc_new_f1500w_rows`) without F770W/F1000W detections, ranked by `blue_dropout`. Unvetted.
+
+**Deviation (post hoc fix after a first, invalid run).** The plan shifted every non-reference band by the same
+vector, which keeps those bands aligned with each other: 93.25 "chance" pairs at α = 0 (not stored). Each band now
+gets the base shift rotated by 120° per band (same 11.3″ length). The invalid run's table (seen) had chance
+fractions 0.81–0.93 and no α passing (not stored). The table above uses the fixed test.
+
+**Post hoc (diagnostic, `post_hoc_fixed_radius`).** Fixed radii 0.1/0.15/0.2/0.3/0.4/0.6″ give 238/263/277/316/344/404
+real vs 0.5/1.5/4/9.5/19.5/39 chance pairs; the chance share of the pairs added over 0.1″ is 0.090 at 0.2″ (3.5 / 39) and
+0.115 at 0.3″ ((9.5 − 0.5) / (316 − 238), computed from the stored counts). This is not a rule.
+
+**Reading.** The 0.1″ radius splits some real MIRI multi-band sources (31 added pairs at 4 % chance), but the
+vetted singles need radii where chance pairs reach 12 % or more. The config with α = 0.25 brings new split-row
+entries (`blue_dropout`) into the top 20, so it is not adopted as the MIRI default. Segment-overlap association
+(a pair shares footprint pixels across bands) is the next test, as the plan says.

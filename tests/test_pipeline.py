@@ -167,8 +167,9 @@ class FakeStages:
         t.meta["band"] = band
         return _meta(t, schema.Provenance.OBSERVED, f"fake catalog {Path(path).name}")
 
-    def merge_bands(self, catalogs, ref_band, radius_arcsec=0.1):
+    def merge_bands(self, catalogs, ref_band, radius_arcsec=0.1, size_factor=0.0):
         self.calls["merge_bands"].append((sorted(catalogs), ref_band, radius_arcsec))
+        self.calls["merge_size_factor"].append(size_factor)
         ref = catalogs[ref_band]
         t = Table(
             {
@@ -497,6 +498,17 @@ def test_optional_stages_skipped_when_not_configured(tmp_path, env, monkeypatch)
     skipped = {s["stage"] for s in run["summary"]["stages"] if s["status"] == "skipped"}
     assert skipped == {"cutouts.make_cutouts", "crossmatch.crossmatch", _CLASSIFY}
     assert len(cands) == 5  # outputs.candidates_top_k
+
+
+def test_merge_size_factor_reaches_merge_bands(tmp_path, env, monkeypatch):
+    fakes = install_fakes(monkeypatch)
+    pipeline.run(write_config(tmp_path), samples=["field_b"])
+    assert fakes.calls["merge_size_factor"] == [0.0]  # default: fixed radius
+    fakes = install_fakes(monkeypatch)
+    stages = json.loads(json.dumps(TEST_CONFIG["stages"]))
+    stages["catalog"]["merge_size_factor"] = 0.25
+    pipeline.run(write_config(tmp_path, stages=stages), samples=["field_b"])
+    assert fakes.calls["merge_size_factor"] == [0.25]
 
 
 def test_disabled_stage_is_skipped_with_reason(tmp_path, env, monkeypatch):
