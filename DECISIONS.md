@@ -1079,6 +1079,13 @@ compact targets, measure 2-D Gaussian centroids on S3 cutouts of both epochs' `_
 row. Synthetic +20 mas shifts are recovered to ≤ 0.031 mas. Peer residual p95: 18.8–21.3 mas (F150W), 26.0–27.6 mas
 (F444W). Script `scripts/smacs_epochs_img.py`, not generalised into `epoch_compare.py` (one use so far).
 
+**Addendum 3 (2026-11-07, third epoch, `results/smacs_jwst3/epoch3_384/RESULT.md`).** A third epoch close in time to
+the second (12774, 31 d after 6882) adds no motion leverage but separates a second-epoch systematic from motion or
+a first-epoch systematic. For `384` the 6882 → 12774 residual is 1.7 / 3.5 mas (below the peer median), so the
+~23 mas 2022 → 2026 shift is not a 6882 artefact (post hoc); the frozen rule stays undetermined (10 peers; p95 set
+by one peer). Same functions, thin wrapper `scripts/smacs_epoch3_384.py`; generalise into `epoch_compare.py` only
+at a third use.
+
 ## D-018 Diffraction-spike flag on cutouts: orientation-free hexagonal harmonic (2026-10-08)
 
 **Decision.** This is new code (tier 5): numpy and scipy, with no new dependency. `cutouts.spike_statistic` resamples
