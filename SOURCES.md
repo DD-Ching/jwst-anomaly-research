@@ -525,6 +525,10 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
   - `jw06882-o057_t057_nircam_clear-f300m_cat.ecsv` `f560d0f3ac43b014e7e34d47c94ba96f393e8cd8507ac1447574a9f91100fb0c`
   - `jw06882-o057_t057_nircam_clear-f410m_cat.ecsv` `876f469e51a51ae34d324a31d6b8ad1b695364a804685c1e420f2acff8782deb`
   - `jw06882-o057_t057_nircam_clear-f444w_cat.ecsv` `e431813bdaf255fbdc0cb4003e96051f7c8babfddc8223199c27582ad43efca6`
+- **JWST program 12774**, "Taking aim at Precision Cosmology with SN Atalanta", PI Agrawal (MAST metadata,
+  2026-11-07). Observation `o002_t032` (target `SMACS0723-GLSN-1`, NIRCam F115W/F150W/F300M/F444W) covers SMACS
+  `f200w_384` on 2026-07-06; public 2026-07-07, level 3, `s3://stpubdata/jwst/public/jw12774/L3/t/o002/`.
+  - `jw12774-o002_t032_nircam_clear-f150w_cat.ecsv` `39678e0962c11becb411d30d82e689568f94fc0d9adbb2e15ee29d3217e8c8e9`
 - **Little-red-dot colour criteria:** Kokorev et al., "A Census of Photometrically Selected Little Red Dots at
   4 < z < 9 in JWST Blank Fields", arXiv:2401.09981 (§3.1: `red1`/`red2` colour cuts, F444W compactness
   f(0.4″)/f(0.2″) < 1.7, F444W > 14σ and < 27.7 mag, brown-dwarf removal F115W−F200W > −0.5, z16 > 4). Read

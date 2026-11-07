@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS `f200w_384` third epoch (12774): frozen rule undetermined; 2026 position reproduced post hoc (TASKS Next M2, D-017 addendum 3)
+- **Plan first** (`results/smacs_jwst3/epoch3_384/PLAN.md`); `scripts/smacs_epoch3_384.py` reuses the image-level
+  centroid functions; `decide` unit-tested. New data: program 12774 o002 (SN Atalanta follow-up, 2026-07-06).
+- **Validation:** +20 mas injections on 12774 cutouts recovered to ≤ 0.043 mas (n = 10 per band).
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): 2736 → 12774 residual 25.87 / 21.17 mas (F150W /
+  F444W), 4.3° / 12.5° from the 2736 → 6882 vectors; F444W 0.9 mas below the peer p95 (22.07): undetermined.
+  Post hoc: 6882 → 12774 residual 1.69 / 3.48 mas (below the peer median), so the two 2026 programs agree and a
+  6882 systematic is disfavoured; motion (≈ 6 mas/yr, star) and a 2736 systematic remain.
+- **Services:** CDS still unreachable (20:10Z, connection reset; XMatch 503); #751 still waits. MAST API and S3 worked.
+- **Handoff:** astrometric route for `384` closed (no 2736-independent early epoch in MAST); record needs
+  spectroscopy. Next: image embeddings (TASKS Next M2); #751 when CDS is reachable.
+
 ## 2026-11-07: SMACS `f200w_1816` / `f200w_384` image-level two-epoch centroids: 1816 no motion detected, 384 undetermined (TASKS Next M2, D-017 addendum 2)
 - **Plan first** (`results/smacs_jwst3/epochs_1816_384_img/PLAN.md`); `scripts/smacs_epochs_img.py` (`decide`
   unit-tested); S3 byte-range cutouts, 2-D Gaussian centroids, peer frame tie and leave-one-out null.

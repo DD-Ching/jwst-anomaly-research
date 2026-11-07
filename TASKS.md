@@ -732,7 +732,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   D-017 addendum: no F444W catalog pair; F150W residuals within faint-peer scatter). Open: image-level F444W
   centroids with a peer-calibrated tie: done 2026-11-07 (`results/smacs_jwst3/epochs_1816_384_img/RESULT.md`,
   D-017 addendum 2): `1816` no motion detected (≲ 4.7–6.5 mas/yr), `384` undetermined (post hoc: both bands
-  ~23 mas the same way). Open: a third epoch covering `384`, if any later program has one.
+  ~23 mas the same way). Third epoch 12774 (2026-07-06) done 2026-11-07 (`results/smacs_jwst3/epoch3_384/RESULT.md`,
+  D-017 addendum 3): frozen rule undetermined (F444W 0.9 mas under the peer p95); post hoc the 2026 position
+  is reproduced (6882 → 12774 ≤ 3.5 mas), so a 6882 systematic is disfavoured; motion vs a 2736 systematic open.
+  No 2736-independent early epoch in MAST. Astrometric route closed; `384` needs spectroscopy.
 - ~~NIRCam F444W grism spectra of program 4043~~ done 2026-11-07 (`results/grism_4043/RESULT.md`, D-110): only
   `f200w_2915` is covered; pipeline c1d not adopted (levels 23–26× the imaging flux; 2915 line gate failed).
 

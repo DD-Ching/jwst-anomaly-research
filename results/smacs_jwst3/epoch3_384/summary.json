@@ -1,0 +1,117 @@
+{
+ "plan": "results/smacs_jwst3/epoch3_384/PLAN.md",
+ "epochs": {
+  "e1": "2736 o001 (2022)",
+  "e2": "6882 o057 (2026-06-05)",
+  "e3": "12774 o002 (2026-07-06)"
+ },
+ "n_peers_selected": 10,
+ "epoch1_f150w_row_sep_arcsec": 0.0,
+ "prev_2736_6882_residual_mas": {
+  "f150w": [
+   -23.264338089525577,
+   9.227370271699325
+  ],
+  "f444w": [
+   -22.308075824229185,
+   3.682648919670566
+  ]
+ },
+ "validation": {
+  "f150w": {
+   "n": 10,
+   "median_recovered_mas": [
+    19.9819992295591,
+    0.003547781524985294,
+    0.00044205002851414535,
+    19.97362510547301
+   ],
+   "max_abs_error_of_median_mas": 0.02637489452699171,
+   "passed": true,
+   "label": "simulation"
+  },
+  "f444w": {
+   "n": 10,
+   "median_recovered_mas": [
+    19.957428369299258,
+    0.0022737117501299576,
+    -0.0051750321777781294,
+    19.988323821383453
+   ],
+   "max_abs_error_of_median_mas": 0.04257163070074199,
+   "passed": true,
+   "label": "simulation"
+  }
+ },
+ "bands": {
+  "f150w": {
+   "n_peers": 10,
+   "tie_mas": [
+    17.879585699796095,
+    14.679815137287823
+   ],
+   "target_residual_mas": [
+    -23.267854558171713,
+    11.307000063867632
+   ],
+   "target_residual_total_mas": 25.86969861023771,
+   "peer_residual_median_mas": 5.319965416070055,
+   "peer_residual_p95_mas": 21.738002634355528,
+   "n_peers_with_larger_residual": 0,
+   "label": "derived",
+   "angle_to_2736_6882_residual_deg": 4.282568344887615
+  },
+  "f444w": {
+   "n_peers": 10,
+   "tie_mas": [
+    10.216432474212745,
+    19.995631925000012
+   ],
+   "target_residual_mas": [
+    -19.647580355109096,
+    7.888166199319457
+   ],
+   "target_residual_total_mas": 21.171929052369197,
+   "peer_residual_median_mas": 14.523784988724955,
+   "peer_residual_p95_mas": 22.065501898823577,
+   "n_peers_with_larger_residual": 1,
+   "label": "derived",
+   "angle_to_2736_6882_residual_deg": 12.500686766093034
+  }
+ },
+ "post_hoc_6882_12774": {
+  "f150w": {
+   "n_peers": 10,
+   "tie_mas": [
+    11.171221169282855,
+    3.819063540980547
+   ],
+   "target_residual_mas": [
+    0.7101775904138119,
+    -1.5379201016929946
+   ],
+   "target_residual_total_mas": 1.6939747486657997,
+   "peer_residual_median_mas": 5.4312147819287,
+   "peer_residual_p95_mas": 10.547427827385906,
+   "n_peers_with_larger_residual": 10,
+   "label": "derived"
+  },
+  "f444w": {
+   "n_peers": 10,
+   "tie_mas": [
+    11.614432104390456,
+    -4.6747192467510175
+   ],
+   "target_residual_mas": [
+    0.8545622596959692,
+    3.370006280417158
+   ],
+   "target_residual_total_mas": 3.4766677991645634,
+   "peer_residual_median_mas": 9.19197704602602,
+   "peer_residual_p95_mas": 25.840804707556412,
+   "n_peers_with_larger_residual": 10,
+   "label": "derived"
+  }
+ },
+ "decision": "undetermined"
+}
