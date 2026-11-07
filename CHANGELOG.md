@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: segment-overlap MIRI band association: reaches the vetted singles but at 22–40 % chance; line closed
+- **Plan first** (`results/miri_confirm/PLAN_segoverlap.md`); TASKS Then 7. D-014 addendum 6.
+- **Code:** `scripts/miri_segoverlap.py` → `summary_segoverlap.json` (rule functions unit-tested before the run).
+- **Result** (`results/miri_confirm/RESULT.md` § Segment-overlap band association): post hoc validation: all 232 F770W
+  pairs within 0.1″ overlap ≥ 0.75. The vetted `_221`, `_239`, `_118`, `_240` merge at every f, but the extra pairs'
+  chance fractions are 0.395 / 0.345 / 0.303 / 0.221 at f 0.1–0.75, all above 0.10: no f adopted
+  (post hoc corrected counting after review: 0.280–0.174, still none). MIRI association
+  stays 0.1″; association line closed with the stated "single band" limitation. Segmentation view of the five
+  inspected (scratch, not tracked).
+- **Handoff:** TASKS Then 7 is done apart from the limitation; next candidates are Then 4 (view f200w_3670), Then 5
+  (vet MIRI `G_Lens`) or Then 6 (spike-geometry check). #751 still waits for CDS XMatch.
+
 ## 2026-11-07: size-aware MIRI band association: passes the chance rule at α 0.25 but does not explain the vetted singles
 - **Plan first** (`results/miri_confirm/PLAN_sizemerge.md`); TASKS Then 7. D-014 addendum 5.
 - **Code:** `catalog.merge_bands(size_factor=α)`, pipeline key `stages.catalog.merge_size_factor` (default off);
