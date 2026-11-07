@@ -1649,3 +1649,81 @@ def test_extended_veto_can_be_disabled(tmp_path, env, monkeypatch):
     path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     pipeline.run(path, samples=["field_a"])
     assert calls == []
+
+
+def test_position_confirmation_feeds_the_quality_gate(tmp_path, env, monkeypatch):
+    """D-014 addendum 2: the position-only join supplies confirm_column and confirm_bands."""
+    install_fakes(monkeypatch)
+    seen = {}
+    real = quality.assess_sources
+
+    def spy(sources, weight_map, **kw):
+        seen.update(kw)
+        seen["has_column"] = kw.get("confirm_column") in sources.colnames
+        return real(sources, weight_map, **kw)
+
+    def positions(path, bands, *, aperture=1, min_snr=5.0):
+        seen["positions_args"] = (path, bands, aperture, min_snr)
+        t = Table({"id": [1], "ra": [0.0], "dec": [0.0]})
+        t.meta.update(provenance="derived", source="fake positions")
+        return t
+
+    monkeypatch.setattr(quality, "assess_sources", spy)
+    monkeypatch.setattr(photometry, "load_detection_positions", positions)
+    config = json.loads(json.dumps(TEST_CONFIG))
+    sample = config["samples"][0]
+    sample["position_confirmation"] = {
+        "url": "https://e.org/x.fits",
+        "sha256": "0" * 64,
+        "label": "nircam",
+        "radius_arcsec": 0.3,
+        "bands": ["F200W"],
+        "confirm_bands": [sample["ref_band"]],
+    }
+    config["stages"]["quality"].update(min_detection_snr=5, require_multiband=True)
+    path = tmp_path / "conf.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    run_id = pipeline.run(path, samples=[sample["id"]])
+    assert seen["positions_args"] == ("fake_phot.fits", ["f200w"], 1, 5.0)
+    assert seen["confirm_column"] == "nircam_match_sep_arcsec" and seen["has_column"]
+    assert seen["confirm_bands"] == [sample["ref_band"].lower()]
+    with _store(env) as store:
+        stages_run = store.get_run(run_id)["summary"]["stages"]
+    names = {s["stage"]: s["status"] for s in stages_run}
+    assert names["photometry.join_position_confirmation"] == "ok"
+
+
+@pytest.mark.parametrize(
+    "block, match",
+    [
+        ("x", "mapping"),
+        ({"url": "https://x/a.fits", "sha256": "0" * 64, "label": "n"}, "bands"),
+        (
+            {
+                "url": "https://x/a.fits",
+                "sha256": "0" * 64,
+                "label": "n",
+                "bands": ["f200w"],
+                "confirm_bands": "f770w",
+            },
+            "confirm_bands",
+        ),
+        (
+            {
+                "url": "https://x/a.fits",
+                "sha256": "0" * 64,
+                "label": "n",
+                "bands": ["f200w"],
+                "min_snr": 0,
+            },
+            "min_snr",
+        ),
+    ],
+)
+def test_position_confirmation_config_is_validated(tmp_path, block, match):
+    config = json.loads(json.dumps(TEST_CONFIG))
+    config["samples"][0]["position_confirmation"] = block
+    path = tmp_path / "bad.yaml"
+    path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
+    with pytest.raises(pipeline.ConfigError, match=match):
+        pipeline.load_config(path)

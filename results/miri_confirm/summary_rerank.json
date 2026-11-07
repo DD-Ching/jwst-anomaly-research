@@ -1,0 +1,48 @@
+{
+ "new_run": "20261107T021815Z-a98aae0e",
+ "base_run": "20261107T022631Z-036f249e",
+ "top_k": 20,
+ "new_gate_passed": 168,
+ "base_gate_passed": 113,
+ "jaccard": 0.6,
+ "new_top": [
+  {
+   "rank": 2,
+   "source_uid": "jw02736-o002_t001_miri_f770w_221",
+   "n_bands": 1,
+   "top": "ref_log_ci_70_50=+4.8; ref_log_ci_50_30=+4.0; ref_ellipticity=+3.7"
+  },
+  {
+   "rank": 4,
+   "source_uid": "jw02736-o002_t001_miri_f770w_239",
+   "n_bands": 1,
+   "top": "ref_log_ci_70_50=+4.2; ref_log_ci_50_30=+4.0; ref_log_isophotal_area=+3.0"
+  },
+  {
+   "rank": 13,
+   "source_uid": "jw02736-o002_t001_miri_f770w_176",
+   "n_bands": 1,
+   "top": "ref_sharpness=-3.2; ref_log_isophotal_area=-1.6; ref_roundness=+1.3"
+  },
+  {
+   "rank": 16,
+   "source_uid": "jw02736-o002_t001_miri_f770w_118",
+   "n_bands": 1,
+   "top": "ref_log_ci_50_30=+4.0; ref_log_ci_70_50=+2.9; ref_ellipticity=+2.8"
+  },
+  {
+   "rank": 18,
+   "source_uid": "jw02736-o002_t001_miri_f770w_240",
+   "n_bands": 1,
+   "top": "ref_log_ci_50_30=+4.0; ref_log_ci_70_50=+2.8; ref_log_isophotal_area=+1.6"
+  }
+ ],
+ "dropped_top": [
+  "jw02736-o002_t001_miri_f1000w_192",
+  "jw02736-o002_t001_miri_f770w_117",
+  "jw02736-o002_t001_miri_f770w_163",
+  "jw02736-o002_t001_miri_f770w_177",
+  "jw02736-o002_t001_miri_f770w_46"
+ ],
+ "new_top_single_band": 5
+}

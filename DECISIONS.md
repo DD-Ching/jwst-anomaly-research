@@ -895,6 +895,15 @@ Frozen before measurement: the same gate per detection band (n ≥ 15). F770W (4
 (10 / 20 vs 0.020) pass; F1500W (3 / 42 vs 0.069) and F1800W (3 / 35 vs 0.057) fail. MIRI single-band confirmation,
 when wired, applies to F770W and F1000W detections only. Revisit if: a deeper or longer-wavelength counterpart
 catalog (e.g. MIRI-selected) becomes available for this field.
+**Addendum 3 (2026-11-07): wired into the pipeline** (`results/miri_confirm/PLAN_rerank.md`, `RESULT.md` § Re-rank).
+A sample's optional `position_confirmation` block (`photometry.load_detection_positions` +
+`join_position_confirmation`: nearest DJA source with NIRCam S/N ≥ 5 within 0.3″, no colours copied) supplies
+the gate's `confirm_column`; `quality.assess_sources(confirm_bands=[f770w, f1000w])` lifts `single_band` only for
+detections in those bands. Config `configs/smacs_jwst3_miri_confirm.yaml`. Gate 113 → 168 (frozen expectation
+168 met; the 55 admitted equal #752's F770W/F1000W matches). Top-20 Jaccard vs the ungated-confirmation run 0.60:
+5 newly admitted F770W singles enter, 4 of them with CI +3–5σ next to bright extended neighbours (deblend
+fragments, hypothesis). Alternative rejected: reusing `matched_photometry` (one-to-one 0.2″ and it replaces
+colours, which MIRI does not need).
 
 ## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
 

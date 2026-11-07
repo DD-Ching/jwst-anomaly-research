@@ -8,10 +8,12 @@ MAST (CAOM metadata)            query.py      query_observations / list_products
   → science-ready products      level-3 _cat.ecsv (photometry/shape) + _i2d.fits (images)
   → source representation       catalog.py    load_pipeline_catalog / merge_bands
   → matched-aperture colours    photometry.py join_matched_photometry (DJA, per sample, D-013)
+                                              join_position_confirmation (positions only, MIRI, D-014 add. 3)
   → derived features            features.py   build_features
   → quality gate (D-011/D-014)  quality.py    assess_sources: image tests (coarse WHT map via
                                               cutouts.sample_weight_map) + detection confirmation
-                                              (best-band S/N, multi-band or matched-photometry match)
+                                              (best-band S/N, multi-band or matched-photometry match,
+                                              optionally only for confirm_bands)
   → star/galaxy strata (D-012)  classify.py   classify_sources (bulk Gaia/SIMBAD) + stellar_locus (D-015/016,
                                               DJA r50 + colours); stars ranked as <sample>-stars
   → baseline anomaly ranking    rank.py       score_anomalies

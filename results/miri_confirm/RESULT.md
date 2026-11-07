@@ -56,3 +56,24 @@ chance level (6 matched vs about 4.9 expected). A pipeline confirmation join for
 F770W and F1000W detections. F1000W rests on 20 sources; its chance rate is 0.4 expected matches. Not yet wired:
 the existing confirmation path (`confirm_column`) comes from the matched-aperture join, which would also replace
 the MIRI colours, so wiring needs a position-only join plus a `confirm_bands` restriction in the quality gate.
+
+## Re-rank with band-restricted confirmation in the pipeline (2026-11-07, `PLAN_rerank.md`)
+
+**Runs.** `20261107T021815Z-a98aae0e` (`configs/smacs_jwst3_miri_confirm.yaml`, position confirmation on) vs
+`20261107T022631Z-036f249e` (the same config without the block); scratch outputs, not stored. Comparison:
+`scripts/miri_rerank_compare.py` → `summary_rerank.json`. Contact sheet of the new top 20: `contact_sheet_rerank.png`.
+
+**Checks (derived).**
+1. Gate count 168 of 908 (baseline 113): the frozen expectation is met, and the 55 admitted sources equal the
+   F770W/F1000W matched list of `summary.json`. Position join: 264 / 908 sources have a NIRCam detection within 0.3″.
+2. Top-20 Jaccard 0.60 (15 shared). New: `f770w_221` (#2), `_239` (#4), `_176` (#13), `_118` (#16), `_240` (#18),
+   all single-band F770W; dropped: `f1000w_192`, `f770w_117`, `_163`, `_177`, `_46`.
+3. Visual (contact sheet viewed): #2 is a knot on the diffuse elongated light of a bright neighbour; #4 a compact
+   source in the wing of a large bright galaxy; #18 a faint knot between bright sources; #16 an elongated faint
+   feature next to a compact source; #13 a faint compact source. Four of five lead with CI_50_30/CI_70_50 at
+   +3–5σ (high concentration from the neighbour's gradient, hypothesis), with 3–5 of the features missing.
+
+**Reading.** 5 / 20 new entries are newly admitted singles, below the plan's "more than half" trigger, so no
+separate single-band stratum. The new entries look like deblend fragments or sources on bright neighbours' light
+(ordinary processing explanation, untested), not anomalies; none is vetted. Expected chance confirmations among
+the 55: about 3.4 (plan).

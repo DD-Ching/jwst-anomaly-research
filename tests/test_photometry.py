@@ -229,3 +229,40 @@ def test_live_dja_smacs0723_header_matches_loader_assumptions():
         assert {f"{band}_flux_aper_1", f"{band}_fluxerr_aper_1", f"{band}_flag_aper_1"} <= names
         assert units[f"{band}_flux_aper_1"] == "uJy"
     assert abs(float(hdr["ASEC_1"]) - 0.5) < 1e-3
+
+
+def test_load_detection_positions_keeps_rows_above_snr(tmp_path):
+    pos = photometry.load_detection_positions(
+        _dja(tmp_path / "x_phot.fits"), ["f200w", "f277w"], min_snr=10
+    )
+    # S/N: row 1 f200w 10 (kept), row 2 10/10 (kept), row 3 f277w 10 (kept), row 4 10 (kept)
+    assert list(pos["id"]) == [1, 2, 3, 4]
+    pos = photometry.load_detection_positions(_dja(tmp_path / "y.fits"), ["f277w"], min_snr=10.5)
+    assert list(pos["id"]) == []
+    pos = photometry.load_detection_positions(_dja(tmp_path / "z.fits"), ["f200w"], min_snr=15)
+    assert list(pos["id"]) == [2]
+    assert pos.meta["provenance"] == "derived"
+    with pytest.raises(ValueError, match="f444w"):
+        photometry.load_detection_positions(_dja(tmp_path / "w.fits"), ["f444w"])
+
+
+def test_join_position_confirmation_is_nearest_neighbour_and_positions_only(tmp_path):
+    pos = Table({"id": [1], "ra": [10.0], "dec": [-5.0]})
+    pos.meta["source"] = "test positions"
+    off = 0.1 / 3600 / np.cos(np.deg2rad(5))
+    src = _sources([10.0, 10.0 + off, 10.0 + 4 * off])
+    out = photometry.join_position_confirmation(src, pos, "nircam", radius_arcsec=0.3)
+    schema.validate(out, schema.SOURCE_COLUMNS)
+    sep = out["nircam_match_sep_arcsec"]
+    # Not one-to-one: two sources may share one external detection.
+    assert sep[0] == pytest.approx(0.0, abs=1e-6) and sep[1] == pytest.approx(0.1, abs=0.01)
+    assert np.isnan(sep[2])  # 0.4" > 0.3"
+    assert set(out.colnames) - set(src.colnames) == {"nircam_match_sep_arcsec"}
+    assert out.meta["matched_photometry"]["kind"] == "position_only"
+    assert out.meta["matched_photometry"]["n_matched"] == 2
+    with pytest.raises(ValueError, match="overwrite"):
+        photometry.join_position_confirmation(out, pos, "nircam")
+    with pytest.raises(ValueError, match="label"):
+        photometry.join_position_confirmation(src, pos, "aper50")
+    empty = photometry.join_position_confirmation(src, pos[:0], "nircam")
+    assert np.isnan(empty["nircam_match_sep_arcsec"]).all()

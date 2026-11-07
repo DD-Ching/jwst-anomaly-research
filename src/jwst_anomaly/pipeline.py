@@ -208,6 +208,8 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(f"{path}: sample {sid!r} needs 'obs_ids' or 'proposal_id'")
         if sample.get("matched_photometry") is not None:
             _check_matched_photometry(sample["matched_photometry"], f"{path}: sample {sid!r}")
+        if sample.get("position_confirmation") is not None:
+            _check_position_confirmation(sample["position_confirmation"], f"{path}: sample {sid!r}")
     for key in ("archive", "stages", "cloud", "outputs"):
         if config.get(key) is not None and not isinstance(config[key], dict):
             raise ConfigError(f"{path}: '{key}' must be a mapping")
@@ -264,6 +266,37 @@ def load_config(path: str | Path) -> dict[str, Any]:
     if outputs.get("table_format", "ecsv") not in TABLE_FORMATS:
         raise ConfigError(f"{path}: outputs.table_format must be one of {sorted(TABLE_FORMATS)}")
     return config
+
+
+def _check_position_confirmation(cfg: Any, where: str) -> None:
+    """Validate a sample's ``position_confirmation`` block (D-014 addendum 2)."""
+    if not isinstance(cfg, dict):
+        raise ConfigError(f"{where}: position_confirmation must be a mapping")
+    url = cfg.get("url")
+    if not isinstance(url, str) or not url.startswith(("https://", "http://")):
+        raise ConfigError(f"{where}: position_confirmation.url must be an http(s) URL")
+    sha = cfg.get("sha256")
+    if not (isinstance(sha, str) and re.fullmatch(r"[0-9a-fA-F]{64}", sha)):
+        raise ConfigError(f"{where}: position_confirmation.sha256 must be 64 hex characters")
+    label = cfg.get("label")
+    if not (isinstance(label, str) and label.isalnum() and label[:1].isalpha()):
+        raise ConfigError(f"{where}: position_confirmation.label must be alphanumeric")
+    for key in ("bands", "confirm_bands"):
+        value = cfg.get(key)
+        required = key == "bands"
+        if value is None and not required:
+            continue
+        if not (isinstance(value, list) and value and all(isinstance(b, str) and b for b in value)):
+            raise ConfigError(f"{where}: position_confirmation.{key} must be a list of bands")
+    for key in ("aperture", "max_bytes"):
+        if key in cfg:
+            _check_positive_int(cfg[key], f"{where}: position_confirmation.{key}")
+    for key in ("radius_arcsec", "min_snr"):
+        value = cfg.get(key)
+        if value is not None and not (
+            isinstance(value, int | float) and not isinstance(value, bool) and value > 0
+        ):
+            raise ConfigError(f"{where}: position_confirmation.{key} must be a positive number")
 
 
 def _check_matched_photometry(cfg: Any, where: str) -> None:
@@ -746,7 +779,13 @@ class _Runner:
         # 4b. Quality gate (derived, D-011): rank only sources whose measurements can be trusted.
         to_rank = feats
         confirm = photometry.match_sep_column(aperture) if aperture else None
-        keep = self._quality(sid, summary, feat_sources, feats, ref_band, band_obs, confirm)
+        gate_sources, confirm_bands = feat_sources, None
+        pos = self._position_confirmation(sid, sample, feat_sources)
+        if pos is not None:  # D-014 addendum 2: a position-only join replaces the confirmation
+            gate_sources, confirm, confirm_bands = pos
+        keep = self._quality(
+            sid, summary, gate_sources, feats, ref_band, band_obs, confirm, confirm_bands
+        )
         if keep is not None:
             to_rank = _subset(feats, keep, "quality-gated subset (D-011)")
         # 4c. Star/galaxy separation (D-012): stars become their own ranking stratum.
@@ -1306,6 +1345,54 @@ class _Runner:
         )
         return joined, label
 
+    def _position_confirmation(
+        self, sid: str, sample: Mapping[str, Any], sources: Table
+    ) -> tuple[Table, str, list[str] | None] | None:
+        """Position-only confirmation join (optional, D-014 addendum 2).
+
+        Returns the sources with the separation column, its name and the configured
+        ``confirm_bands``; None when not configured or when the join fails (then single-band
+        sources stay unconfirmed, the conservative side).
+        """
+        cfg = sample.get("position_confirmation")
+        if not cfg:
+            return None
+        label = str(cfg["label"])
+
+        def join() -> Table:
+            fetch_kwargs = {"max_bytes": int(cfg["max_bytes"])} if "max_bytes" in cfg else {}
+            path = photometry.fetch_catalog(str(cfg["url"]), str(cfg["sha256"]), **fetch_kwargs)
+            positions = photometry.load_detection_positions(
+                path,
+                [str(b).lower() for b in cfg["bands"]],
+                aperture=int(cfg.get("aperture", 1)),
+                min_snr=float(cfg.get("min_snr", photometry.DEFAULT_CONFIRM_MIN_SNR)),
+            )
+            return photometry.join_position_confirmation(
+                sources,
+                positions,
+                label,
+                radius_arcsec=float(
+                    cfg.get("radius_arcsec", photometry.DEFAULT_CONFIRM_RADIUS_ARCSEC)
+                ),
+            )
+
+        name = "photometry.join_position_confirmation"
+        joined = self.stage(sid, name, join, columns=schema.SOURCE_COLUMNS, required=False)
+        if joined is None:
+            self.summaries[sid].notes.append(
+                "position confirmation failed: single-band sources unconfirmed"
+            )
+            return None
+        info = joined.meta.get("matched_photometry", {})
+        bands = cfg.get("confirm_bands")
+        confirm_bands = [str(b).lower() for b in bands] if bands is not None else None
+        self.summaries[sid].notes.append(
+            f"position confirmation '{label}': {info.get('n_matched')} of {len(joined)} sources "
+            f"have an external detection (confirm_bands {confirm_bands}; D-014 addendum 2)"
+        )
+        return joined, photometry.match_sep_column(label), confirm_bands
+
     def _quality(
         self,
         sid: str,
@@ -1315,6 +1402,7 @@ class _Runner:
         ref_band: str,
         band_obs: Mapping[str, str],
         confirm_column: str | None = None,
+        confirm_bands: list[str] | None = None,
     ) -> np.ndarray | None:
         """Quality gate (optional, D-011/D-014). Return the rows of ``feats`` to rank, or None.
 
@@ -1341,6 +1429,8 @@ class _Runner:
             )
             if params.get("require_multiband") and confirm_column:
                 params["confirm_column"] = confirm_column
+                if confirm_bands is not None:
+                    params["confirm_bands"] = confirm_bands
             map_kwargs = {"grid_arcsec": float(cfg.get("grid_arcsec", 1.0))}
             if cfg.get("step") is not None:
                 map_kwargs["step"] = int(cfg["step"])
