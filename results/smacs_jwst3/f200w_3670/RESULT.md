@@ -28,3 +28,6 @@ sheet `sheet.png`). System 2 positions: Mahler+2023 ICLv2 `arcs.dat` (sha256 pin
 - Colours from pipeline `aper_total` apertures; the star and the arc tip partly overlap, so either can contaminate
   the other at the 0.1-mag level (not quantified).
 - Star class from morphology and colour only; no spectrum or proper motion.
+- **Deviation from PLAN rule 1:** the cutouts are 12″ and 4″ in F150W / F200W / F444W instead of 6″ in F200W / F444W,
+  and there is no colour composite; colours come from the catalog instead. The rule-2 inputs (the spike pattern in
+  F200W and the two colours) are unchanged.
