@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: vetting of the five new MIRI top-20 singles: all ordinary; "single band" is a merge-radius effect
+- **Plan first** (`results/miri_confirm/PLAN_vet.md`); TASKS Then 7. Record:
+  `docs/candidates/smacs_miri_f770w_top20_singles.md`, `results/miri_confirm/vet_xband.json`.
+- **Re-run** `20261107T042021Z-8f4189cd` reproduces #754's top 20 exactly (first attempt failed on a MAST proxy reset).
+- **Result:** `_239` the BCG (NED z 0.391 SLS), `_240` a cluster member (z 0.3915 SLS), `_118` Mahler+2022 image 3.1
+  (z 1.99 SLS), `_221` a deblended z 1.1616 galaxy, `_176` a faint z_phot 0.34 galaxy (hypothesis). None unexplained.
+  4 / 5 have F1000W/F1500W counterparts at 0.18–0.66″, beyond the 0.1″ merge radius: plan trigger met. Contact
+  sheets viewed.
+- **Services:** SIMBAD via the CfA TAP mirror, NED and ESA Gaia TAP worked; CDS XMatch and CDS SIMBAD TAP still fail
+  (#751 waits).
+- **Handoff:** next is a size-aware MIRI band association (plan first), then re-rank (TASKS Then 7).
+
 ## 2026-11-07: MIRI deblend-fragment check: frozen mechanism not supported; all five new top-20 singles go to vetting
 - **Plan first** (`results/miri_confirm/PLAN_fragments.md`, committed before measuring); TASKS Then 7.
 - **Result** (`results/miri_confirm/RESULT.md` § Deblend-fragment check, `summary_fragments.json`,

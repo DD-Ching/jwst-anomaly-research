@@ -1,0 +1,142 @@
+{
+ "f770w_221": {
+  "f770w": {
+   "isophotal_flux_uJy": 5.974065459213307e-05,
+   "aper50_flux": 1.2519825165522974e-06,
+   "is_extended": true
+  },
+  "f1000w": {
+   "label": 193,
+   "sep_arcsec": 0.534,
+   "isophotal_area": 413.0,
+   "is_extended": true,
+   "isophotal_flux": 3.1615141551810666e-05
+  },
+  "f1500w": {
+   "label": 119,
+   "sep_arcsec": 0.655,
+   "isophotal_area": 1018.0,
+   "is_extended": false,
+   "isophotal_flux": 0.0003379169138497673
+  },
+  "f1800w": {
+   "label": 225,
+   "sep_arcsec": 0.632,
+   "isophotal_area": 791.0,
+   "is_extended": false,
+   "isophotal_flux": 0.0004625427463906817
+  }
+ },
+ "f770w_239": {
+  "f770w": {
+   "isophotal_flux_uJy": 5.4890928481654555e-05,
+   "aper50_flux": 1.913043692670921e-06,
+   "is_extended": true
+  },
+  "f1000w": {
+   "label": 206,
+   "sep_arcsec": 0.259,
+   "isophotal_area": 409.0,
+   "is_extended": false,
+   "isophotal_flux": 2.5693128009152133e-05
+  },
+  "f1500w": {
+   "label": 37,
+   "sep_arcsec": 0.403,
+   "isophotal_area": 59.0,
+   "is_extended": false,
+   "isophotal_flux": 6.729330380039755e-06
+  },
+  "f1800w": {
+   "label": 30,
+   "sep_arcsec": 16.06,
+   "isophotal_area": 8.0,
+   "is_extended": false,
+   "isophotal_flux": 2.034694261965342e-06
+  }
+ },
+ "f770w_176": {
+  "f770w": {
+   "isophotal_flux_uJy": 3.9026235754135996e-07,
+   "aper50_flux": 5.302977511863945e-07,
+   "is_extended": false
+  },
+  "f1000w": {
+   "label": 128,
+   "sep_arcsec": 5.178,
+   "isophotal_area": 14.0,
+   "is_extended": false,
+   "isophotal_flux": 6.02832642471185e-07
+  },
+  "f1500w": {
+   "label": 74,
+   "sep_arcsec": 7.288,
+   "isophotal_area": 15.0,
+   "is_extended": false,
+   "isophotal_flux": 1.824034370656591e-06
+  },
+  "f1800w": {
+   "label": 50,
+   "sep_arcsec": 9.244,
+   "isophotal_area": 32.0,
+   "is_extended": false,
+   "isophotal_flux": 7.555705451522954e-06
+  }
+ },
+ "f770w_118": {
+  "f770w": {
+   "isophotal_flux_uJy": 1.6953462136370945e-06,
+   "aper50_flux": 5.061575657700305e-07,
+   "is_extended": true
+  },
+  "f1000w": {
+   "label": 88,
+   "sep_arcsec": 0.177,
+   "isophotal_area": 42.0,
+   "is_extended": false,
+   "isophotal_flux": 2.2576127776119392e-06
+  },
+  "f1500w": {
+   "label": 52,
+   "sep_arcsec": 0.274,
+   "isophotal_area": 19.0,
+   "is_extended": false,
+   "isophotal_flux": 2.6682200768846087e-06
+  },
+  "f1800w": {
+   "label": 32,
+   "sep_arcsec": 15.568,
+   "isophotal_area": 332.0,
+   "is_extended": false,
+   "isophotal_flux": 0.0002540081550250761
+  }
+ },
+ "f770w_240": {
+  "f770w": {
+   "isophotal_flux_uJy": 1.000488134650368e-05,
+   "aper50_flux": 8.342941136673797e-07,
+   "is_extended": true
+  },
+  "f1000w": {
+   "label": 207,
+   "sep_arcsec": 0.262,
+   "isophotal_area": 74.0,
+   "is_extended": false,
+   "isophotal_flux": 3.485903334876639e-06
+  },
+  "f1500w": {
+   "label": 37,
+   "sep_arcsec": 1.448,
+   "isophotal_area": 59.0,
+   "is_extended": false,
+   "isophotal_flux": 6.729330380039755e-06
+  },
+  "f1800w": {
+   "label": 30,
+   "sep_arcsec": 16.707,
+   "isophotal_area": 8.0,
+   "is_extended": false,
+   "isophotal_flux": 2.034694261965342e-06
+  }
+ }
+}
