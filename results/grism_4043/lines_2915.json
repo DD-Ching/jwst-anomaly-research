@@ -34,17 +34,27 @@
    3.1
   ],
   "cont_pix": 51,
-  "box_pix": 5
+  "box_pix": 5,
+  "inj_sigma_um": 0.0015,
+  "n_inj": 200,
+  "seed": 1
  },
  "injection_recovery": {
-  "HeI_10833": 0.71,
-  "Pagamma": 0.655,
-  "Pabeta": 0.0
- },
- "zero_injection_rate": {
-  "HeI_10833": 0.0,
-  "Pagamma": 0.0,
-  "Pabeta": 0.0
+  "HeI_10833": {
+   "recovery": 0.71,
+   "n_both_covered": 200,
+   "recovery_both_covered": 0.71
+  },
+  "Pagamma": {
+   "recovery": 0.655,
+   "n_both_covered": 200,
+   "recovery_both_covered": 0.655
+  },
+  "Pabeta": {
+   "recovery": 0.0,
+   "n_both_covered": 9,
+   "recovery_both_covered": 0.0
+  }
  },
  "gate_pass": false,
  "observed_peak": {

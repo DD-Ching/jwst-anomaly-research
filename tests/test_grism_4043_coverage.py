@@ -69,3 +69,17 @@ def test_decide_needs_both_grisms_and_matching_wavelength():
         "c": dict(lines, Pabeta=(6.0, 4.92)),
     }
     assert not gl.decide(nan)["detected"]["Pabeta"]
+
+
+def test_inject_off_spectrum_leaves_flux_finite_and_unchanged():
+    wave, flux = _spec()
+    out = gl.inject(wave, flux, 5.3, 7.0)
+    assert np.array_equal(out, flux)
+
+
+def test_run_injections_counts_coverage():
+    wave, flux = _spec()
+    short = (wave[wave < 4.76], flux[wave < 4.76])
+    res = gl.run_injections({"r": (wave, flux), "c": short}, n=20, snr=12.0, seed=0)
+    assert res["Pabeta"]["n_both_covered"] < 20
+    assert np.isfinite(res["Pabeta"]["recovery"])

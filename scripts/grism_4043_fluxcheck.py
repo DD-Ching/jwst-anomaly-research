@@ -26,6 +26,7 @@ def ratios(c1d: Path, cat: Path, band=(4.2, 4.6)) -> dict:
                 np.isfinite(w)
                 & np.isfinite(f)
                 & (np.asarray(row["DQ"]) == 0)
+                & (np.asarray(row["N_INPUT"]) > 0)
                 & (w > band[0])
                 & (w < band[1])
             )
@@ -55,8 +56,9 @@ def main() -> None:
     for p in args.c1d:
         r = ratios(p, args.cat)
         r["source"] = r["per_source"].get(str(args.source_id))
-        r["source_percentile"] = round(
-            float(np.mean(np.array(list(r["per_source"].values())) < r["source"]) * 100), 1
+        vals = np.array(list(r["per_source"].values()))
+        r["source_percentile"] = (
+            None if r["source"] is None else round(float(np.mean(vals < r["source"]) * 100), 1)
         )
         del r["per_source"]
         res[p.stem] = r

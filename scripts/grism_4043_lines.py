@@ -11,13 +11,14 @@ from scipy.ndimage import median_filter
 
 LINES_UM = {"HeI_10833": 1.0833, "Pagamma": 1.0941, "Pabeta": 1.2822}  # rest, vacuum
 Z_RANGE = (2.68, 3.10)  # DJA eazy 95 % interval for f200w_2915
-CONT_PIX = 51
-BOX_PIX = 5
+CONT_PIX = 51  # ASSUMPTION, running-median continuum width (pixels)
+BOX_PIX = 5  # ASSUMPTION, boxcar width (pixels)
 SNR_MIN = 5.0  # ASSUMPTION
 DLAM_MAX_UM = 0.003  # ASSUMPTION, 3 nm
 GATE_RECOVERY = 0.90  # ASSUMPTION
-INJ_SNR = 7.0
-INJ_SIGMA_UM = 0.0015
+INJ_SNR = 7.0  # ASSUMPTION
+INJ_SIGMA_UM = 0.0015  # ASSUMPTION, injected Gaussian sigma
+SEED = 1
 
 
 def clean(wave, flux, dq, n_input):
@@ -48,24 +49,35 @@ def line_snr(
     return float(snr[i]), float(wave[i])
 
 
+def decide_one(per_grism: dict[str, dict[str, tuple[float, float]]], line: str) -> bool:
+    """S/N >= SNR_MIN in every grism and peak wavelengths within DLAM_MAX_UM."""
+    vals = [per_grism[g][line] for g in per_grism]
+    ok = all(np.isfinite(s) and s >= SNR_MIN for s, _ in vals)
+    return bool(ok and (max(w for _, w in vals) - min(w for _, w in vals) <= DLAM_MAX_UM))
+
+
 def decide(per_grism: dict[str, dict[str, tuple[float, float]]]) -> dict:
-    """Detection per line: S/N >= SNR_MIN in both grisms and peak wavelengths within DLAM_MAX_UM."""
-    grisms = list(per_grism)
-    detected = {}
-    for line in LINES_UM:
-        vals = [per_grism[g][line] for g in grisms]
-        ok = all(np.isfinite(s) and s >= SNR_MIN for s, _ in vals)
-        ok = ok and (max(w for _, w in vals) - min(w for _, w in vals) <= DLAM_MAX_UM)
-        detected[line] = bool(ok)
+    """Detection per line (``decide_one``); any detected line gives ``emission_detected``."""
+    detected = {line: decide_one(per_grism, line) for line in LINES_UM}
     return {
         "detected": detected,
         "verdict": "emission_detected" if any(detected.values()) else "no_line_detected",
     }
 
 
-def inject(wave, flux, center_um, snr):
-    """Add a Gaussian line whose 5-pixel boxcar S/N is ``snr`` (spectrum's robust sigma)."""
-    _, sigma = boxcar_snr(flux)
+def covers(wave: np.ndarray, center_um: float) -> bool:
+    return bool(wave.min() <= center_um <= wave.max())
+
+
+def inject(wave, flux, center_um, snr, sigma=None):
+    """Add a Gaussian line whose 5-pixel boxcar S/N is ``snr`` (spectrum's robust sigma).
+
+    A centre off the spectrum leaves the flux unchanged (the line is not observed there).
+    """
+    if not covers(wave, center_um):
+        return flux
+    if sigma is None:
+        _, sigma = boxcar_snr(flux)
     prof = np.exp(-0.5 * ((wave - center_um) / INJ_SIGMA_UM) ** 2)
     k = np.argmin(np.abs(wave - center_um))
     boxed = prof[max(k - BOX_PIX // 2, 0) : k + BOX_PIX // 2 + 1].sum()
@@ -73,18 +85,28 @@ def inject(wave, flux, center_um, snr):
 
 
 def run_injections(spectra: dict, n: int, snr: float, seed: int) -> dict:
+    """Recovery over all n draws (the frozen gate) and over draws on both spectra."""
     rng = np.random.default_rng(seed)
+    sig = {g: boxcar_snr(fl)[1] for g, (_, fl) in spectra.items()}
     out = {}
     for line, rest in LINES_UM.items():
-        hits = 0
+        hits = hits_cov = n_cov = 0
         for z in rng.uniform(*Z_RANGE, size=n):
             c = rest * (1 + z)
+            both = all(covers(wv, c) for wv, _ in spectra.values())
             per = {}
             for g, (wv, fl) in spectra.items():
-                f2 = inject(wv, fl, c, snr) if snr > 0 else fl
-                per[g] = {ln: line_snr(wv, f2, r) for ln, r in LINES_UM.items()}
-            hits += decide(per)["detected"][line]
-        out[line] = hits / n
+                f2 = inject(wv, fl, c, snr, sig[g])
+                per[g] = {line: line_snr(wv, f2, rest)}
+            hit = decide_one(per, line)
+            hits += hit
+            n_cov += both
+            hits_cov += hit and both
+        out[line] = {
+            "recovery": hits / n,
+            "n_both_covered": n_cov,
+            "recovery_both_covered": round(hits_cov / n_cov, 3) if n_cov else None,
+        }
     return out
 
 
@@ -115,9 +137,8 @@ def main() -> None:
                     round(float(spectra[g][0].max()), 4),
                 ],
             }
-    gate = run_injections(spectra, args.n_inj, INJ_SNR, seed=1)
-    false_pos = run_injections(spectra, args.n_inj, 0.0, seed=2)
-    gate_pass = all(v >= GATE_RECOVERY for v in gate.values())
+    gate = run_injections(spectra, args.n_inj, INJ_SNR, seed=SEED)
+    gate_pass = all(v["recovery"] >= GATE_RECOVERY for v in gate.values())
     per = {
         g: {ln: line_snr(wv, fl, r) for ln, r in LINES_UM.items()}
         for g, (wv, fl) in spectra.items()
@@ -134,9 +155,11 @@ def main() -> None:
             "z_range": Z_RANGE,
             "cont_pix": CONT_PIX,
             "box_pix": BOX_PIX,
+            "inj_sigma_um": INJ_SIGMA_UM,
+            "n_inj": args.n_inj,
+            "seed": SEED,
         },
         "injection_recovery": gate,
-        "zero_injection_rate": false_pos,
         "gate_pass": gate_pass,
         "observed_peak": {
             g: {ln: [round(s, 2), round(w, 4)] for ln, (s, w) in v.items()} for g, v in per.items()

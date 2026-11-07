@@ -21,12 +21,17 @@ Plan: `PLAN.md` (frozen in 54100b2 before any grism flux was read). Scripts: `sc
   address `f200w_2804`, `f200w_1816` or `f200w_384`.
 
 ## Line test for `f200w_2915` (frozen rule, `lines_2915.json`)
-- Validation gate **failed**: injected S/N-7 lines are recovered at 0.71 (He I), 0.655 (Paγ) and 0.0 (Paβ) < 0.90;
-  zero-amplitude injections give 0.0. Per the plan: **no verdict**; the quiescent-galaxy verdict stands as recorded.
-- Post hoc reasons: grismc covers only 3.78–4.76 µm, so Paβ (1.2822 µm × 3.68 at z 2.68, derived) can never be seen in both
-  dispersions, which the rule requires (a plan design error); the observed peak S/N values sit at the band edges
-  (grismr Paβ 13.38 at 5.0815 µm, where the flux diverges), and both spectra have one narrow negative spike
-  (contact plot looked at, not stored).
+- Validation gate **failed**: injected S/N-7 lines are recovered at 0.71 (He I), 0.655 (Paγ) and 0.0 (Paβ) < 0.90.
+  Per the plan: **no verdict**; the quiescent-galaxy verdict stands as recorded.
+- **Deviations:** (1) bug fix after `/code-review`: an injected centre off a spectrum made `inject` return NaN; it
+  now leaves that spectrum unchanged, and recovery is also reported over draws on both spectra (the gate numbers did
+  not change). (2) The plan's zero-amplitude "false-positive rate" was dropped: without injection every draw
+  repeats the same observed decision, so it is not a rate. (3) The rule functions were unit-tested before the run
+  but committed with the result (2ad1461), not with the plan, so git cannot show that they were frozen first.
+- Post hoc reasons (not tested as causes): Paβ lies on both spectra in only 9 / 200 draws (grismc ends at
+  4.7579 µm), and 0 / 9 are recovered; the window peaks sit at band edges (grismr Paβ S/N 13.38 at 5.0815 µm, where
+  the flux diverges), and the argmax over the window takes no edge mask, so an edge feature can outrank an
+  injected line; both spectra have one narrow negative spike (spectrum plot looked at, not stored).
 
 ## Flux check (post hoc, `fluxcheck.json`)
 - The c1d continuum (median, 4.2–4.6 µm) over the 4043 F444W `aper_total_flux`: median 23.1 (16–84 %: 7.5–86.4) for
@@ -37,4 +42,5 @@ Plan: `PLAN.md` (frozen in 54100b2 before any grism flux was read). Scripts: `sc
 ## Limitations
 - Coverage uses footprints and the pipeline's own source list; a decontaminated extraction (e.g. grizli from the
   rate files) could extract more sources, but none of the three uncovered records lies inside the footprint.
-- No line limit for `f200w_2915` (gate failed).
+- No line limit for `f200w_2915` (gate failed). Closing the grism route for the open records is **post hoc**: it
+  rests on the coverage (step 1) and the flux check, not on the plan's outcome rule.
