@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: MIRI band-restricted NIRCam confirmation in the pipeline (in progress)
+- Plan: position-only DJA join for MIRI plus `confirm_bands` [F770W, F1000W] in `quality.assess_sources`, then re-rank MIRI and compare the top 20 (TASKS Then 7).
+
 ## 2026-11-07: MIRI per-band confirmation gate: F770W and F1000W pass, F1500W and F1800W are at chance
 - **Plan first** (`results/miri_confirm/PLAN_bands.md`): the #752 gate per detection band, n ≥ 15.
 - **Result** (`results/miri_confirm/RESULT.md` § Per-band gate, `summary_bands.json`): re-run reproduces #752's
