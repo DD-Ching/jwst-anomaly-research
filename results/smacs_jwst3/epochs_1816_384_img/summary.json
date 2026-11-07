@@ -11,7 +11,10 @@
   "percentile": 95.0,
   "angle_deg": 45.0,
   "inject_mas": 20.0,
-  "inject_tol_mas": 5.0
+  "inject_tol_mas": 5.0,
+  "peak_radius_arcsec": 0.15,
+  "match_arcsec": 0.3,
+  "baseline_yr": 4.0
  },
  "validation": {
   "f150w": {
@@ -98,6 +101,7 @@
     110.6480644174952,
     -73.49647030993948
    ],
+   "epoch1_f150w_row_sep_arcsec": 0.004920925963269132,
    "decision": "no motion detected"
   },
   "f200w_384": {
@@ -146,6 +150,7 @@
     110.64577983215375,
     -73.47261183277226
    ],
+   "epoch1_f150w_row_sep_arcsec": 0.00446331586350926,
    "decision": "undetermined"
   }
  }

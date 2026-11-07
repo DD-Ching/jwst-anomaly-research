@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -31,7 +32,8 @@ from jwst_anomaly import catalog, cutouts
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from epoch_compare import mutual_matches, offsets_mas  # noqa: E402
-from smacs_epochs_1816_384 import E1, E2, TARGETS  # noqa: E402
+from smacs_epochs_1816_384 import BASELINE_YR, E1, E2, TARGETS  # noqa: E402
+from smacs_epochs_1816_384 import _angle_deg as angle_deg  # noqa: E402
 
 BANDS = ("f150w", "f444w")
 S3 = {"e1": "jw02736/L3/t/o001/", "e2": "jw06882/L3/t/o057/"}
@@ -50,7 +52,7 @@ PCTL = 95.0
 ANGLE_DEG = 45.0
 INJECT_MAS = 20.0
 INJECT_TOL_MAS = 5.0
-BASELINE_YR = 4.0
+ZOOM_ARCSEC = 0.6  # contact-sheet panel width (display only)
 
 
 def centroid_sky(data: np.ndarray, wcs: WCS) -> SkyCoord | None:
@@ -91,11 +93,6 @@ def shifted(data: np.ndarray, wcs: WCS, sky: SkyCoord, dmas: tuple[float, float]
     filled = np.where(np.isfinite(data), data, 0.0)
     out = fourier_shift(np.fft.fft2(filled), (float(y1 - y0), float(x1 - x0)))
     return np.real(np.fft.ifft2(out))
-
-
-def angle_deg(a: np.ndarray, b: np.ndarray) -> float:
-    cos = np.dot(a, b) / (np.hypot(*a) * np.hypot(*b))
-    return float(np.degrees(np.arccos(np.clip(cos, -1.0, 1.0))))
 
 
 def band_stats(target_off: np.ndarray | None, peer_off: np.ndarray) -> dict[str, Any] | None:
@@ -152,7 +149,8 @@ def select_peers(cat1: Table, target: SkyCoord, k_target: int, cat2: Table) -> l
     ok &= d2.arcsec > PEER_ISOLATION_ARCSEC
     ok[k_target] = False
     i1, _ = mutual_matches(c1, c2, MATCH_ARCSEC)
-    return [int(i) for i in np.flatnonzero(ok) if i in set(i1.tolist())]
+    cand = np.flatnonzero(ok)
+    return [int(i) for i in cand[np.isin(cand, i1)]]
 
 
 def _read(path: str) -> tuple[np.ndarray, WCS]:
@@ -161,7 +159,7 @@ def _read(path: str) -> tuple[np.ndarray, WCS]:
 
 
 def sheet(path: Path, files: dict, cents: dict, names: list[str]) -> None:
-    """Target cutouts per band and epoch, both epochs' centroids marked (zoomed 0.6 arcsec)."""
+    """Target cutouts per band and epoch, both epochs' centroids marked (ZOOM_ARCSEC wide)."""
     import matplotlib
 
     matplotlib.use("Agg")
@@ -179,6 +177,11 @@ def sheet(path: Path, files: dict, cents: dict, names: list[str]) -> None:
                 if sky is not None:
                     x, y = wcs.world_to_pixel(sky)
                     ax.plot(x, y, "+", color=mk, ms=10)
+            scale = np.mean([q.to_value(u.arcsec) for q in wcs.proj_plane_pixel_scales()])
+            half = ZOOM_ARCSEC / 2 / scale
+            cy, cx = (np.array(data.shape) - 1) / 2
+            ax.set_xlim(cx - half, cx + half)
+            ax.set_ylim(cy - half, cy + half)
             ax.set_title(f"{name} {b} {ep} (+ cyan e1, red e2)", fontsize=7)
             ax.set_xticks([])
             ax.set_yticks([])
@@ -198,10 +201,14 @@ def main(argv: list[str] | None = None) -> int:
     cat2 = catalog.load_pipeline_catalog(args.cat_dir / E2.format(b="f150w"))
     c1 = SkyCoord(cat1["ra"], cat1["dec"], unit="deg")
     # Positions to cut: each target (nearest epoch-1 F150W row) and its peers.
-    uids, ras, decs, groups = [], [], [], {}
+    uids, ras, decs, groups, target_sep = [], [], [], {}, {}
     for name in TARGETS:
         t = SkyCoord(prev[name]["ra"], prev[name]["dec"], unit="deg")
-        k = int(np.argmin(t.separation(c1).arcsec))
+        sep = t.separation(c1).arcsec
+        k = int(np.argmin(sep))
+        if sep[k] > MATCH_ARCSEC:
+            raise SystemExit(f"{name}: no epoch-1 F150W row within {MATCH_ARCSEC} arcsec")
+        target_sep[name] = float(sep[k])
         peers = select_peers(cat1, c1[k], k, cat2)
         groups[name] = [f"{name}"] + [f"{name}_p{i}" for i in peers]
         for uid, i in zip(groups[name], [k, *peers], strict=True):
@@ -212,26 +219,29 @@ def main(argv: list[str] | None = None) -> int:
     pos = dict(zip(uids, SkyCoord(ras, decs, unit="deg"), strict=True))
     cents: dict[tuple[str, str], dict[str, SkyCoord | None]] = {}
     inject: dict[str, list[list[float]]] = {b: [] for b in BANDS}
-    allfiles: dict[tuple[str, str], dict[str, str]] = {}
+    peer_uids = {m for members in groups.values() for m in members[1:]}
+
+    def fetch(key: tuple[str, str]) -> dict[str, str]:
+        b, ep = key
+        i2d = NAMES[ep].format(b=b).replace("_cat.ecsv", "_i2d.fits")
+        tab = cutouts.make_cutouts(
+            f"s3://stpubdata/jwst/public/{S3[ep]}{i2d}",
+            targets,
+            size_arcsec=SIZE_ARCSEC,
+            out_dir=args.work,
+            storage_options={"anon": True},
+        )
+        return dict(zip(tab["source_uid"], tab["path"], strict=True))
+
+    keys = [(b, ep) for b in BANDS for ep in ("e1", "e2")]
+    with ThreadPoolExecutor(max_workers=len(keys)) as pool:  # four independent S3 reads
+        allfiles = dict(zip(keys, pool.map(fetch, keys), strict=True))
+    for key, fl in allfiles.items():
+        cents[key] = {uid: (centroid_sky(*_read(p)) if p else None) for uid, p in fl.items()}
     for b in BANDS:
-        files = {}
-        for ep in ("e1", "e2"):
-            i2d = NAMES[ep].format(b=b).replace("_cat.ecsv", "_i2d.fits")
-            tab = cutouts.make_cutouts(
-                f"s3://stpubdata/jwst/public/{S3[ep]}{i2d}",
-                targets,
-                size_arcsec=SIZE_ARCSEC,
-                out_dir=args.work,
-                storage_options={"anon": True},
-            )
-            files[ep] = dict(zip(tab["source_uid"], tab["path"], strict=True))
-            allfiles[(b, ep)] = files[ep]
-            cents[(b, ep)] = {
-                uid: (centroid_sky(*_read(p)) if p else None) for uid, p in files[ep].items()
-            }
         # Synthetic validation on peers: shift the epoch-2 cutout, re-measure.
-        for uid, p in files["e2"].items():
-            if "_p" not in uid or not p or cents[(b, "e2")][uid] is None:
+        for uid, p in allfiles[(b, "e2")].items():
+            if uid not in peer_uids or not p or cents[(b, "e2")][uid] is None:
                 continue
             data, wcs = _read(p)
             base = cents[(b, "e2")][uid]
@@ -254,6 +264,9 @@ def main(argv: list[str] | None = None) -> int:
             "angle_deg": ANGLE_DEG,
             "inject_mas": INJECT_MAS,
             "inject_tol_mas": INJECT_TOL_MAS,
+            "peak_radius_arcsec": PEAK_RADIUS_ARCSEC,
+            "match_arcsec": MATCH_ARCSEC,
+            "baseline_yr": BASELINE_YR,
         },
         "validation": {},
         "targets": {},
@@ -288,8 +301,9 @@ def main(argv: list[str] | None = None) -> int:
             st = band_stats(t_off, np.array(peers).reshape(-1, 2))
             per_band[b] = st
             rec["bands"][b] = st or {
-                "not_measured": f"target centroid {'ok' if t_off is not None else 'failed'}, "
-                f"{len(peers)} peers (< {MIN_PEERS} needed or target failed)"
+                "not_measured": f"target centroid {'ok' if t_off is not None else 'failed'}; "
+                f"{len(peers)} peers with centroids ({MIN_PEERS} needed)",
+                "label": "derived",
             }
             if st is not None:
                 st["peer_p95_motion_mas_per_yr"] = st["peer_residual_p95_mas"] / BASELINE_YR
@@ -301,6 +315,7 @@ def main(argv: list[str] | None = None) -> int:
             }
         rec["n_peers_selected"] = len(members) - 1
         rec["epoch1_f150w_position"] = [pos[members[0]].ra.deg, pos[members[0]].dec.deg]
+        rec["epoch1_f150w_row_sep_arcsec"] = target_sep[name]
         rec["decision"] = decide(per_band) if valid else "not evaluated: validation failed"
         out["targets"][name] = rec
     args.out.mkdir(parents=True, exist_ok=True)
