@@ -1,0 +1,50 @@
+{
+ "new_run": "20261107T051243Z-b065bb6d",
+ "base_run": "20261107T051306Z-bfc1921b",
+ "top_k": 20,
+ "new_gate_passed": 168,
+ "base_gate_passed": 168,
+ "jaccard": 0.739,
+ "new_top": [
+  {
+   "rank": 2,
+   "source_uid": "jw02736-o002_t001_miri_f1500w_173",
+   "n_bands": 2,
+   "top": "blue_dropout=+6.0; color_f1500w_f1800w=+4.4; red_dropout=-1.3"
+  },
+  {
+   "rank": 8,
+   "source_uid": "jw02736-o002_t001_miri_f770w_220",
+   "n_bands": 4,
+   "top": "color_f1000w_f1500w=+2.7; ref_log_ci_50_30=+2.7; ref_log_ci_70_50=+2.6"
+  },
+  {
+   "rank": 10,
+   "source_uid": "jw02736-o002_t001_miri_f1500w_207",
+   "n_bands": 2,
+   "top": "blue_dropout=+6.0; red_dropout=-1.3; color_f1500w_f1800w=-0.1"
+  }
+ ],
+ "dropped_top": [
+  "jw02736-o002_t001_miri_f1500w_117",
+  "jw02736-o002_t001_miri_f1500w_119",
+  "jw02736-o002_t001_miri_f770w_156"
+ ],
+ "new_top_single_band": 0,
+ "post_hoc_new_f1500w_rows": {
+  "jw02736-o002_t001_miri_f1500w_173": {
+   "f770w_detected": false,
+   "f1000w_detected": false,
+   "f1500w_isophotal_area": 691.0,
+   "f1800w_isophotal_area": 846.0,
+   "f1800w_sep_arcsec": 0.3641680943395727
+  },
+  "jw02736-o002_t001_miri_f1500w_207": {
+   "f770w_detected": false,
+   "f1000w_detected": false,
+   "f1500w_isophotal_area": 1474.0,
+   "f1800w_isophotal_area": 802.0,
+   "f1800w_sep_arcsec": 0.2971456859987568
+  }
+ }
+}

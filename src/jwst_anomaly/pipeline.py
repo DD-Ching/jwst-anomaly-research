@@ -19,7 +19,7 @@ all sources are ranked, marked "ungated"). Image products (``_i2d.fits``,
 Config keys read: ``name``, ``archive.{collection, calib_level, data_rights,
 product_subgroups}``, ``samples[].{id, role, description, proposal_id, instrument_name,
 ref_band, obs_ids, query}`` (``query``: extra MAST criteria, optional),
-``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.merge_radius_arcsec``,
+``cloud.{s3_bucket, l3_key_pattern}``, ``stages.catalog.{merge_radius_arcsec, merge_size_factor}``,
 ``stages.quality.{enabled, grid_arcsec, step, min_rel_weight, min_edge_arcsec, max_artifact_ci,
 min_ranked, min_detection_snr, require_multiband}`` (gate skipped when the block is absent),
 ``stages.classify.{enabled, services, radius_arcsec, gaia_radius_arcsec, star_top_k, min_stars,
@@ -746,6 +746,8 @@ class _Runner:
         merge_kwargs = {}
         if "merge_radius_arcsec" in cat_cfg:
             merge_kwargs["radius_arcsec"] = float(cat_cfg["merge_radius_arcsec"])
+        if cat_cfg.get("merge_size_factor"):
+            merge_kwargs["size_factor"] = float(cat_cfg["merge_size_factor"])
         sources = self.stage(
             sid,
             "catalog.merge_bands",

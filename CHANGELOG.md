@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: size-aware MIRI band association: passes the chance rule at α 0.25 but does not explain the vetted singles
+- **Plan first** (`results/miri_confirm/PLAN_sizemerge.md`); TASKS Then 7. D-014 addendum 5.
+- **Code:** `catalog.merge_bands(size_factor=α)`, pipeline key `stages.catalog.merge_size_factor` (default off);
+  `scripts/miri_sizemerge.py` → `summary_sizemerge.json`.
+- **Result** (`results/miri_confirm/RESULT.md` § Size-aware band association): α = 0.25 adopted (31 added pairs,
+  chance share 0.040; 0.115 at α = 0.5). Only 1 / 4 vetted singles merge (plan: 3 / 4), so the radius is not the
+  explanation. Re-rank (run `20261107T051243Z-b065bb6d` vs `20261107T051306Z-bfc1921b`): gate 168 both, top-20
+  Jaccard 0.739, two new F1500W `blue_dropout` rows (split or diffuse segments by eye, unvetted). Contact sheet
+  viewed. Not the MIRI default.
+- **Failed approach:** a common shift for all non-reference bands left them aligned with each other (93 "chance"
+  pairs at 0.1″, not stored); fixed with per-band rotated shifts after that first, invalid run (whose table showed no α passing); the frozen rule was applied to the fixed test (deviation, in RESULT).
+- **Services:** CDS XMatch HTTP 503 (not stored) / SIMBAD TAP unreachable again 05:08Z; #751 still waits.
+- **Handoff:** next is a segment-overlap MIRI band association (shared footprint pixels across bands; plan first).
+
 ## 2026-11-07: vetting of the five new MIRI top-20 singles: all ordinary; "single band" is a merge-radius effect
 - **Plan first** (`results/miri_confirm/PLAN_vet.md`); TASKS Then 7. Record:
   `docs/candidates/smacs_miri_f770w_top20_singles.md`, `results/miri_confirm/vet_xband.json`.
