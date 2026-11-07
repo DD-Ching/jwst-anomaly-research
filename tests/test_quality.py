@@ -262,3 +262,24 @@ def test_low_snr_uses_the_best_detected_band_so_dropouts_survive(image):
     src["f444w_aper50_abmag_err"] = [0.003, 0.6]  # S/N ~360 vs ~1.8
     q = quality.assess_sources(src, None, min_detection_snr=5)
     assert list(q["quality_reason"]) == ["", "low_snr"]
+
+
+def test_confirmation_restricted_to_confirm_bands(image):
+    """D-014 addendum 2: a confirmation counts only for detections in ``confirm_bands``."""
+    _, w = image
+    names = ("f770_conf", "f1800_conf", "f1800_unconf")
+    src = _sources(w, {n: SOURCES["interior"] for n in names}, ci={})
+    src.remove_columns(["f200w_detected", "f200w_CI_50_30", "f200w_aper50_abmag_err"])
+    src["ref_band"] = ["F770W"] * 3
+    src["f770w_detected"] = [True, False, False]
+    src["f1000w_detected"] = [False] * 3
+    src["f1800w_detected"] = [False, True, True]
+    src["nircam_match_sep_arcsec"] = [0.1, 0.1, np.nan]
+    kw = dict(require_multiband=True, confirm_column="nircam_match_sep_arcsec")
+    q = quality.assess_sources(src, None, ref_band="F770W", confirm_bands=["F770W", "f1000w"], **kw)
+    assert list(q["quality_reason"]) == ["", "single_band", "single_band"]
+    assert q.meta["thresholds"]["confirm_bands"] == ["F770W", "f1000w"]
+    q_all = quality.assess_sources(src, None, ref_band="F770W", **kw)
+    assert list(q_all["quality_reason"]) == ["", "", "single_band"]
+    with pytest.raises(ValueError, match="confirm_bands"):
+        quality.assess_sources(src, None, ref_band="F770W", confirm_bands=["f2100w"], **kw)

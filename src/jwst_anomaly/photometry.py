@@ -236,3 +236,99 @@ def joined_columns(joined: Table, label: str) -> Table:
         "matched_photometry": joined.meta.get("matched_photometry", {}),
     }
     return out
+
+
+DEFAULT_CONFIRM_MIN_SNR = (
+    5.0  # ASSUMPTION (D-014 addendum 2): detection floor in the external bands
+)
+DEFAULT_CONFIRM_RADIUS_ARCSEC = 0.3  # ASSUMPTION (D-014 addendum): about one MIRI F770W FWHM
+
+
+def load_detection_positions(
+    path: str | Path,
+    bands: list[str],
+    *,
+    aperture: int = 1,
+    min_snr: float = DEFAULT_CONFIRM_MIN_SNR,
+) -> Table:
+    """Positions of DJA rows with aperture S/N >= ``min_snr`` in at least one of ``bands``.
+
+    For a position-only confirmation join (D-014 addendum 2: MIRI single-band detections confirmed
+    by NIRCam). Returns ``id, ra, dec``; provenance ``derived`` (a selection of observed rows).
+    Raises ``ValueError`` if a band is missing.
+    """
+    t = Table.read(path)
+    missing = [b for b in bands if f"{b}_flux_aper_{aperture}" not in t.colnames]
+    if missing:
+        raise ValueError(f"{path}: no aperture-{aperture} photometry for bands {missing}")
+    ok = np.zeros(len(t), dtype=bool)
+    for b in bands:
+        f = np.asarray(np.ma.filled(t[f"{b}_flux_aper_{aperture}"], np.nan), float)
+        e = np.asarray(np.ma.filled(t[f"{b}_fluxerr_aper_{aperture}"], np.nan), float)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            ok |= np.isfinite(f) & np.isfinite(e) & (e > 0) & (f / e >= min_snr)
+    out = Table(
+        {
+            "id": np.asarray(t["id"])[ok],
+            "ra": np.asarray(t["ra"], float)[ok],
+            "dec": np.asarray(t["dec"], float)[ok],
+        }
+    )
+    out.meta.update(
+        provenance=schema.Provenance.DERIVED.value,
+        source=(
+            f"DJA catalog {Path(path).name}: {int(ok.sum())} of {len(t)} rows with aperture-"
+            f"{aperture} S/N >= {min_snr} in one of {bands}"
+        ),
+    )
+    return out
+
+
+def join_position_confirmation(
+    sources: Table,
+    positions: Table,
+    label: str,
+    *,
+    radius_arcsec: float = DEFAULT_CONFIRM_RADIUS_ARCSEC,
+) -> Table:
+    """Copy of ``sources`` with ``<label>_match_sep_arcsec``: nearest ``positions`` row within
+    ``radius_arcsec`` (NaN otherwise). No photometry is copied, so colours are unchanged.
+
+    Nearest neighbour, not one-to-one (as the frozen rule of ``results/miri_confirm/PLAN.md``):
+    the column only says whether an independent detection exists at the position. The column name
+    is :func:`match_sep_column`, so ``quality.assess_sources(confirm_column=...)`` reads it.
+    """
+    schema.validate(sources, schema.SOURCE_COLUMNS, name="sources")
+    if not (label.isalnum() and label[0].isalpha()) or label.lower() in RESERVED_LABELS:
+        raise ValueError(
+            f"label {label!r} must be alphanumeric and not one of {sorted(RESERVED_LABELS)}"
+        )
+    col = match_sep_column(label)
+    if col in sources.colnames:
+        raise ValueError(f"label {label!r} would overwrite existing column {col!r}")
+    out = sources.copy(copy_data=True)
+    sep_col = np.full(len(out), np.nan)
+    if len(out) and len(positions):
+        src = SkyCoord(np.asarray(out["ra"], float), np.asarray(out["dec"], float), unit="deg")
+        ref = SkyCoord(
+            np.asarray(positions["ra"], float), np.asarray(positions["dec"], float), unit="deg"
+        )
+        _, sep, _ = src.match_to_catalog_sky(ref)
+        sep = sep.to_value(u.arcsec)
+        sep_col = np.where(sep <= radius_arcsec, sep, np.nan)
+    out[col] = sep_col
+    n_hit = int(np.isfinite(sep_col).sum())
+    out.meta = dict(sources.meta)
+    out.meta["source"] = (
+        f"{sources.meta.get('source', '')} + position confirmation "
+        f"({positions.meta.get('source')}, "
+        f'{n_hit} of {len(out)} within {radius_arcsec}")'
+    )
+    out.meta["matched_photometry"] = {
+        "label": label,
+        "kind": "position_only",
+        "n_matched": n_hit,
+        "radius_arcsec": radius_arcsec,
+        "catalog": positions.meta.get("source"),
+    }
+    return schema.validate(out, schema.SOURCE_COLUMNS, name="sources+confirmation")

@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: MIRI band-restricted NIRCam confirmation wired into the pipeline; gate 113 → 168
+- **Plan first** (`results/miri_confirm/PLAN_rerank.md`); TASKS Then 7.
+- **Code:** sample block `position_confirmation` (`photometry.load_detection_positions`,
+  `join_position_confirmation`), `quality.assess_sources(confirm_bands=...)`, pipeline stage
+  `photometry.join_position_confirmation`; config `configs/smacs_jwst3_miri_confirm.yaml`. D-014 addendum 3.
+- **Result** (`results/miri_confirm/RESULT.md` § Re-rank, `summary_rerank.json`, `scripts/miri_rerank_compare.py`;
+  runs `20261107T021815Z-a98aae0e` vs `20261107T022631Z-036f249e`): gate 168 (frozen expectation met; the 55
+  admitted equal #752's F770W/F1000W matches). Top-20 Jaccard 0.60; all 5 new entries are F770W singles; contact
+  sheet viewed: 3 sit on extended light of bright neighbours, 1 elongated faint feature by a compact source, 1
+  faint compact source. Below the plan's "more than half" stratum trigger.
+- **Failed:** first launch hit a MAST proxy reset on `list_products` (retry worked); CDS SIMBAD TAP and XMatch still
+  unreachable (classify fell back), so #751 stays waiting.
+- **Handoff:** next is a deblend-fragment check for the high-CI new singles (TASKS Then 7), then `/vet-candidate`.
+
 ## 2026-11-07: MIRI per-band confirmation gate: F770W and F1000W pass, F1500W and F1800W are at chance
 - **Plan first** (`results/miri_confirm/PLAN_bands.md`): the #752 gate per detection band, n ≥ 15.
 - **Result** (`results/miri_confirm/RESULT.md` § Per-band gate, `summary_bands.json`): re-run reproduces #752's

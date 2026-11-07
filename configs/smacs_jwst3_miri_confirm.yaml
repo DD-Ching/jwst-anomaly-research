@@ -1,0 +1,108 @@
+# SMACS 0723 MIRI re-rank with band-restricted NIRCam confirmation (plan:
+# results/miri_confirm/PLAN_rerank.md, D-014 addendum 2). Stages as smacs_jwst3_simbad.yaml;
+# the sample is the MIRI sample of reference_sample.yaml plus a position-only DJA join.
+name: smacs_jwst3_miri_confirm
+archive:
+  collection: JWST
+  calib_level: 3
+  data_rights: PUBLIC
+  product_subgroups:
+  - CAT
+  - I2D
+samples:
+- id: smacs0723_miri
+  role: science-aux
+  description: Same field, MIRI imaging (program 2736)
+  proposal_id: '2736'
+  instrument_name: MIRI/IMAGE
+  ref_band: F770W
+  obs_ids:
+  - jw02736-o002_t001_miri_f770w
+  - jw02736-o002_t001_miri_f1000w
+  - jw02736-o002_t001_miri_f1500w
+  - jw02736-o002_t001_miri_f1800w
+  # D-014 addendum 2: single-band detections in F770W/F1000W count as confirmed when a DJA
+  # v7.4 source with S/N >= 5 in a NIRCam band (0.5" aperture) lies within 0.3" (ASSUMPTIONs,
+  # results/miri_confirm/PLAN_bands.md). Positions only: no MIRI colour is replaced.
+  position_confirmation:
+    url: https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/smacs0723-grizli-v7.4-fix_phot.fits
+    sha256: 361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166
+    aperture: 1
+    label: nircam
+    radius_arcsec: 0.3
+    min_snr: 5
+    bands: [f090w, f150w, f200w, f277w, f356w, f444w]
+    confirm_bands: [f770w, f1000w]
+cloud:
+  s3_bucket: stpubdata
+  l3_key_pattern: jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}
+stages:
+  catalog:
+    merge_radius_arcsec: 0.1
+  quality:
+    grid_arcsec: 1.0
+    min_rel_weight: 0.5
+    min_edge_arcsec: 1.0
+    max_artifact_ci: 1.45
+    min_ranked: 20
+    min_detection_snr: 5
+    require_multiband: true
+  classify:
+    services:
+    - simbad
+    - gaia
+    radius_arcsec: 0.5
+    gaia_radius_arcsec: 0.3
+    star_top_k: 10
+    min_stars: 5
+    extended_veto: true
+    stellar_locus:
+      calib_mag_range:
+      - 20.0
+      - 22.5
+      r50_tolerance: 0.2
+      r50_floor: 0.5
+      mag_max: 24.0
+      colours:
+      - - f150w
+        - f444w
+      - - f200w
+        - f356w
+      colour_pad: 0.3
+      min_ref_stars: 10
+  features:
+    daofind_max_ci: 1.8
+  rank:
+    methods:
+    - robust_z
+    - isolation_forest
+    - lof
+    random_state: 0
+  cutouts:
+    top_k: 20
+    size_arcsec: 3.0
+    bands:
+    - F200W
+    screen_low_weight: true
+    spike:
+      radii_arcsec:
+      - 0.2
+      - 0.8
+      search_arcsec: 0.3
+      threshold: 3.0
+      screen: true
+      host_annulus_arcsec:
+      - 0.3
+      - 0.6
+      host_ratio_max: 0.004
+      host_exempt_colour:
+      - f150w
+      - f444w
+      - 1.0
+  crossmatch:
+    top_k: 20
+    radius_arcsec: 1.0
+    services:
+    - simbad
+    - ned
+    - gaia

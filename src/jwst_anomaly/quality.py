@@ -50,6 +50,7 @@ def assess_sources(
     min_detection_snr: float | None = None,
     require_multiband: bool = False,
     confirm_column: str | None = None,
+    confirm_bands: list[str] | None = None,
 ) -> Table:
     """Flag each merged source (``schema.SOURCE_COLUMNS``); return ``schema.QUALITY_COLUMNS``.
 
@@ -66,7 +67,9 @@ def assess_sources(
     not the reference band, counts, so red dropouts undetected in the reference band survive. With
     ``require_multiband``, ``single_band`` flags sources detected in one band only unless an
     independent detection confirms them: a finite value in ``confirm_column`` (e.g. the matched-
-    photometry separation of a catalog built from a stacked detection image).
+    photometry separation of a catalog built from a stacked detection image). With
+    ``confirm_bands`` (D-014 addendum 2), that confirmation counts only for sources detected in
+    one of those bands, e.g. MIRI F770W/F1000W, whose NIRCam matches beat the chance rate.
     """
     schema.validate(sources, schema.SOURCE_COLUMNS, name="sources")
     n = len(sources)
@@ -129,6 +132,16 @@ def assess_sources(
             confirmed = np.isfinite(column_as_float(sources, confirm_column))
             info = sources.meta.get("matched_photometry") or {}
             confirmation = f"{confirm_column} from {info.get('catalog', 'an external catalog')}"
+            if confirm_bands is not None:
+                wanted = [b.lower() for b in confirm_bands]
+                unknown = sorted(set(wanted) - set(discover_bands(sources)))
+                if unknown:
+                    raise ValueError(f"confirm_bands {unknown} not among the sources' bands")
+                in_band = np.zeros(n, dtype=bool)
+                for b in wanted:
+                    in_band |= _detected(sources, b)
+                confirmed &= in_band
+                confirmation += f" (only detections in {wanted})"
         single = (n_bands <= 1) & ~confirmed
 
     reasons = [
@@ -165,6 +178,7 @@ def assess_sources(
             "snr_test": snr_test,
             "require_multiband": require_multiband,
             "confirm_column": confirm_column,
+            "confirm_bands": list(confirm_bands) if confirm_bands is not None else None,
             "provenance": schema.Provenance.ASSUMPTION.value,
         },
         ref_band=band,
