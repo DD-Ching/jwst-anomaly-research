@@ -697,7 +697,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 ## Next (M2)
 - Matched-aperture colours for other samples (D-013 is done for SMACS NIRCam):
   - CEERS: done (D-022); validated against CEERS DR1.0 2026-11-06 (D-022 addendum).
-  - MIRI: evaluate fixed-aperture colours.
+  - ~~MIRI: evaluate fixed-aperture colours~~ done 2026-11-07 for SMACS, not adopted
+    (`results/miri_dja_colours/RESULT.md`, D-013 addendum: no F770W−F1000W size bias, ρ +0.067; post hoc
+    F1000W−F1500W ρ −0.34 is not removed by a fixed aperture).
 - ~~DJA photo-z as a ranking stratifier~~ done 2026-11-07 for SMACS (`results/smacs_jwst3/zphot_stratify/RESULT.md`,
   D-022 addendum 4: members 2 / 20 of the top 20, not adopted). Open (post hoc): eazy `z_phot = -1` rows are 4 / 20 of
   the top 20 vs 156 / 2938 ranked; ~~test whether the no-fit flag marks uncatalogued stars or compact non-galaxies~~

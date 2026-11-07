@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS MIRI colours from DJA fixed apertures: not adopted (TASKS Next M2, D-013 addendum)
+- **Plan first** (`results/miri_dja_colours/PLAN.md`, DJA v7.4 0.7″ aperture); runs `20261107T151133Z-675b4a49`
+  (`configs/smacs_jwst3_miri_dja.yaml`) vs `20261107T151133Z-0490f84e`; rules V / C / B as tested functions in
+  `scripts/miri_dja_colours.py`.
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): V passes (MAD 0.058), C passes (134 / 160), B
+  = no bias (F770W−F1000W ρ `aper50` +0.067, `dja07` +0.053, 124 rows); pipeline MIRI colours kept. Top-20 Jaccard
+  0.60 vs baseline. Post hoc: F1000W−F1500W ρ −0.335 / −0.367 is not removed by a fixed aperture (cause untested).
+- **Services:** CDS (SIMBAD, XMatch) still unreachable (15:12Z, proxy tunnel closed); #751 still waits.
+- **Handoff:** next: image embeddings (TASKS Next M2) or the NIRCam F444W grism item; `f200w_1816` / `f200w_384`
+  still need a vetting route.
+
 ## 2026-11-07: SMACS point-source screen v2 (locus 20–24 mag): not validated (TASKS Next M2, D-022 addendum 7)
 - **Plan first** (`results/smacs_jwst3/point_source_v2/PLAN.md`, stating that the window was chosen after v1); run
   `20261107T141219Z-86cb61bb` (ranks reproduce #766); `scripts/smacs_point_source.py --plan v2` (`decide_v2`,

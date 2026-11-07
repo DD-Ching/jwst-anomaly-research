@@ -1,0 +1,131 @@
+{
+  "run_id": "20261107T151133Z-675b4a49",
+  "provenance": "derived (observed DJA v7.4 and MAST L3 jwst 3.0.0 MIRI catalogues)",
+  "thresholds_assumption": {
+    "V_max_mad": 0.15,
+    "C_min_coverage": 0.8,
+    "B_min_drop": 0.1,
+    "B_min_rho": 0.1,
+    "min_snr_f770w_aper50": 10.0
+  },
+  "n_sources": 908,
+  "n_ranked": 160,
+  "n_ranked_with_dja07_f770w_f1000w": 134,
+  "coverage": 0.8375,
+  "colours": {
+    "F770W-F1000W": {
+      "n_common": 124,
+      "aper50": {
+        "rho": 0.06701331120973177,
+        "p": 0.4596016750197447,
+        "median": -0.2855103775641634
+      },
+      "isophotal": {
+        "rho": 0.15164000316859036,
+        "p": 0.09271882252845305,
+        "median": -0.5353190036905247
+      },
+      "dja07": {
+        "rho": 0.05348537867582414,
+        "p": 0.5552050215441122,
+        "median": -0.34117308908517785
+      },
+      "compact_quartile_area_max_px": 42.0,
+      "compact_n": 32,
+      "compact_diff_dja_minus_aper50": {
+        "median": -0.0314833484792878,
+        "mad": 0.05820976603730443
+      }
+    },
+    "F1000W-F1500W": {
+      "n_common": 47,
+      "aper50": {
+        "rho": -0.3353380030799721,
+        "p": 0.021210289605935954,
+        "median": 0.46436426612701354
+      },
+      "isophotal": {
+        "rho": -0.2543803889547848,
+        "p": 0.08443823900190928,
+        "median": 0.2255017042598979
+      },
+      "dja07": {
+        "rho": -0.3669114725887951,
+        "p": 0.011185626103321295,
+        "median": 0.18664771602257701
+      },
+      "compact_quartile_area_max_px": 83.5,
+      "compact_n": 12,
+      "compact_diff_dja_minus_aper50": {
+        "median": -0.2919621566564885,
+        "mad": 0.04053031406960628
+      }
+    }
+  },
+  "rules": {
+    "V": true,
+    "C": true,
+    "B": "no_bias"
+  },
+  "verdict": "not_adopted",
+  "top20": [
+    "jw02736-o002_t001_miri_f770w_57",
+    "jw02736-o002_t001_miri_f770w_221",
+    "jw02736-o002_t001_miri_f770w_239",
+    "jw02736-o002_t001_miri_f770w_193",
+    "jw02736-o002_t001_miri_f770w_240",
+    "jw02736-o002_t001_miri_f770w_192",
+    "jw02736-o002_t001_miri_f770w_110",
+    "jw02736-o002_t001_miri_f770w_29",
+    "jw02736-o002_t001_miri_f770w_35",
+    "jw02736-o002_t001_miri_f770w_109",
+    "jw02736-o002_t001_miri_f1500w_117",
+    "jw02736-o002_t001_miri_f1500w_119",
+    "jw02736-o002_t001_miri_f770w_114",
+    "jw02736-o002_t001_miri_f770w_118",
+    "jw02736-o002_t001_miri_f770w_177",
+    "jw02736-o002_t001_miri_f770w_59",
+    "jw02736-o002_t001_miri_f770w_231",
+    "jw02736-o002_t001_miri_f770w_161",
+    "jw02736-o002_t001_miri_f770w_176",
+    "jw02736-o002_t001_miri_f770w_222"
+  ],
+  "baseline_run_id": "20261107T151133Z-0490f84e",
+  "baseline_top20": [
+    "jw02736-o002_t001_miri_f770w_78",
+    "jw02736-o002_t001_miri_f770w_221",
+    "jw02736-o002_t001_miri_f770w_29",
+    "jw02736-o002_t001_miri_f770w_239",
+    "jw02736-o002_t001_miri_f770w_57",
+    "jw02736-o002_t001_miri_f770w_114",
+    "jw02736-o002_t001_miri_f1500w_119",
+    "jw02736-o002_t001_miri_f770w_59",
+    "jw02736-o002_t001_miri_f770w_192",
+    "jw02736-o002_t001_miri_f770w_222",
+    "jw02736-o002_t001_miri_f770w_136",
+    "jw02736-o002_t001_miri_f770w_246",
+    "jw02736-o002_t001_miri_f770w_176",
+    "jw02736-o002_t001_miri_f770w_35",
+    "jw02736-o002_t001_miri_f1500w_117",
+    "jw02736-o002_t001_miri_f770w_118",
+    "jw02736-o002_t001_miri_f770w_110",
+    "jw02736-o002_t001_miri_f770w_240",
+    "jw02736-o002_t001_miri_f770w_156",
+    "jw02736-o002_t001_miri_f770w_38"
+  ],
+  "top20_jaccard": 0.6,
+  "top20_new": [
+    "jw02736-o002_t001_miri_f770w_193",
+    "jw02736-o002_t001_miri_f770w_109",
+    "jw02736-o002_t001_miri_f770w_177",
+    "jw02736-o002_t001_miri_f770w_231",
+    "jw02736-o002_t001_miri_f770w_161"
+  ],
+  "top20_dropped": [
+    "jw02736-o002_t001_miri_f770w_78",
+    "jw02736-o002_t001_miri_f770w_136",
+    "jw02736-o002_t001_miri_f770w_246",
+    "jw02736-o002_t001_miri_f770w_156",
+    "jw02736-o002_t001_miri_f770w_38"
+  ]
+}
