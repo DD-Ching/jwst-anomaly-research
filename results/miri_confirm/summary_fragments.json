@@ -1,0 +1,144 @@
+{
+ "products": "jw02736-o002_t001_miri_f770w",
+ "cal_ver": "3.0.0",
+ "n_catalog": 264,
+ "n_tested": 240,
+ "rule": {
+  "flux_factor": 5.0,
+  "connectivity": 4,
+  "min_snr": 5.0,
+  "p_max": 0.01,
+  "min_group": 10
+ },
+ "mechanism": {
+  "overall": {
+   "n_adj": 14,
+   "n_other": 226,
+   "tested": true,
+   "median_adj": 2.1269394391019314,
+   "median_other": 1.8909706529831487,
+   "p": 1.1438334334682623e-05,
+   "pass": true
+  },
+  "tertiles": [
+   {
+    "n_adj": 4,
+    "n_other": 76,
+    "tested": false
+   },
+   {
+    "n_adj": 5,
+    "n_other": 75,
+    "tested": false
+   },
+   {
+    "n_adj": 5,
+    "n_other": 75,
+    "tested": false
+   }
+  ],
+  "supported": false
+ },
+ "rates": {
+  "baseline_gate_matched_f770w": {
+   "n": 97,
+   "bright_adjacent": 0,
+   "fraction": 0.0
+  },
+  "admitted_f770w": {
+   "n": 45,
+   "bright_adjacent": 1,
+   "fraction": 0.022
+  },
+  "new_top20": {
+   "n": 5,
+   "bright_adjacent": 1,
+   "fraction": 0.2
+  }
+ },
+ "flag_rule_trigger": false,
+ "new_top20": [
+  {
+   "label": 221,
+   "bright_adjacent": false,
+   "ci_50_30": 2.531,
+   "isophotal_flux": 5.974065459213307e-05,
+   "nn_label": 53,
+   "nn_flux_ratio": 0.01,
+   "nn_dist_pix": 20.02,
+   "verdict": "to /vet-candidate",
+   "r_eq_pix": 16.9,
+   "reaches_bkg_annulus": true,
+   "ci_at_ceiling": true
+  },
+  {
+   "label": 239,
+   "bright_adjacent": false,
+   "ci_50_30": 2.527,
+   "isophotal_flux": 5.4890928481654555e-05,
+   "nn_label": 240,
+   "nn_flux_ratio": 0.18,
+   "nn_dist_pix": 14.96,
+   "verdict": "to /vet-candidate",
+   "r_eq_pix": 18.15,
+   "reaches_bkg_annulus": true,
+   "ci_at_ceiling": true
+  },
+  {
+   "label": 176,
+   "bright_adjacent": false,
+   "ci_50_30": 1.789,
+   "isophotal_flux": 3.9026235754135996e-07,
+   "nn_label": 169,
+   "nn_flux_ratio": 3.91,
+   "nn_dist_pix": 46.91,
+   "verdict": "to /vet-candidate",
+   "r_eq_pix": 1.78,
+   "reaches_bkg_annulus": false,
+   "ci_at_ceiling": false
+  },
+  {
+   "label": 118,
+   "bright_adjacent": false,
+   "ci_50_30": 2.53,
+   "isophotal_flux": 1.6953462136370945e-06,
+   "nn_label": 120,
+   "nn_flux_ratio": 2.03,
+   "nn_dist_pix": 10.79,
+   "verdict": "to /vet-candidate",
+   "r_eq_pix": 3.95,
+   "reaches_bkg_annulus": false,
+   "ci_at_ceiling": true
+  },
+  {
+   "label": 240,
+   "bright_adjacent": true,
+   "ci_50_30": 2.519,
+   "isophotal_flux": 1.000488134650368e-05,
+   "nn_label": 239,
+   "nn_flux_ratio": 5.49,
+   "nn_dist_pix": 14.96,
+   "verdict": "to /vet-candidate",
+   "r_eq_pix": 8.92,
+   "reaches_bkg_annulus": false,
+   "ci_at_ceiling": true
+  }
+ ],
+ "post_hoc_annulus": {
+  "bkg_inner_radius_pix": 8.922,
+  "ci_50_30_ceiling": 2.409,
+  "reach": {
+   "n": 18,
+   "ci_at_ceiling": 3
+  },
+  "inside": {
+   "n": 222,
+   "ci_at_ceiling": 6
+  },
+  "aperture_radii_pix": [
+   1.353,
+   2.1,
+   4.217
+  ]
+ }
+}

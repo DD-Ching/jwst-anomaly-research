@@ -77,3 +77,35 @@ the MIRI colours, so wiring needs a position-only join plus a `confirm_bands` re
 separate single-band stratum. The new entries look like deblend fragments or sources on bright neighbours' light
 (ordinary processing explanation, untested), not anomalies; none is vetted. Expected chance confirmations among
 the 55: about 3.4 (plan).
+
+## Deblend-fragment check of the new top-20 singles (2026-11-07, `PLAN_fragments.md`)
+
+**Data.** MAST L3 `jw02736-o002_t001_miri_f770w_cat.ecsv` + `_segm.fits` (S3 `stpubdata`, CAL_VER 3.0.0, as the
+run); 264 catalog rows, 240 with finite CI_50_30 and isophotal S/N ≥ 5. Script `scripts/miri_fragments.py` →
+`summary_fragments.json`. Raw files were streamed to scratch and deleted.
+
+**Frozen rule outcome (derived).**
+1. Bright-adjacency (segment 4-adjacent to one ≥ 5 × brighter, ASSUMPTION): 14 / 240 sources. Mechanism test:
+   overall one-sided Mann–Whitney p = 1.1e-5 (median CI_50_30 2.13 vs 1.89), but every flux tertile holds only
+   4–5 bright-adjacent sources (< 10), so the "all tested tertiles" clause has nothing to test and the frozen
+   function returns **not supported**.
+2. Base rates: 0 / 97 NIRCam-matched baseline gate passers, 1 / 45 admitted F770W singles, 1 / 5 new top-20
+   entries (`f770w_240`, next to `_239` at 5.5 × its flux). Plan-change trigger not met.
+3. Verdict per the frozen rule: all five (`f770w_221`, `_239`, `_176`, `_118`, `_240`) go to `/vet-candidate`.
+
+**Deviation.** The baseline group is the 97 NIRCam-matched gate passers of `summary.json`, not all 113 (the full
+list was not stored).
+
+**Post hoc (not in the plan; `post_hoc_annulus` in the JSON).** The F770W CI_50_30 flat-surface-brightness ceiling
+is the aperture-area ratio 2.409 (EE30 / EE50 radii 1.353 / 2.100 px, catalog meta); 9 / 240 sources reach it, including
+`_221`, `_239`, `_118` and `_240` (2.52–2.53). `_221` and `_239` have isophotal footprints with equivalent radii
+16.9 and 18.2 px, beyond the 8.9 px inner radius of the local-background annulus; such footprints reach the
+ceiling in 3 / 18 cases vs 6 / 222 for smaller ones (small numbers; hypothesis: the annulus samples the source's
+own light, so the subtracted aperture fluxes and the CIs are not profile measurements for these). Contact sheet
+`contact_sheet_rerank.png` viewed again: #2 (`_221`) is marked on the diffuse band of an extended galaxy beside a
+brighter knot; #4 (`_239`) is the core of a large galaxy; #18 (`_240`) a faint knot between brighter sources; #16
+(`_118`) an elongated faint feature; #13 (`_176`) a faint compact source (sharpness-led, CI 1.79, below the ceiling).
+
+**Reading.** The addendum 3 "deblend fragment" hypothesis is not supported as a group description: only `_240` is
+a child next to a much brighter segment. Two of the high-CI entries are themselves large extended segments. None
+is vetted; none is an anomaly claim.

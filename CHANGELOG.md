@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: MIRI deblend-fragment check: frozen mechanism not supported; all five new top-20 singles go to vetting
+- **Plan first** (`results/miri_confirm/PLAN_fragments.md`, committed before measuring); TASKS Then 7.
+- **Result** (`results/miri_confirm/RESULT.md` § Deblend-fragment check, `summary_fragments.json`,
+  `scripts/miri_fragments.py`; MAST L3 F770W cat + segm, CAL_VER 3.0.0): bright-adjacency 14 / 240; overall CI
+  difference p 1.1e-5 but too few per flux tertile, so the frozen rule says not supported. Bright-adjacent: 0 / 97
+  baseline, 1 / 45 admitted, 1 / 5 new top 20 (`_240`). D-014 addendum 4.
+- **Post hoc:** 4 / 5 at the CI_50_30 flat-profile ceiling 2.409; `_221`, `_239` footprints exceed the background
+  annulus' inner radius (contamination hypothesis). Contact sheet viewed.
+- **Deviation:** baseline = 97 NIRCam-matched gate passers (the all-113 list was not stored).
+- **Handoff:** #751 still waits for CDS (connection reset 03:08Z). Next: `/vet-candidate` on the five.
+
 ## 2026-11-07: MIRI band-restricted NIRCam confirmation wired into the pipeline; gate 113 → 168
 - **Plan first** (`results/miri_confirm/PLAN_rerank.md`); TASKS Then 7.
 - **Code:** sample block `position_confirmation` (`photometry.load_detection_positions`,

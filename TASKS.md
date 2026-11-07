@@ -672,9 +672,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    61 / 163 single-band-only MIRI sources have a DJA NIRCam counterpart (chance 0.051; F770W 45 / 66, F1500W/F1800W
    near chance). Per-band gate done 2026-11-07 (D-014 addendum 2): F770W and F1000W pass, F1500W/F1800W fail.
    Wired 2026-11-07 (D-014 addendum 3, `configs/smacs_jwst3_miri_confirm.yaml`): gate 113 → 168, top-20 Jaccard
-   0.60, 5 new F770W singles (4 look like fragments on bright neighbours' light). Next: a deblend-fragment check for
-   high-CI single-band MIRI sources near brighter ones (`f770w_221`, `_239`, `_118`, `_240`), then `/vet-candidate`
-   on whatever survives.
+   0.60, 5 new F770W singles (4 look like fragments on bright neighbours' light). Deblend-fragment check done
+   2026-11-07 (D-014 addendum 4): frozen mechanism not supported, only `_240` is bright-adjacent; 4 / 5 sit at the
+   CI flat-profile ceiling (post hoc). Next: `/vet-candidate` on `f770w_221`, `_239`, `_176`, `_118`, `_240`.
 8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
    since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). ~~DJA colours vs CEERS DR1.0~~
    done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a

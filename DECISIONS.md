@@ -905,6 +905,14 @@ detections in those bands. Config `configs/smacs_jwst3_miri_confirm.yaml`. Gate 
 fragments, hypothesis). Alternative rejected: reusing `matched_photometry` (one-to-one 0.2″ and it replaces
 colours, which MIRI does not need).
 
+**Addendum 4 (2026-11-07): deblend-fragment check** (`results/miri_confirm/PLAN_fragments.md`, `RESULT.md` §
+Deblend-fragment check, `summary_fragments.json`). Frozen rule (segment 4-adjacent to one ≥ 5 × brighter, CI_50_30
+higher in every flux tertile with ≥ 10 per group): not supported (overall p 1.1e-5, but 4–5 bright-adjacent sources
+per tertile); bright-adjacency 0 / 97 baseline, 1 / 45 admitted, 1 / 5 new top 20. All five new entries go to
+`/vet-candidate`; no gate change. Post hoc: 4 / 5 sit at the CI_50_30 flat-profile ceiling 2.409, and `_221`, `_239`
+have footprints larger than the background annulus' inner radius (hypothesis: annulus contamination). Revisit if a
+vetting step needs a CI feature for extended footprints.
+
 ## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
 
 **Decision.** After the catalogue classification (D-012), `classify.stellar_locus` adds sources that are
