@@ -1,0 +1,16 @@
+{
+  "provenance": "observed (pipeline catalog photometry, jwst 3.0.0 program 2736 o001 *_cat.ecsv, aper_total_abmag); derived (colours)",
+  "image_list": "Mahler+2023 ICLv2 arcs.dat, sha256 af7e5368e4bdaa8903fd86239fc0d5e2eb9ad7da23e0cf3f2c0d86e0e49040b9",
+  "f200w_3670": {"ra": 110.836848, "dec": -73.458635, "sep_to_2.3_segment_arcsec": 0.81,
+                 "aper_total_abmag": {"f090w": 22.93, "f150w": 22.23, "f200w": 22.51, "f277w": 23.20, "f356w": 23.57, "f444w": 23.88},
+                 "CI_50_30_f200w": 1.69, "ellipticity_f200w": 0.10},
+  "image_2.3_segment": {"f200w_label": 3671, "aper_total_abmag": {"f090w": 26.99, "f150w": 26.15, "f200w": 25.89, "f277w": 25.24, "f356w": 24.84, "f444w": 24.71}},
+  "image_2.1_segment": {"f200w_label": 1373, "aper_total_abmag": {"f090w": 26.89, "f150w": 26.07, "f200w": 25.88, "f277w": 25.03, "f356w": 24.66, "f444w": 24.48}},
+  "colours": {
+    "f200w_3670": {"f090w-f444w": -0.95, "f150w-f277w": -0.97},
+    "2.3": {"f090w-f444w": 2.28, "f150w-f277w": 0.91},
+    "2.1": {"f090w-f444w": 2.41, "f150w-f277w": 1.04}
+  },
+  "spike_pattern_visible": {"f150w": true, "f200w": true, "f444w": "PSF core only at 4 arcsec scale"},
+  "outcome": "A (Galactic star projected on the end of arc image 2.3)"
+}
