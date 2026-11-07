@@ -689,8 +689,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a
    PSF term; ranking unaffected). ~~Science vs control feature distributions~~ done 2026-11-06
    (`results/science_control_features/RESULT.md`, D-022 addendum 2: differ strongly, carried by SMACS z_phot cluster
-   members; background galaxies match at D ≤ 0.12 in most bins). Next: any science-vs-control top-k comparison uses
-   SMACS z_phot ≥ 0.8 in `ref_mag` bins; re-run CEERS with the star split once Gaia XMatch/TAP work.
+   members; background galaxies match at D ≤ 0.12 in most bins). ~~CEERS star split~~ done 2026-11-07
+   (`results/ceers_star_split/RESULT.md`, D-022 addendum 3: 6 bright stars split, no verdict change, background match
+   moves ≤ 0.010). Rule: science-vs-control top-k comparisons use SMACS z_phot ≥ 0.8 in `ref_mag` bins 24–28.
 9. Diffraction-spike mask for multi-band spike detections, only if they appear (D-014 "Revisit if").
 
 ## Next (M2)

@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: CEERS t021 with stars split: no verdict changes, background match unchanged (TASKS Then 8, D-022 addendum 3)
+- **Plan first** (`results/ceers_star_split/PLAN.md`). Run `20261107T101020Z-c9a64ce3` of `configs/reference_sample.yaml`.
+- **Result** (`results/ceers_star_split/RESULT.md`, `summary.json`, plot looked at): 6 catalogued stars (ref_mag ≤ 21.1)
+  leave the 3156 ranked CEERS rows; no verdict changes; largest move `ref_log_ci_70_50` ≤ 24 D 0.363 → 0.308; all
+  other bins and the SMACS background match move ≤ 0.010. Post hoc: 11 / 49 bright CEERS rows look point-like and blue.
+- **Services:** CDS XMatch refuses Gaia/SIMBAD tables and SIMBAD TAP resets (10:18–10:26Z); the Gaia `field` and CfA
+  mirror fallbacks carried classification. ESA Gaia TAP up. #751 still waits for CDS.
+- **Handoff:** Then 8 done. Next unblocked: Next (M2) MIRI fixed-aperture colours, or DJA photo-z as a stratifier.
+
 ## 2026-11-07: SMACS f200w_3670 is a foreground star on lensed image 2.3; no lens anomaly (TASKS Then 4 closed)
 - **Plan first** (`results/smacs_jwst3/f200w_3670/PLAN.md`): star (A) vs compact lensed knot (B), rules frozen before viewing.
 - **Result** (`RESULT.md`, `summary.json`, `sheet.png`; `scripts/smacs_f3670_sheet.py`): own segment 0.81″ from the 2.3
