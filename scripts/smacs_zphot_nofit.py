@@ -1,14 +1,15 @@
-"""What the DJA eazy ``z_phot = -1`` (no-fit) flag marks among SMACS ranked galaxy-stratum sources.
+"""What the DJA eazy ``z_phot = -1`` (no-fit) flag marks among SMACS ranked sources.
 
-Plan: ``results/smacs_jwst3/zphot_nofit/PLAN.md`` (rule and definitions frozen there before the run).
-Reads one pipeline run of ``configs/smacs_jwst3_gaia_only.yaml``, matches ranked galaxy-stratum and star-stratum
-sources to the DJA v7.4 zout (0.2", same ``id`` order as the DJA phot catalog), and compares no-fit with fitted
-rows: usable filters (``nusefilt``) and size (DJA ``flux_radius``, detection image, pixels). Writes ``summary.json``.
+Plan: ``results/smacs_jwst3/zphot_nofit/PLAN.md`` (rule and definitions frozen before the run).
+Reads one pipeline run of ``configs/smacs_jwst3_gaia_only.yaml``, matches ranked galaxy-stratum and
+star-stratum sources to the DJA v7.4 zout (0.2", same ``id`` order as the DJA phot catalog), and
+compares no-fit with fitted rows: usable filters (``nusefilt``) and size (DJA ``flux_radius``,
+detection image, pixels). Writes ``summary.json``.
 
-Provenance: catalog columns are ``observed`` / ``derived`` (DJA, MAST); every statistic is ``derived``; the
-thresholds are ASSUMPTIONs from the plan.
+Provenance: catalog columns are ``observed`` / ``derived`` (DJA, MAST); every statistic is
+``derived``; the thresholds are ASSUMPTIONs from the plan.
 
-Usage: python scripts/smacs_zphot_nofit.py <run_dir> --zout <zout.fits> --phot <phot.fits> --out <dir>
+Usage: python scripts/smacs_zphot_nofit.py <run_dir> --zout <zout> --phot <phot> --out <dir>
 """
 
 from __future__ import annotations
@@ -30,13 +31,36 @@ from smacs_zphot_stratify import TOP_K, ZOUT_SHA256  # noqa: E402
 from jwst_anomaly.provenance import file_sha256  # noqa: E402
 
 SAMPLE = "smacs0723_nircam"
-PHOT_SHA256 = "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166"  # configs (DJA v7.4 phot)
-COV_FRACTION = 0.8  # ASSUMPTION (plan): share of no-fit rows below the fitted 5th percentile of nusefilt
+PHOT_SHA256 = (
+    "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166"  # configs (DJA v7.4 phot)
+)
+COV_FRACTION = (
+    0.8  # ASSUMPTION (plan): share of no-fit rows below the fitted 5th percentile of nusefilt
+)
 COV_PCT = 5.0  # ASSUMPTION (plan)
 SIZE_PCT = 10.0  # ASSUMPTION (plan): no-fit median flux_radius below this fitted percentile
 STAR_PCT = 90.0  # ASSUMPTION (plan): "compact" = flux_radius <= this percentile of matched stars
 MIN_STARS = 5  # ASSUMPTION (plan)
 MIN_COMPACT_TOP = 2  # ASSUMPTION (plan): of the top-20 no-fit rows
+# Post hoc (deviation, added after the frozen rule ran): faint galaxies are small too, so compare
+# flux_radius within ref_mag bins (ASSUMPTION edges).
+MAG_EDGES = (20.0, 24.0, 26.0, 27.0, 28.0, 29.0, 31.0)
+
+
+def by_mag(mag: np.ndarray, rad: np.ndarray, groups: dict[str, np.ndarray]) -> list[dict]:
+    """Median flux_radius and count per ref_mag bin for each boolean group mask."""
+    out = []
+    for lo, hi in zip(MAG_EDGES[:-1], MAG_EDGES[1:], strict=True):
+        b = (mag > lo) & (mag <= hi)
+        row: dict = {"ref_mag": [lo, hi]}
+        for name, m in groups.items():
+            x = rad[b & m]
+            row[name] = {
+                "n": int(x.size),
+                "median": round(float(np.median(x)), 3) if x.size else None,
+            }
+        out.append(row)
+    return out
 
 
 def decide(
@@ -63,7 +87,9 @@ def match(src: Table, uids: list[str], cat: SkyCoord) -> tuple[np.ndarray, np.nd
     """DJA row index of each uid and whether it lies within ZOUT_MATCH_ARCSEC."""
     row = {str(x): i for i, x in enumerate(src["source_uid"])}
     pos = np.array([row[x] for x in uids])
-    c = SkyCoord(np.asarray(src["ra"], float)[pos] * u.deg, np.asarray(src["dec"], float)[pos] * u.deg)
+    c = SkyCoord(
+        np.asarray(src["ra"], float)[pos] * u.deg, np.asarray(src["dec"], float)[pos] * u.deg
+    )
     idx, sep, _ = c.match_to_catalog_sky(cat)
     return idx, sep.arcsec <= ZOUT_MATCH_ARCSEC
 
@@ -73,7 +99,9 @@ def q(x: np.ndarray) -> dict[str, float | int]:
     if not x.size:
         return {"n": 0}
     p = np.percentile(x, [5, 10, 50, 90])
-    return {"n": int(x.size)} | {f"p{k}": round(float(v), 3) for k, v in zip((5, 10, 50, 90), p, strict=True)}
+    return {"n": int(x.size)} | {
+        f"p{k}": round(float(v), 3) for k, v in zip((5, 10, 50, 90), p, strict=True)
+    }
 
 
 def main() -> None:
@@ -102,7 +130,9 @@ def main() -> None:
     nofit = ok & (zp[idx] == -1)
     fit = ok & (zp[idx] >= 0)
 
-    stars = [str(x) for x in Table.read(args.run_dir / f"{SAMPLE}-stars" / "scores.ecsv")["source_uid"]]
+    stars = [
+        str(x) for x in Table.read(args.run_dir / f"{SAMPLE}-stars" / "scores.ecsv")["source_uid"]
+    ]
     s_idx, s_ok = match(src, stars, cat)
     star_r = rad[s_idx[s_ok]]
     compact_cut = float(np.percentile(star_r, STAR_PCT)) if star_r.size >= MIN_STARS else None
@@ -125,6 +155,11 @@ def main() -> None:
     n_compact = None if compact_cut is None else sum(t["compact"] for t in top)
     verdict = decide(nuse[idx[nofit]], nuse[idx[fit]], rad[idx[nofit]], rad[idx[fit]], n_compact)
 
+    feats = Table.read(d / "features.ecsv")
+    fmag = {str(x): float(m) for x, m in zip(feats["source_uid"], feats["ref_mag"], strict=True)}
+    mag = np.array([fmag.get(x, np.nan) for x in uids])
+    r_all = np.where(ok, rad[idx], np.nan)
+
     summary = {
         "run": args.run_dir.name,
         "zout_sha256": ZOUT_SHA256,
@@ -136,9 +171,12 @@ def main() -> None:
         "nusefilt": {
             "nofit": q(nuse[idx[nofit]].astype(float)),
             "fit": q(nuse[idx[fit]].astype(float)),
-            "nofit_below_fit_p5": round(float(np.mean(nuse[idx[nofit]] < np.percentile(nuse[idx[fit]], COV_PCT))), 4),
+            "nofit_below_fit_p5": round(
+                float(np.mean(nuse[idx[nofit]] < np.percentile(nuse[idx[fit]], COV_PCT))), 4
+            ),
             "nofit_counts": {
-                str(int(v)): int(c) for v, c in zip(*np.unique(nuse[idx[nofit]], return_counts=True), strict=True)
+                str(int(v)): int(c)
+                for v, c in zip(*np.unique(nuse[idx[nofit]], return_counts=True), strict=True)
             },
         },
         "flux_radius_pix": {
@@ -154,6 +192,7 @@ def main() -> None:
             if compact_cut is None
             else round(float(np.mean(rad[idx[fit]] <= compact_cut)), 4),
         },
+        "post_hoc_flux_radius_by_ref_mag": by_mag(mag, r_all, {"nofit": nofit, "fit": fit}),
         "top20_nofit": top,
         "n_compact_top20_nofit": n_compact,
         "verdict": verdict,
@@ -170,7 +209,11 @@ def main() -> None:
     }
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    print(json.dumps({k: summary[k] for k in ("n_nofit", "n_fit", "nusefilt", "flux_radius_pix", "verdict")}))
+    print(
+        json.dumps(
+            {k: summary[k] for k in ("n_nofit", "n_fit", "nusefilt", "flux_radius_pix", "verdict")}
+        )
+    )
     print(json.dumps(top))
 
 

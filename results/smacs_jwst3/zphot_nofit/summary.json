@@ -1,0 +1,200 @@
+{
+ "run": "20261107T121058Z-86f3f464",
+ "zout_sha256": "82db8910962f3050ddb9f8209aafa487fb30f3cf46551d57ef3824d7d2c355ea",
+ "phot_sha256": "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166",
+ "n_ranked": 2938,
+ "n_matched": 2340,
+ "n_nofit": 156,
+ "n_fit": 2184,
+ "nusefilt": {
+  "nofit": {
+   "n": 156,
+   "p5": 6.0,
+   "p10": 6.0,
+   "p50": 7.0,
+   "p90": 20.0
+  },
+  "fit": {
+   "n": 2184,
+   "p5": 6.0,
+   "p10": 6.0,
+   "p50": 8.0,
+   "p90": 20.0
+  },
+  "nofit_below_fit_p5": 0.0,
+  "nofit_counts": {
+   "6": 55,
+   "7": 35,
+   "8": 2,
+   "9": 1,
+   "10": 1,
+   "12": 1,
+   "13": 2,
+   "14": 2,
+   "15": 5,
+   "16": 11,
+   "17": 1,
+   "19": 14,
+   "20": 26
+  }
+ },
+ "flux_radius_pix": {
+  "nofit": {
+   "n": 156,
+   "p5": 1.642,
+   "p10": 1.764,
+   "p50": 1.972,
+   "p90": 3.838
+  },
+  "fit": {
+   "n": 2184,
+   "p5": 2.664,
+   "p10": 3.105,
+   "p50": 5.441,
+   "p90": 11.365
+  },
+  "stars": {
+   "n": 133,
+   "p5": 1.939,
+   "p10": 1.974,
+   "p50": 2.222,
+   "p90": 5.389
+  },
+  "n_stars_matched": 133,
+  "compact_cut": 5.388612054633901,
+  "nofit_compact_fraction": 0.9359,
+  "fit_compact_fraction": 0.4895
+ },
+ "post_hoc_flux_radius_by_ref_mag": [
+  {
+   "ref_mag": [
+    20.0,
+    24.0
+   ],
+   "nofit": {
+    "n": 3,
+    "median": 5.233
+   },
+   "fit": {
+    "n": 99,
+    "median": 7.145
+   }
+  },
+  {
+   "ref_mag": [
+    24.0,
+    26.0
+   ],
+   "nofit": {
+    "n": 58,
+    "median": 2.014
+   },
+   "fit": {
+    "n": 155,
+    "median": 5.917
+   }
+  },
+  {
+   "ref_mag": [
+    26.0,
+    27.0
+   ],
+   "nofit": {
+    "n": 44,
+    "median": 1.977
+   },
+   "fit": {
+    "n": 212,
+    "median": 5.987
+   }
+  },
+  {
+   "ref_mag": [
+    27.0,
+    28.0
+   ],
+   "nofit": {
+    "n": 36,
+    "median": 1.885
+   },
+   "fit": {
+    "n": 402,
+    "median": 5.361
+   }
+  },
+  {
+   "ref_mag": [
+    28.0,
+    29.0
+   ],
+   "nofit": {
+    "n": 7,
+    "median": 1.716
+   },
+   "fit": {
+    "n": 648,
+    "median": 4.616
+   }
+  },
+  {
+   "ref_mag": [
+    29.0,
+    31.0
+   ],
+   "nofit": {
+    "n": 2,
+    "median": 1.403
+   },
+   "fit": {
+    "n": 367,
+    "median": 4.784
+   }
+  }
+ ],
+ "top20_nofit": [
+  {
+   "rank": 3,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_1395",
+   "dja_id": 1476,
+   "nusefilt": 6,
+   "flux_radius_pix": 4.483,
+   "compact": true
+  },
+  {
+   "rank": 13,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_3884",
+   "dja_id": 8066,
+   "nusefilt": 19,
+   "flux_radius_pix": 11.734,
+   "compact": false
+  },
+  {
+   "rank": 14,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_1816",
+   "dja_id": 813,
+   "nusefilt": 6,
+   "flux_radius_pix": 2.276,
+   "compact": true
+  },
+  {
+   "rank": 19,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_384",
+   "dja_id": 5182,
+   "nusefilt": 6,
+   "flux_radius_pix": 1.906,
+   "compact": true
+  }
+ ],
+ "n_compact_top20_nofit": 3,
+ "verdict": "H-star supported",
+ "assumptions": {
+  "match_arcsec": 0.2,
+  "cov_fraction": 0.8,
+  "cov_pct": 5.0,
+  "size_pct": 10.0,
+  "star_pct": 90.0,
+  "min_stars": 5,
+  "min_compact_top": 2,
+  "top_k": 20
+ }
+}

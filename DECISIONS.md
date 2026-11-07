@@ -1254,6 +1254,14 @@ percentiles 0.4835 vs 0.48; deviation). Decision: no z_phot stratification of SM
 Post hoc: eazy `z_phot = -1` rows are 4 / 20 of the top 20 vs 156 / 2938 ranked (2 already screened as spiked stars).
 Revisit if a point-source rule uses the eazy no-fit flag, or a cluster field with a larger member share is ranked.
 
+**Addendum 5 (2026-11-07): what the eazy `z_phot = -1` flag marks in the SMACS ranked stratum**
+(`results/smacs_jwst3/zphot_nofit/RESULT.md`). Of 156 matched no-fit rows none lies below the fitted rows' 5th
+percentile of `nusefilt` (6), so it is not a filter-coverage flag here. Their DJA `flux_radius` median (1.972 px) is
+below the fitted 10th percentile (3.105 px) and near the star median (2.222 px), also within each `ref_mag` bin
+24–28 (post hoc); 3 of the 4 top-20 no-fit rows are compact. Frozen rule: H-star supported (point-like sources the
+Gaia-only split misses). Decision: no screen adopted yet; a point-source screen is a TASKS item that must first be
+validated on Gaia stars and catalogued multiple images. Revisit if that screen is built or DJA documents the flag.
+
 ## D-023 Owner priorities: lensing-violation search first, more clusters, faster cadence (2026-10-08)
 
 **Decision** (owner, in chat): put the search for lensing that published models cannot explain at the top. It is
