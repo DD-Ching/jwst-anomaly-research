@@ -15,7 +15,7 @@ Mahler+2022 model images of its system (within the model's rms)?
 **What would change the plan.** An object that survives A–C of `/vet-candidate` goes to a needs-human candidate PR.
 If no top-20 row carries `G_Lens` in the current run, record that the Oct-7 object no longer ranks and close the item.
 
-## Frozen rules for the MIRI flux-ratio step (written 2026-11-07T07:28Z, before any flux was read)
+## Frozen rules for the MIRI flux-ratio step (written 2026-11-07T07:22Z, before any flux was read)
 
 Run `20261107T071516Z-7e9ac450` reproduces the MIRI top 20 of #754; its only `G_Lens` row is `f770w_118`, already
 vetted as Mahler+2022 system 3 (ICLv2 label 3.3). The open lensing question is therefore whether system 3, and any

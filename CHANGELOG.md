@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: MIRI `G_Lens` object is the vetted system-3 image; MIRI flux ratios of ICLv2 images: no anomaly
+- **Plan first** (`results/miri_confirm/PLAN_glens.md`, rules frozen before reading fluxes); TASKS Then 5 closed.
+- **Result** (`results/miri_confirm/RESULT.md` § MIRI `G_Lens`, `scripts/miri_fluxratio.py`, run
+  `20261107T071516Z-7e9ac450`): only top-20 `G_Lens` row is `f770w_118` (already vetted). D-032 rules on MIRI:
+  F770W 6 images (systems 1, 4) rms 0.36 mag, no flag; F1000W 8 images (1, 3, 4) flags 4.2/4.3, chromatic
+  (isophotal F770W−F1000W −1.14 / −1.91 vs `aper_total` −0.33 / −0.36), so isophote truncation. Cutouts viewed.
+- **Services:** CDS SIMBAD TAP / XMatch still reset 07:12Z; #751 still waits.
+- **Handoff:** next is Then 4 (view f200w_3670) or Then 6 (spike-geometry check).
+
 ## 2026-11-07: segment-overlap MIRI band association: reaches the vetted singles but at 22–40 % chance; line closed
 - **Plan first** (`results/miri_confirm/PLAN_segoverlap.md`); TASKS Then 7. D-014 addendum 6.
 - **Code:** `scripts/miri_segoverlap.py` → `summary_segoverlap.json` (rule functions unit-tested before the run).
