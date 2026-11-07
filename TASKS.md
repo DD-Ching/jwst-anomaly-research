@@ -663,7 +663,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
      arc lies next to it.
-5. **Vet MIRI's known `G_Lens` object** with `/vet-candidate` and `scripts/vet_evidence.py`.
+5. ~~**Vet MIRI's known `G_Lens` object**~~ done 2026-11-07 (`results/miri_confirm/RESULT.md` § MIRI `G_Lens`): the only
+   top-20 `G_Lens` row is the vetted `f770w_118` (system 3); MIRI flux ratios of ICLv2 systems 1, 3, 4: no anomaly
+   (F1000W 4.2/4.3 flags chromatic, isophote truncation).
 6. **Spike streaks confirmed by a coincident DJA object** (D-014 "Revisit if"; run `20261007T202419Z-65728e80`): CEERS
    `f200w_2842` (#4) is detected in F200W only, with ellipticity 0.95 and area 376 px. A bright source lies 4.6″
    away, and a DJA object sits 0.04″ off. Test single-band, highly elongated detections near bright sources

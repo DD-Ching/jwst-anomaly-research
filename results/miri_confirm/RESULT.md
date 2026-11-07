@@ -193,3 +193,35 @@ none ≤ 0.10, same vetted merges. The frozen outcome stands.
 chance neighbours under the 0.10 ceiling (ASSUMPTION). Per the plan's stop branch, the MIRI association stays the
 fixed 0.1″ and this line is closed. Stated limitation: a MIRI row's "single band" status is unreliable for extended or
 blended sources; vetting checks other-band footprints and centroids within ~0.7″ (as the five-source vetting did).
+
+## MIRI `G_Lens` object and MIRI flux ratios of ICLv2 multiple images (2026-11-07, TASKS Then 5)
+
+Frozen plan: `PLAN_glens.md` (rules committed 07:22Z, before any flux was read). Run `20261107T071516Z-7e9ac450`
+(`configs/smacs_jwst3_miri_confirm.yaml`, jwst 3.0.0; CDS SIMBAD TAP and XMatch unreachable, NED worked).
+Script `scripts/miri_fluxratio.py` → `summary_fluxratio.json`.
+
+- **`G_Lens` object (observed):** the only top-20 row with NED `G_Lens` is rank 16 `f770w_118`
+  (`[NDA2023] 01149`, 0.06″), already vetted as Mahler+2022 system 3 (`docs/candidates/smacs_miri_f770w_top20_singles.md`).
+  The Oct-7 object cannot be re-identified on the pre-3.0.0 run (outputs not kept); no other `G_Lens`/`Q_Lens`
+  row ranks now. Then 5 is closed: nothing new to vet.
+- **Flux-ratio rule outcome (derived; ICLv2 μ at the catalogued positions, D-032 rules, 0.5″ match):** 13 / 60
+  images match a MIRI row.
+
+| Band | usable | tested (systems) | rms / max \|LOO residual\| | flagged (> 0.75 mag) |
+|---|---|---|---|---|
+| F770W | 9 | 6 (1, 4) | 0.36 / 0.69 mag | none |
+| F1000W | 8 | 8 (1, 3, 4) | 0.64 / 1.25 mag | 4.2 (−0.97), 4.3 (+1.25) |
+
+- **4.2 / 4.3 are chromatic, so a measurement failure under the frozen rule:** their F770W residuals are −0.37 /
+  +0.69 mag (not flagged). Post hoc: the F1000W isophotes shrink to 67 px (4.2, an arc; 238 px in F770W) and 5 px
+  (4.3, S/N 23.5), so isophotal F770W−F1000W is −1.57 / −1.14 / −1.91 for 4.1 / 4.2 / 4.3, while the
+  aperture-corrected `aper_total` colours agree (−0.42 / −0.33 / −0.36). Lensing is achromatic; a shallower band's
+  isophote truncating faint or extended images is the ordinary explanation. Cutouts (F770W and F1000W, 4″, S3 byte
+  ranges; scratch, not tracked) viewed: 4.3 is a faint knot in F1000W, 4.2 an arc whose outer part drops below the
+  F1000W isophote; no extra or missing image near any matched position.
+- **System 3 in MIRI:** 3.1, 3.3 have no F770W/F1000W isophotal row at their nearest match (`f1500w_28`,
+  `f1500w_52`, F1500W-anchored rows); `f770w_118` sits 0.40″ from ICLv2 3.3, beyond `f1500w_52` (0.16″), the same
+  split-row effect as D-014 addendum 6. Only 3.2/3.4 are tested (F1000W, ±0.44 mag).
+- **Result: no MIRI flux-ratio anomaly** in systems 1, 3 and 4; consistent with D-032 (NIRCam). Limits: 3 systems,
+  best-fit μ only, isophotal fluxes (D-032's caveat that aperture flux follows surface brightness for arcs), 47 / 60
+  images without a MIRI row within 0.5″.
