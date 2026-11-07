@@ -2,7 +2,7 @@
 
 Plan: `PLAN.md` (pushed before the run). Run `20261107T111137Z-3978d5de` of `configs/smacs_jwst3_gaia_only.yaml`
 at main `da1d1be`. Re-score: `scripts/smacs_zphot_stratify.py <run> --zout <SMACS DJA v7.4 zout> --out .`
-(zout sha256 `82db8910…` as in SOURCES.md) → `summary.json`. Contact sheet of the run looked at.
+(the script checks the zout sha256 against SOURCES.md and stores it in `summary.json`) → `summary.json`. Contact sheet of the run looked at.
 
 ## Tool check (observed)
 - The baseline re-score reproduces all 2938 pipeline galaxy-stratum ranks exactly (the script stops otherwise).
@@ -20,15 +20,19 @@ at main `da1d1be`. Re-score: `scripts/smacs_zphot_stratify.py <run> --zout <SMAC
   ranked anomalous as a minority population) is not supported; the overall top 20 is mostly background (H1).
 - Background scored alone: its top 9 (its share of 20) holds 7 of the overall top 20 (overall ranks 1, 2, 6, 7, 9,
   11, 18, 40, 80). Members scored alone: their top 4 have overall ranks 38, 58, 97, 213 (none in the top 20).
-- "What changes the plan" not met: the 14 ICLv2 multiple images that match a ranked background source (0.3″; 25 / 60
-  match any ranked source) sit at median percentile 0.4835 overall and 0.48 within the background stratum. Stratifying
-  does not raise catalogued lensed images; the anomaly score does not track lensed-image status (descriptive).
+- **"What changes the plan" trigger, as written (`image_trigger`): met.** The 14 ICLv2 multiple images that match a
+  ranked background source (0.3″; 25 / 60 match any ranked source) have median rank 1420.5 overall and 611.5 within the
+  background stratum, a raw ratio of 2.323 (> 2). **Deviation (post hoc reading, not frozen):** the background list is
+  shorter by 2938 / 1274 = 2.306, so the raw ratio is the list-length ratio; as percentiles the images sit at 0.4835
+  overall and 0.48 within the background. The plan's consequence (wire the option before new top-k vetting) is
+  therefore not taken; this deviation is stated in the PR for the owner. The rule should have been written in
+  percentiles.
 
 ## Post hoc (deviation: added after the first pass, not a rule)
 - The "other" stratum splits into 156 eazy `z_phot = -1` rows (no fit), 598 without a zout match and 296 between the
   ranges. `z_phot = -1` rows are 4 / 20 of the top 20 (0.20) against 156 / 2938 of the ranked stratum: 2 of them
   (`f200w_1395`, `f200w_3884`) are already screened as spiked stellar-colour sources (D-019), and `f200w_1816`,
-  `f200w_384` are compact point-like sources in the contact sheet. Hypothesis (untested): an eazy no-fit flag marks
+  `f200w_384` look compact and point-like in the contact sheet (visual, not stored). Hypothesis (untested): an eazy no-fit flag marks
   uncatalogued stars or compact non-galaxy sources missed by the star split.
 
 ## What this changes

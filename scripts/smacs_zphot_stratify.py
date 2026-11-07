@@ -26,8 +26,14 @@ from astropy.table import Table
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lens_consistency as lc  # noqa: E402
-from science_control_features import Z_BACKGROUND_MIN, Z_MEMBER, zphot_for  # noqa: E402
+from science_control_features import (  # noqa: E402
+    Z_BACKGROUND_MIN,
+    Z_MEMBER,
+    ranked_features,
+    zphot_for,
+)
 
+from jwst_anomaly.provenance import file_sha256  # noqa: E402
 from jwst_anomaly.rank import score_anomalies  # noqa: E402
 
 SAMPLE = "smacs0723_nircam"
@@ -35,6 +41,10 @@ TOP_K = 20  # ASSUMPTION (plan)
 IMAGE_MATCH_ARCSEC = 0.3  # ASSUMPTION (plan)
 ENRICH_FACTOR = 2.0  # ASSUMPTION (plan): member share of the top k vs of the stratum
 ENRICH_MIN = 4  # ASSUMPTION (plan): members in the top k
+IMAGE_GAIN = 2.0  # ASSUMPTION (plan): "median rank improves by > 2x"
+MIN_STRATUM = 21  # ASSUMPTION: LOF uses 20 neighbours; smaller strata are not scored
+# DJA v7.4 SMACS eazy zout member (SOURCES.md)
+ZOUT_SHA256 = "82db8910962f3050ddb9f8209aafa487fb30f3cf46551d57ef3824d7d2c355ea"
 
 
 def stratum_of(z: np.ndarray) -> np.ndarray:
@@ -58,6 +68,22 @@ def decide(n_top_member: int, frac_top: float, frac_stratum: float) -> str:
     return "no rule change"
 
 
+def image_trigger(med_overall: float | None, med_background: float | None) -> bool:
+    """Frozen plan trigger, read literally: the raw median rank improves by more than IMAGE_GAIN.
+
+    Raw ranks of the background list are smaller by its length alone (n_background / n_ranked);
+    the script also reports percentiles, a post hoc reading (see RESULT.md).
+    """
+    if med_overall is None or med_background is None:
+        return False
+    return med_overall > IMAGE_GAIN * med_background
+
+
+def share_k(count: int, n: int) -> int:
+    """A stratum's share of TOP_K, rounded half up, at least 1."""
+    return max(1, int(np.floor(TOP_K * count / n + 0.5)))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("run_dir", type=Path)
@@ -65,11 +91,11 @@ def main() -> None:
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     d = args.run_dir / SAMPLE
-    feats = Table.read(d / "features.ecsv")
+    if file_sha256(args.zout) != ZOUT_SHA256:
+        raise SystemExit(f"{args.zout} is not the pinned DJA v7.4 SMACS zout")
     scores = Table.read(d / "scores.ecsv")
     pipeline = {str(u): int(r) for u, r in zip(scores["source_uid"], scores["rank"], strict=True)}
-    uids = np.array([str(u) for u in feats["source_uid"]])
-    ranked = feats[np.isin(uids, list(pipeline))]
+    ranked = ranked_features(args.run_dir, SAMPLE)
     r_uids = np.array([str(u) for u in ranked["source_uid"]])
 
     base = ranks_of(ranked)
@@ -79,6 +105,9 @@ def main() -> None:
 
     z = zphot_for(args.run_dir, SAMPLE, r_uids, args.zout)
     strat = stratum_of(z)
+    for s in ("member", "background"):
+        if (strat == s).sum() < MIN_STRATUM:
+            raise SystemExit(f"stratum {s} has {(strat == s).sum()} < {MIN_STRATUM} sources")
     per = {s: ranks_of(ranked[strat == s]) for s in ("member", "background")}
     n = len(r_uids)
     counts = {s: int((strat == s).sum()) for s in ("member", "background", "other")}
@@ -94,7 +123,7 @@ def main() -> None:
     # Overlap: each stratum's own top k_s (its share of TOP_K, at least 1) vs the overall top 20.
     overlap = {}
     for s in ("member", "background"):
-        k_s = max(1, round(TOP_K * counts[s] / n))
+        k_s = share_k(counts[s], n)
         own = {u for u, r in per[s].items() if r <= k_s}
         overlap[s] = {
             "k_s": k_s,
@@ -108,13 +137,17 @@ def main() -> None:
     images, _ = lc.image_list("smacs0723-iclv2", files, par)
     src = Table.read(d / "sources.ecsv")
     srow = {str(u): i for i, u in enumerate(src["source_uid"])}
-    pos = np.array([srow[u] for u in r_uids])
-    cs = SkyCoord(np.asarray(src["ra"], float)[pos], np.asarray(src["dec"], float)[pos], unit="deg")
+    pos = np.array([srow.get(u, -1) for u in r_uids])
+    have = pos >= 0  # a ranked uid without a source row cannot be matched
+    pos_ok, uid_ok = pos[have], r_uids[have]
+    cs = SkyCoord(
+        np.asarray(src["ra"], float)[pos_ok], np.asarray(src["dec"], float)[pos_ok], unit="deg"
+    )
     ci = SkyCoord(images["ra"], images["dec"], unit="deg")
     j, sep, _ = ci.match_to_catalog_sky(cs)
     img_rows = []
     for k in np.flatnonzero(sep.arcsec <= IMAGE_MATCH_ARCSEC):
-        u = r_uids[j[k]]
+        u = uid_ok[j[k]]
         img_rows.append(
             {
                 "image": str(images["image_id"][k]),
@@ -149,6 +182,7 @@ def main() -> None:
 
     summary = {
         "run": args.run_dir.name,
+        "zout_sha256": ZOUT_SHA256,
         "post_hoc_other_split": post_hoc_other,
         "n_ranked": n,
         "strata": counts,
@@ -178,6 +212,9 @@ def main() -> None:
             "median_overall_percentile": None if med_overall is None else round(med_overall / n, 4),
             "median_background_rank": med_bg,
             "median_background_percentile": None if med_bg is None else round(med_bg / nb, 4),
+            "raw_median_rank_ratio": None if not bg_imgs else round(med_overall / med_bg, 3),
+            "length_ratio_n_ranked_over_n_background": round(n / nb, 3),
+            "plan_trigger_met_literal": image_trigger(med_overall, med_bg),
             "rows": img_rows,
         },
         "assumptions": {
@@ -187,6 +224,9 @@ def main() -> None:
             "image_match_arcsec": IMAGE_MATCH_ARCSEC,
             "enrich_factor": ENRICH_FACTOR,
             "enrich_min": ENRICH_MIN,
+            "image_gain": IMAGE_GAIN,
+            "min_stratum": MIN_STRATUM,
+            "k_s_rounding": "half up, at least 1",
         },
     }
     args.out.mkdir(parents=True, exist_ok=True)

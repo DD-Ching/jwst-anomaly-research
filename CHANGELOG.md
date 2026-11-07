@@ -7,7 +7,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `configs/smacs_jwst3_gaia_only.yaml`; `scripts/smacs_zphot_stratify.py` (baseline reproduces all 2938 ranks).
 - **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): members 614 / 2938 ranked but 2 / 20 of the top
   20, so H0 (minority-population effect) fails the frozen rule; background-only top 9 holds 7 of the overall top 20.
-  ICLv2 images matched in the background stratum: median percentile 0.4835 overall, 0.48 within it (no gain).
+  ICLv2 images in the background stratum: the plan's raw median-rank trigger is met (2.323 > 2) but equals the
+  list-length ratio (2.306); as percentiles 0.4835 vs 0.48, so its consequence is not taken (deviation, in the PR).
 - **Post hoc:** eazy `z_phot = -1` rows are 4 / 20 of the top 20 vs 156 / 2938 ranked; 2 are screened spiked stars.
 - **Services:** CDS XMatch still refuses Gaia (11:15Z); #751 still waits for CDS.
 - **Handoff:** next unblocked: the `z_phot = -1` point-source test (TASKS Next M2), or MIRI fixed-aperture colours.
