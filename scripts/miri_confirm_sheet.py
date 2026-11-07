@@ -30,6 +30,7 @@ anchor = np.asarray(s["anchor_band"]).astype(str)
 uid = np.asarray(s["source_uid"]).astype(str)
 rng = np.random.default_rng(0)
 pick = []
+labels = []  # title parts from the actual group sizes (a short group shifts later panels)
 for band, want_match, k in [
     ("F770W", True, 8),
     ("F770W", False, 4),
@@ -38,7 +39,13 @@ for band, want_match, k in [
 ]:
     m = only & (anchor == band) & (np.isin(uid, list(matched)) == want_match)
     idx = np.flatnonzero(m)
-    pick += list(rng.choice(idx, min(k, len(idx)), replace=False))
+    chosen = list(rng.choice(idx, min(k, len(idx)), replace=False))
+    if chosen:
+        first = len(pick) + 1
+        labels.append(
+            f"{first}-{first + len(chosen) - 1} {band} {'matched' if want_match else 'unmatched'}"
+        )
+    pick += chosen
 t = s[pick]
 tg = Table({"source_uid": t["source_uid"], "ra": t["ra"], "dec": t["dec"]})
 tg["rank"] = np.arange(1, len(tg) + 1)
@@ -68,8 +75,5 @@ allc = vstack(cs, metadata_conflicts="silent")
 viz.contact_sheet(
     allc,
     SP / "contact_sheet_rgb.png",
-    title=(
-        "SMACS MIRI single-band-only: 1-8 F770W matched, 9-12 F770W unmatched, "
-        "13-16 F1800W unmatched, 17-19 F1500W matched"
-    ),
+    title="SMACS MIRI single-band-only: " + ", ".join(labels),
 )
