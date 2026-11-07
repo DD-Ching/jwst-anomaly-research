@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS MIRI single-band detections: 61 / 163 have a NIRCam counterpart, F770W real, F1500W/F1800W near chance
+- **Plan first** (`results/miri_confirm/PLAN.md`); TASKS "Then" 7, D-014 "Revisit if".
+- **Result** (`results/miri_confirm/RESULT.md`, `scripts/miri_confirm.py`): jwst 3.0.0 MIRI run (908 sources, 113
+  pass the gate). Of the 163 sources failing only `single_band`, 61 match a DJA v7.4 NIRCam source (S/N ≥ 5,
+  0.3″) vs a 0.051 shifted-position chance rate: frozen rule "adopt". By band F770W 45 / 66, F1000W 10 / 20,
+  F1500W 3 / 42, F1800W 3 / 35. Positive control: gate-passing sources match 97 / 113. Contact sheet viewed:
+  unmatched F770W singles lie on star spikes or halos; unmatched F1800W ones are noise or edge.
+- **Deviation:** not wired into the pipeline (about 8 expected chance confirmations, mostly F1500W/F1800W; a band
+  restriction is post hoc). Ranking unchanged.
+- **Handoff:** #751 (XMatch cause) still waits for a session that reaches CDS (unreachable again 2026-11-07
+  00:08Z). Next: frozen band-restricted MIRI confirmation join and MIRI re-rank; CEERS star split re-run (after
+  #751); Zoobot/DINOv2 reuse check.
+
 ## 2026-11-06: SMACS vs CEERS t021 ranked features differ strongly, carried by z_phot cluster members
 - **Plan first** (`results/science_control_features/PLAN.md`, frozen rule as a tested function); TASKS "Then" 8.
 - **Result** (`results/science_control_features/RESULT.md`, `scripts/science_control_features.py`, run
