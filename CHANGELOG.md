@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: Cutouts: north-up panels and shared brightness scaling (TASKS Next M2, D-005 addendum)
+- `viz.north_up` (local sky Jacobian of the cutout WCS; NaN-aware bilinear); `contact_sheet(north_up=,
+  scale="panel"|"band"|"all")`, `cutout_png(north_up=)`. Default orientation and scale unchanged; the sheet
+  footnote now states the orientation (default PNG text changes).
+- **Validated** (`results/viz_north_up/RESULT.md`): synthetic rotations, both parities and a mosaic-offset WCS
+  (unit tests); SMACS F200W real cutouts (35.39° WCS rotation): 10 / 11 catalogued pairs matched within 4 px
+  (max 3.47 px; post hoc rule), the miss an elongated galaxy; stored-orientation control ≤ 0.199; contact sheets
+  looked at.
+- **Failed approaches:** nearest neighbour dropped a one-pixel artefact at 210°; `mode="constant"` blanked the
+  last row and column of an identity transform; a 0.5 coverage threshold filled isolated NaN pixels.
+- **Services:** CDS (SIMBAD, XMatch) still unreachable (17:10Z, connection reset); #751 still waits. S3 worked.
+- **Handoff:** next: wire `north_up` / `scale` into pipeline configs (contact-sheet options) or image embeddings
+  (TASKS Next M2); `f200w_1816` / `f200w_384` still need a vetting route.
+
 ## 2026-11-07: Program 4043 F444W grism: pipeline c1d not adopted; covers no record that needs a spectrum (TASKS Next M2, D-110)
 - **Plan first** (`results/grism_4043/PLAN.md`); scripts `grism_4043_coverage.py`, `grism_4043_lines.py` (frozen
   rule, unit-tested before the run but committed with the result), `grism_4043_fluxcheck.py` (post hoc).
