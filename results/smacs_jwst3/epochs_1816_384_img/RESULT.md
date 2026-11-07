@@ -8,8 +8,8 @@ Output: `summary.json`. Contact sheet: `contact_sheet.png` (both epochs' centroi
 - Level-3 `_i2d.fits` of 2736 o001 (2022) and VENUS 6882 o057 (2026), F150W and F444W, read by S3 byte range
   (1.5″ cutouts); CATs from `s3://stpubdata` (same products as `../epochs_1816_384/`).
 - Contact sheet (0.6″ panels): one compact, isolated source at each target position in all 8 cutouts; the
-  centroids sit on the source peak. The markers are raw positions before the frame tie (tie 14.5–25.5 mas, mostly
-  in Dec, `tie_mas`), so their visible separation is not the residual.
+  centroids sit on the source peak. The markers are raw positions before the frame tie (tie Dec component 14.5–25.5 mas, larger than RA;
+  `tie_mas`), so their visible separation is not the residual.
 
 ## Validation (simulation)
 - Shifting each peer's epoch-2 cutout by +20 mas in RA or Dec (Fourier shift) is recovered with a median error
