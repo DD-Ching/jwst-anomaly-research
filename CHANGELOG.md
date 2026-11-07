@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS point-source screen v2 (locus 20–24 mag): not validated (TASKS Next M2, D-022 addendum 7)
+- **Plan first** (`results/smacs_jwst3/point_source_v2/PLAN.md`, stating that the window was chosen after v1); run
+  `20261107T141219Z-86cb61bb` (ranks reproduce #766); `scripts/smacs_point_source.py --plan v2` (`decide_v2`,
+  `held_out_by_group` unit-tested before the run).
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): cut 2.7257 px from 101 stars; V1a 0.6909 / 0.9348
+  and V1b (spatial halves) 0.9608 / 0.76 fail; V2 0 / 19. The plan's expectation that V1a would pass was wrong (the
+  MAD narrowed). Only 5 stars at 24–27 mag, so no size label is possible at the targets' magnitude here.
+- **Failed approach:** constant-width `flux_radius` locus on SMACS, closed (post hoc: median 2.649 px at 20–20.7 mag);
+  a magnitude-dependent locus or a saturation flag stays open. `/code-review` fixes: a failed gate wins over an
+  unsplit one, RA-wrap guard, unlabelled target rows carry `below_cut`.
+- **Services:** CDS XMatch still refuses Gaia (14:19Z; host resets at 14:08Z); #751 still waits.
+- **Handoff:** next: MIRI fixed-aperture colours (TASKS Next M2), which could also place `f200w_1816` / `f200w_384`.
+
 ## 2026-11-07: SMACS point-source screen on DJA `flux_radius`: not validated (TASKS Next M2, D-022 addendum 6)
 - **Plan first** (`results/smacs_jwst3/point_source/PLAN.md`); run `20261107T131039Z-cd7a1929` (ranks reproduce #765);
   `scripts/smacs_point_source.py` (rule functions unit-tested before the run).
