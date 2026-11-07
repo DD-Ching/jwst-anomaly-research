@@ -153,3 +153,43 @@ real vs 0.5/1.5/4/9.5/19.5/39 chance pairs; the chance share of the pairs added 
 vetted singles need radii where chance pairs reach 12 % or more. The config with α = 0.25 brings new split-row
 entries (`blue_dropout`) into the top 20, so it is not adopted as the MIRI default. Segment-overlap association
 (a pair shares footprint pixels across bands) is the next test, as the plan says.
+
+## Segment-overlap band association (2026-11-07)
+
+**Plan** `PLAN_segoverlap.md` (frozen before measuring). **Data:** MAST L3 `jw02736-o002_t001_miri_{f770w,f1000w,
+f1500w,f1800w}_segm.fits` and `_cat.ecsv` (S3 `stpubdata`, jwst 3.0.0; sha256 in the JSON), streamed to scratch and
+deleted. Script `scripts/miri_segoverlap.py` → `summary_segoverlap.json`. Each other-band map is resampled onto the
+F770W grid (nearest neighbour through both WCSs); an F770W ↔ band-b pair is accepted at `n_ij / min(A_i, A_j) ≥ f`,
+one-to-one by decreasing overlap; "extra" pairs have catalog centroids > 0.1″ apart.
+
+**Validation (post hoc, not in the plan; derived, `validation_r0_pairs`; every pair within 0.1″, not one-to-one, no frozen criterion).** All 232 F770W pairs within 0.1″ (F1000W 145, F1500W 55, F1800W 32)
+overlap ≥ 0.75; per-band 10th percentiles 0.979 / 0.951 / 0.949. The resampling and the overlap measure reproduce the
+known associations by this check.
+
+**Frozen rule outcome (derived).**
+
+| f | accepted within 0.1″ | extra (real) | extra (chance, mean of 4 shifts) | chance fraction | passes (≤ 0.10) |
+|---|---|---|---|---|---|
+| 0.1 | 231 | 124 | 49.0 | 0.395 | no |
+| 0.25 | 231 | 121 | 41.75 | 0.345 | no |
+| 0.5 | 231 | 114 | 34.5 | 0.303 | no |
+| 0.75 | 231 | 102 | 22.5 | 0.221 | no |
+
+No f is adopted. The four vetted rows (`_221`, `_239`, `_118`, `_240`) gain ≥ 1 band at every f (`vetted_bands_gained`),
+`_176` none. The segmentation view of the five (post hoc, scratch, not tracked) shows the F770W footprints of `_221`, `_118`
+overlapping their F1000W/F1500W/F1800W segments, and `_239`, `_240` partly overlapping F1000W segments of bright
+neighbours. So footprint overlap does reach the vetted rows, but its extra pairs are 22–40 % chance. The chance
+measure here is reference-anchored (F770W pairs only), unlike the chained merge of the size-aware test, so the two
+fractions are indicative, not a strict comparison.
+
+**Post hoc corrected counting (`post_hoc_corrected_grid`, after code review).** The frozen counting breaks overlap
+ties by label, lets chance pairs use labels that the real run spends on 0.1″ pairs, measures band-b areas after
+truncation at the F770W grid edge, and counts labels without a catalog row as extra; all four can inflate the chance
+count. With all four fixed (native areas, ties by shared pixels, catalogued labels only, real 0.1″ labels removed
+from the chance run) the chance fractions are 0.280 / 0.246 / 0.224 / 0.174 at f 0.1 / 0.25 / 0.5 / 0.75: still
+none ≤ 0.10, same vetted merges. The frozen outcome stands.
+
+**Reading.** Neither a size-scaled radius (addendum 5) nor footprint overlap separates real split MIRI rows from
+chance neighbours under the 0.10 ceiling (ASSUMPTION). Per the plan's stop branch, the MIRI association stays the
+fixed 0.1″ and this line is closed. Stated limitation: a MIRI row's "single band" status is unreliable for extended or
+blended sources; vetting checks other-band footprints and centroids within ~0.7″ (as the five-source vetting did).

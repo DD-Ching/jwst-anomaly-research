@@ -678,7 +678,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
    unexplained; `_239` BCG, `_240` cluster member, `_118` lensed image 3.1, `_221` z 1.16 galaxy, `_176` z_phot 0.34;
    4 / 5 are "single band" only because other-band centroids lie 0.18–0.66″ away (0.1″ merge radius). Size-scaled
    radius done 2026-11-07 (D-014 addendum 5): α 0.25 passes the chance rule but merges 1 / 4 of those; not the MIRI
-   default. Next: segment-overlap association (shared footprint pixels across bands), plan first, then re-rank.
+   default. Segment overlap done 2026-11-07 (D-014 addendum 6): all 4 merge, but chance fractions 0.22–0.40 at every
+   f, none adopted; association line closed, 0.1″ stays, "single band" MIRI rows need a footprint check in vetting.
 8. **Control comparability, what remains** (D-022): pipeline-catalog features are jwst 3.0.0 in CEERS and,
    since 2026-11-06, in SMACS (`results/smacs_jwst3/RESULT.md`). CEERS has no stellar locus (too few stars). ~~DJA colours vs CEERS DR1.0~~
    done 2026-11-06 (`results/ceers_dr1_colours/RESULT.md`, D-022 addendum: two LW colours offset −0.05 to −0.07 mag, a

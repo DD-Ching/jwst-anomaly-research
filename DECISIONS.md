@@ -923,6 +923,17 @@ adds two F1500W `blue_dropout` rows that look like split or diffuse segments (co
 Alternatives rejected: a larger fixed radius (chance share 0.115 at 0.3″, post hoc). Revisit if a segment-overlap
 association is measured, or a field needs α > 0 under the same chance rule.
 
+**Addendum 6 (2026-11-07): segment-overlap band association** (`results/miri_confirm/PLAN_segoverlap.md`, `RESULT.md`
+§ Segment-overlap band association, `summary_segoverlap.json`, `scripts/miri_segoverlap.py`). F770W ↔ other-band pairs
+accepted at footprint overlap `n_ij / min(A_i, A_j) ≥ f` on the F770W grid, one-to-one. Post hoc validation: all 232
+pairs within 0.1″ overlap ≥ 0.75 (per-band 10th percentiles 0.949–0.979). The vetted rows `_221`, `_239`, `_118`, `_240` all merge at every
+f, but the pairs beyond 0.1″ carry chance fractions 0.395 / 0.345 / 0.303 / 0.221 (f 0.1 / 0.25 / 0.5 / 0.75), all above
+the 0.10 ceiling, so no f is adopted (post hoc corrected counting: 0.280–0.174, still none). MIRI association stays the fixed 0.1″ and the line is closed (plan's stop
+branch). Limitation: "single band" MIRI rows of extended or blended sources are not reliable; vetting checks other-band
+footprints (as `docs/candidates/smacs_miri_f770w_top20_singles.md` did). Alternatives rejected: segment overlap (chance
+too high), size-scaled radius (addendum 5). Revisit if a PSF-matched multi-band detection image (one segmentation for
+all MIRI bands) becomes available or is built for another reason.
+
 ## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
 
 **Decision.** After the catalogue classification (D-012), `classify.stellar_locus` adds sources that are
