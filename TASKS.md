@@ -728,6 +728,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   (`results/viz_north_up/RESULT.md`, D-005 addendum); pipeline configs do not expose them yet (defaults unchanged).
 - Second epochs and medium bands: check the galaxy top k against VENUS (6882) and other later programs
   with `scripts/epoch_compare.py` (D-017). Moving sources are stars; variable ones are AGN or transients.
+  `f200w_1816` / `f200w_384` done 2026-11-07, undetermined (`results/smacs_jwst3/epochs_1816_384/RESULT.md`,
+  D-017 addendum: no F444W catalog pair; F150W residuals within faint-peer scatter). Open: image-level F444W
+  centroids with a peer-calibrated tie (new plan).
 - ~~NIRCam F444W grism spectra of program 4043~~ done 2026-11-07 (`results/grism_4043/RESULT.md`, D-110): only
   `f200w_2915` is covered; pipeline c1d not adopted (levels 23–26× the imaging flux; 2915 line gate failed).
 

@@ -1065,6 +1065,14 @@ Unit tests recover an injected 30 mas motion and 0.5 mag change.
 - Extended targets are tested: then measure motion on PSF-like cores, or across filters. For `2915`, a galaxy,
   the residual was 7 mas in F444W and 34 mas in F150W; the bands disagree, so it is not motion.
 
+**Addendum (2026-11-07, SMACS `f200w_1816` / `f200w_384`, `results/smacs_jwst3/epochs_1816_384/RESULT.md`).**
+For faint compact targets (F150W ≈ 25.7 mag) the tool's error (tie + `semimajor_sigma` / S/N; 1.20–1.33 mas)
+is about one tenth of the residual median of 8 similar-magnitude, similar-size peers (11.41–12.97 mas, post hoc). Its
+`target_residual_significance` (5.2, 17.4 there) is therefore not evidence of motion for such targets; compare
+with magnitude- and size-matched peers instead (post hoc check in `scripts/smacs_epochs_1816_384.py`). Both
+targets lack F444W CAT rows though a compact source is visible there in the cutouts (visual, not stored), so
+"not measured" need not mean "absent". Tool unchanged.
+
 ## D-018 Diffraction-spike flag on cutouts: orientation-free hexagonal harmonic (2026-10-08)
 
 **Decision.** This is new code (tier 5): numpy and scipy, with no new dependency. `cutouts.spike_statistic` resamples
