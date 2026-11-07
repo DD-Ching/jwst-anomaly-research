@@ -48,6 +48,8 @@ nf = ["skyllh>=26.1"]
 streaks = ["acstools>=3.8", "scikit-image>=0.22", "photutils>=1.12"]
 # Image simulations of the W1 catalogue-shape responsivity (scripts/w1_r_sim.py).
 shearsim = ["galsim>=2.5", "photutils>=3.0"]  # photutils 3 API (n_pixels, semimajor_axis)
+# Pretrained image encoders for the M2 embedding pilot (scripts/m2_embeddings.py; D-010 addendum). CPU torch is enough.
+embed = ["torch>=2.4", "timm>=1.0.30", "huggingface_hub>=0.24"]
 
 [project.scripts]
 jwst-anomaly = "jwst_anomaly.cli:main"

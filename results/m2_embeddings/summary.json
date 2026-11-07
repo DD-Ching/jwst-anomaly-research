@@ -1,0 +1,120 @@
+{
+ "provenance": "simulated (injections into observed cutouts); recall is derived",
+ "plan": "results/m2_embeddings/PLAN.md",
+ "image": "s3://stpubdata/jwst/public/jw02736/L3/t/o001/jw02736-o001_t001_nircam_clear-f200w_i2d.fits",
+ "pix_arcsec": 0.031228055546194514,
+ "n_hosts_eligible": 2655,
+ "n_clean": 1000,
+ "n_injected": 50,
+ "n_hosts_used": 1050,
+ "random_recall_at_k": 0.047619047619047616,
+ "params": {
+  "size_px": 64,
+  "mag_range": [
+   20.0,
+   27.0
+  ],
+  "strengths": [
+   0.3,
+   1.0
+  ],
+  "inj_seeds": [
+   1,
+   2,
+   3
+  ],
+  "r_range_arcsec": [
+   0.35,
+   0.7
+  ],
+  "extent_deg": [
+   90.0,
+   180.0
+  ],
+  "sigma_px": 1.5,
+  "n_pca": 50,
+  "n_trees": 300,
+  "top_k": 50,
+  "margin": 0.1,
+  "encoders": {
+   "zoobot": "hf_hub:mwalmsley/zoobot-encoder-convnext_nano",
+   "dinov2": "vit_small_patch14_dinov2.lvd142m"
+  }
+ },
+ "recall_at_k": {
+  "pixel": {
+   "0.3": [
+    0.02,
+    0.04,
+    0.04
+   ],
+   "1.0": [
+    0.08,
+    0.1,
+    0.06
+   ]
+  },
+  "zoobot": {
+   "0.3": [
+    0.18,
+    0.18,
+    0.16
+   ],
+   "1.0": [
+    0.14,
+    0.2,
+    0.18
+   ]
+  },
+  "dinov2": {
+   "0.3": [
+    0.04,
+    0.04,
+    0.06
+   ],
+   "1.0": [
+    0.08,
+    0.06,
+    0.04
+   ]
+  }
+ },
+ "mean_recall_at_k": {
+  "pixel": {
+   "0.3": 0.03333333333333333,
+   "1.0": 0.08
+  },
+  "zoobot": {
+   "0.3": 0.17333333333333334,
+   "1.0": 0.17333333333333334
+  },
+  "dinov2": {
+   "0.3": 0.04666666666666667,
+   "1.0": 0.060000000000000005
+  }
+ },
+ "outcome": {
+  "zoobot": {
+   "0.3": "beats",
+   "1.0": "tie"
+  },
+  "dinov2": {
+   "0.3": "tie",
+   "1.0": "tie"
+  }
+ },
+ "h_emb_supported": {
+  "zoobot": false,
+  "dinov2": false
+ },
+ "timing_s": {
+  "io": 11.693845510482788,
+  "zoobot": 35.41797423362732,
+  "dinov2": 52.6070032119751
+ },
+ "versions": {
+  "torch": "2.15.0+cpu",
+  "timm": "1.0.31",
+  "sklearn": "1.9.1"
+ }
+}

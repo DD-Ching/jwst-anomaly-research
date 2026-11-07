@@ -124,7 +124,10 @@ def embed(name: str, imgs: np.ndarray, batch: int = 32) -> np.ndarray:
     import torch
     import torch.nn.functional as F
 
-    model = timm.create_model(ENCODERS[name], pretrained=True, num_classes=0).eval()
+    kw = (
+        {"img_size": 224} if name == "dinov2" else {}
+    )  # timm interpolates DINOv2's 518 px pos-embed
+    model = timm.create_model(ENCODERS[name], pretrained=True, num_classes=0, **kw).eval()
     out = []
     x01 = (imgs - imgs.min(axis=(1, 2), keepdims=True)) / (
         np.ptp(imgs, axis=(1, 2), keepdims=True) + 1e-12
