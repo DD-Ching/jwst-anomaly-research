@@ -1,8 +1,9 @@
 """Contact sheet for ``miri_confirm.py``: single-band-only MIRI sources in F200W, F770W, F1800W.
 
-Usage: ``python scripts/miri_confirm_sheet.py <run_dir> <out_dir>`` after ``miri_confirm.py`` wrote
-``results/miri_confirm/summary.json``. Picks (seeded) 8 matched and 4 unmatched F770W, 4 unmatched
-F1800W and 3 matched F1500W sources; cutouts are S3 byte-range reads from ``stpubdata``.
+Usage: ``python scripts/miri_confirm_sheet.py <run_dir> <out_dir> <summary.json>`` with the
+``summary.json`` that ``miri_confirm.py`` wrote for the same run.
+Picks (seeded) 8 matched and 4 unmatched F770W, 4 unmatched F1800W
+and 3 matched F1500W sources; cutouts are S3 byte-range reads from ``stpubdata``.
 Visual check only (observed images); no number in RESULT.md depends on it.
 """
 
@@ -15,10 +16,13 @@ from astropy.table import Table, vstack
 
 from jwst_anomaly import cutouts, viz
 
-R, SP = Path(sys.argv[1]), Path(sys.argv[2])
+R, SP, SUMMARY = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
 SP.mkdir(parents=True, exist_ok=True)
 s = Table.read(R / "smacs0723_miri/sources.ecsv")
-g = json.load(open("results/miri_confirm/summary.json"))["groups"]["single_band_only"]
+g = json.loads(SUMMARY.read_text())
+if g.get("run") != R.name:
+    raise SystemExit(f"{SUMMARY} is for run {g.get('run')}, not {R.name}")
+g = g["groups"]["single_band_only"]
 matched = set(g["matched_uids"])
 q = Table.read(R / "smacs0723_miri/quality.ecsv")
 only = np.asarray(np.ma.filled(q["quality_reason"].astype(str), "")) == "single_band"
