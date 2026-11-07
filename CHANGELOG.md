@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: Program 4043 F444W grism: pipeline c1d not adopted; covers no record that needs a spectrum (TASKS Next M2, D-110)
+- **Plan first** (`results/grism_4043/PLAN.md`); scripts `grism_4043_coverage.py`, `grism_4043_lines.py` (frozen
+  rule, unit-tested before the run but committed with the result), `grism_4043_fluxcheck.py` (post hoc).
+- **Result** (`RESULT.md`, `coverage.json`, `lines_2915.json`, `fluxcheck.json`; spectrum plot looked at): only
+  `f200w_2915` has a pipeline c1d spectrum; `f200w_2804`, `f200w_1816`, `f200w_384` lie outside the footprint. The
+  2915 line test failed its injection gate (0.71 / 0.655 / 0.0 < 0.90), so no verdict; post hoc, c1d levels are a
+  median 23–26× the imaging flux. Grism route closed for the open SMACS records (post hoc: rests on coverage and
+  the flux check, not on the plan's outcome rule).
+- **Failed approach:** a "both dispersions" line rule: Paβ is on both spectra in only 9 / 200 draws (grismc ends
+  at 4.7579 µm); the window argmax has no band-edge mask. `/code-review` fixes: NaN injections off the spectrum,
+  the zero-amplitude "rate" dropped (not a rate), fluxcheck guard; the rule functions were committed with the result.
+- **Services:** CDS (SIMBAD, XMatch) still unreachable (16:08Z); MAST API timed out, MAST TAP and S3 worked; #751 still waits.
+- **Handoff:** next: image embeddings (TASKS Next M2) or cutouts north-up; `f200w_1816` / `f200w_384` still need a
+  vetting route.
+
 ## 2026-11-07: SMACS MIRI colours from DJA fixed apertures: not adopted (TASKS Next M2, D-013 addendum)
 - **Plan first** (`results/miri_dja_colours/PLAN.md`, DJA v7.4 0.7″ aperture); runs `20261107T151133Z-675b4a49`
   (`configs/smacs_jwst3_miri_dja.yaml`) vs `20261107T151133Z-0490f84e`; rules V / C / B as tested functions in

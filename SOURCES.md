@@ -561,6 +561,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
 - **JWST program 4043**, "Unveiling the build-up of large scale structure in the early Universe", PI Witten (MAST
   metadata). It has NIRCam F444W grism spectra (`jw04043-o001_t001_nircam_f444w-grismr` and `-grismc`, public,
   level 3, t_min 2024-05-11) and F090W/F115W/F444W imaging over part of SMACS 0723, including `2915`.
+  Pipeline WFSS products (accessed 2026-11-07, `CAL_VER` 3.0.0, last modified 2026-10-21):
+  `s3://stpubdata/jwst/public/jw04043/L3/t/o001/jw04043-o001_t001_nircam_f444w-grism{r,c}_c1d.fits` (19,434,240 /
+  25,891,200 bytes; 212 / 221 sources), `_x1d.fits` (358,868,160 / 362,848,320 bytes, not read), and
+  `jw04043-o001_t001_nircam_clear-f444w_cat.ecsv` (3449 rows); footprints from MAST CAOM TAP `ivoa.obscore`.
 
 ## Control-field matched photometry (cycle 16, checked 2026-10-07 UTC)
 

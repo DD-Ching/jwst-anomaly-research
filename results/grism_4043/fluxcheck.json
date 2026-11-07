@@ -1,0 +1,40 @@
+{
+ "grismr_c1d": {
+  "file": "grismr_c1d.fits",
+  "band_um": [
+   4.2,
+   4.6
+  ],
+  "percentiles": [
+   16,
+   84
+  ],
+  "n": 163,
+  "ratio_median": 23.053,
+  "ratio_p16_p84": [
+   7.488,
+   86.416
+  ],
+  "source": 17.51,
+  "source_percentile": 39.9
+ },
+ "grismc_c1d": {
+  "file": "grismc_c1d.fits",
+  "band_um": [
+   4.2,
+   4.6
+  ],
+  "percentiles": [
+   16,
+   84
+  ],
+  "n": 178,
+  "ratio_median": 26.449,
+  "ratio_p16_p84": [
+   10.677,
+   110.376
+  ],
+  "source": 17.62,
+  "source_percentile": 34.8
+ }
+}

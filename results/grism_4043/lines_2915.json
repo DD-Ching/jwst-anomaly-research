@@ -1,0 +1,91 @@
+{
+ "source_id": 1238,
+ "spectra": {
+  "grismr": {
+   "file": "grismr_c1d.fits",
+   "cal_ver": "3.0.0",
+   "n_pix": 1352,
+   "ra": 110.75712141359567,
+   "dec": -73.48898446707432,
+   "wave_um": [
+    3.7807,
+    5.1001
+   ]
+  },
+  "grismc": {
+   "file": "grismc_c1d.fits",
+   "cal_ver": "3.0.0",
+   "n_pix": 997,
+   "ra": 110.75712141359567,
+   "dec": -73.48898446707432,
+   "wave_um": [
+    3.7819,
+    4.7579
+   ]
+  }
+ },
+ "params": {
+  "snr_min": 5.0,
+  "dlam_max_um": 0.003,
+  "gate_recovery": 0.9,
+  "inj_snr": 7.0,
+  "z_range": [
+   2.68,
+   3.1
+  ],
+  "cont_pix": 51,
+  "box_pix": 5,
+  "inj_sigma_um": 0.0015,
+  "n_inj": 200,
+  "seed": 1
+ },
+ "injection_recovery": {
+  "HeI_10833": {
+   "recovery": 0.71,
+   "n_both_covered": 200,
+   "recovery_both_covered": 0.71
+  },
+  "Pagamma": {
+   "recovery": 0.655,
+   "n_both_covered": 200,
+   "recovery_both_covered": 0.655
+  },
+  "Pabeta": {
+   "recovery": 0.0,
+   "n_both_covered": 9,
+   "recovery_both_covered": 0.0
+  }
+ },
+ "gate_pass": false,
+ "observed_peak": {
+  "grismr": {
+   "HeI_10833": [
+    3.78,
+    4.3027
+   ],
+   "Pagamma": [
+    3.78,
+    4.3027
+   ],
+   "Pabeta": [
+    13.38,
+    5.0815
+   ]
+  },
+  "grismc": {
+   "HeI_10833": [
+    4.26,
+    4.419
+   ],
+   "Pagamma": [
+    4.26,
+    4.419
+   ],
+   "Pabeta": [
+    2.02,
+    4.754
+   ]
+  }
+ },
+ "verdict": "no_verdict_gate_failed"
+}
