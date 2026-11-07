@@ -28,6 +28,7 @@ MATCH_ARCSEC = 0.3  # ASSUMPTION (plan): about one F770W FWHM
 MIN_SNR = 5.0  # ASSUMPTION: NIRCam detection floor, as quality.min_detection_snr
 SHIFTS_ARCSEC = (5.0, 6.0, 7.0, 8.0, 9.0, 10.0, -5.0, -6.5, -8.0, -10.0)  # ASSUMPTION (plan)
 MAX_CHANCE_FRACTION = 0.2  # ASSUMPTION (plan): chance rate / real rate gate
+MIN_BAND_N = 15  # ASSUMPTION (PLAN_bands.md): smallest per-band group the gate is applied to
 
 
 def nircam_detected(dja: Table, bands=NIRCAM_BANDS, aperture=APERTURE, min_snr=MIN_SNR):
@@ -57,6 +58,13 @@ def verdict(real_rate: float, chance_rate: float, gate: float = MAX_CHANCE_FRACT
     if not np.isfinite(real_rate) or real_rate <= 0:
         return "not adopted: no real matches"
     return "adopt" if chance_rate < gate * real_rate else "not adopted: chance rate too high"
+
+
+def band_verdict(n: int, real_rate: float, chance_rate: float, min_n: int = MIN_BAND_N) -> str:
+    """Frozen per-band rule (``PLAN_bands.md``): the group rule, only when ``n >= min_n``."""
+    if n < min_n:
+        return f"not tested: n < {min_n}"
+    return verdict(real_rate, chance_rate)
 
 
 def main(argv=None) -> int:
@@ -97,14 +105,22 @@ def main(argv=None) -> int:
         hit, sep = match_fraction(ra, dec, ref, MATCH_ARCSEC)
         chance = [match_fraction(ra, dec, ref, MATCH_ARCSEC, s)[0].mean() for s in SHIFTS_ARCSEC]
         real, ch = float(hit.mean()) if len(hit) else float("nan"), float(np.mean(chance))
-        by_band = {
-            b: {
-                "n": int((anchor[m] == b).sum()),
-                "matched": int(hit[anchor[m] == b].sum()),
-                "rate": round(float(hit[anchor[m] == b].mean()), 3),
+        by_band = {}
+        for b in sorted(set(anchor[m])):
+            in_b = anchor[m] == b
+            ch_b = [
+                match_fraction(ra[in_b], dec[in_b], ref, MATCH_ARCSEC, s)[0].mean()
+                for s in SHIFTS_ARCSEC
+            ]
+            real_b = float(hit[in_b].mean())
+            by_band[b] = {
+                "n": int(in_b.sum()),
+                "matched": int(hit[in_b].sum()),
+                "rate": round(real_b, 3),
+                "chance_rate": round(float(np.mean(ch_b)), 4),
+                "chance_rate_std": round(float(np.std(ch_b)), 4),
+                "verdict": band_verdict(int(in_b.sum()), real_b, float(np.mean(ch_b))),
             }
-            for b in sorted(set(anchor[m]))
-        }
         out["groups"][name] = {
             "n": int(m.sum()),
             "matched": int(hit.sum()),

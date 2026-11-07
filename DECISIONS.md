@@ -890,6 +890,11 @@ NIRCam source (S/N ≥ 5) within 0.3″ against a 0.051 chance rate: the frozen 
 the detection band (F770W 45 / 66, F1000W 10 / 20, F1500W 3 / 42, F1800W 3 / 35), and unmatched F770W singles in
 the contact sheet sit on star spikes or halos. Not wired yet: a band-restricted, position-only confirmation join
 needs its own frozen rule (post hoc idea). Ranking unchanged.
+**Addendum 2 (2026-11-07): per-band gate** (`results/miri_confirm/PLAN_bands.md`, `RESULT.md` § Per-band gate).
+Frozen before measurement: the same gate per detection band (n ≥ 15). F770W (45 / 66 vs chance 0.046) and F1000W
+(10 / 20 vs 0.020) pass; F1500W (3 / 42 vs 0.069) and F1800W (3 / 35 vs 0.057) fail. MIRI single-band confirmation,
+when wired, applies to F770W and F1000W detections only. Revisit if: a deeper or longer-wavelength counterpart
+catalog (e.g. MIRI-selected) becomes available for this field.
 
 ## D-015 Stellar locus: point-like sources with ordinary stellar colours join the stars (2026-10-08)
 
