@@ -43,3 +43,23 @@ def test_decide_gates():
     assert ps.decide([0.95, 0.95], 9, 0.0) == "not validated (V2 fails)"
     assert ps.decide([0.95, 0.95], 30, 0.2) == "not validated (V2 fails)"
     assert ps.decide([], 30, None) == "undetermined (V1 could not be split)"
+
+
+def test_held_out_by_group_and_spatial_halves():
+    ra = np.arange(20, dtype=float)
+    g = ps.spatial_groups(ra)
+    assert g.sum() == 10 and g[-1] and not g[0]
+    r = np.where(ra == 2.0, 9.0, 2.0 + 0.01 * (ra % 2))  # flat locus, one west outlier
+    rec = ps.held_out_by_group(g, r)
+    assert rec == [0.9, 1.0]  # east cut tested on west: 9 / 10
+    assert ps.held_out_by_group(np.ones(5, bool), np.ones(5)) == []
+
+
+def test_decide_v2_gates_and_reach():
+    ok = [0.95, 0.92]
+    assert ps.decide_v2(ok, ok, 19, 0.0, 12, 0.85) == "validated to ref_mag 27"
+    assert ps.decide_v2(ok, ok, 19, 0.0, 12, 0.5) == "validated to ref_mag 24 only"
+    assert ps.decide_v2(ok, ok, 19, 0.0, 9, 1.0) == "validated to ref_mag 24 only"  # V3 descriptive
+    assert ps.decide_v2(ok, [0.95, 0.85], 19, 0.0, 12, 0.9) == "not validated (V1b fail)"
+    assert ps.decide_v2([0.8, 0.9], ok, 5, 0.0, 12, 0.9) == "not validated (V1a, V2 fail)"
+    assert ps.decide_v2([], ok, 19, 0.0, 12, 0.9) == "undetermined (V1 could not be split)"

@@ -9,7 +9,10 @@ Provenance: catalog columns are ``observed`` / ``derived`` (DJA, MAST, ICLv2 ``m
 positions of catalogued images are observed identifications); every statistic is ``derived``; the
 thresholds are ASSUMPTIONs from the plan.
 
-Usage: python scripts/smacs_point_source.py <run_dir> --phot <phot.fits> --out <dir>
+``--plan v2`` applies ``results/smacs_jwst3/point_source_v2/PLAN.md``: locus window [20, 24], no
+fallback, plus a spatial held-out check (V1b) and a faint-star extrapolation check (V3).
+
+Usage: python scripts/smacs_point_source.py <run_dir> --phot <phot.fits> --out <dir> [--plan v2]
 """
 
 from __future__ import annotations
@@ -44,6 +47,14 @@ TARGETS = (
 )
 MAG_EDGES = (18.0, 22.0, 24.0, 26.0, 27.0, 28.0, 31.0)  # descriptive bins
 TOP_K = 20
+# v2 plan (results/smacs_jwst3/point_source_v2/PLAN.md), frozen before the v2 run
+LOCUS_MAG_V2 = (
+    20.0,
+    24.0,
+)  # ASSUMPTION (v2 plan; chosen after v1's outliers, so V1a is not independent)
+V3_MAG = (24.0, 27.0)  # ASSUMPTION (v2 plan): faint extrapolation range, (lo, hi]
+V3_MIN_STARS = 10  # ASSUMPTION (v2 plan): fewer → V3 descriptive
+V3_MIN_POINT = 0.80  # ASSUMPTION (v2 plan)
 
 
 def locus_cut(radius: np.ndarray) -> tuple[float, float, float]:
@@ -73,6 +84,56 @@ def held_out_recovery(ids: np.ndarray, radius: np.ndarray) -> list[float]:
         cut = locus_cut(radius[a])[2]
         out.append(float(np.mean(radius[b] <= cut)))
     return out
+
+
+def held_out_by_group(group: np.ndarray, radius: np.ndarray) -> list[float]:
+    """Cut from one group (``group`` True, then False), recovery fraction on the other; [] if a
+    group is too small to split."""
+    out = []
+    for train in (True, False):
+        a, b = group == train, group != train
+        if a.sum() < 2 or b.sum() < 1:
+            return []
+        cut = locus_cut(radius[a])[2]
+        out.append(float(np.mean(radius[b] <= cut)))
+    return out
+
+
+def spatial_groups(ra: np.ndarray) -> np.ndarray:
+    """V1b halves: True = east (``ra`` above the locus median ``ra``)."""
+    return ra > np.median(ra)
+
+
+def decide_v2(
+    rec_parity: list[float],
+    rec_spatial: list[float],
+    n_images: int,
+    image_point_frac: float | None,
+    n_faint: int,
+    faint_point_frac: float | None,
+) -> str:
+    """Frozen v2 plan rule: V1a, V1b, V2 combined with "and"; V3 sets the magnitude reach."""
+    if len(rec_parity) != 2 or len(rec_spatial) != 2:
+        return "undetermined (V1 could not be split)"
+    fails = []
+    if min(rec_parity) < V1_MIN_RECOVERY:
+        fails.append("V1a")
+    if min(rec_spatial) < V1_MIN_RECOVERY:
+        fails.append("V1b")
+    if not (
+        n_images >= V2_MIN_IMAGES
+        and image_point_frac is not None
+        and image_point_frac <= V2_MAX_POINT
+    ):
+        fails.append("V2")
+    if fails:
+        return "not validated (" + ", ".join(fails) + " fail)"
+    v3 = (
+        n_faint >= V3_MIN_STARS
+        and faint_point_frac is not None
+        and faint_point_frac >= V3_MIN_POINT
+    )
+    return "validated to ref_mag 27" if v3 else "validated to ref_mag 24 only"
 
 
 def decide(recovery: list[float], n_images: int, image_point_frac: float | None) -> str:
@@ -117,7 +178,9 @@ def main() -> None:
     ap.add_argument("run_dir", type=Path)
     ap.add_argument("--phot", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--plan", choices=("v1", "v2"), default="v1", help="frozen plan to apply")
     args = ap.parse_args()
+    v2 = args.plan == "v2"
     if file_sha256(args.phot) != PHOT_SHA256:
         raise SystemExit("phot is not the pinned DJA v7.4 SMACS file")
     p = Table.read(args.phot)
@@ -133,8 +196,15 @@ def main() -> None:
 
     s = stars[stars["ok"]]
     s_rad, s_mag, s_ids = rad[s["dja"]], np.asarray(s["ref_mag"], float), ids[s["dja"]]
-    lm, window = locus_mask(s_mag, s_rad)
+    s_ra = np.asarray(p["ra"], float)[s["dja"]]
+    if v2:  # no fallback window
+        lo, hi = LOCUS_MAG_V2
+        lm = (s_mag >= lo) & (s_mag <= hi) & np.isfinite(s_rad)
+        window = [lo, hi] if lm.sum() >= MIN_LOCUS else None
+    else:
+        lm, window = locus_mask(s_mag, s_rad)
     summary: dict = {
+        "plan": args.plan,
         "run": args.run_dir.name,
         "phot_sha256": PHOT_SHA256,
         "n_stars_ranked": len(stars),
@@ -161,7 +231,25 @@ def main() -> None:
         i_point = i_rad <= cut
         n_img = int(i_ok.sum())
         frac = float(np.mean(i_point)) if n_img else None
-        verdict = decide(rec, n_img, frac)
+        if v2:
+            rec_sp = held_out_by_group(spatial_groups(s_ra[lm]), s_rad[lm])
+            fm = (s_mag > V3_MAG[0]) & (s_mag <= V3_MAG[1]) & np.isfinite(s_rad)
+            n_faint = int(fm.sum())
+            faint_frac = float(np.mean(s_rad[fm] <= cut)) if n_faint else None
+            verdict = decide_v2(rec, rec_sp, n_img, frac, n_faint, faint_frac)
+            summary |= {
+                "v1b_recovery_spatial": [round(x, 4) for x in rec_sp],
+                "v1b_split_ra_deg": round(float(np.median(s_ra[lm])), 6),
+                "v3_n_faint_stars": n_faint,
+                "v3_point_fraction": None if faint_frac is None else round(faint_frac, 4),
+                "v3_is_gate": n_faint >= V3_MIN_STARS,
+                "v3_faint_stars": [
+                    {"ref_mag": round(float(m), 3), "flux_radius_pix": round(float(r), 3)}
+                    for m, r in sorted(zip(s_mag[fm], s_rad[fm], strict=True))
+                ],
+            }
+        else:
+            verdict = decide(rec, n_img, frac)
 
         g_ok = np.asarray(gal["ok"])
         g_rad = np.where(g_ok, rad[gal["dja"]], np.nan)
@@ -190,6 +278,8 @@ def main() -> None:
         top = [top_row(k) for k in range(min(TOP_K, len(gal)))]
         pos = {x: k for k, x in enumerate(gal["source_uid"])}
         targets = {t: top_row(pos[t]) if t in pos else None for t in TARGETS}
+        if v2:  # v2 plan: targets (ref_mag > 24) are labelled only with the 27 mag reach
+            summary["targets_labelled"] = verdict == "validated to ref_mag 27"
         point_images = [
             {
                 "id": str(images["id"][j]) if "id" in images.colnames else int(j),
@@ -241,14 +331,20 @@ def main() -> None:
         }
     summary["assumptions"] = {
         "match_arcsec": ZOUT_MATCH_ARCSEC,
-        "locus_mag": LOCUS_MAG,
-        "locus_mag_fallback": LOCUS_MAG_FALLBACK,
+        "locus_mag": LOCUS_MAG_V2 if v2 else LOCUS_MAG,
+        "locus_mag_fallback": None if v2 else LOCUS_MAG_FALLBACK,
         "min_locus": MIN_LOCUS,
         "n_sigma": N_SIGMA,
         "v1_min_recovery": V1_MIN_RECOVERY,
         "v2_min_images": V2_MIN_IMAGES,
         "v2_max_point": V2_MAX_POINT,
     }
+    if v2:
+        summary["assumptions"] |= {
+            "v3_mag": V3_MAG,
+            "v3_min_stars": V3_MIN_STARS,
+            "v3_min_point": V3_MIN_POINT,
+        }
     args.out.mkdir(parents=True, exist_ok=True)
     text = json.dumps(summary, indent=1, allow_nan=False)  # strict JSON: no bare NaN
     (args.out / "summary.json").write_text(text + "\n")
