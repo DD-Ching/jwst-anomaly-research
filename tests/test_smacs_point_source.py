@@ -42,4 +42,4 @@ def test_decide_gates():
     assert ps.decide([0.95, 0.85], 30, 0.05) == "not validated (V1 fails)"
     assert ps.decide([0.95, 0.95], 9, 0.0) == "not validated (V2 fails)"
     assert ps.decide([0.95, 0.95], 30, 0.2) == "not validated (V2 fails)"
-    assert ps.decide([], 30, None) == "not validated (V1 fails) (V2 fails)"
+    assert ps.decide([], 30, None) == "undetermined (V1 could not be split)"

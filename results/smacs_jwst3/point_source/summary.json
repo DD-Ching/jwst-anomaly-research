@@ -66,6 +66,14 @@
    "flux_radius_pix": 3.106
   }
  ],
+ "locus_duplicate_dja_ids": 0,
+ "review_v1_recovery_dedup": [
+  0.7333,
+  0.9057
+ ],
+ "galaxy_matched": 2340,
+ "galaxy_matched_outside_bins_or_nan_mag": 306,
+ "v2_images_nan_radius": 0,
  "r_psf": 2.1563,
  "mad_sigma": 0.2681,
  "cut": 2.9605,

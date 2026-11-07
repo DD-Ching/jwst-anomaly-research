@@ -17,7 +17,10 @@ the run. Contact sheet of the run looked at.
   for the record: `f200w_1816` 2.276 px, `f200w_384` 1.906 px (both below the cut; not a label, since the screen is
   not validated).
 - Descriptive: point-like fraction of galaxy-stratum rows by ref_mag: 0 / 13 (18–22), 2 / 90 (22–24), 62 / 213
-  (24–26), 48 / 256 (26–27), 82 / 438 (27–28), 107 / 1024 (28–31); 8 of the top 20 are below the cut (`top20`).
+  (24–26), 48 / 256 (26–27), 82 / 438 (27–28), 107 / 1024 (28–31); 8 of the top 20 are below the cut (`top20`). The bins cover 2034 of the 2340 DJA-matched galaxy
+  rows; 306 have ref_mag outside (18, 31] or NaN (`galaxy_matched_outside_bins_or_nan_mag`).
+- Review checks (added after the run; do not change the verdict): no locus star shares a DJA id with another
+  (`locus_duplicate_dja_ids` 0), no matched image has a NaN radius (`v2_images_nan_radius` 0).
 
 ## Post hoc (deviation: added after V1 failed)
 - The 14 locus stars above the cut (`post_hoc_locus_outliers`): 9 have ref_mag < 20 (radii 3.5–7.1 px), 3 lie at

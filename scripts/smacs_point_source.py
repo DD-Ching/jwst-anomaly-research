@@ -27,6 +27,7 @@ from astropy.table import Table
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from science_control_features import ZOUT_MATCH_ARCSEC  # noqa: E402
 from smacs_zphot_nofit import PHOT_SHA256, SAMPLE  # noqa: E402
+from smacs_zphot_nofit import match as uid_match  # noqa: E402
 
 from jwst_anomaly.provenance import file_sha256  # noqa: E402
 
@@ -75,8 +76,11 @@ def held_out_recovery(ids: np.ndarray, radius: np.ndarray) -> list[float]:
 
 
 def decide(recovery: list[float], n_images: int, image_point_frac: float | None) -> str:
-    """Frozen plan rule for the validation gates."""
-    v1 = len(recovery) == 2 and min(recovery) >= V1_MIN_RECOVERY
+    """Frozen plan rule for the validation gates. An empty ``recovery`` (a parity half too small to
+    split) means V1 could not be run: undetermined, not a failure."""
+    if len(recovery) != 2:
+        return "undetermined (V1 could not be split)"
+    v1 = min(recovery) >= V1_MIN_RECOVERY
     v2 = (
         n_images >= V2_MIN_IMAGES
         and image_point_frac is not None
@@ -92,25 +96,17 @@ def match(ra: np.ndarray, dec: np.ndarray, cat: SkyCoord) -> tuple[np.ndarray, n
     return idx, sep.arcsec <= ZOUT_MATCH_ARCSEC
 
 
-def _stratum(run_dir: Path, name: str, src: Table, cat: SkyCoord) -> Table:
+def _stratum(run_dir: Path, name: str, src: Table, cat: SkyCoord, fmag: dict) -> Table:
     """Ranked uids of a stratum (rank order) with DJA index, match flag and ref_mag."""
-    d = run_dir / name
-    sc = Table.read(d / "scores.ecsv")
+    sc = Table.read(run_dir / name / "scores.ecsv")
     sc = sc[np.argsort(np.asarray(sc["rank"]))]
     uids = [str(x) for x in sc["source_uid"]]
-    row = {str(x): i for i, x in enumerate(src["source_uid"])}
-    pos = np.array([row.get(x, -1) for x in uids])
-    have = pos >= 0
-    ra = np.where(have, np.asarray(src["ra"], float)[pos], 0.0)
-    dec = np.where(have, np.asarray(src["dec"], float)[pos], 0.0)
-    idx, ok = match(ra, dec, cat)
-    feats = Table.read(run_dir / SAMPLE / "features.ecsv")  # shared by both strata
-    fmag = {str(x): float(m) for x, m in zip(feats["source_uid"], feats["ref_mag"], strict=True)}
+    idx, ok = uid_match(src, uids, cat)
     return Table(
         {
             "source_uid": uids,
             "dja": idx,
-            "ok": have & ok,
+            "ok": ok,
             "ref_mag": [fmag.get(x, np.nan) for x in uids],
         }
     )
@@ -130,8 +126,10 @@ def main() -> None:
     ids = np.asarray(p["id"], int)
 
     src = Table.read(args.run_dir / SAMPLE / "sources.ecsv")
-    stars = _stratum(args.run_dir, f"{SAMPLE}-stars", src, cat)
-    gal = _stratum(args.run_dir, SAMPLE, src, cat)
+    feats = Table.read(args.run_dir / SAMPLE / "features.ecsv")  # shared by both strata
+    fmag = {str(x): float(m) for x, m in zip(feats["source_uid"], feats["ref_mag"], strict=True)}
+    stars = _stratum(args.run_dir, f"{SAMPLE}-stars", src, cat, fmag)
+    gal = _stratum(args.run_dir, SAMPLE, src, cat, fmag)
 
     s = stars[stars["ok"]]
     s_rad, s_mag, s_ids = rad[s["dja"]], np.asarray(s["ref_mag"], float), ids[s["dja"]]
@@ -157,6 +155,9 @@ def main() -> None:
         images, _ = lc.image_list("smacs0723-iclv2", files, par)
         i_idx, i_ok = match(np.asarray(images["ra"], float), np.asarray(images["dec"], float), cat)
         i_rad = rad[i_idx[i_ok]]
+        i_fin = np.isfinite(i_rad)  # a missing radius is neither kept nor removed
+        i_ok[np.flatnonzero(i_ok)[~i_fin]] = False
+        i_rad = i_rad[i_fin]
         i_point = i_rad <= cut
         n_img = int(i_ok.sum())
         frac = float(np.mean(i_point)) if n_img else None
@@ -175,32 +176,20 @@ def main() -> None:
                     "point_like": int(np.sum(g_rad[b] <= cut)),
                 }
             )
-        top = [
-            {
+
+        def top_row(k: int) -> dict:
+            fin = bool(g_ok[k] and np.isfinite(g_rad[k]))
+            return {
                 "rank": k + 1,
-                "source_uid": gal["source_uid"][k],
+                "source_uid": str(gal["source_uid"][k]),
                 "ref_mag": round(float(g_mag[k]), 3),
-                "flux_radius_pix": None if not g_ok[k] else round(float(g_rad[k]), 3),
-                "point_like": None if not g_ok[k] else bool(g_rad[k] <= cut),
+                "flux_radius_pix": round(float(g_rad[k]), 3) if fin else None,
+                "point_like": bool(g_rad[k] <= cut) if fin else None,
             }
-            for k in range(min(TOP_K, len(gal)))
-        ]
-        tmap = {t["source_uid"]: t for t in top}
-        targets = {}
-        for t in TARGETS:
-            row = tmap.get(t)
-            if row is None:
-                k = list(gal["source_uid"]).index(t) if t in list(gal["source_uid"]) else None
-                row = (
-                    None
-                    if k is None
-                    else {
-                        "rank": k + 1,
-                        "flux_radius_pix": round(float(g_rad[k]), 3) if g_ok[k] else None,
-                        "point_like": bool(g_rad[k] <= cut) if g_ok[k] else None,
-                    }
-                )
-            targets[t] = row
+
+        top = [top_row(k) for k in range(min(TOP_K, len(gal)))]
+        pos = {x: k for k, x in enumerate(gal["source_uid"])}
+        targets = {t: top_row(pos[t]) if t in pos else None for t in TARGETS}
         point_images = [
             {
                 "id": str(images["id"][j]) if "id" in images.colnames else int(j),
@@ -214,8 +203,20 @@ def main() -> None:
             {"ref_mag": round(float(m), 3), "flux_radius_pix": round(float(r), 3)}
             for m, r in sorted(zip(s_mag[lm][out_m], s_rad[lm][out_m], strict=True))
         ]
+        # Review check: several ranked uids (per-band detections) can match one DJA object.
+        l_ids = s_ids[lm]
+        _, first = np.unique(l_ids, return_index=True)
+        dedup = np.zeros(l_ids.size, bool)
+        dedup[first] = True
+        rec_dedup = held_out_recovery(l_ids[dedup], s_rad[lm][dedup])
+        binned = sum(b["n"] for b in bins)
         summary |= {
             "post_hoc_locus_outliers": locus_outliers,
+            "locus_duplicate_dja_ids": int(l_ids.size - dedup.sum()),
+            "review_v1_recovery_dedup": [round(x, 4) for x in rec_dedup],
+            "galaxy_matched": int(g_ok.sum()),
+            "galaxy_matched_outside_bins_or_nan_mag": int(g_ok.sum() - binned),
+            "v2_images_nan_radius": int((~i_fin).sum()),
             "r_psf": round(r_psf, 4),
             "mad_sigma": round(sig, 4),
             "cut": round(cut, 4),
