@@ -1,0 +1,189 @@
+{
+ "n_polygons": {
+  "jw04043-o001_t001_nircam_f444w-grismr": 8,
+  "jw04043-o001_t001_nircam_f444w-grismc": 8
+ },
+ "f200w_catalog_fraction_inside": {
+  "jw04043-o001_t001_nircam_f444w-grismr": 0.463,
+  "jw04043-o001_t001_nircam_f444w-grismc": 0.463
+ },
+ "n_catalog": 4080,
+ "records": [
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_1032",
+   "ra": 110.783823,
+   "dec": -73.454566,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": false,
+     "edge_arcsec": null
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": false,
+     "edge_arcsec": null
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_1096",
+   "ra": 110.846894,
+   "dec": -73.442973,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": true,
+     "edge_arcsec": 45.1
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": true,
+     "edge_arcsec": 45.1
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_2559",
+   "ra": 110.806537,
+   "dec": -73.473169,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": true,
+     "edge_arcsec": 28.8
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": true,
+     "edge_arcsec": 28.8
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_2804",
+   "ra": 110.668714,
+   "dec": -73.504767,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": false,
+     "edge_arcsec": null
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": false,
+     "edge_arcsec": null
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_2915",
+   "ra": 110.757124,
+   "dec": -73.488992,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": true,
+     "edge_arcsec": 30.8
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": true,
+     "edge_arcsec": 30.6
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_2925",
+   "ra": 110.84249,
+   "dec": -73.472258,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": true,
+     "edge_arcsec": 6.3
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": true,
+     "edge_arcsec": 6.3
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_438",
+   "ra": 110.707536,
+   "dec": -73.460307,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": false,
+     "edge_arcsec": null
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": false,
+     "edge_arcsec": null
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f277w_829",
+   "ra": 110.858177,
+   "dec": -73.444423,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": true,
+     "edge_arcsec": 46.5
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": true,
+     "edge_arcsec": 46.6
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f356w_1243",
+   "ra": 110.682947,
+   "dec": -73.487722,
+   "source": "candidates.csv",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": false,
+     "edge_arcsec": null
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": false,
+     "edge_arcsec": null
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_1816",
+   "ra": 110.64806517613874,
+   "dec": -73.49647165976755,
+   "source": "2736 F200W cat (jwst 3.0.0)",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": false,
+     "edge_arcsec": null
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": false,
+     "edge_arcsec": null
+    }
+   }
+  },
+  {
+   "name": "jw02736-o001_t001_nircam_f200w_384",
+   "ra": 110.64578376567073,
+   "dec": -73.47261236663392,
+   "source": "2736 F200W cat (jwst 3.0.0)",
+   "coverage": {
+    "jw04043-o001_t001_nircam_f444w-grismr": {
+     "inside": false,
+     "edge_arcsec": null
+    },
+    "jw04043-o001_t001_nircam_f444w-grismc": {
+     "inside": false,
+     "edge_arcsec": null
+    }
+   }
+  }
+ ]
+}

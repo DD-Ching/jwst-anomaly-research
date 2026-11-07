@@ -6836,3 +6836,14 @@ confining radiation at a throat is found.
   Post hoc, at f 0.80 / 0.75 the run repairs the D14a merge but keeps two D115a images lost
   (`results/lens_consistency/d115b_lenstool_refit/RESULT_FP.md`). Revisit with a multi-hour BayeSys run (addendum
   4) or a Lenstool build with D52b's image matching fixed.
+
+## D-110 Program 4043 grism: pipeline c1d not adopted; no grizli extraction for now (2026-11-07)
+- **Decision:** do not use the MAST pipeline `_c1d` / `_x1d` spectra of program 4043 for flux or line work, and do
+  not build a grizli WFSS extraction now: of the open SMACS records only `f200w_2915` has a pipeline spectrum, and
+  the records that need one (`f200w_2804`, `f200w_1816`, `f200w_384`) lie outside the grism footprint.
+- **Alternatives rejected:** pipeline c1d as delivered (levels a median 23–26× the imaging flux, 16–84 % 7.5–110×);
+  a grizli extraction from the rate files (several GB, and it could add no spectrum for the three uncovered records).
+- **Evidence:** `results/grism_4043/RESULT.md` (`coverage.json`, `lines_2915.json`, `fluxcheck.json`): coverage
+  of 11 records; the frozen 2915 line test failed its injection gate (0.71 / 0.655 / 0.0 < 0.90).
+- **Revisit if:** a covered top-k source needs a redshift or line diagnostic, DJA publishes grizli spectra for
+  4043, or MAST reprocesses 4043 with a jwst version whose c1d matches the imaging flux scale.

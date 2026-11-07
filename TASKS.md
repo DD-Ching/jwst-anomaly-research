@@ -727,8 +727,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 - Cutouts: north-up panels and an option for shared brightness scaling across panels.
 - Second epochs and medium bands: check the galaxy top k against VENUS (6882) and other later programs
   with `scripts/epoch_compare.py` (D-017). Moving sources are stars; variable ones are AGN or transients.
-- NIRCam F444W grism spectra of program 4043 (SOURCES) for top-k sources they cover: redshifts and lines. Needs
-  a reuse check (grizli or the jwst WFSS pipeline products).
+- ~~NIRCam F444W grism spectra of program 4043~~ done 2026-11-07 (`results/grism_4043/RESULT.md`, D-110): only
+  `f200w_2915` is covered; pipeline c1d not adopted (levels 23–26× the imaging flux; 2915 line gate failed).
 
 ## Owner setup (needs-human)
 - Run `claude.exe` interactively in the repo once and accept workspace trust.
