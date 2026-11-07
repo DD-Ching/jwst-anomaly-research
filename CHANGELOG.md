@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS f200w_3670 is a foreground star on lensed image 2.3; no lens anomaly (TASKS Then 4 closed)
+- **Plan first** (`results/smacs_jwst3/f200w_3670/PLAN.md`): star (A) vs compact lensed knot (B), rules frozen before viewing.
+- **Result** (`RESULT.md`, `summary.json`, `sheet.png`; `scripts/smacs_f3670_sheet.py`): own segment 0.81″ from the 2.3
+  arc segment; F090W−F444W −0.95 vs arc 2.3 +2.28 and counter-image 2.1 +2.41 (2.1 / 2.3 agree within 0.13 mag); six-spike
+  PSF pattern in F150W / F200W (looked at). Outcome A; the stellar-locus label is right.
+- **Services:** CDS SIMBAD TAP / XMatch still reset (09:10Z); #751 still waits.
+- **Handoff:** TASKS Then 8 (needs Gaia XMatch) is blocked on CDS; next candidates are Next (M2) MIRI fixed-aperture
+  colours or DJA photo-z as a stratifier.
+
 ## 2026-11-07: Spike-geometry check for single-band streaks: no rule adopted (TASKS Then 6, D-014 addendum 7)
 - **Plan first** (`results/spike_geometry/PLAN.md`, rule A and addendum B frozen before each run; rules as functions with
   unit tests). Runs `20261107T081028Z-c5afef2f` (CEERS) and `-369d1097` (SMACS), jwst 3.0.0 catalogs.

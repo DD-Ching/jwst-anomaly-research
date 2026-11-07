@@ -659,7 +659,8 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 
 ## Then (M1 follow-through, after the M3 items)
 4. ~~**Star-stratum sources with NED galaxy matches**~~ done 2026-11-06 on jwst 3.0.0 (`results/smacs_jwst3/star_ned/RESULT.md`:
-   3 / 139, no rule change; f090w_1561 likely a compact cluster member in the locus). Open: view f200w_3670 (spikes, adjacent arc). Original (run `20261007T162133Z-2511977c`):
+   3 / 139, no rule change; f090w_1561 likely a compact cluster member in the locus). f200w_3670 viewed 2026-11-07
+   (`results/smacs_jwst3/f200w_3670/RESULT.md`): a spiked foreground star on the end of arc 2.3; 2.1 / 2.3 colours agree. Original (run `20261007T162133Z-2511977c`):
    - `f090w_1719`: NED `[NDA2023] 00713`, type G, 0.03″.
    - `f200w_2054`: a stellar-locus member 0.23″ from the lensed image NED `[MJR2023] 002.3`; it has spikes, and an
      arc lies next to it.
