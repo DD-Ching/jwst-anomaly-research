@@ -136,10 +136,9 @@ def main(argv=None) -> int:
         "admitted_f770w": rate(admitted),
         "new_top20": rate(list(NEW_TOP)),
     }
-    trigger = bool(
-        rates["admitted_f770w"]["fraction"] > 0.5
-        and rates["baseline_gate_matched_f770w"]["fraction"] < 0.25
-    )
+    f_adm = rates["admitted_f770w"]["fraction"]
+    f_base = rates["baseline_gate_matched_f770w"]["fraction"]
+    trigger = f_adm is not None and f_base is not None and f_adm > 0.5 and f_base < 0.25
 
     per = []
     for v in NEW_TOP:
