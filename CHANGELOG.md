@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS `f200w_1816` / `f200w_384` image-level two-epoch centroids: 1816 no motion detected, 384 undetermined (TASKS Next M2, D-017 addendum 2)
+- **Plan first** (`results/smacs_jwst3/epochs_1816_384_img/PLAN.md`); `scripts/smacs_epochs_img.py` (`decide`
+  unit-tested); S3 byte-range cutouts, 2-D Gaussian centroids, peer frame tie and leave-one-out null.
+- **Validation:** synthetic +20 mas shifts recovered to ≤ 0.031 mas (30 peers per band).
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): `1816` residual 1.53 / 2.45 mas (F150W /
+  F444W), below the peer median in both: no motion detected (peer p95 4.69 / 6.51 mas/yr). `384` 25.03 / 22.61 mas:
+  F150W above all 16 peers, F444W below the peer p95 (27.60): undetermined. Post hoc: the two bands point 12.3°
+  apart (~6 mas/yr if motion); suggestive, not established.
+- **Handoff:** next: a third epoch covering `384` (check later programs' footprints), else close both records
+  as "compact, unresolved; needs spectroscopy"; image embeddings (TASKS Next M2).
+
 ## 2026-11-07: SMACS `f200w_1816` / `f200w_384` two-epoch check (2736 → VENUS 6882): undetermined (TASKS Next M2, D-017 addendum)
 - **Plan first** (`results/smacs_jwst3/epochs_1816_384/PLAN.md`); `scripts/smacs_epochs_1816_384.py` (`decide`
   encodes the frozen rule, unit-tested); CATs and cutouts from S3 (MAST portal API "Request failed").

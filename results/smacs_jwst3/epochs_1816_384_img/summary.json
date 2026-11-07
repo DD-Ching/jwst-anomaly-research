@@ -1,0 +1,157 @@
+{
+ "plan": "results/smacs_jwst3/epochs_1816_384_img/PLAN.md",
+ "assumptions": {
+  "size_arcsec": 1.5,
+  "box_px": 7,
+  "peer_dmag": 1.0,
+  "peer_size_frac": 0.5,
+  "peer_radius_arcsec": 60.0,
+  "peer_isolation_arcsec": 1.0,
+  "min_peers": 10,
+  "percentile": 95.0,
+  "angle_deg": 45.0,
+  "inject_mas": 20.0,
+  "inject_tol_mas": 5.0,
+  "peak_radius_arcsec": 0.15,
+  "match_arcsec": 0.3,
+  "baseline_yr": 4.0
+ },
+ "validation": {
+  "f150w": {
+   "n": 30,
+   "median_recovered_mas": [
+    19.992018775442997,
+    -0.004820379975244987,
+    -0.0077132674802107256,
+    20.000520025981647
+   ],
+   "injected_mas": [
+    20.0,
+    0.0,
+    0.0,
+    20.0
+   ],
+   "max_abs_error_of_median_mas": 0.00798122455700323,
+   "passed": true,
+   "label": "simulation"
+  },
+  "f444w": {
+   "n": 30,
+   "median_recovered_mas": [
+    19.98603808141163,
+    -0.008024638694638514,
+    0.01052350890788962,
+    19.969453579644444
+   ],
+   "injected_mas": [
+    20.0,
+    0.0,
+    0.0,
+    20.0
+   ],
+   "max_abs_error_of_median_mas": 0.03054642035555588,
+   "passed": true,
+   "label": "simulation"
+  }
+ },
+ "targets": {
+  "f200w_1816": {
+   "bands": {
+    "f150w": {
+     "n_peers": 14,
+     "tie_mas": [
+      11.747152554534502,
+      15.508257114562277
+     ],
+     "target_residual_mas": [
+      1.5305712432438874,
+      -0.11567471530983653
+     ],
+     "target_residual_total_mas": 1.5349361453842798,
+     "peer_residual_median_mas": 6.255010132308955,
+     "peer_residual_p95_mas": 18.76351913318078,
+     "n_peers_with_larger_residual": 14,
+     "label": "derived",
+     "peer_p95_motion_mas_per_yr": 4.690879783295195
+    },
+    "f444w": {
+     "n_peers": 14,
+     "tie_mas": [
+      6.9732031008543025,
+      23.155485764672076
+     ],
+     "target_residual_mas": [
+      1.0128392516664473,
+      -2.234776997630167
+     ],
+     "target_residual_total_mas": 2.4535834159150065,
+     "peer_residual_median_mas": 9.222840973719517,
+     "peer_residual_p95_mas": 26.044678446455453,
+     "n_peers_with_larger_residual": 14,
+     "label": "derived",
+     "peer_p95_motion_mas_per_yr": 6.511169611613863
+    }
+   },
+   "post_hoc": {
+    "angle_between_band_residuals_deg": 61.297171864300026,
+    "label": "derived (post hoc; not part of the frozen rule)"
+   },
+   "n_peers_selected": 14,
+   "epoch1_f150w_position": [
+    110.6480644174952,
+    -73.49647030993948
+   ],
+   "epoch1_f150w_row_sep_arcsec": 0.004920925963269132,
+   "decision": "no motion detected"
+  },
+  "f200w_384": {
+   "bands": {
+    "f150w": {
+     "n_peers": 16,
+     "tie_mas": [
+      5.994671121240618,
+      14.478298146769482
+     ],
+     "target_residual_mas": [
+      -23.264338089525577,
+      9.227370271699325
+     ],
+     "target_residual_total_mas": 25.027460695699656,
+     "peer_residual_median_mas": 8.91269650082512,
+     "peer_residual_p95_mas": 21.30904780216402,
+     "n_peers_with_larger_residual": 0,
+     "label": "derived",
+     "peer_p95_motion_mas_per_yr": 5.327261950541005
+    },
+    "f444w": {
+     "n_peers": 16,
+     "tie_mas": [
+      0.4079330325090649,
+      25.505857716934
+     ],
+     "target_residual_mas": [
+      -22.308075824229185,
+      3.682648919670566
+     ],
+     "target_residual_total_mas": 22.610001106702967,
+     "peer_residual_median_mas": 10.151256479512263,
+     "peer_residual_p95_mas": 27.60372353358497,
+     "n_peers_with_larger_residual": 3,
+     "label": "derived",
+     "peer_p95_motion_mas_per_yr": 6.900930883396242
+    }
+   },
+   "post_hoc": {
+    "angle_between_band_residuals_deg": 12.260911850281655,
+    "label": "derived (post hoc; not part of the frozen rule)"
+   },
+   "n_peers_selected": 16,
+   "epoch1_f150w_position": [
+    110.64577983215375,
+    -73.47261183277226
+   ],
+   "epoch1_f150w_row_sep_arcsec": 0.00446331586350926,
+   "decision": "undetermined"
+  }
+ }
+}

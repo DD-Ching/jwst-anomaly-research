@@ -1073,6 +1073,12 @@ with magnitude- and size-matched peers instead (post hoc check in `scripts/smacs
 targets lack F444W CAT rows though a compact source is visible there in the cutouts (visual, not stored), so
 "not measured" need not mean "absent". Tool unchanged.
 
+**Addendum 2 (2026-11-07, image-level centroids, `results/smacs_jwst3/epochs_1816_384_img/RESULT.md`).** For faint
+compact targets, measure 2-D Gaussian centroids on S3 cutouts of both epochs' `_i2d.fits` and tie the frames with
+14–16 magnitude- and size-matched isolated peers (leave-one-out null); this measures F444W where the CATs have no
+row. Synthetic +20 mas shifts are recovered to ≤ 0.031 mas. Peer residual p95: 18.8–21.3 mas (F150W), 26.0–27.6 mas
+(F444W). Script `scripts/smacs_epochs_img.py`, not generalised into `epoch_compare.py` (one use so far).
+
 ## D-018 Diffraction-spike flag on cutouts: orientation-free hexagonal harmonic (2026-10-08)
 
 **Decision.** This is new code (tier 5): numpy and scipy, with no new dependency. `cutouts.spike_statistic` resamples
