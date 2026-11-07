@@ -48,3 +48,14 @@ def test_tangential_or_round_or_multiband_or_faint_neighbour_not_flagged():
     assert not _flag(_table(pa_streak=0.0, ell=0.7))
     assert not _flag(_table(pa_streak=0.0, n_bands=2))
     assert not _flag(_table(pa_streak=0.0, dmag=2.0))
+
+
+def test_streak_verdict_needs_all_three_conditions():
+    good = [{"single_in": 6, "single_n": 100, "multi_in": 1, "multi_n": 100}]
+    assert sg.streak_verdict(True, 0, good)["adopt"]
+    assert not sg.streak_verdict(False, 0, good)["adopt"]
+    assert not sg.streak_verdict(True, 2, good)["adopt"]
+    flat = [{"single_in": 2, "single_n": 100, "multi_in": 1, "multi_n": 100}]
+    assert not sg.streak_verdict(True, 0, flat)["adopt"]
+    none = [{"single_in": 0, "single_n": 100, "multi_in": 5, "multi_n": 100}]
+    assert not sg.streak_verdict(True, 0, none)["enrichment"]

@@ -180,13 +180,85 @@ def arcs_negative(smacs_sample: Path) -> dict:
     }
 
 
+SEG_LEN = 64  # ASSUMPTION (addendum B, arm 2): row/column-segment length in block pixels
+ENRICH = 3.0  # ASSUMPTION (addendum B): single-band in-mask fraction vs >= 3-band fraction
+
+
+def streak_verdict(positive_in_mask: bool, n_images_in_mask: int, fields: list[dict]) -> dict:
+    """Addendum B adoption rule: all three conditions must hold.
+
+    ``fields``: per field ``{"single_in": k, "single_n": n, "multi_in": k3, "multi_n": n3}``
+    (multi = detected in >= 3 bands). Condition 3 is judged only in fields with ``single_in`` >= 1
+    and requires single_in/single_n >= ENRICH * multi_in/multi_n there (and at least one such field).
+    """
+    judged = [f for f in fields if f["single_in"] >= 1]
+    c3 = bool(judged) and all(
+        f["single_in"] / f["single_n"] >= ENRICH * f["multi_in"] / max(f["multi_n"], 1)
+        for f in judged
+    )
+    cond = {"positive": bool(positive_in_mask), "arcs": n_images_in_mask <= 1, "enrichment": c3}
+    return {**cond, "adopt": all(cond.values())}
+
+
+def streak_run(run_samples: dict[str, Path], positive_uid: str, out: Path, processes: int) -> dict:
+    """Addendum B: W1 trail masks (arm 1) and trail + segment stripes (arm 2) per field."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import w1_streak_mask as wm
+    from jwst_anomaly.pipeline import l3_image_uri
+
+    cloud = {"s3_bucket": "stpubdata",
+             "l3_key_pattern": "jwst/public/jw{proposal:05d}/L3/t/o{observation:03d}/{obs_id}_{suffix}"}
+    obs = {"ceers_t021": "jw01345-o001_t021_nircam_clear-f200w",
+           "smacs0723_nircam": "jw02736-o001_t001_nircam_clear-f200w"}
+    arms: dict[str, dict] = {"trail": {}, "trail_seg64": {}}
+    pos_in = {"trail": False, "trail_seg64": False}
+    img_in = {"trail": 0, "trail_seg64": 0}
+    for name, rs in run_samples.items():
+        t = Table.read(rs / "sources.ecsv")
+        uri = l3_image_uri(cloud, obs[name])
+        img, wcs = wm.stream_binned(uri)
+        z, wz = wm.normalise(img), wcs[:: wm.REBIN, :: wm.REBIN]
+        trail, cat = wm.find_trails(z, processes)
+        seg = trail | wm.to_mask_grid(wm.segment_stripes(img, SEG_LEN), trail.shape)
+        nb = np.asarray(t["n_bands"])
+        for arm, mask in (("trail", trail), ("trail_seg64", seg)):
+            inm = wm.veto_rows(t["ra"], t["dec"], mask, wz)
+            rec = {"i2d": uri, "mask_pixels": int(mask.sum()),
+                   "n_trails_status2": 0 if cat is None else int((cat["status"] == wm.KEEP_STATUS).sum()),
+                   "single_in": int((inm & (nb == 1)).sum()), "single_n": int((nb == 1).sum()),
+                   "multi_in": int((inm & (nb >= 3)).sum()), "multi_n": int((nb >= 3).sum())}
+            if name == "ceers_t021":
+                ip = find_uid(t, positive_uid)
+                pos_in[arm] = bool(ip is not None and inm[ip])
+            if name == "smacs0723_nircam":
+                _, files, par = __import__("lens_consistency").load_model("smacs0723-iclv2")
+                images = __import__("lens_consistency").image_list("smacs0723-iclv2", files, par)[0]
+                img_in[arm] = int(wm.veto_rows(images["ra"], images["dec"], mask, wz).sum())
+                rec["n_iclv2_images_in_mask"] = img_in[arm]
+            arms[arm][name] = rec
+            wm._sheet(out / f"{name}_{arm}_mask.png", img, mask, f"{name} {arm}")
+    res = {"plan": "results/spike_geometry/PLAN.md addendum B", "veto_arcsec": wm.VETO_ARCSEC,
+           "seg_len": SEG_LEN, "enrich": ENRICH, "arms": {}}
+    for arm in arms:
+        res["arms"][arm] = {"fields": arms[arm], "positive_in_mask": pos_in[arm],
+                            "verdict": streak_verdict(pos_in[arm], img_in[arm], list(arms[arm].values()))}
+    (out / "summary_streak.json").write_text(json.dumps(res, indent=1) + "\n")
+    return res
+
+
 def main(argv=None) -> dict:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--ceers", type=Path, required=True, help="run dir of ceers_t021")
     p.add_argument("--smacs", type=Path, required=True, help="run dir of smacs0723_nircam")
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--positive", default="_f200w_2842", help="known spike streak (uid suffix)")
+    p.add_argument("--streak", action="store_true", help="run addendum B (streak masks) only")
+    p.add_argument("--processes", type=int, default=4)
     a = p.parse_args(argv)
+    a.out.mkdir(parents=True, exist_ok=True)
+    if a.streak:
+        return streak_run({"ceers_t021": a.ceers, "smacs0723_nircam": a.smacs}, a.positive, a.out,
+                          a.processes)
     ceers = screen(a.ceers)
     smacs = screen(a.smacs)
     tc = Table.read(a.ceers / "sources.ecsv")
@@ -214,6 +286,9 @@ def main(argv=None) -> dict:
 
 if __name__ == "__main__":
     s = main()
+    if "arms" in s:
+        print(json.dumps(s, indent=1))
+        sys.exit(0)
     print(json.dumps({k: v for k, v in s.items() if k not in ("ceers", "smacs")}, indent=1,
                      default=float)[:3000])
     for k in ("ceers", "smacs"):
