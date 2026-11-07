@@ -701,7 +701,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 - ~~DJA photo-z as a ranking stratifier~~ done 2026-11-07 for SMACS (`results/smacs_jwst3/zphot_stratify/RESULT.md`,
   D-022 addendum 4: members 2 / 20 of the top 20, not adopted). Open (post hoc): eazy `z_phot = -1` rows are 4 / 20 of
   the top 20 vs 156 / 2938 ranked; ~~test whether the no-fit flag marks uncatalogued stars or compact non-galaxies~~
-  done 2026-11-07 (`results/smacs_jwst3/zphot_nofit/RESULT.md`, D-022 addendum 5: compact, not a coverage flag).
+  done 2026-11-07 (`results/smacs_jwst3/zphot_nofit/RESULT.md`, D-022 addendum 5: compact; coverage criterion not met).
 - SMACS point-source screen before top-k vetting: DJA `flux_radius` against the stellar locus. Validate first on the
   Gaia stars (recovery) and the ICLv2 multiple images (must not be removed); then apply to `f200w_1816`, `f200w_384`.
 - ~~Re-fetch program 2736 after MAST reprocesses it~~ done 2026-11-06 (jwst 3.0.0, `results/smacs_jwst3/RESULT.md`).

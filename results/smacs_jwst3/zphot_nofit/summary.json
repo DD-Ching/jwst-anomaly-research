@@ -36,6 +36,23 @@
    "17": 1,
    "19": 14,
    "20": 26
+  },
+  "fit_counts": {
+   "6": 677,
+   "7": 411,
+   "8": 18,
+   "9": 22,
+   "10": 22,
+   "11": 4,
+   "12": 17,
+   "13": 16,
+   "14": 28,
+   "15": 71,
+   "16": 252,
+   "17": 11,
+   "18": 13,
+   "19": 193,
+   "20": 429
   }
  },
  "flux_radius_pix": {
@@ -158,7 +175,8 @@
    "dja_id": 1476,
    "nusefilt": 6,
    "flux_radius_pix": 4.483,
-   "compact": true
+   "compact": true,
+   "screened": "spikes, stellar colours (D-019)"
   },
   {
    "rank": 13,
@@ -166,7 +184,8 @@
    "dja_id": 8066,
    "nusefilt": 19,
    "flux_radius_pix": 11.734,
-   "compact": false
+   "compact": false,
+   "screened": "spikes, stellar colours (D-019)"
   },
   {
    "rank": 14,
@@ -174,7 +193,8 @@
    "dja_id": 813,
    "nusefilt": 6,
    "flux_radius_pix": 2.276,
-   "compact": true
+   "compact": true,
+   "screened": null
   },
   {
    "rank": 19,
@@ -182,7 +202,8 @@
    "dja_id": 5182,
    "nusefilt": 6,
    "flux_radius_pix": 1.906,
-   "compact": true
+   "compact": true,
+   "screened": null
   }
  ],
  "n_compact_top20_nofit": 3,

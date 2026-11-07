@@ -71,6 +71,7 @@ def decide(
     n_compact_top: int | None,
 ) -> str:
     """Frozen plan rule. ``n_compact_top`` is None when compactness is undetermined."""
+    nofit_r, fit_r = nofit_r[np.isfinite(nofit_r)], fit_r[np.isfinite(fit_r)]
     cut = np.percentile(fit_nuse, COV_PCT)
     if np.mean(nofit_nuse < cut) >= COV_FRACTION:
         return "H-cov: coverage flag"
@@ -86,12 +87,12 @@ def decide(
 def match(src: Table, uids: list[str], cat: SkyCoord) -> tuple[np.ndarray, np.ndarray]:
     """DJA row index of each uid and whether it lies within ZOUT_MATCH_ARCSEC."""
     row = {str(x): i for i, x in enumerate(src["source_uid"])}
-    pos = np.array([row[x] for x in uids])
-    c = SkyCoord(
-        np.asarray(src["ra"], float)[pos] * u.deg, np.asarray(src["dec"], float)[pos] * u.deg
-    )
-    idx, sep, _ = c.match_to_catalog_sky(cat)
-    return idx, sep.arcsec <= ZOUT_MATCH_ARCSEC
+    pos = np.array([row.get(x, -1) for x in uids])
+    have = pos >= 0  # a uid without a source row is unmatched
+    ra = np.where(have, np.asarray(src["ra"], float)[pos], 0.0)
+    dec = np.where(have, np.asarray(src["dec"], float)[pos], 0.0)
+    idx, sep, _ = SkyCoord(ra * u.deg, dec * u.deg).match_to_catalog_sky(cat)
+    return idx, have & (sep.arcsec <= ZOUT_MATCH_ARCSEC)
 
 
 def q(x: np.ndarray) -> dict[str, float | int]:
@@ -102,6 +103,11 @@ def q(x: np.ndarray) -> dict[str, float | int]:
     return {"n": int(x.size)} | {
         f"p{k}": round(float(v), 3) for k, v in zip((5, 10, 50, 90), p, strict=True)
     }
+
+
+def counts(x: np.ndarray) -> dict[str, int]:
+    v, c = np.unique(x, return_counts=True)
+    return {str(int(a)): int(b) for a, b in zip(v, c, strict=True)}
 
 
 def main() -> None:
@@ -135,10 +141,15 @@ def main() -> None:
     ]
     s_idx, s_ok = match(src, stars, cat)
     star_r = rad[s_idx[s_ok]]
+    star_r = star_r[np.isfinite(star_r)]
     compact_cut = float(np.percentile(star_r, STAR_PCT)) if star_r.size >= MIN_STARS else None
 
     top = []
-    for k in range(TOP_K):
+    screened = {}
+    if (d / "screened.ecsv").exists():  # D-019-D-021 spike / weight screen of the top rows
+        st = Table.read(d / "screened.ecsv")
+        screened = {str(x): str(r) for x, r in zip(st["source_uid"], st["reason"], strict=True)}
+    for k in range(min(TOP_K, len(uids))):
         if not nofit[k]:
             continue
         r = float(rad[idx[k]])
@@ -150,6 +161,7 @@ def main() -> None:
                 "nusefilt": int(nuse[idx[k]]),
                 "flux_radius_pix": round(r, 3),
                 "compact": None if compact_cut is None else bool(r <= compact_cut),
+                "screened": screened.get(uids[k]),
             }
         )
     n_compact = None if compact_cut is None else sum(t["compact"] for t in top)
@@ -174,10 +186,8 @@ def main() -> None:
             "nofit_below_fit_p5": round(
                 float(np.mean(nuse[idx[nofit]] < np.percentile(nuse[idx[fit]], COV_PCT))), 4
             ),
-            "nofit_counts": {
-                str(int(v)): int(c)
-                for v, c in zip(*np.unique(nuse[idx[nofit]], return_counts=True), strict=True)
-            },
+            "nofit_counts": counts(nuse[idx[nofit]]),
+            "fit_counts": counts(nuse[idx[fit]]),
         },
         "flux_radius_pix": {
             "nofit": q(rad[idx[nofit]]),

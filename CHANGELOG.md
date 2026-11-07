@@ -2,11 +2,11 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-11-07: SMACS eazy `z_phot = -1` rows are compact, not a coverage flag (TASKS Next M2, D-022 addendum 5)
+## 2026-11-07: SMACS eazy `z_phot = -1` rows are compact; coverage criterion not met (TASKS Next M2, D-022 addendum 5)
 - **Plan first** (`results/smacs_jwst3/zphot_nofit/PLAN.md`); run `20261107T121058Z-86f3f464`;
   `scripts/smacs_zphot_nofit.py` (rule unit-tested before the run).
 - **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): 156 no-fit rows, none below the fitted
-  `nusefilt` 5th percentile; `flux_radius` median 1.972 px vs fitted 10th percentile 3.105 px, also at fixed
+  `nusefilt` 5th percentile (frozen coverage criterion not met); `flux_radius` median 1.972 px vs fitted 10th percentile 3.105 px, also at fixed
   `ref_mag` (post hoc). Frozen rule: H-star supported. No screen adopted; a validated point-source screen is queued.
 - **Services:** CDS (SIMBAD, XMatch) unreachable from the cloud session (12:10Z, proxy tunnel closed); #751 still waits.
 - **Handoff:** next: build and validate the SMACS point-source screen (TASKS Next M2), or MIRI fixed-aperture colours.
