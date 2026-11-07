@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-07: SMACS 2736 NIRISS / MIRI coverage of the open records; Noirot+2023 redshift types (TASKS Later)
+- `scripts/smacs_niriss_miri_coverage.py` (reuses `grism_4043_coverage` geometry; matching unit-tested); result
+  `results/smacs_niriss_miri_coverage/RESULT.md`.
+- **Result:** 5 / 11 records inside the 2736 NIRISS footprints, 4 also MIRI; `384` and `1816` outside all, so no
+  second 2022 instrument can test the 2736 position of `384` (stays "needs spectroscopy"). `1096` and `2925`
+  match Noirot+2023 at ≤ 0.29″ with Q_FLAG 2 (single feature): their NED redshifts are single-line grism values
+  (answers the `2925` open question; verdicts unchanged).
+- **Services:** CDS still unreachable (23:08Z, XMatch 503, connection reset); #751 still waits. MAST, arXiv and
+  niriss.github.io worked.
+- **Handoff:** next: TASKS Later / Next M2 items; #751 when CDS is reachable.
+
 ## 2026-11-07: SMACS `f200w_1096` ICLv2 shear and magnification: orientation consistent, weak shear (TASKS Later M3, D-024 addendum 7)
 - **Plan first** (`results/smacs_1096_shear/PLAN.md`); `scripts/smacs_1096_shear.py` reuses `lens_consistency`
   (`load_model`, `load_shapes`, `anti_probability`); `decide` unit-tested.
