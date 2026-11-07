@@ -3,7 +3,7 @@
 Plan: `PLAN.md` (rule frozen before measurement). Script: `scripts/miri_confirm.py`; numbers: `summary.json`.
 Contact sheet: `contact_sheet.png` (`scripts/miri_confirm_sheet.py`, visual check only).
 
-**Data (observed).** Pipeline run `20261107T001054Z-9ae92a90` (not stored; scratch outputs), sample
+**Data (observed).** Pipeline run `20261107T001054Z-9ae92a90` (not stored; scratch outputs; catalog checksums in `data/manifests/smacs_jwst3_miri.ecsv`), sample
 `smacs0723_miri` (program 2736, jwst 3.0.0 MIRI catalogs, config `smacs_jwst3_simbad.yaml` stages with the MIRI
 sample of `reference_sample.yaml`): 908 sources, 113 pass the quality gate. DJA v7.4 SMACS `fix_phot.fits`
 (sha256 361a4eb9…, the D-013 catalog): 12,363 rows with S/N ≥ 5 in at least one NIRCam band (0.5″ aperture).
