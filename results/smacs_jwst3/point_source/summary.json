@@ -1,0 +1,324 @@
+{
+ "run": "20261107T131039Z-cd7a1929",
+ "phot_sha256": "361a4eb944fefa3afbbbfe08192d2d5c5764ae7137e41d77c2ce63c5b4a47166",
+ "n_stars_ranked": 139,
+ "n_stars_matched": 133,
+ "locus_window": [
+  19.0,
+  24.0
+ ],
+ "n_locus": 113,
+ "post_hoc_locus_outliers": [
+  {
+   "ref_mag": 19.029,
+   "flux_radius_pix": 6.983
+  },
+  {
+   "ref_mag": 19.095,
+   "flux_radius_pix": 6.075
+  },
+  {
+   "ref_mag": 19.137,
+   "flux_radius_pix": 5.798
+  },
+  {
+   "ref_mag": 19.223,
+   "flux_radius_pix": 5.847
+  },
+  {
+   "ref_mag": 19.236,
+   "flux_radius_pix": 3.522
+  },
+  {
+   "ref_mag": 19.272,
+   "flux_radius_pix": 7.075
+  },
+  {
+   "ref_mag": 19.42,
+   "flux_radius_pix": 5.407
+  },
+  {
+   "ref_mag": 19.803,
+   "flux_radius_pix": 3.945
+  },
+  {
+   "ref_mag": 19.845,
+   "flux_radius_pix": 4.624
+  },
+  {
+   "ref_mag": 20.387,
+   "flux_radius_pix": 3.005
+  },
+  {
+   "ref_mag": 20.557,
+   "flux_radius_pix": 3.101
+  },
+  {
+   "ref_mag": 20.668,
+   "flux_radius_pix": 7.052
+  },
+  {
+   "ref_mag": 22.802,
+   "flux_radius_pix": 3.36
+  },
+  {
+   "ref_mag": 23.516,
+   "flux_radius_pix": 3.106
+  }
+ ],
+ "locus_duplicate_dja_ids": 0,
+ "review_v1_recovery_dedup": [
+  0.7333,
+  0.9057
+ ],
+ "galaxy_matched": 2340,
+ "galaxy_matched_outside_bins_or_nan_mag": 306,
+ "v2_images_nan_radius": 0,
+ "r_psf": 2.1563,
+ "mad_sigma": 0.2681,
+ "cut": 2.9605,
+ "locus_radius_quantiles": [
+  1.939,
+  2.156,
+  5.563
+ ],
+ "stars_all_point_fraction": 0.797,
+ "v1_recovery": [
+  0.7333,
+  0.9057
+ ],
+ "v2_n_images": 19,
+ "v2_n_images_listed": 60,
+ "v2_point_fraction": 0.0,
+ "v2_point_images": [],
+ "image_radius_quantiles": [
+  3.724,
+  6.636,
+  15.447
+ ],
+ "verdict": "not validated (V1 fails)",
+ "galaxy_point_like_by_ref_mag": [
+  {
+   "ref_mag": [
+    18.0,
+    22.0
+   ],
+   "n": 13,
+   "point_like": 0
+  },
+  {
+   "ref_mag": [
+    22.0,
+    24.0
+   ],
+   "n": 90,
+   "point_like": 2
+  },
+  {
+   "ref_mag": [
+    24.0,
+    26.0
+   ],
+   "n": 213,
+   "point_like": 62
+  },
+  {
+   "ref_mag": [
+    26.0,
+    27.0
+   ],
+   "n": 256,
+   "point_like": 48
+  },
+  {
+   "ref_mag": [
+    27.0,
+    28.0
+   ],
+   "n": 438,
+   "point_like": 82
+  },
+  {
+   "ref_mag": [
+    28.0,
+    31.0
+   ],
+   "n": 1024,
+   "point_like": 107
+  }
+ ],
+ "top20": [
+  {
+   "rank": 1,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_3255",
+   "ref_mag": 21.358,
+   "flux_radius_pix": 3.267,
+   "point_like": false
+  },
+  {
+   "rank": 2,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_2063",
+   "ref_mag": 27.382,
+   "flux_radius_pix": 1.691,
+   "point_like": true
+  },
+  {
+   "rank": 3,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_1395",
+   "ref_mag": 25.187,
+   "flux_radius_pix": 4.483,
+   "point_like": false
+  },
+  {
+   "rank": 4,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_318",
+   "ref_mag": 28.048,
+   "flux_radius_pix": 2.157,
+   "point_like": true
+  },
+  {
+   "rank": 5,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_2693",
+   "ref_mag": 29.876,
+   "flux_radius_pix": null,
+   "point_like": null
+  },
+  {
+   "rank": 6,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_2490",
+   "ref_mag": 26.847,
+   "flux_radius_pix": 2.131,
+   "point_like": true
+  },
+  {
+   "rank": 7,
+   "source_uid": "jw02736-o001_t001_nircam_f277w_743",
+   "ref_mag": null,
+   "flux_radius_pix": 7.686,
+   "point_like": false
+  },
+  {
+   "rank": 8,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_921",
+   "ref_mag": 28.284,
+   "flux_radius_pix": 3.252,
+   "point_like": false
+  },
+  {
+   "rank": 9,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_3446",
+   "ref_mag": 30.226,
+   "flux_radius_pix": 4.365,
+   "point_like": false
+  },
+  {
+   "rank": 10,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_3177",
+   "ref_mag": 27.62,
+   "flux_radius_pix": null,
+   "point_like": null
+  },
+  {
+   "rank": 11,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_389",
+   "ref_mag": 29.165,
+   "flux_radius_pix": 3.262,
+   "point_like": false
+  },
+  {
+   "rank": 12,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_3188",
+   "ref_mag": 25.514,
+   "flux_radius_pix": 2.556,
+   "point_like": true
+  },
+  {
+   "rank": 13,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_3884",
+   "ref_mag": 25.095,
+   "flux_radius_pix": 11.734,
+   "point_like": false
+  },
+  {
+   "rank": 14,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_1816",
+   "ref_mag": 25.897,
+   "flux_radius_pix": 2.276,
+   "point_like": true
+  },
+  {
+   "rank": 15,
+   "source_uid": "jw02736-o001_t001_nircam_f356w_1098",
+   "ref_mag": null,
+   "flux_radius_pix": 2.343,
+   "point_like": true
+  },
+  {
+   "rank": 16,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_3774",
+   "ref_mag": 29.414,
+   "flux_radius_pix": 7.131,
+   "point_like": false
+  },
+  {
+   "rank": 17,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_1552",
+   "ref_mag": 29.345,
+   "flux_radius_pix": 0.611,
+   "point_like": true
+  },
+  {
+   "rank": 18,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_1788",
+   "ref_mag": 30.157,
+   "flux_radius_pix": 4.166,
+   "point_like": false
+  },
+  {
+   "rank": 19,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_384",
+   "ref_mag": 26.305,
+   "flux_radius_pix": 1.906,
+   "point_like": true
+  },
+  {
+   "rank": 20,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_429",
+   "ref_mag": 28.547,
+   "flux_radius_pix": 6.534,
+   "point_like": false
+  }
+ ],
+ "targets": {
+  "jw02736-o001_t001_nircam_f200w_1816": {
+   "rank": 14,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_1816",
+   "ref_mag": 25.897,
+   "flux_radius_pix": 2.276,
+   "point_like": true
+  },
+  "jw02736-o001_t001_nircam_f200w_384": {
+   "rank": 19,
+   "source_uid": "jw02736-o001_t001_nircam_f200w_384",
+   "ref_mag": 26.305,
+   "flux_radius_pix": 1.906,
+   "point_like": true
+  }
+ },
+ "assumptions": {
+  "match_arcsec": 0.2,
+  "locus_mag": [
+   19.0,
+   24.0
+  ],
+  "locus_mag_fallback": [
+   18.0,
+   24.0
+  ],
+  "min_locus": 10,
+  "n_sigma": 3.0,
+  "v1_min_recovery": 0.9,
+  "v2_min_images": 10,
+  "v2_max_point": 0.1
+ }
+}
