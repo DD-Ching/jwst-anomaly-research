@@ -1,0 +1,102 @@
+{
+  "plan": "results/smacs_1096_shear/PLAN.md",
+  "model": "smacs0723-iclv2",
+  "record": "jw02736-o001_t001_nircam_f200w_1096",
+  "ra": 110.846894,
+  "dec": -73.442973,
+  "radius_arcsec": 46.96,
+  "prediction": [
+    {
+      "z_s": 1.3618,
+      "kappa": 0.1804,
+      "gamma": 0.1082,
+      "reduced_shear": 0.132,
+      "magnification": 1.515,
+      "tangential_pa_deg": 122.77,
+      "provenance": "model_prediction"
+    },
+    {
+      "z_s": 1.0,
+      "kappa": 0.1549,
+      "gamma": 0.0929,
+      "reduced_shear": 0.1099,
+      "magnification": 1.417,
+      "tangential_pa_deg": 122.77,
+      "provenance": "model_prediction"
+    },
+    {
+      "z_s": 2.0,
+      "kappa": 0.2026,
+      "gamma": 0.1214,
+      "reduced_shear": 0.1523,
+      "magnification": 1.61,
+      "tangential_pa_deg": 122.77,
+      "provenance": "model_prediction"
+    },
+    {
+      "z_s": 4.0,
+      "kappa": 0.2258,
+      "gamma": 0.1354,
+      "reduced_shear": 0.1749,
+      "magnification": 1.721,
+      "tangential_pa_deg": 122.77,
+      "provenance": "model_prediction"
+    }
+  ],
+  "shapes": {
+    "f150w": {
+      "label": 3043,
+      "sep_arcsec": 0.054,
+      "pa_obs_deg": 154.03,
+      "ellipticity": 0.388,
+      "semimajor_px": 5.7,
+      "snr": 233.2
+    },
+    "f200w": {
+      "label": 3298,
+      "sep_arcsec": 0.298,
+      "pa_obs_deg": 97.38,
+      "ellipticity": 0.661,
+      "semimajor_px": 13.02,
+      "snr": 485.7
+    },
+    "f444w": {
+      "label": 624,
+      "sep_arcsec": 0.009,
+      "pa_obs_deg": 97.38,
+      "ellipticity": 0.676,
+      "semimajor_px": 8.48,
+      "snr": 1016.1
+    }
+  },
+  "shapes_provenance": "observed (jwst pipeline catalog moments)",
+  "offsets": {
+    "f150w": {
+      "offset_deg": 31.26,
+      "p_offset_ge": 0.3798,
+      "p_offset_ge_shear0": 0.6529
+    },
+    "f200w": {
+      "offset_deg": 25.39,
+      "p_offset_ge": 0.4661,
+      "p_offset_ge_shear0": 0.7176
+    },
+    "f444w": {
+      "offset_deg": 25.39,
+      "p_offset_ge": 0.4661,
+      "p_offset_ge_shear0": 0.7176
+    }
+  },
+  "chain": {
+    "note": "no pinned bayes.dat for this model; best model only"
+  },
+  "params": {
+    "P_INCONSISTENT": 0.01,
+    "G_NO_POWER": 0.05,
+    "SIGMA_EPS": 0.26,
+    "MIN_ELLIPTICITY": 0.5,
+    "MATCH_ARCSEC": 0.3,
+    "provenance": "assumption"
+  },
+  "outcome_f200w": "consistent"
+}
