@@ -77,8 +77,14 @@ def vetted_status(merged: Table) -> dict[str, int]:
 
 
 def chance_fraction(extra_real: float, extra_chance: float) -> float | None:
-    """Chance share of the pairs added over alpha = 0; None when nothing was added."""
-    return extra_chance / extra_real if extra_real > 0 else None
+    """Chance share of the pairs added over alpha = 0.
+
+    None (never passes) when nothing was added or the chance count fell below alpha = 0 (a net
+    loss from one-to-one reassignment is not a measured low chance rate).
+    """
+    if extra_real <= 0 or extra_chance < 0:
+        return None
+    return extra_chance / extra_real
 
 
 def adopt_alpha(alphas, fractions, max_chance: float = MAX_CHANCE) -> float:
@@ -120,10 +126,12 @@ def main(argv=None) -> int:
         for r in POST_HOC_RADII
     ]
     rows = []
+    fracs = []
     for al in ALPHAS:
         extra_real = n_pairs(real[al]) - n_pairs(real[0.0])
         extra_chance = chance[al] - chance[0.0]
         frac = chance_fraction(extra_real, extra_chance)
+        fracs.append(frac)  # unrounded: the rule decides on these, the JSON shows them rounded
         passes = adopt_alpha([al], [frac]) == al > 0
         n_multi = int(np.sum(np.asarray(real[al]["n_bands"]) >= 2))
         rows.append(
@@ -140,7 +148,7 @@ def main(argv=None) -> int:
                 "vetted_n_bands": vetted_status(real[al]),
             }
         )
-    adopted = adopt_alpha(ALPHAS, [r["chance_fraction"] for r in rows])
+    adopted = adopt_alpha(ALPHAS, fracs)
     vet = rows[ALPHAS.index(adopted)]["vetted_n_bands"]
     hits = sum(1 for k, exp in VETTED.items() if exp and vet[f"f770w_{k}"] >= 2)
     out = {

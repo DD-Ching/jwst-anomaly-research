@@ -30,3 +30,8 @@ def test_shifted_moves_on_sky():
 
 def test_n_pairs():
     assert m.n_pairs(Table({"n_bands": [1, 2, 4]})) == 4
+
+
+def test_chance_fraction_net_loss_never_passes():
+    assert m.chance_fraction(10, -0.5) is None
+    assert m.adopt_alpha([0.0, 0.25], [None, m.chance_fraction(10, -0.5)]) == 0.0

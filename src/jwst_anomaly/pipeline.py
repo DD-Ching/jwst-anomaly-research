@@ -746,7 +746,7 @@ class _Runner:
         merge_kwargs = {}
         if "merge_radius_arcsec" in cat_cfg:
             merge_kwargs["radius_arcsec"] = float(cat_cfg["merge_radius_arcsec"])
-        if cat_cfg.get("merge_size_factor"):
+        if cat_cfg.get("merge_size_factor") is not None:
             merge_kwargs["size_factor"] = float(cat_cfg["merge_size_factor"])
         sources = self.stage(
             sid,

@@ -550,3 +550,13 @@ def test_merge_size_factor_needs_area_and_scale():
         catalog.merge_bands(cats, "F770W", size_factor=0.5)
     with pytest.raises(ValueError, match="size_factor"):
         catalog.merge_bands(cats, "F770W", size_factor=-1.0)
+
+
+def test_merge_size_factor_missing_area_falls_back_to_r0():
+    # The candidate has no usable area: the pair limit is r0, not alpha * the anchor's r_eq.
+    cats = {
+        "F770W": _sized("F770W", [(0.0, 0.0)], [314.16]),
+        "F1000W": _sized("F1000W", [(0.4, 0.0)], [0.0]),
+    }
+    m = catalog.merge_bands(cats, "F770W", radius_arcsec=0.1, size_factor=0.5)
+    assert list(m["n_bands"]) == [1, 1]

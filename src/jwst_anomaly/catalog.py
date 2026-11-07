@@ -146,7 +146,6 @@ def merge_bands(
     if not np.isfinite(size_factor) or size_factor < 0:
         raise ValueError(f"size_factor must be >= 0, got {size_factor!r}")
     cats, n_dropped = _check_catalogs(catalogs)
-    req = {b: _equivalent_radius_arcsec(c, b) for b, c in cats.items()} if size_factor else {}
     ref = _normalize_band(ref_band)
     if ref not in cats:
         raise ValueError(f"ref_band {ref_band!r} not in catalogs {sorted(cats)}")
@@ -157,9 +156,9 @@ def merge_bands(
     field = field_id or _default_field_id(cats[ref])
     if not _FIELD_ID.fullmatch(field):
         raise ValueError(f"field_id {field!r} must match {_FIELD_ID.pattern}")
+    req = {b: _equivalent_radius_arcsec(c, b) for b, c in cats.items()} if size_factor else {}
     bands = sorted(cats, key=_band_sort_key)  # output column order
     order = [ref] + [b for b in bands if b != ref]  # matching order
-    radius = radius_arcsec * u.arcsec
 
     ref_cat = cats[ref]
     n_ref = len(ref_cat)
@@ -188,14 +187,15 @@ def merge_bands(
         cat = cats[band]
         cat_coord = SkyCoord(cat["ra"], cat["dec"], unit=u.deg)
         row_coord = SkyCoord(row_ra, row_dec, unit=u.deg)
-        if size_factor:
+        reach = radius_arcsec  # largest accepted separation for this band
+        limits = None
+        if size_factor:  # per-pair limit <= alpha * this band's r_eq, so this reach suffices
             limits = (row_req, req[band], radius_arcsec, size_factor)
-            reach = max(radius_arcsec, size_factor * float(np.nanmax(req[band], initial=0.0)))
-            rows, idx, sep, n_contested = _match_one_to_one(
-                row_coord, cat_coord, reach * u.arcsec, limits=limits
-            )
-        else:
-            rows, idx, sep, n_contested = _match_one_to_one(row_coord, cat_coord, radius)
+            finite = req[band][np.isfinite(req[band])]
+            reach = max(radius_arcsec, size_factor * float(finite.max(initial=0.0)))
+        rows, idx, sep, n_contested = _match_one_to_one(
+            row_coord, cat_coord, reach * u.arcsec, limits=limits
+        )
         a = np.full(len(row_ra), -1)
         a[rows] = idx
         s = np.full(len(row_ra), np.nan)
@@ -217,7 +217,7 @@ def merge_bands(
             a = np.concatenate([a, unmatched])
             s = np.concatenate([s, np.zeros(len(unmatched))])
         assign[band], seps[band] = a, s
-        _warn_if_poor_match(band, ref, stats[band], n_ref, radius_arcsec)
+        _warn_if_poor_match(band, ref, stats[band], n_ref, reach)
     for band in order:
         stats[band]["n_no_position"] = n_dropped[band]
 
@@ -379,7 +379,8 @@ def _match_one_to_one(
     """Greedy one-to-one pairs within ``radius``, closest first; ties broken by index.
 
     ``limits = (row_req, cat_req, r0, alpha)`` keeps only pairs with separation
-    ``<= max(r0, alpha * min(row_req, cat_req))`` (arcsec; a NaN r_eq gives ``r0``).
+    ``<= max(r0, alpha * min(row_req, cat_req))`` (arcsec; a NaN r_eq on either side gives
+    ``r0``, so a missing area never loosens the match).
     Returns matched row indices, catalog indices, separations (arcsec) and the number of
     contested matches (the row or the detection had another accepted candidate).
     """
@@ -390,8 +391,8 @@ def _match_one_to_one(
     sep = d2d.arcsec
     if limits is not None:
         row_req, cat_req, r0, alpha = limits
-        r_eq = np.fmin(row_req[i_row], cat_req[i_cat])  # fmin: NaN only if both are NaN
-        lim = np.fmax(r0, alpha * r_eq)
+        r_eq = np.minimum(row_req[i_row], cat_req[i_cat])  # NaN if either side is NaN
+        lim = np.where(np.isfinite(r_eq), np.maximum(r0, alpha * r_eq), r0)
         ok = sep <= lim
         i_row, i_cat, sep = i_row[ok], i_cat[ok], sep[ok]
     taken_row = np.zeros(len(rows), dtype=bool)
