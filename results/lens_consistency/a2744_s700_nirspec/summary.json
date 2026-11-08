@@ -16,7 +16,12 @@
   "bytes": 171878708,
   "sha256": "ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3",
   "n_rows": 99478,
-  "accessed": "2026-10-24"
+  "accessed": "2026-10-24",
+  "seen_this_run": {
+   "last_modified": "Tue, 15 Sep 2026 13:01:52 GMT",
+   "bytes": 171878708,
+   "accessed": "2026-11-08"
+  }
  },
  "dja_rows_read": 99478,
  "knots": [

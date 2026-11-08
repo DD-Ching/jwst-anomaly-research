@@ -90,18 +90,24 @@ def footprints(k: Table) -> dict[str, list[dict]]:
     return out
 
 
-def dja_path(arg: str | None) -> tuple[Path, Path | None]:
+def dja_path(arg: str | None) -> tuple[Path, Path | None, dict]:
+    """The table csv, its temporary directory (None for a local file) and what this run saw."""
     if arg:
-        return Path(arg), None
+        return Path(arg), None, {"source": str(arg)}
     tmp = Path(tempfile.mkdtemp(prefix="dja46_"))
     gz = tmp / m6.TABLE["name"]
     with urllib.request.urlopen(m6.TABLE["url"], timeout=600) as r, open(gz, "wb") as fh:
+        seen = {
+            "last_modified": r.headers.get("Last-Modified"),
+            "bytes": int(r.headers.get("Content-Length") or 0),
+        }
         shutil.copyfileobj(r, fh)
+    seen["accessed"] = Time.now().iso[:10]
     csv = tmp / "table.csv"
     with gzip.open(gz, "rb") as fi, open(csv, "wb") as fo:
         shutil.copyfileobj(fi, fo)
     gz.unlink()
-    return csv, tmp
+    return csv, tmp, seen
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -110,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     k = knots()
     fp = footprints(k)
-    csv, tmp = dja_path(args.dja)
+    csv, tmp, seen = dja_path(args.dja)
     try:
         rows, n = m6.match_rows(csv, k)
     finally:
@@ -143,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
             "z_agree": m6.Z_AGREE,
             "z_known": Z_KNOWN,
         },
-        "dja_table": m6.TABLE,
+        "dja_table": {**m6.TABLE, "seen_this_run": seen},
         "dja_rows_read": n,
         "knots": [
             {"image_id": str(r["image_id"]), "ra": float(r["ra"]), "dec": float(r["dec"])}
