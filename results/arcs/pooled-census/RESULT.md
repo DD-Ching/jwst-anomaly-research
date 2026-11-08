@@ -5,12 +5,13 @@ Plan: `PLAN.md` (committed before the run). Script: `scripts/arcs_pooled_census.
 S3 cutouts of each field's screen mosaic (not stored). Contact sheet: `census_anti.png` (looked at).
 
 ## Frozen outcome: **anti excess explained by clump orientation (exploratory)** (derived)
-- 104 strong-shear background rows in the 5 variant-B fields; 73 pass the own-flux gate (0.70 ≥ 0.5, ≥ 12); 19 of
+- 104 strong-shear background rows in the 5 variant-B fields; 73 pass the own-flux gate (73 / 104 ≥ 0.5, ≥ 12); 19 of
   them are `two-knot`, f̂ 0.26 (95 % upper 0.376).
 - The shape-noise sum reproduces the pooled tally (2.273); under the clump-aware null the expectation is 5.538 and
   P(≥ 6) is 0.484 (shape-noise check 0.0227) → ≥ 0.05, so the frozen label is "explained".
 - Sensitivity (mixture for every row): P 0.477 at f̂, 0.707 at the 95 % upper f. Secondary: P(≥ 4) for the 4 rows
-  that persist under second models 0.824; variant A with MACS1423's stored census rows, P(≥ 10) 0.293.
+  that persist under second models 0.789 (deviation: `summary.json`'s 0.824 left the 2 non-persisting anti rows in the
+  null; the review fix drops them from count and null, as #273's fix 4, `posthoc.json`); variant A with MACS1423's stored census rows, P(≥ 10) 0.293.
 
 ## What the anti rows are (observed pixels, derived classes; inputs in `posthoc.json` `anti_rows_inputs`)
 | Field | Row | mag | z_phot | g_min | Class | Gate |
@@ -22,7 +23,8 @@ S3 cutouts of each field's screen mosaic (not stored). Contact sheet: `census_an
 | RXC J0600 | 581 | 21.2 | 0.70 | 0.39 | single | passed |
 | MACS0308 | 2157 | 20.6 | 0.76 | 0.64 | single | passed |
 
-Contact sheet (by eye): the MACS0417 rows are faint and noisy; 4071's cutout shows vertical striping (the stripe
+Contact sheet (by eye; deviation: it shows the 1″-filtered stamp without the fitted knot positions the plan named,
+and its 33-px median filter on a 65-px stamp is a display filter, not the fitted residual): the MACS0417 rows are faint and noisy; 4071's cutout shows vertical striping (the stripe
 pattern of NIRCam 1/f noise is a likely reading, not tested). 2194 is a thin faint streak, 581 an elongated disc with
 a bright core, 2157 a smooth elongated galaxy; none of the three shows two knots.
 

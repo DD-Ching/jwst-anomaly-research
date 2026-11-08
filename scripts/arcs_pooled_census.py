@@ -82,6 +82,18 @@ def decide(n_passed: int, n_rows: int, p_primary: float) -> str:
     return vc.outcome(p_primary)
 
 
+def _finite(x):
+    """NaN -> None, so the JSON stays valid."""
+    return None if x is None or not np.isfinite(x) else x
+
+
+def persisting_tail(keys, probs, anti) -> float:
+    """P(≥ k_persist) with the non-persisting anti rows dropped from count and null (#273 fix 4)."""
+    drop = {k for k in anti if k not in PERSIST}
+    kept = [p for k, p in zip(keys, probs, strict=True) if k not in drop]
+    return tail(kept, sum(k in PERSIST for k in anti))
+
+
 def tail(probs, k: int) -> float:
     return float(vc.vn.excess_p(list(probs), k))
 
@@ -121,7 +133,13 @@ def main(argv=None) -> int:
     a = p.parse_args(argv)
     if a.posthoc:
         ph = {"label": "post hoc (not in PLAN.md); derived from census.ecsv"}
-        ph |= posthoc(Table.read(a.out / "census.ecsv"))
+        cen = Table.read(a.out / "census.ecsv")
+        ph |= posthoc(cen)
+        ck = [(str(f), str(lab)) for f, lab in zip(cen["field"], cen["label"], strict=True)]
+        ca = [k for k, c in zip(ck, cen["screen_class"], strict=True) if c == "anti"]
+        ph["deviation_p_ge_persisting_dropped"] = persisting_tail(
+            ck, [float(v) for v in cen["p_anti_row"]], ca
+        )
         rows = load_rows()
         ph["anti_rows_inputs"] = {
             f"{r['field']} {r['label']}": {
@@ -134,6 +152,8 @@ def main(argv=None) -> int:
         (a.out / "posthoc.json").write_text(json.dumps(ph, indent=1) + "\n")
         print(json.dumps(ph, indent=1))
         return 0
+    # fixed field order: seeds are seed + global row index in FIELDS_B order
+    a.fields = [f for f in FIELDS_B if f in a.fields]
     rows = load_rows(tuple(a.fields))
     full = tuple(a.fields) == tuple(FIELDS_B)
     lam_check = sum(row_probs(g, "single", True, 0.0, a.sigma_eps)[1] for g in rows["g_min"])
@@ -148,6 +168,8 @@ def main(argv=None) -> int:
         gi = 0
         for f in a.fields:
             sel = rows[rows["field"] == f]
+            if not len(sel):
+                continue
             tg = Table({"source_uid": list(sel["label"]), "ra": sel["ra"], "dec": sel["dec"]})
             c = cutouts.make_cutouts(
                 image_url(f),
@@ -211,7 +233,7 @@ def main(argv=None) -> int:
         sens[name] = {"f": round(f, 3), "p_ge_k": tail(mix, k_b)}
     persist_keys = [k for k in anti if k in PERSIST]
     secondary = {
-        "p_ge_persisting": tail((pr[k][2] for k in keys), len(persist_keys))
+        "p_ge_persisting": persisting_tail(keys, [pr[k][2] for k in keys], anti)
         if full and len(passed) >= MIN_GATE_PASSED
         else None,
         "k_persisting": len(persist_keys),
@@ -226,13 +248,14 @@ def main(argv=None) -> int:
         "n_rows": len(keys),
         "n_gate_passed": len(passed),
         "n_two_knot_gate_passed": n_two,
-        "f_two_knot_pooled": round(f_hat, 3),
-        "f_two_knot_95_upper": round(f_up, 3),
+        "gate_pass_frac": round(len(passed) / len(keys), 3),
+        "f_two_knot_pooled": _finite(round(f_hat, 3)),
+        "f_two_knot_95_upper": _finite(round(f_up, 3)),
         "k_anti": k_b,
         "expected_shape_noise": round(sum(pr[k][1] for k in keys), 3),
         "expected_clump_aware": round(sum(pr[k][2] for k in keys), 3),
         "p_ge_k_shape_noise_check": tail((pr[k][1] for k in keys), k_b),
-        "p_ge_k_clump_aware": p_primary,
+        "p_ge_k_clump_aware": _finite(p_primary),
         "classes_of_anti": {
             f"{k[0]} {k[1]}": [res[k]["class"], bool(res[k]["gate"]["passed"])] for k in anti
         },

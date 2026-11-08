@@ -42,7 +42,7 @@ def main() -> int:
             with fits.open(c["path"][0]) as h:
                 ext = next(x for x in h if x.data is not None)
                 img, w = ext.data.astype(float), WCS(ext.header)
-            x, y = (int(v) for v in w.world_to_pixel_values(r["ra"], r["dec"]))
+            x, y = (round(float(v)) for v in w.world_to_pixel_values(r["ra"], r["dec"]))
             k = 32  # half-size in px (2″ at 0.031″/px; ~4″ at 0.063″/px)
             s = img[max(y - k, 0) : y + k + 1, max(x - k, 0) : x + k + 1]
             s = s - median_filter(np.nan_to_num(s), 33)

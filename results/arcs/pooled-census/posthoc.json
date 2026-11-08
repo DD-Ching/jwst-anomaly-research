@@ -21,6 +21,7 @@
   "p_ge_k": 0.6203163744257776,
   "p_le_k": 0.6657211499887203
  },
+ "deviation_p_ge_persisting_dropped": 0.7894448275894179,
  "anti_rows_inputs": {
   "MACS0417 1993": {
    "z_phot": 3.03,

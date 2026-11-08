@@ -81,3 +81,15 @@ def test_posthoc_class_split():
     }
     assert ph["other_gate_passed"]["anti"] == 1 and ph["other_gate_passed"]["n"] == 2
     assert ph["gate_failed"]["anti"] == 0 and ph["gate_failed"]["p_ge_k"] == pytest.approx(1.0)
+
+
+def test_persisting_tail_drops_non_persisting_anti():
+    keys = [("WHL0137", "2194"), ("MACS0417", "1993"), ("X", "1")]
+    probs = [0.5, 0.9, 0.5]
+    anti = keys[:2]
+    # 1993 leaves count and null: P(>= 1) over two rows of 0.5
+    assert pc.persisting_tail(keys, probs, anti) == pytest.approx(0.75)
+
+
+def test_finite():
+    assert pc._finite(float("nan")) is None and pc._finite(0.3) == 0.3
