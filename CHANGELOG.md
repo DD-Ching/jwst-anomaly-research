@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `forced_check` radii scaled to the image-plane rms: not adopted, rms outlier-driven (D-034 addendum 2026-11-08)
+- **Question:** is an image-plane rms above 1″ a broad model scatter (then scale the 1.5″ match / 1″ search radii by
+  it) or set by one image? Plan first (`results/lens_consistency/rms_radii/PLAN.md`); functions unit-tested before
+  the run; offline census of the 55 stored `validate` image-plane tables (`scripts/rms_radii_census.py`).
+- **Result** (`RESULT.md`, `summary.json`): 30 tables rms ≤ 1″, 10 scalable (1–2″), 15 gate-K failures; 6 / 10
+  scalable tables drop to ≤ 1″ without their largest offset → frozen "outlier-driven": radii not scaled. Post hoc
+  (`posthoc.json`): 12 / 25 rms > 1″ tables have a robust scale ≤ 1″. Tables, not fields, are counted. No flag, no candidate.
+- **Failed approach:** rms scaling as the radius scale (this census). **Services:** none used (offline).
+- **Handoff:** the `forced_check` radius item is closed unless a robust scale gets its own frozen gate. Supporting 1
+  next: retry www.fe.infn.it to re-run Bergamini `validate`; #751 still waits on CDS.
+
 ## 2026-11-08: D-037 `d037_label` diagnostic column in `images --forced-image` (D-037 addendum c)
 - **Question:** can the repeated-pair rule (gated on two fields, D-037 addenda) be reported by `images` itself, so
   later forced runs carry the label instead of a separate gate script? `--shared-imageplane` takes `validate`'s

@@ -1207,3 +1207,21 @@ def test_d037_label_check_compare():
     assert not m.compare(table, [dict(gate[0], shared_pair="")])["passes"]
     table["image_class"][1] = "missing"  # an absent row the gate never read
     assert m.compare(table, gate)["rows_not_in_gate"] == ["5:absent"]
+
+
+def test_rms_scaled_radii_threshold_scaling_and_cap():
+    assert lc.rms_scaled_radii(0.8) == (1.5, 1.0)
+    assert lc.rms_scaled_radii(1.0) == (1.5, 1.0)
+    assert lc.rms_scaled_radii(float("nan")) == (1.5, 1.0)
+    m, s = lc.rms_scaled_radii(1.6)
+    assert m == pytest.approx(2.4) and s == pytest.approx(1.6)
+    assert lc.rms_scaled_radii(5.0) == (3.0, 3.0)  # capped
+    assert lc.rms_scaled_radii(5.0, match=4.0) == (4.0, 3.0)  # never reduced
+
+
+def test_rms_outlier_driven():
+    assert lc.image_plane_rms([3.0, 4.0]) == pytest.approx(np.sqrt(12.5))
+    assert not lc.rms_outlier_driven([0.3, 0.4, 0.5])  # rms below threshold
+    assert lc.rms_outlier_driven([0.3, 0.4, 0.3, 0.2, 4.0])  # one image sets it
+    assert not lc.rms_outlier_driven([1.5, 1.4, 1.6, 1.3, np.nan])  # broad scatter
+    assert not lc.rms_outlier_driven([5.0])

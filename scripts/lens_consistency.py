@@ -1647,6 +1647,42 @@ def system_search_radius(table: Table, sys_id: str, base: float, has_unpredicted
     return max(base, min(widen, MAX_SEARCH_ARCSEC))
 
 
+RMS_SCALE_THRESHOLD = 1.0  # image-plane rms above which radii scale with it (ASSUMPTION)
+
+
+def image_plane_rms(dtheta) -> float:
+    """Root-mean-square of the finite image-plane offsets (arcsec); NaN when there are none."""
+    d = np.asarray(dtheta, dtype=float)
+    d = d[np.isfinite(d)]
+    return float(np.sqrt(np.mean(d**2))) if len(d) else float("nan")
+
+
+def rms_scaled_radii(
+    rms: float,
+    match: float = 1.5,
+    search: float = 1.0,
+    threshold: float = RMS_SCALE_THRESHOLD,
+    cap: float = MAX_SEARCH_ARCSEC,
+) -> tuple[float, float]:
+    """Match and search radii scaled by ``rms / threshold`` when the image-plane rms exceeds
+    ``threshold``, each capped at ``cap``; unchanged otherwise (or when the rms is not finite).
+    A radius already above ``cap`` is never reduced."""
+    if not (np.isfinite(rms) and rms > threshold):
+        return match, search
+    f = rms / threshold
+    return max(match, min(match * f, cap)), max(search, min(search * f, cap))
+
+
+def rms_outlier_driven(dtheta, threshold: float = RMS_SCALE_THRESHOLD) -> bool:
+    """True when the rms exceeds ``threshold`` but drops to <= ``threshold`` once the single
+    largest finite offset is removed (one image, not the model as a whole, sets the rms)."""
+    d = np.asarray(dtheta, dtype=float)
+    d = np.sort(d[np.isfinite(d)])
+    if len(d) < 2 or not image_plane_rms(d) > threshold:
+        return False
+    return image_plane_rms(d[:-1]) <= threshold
+
+
 FORCED_SKIP = ("observed", "demagnified", "outside")  # image classes forced_check does not test
 
 

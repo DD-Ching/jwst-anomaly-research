@@ -1,0 +1,22 @@
+{
+  "n_tables_read": 55,
+  "n_tables_used": 55,
+  "groups": {
+    "rms<=1": 30,
+    "scalable": 10,
+    "gate_k_failure": 15
+  },
+  "scalable_outlier_driven": 6,
+  "reading": "rms scale outlier-driven",
+  "gate_k_failure_outlier_driven": 0,
+  "scalable_unmatched_fixed": 82,
+  "scalable_unmatched_scaled": 52,
+  "provenance": "derived",
+  "assumptions": {
+    "match_arcsec": 1.5,
+    "rms_threshold_arcsec": 1.0,
+    "cap_arcsec": 3.0,
+    "scalable_max_rms_arcsec": 2.0,
+    "min_n": 3
+  }
+}
