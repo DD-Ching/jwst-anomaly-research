@@ -3260,6 +3260,16 @@ CATS-fitted z = 4.419.
   the 11 `no_reference` readings equal the scratch-Sharon ones. `results/lens_consistency/macs1149_crossmodel/RESULT.md`.
 - **Revisit if** a spectroscopic z for system 16 is published (as above), or a JWST-era MACS1149 model appears.
 
+**Addendum 2026-11-08 (repeated-pair and model-dependent-μ rules as functions, `scripts/d037_rules_gate.py`).**
+- **Decision.** `lens_consistency.repeated_pair_topology` (row within 8″ of every `shared_match` image of its system)
+  and `mu_model_dependent` (|μ| ratio > 2× between models; not applicable without a second-model image) reproduce the
+  three hand labels (gate R passes). They stay diagnostics until gated on a second field; fitted-z and BCG-annulus
+  rules are not coded.
+- **Evidence.** Re-run `validate`: rms 0.6731″ / 145, six shared pairs as recorded. 16 `absent`, 2 `confused` →
+  `model_topology`; 1192 → `mu_model_dependent` at ratio 2.07 (narrow; pinned Sharon 3.63 vs CATS 7.52).
+  `results/lens_consistency/d037_rules/RESULT.md`.
+- **Revisit if** the second-field gate fails, or a pinned second model moves 1192's ratio below 2.
+
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
 **Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″

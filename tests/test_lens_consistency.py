@@ -1062,3 +1062,38 @@ def test_model_copies_unique_one_to_one_and_parity():
     assert lc.model_copies_unique(table[[0, 2]], images, unpred, 1.0, mu) == ["1.2", "3.2"]
     # missing parity information -> no label
     assert lc.model_copies_unique(table[:1], images, unpred, 1.0, {}) == [""]
+
+
+def test_repeated_pair_topology_within_radius_of_every_pair_image():
+    """D-037 repeated-pair rule: a flag row within 8" of every shared-match image of its system."""
+    d0 = -24.0
+    a = 1.0 / 3600
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "1.3", "2.1", "2.2"],
+            "system": ["1", "1", "1", "2", "2"],
+            "ra": [64.0] * 5,
+            "dec": [d0, d0 + 1 * a, d0 + 50 * a, d0 + 100 * a, d0 + 101 * a],
+        }
+    )
+    table = Table(
+        {
+            "system": ["1", "1", "1", "2", "3"],
+            "ra": [64.0] * 5,
+            "dec": [d0 + 7.5 * a, d0 + 8.5 * a, d0 + 3 * a, d0 + 104 * a, d0],
+            "forced_class": ["absent", "confused", "recovered", "confused", "absent"],
+        }
+    )
+    shared = ["1.1", "1.2", "2.1"]  # system 2 has only one shared id: no pair
+    got = lc.repeated_pair_topology(table, images, shared)
+    # 7.5" / 6.5" from 1.1 / 1.2 -> pair; 8.5" from 1.1 -> no; recovered not a flag class
+    assert got == ["1.1/1.2", "", "", "", ""]
+    assert lc.repeated_pair_topology(table, images, shared, classes=("recovered",))[2] == "1.1/1.2"
+
+
+def test_mu_model_dependent_factor_two():
+    assert lc.mu_model_dependent(7.52, 3.63) is True  # ratio 2.07
+    assert lc.mu_model_dependent(15.82, 30.18) is False  # ratio 1.91
+    assert lc.mu_model_dependent(-4.0, 1.9) is True  # |mu| compared
+    assert lc.mu_model_dependent(5.0, None) is None
+    assert lc.mu_model_dependent(5.0, float("nan")) is None

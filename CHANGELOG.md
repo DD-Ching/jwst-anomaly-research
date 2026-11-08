@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: D-037 repeated-pair and model-dependent-μ rules as functions: gate R passes on MACS1149 (defining field; D-037 addendum)
+- **Question:** do D-037's repeated-pair and model-dependent-μ rules, written as functions, reproduce its hand labels
+  (TASKS Supporting 1, `forced_check` item)? Plan first (`results/lens_consistency/d037_rules/PLAN.md`);
+  `lens_consistency.repeated_pair_topology` / `mu_model_dependent` unit-tested before the run;
+  `scripts/d037_rules_gate.py` on the stored CATS forced table, a re-run `validate` and the stored Sharon μ.
+- **Result** (`RESULT.md`, `summary.json`): route reproduces rms 0.6731″ / 145 images and the six recorded shared
+  pairs; 16 `absent` and 2 `confused` → `model_topology`, 1192 `confused` → `mu_model_dependent` (ratio 2.07, narrow);
+  no rule-only rows → gate R passes. Defining field only: not adopted as a class until a second-field gate. No flag,
+  no candidate.
+- **Failed approach:** none (a radec-rounding key mismatch in the first gate run left 16's Sharon μ empty; fixed by a
+  0.05″ positional match before the recorded run). **Services:** archive.stsci.edu with the proxy + certifi bundle;
+  CDS still resets (15:09Z); #751 waits.
+- **Handoff:** next on this item: gate both functions on a second field with hand-read topology / μ flags (MACS0416
+  or Abell 2744 forced rows), then a `d037_label` column in `images --forced-image`; radii scaled to the rms stays open.
+
 ## 2026-11-08: D-042 second copy rule as a function: gate U fails as frozen on MACS0416; system 122's copy reading not reproduced (D-042 addendum)
 - **Question:** does D-042's one-to-one, same-parity copy rule (6.5 × rms) reproduce its own hand reading? Plan first
   (`results/lens_consistency/copy_rule_unique/PLAN.md`); `lens_consistency.model_copies_unique` unit-tested before the

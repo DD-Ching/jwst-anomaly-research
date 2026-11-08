@@ -1848,6 +1848,59 @@ def model_copies_unique(
     return out
 
 
+PAIR_RADIUS_ARCSEC = (
+    8.0  # D-037 repeated-pair rule: row within this of every pair image (ASSUMPTION)
+)
+MU_MODEL_FACTOR = (
+    2.0  # D-037 model-dependent-mu rule: |mu| ratio between models above this (ASSUMPTION)
+)
+
+
+def repeated_pair_topology(
+    table: Table,
+    images: Table,
+    shared: list[str],
+    radius_arcsec: float = PAIR_RADIUS_ARCSEC,
+    classes: tuple[str, ...] = COPY_CLASSES,
+) -> list[str]:
+    """D-037 repeated-pair rule, per row of a forced-checked ``table``: when the row's
+    ``forced_class`` is in ``classes`` and two or more catalogued images of its own system share
+    one predicted image (``shared``: ``validate``'s ``shared_match`` ids), and the row lies within
+    ``radius_arcsec`` of every one of them, return those ids joined by ``/`` (the row is
+    ``model_topology``, untestable); otherwise ``""``."""
+    ids = np.asarray(images["image_id"]).astype(str)
+    cand = images[np.isin(ids, sorted(set(map(str, shared))))]
+    csys = np.asarray(cand["system"]).astype(str)
+    cid = np.asarray(cand["image_id"]).astype(str)
+    out = []
+    for r in table:
+        sel = csys == str(r["system"])
+        if r["forced_class"] not in classes or sel.sum() < 2:
+            out.append("")
+            continue
+        sep = (
+            SkyCoord(r["ra"], r["dec"], unit="deg")
+            .separation(SkyCoord(cand["ra"][sel], cand["dec"][sel], unit="deg"))
+            .arcsec
+        )
+        out.append("/".join(sorted(cid[sel])) if np.all(sep <= radius_arcsec) else "")
+    return out
+
+
+def mu_model_dependent(
+    mu_first: float, mu_second: float | None, factor: float = MU_MODEL_FACTOR
+) -> bool | None:
+    """D-037 model-dependent-mu rule for one ``absent`` / ``confused`` row: ``True`` when the two
+    models' |mu| differ by more than ``factor`` x, ``False`` when they agree within it, ``None``
+    when the second model has no image of the source there (rule not applicable)."""
+    if mu_second is None or not (np.isfinite(mu_first) and np.isfinite(mu_second)):
+        return None
+    a, b = abs(float(mu_first)), abs(float(mu_second))
+    if min(a, b) == 0:
+        return True
+    return bool(max(a, b) / min(a, b) > factor)
+
+
 def image_stamper(uri: str, half_arcsec: float = 1.5):
     """``stamp(ra, dec)`` reading SCI/ERR sections of an ``_i2d`` (local path or S3 by byte range).
 
