@@ -1,0 +1,229 @@
+{
+ "provenance": "derived (forced classes: stored 2026-10-14 run; mu: model_prediction)",
+ "model": "macs1149-cats",
+ "inputs": {
+  "model": "macs1149-cats",
+  "table": "../results/lens_consistency/macs1149-cats/images_predicted.ecsv",
+  "imageplane": "../results/lens_consistency/d037_rules/imageplane_macs1149-cats.ecsv",
+  "crossmodel": "../results/lens_consistency/macs1149_crossmodel/summary.json"
+ },
+ "assumptions": {
+  "pair_radius_arcsec": 8.0,
+  "mu_model_factor": 2.0,
+  "mu_second_radius_arcsec": 3.0,
+  "xmodel_row_match_arcsec": 0.05
+ },
+ "validate_rms_arcsec": 0.6731,
+ "n_imageplane": 145,
+ "shared_match_images": [
+  "2.2",
+  "2.3",
+  "16.1",
+  "16.2",
+  "21.1",
+  "21.2",
+  "1015.3",
+  "1015.4",
+  "1050.2",
+  "1050.3",
+  "1052.4",
+  "1052.5"
+ ],
+ "flag_rows": [
+  {
+   "system": "2",
+   "forced_class": "confused",
+   "mu_first": -16.53,
+   "mu_second_nearest": null,
+   "second_sep_arcsec": null,
+   "mu_ratio": null,
+   "shared_pair": "2.2/2.3",
+   "mu_model_dependent": null,
+   "labels": [
+    "model_topology"
+   ]
+  },
+  {
+   "system": "16",
+   "forced_class": "absent",
+   "mu_first": 15.82,
+   "mu_second_nearest": 30.18,
+   "second_sep_arcsec": 0.9,
+   "mu_ratio": 1.91,
+   "shared_pair": "16.1/16.2",
+   "mu_model_dependent": false,
+   "labels": [
+    "model_topology"
+   ]
+  },
+  {
+   "system": "1192",
+   "forced_class": "confused",
+   "mu_first": 7.52,
+   "mu_second_nearest": 3.63,
+   "second_sep_arcsec": 0.44,
+   "mu_ratio": 2.07,
+   "shared_pair": "",
+   "mu_model_dependent": true,
+   "labels": [
+    "mu_model_dependent"
+   ]
+  }
+ ],
+ "diagnostic_other_rows": [
+  {
+   "system": "13",
+   "forced_class": "no_reference",
+   "mu_first": -9.96,
+   "mu_second_nearest": null,
+   "second_sep_arcsec": null,
+   "mu_ratio": null,
+   "shared_pair": ""
+  },
+  {
+   "system": "14",
+   "forced_class": "no_reference",
+   "mu_first": 5.09,
+   "mu_second_nearest": 4.67,
+   "second_sep_arcsec": 0.65,
+   "mu_ratio": 1.09,
+   "shared_pair": ""
+  },
+  {
+   "system": "16",
+   "forced_class": "recovered",
+   "mu_first": 4.04,
+   "mu_second_nearest": 4.11,
+   "second_sep_arcsec": 0.96,
+   "mu_ratio": 1.02,
+   "shared_pair": ""
+  },
+  {
+   "system": "21",
+   "forced_class": "recovered",
+   "mu_first": 111.03,
+   "mu_second_nearest": null,
+   "second_sep_arcsec": null,
+   "mu_ratio": null,
+   "shared_pair": "21.1/21.2"
+  },
+  {
+   "system": "1002",
+   "forced_class": "no_reference",
+   "mu_first": -3.59,
+   "mu_second_nearest": null,
+   "second_sep_arcsec": null,
+   "mu_ratio": null,
+   "shared_pair": ""
+  },
+  {
+   "system": "1007",
+   "forced_class": "no_reference",
+   "mu_first": 18.31,
+   "mu_second_nearest": 0.1,
+   "second_sep_arcsec": 0.75,
+   "mu_ratio": 183.14,
+   "shared_pair": ""
+  },
+  {
+   "system": "1009",
+   "forced_class": "no_reference",
+   "mu_first": 3.58,
+   "mu_second_nearest": 3.4,
+   "second_sep_arcsec": 0.12,
+   "mu_ratio": 1.05,
+   "shared_pair": ""
+  },
+  {
+   "system": "1010",
+   "forced_class": "no_reference",
+   "mu_first": 3.6,
+   "mu_second_nearest": 3.41,
+   "second_sep_arcsec": 0.08,
+   "mu_ratio": 1.06,
+   "shared_pair": ""
+  },
+  {
+   "system": "1020",
+   "forced_class": "no_reference",
+   "mu_first": -4.07,
+   "mu_second_nearest": -2.35,
+   "second_sep_arcsec": 0.83,
+   "mu_ratio": 1.73,
+   "shared_pair": ""
+  },
+  {
+   "system": "1211",
+   "forced_class": "no_reference",
+   "mu_first": -4.01,
+   "mu_second_nearest": -2.05,
+   "second_sep_arcsec": 0.83,
+   "mu_ratio": 1.95,
+   "shared_pair": ""
+  },
+  {
+   "system": "1222",
+   "forced_class": "no_reference",
+   "mu_first": -3.66,
+   "mu_second_nearest": null,
+   "second_sep_arcsec": null,
+   "mu_ratio": null,
+   "shared_pair": ""
+  },
+  {
+   "system": "1999",
+   "forced_class": "no_reference",
+   "mu_first": -5.0,
+   "mu_second_nearest": -4.42,
+   "second_sep_arcsec": 0.68,
+   "mu_ratio": 1.13,
+   "shared_pair": ""
+  },
+  {
+   "system": "1999",
+   "forced_class": "no_reference",
+   "mu_first": 3.64,
+   "mu_second_nearest": 3.88,
+   "second_sep_arcsec": 0.42,
+   "mu_ratio": 1.07,
+   "shared_pair": ""
+  }
+ ],
+ "gate_R": {
+  "16:absent": {
+   "want": [
+    "model_topology"
+   ],
+   "got": [
+    [
+     "model_topology"
+    ]
+   ],
+   "ok": true
+  },
+  "2:confused": {
+   "want": [
+    "model_topology"
+   ],
+   "got": [
+    [
+     "model_topology"
+    ]
+   ],
+   "ok": true
+  },
+  "1192:confused": {
+   "want": [
+    "mu_model_dependent"
+   ],
+   "got": [
+    [
+     "mu_model_dependent"
+    ]
+   ],
+   "ok": true
+  },
+  "rule_only_rows": [],
+  "passes": true
+ }
+}
