@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` pooled anti rows, clump-pair census: frozen `explained`; 3 single-component rows stay open (D-024 addendum 9)
+- **Question:** is the pooled anti excess (variant B, 6 vs 2.27) a clump-pair effect, as in MACS1423? Plan first
+  (`results/arcs/pooled-census/PLAN.md`); `scripts/arcs_pooled_census.py` reuses #273's census code unchanged; rule
+  functions unit-tested before the run; 104 rows of 5 fields as 8″ F200W S3 cutouts (not stored).
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): 73 / 104 rows pass the gate, f̂ 0.26; clump-aware
+  expectation 5.538, P(≥ 6) 0.484 → frozen `anti excess explained by clump orientation (exploratory)`. Post hoc
+  (`posthoc.json`): only 1 / 6 anti rows is a gate-passed two-knot; the 3 single-component anti rows (WHL0137 2194,
+  RXC J0600 581, MACS0308 2157) give, post hoc, 3 vs 0.631 within their class (P 0.024). No candidate.
+- **Failed approach:** none. **Services:** MAST S3 worked; CDS still times out (07:08Z); #751 waits.
+- **Handoff:** next on this line: photo-z contamination of 581 and 2157 (mag 21.2 / 20.6, low background z_phot 0.70 / 0.76)
+  and 2194 (DJA / spec-z, second band).
+
 ## 2026-11-08: `arcs` pooled anti rows under second published models: `mixed`, 4 / 6 persist (D-024 addendum 8)
 - **Question:** is the pooled anti excess (`results/arcs/pooled-tally/`, variant B 6 vs 2.27) a deciding-model
   shear-direction error? Plan first (`results/arcs/anti-model-swap/PLAN.md`); `scripts/arcs_model_swap.py`, rule
