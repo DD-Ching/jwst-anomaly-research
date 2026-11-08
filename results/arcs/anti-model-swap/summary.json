@@ -1,0 +1,186 @@
+{
+ "plan": "results/arcs/anti-model-swap/PLAN.md",
+ "label": "derived (classes from stored model_prediction tables); exploratory",
+ "pairs": {
+  "MACS0417": [
+   "macs0417-relics/run2-canucs-v1/arcs.ecsv",
+   "macs0417-relics/run1-relics-v1/arcs.ecsv"
+  ],
+  "WHL0137": [
+   "whl0137-relics/whl0137-relics-lenstool/arcs.ecsv",
+   "whl0137-relics/whl0137-relics-glafic/arcs.ecsv"
+  ],
+  "RXC J0600": [
+   "rxc0600-relics/rxc0600-relics-glafic/arcs.ecsv",
+   "rxc0600-relics/rxc0600-relics-lenstool/arcs.ecsv"
+  ],
+  "MACS0308": [
+   "macs0308-relics/macs0308-relics-glafic/arcs.ecsv",
+   "macs0308-relics/macs0308-relics-zitrin/arcs.ecsv"
+  ]
+ },
+ "untested_fields": [
+  "MACS1423",
+  "RXC J0018"
+ ],
+ "assumptions": {
+  "match_arcsec": 0.1,
+  "control_min": 0.7,
+  "min_tested": 4
+ },
+ "control": {
+  "n_matched": 76,
+  "aligned": 66,
+  "anti": 5,
+  "retention": 0.868421052631579,
+  "passes": true
+ },
+ "control_by_field": {
+  "MACS0417": {
+   "n_matched": 37,
+   "aligned": 31,
+   "anti": 4,
+   "retention": 0.8378378378378378,
+   "passes": true
+  },
+  "WHL0137": {
+   "n_matched": 13,
+   "aligned": 13,
+   "anti": 0,
+   "retention": 1.0,
+   "passes": true
+  },
+  "RXC J0600": {
+   "n_matched": 11,
+   "aligned": 8,
+   "anti": 1,
+   "retention": 0.7272727272727273,
+   "passes": true
+  },
+  "MACS0308": {
+   "n_matched": 15,
+   "aligned": 14,
+   "anti": 0,
+   "retention": 0.9333333333333333,
+   "passes": true
+  }
+ },
+ "anti_rows": [
+  {
+   "field": "MACS0417",
+   "label": 1993,
+   "g_min_primary": 3.68731038870103,
+   "offset_min_primary": 88.08002383299635,
+   "second_class": "aligned"
+  },
+  {
+   "field": "MACS0417",
+   "label": 2341,
+   "g_min_primary": 0.26352113261191973,
+   "offset_min_primary": 69.13380442609471,
+   "second_class": "mixed"
+  },
+  {
+   "field": "MACS0417",
+   "label": 4071,
+   "g_min_primary": 1.18244510211688,
+   "offset_min_primary": 71.48834341489125,
+   "second_class": "anti"
+  },
+  {
+   "field": "WHL0137",
+   "label": 2194,
+   "g_min_primary": 0.23620601282075082,
+   "offset_min_primary": 63.14779660260933,
+   "second_class": "anti"
+  },
+  {
+   "field": "RXC J0600",
+   "label": 581,
+   "g_min_primary": 0.3939015351147131,
+   "offset_min_primary": 63.621362097980395,
+   "second_class": "anti"
+  },
+  {
+   "field": "MACS0308",
+   "label": 2157,
+   "g_min_primary": 0.6398667982648472,
+   "offset_min_primary": 81.99409633933355,
+   "second_class": "anti"
+  }
+ ],
+ "m_tested": 6,
+ "k_anti_in_second": 4,
+ "outcome": "mixed",
+ "secondary_variant_B": {
+  "sigma_eps": 0.26,
+  "deciding": {
+   "anti": 6,
+   "expected": 2.273045076411647,
+   "p_ge_observed": 0.028549048059201415
+  },
+  "second_runs_swapped_in": {
+   "anti": 13,
+   "expected": 2.6317594121839565,
+   "p_ge_observed": 4.120383167633782e-06
+  },
+  "per_field_deciding": {
+   "MACS0417": {
+    "n": 49,
+    "anti": 3,
+    "expected": 1.5159862428487536,
+    "p_ge_observed": 0.19517661813291284
+   },
+   "WHL0137": {
+    "n": 18,
+    "anti": 1,
+    "expected": 0.1500273450056235,
+    "p_ge_observed": 0.13931555931760378
+   },
+   "RXC J0600": {
+    "n": 12,
+    "anti": 1,
+    "expected": 0.2029990155215398,
+    "p_ge_observed": 0.18372095496564825
+   },
+   "MACS0308": {
+    "n": 21,
+    "anti": 1,
+    "expected": 0.3093747543854621,
+    "p_ge_observed": 0.2660943158889799
+   },
+   "RXC J0018": {
+    "n": 4,
+    "anti": 0,
+    "expected": 0.0946577186502679,
+    "p_ge_observed": 1.0
+   }
+  },
+  "per_field_second": {
+   "MACS0417": {
+    "n": 61,
+    "anti": 8,
+    "expected": 1.4159161811418146,
+    "p_ge_observed": 0.00011502271199834304
+   },
+   "WHL0137": {
+    "n": 19,
+    "anti": 1,
+    "expected": 0.23220995050728302,
+    "p_ge_observed": 0.20722033865915412
+   },
+   "RXC J0600": {
+    "n": 18,
+    "anti": 3,
+    "expected": 0.4994433281717641,
+    "p_ge_observed": 0.014345508389732522
+   },
+   "MACS0308": {
+    "n": 18,
+    "anti": 1,
+    "expected": 0.3895322337128267,
+    "p_ge_observed": 0.3226263470380794
+   }
+  }
+ }
+}

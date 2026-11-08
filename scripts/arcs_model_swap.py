@@ -85,6 +85,8 @@ def main() -> None:
         if pmeta["assumptions"] != smeta["assumptions"]:
             raise SystemExit(f"error: {field} runs use different assumptions")
         a = pmeta["assumptions"]
+        if float(a["sigma_eps"]) != 0.26:
+            raise SystemExit(f"error: {field} runs used σ_ε {a['sigma_eps']}, the plan uses 0.26")
         second_stats[field] = ap.field_stats(
             s_bg, float(a["sigma_eps"]), float(a["min_ellipticity"]), float(a["anti_deg"])
         )
@@ -111,6 +113,8 @@ def main() -> None:
     for f in ap.VARIANTS["B"]:
         rows, meta = ap.load_run(ap.FIELDS[f])
         a = meta["assumptions"]
+        if float(a["sigma_eps"]) != sigma:
+            raise SystemExit(f"error: {f} deciding run used σ_ε {a['sigma_eps']}, not {sigma}")
         prim_stats[f] = ap.field_stats(
             rows, sigma, float(a["min_ellipticity"]), float(a["anti_deg"])
         )
@@ -137,6 +141,7 @@ def main() -> None:
             "sigma_eps": sigma,
             "deciding": ap.pooled(prim_stats, ap.VARIANTS["B"]),
             "second_runs_swapped_in": ap.pooled(swapped, ap.VARIANTS["B"]),
+            "per_field_deciding": prim_stats,
             "per_field_second": second_stats,
         },
     }
