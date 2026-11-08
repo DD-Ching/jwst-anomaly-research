@@ -28,7 +28,8 @@ def diff_inventories(old: dict, new: dict, centre_tol_arcsec: float = 0.5) -> di
         }
         if "centre_deg" in v and "centre_deg" in o:
             (ra0, de0), (ra1, de1) = o["centre_deg"], v["centre_deg"]
-            d = 3600 * math.hypot((ra0 - ra1) * math.cos(math.radians(de0)), de0 - de1)
+            dra = (ra0 - ra1 + 180.0) % 360.0 - 180.0
+            d = 3600 * math.hypot(dra * math.cos(math.radians(de0)), de0 - de1)
             if d > centre_tol_arcsec:
                 rec["centre_shift_arcsec"] = round(d, 2)
         out[field] = rec

@@ -30,3 +30,9 @@ def test_added_removed_newly_public_and_centre():
 def test_unchanged_field_is_empty():
     inv = _inv({"1-1": {"public": True}}, [1.0, 1.0])
     assert diff_inventories(inv, inv)["x"] == {"added": [], "removed": [], "newly_public": []}
+
+
+def test_centre_shift_wraps_at_ra_zero():
+    old = _inv({}, [359.99995, 0.0])
+    new = _inv({}, [0.00001, 0.0])
+    assert "centre_shift_arcsec" not in diff_inventories(old, new)["x"]
