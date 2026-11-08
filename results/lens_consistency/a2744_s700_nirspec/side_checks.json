@@ -1,0 +1,25 @@
+{
+ "provenance": "observed (archive metadata; post hoc side checks, recorded by hand from this run's queries on 2026-11-08 ~04:05-04:12Z)",
+ "dja_newer_than_v4_6": {
+  "probed": ["dja_msaexp_emission_lines_v4.7.csv.gz", "dja_msaexp_emission_lines_v4.8.csv.gz", "dja_msaexp_emission_lines_v5.0.csv.gz", "dja_msaexp_emission_lines_v5.1.csv.gz", "dja_msaexp_emission_lines_v4.6.1.csv.gz", "nirspec_graded_v3.csv.gz", "nirspec_graded_v4.csv.gz"],
+  "http_status": 403,
+  "note": "bucket listing is denied (403), so absence is by name only; v4.6 HEAD 200, Last-Modified 2026-09-15T13:01:52Z, 171878708 B (unchanged)",
+  "dja_blog_newest_nirspec_post": "2025-05-01 NIRSpec Merged Table (v4)"
+ },
+ "elgordo_nirspec_in_mast": {
+  "position_deg": [15.7208, -49.2544],
+  "radius_deg": 0.06,
+  "instrument_names": ["NIRSPEC/MSA", "NIRSPEC/IFU", "NIRSPEC/SLIT", "NIRSPEC"],
+  "n_rows": 0,
+  "control_same_query_nircam_image": {"1176": 8, "6882": 4},
+  "control_same_query_abell2744_nirspec_msa_includes": ["1324", "2561", "2756", "3073", "6053", "8204", "9214"]
+ },
+ "programme_8204": {
+  "nirspec_msa_rows": 803,
+  "release_min": "2026-11-05",
+  "pointing_centre_sep_from_700_1_arcmin": 0.17,
+  "min_polygon_vertex_sep_arcsec": 8.4,
+  "footprint_contains_700_1": false,
+  "reading": "700.1 lies outside every 8204 s_region polygon; that this is the inter-quadrant gap is a reading, not checked"
+ }
+}

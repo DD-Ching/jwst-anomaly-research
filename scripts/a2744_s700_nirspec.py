@@ -1,7 +1,8 @@
 """Abell 2744 system 700.1 (UNCOVER 78): public NIRSpec MSA coverage of the arc ends.
 
-Frozen plan: ``results/lens_consistency/a2744_s700_nirspec/PLAN.md``. MAST CAOM footprints (NIRSpec/MSA, 1"
-around each knot) and DJA v4.6 rows within 0.5" of each knot; ``decide`` gives the outcome.
+Frozen plan: ``results/lens_consistency/a2744_s700_nirspec/PLAN.md``. MAST CAOM footprints
+(NIRSpec/MSA, 1" around each knot) and DJA v4.6 rows within 0.5" of each knot; ``decide`` gives
+the outcome.
 
     python scripts/a2744_s700_nirspec.py [--dja PATH]
 """
@@ -73,7 +74,9 @@ def footprints(k: Table) -> dict[str, list[dict]]:
         for x in o:
             p = str(x["proposal_id"])
             rel = float(x["t_obs_release"]) if np.isfinite(x["t_obs_release"]) else None
-            d = progs.setdefault(p, {"programme": p, "n_rows": 0, "planned": True, "release_min": None})
+            d = progs.setdefault(
+                p, {"programme": p, "n_rows": 0, "planned": True, "release_min": None}
+            )
             d["n_rows"] += 1
             if int(x["calib_level"]) >= 0:
                 d["planned"] = False
@@ -82,7 +85,7 @@ def footprints(k: Table) -> dict[str, list[dict]]:
         for d in progs.values():
             m = d.pop("release_min")
             d["release_min"] = Time(m, format="mjd").iso[:10] if m is not None else None
-            d["new_public"] = (not d["planned"]) and m is not None and m > cut
+            d["new_public"] = bool((not d["planned"]) and m is not None and m > cut)
         out[str(r["image_id"])] = sorted(progs.values(), key=lambda d: d["programme"])
     return out
 
@@ -120,7 +123,9 @@ def main(argv: list[str] | None = None) -> int:
         for r in v
         if r.get("z_best") not in (None, "")
     )
-    known_prog = any(d["programme"] == KNOWN_PROGRAMME and not d["planned"] for v in fp.values() for d in v)
+    known_prog = any(
+        d["programme"] == KNOWN_PROGRAMME and not d["planned"] for v in fp.values() for d in v
+    )
     gate_k = known_prog and known_z
     end_a = any(spec.get(i) for i in END_A)
     end_b = any(spec.get(i) for i in END_B)
@@ -141,11 +146,16 @@ def main(argv: list[str] | None = None) -> int:
         "dja_table": m6.TABLE,
         "dja_rows_read": n,
         "knots": [
-            {"image_id": str(r["image_id"]), "ra": float(r["ra"]), "dec": float(r["dec"])} for r in k
+            {"image_id": str(r["image_id"]), "ra": float(r["ra"]), "dec": float(r["dec"])}
+            for r in k
         ],
         "footprints": fp,
         "dja_rows": rows,
-        "gate_k": {"known_programme_returned": known_prog, "known_z_recovered": known_z, "passed": gate_k},
+        "gate_k": {
+            "known_programme_returned": bool(known_prog),
+            "known_z_recovered": bool(known_z),
+            "passed": bool(gate_k),
+        },
         "end_a_measured": bool(end_a),
         "end_b_measured": bool(end_b),
         "new_public_programmes": new_public,
@@ -154,8 +164,21 @@ def main(argv: list[str] | None = None) -> int:
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    print(json.dumps({k_: summary[k_] for k_ in ("gate_k", "end_a_measured", "end_b_measured",
-                                                  "new_public_programmes", "planned_programmes", "outcome")}))
+    print(
+        json.dumps(
+            {
+                k_: summary[k_]
+                for k_ in (
+                    "gate_k",
+                    "end_a_measured",
+                    "end_b_measured",
+                    "new_public_programmes",
+                    "planned_programmes",
+                    "outcome",
+                )
+            }
+        )
+    )
     return 0
 
 

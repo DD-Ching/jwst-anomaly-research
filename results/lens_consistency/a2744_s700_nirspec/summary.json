@@ -1,0 +1,297 @@
+{
+ "plan": "PLAN.md",
+ "provenance": "observed (archive metadata: MAST CAOM footprints, DJA v4.6 catalogue rows)",
+ "params": {
+  "released_after": "2026-10-20",
+  "footprint_radius": "1 arcsec",
+  "dja_match_arcsec": 0.5,
+  "spec_grade": 3,
+  "z_agree": 0.01,
+  "z_known": 2.3151
+ },
+ "dja_table": {
+  "name": "dja_msaexp_emission_lines_v4.6.csv.gz",
+  "url": "https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.6.csv.gz",
+  "last_modified": "2026-09-15T13:01:52Z",
+  "bytes": 171878708,
+  "sha256": "ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3",
+  "n_rows": 99478,
+  "accessed": "2026-10-24"
+ },
+ "dja_rows_read": 99478,
+ "knots": [
+  {
+   "image_id": "78.11",
+   "ra": 3.579613629395678,
+   "dec": -30.35772190032174
+  },
+  {
+   "image_id": "78.12",
+   "ra": 3.579236546301403,
+   "dec": -30.35780995481245
+  },
+  {
+   "image_id": "78.13",
+   "ra": 3.574876131238391,
+   "dec": -30.35607189809375
+  },
+  {
+   "image_id": "78.21",
+   "ra": 3.5797057136438686,
+   "dec": -30.357721900676278
+  },
+  {
+   "image_id": "78.22",
+   "ra": 3.579161959967981,
+   "dec": -30.357838010933285
+  },
+  {
+   "image_id": "78.23",
+   "ra": 3.574913626250475,
+   "dec": -30.356079118676867
+  },
+  {
+   "image_id": "78.31",
+   "ra": 3.579517791536864,
+   "dec": -30.357754967961796
+  },
+  {
+   "image_id": "78.32",
+   "ra": 3.5793636318350104,
+   "dec": -30.35779551068616
+  }
+ ],
+ "footprints": {
+  "78.11": [
+   {
+    "programme": "2561",
+    "n_rows": 19,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ],
+  "78.12": [
+   {
+    "programme": "2561",
+    "n_rows": 19,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ],
+  "78.13": [
+   {
+    "programme": "2561",
+    "n_rows": 20,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ],
+  "78.21": [
+   {
+    "programme": "2561",
+    "n_rows": 19,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ],
+  "78.22": [
+   {
+    "programme": "2561",
+    "n_rows": 20,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ],
+  "78.23": [
+   {
+    "programme": "2561",
+    "n_rows": 20,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ],
+  "78.31": [
+   {
+    "programme": "2561",
+    "n_rows": 19,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ],
+  "78.32": [
+   {
+    "programme": "2561",
+    "n_rows": 19,
+    "planned": false,
+    "release_min": "2023-08-08",
+    "new_public": false
+   },
+   {
+    "programme": "6793",
+    "n_rows": 3,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   },
+   {
+    "programme": "9645",
+    "n_rows": 54,
+    "planned": true,
+    "release_min": null,
+    "new_public": false
+   }
+  ]
+ },
+ "dja_rows": {
+  "78.13": [
+   {
+    "file": "uncover-v4_prism-clear_2561_60018.spec.fits",
+    "srcid": "60018",
+    "ra": "3.57487917",
+    "dec": "-30.35606972",
+    "grating": "PRISM",
+    "root": "uncover-v4",
+    "sn50": "8.130372",
+    "zline": "2.3107982",
+    "z_best": "2.3107982",
+    "z_phot": "2.3075848",
+    "grade": "3",
+    "sep_arcsec": 0.012
+   }
+  ],
+  "78.23": [
+   {
+    "file": "uncover-v4_prism-clear_2561_60018.spec.fits",
+    "srcid": "60018",
+    "ra": "3.57487917",
+    "dec": "-30.35606972",
+    "grating": "PRISM",
+    "root": "uncover-v4",
+    "sn50": "8.130372",
+    "zline": "2.3107982",
+    "z_best": "2.3107982",
+    "z_phot": "2.3075848",
+    "grade": "3",
+    "sep_arcsec": 0.112
+   }
+  ]
+ },
+ "gate_k": {
+  "known_programme_returned": true,
+  "known_z_recovered": true,
+  "passed": true
+ },
+ "end_a_measured": false,
+ "end_b_measured": false,
+ "new_public_programmes": [],
+ "planned_programmes": [
+  "6793",
+  "9645"
+ ],
+ "outcome": "no new input"
+}
