@@ -10,7 +10,7 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   (pixel × 0.06″ = arcsec maps to 7.6 × 10⁻⁶″; the stored Zitrin run's 18 classes reproduced, Δoffset 0.0°); κ gates
   pass; control median 1.0; 2157 `anti` in 100 / 100 (offset_min 78.9–79.2° at 16–84 %) → `robust`. The realisations
   barely move the prediction, so this is one model's statistical error only. Open set: 581, 2157. No candidate.
-- **Failed approach:** none. **Services:** archive.stsci.edu byte ranges with the proxy + certifi bundle (~14 MB/s
+- **Failed approach:** none. **Services:** archive.stsci.edu byte ranges with the proxy + certifi bundle (~14 MB/s, not stored,
   per connection); #751 waits.
 - **Handoff:** the `arcs` model-error route is exhausted for published RELICS models; next on this line only a
   public spectrum (membership of 581 / 2157) or a new independent model.

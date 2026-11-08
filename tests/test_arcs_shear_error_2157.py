@@ -91,3 +91,26 @@ def test_gates():
     assert not m.v2_gate(["aligned", "anti"], ["aligned", "mixed"], np.array([0.1, 0.1]))
     assert not m.v2_gate(["aligned"], ["aligned"], np.array([0.6]))
     assert not m.v2_gate([], [], np.array([]))
+
+
+def test_read_strip_rejects_other_grid_and_scaled_images(tmp_path):
+    _, raw, _ = _image(tmp_path)
+    ref, _ = m.parse_header(raw[: m.HEADER_BYTES])
+    m.read_strip(_getter(raw), 0, 5, ref)  # same grid passes
+    other = ref.copy()
+    other["CRPIX1"] = 21.0
+    for hdr_ref in (other,):
+        try:
+            m.read_strip(_getter(raw), 0, 5, hdr_ref)
+        except ValueError as e:
+            assert "CRPIX1" in str(e)
+        else:
+            raise AssertionError("grid mismatch not detected")
+    card = next(raw[k : k + 80] for k in range(0, 2880 * 3, 80) if raw[k : k + 8] == b"PAD000  ")
+    scaled = raw.replace(card, b"BSCALE  =                  2.0".ljust(80), 1)
+    try:
+        m.read_strip(_getter(scaled), 0, 5)
+    except ValueError as e:
+        assert "BSCALE" in str(e)
+    else:
+        raise AssertionError("scaled image not detected")

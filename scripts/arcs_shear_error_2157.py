@@ -50,6 +50,18 @@ MARGIN_PX = 16
 V1_MAX_ARCSEC = 1e-3
 V2_MAX_OFFSET_DEG = 0.5
 HEADER_BYTES = 2880 * 4  # enough for these headers; checked for END below
+GRID_KEYS = (
+    "NAXIS1",
+    "NAXIS2",
+    "CRPIX1",
+    "CRPIX2",
+    "CRVAL1",
+    "CRVAL2",
+    "CD1_1",
+    "CD2_2",
+    "CD1_2",
+    "CD2_1",
+)
 
 
 # ---- strip reader (unit-tested offline) ----
@@ -63,13 +75,25 @@ def parse_header(head: bytes) -> tuple[fits.Header, int]:
     raise ValueError("END card not found in the bytes read")
 
 
-def read_strip(get_range: Callable[[int, int], bytes], j0: int, j1: int) -> tuple[np.ndarray, WCS]:
+def read_strip(
+    get_range: Callable[[int, int], bytes], j0: int, j1: int, expect: fits.Header | None = None
+) -> tuple[np.ndarray, WCS]:
     """Rows j0..j1-1 (0-based) of a 2-D BITPIX -32 primary image and the WCS sliced to them.
 
-    ``get_range(start, end)`` returns bytes start..end inclusive (HTTP Range semantics)."""
+    ``get_range(start, end)`` returns bytes start..end inclusive (HTTP Range semantics). With
+    ``expect`` (a reference header), the grid keys must match it (one pixel box = one sky box)."""
     hdr, offset = parse_header(get_range(0, HEADER_BYTES - 1))
     if hdr["BITPIX"] != -32 or hdr["NAXIS"] != 2:
         raise ValueError("expected a 2-D float32 image")
+    if hdr.get("BSCALE", 1) != 1 or hdr.get("BZERO", 0) != 0:
+        raise ValueError("scaled image (BSCALE / BZERO) not supported")
+    for key in GRID_KEYS:
+        if (
+            expect is not None
+            and key in expect
+            and not np.isclose(float(hdr[key]), float(expect[key]), rtol=1e-9)
+        ):
+            raise ValueError(f"grid differs from the reference header: {key}")
     nx, ny = int(hdr["NAXIS1"]), int(hdr["NAXIS2"])
     j0, j1 = max(0, j0), min(ny, j1)
     row = 4 * nx
@@ -111,22 +135,34 @@ class Http:
         self.url, self.session, self.digest = url, requests.Session(), hashlib.sha256()
 
     def __call__(self, start: int, end: int) -> bytes:
+        """Bytes start..end; a 200 answer (range ignored), 429 or 5xx is retried with back-off,
+        other 4xx fail at once; the 206 Content-Range must start at ``start``."""
+        import time
+
         import requests
 
-        for attempt in range(4):
+        for attempt in range(5):
+            wait = 2.0 * 2**attempt
             try:
-                r = self.session.get(
-                    self.url, headers={"Range": f"bytes={start}-{end}"}, timeout=180
-                )
-                r.raise_for_status()
-                if r.status_code != 206:
-                    raise RuntimeError(f"{self.url}: range not honoured ({r.status_code})")
-                self.digest.update(r.content)
-                return r.content
-            except requests.RequestException:
-                if attempt == 3:
-                    raise
-        raise RuntimeError("unreachable")
+                with self.session.get(
+                    self.url, headers={"Range": f"bytes={start}-{end}"}, timeout=180, stream=True
+                ) as r:
+                    if r.status_code == 206:
+                        cr = r.headers.get("Content-Range", "")
+                        if not cr.startswith(f"bytes {start}-"):
+                            raise RuntimeError(f"{self.url}: unexpected Content-Range {cr!r}")
+                        body = r.content
+                        self.digest.update(body)
+                        return body
+                    if r.status_code not in (200, 429) and r.status_code < 500:
+                        r.raise_for_status()
+                        raise RuntimeError(f"{self.url}: HTTP {r.status_code}")
+            except (requests.ConnectionError, requests.Timeout):
+                pass
+            if attempt == 4:
+                break
+            time.sleep(wait)
+        raise RuntimeError(f"{self.url}: range {start}-{end} failed after 5 attempts")
 
 
 def bounds(tables: list[Table], wcs_full: WCS) -> tuple[int, int, int, int]:
@@ -141,9 +177,12 @@ def bounds(tables: list[Table], wcs_full: WCS) -> tuple[int, int, int, int]:
     )
 
 
+REF_HEADER: fits.Header | None = None  # set in main from map000; every strip must match its grid
+
+
 def strip(url: str, box) -> tuple[np.ndarray, WCS, str]:
     h = Http(url)
-    data, wcs = read_strip(h, box[0], box[1])
+    data, wcs = read_strip(h, box[0], box[1], REF_HEADER)
     data, wcs = cut_columns(data, wcs, box[2], box[3])
     return data, wcs, h.digest.hexdigest()
 
@@ -202,6 +241,8 @@ def main(argv: list[str] | None = None) -> int:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", FITSFixedWarning)
         wfull = WCS(hdr)
+    global REF_HEADER
+    REF_HEADER = hdr
     centre = tuple(
         float(v)
         for v in wfull.pixel_to_world_values(wfull.wcs.crpix[0] - 1, wfull.wcs.crpix[1] - 1)
@@ -226,7 +267,7 @@ def main(argv: list[str] | None = None) -> int:
         "V1_passes": v1_gate(v1_max),
         "V2_n_rows": len(stored_bg),
         "V2_classes_equal": list(stored_bg["orientation_class"]) == list(re["orientation_class"]),
-        "V2_max_offset_diff_deg": round(float(d_off.max()), 4),
+        "V2_max_offset_diff_deg": round(float(d_off.max()), 4) if len(d_off) else None,
         "V2_passes": v2,
         "best_fit_2157": ase._rec(ase.reclass(best, row)),
         "sha256_best_arcsec_strips": [sha_ax, sha_ay],

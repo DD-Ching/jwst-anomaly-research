@@ -3,7 +3,7 @@
 Plan: `PLAN.md` (frozen before any realisation value was read). Script `scripts/arcs_shear_error_2157.py`; strip
 reader and gates unit-tested before the run (`tests/test_arcs_shear_error_2157.py`); rule functions are addendum 13's,
 imported unchanged. Every number below is in `summary.json`. Maps read as HTTP byte ranges from the RELICS HLSP
-(DOI 10.17909/T9SP45; strip sha256 in `summary.json`), nothing stored. Observed axis and photo-z from the deciding
+(DOI 10.17909/T9SP45; strip sha256 in `summary.json`); only the 3 κ strips touch disk, briefly, and are deleted. Observed axis and photo-z from the deciding
 GLAFIC run's stored `arcs.ecsv`; predicted axes `model_prediction`; classes and labels `derived`; thresholds
 ASSUMPTIONs (`summary.json` `params`).
 
