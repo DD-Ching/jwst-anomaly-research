@@ -783,6 +783,10 @@ All of these were rejected for D-018; they are listed so later sessions do not s
   - DJA NIRSpec emission-line table v4.6 (accessed 2026-10-21, streamed): same path with `_v4.6`, 171,878,708 B,
     Last-Modified 2026-09-15, sha256 `ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3`, 99,478 rows.
     v4.5 (2026-02-23, 151,445,355 B) exists, not read.
+    Re-streamed 2026-11-08 (Last-Modified unchanged; 99,478 rows); v4.7 / v4.8 / v5.0 / v5.1 not found by name (403).
+  - MAST CAOM NIRSpec/MSA metadata for Abell 2744 programmes 2561, 6793 (planned), 8204 (released 2026-11-05) and
+    9645 (planned), accessed 2026-11-08 via `astroquery.mast.Observations.query_criteria` (Abell 2744 700.1 coverage;
+    `results/lens_consistency/a2744_s700_nirspec/`).
   - CATS v4.1 `arcs.txt` (already pinned in `lensmodel.MODELS["macs1149-cats"]`).
 ### MACS0416 field run (accessed 2026-10-08; D-038)
 

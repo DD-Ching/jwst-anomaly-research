@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: Abell 2744 700.1 vs public NIRSpec MSA coverage: `no new input` (D-036 addendum 2026-11-08)
+- **Question:** 700.1 (UNCOVER 78) was parked until "spectra of both arc ends"; NIRSpec MSA programme 8204 in
+  Abell 2744 became public on 2026-11-05. Does any public spectrum now measure the a or b end?
+- **Plan first** (`results/lens_consistency/a2744_s700_nirspec/PLAN.md`); `scripts/a2744_s700_nirspec.py` (MAST
+  footprints on the 8 knots, DJA v4.6 streamed and deleted); `decide` unit-tested before the run.
+- **Result** (`RESULT.md`, `summary.json`): gate K passes; no DJA row within 0.5″ of a or b; the system 78 z_spec rests
+  on UNCOVER 60018 at the c knots (78.13 / 78.23), so the a/b z is assigned. Footprints: 2561 and unexecuted 6793 /
+  9645 → `no new input`. Post hoc (`side_checks.json`): 8204 misses 700.1; no DJA table newer than v4.6 by name; El
+  Gordo has no NIRSpec in MAST, so the MACS1149 16.2 and El Gordo third-image rechecks stay unmet.
+- **Failed approach:** CAOM `s_ra` / `s_dec` of MSA rows are pointing centres, not sources; use `s_region` and
+  source tables.
+- **Services:** MAST and DJA S3 worked; CDS still unreachable (04:08Z, connection reset); #751 waits.
+- **Handoff:** recheck 700.1 when 6793 / 9645 is released; TASKS Next M2 / Later items otherwise.
+
 ## 2026-11-08: SN Athena: no reappearance in HST 18470 visit 5 (2026-10-28); both predictions open (D-034 addendum 2026-11-08c)
 - **Question:** the open MACS0417 h002 = SN Athena item (#323): has the next image appeared in the first unchecked
   public HST 18470 visit? Discovery team: mid-Aug 2026 to early Mar 2027; our RELICS glafic: 2027-09-14 to 2027-11-22.

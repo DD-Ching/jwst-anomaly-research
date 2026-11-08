@@ -528,7 +528,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        photo-z; ~~fix system 16's z~~ — done (D-037 addendum 2026-10-14: z ≈ 2.5–2.9 from the pair in both models; CANUCS
        5106117 is a possible far image; a spectrum would settle both; ~~published spec-z~~ checked 2026-10-20, none
        (`results/lens_consistency/macs1149_s16_specz/RESULT.md`: Treu+16 and DJA NIRSpec v4.4; 16.2's CANUCS PRISM
-       spectrum is ungraded; ~~DJA v4.6~~ checked 2026-10-21, still ungraded (`macs1149_s16_specz/dja_v46/RESULT.md`); recheck when a DJA table newer than v4.6 appears); evaluate the CANUCS
+       spectrum is ungraded; ~~DJA v4.6~~ checked 2026-10-21, still ungraded (`macs1149_s16_specz/dja_v46/RESULT.md`); recheck when a DJA table newer than v4.6 appears; none by name 2026-11-08); evaluate the CANUCS
        lens models (see the CANUCS item above);
      - `bayes.dat` position spreads: not needed (D-045: 0.2–0.4″, inside the 1″ radius). UNCOVER v2.0 passes the
        gate (D-041 addendum 2026-10-14). The cross-model rule on every forced row is null (CHANGELOG 2026-10-14);
@@ -538,11 +538,11 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
 2. **Cluster fields** (done: #30–#32, D-026). Run the lens-model checks per field:
    - El Gordo: Caminha+2023 multiple images and magnification maps (CDS);
      Third-image candidates 6c / 13c / 20c (D-034 addenda ay, az): no public spectrum (DJA v4.6 has no El Gordo rows,
-     MAST no NIRSpec; addendum ba); recheck when a DJA table newer than v4.6 or an El Gordo NIRSpec program is public;
+     MAST no NIRSpec; addendum ba); recheck when a DJA table newer than v4.6 or an El Gordo NIRSpec program is public (rechecked 2026-11-08: neither, `a2744_s700_nirspec/side_checks.json`);
    - Abell 2744: UNCOVER v2.0 maps (validated 2026-10-14, `scripts/a2744_uncover.py`);
    - **Done (D-030):** `validate --model elgordo-caminha23 | abell2744-bergamini23` reproduces Lenstool's χ²
      (82.53 vs 80.22; 146.64 vs 146.60). No image-position anomaly. Next:
-     - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1: both models merge a/b at z_spec 2.3151; vetted 2026-10-20 (D-036 addendum c): undetermined, two modelled members nearby (group halo O4 at 4.4″); parked until a local re-fit or spectra;
+     - `images --forced-image`: done for El Gordo (D-034) and Abell 2744 (D-036); 700.1: both models merge a/b at z_spec 2.3151; vetted 2026-10-20 (D-036 addendum c): undetermined, two modelled members nearby (group halo O4 at 4.4″); parked until a local re-fit or spectra; NIRSpec coverage checked 2026-11-08 (`results/lens_consistency/a2744_s700_nirspec/RESULT.md`, D-036 addendum 2026-11-08: `no new input`; no a/b spectrum, z_spec is from the c knots; 8204 misses 700.1); recheck when 6793 / 9645 is released;
      - search radii from `bayes.dat` instead of a fixed 1″;
      - ~~Abell 2744 multiplicity residual~~ — done (D-045): model resolution at folds. Next: `bayes.dat` μ errors in
        `fluxratios` (Abell 2744 and El Gordo chains validated; El Gordo's chain uses σ² = a·b, D-045);

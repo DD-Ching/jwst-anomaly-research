@@ -3150,6 +3150,12 @@ D-034's rules now remove these automatically.
   0.8). Spec-z members at 2.11″ (DJA 45749 = Bergamini+23 member 20036) and 4.43″ (DJA 45736 = group halo O4/O9
   centre) are both in the model (post hoc). 700.1 is parked as model-limited near the northern group core, not a
   candidate. Revisit if a local re-fit with O4/O9/20036 free, or spectra of both arc ends, becomes available.
+- **Addendum 2026-11-08 (NIRSpec coverage, `results/lens_consistency/a2744_s700_nirspec/`):** frozen outcome
+  `no new input`. Gate K passes (2561 returned; DJA v4.6 grade-3 z 2.3108 on a 78 knot). No DJA row within 0.5″ of
+  either end (a: 78.x1, b: 78.x2); the system 78 z_spec rests on UNCOVER 60018 at the c knots (78.13 0.012″, 78.23
+  0.112″), so the a/b z is assigned, not measured. MSA footprints on the knots: 2561 and the unexecuted 6793 / 9645;
+  newly public 8204 (2026-11-05) misses 700.1 (post hoc). Revisit if 6793 or 9645 is released or a DJA table newer
+  than v4.6 appears.
 
 ## D-037 MACS1149 screens: null; repeated-pair, fitted-redshift and model-dependent-μ rules (2026-10-08)
 
