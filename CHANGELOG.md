@@ -13,6 +13,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   resets (23:08Z); #751 waits.
 - **Handoff:** 581 now hinges on membership (spectroscopy); weight it as a likely member in any pooled anti tally.
   2157 needs deeper spectroscopy or a JWST grism.
+- **Feasibility (not stored, counted 23:27Z):** the same κ-peak test for MACS0308 2157 cannot pass gate G: NED `objdir`
+  has 1 spectroscopic G / G_Lens galaxy within 2′ of the cluster (0 members, 1 background; needs ≥ 8 each). Not run.
 
 ## 2026-11-08: `arcs` RXC J0600 581 under the GLAFIC v3 realisations: `undetermined`, the 0.4″ grid fails V2 (D-024 addendum 18)
 - **Question:** is 581's `anti` class robust to the GLAFIC model's own statistical error? Addendum 13 said GLAFIC
