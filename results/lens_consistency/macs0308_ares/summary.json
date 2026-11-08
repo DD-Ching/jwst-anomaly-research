@@ -1,0 +1,162 @@
+{
+  "provenance": "model_prediction",
+  "source": "RELICS MACS0308 maps (Acebron et al. 2018) at the SN Ares position (arXiv:2610.33161v1); plan PLAN.md",
+  "ares_radec": [
+    47.222575,
+    26.766286
+  ],
+  "assumptions": {
+    "gate_s_arcsec": 0.3,
+    "earlier_yr": 1.0,
+    "later_yr": 10.0,
+    "path_tol": 0.01,
+    "cosmology": "FlatLambdaCDM H0 70, Om0 0.3 (map cosmology)"
+  },
+  "published_later_arrivals_yr": {
+    "glafic_jwst": [
+      72.0,
+      77.0
+    ],
+    "allingham": [
+      76.4,
+      79.1
+    ]
+  },
+  "published_ares_mu": {
+    "lenstool": 5.6,
+    "glafic_jwst": 4.7,
+    "allingham": 4.6
+  },
+  "published_later_mu_approx": [
+    5.0,
+    1.5
+  ],
+  "models": [
+    {
+      "model": "macs0308-relics-glafic",
+      "provenance": "model_prediction",
+      "files_sha256": {
+        "alpha_x": "8b34955296b1114fb89362098c2e6625db925e33b8fcba2e1f8d3e78c68fba59",
+        "alpha_y": "183df21b028c2e87943a0c30db564f211858f5c3e5971090048377db4c9af55c",
+        "kappa_map": "cee400683a3339670ca3ce9d2ae203a9c26b1c82408a61c37a5a940fb1c83660",
+        "mag_z2": "b2a076ed89bb89c9e55b574964d1aa3f8400f8db23b02e8bb725b05be7a10a67"
+      },
+      "ares_frame_xy": [
+        34.109,
+        20.768
+      ],
+      "z_s": 1.276,
+      "dls_ds": 0.64409,
+      "beta_xy": [
+        4.6093,
+        0.8027
+      ],
+      "n_images": 3,
+      "ares_to_reference_arcsec": 0.0,
+      "reference_magnification": 6.434,
+      "days_per_arcsec2": 60.727,
+      "path_check_max_rel_diff": 1.27e-05,
+      "path_check_pass": true,
+      "other_delays_yr": [
+        57.21,
+        65.0
+      ],
+      "outcome": "agrees",
+      "images": [
+        {
+          "ra": 47.222575,
+          "dec": 26.766286,
+          "magnification": 6.434,
+          "mu_ratio": 1.0,
+          "delay_days": 0.0,
+          "reference_image": true,
+          "delay_yr": 0.0,
+          "sep_from_ares_arcsec": 0.0
+        },
+        {
+          "ra": 47.239927,
+          "dec": 26.761123,
+          "magnification": -5.746,
+          "mu_ratio": -0.8931,
+          "delay_days": 20894.8,
+          "reference_image": false,
+          "delay_yr": 57.21,
+          "sep_from_ares_arcsec": 58.792
+        },
+        {
+          "ra": 47.233808,
+          "dec": 26.760468,
+          "magnification": 0.359,
+          "mu_ratio": 0.0558,
+          "delay_days": 23740.9,
+          "reference_image": false,
+          "delay_yr": 65.0,
+          "sep_from_ares_arcsec": 41.744
+        }
+      ]
+    },
+    {
+      "model": "macs0308-relics-zitrin",
+      "provenance": "model_prediction",
+      "files_sha256": {
+        "alpha_x": "dc25bb617b5485208e6b6e1bb1d58dbb10a0c010a1c42bf9452702044bd33507",
+        "alpha_y": "fd7d4bcd559591938c94fc539af1decccc1a773f43cfdd6ec7b75ebdb0c00eb6",
+        "kappa_map": "f6aaa57798b2af544d66db297155879bc962b866e9ec1d82582823f204a6751e",
+        "mag_z2": "b0b39391449240c7035c59ed4d0133827e6f32dc4218229f8f98805d5448fe6f"
+      },
+      "ares_frame_xy": [
+        47.746,
+        16.489
+      ],
+      "z_s": 1.276,
+      "dls_ds": 0.64409,
+      "beta_xy": [
+        15.8234,
+        -12.6534
+      ],
+      "n_images": 3,
+      "ares_to_reference_arcsec": 0.0,
+      "reference_magnification": 4.233,
+      "days_per_arcsec2": 60.727,
+      "path_check_max_rel_diff": 3.51e-05,
+      "path_check_pass": true,
+      "other_delays_yr": [
+        76.92,
+        85.44
+      ],
+      "outcome": "agrees",
+      "images": [
+        {
+          "ra": 47.222575,
+          "dec": 26.766286,
+          "magnification": 4.233,
+          "mu_ratio": 1.0,
+          "delay_days": 0.0,
+          "reference_image": true,
+          "delay_yr": 0.0,
+          "sep_from_ares_arcsec": 0.0
+        },
+        {
+          "ra": 47.239536,
+          "dec": 26.760831,
+          "magnification": -3.244,
+          "mu_ratio": -0.7663,
+          "delay_days": 28095.3,
+          "reference_image": false,
+          "delay_yr": 76.92,
+          "sep_from_ares_arcsec": 57.948
+        },
+        {
+          "ra": 47.234307,
+          "dec": 26.760432,
+          "magnification": 0.395,
+          "mu_ratio": 0.0933,
+          "delay_days": 31208.6,
+          "reference_image": false,
+          "delay_yr": 85.44,
+          "sep_from_ares_arcsec": 43.202
+        }
+      ]
+    }
+  ]
+}

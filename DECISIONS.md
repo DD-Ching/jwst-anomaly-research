@@ -3020,6 +3020,14 @@ BPZ cannot decide the family-4 third image; line stays paused. Alternatives reje
 reading the segment classes after a failed gate. Revisit if: JWST-resolution photo-z or spectroscopy of RX J0152
 (a DJA / VENUS catalogue) or a SLICE model of RX J0152 becomes public.
 
+**Addendum 2026-11-08 (MACS J0308 SN Ares image order).** `results/lens_consistency/macs0308_ares/RESULT.md`; plan
+frozen in 2972398. The SN Ares position (arXiv:2610.33161v1, z 1.276) re-imaged in the RELICS GLAFIC v2 and Zitrin
+LTM-Gauss v1 maps gives 3 images with Ares first in both (later arrivals 57.21 / 65.0 and 76.92 / 85.44 yr against the
+published JWST-era 72–79.1 yr): `agrees` under the frozen rule (no image ≥ 1 yr earlier; all others ≥ 10 yr later).
+Decision: no lens-model residual; no archival-epoch search is implied. Alternatives rejected: comparing magnifications
+of the central image (core-profile dependent; post hoc only). Revisit if: a JWST-era MACS0308 model becomes public, or
+the SN reappears in an image the models do not predict.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

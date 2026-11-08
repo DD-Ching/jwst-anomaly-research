@@ -2,6 +2,21 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: MACS J0308 SN Ares image order in the pre-JWST RELICS maps: both `agrees` (D-034 addendum 2026-11-08)
+- **New input:** SN Ares (arXiv:2610.33161v1, lensed SN IIb, z 1.276); three JWST-era models (not public) say it
+  arrives first, the others after 72–79.1 yr. Found by an arXiv search this run; Zenodo had no new cluster lens-model
+  record since 2026-10-24.
+- **Plan first** (`results/lens_consistency/macs0308_ares/PLAN.md`); `scripts/macs0308_ares.py` reuses the
+  Fermat-potential functions of `smacs_at2024jfz.py`; `decide` unit-tested before the run.
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): GLAFIC v2 and Zitrin LTM-Gauss v1 both give 3
+  images with Ares first; later arrivals 57.21 / 65.0 and 76.92 / 85.44 yr; path checks ≤ 3.51e-05. No earlier image,
+  so no archival-epoch prediction. Post hoc: the later images lie 0.326–5.023″ from programme 9478's planned targets;
+  the central one is demagnified (μ 0.359 / 0.395) against the paper's ~1.5× (core-profile dependent).
+- **Failed approach:** none. The top-k reuse of classify's SIMBAD/Gaia matches (TASKS Later) was checked first and
+  dropped: every config uses classify 0.5″ vs crossmatch 1.0″, so subset reuse would never apply (not stored).
+- **Services:** CDS still unreachable (00:08Z, connection reset); #751 still waits. MAST HLSP, arXiv, Zenodo worked.
+- **Handoff:** next: TASKS Next M2 / Later items; a JWST-era MACS0308 model when public; #751 when CDS is reachable.
+
 ## 2026-11-07: SMACS 2736 NIRISS / MIRI coverage of the open records; Noirot+2023 redshift types (TASKS Later)
 - `scripts/smacs_niriss_miri_coverage.py` (reuses `grism_4043_coverage` geometry; matching unit-tested); result
   `results/smacs_niriss_miri_coverage/RESULT.md`.

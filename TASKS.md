@@ -147,6 +147,9 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 - **MACS J0308 grid 2026-10-27** (`results/transients/macs0308_grid/RESULT.md`): 5293 o005 → 6882 o015, F300M / F410M,
   outcome U (G1 0.518); SN Ares not a hit; 27 groups instrumental, incl. a fixed-offset bright-star image (8.3″,
   PA 120°). Next grid: MACS J2129 4903 o004 → 6882 o040 (plan first).
+- **SN Ares image order 2026-11-08** (`results/lens_consistency/macs0308_ares/RESULT.md`, D-034 addendum 2026-11-08):
+  both RELICS MACS0308 models put Ares first (later images 57.21–85.44 yr; published JWST-era 72–79.1 yr): `agrees`,
+  no lens-model residual. Reopen when a JWST-era MACS0308 model becomes public (image-level comparison).
 - **Two-epoch inventory, 15 more clusters 2026-10-27** (`results/transients/epoch_inventory_ext/RESULT.md`): 8 `core`
   pairs on MACS J0308, Abell 1689, MACS J2129.4-0741, MACS J0138. Next grid: MACS J0308 5293 o005 → 6882 o015 or
   MACS J2129 4903 o004 → 6882 o040 (plan first; known-transient check first).
