@@ -1,0 +1,10 @@
+{
+ "provenance": "derived",
+ "note": "post hoc, not part of gate U: separations (arcsec) of the macs0416-cats system-122 rows from every catalogued 122 image, JWST frame, from the re-run images_predicted_macs0416.ecsv.gz",
+ "rows": [
+  {"forced_class": "confused", "magnification": -2.95, "sep": {"122.1": 4.6, "122.2": 6.44, "122.3": 6.87, "122.4": 5.68, "122.5": 47.71}},
+  {"forced_class": "confused", "magnification": -2.45, "sep": {"122.1": 4.71, "122.2": 6.47, "122.3": 7.0, "122.4": 6.22, "122.5": 47.37}}
+ ],
+ "matched": {"122.1": "observed row, mu 14.07", "122.4": "observed row, mu -6.04", "122.5": "observed row, mu 2.06"},
+ "radius_arcsec": 4.94
+}

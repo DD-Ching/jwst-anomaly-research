@@ -3494,6 +3494,15 @@ the JWST-era model, with spectroscopic constraints only, is the stronger check).
 - A multi-plane re-fit, or a measured velocity dispersion of CANUCS 3101008 (z 0.268), gives σ ≳ 65 km/s. System
   51's explanation then fails and the fourth image becomes a flag again.
 
+**Addendum 2026-11-08 (second copy rule as a function).** `lens_consistency.model_copies_unique` (one-to-one pairing
+within 6.5 × rms, same parity from the map μ at the catalogued image; unit-tested before the run) on a re-run of the
+MACS0416 `images` screen (route reproduces the recorded counts). Gate U fails as frozen: 1 and 15 labelled, 45 not
+(opposite parity), but 122 ×2 not labelled: neither row has an unpredicted image within 4.94″. Post hoc, they lie
+6.44–7.00″ from 122.2 / 122.3, outside the recorded 1.6–4.7″, so that hand copy reading is not reproduced; both rows
+stay `confused`, no flag. The rule stays a by-eye reading; not adopted as a class
+(`results/lens_consistency/copy_rule_unique/RESULT.md`). Revisit if: a copy rule is gated on a field with an
+independent hand list.
+
 ## D-043 Abell 370 and Abell S1063 radial screens: null; Gaia-seeded spike veto (2026-10-08)
 
 **Decision.**

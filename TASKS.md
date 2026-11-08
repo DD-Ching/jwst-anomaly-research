@@ -456,7 +456,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
        p 0.69; `results/radial_macs0717/RESULT.md`; photo-z cover ~17 % of rows);
      - `forced_check`: match and search radii scaled to the image-plane rms when it exceeds 1″; ~~classify model copies of
        unpredicted catalogued images automatically (D-041)~~ tried 2026-11-08 (`results/lens_consistency/model_copy_rule/RESULT.md`,
-       D-041 addendum: gate G fails as frozen, `absent` 5 vs 3, system-7 pair; diagnostic only; next a frozen one-to-one amendment on a second field);
+       D-041 addendum: gate G fails as frozen, `absent` 5 vs 3, system-7 pair; diagnostic only); ~~D-042's one-to-one second copy rule as a function~~ tried 2026-11-08 (`results/lens_consistency/copy_rule_unique/RESULT.md`, D-042 addendum: gate U fails on MACS0416 system 122, whose hand copy reading is not reproduced; both copy rules stay by-eye; route closed);
      - ~~MACS0417 / MACS1423 published images vs CANUCS v1 maps~~ done 2026-10-21
        (`results/lens_consistency/macs0417_images/RESULT.md`): gate K fails for every model (CANUCS rms 1.12″ / 1.59″, one
        central image each: MACS0417 1b.4, MACS1423 1.5; RELICS v1 9.3″, maps load correctly); post hoc without them

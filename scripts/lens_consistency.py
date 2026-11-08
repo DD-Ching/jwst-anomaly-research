@@ -1787,6 +1787,67 @@ def model_copies(
     return out
 
 
+COPY_UNIQUE_RMS_FACTOR = 6.5  # D-042 second copy rule: pair radius in x the rms (ASSUMPTION)
+
+
+def copy_partners(
+    table: Table, images: Table, unpredicted: list[str], limit_arcsec: float
+) -> dict[int, dict[str, float]]:
+    """Per ``table`` row index with ``forced_class`` in ``COPY_CLASSES``: the catalogued,
+    unpredicted images of the row's system within ``limit_arcsec``,
+    as ``{image_id: separation_arcsec}``."""
+    ids = np.asarray(images["image_id"]).astype(str)
+    cand = images[np.isin(ids, sorted(set(map(str, unpredicted))))]
+    cid = np.asarray(cand["image_id"]).astype(str)
+    csys = np.asarray(cand["system"]).astype(str)
+    out: dict[int, dict[str, float]] = {}
+    for i, r in enumerate(table):
+        if r["forced_class"] not in COPY_CLASSES:
+            continue
+        sel = csys == str(r["system"])
+        if not sel.any():
+            out[i] = {}
+            continue
+        sep = (
+            SkyCoord(r["ra"], r["dec"], unit="deg")
+            .separation(SkyCoord(cand["ra"][sel], cand["dec"][sel], unit="deg"))
+            .arcsec
+        )
+        out[i] = {str(x): float(d) for x, d in zip(cid[sel], sep, strict=True) if d <= limit_arcsec}
+    return out
+
+
+def model_copies_unique(
+    table: Table,
+    images: Table,
+    unpredicted: list[str],
+    rms_arcsec: float,
+    image_mu: dict[str, float],
+    factor: float = COPY_UNIQUE_RMS_FACTOR,
+) -> list[str]:
+    """D-042 second copy rule, per row of a forced-checked ``table``. Within a system, a row
+    (``forced_class`` in ``COPY_CLASSES``) and a catalogued, unpredicted image pair up when they
+    lie within ``factor`` x ``rms_arcsec``. The row is a copy of image I (returned id) when I is
+    its only partner, the row is I's only partner, and ``image_mu[I]`` (the model's signed
+    magnification at I) has the sign of the row's ``magnification``; otherwise ``""``."""
+    partners = {
+        i: list(p)
+        for i, p in copy_partners(table, images, unpredicted, factor * rms_arcsec).items()
+    }
+    n_rows = {}
+    for p in partners.values():
+        for img in p:
+            n_rows[img] = n_rows.get(img, 0) + 1
+    out = [""] * len(table)
+    for i, p in partners.items():
+        if len(p) != 1 or n_rows[p[0]] != 1:
+            continue
+        mu_row, mu_img = float(table[i]["magnification"]), image_mu.get(p[0], np.nan)
+        if np.isfinite(mu_img) and np.sign(mu_row) == np.sign(mu_img) != 0:
+            out[i] = p[0]
+    return out
+
+
 def image_stamper(uri: str, half_arcsec: float = 1.5):
     """``stamp(ra, dec)`` reading SCI/ERR sections of an ``_i2d`` (local path or S3 by byte range).
 
