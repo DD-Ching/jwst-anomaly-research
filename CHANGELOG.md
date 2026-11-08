@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: RXC J0018 SN Helios image order in the pre-JWST RELICS Lenstool map: `agrees` (D-034 addendum 2026-11-08b)
+- **New input:** SN Helios (arXiv:2609.30440v2, lensed SN II at z 3.34, one image); JWST-era models (not public) put
+  the next image 2.32–6.0 yr later. Found while checking the Atalanta citation of #237 (valid: the paper lists it).
+- **Plan first** (`results/lens_consistency/rxc0018_helios/PLAN.md`); `scripts/rxc0018_helios.py` reuses the
+  Fermat-potential functions of `smacs_at2024jfz.py`; `decide` unit-tested before the run.
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): 5 images; no image within 1 yr before Helios;
+  first later image +6.753 yr, 2.384″ from the published next-image centre → `agrees`. Post hoc: past image 29.61 yr
+  ago, 4.238″ from the published LENSTOOL past image; amplitude sensitivity: `differs` at 0.85, single image at 0.70
+  (map amplitude untested, D-034 addenda bi–bk).
+- **Failed approach:** none.
+- **Services:** CDS still unreachable (02:10Z, no connection); #751 still waits. MAST HLSP and arXiv worked.
+- **Handoff:** next: TASKS Next M2 / Later items; #751 when CDS is reachable; the other VENUS SNe (Athena, DD 12781)
+  when a position and public model exist.
+
 ## 2026-11-08: SMACS `f356w_1243` two-epoch F444W check: constant flux, no motion detected (TASKS Next M2, D-017 addendum 4)
 - **Question:** the record's open question, whether a second NIRCam epoch tests the transient hypothesis for this red
   point-like z_phot ≈ 5.7 source. VENUS 6882 o057 covers it in F444W only; 12774 does not.

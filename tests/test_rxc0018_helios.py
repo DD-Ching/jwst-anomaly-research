@@ -39,6 +39,7 @@ def img(d, ratio=0.6, sep=2.0):
         (True, 0.1, [img(-1.0, ratio=-0.5), img(3.0)], "conflicts"),
         (True, 0.1, [img(-1.01), img(3.0)], "agrees"),
         (True, 0.1, [img(-0.5, ratio=0.49), img(3.0)], "agrees"),
+        (True, 0.1, [img(-0.5, ratio=float("nan")), img(3.0)], "conflicts"),
     ],
 )
 def test_decide(path_ok, sep, others, expected):

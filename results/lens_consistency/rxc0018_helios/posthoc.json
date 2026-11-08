@@ -1,0 +1,70 @@
+{
+  "provenance": "derived",
+  "label": "post hoc; no verdict depends on it. Past-image delays were named in PLAN.md 'Not done here'; positions and amplitude_sensitivity are deviations added after the run",
+  "past_images_yr_ago": [
+    29.61
+  ],
+  "past_images_mu": [
+    4.081
+  ],
+  "past_images_sep_to_published_lenstool_arcsec": [
+    4.238
+  ],
+  "first_later_image_sep_to_each_published_arcsec": {
+    "ALP": 2.579,
+    "zitrin-analytic": 6.679,
+    "glafic": 2.198,
+    "WSLAP+": 4.673,
+    "LENSTOOL": 1.2
+  },
+  "published_past_yr_ago": {
+    "ALP": 46.0,
+    "LENSTOOL": 42.7
+  },
+  "amplitude_sensitivity": {
+    "0.70": {
+      "outcome": "undetermined",
+      "n_images": 1,
+      "path_check_max_rel_diff": 0.0,
+      "images": [
+        {
+          "delay_yr": 0.0,
+          "magnification": 2.711,
+          "sep_centre_arcsec": 18.589
+        }
+      ]
+    },
+    "0.85": {
+      "outcome": "differs",
+      "n_images": 5,
+      "path_check_max_rel_diff": 5.53e-05,
+      "images": [
+        {
+          "delay_yr": 10.708,
+          "magnification": 15.925,
+          "sep_centre_arcsec": 19.966
+        },
+        {
+          "delay_yr": 0.0,
+          "magnification": 3.727,
+          "sep_centre_arcsec": 18.589
+        },
+        {
+          "delay_yr": 13.328,
+          "magnification": -2.705,
+          "sep_centre_arcsec": 4.066
+        },
+        {
+          "delay_yr": 14.432,
+          "magnification": -1.615,
+          "sep_centre_arcsec": 12.04
+        },
+        {
+          "delay_yr": 15.927,
+          "magnification": 0.001,
+          "sep_centre_arcsec": 6.616
+        }
+      ]
+    }
+  }
+}

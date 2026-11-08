@@ -57,6 +57,8 @@ PUBLISHED_HELIOS_MU = {
     "LENSTOOL": 5.3,
 }
 PUBLISHED_PAST_YR = {"ALP": 46.0, "LENSTOOL": 42.7}
+#: Published LENSTOOL past-image position (paper text): 00:18:34.14 +16:25:39.9.
+PUBLISHED_PAST_RADEC_LENSTOOL = _hms(34.14, 25, 39.9)
 GATE_S_ARCSEC = 0.3  # ASSUMPTION: re-imaged SN within this of the input position
 EARLY_YR = 1.0  # ASSUMPTION: an earlier image within this is still on the plateau at discovery
 BRIGHT_RATIO = 0.5  # ASSUMPTION: |mu| >= this x |mu_Helios| would be seen in the discovery mosaic
@@ -64,6 +66,12 @@ NEXT_WINDOW_YR = (1.0, 10.0)  # ASSUMPTION (published 2.32-6.0 yr)
 NEXT_RADIUS_ARCSEC = 5.0  # ASSUMPTION ("agree to within a few arcseconds")
 GRID_HALF_WIDTH = 90.0  # arcsec
 GRID_STEP = 0.1
+
+
+def _sep(ra1: float, dec1: float, ra2: float, dec2: float) -> float:
+    from astropy.coordinates import SkyCoord
+
+    return float(SkyCoord(ra1, dec1, unit="deg").separation(SkyCoord(ra2, dec2, unit="deg")).arcsec)
 
 
 def published_centre() -> tuple[float, float]:
@@ -93,10 +101,16 @@ def decide(
         return "stopped: path"
     if not (np.isfinite(sn_sep_arcsec) and sn_sep_arcsec <= gate_s):
         return "stopped: no SN image"
-    if any(-early <= r["delay_yr"] < 0 and abs(r["mu_ratio"]) >= bright for r in others):
+    # a non-finite magnification ratio counts as bright (conservative; review fix after the run)
+    if any(
+        -early <= r["delay_yr"] < 0
+        and (not np.isfinite(r["mu_ratio"]) or abs(r["mu_ratio"]) >= bright)
+        for r in others
+    ):
         return "conflicts"
     later = [r for r in others if r["delay_yr"] > 0]
     if not later:
+        # only earlier images: not covered by PLAN.md (did not occur in the frozen run)
         return "undetermined" if not others else "differs"
     first = min(later, key=lambda r: r["delay_yr"])
     in_window = window[0] <= first["delay_yr"] <= window[1]
@@ -105,13 +119,27 @@ def decide(
     return "differs"
 
 
-def run_model(name: str = MODEL) -> dict:
+#: Post hoc: deflection amplitude factors for the untested RELICS Lenstool v1 normalisation
+#: (D-034 addendum bi-bk: offset maps needed 0.65-0.72; RXC J0018 shares their map maker).
+POSTHOC_AMPLITUDES = (0.70, 0.85)
+
+
+def run_model(name: str = MODEL, amplitude: float = 1.0) -> dict:
     from astropy.coordinates import SkyCoord
 
     model, _, _ = lc.load_model(name)
+    # post hoc sensitivity only: every deflection read goes through dls_ds, so the reported
+    # ``dls_ds`` of a scaled run includes the factor (delay_factor_days does not use it)
+    if amplitude != 1.0:
+        base = model.dls_ds
+        model.dls_ds = lambda z_s, _b=base: amplitude * np.asarray(_b(z_s))
     grid = lensmodel.DeflectionGrid.compute(model, GRID_HALF_WIDTH, GRID_STEP)
-    at.TNS_RADEC = HELIOS_RADEC  # solve() reads the reference position from this module constant
-    res = at.solve(model, grid, Z_S)
+    saved = at.TNS_RADEC  # solve() reads the reference position from this module constant
+    at.TNS_RADEC = HELIOS_RADEC
+    try:
+        res = at.solve(model, grid, Z_S)
+    finally:
+        at.TNS_RADEC = saved
     imgs = res.get("images", [])
     centre = SkyCoord(*published_centre(), unit="deg")
     for r in imgs:  # drop the AT 2024jfz-specific epoch fields
@@ -141,6 +169,19 @@ def run_model(name: str = MODEL) -> dict:
         "outcome": outcome,
         "images": imgs,
         "_model": model,
+    }
+
+
+def _brief(res: dict) -> dict:
+    """Outcome and per-image delay, magnification and centre separation of a run."""
+    return {
+        "outcome": res["outcome"],
+        "n_images": res["n_images"],
+        "path_check_max_rel_diff": res["path_check_max_rel_diff"],
+        "images": [
+            {k: r[k] for k in ("delay_yr", "magnification", "sep_centre_arcsec")}
+            for r in res["images"]
+        ],
     }
 
 
@@ -210,12 +251,26 @@ def main(argv=None) -> int:
     }
     (args.out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     past = [r for r in res["images"] if not r["reference_image"] and r["delay_yr"] < 0]
+    later = [r for r in res["images"] if not r["reference_image"] and r["delay_yr"] > 0]
+    first = min(later, key=lambda r: r["delay_yr"]) if later else None
     posthoc = {
         "provenance": "derived",
-        "label": "post hoc (planned in PLAN.md 'Not done here'; no verdict depends on it)",
+        "label": "post hoc; no verdict depends on it. Past-image delays were named in PLAN.md 'Not "
+        "done here'; positions and amplitude_sensitivity are deviations added after the run",
         "past_images_yr_ago": [round(-r["delay_yr"], 2) for r in past],
         "past_images_mu": [r["magnification"] for r in past],
+        "past_images_sep_to_published_lenstool_arcsec": [
+            round(_sep(r["ra"], r["dec"], *PUBLISHED_PAST_RADEC_LENSTOOL), 3) for r in past
+        ],
+        "first_later_image_sep_to_each_published_arcsec": {
+            k: round(_sep(first["ra"], first["dec"], *v[0]), 3) for k, v in PUBLISHED_NEXT.items()
+        }
+        if first
+        else None,
         "published_past_yr_ago": PUBLISHED_PAST_YR,
+        "amplitude_sensitivity": {
+            f"{k:.2f}": _brief(run_model(amplitude=k)) for k in POSTHOC_AMPLITUDES
+        },
     }
     (args.out / "posthoc.json").write_text(json.dumps(posthoc, indent=2) + "\n")
     print(

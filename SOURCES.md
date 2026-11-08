@@ -2054,6 +2054,12 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   obs_id, sha256 and size in `files.json`; columns TIME, PDCSAP_FLUX, QUALITY; TIMEDEL from the header.
 - MAST CAOM TAP (`dbo.ObsPointing`): the 120 s records of the #561 TIC sample (`sample.json`).
 
+## RXC J0018 SN Helios image order (accessed 2026-11-08; `results/lens_consistency/rxc0018_helios/`)
+- Fujimoto et al. 2026, "SN Helios: A Multiply Imaged Type II Supernova Opening Time-Delay Cosmography beyond redshift
+  of 3", arXiv:2609.30440v2 (HTML read for the SN position, z, Table 5 next-image predictions; not refereed).
+- RELICS RXC J0018 Lenstool v1 maps: already listed (HLSP DOI 10.17909/T9SP45; sha256 in
+  `lensmodel.RXC0018_RELICS_LENSTOOL`).
+
 ## MACS J0308 SN Ares image order (accessed 2026-11-08; `results/lens_consistency/macs0308_ares/`)
 - Larison et al. 2026, "SN Ares: A Strongly Lensed Type IIb Supernova at z=1.276 with a Predicted 70-Year Time Delay",
   arXiv:2610.33161v1 (HTML read for the SN position, z_spec, model delays and magnifications; not refereed).

@@ -1,0 +1,157 @@
+{
+  "provenance": "model_prediction",
+  "source": "RELICS RXC J0018 Lenstool v1 map at the SN Helios position (arXiv:2609.30440v2); plan PLAN.md",
+  "helios_radec": [
+    4.63125,
+    16.438333
+  ],
+  "published_next_centre_radec": [
+    4.632375,
+    16.433283
+  ],
+  "assumptions": {
+    "gate_s_arcsec": 0.3,
+    "early_yr": 1.0,
+    "bright_ratio": 0.5,
+    "next_window_yr": [
+      1.0,
+      10.0
+    ],
+    "next_radius_arcsec": 5.0,
+    "path_tol": 0.01,
+    "cosmology": "FlatLambdaCDM H0 70, Om0 0.3 (map cosmology)"
+  },
+  "published_next": {
+    "ALP": {
+      "radec": [
+        4.631417,
+        16.433417
+      ],
+      "delay_yr": 2.32,
+      "mu": 7.2
+    },
+    "zitrin-analytic": {
+      "radec": [
+        4.632667,
+        16.434528
+      ],
+      "delay_yr": 2.7,
+      "mu": 4.9
+    },
+    "glafic": {
+      "radec": [
+        4.632417,
+        16.433139
+      ],
+      "delay_yr": 3.09,
+      "mu": 10.9
+    },
+    "WSLAP+": {
+      "radec": [
+        4.633167,
+        16.4325
+      ],
+      "delay_yr": 4.18,
+      "mu": 25.1
+    },
+    "LENSTOOL": {
+      "radec": [
+        4.632208,
+        16.432833
+      ],
+      "delay_yr": 6.0,
+      "mu": 3.1
+    }
+  },
+  "published_helios_mu": {
+    "ALP": 11.2,
+    "zitrin-analytic": 6.1,
+    "glafic": 11.5,
+    "WSLAP+": 30.6,
+    "LENSTOOL": 5.3
+  },
+  "published_past_yr_ago": {
+    "ALP": 46.0,
+    "LENSTOOL": 42.7
+  },
+  "model": {
+    "model": "rxc0018-relics-lenstool",
+    "provenance": "model_prediction",
+    "files_sha256": {
+      "alpha_x": "85510c1791fe341366638b1236361e99a2066b47c24618e2f574c4ca07418b54",
+      "alpha_y": "dbf3451c987f00a0ca68215179b8564827c12d70847798b5b30b73e51192dea0",
+      "kappa_map": "ea5877fd80c918b60e3d2d1d1ec75d0e6b332114a652be0c9e748b1268ea3bf6",
+      "mag_z2": "166fa66e06a16ee8e95a23d61778084a0bce7e2f85f75511b9621fc05565310d"
+    },
+    "z_s": 3.34,
+    "dls_ds": 0.69427,
+    "beta_xy": [
+      5.8505,
+      -9.941
+    ],
+    "n_images": 5,
+    "helios_to_reference_arcsec": 0.0,
+    "reference_magnification": 5.554,
+    "days_per_arcsec2": 82.159,
+    "path_check_max_rel_diff": 3.3e-05,
+    "path_check_pass": true,
+    "outcome": "agrees",
+    "images": [
+      {
+        "ra": 4.63125,
+        "dec": 16.438333,
+        "magnification": 5.554,
+        "mu_ratio": 1.0,
+        "delay_days": 0.0,
+        "reference_image": true,
+        "delay_yr": 0.0,
+        "sep_from_helios_arcsec": 0.0,
+        "sep_centre_arcsec": 18.589
+      },
+      {
+        "ra": 4.643385,
+        "dec": 16.428198,
+        "magnification": 4.081,
+        "mu_ratio": 0.7347,
+        "delay_days": -10816.9,
+        "reference_image": false,
+        "delay_yr": -29.615,
+        "sep_from_helios_arcsec": 55.559,
+        "sep_centre_arcsec": 42.196
+      },
+      {
+        "ra": 4.631861,
+        "dec": 16.432841,
+        "magnification": -2.201,
+        "mu_ratio": -0.3962,
+        "delay_days": 2466.4,
+        "reference_image": false,
+        "delay_yr": 6.753,
+        "sep_from_helios_arcsec": 19.886,
+        "sep_centre_arcsec": 2.384
+      },
+      {
+        "ra": 4.635367,
+        "dec": 16.435408,
+        "magnification": -1.61,
+        "mu_ratio": -0.2899,
+        "delay_days": 3639.1,
+        "reference_image": false,
+        "delay_yr": 9.963,
+        "sep_from_helios_arcsec": 17.689,
+        "sep_centre_arcsec": 12.854
+      },
+      {
+        "ra": 4.634118,
+        "dec": 16.434046,
+        "magnification": 0.001,
+        "mu_ratio": 0.0001,
+        "delay_days": 4399.9,
+        "reference_image": false,
+        "delay_yr": 12.046,
+        "sep_from_helios_arcsec": 18.339,
+        "sep_centre_arcsec": 6.615
+      }
+    ]
+  }
+}
