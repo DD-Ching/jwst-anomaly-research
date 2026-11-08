@@ -1483,6 +1483,8 @@ g = 0); single-source orientation checks are informative only for g ≳ 0.2, as 
 
 **Addendum 9 2026-11-08 (pooled anti rows, clump-pair census, `scripts/arcs_pooled_census.py`).** #273's census rules unchanged on the 104 strong-shear background rows of the 5 variant-B fields (F200W S3 cutouts): 73 gate-passed, f̂ 0.26, clump-aware expectation 5.538, P(≥ 6) 0.484 → frozen `explained (exploratory)` (`results/arcs/pooled-census/RESULT.md`). Post hoc: the frozen label rests on the null's inflation; only 1 / 6 anti rows is a gate-passed two-knot, and the 3 single-component anti rows (2194, 581, 2157) give 3 vs 0.631 in their class (P 0.024). Do not cite the pooled excess as closed by clump pairs without that caveat. Revisit if a photo-z / spec-z check moves 581, 2157 or 2194 out of the background.
 
+**Addendum 10 2026-11-08 (photo-z contamination of the 3 single-component anti rows, `scripts/arcs_photoz_contam.py`).** Frozen `mixed / undetermined` (`results/arcs/photoz-contam/RESULT.md`): no NED (1.0″) or DJA v4.6 (0.5″) spec-z for 2194, 581 or 2157; the HST F606W − F814W red-sequence test fails its gate in all three clusters (false-member rate 0.62–0.84), so it is not a membership veto here. Only 581 has a second photo-z (RELICS BPZ 0.537, 0.457–0.665) that reaches the member cut. The open part of the pooled anti excess stays open; membership needs a spectrum. Revisit if a public spectrum covers any of the 3 rows, or a validated redder-baseline colour exists.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.
