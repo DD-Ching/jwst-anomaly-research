@@ -1485,6 +1485,8 @@ g = 0); single-source orientation checks are informative only for g ≳ 0.2, as 
 
 **Addendum 10 2026-11-08 (photo-z contamination of the 3 single-component anti rows, `scripts/arcs_photoz_contam.py`).** Frozen `mixed / undetermined` (`results/arcs/photoz-contam/RESULT.md`): no NED (1.0″) or DJA v4.6 (0.5″) spec-z for 2194, 581 or 2157; the HST F606W − F814W red-sequence test fails its gate in all three clusters (false-member rate 0.461–0.839), so it is not a membership veto here. The RELICS BPZ second photo-z reaches the member cut for 581 (0.537, 0.457–0.665) and for 2194 (unconstrained, odds 0.165). The open part of the pooled anti excess stays open; membership needs a spectrum. Revisit if a public spectrum covers any of the 3 rows, or a validated redder-baseline colour exists.
 
+**Addendum 11 2026-11-08 (second-band shapes of the 3 single-component anti rows, `scripts/arcs_anti_bands.py`).** Frozen `blend veto passed; the rows stay open (not a lensing test)` (`results/arcs/anti-bands/RESULT.md`): F150W and F444W (F410M for MACS0308) band gates pass (controls 29 / 30 and 28 / 28 stay aligned); 2194, 581 and 2157 keep their F200W axis within 4.4° and stay `anti` in both bands; single objects by eye. A colour blend does not set their axes; band agreement cannot separate intrinsic shape from shear. Revisit if a deblended or PSF-corrected shape, a spectrum, or a model-error estimate at the rows changes their class.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

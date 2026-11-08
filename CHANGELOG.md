@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` pooled anti rows, second-band shapes: frozen `blend veto passed; the rows stay open` (D-024 addendum 11)
+- **Question:** are the axes of the 3 single-component anti rows (WHL0137 2194, RXC J0600 581, MACS0308 2157) set by a
+  colour blend or colour-dependent structure? Plan first (`results/arcs/anti-bands/PLAN.md`);
+  `scripts/arcs_anti_bands.py` reuses `arcs_bands.py` matching unchanged; rule functions unit-tested before the run.
+- **Result** (`RESULT.md`, `summary.json`; contact sheet `anti_bands.png` looked at): both band gates pass (F150W
+  control 29 / 30 stay aligned, LW 28 / 28); all 3 rows keep their F200W axis within 4.4° in F150W and F444W / F410M
+  and stay `anti` → 3 `same_axis`. Each is a single object in all bands (581 a near edge-on disc). Not a lensing
+  test; no candidate.
+- **Failed approach:** none. **Services:** S3 catalogues and cutouts worked; RELICS model files needed the certifi +
+  proxy CA bundle; CDS still resets / 503 (09:08Z); #751 waits.
+- **Handoff:** next on this line: the deciding models' local shear error at the 3 rows and whether intrinsic shape
+  noise at e 0.531–0.795 explains an anti axis at g_min 0.24–0.64; membership only with a spectrum.
+
 ## 2026-11-08: `arcs` pooled anti rows, photo-z contamination: frozen `mixed / undetermined` (D-024 addendum 10)
 - **Question:** are the 3 single-component anti rows left open by addendum 9 (WHL0137 2194, RXC J0600 581, MACS0308
   2157) members or foreground galaxies counted as background? Plan first (`results/arcs/photoz-contam/PLAN.md`);
