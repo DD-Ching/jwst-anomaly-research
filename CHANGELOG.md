@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` single-component anti rows, model shear error: frozen `model error explains WHL0137 2194` (D-024 addendum 13)
+- **Question:** do the models' own statistical error (RELICS `range/` realisations) or further independent models
+  move the open anti rows out of `anti`? Plan first (`results/arcs/anti-shear-error/PLAN.md`);
+  `scripts/arcs_shear_error.py`, rule functions unit-tested before the run.
+- **Result** (`RESULT.md`, `summary.json`; contact sheet `../anti-bands/anti_bands.png` looked at): WHL0137 2194 is
+  `mixed` under RELICS Zitrin LTM-Gauss (offset 48.3°) and WSLAP (53.5°), both gates passed → `model_sensitive`, it
+  leaves the open set. RXC J0600 581 stays `anti` in 100 / 100 Lenstool realisations (offset ≥ 74.6° at 16 %; control
+  median 0.727) → `robust`. MACS0308 2157 untested (36 MB realisation maps). No candidate.
+- **Failed approach:** none. **Services:** archive.stsci.edu with the proxy + certifi bundle worked; CDS still
+  resets (11:08Z); #751 waits.
+- **Handoff:** next on this line: MACS0308 2157 under the Zitrin `range/` maps by byte-range reads; membership of
+  581 / 2157 only with a spectrum.
+
 ## 2026-11-08: `arcs` anti null with an empirical CEERS shape prior: frozen `excess persists` (D-024 addendum 12)
 - **Question:** is the pooled anti excess a too-thin Gaussian shape-noise tail (σ_ε 0.26)? Plan first
   (`results/arcs/shape-prior/PLAN.md`); `scripts/arcs_shape_prior.py`, rule functions unit-tested before the run (a
