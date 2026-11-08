@@ -1,0 +1,134 @@
+{
+ "plan": "PLAN.md",
+ "label": "exploratory; pixels observed, fits derived, injections simulated, P model_prediction",
+ "fields": [
+  "MACS0417",
+  "WHL0137",
+  "RXC J0600",
+  "MACS0308",
+  "RXC J0018"
+ ],
+ "assumptions": {
+  "fit_arcsec": 0.4,
+  "n_inject": 20,
+  "seed": 20261108,
+  "sigma_eps": 0.26,
+  "min_gate_pass_frac": 0.5,
+  "min_gate_passed": 12
+ },
+ "sample": {
+  "n_rows": 104,
+  "n_gate_passed": 73,
+  "n_two_knot_gate_passed": 19,
+  "f_two_knot_pooled": 0.26,
+  "f_two_knot_95_upper": 0.376,
+  "k_anti": 6,
+  "expected_shape_noise": 2.273,
+  "expected_clump_aware": 5.538,
+  "p_ge_k_shape_noise_check": 0.02270335218479299,
+  "p_ge_k_clump_aware": 0.4839951440703518,
+  "classes_of_anti": {
+   "MACS0417 1993": [
+    "undecided",
+    false
+   ],
+   "MACS0417 2341": [
+    "two-knot",
+    true
+   ],
+   "MACS0417 4071": [
+    "two-knot",
+    false
+   ],
+   "WHL0137 2194": [
+    "single",
+    true
+   ],
+   "RXC J0600 581": [
+    "single",
+    true
+   ],
+   "MACS0308 2157": [
+    "single",
+    true
+   ]
+  },
+  "two_knot_among_non_anti": 18,
+  "outcome": "anti excess explained by clump orientation (exploratory)"
+ },
+ "per_field": {
+  "MACS0417": {
+   "image": "s3://stpubdata/jwst/public/jw01208/L3/t/o006/jw01208-o006_t003_nircam_clear-f200w_i2d.fits",
+   "pixel_scale_arcsec": 0.03122991199234558,
+   "n_rows": 49,
+   "n_gate_passed": 27,
+   "n_two_knot_gate_passed": 9,
+   "f_two_knot": 0.333,
+   "anti": 3,
+   "expected_shape_noise": 1.516,
+   "expected_clump_aware": 3.379
+  },
+  "WHL0137": {
+   "image": "s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f200w_i2d.fits",
+   "pixel_scale_arcsec": 0.031231014562708097,
+   "n_rows": 18,
+   "n_gate_passed": 16,
+   "n_two_knot_gate_passed": 5,
+   "f_two_knot": 0.312,
+   "anti": 1,
+   "expected_shape_noise": 0.15,
+   "expected_clump_aware": 0.723
+  },
+  "RXC J0600": {
+   "image": "s3://stpubdata/jwst/public/jw06796/L3/t/o010/jw06796-o010_t001_nircam_clear-f200w_i2d.fits",
+   "pixel_scale_arcsec": 0.03122723218932055,
+   "n_rows": 12,
+   "n_gate_passed": 11,
+   "n_two_knot_gate_passed": 0,
+   "f_two_knot": 0.0,
+   "anti": 1,
+   "expected_shape_noise": 0.203,
+   "expected_clump_aware": 0.243
+  },
+  "MACS0308": {
+   "image": "s3://stpubdata/jwst/public/jw05293/L3/t/o005/jw05293-o005_t001_nircam_clear-f200w_i2d.fits",
+   "pixel_scale_arcsec": 0.03122512627944072,
+   "n_rows": 21,
+   "n_gate_passed": 15,
+   "n_two_knot_gate_passed": 3,
+   "f_two_knot": 0.2,
+   "anti": 1,
+   "expected_shape_noise": 0.309,
+   "expected_clump_aware": 0.765
+  },
+  "RXC J0018": {
+   "image": "s3://stpubdata/jwst/public/jw06882/L3/t/o001/jw06882-o001_t001_nircam_clear-f200w_i2d.fits",
+   "pixel_scale_arcsec": 0.03123121644775706,
+   "n_rows": 4,
+   "n_gate_passed": 4,
+   "n_two_knot_gate_passed": 2,
+   "f_two_knot": 0.5,
+   "anti": 0,
+   "expected_shape_noise": 0.095,
+   "expected_clump_aware": 0.428
+  }
+ },
+ "sensitivity_mixture": {
+  "f_hat": {
+   "f": 0.26,
+   "p_ge_k": 0.4774733785016454
+  },
+  "f_95_upper": {
+   "f": 0.376,
+   "p_ge_k": 0.7072245949001247
+  }
+ },
+ "secondary": {
+  "p_ge_persisting": 0.8236555049760665,
+  "k_persisting": 4,
+  "variant_A_with_macs1423_stored": {
+   "k": 10,
+   "p_ge_k": 0.29293468022734476
+  }
+ }
+}

@@ -1,4 +1,4 @@
-"""Tests for scripts/arcs_pooled_census.py: frozen outcome rule, row probabilities, row selection."""
+"""Tests for scripts/arcs_pooled_census.py: frozen outcome rule, row probabilities, rows."""
 
 from __future__ import annotations
 
@@ -48,7 +48,9 @@ def test_rows_reproduce_pooled_tally():
     assert int(np.sum(rows["orientation_class"] == "anti")) == 6
     lam = sum(pc.row_probs(g, "single", True, 0.0)[1] for g in rows["g_min"])
     assert round(lam, 3) == pc.POOLED_B_EXPECTED
-    assert {(str(r["field"]), str(r["label"])) for r in rows if r["orientation_class"] == "anti"} >= pc.PERSIST
+    assert {
+        (str(r["field"]), str(r["label"])) for r in rows if r["orientation_class"] == "anti"
+    } >= pc.PERSIST
 
 
 def test_image_urls():
@@ -56,3 +58,26 @@ def test_image_urls():
         "jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f200w_i2d.fits"
     )
     assert set(pc.IMAGES) == set(pc.FIELDS_B)
+
+
+def test_posthoc_class_split():
+    from astropy.table import Table
+
+    t = Table(
+        {
+            "gate_passed": [True, True, True, False],
+            "deblend_class": ["two-knot", "single", "single", "undecided"],
+            "screen_class": ["anti", "anti", "aligned", "aligned"],
+            "p_anti_row": [0.2, 0.1, 0.1, 0.3],
+        }
+    )
+    ph = pc.posthoc(t)
+    assert ph["two_knot_gate_passed"] == {
+        "n": 1,
+        "anti": 1,
+        "expected": 0.2,
+        "p_ge_k": pytest.approx(0.2),
+        "p_le_k": pytest.approx(1.0),
+    }
+    assert ph["other_gate_passed"]["anti"] == 1 and ph["other_gate_passed"]["n"] == 2
+    assert ph["gate_failed"]["anti"] == 0 and ph["gate_failed"]["p_ge_k"] == pytest.approx(1.0)

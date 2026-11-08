@@ -1481,6 +1481,8 @@ g = 0); single-source orientation checks are informative only for g ≳ 0.2, as 
 
 **Addendum 8 2026-11-08 (pooled anti rows under second models, `scripts/arcs_model_swap.py`).** The six variant-B anti rows of `results/arcs/pooled-tally/` with a stored second run of their field: control 66 / 76 aligned rows stay aligned (0.868 ≥ 0.70); 4 / 6 anti rows stay anti, frozen label `mixed` (`results/arcs/anti-model-swap/RESULT.md`). The 4 rows outside MACS0417 all persist; MACS0417 1993 (g_min 3.69) and 2341 do not. With the second runs swapped in, variant B is 13 vs 2.63 (P 4.1 × 10⁻⁶). Model choice does not explain the pooled excess; blends / clump pairs, photo-z contamination and σ_ε at strong shear remain untested. Revisit if a JWST-era second model of MACS1423 or another pooled field becomes public.
 
+**Addendum 9 2026-11-08 (pooled anti rows, clump-pair census, `scripts/arcs_pooled_census.py`).** #273's census rules unchanged on the 104 strong-shear background rows of the 5 variant-B fields (F200W S3 cutouts): 73 gate-passed, f̂ 0.26, clump-aware expectation 5.538, P(≥ 6) 0.484 → frozen `explained (exploratory)` (`results/arcs/pooled-census/RESULT.md`). Post hoc: the frozen label rests on the null's inflation; only 1 / 6 anti rows is a gate-passed two-knot, and the 3 single-component anti rows (2194, 581, 2157) give 3 vs 0.631 in their class (P 0.024). Do not cite the pooled excess as closed by clump pairs without that caveat. Revisit if a photo-z / spec-z check moves 581, 2157 or 2194 out of the background.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

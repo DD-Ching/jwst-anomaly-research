@@ -1,0 +1,56 @@
+{
+ "label": "post hoc (not in PLAN.md); derived from census.ecsv",
+ "two_knot_gate_passed": {
+  "n": 19,
+  "anti": 1,
+  "expected": 2.866,
+  "p_ge_k": 0.9585337122309344,
+  "p_le_k": 0.18887300449377808
+ },
+ "other_gate_passed": {
+  "n": 54,
+  "anti": 3,
+  "expected": 0.631,
+  "p_ge_k": 0.024237277930407922,
+  "p_le_k": 0.9966951342177371
+ },
+ "gate_failed": {
+  "n": 31,
+  "anti": 2,
+  "expected": 2.041,
+  "p_ge_k": 0.6203163744257776,
+  "p_le_k": 0.6657211499887203
+ },
+ "anti_rows_inputs": {
+  "MACS0417 1993": {
+   "z_phot": 3.03,
+   "mag": 27.2,
+   "g_min": 3.69
+  },
+  "MACS0417 2341": {
+   "z_phot": 3.15,
+   "mag": 27.1,
+   "g_min": 0.26
+  },
+  "MACS0417 4071": {
+   "z_phot": 8.12,
+   "mag": 27.4,
+   "g_min": 1.18
+  },
+  "WHL0137 2194": {
+   "z_phot": 1.17,
+   "mag": 24.4,
+   "g_min": 0.24
+  },
+  "RXC J0600 581": {
+   "z_phot": 0.7,
+   "mag": 21.2,
+   "g_min": 0.39
+  },
+  "MACS0308 2157": {
+   "z_phot": 0.76,
+   "mag": 20.6,
+   "g_min": 0.64
+  }
+ }
+}

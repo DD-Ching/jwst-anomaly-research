@@ -86,6 +86,28 @@ def tail(probs, k: int) -> float:
     return float(vc.vn.excess_p(list(probs), k))
 
 
+def posthoc(t: Table) -> dict:
+    """Post hoc (not in the plan): anti observed vs expected within each gate-passed class."""
+    out = {}
+    passed = np.asarray(t["gate_passed"], bool)
+    anti = np.asarray(t["screen_class"]) == "anti"
+    for name, sel in (
+        ("two_knot_gate_passed", passed & (np.asarray(t["deblend_class"]) == "two-knot")),
+        ("other_gate_passed", passed & (np.asarray(t["deblend_class"]) != "two-knot")),
+        ("gate_failed", ~passed),
+    ):
+        probs = [float(v) for v in t["p_anti_row"][sel]]
+        k = int(np.sum(anti & sel))
+        out[name] = {
+            "n": int(np.sum(sel)),
+            "anti": k,
+            "expected": round(sum(probs), 3),
+            "p_ge_k": tail(probs, k) if probs else None,
+            "p_le_k": float(1.0 - tail(probs, k + 1)) if probs else None,
+        }
+    return out
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--fields", nargs="*", default=list(FIELDS_B))
@@ -95,12 +117,30 @@ def main(argv=None) -> int:
     p.add_argument("--sigma-eps", type=float, default=0.26, help="ASSUMPTION (screen value)")
     p.add_argument("--workers", type=int, default=os.cpu_count() or 1)
     p.add_argument("--out", type=Path, default=OUT)
+    p.add_argument("--posthoc", action="store_true", help="only re-read census.ecsv, post hoc")
     a = p.parse_args(argv)
+    if a.posthoc:
+        ph = {"label": "post hoc (not in PLAN.md); derived from census.ecsv"}
+        ph |= posthoc(Table.read(a.out / "census.ecsv"))
+        rows = load_rows()
+        ph["anti_rows_inputs"] = {
+            f"{r['field']} {r['label']}": {
+                "z_phot": round(float(r["z_phot"]), 2),
+                "mag": round(float(r["mag"]), 1),
+                "g_min": round(float(r["g_min"]), 2),
+            }
+            for r in rows[rows["orientation_class"] == "anti"]
+        }
+        (a.out / "posthoc.json").write_text(json.dumps(ph, indent=1) + "\n")
+        print(json.dumps(ph, indent=1))
+        return 0
     rows = load_rows(tuple(a.fields))
     full = tuple(a.fields) == tuple(FIELDS_B)
     lam_check = sum(row_probs(g, "single", True, 0.0, a.sigma_eps)[1] for g in rows["g_min"])
     if full and round(lam_check, 3) != POOLED_B_EXPECTED:
-        raise SystemExit(f"error: shape-noise sum {lam_check:.3f} != pooled tally {POOLED_B_EXPECTED}")
+        raise SystemExit(
+            f"error: shape-noise sum {lam_check:.3f} != pooled tally {POOLED_B_EXPECTED}"
+        )
 
     res, px_scale = {}, {}
     with tempfile.TemporaryDirectory() as tmp, ProcessPoolExecutor(a.workers) as ex:
@@ -110,7 +150,10 @@ def main(argv=None) -> int:
             sel = rows[rows["field"] == f]
             tg = Table({"source_uid": list(sel["label"]), "ra": sel["ra"], "dec": sel["dec"]})
             c = cutouts.make_cutouts(
-                image_url(f), tg, size_arcsec=8.0, out_dir=Path(tmp) / f.replace(" ", "_"),
+                image_url(f),
+                tg,
+                size_arcsec=8.0,
+                out_dir=Path(tmp) / f.replace(" ", "_"),
                 extensions=["ERR", "WHT"],
             )
             path = {str(u): str(q) for u, q in zip(c["source_uid"], c["path"], strict=True)}
@@ -121,8 +164,13 @@ def main(argv=None) -> int:
             for r in sel:
                 key = (f, str(r["label"]))
                 futs[key] = ex.submit(
-                    vc.deblend_row, path[key[1]], float(r["ra"]), float(r["dec"]),
-                    a.fit_arcsec, a.n_inject, a.seed + gi,
+                    vc.deblend_row,
+                    path[key[1]],
+                    float(r["ra"]),
+                    float(r["dec"]),
+                    a.fit_arcsec,
+                    a.n_inject,
+                    a.seed + gi,
                 )
                 gi += 1
         res = {k: fu.result() for k, fu in futs.items()}
@@ -189,7 +237,9 @@ def main(argv=None) -> int:
             f"{k[0]} {k[1]}": [res[k]["class"], bool(res[k]["gate"]["passed"])] for k in anti
         },
         "two_knot_among_non_anti": sum(
-            res[k]["class"] == "two-knot" and res[k]["gate"]["passed"] for k in keys if k not in anti
+            res[k]["class"] == "two-knot" and res[k]["gate"]["passed"]
+            for k in keys
+            if k not in anti
         ),
         "outcome": decide(len(passed), len(keys), p_primary),
     }
@@ -218,7 +268,8 @@ def main(argv=None) -> int:
     t.write(a.out / "census.ecsv", overwrite=True)
     out = {
         "plan": "PLAN.md",
-        "label": "exploratory; pixels observed, fits derived, injections simulated, P model_prediction",
+        "label": "exploratory; pixels observed, fits derived, injections simulated, "
+        "P model_prediction",
         "fields": list(a.fields),
         "assumptions": {k: getattr(a, k) for k in ("fit_arcsec", "n_inject", "seed", "sigma_eps")}
         | {"min_gate_pass_frac": MIN_GATE_PASS_FRAC, "min_gate_passed": MIN_GATE_PASSED},
