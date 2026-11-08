@@ -2,7 +2,7 @@
 
 Plan: `PLAN.md` (committed before any query). Script: `scripts/arcs_spec_coverage.py`; rule functions
 (footprint containment, instrument groups, class, gate Q) unit-tested before the run
-(`tests/test_arcs_spec_coverage.py`). Every number below is in `summary.json` (queried 2026-11-08 19:12Z).
+(`tests/test_arcs_spec_coverage.py`). Every number below is in `summary.json` (`queried_utc` 2026-11-08T19:15:58).
 Archives: ESO ObsCore TAP (`INTERSECTS` on the server), MAST CAOM (3″ cone, footprint tested here). No data downloaded.
 
 ## Gate Q (validation): **passed**
