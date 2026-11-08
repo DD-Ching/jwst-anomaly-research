@@ -10,12 +10,12 @@
 # meta: !!omap
 # - {provenance: observed}
 # - {source: 'stpubdata S3 level-3 pipeline catalogues of the arcs anti-bands run (results/arcs/anti-bands/PLAN.md); sha256 equal to the
-#     first run (09:10Z)'}
+#     first run (about 09:10Z)'}
 # schema: astropy-2.0
 dataURI productFilename size sha256 retrieved_utc jwst_version
-s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f150w_cat.ecsv jw02282-o010_t001_nircam_clear-f150w_cat.ecsv 3002013 4bc865aa68a07011332d6633cff9aef8905cc751766402a904da07084bb3d5db 2026-11-08T09:40Z 3.0.0
-s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f444w_cat.ecsv jw02282-o010_t001_nircam_clear-f444w_cat.ecsv 1872677 3d809af45377aef0ba52c35cc8ff6cae12c6f6581b64a7a0cb4cf767b958b324 2026-11-08T09:40Z 3.0.0
-s3://stpubdata/jwst/public/jw05293/L3/t/o005/jw05293-o005_t001_nircam_clear-f150w_cat.ecsv jw05293-o005_t001_nircam_clear-f150w_cat.ecsv 2112235 bb0e1deec67dbd76276a3d35c2b56bb2f2ccea8bc34d712eadca529972071696 2026-11-08T09:40Z 3.0.0
-s3://stpubdata/jwst/public/jw05293/L3/t/o005/jw05293-o005_t001_nircam_clear-f410m_cat.ecsv jw05293-o005_t001_nircam_clear-f410m_cat.ecsv 1240503 7e1565266db1d74474755c5dbc27323d529660d5f157e41876cda4b6ebb7976e 2026-11-08T09:40Z 3.0.0
-s3://stpubdata/jwst/public/jw06796/L3/t/o010/jw06796-o010_t001_nircam_clear-f150w_cat.ecsv jw06796-o010_t001_nircam_clear-f150w_cat.ecsv 5270442 0e3083ae993dd04955944a6a82a4c5d296a0cfca37a5797c294a93cffc9bd503 2026-11-08T09:40Z 3.0.0
-s3://stpubdata/jwst/public/jw06796/L3/t/o010/jw06796-o010_t001_nircam_clear-f444w_cat.ecsv jw06796-o010_t001_nircam_clear-f444w_cat.ecsv 3630141 427ff3e1be8f1995091f77a4f07860cf8b7fd9597d6d3257677fffbc771aff22 2026-11-08T09:40Z 3.0.0
+s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f150w_cat.ecsv jw02282-o010_t001_nircam_clear-f150w_cat.ecsv 3002013 4bc865aa68a07011332d6633cff9aef8905cc751766402a904da07084bb3d5db 2026-11-08T09:22Z 3.0.0
+s3://stpubdata/jwst/public/jw02282/L3/t/o010/jw02282-o010_t001_nircam_clear-f444w_cat.ecsv jw02282-o010_t001_nircam_clear-f444w_cat.ecsv 1872677 3d809af45377aef0ba52c35cc8ff6cae12c6f6581b64a7a0cb4cf767b958b324 2026-11-08T09:22Z 3.0.0
+s3://stpubdata/jwst/public/jw05293/L3/t/o005/jw05293-o005_t001_nircam_clear-f150w_cat.ecsv jw05293-o005_t001_nircam_clear-f150w_cat.ecsv 2112235 bb0e1deec67dbd76276a3d35c2b56bb2f2ccea8bc34d712eadca529972071696 2026-11-08T09:22Z 3.0.0
+s3://stpubdata/jwst/public/jw05293/L3/t/o005/jw05293-o005_t001_nircam_clear-f410m_cat.ecsv jw05293-o005_t001_nircam_clear-f410m_cat.ecsv 1240503 7e1565266db1d74474755c5dbc27323d529660d5f157e41876cda4b6ebb7976e 2026-11-08T09:22Z 3.0.0
+s3://stpubdata/jwst/public/jw06796/L3/t/o010/jw06796-o010_t001_nircam_clear-f150w_cat.ecsv jw06796-o010_t001_nircam_clear-f150w_cat.ecsv 5270442 0e3083ae993dd04955944a6a82a4c5d296a0cfca37a5797c294a93cffc9bd503 2026-11-08T09:22Z 3.0.0
+s3://stpubdata/jwst/public/jw06796/L3/t/o010/jw06796-o010_t001_nircam_clear-f444w_cat.ecsv jw06796-o010_t001_nircam_clear-f444w_cat.ecsv 3630141 427ff3e1be8f1995091f77a4f07860cf8b7fd9597d6d3257677fffbc771aff22 2026-11-08T09:22Z 3.0.0

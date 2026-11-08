@@ -1,7 +1,7 @@
 """Contact sheet of the 3 single-component anti rows in F150W, F200W and F444W / F410M (by eye).
 
 Re-reads 8″ S3 cutouts of the same observation (temporary) and ``summary.json`` of
-``scripts/arcs_anti_bands.py``; the red bar is the F200W catalogue axis (sky PA, north up):
+``scripts/arcs_anti_bands.py``; the red bar is the F200W catalogue axis (sky PA, drawn through the WCS):
 
     python scripts/arcs_anti_bands_sheet.py
 
