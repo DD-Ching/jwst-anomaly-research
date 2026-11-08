@@ -1493,6 +1493,8 @@ g = 0); single-source orientation checks are informative only for g ≳ 0.2, as 
 
 **Addendum 14 2026-11-08 (MACS0308 2157 under the Zitrin LTM-Gauss realisations, `scripts/arcs_shear_error_2157.py`).** Frozen `model error does not remove the tested rows` (`results/arcs/anti-shear-error-2157/RESULT.md`): 2157 is `anti` in 100 / 100 RELICS Zitrin `range/` realisations (offset_min 16 / 84 % 78.9 / 79.2°; control median 1.0 of 17; κ gates pass). The 36 MB pixel-unit maps are read as one HTTP byte range per file (row strip, header WCS sliced; validated: pixel × 0.06″ = arcsec maps to 7.6 × 10⁻⁶″, the stored Zitrin run's 18 classes reproduced exactly). For the next large map, fold this reader into the existing `cutouts._RowStripSection` / `moa_stream` range helpers instead of copying it. The realisations barely move the prediction (span 0.3°), so this is one model's statistical error only. Open set: 581, 2157, both `robust`. Revisit if a public spectrum or a further independent model of either field appears.
 
+**Addendum 15 2026-11-08 (public spectral coverage of the open anti rows, `scripts/arcs_spec_coverage.py`).** Metadata only (ESO ObsCore, MAST CAOM; gate Q passed: Abell 2744 MUSE 13 / NIRISS WFSS 10, empty sky none; `results/arcs/spec-coverage/RESULT.md`). MACS0308 2157 `spectrum_available`: one public VLT/MUSE cube (ADP.2020-01-04T23:56:39.902, 0104.A-0801(A), 2629 s, 475–935 nm). RXC J0600 581 `none` (ALMA cubes only). Revisit if: the 2157 MUSE spectrum gives a redshift (decides membership), or new public spectroscopy covers 581.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

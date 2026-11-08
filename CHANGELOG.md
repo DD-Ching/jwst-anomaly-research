@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` public spectral coverage of the open anti rows: MACS0308 2157 has a public MUSE cube; RXC J0600 581 none (D-024 addendum 15)
+- **Question:** can membership of the two `robust` anti rows (581, 2157) be decided from a public spectrum outside NED /
+  DJA? Plan first (`results/arcs/spec-coverage/PLAN.md`); footprint, grouping, class and gate functions unit-tested
+  before the run; metadata only (ESO ObsCore TAP, MAST CAOM).
+- **Result** (`RESULT.md`, `summary.json`): gate Q passes (Abell 2744 MUSE 13, NIRISS WFSS 10; empty sky none). 2157
+  `spectrum_available` (MUSE `ADP.2020-01-04T23:56:39.902`, 0104.A-0801(A), 2629 s, 475–935 nm); 581 `none` (ALMA
+  cubes only). No flag, no candidate.
+- **Failed approach:** none. **Services:** archive.eso.org TAP and mast.stsci.edu work; CDS and www.fe.infn.it still
+  reset (19:08Z); #751 waits.
+- **Handoff:** next on this line: extract the 2157 MUSE spectrum (stream, aperture only) and measure z.
+
 ## 2026-11-08: `forced_check` radii scaled to the image-plane rms: not adopted, rms outlier-driven (D-034 addendum 2026-11-08)
 - **Question:** is an image-plane rms above 1″ a broad model scatter (then scale the 1.5″ match / 1″ search radii by
   it) or set by one image? Plan first (`results/lens_consistency/rms_radii/PLAN.md`); functions unit-tested before
