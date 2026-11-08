@@ -35,8 +35,8 @@ def test_gate_and_label():
     assert not akm.gate([True] * 7, [False] * 9)["passes"]
     assert not akm.gate([True] * 6 + [False] * 4, [False] * 10)["passes"]
     assert not akm.gate([True] * 10, [True] * 2 + [False] * 8)["passes"]
-    assert akm.label(True, True) == "GLAFIC member (model input)"
-    assert akm.label(True, False) == "GLAFIC background (model input)"
+    assert akm.label(True, True) == "member (model input)"
+    assert akm.label(True, False) == "background (model input)"
     assert akm.label(False, True) == "undetermined"
 
 

@@ -8,6 +8,7 @@ NED table are read in the scratchpad and deleted; only ``summary.json`` is writt
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import io
 import json
@@ -17,8 +18,7 @@ from pathlib import Path
 import numpy as np
 from arcs_photoz_contam import NED_TAP, row_position
 from arcs_shear_error import RELICS
-from astropy.io import ascii, fits
-from astropy.table import Table
+from astropy.io import fits
 from astropy.wcs import WCS
 
 OUT = Path(__file__).resolve().parents[1] / "results" / "arcs" / "kappa-members-581"
@@ -89,7 +89,7 @@ def gate(member_peaks: list[bool], bg_peaks: list[bool]) -> dict:
 def label(gate_passes: bool, peak: bool | None) -> str:
     if not gate_passes or peak is None:
         return "undetermined"
-    return "GLAFIC member (model input)" if peak else "GLAFIC background (model input)"
+    return "member (model input)" if peak else "background (model input)"
 
 
 def fetch(url: str, dest: Path) -> str:
@@ -105,7 +105,7 @@ def fetch(url: str, dest: Path) -> str:
     return h.hexdigest()
 
 
-def ned_table() -> Table:
+def ned_table() -> list[dict]:
     import requests
 
     q = (
@@ -117,7 +117,7 @@ def ned_table() -> Table:
     p = {"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": q}
     r = requests.get(NED_TAP + "/sync", params=p, timeout=120)
     r.raise_for_status()
-    return ascii.read(io.StringIO(r.text), format="csv")
+    return list(csv.DictReader(io.StringIO(r.text)))
 
 
 def main(argv: list[str] | None = None) -> int:

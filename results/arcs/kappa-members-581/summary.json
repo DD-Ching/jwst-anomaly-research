@@ -1,0 +1,2165 @@
+{
+ "params": {
+  "z_cl": 0.43,
+  "dz": 0.03,
+  "spec_flags": [
+   "IST",
+   "S1L",
+   "SLS",
+   "SST"
+  ],
+  "types": [
+   "G",
+   "G_Lens"
+  ],
+  "box_arcsec": 2.0,
+  "peak_r_arcsec": 0.4,
+  "peak_ratio": 1.5,
+  "edge_arcsec": 1.0,
+  "n_min": 8,
+  "recall_min": 0.7,
+  "bg_max": 0.1
+ },
+ "ned": {
+  "n_rows": 152,
+  "n_spec": 116
+ },
+ "row": {
+  "label": 581,
+  "ra": 90.0304080782502,
+  "dec": -20.147417436311873
+ },
+ "maps": {
+  "glafic_v3": {
+   "url": "https://archive.stsci.edu/hlsps/relics/rxc0600m20/models/glafic/v3/hlsp_relics_model_model_rxc0600m20_glafic_v3_kappa.fits",
+   "sha256": "43308bce5601a48d166eeb676724766323a2363c131d29ff6dfa70df5c23892c",
+   "pixel_arcsec": 0.1,
+   "gate": {
+    "n_members": 41,
+    "n_background": 60,
+    "recall": 0.8536585365853658,
+    "bg_rate": 0.0,
+    "passes": true
+   },
+   "row_581": {
+    "max": 5.239890098571777,
+    "dist_arcsec": 0.223,
+    "ratio": 6.426,
+    "peak": true
+   },
+   "label": "member (model input)",
+   "galaxies": [
+    {
+     "name": "RXC J0600:[FOB2021] 000772",
+     "z": 0.4307,
+     "class": "member",
+     "max": 9.374724388122559,
+     "dist_arcsec": 0.073,
+     "ratio": 5.652,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 900003",
+     "z": 5.4067,
+     "class": "background",
+     "max": 2.432107448577881,
+     "dist_arcsec": 1.468,
+     "ratio": 1.773,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 15.1",
+     "z": 3.9478,
+     "class": "background",
+     "max": 1.4496184587478638,
+     "dist_arcsec": 1.544,
+     "ratio": 1.046,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 22.3",
+     "z": 3.529,
+     "class": "background",
+     "max": 1.5101737976074219,
+     "dist_arcsec": 1.5,
+     "ratio": 1.06,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 23.1",
+     "z": 5.4087,
+     "class": "background",
+     "max": 1.0232391357421875,
+     "dist_arcsec": 1.52,
+     "ratio": 1.021,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 15.2",
+     "z": 3.947,
+     "class": "background",
+     "max": 1.5792856216430664,
+     "dist_arcsec": 1.498,
+     "ratio": 1.062,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 23.2",
+     "z": 5.409,
+     "class": "background",
+     "max": 1.059117078781128,
+     "dist_arcsec": 1.485,
+     "ratio": 1.023,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 17.3",
+     "z": 3.3162,
+     "class": "background",
+     "max": 1.3853654861450195,
+     "dist_arcsec": 1.497,
+     "ratio": 1.041,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 19.2",
+     "z": 3.937,
+     "class": "background",
+     "max": 2.067753314971924,
+     "dist_arcsec": 1.447,
+     "ratio": 1.126,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 19.1",
+     "z": 3.95,
+     "class": "background",
+     "max": 1.3153042793273926,
+     "dist_arcsec": 1.517,
+     "ratio": 1.028,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 20.1",
+     "z": 5.355,
+     "class": "background",
+     "max": 1.4276710748672485,
+     "dist_arcsec": 1.504,
+     "ratio": 1.051,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 08.1",
+     "z": 5.4603,
+     "class": "background",
+     "max": 1.5187695026397705,
+     "dist_arcsec": 1.5,
+     "ratio": 1.13,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 18.1",
+     "z": 3.6672,
+     "class": "background",
+     "max": 1.7040716409683228,
+     "dist_arcsec": 1.237,
+     "ratio": 1.062,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 09.2",
+     "z": 3.5247,
+     "class": "background",
+     "max": 6.116356372833252,
+     "dist_arcsec": 1.057,
+     "ratio": 3.917,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001024",
+     "z": 2.7734,
+     "class": "background",
+     "max": 1.0061410665512085,
+     "dist_arcsec": 1.501,
+     "ratio": 1.025,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001025",
+     "z": 2.7734,
+     "class": "background",
+     "max": 0.9970025420188904,
+     "dist_arcsec": 1.526,
+     "ratio": 1.026,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 09.4",
+     "z": 3.5228,
+     "class": "background",
+     "max": 5.1342363357543945,
+     "dist_arcsec": 0.905,
+     "ratio": 2.128,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001027",
+     "z": 2.7699,
+     "class": "background",
+     "max": 0.9797237515449524,
+     "dist_arcsec": 1.494,
+     "ratio": 1.036,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 13.2",
+     "z": 3.0292,
+     "class": "background",
+     "max": 1.401893138885498,
+     "dist_arcsec": 1.42,
+     "ratio": 1.046,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001029",
+     "z": 2.7699,
+     "class": "background",
+     "max": 0.9611921906471252,
+     "dist_arcsec": 1.541,
+     "ratio": 1.036,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 21.2",
+     "z": 5.4086,
+     "class": "background",
+     "max": 1.3643704652786255,
+     "dist_arcsec": 1.116,
+     "ratio": 1.055,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 16.2",
+     "z": 4.1326,
+     "class": "background",
+     "max": 5.485067844390869,
+     "dist_arcsec": 0.967,
+     "ratio": 2.806,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 10.1",
+     "z": 4.5064,
+     "class": "background",
+     "max": 1.8406156301498413,
+     "dist_arcsec": 1.49,
+     "ratio": 1.085,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 14.2",
+     "z": 4.4404,
+     "class": "background",
+     "max": 1.5298857688903809,
+     "dist_arcsec": 1.173,
+     "ratio": 1.049,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 22.1",
+     "z": 3.526,
+     "class": "background",
+     "max": 1.3110867738723755,
+     "dist_arcsec": 1.399,
+     "ratio": 1.076,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 16.1",
+     "z": 4.1399,
+     "class": "background",
+     "max": 1.6312364339828491,
+     "dist_arcsec": 1.512,
+     "ratio": 1.054,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000743",
+     "z": 0.4369,
+     "class": "member",
+     "max": 12.475607872009277,
+     "dist_arcsec": 0.109,
+     "ratio": 6.9,
+     "peak": true
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 10.3",
+     "z": 4.5071,
+     "class": "background",
+     "max": 1.1216259002685547,
+     "dist_arcsec": 1.441,
+     "ratio": 1.042,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 07.1",
+     "z": 6.0719,
+     "class": "background",
+     "max": 1.0594393014907837,
+     "dist_arcsec": 1.455,
+     "ratio": 1.035,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000801",
+     "z": 4.5066,
+     "class": "background",
+     "max": 1.1995962858200073,
+     "dist_arcsec": 1.537,
+     "ratio": 1.031,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] G11",
+     "z": 0.4439,
+     "class": "member",
+     "max": 16.07545280456543,
+     "dist_arcsec": 0.265,
+     "ratio": 6.953,
+     "peak": true
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 01.2",
+     "z": 2.0033,
+     "class": "background",
+     "max": 1.0801676511764526,
+     "dist_arcsec": 1.551,
+     "ratio": 1.014,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 17.1",
+     "z": 3.32,
+     "class": "background",
+     "max": 1.1976757049560547,
+     "dist_arcsec": 1.469,
+     "ratio": 1.026,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 14.1",
+     "z": 4.4406,
+     "class": "background",
+     "max": 0.8259807825088501,
+     "dist_arcsec": 1.464,
+     "ratio": 1.026,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000684",
+     "z": 0.3838,
+     "class": "foreground",
+     "max": 10.47380542755127,
+     "dist_arcsec": 0.049,
+     "ratio": 5.843,
+     "peak": true
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 01.1",
+     "z": 2.0032,
+     "class": "background",
+     "max": 1.0478664636611938,
+     "dist_arcsec": 1.552,
+     "ratio": 1.015,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 09.3",
+     "z": 3.5169,
+     "class": "background",
+     "max": 1.286266565322876,
+     "dist_arcsec": 1.424,
+     "ratio": 1.143,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 08.3",
+     "z": 5.4603,
+     "class": "background",
+     "max": 1.1249446868896484,
+     "dist_arcsec": 1.44,
+     "ratio": 1.059,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 900001",
+     "z": 3.521,
+     "class": "background",
+     "max": 1.0006537437438965,
+     "dist_arcsec": 1.474,
+     "ratio": 1.031,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 11.2",
+     "z": 3.6753,
+     "class": "background",
+     "max": 1.0738905668258667,
+     "dist_arcsec": 1.516,
+     "ratio": 1.039,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 12.1",
+     "z": 5.1734,
+     "class": "background",
+     "max": 1.036426067352295,
+     "dist_arcsec": 1.477,
+     "ratio": 1.013,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 17.2",
+     "z": 3.3162,
+     "class": "background",
+     "max": 0.982111930847168,
+     "dist_arcsec": 1.243,
+     "ratio": 1.073,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 18.2",
+     "z": 3.674,
+     "class": "background",
+     "max": 0.9860668778419495,
+     "dist_arcsec": 1.497,
+     "ratio": 1.03,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 11.1",
+     "z": 3.6753,
+     "class": "background",
+     "max": 0.9860668778419495,
+     "dist_arcsec": 1.497,
+     "ratio": 1.03,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000786",
+     "z": 5.4599,
+     "class": "background",
+     "max": 0.960716962814331,
+     "dist_arcsec": 1.487,
+     "ratio": 1.028,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 13.1",
+     "z": 3.0292,
+     "class": "background",
+     "max": 0.8089084625244141,
+     "dist_arcsec": 1.502,
+     "ratio": 1.057,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 22.2",
+     "z": 3.529,
+     "class": "background",
+     "max": 0.8263473510742188,
+     "dist_arcsec": 1.471,
+     "ratio": 1.04,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 21.3",
+     "z": 5.4087,
+     "class": "background",
+     "max": 0.7294369339942932,
+     "dist_arcsec": 1.519,
+     "ratio": 1.025,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 20.2",
+     "z": 5.3549,
+     "class": "background",
+     "max": 0.6701853275299072,
+     "dist_arcsec": 1.449,
+     "ratio": 1.021,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 12.2",
+     "z": 5.1739,
+     "class": "background",
+     "max": 0.8683844804763794,
+     "dist_arcsec": 1.501,
+     "ratio": 1.021,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 15.3",
+     "z": 3.945,
+     "class": "background",
+     "max": 0.6823676824569702,
+     "dist_arcsec": 1.52,
+     "ratio": 1.021,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600.1-2007:[SCB2020]0840",
+     "z": 6.0719,
+     "class": "background",
+     "max": 2.5310115814208984,
+     "dist_arcsec": 1.06,
+     "ratio": 2.172,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] arc",
+     "z": 6.0736,
+     "class": "background",
+     "max": 1.0765923261642456,
+     "dist_arcsec": 1.428,
+     "ratio": 1.038,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060008.18-200808.8",
+     "z": 0.4266,
+     "class": "member",
+     "max": 20.072751998901367,
+     "dist_arcsec": 0.221,
+     "ratio": 5.121,
+     "peak": true
+    },
+    {
+     "name": "WISEA J060006.28-200759.3",
+     "z": 0.3284,
+     "class": "foreground",
+     "max": 12.0308837890625,
+     "dist_arcsec": 1.102,
+     "ratio": 8.602,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000956",
+     "z": 0.424,
+     "class": "member",
+     "max": 3.2007791996002197,
+     "dist_arcsec": 0.069,
+     "ratio": 2.894,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000964",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 1.0589796304702759,
+     "dist_arcsec": 1.513,
+     "ratio": 1.02,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000974",
+     "z": 0.4313,
+     "class": "member",
+     "max": 5.5558061599731445,
+     "dist_arcsec": 0.046,
+     "ratio": 4.727,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000990",
+     "z": 0.5491,
+     "class": "background",
+     "max": 0.910490870475769,
+     "dist_arcsec": 1.51,
+     "ratio": 1.022,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000697",
+     "z": 0.4215,
+     "class": "member",
+     "max": 10.65914535522461,
+     "dist_arcsec": 0.068,
+     "ratio": 5.138,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000699",
+     "z": 0.4245,
+     "class": "member",
+     "max": 5.824517726898193,
+     "dist_arcsec": 0.031,
+     "ratio": 2.949,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000711",
+     "z": 0.4332,
+     "class": "member",
+     "max": 9.147527694702148,
+     "dist_arcsec": 0.044,
+     "ratio": 3.497,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000724",
+     "z": 0.736,
+     "class": "background",
+     "max": 1.1344338655471802,
+     "dist_arcsec": 1.5,
+     "ratio": 1.053,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000735",
+     "z": 0.428,
+     "class": "member",
+     "max": 6.749113082885742,
+     "dist_arcsec": 0.048,
+     "ratio": 5.164,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000736",
+     "z": 0.4294,
+     "class": "member",
+     "max": 8.444568634033203,
+     "dist_arcsec": 0.029,
+     "ratio": 7.223,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000737",
+     "z": 0.43,
+     "class": "member",
+     "max": 6.7432708740234375,
+     "dist_arcsec": 0.028,
+     "ratio": 5.352,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000754",
+     "z": 0.4233,
+     "class": "member",
+     "max": 7.911226749420166,
+     "dist_arcsec": 0.011,
+     "ratio": 3.802,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000779",
+     "z": 0.4305,
+     "class": "member",
+     "max": 6.039124011993408,
+     "dist_arcsec": 0.054,
+     "ratio": 2.815,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000792",
+     "z": 0.4304,
+     "class": "member",
+     "max": 7.226944446563721,
+     "dist_arcsec": 0.039,
+     "ratio": 2.872,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000538",
+     "z": 1.027,
+     "class": "background",
+     "max": 1.6127179861068726,
+     "dist_arcsec": 1.206,
+     "ratio": 1.604,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000662",
+     "z": 0.384,
+     "class": "foreground",
+     "max": 10.47380542755127,
+     "dist_arcsec": 0.667,
+     "ratio": 5.901,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000490",
+     "z": 0.8943,
+     "class": "background",
+     "max": 1.052769422531128,
+     "dist_arcsec": 1.463,
+     "ratio": 1.014,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000524",
+     "z": 0.5614,
+     "class": "background",
+     "max": 1.2290494441986084,
+     "dist_arcsec": 1.514,
+     "ratio": 1.044,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000606",
+     "z": 0.2662,
+     "class": "foreground",
+     "max": 1.6803325414657593,
+     "dist_arcsec": 1.147,
+     "ratio": 1.285,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000625",
+     "z": 0.3449,
+     "class": "foreground",
+     "max": 1.2650129795074463,
+     "dist_arcsec": 1.497,
+     "ratio": 1.105,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000626",
+     "z": 0.3448,
+     "class": "foreground",
+     "max": 1.466766357421875,
+     "dist_arcsec": 1.473,
+     "ratio": 1.237,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000660",
+     "z": 0.3843,
+     "class": "foreground",
+     "max": 4.644855976104736,
+     "dist_arcsec": 0.067,
+     "ratio": 3.748,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000685",
+     "z": 0.419,
+     "class": "member",
+     "max": 10.538920402526855,
+     "dist_arcsec": 0.02,
+     "ratio": 5.682,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000687",
+     "z": 0.2298,
+     "class": "foreground",
+     "max": 1.8363831043243408,
+     "dist_arcsec": 1.485,
+     "ratio": 1.093,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000802",
+     "z": 0.4319,
+     "class": "member",
+     "max": 6.502525806427002,
+     "dist_arcsec": 0.07,
+     "ratio": 2.227,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000860",
+     "z": 0.4177,
+     "class": "member",
+     "max": 7.090187072753906,
+     "dist_arcsec": 0.047,
+     "ratio": 4.733,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000862",
+     "z": 0.4321,
+     "class": "member",
+     "max": 7.848937034606934,
+     "dist_arcsec": 0.047,
+     "ratio": 5.297,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000863",
+     "z": 0.4296,
+     "class": "member",
+     "max": 5.1368489265441895,
+     "dist_arcsec": 0.069,
+     "ratio": 3.66,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000870",
+     "z": 0.4392,
+     "class": "member",
+     "max": 5.480891704559326,
+     "dist_arcsec": 0.057,
+     "ratio": 4.423,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000900",
+     "z": 0.4323,
+     "class": "member",
+     "max": 42.31061553955078,
+     "dist_arcsec": 1.006,
+     "ratio": 28.928,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000938",
+     "z": 0.4197,
+     "class": "member",
+     "max": 6.792383193969727,
+     "dist_arcsec": 0.061,
+     "ratio": 6.517,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000957",
+     "z": 0.4314,
+     "class": "member",
+     "max": 9.086013793945312,
+     "dist_arcsec": 0.02,
+     "ratio": 8.698,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000962",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 1.0548462867736816,
+     "dist_arcsec": 1.516,
+     "ratio": 1.02,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000963",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 1.044494867324829,
+     "dist_arcsec": 1.473,
+     "ratio": 1.019,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000965",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 1.0645473003387451,
+     "dist_arcsec": 1.524,
+     "ratio": 1.021,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000966",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 1.09695303440094,
+     "dist_arcsec": 1.469,
+     "ratio": 1.028,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000967",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 1.0762574672698975,
+     "dist_arcsec": 1.478,
+     "ratio": 1.024,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001000",
+     "z": 0.4305,
+     "class": "member",
+     "max": 3.9883601665496826,
+     "dist_arcsec": 0.061,
+     "ratio": 3.789,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001003",
+     "z": 0.5479,
+     "class": "background",
+     "max": 0.91960608959198,
+     "dist_arcsec": 1.492,
+     "ratio": 1.032,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600.1-2007:[SCB2020]0785",
+     "z": 6.0719,
+     "class": "background",
+     "max": 1.9453469514846802,
+     "dist_arcsec": 1.502,
+     "ratio": 1.11,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] z6",
+     "z": 6.0719,
+     "class": "background",
+     "max": 1.1000133752822876,
+     "dist_arcsec": 1.446,
+     "ratio": 1.025,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000474",
+     "z": 0.4366,
+     "class": "member",
+     "max": 3.8336455821990967,
+     "dist_arcsec": 0.061,
+     "ratio": 3.873,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000510",
+     "z": 0.423,
+     "class": "member",
+     "max": 12.71293830871582,
+     "dist_arcsec": 0.051,
+     "ratio": 8.43,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000514",
+     "z": 0.4293,
+     "class": "member",
+     "max": 4.58526611328125,
+     "dist_arcsec": 0.039,
+     "ratio": 3.735,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000539",
+     "z": 0.4448,
+     "class": "member",
+     "max": 12.16453742980957,
+     "dist_arcsec": 0.02,
+     "ratio": 10.326,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000543",
+     "z": 0.4299,
+     "class": "member",
+     "max": 1.4613081216812134,
+     "dist_arcsec": 1.455,
+     "ratio": 1.053,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000547",
+     "z": 0.4234,
+     "class": "member",
+     "max": 6.493838787078857,
+     "dist_arcsec": 0.05,
+     "ratio": 4.828,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000571",
+     "z": 0.8751,
+     "class": "background",
+     "max": 1.0627697706222534,
+     "dist_arcsec": 1.45,
+     "ratio": 1.028,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000647",
+     "z": 0.4176,
+     "class": "member",
+     "max": 9.669988632202148,
+     "dist_arcsec": 0.046,
+     "ratio": 5.352,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000823",
+     "z": 0.4276,
+     "class": "member",
+     "max": 8.102546691894531,
+     "dist_arcsec": 0.045,
+     "ratio": 4.596,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000871",
+     "z": 0.3825,
+     "class": "foreground",
+     "max": 17.60763931274414,
+     "dist_arcsec": 0.022,
+     "ratio": 14.042,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000886",
+     "z": 0.4462,
+     "class": "member",
+     "max": 4.860606670379639,
+     "dist_arcsec": 0.068,
+     "ratio": 4.308,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000887",
+     "z": 0.4315,
+     "class": "member",
+     "max": 11.936308860778809,
+     "dist_arcsec": 0.036,
+     "ratio": 6.874,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000899",
+     "z": 0.4317,
+     "class": "member",
+     "max": 42.31061553955078,
+     "dist_arcsec": 0.87,
+     "ratio": 29.54,
+     "peak": false
+    },
+    {
+     "name": "[GFV2024] J060005.66-200820.8",
+     "z": 6.072,
+     "class": "background",
+     "max": 1.013441562652588,
+     "dist_arcsec": 1.191,
+     "ratio": 1.155,
+     "peak": false
+    },
+    {
+     "name": "[OMS2023] 6000408992306",
+     "z": 0.5089,
+     "class": "background",
+     "max": 1.3522635698318481,
+     "dist_arcsec": 1.166,
+     "ratio": 1.083,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060008.31-200752.3",
+     "z": 0.4316,
+     "class": "member",
+     "max": 16.225317001342773,
+     "dist_arcsec": 0.287,
+     "ratio": 8.118,
+     "peak": true
+    },
+    {
+     "name": "WISEA J060008.45-200832.9",
+     "z": 0.4255,
+     "class": "member",
+     "max": 11.023746490478516,
+     "dist_arcsec": 0.844,
+     "ratio": 9.631,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060008.21-200821.1",
+     "z": 0.4195,
+     "class": "member",
+     "max": 6.8150482177734375,
+     "dist_arcsec": 0.556,
+     "ratio": 3.842,
+     "peak": false
+    },
+    {
+     "name": "[OMS2023] 6000408992293",
+     "z": 0.4295,
+     "class": "member",
+     "max": 7.615057468414307,
+     "dist_arcsec": 1.013,
+     "ratio": 4.649,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060007.00-200759.6",
+     "z": 0.4164,
+     "class": "member",
+     "max": 20.891620635986328,
+     "dist_arcsec": 0.389,
+     "ratio": 13.834,
+     "peak": true
+    }
+   ]
+  },
+  "lenstool_v1": {
+   "url": "https://archive.stsci.edu/hlsps/relics/rxc0600m20/models/lenstool/hlsp_relics_model_model_rxc0600m20_lenstool_v1_kappa.fits",
+   "sha256": "41b33a17230f32e42e02f07a4498b5c0006cc64970bb9ed90e24e2a11e401332",
+   "pixel_arcsec": 0.2002,
+   "gate": {
+    "n_members": 41,
+    "n_background": 60,
+    "recall": 0.8048780487804879,
+    "bg_rate": 0.0,
+    "passes": true
+   },
+   "row_581": {
+    "max": 2.3055076599121094,
+    "dist_arcsec": 1.645,
+    "ratio": 1.119,
+    "peak": false
+   },
+   "label": "background (model input)",
+   "galaxies": [
+    {
+     "name": "RXC J0600:[FOB2021] 000772",
+     "z": 0.4307,
+     "class": "member",
+     "max": 5.899371147155762,
+     "dist_arcsec": 0.246,
+     "ratio": 3.036,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 900003",
+     "z": 5.4067,
+     "class": "background",
+     "max": 2.5400872230529785,
+     "dist_arcsec": 1.634,
+     "ratio": 1.492,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 15.1",
+     "z": 3.9478,
+     "class": "background",
+     "max": 1.6796211004257202,
+     "dist_arcsec": 1.661,
+     "ratio": 1.041,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 22.3",
+     "z": 3.529,
+     "class": "background",
+     "max": 2.444540023803711,
+     "dist_arcsec": 1.621,
+     "ratio": 1.115,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 23.1",
+     "z": 5.4087,
+     "class": "background",
+     "max": 1.5626951456069946,
+     "dist_arcsec": 1.62,
+     "ratio": 1.017,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 15.2",
+     "z": 3.947,
+     "class": "background",
+     "max": 1.822261929512024,
+     "dist_arcsec": 1.617,
+     "ratio": 1.064,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 23.2",
+     "z": 5.409,
+     "class": "background",
+     "max": 1.5699551105499268,
+     "dist_arcsec": 1.621,
+     "ratio": 1.014,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 17.3",
+     "z": 3.3162,
+     "class": "background",
+     "max": 3.695106267929077,
+     "dist_arcsec": 1.546,
+     "ratio": 1.048,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 19.2",
+     "z": 3.937,
+     "class": "background",
+     "max": 2.419623374938965,
+     "dist_arcsec": 1.568,
+     "ratio": 1.146,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 19.1",
+     "z": 3.95,
+     "class": "background",
+     "max": 1.825514793395996,
+     "dist_arcsec": 1.229,
+     "ratio": 1.051,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 20.1",
+     "z": 5.355,
+     "class": "background",
+     "max": 8.516077041625977,
+     "dist_arcsec": 0.513,
+     "ratio": 4.595,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 08.1",
+     "z": 5.4603,
+     "class": "background",
+     "max": 3.6243736743927,
+     "dist_arcsec": 1.292,
+     "ratio": 1.028,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 18.1",
+     "z": 3.6672,
+     "class": "background",
+     "max": 3.6535372734069824,
+     "dist_arcsec": 1.43,
+     "ratio": 1.054,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 09.2",
+     "z": 3.5247,
+     "class": "background",
+     "max": 9.600729942321777,
+     "dist_arcsec": 1.145,
+     "ratio": 2.648,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001024",
+     "z": 2.7734,
+     "class": "background",
+     "max": 2.268388032913208,
+     "dist_arcsec": 1.5,
+     "ratio": 1.134,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001025",
+     "z": 2.7734,
+     "class": "background",
+     "max": 2.100961446762085,
+     "dist_arcsec": 1.595,
+     "ratio": 1.125,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 09.4",
+     "z": 3.5228,
+     "class": "background",
+     "max": 3.2228939533233643,
+     "dist_arcsec": 1.399,
+     "ratio": 1.082,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001027",
+     "z": 2.7699,
+     "class": "background",
+     "max": 1.709535002708435,
+     "dist_arcsec": 1.56,
+     "ratio": 1.116,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 13.2",
+     "z": 3.0292,
+     "class": "background",
+     "max": 1.8544363975524902,
+     "dist_arcsec": 1.559,
+     "ratio": 1.037,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001029",
+     "z": 2.7699,
+     "class": "background",
+     "max": 1.5418071746826172,
+     "dist_arcsec": 1.675,
+     "ratio": 1.116,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 21.2",
+     "z": 5.4086,
+     "class": "background",
+     "max": 1.8944406509399414,
+     "dist_arcsec": 1.18,
+     "ratio": 1.081,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 16.2",
+     "z": 4.1326,
+     "class": "background",
+     "max": 6.855463981628418,
+     "dist_arcsec": 1.063,
+     "ratio": 2.605,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 10.1",
+     "z": 4.5064,
+     "class": "background",
+     "max": 2.712414026260376,
+     "dist_arcsec": 1.57,
+     "ratio": 1.067,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 14.2",
+     "z": 4.4404,
+     "class": "background",
+     "max": 2.163163423538208,
+     "dist_arcsec": 1.294,
+     "ratio": 1.071,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 22.1",
+     "z": 3.526,
+     "class": "background",
+     "max": 1.7963770627975464,
+     "dist_arcsec": 1.563,
+     "ratio": 1.081,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 16.1",
+     "z": 4.1399,
+     "class": "background",
+     "max": 2.1124768257141113,
+     "dist_arcsec": 1.519,
+     "ratio": 1.038,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000743",
+     "z": 0.4369,
+     "class": "member",
+     "max": 3.128450632095337,
+     "dist_arcsec": 0.18,
+     "ratio": 1.489,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 10.3",
+     "z": 4.5071,
+     "class": "background",
+     "max": 1.467272400856018,
+     "dist_arcsec": 1.65,
+     "ratio": 1.098,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 07.1",
+     "z": 6.0719,
+     "class": "background",
+     "max": 1.291357159614563,
+     "dist_arcsec": 1.52,
+     "ratio": 1.084,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000801",
+     "z": 4.5066,
+     "class": "background",
+     "max": 1.4578680992126465,
+     "dist_arcsec": 1.537,
+     "ratio": 1.064,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] G11",
+     "z": 0.4439,
+     "class": "member",
+     "max": 7.589208126068115,
+     "dist_arcsec": 0.532,
+     "ratio": 4.728,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 01.2",
+     "z": 2.0033,
+     "class": "background",
+     "max": 1.4794448614120483,
+     "dist_arcsec": 1.674,
+     "ratio": 1.02,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 17.1",
+     "z": 3.32,
+     "class": "background",
+     "max": 1.564559817314148,
+     "dist_arcsec": 1.603,
+     "ratio": 1.039,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 14.1",
+     "z": 4.4406,
+     "class": "background",
+     "max": 0.7511959671974182,
+     "dist_arcsec": 1.446,
+     "ratio": 1.061,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000684",
+     "z": 0.3838,
+     "class": "foreground",
+     "max": 9.129335403442383,
+     "dist_arcsec": 0.212,
+     "ratio": 4.052,
+     "peak": true
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 01.1",
+     "z": 2.0032,
+     "class": "background",
+     "max": 1.346365213394165,
+     "dist_arcsec": 1.604,
+     "ratio": 1.027,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 09.3",
+     "z": 3.5169,
+     "class": "background",
+     "max": 1.661026954650879,
+     "dist_arcsec": 1.382,
+     "ratio": 1.225,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 08.3",
+     "z": 5.4603,
+     "class": "background",
+     "max": 1.353852391242981,
+     "dist_arcsec": 1.503,
+     "ratio": 1.11,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 900001",
+     "z": 3.521,
+     "class": "background",
+     "max": 1.026074767112732,
+     "dist_arcsec": 1.61,
+     "ratio": 1.073,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 11.2",
+     "z": 3.6753,
+     "class": "background",
+     "max": 1.2528045177459717,
+     "dist_arcsec": 1.205,
+     "ratio": 1.083,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 12.1",
+     "z": 5.1734,
+     "class": "background",
+     "max": 1.2668849229812622,
+     "dist_arcsec": 1.528,
+     "ratio": 1.027,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 17.2",
+     "z": 3.3162,
+     "class": "background",
+     "max": 0.8792433142662048,
+     "dist_arcsec": 1.583,
+     "ratio": 1.058,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 18.2",
+     "z": 3.674,
+     "class": "background",
+     "max": 1.0004501342773438,
+     "dist_arcsec": 1.564,
+     "ratio": 1.075,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 11.1",
+     "z": 3.6753,
+     "class": "background",
+     "max": 1.0004501342773438,
+     "dist_arcsec": 1.564,
+     "ratio": 1.075,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000786",
+     "z": 5.4599,
+     "class": "background",
+     "max": 0.9329079389572144,
+     "dist_arcsec": 1.48,
+     "ratio": 1.065,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 13.1",
+     "z": 3.0292,
+     "class": "background",
+     "max": 0.6991418600082397,
+     "dist_arcsec": 1.553,
+     "ratio": 1.146,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 22.2",
+     "z": 3.529,
+     "class": "background",
+     "max": 0.6774007081985474,
+     "dist_arcsec": 1.521,
+     "ratio": 1.081,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 21.3",
+     "z": 5.4087,
+     "class": "background",
+     "max": 0.5360833406448364,
+     "dist_arcsec": 1.566,
+     "ratio": 1.061,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 20.2",
+     "z": 5.3549,
+     "class": "background",
+     "max": 0.4528016746044159,
+     "dist_arcsec": 1.417,
+     "ratio": 1.039,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 12.2",
+     "z": 5.1739,
+     "class": "background",
+     "max": 0.7627072930335999,
+     "dist_arcsec": 1.567,
+     "ratio": 1.059,
+     "peak": false
+    },
+    {
+     "name": "MACS J0600:[FZR2024] 15.3",
+     "z": 3.945,
+     "class": "background",
+     "max": 0.4550614058971405,
+     "dist_arcsec": 1.563,
+     "ratio": 1.047,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600.1-2007:[SCB2020]0840",
+     "z": 6.0719,
+     "class": "background",
+     "max": 1.4692096710205078,
+     "dist_arcsec": 1.564,
+     "ratio": 1.067,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] arc",
+     "z": 6.0736,
+     "class": "background",
+     "max": 1.3935902118682861,
+     "dist_arcsec": 1.636,
+     "ratio": 1.093,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060008.18-200808.8",
+     "z": 0.4266,
+     "class": "member",
+     "max": 13.030150413513184,
+     "dist_arcsec": 0.463,
+     "ratio": 3.206,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060006.28-200759.3",
+     "z": 0.3284,
+     "class": "foreground",
+     "max": 1.458736538887024,
+     "dist_arcsec": 1.232,
+     "ratio": 1.037,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000956",
+     "z": 0.424,
+     "class": "member",
+     "max": 4.276315212249756,
+     "dist_arcsec": 0.214,
+     "ratio": 2.196,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000964",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 3.8729488849639893,
+     "dist_arcsec": 1.328,
+     "ratio": 1.051,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000974",
+     "z": 0.4313,
+     "class": "member",
+     "max": 7.433165550231934,
+     "dist_arcsec": 0.165,
+     "ratio": 3.587,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000990",
+     "z": 0.5491,
+     "class": "background",
+     "max": 1.552794337272644,
+     "dist_arcsec": 1.571,
+     "ratio": 1.074,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000697",
+     "z": 0.4215,
+     "class": "member",
+     "max": 8.995330810546875,
+     "dist_arcsec": 0.29,
+     "ratio": 3.427,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000699",
+     "z": 0.4245,
+     "class": "member",
+     "max": 4.0763397216796875,
+     "dist_arcsec": 0.218,
+     "ratio": 1.785,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000711",
+     "z": 0.4332,
+     "class": "member",
+     "max": 7.585886478424072,
+     "dist_arcsec": 0.05,
+     "ratio": 2.313,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000724",
+     "z": 0.736,
+     "class": "background",
+     "max": 1.5531631708145142,
+     "dist_arcsec": 1.678,
+     "ratio": 1.084,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000735",
+     "z": 0.428,
+     "class": "member",
+     "max": 5.216470718383789,
+     "dist_arcsec": 0.237,
+     "ratio": 3.035,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000736",
+     "z": 0.4294,
+     "class": "member",
+     "max": 5.119976043701172,
+     "dist_arcsec": 0.24,
+     "ratio": 3.227,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000737",
+     "z": 0.43,
+     "class": "member",
+     "max": 8.677650451660156,
+     "dist_arcsec": 0.137,
+     "ratio": 5.209,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000754",
+     "z": 0.4233,
+     "class": "member",
+     "max": 6.504976749420166,
+     "dist_arcsec": 0.24,
+     "ratio": 2.715,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000779",
+     "z": 0.4305,
+     "class": "member",
+     "max": 5.696710586547852,
+     "dist_arcsec": 0.217,
+     "ratio": 2.359,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000792",
+     "z": 0.4304,
+     "class": "member",
+     "max": 4.78177547454834,
+     "dist_arcsec": 0.214,
+     "ratio": 1.707,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000538",
+     "z": 1.027,
+     "class": "background",
+     "max": 2.294797897338867,
+     "dist_arcsec": 1.163,
+     "ratio": 1.547,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000662",
+     "z": 0.384,
+     "class": "foreground",
+     "max": 9.129335403442383,
+     "dist_arcsec": 0.639,
+     "ratio": 4.191,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000490",
+     "z": 0.8943,
+     "class": "background",
+     "max": 1.405444860458374,
+     "dist_arcsec": 1.655,
+     "ratio": 1.024,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000524",
+     "z": 0.5614,
+     "class": "background",
+     "max": 1.6757187843322754,
+     "dist_arcsec": 1.554,
+     "ratio": 1.027,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000606",
+     "z": 0.2662,
+     "class": "foreground",
+     "max": 2.2419421672821045,
+     "dist_arcsec": 1.124,
+     "ratio": 1.33,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000625",
+     "z": 0.3449,
+     "class": "foreground",
+     "max": 1.6830540895462036,
+     "dist_arcsec": 1.462,
+     "ratio": 1.084,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000626",
+     "z": 0.3448,
+     "class": "foreground",
+     "max": 2.024012565612793,
+     "dist_arcsec": 1.512,
+     "ratio": 1.263,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000660",
+     "z": 0.3843,
+     "class": "foreground",
+     "max": 5.461354732513428,
+     "dist_arcsec": 0.078,
+     "ratio": 4.038,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000685",
+     "z": 0.419,
+     "class": "member",
+     "max": 4.446174621582031,
+     "dist_arcsec": 0.255,
+     "ratio": 1.809,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000687",
+     "z": 0.2298,
+     "class": "foreground",
+     "max": 2.1099464893341064,
+     "dist_arcsec": 1.537,
+     "ratio": 1.102,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000802",
+     "z": 0.4319,
+     "class": "member",
+     "max": 9.89502239227295,
+     "dist_arcsec": 0.163,
+     "ratio": 2.826,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000860",
+     "z": 0.4177,
+     "class": "member",
+     "max": 5.706881523132324,
+     "dist_arcsec": 0.066,
+     "ratio": 2.476,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000862",
+     "z": 0.4321,
+     "class": "member",
+     "max": 5.29689884185791,
+     "dist_arcsec": 0.278,
+     "ratio": 2.454,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000863",
+     "z": 0.4296,
+     "class": "member",
+     "max": 4.327385902404785,
+     "dist_arcsec": 0.048,
+     "ratio": 2.133,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000870",
+     "z": 0.4392,
+     "class": "member",
+     "max": 1.9015971422195435,
+     "dist_arcsec": 1.434,
+     "ratio": 1.989,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000900",
+     "z": 0.4323,
+     "class": "member",
+     "max": 11.291501998901367,
+     "dist_arcsec": 0.154,
+     "ratio": 3.928,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000938",
+     "z": 0.4197,
+     "class": "member",
+     "max": 5.316479206085205,
+     "dist_arcsec": 0.078,
+     "ratio": 5.339,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000957",
+     "z": 0.4314,
+     "class": "member",
+     "max": 5.225454807281494,
+     "dist_arcsec": 0.193,
+     "ratio": 4.466,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000962",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 3.9216508865356445,
+     "dist_arcsec": 1.319,
+     "ratio": 1.022,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000963",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 3.8729488849639893,
+     "dist_arcsec": 1.118,
+     "ratio": 1.034,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000965",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 3.88687801361084,
+     "dist_arcsec": 1.509,
+     "ratio": 1.049,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000966",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 3.433267116546631,
+     "dist_arcsec": 1.506,
+     "ratio": 1.125,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000967",
+     "z": 0.0866,
+     "class": "foreground",
+     "max": 3.6488327980041504,
+     "dist_arcsec": 1.486,
+     "ratio": 1.107,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001000",
+     "z": 0.4305,
+     "class": "member",
+     "max": 5.9815874099731445,
+     "dist_arcsec": 0.192,
+     "ratio": 1.764,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 001003",
+     "z": 0.5479,
+     "class": "background",
+     "max": 1.0513575077056885,
+     "dist_arcsec": 1.479,
+     "ratio": 1.085,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600.1-2007:[SCB2020]0785",
+     "z": 6.0719,
+     "class": "background",
+     "max": 2.8135364055633545,
+     "dist_arcsec": 1.585,
+     "ratio": 1.072,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] z6",
+     "z": 6.0719,
+     "class": "background",
+     "max": 1.579555869102478,
+     "dist_arcsec": 1.552,
+     "ratio": 1.041,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000474",
+     "z": 0.4366,
+     "class": "member",
+     "max": 5.2535929679870605,
+     "dist_arcsec": 0.116,
+     "ratio": 3.788,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000510",
+     "z": 0.423,
+     "class": "member",
+     "max": 7.885107517242432,
+     "dist_arcsec": 0.155,
+     "ratio": 3.917,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000514",
+     "z": 0.4293,
+     "class": "member",
+     "max": 14.057844161987305,
+     "dist_arcsec": 0.166,
+     "ratio": 8.031,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000539",
+     "z": 0.4448,
+     "class": "member",
+     "max": 4.914367198944092,
+     "dist_arcsec": 0.263,
+     "ratio": 2.887,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000543",
+     "z": 0.4299,
+     "class": "member",
+     "max": 8.516077041625977,
+     "dist_arcsec": 0.206,
+     "ratio": 4.455,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000547",
+     "z": 0.4234,
+     "class": "member",
+     "max": 4.927143096923828,
+     "dist_arcsec": 0.1,
+     "ratio": 2.619,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000571",
+     "z": 0.8751,
+     "class": "background",
+     "max": 1.5806740522384644,
+     "dist_arcsec": 1.673,
+     "ratio": 1.01,
+     "peak": false
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000647",
+     "z": 0.4176,
+     "class": "member",
+     "max": 15.33144474029541,
+     "dist_arcsec": 0.115,
+     "ratio": 6.365,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000823",
+     "z": 0.4276,
+     "class": "member",
+     "max": 5.786382675170898,
+     "dist_arcsec": 0.212,
+     "ratio": 2.021,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000871",
+     "z": 0.3825,
+     "class": "foreground",
+     "max": 4.902482032775879,
+     "dist_arcsec": 0.209,
+     "ratio": 3.784,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000886",
+     "z": 0.4462,
+     "class": "member",
+     "max": 3.9144153594970703,
+     "dist_arcsec": 0.133,
+     "ratio": 3.16,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000887",
+     "z": 0.4315,
+     "class": "member",
+     "max": 9.600729942321777,
+     "dist_arcsec": 0.111,
+     "ratio": 2.615,
+     "peak": true
+    },
+    {
+     "name": "RXC J0600:[FOB2021] 000899",
+     "z": 0.4317,
+     "class": "member",
+     "max": 7.779850006103516,
+     "dist_arcsec": 0.185,
+     "ratio": 2.623,
+     "peak": true
+    },
+    {
+     "name": "[GFV2024] J060005.66-200820.8",
+     "z": 6.072,
+     "class": "background",
+     "max": 1.0597985982894897,
+     "dist_arcsec": 1.48,
+     "ratio": 1.031,
+     "peak": false
+    },
+    {
+     "name": "[OMS2023] 6000408992306",
+     "z": 0.5089,
+     "class": "background",
+     "max": 1.7370026111602783,
+     "dist_arcsec": 1.244,
+     "ratio": 1.05,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060008.31-200752.3",
+     "z": 0.4316,
+     "class": "member",
+     "max": 8.401543617248535,
+     "dist_arcsec": 0.188,
+     "ratio": 3.558,
+     "peak": true
+    },
+    {
+     "name": "WISEA J060008.45-200832.9",
+     "z": 0.4255,
+     "class": "member",
+     "max": 5.129711151123047,
+     "dist_arcsec": 0.963,
+     "ratio": 2.458,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060008.21-200821.1",
+     "z": 0.4195,
+     "class": "member",
+     "max": 16.198009490966797,
+     "dist_arcsec": 0.602,
+     "ratio": 4.436,
+     "peak": false
+    },
+    {
+     "name": "[OMS2023] 6000408992293",
+     "z": 0.4295,
+     "class": "member",
+     "max": 2.5159494876861572,
+     "dist_arcsec": 1.554,
+     "ratio": 1.073,
+     "peak": false
+    },
+    {
+     "name": "WISEA J060007.00-200759.6",
+     "z": 0.4164,
+     "class": "member",
+     "max": 5.979860782623291,
+     "dist_arcsec": 0.548,
+     "ratio": 3.109,
+     "peak": false
+    }
+   ]
+  }
+ },
+ "outcome": "member (model input)"
+}
