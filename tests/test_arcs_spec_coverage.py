@@ -74,3 +74,10 @@ def test_gate_q():
     assert not sc.gate_q({"by_instrument": {"ESO:MUSE:ifu_slitless": 1}}, {"class": "none"})[
         "passed"
     ]
+
+
+def test_released_iso():
+    assert sc.released_iso("2019-11-17T05:40:56Z", "2026-11-08T19:00:00")
+    assert not sc.released_iso("2027-01-01T00:00:00Z", "2026-11-08T19:00:00")
+    assert not sc.released_iso("--", "2026-11-08T19:00:00")
+    assert not sc.released_iso("", "2026-11-08T19:00:00")

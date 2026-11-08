@@ -13,7 +13,7 @@ Archives: ESO ObsCore TAP (`INTERSECTS` on the server), MAST CAOM (3″ cone, fo
 ## Frozen classes (derived)
 | Row | Class | Public covering observations (optical / NIR) |
 |---|---|---|
-| RXC J0600 581 | **`none`** | none (ESO ALMA cubes only, 12, group `other`; no MAST spectroscopic row within 3″) |
+| RXC J0600 581 | **`none`** | none (ESO ALMA cubes only, 8, group `other`; no MAST spectroscopic row within 3″) |
 | MACS0308 2157 | **`spectrum_available`** | 1 VLT/MUSE cube: `ADP.2020-01-04T23:56:39.902`, programme 0104.A-0801(A), 2629 s, 475–935 nm, public since 2019-11-17 |
 | WHL0137 2194 (explained; no label) | — | none (ESO ALMA cubes only, 4) |
 
@@ -35,3 +35,6 @@ Archives: ESO ObsCore TAP (`INTERSECTS` on the server), MAST CAOM (3″ cone, fo
 - Footprint containment is an ASSUMPTION for coverage (edge spaxels, masked regions, gaps are not checked).
 - Only ESO and MAST were queried (no Keck KOA, Gemini, or survey-specific releases); a `none` is for these two archives.
 - MSA footprints would not show whether a slit was placed on the target (none occurred here).
+- Review fix after the first run (post hoc, classes unchanged): ESO rows with a missing release date counted as
+  public; they now do not. 581's public ALMA count drops 12 (first run, not stored) → 8; the stored `summary.json` is
+  the re-run (its `queried_utc`).

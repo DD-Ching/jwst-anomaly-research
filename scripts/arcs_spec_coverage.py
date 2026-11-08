@@ -129,6 +129,13 @@ def mode_group(archive: str, instrument: str, mode: str, dataproduct: str) -> st
     return "other"
 
 
+def released_iso(rel: str, now_iso: str) -> bool:
+    """True only for a well-formed ISO release date on or before now (missing: not public)."""
+    if not re.match(r"^\d{4}-\d{2}-\d{2}", rel or ""):
+        return False
+    return rel[:10] <= now_iso[:10]
+
+
 def classify(groups: list[str]) -> str:
     """Frozen per-target class from the groups of the public, covering observations."""
     if "ifu_slitless" in groups:
@@ -160,7 +167,7 @@ def eso_rows(ra: float, dec: float, now_iso: str) -> list[dict]:
                 "mode": "",
                 "dataproduct": str(r["dataproduct_type"]),
                 "release": rel,
-                "public": rel[:10] <= now_iso[:10],
+                "public": released_iso(rel, now_iso),
                 "target": str(r["target_name"]),
                 "proposal": str(r["proposal_id"]),
                 "exptime_s": float(r["t_exptime"]) if r["t_exptime"] is not np.ma.masked else None,
