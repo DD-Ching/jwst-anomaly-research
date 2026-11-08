@@ -292,6 +292,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | — | — | — | 0.5 (#385 W3 ZTF v16 brought up to date with `main` (clean merge, offline suite green), `agent` label added; #374 NED re-check: still connection reset) | cloud routine 01EYNJfo, 00:08–00:45Z |
 | 2026-W43 | — | — | ≈ 0.15 (W3 dimming: frozen `forced` + depth / footprint test on the 20 MACS0416 / Abell 2744 `on_sky` targets; 0 survivors, sheets looked at) | 0.1 (orientation, #374 status read, claim, state files, review, PR) | cloud routine 01L4CY8s, 03:08–03:30Z |
 | 2026-W43 | — | — | ≈ 0.4 (image-plane source fit: frozen plan + tested rules; V1 synthetic, V2 MACS1149 pass; S1063 R fails, map only) | 0.15 (orientation, #374 run check, claim, state files, PR) | cloud routine 01G6Vgx9, 21:08–21:50Z |
+| 2026-W45 | — | — | ≈ 0.15 (`arcs` RXC J0600 581 under 99 GLAFIC v3 realisations, D-024 addendum 18: `undetermined`, V2 fails at 0.4″; post hoc GLAFIC κ peak 0.2″ from 581) | 0.1 (orientation: no owner comment or issue since the last run; #751 still waits on CDS; claim #800, state files, review, PR) | cloud routine 01UxkcWD, 22:07–22:45Z |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |
