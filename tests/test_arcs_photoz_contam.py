@@ -55,7 +55,7 @@ def test_red_sequence_fit_recovers_line():
     rs = pc.fit_red_sequence(mag, col)
     assert abs(rs["slope"] + 0.03) < 0.01
     assert abs(rs["sigma"] - 0.05) < 0.01
-    assert abs(pc.rs_offset(rs, 20.0, 1.2 + 0.1)) - 2.0 < 0.5
+    assert abs(pc.rs_offset(rs, 20.0, 1.2 + 0.1) - 2.0) < 0.5
 
 
 def test_ned_spec_z_skips_photometric():
@@ -65,3 +65,10 @@ def test_ned_spec_z_skips_photometric():
     ]
     assert pc.ned_spec_z(rows) == 0.7
     assert pc.ned_spec_z(rows[:1]) is None
+
+
+def test_combine_spec():
+    assert pc.combine_spec(None, None, 0.43) == (None, False)
+    assert pc.combine_spec(0.44, None, 0.43) == ("member_or_foreground", False)
+    assert pc.combine_spec(None, 0.9, 0.43) == ("background", False)
+    assert pc.combine_spec(1.2, 0.44, 0.43) == (None, True)

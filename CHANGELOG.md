@@ -8,7 +8,8 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   `scripts/arcs_photoz_contam.py`, rule functions unit-tested before the run.
 - **Result** (`RESULT.md`, `summary.json`; contact sheet looked at): all 3 `undetermined`. No NED or DJA v4.6
   spec-z. The HST F606W − F814W red sequence fails its validation gate in all three clusters (false-member rate
-  0.618–0.839), and only 581 has a second photo-z (RELICS BPZ 0.537, 0.457–0.665) that reaches the member cut. No candidate.
+  0.461–0.839); the RELICS BPZ second photo-z of 581 (0.537, 0.457–0.665) and of 2194 (unconstrained, odds 0.165)
+  reaches the member cut. No candidate.
 - **Failed approach:** F606W − F814W red sequence as a membership veto at z_cl 0.36–0.57 (do not reuse).
 - **Services:** archive.stsci.edu needs the proxy + certifi bundle (as before); NED TAP and DJA S3 worked; CDS still
   unreachable (08:10Z); #751 waits.

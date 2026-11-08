@@ -5,7 +5,21 @@
   "derived": "red-sequence fits, offsets, labels, outcome",
   "assumption": "z_cl, radii, DZ_MEMBER, RS cuts, 2 sigma, gate thresholds"
  },
- "dja_table": {
+ "params": {
+  "NED_RADIUS": 1.0,
+  "DJA_RADIUS": 0.5,
+  "RELICS_RADIUS": 1.0,
+  "DZ_MEMBER": 0.03,
+  "RS_DZ": 0.05,
+  "RS_MAG": 23.0,
+  "STEL_MAX": 0.8,
+  "RS_NSIG": 2.0,
+  "BG_ZMIN": 0.1,
+  "GATE_RECALL": 0.8,
+  "GATE_FBG": 0.3
+ },
+ "ned_query": "NEDTAP.objdir cone via pyvo (deviation: the plan named crossmatch.query_matches, which does not return NED's redshift flag)",
+ "dja_reference_table": {
   "name": "dja_msaexp_emission_lines_v4.6.csv.gz",
   "url": "https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.6.csv.gz",
   "last_modified": "2026-09-15T13:01:52Z",
@@ -13,6 +27,11 @@
   "sha256": "ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3",
   "n_rows": 99478,
   "accessed": "2026-10-24"
+ },
+ "dja_this_run": {
+  "rows_read": 99478,
+  "rows_match_reference": true,
+  "checksum_compared": false
  },
  "red_sequence": {
   "WHL0137": {
@@ -38,14 +57,14 @@
    "gate_passed": false
   },
   "MACS0308": {
-   "slope": -0.044942682384764246,
-   "intercept": 1.854324452126406,
-   "sigma": 0.09277150039759564,
+   "slope": -0.03627492979362597,
+   "intercept": 1.6839441609801107,
+   "sigma": 0.06782440519989896,
    "n_used": 93,
    "n_fit_set": 102,
-   "recall": 0.8823529411764706,
+   "recall": 0.8725490196078431,
    "n_bg_set": 89,
-   "f_bg": 0.6179775280898876,
+   "f_bg": 0.4606741573033708,
    "gate_passed": false
   }
  },
@@ -83,6 +102,7 @@
    "z_spec_ned": null,
    "z_spec_dja": null,
    "spec_class": null,
+   "spec_conflict": false,
    "rs_class": null,
    "photoz_disagrees": true,
    "row_label": "undetermined"
@@ -120,6 +140,7 @@
    "z_spec_ned": null,
    "z_spec_dja": null,
    "spec_class": null,
+   "spec_conflict": false,
    "rs_class": null,
    "photoz_disagrees": true,
    "row_label": "undetermined"
@@ -150,7 +171,7 @@
     "zbmax": 0.853,
     "odds": 0.876,
     "stel": 0.0,
-    "posthoc_rs_offset_sigma": 0.45
+    "posthoc_rs_offset_sigma": 0.357
    },
    "ned": [
     {
@@ -166,6 +187,7 @@
    "z_spec_ned": null,
    "z_spec_dja": null,
    "spec_class": null,
+   "spec_conflict": false,
    "rs_class": null,
    "photoz_disagrees": null,
    "row_label": "undetermined"

@@ -78,9 +78,12 @@ def fit_red_sequence(mag: np.ndarray, col: np.ndarray, n_iter: int = 3, clip: fl
         r = col - np.polyval(p, mag)
         sig = float(np.std(r[keep]))
         new = np.isfinite(mag) & np.isfinite(col) & (np.abs(r) <= clip * sig)
-        if new.sum() < 5:
+        if new.sum() < 5 or np.array_equal(new, keep):
             break
         keep = new
+    # final fit on the final clip set, so slope, sigma and n_used describe the same sources
+    p = np.polyfit(mag[keep], col[keep], 1)
+    sig = float(np.std((col - np.polyval(p, mag))[keep]))
     return {"slope": float(p[0]), "intercept": float(p[1]), "sigma": sig, "n_used": int(keep.sum())}
 
 
@@ -176,12 +179,14 @@ def ned_spec_z(rows: list[dict]) -> float | None:
     return min(ok, key=lambda r: r["sep_arcsec"])["z"] if ok else None
 
 
-def dja_rows(table_csv: Path, targets: list[tuple[float, float]]) -> list[list[dict]]:
+def dja_rows(table_csv: Path, targets: list[tuple[float, float]]) -> tuple[list[list[dict]], int]:
     ra0 = np.array([t[0] for t in targets])
     de0 = np.array([t[1] for t in targets])
     out: list[list[dict]] = [[] for _ in targets]
+    n = 0
     with open(table_csv, newline="") as fh:
         for row in csv.DictReader(fh):
+            n += 1
             try:
                 ra, dec = float(row["ra"]), float(row["dec"])
             except (TypeError, ValueError):
@@ -197,12 +202,29 @@ def dja_rows(table_csv: Path, targets: list[tuple[float, float]]) -> list[list[d
                     }
                     | {"sep_arcsec": round(float(s[k]), 3)}
                 )
-    return out
+    return out, n
 
 
 def dja_spec_z(rows: list[dict]) -> float | None:
     ok = [r for r in rows if str(r.get("grade", "")).strip() == "3"]
     return float(min(ok, key=lambda r: r["sep_arcsec"])["z_best"]) if ok else None
+
+
+def combine_spec(z_dja: float | None, z_ned: float | None, z_cl: float) -> tuple[str | None, bool]:
+    """Test 1 over both sources; disagreeing classes give None (added after the first run, which had
+    no spectroscopic redshift at all, so it changes no label). Returns (class, conflict)."""
+    cls = {spec_class(z, z_cl) for z in (z_dja, z_ned) if z is not None}
+    if len(cls) > 1:
+        return None, True
+    return (cls.pop() if cls else None), False
+
+
+def stored_photoz_is_dja(run: str) -> bool:
+    """The field run's stored photo-z is a DJA eazy catalogue (its summary names a grizli zout)."""
+    p = ARCS / run.split("/")[0] / "summary.json"
+    if not p.exists():
+        return False
+    return "grizli" in str(json.loads(p.read_text()).get("inputs", {}).get("photoz", ""))
 
 
 def row_position(run: str, lab: int) -> dict:
@@ -232,7 +254,9 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     pos = [row_position(run, lab) for _, lab, run, _, _ in ROWS]
-    dja = dja_rows(args.dja, [(p["ra"], p["dec"]) for p in pos])
+    dja, n_dja = dja_rows(args.dja, [(p["ra"], p["dec"]) for p in pos])
+    if n_dja != DJA_TABLE["n_rows"]:
+        raise SystemExit(f"DJA table has {n_dja} rows, expected {DJA_TABLE['n_rows']}")
     rows, rs_all = [], {}
     for (field, lab, run, code, z_cl), p, drows in zip(ROWS, pos, dja, strict=True):
         b = read_bpz(args.relics_dir / f"hlsp_relics_hst_acs-wfc3ir_{code}_multi_v1_cat.txt")
@@ -259,8 +283,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         ned = ned_redshifts(p["ra"], p["dec"])
         z_ned, z_dja = ned_spec_z(ned), dja_spec_z(drows)
-        z_spec = z_dja if z_dja is not None else z_ned
-        spec = spec_class(z_spec, z_cl)
+        spec, conflict = combine_spec(z_dja, z_ned, z_cl)
         if matched and np.isfinite(col[k]) and np.isfinite(mag[k]):
             # post hoc (not in the plan): offset reported even where the gate failed; never labels
             rel["posthoc_rs_offset_sigma"] = round(rs_offset(rs, float(mag[k]), float(col[k])), 3)
@@ -271,7 +294,7 @@ def main(argv: list[str] | None = None) -> int:
                 "red_sequence_like" if abs(rel["rs_offset_sigma"]) <= RS_NSIG else "off_sequence"
             )
         # second photo-z only where the stored photo-z was DJA eazy (MACS0308's is this BPZ)
-        second = code != "macs0308p26" and matched
+        second = stored_photoz_is_dja(run) and matched
         disagrees = bool(rel["zbmin"] <= member_cut(z_cl)) if second else None
         rows.append(
             {
@@ -286,6 +309,7 @@ def main(argv: list[str] | None = None) -> int:
                 "z_spec_ned": z_ned,
                 "z_spec_dja": z_dja,
                 "spec_class": spec,
+                "spec_conflict": conflict,
                 "rs_class": rs_cls,
                 "photoz_disagrees": disagrees,
                 "row_label": label(spec, rs_cls, disagrees),
@@ -299,7 +323,27 @@ def main(argv: list[str] | None = None) -> int:
             "derived": "red-sequence fits, offsets, labels, outcome",
             "assumption": "z_cl, radii, DZ_MEMBER, RS cuts, 2 sigma, gate thresholds",
         },
-        "dja_table": DJA_TABLE,
+        "params": {
+            "NED_RADIUS": NED_RADIUS,
+            "DJA_RADIUS": DJA_RADIUS,
+            "RELICS_RADIUS": RELICS_RADIUS,
+            "DZ_MEMBER": DZ_MEMBER,
+            "RS_DZ": RS_DZ,
+            "RS_MAG": RS_MAG,
+            "STEL_MAX": STEL_MAX,
+            "RS_NSIG": RS_NSIG,
+            "BG_ZMIN": BG_ZMIN,
+            "GATE_RECALL": GATE_RECALL,
+            "GATE_FBG": GATE_FBG,
+        },
+        "ned_query": "NEDTAP.objdir cone via pyvo (deviation: the plan named "
+        "crossmatch.query_matches, which does not return NED's redshift flag)",
+        "dja_reference_table": DJA_TABLE,
+        "dja_this_run": {
+            "rows_read": n_dja,
+            "rows_match_reference": n_dja == DJA_TABLE["n_rows"],
+            "checksum_compared": False,
+        },
         "red_sequence": rs_all,
         "rows": rows,
         "outcome": outcome([r["row_label"] for r in rows]),
