@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: D-042 second copy rule as a function: gate U fails as frozen on MACS0416; system 122's copy reading not reproduced (D-042 addendum)
+- **Question:** does D-042's one-to-one, same-parity copy rule (6.5 × rms) reproduce its own hand reading? Plan first
+  (`results/lens_consistency/copy_rule_unique/PLAN.md`); `lens_consistency.model_copies_unique` unit-tested before the
+  run; `scripts/copy_rule_unique_gate.py` on a re-run of MACS0416 `images` (F277W by S3 byte range).
+- **Result** (`RESULT.md`, `summary.json`): route reproduces the recorded counts (143 predicted; recovered 3,
+  confused 13, absent 2); 1 and 15 labelled, 45 not (opposite parity); 122 ×2 not labelled → gate U fails, rule not
+  adopted. Post hoc: the 122 rows are 6.44–7.00″ from 122.2 / 122.3 (`post_hoc_122.json`), so the field note's copy
+  reading for 122 is not reproduced; still `confused`, no flag, no candidate.
+- **Failed approach:** both copy rules (D-041, D-042) fail as frozen functions on their own defining fields.
+  **Services:** MAST S3 byte ranges with the proxy + certifi bundle; CDS still resets (14:07Z); #751 waits.
+- **Handoff:** copy-rule route closed; next on the forced-check item: radii scaled to the rms in `forced_check`, or the
+  D-037 rules as code.
+
 ## 2026-11-08: D-041 model-copy rule as a function: gate G fails as frozen on MACS0717; not adopted as a class (D-041 addendum)
 - **Question:** can the D-041 copy rule (TASKS Supporting 1, `forced_check` item) label `absent` / `confused` rows
   automatically? Plan first (`results/lens_consistency/model_copy_rule/PLAN.md`); `lens_consistency.model_copies`

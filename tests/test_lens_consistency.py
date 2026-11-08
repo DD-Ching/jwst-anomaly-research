@@ -1015,3 +1015,50 @@ def test_model_copies_positional_and_detection():
     assert got == ["1.1", "", "", "", ""]
     assert lc.model_copies(table, images, ["1.1", "1.2"], 2.0, detected={"1.2"})[0] == "1.2"
     assert lc.model_copies(table, images, ["1.1", "1.2"], 2.0, detected=set())[0] == ""
+
+
+def test_model_copies_unique_one_to_one_and_parity():
+    """D-042 second copy rule: one-to-one pairing within factor x rms, same parity."""
+    d0 = -24.0
+    a = 1.0 / 3600
+    images = Table(
+        {
+            "image_id": ["1.2", "2.2", "2.3", "3.2", "4.2", "5.2"],
+            "system": ["1", "2", "2", "3", "4", "5"],
+            "ra": [64.0] * 6,
+            "dec": [d0, d0 + 100 * a, d0 + 103 * a, d0 + 200 * a, d0 + 300 * a, d0 + 400 * a],
+        }
+    )
+    table = Table(
+        {
+            "system": ["1", "2", "3", "3", "4", "5", "1"],
+            "ra": [64.0] * 7,
+            "dec": [
+                d0 + 3 * a,  # 3" from 1.2 -> copy
+                d0 + 101.5 * a,  # two partners (2.2, 2.3) -> no label
+                d0 + 199 * a,  # 3.2 shared by two rows -> no label
+                d0 + 201 * a,
+                d0 + 302 * a,  # opposite parity -> no label
+                d0 + 410 * a,  # 10" > 6.5 x 1" -> no label
+                d0 + 1 * a,  # not a copy class
+            ],
+            "magnification": [5.0, 3.0, 2.0, 2.0, -4.0, 3.0, 5.0],
+            "forced_class": [
+                "confused",
+                "absent",
+                "confused",
+                "confused",
+                "confused",
+                "absent",
+                "recovered",
+            ],
+        }
+    )
+    mu = {"1.2": 2.0, "2.2": 1.0, "2.3": 1.0, "3.2": 1.0, "4.2": 3.0, "5.2": 1.0}
+    unpred = ["1.2", "2.2", "2.3", "3.2", "4.2", "5.2"]
+    got = lc.model_copies_unique(table, images, unpred, 1.0, mu)
+    assert got == ["1.2", "", "", "", "", "", ""]
+    # without the shared-partner row, 3.2's remaining row becomes a copy
+    assert lc.model_copies_unique(table[[0, 2]], images, unpred, 1.0, mu) == ["1.2", "3.2"]
+    # missing parity information -> no label
+    assert lc.model_copies_unique(table[:1], images, unpred, 1.0, {}) == [""]

@@ -11,7 +11,7 @@ image are a pair when their separation is ≤ 6.5 × the model's image-plane rms
 row has exactly one such image (I), I has exactly one such row, and the model's magnification at I (same source
 redshift) has the row's sign (same parity). Everything else gets no label.
 
-**Known case (gate U).** MACS0416 `macs0416-cats` `images` re-run with the recorded settings (docs/fields/macs0416.md:
+**Known case (gate U).** MACS0416 `macs0416-cats` (rms 0.76″ as D-042 records it, so the radius is 4.94″) `images` re-run with the recorded settings (docs/fields/macs0416.md:
 F277W forced image by S3 byte range, frame offset +0.208″, −0.025″). D-042's hand reading: copy rows 1, 15, 122 ×2
 (confused) and not 45 (opposite parity, μ −9 at 1.89″ from 45.2). U passes when the rule labels exactly these four
 rows among the `absent` + `confused` rows (per-system counts) and does not label 45. Before the gate, the re-run must

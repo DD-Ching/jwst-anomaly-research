@@ -1,0 +1,217 @@
+{
+ "provenance": "derived",
+ "model": "macs0416-cats",
+ "table": "images_predicted_macs0416.ecsv.gz (re-run, gzipped copy)",
+ "rms_arcsec": 0.76,
+ "factor": 6.5,
+ "unpredicted_catalogued_images": [
+  "1.2",
+  "15.1",
+  "16.2",
+  "45.2",
+  "55.2",
+  "60.3",
+  "122.2",
+  "122.3"
+ ],
+ "image_mu_model_prediction": {
+  "1.2": -12.566,
+  "15.1": 4.645,
+  "16.2": -6.75,
+  "45.2": 2.281,
+  "55.2": 2.348,
+  "60.3": -74.438,
+  "122.2": -2.177,
+  "122.3": -3.976
+ },
+ "forced_classes": {
+  "confused": 13,
+  "recovered": 3,
+  "absent": 2,
+  "no_reference": 6,
+  "undetectable": 3,
+  "inconsistent_reference": 3
+ },
+ "n_absent_confused": 15,
+ "n_copy_unique": 2,
+ "labelled": {
+  "absent": {},
+  "confused": {
+   "1": 1,
+   "15": 1
+  }
+ },
+ "rows": [
+  {
+   "system": "1",
+   "forced_class": "confused",
+   "magnification": -7.6,
+   "copy_of_unique": "1.2",
+   "copy_of_d041": "",
+   "partners_arcsec": {
+    "1.2": 1.58
+   },
+   "ra": 64.043355,
+   "dec": -24.063144
+  },
+  {
+   "system": "15",
+   "forced_class": "confused",
+   "magnification": 6.78,
+   "copy_of_unique": "15.1",
+   "copy_of_d041": "",
+   "partners_arcsec": {
+    "15.1": 2.57
+   },
+   "ra": 64.02734,
+   "dec": -24.076355
+  },
+  {
+   "system": "27",
+   "forced_class": "absent",
+   "magnification": 26.19,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.045847,
+   "dec": -24.063321
+  },
+  {
+   "system": "27",
+   "forced_class": "absent",
+   "magnification": 19.0,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.046834,
+   "dec": -24.064744
+  },
+  {
+   "system": "27",
+   "forced_class": "confused",
+   "magnification": -6.85,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.045148,
+   "dec": -24.062784
+  },
+  {
+   "system": "27",
+   "forced_class": "confused",
+   "magnification": -5.45,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.046391,
+   "dec": -24.063818
+  },
+  {
+   "system": "34",
+   "forced_class": "confused",
+   "magnification": 1.96,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.042129,
+   "dec": -24.081853
+  },
+  {
+   "system": "45",
+   "forced_class": "confused",
+   "magnification": -8.99,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {
+    "45.2": 1.89
+   },
+   "ra": 64.033071,
+   "dec": -24.078188
+  },
+  {
+   "system": "45",
+   "forced_class": "confused",
+   "magnification": 2.5,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.024602,
+   "dec": -24.071381
+  },
+  {
+   "system": "47",
+   "forced_class": "confused",
+   "magnification": 2.18,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.038352,
+   "dec": -24.083895
+  },
+  {
+   "system": "51",
+   "forced_class": "confused",
+   "magnification": 3.78,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.026803,
+   "dec": -24.069756
+  },
+  {
+   "system": "122",
+   "forced_class": "confused",
+   "magnification": -2.95,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.035213,
+   "dec": -24.068052
+  },
+  {
+   "system": "122",
+   "forced_class": "confused",
+   "magnification": -2.45,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.035693,
+   "dec": -24.067711
+  },
+  {
+   "system": "132",
+   "forced_class": "confused",
+   "magnification": 2.56,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.033445,
+   "dec": -24.063047
+  },
+  {
+   "system": "133",
+   "forced_class": "confused",
+   "magnification": 2.62,
+   "copy_of_unique": "",
+   "copy_of_d041": "",
+   "partners_arcsec": {},
+   "ra": 64.033607,
+   "dec": -24.063132
+  }
+ ],
+ "gate_U": {
+  "confused": {
+   "rule_only": [],
+   "hand_only": [
+    "122",
+    "122"
+   ]
+  },
+  "absent": {
+   "rule_only": [],
+   "hand_only": []
+  },
+  "not_copy_labelled": [],
+  "passes": false
+ }
+}
