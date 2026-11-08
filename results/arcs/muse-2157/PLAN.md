@@ -12,3 +12,14 @@
   agree with z > 0.40; one feature only → `single_line`; none → `undetermined` (with the continuum S/N stated).
 - **Would change the plan:** `member` makes the anti row an ordinary foreground galaxy (anti label withdrawn);
   `background` keeps it for the lens-model tests.
+
+## Amendment before any cube data was read (2026-11-08T20:25Z)
+- The ESO portal ignores HTTP Range (416 with unknown length) and streams the whole file, so the DATA extension
+  (1.55 GB) is streamed once and only two 80 × 80-spaxel boxes and a white-light image are kept in memory; nothing
+  is stored. Noise comes from robust scatter of random apertures in the box (STAT extension not read).
+- No object in this field has a secure published spec-z in NED (2026-11-08 TAP query: only the cluster z 0.356 and
+  photo-z rows). Gate M is therefore the central galaxy (NED WISEA J030855.93+264537.9) recovering the cluster
+  redshift: ≥ 2 features (|S/N| ≥ 5) and |z − 0.356| < 0.01 (ASSUMPTION: allows ~±2200 km/s for the central galaxy's
+  velocity offset and the cluster z precision).
+- The reading is computed by `classify` in `scripts/arcs_muse_2157.py` (z scan 0–1.6, step 2e-4); `foreground`
+  added for ≥ 2 features at z < 0.40 outside the member window.
