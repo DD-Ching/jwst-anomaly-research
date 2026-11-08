@@ -3035,6 +3035,15 @@ Decision: no lens-model residual; no archival-epoch search is implied. Alternati
 of the central image (core-profile dependent; post hoc only). Revisit if: a JWST-era MACS0308 model becomes public, or
 the SN reappears in an image the models do not predict.
 
+**Addendum 2026-11-08b (RXC J0018 SN Helios image order).** `results/lens_consistency/rxc0018_helios/RESULT.md`;
+plan and `decide` committed before the run. The SN Helios position (arXiv:2609.30440v2, z 3.34) re-imaged in the
+RELICS Lenstool v1 map gives 5 images; none arrives within 1 yr before Helios, and the first later image comes at
++6.753 yr, 2.384″ from the mean published JWST-era next-image position (published 2.32–6.0 yr): `agrees`. Post hoc
+the outcome depends on the untested map amplitude (same map maker as the offset maps of addenda bi–bk): `differs` at
+0.85, a single image at 0.70. Decision: no lens-model residual; no archival-epoch search is implied. Alternatives
+rejected: a frozen amplitude correction (H_K undetermined, addendum bk). Revisit if: no next image within
+the frozen 10-yr window, an image appears elsewhere, or a JWST-era RXC J0018 map is public.
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**
