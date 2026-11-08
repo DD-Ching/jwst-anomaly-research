@@ -1095,9 +1095,10 @@ at a third use.
 
 **Addendum 4 (2026-11-08, SMACS `f356w_1243`, `results/smacs_jwst3/epochs_1243/RESULT.md`).** The catalog route
 with the peer null also gives a variability test: peer Δm on the same frame tie, σ from the MAD. F444W 2736 → 6882:
-Δm −0.0329 vs σ_peer 0.0187 (15 peers) → `constant`; residual 14.13 mas ≤ peer p95 20.40 → `no motion detected`. Thin
-wrapper `scripts/smacs_epochs_1243.py`; this is the third use of the peer null, so a later change should move
-`peer_stats` into `epoch_compare.py`.
+Δm −0.0329 vs σ_peer 0.0187 (15 peers) → `constant`; residual 14.13 mas ≤ peer p95 20.40 → `no motion detected`. This is
+the third use of the peer null, so (per addendum 3) it now lives in `epoch_compare.py` as `peer_null`, and
+`compare_epochs` returns `reference_dmag_median`; the earlier wrappers keep their own copies (their results are
+frozen). Thin wrapper `scripts/smacs_epochs_1243.py`.
 
 ## D-018 Diffraction-spike flag on cutouts: orientation-free hexagonal harmonic (2026-10-08)
 

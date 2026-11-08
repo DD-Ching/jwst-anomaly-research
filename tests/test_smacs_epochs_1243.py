@@ -44,3 +44,19 @@ def test_between_thresholds_undetermined():
         "variability": "undetermined",
         "motion": "undetermined",
     }
+
+
+def test_exact_thresholds():
+    # dm = 2 / 5 sigma -> constant / variable; r = p95 / p99 -> no motion / undetermined
+    assert mod.decide(_st(dm=0.1, r=10.0))["variability"] == "constant"
+    assert mod.decide(_st(dm=0.25))["variability"] == "variable"
+    assert mod.decide(_st(r=10.0))["motion"] == "no motion detected"
+    assert mod.decide(_st(r=15.0))["motion"] == "undetermined"
+    assert mod.decide(_st(n=10))["variability"] == "constant"
+
+
+def test_missing_or_zero_sigma_and_missing_dm():
+    assert mod.decide(_st(sig=0.0, dm=0.0))["variability"] == "undetermined"
+    assert mod.decide(_st(sig=None))["variability"] == "undetermined"
+    assert mod.decide(_st(dm=None))["variability"] == "not measured"
+    assert mod.decide(_st(p95=None, p99=None))["motion"] == "undetermined"

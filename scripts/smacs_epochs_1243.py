@@ -1,8 +1,8 @@
 """Two-epoch F444W check of SMACS ``f356w_1243`` (2736 o001 -> VENUS 6882 o057).
 
 Plan: ``results/smacs_jwst3/epochs_1243/PLAN.md`` (frozen in the claim commit). Reuses the D-017
-tool (``compare_epochs``) and the peer selection of ``smacs_epochs_1816_384`` (D-017 addendum 1).
-``decide`` encodes the plan's outcome rules.
+tool (``compare_epochs``) and its peer null (``peer_null``, D-017 addenda 1 and 4). ``decide``
+encodes the plan's outcome rules.
 
     python scripts/smacs_epochs_1243.py <scratch dir> --cat-dir <dir with the CATs> \\
         --out results/smacs_jwst3/epochs_1243
@@ -12,7 +12,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -23,7 +25,7 @@ from astropy.table import Table
 from jwst_anomaly import catalog, cutouts
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from epoch_compare import MAD_TO_SIGMA, compare_epochs, mutual_matches, offsets_mas  # noqa: E402
+from epoch_compare import compare_epochs, peer_null  # noqa: E402
 from smacs_epochs_1816_384 import (  # noqa: E402
     BASELINE_YR,
     NULL_DMAG,
@@ -45,83 +47,83 @@ VAR_SIG = 5.0
 CONST_SIG = 2.0
 FADE_BOUND_SIG = 3.0
 SHEET_ARCSEC = 4.0
+SHEET_PANELS = (
+    ("2736 F356W", "e1", "f356w"),
+    ("2736 F444W", "e1", "f444w"),
+    ("6882 F444W", "e2", "f444w"),
+    ("6882 F410M", "e2", "f410m"),
+)
+
+
+def _finite_pos(x: Any) -> bool:
+    return x is not None and math.isfinite(x) and x > 0
 
 
 def decide(st: dict[str, Any] | None) -> dict[str, str]:
     """Plan outcome rules on the F444W statistics ``st`` (None if the target is not measured).
 
     Variability: |dm_target| >= VAR_SIG x sigma_peer -> "variable"; <= CONST_SIG x sigma_peer ->
-    "constant"; else "undetermined". Motion: residual > peer p99 -> "moves"; <= peer p95 ->
-    "no motion detected"; else "undetermined". Fewer than MIN_PEERS peers -> both "undetermined".
+    "constant"; else "undetermined"; "not measured" without a target dm. Motion: residual > peer
+    p99 -> "moves"; <= peer p95 -> "no motion detected"; else "undetermined". Fewer than
+    MIN_PEERS peers -> both "undetermined"; a zero or missing peer sigma / percentile ->
+    "undetermined" for that axis.
     """
     if st is None:
         return {"variability": "not measured", "motion": "not measured"}
     if st["n_peers"] < MIN_PEERS:
         return {"variability": "undetermined", "motion": "undetermined"}
-    dm, sig = abs(st["target_dmag"]), st["peer_dmag_sigma"]
-    if dm >= VAR_SIG * sig:
-        var = "variable"
-    elif dm <= CONST_SIG * sig:
-        var = "constant"
-    else:
+    sig = st["peer_dmag_sigma"]
+    if st["target_dmag"] is None:
+        var = "not measured"
+    elif not _finite_pos(sig):
         var = "undetermined"
-    r = st["target_residual_mas"]
-    if r > st["peer_residual_p99_mas"]:
+    else:
+        dm = abs(st["target_dmag"])
+        if dm >= VAR_SIG * sig:
+            var = "variable"
+        elif dm <= CONST_SIG * sig:
+            var = "constant"
+        else:
+            var = "undetermined"
+    r, p95, p99 = (
+        st["target_residual_mas"],
+        st["peer_residual_p95_mas"],
+        st["peer_residual_p99_mas"],
+    )
+    if not (_finite_pos(p95) and _finite_pos(p99)):
+        mot = "undetermined"
+    elif r > p99:
         mot = "moves"
-    elif r <= st["peer_residual_p95_mas"]:
+    elif r <= p95:
         mot = "no motion detected"
     else:
         mot = "undetermined"
     return {"variability": var, "motion": mot}
 
 
-def peer_stats(cat1: Table, cat2: Table, target: SkyCoord, cmp: dict[str, Any]) -> dict[str, Any]:
-    """Peers (mutual matches near the target, similar magnitude and size) on the same frame tie."""
-    c1 = SkyCoord(cat1["ra"], cat1["dec"], unit="deg")
-    c2 = SkyCoord(cat2["ra"], cat2["dec"], unit="deg")
-    k1 = int(np.argmin(target.separation(c1).arcsec))
-    k2 = int(np.argmin(target.separation(c2).arcsec))
-    mag1 = np.asarray(cat1["aper50_abmag"], float)
-    mag2 = np.asarray(cat2["aper50_abmag"], float)
-    size = np.ma.filled(np.ma.asarray(cat1["semimajor_sigma"], float), np.nan)
-    i1, i2 = mutual_matches(c1, c2, 0.3)
-    d_all = offsets_mas(c1[i1], c2[i2])
-    dm_all = mag2[i2] - mag1[i1]
-    peer = (
-        (c1[k1].separation(c1[i1]).arcsec <= NULL_RADIUS_ARCSEC)
-        & (np.abs(mag1[i1] - mag1[k1]) <= NULL_DMAG)
-        & (np.abs(size[i1] / size[k1] - 1.0) <= NULL_SIZE_FRAC)
-        & (i1 != k1)
-        & (i2 != k2)
-        & np.isfinite(d_all).all(axis=1)
-        & np.isfinite(dm_all)
+def stats(cat1: Table, cat2: Table, target: SkyCoord, cmp: dict[str, Any]) -> dict[str, Any]:
+    """Target values plus the peer null, with the plan's derived bounds."""
+    st = peer_null(
+        cat1,
+        cat2,
+        target,
+        cmp,
+        radius_arcsec=NULL_RADIUS_ARCSEC,
+        dmag=NULL_DMAG,
+        size_frac=NULL_SIZE_FRAC,
     )
-    med = np.asarray(cmp["frame_offset_mas"], float)
-    # compare_epochs subtracts the reference median from the raw target dm; recover that median.
-    dm_med = float(mag2[k2] - mag1[k1]) - cmp["target_dmag"]
-    r_peer = np.hypot(*(d_all[peer] - med).T)
-    dm_peer = dm_all[peer] - dm_med
-    n = int(peer.sum())
-    sig = float(MAD_TO_SIGMA * np.median(np.abs(dm_peer - np.median(dm_peer)))) if n else np.nan
-    p95 = float(np.percentile(r_peer, 95)) if n else np.nan
-    return {
-        "n_peers": n,
-        "target_aper50_abmag": [float(mag1[k1]), float(mag2[k2])],
-        "target_dmag": float(cmp["target_dmag"]),
-        "reference_dmag_median": dm_med,
-        "peer_dmag_median": float(np.median(dm_peer)) if n else None,
-        "peer_dmag_sigma": sig,
-        "fade_bound_mag": FADE_BOUND_SIG * sig,
-        "constant_threshold_mag": CONST_SIG * sig,
-        "target_residual_mas": float(cmp["target_residual_total_mas"]),
-        "target_residual_vec_mas": cmp["target_residual_mas"],
-        "peer_residual_median_mas": float(np.median(r_peer)) if n else np.nan,
-        "peer_residual_p95_mas": p95,
-        "peer_residual_p99_mas": float(np.percentile(r_peer, 99)) if n else np.nan,
-        "p95_motion_bound_mas_per_yr": p95 / BASELINE_YR,
-        "n_peers_with_larger_residual": int(np.sum(r_peer > cmp["target_residual_total_mas"])),
-        "label": "derived",
-    }
+    sig, p95 = st["peer_dmag_sigma"], st["peer_residual_p95_mas"]
+    st.update(
+        {
+            "target_dmag": cmp["target_dmag"],
+            "target_residual_mas": cmp["target_residual_total_mas"],
+            "target_residual_vec_mas": cmp["target_residual_mas"],
+            "constant_threshold_mag": CONST_SIG * sig if sig is not None else None,
+            "fade_bound_mag": FADE_BOUND_SIG * sig if sig is not None else None,
+            "p95_motion_bound_mas_per_yr": p95 / BASELINE_YR if p95 is not None else None,
+        }
+    )
+    return st
 
 
 def sheet(path: Path, files: dict[str, str | None], st: dict[str, Any] | None) -> None:
@@ -143,9 +145,9 @@ def sheet(path: Path, files: dict[str, str | None], st: dict[str, Any] | None) -
         ax.imshow(d, origin="lower", cmap="gray_r", vmin=lo, vmax=hi)
         ax.plot(d.shape[1] / 2 - 0.5, d.shape[0] / 2 - 0.5, "r+", ms=14, mew=0.8)
         ax.set_title(lab, fontsize=9)
-    note = (
-        "" if st is None else f"dm {st['target_dmag']:+.3f}, sigma_peer {st['peer_dmag_sigma']:.3f}"
-    )
+    note = ""
+    if st is not None and st["target_dmag"] is not None and st["peer_dmag_sigma"] is not None:
+        note = f"dm {st['target_dmag']:+.3f}, sigma_peer {st['peer_dmag_sigma']:.3f}"
     fig.suptitle(f'{NAME} ({SHEET_ARCSEC:.0f}" cutouts, native orientation) {note}', fontsize=9)
     fig.tight_layout()
     fig.savefig(path, dpi=110)
@@ -171,18 +173,24 @@ def main(argv: list[str] | None = None) -> int:
             for ep, c in (("e1", cat1), ("e2", cat2))
         },
     }
+    st: dict[str, Any] | None = None
     try:
         cmp = compare_epochs(cat1, cat2, target)
-        st = peer_stats(cat1, cat2, target, cmp)
+    except ValueError as exc:
+        out["not_measured"] = str(exc)
+    else:
+        st = stats(cat1, cat2, target, cmp)
         out["compare"] = cmp
         out["peers"] = st
+        dm, pm = cmp["target_dmag"], st["peer_dmag_median"]
         out["post_hoc"] = {
-            "dmag_over_reference_sigma": abs(cmp["target_dmag"]) / cmp["reference_dmag_sigma"],
+            # The frozen rule centres dm on the bright-reference median; these check that choice.
+            "dmag_over_reference_sigma": abs(dm) / cmp["reference_dmag_sigma"]
+            if dm is not None and cmp["reference_dmag_sigma"] > 0
+            else None,
+            "dmag_minus_peer_median": dm - pm if dm is not None and pm is not None else None,
             "label": "derived (post hoc)",
         }
-    except ValueError as exc:
-        st = None
-        out["not_measured"] = str(exc)
     out["decision"] = decide(st)
     out["assumptions"] = {
         "min_peers": MIN_PEERS,
@@ -195,13 +203,9 @@ def main(argv: list[str] | None = None) -> int:
         "baseline_yr": BASELINE_YR,
     }
     tab = Table({"source_uid": [NAME], "ra": [TARGET[0]], "dec": [TARGET[1]]})
-    files: dict[str, str | None] = {}
-    for lab, ep, b in (
-        ("2736 F356W", "e1", "f356w"),
-        ("2736 F444W", "e1", "f444w"),
-        ("6882 F444W", "e2", "f444w"),
-        ("6882 F410M", "e2", "f410m"),
-    ):
+
+    def fetch(panel: tuple[str, str, str]) -> str | None:
+        _, ep, b = panel
         i2d = CATS[ep].format(b=b).replace("_cat.ecsv", "_i2d.fits")
         got = cutouts.make_cutouts(
             f"s3://stpubdata/jwst/public/{S3[ep]}{i2d}",
@@ -210,11 +214,15 @@ def main(argv: list[str] | None = None) -> int:
             out_dir=args.work / f"{ep}_{b}",
             storage_options={"anon": True},
         )
-        files[lab] = got["path"][0] or None
+        return got["path"][0] or None
+
+    with ThreadPoolExecutor(max_workers=len(SHEET_PANELS)) as pool:  # independent S3 range reads
+        paths = list(pool.map(fetch, SHEET_PANELS))
+    files = {lab: p for (lab, _, _), p in zip(SHEET_PANELS, paths, strict=True)}
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "summary.json").write_text(json.dumps(out, indent=1) + "\n")
+    (args.out / "summary.json").write_text(json.dumps(out, indent=1, allow_nan=False) + "\n")
     sheet(args.out / "contact_sheet.png", files, st)
-    print(json.dumps({"decision": out["decision"], "peers": st}, indent=1))
+    print(json.dumps({"decision": out["decision"], "post_hoc": out.get("post_hoc")}, indent=1))
     return 0
 
 

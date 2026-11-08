@@ -46,6 +46,7 @@
   "target_residual_over_reference_sigma": 1.3221066015374534,
   "fraction_of_references_with_larger_residual": 0.4066390041493776,
   "target_dmag": -0.032932328751599016,
+  "reference_dmag_median": -0.01148673243288556,
   "reference_dmag_sigma": 0.033826046740521365,
   "target_snr": [
    121.6842908749882,
@@ -55,30 +56,27 @@
  },
  "peers": {
   "n_peers": 15,
-  "target_aper50_abmag": [
-   26.114116989499053,
-   26.069697928314568
-  ],
-  "target_dmag": -0.032932328751599016,
-  "reference_dmag_median": -0.01148673243288556,
+  "target_size_finite": true,
   "peer_dmag_median": 0.003544156789374142,
   "peer_dmag_sigma": 0.01870777845738114,
-  "fade_bound_mag": 0.056123335372143424,
-  "constant_threshold_mag": 0.03741555691476228,
+  "peer_residual_median_mas": 8.62532181690788,
+  "peer_residual_p95_mas": 20.400368422250192,
+  "peer_residual_p99_mas": 21.45195642050967,
+  "n_peers_with_larger_residual": 2,
+  "label": "derived",
+  "target_dmag": -0.032932328751599016,
   "target_residual_mas": 14.132522607190715,
   "target_residual_vec_mas": [
    4.938556022517387,
    -13.241558052405082
   ],
-  "peer_residual_median_mas": 8.62532181690788,
-  "peer_residual_p95_mas": 20.400368422250192,
-  "peer_residual_p99_mas": 21.45195642050967,
-  "p95_motion_bound_mas_per_yr": 5.100092105562548,
-  "n_peers_with_larger_residual": 2,
-  "label": "derived"
+  "constant_threshold_mag": 0.03741555691476228,
+  "fade_bound_mag": 0.056123335372143424,
+  "p95_motion_bound_mas_per_yr": 5.100092105562548
  },
  "post_hoc": {
   "dmag_over_reference_sigma": 0.9735789997637609,
+  "dmag_minus_peer_median": -0.03647648554097316,
   "label": "derived (post hoc)"
  },
  "decision": {

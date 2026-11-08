@@ -9,8 +9,10 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   disclosed); `scripts/smacs_epochs_1243.py` reuses `compare_epochs` and the peer selection; `decide` unit-tested.
 - **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): Δm −0.0329 vs σ_peer 0.0187 (15 peers) →
   `constant` (fade bound 0.056 mag); residual 14.13 mas ≤ peer p95 20.40 → `no motion detected` (≤ 5.10 mas/yr).
-  A 2022 transient and a fast brown dwarf are disfavoured; verdict unchanged. Post hoc: 0.97 σ against the
-  bright-reference σ too.
+  A 2022 transient and a fast brown dwarf are disfavoured; verdict unchanged. Post hoc: centred on the peer median
+  |Δm| is 0.0365, still `constant` but by < 0.001 mag (marginal).
+- **Code:** the peer null moved into `epoch_compare.py` (`peer_null`, third use, D-017 addendum 3);
+  `compare_epochs` also returns `reference_dmag_median`.
 - **Failed approach:** none.
 - **Services:** CDS still unreachable (01:08Z, connection reset); #751 still waits. S3 worked.
 - **Handoff:** next: TASKS Next M2 / Later items; #751 when CDS is reachable.

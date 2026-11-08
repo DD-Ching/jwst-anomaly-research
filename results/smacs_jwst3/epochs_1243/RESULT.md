@@ -29,6 +29,10 @@ motion `no motion detected` (≤ peer p95; bound 20.40 mas / 4.0 yr = 5.10 mas/y
   transient open question is answered for F444W.
 - The D-017 tool significance (6.71) is not evidence of motion: for faint compact targets the tool error is
   under-estimated (D-017 addendum 1); the frozen rule uses the peer null.
-- **Post hoc:** the near-threshold variability margin (0.0329 vs 0.0374) does not depend on the peer σ choice: against
-  the bright-reference σ (0.0338, `compare.reference_dmag_sigma`) |Δm| is 0.97 σ (`post_hoc`).
+- **Post hoc (centring):** the frozen rule centres Δm on the bright-reference median. Centred on the peer median
+  instead, |Δm| is 0.0365 (`post_hoc.dmag_minus_peer_median`) against the same 0.0374 threshold: still `constant`, but
+  by under 0.001 mag, so the `constant` verdict is marginal. Against the bright-reference σ (0.0338,
+  `compare.reference_dmag_sigma`) |Δm| is 0.97 σ (`post_hoc`). Either way any change is ≤ 0.06 mag.
+- The contact sheet marks the record position only; a 14 mas residual (about a quarter of an F444W pixel) is not
+  visible by eye, so the sheet checks presence, morphology and the neighbour, not the motion number.
 - **Not tested:** F356W (no 2026 epoch), colour change, sub-5 mas/yr motion.
