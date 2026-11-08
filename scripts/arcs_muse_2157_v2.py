@@ -105,7 +105,7 @@ def gate_m2(z_best: float, contrast: float, z_ref: float) -> bool:
 
 
 def oii_model(lam: np.ndarray, z: float, flux: float, sigma_a: float = OII_SIGMA_A) -> np.ndarray:
-    """[O II] doublet (1:1) flux density on ``lam`` for a total line ``flux`` (density x Angstrom)."""
+    """[O II] doublet (1:1) flux density on ``lam`` for total line ``flux`` (density x A)."""
     out = np.zeros_like(lam, dtype=float)
     for rest in OII:
         c = rest * (1 + z)
