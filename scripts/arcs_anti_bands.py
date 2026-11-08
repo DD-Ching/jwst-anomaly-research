@@ -1,9 +1,10 @@
 """Second-band (F150W, F444W / F410M) shapes of the 3 single-component pooled ``arcs`` anti rows.
 
-Plan (frozen before the run): ``results/arcs/anti-bands/PLAN.md``. Matching, usability and re-classing
-reuse ``scripts/arcs_bands.py`` unchanged; this script adds the band gate, the per-row label and the
-frozen outcome. Catalogues are read from S3 into the cache, their sha256 is recorded, and they are
-deleted after the run (``--keep`` keeps them). Shapes ``observed``; classes and labels ``derived``.
+Plan (frozen before the run): ``results/arcs/anti-bands/PLAN.md``. Matching, usability
+and re-classing reuse ``scripts/arcs_bands.py`` unchanged; this script adds the band gate,
+the per-row label and the frozen outcome. Catalogues are read from S3 into the cache, their
+sha256 is recorded, and they are deleted after the run (``--keep`` keeps them). Shapes
+``observed``; classes and labels ``derived``.
 
     python scripts/arcs_anti_bands.py
 """
@@ -63,7 +64,7 @@ def band_verdict(usable: bool, dpa: float) -> str:
 
 
 def row_label(verdicts: dict[str, str], passed: dict[str, bool]) -> str:
-    """Rule 3: over passing bands, any ``differs`` -> blend_flag; else any ``agree`` -> same_axis."""
+    """Rule 3 (passing bands): ``differs`` -> blend_flag; else any ``agree`` -> same_axis."""
     used = [v for b, v in verdicts.items() if passed.get(b, False)]
     if "differs" in used:
         return "blend_flag"
@@ -110,7 +111,9 @@ def run(out: Path, cache: Path, keep: bool) -> dict:
     per_band = {b: [] for b in BANDS}  # control tables per band
     rows, inputs = {}, {}
     for label, field, model_name, obs, sw, lw in ROWS:
-        stored = Table.read(paths.repo_root() / "results" / "arcs" / field / model_name / "arcs.ecsv")
+        stored = Table.read(
+            paths.repo_root() / "results" / "arcs" / field / model_name / "arcs.ecsv"
+        )
         model, _, _ = lc.load_model(model_name)
         lc.apply_frame_offset(model_name, model)
         rows[label] = {"field": field, "model": model_name, "bands": {}}
@@ -143,6 +146,7 @@ def run(out: Path, cache: Path, keep: bool) -> dict:
                 "e": None if not np.isfinite(r["e_444"]) else round(float(r["e_444"]), 3),
                 "snr": None if not np.isfinite(r["snr_444"]) else round(float(r["snr_444"]), 1),
                 "pa_200": round(float(r["pa_obs"]), 1),
+                "g_min_200": round(float(r["g_min"]), 2),
                 "e_200": round(float(r["ellipticity"]), 3),
             }
     gate = {}

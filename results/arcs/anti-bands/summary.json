@@ -1,0 +1,161 @@
+{
+ "plan": "results/arcs/anti-bands/PLAN.md",
+ "params": {
+  "match_arcsec": 0.3,
+  "min_e": 0.3,
+  "min_snr": 10.0,
+  "aligned_deg": 30.0,
+  "anti_deg": 60.0,
+  "gate_min_rows": 10,
+  "gate_min_frac": 0.8,
+  "agree_deg": 15.0
+ },
+ "inputs_sha256": {
+  "jw02282-o010_t001_nircam_clear-f150w_cat.ecsv": "4bc865aa68a07011332d6633cff9aef8905cc751766402a904da07084bb3d5db",
+  "jw02282-o010_t001_nircam_clear-f444w_cat.ecsv": "3d809af45377aef0ba52c35cc8ff6cae12c6f6581b64a7a0cb4cf767b958b324",
+  "jw06796-o010_t001_nircam_clear-f150w_cat.ecsv": "0e3083ae993dd04955944a6a82a4c5d296a0cfca37a5797c294a93cffc9bd503",
+  "jw06796-o010_t001_nircam_clear-f444w_cat.ecsv": "427ff3e1be8f1995091f77a4f07860cf8b7fd9597d6d3257677fffbc771aff22",
+  "jw05293-o005_t001_nircam_clear-f150w_cat.ecsv": "bb0e1deec67dbd76276a3d35c2b56bb2f2ccea8bc34d712eadca529972071696",
+  "jw05293-o005_t001_nircam_clear-f410m_cat.ecsv": "7e1565266db1d74474755c5dbc27323d529660d5f157e41876cda4b6ebb7976e"
+ },
+ "gate": {
+  "SW": {
+   "per_field": {
+    "whl0137-relics f150w": [
+     9,
+     8
+    ],
+    "rxc0600-relics f150w": [
+     8,
+     8
+    ],
+    "macs0308-relics f150w": [
+     13,
+     13
+    ]
+   },
+   "usable": 30,
+   "stay_aligned": 29,
+   "passes": true,
+   "dpa_median": 1.7,
+   "dpa_p95": 11.6
+  },
+  "LW": {
+   "per_field": {
+    "whl0137-relics f444w": [
+     9,
+     9
+    ],
+    "rxc0600-relics f444w": [
+     10,
+     10
+    ],
+    "macs0308-relics f410m": [
+     9,
+     9
+    ]
+   },
+   "usable": 28,
+   "stay_aligned": 28,
+   "passes": true,
+   "dpa_median": 1.1,
+   "dpa_p95": 7.8
+  }
+ },
+ "rows": {
+  "2194": {
+   "field": "whl0137-relics",
+   "model": "whl0137-relics-lenstool",
+   "bands": {
+    "SW": {
+     "band": "f150w",
+     "status": "anti",
+     "verdict": "agree",
+     "sep_nearest": 0.02,
+     "dpa": 0.2,
+     "e": 0.821,
+     "snr": 81.7,
+     "pa_200": 70.8,
+     "g_min_200": 0.24,
+     "e_200": 0.795
+    },
+    "LW": {
+     "band": "f444w",
+     "status": "anti",
+     "verdict": "agree",
+     "sep_nearest": 0.02,
+     "dpa": 0.1,
+     "e": 0.651,
+     "snr": 99.5,
+     "pa_200": 70.8,
+     "g_min_200": 0.24,
+     "e_200": 0.795
+    }
+   },
+   "label": "same_axis"
+  },
+  "581": {
+   "field": "rxc0600-relics",
+   "model": "rxc0600-relics-glafic",
+   "bands": {
+    "SW": {
+     "band": "f150w",
+     "status": "anti",
+     "verdict": "agree",
+     "sep_nearest": 0.03,
+     "dpa": 0.1,
+     "e": 0.691,
+     "snr": 417.7,
+     "pa_200": 30.6,
+     "g_min_200": 0.39,
+     "e_200": 0.688
+    },
+    "LW": {
+     "band": "f444w",
+     "status": "anti",
+     "verdict": "agree",
+     "sep_nearest": 0.02,
+     "dpa": 0.3,
+     "e": 0.631,
+     "snr": 618.7,
+     "pa_200": 30.6,
+     "g_min_200": 0.39,
+     "e_200": 0.688
+    }
+   },
+   "label": "same_axis"
+  },
+  "2157": {
+   "field": "macs0308-relics",
+   "model": "macs0308-relics-glafic",
+   "bands": {
+    "SW": {
+     "band": "f150w",
+     "status": "anti",
+     "verdict": "agree",
+     "sep_nearest": 0.07,
+     "dpa": 4.4,
+     "e": 0.487,
+     "snr": 285.3,
+     "pa_200": 176.4,
+     "g_min_200": 0.64,
+     "e_200": 0.531
+    },
+    "LW": {
+     "band": "f410m",
+     "status": "anti",
+     "verdict": "agree",
+     "sep_nearest": 0.06,
+     "dpa": 3.7,
+     "e": 0.481,
+     "snr": 173.3,
+     "pa_200": 176.4,
+     "g_min_200": 0.64,
+     "e_200": 0.531
+    }
+   },
+   "label": "same_axis"
+  }
+ },
+ "outcome": "blend veto passed; the rows stay open (not a lensing test)"
+}
