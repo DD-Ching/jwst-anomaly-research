@@ -58,6 +58,17 @@ def knots() -> Table:
     return out
 
 
+def release_mjd(v) -> float | None:
+    """CAOM ``t_obs_release`` as a float MJD, or None when masked, empty or not finite."""
+    if v is None or np.ma.is_masked(v):
+        return None
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return f if np.isfinite(f) else None
+
+
 def footprints(k: Table) -> dict[str, list[dict]]:
     from astroquery.mast import Observations
 
@@ -73,7 +84,7 @@ def footprints(k: Table) -> dict[str, list[dict]]:
         progs: dict[str, dict] = {}
         for x in o:
             p = str(x["proposal_id"])
-            rel = float(x["t_obs_release"]) if np.isfinite(x["t_obs_release"]) else None
+            rel = release_mjd(x["t_obs_release"])
             d = progs.setdefault(
                 p, {"programme": p, "n_rows": 0, "planned": True, "release_min": None}
             )
@@ -95,18 +106,22 @@ def dja_path(arg: str | None) -> tuple[Path, Path | None, dict]:
     if arg:
         return Path(arg), None, {"source": str(arg)}
     tmp = Path(tempfile.mkdtemp(prefix="dja46_"))
-    gz = tmp / m6.TABLE["name"]
-    with urllib.request.urlopen(m6.TABLE["url"], timeout=600) as r, open(gz, "wb") as fh:
-        seen = {
-            "last_modified": r.headers.get("Last-Modified"),
-            "bytes": int(r.headers.get("Content-Length") or 0),
-        }
-        shutil.copyfileobj(r, fh)
-    seen["accessed"] = Time.now().iso[:10]
-    csv = tmp / "table.csv"
-    with gzip.open(gz, "rb") as fi, open(csv, "wb") as fo:
-        shutil.copyfileobj(fi, fo)
-    gz.unlink()
+    try:
+        gz = tmp / m6.TABLE["name"]
+        with urllib.request.urlopen(m6.TABLE["url"], timeout=600) as r, open(gz, "wb") as fh:
+            seen = {
+                "last_modified": r.headers.get("Last-Modified"),
+                "bytes": int(r.headers.get("Content-Length") or 0),
+            }
+            shutil.copyfileobj(r, fh)
+        seen["accessed"] = Time.now().iso[:10]
+        csv = tmp / "table.csv"
+        with gzip.open(gz, "rb") as fi, open(csv, "wb") as fo:
+            shutil.copyfileobj(fi, fo)
+        gz.unlink()
+    except BaseException:
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise
     return csv, tmp, seen
 
 

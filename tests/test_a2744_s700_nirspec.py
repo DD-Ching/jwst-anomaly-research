@@ -25,3 +25,13 @@ def test_decide_none():
 
 def test_ends_disjoint():
     assert not set(m.END_A) & set(m.END_B)
+
+
+def test_release_mjd_masked_and_empty():
+    import numpy as np
+
+    assert m.release_mjd(np.ma.masked) is None
+    assert m.release_mjd(None) is None
+    assert m.release_mjd("") is None
+    assert m.release_mjd(float("nan")) is None
+    assert m.release_mjd(61000.5) == 61000.5
