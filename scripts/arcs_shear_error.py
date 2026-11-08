@@ -56,7 +56,8 @@ RXC = {
     "row": 581,
     "run": "rxc0600-relics/rxc0600-relics-glafic/arcs.ecsv",
     "z_lens": 0.43,
-    "range": "rxc0600m20/models/lenstool/range/hlsp_relics_model_model_rxc0600m20_lenstool-map{:03d}_v1",
+    "range": "rxc0600m20/models/lenstool/range/"
+    "hlsp_relics_model_model_rxc0600m20_lenstool-map{:03d}_v1",
 }
 
 
@@ -196,7 +197,12 @@ def run_whl(cache: Path) -> dict:
             "row": _rec(reclass(model, row)),
         }
     used = [p["row"]["class"] for p in per.values() if p["map_gate"] and p["control_gate"]]
-    return {"label": WHL["row"], "models": per, "label_rule3": models_label(used)}
+    return {
+        "label": WHL["row"],
+        "deciding_run_row": _rec(row),
+        "models": per,
+        "label_rule3": models_label(used),
+    }
 
 
 def run_rxc(cache: Path) -> dict:
@@ -206,7 +212,10 @@ def run_rxc(cache: Path) -> dict:
         with_k = i in RANGE_GATE_MAPS
         model, shas, check = build(RXC["range"].format(i), RXC["z_lens"], cache, with_k)
         if with_k:
-            gates[f"map{i:03d}"] = {"kappa_check": check, "passes": map_gate(check["median_rel_diff"])}
+            gates[f"map{i:03d}"] = {
+                "kappa_check": check,
+                "passes": map_gate(check["median_rel_diff"]),
+            }
         rets.append(retention(list(reclass(model, ctrl)["orientation_class"])))
         rec = _rec(reclass(model, row))
         rec["map"] = i
@@ -219,6 +228,7 @@ def run_rxc(cache: Path) -> dict:
     pct = lambda k: [round(float(v), 3) for v in np.percentile([r[k] for r in real], (16, 50, 84))]  # noqa: E731
     return {
         "label": RXC["row"],
+        "deciding_run_row": _rec(row),
         "map_gates": gates,
         "control_n": len(ctrl),
         "control_retention_median": round(r_med, 3),
