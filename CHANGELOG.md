@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` RXC J0600 581: the GLAFIC v3 model treats it as a cluster member (D-024 addendum 19)
+- **Question:** does GLAFIC's galaxy-scale κ peak at 581 (addendum 18, post hoc) mean the model treats 581 as a
+  member? Plan frozen first (`results/arcs/kappa-members-581/PLAN.md`); peak and gate functions unit-tested before the run.
+- **Result** (`RESULT.md`, `summary.json`): on 116 NED spectroscopic galaxies a κ peak marks members (recall 0.854
+  GLAFIC / 0.805 Lenstool of 41) and no background galaxy (0 / 60): gate passes. GLAFIC has a peak on 581 → `member
+  (model input)`; Lenstool has none. 581's GLAFIC `anti` row is not a lensing residual; only Lenstool treats it as an
+  arc. Looked at `kappa_581.png`. No flag, no candidate.
+- **Failed approach:** none. **Services:** archive.stsci.edu and NED TAP work (proxy + certifi bundle); CDS still
+  resets (23:08Z); #751 waits.
+- **Handoff:** 581 now hinges on membership (spectroscopy); weight it as a likely member in any pooled anti tally.
+  2157 needs deeper spectroscopy or a JWST grism.
+
 ## 2026-11-08: `arcs` RXC J0600 581 under the GLAFIC v3 realisations: `undetermined`, the 0.4″ grid fails V2 (D-024 addendum 18)
 - **Question:** is 581's `anti` class robust to the GLAFIC model's own statistical error? Addendum 13 said GLAFIC
   had no realisations; the RELICS listing shows 99 (`glafic/v3/range/`, 0.4″ px). Plan frozen and committed first
