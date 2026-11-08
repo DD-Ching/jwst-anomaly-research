@@ -1752,6 +1752,41 @@ def forced_check(
     }
 
 
+COPY_RMS_FACTOR = 1.75  # model copy: within this x the image-plane rms (D-041; ASSUMPTION)
+COPY_CLASSES = ("absent", "confused")  # forced classes the copy rule can explain
+
+
+def model_copies(
+    table: Table,
+    images: Table,
+    unpredicted: list[str],
+    rms_arcsec: float,
+    factor: float = COPY_RMS_FACTOR,
+    detected: set[str] | None = None,
+) -> list[str]:
+    """D-041 model-copy rule, per row of a forced-checked ``table``: the image id of the nearest
+    catalogued, unpredicted image of the row's own system within ``factor`` x ``rms_arcsec``
+    when the row's ``forced_class`` is in ``COPY_CLASSES``, else ``""``. Such a row is the model's
+    copy of that image, not a missing counter-image. ``detected`` (image ids with S/N >= 5) applies
+    D-041's detection condition; ``None`` applies the positional condition only."""
+    unpred = set(unpredicted) if detected is None else set(unpredicted) & set(detected)
+    keep = np.isin(np.asarray(images["image_id"]).astype(str), sorted(unpred))
+    cand = images[keep]
+    csys = np.asarray(cand["system"]).astype(str)
+    cc = SkyCoord(cand["ra"], cand["dec"], unit="deg") if len(cand) else None
+    limit = factor * rms_arcsec
+    out = []
+    for row in table:
+        sel = csys == str(row["system"])
+        if row["forced_class"] not in COPY_CLASSES or not sel.any():
+            out.append("")
+            continue
+        sep = SkyCoord(row["ra"], row["dec"], unit="deg").separation(cc[sel]).arcsec
+        j = int(np.argmin(sep))
+        out.append(str(cand["image_id"][sel][j]) if sep[j] <= limit else "")
+    return out
+
+
 def image_stamper(uri: str, half_arcsec: float = 1.5):
     """``stamp(ra, dec)`` reading SCI/ERR sections of an ``_i2d`` (local path or S3 by byte range).
 

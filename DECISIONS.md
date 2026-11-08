@@ -3429,6 +3429,17 @@ drop to 4 (plus the 2 system-65 flux-ratio flags, which do not depend on the rad
   on the 7 inside the maps). CATS on the same images: 2.77″. `results/lens_consistency/macs0717_models/RESULT.md`.
 - **Revisit if** a forced row lies outside Sharon's footprint, or a JWST-era MACS0717 model is released.
 
+**Addendum 2026-11-08 (model-copy rule as a function).**
+- **Decision.** `lens_consistency.model_copies` computes the copy rule (same system, unpredicted catalogued image,
+  ≤ 1.75 × rms; nearest wins; detection condition optional). Gate G on the stored MACS0717 table (rms 3.2117″
+  recomputed) fails as frozen: `confused` 28 / 28 per system, `absent` 5 vs 3 (rule-only: the system-7 pair).
+  So it is **not** a forced class; it stays a tested diagnostic and the per-row reading stays.
+- **Alternatives rejected.** Adopting it after a post hoc relabelling of the system-7 pair (the hand verdict also
+  blames model position error there, but the frozen gate compares counts).
+- **Evidence.** `results/lens_consistency/model_copy_rule/RESULT.md`, `summary.json`.
+- **Revisit if** a frozen amendment (one-to-one assignment, or the pair rows counted as copies) is gated on a second
+  field, or per-image S/N is stored so the detection condition can be tested.
+
 ## D-042 MACS0416 counter-image and flux-ratio screens: null; CANUCS Lenstool model as second model; two-plane check of foreground deflectors (2026-10-08)
 
 **Decision.** With the image list open (D-040), the MACS0416 `images` and `fluxratio` screens are a null result
