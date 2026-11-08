@@ -1487,6 +1487,8 @@ g = 0); single-source orientation checks are informative only for g ≳ 0.2, as 
 
 **Addendum 11 2026-11-08 (second-band shapes of the 3 single-component anti rows, `scripts/arcs_anti_bands.py`).** Frozen `blend veto passed; the rows stay open (not a lensing test)` (`results/arcs/anti-bands/RESULT.md`): F150W and F444W (F410M for MACS0308) band gates pass (controls 29 / 30 and 28 / 28 stay aligned); 2194, 581 and 2157 keep their F200W axis within 4.4° and stay `anti` in both bands; single objects by eye. A colour blend does not set their axes; band agreement cannot separate intrinsic shape from shear. Revisit if a deblended or PSF-corrected shape, a spectrum, or a model-error estimate at the rows changes their class.
 
+**Addendum 12 2026-11-08 (anti null with an empirical CEERS shape prior, `scripts/arcs_shape_prior.py`).** |ε| resampled from the CEERS F200W pipeline catalogue (`arcs` cuts without the e cut, 1108 sources, rms 0.233 per component) replaces the Gaussian σ_ε 0.26; gate passed (weak pool B 9 vs 7.42, P 0.654; isotropy 0.3317). Frozen `excess persists under the empirical prior` (`results/arcs/shape-prior/RESULT.md`): pooled B 6 vs 1.392, P 0.0031 (A 10 vs 1.934; S1063 4 vs 0.341). Post hoc, larger prior sources are more elongated (≥ 6 px: rms 0.266, B 6 vs 2.352, P 0.033). A thin Gaussian tail does not make the excess; the Gaussian null stays in use. Shape noise only: addendum 9's clump-aware expectation still explains the pooled count. Revisit if a multi-field or size- and redshift-matched prior is built.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

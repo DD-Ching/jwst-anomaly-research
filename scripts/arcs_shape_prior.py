@@ -1,8 +1,9 @@
 """`arcs` anti null with an empirical blank-field shape prior (exploratory).
 
-Plan: results/arcs/shape-prior/PLAN.md (frozen before the prior was read). The Gaussian σ_ε 0.26 null of
-``lens_consistency.anti_probability`` is replaced by |ε| resampled from the CEERS F200W pipeline catalogue
-(same cuts as the `arcs` runs except the ellipticity cut), with uniform phases (ASSUMPTION). The
+Plan: results/arcs/shape-prior/PLAN.md (frozen before the prior was read). The Gaussian σ_ε 0.26
+null of ``lens_consistency.anti_probability`` is replaced by |ε| resampled from the CEERS F200W
+pipeline catalogue (same cuts as the `arcs` runs except the ellipticity cut), with uniform phases
+(ASSUMPTION). Post hoc (``posthoc``): the same with the prior restricted to larger sources. The
 lensing map, the e ≥ 0.5 and 60° anti cuts and the g_min rounding are those of ``anti_probability``.
 The catalogue is read from S3, pinned by sha256 in ``data/manifests/reference_sample.ecsv``, and
 deleted after reading unless ``--keep``.
@@ -58,6 +59,10 @@ def prior_eps(shapes: Table, min_semimajor_px: float, min_snr: float) -> np.ndar
     )
     eps = eps_from_e(np.asarray(shapes["ellipticity"], float)[sel])
     return eps[(eps >= 0) & (eps < 0.95)]
+
+
+# post hoc (not in the plan): prior subsets by size; the strong rows are larger (median 6.1 px)
+POSTHOC_MIN_SEMIMAJOR = (4.0, 6.0)
 
 
 def p_anti_emp(
@@ -122,6 +127,7 @@ def main() -> None:
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     eps = prior_eps(shapes, float(meta["min_semimajor_px"]), float(meta["min_snr"]))
+    eps_sub = {m: prior_eps(shapes, m, float(meta["min_snr"])) for m in POSTHOC_MIN_SEMIMAJOR}
 
     @cache
     def pe(g: float) -> float:
@@ -183,6 +189,29 @@ def main() -> None:
             "prior_frac_eps_ge_row": float(np.mean(eps >= e_row)),
         }
 
+    posthoc = {}
+    for m, e_m in eps_sub.items():
+        cache_m: dict[float, float] = {}
+
+        def lam_m(t: Table, e_m=e_m, cache_m=cache_m) -> float:
+            out = 0.0
+            for g in np.asarray(t["g_min"], float):
+                key = round(float(g), 2)
+                if key not in cache_m:
+                    cache_m[key] = p_anti_emp(key, e_m, e_min, anti_deg)
+                out += cache_m[key]
+            return out
+
+        sb, wbm = pool(strong, ap.VARIANTS["B"]), lam_m(wb)
+        lb = lam_m(sb)
+        posthoc[f"semimajor_ge_{m:g}px"] = {
+            "prior_n": int(len(e_m)),
+            "eps_rms_per_component": float(np.sqrt(np.mean(e_m**2) / 2)),
+            "weak_B_expected": wbm,
+            "weak_B_p_two_sided": nc.two_sided_p(g_res["weak_anti"], wbm),
+            "strong_B_expected": lb,
+            "strong_B_p": float(poisson.sf(res["B"]["anti"] - 1, lb)),
+        }
     gx = np.random.default_rng(SEED).normal(0.0, nc.SIGMA0, (2, N_DRAW))
     gauss_frac = float(np.mean(np.hypot(gx[0], gx[1]) >= 1 / 3))
     summary = {
@@ -212,6 +241,7 @@ def main() -> None:
         "gate": g_res,
         "strong": res,
         "open_rows": rows_out,
+        "posthoc": posthoc,
         "outcome": outcome(g_res["passes"], res["B"]["p_emp"]),
     }
     OUT.mkdir(parents=True, exist_ok=True)
