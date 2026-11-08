@@ -28,6 +28,7 @@ import arcs_bands as ab  # noqa: E402
 import arcs_null_calibration as nc  # noqa: E402
 import arcs_pooled as ap  # noqa: E402
 
+from jwst_anomaly import paths as paths_mod  # noqa: E402
 from jwst_anomaly.photometry import fetch_catalog  # noqa: E402
 
 lc = ap.lc
@@ -73,16 +74,8 @@ def p_anti_emp(
     n: int = N_DRAW,
     seed: int = SEED,
 ) -> float:
-    """``anti_probability`` with |ε| resampled from ``eps`` and uniform phases."""
-    rng = np.random.default_rng(seed)
-    mod = rng.choice(np.asarray(eps, float), n, replace=True)
-    es = mod * np.exp(1j * rng.uniform(0.0, 2 * np.pi, n))
-    g = float(g)
-    eo = (es + g) / (1 + g * es) if abs(g) <= 1 else (1 + g * np.conj(es)) / (np.conj(es) + g)
-    e_obs = 2 * np.abs(eo) / (1 + np.abs(eo))  # 1 - b/a
-    angle = np.degrees(np.abs(np.angle(eo))) / 2
-    sel = e_obs >= min_ellipticity
-    return float(np.mean(angle[sel] >= anti_deg)) if sel.any() else float("nan")
+    """``anti_probability`` with |ε| resampled from ``eps``, uniform phases, same lensing map."""
+    return lc.anti_probability(g, 0.0, min_ellipticity, anti_deg, n, seed, eps_samples=eps)
 
 
 def gate(weak_k: int, weak_lam: float, p_iso: float) -> dict:
@@ -122,54 +115,54 @@ def main() -> None:
     try:
         path = fetch_catalog(ab.s3_url(PRIOR_FILE), sha, cache_dir=tmp)
         shapes = lc.load_shapes(path)
-        if args.keep:
-            shutil.copy(path, OUT / path.name)
+        if args.keep:  # into the gitignored data cache, never into results/
+            keep = paths_mod.cache_dir() / "external"
+            keep.mkdir(parents=True, exist_ok=True)
+            shutil.copy(path, keep / path.name)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
-    eps = prior_eps(shapes, float(meta["min_semimajor_px"]), float(meta["min_snr"]))
-    eps_sub = {m: prior_eps(shapes, m, float(meta["min_snr"])) for m in POSTHOC_MIN_SEMIMAJOR}
+    priors = {"frozen": prior_eps(shapes, float(meta["min_semimajor_px"]), float(meta["min_snr"]))}
+    for m in POSTHOC_MIN_SEMIMAJOR:
+        priors[f"semimajor_ge_{m:g}px"] = prior_eps(shapes, m, float(meta["min_snr"]))
+    eps = priors["frozen"]
 
     @cache
-    def pe(g: float) -> float:
-        return p_anti_emp(g, eps, e_min, anti_deg)
+    def pe(prior: str, g: float) -> float:
+        return p_anti_emp(g, priors[prior], e_min, anti_deg)
 
-    def lam(t: Table) -> float:
-        return float(sum(pe(round(float(g), 2)) for g in np.asarray(t["g_min"], float)))
+    def lam(t: Table, prior: str = "frozen") -> float:
+        return float(sum(pe(prior, round(float(g), 2)) for g in np.asarray(t["g_min"], float)))
+
+    def tally(t: Table, prior: str = "frozen") -> dict:
+        k, lam_e = int(ap.anti_mask(t).sum()), lam(t, prior)
+        return {
+            "n": len(t),
+            "anti": k,
+            "expected_emp": lam_e,
+            "p_emp": float(poisson.sf(k - 1, lam_e)),
+        }
 
     weak = {f: nc.rows(q, strong=False) for f, q in paths.items()}
     strong = {f: nc.rows(q, strong=True) for f, q in paths.items()}
 
     def pool(tabs: dict[str, Table], fields: tuple[str, ...]) -> Table:
         return vstack(
-            [tabs[f]["label", "g_min", "orientation_class"] for f in fields],
+            [tabs[f]["label", "g_min", "orientation_class", "semimajor_px"] for f in fields],
             metadata_conflicts="silent",
         )
 
     wb = pool(weak, ap.VARIANTS["B"])
-    g_res = gate(int(ap.anti_mask(wb).sum()), lam(wb), pe(0.0))
+    g_res = gate(int(ap.anti_mask(wb).sum()), lam(wb), pe("frozen", 0.0))
 
     res = {}
     for v, fields in ap.VARIANTS.items():
         t = pool(strong, fields)
-        k, lam_e = int(ap.anti_mask(t).sum()), lam(t)
-        lam_g = float(nc.p_anti(t, nc.SIGMA0, e_min, anti_deg).sum())
-        res[v] = {
-            "n": len(t),
-            "anti": k,
-            "expected_emp": lam_e,
-            "p_emp": float(poisson.sf(k - 1, lam_e)),
-            "expected_gauss_0.26": lam_g,
-        }
-    s = strong["S1063"]
-    k = int(ap.anti_mask(s).sum())
-    res["S1063"] = {
-        "n": len(s),
-        "anti": k,
-        "expected_emp": lam(s),
-        "p_emp": float(poisson.sf(k - 1, lam(s))),
-    }
+        res[v] = tally(t)
+        res[v]["expected_gauss_0.26"] = float(nc.p_anti(t, nc.SIGMA0, e_min, anti_deg).sum())
+    res["S1063"] = tally(strong["S1063"])
     weak_a = pool(weak, ap.VARIANTS["A"])
     res["weak_A"] = {"anti": int(ap.anti_mask(weak_a).sum()), "expected_emp": lam(weak_a)}
+    strong_b = pool(strong, ap.VARIANTS["B"])
 
     rows_out = {}
     for f, label in OPEN_ROWS.items():
@@ -184,36 +177,28 @@ def main() -> None:
             "g_min": g,
             "ellipticity": float(r["ellipticity"]),
             "eps": e_row,
-            "p_anti_emp": pe(g),
+            "p_anti_emp": pe("frozen", g),
             "p_anti_gauss": ap._p_anti(g, nc.SIGMA0, e_min, anti_deg),
             "prior_frac_eps_ge_row": float(np.mean(eps >= e_row)),
         }
 
-    posthoc = {}
-    for m, e_m in eps_sub.items():
-        cache_m: dict[float, float] = {}
-
-        def lam_m(t: Table, e_m=e_m, cache_m=cache_m) -> float:
-            out = 0.0
-            for g in np.asarray(t["g_min"], float):
-                key = round(float(g), 2)
-                if key not in cache_m:
-                    cache_m[key] = p_anti_emp(key, e_m, e_min, anti_deg)
-                out += cache_m[key]
-            return out
-
-        sb, wbm = pool(strong, ap.VARIANTS["B"]), lam_m(wb)
-        lb = lam_m(sb)
-        posthoc[f"semimajor_ge_{m:g}px"] = {
-            "prior_n": int(len(e_m)),
-            "eps_rms_per_component": float(np.sqrt(np.mean(e_m**2) / 2)),
+    posthoc = {"strong_B_semimajor_px_median": float(np.median(strong_b["semimajor_px"]))}
+    for name in priors:
+        if name == "frozen":
+            continue
+        tb, wbm = tally(strong_b, name), lam(wb, name)
+        posthoc[name] = {
+            "prior_n": int(len(priors[name])),
+            "eps_rms_per_component": float(np.sqrt(np.mean(priors[name] ** 2) / 2)),
             "weak_B_expected": wbm,
             "weak_B_p_two_sided": nc.two_sided_p(g_res["weak_anti"], wbm),
-            "strong_B_expected": lb,
-            "strong_B_p": float(poisson.sf(res["B"]["anti"] - 1, lb)),
+            "strong_B_expected": tb["expected_emp"],
+            "strong_B_p": tb["p_emp"],
         }
+    # the Gaussian null's own stream (|ε| < 0.95 kept, as `anti_probability`)
     gx = np.random.default_rng(SEED).normal(0.0, nc.SIGMA0, (2, N_DRAW))
-    gauss_frac = float(np.mean(np.hypot(gx[0], gx[1]) >= 1 / 3))
+    gmod = np.hypot(gx[0], gx[1])
+    gauss_frac = float(np.mean(gmod[gmod < 0.95] >= 1 / 3))
     summary = {
         "plan": "results/arcs/shape-prior/PLAN.md",
         "inputs_sha256": {PRIOR_FILE: sha},

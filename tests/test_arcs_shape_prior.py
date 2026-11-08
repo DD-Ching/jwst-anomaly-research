@@ -37,12 +37,21 @@ def test_p_anti_isotropic_at_zero_shear():
 
 
 def test_p_anti_matches_gaussian_code():
-    """With a Gaussian-drawn prior the empirical code reproduces `anti_probability`."""
+    """With a Gaussian-drawn prior the empirical path reproduces the Gaussian path (relative)."""
     rng = np.random.default_rng(3)
     eps = np.hypot(rng.normal(0, 0.26, 400_000), rng.normal(0, 0.26, 400_000))
     eps = eps[eps < 0.95]
-    for g in (0.2, 0.5, 1.5):
-        assert sp.p_anti_emp(g, eps) == pytest.approx(sp.lc.anti_probability(g), abs=0.01)
+    for g in (0.2, 0.5, 3.0):  # P 0.07, 0.003, 0.02: enough counts for a relative check
+        ref = sp.lc.anti_probability(g, n=1_000_000)
+        assert ref > 0
+        assert sp.p_anti_emp(g, eps, n=1_000_000) == pytest.approx(ref, rel=0.15)
+
+
+def test_p_anti_inside_critical_curve_branch():
+    """|g| > 1 uses the inverted map, under which g and 1/g give the same e_obs distribution."""
+    eps = np.random.default_rng(2).uniform(0.0, 0.9, 5000)
+    assert sp.p_anti_emp(2.0, eps) == pytest.approx(sp.p_anti_emp(0.5, eps), rel=1e-9)
+    assert sp.p_anti_emp(2.0, eps) != pytest.approx(sp.p_anti_emp(0.2, eps), rel=0.1)
 
 
 def test_p_anti_falls_with_shear():

@@ -906,15 +906,22 @@ def anti_probability(
     anti_deg: float = 60.0,
     n: int = 200_000,
     seed: int = 1,
+    eps_samples: np.ndarray | None = None,
 ) -> float:
     """P(observed axis >= ``anti_deg`` from the shear | observed 1 - b/a >= ``min_ellipticity``).
 
     Ordinary null for the ``anti`` class: Gaussian intrinsic complex ellipticity
     (a - b)/(a + b) with ``sigma_eps`` per component (ASSUMPTION; no PSF, flexion or blending),
     lensed by reduced shear ``g`` (Seitz & Schneider 1997; |g| > 1 inside the critical curve).
+    With ``eps_samples`` (|ε| values, e.g. an empirical prior) the moduli are resampled from it
+    with uniform phases instead, and ``sigma_eps`` is ignored.
     """
     rng = np.random.default_rng(seed)
-    es = rng.normal(0.0, sigma_eps, n) + 1j * rng.normal(0.0, sigma_eps, n)
+    if eps_samples is None:
+        es = rng.normal(0.0, sigma_eps, n) + 1j * rng.normal(0.0, sigma_eps, n)
+    else:
+        mod = rng.choice(np.asarray(eps_samples, float), n, replace=True)
+        es = mod * np.exp(1j * rng.uniform(0.0, 2 * np.pi, n))
     es = es[np.abs(es) < 0.95]
     g = float(g)
     eo = (es + g) / (1 + g * es) if abs(g) <= 1 else (1 + g * np.conj(es)) / (np.conj(es) + g)

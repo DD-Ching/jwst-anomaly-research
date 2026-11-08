@@ -19,7 +19,7 @@
   "eps_median": 0.2794503723243488,
   "eps_rms_per_component": 0.23282235955826683,
   "frac_e_ge_0.5": 0.37093862815884476,
-  "gauss_0.26_frac_e_ge_0.5": 0.437085,
+  "gauss_0.26_frac_e_ge_0.5": 0.4363353259835581,
   "eps_quantiles": {
    "0.5": 0.2794503723243488,
    "0.75": 0.3880661469325022,
@@ -88,21 +88,22 @@
   }
  },
  "posthoc": {
+  "strong_B_semimajor_px_median": 6.140732342701769,
   "semimajor_ge_4px": {
    "prior_n": 661,
    "eps_rms_per_component": 0.2468288954096318,
-   "weak_B_expected": 8.257554099510198,
-   "weak_B_p_two_sided": 0.8867098066738694,
-   "strong_B_expected": 1.8836950658436293,
-   "strong_B_p": 0.012722635764551994
+   "weak_B_expected": 8.257554099510195,
+   "weak_B_p_two_sided": 0.8867098066738691,
+   "strong_B_expected": 1.8836950658436298,
+   "strong_B_p": 0.01272263576455201
   },
   "semimajor_ge_6px": {
    "prior_n": 359,
    "eps_rms_per_component": 0.2661440172600976,
-   "weak_B_expected": 8.869556736876165,
+   "weak_B_expected": 8.869556736876161,
    "weak_B_p_two_sided": 1.0,
-   "strong_B_expected": 2.3517561396280744,
-   "strong_B_p": 0.03284395431312621
+   "strong_B_expected": 2.3517561396280753,
+   "strong_B_p": 0.03284395431312625
   }
  },
  "outcome": "excess persists under the empirical prior"

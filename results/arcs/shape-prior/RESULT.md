@@ -2,7 +2,7 @@
 
 Plan: `PLAN.md` (committed before the prior was read). Script: `scripts/arcs_shape_prior.py`; rule functions
 unit-tested before the run (`tests/test_arcs_shape_prior.py`, including a check that a Gaussian-drawn prior
-reproduces `lens_consistency.anti_probability` to 0.01 at g 0.2, 0.5, 1.5). Every number below is in
+gives the Gaussian path's P(anti) to 15 % relative at g 0.2, 0.5, 3.0, and g ↔ 1/g symmetry checks the |g| > 1 branch). The empirical prior enters through `anti_probability(eps_samples=...)`, so both nulls share one lensing map. Every number below is in
 `summary.json`. Input: CEERS `jw01345-o001_t021_nircam_clear-f200w_cat.ecsv` (jwst 3.0.0) from `stpubdata` S3,
 pinned by sha256 in `data/manifests/reference_sample.ecsv`, deleted after reading. Shapes `observed`; prior,
 expectations and labels `derived`; thresholds ASSUMPTIONs (`summary.json` `params`). Figure `prior.png`
@@ -16,7 +16,9 @@ expectations and labels `derived`; thresholds ASSUMPTIONs (`summary.json` `param
 | CEERS, semimajor ≥ 4 px (post hoc) | 661 | 0.247 | 8.26, P 0.89 | 1.884, P 0.013 | — | — |
 | CEERS, semimajor ≥ 6 px (post hoc) | 359 | 0.266 | 8.87, P 1.0 | 2.352, P 0.033 | — | — |
 
-Gate (rule 3): weak-shear pool B two-sided P 0.654 ≥ 0.05 and P(anti | g = 0) 0.3317 (1/3 ± 0.01): passes.
+Gate (rule 3): weak-shear pool B two-sided P 0.654 ≥ 0.05 and P(anti | g = 0) 0.3317 (1/3 ± 0.01): passes. Post hoc
+(review): the isotropy half holds by construction with uniform phases, so it is a code sanity check only; the gate
+rests on the weak rows.
 Rule 4: pooled B P 0.0031 < 0.05.
 
 ## The 3 open single-component rows (descriptive, not a label)
@@ -28,12 +30,11 @@ Rule 4: pooled B P 0.0031 < 0.05.
 
 ## Reading (narrowest statement)
 - The CEERS F200W pipeline shapes under the `arcs` cuts have a thinner high-|ε| tail than the Gaussian σ_ε 0.26 null
-  (fraction with e ≥ 0.5: 0.371 vs 0.437), so the empirical prior lowers the expected anti counts. A thin Gaussian
-  tail does not produce the pooled anti excess or the S1063 count; the Gaussian null is, if anything, conservative
-  against them for this sample.
-- Post hoc, larger prior sources are more elongated (rms 0.247 at ≥ 4 px, 0.266 at ≥ 6 px; the strong rows' median
-  semimajor is 6.1 px, not stored); at ≥ 6 px the expectation comes back to the Gaussian one (2.352 vs 2.273) and
-  the excess stays at P 0.033. Size matching is approximate: the strong rows are magnified.
+  (fraction with e ≥ 0.5: 0.371 vs 0.436), so the frozen empirical prior lowers the expected anti counts. A
+  Gaussian tail that is too thin does not produce the pooled anti excess or the S1063 count under this prior.
+- Post hoc, larger prior sources are more elongated (rms 0.247 at ≥ 4 px, 0.266 at ≥ 6 px; the strong pool B rows'
+  median semimajor is 6.1 px); at ≥ 6 px the expectation is slightly above the Gaussian one (2.352 vs 2.273), so the
+  Gaussian null is not conservative for size-matched sources, and the excess stays at P 0.033. Size matching is approximate: the strong rows are magnified.
 - This tests shape noise only. Addendum 9's clump-aware expectation (5.538, P 0.484; `../pooled-census/summary.json`) still explains the pooled count;
   the 3 single-component rows stay open. No candidate; not a lensing anomaly claim.
 
