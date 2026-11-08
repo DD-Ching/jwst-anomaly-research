@@ -1479,6 +1479,8 @@ frozen rule `inconsistent` below 0.01 and `no_power` for g < 0.05 (ASSUMPTIONs).
 P 0.4661, `consistent` (`results/smacs_1096_shear/RESULT.md`). At g ≈ 0.13 the test has little power (P 0.7176 at
 g = 0); single-source orientation checks are informative only for g ≳ 0.2, as the selection assumes.
 
+**Addendum 8 2026-11-08 (pooled anti rows under second models, `scripts/arcs_model_swap.py`).** The six variant-B anti rows of `results/arcs/pooled-tally/` with a stored second run of their field: control 66 / 76 aligned rows stay aligned (0.868 ≥ 0.70); 4 / 6 anti rows stay anti, frozen label `mixed` (`results/arcs/anti-model-swap/RESULT.md`). The 4 rows outside MACS0417 all persist; MACS0417 1993 (g_min 3.69) and 2341 do not. With the second runs swapped in, variant B is 13 vs 2.63 (P 4.1 × 10⁻⁶). Model choice does not explain the pooled excess; blends / clump pairs, photo-z contamination and σ_ε at strong shear remain untested. Revisit if a JWST-era second model of MACS1423 or another pooled field becomes public.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.

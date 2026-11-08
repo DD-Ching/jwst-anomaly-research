@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` pooled anti rows under second published models: `mixed`, 4 / 6 persist (D-024 addendum 8)
+- **Question:** is the pooled anti excess (`results/arcs/pooled-tally/`, variant B 6 vs 2.27) a deciding-model
+  shear-direction error? Plan first (`results/arcs/anti-model-swap/PLAN.md`); `scripts/arcs_model_swap.py`, rule
+  functions unit-tested before the run; stored tables only.
+- **Result** (`RESULT.md`, `summary.json`): control 66 / 76 aligned rows stay aligned (0.868); 4 / 6 anti rows stay
+  anti → frozen `mixed`. WHL0137 2194, RXC J0600 581, MACS0308 2157 and MACS0417 4071 persist; MACS0417 1993
+  (g_min 3.69) and 2341 do not. Secondary: second runs swapped in, variant B 13 vs 2.63 (P 4.1 × 10⁻⁶). Model choice
+  does not explain the excess (with S1063's 4 / 4 in three HFF models). No candidate.
+- **Failed approach:** none. **Services:** LAM atlas API path refused by this session's tool policy (bot-check
+  cookie; not retried); CDS still resets the connection (06:08Z); #751 waits.
+- **Handoff:** next on this line: a blend / clump-pair check of the 10 pooled anti rows (MACS1423 census method),
+  then photo-z contamination; MACS1423 has no second model.
+
 ## 2026-11-08: Two-epoch NIRCam inventory refresh on 34 cluster fields: no new public epoch (D-027 addendum 2026-11-08)
 - **Question:** any NIRCam epoch added or released since the 2026-10-26 / 10-27 inventories? Rule: yes → grid plan
   on the best pair; no → wait for the first `upcoming` release.

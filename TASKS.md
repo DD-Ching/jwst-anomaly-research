@@ -412,7 +412,7 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
      P 0.05 at σ_ε 0.273 / 0.320; S1063 vs a common pooled rate, conditional, P 0.078–0.121, post hoc). ~~Calibrate on
      weak-shear rows~~ done 2026-10-20 (`results/arcs/null-calibration/RESULT.md`: 9 anti vs 11.06 / 9.14, no excess;
      σ̂_ε 0.24 / 0.27, f̂ 0 / 0.06 with wide intervals; frozen label "explains" rests on f̂ only, in substance no power;
-     no further calibration from these tables). Next, optional: VENUS (6882) clusters with
+     no further calibration from these tables). ~~Model swap of the pooled anti rows~~ done 2026-11-08 (`results/arcs/anti-model-swap/RESULT.md`, D-024 addendum 8: `mixed`, 4 / 6 stay anti in a second model, control 0.868; all 4 outside MACS0417 persist; model choice does not explain the excess). Next: blend / clump-pair check of the pooled anti rows (as the MACS1423 census), then photo-z contamination. Next, optional: VENUS (6882) clusters with
      RELICS/CLASH maps (no photo-z yet); Bullet (LAM atlas Lenstool model, JWST 4598) once a photo-z source exists;
    - ~~arc curvature~~ — done (D-024 addenda 5–6): forward-modelled curvature, 5 testable arcs all as predicted (El
      Gordo 2527 explained by its model); critical curves at z_s = 1, 2, 4 still open;
