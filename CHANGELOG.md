@@ -2,6 +2,9 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: (in progress) D-037 diagnostic column `d037_label` in `images --forced-image`
+- Claim; plan: add the repeated-pair rule as a diagnostic column (no class change), unit-test, re-run on stored tables.
+
 ## 2026-11-08: D-037 rule functions on a second field: route fails as frozen (id alias); post hoc gate A passes 6 / 6 on Abell 2744 (D-037 addendum b)
 - **Question:** do `repeated_pair_topology` / `mu_model_dependent` reproduce hand readings off their defining field
   (TASKS Supporting 1, `forced_check`)? Plan first (`results/lens_consistency/d037_rules_a2744/PLAN.md`); offline on
