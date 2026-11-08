@@ -1794,7 +1794,8 @@ def copy_partners(
     table: Table, images: Table, unpredicted: list[str], limit_arcsec: float
 ) -> dict[int, dict[str, float]]:
     """Per ``table`` row index with ``forced_class`` in ``COPY_CLASSES``: the catalogued,
-    unpredicted images of the row's system within ``limit_arcsec``, as ``{image_id: separation_arcsec}``."""
+    unpredicted images of the row's system within ``limit_arcsec``,
+    as ``{image_id: separation_arcsec}``."""
     ids = np.asarray(images["image_id"]).astype(str)
     cand = images[np.isin(ids, sorted(set(map(str, unpredicted))))]
     cid = np.asarray(cand["image_id"]).astype(str)
