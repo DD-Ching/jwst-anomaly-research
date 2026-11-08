@@ -1,0 +1,113 @@
+{
+ "meta": {
+  "old": "results/transients/epoch_inventory/inventory.json",
+  "new": "results/transients/epoch_inventory_refresh/core19/inventory.json",
+  "old_meta": {
+   "queried_mjd": 61338.8499,
+   "radius": "3 arcmin",
+   "n_used_epochs": 96
+  },
+  "new_meta": {
+   "queried_mjd": 61352.2162,
+   "radius": "3 arcmin",
+   "n_used_epochs": 109
+  }
+ },
+ "fields": {
+  "abell2744": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "abell370": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "abells1063": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "bullet": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "elgordo": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs0416": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs0417": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs0647": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs0717": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs1149": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs1423": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs1931": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "ms0451": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "plckg165": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "rxcj0018": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "rxj2129": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "smacs0723": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "spt0615": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "sunrise": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  }
+ }
+}

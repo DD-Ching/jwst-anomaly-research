@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: Two-epoch NIRCam inventory refresh on 34 cluster fields: no new public epoch (D-027 addendum 2026-11-08)
+- **Question:** any NIRCam epoch added or released since the 2026-10-26 / 10-27 inventories? Rule: yes → grid plan
+  on the best pair; no → wait for the first `upcoming` release.
+- **Result** (`results/transients/epoch_inventory_refresh/RESULT.md`, frozen rules re-run unchanged): 0 / 34 fields
+  changed → no new two-epoch input. Next public epochs: Abell 370 9371 o001 2026-12-29, 7345 o101–o104 to
+  2027-01-28 (MJD 61433.2), MACS J0138 8799 o003 2027-01-07.
+- **Failed approach / services:** `mastresolver.stsci.edu` fails TLS from cloud sessions; the inventory scripts fall
+  back to `Mast.Name.Lookup` on `mast.stsci.edu` (4 ext centres move 8.6–28.4″, epoch sets identical). CDS still
+  unreachable (05:08Z, connection reset); #751 waits.
+- **Handoff:** re-run both inventories (`scripts/epoch_inventory_diff.py` against this snapshot) after 2026-12-29;
+  meanwhile TASKS Next M2 / Later items.
+
 ## 2026-11-08: Abell 2744 700.1 vs public NIRSpec MSA coverage: `no new input` (D-036 addendum 2026-11-08)
 - **Question:** 700.1 (UNCOVER 78) was parked until "spectra of both arc ends"; NIRSpec MSA programme 8204 in
   Abell 2744 became public on 2026-11-05. Does any public spectrum now measure the a or b end?

@@ -27,6 +27,7 @@ from epoch_inventory import (  # noqa: E402
     epoch_key,
     filter_name,
     new_pairs,
+    resolve_centre,
     used_epochs,
 )
 
@@ -85,10 +86,10 @@ def used_excluding_inventories(root: Path) -> set[tuple[str, str]]:
 
 def query_field(name: str) -> dict:
     """Resolved centre and level-3 NIRCam image rows (with s_region) of one field."""
-    from astroquery.mast import Mast, Observations
+    from astroquery.mast import Observations
 
     try:
-        c = Mast.resolve_object(name)
+        c = resolve_centre(name)
     except Exception as exc:  # recorded as unresolved, per the plan
         return {"unresolved": f"{type(exc).__name__}: {exc}"[:200]}
     tab = Observations.query_criteria(

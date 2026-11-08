@@ -1,6 +1,8 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import epoch_inventory as ei  # noqa: E402
 
@@ -52,3 +54,10 @@ def test_used_epochs(tmp_path):
     (out / "inventory.json").write_text('{"e": "jw09999-o001"}')
     assert ("09999", "001") in ei.used_epochs(tmp_path)
     assert ("09999", "001") not in ei.used_epochs(tmp_path, exclude=out)
+
+
+def test_parse_name_lookup_first_hit_and_empty():
+    payload = {"resolvedCoordinate": [{"ra": 3.58346, "decl": -30.38828}, {"ra": 0.0, "decl": 0.0}]}
+    assert ei.parse_name_lookup(payload) == (3.58346, -30.38828)
+    with pytest.raises(ValueError):
+        ei.parse_name_lookup({"resolvedCoordinate": []})

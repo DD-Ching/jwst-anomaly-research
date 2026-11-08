@@ -1,0 +1,101 @@
+{
+ "meta": {
+  "old": "results/transients/epoch_inventory_ext/inventory.json",
+  "new": "results/transients/epoch_inventory_refresh/ext15/inventory.json",
+  "old_meta": {
+   "queried_mjd": 61340.0523,
+   "radius": "3 arcmin",
+   "core_radius_arcmin": 1.0,
+   "core_min_arcmin2": 1.0,
+   "n_used_epochs": 101
+  },
+  "new_meta": {
+   "queried_mjd": 61352.2162,
+   "radius": "3 arcmin",
+   "core_radius_arcmin": 1.0,
+   "core_min_arcmin2": 1.0,
+   "n_used_epochs": 109
+  }
+ },
+ "fields": {
+  "macs0138": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "rxj0152": {
+   "added": [],
+   "removed": [],
+   "newly_public": [],
+   "centre_shift_arcsec": 28.43
+  },
+  "macs0358": {
+   "added": [],
+   "removed": [],
+   "newly_public": [],
+   "centre_shift_arcsec": 8.63
+  },
+  "rxcj2211": {
+   "added": [],
+   "removed": [],
+   "newly_public": [],
+   "centre_shift_arcsec": 19.02
+  },
+  "spt0546": {
+   "added": [],
+   "removed": [],
+   "newly_public": [],
+   "centre_shift_arcsec": 10.11
+  },
+  "macs2129": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs1206": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "abell1689": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs0329": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "abell383": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "abell209": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "macs0308": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "sdss1004": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "sdss1029": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  },
+  "sdss2222": {
+   "added": [],
+   "removed": [],
+   "newly_public": []
+  }
+ }
+}

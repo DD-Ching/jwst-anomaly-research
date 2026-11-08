@@ -731,6 +731,9 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   > 0.5″; not built. Revisit for low-latitude fields or epochs > 10 yr after J2016. Identify lenses by name or literature, not only by otype.
 - ~~Cutouts: north-up panels and an option for shared brightness scaling across panels~~ done 2026-11-07 in `viz`
   (`results/viz_north_up/RESULT.md`, D-005 addendum); pipeline configs do not expose them yet (defaults unchanged).
+- Two-epoch inputs: inventory refresh 2026-11-08 found 0 / 34 fields with a new or newly public NIRCam epoch
+  (`results/transients/epoch_inventory_refresh/RESULT.md`, D-027 addendum 2026-11-08). Re-run both inventories and
+  `scripts/epoch_inventory_diff.py` after 2026-12-29 (Abell 370 9371 o001; then 7345 o101–o104, MACS J0138 8799 o003).
 - Second epochs and medium bands: check the galaxy top k against VENUS (6882) and other later programs
   with `scripts/epoch_compare.py` (D-017). Moving sources are stars; variable ones are AGN or transients.
   `f200w_1816` / `f200w_384` done 2026-11-07, undetermined (`results/smacs_jwst3/epochs_1816_384/RESULT.md`,
