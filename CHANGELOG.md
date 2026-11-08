@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: D-037 rule functions on a second field: route fails as frozen (id alias); post hoc gate A passes 6 / 6 on Abell 2744 (D-037 addendum b)
+- **Question:** do `repeated_pair_topology` / `mu_model_dependent` reproduce hand readings off their defining field
+  (TASKS Supporting 1, `forced_check`)? Plan first (`results/lens_consistency/d037_rules_a2744/PLAN.md`); offline on
+  the stored 2026-10-14 Abell 2744 D-041 run (Bergamini+23 and UNCOVER v2.0 forced rows), catalogued positions from
+  Bergamini+23 Table 2 on the CfA VizieR mirror.
+- **Result** (`RESULT.md`, `summary.json`, `summary_post_hoc.json`): frozen route check fails (Table 2 names 46.1a–c
+  `JD1A`–`C`). Post hoc alias from the stored separations: gate A 6 / 6 (UNCOVER 3.1, 34.1 → `model_topology`;
+  Bergamini 700.1 ×2, 18.1, 22.1 → none); unread UNCOVER C200.3 → `model_topology`. μ rule: no positive case here.
+  No flag, no candidate.
+- **Failed approach:** re-running Bergamini `validate`: www.fe.infn.it resets every connection (16:12Z), so its
+  `shared_match` is the recorded list. **Services:** vizier.cfa.harvard.edu works; vizier.cds.unistra.fr still resets.
+- **Handoff:** next on this item: a `d037_label` diagnostic column in `images --forced-image`; radii scaled to the rms
+  stays open; retry fe.infn.it to re-run Bergamini `validate`.
+
 ## 2026-11-08: D-037 repeated-pair and model-dependent-μ rules as functions: gate R passes on MACS1149 (defining field; D-037 addendum)
 - **Question:** do D-037's repeated-pair and model-dependent-μ rules, written as functions, reproduce its hand labels
   (TASKS Supporting 1, `forced_check` item)? Plan first (`results/lens_consistency/d037_rules/PLAN.md`);

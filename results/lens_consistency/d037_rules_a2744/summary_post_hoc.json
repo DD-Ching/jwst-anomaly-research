@@ -1,0 +1,265 @@
+{
+ "provenance": "derived (forced classes: stored 2026-10-14 run; mu: model_prediction)",
+ "inputs": {
+  "run": "../results/lens_consistency/abell2744-uncover2",
+  "images": "<scratch>/berg_table2.tsv",
+  "images_sha256": "e79aa3c7fc336ec7156e6cd5a4049a6ed28d8ffc1840c53cbc04757f95295f10"
+ },
+ "assumptions": {
+  "pair_radius_arcsec": 8.0,
+  "mu_model_factor": 2.0,
+  "mu_second_radius_arcsec": 3.0,
+  "route_pos_arcsec": 0.1
+ },
+ "post_hoc_alias": {
+  "JD1B": "46.1a",
+  "JD1A": "46.1b",
+  "JD1C": "46.1c"
+ },
+ "route_check": {
+  "n_images": 149,
+  "missing_ids": [],
+  "docs_pos_sep_arcsec": {
+   "3.2a": 0.016,
+   "3.2b": 0.024,
+   "34.1a": 0.014,
+   "34.1b": 0.01,
+   "700.1a": 0.014,
+   "700.1b": 0.019
+  },
+  "ok": true
+ },
+ "shared_match": {
+  "uncover2": [
+   "3.1a",
+   "3.1b",
+   "3.2a",
+   "3.2b",
+   "3.3a",
+   "3.3b",
+   "34.1a",
+   "34.1b",
+   "A200.1a",
+   "A200.1b",
+   "B200.2a",
+   "B200.2b",
+   "C200.3a",
+   "C200.3b",
+   "700.1a",
+   "700.1b"
+  ],
+  "bergamini23": [
+   "3.2a",
+   "3.2b",
+   "34.1a",
+   "34.1b",
+   "700.1a",
+   "700.1b"
+  ]
+ },
+ "flag_rows": [
+  {
+   "model": "bergamini23",
+   "system": "18.1",
+   "forced_class": "confused",
+   "radec": [
+    3.588606,
+    -30.396262
+   ],
+   "mu_first": -3.87,
+   "second_sep_arcsec": null,
+   "mu_second_nearest": null,
+   "mu_ratio": null,
+   "shared_pair": "",
+   "mu_model_dependent": null,
+   "labels": []
+  },
+  {
+   "model": "bergamini23",
+   "system": "22.1",
+   "forced_class": "confused",
+   "radec": [
+    3.587388,
+    -30.411633
+   ],
+   "mu_first": 5.41,
+   "second_sep_arcsec": 28.8,
+   "mu_second_nearest": -6.4,
+   "mu_ratio": 1.18,
+   "shared_pair": "",
+   "mu_model_dependent": null,
+   "labels": []
+  },
+  {
+   "model": "bergamini23",
+   "system": "700.1",
+   "forced_class": "absent",
+   "radec": [
+    3.57519,
+    -30.355605
+   ],
+   "mu_first": -91.95,
+   "second_sep_arcsec": 3.56,
+   "mu_second_nearest": 7.86,
+   "mu_ratio": 11.7,
+   "shared_pair": "",
+   "mu_model_dependent": null,
+   "labels": []
+  },
+  {
+   "model": "bergamini23",
+   "system": "700.1",
+   "forced_class": "absent",
+   "radec": [
+    3.578833,
+    -30.353597
+   ],
+   "mu_first": 10.3,
+   "second_sep_arcsec": 12.74,
+   "mu_second_nearest": 8.03,
+   "mu_ratio": 1.28,
+   "shared_pair": "",
+   "mu_model_dependent": null,
+   "labels": []
+  },
+  {
+   "model": "uncover2",
+   "system": "3.1",
+   "forced_class": "absent",
+   "radec": [
+    3.588002,
+    -30.393849
+   ],
+   "mu_first": -59.52,
+   "second_sep_arcsec": null,
+   "mu_second_nearest": null,
+   "mu_ratio": null,
+   "shared_pair": "3.1a/3.1b",
+   "mu_model_dependent": null,
+   "labels": [
+    "model_topology"
+   ]
+  },
+  {
+   "model": "uncover2",
+   "system": "3.3",
+   "forced_class": "confused",
+   "radec": [
+    3.57677,
+    -30.402046
+   ],
+   "mu_first": 3.74,
+   "second_sep_arcsec": 1.52,
+   "mu_second_nearest": 3.44,
+   "mu_ratio": 1.09,
+   "shared_pair": "",
+   "mu_model_dependent": false,
+   "labels": []
+  },
+  {
+   "model": "uncover2",
+   "system": "34.1",
+   "forced_class": "absent",
+   "radec": [
+    3.591856,
+    -30.411307
+   ],
+   "mu_first": 28.18,
+   "second_sep_arcsec": 2.74,
+   "mu_second_nearest": 44.98,
+   "mu_ratio": 1.6,
+   "shared_pair": "34.1a/34.1b",
+   "mu_model_dependent": false,
+   "labels": [
+    "model_topology"
+   ]
+  },
+  {
+   "model": "uncover2",
+   "system": "C200.3",
+   "forced_class": "confused",
+   "radec": [
+    3.556822,
+    -30.374482
+   ],
+   "mu_first": 22.35,
+   "second_sep_arcsec": 15.34,
+   "mu_second_nearest": 9.69,
+   "mu_ratio": 2.31,
+   "shared_pair": "C200.3a/C200.3b",
+   "mu_model_dependent": null,
+   "labels": [
+    "model_topology"
+   ]
+  },
+  {
+   "model": "uncover2",
+   "system": "301.1",
+   "forced_class": "confused",
+   "radec": [
+    3.551638,
+    -30.379717
+   ],
+   "mu_first": 7.8,
+   "second_sep_arcsec": 15.0,
+   "mu_second_nearest": -0.99,
+   "mu_ratio": 7.85,
+   "shared_pair": "",
+   "mu_model_dependent": null,
+   "labels": []
+  }
+ ],
+ "gate_A": {
+  "uncover2:3.1:absent": {
+   "want": [
+    "model_topology"
+   ],
+   "got": [
+    [
+     "model_topology"
+    ]
+   ],
+   "ok": true
+  },
+  "uncover2:34.1:absent": {
+   "want": [
+    "model_topology"
+   ],
+   "got": [
+    [
+     "model_topology"
+    ]
+   ],
+   "ok": true
+  },
+  "bergamini23:700.1:absent": {
+   "want": [],
+   "got": [
+    [],
+    []
+   ],
+   "ok": true
+  },
+  "bergamini23:18.1:confused": {
+   "want": [],
+   "got": [
+    []
+   ],
+   "ok": true
+  },
+  "bergamini23:22.1:confused": {
+   "want": [],
+   "got": [
+    []
+   ],
+   "ok": true
+  },
+  "n_hand_rows": 6,
+  "unread_rows": [
+   "uncover2:3.3:confused []",
+   "uncover2:C200.3:confused ['model_topology']",
+   "uncover2:301.1:confused []"
+  ],
+  "passes": true
+ }
+}

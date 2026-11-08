@@ -1126,3 +1126,30 @@ def test_d037_gate_r_labels():
     rows = [{"system": "1", "radec": [64.0, -24.0], "sharon": {"nearest_extra_mu": 2.0}}]
     assert g.second_model(rows, "1", 64.0 + 0.01 / 3600, -24.0) == {"nearest_extra_mu": 2.0}
     assert g.second_model(rows, "1", 64.0, -24.0 + 0.1 / 3600) == {}
+
+
+def test_d037_gate_a_second_field(tmp_path):
+    spec = importlib.util.spec_from_file_location(
+        "d037_rules_a2744", Path(__file__).parents[1] / "scripts" / "d037_rules_a2744.py"
+    )
+    g = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(g)
+    tsv = tmp_path / "t2.tsv"
+    tsv.write_text(
+        "#comment\nrecno\tID\tRAJ2000\tDEJ2000\n \t \tdeg\tdeg\n--\t--\t--\t--\n"
+        "1\t34.1a  \t003.593414\t-30.410812\n2\tJD1A\t003.5\t-30.4\n"
+    )
+    t = g.read_vizier_tsv(tsv)
+    assert list(t["image_id"]) == ["34.1a", "JD1A"] and list(t["system"]) == ["34.1", "JD1A"]
+    t = g.read_vizier_tsv(tsv, g.JD1_ALIAS)
+    assert list(t["image_id"]) == ["34.1a", "46.1b"] and t["system"][1] == "46.1"
+    rows = []
+    for (model, sys_id, cls), want in g.HAND_A.items():
+        n = 2 if sys_id == "700.1" else 1
+        rows += [{"model": model, "system": sys_id, "forced_class": cls, "labels": want}] * n
+    assert g.gate(rows)["passes"]
+    assert not g.gate(rows[1:])["passes"]  # a hand row missing
+    bad = [dict(rows[0], labels=[])] + rows[1:]
+    assert not g.gate(bad)["passes"]
+    extra = rows + [{"model": "uncover2", "system": "9", "forced_class": "confused", "labels": []}]
+    assert g.gate(extra)["passes"] and g.gate(extra)["unread_rows"] == ["uncover2:9:confused []"]
