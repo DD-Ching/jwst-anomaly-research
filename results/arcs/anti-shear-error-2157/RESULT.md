@@ -32,8 +32,7 @@ Secondary: offset_min 16 / 50 / 84 % 78.9 / 79.1 / 79.2°; g_min 1.189 / 1.247 /
 ## Deviations and limits
 - None from the plan. The strip route (byte ranges, sliced WCS) is new here and was validated by V1 / V2 before use.
 - Zitrin realisation spread is narrow at the row; the published GLAFIC v2 has no realisations here. Both models
-  share HST-era constraints. Membership is still open (no public spec-z, addendum 10); mag 20.61 at z_phot 0.76 is
-  bright for a background source, which a spectrum would settle.
+  share HST-era constraints. Membership is still open (no public spec-z, addendum 10); only a spectrum settles it.
 
 ## Next
 Membership of 581 / 2157 only with a spectrum; a further independent model of MACS0308 if one is published.
