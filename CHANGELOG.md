@@ -2,8 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
-## 2026-11-08: (in progress) D-037 diagnostic column `d037_label` in `images --forced-image`
-- Claim; plan: add the repeated-pair rule as a diagnostic column (no class change), unit-test, re-run on stored tables.
+## 2026-11-08: D-037 `d037_label` diagnostic column in `images --forced-image` (D-037 addendum c)
+- **Question:** can the repeated-pair rule (gated on two fields, D-037 addenda) be reported by `images` itself, so
+  later forced runs carry the label instead of a separate gate script? `--shared-imageplane` takes `validate`'s
+  imageplane; `d037_columns` unit-tested before the run.
+- **Result** (`results/lens_consistency/d037_label/RESULT.md`, `summary.json`): on the stored MACS1149 CATS forced
+  table the column reproduces all three gate-R readings (2, 16 → `model_topology`; 1192 → none); no other flag row.
+  `forced_class` unchanged (diagnostic only). No flag, no candidate.
+- **Failed approach:** none. **Services:** archive.stsci.edu needs the proxy CA + certifi bundle in `SSL_CERT_FILE`
+  (the proxy CA alone fails verification); CDS (cdsxmatch) still resets, www.fe.infn.it 503 (17:10Z); #751 waits.
+- **Handoff:** the D-037 line is closed for now. μ rule stays in the gate scripts (needs a second model). Next on
+  Supporting 1: radii scaled to the rms (open), or retry fe.infn.it to re-run Bergamini `validate`.
 
 ## 2026-11-08: D-037 rule functions on a second field: route fails as frozen (id alias); post hoc gate A passes 6 / 6 on Abell 2744 (D-037 addendum b)
 - **Question:** do `repeated_pair_topology` / `mu_model_dependent` reproduce hand readings off their defining field

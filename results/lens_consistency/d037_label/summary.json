@@ -1,0 +1,58 @@
+{
+ "provenance": "derived (forced classes: stored 2026-10-14 run; labels: d037_columns)",
+ "model": "macs1149-cats",
+ "inputs": {
+  "model": "macs1149-cats",
+  "table": "../results/lens_consistency/macs1149-cats/images_predicted.ecsv",
+  "imageplane": "../results/lens_consistency/d037_rules/imageplane_macs1149-cats.ecsv",
+  "gate_summary": "../results/lens_consistency/d037_rules/summary.json"
+ },
+ "assumptions": {
+  "pair_radius_arcsec": 8.0
+ },
+ "check": {
+  "rows": {
+   "2:confused": {
+    "want": [
+     "model_topology",
+     "2.2/2.3"
+    ],
+    "got": [
+     [
+      "model_topology",
+      "2.2/2.3"
+     ]
+    ],
+    "ok": true
+   },
+   "16:absent": {
+    "want": [
+     "model_topology",
+     "16.1/16.2"
+    ],
+    "got": [
+     [
+      "model_topology",
+      "16.1/16.2"
+     ]
+    ],
+    "ok": true
+   },
+   "1192:confused": {
+    "want": [
+     "",
+     ""
+    ],
+    "got": [
+     [
+      "",
+      ""
+     ]
+    ],
+    "ok": true
+   }
+  },
+  "rows_not_in_gate": [],
+  "passes": true
+ }
+}
