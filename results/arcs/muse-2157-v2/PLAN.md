@@ -25,3 +25,9 @@ thresholds below are not blind; they are frozen here before this run.
 ## What changes the plan
 - M2 fails → the absorption route is closed for this cube; only the [O II] limit is reported.
 - Target `member` → 2157 leaves the anti list; `background` → stays open, z recorded; `undetermined` → limit only.
+
+## Amendment 1 (2026-11-08, before any data read)
+The unit test showed that a lone injected [O II] doublet is z-degenerate under the scan (other lines at other z
+score the same: z_best 0.2656, contrast 1.01 for a z 0.7 injection, not stored). Item 5's recovery is therefore
+replaced by: **detected = [O II] window S/N ≥ 5 at z_inj**; F90 uses detection. The z-identified fraction
+(|z_best − z_inj| < 0.002) is reported as a diagnostic only.
