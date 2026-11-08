@@ -32,3 +32,21 @@ spec.loader.exec_module(mod)
 )
 def test_decide(path_ok, sep, delays, expected):
     assert mod.decide(path_ok, sep, delays) == expected
+
+
+def test_nearest_targets():
+    images = [
+        {"ra": 10.0, "dec": 0.0, "reference_image": True, "delay_yr": 0.0, "magnification": 5.0},
+        {
+            "ra": 10.001,
+            "dec": 0.0,
+            "reference_image": False,
+            "delay_yr": 70.0,
+            "magnification": -3.0,
+        },
+        {"ra": 10.01, "dec": 0.0, "reference_image": False, "delay_yr": 80.0, "magnification": 0.4},
+    ]
+    out = mod.nearest_targets(images, {"t": (10.0, 0.0)})
+    assert out["t"]["delay_yr"] == 70.0
+    assert out["t"]["sep_arcsec"] == pytest.approx(3.6, abs=1e-3)
+    assert mod.nearest_targets(images[:1], {"t": (10.0, 0.0)}) == {}

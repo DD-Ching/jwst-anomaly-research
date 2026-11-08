@@ -37,6 +37,9 @@ Z_S = 1.276  # z_spec of SN Ares (same paper)
 DAYS_PER_YR = 365.25
 #: Published JWST-era predictions (paper text; not public models): later arrivals in years.
 PUBLISHED_LATER_YR = {"glafic_jwst": (72.0, 77.0), "allingham": (76.4, 79.1)}
+#: Published magnification of SN Ares and the abstract's approximate later-image values.
+PUBLISHED_ARES_MU = {"lenstool": 5.6, "glafic_jwst": 4.7, "allingham": 4.6}
+PUBLISHED_LATER_MU_APPROX = (5.0, 1.5)
 GATE_S_ARCSEC = 0.3  # ASSUMPTION: re-imaged SN within this of the input position
 EARLIER_YR = 1.0  # ASSUMPTION: an image this much earlier than Ares is a conflict
 LATER_YR = 10.0  # ASSUMPTION: every other image this much later is agreement
@@ -70,7 +73,7 @@ def decide(
 
 
 def run_model(name: str) -> dict:
-    model, files, _ = lc.load_model(name)
+    model, _, _ = lc.load_model(name)
     grid = lensmodel.DeflectionGrid.compute(model, GRID_HALF_WIDTH, GRID_STEP)
     at.TNS_RADEC = ARES_RADEC  # solve() reads the reference position from this module constant
     res = at.solve(model, grid, Z_S)
@@ -107,6 +110,31 @@ def run_model(name: str) -> dict:
     }
 
 
+#: Post hoc: planned future-image targets of JWST programme 9478 (results/transients/macs0308_grid/
+#: PLAN.md, from the programme's public target list; presumably JWST-era model predictions).
+TARGETS_9478 = {"Ares_Image2": (47.2342638, 26.76035), "Ares_Image3": (47.2386733, 26.76029)}
+
+
+def nearest_targets(images: list[dict], targets=TARGETS_9478) -> dict:
+    """Per target: separation (arcsec) to the nearest predicted non-SN image and its delay."""
+    from astropy.coordinates import SkyCoord
+
+    others = [r for r in images if not r["reference_image"]]
+    out = {}
+    if not others:
+        return out
+    pred = SkyCoord([r["ra"] for r in others], [r["dec"] for r in others], unit="deg")
+    for name, (ra, dec) in targets.items():
+        sep = SkyCoord(ra, dec, unit="deg").separation(pred).arcsec
+        k = int(np.argmin(sep))
+        out[name] = {
+            "sep_arcsec": round(float(sep[k]), 3),
+            "delay_yr": others[k]["delay_yr"],
+            "magnification": others[k]["magnification"],
+        }
+    return out
+
+
 def plot(results: list[dict], out: Path) -> None:
     import matplotlib
 
@@ -134,9 +162,12 @@ def plot(results: list[dict], out: Path) -> None:
             )
         i0, j0 = model.wcs.world_to_pixel_values(*ARES_RADEC)
         ax.plot(i0, j0, "x", ms=10, color="blue")
+        for ra, dec in TARGETS_9478.values():  # post hoc overlay
+            ax.plot(*model.wcs.world_to_pixel_values(ra, dec), "+", ms=12, color="green")
         ax.set_title(f"{res['model']}: {res['outcome']} (z_s {Z_S})", fontsize=9)
     fig.suptitle(
-        "SN Ares (blue x) and predicted images (red; * = image at the SN), κ map (log)", fontsize=9
+        "SN Ares (blue x), predicted images (red; * = at the SN), 9478 targets (green +, post hoc)",
+        fontsize=9,
     )
     fig.tight_layout()
     fig.savefig(out / "images.png", dpi=80)
@@ -162,9 +193,21 @@ def main(argv=None) -> int:
             "cosmology": "FlatLambdaCDM H0 70, Om0 0.3 (map cosmology)",
         },
         "published_later_arrivals_yr": PUBLISHED_LATER_YR,
+        "published_ares_mu": PUBLISHED_ARES_MU,
+        "published_later_mu_approx": PUBLISHED_LATER_MU_APPROX,
         "models": [{k: v for k, v in r.items() if k != "_model"} for r in results],
     }
     (args.out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+    posthoc = {
+        "provenance": "derived",
+        "label": "post hoc (added after the frozen run; no verdict depends on it)",
+        "source": "JWST programme 9478 target list positions 'Ares_Image2' / 'Ares_Image3' as "
+        "recorded in results/transients/macs0308_grid/PLAN.md (not a refereed source)",
+        "nearest_predicted_image": {
+            r["model"]: nearest_targets(r["images"]) for r in summary["models"]
+        },
+    }
+    (args.out / "posthoc.json").write_text(json.dumps(posthoc, indent=2) + "\n")
     for r in summary["models"]:
         print(
             r["model"],

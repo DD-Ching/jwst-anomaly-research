@@ -1,0 +1,31 @@
+{
+  "provenance": "derived",
+  "label": "post hoc (added after the frozen run; no verdict depends on it)",
+  "source": "JWST programme 9478 target list positions 'Ares_Image2' / 'Ares_Image3' as recorded in results/transients/macs0308_grid/PLAN.md (not a refereed source)",
+  "nearest_predicted_image": {
+    "macs0308-relics-glafic": {
+      "Ares_Image2": {
+        "sep_arcsec": 1.525,
+        "delay_yr": 65.0,
+        "magnification": 0.359
+      },
+      "Ares_Image3": {
+        "sep_arcsec": 5.023,
+        "delay_yr": 57.21,
+        "magnification": -5.746
+      }
+    },
+    "macs0308-relics-zitrin": {
+      "Ares_Image2": {
+        "sep_arcsec": 0.326,
+        "delay_yr": 85.44,
+        "magnification": 0.395
+      },
+      "Ares_Image3": {
+        "sep_arcsec": 3.389,
+        "delay_yr": 76.92,
+        "magnification": -3.244
+      }
+    }
+  }
+}
