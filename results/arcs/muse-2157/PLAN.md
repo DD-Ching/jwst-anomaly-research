@@ -13,7 +13,7 @@
 - **Would change the plan:** `member` makes the anti row an ordinary foreground galaxy (anti label withdrawn);
   `background` keeps it for the lens-model tests.
 
-## Amendment before any cube data was read (2026-11-08T20:25Z)
+## Amendment before any cube data was read (committed in 5be3c27, 2026-11-08T20:12:11Z; the first draft of this heading carried a mistyped 20:25Z)
 - The ESO portal ignores HTTP Range (416 with unknown length) and streams the whole file, so the DATA extension
   (1.55 GB) is streamed once and only two 80 × 80-spaxel boxes and a white-light image are kept in memory; nothing
   is stored. Noise comes from robust scatter of random apertures in the box (STAT extension not read).

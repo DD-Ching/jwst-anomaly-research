@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` MACS0308 2157 MUSE redshift attempt: gate M failed as frozen; no redshift (D-024 addendum 16)
+- **Question:** does the public MUSE cube (#796) give 2157 a redshift (member at 0.356 or background)? Plan first
+  (`results/arcs/muse-2157/PLAN.md`, amended before any data read); `scripts/arcs_muse_2157.py` unit-tested before
+  the run; the 1.55 GB DATA extension streamed once (ESO portal ignores HTTP Range), boxes kept in memory, nothing stored.
+- **Result** (`RESULT.md`, `summary.json`): gate M fails (control central galaxy: z scan 0.3568 but 0 features at
+  |S/N| ≥ 5; aperture at the WISE position about 1″ off the galaxy peak, by eye). 2157: `undetermined` (z_best 0.4174,
+  0 features; continuum S/N 2.0 per pixel). Post hoc peak contrast: control 1.79, target 1.07 (`posthoc.json`).
+  Membership stays undecided. No flag, no candidate.
+- **Failed approach:** a per-line S/N 5 cut with a WISE-position aperture as the validation for absorption redshifts.
+  **Services:** dataportal.eso.org streams at ~15 MB/s (not stored) but answers Range with 416.
+- **Handoff:** next on this line (new plan): recentre apertures on the white-light peak, use the STAT extension,
+  gate on scan peak contrast with a frozen threshold, and inject [O II] at 2157 for a line-flux limit.
+
 ## 2026-11-08: `arcs` public spectral coverage of the open anti rows: MACS0308 2157 has a public MUSE cube; RXC J0600 581 none (D-024 addendum 15)
 - **Question:** can membership of the two `robust` anti rows (581, 2157) be decided from a public spectrum outside NED /
   DJA? Plan first (`results/arcs/spec-coverage/PLAN.md`); footprint, grouping, class and gate functions unit-tested

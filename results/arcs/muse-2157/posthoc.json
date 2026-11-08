@@ -1,0 +1,20 @@
+{
+ "label": "post hoc (not in PLAN.md)",
+ "exclude_dz": 0.01,
+ "rows": {
+  "control": {
+   "z_best": 0.3568,
+   "score_best": 20.699173472039387,
+   "z_second": 0.1552,
+   "score_second": 11.565849392863395,
+   "ratio": 1.7896803571393234
+  },
+  "target": {
+   "z_best": 0.4174,
+   "score_best": 11.646836775901571,
+   "z_second": 0.317,
+   "score_second": 10.87003499329345,
+   "ratio": 1.0714626754272079
+  }
+ }
+}

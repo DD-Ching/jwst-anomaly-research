@@ -1,7 +1,8 @@
-"""Redshift of the `arcs` anti row MACS0308 2157 from the public ESO MUSE cube (plan: results/arcs/muse-2157/PLAN.md).
+"""Redshift of the `arcs` anti row MACS0308 2157 from the public ESO MUSE cube.
 
-The ESO data portal ignores HTTP Range requests, so the cube is streamed once and only small boxes are kept in
-memory (target box, control box, a white-light image); nothing is written to disk (Cloud disk decision).
+Plan: results/arcs/muse-2157/PLAN.md. The ESO data portal ignores HTTP Range requests, so the
+cube is streamed once and only small boxes are kept in memory (target box, control box, a
+white-light image); nothing is written to disk (Cloud disk decision).
 """
 
 from __future__ import annotations
@@ -20,14 +21,22 @@ from astropy.wcs import WCS
 BLOCK = 2880
 CUBE_URL = "https://dataportal.eso.org/dataportal_new/file/ADP.2020-01-04T23:56:39.902"
 TARGET = {"name": "MACS0308 2157", "ra": 47.23285635900545, "dec": 26.755093856038467}
-# Control: the central galaxy (NED WISEA J030855.93+264537.9; cluster z 0.356, NED "MACS J0308.9+2645").
+# Control: the central galaxy (NED WISEA J030855.93+264537.9);
+# cluster z 0.356 (NED "MACS J0308.9+2645").
 CONTROL = {"name": "MACS0308 central galaxy", "ra": 47.2330795, "dec": 26.7605368, "z_ref": 0.356}
 Z_CLUSTER = 0.356
 Z_PHOT = 0.756
 
 # Rest-frame air wavelengths (Angstrom; standard values, ASSUMPTION: no line-ratio priors).
-EMISSION = {"[OII]3727": 3727.4, "Hbeta": 4861.3, "[OIII]4959": 4958.9, "[OIII]5007": 5006.8, "Halpha": 6562.8,
-            "[NII]6583": 6583.4, "[SII]6716": 6716.4}
+EMISSION = {
+    "[OII]3727": 3727.4,
+    "Hbeta": 4861.3,
+    "[OIII]4959": 4958.9,
+    "[OIII]5007": 5006.8,
+    "Halpha": 6562.8,
+    "[NII]6583": 6583.4,
+    "[SII]6716": 6716.4,
+}
 ABSORPTION = {"CaK": 3933.7, "CaH": 3968.5, "Gband": 4304.4, "Mgb": 5175.4, "NaD": 5892.9}
 SNR_FEATURE = 5.0  # ASSUMPTION: a feature counts at |S/N| >= 5 in its window
 
@@ -102,11 +111,17 @@ def aperture_spectrum(cube: np.ndarray, xc: float, yc: float, r_px: float) -> np
     return np.nansum(cube[:, m], axis=1)
 
 
-def noise_spectrum(cube: np.ndarray, r_px: float, exclude: list[tuple[float, float, float]], n: int = 200,
-                   seed: int = 0) -> np.ndarray:
+def noise_spectrum(
+    cube: np.ndarray,
+    r_px: float,
+    exclude: list[tuple[float, float, float]],
+    n: int = 200,
+    seed: int = 0,
+) -> np.ndarray:
     """Per-wavelength robust scatter (1.4826 MAD) of aperture sums at random positions in the box.
 
-    Positions within an ``exclude`` (x, y, radius) circle are skipped; sources elsewhere are suppressed by the MAD.
+    Positions within an ``exclude`` (x, y, radius) circle are skipped; sources elsewhere are
+    suppressed by the MAD.
     """
     rng = np.random.default_rng(seed)
     ny, nx = cube.shape[1:]
@@ -131,16 +146,23 @@ def continuum_subtract(lam: np.ndarray, flux: np.ndarray, width_a: float = 150.0
     return f - cont
 
 
-def line_snr(lam: np.ndarray, resid: np.ndarray, noise: np.ndarray, center: float, half_a: float) -> float:
+def line_snr(
+    lam: np.ndarray, resid: np.ndarray, noise: np.ndarray, center: float, half_a: float
+) -> float:
     m = np.abs(lam - center) <= half_a
     if m.sum() < 2 or not np.all(np.isfinite(noise[m])):
         return float("nan")
     return float(np.nansum(resid[m]) / np.sqrt(np.nansum(noise[m] ** 2)))
 
 
-def scan_redshift(lam: np.ndarray, resid: np.ndarray, noise: np.ndarray, z_grid: np.ndarray,
-                  sky_mask: np.ndarray | None = None) -> dict:
-    """Score each z by the summed positive emission S/N plus summed absorption depth S/N (lines in range only)."""
+def scan_redshift(
+    lam: np.ndarray,
+    resid: np.ndarray,
+    noise: np.ndarray,
+    z_grid: np.ndarray,
+    sky_mask: np.ndarray | None = None,
+) -> dict:
+    """Score each z: summed positive emission S/N plus absorption depth S/N (lines in range)."""
     if sky_mask is not None:
         resid = np.where(sky_mask, np.nan, resid)
     lo, hi = lam[0] + 10, lam[-1] - 10
@@ -162,8 +184,13 @@ def scan_redshift(lam: np.ndarray, resid: np.ndarray, noise: np.ndarray, z_grid:
     return {"z_best": float(z_grid[k]), "score_best": float(score[k]), "score": score}
 
 
-def features_at(lam: np.ndarray, resid: np.ndarray, noise: np.ndarray, z: float,
-                sky_mask: np.ndarray | None = None) -> dict[str, float]:
+def features_at(
+    lam: np.ndarray,
+    resid: np.ndarray,
+    noise: np.ndarray,
+    z: float,
+    sky_mask: np.ndarray | None = None,
+) -> dict[str, float]:
     if sky_mask is not None:
         resid = np.where(sky_mask, np.nan, resid)
     lo, hi = lam[0] + 10, lam[-1] - 10
@@ -240,12 +267,19 @@ def main() -> None:
     pix_arcsec = abs(hdr["CD2_2"]) * 3600
     r_px = args.r_arcsec / pix_arcsec
     z_grid = np.arange(0.0, 1.6, 0.0002)
-    report = {"plan": "results/arcs/muse-2157/PLAN.md", "cube": CUBE_URL, "streamed_utc": started,
-              "aperture_r_arcsec": args.r_arcsec, "snr_feature": SNR_FEATURE,
-              "provenance": {"observed": "MUSE cube DATA values (ESO phase-3 product)",
-                             "derived": "aperture spectra, noise, z scan, features, class",
-                             "assumption": "aperture radius, S/N 5 feature cut, line windows, sky mask factor 3"},
-              "rows": {}}
+    report = {
+        "plan": "results/arcs/muse-2157/PLAN.md",
+        "cube": CUBE_URL,
+        "streamed_utc": started,
+        "aperture_r_arcsec": args.r_arcsec,
+        "snr_feature": SNR_FEATURE,
+        "provenance": {
+            "observed": "MUSE cube DATA values (ESO phase-3 product)",
+            "derived": "aperture spectra, noise, z scan, features, class",
+            "assumption": "aperture radius, S/N 5 feature cut, line windows, sky mask factor 3",
+        },
+        "rows": {},
+    }
     spectra = {"lam": lam.tolist()}
     for key, src in (("control", CONTROL), ("target", TARGET)):
         cube = res["boxes"][key]
@@ -257,28 +291,49 @@ def main() -> None:
         scan = scan_redshift(lam, resid, noise, z_grid, mask)
         feats = features_at(lam, resid, noise, scan["z_best"], mask)
         nf = n_features(feats)
-        row = {"name": src["name"], "ra": src["ra"], "dec": src["dec"], "pixel_xy": [xf, yf],
-               "z_best": scan["z_best"], "score_best": scan["score_best"], "features_at_best": feats,
-               "n_features": nf, "class": classify(scan["z_best"], nf),
-               "features_at_z_cluster": features_at(lam, resid, noise, Z_CLUSTER, mask),
-               "features_at_z_phot": features_at(lam, resid, noise, Z_PHOT, mask),
-               "continuum_median_snr_per_pix": float(np.nanmedian(spec / noise)),
-               "n_sky_masked": int(mask.sum())}
+        row = {
+            "name": src["name"],
+            "ra": src["ra"],
+            "dec": src["dec"],
+            "pixel_xy": [xf, yf],
+            "z_best": scan["z_best"],
+            "score_best": scan["score_best"],
+            "features_at_best": feats,
+            "n_features": nf,
+            "class": classify(scan["z_best"], nf),
+            "features_at_z_cluster": features_at(lam, resid, noise, Z_CLUSTER, mask),
+            "features_at_z_phot": features_at(lam, resid, noise, Z_PHOT, mask),
+            "continuum_median_snr_per_pix": float(np.nanmedian(spec / noise)),
+            "n_sky_masked": int(mask.sum()),
+        }
         if key == "control":
             row["z_ref"] = CONTROL["z_ref"]
             row["gate_m_passed"] = bool(nf >= 2 and abs(scan["z_best"] - CONTROL["z_ref"]) < 0.01)
         report["rows"][key] = row
-        spectra[key] = {"flux": spec.tolist(), "noise": noise.tolist(), "score": scan["score"].tolist()}
+        spectra[key] = {
+            "flux": spec.tolist(),
+            "noise": noise.tolist(),
+            "score": scan["score"].tolist(),
+        }
     report["z_grid"] = [float(z_grid[0]), float(z_grid[-1]), 0.0002]
     args.out.mkdir(parents=True, exist_ok=True)
-    (args.out / "summary.json").write_text(json.dumps(report, indent=1, default=float))
+    (args.out / "summary.json").write_text(json.dumps(report, indent=1, default=float) + "\n")
     with gzip.open(args.out / "spectra.json.gz", "wt") as f:
         json.dump(spectra, f)
     _sheet(args.out, res, centres, lam, spectra, r_px)
-    print(json.dumps({k: {kk: v[kk] for kk in ("z_best", "n_features", "class")} for k, v in report["rows"].items()}))
+    print(
+        json.dumps(
+            {
+                k: {kk: v[kk] for kk in ("z_best", "n_features", "class")}
+                for k, v in report["rows"].items()
+            }
+        )
+    )
 
 
-def _sheet(out: Path, res: dict, centres: dict, lam: np.ndarray, spectra: dict, r_px: float) -> None:
+def _sheet(
+    out: Path, res: dict, centres: dict, lam: np.ndarray, spectra: dict, r_px: float
+) -> None:
     import matplotlib
 
     matplotlib.use("Agg")
@@ -311,8 +366,13 @@ def _sheet(out: Path, res: dict, centres: dict, lam: np.ndarray, spectra: dict, 
     ax.legend()
     ax.set_xlabel("z")
     ax.set_title("feature score")
-    axes[2, 0].imshow(res["white"], origin="lower", cmap="gray",
-                      vmin=np.nanpercentile(res["white"], 5), vmax=np.nanpercentile(res["white"], 99.5))
+    axes[2, 0].imshow(
+        res["white"],
+        origin="lower",
+        cmap="gray",
+        vmin=np.nanpercentile(res["white"], 5),
+        vmax=np.nanpercentile(res["white"], 99.5),
+    )
     for key, col in (("control", "c"), ("target", "r")):
         axes[2, 0].plot(*centres[key][2:], "o", mfc="none", color=col)
     axes[2, 0].set_title("cube white light")
