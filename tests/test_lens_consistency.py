@@ -988,3 +988,30 @@ def test_gated_systems_none_for_usable_list_and_error_without_table():
         lc.gated_systems("macs0416-canucs", Path("unused.ecsv"), 0.5)
     with pytest.raises(SystemExit):
         lc.gated_systems("abell370-canucs", None, 0.5)
+
+
+def test_model_copies_positional_and_detection():
+    """D-041 copy rule: nearest unpredicted image of the same system within factor x rms."""
+    d0 = 37.0
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "2.1"],
+            "system": ["1", "1", "2"],
+            "ra": [100.0, 100.0, 100.0],
+            "dec": [d0, d0 + 4.0 / 3600, d0],
+        }
+    )
+    table = Table(
+        {
+            "system": ["1", "1", "1", "2", "3"],
+            "ra": [100.0, 100.0, 100.0, 100.0, 100.0],
+            "dec": [d0 + 1.0 / 3600, d0 + 1.0 / 3600, d0 + 9.0 / 3600, d0, d0],
+            "forced_class": ["absent", "recovered", "confused", "confused", "absent"],
+        }
+    )
+    got = lc.model_copies(table, images, ["1.1", "1.2"], rms_arcsec=2.0)
+    # row 0: 1.0" from 1.1 (nearest) -> copy; row 1 not a copy class; row 2: 5" from 1.2 > 3.5";
+    # row 3: system 2 has no unpredicted image; row 4: system without images
+    assert got == ["1.1", "", "", "", ""]
+    assert lc.model_copies(table, images, ["1.1", "1.2"], 2.0, detected={"1.2"})[0] == "1.2"
+    assert lc.model_copies(table, images, ["1.1", "1.2"], 2.0, detected=set())[0] == ""

@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: D-041 model-copy rule as a function: gate G fails as frozen on MACS0717; not adopted as a class (D-041 addendum)
+- **Question:** can the D-041 copy rule (TASKS Supporting 1, `forced_check` item) label `absent` / `confused` rows
+  automatically? Plan first (`results/lens_consistency/model_copy_rule/PLAN.md`); `lens_consistency.model_copies`
+  unit-tested before the run; `scripts/model_copy_gate.py` on the stored MACS0717 table.
+- **Result** (`RESULT.md`, `summary.json`): rms 3.2117″ reproduced by `validate`; 33 / 44 rows flagged (the docs'
+  first-pass count); `confused` 28 / 28 per system; `absent` 5 vs 3, rule-only the system-7 pair → gate G fails,
+  rule kept as a diagnostic only. Post hoc: the hand verdict for that pair is also model position error (filed
+  under μ-untestable); both rows map to 7.2 (no one-to-one assignment). No flag, no candidate.
+- **Failed approach:** the positional rule alone does not reproduce the hand bookkeeping. **Services:**
+  archive.stsci.edu with the proxy + certifi bundle; CDS still resets (13:08Z); #751 waits.
+- **Handoff:** next on this item: a frozen one-to-one amendment gated on a second field, or radii scaled to the rms
+  (open half of the item).
+
 ## 2026-11-08: `arcs` MACS0308 2157 under the Zitrin realisations: frozen `model error does not remove the tested rows` (D-024 addendum 14)
 - **Question:** does the Zitrin LTM-Gauss model's own statistical error (100 RELICS `range/` realisations, 36 MB
   pixel-unit maps) move 2157 out of `anti`? Plan first (`results/arcs/anti-shear-error-2157/PLAN.md`);
