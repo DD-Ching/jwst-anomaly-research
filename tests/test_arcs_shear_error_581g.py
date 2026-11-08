@@ -72,3 +72,31 @@ def test_v3_stat_and_gate():
 def test_frozen_constants():
     assert m.N_RANGE == 99 and m.RANGE_GATE_MAPS == (0, 49, 98)
     assert m.ROW == 581 and m.Z_LENS == 0.43
+
+
+def test_same_grid_includes_rotation():
+    ref = _wcs(10, 0.4).to_header()
+    for k, v in (("NAXIS1", 10), ("NAXIS2", 10)):
+        ref[k] = v
+    assert m.same_grid(ref.copy(), ref)
+    rot = ref.copy()
+    rot["PC1_2"] = 0.0
+    rot["CD1_2"] = 1e-6
+    ref["CD1_2"] = 0.0
+    assert not m.same_grid(rot, ref)
+    shifted = ref.copy()
+    shifted["CRVAL1"] = ref["CRVAL1"] + 1e-3
+    assert not m.same_grid(shifted, ref)
+
+
+def test_local_peak_interior_and_edge():
+    w = _wcs(101, 0.1)
+    jj, ii = np.mgrid[0:101, 0:101]
+    k = 0.01 * ii.astype(float)  # rises to +x: box maximum on the edge
+    k[52, 50] = 5.0  # interior peak 0.2 arcsec from the centre pixel (50, 50)
+    ra, dec = w.pixel_to_world_values(50, 50)
+    out = m.local_peak(k, w, float(ra), float(dec), 2.0)
+    assert out["kappa_max_box"] == 5.0 and np.isclose(out["max_dist_arcsec"], 0.2)
+    k[52, 50] = 0.0
+    out = m.local_peak(k, w, float(ra), float(dec), 2.0)
+    assert out["max_dist_arcsec"] >= 2.0

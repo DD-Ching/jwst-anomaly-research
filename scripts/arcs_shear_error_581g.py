@@ -18,6 +18,7 @@ import importlib.util
 import io
 import json
 import sys
+import threading
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -35,6 +36,11 @@ _spec = importlib.util.spec_from_file_location("arcs_shear_error", _DIR / "arcs_
 ase = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ase)
 lc = ase.lc
+_spec2 = importlib.util.spec_from_file_location(
+    "arcs_shear_error_2157", _DIR / "arcs_shear_error_2157.py"
+)
+a2157 = importlib.util.module_from_spec(_spec2)
+_spec2.loader.exec_module(a2157)
 
 OUT = ase.ROOT / "anti-shear-error-581-glafic"
 BASE = ase.RELICS + "rxc0600m20/models/glafic/v3/"
@@ -47,14 +53,15 @@ DECIDING = ase.RXC["run"]  # the stored GLAFIC v3 run (best fit, 0.1" maps)
 # frozen constants (ASSUMPTIONS, PLAN.md); deviations from addendum 13: 99 maps, gate map 098
 N_RANGE = 99
 RANGE_GATE_MAPS = (0, 49, 98)
-V1_MAX_ARCSEC = 1e-3
+V1_MAX_ARCSEC = a2157.V1_MAX_ARCSEC  # 1e-3 arcsec, as addendum 14
 V2_MAX_OFFSET_DEG = 2.0
 V3_MAX_REL = 0.10
 
 
 # ---- route functions (unit-tested offline) ----
-def pixel_scale_arcsec(wcs: WCS) -> float:
-    return float(abs(wcs.pixel_scale_matrix[1, 1]) * 3600.0)
+pixel_scale_arcsec = a2157.pixel_scale_arcsec
+v1_gate = a2157.v1_gate
+GRID_KEYS = a2157.GRID_KEYS  # NAXIS, CRPIX, CRVAL and the full CD matrix
 
 
 def resample(data: np.ndarray, src: WCS, dst: WCS, shape: tuple[int, int]) -> np.ndarray:
@@ -66,10 +73,6 @@ def resample(data: np.ndarray, src: WCS, dst: WCS, shape: tuple[int, int]) -> np
     x, y = src.world_to_pixel_values(ra, dec)
     out = map_coordinates(data, [y, x], order=1, mode="constant", cval=np.nan)
     return out.reshape(shape).astype(np.float32)
-
-
-def v1_gate(max_abs: float) -> bool:
-    return bool(np.isfinite(max_abs) and max_abs <= V1_MAX_ARCSEC)
 
 
 def v2_gate(stored: list[str], new: list[str], d_offset) -> bool:
@@ -93,15 +96,22 @@ def v3_gate(stat: float) -> bool:
 
 
 # ---- I/O ----
+_TLS = threading.local()
+
+
 def get(url: str) -> tuple[np.ndarray, WCS, fits.Header, str]:
-    """Whole small FITS file into memory (retry on 429 / 5xx / connection errors)."""
+    """Whole small FITS file into memory. 429 / 5xx, transport errors and truncated bodies are
+    retried with back-off; other 4xx fail at once. One ``requests.Session`` per thread."""
     import time
 
     import requests
 
+    session = getattr(_TLS, "session", None)
+    if session is None:
+        session = _TLS.session = requests.Session()
     for attempt in range(5):
         try:
-            r = requests.get(url, timeout=180)
+            r = session.get(url, timeout=180)
             if r.status_code == 200:
                 body = r.content
                 with fits.open(io.BytesIO(body)) as h:
@@ -113,10 +123,24 @@ def get(url: str) -> tuple[np.ndarray, WCS, fits.Header, str]:
                 return data, wcs, hdr, hashlib.sha256(body).hexdigest()
             if r.status_code != 429 and r.status_code < 500:
                 r.raise_for_status()
-        except (requests.ConnectionError, requests.Timeout):
-            pass
-        time.sleep(2.0 * 2**attempt)
+                raise RuntimeError(f"{url}: HTTP {r.status_code}")
+        except requests.HTTPError:
+            raise
+        except (requests.RequestException, OSError, TypeError):
+            pass  # transport error or a truncated / unparsable body
+        if attempt < 4:
+            time.sleep(2.0 * 2**attempt)
     raise RuntimeError(f"{url}: failed after 5 attempts")
+
+
+def same_grid(hdr: fits.Header, ref: fits.Header) -> bool:
+    """True when every grid key present in ``ref`` matches (rtol 1e-9; rotation terms included)."""
+    for key in GRID_KEYS:
+        if key in ref and (
+            key not in hdr or not np.isclose(float(hdr[key]), float(ref[key]), rtol=1e-9, atol=0)
+        ):
+            return False
+    return True
 
 
 def model_from(ax, ay, wcs, centre, tag) -> lensmodel.MapLensModel:
@@ -129,8 +153,10 @@ def alpha_at(model, rows: Table) -> np.ndarray:
     return np.stack(model.deflection_xy(x, y), axis=1)
 
 
-def kappa_check(model, url: str, cache: Path) -> dict:
-    data, wcs, _, sha = get(url)
+def kappa_check(model, url: str, cache: Path, ref_hdr: fits.Header | None = None) -> dict:
+    data, wcs, hdr, sha = get(url)
+    if ref_hdr is not None and not same_grid(hdr, ref_hdr):
+        raise ValueError(f"{url}: grid differs from map000")
     cache.mkdir(parents=True, exist_ok=True)
     path = cache / url.rsplit("/", 1)[1]
     fits.PrimaryHDU(data, header=wcs.to_header()).writeto(path, overwrite=True)
@@ -146,10 +172,8 @@ def kappa_check(model, url: str, cache: Path) -> dict:
 def one_realisation(i: int, centre, row, ctrl, bg, ref_hdr, cache: Path) -> dict:
     ax, wcs, hx, sx = get(RANGE.format(i, "x-pixels-deflect"))
     ay, _, hy, sy = get(RANGE.format(i, "y-pixels-deflect"))
-    for key in ("NAXIS1", "NAXIS2", "CRPIX1", "CRPIX2", "CRVAL1", "CRVAL2", "CD1_1", "CD2_2"):
-        for h in (hx, hy):
-            if not np.isclose(float(h[key]), float(ref_hdr[key]), rtol=1e-9):
-                raise ValueError(f"map{i:03d}: grid differs from map000 ({key})")
+    if not (same_grid(hx, ref_hdr) and same_grid(hy, ref_hdr)):
+        raise ValueError(f"map{i:03d}: grid differs from map000")
     s = pixel_scale_arcsec(wcs)
     model = model_from(ax * s, ay * s, wcs, centre, f"glafic-map{i:03d}_v3")
     rec = ase._rec(ase.reclass(model, row))
@@ -157,26 +181,87 @@ def one_realisation(i: int, centre, row, ctrl, bg, ref_hdr, cache: Path) -> dict
     rec["control_retention"] = ase.retention(list(ase.reclass(model, ctrl)["orientation_class"]))
     rec["alpha_bg"] = alpha_at(model, bg).tolist()
     if i in RANGE_GATE_MAPS:
-        check = kappa_check(model, RANGE.format(i, "kappa"), cache)
+        check = kappa_check(model, RANGE.format(i, "kappa"), cache, ref_hdr)
         rec["kappa_gate"] = {"kappa_check": check, "passes": ase.map_gate(check["median_rel_diff"])}
     return rec
+
+
+# ---- post hoc diagnostic (added after the first run; not a rule) ----
+LENSTOOL_KAPPA = (
+    ase.RELICS
+    + "rxc0600m20/models/lenstool/hlsp_relics_model_model_rxc0600m20_lenstool_v1_kappa.fits"
+)
+POSTHOC_BOX_ARCSEC = 2.0
+
+
+def local_peak(kappa: np.ndarray, wcs: WCS, ra: float, dec: float, half: float) -> dict:
+    """κ at the row and the maximum in a square box of half-width ``half`` arcsec around it;
+    ``max_dist_arcsec`` < ``half`` means an interior local maximum, >= ``half`` a box-edge one."""
+    sc = pixel_scale_arcsec(wcs)
+    i, j = wcs.world_to_pixel_values(ra, dec)
+    i, j = int(round(float(i))), int(round(float(j)))
+    r = int(round(half / sc))
+    sub = kappa[max(0, j - r) : j + r + 1, max(0, i - r) : i + r + 1]
+    jj, ii = np.unravel_index(np.nanargmax(sub), sub.shape)
+    dj, di = jj - min(r, j), ii - min(r, i)
+    return {
+        "pix": [i, j],
+        "kappa_at_row": round(float(kappa[j, i]), 4),
+        "kappa_max_box": round(float(np.nanmax(sub)), 4),
+        "kappa_median_box": round(float(np.nanmedian(sub)), 4),
+        "max_dist_arcsec": round(float(np.hypot(di, dj)) * sc, 2),
+    }
+
+
+def posthoc_kappa() -> dict:
+    stored = Table.read(ase.ROOT / DECIDING)
+    bg = stored[stored["strong_shear"] & (stored["population"] == "background")]
+    (gk, gw, _, gsha), (lk, lw, _, lsha) = (get(BEST.format("kappa")), get(LENSTOOL_KAPPA))
+    rows = [
+        {
+            "label": int(b["label"]),
+            "glafic": local_peak(gk, gw, float(b["ra"]), float(b["dec"]), POSTHOC_BOX_ARCSEC),
+            "lenstool": local_peak(lk, lw, float(b["ra"]), float(b["dec"]), POSTHOC_BOX_ARCSEC),
+        }
+        for b in bg
+    ]
+    return {
+        "post_hoc": True,
+        "box_half_width_arcsec": POSTHOC_BOX_ARCSEC,
+        "provenance": {"kappa": "model_prediction", "peaks": "derived"},
+        "sha256_glafic_v3_best_kappa": gsha,
+        "sha256_lenstool_v1_best_kappa": lsha,
+        "glafic_pixel_scale_arcsec": round(pixel_scale_arcsec(gw), 4),
+        "lenstool_pixel_scale_arcsec": round(pixel_scale_arcsec(lw), 4),
+        "rows": rows,
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--cache", type=Path, required=True)
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument(
+        "--posthoc-kappa", action="store_true", help="only write posthoc_kappa.json (post hoc)"
+    )
     args = ap.parse_args(argv)
+    if args.posthoc_kappa:
+        out = posthoc_kappa()
+        OUT.mkdir(parents=True, exist_ok=True)
+        (OUT / "posthoc_kappa.json").write_text(json.dumps(out, indent=1) + "\n")
+        print(json.dumps([(r["label"], r["glafic"], r["lenstool"]) for r in out["rows"]]))
+        return 0
 
     row, ctrl = ase.split_rows(DECIDING, ROW)
     stored = Table.read(ase.ROOT / DECIDING)
     bg = stored[stored["strong_shear"] & (stored["population"] == "background")]
 
     # best fit: V1 unit convention; centre = best-fit reference pixel (as the stored run)
-    bpx, bwcs, _, _ = get(BEST.format("x-pixels-deflect"))
-    bpy, _, _, _ = get(BEST.format("y-pixels-deflect"))
-    bax, _, _, sha_bx = get(BEST.format("x-arcsec-deflect"))
-    bay, _, _, sha_by = get(BEST.format("y-arcsec-deflect"))
+    names = ("x-pixels-deflect", "y-pixels-deflect", "x-arcsec-deflect", "y-arcsec-deflect")
+    with ThreadPoolExecutor(len(names)) as pool:
+        fetched = list(pool.map(lambda n: get(BEST.format(n)), names))
+    (bpx, bwcs, _, _), (bpy, _, _, _), (bax, _, _, sha_bx), (bay, _, _, sha_by) = fetched
+    del fetched
     sb = pixel_scale_arcsec(bwcs)
     v1_max = float(max(np.nanmax(np.abs(bpx * sb - bax)), np.nanmax(np.abs(bpy * sb - bay))))
     del bpx, bpy

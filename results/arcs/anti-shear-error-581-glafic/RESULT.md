@@ -22,10 +22,11 @@ Secondary (not rules): offset_min 16 / 50 / 84 % 77.868 / 78.8 / 80.1°; g_min 0
 fit: 581 `anti`, offset_min 79.9°, g_min 0.236. Stored GLAFIC run (0.1″ maps): 63.6°, g_min 0.394.
 
 ## Why V2 fails (post hoc diagnostics, not rules; every number in this section is post hoc)
-- Per row (`summary.json` `validation.V2_rows_posthoc`, added after the first run; rules unchanged, second run gives
-  identical realisation sha256 and outcome): 11 of 12 rows reproduce within 0.01° in offset_min and 0.003 in g_min.
+- Per row (`summary.json` `validation.V2_rows_posthoc`, added after the first run; rules unchanged; the re-runs gave
+  the same realisation sha256 and outcome, a comparison not stored): 11 of 12 rows reproduce within 0.01° in offset_min and 0.003 in g_min.
   Only 581 moves: 63.62° → 79.91°, g_min 0.394 → 0.236.
-- `posthoc_kappa.json`: the GLAFIC best-fit κ has a local peak of 5.24 at 0.2″ from 581 (κ 1.18 at the row; 2″-box
+- `posthoc_kappa.json` (`--posthoc-kappa`; reads the GLAFIC v3 and Lenstool v1 best-fit κ maps into memory, beyond the
+  plan's I/O list): the GLAFIC best-fit κ has a local peak of 5.24 at 0.2″ from 581 (κ 1.18 at the row; 2″-box
   median 0.80). For the other 11 rows the box maximum lies on the box edge (0.75–1.23, at 2.0–2.8″), so none has an interior peak. The
   Lenstool v1 best fit has no local peak there either (2.48 at the box corner, 2.83″, rising toward the cluster). The
   0.4″ realisation grid cannot resolve a galaxy-scale halo at 0.2″, so the realisations cannot test this row.
@@ -44,3 +45,12 @@ fit: 581 `anti`, offset_min 79.9°, g_min 0.236. Stored GLAFIC run (0.1″ maps)
   addendum 15).
 - Not a lensing anomaly claim and not a candidate. The open set stays 581 (Lenstool `robust`, GLAFIC `undetermined`)
   and 2157 (`robust`, membership `undetermined`).
+
+## Deviations (labelled)
+- 99 maps and κ gate map 098 instead of addendum 13's 100 and 099 (only map000–098 are published; written into the
+  plan before the run).
+- The script and tests were written, and the tests passed, before the first run, but their commit failed on a lint
+  error (line length), so they were first committed after the run. The frozen constants were already in the plan
+  commit; the review fixes since then (retries, parallel best-fit reads, the grid check including rotation terms,
+  reuse of the 2157 helpers) leave `summary.json` byte-identical.
+- `V2_rows_posthoc` and `posthoc_kappa.json` are post hoc.

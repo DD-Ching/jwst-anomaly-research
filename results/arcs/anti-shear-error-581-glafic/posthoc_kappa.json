@@ -1,214 +1,288 @@
 {
- "sha256_best_kappa": "43308bce5601a48d166eeb676724766323a2363c131d29ff6dfa70df5c23892c",
- "pix": [
-  1322,
-  781
- ],
- "r1arcsec": {
-  "kappa_at_row": 1.1795,
-  "kappa_max": 5.2399,
-  "kappa_median": 0.8194,
-  "max_dist_arcsec": 0.2
+ "post_hoc": true,
+ "box_half_width_arcsec": 2.0,
+ "provenance": {
+  "kappa": "model_prediction",
+  "peaks": "derived"
  },
- "r2arcsec": {
-  "kappa_at_row": 1.1795,
-  "kappa_max": 5.2399,
-  "kappa_median": 0.8017,
-  "max_dist_arcsec": 0.2
- },
- "r3arcsec": {
-  "kappa_at_row": 1.1795,
-  "kappa_max": 5.2399,
-  "kappa_median": 0.7973,
-  "max_dist_arcsec": 0.2
- },
- "map000_kappa_near_row": 1.1931,
- "lenstool_best": {
-  "sha256": "41b33a17230f32e42e02f07a4498b5c0006cc64970bb9ed90e24e2a11e401332",
-  "pixel_scale_arcsec": 0.2002,
-  "kappa_at_row": 2.039,
-  "kappa_max_2arcsec": 2.4824,
-  "kappa_median_2arcsec": 2.037,
-  "max_dist_arcsec": 2.83
- },
- "all_bg_rows": [
+ "sha256_glafic_v3_best_kappa": "43308bce5601a48d166eeb676724766323a2363c131d29ff6dfa70df5c23892c",
+ "sha256_lenstool_v1_best_kappa": "41b33a17230f32e42e02f07a4498b5c0006cc64970bb9ed90e24e2a11e401332",
+ "glafic_pixel_scale_arcsec": 0.1,
+ "lenstool_pixel_scale_arcsec": 0.2002,
+ "rows": [
   {
    "label": 540,
    "glafic": {
+    "pix": [
+     1345,
+     749
+    ],
     "kappa_at_row": 0.7549,
-    "kappa_max_2arcsec": 0.8014,
-    "kappa_median_2arcsec": 0.754,
+    "kappa_max_box": 0.8014,
+    "kappa_median_box": 0.754,
     "max_dist_arcsec": 2.56
    },
    "lenstool": {
+    "pix": [
+     572,
+     274
+    ],
     "kappa_at_row": 1.9341,
-    "kappa_max_2arcsec": 2.2801,
-    "kappa_median_2arcsec": 1.9314,
+    "kappa_max_box": 2.2801,
+    "kappa_median_box": 1.9314,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 581,
    "glafic": {
+    "pix": [
+     1322,
+     781
+    ],
     "kappa_at_row": 1.1795,
-    "kappa_max_2arcsec": 5.2399,
-    "kappa_median_2arcsec": 0.8017,
+    "kappa_max_box": 5.2399,
+    "kappa_median_box": 0.8017,
     "max_dist_arcsec": 0.2
    },
    "lenstool": {
+    "pix": [
+     560,
+     290
+    ],
     "kappa_at_row": 2.039,
-    "kappa_max_2arcsec": 2.4824,
-    "kappa_median_2arcsec": 2.037,
+    "kappa_max_box": 2.4824,
+    "kappa_median_box": 2.037,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 635,
    "glafic": {
+    "pix": [
+     1199,
+     730
+    ],
     "kappa_at_row": 0.7244,
-    "kappa_max_2arcsec": 0.7478,
-    "kappa_median_2arcsec": 0.7243,
+    "kappa_max_box": 0.7478,
+    "kappa_median_box": 0.7243,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     499,
+     265
+    ],
     "kappa_at_row": 0.9644,
-    "kappa_max_2arcsec": 1.1055,
-    "kappa_median_2arcsec": 0.9645,
+    "kappa_max_box": 1.1055,
+    "kappa_median_box": 0.9645,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 675,
    "glafic": {
+    "pix": [
+     1165,
+     738
+    ],
     "kappa_at_row": 0.7244,
-    "kappa_max_2arcsec": 0.7479,
-    "kappa_median_2arcsec": 0.7242,
+    "kappa_max_box": 0.7479,
+    "kappa_median_box": 0.7242,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     482,
+     269
+    ],
     "kappa_at_row": 0.8737,
-    "kappa_max_2arcsec": 0.9888,
-    "kappa_median_2arcsec": 0.874,
+    "kappa_max_box": 0.9888,
+    "kappa_median_box": 0.874,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 712,
    "glafic": {
+    "pix": [
+     1138,
+     752
+    ],
     "kappa_at_row": 0.729,
-    "kappa_max_2arcsec": 0.7537,
-    "kappa_median_2arcsec": 0.7287,
+    "kappa_max_box": 0.7537,
+    "kappa_median_box": 0.7287,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     468,
+     276
+    ],
     "kappa_at_row": 0.8231,
-    "kappa_max_2arcsec": 0.925,
-    "kappa_median_2arcsec": 0.8231,
+    "kappa_max_box": 0.925,
+    "kappa_median_box": 0.8231,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 952,
    "glafic": {
+    "pix": [
+     1204,
+     994
+    ],
     "kappa_at_row": 1.155,
-    "kappa_max_2arcsec": 1.2303,
-    "kappa_median_2arcsec": 1.1537,
+    "kappa_max_box": 1.2303,
+    "kappa_median_box": 1.1537,
     "max_dist_arcsec": 2.01
    },
    "lenstool": {
+    "pix": [
+     501,
+     397
+    ],
     "kappa_at_row": 2.7423,
-    "kappa_max_2arcsec": 3.3687,
-    "kappa_median_2arcsec": 2.758,
+    "kappa_max_box": 3.3687,
+    "kappa_median_box": 2.758,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 1128,
    "glafic": {
+    "pix": [
+     1542,
+     1388
+    ],
     "kappa_at_row": 0.8477,
-    "kappa_max_2arcsec": 0.9501,
-    "kappa_median_2arcsec": 0.8494,
+    "kappa_max_box": 0.9501,
+    "kappa_median_box": 0.8494,
     "max_dist_arcsec": 2.06
    },
    "lenstool": {
+    "pix": [
+     670,
+     593
+    ],
     "kappa_at_row": 1.1293,
-    "kappa_max_2arcsec": 1.4754,
-    "kappa_median_2arcsec": 1.1194,
+    "kappa_max_box": 1.4754,
+    "kappa_median_box": 1.1194,
     "max_dist_arcsec": 2.01
    }
   },
   {
    "label": 1370,
    "glafic": {
+    "pix": [
+     840,
+     1045
+    ],
     "kappa_at_row": 0.795,
-    "kappa_max_2arcsec": 0.8592,
-    "kappa_median_2arcsec": 0.795,
+    "kappa_max_box": 0.8592,
+    "kappa_median_box": 0.795,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     320,
+     422
+    ],
     "kappa_at_row": 0.6315,
-    "kappa_max_2arcsec": 0.7249,
-    "kappa_median_2arcsec": 0.6303,
+    "kappa_max_box": 0.7249,
+    "kappa_median_box": 0.6303,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 1571,
    "glafic": {
+    "pix": [
+     731,
+     1125
+    ],
     "kappa_at_row": 0.7287,
-    "kappa_max_2arcsec": 0.755,
-    "kappa_median_2arcsec": 0.7287,
+    "kappa_max_box": 0.755,
+    "kappa_median_box": 0.7287,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     265,
+     462
+    ],
     "kappa_at_row": 0.5001,
-    "kappa_max_2arcsec": 0.5408,
-    "kappa_median_2arcsec": 0.5001,
+    "kappa_max_box": 0.5408,
+    "kappa_median_box": 0.5001,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 1637,
    "glafic": {
+    "pix": [
+     765,
+     1204
+    ],
     "kappa_at_row": 0.7955,
-    "kappa_max_2arcsec": 0.825,
-    "kappa_median_2arcsec": 0.7954,
+    "kappa_max_box": 0.825,
+    "kappa_median_box": 0.7954,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     282,
+     501
+    ],
     "kappa_at_row": 0.6109,
-    "kappa_max_2arcsec": 0.6695,
-    "kappa_median_2arcsec": 0.6109,
+    "kappa_max_box": 0.6695,
+    "kappa_median_box": 0.6109,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 1719,
    "glafic": {
+    "pix": [
+     925,
+     1379
+    ],
     "kappa_at_row": 1.0438,
-    "kappa_max_2arcsec": 1.075,
-    "kappa_median_2arcsec": 1.0434,
+    "kappa_max_box": 1.075,
+    "kappa_median_box": 1.0434,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     362,
+     589
+    ],
     "kappa_at_row": 1.2733,
-    "kappa_max_2arcsec": 1.342,
-    "kappa_median_2arcsec": 1.2728,
+    "kappa_max_box": 1.342,
+    "kappa_median_box": 1.2728,
     "max_dist_arcsec": 2.83
    }
   },
   {
    "label": 1784,
    "glafic": {
+    "pix": [
+     939,
+     1437
+    ],
     "kappa_at_row": 1.0335,
-    "kappa_max_2arcsec": 1.0647,
-    "kappa_median_2arcsec": 1.0334,
+    "kappa_max_box": 1.0647,
+    "kappa_median_box": 1.0334,
     "max_dist_arcsec": 2.83
    },
    "lenstool": {
+    "pix": [
+     369,
+     618
+    ],
     "kappa_at_row": 1.3195,
-    "kappa_max_2arcsec": 1.3853,
-    "kappa_median_2arcsec": 1.3195,
+    "kappa_max_box": 1.3853,
+    "kappa_median_box": 1.3195,
     "max_dist_arcsec": 2.83
    }
   }
