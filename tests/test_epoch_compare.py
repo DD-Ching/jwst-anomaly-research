@@ -121,3 +121,30 @@ def test_mutual_matches_drop_contested_pairs():
     b = SkyCoord([10.0 + 0.05 / 3600], [0.0], unit="deg")
     ia, ib = ec.mutual_matches(a, b, 0.3)
     assert len(ia) == 1 and len(ib) == 1
+
+
+def test_peer_null_uses_the_frame_tie_and_excludes_the_target():
+    cat1, cat2, target = _cats(target_motion_mas=(30.0, 0.0), target_dmag=0.5)
+    for c in (cat1, cat2):
+        c["semimajor_sigma"] = np.full(len(c), 2.0)
+    r = ec.compare_epochs(cat1, cat2, target)
+    assert r["reference_dmag_median"] == pytest.approx(0.1, abs=0.01)
+    p = ec.peer_null(cat1, cat2, target, r, radius_arcsec=60.0, dmag=5.0, size_frac=0.3)
+    assert p["n_peers"] == 79
+    assert abs(p["peer_dmag_median"]) < 0.01  # centred by the reference median
+    assert p["peer_dmag_sigma"] == pytest.approx(0.02, abs=0.01)  # epoch-2 noise only
+    assert p["peer_residual_p99_mas"] < 30.0
+    assert p["n_peers_with_larger_residual"] == 0
+    assert p["target_size_finite"]
+
+
+def test_peer_null_without_peers_is_valid_json():
+    import json
+
+    cat1, cat2, target = _cats()
+    cat1["semimajor_sigma"] = np.full(len(cat1), 2.0)
+    cat1["semimajor_sigma"][0] = np.nan  # target size missing -> no peers
+    r = ec.compare_epochs(cat1, cat2, target)
+    p = ec.peer_null(cat1, cat2, target, r)
+    assert p["n_peers"] == 0 and p["peer_dmag_sigma"] is None and not p["target_size_finite"]
+    json.dumps(p, allow_nan=False)

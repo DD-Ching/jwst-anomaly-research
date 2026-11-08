@@ -134,8 +134,69 @@ def compare_epochs(
         "target_residual_over_reference_sigma": float(np.hypot(*(d_t / sig))),
         "fraction_of_references_with_larger_residual": float(np.mean(resid_ref > total)),
         "target_dmag": dm_t,
+        "reference_dmag_median": float(dm_med),
         "reference_dmag_sigma": float(dm_sig),
         "target_snr": snr_t,
+        "label": "derived",
+    }
+
+
+def peer_null(
+    cat1: Table,
+    cat2: Table,
+    target: SkyCoord,
+    cmp: dict[str, Any],
+    *,
+    radius_arcsec: float = 60.0,
+    dmag: float = 0.5,
+    size_frac: float = 0.3,
+    match_radius_arcsec: float = 0.3,
+) -> dict[str, Any]:
+    """Empirical null for faint targets (D-017 addenda 1 and 4), on ``compare_epochs``' frame tie.
+
+    Peers are mutual matches within ``radius_arcsec`` of the target with epoch-1 aper50 magnitude
+    within ``dmag`` and ``semimajor_sigma`` within ``size_frac`` of the target's; the target's rows
+    are excluded. Returns the peer positional residuals and the peer magnitude changes, both after
+    the frame-tie median (``cmp["frame_offset_mas"]``, ``cmp["reference_dmag_median"]``). Missing
+    values are None, so the result is valid JSON.
+    """
+    c1 = SkyCoord(cat1["ra"], cat1["dec"], unit="deg")
+    c2 = SkyCoord(cat2["ra"], cat2["dec"], unit="deg")
+    k1 = int(np.argmin(target.separation(c1).arcsec))
+    k2 = int(np.argmin(target.separation(c2).arcsec))
+    mag1 = np.asarray(cat1["aper50_abmag"], float)
+    mag2 = np.asarray(cat2["aper50_abmag"], float)
+    size = np.ma.filled(np.ma.asarray(cat1["semimajor_sigma"], float), np.nan)
+    i1, i2 = mutual_matches(c1, c2, match_radius_arcsec)
+    d_all = offsets_mas(c1[i1], c2[i2])
+    dm_all = mag2[i2] - mag1[i1] - cmp["reference_dmag_median"]
+    with np.errstate(invalid="ignore", divide="ignore"):
+        same_size = np.abs(size[i1] / size[k1] - 1.0) <= size_frac
+    peer = (
+        (c1[k1].separation(c1[i1]).arcsec <= radius_arcsec)
+        & (np.abs(mag1[i1] - mag1[k1]) <= dmag)
+        & same_size
+        & (i1 != k1)
+        & (i2 != k2)
+        & np.isfinite(d_all).all(axis=1)
+        & np.isfinite(dm_all)
+    )
+    r_peer = np.hypot(*(d_all[peer] - np.asarray(cmp["frame_offset_mas"], float)).T)
+    dm_peer = dm_all[peer]
+    n = int(peer.sum())
+
+    def opt(f: Any) -> float | None:
+        return float(f()) if n else None
+
+    return {
+        "n_peers": n,
+        "target_size_finite": bool(np.isfinite(size[k1]) and size[k1] > 0),
+        "peer_dmag_median": opt(lambda: np.median(dm_peer)),
+        "peer_dmag_sigma": opt(lambda: robust_center(dm_peer)[1]),
+        "peer_residual_median_mas": opt(lambda: np.median(r_peer)),
+        "peer_residual_p95_mas": opt(lambda: np.percentile(r_peer, 95)),
+        "peer_residual_p99_mas": opt(lambda: np.percentile(r_peer, 99)),
+        "n_peers_with_larger_residual": int(np.sum(r_peer > cmp["target_residual_total_mas"])),
         "label": "derived",
     }
 
