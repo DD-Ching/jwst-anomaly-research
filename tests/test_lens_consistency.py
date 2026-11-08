@@ -1084,16 +1084,45 @@ def test_repeated_pair_topology_within_radius_of_every_pair_image():
             "forced_class": ["absent", "confused", "recovered", "confused", "absent"],
         }
     )
-    shared = ["1.1", "1.2", "2.1"]  # system 2 has only one shared id: no pair
+    shared = ["1.1", "1.2", "1.3", "2.1"]  # 1.3 shares another predicted image, 50" away
     got = lc.repeated_pair_topology(table, images, shared)
-    # 7.5" / 6.5" from 1.1 / 1.2 -> pair; 8.5" from 1.1 -> no; recovered not a flag class
+    # 7.5" / 6.5" from 1.1 / 1.2 -> pair (1.3 far does not block); 8.5" from 1.1 -> one image
+    # only; recovered not a flag class; system 2 has a single shared id
     assert got == ["1.1/1.2", "", "", "", ""]
     assert lc.repeated_pair_topology(table, images, shared, classes=("recovered",))[2] == "1.1/1.2"
 
 
 def test_mu_model_dependent_factor_two():
-    assert lc.mu_model_dependent(7.52, 3.63) is True  # ratio 2.07
-    assert lc.mu_model_dependent(15.82, 30.18) is False  # ratio 1.91
-    assert lc.mu_model_dependent(-4.0, 1.9) is True  # |mu| compared
-    assert lc.mu_model_dependent(5.0, None) is None
-    assert lc.mu_model_dependent(5.0, float("nan")) is None
+    assert lc.mu_model_dependent(7.52, 3.63, 0.44) is True  # ratio 2.07
+    assert lc.mu_model_dependent(15.82, 30.18, 0.9) is False  # ratio 1.91
+    assert lc.mu_model_dependent(-4.0, 1.9, 1.0) is True  # |mu| compared
+    assert lc.mu_model_dependent(7.52, 3.63, 3.5) is None  # second image beyond 3"
+    assert lc.mu_model_dependent(5.0, None, None) is None
+    assert lc.mu_model_dependent(5.0, float("nan"), 0.5) is None
+    assert lc.mu_model_dependent(5.0, 0.0, 0.5) is None
+    assert lc.mu_ratio(0.0, 2.0) is None and lc.mu_ratio(-2.0, 4.0) == 2.0
+
+
+def test_d037_gate_r_labels():
+    spec = importlib.util.spec_from_file_location(
+        "d037_rules_gate", Path(__file__).parents[1] / "scripts" / "d037_rules_gate.py"
+    )
+    g = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(g)
+    ok = [
+        {"system": "16", "forced_class": "absent", "labels": ["model_topology"]},
+        {"system": "2", "forced_class": "confused", "labels": ["model_topology"]},
+        {"system": "1192", "forced_class": "confused", "labels": ["mu_model_dependent"]},
+    ]
+    assert g.gate(ok)["passes"]
+    both = [dict(ok[0], labels=["model_topology", "mu_model_dependent"])] + ok[1:]
+    assert not g.gate(both)["passes"]
+    extra = ok + [{"system": "5", "forced_class": "absent", "labels": ["model_topology"]}]
+    assert g.gate(extra)["rule_only_rows"] == ["5:absent"]
+    assert g.labels("", None) == [] and g.labels("a/b", True) == [
+        "model_topology",
+        "mu_model_dependent",
+    ]
+    rows = [{"system": "1", "radec": [64.0, -24.0], "sharon": {"nearest_extra_mu": 2.0}}]
+    assert g.second_model(rows, "1", 64.0 + 0.01 / 3600, -24.0) == {"nearest_extra_mu": 2.0}
+    assert g.second_model(rows, "1", 64.0, -24.0 + 0.1 / 3600) == {}

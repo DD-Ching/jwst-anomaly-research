@@ -3261,7 +3261,8 @@ CATS-fitted z = 4.419.
 - **Revisit if** a spectroscopic z for system 16 is published (as above), or a JWST-era MACS1149 model appears.
 
 **Addendum 2026-11-08 (repeated-pair and model-dependent-μ rules as functions, `scripts/d037_rules_gate.py`).**
-- **Decision.** `lens_consistency.repeated_pair_topology` (row within 8″ of every `shared_match` image of its system)
+- **Decision.** `lens_consistency.repeated_pair_topology` (row within 8″ of ≥ 2 `shared_match` images of its system;
+  post hoc from "every", since `shared_match` does not name the shared predicted image)
   and `mu_model_dependent` (|μ| ratio > 2× between models; not applicable without a second-model image) reproduce the
   three hand labels (gate R passes). They stay diagnostics until gated on a second field; fitted-z and BCG-annulus
   rules are not coded.

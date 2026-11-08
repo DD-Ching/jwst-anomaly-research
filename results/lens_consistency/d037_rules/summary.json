@@ -9,7 +9,9 @@
  },
  "assumptions": {
   "pair_radius_arcsec": 8.0,
-  "mu_model_factor": 2.0
+  "mu_model_factor": 2.0,
+  "mu_second_radius_arcsec": 3.0,
+  "xmodel_row_match_arcsec": 0.05
  },
  "validate_rms_arcsec": 0.6731,
  "n_imageplane": 145,

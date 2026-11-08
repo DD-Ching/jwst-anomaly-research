@@ -1848,12 +1848,9 @@ def model_copies_unique(
     return out
 
 
-PAIR_RADIUS_ARCSEC = (
-    8.0  # D-037 repeated-pair rule: row within this of every pair image (ASSUMPTION)
-)
-MU_MODEL_FACTOR = (
-    2.0  # D-037 model-dependent-mu rule: |mu| ratio between models above this (ASSUMPTION)
-)
+PAIR_RADIUS_ARCSEC = 8.0  # D-037 repeated pair: row within this of two shared images (ASSUMPTION)
+MU_MODEL_FACTOR = 2.0  # D-037 model-dependent mu: |mu| ratio between models above this (ASSUMPTION)
+MU_SECOND_RADIUS_ARCSEC = 3.0  # second model's image counts within this (D-041 loose radius)
 
 
 def repeated_pair_topology(
@@ -1864,10 +1861,10 @@ def repeated_pair_topology(
     classes: tuple[str, ...] = COPY_CLASSES,
 ) -> list[str]:
     """D-037 repeated-pair rule, per row of a forced-checked ``table``: when the row's
-    ``forced_class`` is in ``classes`` and two or more catalogued images of its own system share
-    one predicted image (``shared``: ``validate``'s ``shared_match`` ids), and the row lies within
-    ``radius_arcsec`` of every one of them, return those ids joined by ``/`` (the row is
-    ``model_topology``, untestable); otherwise ``""``."""
+    ``forced_class`` is in ``classes`` and at least two catalogued images of its own system that
+    share a predicted image (``shared``: ``validate``'s ``shared_match`` ids, which do not say
+    which predicted image) lie within ``radius_arcsec`` of the row, return those ids joined by
+    ``/`` (the row is ``model_topology``, untestable); otherwise ``""``."""
     ids = np.asarray(images["image_id"]).astype(str)
     cand = images[np.isin(ids, sorted(set(map(str, shared))))]
     csys = np.asarray(cand["system"]).astype(str)
@@ -1883,22 +1880,37 @@ def repeated_pair_topology(
             .separation(SkyCoord(cand["ra"][sel], cand["dec"][sel], unit="deg"))
             .arcsec
         )
-        out.append("/".join(sorted(cid[sel])) if np.all(sep <= radius_arcsec) else "")
+        near = cid[sel][sep <= radius_arcsec]
+        out.append("/".join(sorted(near)) if len(near) >= 2 else "")
     return out
 
 
-def mu_model_dependent(
-    mu_first: float, mu_second: float | None, factor: float = MU_MODEL_FACTOR
-) -> bool | None:
-    """D-037 model-dependent-mu rule for one ``absent`` / ``confused`` row: ``True`` when the two
-    models' |mu| differ by more than ``factor`` x, ``False`` when they agree within it, ``None``
-    when the second model has no image of the source there (rule not applicable)."""
-    if mu_second is None or not (np.isfinite(mu_first) and np.isfinite(mu_second)):
+def mu_ratio(mu_first: float, mu_second: float | None) -> float | None:
+    """|mu| ratio (larger over smaller) of two models, or ``None`` when either value is missing,
+    non-finite or zero."""
+    if mu_second is None or mu_first is None:
         return None
     a, b = abs(float(mu_first)), abs(float(mu_second))
-    if min(a, b) == 0:
-        return True
-    return bool(max(a, b) / min(a, b) > factor)
+    if not (np.isfinite(a) and np.isfinite(b)) or min(a, b) == 0:
+        return None
+    return max(a, b) / min(a, b)
+
+
+def mu_model_dependent(
+    mu_first: float,
+    mu_second: float | None,
+    sep_arcsec: float | None,
+    factor: float = MU_MODEL_FACTOR,
+    radius_arcsec: float = MU_SECOND_RADIUS_ARCSEC,
+) -> bool | None:
+    """D-037 model-dependent-mu rule for one ``absent`` / ``confused`` row: ``True`` when the
+    second model's image of the source (within ``radius_arcsec`` of the row) has |mu| differing
+    by more than ``factor`` x, ``False`` when within it, ``None`` when no such image or no usable
+    mu exists (rule not applicable)."""
+    if sep_arcsec is None or not np.isfinite(sep_arcsec) or sep_arcsec > radius_arcsec:
+        return None
+    ratio = mu_ratio(mu_first, mu_second)
+    return None if ratio is None else bool(ratio > factor)
 
 
 def image_stamper(uri: str, half_arcsec: float = 1.5):

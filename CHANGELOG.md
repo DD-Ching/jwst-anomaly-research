@@ -11,8 +11,9 @@ Newest first. Results, failed approaches and the handoff state; not a diary.
   pairs; 16 `absent` and 2 `confused` → `model_topology`, 1192 `confused` → `mu_model_dependent` (ratio 2.07, narrow);
   no rule-only rows → gate R passes. Defining field only: not adopted as a class until a second-field gate. No flag,
   no candidate.
-- **Failed approach:** none (a radec-rounding key mismatch in the first gate run left 16's Sharon μ empty; fixed by a
-  0.05″ positional match before the recorded run). **Services:** archive.stsci.edu with the proxy + certifi bundle;
+- **Deviations (post hoc, outcome unchanged):** a radec-rounding key mismatch in the first gate run left 16's Sharon μ
+  empty (now a 0.05″ match); after review the pair rule needs ≥ 2 shared images within 8″ (not every one) and the μ
+  rule applies the 3.0″ second-model radius explicitly. **Failed approach:** none. **Services:** archive.stsci.edu with the proxy + certifi bundle;
   CDS still resets (15:09Z); #751 waits.
 - **Handoff:** next on this item: gate both functions on a second field with hand-read topology / μ flags (MACS0416
   or Abell 2744 forced rows), then a `d037_label` column in `images --forced-image`; radii scaled to the rms stays open.

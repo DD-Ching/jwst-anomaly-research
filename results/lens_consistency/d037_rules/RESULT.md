@@ -19,6 +19,15 @@ docs/fields/macs1149.md.
 No other `absent` / `confused` row exists, so there are no rule-only rows. Diagnostic (not a flag): the `recovered`
 row of system 21 lies within 8″ of the shared pair 21.1/21.2.
 
+**Deviations (post hoc, after the first gate run; outcome unchanged).**
+- The first run keyed the cross-model rows by rounded RA/Dec and mis-keyed system 16 (Sharon μ empty); the recorded
+  run matches them within 0.05″ (`xmodel_row_match_arcsec`).
+- After the review: the repeated-pair rule now needs the row within 8″ of **at least two** shared-match images of its
+  system, not of every one, because `shared_match` does not say which predicted image is shared (a system with two
+  separate shared pairs would otherwise never be labelled); and the μ rule applies the plan's 3.0″ second-model radius
+  explicitly (`mu_second_radius_arcsec`). On MACS1149 each system has one shared pair and both second-model images are
+  within 0.9″, so the labels are the same.
+
 **Limits.**
 - This is the rules' own defining field, so the pass shows the functions reproduce the hand reading, not that the
   rules are validated; adopting either label as a class needs a second-field gate (plan, "What changes the plan").

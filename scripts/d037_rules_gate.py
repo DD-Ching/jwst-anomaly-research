@@ -9,6 +9,7 @@ from pathlib import Path
 
 import lens_consistency as lc
 import numpy as np
+from astropy.coordinates import SkyCoord
 from astropy.table import Table
 
 # D-037 hand labels of the three MACS1149 forced flags (system, forced_class) -> label
@@ -17,6 +18,20 @@ HAND_R = {
     ("2", "confused"): "model_topology",
     ("1192", "confused"): "mu_model_dependent",
 }
+
+
+XMODEL_ROW_MATCH_ARCSEC = 0.05  # same row in the cross-model summary (radec rounded to 1e-6 deg)
+
+
+def second_model(xm_rows: list[dict], sys_id: str, ra: float, dec: float) -> dict:
+    """Second-model fields of the cross-model summary row of the same system and position."""
+    here = SkyCoord(ra, dec, unit="deg")
+    for x in xm_rows:
+        if x["system"] == sys_id:
+            there = SkyCoord(x["radec"][0], x["radec"][1], unit="deg")
+            if here.separation(there).arcsec < XMODEL_ROW_MATCH_ARCSEC:
+                return x.get("sharon") or {}
+    return {}
 
 
 def labels(topo: str, mu_dep: bool | None) -> list[str]:
@@ -56,51 +71,32 @@ def main() -> None:
     model, files, par = lc.load_model(a.model)
     images, _ = lc.image_list(a.model, files, par)
     lc.apply_frame_offset(a.model, model, images)
-    topo = lc.repeated_pair_topology(table, images, shared)
+    every_class = tuple(sorted({str(x) for x in table["forced_class"]}))
+    topo = lc.repeated_pair_topology(table, images, shared, classes=every_class)
     xm_rows = json.loads(a.crossmodel.read_text())["rows"]
-
-    def second_model(sys_id: str, ra: float, dec: float) -> dict:
-        """The cross-model row of the same system within 0.05" (its radec is rounded to 1e-6 deg;
-        rounding both sides to 1e-5 deg mis-keys half-way cases)."""
-        for x in xm_rows:
-            if x["system"] == sys_id and (
-                abs(x["radec"][0] - ra) * 3600 * np.cos(np.radians(dec)) < 0.05
-                and abs(x["radec"][1] - dec) * 3600 < 0.05
-            ):
-                return x.get("sharon") or {}
-        return {}
-
     rows, diag = [], []
-    all_topo = lc.repeated_pair_topology(
-        table, images, shared, classes=tuple(sorted({str(x) for x in table["forced_class"]}))
-    )
-    for r, t, t_all in zip(table, topo, all_topo, strict=True):
+    for r, t in zip(table, topo, strict=True):
         if r["image_class"] == "observed":
             continue
-        sh = second_model(str(r["system"]), float(r["ra"]), float(r["dec"]))
-        mu2 = sh.get("nearest_extra_mu")
+        sh = second_model(xm_rows, str(r["system"]), float(r["ra"]), float(r["dec"]))
+        mu2, sep2 = sh.get("nearest_extra_mu"), sh.get("nearest_extra_sep_arcsec")
+        ratio = lc.mu_ratio(float(r["magnification"]), mu2)
         rec = {
             "system": str(r["system"]),
             "forced_class": str(r["forced_class"]),
             "mu_first": round(float(r["magnification"]), 2),
             "mu_second_nearest": mu2,
-            "second_sep_arcsec": sh.get("nearest_extra_sep_arcsec"),
-            "mu_ratio": (
-                round(
-                    max(abs(r["magnification"]), abs(mu2)) / min(abs(r["magnification"]), abs(mu2)),
-                    2,
-                )
-                if mu2
-                else None
-            ),
-            "shared_pair": t_all,
+            "second_sep_arcsec": sep2,
+            "mu_ratio": None if ratio is None else round(ratio, 2),
+            "shared_pair": t,
         }
         if r["forced_class"] in lc.COPY_CLASSES:
-            md = lc.mu_model_dependent(float(r["magnification"]), mu2)
+            md = lc.mu_model_dependent(float(r["magnification"]), mu2, sep2)
             rec.update(mu_model_dependent=md, labels=labels(t, md))
             rows.append(rec)
         else:
             diag.append(rec)
+    finite = np.isfinite(np.asarray(ip["dtheta_arcsec"], float))
     summary = {
         "provenance": "derived (forced classes: stored 2026-10-14 run; mu: model_prediction)",
         "model": a.model,
@@ -108,9 +104,13 @@ def main() -> None:
         "assumptions": {
             "pair_radius_arcsec": lc.PAIR_RADIUS_ARCSEC,
             "mu_model_factor": lc.MU_MODEL_FACTOR,
+            "mu_second_radius_arcsec": lc.MU_SECOND_RADIUS_ARCSEC,
+            "xmodel_row_match_arcsec": XMODEL_ROW_MATCH_ARCSEC,
         },
-        "validate_rms_arcsec": round(float((ip["dtheta_arcsec"] ** 2).mean() ** 0.5), 4),
-        "n_imageplane": len(ip),
+        "validate_rms_arcsec": round(
+            float(np.sqrt(np.mean(np.asarray(ip["dtheta_arcsec"], float)[finite] ** 2))), 4
+        ),
+        "n_imageplane": int(finite.sum()),
         "shared_match_images": shared,
         "flag_rows": rows,
         "diagnostic_other_rows": diag,
