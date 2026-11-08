@@ -1790,6 +1790,32 @@ def model_copies(
 COPY_UNIQUE_RMS_FACTOR = 6.5  # D-042 second copy rule: pair radius in x the rms (ASSUMPTION)
 
 
+def copy_partners(
+    table: Table, images: Table, unpredicted: list[str], limit_arcsec: float
+) -> dict[int, dict[str, float]]:
+    """Per ``table`` row index with ``forced_class`` in ``COPY_CLASSES``: the catalogued,
+    unpredicted images of the row's system within ``limit_arcsec``, as ``{image_id: separation_arcsec}``."""
+    ids = np.asarray(images["image_id"]).astype(str)
+    cand = images[np.isin(ids, sorted(set(map(str, unpredicted))))]
+    cid = np.asarray(cand["image_id"]).astype(str)
+    csys = np.asarray(cand["system"]).astype(str)
+    out: dict[int, dict[str, float]] = {}
+    for i, r in enumerate(table):
+        if r["forced_class"] not in COPY_CLASSES:
+            continue
+        sel = csys == str(r["system"])
+        if not sel.any():
+            out[i] = {}
+            continue
+        sep = (
+            SkyCoord(r["ra"], r["dec"], unit="deg")
+            .separation(SkyCoord(cand["ra"][sel], cand["dec"][sel], unit="deg"))
+            .arcsec
+        )
+        out[i] = {str(x): float(d) for x, d in zip(cid[sel], sep, strict=True) if d <= limit_arcsec}
+    return out
+
+
 def model_copies_unique(
     table: Table,
     images: Table,
@@ -1803,26 +1829,10 @@ def model_copies_unique(
     lie within ``factor`` x ``rms_arcsec``. The row is a copy of image I (returned id) when I is
     its only partner, the row is I's only partner, and ``image_mu[I]`` (the model's signed
     magnification at I) has the sign of the row's ``magnification``; otherwise ``""``."""
-    unpred = set(map(str, unpredicted))
-    ids = np.asarray(images["image_id"]).astype(str)
-    cand = images[np.isin(ids, sorted(unpred))]
-    cid = np.asarray(cand["image_id"]).astype(str)
-    csys = np.asarray(cand["system"]).astype(str)
-    limit = factor * rms_arcsec
-    rows = [i for i, r in enumerate(table) if r["forced_class"] in COPY_CLASSES]
-    partners: dict[int, list[str]] = {}
-    for i in rows:
-        r = table[i]
-        sel = csys == str(r["system"])
-        if not sel.any():
-            partners[i] = []
-            continue
-        sep = (
-            SkyCoord(r["ra"], r["dec"], unit="deg")
-            .separation(SkyCoord(cand["ra"][sel], cand["dec"][sel], unit="deg"))
-            .arcsec
-        )
-        partners[i] = [str(x) for x in cid[sel][sep <= limit]]
+    partners = {
+        i: list(p)
+        for i, p in copy_partners(table, images, unpredicted, factor * rms_arcsec).items()
+    }
     n_rows = {}
     for p in partners.values():
         for img in p:

@@ -30,22 +30,6 @@ def image_mu(model, images: Table, table: Table, ids: list[str]) -> dict[str, fl
     return out
 
 
-def partners(row, images: Table, unpred: list[str], rms: float) -> dict[str, float]:
-    """Unpredicted catalogued images of the row's system within the rule's radius (arcsec)."""
-    from astropy.coordinates import SkyCoord
-
-    sel = [
-        i for i in images if str(i["system"]) == str(row["system"]) and str(i["image_id"]) in unpred
-    ]
-    c = SkyCoord(row["ra"], row["dec"], unit="deg")
-    out = {}
-    for i in sel:
-        d = float(c.separation(SkyCoord(i["ra"], i["dec"], unit="deg")).arcsec)
-        if d <= lc.COPY_UNIQUE_RMS_FACTOR * rms:
-            out[str(i["image_id"])] = round(d, 2)
-    return out
-
-
 def label(table: Table, copies: list[str]) -> dict[str, Counter]:
     return {
         cls: Counter(
@@ -86,6 +70,7 @@ def main() -> None:
     mu = image_mu(model, images, table, unpred)
     copies = lc.model_copies_unique(table, images, unpred, a.rms, mu)
     base = lc.model_copies(table, images, unpred, a.rms)
+    pairs = lc.copy_partners(table, images, unpred, lc.COPY_UNIQUE_RMS_FACTOR * a.rms)
     rows = [
         {
             "system": str(r["system"]),
@@ -93,11 +78,11 @@ def main() -> None:
             "magnification": round(float(r["magnification"]), 2),
             "copy_of_unique": c,
             "copy_of_d041": b,
-            "partners_arcsec": partners(r, images, unpred, a.rms),
+            "partners_arcsec": {k: round(v, 2) for k, v in pairs[i].items()},
             "ra": round(float(r["ra"]), 6),
             "dec": round(float(r["dec"]), 6),
         }
-        for r, c, b in zip(table, copies, base, strict=True)
+        for i, (r, c, b) in enumerate(zip(table, copies, base, strict=True))
         if r["forced_class"] in lc.COPY_CLASSES
     ]
     got = label(table, copies)
