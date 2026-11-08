@@ -2015,12 +2015,33 @@ def halo_recovery(hstamp, ra: float, dec: float, flux: float, n_angles: int = 8)
     return float(np.median(fracs)) if fracs else float("nan")
 
 
+def shared_match_ids(imageplane: Path) -> list[str]:
+    """Image ids flagged ``shared_match`` in ``validate``'s ``imageplane*.ecsv``."""
+    ip = Table.read(imageplane, format="ascii.ecsv")
+    if "shared_match" not in ip.colnames:
+        raise SystemExit(f"error: {imageplane}: no shared_match column (not a validate imageplane)")
+    return [str(i) for i in ip["image_id"][np.asarray(ip["shared_match"], bool)]]
+
+
+def d037_columns(table: Table, images: Table, shared: list[str]) -> None:
+    """Add D-037's repeated-pair rule to a forced-checked ``table`` in place, as diagnostic
+    columns: ``d037_pair`` (the shared-match ids, ``/``-joined) and ``d037_label``
+    (``model_topology`` or ``""``). Only ``COPY_CLASSES`` rows are labelled; ``forced_class`` is
+    not changed (D-037 addendum b: diagnostic, not a class). The model-dependent-mu rule needs a
+    second model and stays in the gate scripts."""
+    pair = repeated_pair_topology(table, images, shared)
+    table["d037_pair"] = pair
+    table["d037_label"] = ["model_topology" if p else "" for p in pair]
+
+
 def cmd_images(args) -> dict:
     if not has_image_list(args.model):
         raise SystemExit(
             f"error: {args.model}: no usable multiple-image list (none published, or excluded by "
             "the image-plane rms gate of D-035)"
         )
+    if args.shared_imageplane and not args.forced_image:
+        raise SystemExit("error: --shared-imageplane labels forced rows; it needs --forced-image")
     check_planes(args.model, args.plane)
     model, files, par = load_model(args.model)
     model, planes = apply_planes(args.model, model, args.plane)
@@ -2064,6 +2085,13 @@ def cmd_images(args) -> dict:
         table.meta["forced"]["halo_filter_arcsec"] = args.halo_filter_arcsec
         table.meta["forced"]["image"] = args.forced_image
         table.meta["forced"]["frame_offset_arcsec"] = [dra, ddec]
+        if args.shared_imageplane:
+            d037_columns(table, images, shared_match_ids(args.shared_imageplane))
+            table.meta["forced"]["d037"] = {
+                "shared_imageplane": str(args.shared_imageplane),
+                "pair_radius_arcsec": PAIR_RADIUS_ARCSEC,
+                "classes": list(COPY_CLASSES),
+            }
     out = out_dir(args, planes)
     _write(table, out / "images_predicted.ecsv")
     classes = (
@@ -2123,6 +2151,11 @@ def cmd_images(args) -> dict:
                             round(float(r["best_dx"]), 1),
                             round(float(r["best_dy"]), 1),
                         ],
+                        **(
+                            {"d037_label": str(r["d037_label"]), "d037_pair": str(r["d037_pair"])}
+                            if "d037_label" in table.colnames
+                            else {}
+                        ),
                     }
                     for r in table
                     if r["forced_class"]
@@ -2686,6 +2719,11 @@ def main(argv: list[str] | None = None) -> int:
         type=float,
         default=None,
         help="subtract a median filter of this size from every forced stamp (BCG/ICL halos)",
+    )
+    i.add_argument(
+        "--shared-imageplane",
+        type=Path,
+        help="validate's imageplane.ecsv: add the D-037 repeated-pair d037_label diagnostic column",
     )
     f = sub.add_parser("fluxratios", help="image flux ratios against model magnification ratios")
     f.add_argument("--photometry", type=Path, help="DJA fix_phot FITS table")

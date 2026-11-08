@@ -3282,6 +3282,14 @@ CATS-fitted z = 4.419.
 - **Revisit if** a re-run Bergamini `validate` changes its `shared_match` list, or a positive μ case on a second field
   disagrees with its hand reading.
 
+**Addendum 2026-11-08c (`d037_label` column).**
+- **Decision.** `images --forced-image --shared-imageplane <imageplane.ecsv>` writes the repeated-pair rule as
+  `d037_pair` / `d037_label` (`absent` / `confused` rows; `forced_class` unchanged). The μ rule is not wired in (it
+  needs a second model); its gate scripts stay the route. Alternative rejected: changing `forced_class` to
+  `model_topology` (the rule is a diagnostic, addendum b).
+- **Evidence.** `results/lens_consistency/d037_label/summary.json`: gate-R readings reproduced 3 / 3 on MACS1149.
+- **Revisit if** a field's image ids differ from its `validate` ids, or a hand reading disagrees with the column.
+
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
 **Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″

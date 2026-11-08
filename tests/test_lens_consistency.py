@@ -1153,3 +1153,57 @@ def test_d037_gate_a_second_field(tmp_path):
     assert not g.gate(bad)["passes"]
     extra = rows + [{"model": "uncover2", "system": "9", "forced_class": "confused", "labels": []}]
     assert g.gate(extra)["passes"] and g.gate(extra)["unread_rows"] == ["uncover2:9:confused []"]
+
+
+def test_d037_columns_label_copy_class_rows_only(tmp_path):
+    d0 = -24.0
+    a = 1.0 / 3600
+    images = Table(
+        {
+            "image_id": ["1.1", "1.2", "1.3"],
+            "system": ["1", "1", "1"],
+            "ra": [64.0] * 3,
+            "dec": [d0, d0 + 1 * a, d0 + 30 * a],
+        }
+    )
+    ip = Table({"image_id": ["1.1", "1.2", "1.3"], "shared_match": [True, True, False]})
+    ip.write(tmp_path / "imageplane.ecsv", format="ascii.ecsv")
+    shared = lc.shared_match_ids(tmp_path / "imageplane.ecsv")
+    assert shared == ["1.1", "1.2"]
+    table = Table(
+        {
+            "system": ["1", "1", "1"],
+            "ra": [64.0] * 3,
+            "dec": [d0 + 3 * a, d0 + 3 * a, d0 + 20 * a],
+            "forced_class": ["absent", "recovered", "confused"],
+        }
+    )
+    lc.d037_columns(table, images, shared)
+    assert list(table["d037_label"]) == ["model_topology", "", ""]
+    assert list(table["d037_pair"]) == ["1.1/1.2", "", ""]
+    assert list(table["forced_class"]) == ["absent", "recovered", "confused"]  # unchanged
+    Table({"image_id": ["1.1"]}).write(tmp_path / "bad.ecsv", format="ascii.ecsv")
+    with pytest.raises(SystemExit):
+        lc.shared_match_ids(tmp_path / "bad.ecsv")
+
+
+def test_d037_label_check_compare():
+    spec = importlib.util.spec_from_file_location(
+        "d037_label_check", Path(__file__).parents[1] / "scripts" / "d037_label_check.py"
+    )
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    table = Table(
+        {
+            "system": ["2", "5", "7"],
+            "forced_class": ["confused", "absent", "recovered"],
+            "image_class": ["missing", "observed", "missing"],
+            "d037_label": ["model_topology", "", ""],
+            "d037_pair": ["2.2/2.3", "", ""],
+        }
+    )
+    gate = [{"system": "2", "forced_class": "confused", "shared_pair": "2.2/2.3"}]
+    assert m.compare(table, gate)["passes"]
+    assert not m.compare(table, [dict(gate[0], shared_pair="")])["passes"]
+    table["image_class"][1] = "missing"  # an absent row the gate never read
+    assert m.compare(table, gate)["rows_not_in_gate"] == ["5:absent"]
