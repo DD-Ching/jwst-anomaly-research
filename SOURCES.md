@@ -608,6 +608,8 @@ All of these were rejected for D-018; they are listed so later sessions do not s
       MCMC chain `bayes.dat` 70,069,007 B, sha256 `bf6ae670…` (accessed 2026-10-08; D-045).
       Accessed 2026-10-08: `best.par` sha256 `7245368f96ad9c7159eb9c8d0045030eda0804554312ee86d84f2e052025b9fb`,
       `obs_arcs.cat` sha256 `d02c231f4ee8c81f47335a99182a9f64a4c553e14818b1c9bd07314c2f4f5e1c`.
+      Table 2 (149 multiple images; system 46 named `JD1A`–`C`), VizieR J/ApJ/952/84/table2 via the mirror
+      https://vizier.cfa.harvard.edu (asu-tsv `-out.all`), sha256 `e79aa3c7fc336ec7156e6cd5a4049a6ed28d8ffc1840c53cbc04757f95295f10`, accessed 2026-11-08.
 - **El Gordo.**
   - Data: MAST 1176 `jw01176-o241_t012` (jwst 3.0.0, reprocessed 2026-10-01).
   - Diego et al. 2023, A&A 672, A3, arXiv:2210.06514 (JWST PEARLS El Gordo lens model): Table `tab_arcs`

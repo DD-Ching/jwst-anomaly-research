@@ -3271,6 +3271,17 @@ CATS-fitted z = 4.419.
   `results/lens_consistency/d037_rules/RESULT.md`.
 - **Revisit if** the second-field gate fails, or a pinned second model moves 1192's ratio below 2.
 
+**Addendum 2026-11-08b (second-field gate on Abell 2744, `scripts/d037_rules_a2744.py`).**
+- **Decision.** Frozen outcome: the route check fails as written (Bergamini+23 VizieR Table 2 names system 46 `JD1`).
+  Post hoc, with the JD1 → 46.1 alias fixed by the stored separations, gate A passes 6 / 6 (UNCOVER 3.1, 34.1 →
+  `model_topology`; Bergamini 700.1 ×2, 18.1, 22.1 → none). Both functions may be reported as a `d037_label`
+  diagnostic column; they are not verdicts, and the fitted-z and BCG-annulus rules stay by eye.
+- **Evidence.** `results/lens_consistency/d037_rules_a2744/RESULT.md`, `summary_post_hoc.json`. Bergamini
+  `shared_match` from the recorded list (www.fe.infn.it unreachable from the cloud). Unread UNCOVER C200.3 gets
+  `model_topology` (new diagnostic). `mu_model_dependent` has no positive case here.
+- **Revisit if** a re-run Bergamini `validate` changes its `shared_match` list, or a positive μ case on a second field
+  disagrees with its hand reading.
+
 ## D-038 MACS0416: system 26 is a solver-grid artefact at a fold caustic; radial screen null (2026-10-08)
 
 **Decision.** MACS0416 system 26's 11″ image-plane residual (D-035) comes from `find_images`. With the default 0.25″

@@ -1,0 +1,60 @@
+{
+ "provenance": "derived (forced classes: stored 2026-10-14 run; mu: model_prediction)",
+ "inputs": {
+  "run": "../results/lens_consistency/abell2744-uncover2",
+  "images": "<scratch>/berg_table2.tsv",
+  "images_sha256": "e79aa3c7fc336ec7156e6cd5a4049a6ed28d8ffc1840c53cbc04757f95295f10"
+ },
+ "assumptions": {
+  "pair_radius_arcsec": 8.0,
+  "mu_model_factor": 2.0,
+  "mu_second_radius_arcsec": 3.0,
+  "route_pos_arcsec": 0.1
+ },
+ "post_hoc_alias": null,
+ "route_check": {
+  "n_images": 149,
+  "missing_ids": [
+   "46.1a",
+   "46.1b",
+   "46.1c"
+  ],
+  "docs_pos_sep_arcsec": {
+   "3.2a": 0.016,
+   "3.2b": 0.024,
+   "34.1a": 0.014,
+   "34.1b": 0.01,
+   "700.1a": 0.014,
+   "700.1b": 0.019
+  },
+  "ok": false
+ },
+ "shared_match": {
+  "uncover2": [
+   "3.1a",
+   "3.1b",
+   "3.2a",
+   "3.2b",
+   "3.3a",
+   "3.3b",
+   "34.1a",
+   "34.1b",
+   "A200.1a",
+   "A200.1b",
+   "B200.2a",
+   "B200.2b",
+   "C200.3a",
+   "C200.3b",
+   "700.1a",
+   "700.1b"
+  ],
+  "bergamini23": [
+   "3.2a",
+   "3.2b",
+   "34.1a",
+   "34.1b",
+   "700.1a",
+   "700.1b"
+  ]
+ }
+}
