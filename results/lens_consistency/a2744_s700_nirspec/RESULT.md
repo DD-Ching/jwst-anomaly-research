@@ -21,8 +21,10 @@ Script: `scripts/a2744_s700_nirspec.py`; `decide` unit-tested in `tests/test_a27
   a or b. (assumption stated)
 
 **Post hoc side checks** (`side_checks.json`, deviation: added after the plan, not in its rules):
-- Post hoc: programme 8204 (NIRSpec MSA, 803 rows, released 2026-11-05) has pointing centres 0.17′ from 700.1, but 700.1 lies
-  outside every 8204 `s_region` polygon (nearest vertex 8.4″). So the new release does not cover 700.1.
+- Post hoc: programme 8204 (NIRSpec MSA, 803 rows, released 2026-11-05) has pointing centres 1.52′ from the a/b knot mean;
+  700.1 lies outside every 8204 `s_region` polygon (nearest vertex 8.8″), as the per-knot footprints in `summary.json`
+  also show. So the new release does not cover 700.1. Within 6″ of the a/b mean only 2561, 6793 and 9645 have MSA
+  footprints. (Correction before review: a first computation at a mistyped position gave 0.17′ / 8.4″; superseded.)
 - Post hoc, DJA: no emission-line table newer than v4.6 found by name (v4.7, v4.8, v5.0, v5.1, v4.6.1: 403; the bucket listing is
   also 403, so this is absence by name only). v4.6 is unchanged (Last-Modified 2026-09-15). The recheck conditions of
   MACS1149 16.2 and El Gordo 6c / 13c / 20c ("a DJA table newer than v4.6") are not met.
@@ -31,7 +33,7 @@ Script: `scripts/a2744_s700_nirspec.py`; `decide` unit-tested in `tests/test_a27
   not met.
 
 **Failed approach.** CAOM `s_ra` / `s_dec` of NIRSpec MSA rows are the pointing centre (every 9645 row
-within 20″ had the same position; not stored), not the source, so they cannot test shutter placement. Use footprints (`s_region`) for
+returned had the same position; not stored), not the source, so they cannot test shutter placement. Use footprints (`s_region`) for
 coverage and DJA / `_msa.fits` source tables for shutters.
 
 **Next.** Recheck when 6793 or 9645 is released (MAST `t_obs_release`), or when a DJA table newer than v4.6 appears.
