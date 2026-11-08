@@ -2,6 +2,20 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` pooled anti rows, photo-z contamination: frozen `mixed / undetermined` (D-024 addendum 10)
+- **Question:** are the 3 single-component anti rows left open by addendum 9 (WHL0137 2194, RXC J0600 581, MACS0308
+  2157) members or foreground galaxies counted as background? Plan first (`results/arcs/photoz-contam/PLAN.md`);
+  `scripts/arcs_photoz_contam.py`, rule functions unit-tested before the run.
+- **Result** (`RESULT.md`, `summary.json`; contact sheet looked at): all 3 `undetermined`. No NED or DJA v4.6
+  spec-z. The HST F606W − F814W red sequence fails its validation gate in all three clusters (false-member rate
+  0.461–0.839); the RELICS BPZ second photo-z of 581 (0.537, 0.457–0.665) and of 2194 (unconstrained, odds 0.165)
+  reaches the member cut. No candidate.
+- **Failed approach:** F606W − F814W red sequence as a membership veto at z_cl 0.36–0.57 (do not reuse).
+- **Services:** archive.stsci.edu needs the proxy + certifi bundle (as before); NED TAP and DJA S3 worked; CDS still
+  unreachable (08:10Z); #751 waits.
+- **Handoff:** next on this line: second-band (F150W / F444W) shapes of the 3 rows and the deciding models' local
+  shear error; membership only with a spectrum.
+
 ## 2026-11-08: `arcs` pooled anti rows, clump-pair census: frozen `explained`; 3 single-component rows stay open (D-024 addendum 9)
 - **Question:** is the pooled anti excess (variant B, 6 vs 2.27) a clump-pair effect, as in MACS1423? Plan first
   (`results/arcs/pooled-census/PLAN.md`); `scripts/arcs_pooled_census.py` reuses #273's census code unchanged; rule

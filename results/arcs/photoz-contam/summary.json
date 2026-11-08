@@ -1,0 +1,197 @@
+{
+ "plan": "results/arcs/photoz-contam/PLAN.md",
+ "provenance": {
+  "observed": "RELICS HLSP catalogues (DOI 10.17909/T9SP45), NED objdir, DJA v4.6 rows, stored arcs_anti.ecsv rows",
+  "derived": "red-sequence fits, offsets, labels, outcome",
+  "assumption": "z_cl, radii, DZ_MEMBER, RS cuts, 2 sigma, gate thresholds"
+ },
+ "params": {
+  "NED_RADIUS": 1.0,
+  "DJA_RADIUS": 0.5,
+  "RELICS_RADIUS": 1.0,
+  "DZ_MEMBER": 0.03,
+  "RS_DZ": 0.05,
+  "RS_MAG": 23.0,
+  "STEL_MAX": 0.8,
+  "RS_NSIG": 2.0,
+  "BG_ZMIN": 0.1,
+  "GATE_RECALL": 0.8,
+  "GATE_FBG": 0.3
+ },
+ "ned_query": "NEDTAP.objdir cone via pyvo (deviation: the plan named crossmatch.query_matches, which does not return NED's redshift flag)",
+ "dja_reference_table": {
+  "name": "dja_msaexp_emission_lines_v4.6.csv.gz",
+  "url": "https://s3.amazonaws.com/msaexp-nirspec/extractions/dja_msaexp_emission_lines_v4.6.csv.gz",
+  "last_modified": "2026-09-15T13:01:52Z",
+  "bytes": 171878708,
+  "sha256": "ee64bb460f417d3fcf96fc53818c06ca0e27d784833063ae8eb48feb18c6ddf3",
+  "n_rows": 99478,
+  "accessed": "2026-10-24"
+ },
+ "dja_this_run": {
+  "rows_read": 99478,
+  "rows_match_reference": true,
+  "checksum_compared": false
+ },
+ "red_sequence": {
+  "WHL0137": {
+   "slope": -0.08014776546879215,
+   "intercept": 2.858129935338624,
+   "sigma": 0.24315086111334727,
+   "n_used": 126,
+   "n_fit_set": 126,
+   "recall": 0.9444444444444444,
+   "n_bg_set": 50,
+   "f_bg": 0.72,
+   "gate_passed": false
+  },
+  "RXC J0600": {
+   "slope": -0.08642160176535016,
+   "intercept": 2.7546434505150277,
+   "sigma": 0.16556903306599313,
+   "n_used": 156,
+   "n_fit_set": 158,
+   "recall": 0.9113924050632911,
+   "n_bg_set": 62,
+   "f_bg": 0.8387096774193549,
+   "gate_passed": false
+  },
+  "MACS0308": {
+   "slope": -0.03627492979362597,
+   "intercept": 1.6839441609801107,
+   "sigma": 0.06782440519989896,
+   "n_used": 93,
+   "n_fit_set": 102,
+   "recall": 0.8725490196078431,
+   "n_bg_set": 89,
+   "f_bg": 0.4606741573033708,
+   "gate_passed": false
+  }
+ },
+ "rows": [
+  {
+   "field": "WHL0137",
+   "label": 2194,
+   "z_cl": 0.566,
+   "member_cut": 0.613,
+   "stored": {
+    "ra": 24.341443283127845,
+    "dec": -8.454895554127202,
+    "mag": 24.36220426336193,
+    "z_phot": 1.1737993955612183,
+    "z160": 1.142813801765442,
+    "z840": 1.2725201845169067,
+    "g_min": 0.22891777210744033,
+    "ellipticity": 0.7949571071414702
+   },
+   "relics": {
+    "id": 2569,
+    "sep_arcsec": 0.319,
+    "matched": true,
+    "f814w_mag": 26.3895,
+    "f606w_f814w": 0.2907999999999973,
+    "zb": 1.079,
+    "zbmin": 0.154,
+    "zbmax": 1.732,
+    "odds": 0.165,
+    "stel": 0.0,
+    "posthoc_rs_offset_sigma": -1.86
+   },
+   "ned": [],
+   "dja": [],
+   "z_spec_ned": null,
+   "z_spec_dja": null,
+   "spec_class": null,
+   "spec_conflict": false,
+   "rs_class": null,
+   "photoz_disagrees": true,
+   "row_label": "undetermined"
+  },
+  {
+   "field": "RXC J0600",
+   "label": 581,
+   "z_cl": 0.43,
+   "member_cut": 0.4729,
+   "stored": {
+    "ra": 90.0304080782502,
+    "dec": -20.147417436311873,
+    "mag": 21.170923019145597,
+    "z_phot": 0.7036110162734985,
+    "z160": 0.6751458048820496,
+    "z840": 0.7725285291671753,
+    "g_min": 0.3939015351147131,
+    "ellipticity": 0.6875252583084737
+   },
+   "relics": {
+    "id": 4602,
+    "sep_arcsec": 0.23,
+    "matched": true,
+    "f814w_mag": 22.6502,
+    "f606w_f814w": 1.2083999999999975,
+    "zb": 0.537,
+    "zbmin": 0.457,
+    "zbmax": 0.665,
+    "odds": 0.805,
+    "stel": 0.0,
+    "posthoc_rs_offset_sigma": 2.484
+   },
+   "ned": [],
+   "dja": [],
+   "z_spec_ned": null,
+   "z_spec_dja": null,
+   "spec_class": null,
+   "spec_conflict": false,
+   "rs_class": null,
+   "photoz_disagrees": true,
+   "row_label": "undetermined"
+  },
+  {
+   "field": "MACS0308",
+   "label": 2157,
+   "z_cl": 0.356,
+   "member_cut": 0.3967,
+   "stored": {
+    "ra": 47.23285635900545,
+    "dec": 26.755093856038467,
+    "mag": 20.60894247723889,
+    "z_phot": 0.756,
+    "z160": 0.671,
+    "z840": 0.853,
+    "g_min": 0.6398667982648472,
+    "ellipticity": 0.5306287873974442
+   },
+   "relics": {
+    "id": 3010,
+    "sep_arcsec": 0.056,
+    "matched": true,
+    "f814w_mag": 21.6857,
+    "f606w_f814w": 0.9214999999999982,
+    "zb": 0.756,
+    "zbmin": 0.671,
+    "zbmax": 0.853,
+    "odds": 0.876,
+    "stel": 0.0,
+    "posthoc_rs_offset_sigma": 0.357
+   },
+   "ned": [
+    {
+     "prefname": "[OMS2023] 4001116362945",
+     "sep_arcsec": 0.927,
+     "z": null,
+     "zflag": "",
+     "type": "G",
+     "z_bibcode": ""
+    }
+   ],
+   "dja": [],
+   "z_spec_ned": null,
+   "z_spec_dja": null,
+   "spec_class": null,
+   "spec_conflict": false,
+   "rs_class": null,
+   "photoz_disagrees": null,
+   "row_label": "undetermined"
+  }
+ ],
+ "outcome": "mixed / undetermined"
+}
