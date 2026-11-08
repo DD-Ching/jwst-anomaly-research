@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` RXC J0600 581 under the GLAFIC v3 realisations: `undetermined`, the 0.4″ grid fails V2 (D-024 addendum 18)
+- **Question:** is 581's `anti` class robust to the GLAFIC model's own statistical error? Addendum 13 said GLAFIC
+  had no realisations; the RELICS listing shows 99 (`glafic/v3/range/`, 0.4″ px). Plan frozen and committed first
+  (`results/arcs/anti-shear-error-581-glafic/PLAN.md`); unit, resolution and centring gates tested offline.
+- **Result** (`RESULT.md`, `summary.json`): V2 fails (the best fit resampled to 0.4″ moves 581 by 16.29°; the other
+  11 rows move ≤ 0.01°), so the label is `undetermined`, although 581 is `anti` in 99 / 99 realisations. The κ, V1 and V3 gates pass.
+  Post hoc (`posthoc_kappa.json`): GLAFIC has a galaxy-scale κ peak (5.24) 0.2″ from 581; Lenstool has none. No candidate.
+- **Failed approach:** coarse (0.4″) realisation maps cannot test a row that sits on a modelled galaxy-scale halo.
+- **Services:** archive.stsci.edu needs the proxy + certifi bundle (docs/operations.md §3); CDS still times out / resets (22:08Z); #751 waits.
+- **Handoff:** 581 next needs a public GLAFIC member list, new spectroscopy or an independent model; 2157 needs
+  deeper spectroscopy or a JWST grism.
+
 ## 2026-11-08: `arcs` MACS0308 2157 MUSE second plan: gate M2 passed; 2157 `undetermined` (D-024 addendum 17)
 - **Question:** with recentred apertures, STAT-aware noise and a frozen peak-contrast gate, does the public MUSE cube
   give 2157 a redshift, and how bright an [O II] line would it show? Plan first (`results/arcs/muse-2157-v2/PLAN.md`,
