@@ -1,0 +1,110 @@
+{
+ "plan": "results/arcs/shape-prior/PLAN.md",
+ "inputs_sha256": {
+  "jw01345-o001_t021_nircam_clear-f200w_cat.ecsv": "878766359ac425b9510b0e02dba82f032f23a1e68d2deb097d51df9cc5f35f27"
+ },
+ "params": {
+  "alpha": 0.05,
+  "gate_p": 0.05,
+  "iso_tol": 0.01,
+  "n_draw": 200000,
+  "seed": 1,
+  "min_ellipticity": 0.5,
+  "anti_deg": 60.0,
+  "min_semimajor_px": 2.0,
+  "min_snr": 10.0
+ },
+ "prior": {
+  "n": 1108,
+  "eps_median": 0.2794503723243488,
+  "eps_rms_per_component": 0.23282235955826683,
+  "frac_e_ge_0.5": 0.37093862815884476,
+  "gauss_0.26_frac_e_ge_0.5": 0.4363353259835581,
+  "eps_quantiles": {
+   "0.5": 0.2794503723243488,
+   "0.75": 0.3880661469325022,
+   "0.9": 0.48708464974350574,
+   "0.95": 0.547462511090824,
+   "0.99": 0.7431732442710056
+  }
+ },
+ "gate": {
+  "weak_anti": 9,
+  "weak_expected": 7.418345744960113,
+  "weak_p_two_sided": 0.6537033138472135,
+  "p_anti_g0": 0.3317185075231091,
+  "passes": true
+ },
+ "strong": {
+  "A": {
+   "n": 159,
+   "anti": 10,
+   "expected_emp": 1.934161674381181,
+   "p_emp": 3.528711393303991e-05,
+   "expected_gauss_0.26": 3.221931753410523
+  },
+  "B": {
+   "n": 104,
+   "anti": 6,
+   "expected_emp": 1.3917997937568385,
+   "p_emp": 0.0031114707250221568,
+   "expected_gauss_0.26": 2.2730450764116465
+  },
+  "S1063": {
+   "n": 24,
+   "anti": 4,
+   "expected_emp": 0.34104729680236673,
+   "p_emp": 0.00042977584600128576
+  },
+  "weak_A": {
+   "anti": 9,
+   "expected_emp": 8.957174474286761
+  }
+ },
+ "open_rows": {
+  "WHL0137 2194": {
+   "g_min": 0.24,
+   "ellipticity": 0.7949571071414702,
+   "eps": 0.6596919593921847,
+   "p_anti_emp": 0.026823964234714354,
+   "p_anti_gauss": 0.04835402421133008,
+   "prior_frac_eps_ge_row": 0.016245487364620937
+  },
+  "RXC J0600 581": {
+   "g_min": 0.39,
+   "ellipticity": 0.6875252583084737,
+   "eps": 0.5238388492127372,
+   "p_anti_emp": 0.004287103624851969,
+   "p_anti_gauss": 0.010657344485101933,
+   "prior_frac_eps_ge_row": 0.06407942238267147
+  },
+  "MACS0308 2157": {
+   "g_min": 0.64,
+   "ellipticity": 0.5306287873974442,
+   "eps": 0.3611264347949165,
+   "p_anti_emp": 0.0005664681476491572,
+   "p_anti_gauss": 0.0008394403044644835,
+   "prior_frac_eps_ge_row": 0.30144404332129965
+  }
+ },
+ "posthoc": {
+  "strong_B_semimajor_px_median": 6.140732342701769,
+  "semimajor_ge_4px": {
+   "prior_n": 661,
+   "eps_rms_per_component": 0.2468288954096318,
+   "weak_B_expected": 8.257554099510195,
+   "weak_B_p_two_sided": 0.8867098066738691,
+   "strong_B_expected": 1.8836950658436298,
+   "strong_B_p": 0.01272263576455201
+  },
+  "semimajor_ge_6px": {
+   "prior_n": 359,
+   "eps_rms_per_component": 0.2661440172600976,
+   "weak_B_expected": 8.869556736876161,
+   "weak_B_p_two_sided": 1.0,
+   "strong_B_expected": 2.3517561396280753,
+   "strong_B_p": 0.03284395431312625
+  }
+ },
+ "outcome": "excess persists under the empirical prior"
+}

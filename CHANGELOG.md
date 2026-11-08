@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` anti null with an empirical CEERS shape prior: frozen `excess persists` (D-024 addendum 12)
+- **Question:** is the pooled anti excess a too-thin Gaussian shape-noise tail (σ_ε 0.26)? Plan first
+  (`results/arcs/shape-prior/PLAN.md`); `scripts/arcs_shape_prior.py`, rule functions unit-tested before the run (a
+  Gaussian-drawn prior reproduces `anti_probability`).
+- **Result** (`RESULT.md`, `summary.json`; `prior.png` looked at): CEERS F200W prior (1108 sources, rms 0.233) has a
+  thinner tail than the Gaussian (e ≥ 0.5: 0.371 vs 0.436); gate passes (weak B 9 vs 7.42, P 0.654); pooled B 6 vs
+  1.392, P 0.0031 → `excess persists under the empirical prior`. Post hoc, ≥ 6 px prior: 6 vs 2.352, P 0.033. Shape
+  noise only; addendum 9's clump-aware expectation still explains the pooled count. No candidate.
+- **Failed approach:** none. **Services:** MAST S3 worked; CDS still 503 (10:08Z); #751 waits.
+- **Handoff:** next on this line: the deciding models' local shear error at the 3 single-component rows; membership
+  only with a spectrum.
+
 ## 2026-11-08: `arcs` pooled anti rows, second-band shapes: frozen `blend veto passed; the rows stay open` (D-024 addendum 11)
 - **Question:** are the axes of the 3 single-component anti rows (WHL0137 2194, RXC J0600 581, MACS0308 2157) set by a
   colour blend or colour-dependent structure? Plan first (`results/arcs/anti-bands/PLAN.md`);
