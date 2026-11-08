@@ -1495,6 +1495,8 @@ g = 0); single-source orientation checks are informative only for g ≳ 0.2, as 
 
 **Addendum 15 2026-11-08 (public spectral coverage of the open anti rows, `scripts/arcs_spec_coverage.py`).** Metadata only (ESO ObsCore, MAST CAOM; gate Q passed: Abell 2744 MUSE 13 / NIRISS WFSS 10, empty sky none; `results/arcs/spec-coverage/RESULT.md`). MACS0308 2157 `spectrum_available`: one public VLT/MUSE cube (ADP.2020-01-04T23:56:39.902, 0104.A-0801(A), 2629 s, 475–935 nm). RXC J0600 581 `none` (ALMA cubes only). Revisit if: the 2157 MUSE spectrum gives a redshift (decides membership), or new public spectroscopy covers 581.
 
+**Addendum 16 2026-11-08 (MUSE redshift attempt for MACS0308 2157, `scripts/arcs_muse_2157.py`).** Gate M failed as frozen (`results/arcs/muse-2157/RESULT.md`): the central-galaxy control has a z-scan peak at 0.3568 but no feature at |S/N| ≥ 5, so the frozen 2157 reading (`undetermined`, z_best 0.4174, no feature) decides nothing; post hoc scan contrast control 1.79, target 1.07. The ESO portal ignores HTTP Range: stream the cube once and keep boxes in memory (about 90 s here). 2157 membership stays open. Revisit with a recentred aperture, STAT noise, a frozen peak-contrast gate and an [O II] injection limit.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.
