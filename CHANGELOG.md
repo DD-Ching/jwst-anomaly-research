@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` MACS0308 2157 under the Zitrin realisations: frozen `model error does not remove the tested rows` (D-024 addendum 14)
+- **Question:** does the Zitrin LTM-Gauss model's own statistical error (100 RELICS `range/` realisations, 36 MB
+  pixel-unit maps) move 2157 out of `anti`? Plan first (`results/arcs/anti-shear-error-2157/PLAN.md`);
+  `scripts/arcs_shear_error_2157.py` reads one byte-range row strip per map; strip reader tested offline before the run.
+- **Result** (`RESULT.md`, `summary.json`; contact sheet `../anti-bands/anti_bands.png` looked at): route gates pass
+  (pixel × 0.06″ = arcsec maps to 7.6 × 10⁻⁶″; the stored Zitrin run's 18 classes reproduced, Δoffset 0.0°); κ gates
+  pass; control median 1.0; 2157 `anti` in 100 / 100 (offset_min 78.9–79.2° at 16–84 %) → `robust`. The realisations
+  barely move the prediction, so this is one model's statistical error only. Open set: 581, 2157. No candidate.
+- **Failed approach:** none. **Services:** archive.stsci.edu byte ranges with the proxy + certifi bundle (~14 MB/s, not stored,
+  per connection); #751 waits.
+- **Handoff:** the `arcs` model-error route is exhausted for published RELICS models; next on this line only a
+  public spectrum (membership of 581 / 2157) or a new independent model.
+
 ## 2026-11-08: `arcs` single-component anti rows, model shear error: frozen `model error explains WHL0137 2194` (D-024 addendum 13)
 - **Question:** do the models' own statistical error (RELICS `range/` realisations) or further independent models
   move the open anti rows out of `anti`? Plan first (`results/arcs/anti-shear-error/PLAN.md`);
