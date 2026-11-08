@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: SMACS `f356w_1243` two-epoch F444W check: constant flux, no motion detected (TASKS Next M2, D-017 addendum 4)
+- **Question:** the record's open question, whether a second NIRCam epoch tests the transient hypothesis for this red
+  point-like z_phot ≈ 5.7 source. VENUS 6882 o057 covers it in F444W only; 12774 does not.
+- **Plan first** (`results/smacs_jwst3/epochs_1243/PLAN.md`; two nearest-row magnitudes seen in the coverage check,
+  disclosed); `scripts/smacs_epochs_1243.py` reuses `compare_epochs` and the peer selection; `decide` unit-tested.
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): Δm −0.0329 vs σ_peer 0.0187 (15 peers) →
+  `constant` (fade bound 0.056 mag); residual 14.13 mas ≤ peer p95 20.40 → `no motion detected` (≤ 5.10 mas/yr).
+  A 2022 transient and a fast brown dwarf are disfavoured; verdict unchanged. Post hoc: 0.97 σ against the
+  bright-reference σ too.
+- **Failed approach:** none.
+- **Services:** CDS still unreachable (01:08Z, connection reset); #751 still waits. S3 worked.
+- **Handoff:** next: TASKS Next M2 / Later items; #751 when CDS is reachable.
+
 ## 2026-11-08: MACS J0308 SN Ares image order in the pre-JWST RELICS maps: both `agrees` (D-034 addendum 2026-11-08)
 - **New input:** SN Ares (arXiv:2610.33161v1, lensed SN IIb, z 1.276); three JWST-era models (not public) say it
   arrives first, the others after 72–79.1 yr. Found by an arXiv search this run; Zenodo had no new cluster lens-model

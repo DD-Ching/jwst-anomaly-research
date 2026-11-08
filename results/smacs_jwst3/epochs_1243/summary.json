@@ -1,0 +1,98 @@
+{
+ "plan": "results/smacs_jwst3/epochs_1243/PLAN.md",
+ "target": [
+  110.682947,
+  -73.487722
+ ],
+ "band": "f444w",
+ "epochs": {
+  "e1": "2736 o001 (2022-06)",
+  "e2": "6882 o057 (2026-06-05)"
+ },
+ "files": {
+  "e1": {
+   "file": "jw02736-o001_t001_nircam_clear-f444w_cat.ecsv",
+   "sha256": "e7df6501536251018b9a9a46bed30ce5d945228c0a038be540eea12f793915e0"
+  },
+  "e2": {
+   "file": "jw06882-o057_t057_nircam_clear-f444w_cat.ecsv",
+   "sha256": "e431813bdaf255fbdc0cb4003e96051f7c8babfddc8223199c27582ad43efca6"
+  }
+ },
+ "compare": {
+  "n_references": 241,
+  "frame_offset_mas": [
+   4.319422918919914,
+   20.539227012032164
+  ],
+  "reference_sigma_mas": [
+   9.722729579311837,
+   10.848039618540056
+  ],
+  "target_residual_mas": [
+   4.938556022517387,
+   -13.241558052405082
+  ],
+  "target_residual_total_mas": 14.132522607190715,
+  "frame_tie_error_mas": [
+   0.784936862678257,
+   0.8757855615468995
+  ],
+  "target_centroid_error_mas": [
+   0.8249798513046301,
+   1.7325922381229604
+  ],
+  "target_residual_significance": 6.714201119826677,
+  "target_residual_over_reference_sigma": 1.3221066015374534,
+  "fraction_of_references_with_larger_residual": 0.4066390041493776,
+  "target_dmag": -0.032932328751599016,
+  "reference_dmag_sigma": 0.033826046740521365,
+  "target_snr": [
+   121.6842908749882,
+   48.411143465206564
+  ],
+  "label": "derived"
+ },
+ "peers": {
+  "n_peers": 15,
+  "target_aper50_abmag": [
+   26.114116989499053,
+   26.069697928314568
+  ],
+  "target_dmag": -0.032932328751599016,
+  "reference_dmag_median": -0.01148673243288556,
+  "peer_dmag_median": 0.003544156789374142,
+  "peer_dmag_sigma": 0.01870777845738114,
+  "fade_bound_mag": 0.056123335372143424,
+  "constant_threshold_mag": 0.03741555691476228,
+  "target_residual_mas": 14.132522607190715,
+  "target_residual_vec_mas": [
+   4.938556022517387,
+   -13.241558052405082
+  ],
+  "peer_residual_median_mas": 8.62532181690788,
+  "peer_residual_p95_mas": 20.400368422250192,
+  "peer_residual_p99_mas": 21.45195642050967,
+  "p95_motion_bound_mas_per_yr": 5.100092105562548,
+  "n_peers_with_larger_residual": 2,
+  "label": "derived"
+ },
+ "post_hoc": {
+  "dmag_over_reference_sigma": 0.9735789997637609,
+  "label": "derived (post hoc)"
+ },
+ "decision": {
+  "variability": "constant",
+  "motion": "no motion detected"
+ },
+ "assumptions": {
+  "min_peers": 10,
+  "var_sig": 5.0,
+  "const_sig": 2.0,
+  "fade_bound_sig": 3.0,
+  "null_dmag": 0.5,
+  "null_size_frac": 0.3,
+  "null_radius_arcsec": 60.0,
+  "baseline_yr": 4.0
+ }
+}

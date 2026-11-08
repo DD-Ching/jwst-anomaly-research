@@ -1093,6 +1093,12 @@ a first-epoch systematic. For `384` the 6882 → 12774 residual is 1.7 / 3.5 mas
 by one peer). Same functions, thin wrapper `scripts/smacs_epoch3_384.py`; generalise into `epoch_compare.py` only
 at a third use.
 
+**Addendum 4 (2026-11-08, SMACS `f356w_1243`, `results/smacs_jwst3/epochs_1243/RESULT.md`).** The catalog route
+with the peer null also gives a variability test: peer Δm on the same frame tie, σ from the MAD. F444W 2736 → 6882:
+Δm −0.0329 vs σ_peer 0.0187 (15 peers) → `constant`; residual 14.13 mas ≤ peer p95 20.40 → `no motion detected`. Thin
+wrapper `scripts/smacs_epochs_1243.py`; this is the third use of the peer null, so a later change should move
+`peer_stats` into `epoch_compare.py`.
+
 ## D-018 Diffraction-spike flag on cutouts: orientation-free hexagonal harmonic (2026-10-08)
 
 **Decision.** This is new code (tier 5): numpy and scipy, with no new dependency. `cutouts.spike_statistic` resamples
