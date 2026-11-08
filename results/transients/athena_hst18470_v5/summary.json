@@ -1,0 +1,27 @@
+{
+ "reference_visit": "ifu901010",
+ "test_visit": "ifu905010",
+ "test_mjd": 61341.56,
+ "rule": "appeared: z >= 5.0 and seen; not seen: z < 3.0",
+ "positions": {
+  "athena2_12781": {
+   "delta_njy": 29.8,
+   "sigma_d_njy": 38.9,
+   "z": 0.77,
+   "appeared_min_delta_njy": 194.7,
+   "not_seen_max_delta_njy": 116.8,
+   "point_source_seen": false,
+   "decision": "not seen"
+  },
+  "glafic_7p6": {
+   "delta_njy": 14.5,
+   "sigma_d_njy": 37.7,
+   "z": 0.38,
+   "appeared_min_delta_njy": 188.6,
+   "not_seen_max_delta_njy": 113.2,
+   "point_source_seen": false,
+   "decision": "not seen"
+  }
+ },
+ "outcome": "not seen"
+}

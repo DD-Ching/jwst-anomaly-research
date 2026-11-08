@@ -3044,6 +3044,14 @@ the outcome depends on the untested map amplitude (same map maker as the offset 
 rejected: a frozen amplitude correction (H_K undetermined, addendum bk). Revisit if: no next image within
 the frozen 10-yr window, an image appears elsewhere, or a JWST-era RXC J0018 map is public.
 
+**Addendum 2026-11-08c (SN Athena, HST 18470 visit 5).** `results/transients/athena_hst18470_v5/RESULT.md`; plan and
+`decide` committed before the run. In the first unchecked public visit (`ifu905010`, F105W, 2026-10-28) no next
+image of SN Athena is seen at the DD 12781 "Athena-2" position (Δ vs visit 1 +0.77 σ_d) or at our RELICS glafic
+7.6″ position (+0.38 σ_d); stamps looked at. Decision: both predictions stay open (discovery team mid-Aug 2026 to
+early Mar 2027; RELICS glafic 2027-09-14 to 2027-11-22, #309); no lens-model residual. Alternatives rejected: a
+difference-image search (the forced aperture at both predicted positions answers the frozen question). Revisit if: a
+new public HST 18470 or JWST 12781 epoch (re-run the script with that visit appended).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

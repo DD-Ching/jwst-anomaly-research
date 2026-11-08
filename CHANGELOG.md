@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: SN Athena: no reappearance in HST 18470 visit 5 (2026-10-28); both predictions open (D-034 addendum 2026-11-08c)
+- **Question:** the open MACS0417 h002 = SN Athena item (#323): has the next image appeared in the first unchecked
+  public HST 18470 visit? Discovery team: mid-Aug 2026 to early Mar 2027; our RELICS glafic: 2027-09-14 to 2027-11-22.
+- **Plan first** (`results/transients/athena_hst18470_v5/PLAN.md`); `scripts/athena_hst18470.py` generalises #323's
+  forced photometry; `decide` unit-tested before the run; visits 1–4 reproduce #323.
+- **Result** (`RESULT.md`, `summary.json`, contact sheet looked at): visit 5 vs visit 1 Δ +0.77 σ_d at Athena-2 and
+  +0.38 σ_d at the glafic 7.6″ image, no point source → `not seen`. No lens-model residual.
+- **Failed approach:** none. **Services:** MAST worked; CDS still unreachable (03:10Z, connection reset); #751 waits.
+- **Handoff:** re-run at each new public HST 18470 visit and the JWST 12781 epochs (2027-01/02); TASKS Next M2 /
+  Later items.
+
 ## 2026-11-08: RXC J0018 SN Helios image order in the pre-JWST RELICS Lenstool map: `agrees` (D-034 addendum 2026-11-08b)
 - **New input:** SN Helios (arXiv:2609.30440v2, lensed SN II at z 3.34, one image); JWST-era models (not public) put
   the next image 2.32–6.0 yr later. Found while checking the Atalanta citation of #237 (valid: the paper lists it).
