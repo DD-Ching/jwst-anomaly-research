@@ -2,6 +2,18 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-08: `arcs` MACS0308 2157 MUSE second plan: gate M2 passed; 2157 `undetermined` (D-024 addendum 17)
+- **Question:** with recentred apertures, STAT-aware noise and a frozen peak-contrast gate, does the public MUSE cube
+  give 2157 a redshift, and how bright an [O II] line would it show? Plan first (`results/arcs/muse-2157-v2/PLAN.md`,
+  amendment 1 before any data read); functions unit-tested before the run; DATA + STAT streamed once, nothing stored.
+- **Result** (`RESULT.md`, `summary.json`): gate M2 passes (control z 0.3568, contrast 1.875). 2157 contrast 1.041 →
+  `undetermined`. [O II] injection: 82.5 % detected at 1.6 × 10⁻¹⁷ erg s⁻¹ cm⁻² (aperture), F90 not reached in the
+  grid. Membership stays undecided; no flag, no candidate.
+- **Failed approach:** z identification of a lone injected line by the multi-line scan (z-degenerate, ≤ 5 %).
+  **Services:** dataportal.eso.org streamed DATA + STAT; CDS still resets / 503 and www.fe.infn.it resets (21:08Z); #751 waits.
+- **Handoff:** the MUSE route for 2157 is closed at this depth; next on this line needs deeper spectroscopy or a JWST
+  grism. 581 needs new spectroscopy or another independent model.
+
 ## 2026-11-08: `arcs` MACS0308 2157 MUSE redshift attempt: gate M failed as frozen; no redshift (D-024 addendum 16)
 - **Question:** does the public MUSE cube (#796) give 2157 a redshift (member at 0.356 or background)? Plan first
   (`results/arcs/muse-2157/PLAN.md`, amended before any data read); `scripts/arcs_muse_2157.py` unit-tested before

@@ -1497,6 +1497,8 @@ g = 0); single-source orientation checks are informative only for g ≳ 0.2, as 
 
 **Addendum 16 2026-11-08 (MUSE redshift attempt for MACS0308 2157, `scripts/arcs_muse_2157.py`).** Gate M failed as frozen (`results/arcs/muse-2157/RESULT.md`): the central-galaxy control has a z-scan peak at 0.3568 but no feature at |S/N| ≥ 5, so the frozen 2157 reading (`undetermined`, z_best 0.4174, no feature) decides nothing; post hoc scan contrast control 1.79, target 1.07. The ESO portal ignores HTTP Range: stream the cube once and keep boxes in memory (about 90 s here). 2157 membership stays open. Revisit with a recentred aperture, STAT noise, a frozen peak-contrast gate and an [O II] injection limit.
 
+**Addendum 17 2026-11-08 (MUSE second plan for 2157, `scripts/arcs_muse_2157_v2.py`).** Gate M2 passed (`results/arcs/muse-2157-v2/RESULT.md`): recentred control z 0.3568, peak contrast 1.875 ≥ 1.5. 2157: contrast 1.041 → `undetermined` (z_best 0.2046). [O II] injections: 82.5 % detected at 1.6 × 10⁻¹⁷ erg s⁻¹ cm⁻² aperture flux, F90 not reached in the frozen grid. Single lines are z-degenerate under the scan (plan amendment 1). STAT under-states the aperture noise (empirical / STAT 1.34–2.06): use max of both. The MUSE route for 2157 is closed at this depth; revisit only with deeper spectroscopy or a JWST grism.
+
 ## D-025 Field robustness: extended-star veto and red exemption from the host test (2026-10-08)
 
 **Decision.** Two rules found on Abell 2744 (PR #32). Both thresholds are ASSUMPTIONS, set in config.
