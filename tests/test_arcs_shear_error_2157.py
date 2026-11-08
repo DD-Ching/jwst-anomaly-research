@@ -80,7 +80,9 @@ def test_read_strip_clips_and_rejects_short_reads(tmp_path):
 def test_parse_header_offset(tmp_path):
     _, raw, _ = _image(tmp_path)
     hdr, off = m.parse_header(raw[: m.HEADER_BYTES])
-    assert off == len(raw) - -(-60 * 50 * 4 // 2880) * 2880 and off % 2880 == 0 and hdr["NAXIS1"] == 50
+    assert (
+        off == len(raw) - -(-60 * 50 * 4 // 2880) * 2880 and off % 2880 == 0 and hdr["NAXIS1"] == 50
+    )
 
 
 def test_gates():

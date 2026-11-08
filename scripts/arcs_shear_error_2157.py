@@ -7,7 +7,7 @@ validated on the best fit (pixel × scale = arcsec maps; the stored Zitrin run's
 reproduced). Rules are addendum 13's functions, imported unchanged from ``arcs_shear_error.py``.
 Predicted axes ``model_prediction``; classes and labels ``derived``.
 
-    REQUESTS_CA_BUNDLE=<proxy bundle + certifi roots> python scripts/arcs_shear_error_2157.py --cache DIR
+    REQUESTS_CA_BUNDLE=<proxy + certifi bundle> python scripts/arcs_shear_error_2157.py --cache DIR
 """
 
 from __future__ import annotations
@@ -98,7 +98,9 @@ def v1_gate(max_abs: float) -> bool:
 
 def v2_gate(stored: list[str], new: list[str], d_offset: np.ndarray) -> bool:
     d = np.asarray(d_offset, float)
-    return bool(stored == new and len(d) > 0 and np.all(np.isfinite(d)) and d.max() <= V2_MAX_OFFSET_DEG)
+    return bool(
+        stored == new and len(d) > 0 and np.all(np.isfinite(d)) and d.max() <= V2_MAX_OFFSET_DEG
+    )
 
 
 # ---- I/O ----
@@ -113,7 +115,9 @@ class Http:
 
         for attempt in range(4):
             try:
-                r = self.session.get(self.url, headers={"Range": f"bytes={start}-{end}"}, timeout=180)
+                r = self.session.get(
+                    self.url, headers={"Range": f"bytes={start}-{end}"}, timeout=180
+                )
                 r.raise_for_status()
                 if r.status_code != 206:
                     raise RuntimeError(f"{self.url}: range not honoured ({r.status_code})")
@@ -144,9 +148,17 @@ def strip(url: str, box) -> tuple[np.ndarray, WCS, str]:
     return data, wcs, h.digest.hexdigest()
 
 
-def model_from(ax: np.ndarray, ay: np.ndarray, wcs: WCS, centre, tag: str) -> lensmodel.MapLensModel:
+def model_from(
+    ax: np.ndarray, ay: np.ndarray, wcs: WCS, centre, tag: str
+) -> lensmodel.MapLensModel:
     return lensmodel.MapLensModel(
-        ax, ay, wcs, Z_LENS, FlatLambdaCDM(H0=ase.COSMO[0], Om0=ase.COSMO[1]), source=tag, centre=centre
+        ax,
+        ay,
+        wcs,
+        Z_LENS,
+        FlatLambdaCDM(H0=ase.COSMO[0], Om0=ase.COSMO[1]),
+        source=tag,
+        centre=centre,
     )
 
 
@@ -190,7 +202,10 @@ def main(argv: list[str] | None = None) -> int:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", FITSFixedWarning)
         wfull = WCS(hdr)
-    centre = tuple(float(v) for v in wfull.pixel_to_world_values(wfull.wcs.crpix[0] - 1, wfull.wcs.crpix[1] - 1))
+    centre = tuple(
+        float(v)
+        for v in wfull.pixel_to_world_values(wfull.wcs.crpix[0] - 1, wfull.wcs.crpix[1] - 1)
+    )
     box = bounds([row, ctrl, stored_bg], wfull)
 
     # validation on the best fit
@@ -220,7 +235,11 @@ def main(argv: list[str] | None = None) -> int:
     del bx, by, axs, ays, best
 
     with ThreadPoolExecutor(args.workers) as pool:
-        real = list(pool.map(lambda i: one_realisation(i, box, centre, row, ctrl, args.cache), range(ase.N_RANGE)))
+        real = list(
+            pool.map(
+                lambda i: one_realisation(i, box, centre, row, ctrl, args.cache), range(ase.N_RANGE)
+            )
+        )
     gates = {f"map{r['map']:03d}": r.pop("kappa_gate") for r in real if "kappa_gate" in r}
     rets = [r.pop("control_retention") for r in real]
     r_med = float(np.median(rets))
@@ -273,7 +292,11 @@ def main(argv: list[str] | None = None) -> int:
     }
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
-    print(json.dumps({k: summary[k] for k in ("f_anti", "control_retention_median", "labels", "outcome")}))
+    print(
+        json.dumps(
+            {k: summary[k] for k in ("f_anti", "control_retention_median", "labels", "outcome")}
+        )
+    )
     return 0
 
 

@@ -355,6 +355,9 @@ release) on that date. Verdicts and context are in [docs/landscape.md](docs/land
 - RELICS WHL0137−08 Zitrin LTM-Gauss v1 and WSLAP v1 maps, and RXC J0600−20 Lenstool v1 `range/` realisations
   (`lenstool-map000`…`map099`; arcsec deflections, D_LS/D_S = 1 per readme v3): https://archive.stsci.edu/hlsps/relics/whl0137m08/models/
   and `.../rxc0600m20/models/lenstool/range/` (accessed 2026-11-08; sha256 in `results/arcs/anti-shear-error/summary.json`).
+- RELICS MACS J0308+26 Zitrin LTM-Gauss v1 `range/` realisations (`zitrin-ltm-gauss-map000`…`map099`, pixel-unit deflections, 0.06″ px)
+  and best fit: https://archive.stsci.edu/hlsps/relics/macs0308p26/models/zitrin-ltm-gauss/ (accessed 2026-11-08; read by byte ranges; strip
+  sha256 in `results/arcs/anti-shear-error-2157/summary.json`).
 - RELICS MACS J0417 lens models (`glafic/v3` incl. `range/` realisations, `lenstool/v2`; maps scaled to D_LS/D_S = 1;
   readme `hlsp_relics_hst_multi_lens-models_multi_v3_readme.pdf`): https://archive.stsci.edu/hlsps/relics/macs0417m11/models/
   (accessed 2026-10-17; used by `results/transients/batch_venus2/followup/macs0417_h002`).
