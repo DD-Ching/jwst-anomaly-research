@@ -120,11 +120,42 @@ def used_epochs(root: Path, exclude: Path | None = None) -> set[tuple[str, str]]
     return used
 
 
+MAST_INVOKE = "https://mast.stsci.edu/api/v0/invoke"
+
+
+def parse_name_lookup(payload: dict) -> tuple[float, float]:
+    """(ra, dec) in degrees of the first ``Mast.Name.Lookup`` match; ValueError when none."""
+    hits = payload.get("resolvedCoordinate") or []
+    if not hits:
+        raise ValueError("Mast.Name.Lookup returned no coordinate")
+    return float(hits[0]["ra"]), float(hits[0]["decl"])
+
+
+def resolve_centre(name: str):
+    """Field centre as a SkyCoord: astroquery's resolver, else MAST's ``Mast.Name.Lookup``.
+
+    The fallback exists because mastresolver.stsci.edu fails TLS verification from cloud
+    sessions (2026-11-08) while mast.stsci.edu works; both front the same name resolvers.
+    """
+    import requests
+    from astropy.coordinates import SkyCoord
+    from astroquery.mast import Mast
+
+    try:
+        return Mast.resolve_object(name)
+    except Exception:  # noqa: BLE001 - any resolver failure falls back to the MAST service
+        req = {"service": "Mast.Name.Lookup", "params": {"input": name, "format": "json"}}
+        r = requests.post(MAST_INVOKE, data={"request": json.dumps(req)}, timeout=60)
+        r.raise_for_status()
+        ra, dec = parse_name_lookup(r.json())
+        return SkyCoord(ra, dec, unit="deg")
+
+
 def query_field(name: str, radius: str) -> list[dict]:
     from astroquery.mast import Observations
 
     tab = Observations.query_criteria(
-        objectname=name,
+        coordinates=resolve_centre(name),
         radius=radius,
         obs_collection="JWST",
         instrument_name="NIRCAM/IMAGE",

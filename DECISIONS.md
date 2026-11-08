@@ -1807,6 +1807,12 @@ field's arc pass needs a known-transient (or injected) control that fires under 
 shallower band misses it is reported as untrusted, not as a null; an "on an image" radius is checked on the
 known case before use (images are catalogued at knots, not at every arc pixel).
 
+**Addendum 2026-11-08 (inventory refresh).** Both frozen epoch inventories re-run unchanged on 34 fields: 0 epochs
+added or newly public since 2026-10-26 / 10-27 (`results/transients/epoch_inventory_refresh/RESULT.md`). **Decision:**
+no new D-027 grid until a release in `upcoming.json` (first Abell 370 9371 o001, 2026-12-29); currency is then checked
+with `scripts/epoch_inventory_diff.py` against this snapshot. Name resolution falls back to `Mast.Name.Lookup`
+(mastresolver fails TLS from cloud sessions).
+
 ## D-028 Cloud runs open and merge their own PRs with the session's GitHub MCP tools (2026-10-08)
 
 **Decision.**
