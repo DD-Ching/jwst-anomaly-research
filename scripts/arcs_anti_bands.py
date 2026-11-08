@@ -2,9 +2,9 @@
 
 Plan (frozen before the run): ``results/arcs/anti-bands/PLAN.md``. Matching, usability
 and re-classing reuse ``scripts/arcs_bands.py`` unchanged; this script adds the band gate,
-the per-row label and the frozen outcome. Catalogues are read from S3 into the cache, their
-sha256 is recorded, and they are deleted after the run (``--keep`` keeps them). Shapes
-``observed``; classes and labels ``derived``.
+the per-row label and the frozen outcome. Catalogues are read from S3 into the cache, pinned
+by sha256 in ``data/manifests/arcs_anti_bands.ecsv``, and deleted after reading (``--keep``
+keeps them). Shapes ``observed``; classes and labels ``derived``.
 
     python scripts/arcs_anti_bands.py
 """
@@ -12,17 +12,16 @@ sha256 is recorded, and they are deleted after the run (``--keep`` keeps them). 
 from __future__ import annotations
 
 import argparse
-import hashlib
 import importlib.util
 import json
 import sys
-import urllib.request
 from pathlib import Path
 
 import numpy as np
 from astropy.table import Table
 
 from jwst_anomaly import paths
+from jwst_anomaly.photometry import fetch_catalog
 
 _DIR = Path(__file__).resolve().parent
 
@@ -77,20 +76,31 @@ def outcome(labels: list[str]) -> str:
     """Rule 4: the frozen outcome over the 3 rows."""
     n_blend, n_same = labels.count("blend_flag"), labels.count("same_axis")
     if n_blend >= 2:
-        return "explained by colour blends or colour structure (exploratory)"
+        return (
+            "open part of the pooled anti excess explained by colour blends or colour structure"
+            " (exploratory)"
+        )
     if n_same >= 2 and n_blend == 0:
         return "blend veto passed; the rows stay open (not a lensing test)"
     return "mixed / undetermined"
 
 
+MANIFEST = "arcs_anti_bands"
+
+
 def fetch(obs: str, band: str, cache: Path) -> tuple[Path, str]:
-    """Pipeline catalogue of ``obs`` in ``band`` from S3; returns its path and sha256."""
+    """Pipeline catalogue of ``obs`` in ``band`` from S3, sha256-pinned by the manifest."""
     name = f"{obs}_nircam_clear-{band}_cat.ecsv"
-    target = cache / name
-    if not target.exists():
-        cache.mkdir(parents=True, exist_ok=True)
-        urllib.request.urlretrieve(ab.s3_url(name), target)
-    return target, hashlib.sha256(target.read_bytes()).hexdigest()
+    sha = ab.manifest_sha(MANIFEST, name)
+    return fetch_catalog(ab.s3_url(name), sha, cache_dir=cache), sha
+
+
+def row_index(t: Table, label: int) -> int:
+    """Index of the single row ``label`` in ``t``; refuses a missing or duplicated label."""
+    hits = np.flatnonzero(np.asarray(t["label"]) == label)
+    if len(hits) != 1:
+        raise SystemExit(f"error: label {label} found {len(hits)} times")
+    return int(hits[0])
 
 
 def band_args():
@@ -108,6 +118,8 @@ def band_args():
 
 def run(out: Path, cache: Path, keep: bool) -> dict:
     args = band_args()
+    if len({r[1] for r in ROWS}) != len(ROWS):
+        raise SystemExit("error: one row per field (rule 1 pools each field's control once)")
     per_band = {b: [] for b in BANDS}  # control tables per band
     rows, inputs = {}, {}
     for label, field, model_name, obs, sw, lw in ROWS:
@@ -119,12 +131,13 @@ def run(out: Path, cache: Path, keep: bool) -> dict:
         rows[label] = {"field": field, "model": model_name, "bands": {}}
         for band_key, band in zip(BANDS, (sw, lw), strict=True):
             path, sha = fetch(obs, band, cache)
-            inputs[path.name] = sha
-            t = ab.reclassify(
-                model, ab.match_second_band(stored, lc.load_shapes(path), args.match_arcsec), args
-            )
-            if not keep:
-                path.unlink()
+            inputs[path.name.split("_", 1)[1]] = sha
+            try:
+                shapes = lc.load_shapes(path)
+            finally:
+                if not keep:
+                    path.unlink()
+            t = ab.reclassify(model, ab.match_second_band(stored, shapes, args.match_arcsec), args)
             usable = ab.usable_mask(t, args)
             ctrl = (
                 t["strong_shear"]
@@ -132,7 +145,7 @@ def run(out: Path, cache: Path, keep: bool) -> dict:
                 & (t["orientation_class"] == "aligned")
             )
             per_band[band_key].append((t[ctrl & usable], field, band))
-            i = int(np.flatnonzero(np.asarray(t["label"]) == label)[0])
+            i = row_index(t, label)
             r = t[i]
             if str(r["orientation_class"]) != "anti":
                 raise SystemExit(f"error: row {label} is not anti in {model_name}")

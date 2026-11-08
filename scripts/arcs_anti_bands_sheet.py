@@ -32,11 +32,12 @@ import arcs_anti_bands as aab  # noqa: E402
 from jwst_anomaly import cutouts, paths  # noqa: E402
 
 OUT = paths.repo_root() / "results" / "arcs" / "anti-bands"
-S3 = "s3://stpubdata/jwst/public/{p}/L3/t/{o}/{obs}_nircam_clear-{b}_i2d.fits"
 
 
 def image_url(obs: str, band: str) -> str:
-    return S3.format(p=obs[:7], o=obs.split("-")[1].split("_")[0], obs=obs, b=band)
+    """S3 URI of the i2d mosaic (same layout as ``arcs_bands.s3_url``)."""
+    https = aab.ab.s3_url(f"{obs}_nircam_clear-{band}_i2d.fits")
+    return https.replace(aab.ab.S3_HTTPS, "s3://stpubdata/")
 
 
 def main() -> int:
@@ -61,7 +62,7 @@ def main() -> int:
                 x, y = (round(float(v)) for v in w.world_to_pixel_values(r["ra"], r["dec"]))
                 k = round(2.0 / (proj_plane_pixel_scales(w.celestial)[0] * 3600))  # 2″ half-size
                 s = img[max(y - k, 0) : y + k + 1, max(x - k, 0) : x + k + 1]
-                s = s - median_filter(np.nan_to_num(s), 2 * k // 2 + 1)
+                s = s - median_filter(np.nan_to_num(s), 2 * k + 1)  # 4″ window
                 lo, hi = np.nanpercentile(s, [5, 99.7])
                 axis.imshow(s, origin="lower", cmap="gray", vmin=lo, vmax=hi)
                 # F200W axis as a 1.2" bar, placed through the WCS (sky PA east of north)

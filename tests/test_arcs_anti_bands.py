@@ -37,7 +37,21 @@ def test_row_label_uses_passing_bands_only():
 
 
 def test_outcome():
-    assert m.outcome(["blend_flag", "blend_flag", "same_axis"]).startswith("explained")
+    assert m.outcome(["blend_flag", "blend_flag", "same_axis"]) == (
+        "open part of the pooled anti excess explained by colour blends or colour structure"
+        " (exploratory)"
+    )
     assert m.outcome(["same_axis", "same_axis", "undetermined"]).startswith("blend veto passed")
     assert m.outcome(["same_axis", "same_axis", "blend_flag"]) == "mixed / undetermined"
     assert m.outcome(["undetermined"] * 3) == "mixed / undetermined"
+
+
+def test_row_index_refuses_missing_or_duplicate():
+    import pytest
+    from astropy.table import Table
+
+    t = Table({"label": [1, 2, 2]})
+    assert m.row_index(t, 1) == 0
+    for bad in (2, 3):
+        with pytest.raises(SystemExit):
+            m.row_index(t, bad)

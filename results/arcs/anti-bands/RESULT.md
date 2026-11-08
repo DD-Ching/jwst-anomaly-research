@@ -2,8 +2,8 @@
 
 Plan: `PLAN.md` (committed before any second-band shape of these rows was read). Script:
 `scripts/arcs_anti_bands.py`; rule functions unit-tested before the run (`tests/test_arcs_anti_bands.py`). Every
-number below is in `summary.json`. Inputs: six pipeline `_cat.ecsv` from `stpubdata` S3 (sha256 in `summary.json`
-`inputs_sha256`), read into the cache and deleted after the run. Shapes `observed`; classes and labels `derived`;
+number below is in `summary.json`. Inputs: six pipeline `_cat.ecsv` (jwst 3.0.0) from `stpubdata` S3, pinned by sha256 in
+`data/manifests/arcs_anti_bands.ecsv` (also `summary.json` `inputs_sha256`), read into the cache and deleted after reading. Shapes `observed`; classes and labels `derived`;
 thresholds ASSUMPTIONs (`summary.json` `params`).
 
 ## Frozen outcome: **blend veto passed; the rows stay open (not a lensing test)** (rule 4: 3 `same_axis`, 0 `blend_flag`)
@@ -39,8 +39,14 @@ All six band matches lie within 0.07″ of the F200W position; no match is share
 ## Deviations
 - The LW band of MACS0308 is F410M, as the plan states (no F444W catalogue for `jw05293-o005_t001`).
 - `scripts/arcs_anti_bands_sheet.py` (contact sheet) was added after the run; it reads `summary.json` only for titles.
+- Review fixes after the first run: catalogues now go through `fetch_catalog` pinned by the manifest (the first run
+  read them unpinned; same sha256), the rule-4 wording matches the plan, and a missing or duplicated row label is
+  refused. `summary.json` is unchanged by the re-run. The sheet's background window widened from about 2″ to 4″;
+  the reading did not change.
 
 ## Limitations
+- The second-band catalogues are jwst 3.0.0 products read on 2026-11-08; the stored F200W shapes come from the
+  earlier `arcs` runs. Rows are matched by position (all within 0.07″), not by label.
 - 3 rows, chosen post hoc. Pipeline isophotal shapes (no PSF correction): the LW ellipticities are lower (PSF
   dilution), the axes are not.
 
