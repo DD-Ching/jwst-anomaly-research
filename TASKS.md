@@ -762,8 +762,10 @@ Independent program; takes no resources from MOA-II, S1, E1/D1 or data validatio
   `docs/candidates/jw02736-o001_t001_nircam_f200w_1096.md`)~~ done 2026-11-07 for 1096
   (`results/smacs_1096_shear/RESULT.md`, D-024 addendum 7: g 0.132, μ 1.515, orientation consistent).
 - Lensed-SN image order in public pre-JWST maps: SN Ares (MACS0308) and SN Helios (RXC J0018, 2026-11-08,
-  `results/lens_consistency/rxc0018_helios/RESULT.md`: `agrees`, amplitude-conditional) done. Open: SN Athena (z 0.87,
-  DD 12781) once its position and a public model of its cluster are found.
+  `results/lens_consistency/rxc0018_helios/RESULT.md`: `agrees`, amplitude-conditional) done. SN Athena (MACS0417
+  h002) image order and window were done in #309 / #323; HST 18470 visit 5 (2026-10-28) checked 2026-11-08: `not seen`
+  (`results/transients/athena_hst18470_v5/RESULT.md`). Open: re-run `scripts/athena_hst18470.py` at each new public
+  HST 18470 visit and the JWST 12781 epochs (2027-01/02).
 - A weekly scheduled link check of the state files (`scripts/check_links.py`).
 - Switch Dependabot from pip to uv once a `uv.lock` exists. Keep the version in `pyproject.toml`,
   `__init__.py` and `CITATION.cff` in sync on release.
