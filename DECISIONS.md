@@ -3072,6 +3072,14 @@ early Mar 2027; RELICS glafic 2027-09-14 to 2027-11-22, #309); no lens-model res
 difference-image search (the forced aperture at both predicted positions answers the frozen question). Revisit if: a
 new public HST 18470 or JWST 12781 epoch (re-run the script with that visit appended).
 
+**Addendum 2026-11-08 (rms-scaled `forced_check` radii; `results/lens_consistency/rms_radii/RESULT.md`).** Frozen census
+of the 55 stored `validate` image-plane tables (offline): 10 have 1″ < rms ≤ 2″, and in 6 of them the rms drops to
+≤ 1″ without the single largest offset (`rms_outlier_driven`), so the frozen reading is "rms scale outlier-driven".
+Decision: match and search radii are not scaled by the image-plane rms; `rms_scaled_radii` stays an unwired helper.
+Post hoc: 12 of the 25 rms > 1″ tables have a robust scale (1.4826 × median |dθ|) ≤ 1″. Alternatives rejected:
+wiring the rms scaling with an outlier exclusion chosen after seeing this census (post hoc). Revisit if: a robust
+scale gets its own frozen gate on known catalogued images (e.g. matched fraction on gate-K-passing fields unchanged).
+
 ## D-035 Six HFF clusters as CATS map models; image lists gated on their image-plane rms (2026-10-08)
 
 **Decision.**

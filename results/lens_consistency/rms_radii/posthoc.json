@@ -1,0 +1,17 @@
+{
+  "label": "post hoc (not in PLAN.md)",
+  "n_rms_gt_1": 25,
+  "n_robust_scale_le_1": 12,
+  "by_group": {
+    "scalable": {
+      "n": 10,
+      "robust_le_1": 5
+    },
+    "gate_k_failure": {
+      "n": 15,
+      "robust_le_1": 7
+    }
+  },
+  "n_distinct_dirs": 18,
+  "robust_scale_definition": "1.4826 x median |dtheta| (offsets are non-negative, so this is not a MAD about the median)"
+}

@@ -1,0 +1,72 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: table, datatype: string}
+# - {name: n, datatype: int64}
+# - {name: rms_arcsec, datatype: float64}
+# - {name: rms_leave_max_out_arcsec, datatype: float64}
+# - {name: robust_scale_arcsec, datatype: float64}
+# - {name: max_dtheta_arcsec, datatype: float64}
+# - {name: match_scaled_arcsec, datatype: float64}
+# - {name: search_scaled_arcsec, datatype: float64}
+# - {name: n_unmatched_fixed, datatype: int64}
+# - {name: n_unmatched_scaled, datatype: int64}
+# - {name: outlier_driven, datatype: bool}
+# - {name: group, datatype: string}
+# schema: astropy-2.0
+table n rms_arcsec rms_leave_max_out_arcsec robust_scale_arcsec max_dtheta_arcsec match_scaled_arcsec search_scaled_arcsec n_unmatched_fixed n_unmatched_scaled outlier_driven group
+results/lens_consistency/abell2744-uncover2/imageplane_bergamini23.ecsv 149 0.9985 0.931 0.8672 4.5016 1.5 1.0 12 12 False rms<=1
+results/lens_consistency/abell2744-uncover2/imageplane_uncover2.ecsv 181 0.8413 0.8259 0.8852 2.3085 1.5 1.0 10 10 False rms<=1
+results/lens_consistency/abell2744_uncoverref/imageplane_abell2744_abell2744-uncover2-maps.ecsv 181 4.7785 4.1489 0.931 32.1649 3.0 3.0 23 10 False gate_k_failure
+results/lens_consistency/abell2744_uncoverref/imageplane_wls_abell2744_abell2744-uncover2-maps.ecsv 172 0.8354 0.819 0.8959 2.3085 1.5 1.0 9 9 False rms<=1
+results/lens_consistency/abell370_buffalo/imageplane_abell370_abell370-buffalo-a-maps.ecsv 99 7.6966 5.4746 0.8654 54.1052 3.0 3.0 15 5 False gate_k_failure
+results/lens_consistency/abell370_buffalo/imageplane_abell370_k2_abell370-buffalo-a-maps.ecsv 104 0.91 0.8525 0.7408 3.3555 1.5 1.0 9 9 False rms<=1
+results/lens_consistency/abell370_buffalo_extra/imageplane_abell370_abell370-buffalo-a-maps.ecsv 104 0.91 0.8525 0.7408 3.3555 1.5 1.0 9 9 False rms<=1
+results/lens_consistency/abell370_canucsref/imageplane_abell370_abell370-canucs.ecsv 115 2.3351 1.6176 0.5933 18.1324 3.0 2.3351 8 5 False gate_k_failure
+results/lens_consistency/abells1063_d035/imageplane.ecsv 116 11.742 10.9437 2.0416 47.1249 3.0 3.0 55 28 False gate_k_failure
+results/lens_consistency/bullet_extra/imageplane_wls_bullet_bullet-canucs-maps.ecsv 135 0.3914 0.3805 0.4279 1.1318 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/bullet_gatek/imageplane_bullet_bullet-canucs-maps.ecsv 135 1.1963 1.03 0.496 7.1449 1.7945 1.1963 4 4 False scalable
+results/lens_consistency/bullet_gatek/imageplane_wls_bullet_bullet-canucs-maps.ecsv 135 0.3914 0.3805 0.4279 1.1318 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/d037_rules/imageplane_macs1149-cats.ecsv 145 0.6731 0.6219 0.6102 3.1613 1.5 1.0 4 4 False rms<=1
+results/lens_consistency/elgordo_djaref/imageplane_elgordo_elgordo-caminha23.ecsv 56 0.7539 0.7319 0.8672 1.538 1.5 1.0 1 1 False rms<=1
+results/lens_consistency/macs0416_canucsref/imageplane_macs0416_macs0416-canucs.ecsv 303 0.512 0.5052 0.4608 1.5283 1.5 1.0 2 2 False rms<=1
+results/lens_consistency/macs0417_images/imageplane_macs0417_macs0417-canucs-maps.ecsv 56 0.7935 0.3675 0.4199 5.2757 1.5 1.0 1 1 False rms<=1
+results/lens_consistency/macs0417_images/imageplane_macs0417_macs0417-relics-lenstool.ecsv 56 6.2454 6.0341 2.1126 13.4785 3.0 3.0 27 22 False gate_k_failure
+results/lens_consistency/macs0417_images/imageplane_macs1423_macs1423-canucs-maps.ecsv 17 1.3886 0.9846 0.7434 4.1556 2.0829 1.3886 3 2 True scalable
+results/lens_consistency/macs0647_clash_heldout/imageplane_macs0647-clash-ltm.ecsv 69 1.5521 1.5168 1.8227 3.1295 2.3282 1.5521 24 9 False scalable
+results/lens_consistency/macs0647_clash_heldout/imageplane_macs0647-clash-nfw.ecsv 69 2.4951 2.3831 2.0821 6.5881 3.0 2.4951 33 17 False gate_k_failure
+results/lens_consistency/macs0717_models/imageplane_macs0717-cats.ecsv 26 2.7677 2.5944 3.3759 5.5585 3.0 2.7677 19 8 False gate_k_failure
+results/lens_consistency/macs0717_models/imageplane_macs0717-keeton.ecsv 26 0.8534 0.7935 0.8847 1.7874 1.5 1.0 4 4 False rms<=1
+results/lens_consistency/macs0717_models/imageplane_macs0717-sharon.ecsv 25 0.6393 0.5238 0.5847 1.9054 1.5 1.0 2 2 False rms<=1
+results/lens_consistency/macs1149_canucsref/imageplane_macs1149_macs1149-canucs-maps.ecsv 23 0.9899 0.612 0.5948 3.781 1.5 1.0 2 2 False rms<=1
+results/lens_consistency/macs1149_sharon/imageplane_macs1149-cats-fittedz.ecsv 23 0.8529 0.7897 0.8542 1.7347 1.5 1.0 3 3 False rms<=1
+results/lens_consistency/macs1149_sharon/imageplane_macs1149-cats.ecsv 23 4.3545 2.6575 0.8542 16.7558 3.0 3.0 5 2 False gate_k_failure
+results/lens_consistency/macs1149_sharon/imageplane_macs1149-sharon.ecsv 19 0.2255 0.1963 0.2046 0.5224 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/macs1931_gatek/imageplane_spec.ecsv 26 0.9194 0.778 1.0276 2.6165 1.5 1.0 1 1 False rms<=1
+results/lens_consistency/macs2129_clash_heldout/imageplane_macs2129-clash-ltm.ecsv 53 2.2655 2.0885 2.8327 6.7222 3.0 2.2655 30 7 False gate_k_failure
+results/lens_consistency/macs2129_clash_heldout/imageplane_macs2129-clash-nfw.ecsv 53 2.2431 2.0803 2.1299 6.4514 3.0 2.2431 26 6 False gate_k_failure
+results/lens_consistency/mars_hff_inputs/imageplane_A2744.ecsv 120 1.1122 0.9474 0.2035 6.4536 1.6684 1.1122 16 13 True scalable
+results/lens_consistency/mars_hff_inputs/imageplane_A370.ecsv 105 0.8499 0.5049 0.0604 7.0231 1.5 1.0 5 5 False rms<=1
+results/lens_consistency/mars_hff_inputs/imageplane_AS1063.ecsv 57 8.0202 5.5471 0.1212 44.0833 3.0 3.0 2 2 False gate_k_failure
+results/lens_consistency/mars_hff_inputs/imageplane_MACSJ0416.ecsv 236 0.5135 0.4831 0.0716 2.7168 1.5 1.0 7 7 False rms<=1
+results/lens_consistency/mars_hff_inputs/imageplane_MACSJ0717.ecsv 31 0.099 0.0783 0.0683 0.3461 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/mars_hff_inputs/imageplane_MACSJ1149.ecsv 123 0.7423 0.4292 0.1071 6.7308 1.5 1.0 6 6 False rms<=1
+results/lens_consistency/rxj2129_djaref/imageplane_rxj2129_rxj2129-lenstool-maps.ecsv 31 0.4495 0.4136 0.4621 1.0633 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/s1063_extra/imageplane_abells1063_abells1063-wslap.ecsv 36 0.5805 0.4265 0.3586 2.4012 1.5 1.0 1 1 False rms<=1
+results/lens_consistency/s1063_wslap/imageplane_zspec.ecsv 36 4.1969 2.7148 0.374 19.3948 3.0 3.0 3 2 False gate_k_failure
+results/lens_consistency/s1063_wslap/imageplane_zspec_wls.ecsv 36 0.5805 0.4265 0.3586 2.4012 1.5 1.0 1 1 False rms<=1
+results/lens_consistency/slice_relics_glafic/imageplane_macs0553.ecsv 57 1.0207 0.8929 0.8477 3.8383 1.531 1.0207 6 6 True scalable
+results/lens_consistency/slice_relics_glafic/imageplane_rxc2211.ecsv 33 2.271 1.8613 0.9731 7.7027 3.0 2.271 11 6 False gate_k_failure
+results/lens_consistency/slice_relics_heldout/imageplane_macs0553.ecsv 57 1.2348 1.1551 1.2826 3.4918 1.8522 1.2348 13 8 False scalable
+results/lens_consistency/slice_relics_heldout/imageplane_rxc0232.ecsv 26 0.6905 0.6175 0.7385 1.6922 1.5 1.0 2 2 False rms<=1
+results/lens_consistency/slice_relics_heldout/imageplane_rxc2211.ecsv 33 1.8904 1.6634 1.2266 5.421 2.8356 1.8904 9 5 False scalable
+results/lens_consistency/slice_relics_macs0358/imageplane_a3192-relics-glafic.ecsv 16 1.1931 0.9886 1.0212 2.8486 1.7896 1.1931 3 2 True scalable
+results/lens_consistency/slice_relics_macs0358/imageplane_a3192-relics-lenstool.ecsv 16 0.6782 0.6174 0.6655 1.2813 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/slice_relics_rxj0152/imageplane_cl0152-relics-glafic.ecsv 20 0.481 0.4432 0.6176 0.9469 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/slice_relics_rxj0152/imageplane_cl0152-relics-lenstool.ecsv 20 1.1628 0.9172 1.0715 3.325 1.7441 1.1628 2 2 True scalable
+results/lens_consistency/slice_relics_rxj0152/imageplane_cl0152-relics-zitrin.ecsv 20 0.6071 0.4778 0.4808 1.7421 1.5 1.0 1 1 False rms<=1
+results/lens_consistency/smacs_chow23/imageplane_fixedz.ecsv 16 10.1826 7.1782 1.0914 29.7669 3.0 3.0 5 4 False gate_k_failure
+results/lens_consistency/smacs_chow23/imageplane_fixedz_wls.ecsv 16 1.9471 0.6838 0.7978 7.3242 2.9206 1.9471 2 1 True scalable
+results/lens_consistency/smacs_djaref/imageplane_smacs0723_smacs0723-iclv2.ecsv 60 0.3338 0.3195 0.3733 0.8159 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/spt0615_images/imageplane_spt0615-relics-glafic.ecsv 14 0.3107 0.2584 0.341 0.6954 1.5 1.0 0 0 False rms<=1
+results/lens_consistency/spt0615_images/imageplane_spt0615-relics-lenstool.ecsv 14 21.1009 14.3767 1.0232 59.5525 3.0 3.0 6 6 False gate_k_failure
