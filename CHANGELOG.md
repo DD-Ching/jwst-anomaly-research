@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-09: `arcs` single-component anti rows after vetting: excess not supported (D-024 addendum 20)
+- **Question:** does addendum 9's post hoc single-component anti excess (3 vs 0.631, P 0.024) survive addenda 13 and 19
+  (2194 `model_sensitive`, 581 a GLAFIC member)? Plan first (`results/arcs/anti-ledger/PLAN.md`); stored census only.
+- **Result** (`RESULT.md`, `summary.json`): stored split reproduced; primary 1 vs 0.572, P 0.440 → `single-component
+  excess not supported after vetting (post hoc)`; 581 kept as an arc: P 0.114. Looked at `anti_bands.png`. No candidate.
+- **Failed approach:** none. **Services:** CDS still resets (00:09Z); #751 waits.
+- **Handoff:** the `arcs` anti line in the replication fields is closed except the single row MACS0308 2157
+  (deeper spectroscopy or a JWST grism; none public). No further `arcs` anti work is queued.
+
 ## 2026-11-08: `arcs` RXC J0600 581: the GLAFIC v3 model treats it as a cluster member (D-024 addendum 19)
 - **Question:** does GLAFIC's galaxy-scale κ peak at 581 (addendum 18, post hoc) mean the model treats 581 as a
   member? Plan frozen first (`results/arcs/kappa-members-581/PLAN.md`); peak and gate functions unit-tested before the run.
