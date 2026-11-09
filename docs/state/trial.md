@@ -294,6 +294,7 @@ adds its line, with a note naming the unit.
 | 2026-W43 | — | — | ≈ 0.4 (image-plane source fit: frozen plan + tested rules; V1 synthetic, V2 MACS1149 pass; S1063 R fails, map only) | 0.15 (orientation, #374 run check, claim, state files, PR) | cloud routine 01G6Vgx9, 21:08–21:50Z |
 | 2026-W45 | — | — | ≈ 0.15 (`arcs` RXC J0600 581 under 99 GLAFIC v3 realisations, D-024 addendum 18: `undetermined`, V2 fails at 0.4″; post hoc GLAFIC κ peak 0.2″ from 581) | 0.1 (orientation: no owner comment or issue since the last run; #751 still waits on CDS; claim #800, state files, review, PR) | cloud routine 01UxkcWD, 22:07–22:45Z |
 | 2026-W45 | — | — | ≈ 0.15 (`arcs` RXC J0600 581 GLAFIC κ-peak membership, D-024 addendum 19: gate passes on 116 NED spec-z; GLAFIC treats 581 as a member, Lenstool not) | 0.1 (orientation: no owner comment or issue since the last run; #751 still waits on CDS; claim #801, state files, review, PR) | cloud routine 01UxkcWB, 23:07–23:45Z |
+| 2026-W46 | — | — | ≈ 0.1 (`arcs` single-component anti rows after vetting, D-024 addendum 20: 1 vs 0.572, P 0.440, excess not supported; 2157 the one open row) | 0.15 (orientation: no owner comment or issue since the last run; #751 still waits on CDS; venv, claim #803, state files, review, PR) | cloud routine 01UxkcWA, 00:07Z– |
 
 ## Outcome ledger (four columns only)
 | Method improvements | Conditional theory results | Real candidates | Independent verifications |

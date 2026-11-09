@@ -1,0 +1,42 @@
+{
+ "label": "post hoc, exploratory; derived from ../pooled-census/census.ecsv",
+ "reproduce": {
+  "n": 54,
+  "anti": 3,
+  "expected": 0.631,
+  "p_ge_k": 0.024237277930407922
+ },
+ "primary": {
+  "n": 52,
+  "anti": 1,
+  "expected": 0.572,
+  "p_ge_k": 0.4396606754014131
+ },
+ "drop_2194_only": {
+  "n": 53,
+  "anti": 2,
+  "expected": 0.582,
+  "p_ge_k": 0.11427024446919741
+ },
+ "obs_only": {
+  "n": 54,
+  "anti": 1,
+  "expected": 0.631,
+  "p_ge_k": 0.4724383087415677
+ },
+ "rows": {
+  "WHL0137 2194": {
+   "status": "model_sensitive (D-024 addendum 13)",
+   "p_anti_row": 0.04835
+  },
+  "RXC J0600 581": {
+   "status": "member (model input) under GLAFIC v3; arc under Lenstool (addendum 19)",
+   "p_anti_row": 0.01066
+  },
+  "MACS0308 2157": {
+   "status": "open: robust to model error (14), MUSE undetermined (16, 17)",
+   "p_anti_row": 0.00084
+  }
+ },
+ "outcome": "single-component excess not supported after vetting (post hoc)"
+}
