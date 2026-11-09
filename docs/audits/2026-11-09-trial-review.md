@@ -63,7 +63,7 @@ outcomes above are in CHANGELOG.md and DECISIONS.md but were never folded into i
 | Per-unit state files (T3) | every run that touched a unit resumed from its file; no verified step was redone | worked |
 | Weekly split (T1) | met only in W42; high-risk 0 % from W44 | not met; all four units paused on owner or external inputs, and T1 rightly did not invent work |
 | `pending.md` | provisional conclusions of unmerged PRs stayed visible; no "done; do not redo" item was redone | worked |
-| Idle rule | W46 runs stopped in ≈ 0.05 h each when nothing was unblocked | worked, but three successive idle runs per hour cost a little upkeep each |
+| Idle rule | W46 runs stopped in ≈ 0.05 h each when nothing was unblocked | worked; each idle hourly run still costs ≈ 0.05 h of upkeep |
 
 ## 5. Recommendation (for the owner's decision)
 
@@ -72,8 +72,8 @@ outcomes above are in CHANGELOG.md and DECISIONS.md but were never folded into i
 2. Replace T1's fixed 45 / 30 / 15 / 10 split with "report the shares; no target", since the split was not
    reachable while all units waited on the owner.
 3. Clear the owner-review backlog first. Lowest-effort route: close the 10 goal-round PRs #152–#166 as
-   "recorded, not merged" (their conclusions stay in `pending.md`), then review the 5 candidate-labelled PRs
-   (#61, #199, #237, #553, #556).
+   "recorded, not merged" (their conclusions stay in `pending.md`), then review the 6 candidate-labelled PRs
+   (#61, #145, #199, #237, #553, #556; #145 and #237 are already explained as red noise and SN Atalanta).
 4. Decide whether the S0 authorization (T7) continues. If yes, the next run can screen up to three new high-risk
    directions; if no, high-risk work waits for a new owner brief.
 5. Reduce idle cost: with the queue blocked on dated inputs (CDS for #751, DR4 on 2026-12-02, Euclid DR1, HST
