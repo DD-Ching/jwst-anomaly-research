@@ -12,6 +12,7 @@ Evidence for the current priorities: D-023 (owner, 2026-10-08), D-025/D-026 and 
 Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 10 % upkeep), units and ledger:
 `docs/state/trial.md`. Provisional conclusions of open needs-human PRs, and what is "done; do not redo":
 `docs/state/pending.md`.
+- **Trial ended 2026-11-09; review written** (`docs/audits/2026-11-09-trial-review.md`, D-083 addendum: recommend adjust). Owner decision pending; rules unchanged until then.
 - **X1 far-side SV hot spots at Sgr A*** closed 2026-10-13 (gates passed as written, 3.7 / 20 h; the tool is cross-checked, the position comparison is exploratory, the S2 flux-contrast observable is untested; no candidate): conditional results and
   the reopen inputs are in `docs/state/units/X1.md` "Closure". Tracer: `scripts/x1_tracer.py` (angles and image
   weights verified by second routes, `scripts/x1_s4.py`, `scripts/x1_s4b.py`).
