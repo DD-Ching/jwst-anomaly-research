@@ -7,7 +7,7 @@ lapse on their own; D-083 asks for a review, not an automatic stop).
 
 ## 1. Run time by category (derived from the weekly tally)
 
-Source: every `| 2026-W… |` row of `docs/state/trial.md` (565 rows, 2026-W42 to the 02:08Z run of 2026-W46).
+Source: every `| 2026-W… |` row of `docs/state/trial.md` (565 rows, 2026-W42 to this 03:08Z run of 2026-W46, whose own row is included).
 The hours are the runs' own estimates (the first number in each cell); they are not measured wall-clock time.
 
 | ISO week | Rows | Routine | High-risk | Verification | Upkeep | Total h | Shares (R / H / V / U) |
