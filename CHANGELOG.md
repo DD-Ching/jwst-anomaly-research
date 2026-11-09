@@ -2,6 +2,12 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-09: end-of-trial review of D-083 (owner decision pending)
+- **Question:** what did the 2026-10-12 → 2026-11-09 exploration trial deliver, and should it continue, change or stop?
+- **Result** (`docs/audits/2026-11-09-trial-review.md`, D-083 addendum): ≈ 227 self-estimated run-hours over 565 tally rows; shares 23 / 14 / 35 / 27 % (routine / high-risk / verification / upkeep) against 45 / 30 / 15 / 10; high-risk 0 % from W44. No real candidate; 4 vetted hits stay inconclusive; needs-human backlog 27. Recommendation: adjust.
+- **Failed approach:** none. **Services:** CDS XMatch and SIMBAD TAP still reset (03:12Z); #751 waits.
+- **Handoff:** the owner decides on the review's five points; until then the trial rules stay in force unchanged.
+
 ## 2026-11-09: `arcs` single-component anti rows after vetting: excess not supported (D-024 addendum 20)
 - **Question:** does addendum 9's post hoc single-component anti excess (3 vs 0.631, P 0.024) survive addenda 13 and 19
   (2194 `model_sensitive`, 581 a GLAFIC member)? Plan first (`results/arcs/anti-ledger/PLAN.md`); stored census only.

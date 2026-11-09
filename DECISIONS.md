@@ -6071,6 +6071,8 @@ Rules T1–T6 are in `docs/state/trial.md`, version trial-2026-10-12.1. First un
 verifications recommends continue, adjust or stop. Revisit earlier if the owner-review backlog keeps growing or a
 unit overruns its budget.
 
+**Addendum 2026-11-09 (end-of-trial review, `docs/audits/2026-11-09-trial-review.md`).** Tallied 565 rows, ≈ 227 run-hours (self-estimated): routine 23 %, high-risk 14 %, verification 35 %, upkeep 27 % vs the 45 / 30 / 15 / 10 target; high-risk 0 % from W44, when all four units (X1 closed; X2, X3, X4 paused) waited on owner or external inputs. No real candidate; needs-human backlog 27 (14 at the start). Recommendation to the owner: **adjust** (keep T2, T3, T5 and pending.md; drop the fixed split; clear the backlog; decide whether S0 screens continue). Pending the owner's ruling, runs keep applying trial-2026-10-13.2 unchanged; this addendum changes no rule.
+
 ## D-084 X3: W3 screen on unselected Gaia epoch photometry (GAPS dev → held-out → DR4); D-057 fitter plus an astrometric-quality veto (2026-10-14)
 
 **Decision.**
