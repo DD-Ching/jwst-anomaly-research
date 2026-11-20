@@ -162,7 +162,7 @@ Rules, weekly split (45 % routine search / 30 % high-risk / 15 % verification / 
 - **New-data screening 2026-10-24** (`results/screening_2026_10_24/SCREEN.md`; **closed by the owner 2026-10-24**):
   - Sunrise n0153: no new epoch;
   - S1063 1316 / 1557: 116.28VK.001 releases 2026-11-20 to 2027-03-12; first cube (2.5 ks on 1316) not material
-    (re-assessed 2026-11-20, `SCREEN.md`); re-assess after 2027-03-12 (at most +27 ks on 1316, +38 ks on 1557);
+    (re-assessed 2026-11-20, `SCREEN.md`); re-assess after 2027-01-12 (1316, +19.8 ks) and 2027-03-12 (1557, +38.4 ks);
   - Abell 370 1565: unused GO 5890 F150W (37 ks) and F210M exist. The estimated uncertainty of the F150W/F200W flux
     ratio (not a magnitude error) is 0.14–0.21 now and 0.13–0.16 after 2027-01-28. Optimistic, includes an F210M →
     F200W-equivalent exposure conversion, not measured: it does not establish the ≤ 0.15 reopen condition.
