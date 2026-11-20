@@ -2,6 +2,14 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-20: S1063 1316 / 1557: first 116.28VK.001 release assessed, not material
+- **Question:** does the first newly public MUSE cube (release date 2026-11-20) materially improve the 1316 / 1557
+  spectroscopy (reopen condition of the 2026-10-16 owner decision)? Metadata only, no download.
+- **Result** (`results/screening_2026_10_24/SCREEN.md` "Re-assessment 2026-11-20"): one cube, 2.5 ks, covers 1316
+  (≈ 32 ks already); +4 % depth: not material. All 19 cubes by 2027-03-12 add ≤ 27 ks (1316) and ≤ 38 ks (1557).
+- **Failed approach:** none. **Services:** CDS XMatch reset (10:09Z), #751 waits; HST 18470 unchanged (30 rows).
+- **Handoff:** re-assess S1063 1316 after 2027-01-12 and 1557 after 2027-03-12; queue otherwise blocked on owner decisions.
+
 ## 2026-11-09: end-of-trial review of D-083 (owner decision pending)
 - **Question:** what did the 2026-10-12 → 2026-11-09 exploration trial deliver, and should it continue, change or stop?
 - **Result** (`docs/audits/2026-11-09-trial-review.md`, D-083 addendum): ≈ 227 self-estimated run-hours over 565 tally rows; shares 23 / 14 / 35 / 27 % (routine / high-risk / verification / upkeep) against 45 / 30 / 15 / 10; high-risk 0 % from W44. No real candidate; 4 vetted hits stay inconclusive; needs-human backlog 27. Recommendation: adjust.

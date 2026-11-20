@@ -54,3 +54,17 @@
 - CANUCS / Technicolor DR1, arXiv:2506.21685. Lagattuta et al. 2019 (Abell 370 MUSE mosaic), arXiv:1904.02158.
 - Euclid DR1 timeline (ESA), https://www.cosmos.esa.int/web/euclid/dr1-timeline (accessed 2026-10-24).
 - DJA imaging index v7, https://s3.amazonaws.com/grizli-v2/JwstMosaics/v7/index.html (no "abell370" string).
+
+## Re-assessment 2026-11-20 (first S1063 release date; assessment only, per the owner decision of 2026-10-16)
+- **Observed** (ESO ObsCore, queried 2026-11-20 10:09Z; `metadata/eso_116_28VK_released_from_2026-11-20.csv`): one
+  more 116.28VK.001 MUSE cube is public today, `ADP.2026-05-29T11:41:29.148` (2,469 s, released 2026-11-20 08:46Z);
+  18 more are released 2026-12-08 to 2027-03-12.
+- **Derived** (point-in-polygon on `s_region`, `metadata/s1063_release_coverage_2026-11-20.json`; an upper bound, because earlier cubes listed as covering had
+  `finite_fraction` 0 at the target, `vetting/muse_coverage.ecsv`): today's cube covers 1316 only. Exposure on 1316
+  with full coverage before today: 32.3 ks (116.28VK.001 and 60.A-9345 cubes); today adds 2.5 ks
+  (+8 % exposure, about +4 % depth). By 2027-03-12 the 19 cubes add at most 27.3 ks on 1316 (19.8 ks by
+  2027-01-12) and 38.4 ks on 1557 (on 47.2 ks): line-flux limits ×0.74 at best (background-limited).
+- **Assessment:** today's cube is not materially better data; no download, no re-run. ASSUMPTION: "materially
+  better" means at least about ×0.8 on the line-flux limit, i.e. ≥ 1.5× the exposure. For 1316 that is
+  reached on 2027-01-12 at the earliest (+19.8 ks); for 1557 on 2027-02-02 (+27.2 ks). Re-assess after 2027-01-12 (1316) and 2027-03-12 (1557) (or when a redshift catalogue appears), then check
+  `finite_fraction` at the targets before any cutout.
