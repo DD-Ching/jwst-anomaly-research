@@ -26,6 +26,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import halo_phot as hp  # noqa: E402
 import lens_consistency as lc  # noqa: E402
 
+from jwst_anomaly import cds_mirror  # noqa: E402
+
 GAIA_RADIUS_ARCMIN = 4.0
 PM_SIGMA = 3.0
 
@@ -63,6 +65,7 @@ def calibrate(run_json: Path) -> dict:
     lc.apply_frame_offset(d["model"], model, images)
     stars = gaia_stars(float(np.mean(images["ra"])), float(np.mean(images["dec"])))
     out = {"model": d["model"], "bands": d["bands"], "n_gaia": len(stars)}
+    out["gaia_source"] = cds_mirror.tag("VizieR I/355/gaiadr3")
     out |= {"stars": {}, "images": {}}
     for band, uri in d["bands"].items():
         stamp, close = lc.image_stamper(uri, 3.0)

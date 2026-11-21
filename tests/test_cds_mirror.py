@@ -11,9 +11,9 @@ HTML = "<!doctype html>\n<html lang='en'><title>Page unavailable — CDS</title>
 @pytest.fixture(autouse=True)
 def _fresh(monkeypatch):
     monkeypatch.delenv(cm.ENV_VAR, raising=False)
-    cm._first_answering.cache_clear()
+    cm.forget()
     yield
-    cm._first_answering.cache_clear()
+    cm.forget()
 
 
 def test_probe_ok_accepts_the_data_row_and_rejects_error_pages():
@@ -35,13 +35,13 @@ def test_cds_first_then_mirror_then_error(monkeypatch):
     monkeypatch.setattr(cm, "_probe", fake({cm.CDS_VIZIER, cm.CFA_VIZIER}))
     assert cm.vizier_server() == cm.CDS_VIZIER and calls == [cm.CDS_VIZIER]
 
-    cm._first_answering.cache_clear()
+    cm.forget()
     calls.clear()
     monkeypatch.setattr(cm, "_probe", fake({cm.CFA_VIZIER}))
     assert cm.vizier_server() == cm.CFA_VIZIER
     assert calls == [cm.CDS_VIZIER] * cm.PROBE_ATTEMPTS + [cm.CFA_VIZIER]
 
-    cm._first_answering.cache_clear()
+    cm.forget()
     monkeypatch.setattr(cm, "_probe", fake(set()))
     with pytest.raises(ConnectionError):
         cm.vizier_server()
@@ -53,6 +53,19 @@ def test_env_pin_skips_the_probe_even_after_caching(monkeypatch):
     monkeypatch.setenv(cm.ENV_VAR, "vizier.example.org")
     assert cm.vizier_server() == "vizier.example.org"
     assert cm.asu_tsv_url() == "https://vizier.example.org/viz-bin/asu-tsv"
+    assert cm.tag("VizieR X") == "VizieR X [VizieR host vizier.example.org]"
+    monkeypatch.setenv(cm.ENV_VAR, " https://vizier.example.org/viz-bin/ ")
+    assert cm.vizier_server() == "vizier.example.org"
+
+
+def test_choice_is_cached_until_forget(monkeypatch):
+    up = {cm.CDS_VIZIER}
+    monkeypatch.setattr(cm, "_probe", lambda s, t: s in up)
+    assert cm.vizier_server() == cm.CDS_VIZIER
+    up = {cm.CFA_VIZIER}  # CDS goes down mid-run
+    assert cm.vizier_server() == cm.CDS_VIZIER  # cached
+    cm.forget()
+    assert cm.vizier_server() == cm.CFA_VIZIER
 
 
 def test_vizier_binds_the_selected_server(monkeypatch):

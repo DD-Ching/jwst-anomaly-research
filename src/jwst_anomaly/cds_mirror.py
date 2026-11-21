@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import logging
 import os
-from functools import lru_cache
+import threading
 
 log = logging.getLogger(__name__)
 
@@ -48,16 +48,41 @@ def _probe(server: str, timeout: float) -> bool:
     return ok
 
 
-def vizier_server(timeout: float = PROBE_TIMEOUT_S) -> str:
+def _bare_host(value: str) -> str:
+    """``https://host/`` or ``host/`` -> ``host`` (astroquery adds the scheme itself)."""
+    v = value.strip()
+    for scheme in ("https://", "http://"):
+        if v.lower().startswith(scheme):
+            v = v[len(scheme) :]
+    return v.split("/", 1)[0]
+
+
+_LOCK = threading.Lock()
+_SELECTED: list[str] = []  # the probed server for this process (at most one entry)
+
+
+def vizier_server() -> str:
     """``$JWST_ANOMALY_VIZIER_SERVER`` if set, else the first answering ``VIZIER_SERVERS`` entry.
 
-    The probe result is cached for the process. Raises ``ConnectionError`` when none answers.
+    The probe runs once per process under a lock (threads wait for it); :func:`forget` drops the
+    choice so the next call probes again. Raises ``ConnectionError`` when no server answers; that
+    failure is not cached.
     """
-    pinned = os.environ.get(ENV_VAR, "").strip()
-    return pinned or _first_answering(timeout)
+    pinned = _bare_host(os.environ.get(ENV_VAR, ""))
+    if pinned:
+        return pinned
+    with _LOCK:
+        if not _SELECTED:
+            _SELECTED.append(_first_answering(PROBE_TIMEOUT_S))
+        return _SELECTED[0]
 
 
-@lru_cache(maxsize=1)
+def forget() -> None:
+    """Drop the probed server (call after a query on it failed, so a retry can switch hosts)."""
+    with _LOCK:
+        _SELECTED.clear()
+
+
 def _first_answering(timeout: float) -> str:
     for server in VIZIER_SERVERS:
         if any(_probe(server, timeout) for _ in range(PROBE_ATTEMPTS)):
@@ -72,6 +97,11 @@ def vizier(**kwargs):
     from astroquery.vizier import Vizier
 
     return Vizier(vizier_server=vizier_server(), **kwargs)
+
+
+def tag(source: str) -> str:
+    """``source`` with the serving VizieR host appended, for ``meta["source"]`` provenance."""
+    return f"{source} [VizieR host {vizier_server()}]"
 
 
 def asu_tsv_url() -> str:

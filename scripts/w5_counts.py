@@ -615,7 +615,7 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         stamp(
             t,
             schema.Provenance.OBSERVED,
-            f"VizieR {WH24} (Wen & Han 2024), M500 ≥ {VET_CLUSTER_M500}e14",
+            cds_mirror.tag(f"VizieR {WH24} (Wen & Han 2024), M500 ≥ {VET_CLUSTER_M500}e14"),
         )
         t.write(p_cl, overwrite=True)
     p_gal = out_dir() / f"galaxies_{name}.ecsv"
@@ -642,7 +642,11 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         t = Table(res[0], masked=False)
         t.rename_columns(["_RAJ2000", "_DEJ2000"], ["RAJ2000", "DEJ2000"])
         t["d25_arcmin"] = 0.1 * 10 ** np.asarray(t["logD25"], float)
-        stamp(t, schema.Provenance.OBSERVED, f"VizieR {HYPERLEDA} (HyperLEDA), D25 ≥ 1′")
+        stamp(
+            t,
+            schema.Provenance.OBSERVED,
+            cds_mirror.tag(f"VizieR {HYPERLEDA} (HyperLEDA), D25 ≥ 1′"),
+        )
         t.write(p_gal, overwrite=True)
     return Table.read(p_star), Table.read(p_cl), Table.read(p_gal)
 

@@ -17,6 +17,8 @@ import numpy as np
 from astropy.coordinates import SkyCoord
 from astropy.table import Table
 
+from jwst_anomaly import cds_mirror
+
 OUT = Path("results/lens_consistency/abells1063_images")
 CATALOG = "J/ApJ/888/35/table1"
 SOURCE = (
@@ -73,7 +75,7 @@ def build(rows: Table, date: str) -> tuple[Table, dict]:
         }
     )
     out["ra"].unit = out["dec"].unit = "deg"
-    out.meta = {"provenance": "observed", "source": SOURCE.format(date=date)}
+    out.meta = {"provenance": "observed", "source": cds_mirror.tag(SOURCE.format(date=date))}
     # Systems whose images disagree in zspec (a check on the system grouping)
     spread = {}
     for s in sorted(set(systems)):

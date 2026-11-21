@@ -228,6 +228,7 @@ def gaia_psf_star(ra: float, dec: float) -> dict:
                 "dec": float(t["DE_ICRS"][k]),
                 "gmag": float(t["Gmag"][k]),
                 "dist_arcsec": float(sc[k].separation(c).arcsec),
+                "source": cds_mirror.tag("VizieR I/355/gaiadr3"),
             }
     raise RuntimeError("no isolated Gaia star in the cone")
 

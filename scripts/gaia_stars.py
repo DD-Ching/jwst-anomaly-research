@@ -55,8 +55,10 @@ def main(argv: list[str] | None = None) -> None:
     out.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
         source=(
-            f"VizieR ({cds_mirror.vizier_server()}) I/355/gaiadr3 cone {args.ra} {args.dec} "
-            f"r={args.radius_arcmin}' G<{args.gmax}"
+            cds_mirror.tag(
+                f"VizieR I/355/gaiadr3 cone {args.ra} {args.dec} "
+                f"r={args.radius_arcmin}' G<{args.gmax}"
+            )
         ),
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)

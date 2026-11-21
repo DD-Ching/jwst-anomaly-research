@@ -120,7 +120,7 @@ def fetch_gaia(ra: float, dec: float, radius_arcmin: float) -> Table:
     )
     out.meta = {
         "provenance": "observed",
-        "source": f"VizieR ({cds_mirror.vizier_server()}) I/355/gaiadr3 (Gaia DR3, epoch J2016.0)",
+        "source": cds_mirror.tag("VizieR I/355/gaiadr3 (Gaia DR3, epoch J2016.0)"),
     }
     return out
 

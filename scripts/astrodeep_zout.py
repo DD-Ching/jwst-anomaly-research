@@ -64,7 +64,9 @@ def to_zout(pos: Table, z: Table) -> Table:
             "z840": zb + half,
         }
     )
-    out.meta.update(provenance="derived", source=CATALOG, SIQRSIG=SIQR_TO_SIGMA)
+    from jwst_anomaly import cds_mirror
+
+    out.meta.update(provenance="derived", source=cds_mirror.tag(CATALOG), SIQRSIG=SIQR_TO_SIGMA)
     return out
 
 
