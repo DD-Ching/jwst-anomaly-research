@@ -2,6 +2,17 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-21: VizieR falls back to the CfA mirror while CDS answers 404 (D-006 addendum)
+- **Question:** can the VizieR-dependent live tests in #819 run while `vizier.cds.unistra.fr` returns a 404 page?
+  Plan and gate first (`results/vizier_mirror/PLAN.md`).
+- **Result:** `vizier.cfa.harvard.edu` reproduces the CDS-recorded expectations exactly (M0717 4082 / 4082 / 2928);
+  new `jwst_anomaly.cds_mirror` (CDS first, mirror second), used by all 8 astroquery `Vizier` scripts.
+  `test_fetch_m0717_live` and `test_gaia_stars_live_query` pass with `--run-network`; offline suite 2652 passed.
+- **Failed approach:** no reachable mirror for cdsarc FTP files (`cdsarc.cfa.harvard.edu` resets;
+  `vizier.cfa.harvard.edu/ftp/...` 404), TAPVizieR or XMatch, so the El Gordo, A370 buffalo and SMACS XMatch live
+  tests still wait on CDS. The mirror failed one probe request out of several, hence 2 attempts.
+- **Handoff:** after the 2026-11-23 weekly run, #819 should be down to the cdsarc / XMatch failures; #751 still waits.
+
 ## 2026-11-20: S1063 1316 / 1557: first 116.28VK.001 release assessed, not material
 - **Question:** does the first newly public MUSE cube (release date 2026-11-20) materially improve the 1316 / 1557
   spectroscopy (reopen condition of the 2026-10-16 owner decision)? Metadata only, no download.

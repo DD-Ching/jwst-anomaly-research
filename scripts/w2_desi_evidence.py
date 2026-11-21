@@ -27,6 +27,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import w2_desi_pairs as wd  # noqa: E402
 import w12_niq as niq  # noqa: E402
 
+from jwst_anomaly import cds_mirror  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT / "results" / "w2_desi_pairs"
 OUT = RES / "evidence"
@@ -83,7 +85,7 @@ def _finite(x):
 def dawes(ra, dec):
     """Dawes et al. 2023 candidate rows (VizieR J/ApJS/269/61/table2) within 3" (grade etc.)."""
     r = requests.get(
-        "https://vizier.cds.unistra.fr/viz-bin/asu-tsv",
+        cds_mirror.asu_tsv_url(),
         params={"-source": DAWES, "-c": f"{ra} {dec}", "-c.rs": "3", "-out.all": ""},
         timeout=120,
     )

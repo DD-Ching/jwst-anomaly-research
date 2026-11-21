@@ -35,9 +35,9 @@ ZOUT_COLUMNS = ("id", "ra", "dec", "z_phot", "z160", "z840")
 
 
 def fetch(field: str) -> tuple[Table, Table]:
-    from astroquery.vizier import Vizier
+    from jwst_anomaly import cds_mirror
 
-    viz = Vizier(columns=["**"], row_limit=-1)
+    viz = cds_mirror.vizier(columns=["**"], row_limit=-1)
     pos = viz.get_catalogs(f"{CATALOG}/{field}cla")[0]
     z = viz.get_catalogs(f"{CATALOG}/{field}clz")[0]
     return pos, z
@@ -64,7 +64,9 @@ def to_zout(pos: Table, z: Table) -> Table:
             "z840": zb + half,
         }
     )
-    out.meta.update(provenance="derived", source=CATALOG, SIQRSIG=SIQR_TO_SIGMA)
+    from jwst_anomaly import cds_mirror
+
+    out.meta.update(provenance="derived", source=cds_mirror.tag(CATALOG), SIQRSIG=SIQR_TO_SIGMA)
     return out
 
 

@@ -595,9 +595,10 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
     if not p_cl.exists():
         from astropy import units as u
         from astropy.coordinates import SkyCoord
-        from astroquery.vizier import Vizier
 
-        v = Vizier(
+        from jwst_anomaly import cds_mirror
+
+        v = cds_mirror.vizier(
             columns=["Name", "RAJ2000", "DEJ2000", "zCl", "M500", "lam500"],
             column_filters={"M500": f">={VET_CLUSTER_M500}"},
             row_limit=-1,
@@ -614,16 +615,17 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         stamp(
             t,
             schema.Provenance.OBSERVED,
-            f"VizieR {WH24} (Wen & Han 2024), M500 ≥ {VET_CLUSTER_M500}e14",
+            cds_mirror.tag(f"VizieR {WH24} (Wen & Han 2024), M500 ≥ {VET_CLUSTER_M500}e14"),
         )
         t.write(p_cl, overwrite=True)
     p_gal = out_dir() / f"galaxies_{name}.ecsv"
     if not p_gal.exists():
         from astropy import units as u
         from astropy.coordinates import SkyCoord
-        from astroquery.vizier import Vizier
 
-        v = Vizier(
+        from jwst_anomaly import cds_mirror
+
+        v = cds_mirror.vizier(
             columns=["PGC", "_RAJ2000", "_DEJ2000", "logD25"],  # decimal degrees
             column_filters={"logD25": f">={math.log10(VET_GALAXY_D25 * 10):.3f}"},
             row_limit=-1,
@@ -640,7 +642,11 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
         t = Table(res[0], masked=False)
         t.rename_columns(["_RAJ2000", "_DEJ2000"], ["RAJ2000", "DEJ2000"])
         t["d25_arcmin"] = 0.1 * 10 ** np.asarray(t["logD25"], float)
-        stamp(t, schema.Provenance.OBSERVED, f"VizieR {HYPERLEDA} (HyperLEDA), D25 ≥ 1′")
+        stamp(
+            t,
+            schema.Provenance.OBSERVED,
+            cds_mirror.tag(f"VizieR {HYPERLEDA} (HyperLEDA), D25 ≥ 1′"),
+        )
         t.write(p_gal, overwrite=True)
     return Table.read(p_star), Table.read(p_cl), Table.read(p_gal)
 

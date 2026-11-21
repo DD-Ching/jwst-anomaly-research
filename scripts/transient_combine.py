@@ -103,9 +103,9 @@ def near_bright(ra, dec, gaia: Table, **kw) -> np.ndarray:
 
 def fetch_gaia(ra: float, dec: float, radius_arcmin: float) -> Table:
     """Gaia DR3 (VizieR I/355/gaiadr3) sources in one cone; columns ra, dec, gmag, source_id."""
-    from astroquery.vizier import Vizier
+    from jwst_anomaly import cds_mirror
 
-    v = Vizier(columns=["Source", "RA_ICRS", "DE_ICRS", "Gmag"], row_limit=-1)
+    v = cds_mirror.vizier(columns=["Source", "RA_ICRS", "DE_ICRS", "Gmag"], row_limit=-1)
     res = v.query_region(
         SkyCoord(ra, dec, unit="deg"), radius=radius_arcmin * u.arcmin, catalog="I/355/gaiadr3"
     )
@@ -120,7 +120,7 @@ def fetch_gaia(ra: float, dec: float, radius_arcmin: float) -> Table:
     )
     out.meta = {
         "provenance": "observed",
-        "source": "VizieR I/355/gaiadr3 (Gaia DR3, epoch J2016.0)",
+        "source": cds_mirror.tag("VizieR I/355/gaiadr3 (Gaia DR3, epoch J2016.0)"),
     }
     return out
 

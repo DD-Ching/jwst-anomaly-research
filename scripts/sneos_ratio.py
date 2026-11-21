@@ -192,10 +192,11 @@ def gaia_psf_star(ra: float, dec: float) -> dict:
     other Gaia source within GAIA_ISOLATION_ARCSEC (VizieR I/355/gaiadr3)."""
     import astropy.units as u
     from astropy.coordinates import SkyCoord
-    from astroquery.vizier import Vizier
+
+    from jwst_anomaly import cds_mirror
 
     c = SkyCoord(ra, dec, unit="deg")
-    v = Vizier(
+    v = cds_mirror.vizier(
         columns=[
             "RA_ICRS",
             "DE_ICRS",
@@ -227,6 +228,7 @@ def gaia_psf_star(ra: float, dec: float) -> dict:
                 "dec": float(t["DE_ICRS"][k]),
                 "gmag": float(t["Gmag"][k]),
                 "dist_arcsec": float(sc[k].separation(c).arcsec),
+                "source": cds_mirror.tag("VizieR I/355/gaiadr3"),
             }
     raise RuntimeError("no isolated Gaia star in the cone")
 

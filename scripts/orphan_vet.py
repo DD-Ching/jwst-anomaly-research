@@ -422,20 +422,24 @@ def _cone(cat: str, ra: float, dec: float) -> list[dict]:
     """Rows of a VizieR catalogue within CONE_ARCSEC (an empty list when none)."""
     import astropy.units as u
     from astropy.coordinates import SkyCoord
-    from astroquery.vizier import Vizier
+
+    from jwst_anomaly import cds_mirror
 
     c = SkyCoord(ra * u.deg, dec * u.deg)
     import time
 
     for attempt in range(4):  # VizieR resets connections now and then
         try:
-            res = Vizier(columns=["**"], row_limit=-1).query_region(
+            res = cds_mirror.vizier(columns=["**"], row_limit=-1).query_region(
                 c, radius=CONE_ARCSEC * u.arcsec, catalog=[cat]
             )
             break
+        except cds_mirror.NoVizierServer:
+            raise  # no host answered the probe: nothing to retry against
         except Exception:
             if attempt == 3:
                 raise
+            cds_mirror.forget()  # the bound host may have gone down: re-probe on the next try
             time.sleep(2 ** (attempt + 1))
     rows = []
     for tb in res:
@@ -531,7 +535,11 @@ def classify_run(out: Path, pairs: Path, ranks: list[int]) -> dict:
             "lw_stack_bands": m["lw_stack_bands"],
             "artifact_flag_visual_269": k in ARTIFACT_RANKS,
         }
-    (out / "vizier.json").write_text(json.dumps(viz, indent=1) + "\n")
+    from jwst_anomaly import cds_mirror
+
+    (out / "vizier.json").write_text(
+        json.dumps({"_vizier_host": cds_mirror.vizier_server(), **viz}, indent=1) + "\n"
+    )
     summary = {"e2_valid": val["valid"], "classification": cls}
     (out / "classification.json").write_text(json.dumps(summary, indent=1, default=float) + "\n")
     return summary
