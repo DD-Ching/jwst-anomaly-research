@@ -57,6 +57,10 @@ def _bare_host(value: str) -> str:
     return v.split("/", 1)[0]
 
 
+class NoVizierServer(ConnectionError):
+    """No server in ``VIZIER_SERVERS`` answered the probe (nothing to retry against)."""
+
+
 _LOCK = threading.Lock()
 _SELECTED: list[str] = []  # the probed server for this process (at most one entry)
 
@@ -65,7 +69,7 @@ def vizier_server() -> str:
     """``$JWST_ANOMALY_VIZIER_SERVER`` if set, else the first answering ``VIZIER_SERVERS`` entry.
 
     The probe runs once per process under a lock (threads wait for it); :func:`forget` drops the
-    choice so the next call probes again. Raises ``ConnectionError`` when no server answers; that
+    choice so the next call probes again. Raises ``NoVizierServer`` when no server answers; that
     failure is not cached.
     """
     pinned = _bare_host(os.environ.get(ENV_VAR, ""))
@@ -89,7 +93,7 @@ def _first_answering(timeout: float) -> str:
             if server != CDS_VIZIER:
                 log.warning("CDS VizieR unreachable; using the mirror %s", server)
             return server
-    raise ConnectionError(f"no VizieR server answered: {', '.join(VIZIER_SERVERS)}")
+    raise NoVizierServer(f"no VizieR server answered: {', '.join(VIZIER_SERVERS)}")
 
 
 def vizier(**kwargs):
@@ -100,8 +104,16 @@ def vizier(**kwargs):
 
 
 def tag(source: str) -> str:
-    """``source`` with the serving VizieR host appended, for ``meta["source"]`` provenance."""
-    return f"{source} [VizieR host {vizier_server()}]"
+    """``source`` with the VizieR host this process queried appended, for ``meta["source"]``.
+
+    Never probes: it reports the pinned or already-selected host, or "none queried" (e.g. a
+    transform of cached tables), so offline code paths stay offline.
+    """
+    host = _bare_host(os.environ.get(ENV_VAR, ""))
+    if not host:
+        with _LOCK:
+            host = _SELECTED[0] if _SELECTED else "none queried in this process"
+    return f"{source} [VizieR host {host}]"
 
 
 def asu_tsv_url() -> str:

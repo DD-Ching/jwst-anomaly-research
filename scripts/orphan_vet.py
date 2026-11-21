@@ -434,15 +434,12 @@ def _cone(cat: str, ra: float, dec: float) -> list[dict]:
                 c, radius=CONE_ARCSEC * u.arcsec, catalog=[cat]
             )
             break
-        except ConnectionError as exc:
-            if "no VizieR server answered" in str(exc) or attempt == 3:
-                raise  # nothing to retry against
-            cds_mirror.forget()  # the bound host may have gone down: re-probe on the next try
-            time.sleep(2 ** (attempt + 1))
+        except cds_mirror.NoVizierServer:
+            raise  # no host answered the probe: nothing to retry against
         except Exception:
             if attempt == 3:
                 raise
-            cds_mirror.forget()
+            cds_mirror.forget()  # the bound host may have gone down: re-probe on the next try
             time.sleep(2 ** (attempt + 1))
     rows = []
     for tb in res:

@@ -43,7 +43,7 @@ def test_cds_first_then_mirror_then_error(monkeypatch):
 
     cm.forget()
     monkeypatch.setattr(cm, "_probe", fake(set()))
-    with pytest.raises(ConnectionError):
+    with pytest.raises(cm.NoVizierServer):
         cm.vizier_server()
 
 
@@ -56,6 +56,17 @@ def test_env_pin_skips_the_probe_even_after_caching(monkeypatch):
     assert cm.tag("VizieR X") == "VizieR X [VizieR host vizier.example.org]"
     monkeypatch.setenv(cm.ENV_VAR, " https://vizier.example.org/viz-bin/ ")
     assert cm.vizier_server() == "vizier.example.org"
+
+
+def test_tag_never_probes(monkeypatch):
+    def boom(server, timeout):
+        raise AssertionError("tag() must not probe")
+
+    monkeypatch.setattr(cm, "_probe", boom)
+    assert cm.tag("X") == "X [VizieR host none queried in this process]"
+    monkeypatch.setattr(cm, "_probe", lambda s, t: s == cm.CFA_VIZIER)
+    cm.vizier_server()
+    assert cm.tag("X") == f"X [VizieR host {cm.CFA_VIZIER}]"
 
 
 def test_choice_is_cached_until_forget(monkeypatch):
