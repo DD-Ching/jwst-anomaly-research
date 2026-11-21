@@ -422,14 +422,15 @@ def _cone(cat: str, ra: float, dec: float) -> list[dict]:
     """Rows of a VizieR catalogue within CONE_ARCSEC (an empty list when none)."""
     import astropy.units as u
     from astropy.coordinates import SkyCoord
-    from astroquery.vizier import Vizier
+
+    from jwst_anomaly import cds_mirror
 
     c = SkyCoord(ra * u.deg, dec * u.deg)
     import time
 
     for attempt in range(4):  # VizieR resets connections now and then
         try:
-            res = Vizier(columns=["**"], row_limit=-1).query_region(
+            res = cds_mirror.vizier(columns=["**"], row_limit=-1).query_region(
                 c, radius=CONE_ARCSEC * u.arcsec, catalog=[cat]
             )
             break

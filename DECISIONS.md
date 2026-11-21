@@ -427,6 +427,17 @@ recording of 2026-10-07 (`tests/data/xmatch_raw_simbad_mirror.ecsv`), live and o
 ad-hoc proxy workaround (not allowed) and waiting on CDS (blocked SMACS for a day). Revisit if the mirror lags CDS in
 content (compare `basic` row counts) or astroquery drops it from `servers_list`.
 
+**Addendum (2026-11-21): VizieR CfA mirror.** Since 2026-11-10 `vizier.cds.unistra.fr` answers HTTP 404 with a
+generic CDS "Page unavailable" page (#819), while `vizier.cfa.harvard.edu` serves data. `jwst_anomaly.cds_mirror`
+probes CDS, then the mirror (one Hipparcos row, 2 attempts, 15 s each, ASSUMPTIONs) and binds astroquery's
+`Vizier(vizier_server=...)`; every script that used `astroquery.vizier.Vizier` now goes through it, and the
+Gaia-cone scripts name the serving host in `meta["source"]`. `$JWST_ANOMALY_VIZIER_SERVER` pins a host. Evidence:
+on the mirror, J/A+A/607/A30 M0717 gives 4082 / 4082 rows and 2928 kept zout rows, identical to the CDS-recorded
+test expectations, and the A370 Gaia cone test passes (`results/vizier_mirror/PLAN.md` gate). Not covered: cdsarc
+FTP files, TAPVizieR, XMatch (no reachable mirror found from cloud sessions) and the two scripts that build raw
+asu-tsv URLs (`w12_niq.py` pins its URL in manifests). Rejected: replacing CDS outright (the mirror may lag it).
+Revisit if the mirror diverges from CDS on a re-recorded expectation or CDS changes its URL scheme.
+
 ## D-007 Candidate store and run provenance (unit 6)
 
 **Decision.**

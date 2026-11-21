@@ -8,3 +8,7 @@
 - **Gate (ASSUMPTION):** identical row counts and identical IDs / positions to the stored CDS-derived test
   expectations; otherwise the mirror is not used and the PR reports that.
 - **Not covered:** cdsarc FTP files (no reachable mirror found), TAPVizieR, CDS XMatch.
+
+## Result (2026-11-21)
+Gate passed: on `vizier.cfa.harvard.edu`, M0717 4082 / 4082 rows, 2928 zout rows (CDS-recorded: 4082 / 2928);
+the A370 Gaia cone test passes. CDS VizieR still 404 at 09:08Z.

@@ -39,9 +39,9 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--gmax", type=float, default=17.0, help="faintest G kept (ASSUMPTION)")
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args(argv)
-    from astroquery.vizier import Vizier
+    from jwst_anomaly import cds_mirror
 
-    v = Vizier(
+    v = cds_mirror.vizier(
         columns=["RA_ICRS", "DE_ICRS", "Gmag"],
         column_filters={"Gmag": f"<{args.gmax}"},
         row_limit=-1,
@@ -55,7 +55,8 @@ def main(argv: list[str] | None = None) -> None:
     out.meta.update(
         provenance=schema.Provenance.OBSERVED.value,
         source=(
-            f"VizieR I/355/gaiadr3 cone {args.ra} {args.dec} r={args.radius_arcmin}' G<{args.gmax}"
+            f"VizieR ({cds_mirror.vizier_server()}) I/355/gaiadr3 cone {args.ra} {args.dec} "
+            f"r={args.radius_arcmin}' G<{args.gmax}"
         ),
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)

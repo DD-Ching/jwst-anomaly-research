@@ -106,9 +106,9 @@ def build(rows: Table, date: str) -> tuple[Table, dict]:
 def main() -> None:
     from datetime import UTC, datetime
 
-    from astroquery.vizier import Vizier
+    from jwst_anomaly import cds_mirror
 
-    rows = Vizier(row_limit=-1, columns=["**"]).get_catalogs(CATALOG)[0]
+    rows = cds_mirror.vizier(row_limit=-1, columns=["**"]).get_catalogs(CATALOG)[0]
     date = datetime.now(UTC).strftime("%Y-%m-%d")
     out, summary = build(rows, date)
     OUT.mkdir(parents=True, exist_ok=True)

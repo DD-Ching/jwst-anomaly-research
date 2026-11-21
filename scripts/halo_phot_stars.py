@@ -33,10 +33,11 @@ PM_SIGMA = 3.0
 def gaia_stars(ra: float, dec: float):
     import astropy.units as u
     from astropy.coordinates import SkyCoord
-    from astroquery.vizier import Vizier
+
+    from jwst_anomaly import cds_mirror
 
     cols = ["RA_ICRS", "DE_ICRS", "Gmag", "pmRA", "pmDE", "e_pmRA", "e_pmDE", "Plx", "e_Plx"]
-    g = Vizier(columns=cols, row_limit=-1).query_region(
+    g = cds_mirror.vizier(columns=cols, row_limit=-1).query_region(
         SkyCoord(ra, dec, unit="deg"), radius=GAIA_RADIUS_ARCMIN * u.arcmin, catalog="I/355/gaiadr3"
     )[0]
 

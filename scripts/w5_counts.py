@@ -595,9 +595,10 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
     if not p_cl.exists():
         from astropy import units as u
         from astropy.coordinates import SkyCoord
-        from astroquery.vizier import Vizier
 
-        v = Vizier(
+        from jwst_anomaly import cds_mirror
+
+        v = cds_mirror.vizier(
             columns=["Name", "RAJ2000", "DEJ2000", "zCl", "M500", "lam500"],
             column_filters={"M500": f">={VET_CLUSTER_M500}"},
             row_limit=-1,
@@ -621,9 +622,10 @@ def ancillary(name: str) -> tuple[Table, Table, Table]:
     if not p_gal.exists():
         from astropy import units as u
         from astropy.coordinates import SkyCoord
-        from astroquery.vizier import Vizier
 
-        v = Vizier(
+        from jwst_anomaly import cds_mirror
+
+        v = cds_mirror.vizier(
             columns=["PGC", "_RAJ2000", "_DEJ2000", "logD25"],  # decimal degrees
             column_filters={"logD25": f">={math.log10(VET_GALAXY_D25 * 10):.3f}"},
             row_limit=-1,
