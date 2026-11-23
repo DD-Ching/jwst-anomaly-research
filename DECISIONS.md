@@ -442,6 +442,18 @@ lag can be traced. Rejected: replacing CDS outright (the mirror may lag it); a p
 catalogue is chosen at query time, not at binding).
 Revisit if the mirror diverges from CDS on a re-recorded expectation or CDS changes its URL scheme.
 
+**Addendum (2026-11-23): IDIA VizieR mirror; cause of the CDS outage.** CDS's home page (notice updated 2026-11-18)
+attributes the outage to a cybersecurity incident and lists mirrors: VizieR at CfA, IDIA, NAOJ and China-VO; SIMBAD
+(and SIMBAD TAP) at CfA, data ingested up to 2026-10-14, and IDIA; X-Match unavailable. The 2026-11-23 weekly run
+(45235928653) failed `test_live_some_server_answers` because the CfA mirror answered the Hipparcos probe with a
+header and no row (reproduced from a cloud session at 19:12Z; the same query returned the row minutes later).
+`cds_mirror.VIZIER_SERVERS` adds `vizier.idia.ac.za` third (probe row returned in 10-15 s, so the probe timeout is
+now 30 s, ASSUMPTION); NAOJ answered 503 and China-VO did not connect. cdsarc `/ftp/` paths now return the same 404
+page (no mirror serves them: CfA and IDIA `ftp-index` redirect to `/ftp/cats/...`, which 404s), so the Caminha+23
+El Gordo and A370 file tests keep failing until CDS returns. Risk recorded, not handled: a header-only CfA answer
+to a real query would look like an empty result; callers that treat 0 rows as a finding must re-query.
+Revisit when CDS withdraws the incident notice (drop nothing; CDS stays first).
+
 ## D-007 Candidate store and run provenance (unit 6)
 
 **Decision.**

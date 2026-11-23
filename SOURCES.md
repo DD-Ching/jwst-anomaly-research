@@ -185,6 +185,8 @@ All links checked 2026-10-07. Exact catalog identifiers are as queried by `cross
   - VizieR `I/355/gaiadr3`: https://vizier.cds.unistra.fr/viz-bin/VizieR?-source=I/355
   - **VizieR CfA mirror** (all astroquery `Vizier` callers fall back to it when CDS fails, D-006 addendum
     2026-11-21): https://vizier.cfa.harvard.edu/ (VizieR 7.6.1), accessed 2026-11-21.
+  - **VizieR IDIA mirror** (third choice, D-006 addendum 2026-11-23): https://vizier.idia.ac.za/, accessed
+    2026-11-23. Mirror list and the CDS incident notice (updated 2026-11-18): https://cds.unistra.fr/, accessed 2026-11-23.
   - ESA archive `gaiadr3.gaia_source`: https://gea.esac.esa.int/archive/ ; TAP endpoint
     https://gea.esac.esa.int/tap-server/tap ; data model:
     https://gea.esac.esa.int/archive/documentation/GDR3/Gaia_archive/chap_datamodel/sec_dm_main_source_catalogue/ssec_dm_gaia_source.html

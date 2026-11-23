@@ -42,6 +42,12 @@ def test_cds_first_then_mirror_then_error(monkeypatch):
     assert calls == [cm.CDS_VIZIER] * cm.PROBE_ATTEMPTS + [cm.CFA_VIZIER]
 
     cm.forget()
+    calls.clear()
+    monkeypatch.setattr(cm, "_probe", fake({cm.IDIA_VIZIER}))
+    assert cm.vizier_server() == cm.IDIA_VIZIER
+    assert calls == [cm.CDS_VIZIER, cm.CDS_VIZIER, cm.CFA_VIZIER, cm.CFA_VIZIER, cm.IDIA_VIZIER]
+
+    cm.forget()
     monkeypatch.setattr(cm, "_probe", fake(set()))
     with pytest.raises(cm.NoVizierServer):
         cm.vizier_server()
