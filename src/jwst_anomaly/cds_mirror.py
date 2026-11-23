@@ -1,10 +1,12 @@
-"""VizieR server selection: CDS first, then the CfA mirror (D-006 addendum 2026-11-21).
+"""VizieR server selection: CDS first, then the CfA and IDIA mirrors (D-006 addenda 11-21, 11-23).
 
 CDS (``vizier.cds.unistra.fr``) has answered HTTP 404 with a generic "Page unavailable" page since
-2026-11-10 (#819), while the CfA mirror (``vizier.cfa.harvard.edu``, astroquery's documented
-alternative server) serves the same catalogues. Callers get an astroquery ``Vizier`` bound to the
-first server that answers a one-row probe. The mirror is only a fallback: CDS stays the reference
-whenever it answers, because the mirror may lag it.
+2026-11-10 (#819); CDS attributes it to a cybersecurity incident and lists mirrors at
+https://cds.unistra.fr/ (notice updated 2026-11-18). The CfA mirror (``vizier.cfa.harvard.edu``)
+sometimes answers with a header but no data row (2026-11-23), so the IDIA mirror
+(``vizier.idia.ac.za``, slower) is the third choice. Callers get an astroquery ``Vizier`` bound to
+the first server that answers a one-row probe. Mirrors are only fallbacks: CDS stays the reference
+whenever it answers, because a mirror may lag it.
 
 ``JWST_ANOMALY_VIZIER_SERVER`` pins a server and skips the probe (tests, reproducing a run).
 """
@@ -19,11 +21,13 @@ log = logging.getLogger(__name__)
 
 CDS_VIZIER = "vizier.cds.unistra.fr"
 CFA_VIZIER = "vizier.cfa.harvard.edu"
-VIZIER_SERVERS = (CDS_VIZIER, CFA_VIZIER)
+IDIA_VIZIER = "vizier.idia.ac.za"
+VIZIER_SERVERS = (CDS_VIZIER, CFA_VIZIER, IDIA_VIZIER)
 ENV_VAR = "JWST_ANOMALY_VIZIER_SERVER"
 # One Hipparcos row: small, stable since 1997, present on every VizieR mirror.
 PROBE_QUERY = "/viz-bin/asu-tsv?-source=I/239/hip_main&-out=HIP&-out.max=1&HIP=1"
-PROBE_TIMEOUT_S = 15.0  # ASSUMPTION: a live server answers the one-row probe well inside 15 s
+# ASSUMPTION: a live server answers the one-row probe inside 30 s (IDIA took 10-15 s, 2026-11-23).
+PROBE_TIMEOUT_S = 30.0
 PROBE_ATTEMPTS = 2  # ASSUMPTION: the CfA mirror occasionally fails one request (seen 2026-11-21)
 
 

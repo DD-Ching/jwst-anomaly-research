@@ -2,6 +2,19 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-23: weekly network run diagnosed: CDS incident, flaky CfA VizieR, IDIA mirror added (D-006 addendum)
+- **Question:** why did weekly run 45235928653 fail (#819) after the CfA fallback landed?
+- **Result:** 9 failed / 2674 passed, all upstream. CDS's home page states a cybersecurity incident (notice updated
+  2026-11-18) and lists mirrors. New: `test_cds_mirror::test_live_some_server_answers` failed because the CfA mirror
+  returned a header-only answer to the Hipparcos probe (reproduced at 19:12Z, then recovered); cdsarc `/ftp/` now
+  answers the CDS 404 page instead of timing out (El Gordo ×3, pinned chains, A370 buffalo). SIMBAD TAP 404 (2 tests)
+  and XMatch timeout as before; the SIMBAD CfA `mirror` backend test passed.
+- **Change:** `cds_mirror` adds `vizier.idia.ac.za` as the third server, probe timeout 15 → 30 s.
+  `pytest --run-network tests/test_cds_mirror.py` 8 passed.
+- **Failed approach:** no mirror serves cdsarc files (CfA / IDIA `ftp/cats` 404, NAOJ 503, China-VO no connection).
+- **Handoff:** cdsarc, SIMBAD-CDS and XMatch tests wait for CDS; a header-only CfA answer could masquerade as an
+  empty result (D-006 addendum 2026-11-23). #751 still waits.
+
 ## 2026-11-21: VizieR falls back to the CfA mirror while CDS answers 404 (D-006 addendum)
 - **Question:** can the VizieR-dependent live tests in #819 run while `vizier.cds.unistra.fr` returns a 404 page?
   Plan and gate first (`results/vizier_mirror/PLAN.md`).
