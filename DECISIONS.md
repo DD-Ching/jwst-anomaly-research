@@ -3109,6 +3109,11 @@ early Mar 2027; RELICS glafic 2027-09-14 to 2027-11-22, #309); no lens-model res
 difference-image search (the forced aperture at both predicted positions answers the frozen question). Revisit if: a
 new public HST 18470 or JWST 12781 epoch (re-run the script with that visit appended).
 
+**Addendum 2026-11-24 (SN Athena, HST 18470 visit 6).** `results/transients/athena_hst18470_v6/RESULT.md`; same
+frozen rule. Visit 6 (`ifu906010`, F105W, 2026-11-24): `not seen` at Athena-2 (Δ vs visit 1 −0.65 σ_d) and at the
+RELICS glafic 7.6″ position (+0.21 σ_d); stamps looked at. Both predictions stay open; no lens-model residual.
+Revisit if: as in 2026-11-08c.
+
 **Addendum 2026-11-08 (rms-scaled `forced_check` radii; `results/lens_consistency/rms_radii/RESULT.md`).** Frozen census
 of the 55 stored `validate` image-plane tables (offline): 10 have 1″ < rms ≤ 2″, and in 6 of them the rms drops to
 ≤ 1″ without the single largest offset (`rms_outlier_driven`), so the frozen reading is "rms scale outlier-driven".

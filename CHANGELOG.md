@@ -2,6 +2,15 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-24: SN Athena not seen in the new HST 18470 visit 6 (D-034 addendum)
+- **Question:** has the next SN Athena image appeared in HST 18470 visit 6 (`ifu906010`, F105W, 2026-11-24, public
+  the same day)? Plan committed before measuring (`results/transients/athena_hst18470_v6/PLAN.md`).
+- **Result:** `not seen` at both positions (Athena-2 −0.65 σ_d, RELICS glafic +0.21 σ_d; `appeared` would need
+  ≥ 207 / 230 nJy); stamps looked at; visits 1–5 reproduce the v5 numbers exactly. Both windows stay open.
+- **Failed approach:** none. **Services:** CDS XMatch no connection, VizieR and SIMBAD TAP 404 (19:10Z); #751 waits.
+- **Handoff:** re-run at the next public HST 18470 visit (MAST CAOM TAP, proposal 18470, now 31 rows) and the JWST
+  12781 epochs (2027-01/02).
+
 ## 2026-11-23: weekly network run diagnosed: CDS incident, flaky CfA VizieR, IDIA mirror added (D-006 addendum)
 - **Question:** why did weekly run 45235928653 fail (#819) after the CfA fallback landed?
 - **Result:** 9 failed / 2674 passed, all upstream. CDS's home page states a cybersecurity incident (notice updated
