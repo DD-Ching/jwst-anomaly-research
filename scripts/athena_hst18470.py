@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from hit_lightcurve import aperture_photometry  # noqa: E402
 
 POS = {"athena2_12781": (64.394375, -11.90758), "glafic_7p6": (64.394334, -11.907649)}
-VISITS = ("ifu901010", "ifu902010", "ifu903010", "ifu904010", "ifu905010")
+VISITS = ("ifu901010", "ifu902010", "ifu903010", "ifu904010", "ifu905010", "ifu906010")
 APPEAR_SIGMA = 5.0  # ASSUMPTION (PLAN.md)
 NOT_SEEN_SIGMA = 3.0  # ASSUMPTION (PLAN.md)
 
