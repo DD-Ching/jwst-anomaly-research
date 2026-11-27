@@ -2,6 +2,32 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-27: X2 S6a brief: timeline and comparison with arXiv:2510.11406 and arXiv:2610.38659 (no computation; needs-human)
+- **What:** a dated section in `docs/results/s6a_5d_rotating_wormhole_modes.md` (the existing entry point), plus one
+  README line. The PDF stays the 2026-10-16 text.
+- **Timeline:**
+  - the 2510.11406 conjecture (v1, 2025-10-13: "rotating wormholes"; v2, 2026-03-13: "rotating chargeless wormholes");
+  - PR #208 opened on 2026-10-14 at 01:19:56Z with the plan;
+  - result commit a4b6340 dated 03:23:34Z (commit time, not a proven push time);
+  - merge at 04:31:40Z;
+  - this brief on 2026-10-16;
+  - arXiv:2610.38659 v1 on 2026-10-28.
+- **Comparison with 2610.38659 v1:**
+  - Merger location: 0.1006288 (our 960-point estimate) against 0.100628. The estimates differ by about 7.6×10⁻⁷ and
+    the published value lies inside our bracket; this does not certify accuracy to 10⁻⁶.
+  - Behaviour past the merger and the trend with rotation agree qualitatively.
+  - Eigenvalues near the merger are at two different spins: ours −5.8009 ± 0.0143i at 0.1006326 (bracket end), theirs
+    −5.904772 at their exceptional point 0.100628. Their real parts differ by about 0.104, which does not establish a
+    discrepancy at the same spin.
+  - The paper gives no numbers at 0.1207 or 0.1420.
+  - What it adds: an exact Toda background, the exceptional point (eigenvector coalescence) and the near-extremal
+    branch. It confirms the zero-mode ancestry of the second mode, already given in 1309.2448 Sec. V.
+  - It does not cite this repository.
+- **Division of work:** our "Who did what" table, and the paper's own statement on its use of generative AI.
+- **Owner review (2026-11-27):** corrected the timeline (opening, result commit and merge), the scope of the
+  eigenvalue comparison, the 2510.11406 v1/v2 wording, and the zero-mode attribution.
+- **Handoff:** draft with `needs-human` for the owner's single review. The owner posts on X; no post from this session.
+
 ## 2026-11-24: SN Athena not seen in the new HST 18470 visit 6 (D-034 addendum)
 - **Question:** has the next SN Athena image appeared in HST 18470 visit 6 (`ifu906010`, F105W, 2026-11-24, public
   the same day)? Plan committed before measuring (`results/transients/athena_hst18470_v6/PLAN.md`).

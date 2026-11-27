@@ -7,6 +7,10 @@ title: "Unstable modes past the merger in 5D rotating Ellis wormholes (S6a)"
 the last commit that touches the S6a files. Repository: DD-Ching/jwst-anomaly-research, licence BSD-3-Clause.
 **No human domain expert has checked this work. It has not been submitted anywhere.**
 
+*Added 2026-11-27:* a timeline and a comparison with the later paper arXiv:2610.38659
+([below](#timeline-and-comparison-with-later-work-added-2026-11-27)). It adds no computation. The PDF version of this
+brief is still the 2026-10-16 text.
+
 > **What this is and is not.** This is a *linear-stability result in a theoretical model*. It is **not** an
 > observation of a wormhole. It does **not** imply that wormholes exist, and it does **not** imply that they could
 > be used to travel or to communicate. It is not a complete stability analysis of the model.
@@ -89,6 +93,93 @@ of its own.
 | Claude (Claude Code agents, this repository's sessions) | Main derivation, implementation, computation and documentation, including all code, runs and state files. Chose the numerical settings and thresholds after trial runs. Review and literature search were also done by Claude subagents. |
 | GPT (separate conversation; owner's record) | Read the original paper, the GitHub code and the results. Helped shape the research scope and the verification design. Pointed out three issues that the owner relayed to Claude (minimum vs last step in `Shooter.root`, the grid differences near the merger point, and the NaN formatting). Did **not** independently re-derive the equations or re-run the numerics. |
 | Human domain experts | **None so far.** |
+
+## Timeline and comparison with later work (added 2026-11-27)
+
+Nothing here was recomputed.
+- Our numbers come from
+  [`results/x2/s6a_rot5d.json`](https://github.com/DD-Ching/jwst-anomaly-research/blob/a57b824e85a1dda2633caa1e0b2f1f245d4f1c2c/results/x2/s6a_rot5d.json)
+  at a57b824.
+- Other numbers and quotes come from the arXiv versions named below.
+- Where both sides agree only in kind, the table says "qualitative agreement".
+
+### Timeline
+
+| Date (UTC) | Event | Source |
+|---|---|---|
+| 2013 | 5D equal-J rotating Ellis wormholes built numerically. A real-Ω² analysis finds two unstable modes merging at $(\lvert J\rvert/A)_{\mathrm{cr}} = 0.10063$; beyond it the authors "do not find any further unstable modes". The second unstable mode is already identified with the static wormhole's zero mode: "The non-normalizable zero mode of the static wormholes turns into a normalizable unstable mode of the rotating wormholes" | Dzhunushaliev et al., arXiv:1309.2448 (PRD 88, 124028): Sec. V, and Fig. 7 of the arXiv PDF (LaTeX label `Fig4`) |
+| 2025-10-13 | In charged wormholes two purely imaginary modes "merge and continue with degenerate imaginary parts and opposite real parts". The v1 abstract adds: "By analogy, we conjecture an analogous behavior for rotating wormholes." | Blázquez-Salcedo, González-Romero, Khoo, Kunz, Navarro Moreno, [arXiv:2510.11406 v1](https://arxiv.org/abs/2510.11406v1), abstract |
+| 2026-03-13 | v2 (the published version) words the conjecture as "rotating chargeless wormholes". Its conclusion draws the analogy from 4D slow-rotation results near extremal Kerr, and says the fate past the meeting point "can only be confirmed by a non-perturbative study in the future" | [arXiv:2510.11406 v2](https://arxiv.org/abs/2510.11406v2) (PLB 875 (2026) 140335): abstract and conclusion |
+| 2026-10-14 01:19:56 | PR #208 opened in this public repository, with the plan | [PR #208](https://github.com/DD-Ching/jwst-anomaly-research/pull/208) |
+| 2026-10-14 03:23:34 | First commit containing the two verified results and their JSON. This is the commit's own timestamp; it does not by itself establish when the commit was pushed and became public | [a4b6340](https://github.com/DD-Ching/jwst-anomaly-research/commit/a4b63407429c5291ba62b4ccae29e60fb4f57bc4) |
+| 2026-10-14 04:31:40 | PR #208 merged into main | [PR #208](https://github.com/DD-Ching/jwst-anomaly-research/pull/208) |
+| 2026-10-16 | This brief and the README entry | CHANGELOG, 2026-10-16 |
+| 2026-10-28 18:45:21 | The same group, joined by Kleihaus, posts an exact background and the "exceptional-point instability" | arXiv:2610.38659 v1 |
+
+**Citations:**
+- arXiv:2610.38659 does not cite this repository.
+- Its "Note added" cites an independent exact construction by Nozawa (arXiv:2610.34672). We have not read that paper.
+
+### What we computed, and at which two rotation rates
+
+**Verified points.** At $\lvert J\rvert/A = 0.1207$ and $0.1420$ (stored 0.12073053 and 0.14204044), the merged modes
+form a verified complex-conjugate pair, and both members grow (table in "Result").
+- In the later paper's convention $e^{-i\omega t}$, $\omega = -\Omega$ [derived here].
+- The growing roots are then $\omega A^{1/3} = \pm 1.179119 + 2.344107\,i$ and $\pm 1.657594 + 2.250848\,i$.
+
+**Merger.**
+- #208 brackets it at $\lvert J\rvert/A \in [0.1006224, 0.1006326]$ on the 480-point grid.
+- The 960-point estimate is 0.1006288.
+
+**Not verified:**
+- 0.214 is a candidate only.
+- Exploratory tracking reached 0.40.
+- The near-extremal regime was not computed.
+
+### Comparison with arXiv:2610.38659 v1
+
+| Quantity | This repository (#208) | arXiv:2610.38659 v1 | Reading |
+|---|---|---|---|
+| Merger location $\lvert J\rvert/A$ | 0.1006288 (960-point estimate); bracket 0.1006224–0.1006326 (480-point grid) | 0.100628 | the two estimates differ by about $7.6\times10^{-7}$ (derived here, not stored), and the published value lies inside our archived bracket. Their agreement does not certify either value to $10^{-6}$. Both round to 1309.2448's 0.10063 |
+| Nature of the merger | two real-$\Omega^2$ branches become one conjugate pair at their midpoint | eigenvalues **and** eigenvectors coalesce: a second-order exceptional point | eigenvector coalescence shown by them only; we did not test it |
+| $\omega^2 A^{2/3}$ $(= z)$ near the merger, **at two different rotation rates** | $-5.800916 \pm 0.014273\,i$ at $\lvert J\rvert/A = 0.1006326$, the upper end of the archived bracket (480-point grid) | $-5.904772$ at their exceptional point, $\lvert J\rvert/A = 0.100628$ | the real parts differ by about 0.104 (derived here, not stored). Because the two rows are at different spins, they do not establish a discrepancy in the eigenvalue at the same spin |
+| Behaviour past the merger | complex pair, both members growing, verified at 0.1207 and 0.1420 | $\omega_\pm = \pm\omega_R + i\omega_I$ with $\omega_I > 0$; e.g. $\pm 0.863525 + 2.427364\,i$ just past the exceptional point | qualitative agreement |
+| Values at $\lvert J\rvert/A$ = 0.1207 and 0.1420 | listed above | none given in the text (figures only) | no quantitative comparison; the figures were not digitised |
+| Trend past the merger | growth 0.50 and 0.48 of the static rate at the two points; real part 1.18 → 1.66 | growth "declines rapidly post-EP"; the real part "rises to a maximum before decreasing" | qualitative agreement over the range we computed |
+| Rapid rotation | nothing verified beyond 0.142 | followed to near extremality (below) | theirs only |
+
+### What the later paper adds
+- **An exact background.** The coupled metric equations reduce to an open $A_2$ Toda system. The symmetric subclass is a
+  one-parameter family from the static wormhole to the extremal equal-spin Myers–Perry geometry. Our background is
+  numerical, following 1309.2448.
+- **The second unstable mode.** They confirm that it descends from the static wormhole's non-normalizable zero mode.
+  1309.2448 already identified this ancestry (Sec. V; see the timeline).
+- **An exceptional point.** The merger is a second-order exceptional point, at which the eigenvectors coalesce.
+- **The branch at rapid rotation.**
+  - The growth rate $\omega_I A^{1/3}$ falls to order $10^{-6}$ and is consistent with
+    $\omega_I \sim (\lvert J\rvert/A - 0.5)^6$.
+  - The real part peaks and then falls close to zero near $\lvert J\rvert/A \simeq 0.48717$.
+- **Their conclusion:** the symmetric rotating 5D wormholes "are linearly unstable in the cohomogeneity-one
+  gravitational sector".
+
+**Not discussed in the later paper:** the sign difference in the printed $V_{10}$ of 1309.2448, which our re-derivation
+found ("How it was verified").
+
+### How the work was divided
+- **This repository:** see "Who did what" above.
+  - The owner (DD-Ching) set the question, the gates and the reading rules.
+  - Claude (Claude Code agents) did the derivation, code, runs and documentation.
+  - GPT, in a separate conversation (the owner's record), reviewed the work and pointed out three issues.
+  - No human domain expert has checked the work.
+- **arXiv:2610.38659, its "Use of generative AI":** "Generative AI was used as an auxiliary tool in obtaining and
+  organizing parts of the derivation of the exact solutions and for language editing. The exact solutions were
+  independently verified by the authors, while the perturbation analysis, derivation of the unstable modes, numerical
+  calculations, and physical interpretation were carried out and checked by the authors."
+
+### Not claimed
+- No claim of priority beyond the dates above.
+- The later paper is not said to use this work.
+- Nothing about the physics goes beyond what this brief already states.
 
 ## Files (pinned to commit a57b824e85a1dda2633caa1e0b2f1f245d4f1c2c)
 

@@ -2084,3 +2084,11 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   arXiv:2610.33161v1 (HTML read for the SN position, z_spec, model delays and magnifications; not refereed).
 - RELICS MACS0308 GLAFIC v2 and Zitrin LTM-Gauss v1 maps: already listed (HLSP DOI 10.17909/T9SP45; sha256 in
   `lensmodel.MACS0308_RELICS_*`).
+
+## X2 S6a comparison with later work (accessed 2026-11-27; `docs/results/s6a_5d_rotating_wormhole_modes.md`)
+- Blázquez-Salcedo, González-Romero, Khoo, Kleihaus, Kunz, Navarro Moreno, "Exact Rotating Wormholes in Five
+  Dimensions and Their Exceptional-Point Instability", arXiv:2610.38659 v1 (2026-10-28). LaTeX source
+  https://arxiv.org/src/2610.38659v1, sha256 28b1856e339dca17d5987e9cf716bd14d08c0c4b8d4e21eb64f62839c8aae9d9.
+- arXiv:2510.11406 v2 (PLB 875 (2026) 140335), LaTeX source sha256
+  cb0cf5c515bb212ad15ecc392b386e45a855070b4caa30f390e56e386c17540d. The conjecture was read in its abstract and conclusion.
+- Nozawa, arXiv:2610.34672: cited by 2610.38659 ("Note added"); not read.
