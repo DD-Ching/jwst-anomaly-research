@@ -2,6 +2,26 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-27: X2 S6a brief: timeline and comparison with arXiv:2510.11406 and arXiv:2610.38659 (no computation; needs-human)
+- **What:** a dated section in `docs/results/s6a_5d_rotating_wormhole_modes.md` (the existing entry point), plus one
+  README line. The PDF stays the 2026-10-16 text.
+- **Timeline:**
+  - the 2510.11406 conjecture (v1, 2025-10-13);
+  - PR #208 public on 2026-10-14 (opened 01:19:56Z);
+  - this brief on 2026-10-16;
+  - arXiv:2610.38659 v1 on 2026-10-28.
+- **Comparison with 2610.38659 v1:**
+  - Merger location agrees: 0.1006288 (our 960-point estimate) against 0.100628.
+  - Behaviour past the merger and the trend with rotation agree qualitatively.
+  - The eigenvalue at the merger differs by about 0.10: −5.8009 ± 0.0143i just past it against −5.904772. Not
+    investigated, since nothing was recomputed.
+  - The paper gives no numbers at 0.1207 or 0.1420.
+  - What it adds: an exact Toda background, the exceptional point (eigenvector coalescence) and the near-extremal
+    branch.
+  - It does not cite this repository.
+- **Division of work:** our "Who did what" table, and the paper's own statement on its use of generative AI.
+- **Handoff:** draft with `needs-human` for the owner's single review. The owner posts on X; no post from this session.
+
 ## 2026-11-24: SN Athena not seen in the new HST 18470 visit 6 (D-034 addendum)
 - **Question:** has the next SN Athena image appeared in HST 18470 visit 6 (`ifu906010`, F105W, 2026-11-24, public
   the same day)? Plan committed before measuring (`results/transients/athena_hst18470_v6/PLAN.md`).

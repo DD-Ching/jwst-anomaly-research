@@ -18,6 +18,8 @@ signatures.
   [PDF](docs/results/s6a_5d_rotating_wormhole_modes.pdf) · [web summary](docs/results/s6a_5d_rotating_wormhole_modes.md) ·
   [reproduction package](docs/state/units/X2_s6a_repro.md). Version 2026-10-16, based on commit a57b824.
   No human domain expert has reviewed it.
+  - Timeline and comparison with the later paper arXiv:2610.38659 (2026-10-28), which also finds the merged modes
+    continuing as a growing complex pair: in the web summary, added 2026-11-27 (the PDF is the 2026-10-16 text).
 
 **Status:** M0 bootstrap is complete. The M1 catalog-level slice runs end to end on real data; first
 results and limitations are in [CHANGELOG.md](CHANGELOG.md). See [TASKS.md](TASKS.md) and [ROADMAP.md](ROADMAP.md).
