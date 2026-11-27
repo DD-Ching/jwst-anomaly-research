@@ -2,6 +2,22 @@
 
 Newest first. Results, failed approaches and the handoff state; not a diary.
 
+## 2026-11-27: Reading check of Chandrasekaran (arXiv:2611.34924v1) §4: the paper establishes no method for B to read A's chosen bit before the external light arrives (needs-human)
+- **Question (owner):** do §4's source operators and cross-region evolution give a case where a bit A chooses at sending
+  changes B's local reading before the fastest external light path? Record: `docs/results/null_cone_signalling_check.md`.
+- **Equations checked:** (4.1), (4.2e), (4.29) with the spatial join J_t, and (6.16), plus (5.72)–(5.75) and (D.13) /
+  (5.29).
+- **Conclusion** (revised on owner review): the paper establishes no method for B to read out A's chosen bit before the
+  external light arrives.
+  - (6.16) gives only a retarded response of the one-loop mean metric. The earlier "B can distinguish when the light
+    cone arrives" and "at the fastest, together with the external light" are withdrawn.
+  - (5.75): with local operations at A, every trial counted and no coupling between the ends before B reads, B's
+    graviton-number distribution is (1 − e^{−2bω}) e^{−2nbω} for both bits.
+  - App. D.2: a relative boost preserves the same-side G_LL and G_RR and deforms the cross-side G_LR.
+- **Missing operator:** a deformation nonlocal across the spatial boundary that A alone can switch. §4.1 allows one
+  formally but gives no realisation; realising it needs an A–B coupling, which uses the external path.
+- **Handoff:** draft with `needs-human`; no next round queued.
+
 ## 2026-11-24: SN Athena not seen in the new HST 18470 visit 6 (D-034 addendum)
 - **Question:** has the next SN Athena image appeared in HST 18470 visit 6 (`ifu906010`, F105W, 2026-11-24, public
   the same day)? Plan committed before measuring (`results/transients/athena_hst18470_v6/PLAN.md`).

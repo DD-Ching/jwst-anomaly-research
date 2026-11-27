@@ -2084,3 +2084,9 @@ Inputs are pinned by sha256 in `data/manifests/e1_events.ecsv` (4.7 MB in total;
   arXiv:2610.33161v1 (HTML read for the SN position, z_spec, model delays and magnifications; not refereed).
 - RELICS MACS0308 GLAFIC v2 and Zitrin LTM-Gauss v1 maps: already listed (HLSP DOI 10.17909/T9SP45; sha256 in
   `lensmodel.MACS0308_RELICS_*`).
+
+## Null-cone quantization signalling check (accessed 2026-11-27; `docs/results/null_cone_signalling_check.md`)
+- V. Chandrasekaran, "An algebraic quantization of gravity from the null cone", arXiv:2611.34924v1 (submitted
+  2026-11-25). LaTeX source https://arxiv.org/src/2611.34924v1, sha256
+  1251f05ae2fac0bc307286550e115f3a9ef9228187822b9f40aad9c33b3407be. Equation numbers read from
+  https://arxiv.org/html/2611.34924v1.
